@@ -1,0 +1,166 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.57)
+AC_INIT(jwm, 0.24, joewing@joewing.net)
+AC_CONFIG_SRCDIR([src])
+AC_CONFIG_HEADER([config.h])
+
+# Checks for libraries.
+
+AC_PATH_X
+
+CFLAGS="-O2 $CFLAGS"
+
+if test ! "$no_x" = "yes" ; then
+	if test ! x"$x_libraries" = x ; then
+		LDFLAGS="$LDFLAGS -L$x_libraries"
+	fi
+	if test ! x"$x_includes" = x ; then
+		CFLAGS="$CFLAGS -I$x_includes"
+	fi
+else
+	AC_MSG_ERROR([Could not find X11])
+fi
+
+AC_CHECK_LIB([X11], XOpenDisplay,
+	[ LDFLAGS="$LDFLAGS -lX11" ],
+	[ AC_MSG_ERROR([libX11 not found]) ])
+
+AC_CHECK_HEADERS([stdarg.h stdio.h stdlib.h ctype.h signal.h unistd.h \
+	time.h sys/wait.h sys/time.h], [],
+	[ AC_MSG_ERROR([one or more necessary header files not found]) ])
+
+AC_CHECK_HEADERS([X11/Xlib.h], [],
+	[ AC_MSG_ERROR([Xlib.h could not be found]) ])
+
+AC_CHECK_HEADERS([X11/Xutil.h X11/cursorfont.h X11/Xproto.h \
+	X11/Xatom.h X11/keysym.h], [],
+	[ AC_MSG_ERROR([one or more necessary header files not found]) ],
+	[
+		#include <X11/Xlib.h>
+	])
+
+# Confirm dialogs
+AC_ARG_ENABLE(confirm,
+	AC_HELP_STRING([--disable-confirm], [don't enable confirm dialogs]) )
+if test "$enable_confirm" = "no"; then
+	AC_DEFINE(DISABLE_CONFIRM, 1, [Define to disable confirm dialogs])
+fi
+
+# Icon Support (libXpm)
+AC_ARG_ENABLE(icons,
+	AC_HELP_STRING([--disable-icons], [don't enable icon support]) )
+if test "$enable_icons" != "no"; then
+	AC_CHECK_HEADERS([X11/xpm.h], [],
+		[
+			enable_icons="no";
+			AC_MSG_WARN([unabled to use X11/xpm.h, disabling icon support])
+		])
+fi
+if test "$enable_icons" != "no"; then
+	AC_CHECK_LIB(Xpm, XpmReadFileToImage,
+		[ LDFLAGS="$LDFLAGS -lXpm"
+			AC_DEFINE(USE_ICONS, 1, [Define to enable icon support]) ],
+		[ AC_MSG_WARN([unable to use libXpm, disabling icon support]) ])
+fi
+
+# Shape extension
+AC_ARG_ENABLE(shape,
+	AC_HELP_STRING([--disable-shape], [don't use the X shape extension]) )
+if test "$enable_shape" != "no"; then
+	AC_CHECK_LIB(Xext, XShapeCombineRectangles,
+		[ LDFLAGS="$LDFLAGS -lXext"
+		  AC_DEFINE(USE_SHAPE, 1, [Define to enable the X shape extension]) ],
+		[ AC_MSG_WARN([unable to use the X shape extension]) ])
+fi
+
+# Xinerama
+AC_ARG_ENABLE(xinerama,
+	AC_HELP_STRING([--disable-xinerama], [don't use Xinerama]) )
+if test "$enable_xinerama" != "no"; then
+	AC_CHECK_LIB(Xinerama, XineramaQueryExtension,
+		[ LDFLAGS="$LDFLAGS -lXinerama"
+		  AC_DEFINE(USE_XINERAMA, 1, [Define to enable Xinerama]) ],
+		[ AC_MSG_WARN([unable to use Xinerama]) ])
+fi
+
+# Load display
+AC_ARG_ENABLE(load,
+	AC_HELP_STRING([--disable-load], [don't show a load meter]) )
+if test "$enable_load" != "no" ; then
+	AC_DEFINE(SHOW_LOAD, 1, [Define to enable the load meter])
+	if test `uname` = "SunOS" ; then
+		AC_CHECK_LIB([kstat], kstat_open,
+			[ LDFLAGS="$LDFLAGS -lkstat" ],
+			[ AC_MSG_ERROR([libkstat not found]) ])
+	fi
+fi
+
+# Debug
+AC_ARG_ENABLE(debug,
+	AC_HELP_STRING([--enable-debug], [use this to debug JWM]) )
+if test "$enable_debug" = "yes"; then
+	AC_DEFINE(DEBUG, 1, [Define to debug JWM])
+	CFLAGS="$CFLAGS -Wall -pedantic -ansi -g -DDEBUG"
+	LDFLAGS="$LDFLAGS -g"
+fi
+
+if test "$prefix" = "NONE" ; then
+	PREFIX="$ac_default_prefix"
+	prefix="$ac_default_prefix"
+else
+	PREFIX="$prefix"
+fi
+
+if test "$exec_prefix" = "NONE" ; then
+	exec_prefix="$PREFIX"
+fi
+
+if test "$sysconfdir" = "" ; then
+	sysconfdir="$ac_default_sysconfdir"
+fi
+
+if `uname -p 2> /dev/null ; echo $?` = "0" ; then
+	ARCH=`uname -p`
+else
+	ARCH=`uname -m`
+fi
+
+BINDIR=`eval echo \""$bindir"\"`
+SYSCONF=`eval echo \"$sysconfdir\"`
+MANDIR=`eval echo \"$mandir\"`
+
+AC_DEFINE_UNQUOTED(SYSTEM_CONFIG, "$SYSCONF/system.jwmrc",
+	[default system configuration path])
+
+OSNAME=`uname | tr "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "abcdefghijklmnopqrstuvwxyz"`
+OSNAME=`echo $OSNAME | tr -dc "abcdefghijklmnopqrstuvwxyz0123456789"`
+if test ! -r "src/os/$OSNAME.c" ; then
+	OSNAME="unsupported"
+fi
+echo "defining $OSNAME as the machine type"
+
+AC_SUBST(CFLAGS)
+AC_SUBST(LDFLAGS)
+AC_SUBST(VERSION, "$PACKAGE_VERSION")
+AC_SUBST(INSTVERSION, `echo $PACKAGE_VERSION | tr -d .`)
+AC_SUBST(BINDIR)
+AC_SUBST(MANDIR)
+AC_SUBST(DATE, `date "+%Y-%m-%d"`)
+AC_SUBST(SYSCONF, "$SYSCONF")
+AC_SUBST(OSNAME, "$OSNAME")
+AC_SUBST(ARCH)
+
+AC_OUTPUT(
+
+	Makefile src/Makefile jwm.1
+
+	package/irix/jwm.spec package/irix/jwm.idb package/irix/Makefile
+
+	package/solaris/Makefile package/solaris/pkginfo package/solaris/prototype
+
+	package/slackware/Makefile package/slackware/slack-desc
+
+)
+

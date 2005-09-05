@@ -1,0 +1,459 @@
+
+Todo:
+	- Add load status support for AIX, HPUX, ...
+	- More support for GNOME, Motif, and WMSpec hints.
+	- Add some way to remember window states.
+
+20050904:
+	- "make install" no longer installs a .jwmrc to $HOME.
+	- Fixed a bug with moving shaded windows with snapping.
+
+20050901:
+	- Updated the man page with many changes from Joe Wiles.
+	- Made restarting and exiting more responsive.
+
+20050828:
+	- Fixed a bug related to stacking order with "click" focus.
+	- Added the ability to restart and exit JWM by sending the _JWM_RESTART
+	  and _JWM_EXIT hints respectively.
+	- Added the ability to have "jwm" send _JWM_RESTART and _JWM_EXIT via
+	  the -restart and -exit command line options respectively.
+
+20050826:
+	- Added the ability to have menu labels with labeled="true".
+	- Added the ability to disable clicking the root to show the
+	  root menu with onroot="false".
+	- Added some Xinerama support.
+	- Added StartupCommand and ShutdownCommand to the configuration as 
+	  commands to be run when JWM starts and stops respectively.
+	- Added a slight border to the tray.
+
+20050803:
+	- Fixed memory leaks that happen when JWM is unable to start.
+
+20050524:
+	- Changed "VERISON=" to "VERSION=" in the slackware Makefile.in.
+
+20050522:
+	- Added key bindings for "exit" and "restart".
+	- Added the ability to parse environment variables within "Include" tags.
+	- Released v0.23.
+
+20050520:
+	- Fixed menu alignment problem on empty desktops (toomyem).
+	- Fixed --disable-confirm.
+	- Fixed problem with the entire tray not showing up when JWM is started
+	  with no windows.
+	- Now menus that are too big to fit on the screen will go over the
+	  task bar.
+
+20050423:
+	- Now maximizing a window takes advantage of the whole screen if
+	  the tray is set to auto hide (Michael Rogers).
+	- Improved startup/shutdown order. This fixes a intermittent bug
+	  that could cause a crash on restart or exit.
+	- Added the ability to specify a clock format.
+
+20050328:
+	- Fixed compile-time warning in border.c.
+	- Added the "nolist" group option.
+	- Fixed memory leak in icon.c.
+
+20050327:
+	- Fixed icon loading in menus when the icon is nonexistent.
+
+20050206:
+	- Changed menu icons so they are no longer scaled.
+	- Added the ability to specify a max width for tray items.
+	- Added the ability to specify how items are added to the tray.
+
+20050205:
+	- Added a configuration option to disable the exit confirm dialog.
+	- Fixed a minor error in the calculation of the load bars for the
+	  load graph.
+
+20050117:
+	- Fixed menu offsets when submenus are below a separator.
+	- Added a compile-time option to disable confirm dialogs for
+	  exiting and killing windows.
+
+20050112:
+	- Released v0.21.
+
+20050110:
+	- Improved the icon support to be more platform independent.
+	- Added a group option: "icon:".
+
+20050107:
+	- Now makes the directory for system.jwmrc if it doesn't already
+	  exist for "make install".
+
+20050106:
+	- Released v0.20.
+
+20050103:
+	- Added "Width" and "Alignment" options for the tray.
+	- Added the ability to disable the "Start" button by specifying an
+	  empty label without an icon.
+
+20041231:
+	- Added icon support.
+
+20041215:
+	- Released v0.19.
+
+20041214:
+	- Added support for _NET_WM_WINDOW_TYPE_DESKTOP. This allows graphical
+	  file managers such as Nautilus to control the root.
+
+20041210:
+	- Added the option to move and/or resize with only an outline.
+	- Added the ability to start another window manager via the exit
+	  menu item.
+
+20041207:
+	- Added group option for layer and desktop.
+
+20041203:
+	- Removed the dependence on Xm/MwmUtil.h.
+	- Exit and Restart menu items can now have different labels.
+	- "FocusNext" no longer focuses minimized or shaded windows.
+	- Tray is now one pixel when hidden instead of two.
+
+20041201:
+	- Added the ability to change the root menu button label.
+	- The clock is now the correct width.
+	- Minor fix to the snap-to-border algorithm.
+	- Clicking a tray button now only minimizes the client if it is
+	  at the top level of its layer (as well as active).
+
+20041128:
+	- Added program groups based on title and class. Sticky option supported.
+	- Fixed the problem with long window titles running into the buttons.
+
+20041127:
+	- Released v0.18.
+
+20041126:
+	- Fixed font antialiasing with 8-bit color.
+	- Now skips out-dated mouse motion events.
+	- Added "exec:" key binding.
+	- No longer double-buffers drawing borders.
+	- The load status display's width is now proportional to the
+	  tray height.
+
+20041125:
+	- Fixed the problem with text overflowing with 'antialias="false"'
+
+20041113:
+	- Added snap-to-border snap mode ("border" option).
+	- Fixed a problem with restarting JWM that caused borders to not
+	  be redrawn.
+	- Fixed an error in the calculation of time differences.
+
+20041030:
+	- Fixes to click-to-focus model (Terry Loveall).
+	- FocusNext now skips transients.
+
+20041029:
+	- Added configuration options for snap mode and and snap distance.
+
+20041024:
+	- Snap to edge of screen implemented for moving windows (Terry Loveall).
+
+20041010:
+	- Fixed time format on the clock popup.
+
+20041009:
+	- Released v0.17.
+
+20041003:
+	- Added configurable popup status windows to the tray.
+	- Fixed an issue with key bindings.
+
+20040926:
+	- Added the ability to build IRIX tardists to configure.
+	- Fixed (?) an issue with minimizing windows with unmapped transients.
+	- Created a man page.
+
+20040923:
+	- Window placement for windows with an unspecified starting position
+	  now attempts to cascade windows.
+
+20040922:
+	- Added the option to run a program when the load status is clicked
+	  or when the clock is clicked.
+
+20040919:
+	- Released v0.16.
+
+20040918:
+	- Changed behavior of "FocusNext" so it no longer raises minimized
+	  windows. (Suggested by Terry Loveall.)
+
+20040914:
+	- Added the option for "click to focus" (Terry Loveall).
+	- Added configuration option for focus model: "click" or "sloppy".
+	- Added "autohide" option for the tray (Terry Loveall).
+
+20040907:
+	- Fixed a bug in computing the colors for antialiasing.
+
+20040905:
+	- Fixed another layering issue.
+
+20040831:
+	- Fixed a layering issue that could crash JWM.
+	- Improved the configure script.
+	- Released v0.15.
+
+20040828:
+	- Fixed a potential bug in lex.c.
+
+20040823:
+	- Improved antialiasing to use fewer colormap entries.
+
+20040822:
+	- Improved configuration to be cleaner and allow more options.
+
+20040821:
+	- Added support for WM_COLORMAP_WINDOWS.
+
+20040820:
+	- Fixed the configure script to recognize platforms without GNU tr.
+
+20040803:
+	- Released v0.14.
+
+20040802:
+	- Added a configuration option for the height of the tray.
+
+20040801:
+	- Minimized windows now have a small icon instead of brackets.
+	- Improved drawing of borders.
+	- No longer shows marks on shaded window borders.
+	- Fixed behaviour of cursor over a shaded frame.
+
+20040731:
+	- Fixed mouse cursor issue with some applications (xpdf).
+	- Optimized drawing of border buttons.
+
+20040730:
+	- Mouse scroll wheel can now scroll through desktops when over the pager.
+
+20040718:
+	- Improved handling of Expose events.
+
+20040717:
+	- Released v0.13.
+
+20040716:
+	- Improved layer support.
+
+20040715:
+	- Improved the speed of interal window lookups.
+
+20040713:
+	- Fixed a few bugs related to Configure events.
+	- More hint support.
+
+20040709:
+	- Cleaned up/fixed hint stuff. This fixes many problems.
+
+20040705:
+	- Fixed reading of the _NET_WM_STATE hint.
+
+20040630:
+	- Improved the look of the move/resize window.
+
+20040626:
+	- Fixed loading of a default configuration file when a local one is
+	  not found.
+	- Released v0.12
+
+20040625:
+	- Fixed a bug which caused high CPU loads (PropertyNotify loop).
+
+20040611:
+	- Cleaned up window hints stuff. Still more to do.
+	- Changed the color of the "JWM" button.
+
+20040610:
+	- Now debug mode compiles with -pedantic and -ansi.
+	- Made the menus look 3d.
+
+20040609:
+	- Added debug checkpoints for Xlib functions.
+
+20040608:
+	- No longer displays title buttons if they won't fit.
+
+20040602:
+	- Improved resizing so windows aren't redrawn unnecessarily.
+	- Now accepts PropertyNotify for WM_PROTOCOLS hint.
+	- Now makes an extra attempt at sending WM_DELETE_WINDOW before
+	  resorting to killing the client.
+	- Fix behavior for move on title bars without any buttons.
+
+20040530
+	- Added a confirm dialog for killing a window and for closing windows
+	  that don't listen for the WM_DELETE_WINDOW hint.
+	- Added a confirm dialog for exiting JWM.
+
+20040528:
+	- No longer shows marks on the edges of windows that can't be resized.
+
+20040525:
+	- Fixed "make install"
+	- Fixed an off-by-one-pixel problem when drawing the tray.
+
+20040519:
+	- Fixed a bug in the menu code.
+	- Added load status support for MacOS X.
+	- Released v0.11.
+
+20040518:
+	- Fixed a type consistancy issue in font.c.
+	- Improved menu selections over slow X11 connections.
+
+20040516:
+	- Fixed the load/time so that it no longer flickers.
+
+20040514:
+	- Made the separator on the menus look better.
+	- Improved shape extension support, still some issues.
+	- Now configure does a proper check for MwmUtils.h.
+	- Added a default configuration file in a standard location for
+	  users that don't have a local configuration file.
+	- Released v0.10.
+
+20040513:
+	- Mouse now activates window buttons on release rather than press.
+	- Handle expose event on menus.
+
+20040511:
+	- Now correctly grabs the root window and tray.
+	- Can now change desktops with [modifiers]+[number] ('#').
+	- Improved the way colors for the border outlines are calculated.
+	- Changed the look of the pager.
+
+20040510:
+	- Fixed a compiler warning in event.c
+	- Added option to enable antialiasing in the configuration file.
+	- Added the ability to change the height of the title bar.
+	- Added arrows to indicate submenus.
+	- Now menus listen for a button release rather than a button press.
+	- Fixed a stacking problem when a window was above the tray in
+	  the stacking order.
+	- Can now use the scroll wheel to move through menus.
+
+20040509:
+	- Now restacks clients after changing desktops.
+	- Correctly updates the "sticky" desktop hint on client windows.
+	- Reads the current desktop hint from the root window at startup.
+	- Added text antialiasing.
+
+20040504:
+	- Can now use the mouse to move windows when using the keyboard.
+	- Can now use the mouse to resize windows when using the keyboard.
+	- Now hides the menu before executing a menu command.
+	- Released v0.9.
+
+20040502:
+	- Added "Kill" option to the window menu.
+	- Removed some unnecessary code.
+	- Improved memory usage for window stacking.
+
+20040427:
+	- Added the ability to map keys to window functions.
+
+20040424:
+	- Added the ability to resize/move windows with the keyboard.
+
+20040423:
+	- Added load status support for Solaris.
+
+20040420:
+	- Added the ability to shade/unshade windows (double click title).
+	- Added a configuration option for border size.
+	- Fixed a bug when a ConfigureRequest is sent to a shaped window.
+
+20040408:
+	- Now supports internal XML entities.
+	- Fixed window title overridding the title buttons.
+	- Fixed submenu behavior when mouse is on the edge of the parent menu.
+	- Released v0.8.
+
+20040329:
+	- Fixed(?) window gravity.
+
+20040325:
+	- Fixed a focus problem after displaying menus.
+
+20040323:
+	- Now restacks after a new window is mapped.
+	- Impoved move/resize/menu so that the time/load updates.
+
+20040304:
+	- Released v0.7.
+
+20040303:
+	- Fixed an off-by-one error when calculating the border action type.
+	- Fixed a potential error when a window becomes unmanaged.
+	- Fixed stacking order on startup/restart/exit.
+	- Fixed mouse cursor behavior with some programs (swmgr).
+	- Fixed startup/restart not focusing the window under the mouse.
+	- Should now be able to manage screens other than 0.
+
+20040229:
+	- Fixed a bug in the configuration lexer.
+	- Now only mouse buttons 1,2,3 will raise a window.
+
+20040228:
+	- Fixed a stacking bug related to transient windows.
+
+20040226:
+	- Resize now resizes the window as you move the mouse.
+
+20040225:
+	- Now supports aspect ratios for resizing windows.
+
+20040114:
+	- libXpm is no longer needed.
+	- Added load status support for Linux.
+	- Fixed a bug in the configuration lexer.
+	- Released v0.6.
+
+20040112:
+	- New window decorations.
+	- Fixed most XErrors.
+	- Improved shape extension support.
+
+20040111:
+	- Now JWM uses autoconf.
+
+20040110:
+	- Bug fixes.
+	- Released v0.5.
+
+20040109:
+	- Added some support for GNOME hints.
+	- Added support for window layers.
+
+20040106:
+	- Fixed a bug involving window stacking when switching desktops.
+	- Made desktop-switching "more" ICCCM compliant.
+
+20040105:
+	- Added a graphical pager.
+
+20040105:
+	- Minor bug fixes.
+	- Released v0.4.
+
+20040104:
+	- Added "Alt+Tab" shortcut to switch windows.
+	- Added support for virtual destops
+	- Added a simple pager to the tray.
+	- Added a window menu.
+

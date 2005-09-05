@@ -1,0 +1,37 @@
+
+CC = @CC@
+CFLAGS = @CFLAGS@
+LDFLAGS = @LDFLAGS@
+VERSION = @VERSION@
+BINDIR = @BINDIR@
+OSNAME = @OSNAME@
+
+VPATH=.:os
+
+OBJECTS = border.o button.o client.o color.o command.o confirm.o cursor.o \
+	debug.o event.o error.o font.o global.o group.o help.o hint.o key.o lex.o \
+	load.o main.o match.o menu.o move.o outline.o pager.o parse.o popup.o \
+	resize.o root.o status.o timing.o tray.o winmenu.o $(OSNAME).o icon.o \
+	misc.o screen.o
+
+EXE = jwm
+
+.SUFFIXES: .o .h .c
+
+all: $(EXE)
+
+install: all
+	cp $(EXE) $(BINDIR)/$(EXE)
+
+$(EXE): $(OBJECTS)
+	$(CC) -o $(EXE) $(OBJECTS) $(LDFLAGS)
+
+help.o: help.c
+	$(CC) -c $(CFLAGS) -DVERSION=\"$(VERSION)\" help.c
+
+.c.o: $<
+	$(CC) -c $(CFLAGS) $<
+
+clean:
+	rm -f $(OBJECTS) $(EXE) core
+

@@ -1,0 +1,40 @@
+
+SYSCONF = @SYSCONF@
+MANDIR = @MANDIR@
+
+all:
+	cd src ; $(MAKE) all
+
+install: all
+	cd src ; $(MAKE) install ; cd ..
+	if ! test -e $(SYSCONF)/system.jwmrc ; then \
+		echo "Installing \"example.jwmrc\" to \"$(SYSCONF)/system.jwmrc\"" ; \
+		mkdir -p $(SYSCONF) ; \
+		cp example.jwmrc $(SYSCONF)/system.jwmrc ; \
+	fi
+	mkdir -p $(MANDIR)/man1
+	cp jwm.1 $(MANDIR)/man1/jwm.1
+
+irix-package: all
+	(cd package/irix && $(MAKE))
+
+slackware-package: all
+	(cd package/slackware && $(MAKE))
+
+solaris-package: all
+	(cd package/solaris && $(MAKE))
+
+clean:
+	(cd src && $(MAKE) clean)
+	for x in package/* ; do \
+		(cd $$x && $(MAKE) clean ) ; \
+	done
+
+distclean: clean
+	rm -f *~ config.cache config.log config.status config.h
+	rm -f Makefile src/Makefile jwm.tardist jwm.1
+	rm -fr autom4te.cache
+	for x in package/* ; do \
+		(cd $$x && $(MAKE) distclean ) ; \
+	done
+

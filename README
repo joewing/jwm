@@ -1,0 +1,17 @@
+JWM
+See LICENSE for license information.
+
+> Requirements
+To build JWM you will need a C compiler (gcc works), X11, and the
+"development headers" for X11 and Xlib.
+If available and not disabled at compile time, JWM will also use
+libXext for the shape extension and libXpm for icon support.
+
+> Installation
+Run "./configure --help" for configuration options.
+Run "./configure [options]"
+Run "make" to build JWM.
+Run "make install" to install JWM.
+
+For more information see http://joewing.net
+

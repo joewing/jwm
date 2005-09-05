@@ -1,0 +1,28 @@
+
+ARCH = @ARCH@
+BINDIR = @BINDIR@
+MANDIR = @MANDIR@
+SYSCONF = @SYSCONF@
+VERSION = @VERSION@
+
+PACKAGE_NAME = "jwm-$(VERSION)-solaris-$(ARCH).pkg.tgz"
+
+all:
+	mkdir -p "pkg/$(BINDIR)"
+	mkdir -p "pkg/$(MANDIR)/man1"
+	mkdir -p "pkg/$(SYSCONF)"
+	cp ../../src/jwm "pkg/$(BINDIR)"
+	cp ../../jwm.1 "pkg/$(MANDIR)/man1"
+	cp solaris.jwmrc "pkg/$(SYSCONF)/system.jwmrc"
+	cp prototype pkg
+	cp pkginfo pkg
+	pkgmk -o -r `pwd`/pkg -d `pwd` -f prototype
+	tar -cf - JWM | gzip > $(PACKAGE_NAME)
+
+clean:
+	rm -rf pkg JWM
+
+distclean:
+	rm -f pkginfo prototype Makefile
+	rm -f $(PACKAGE_NAME)
+

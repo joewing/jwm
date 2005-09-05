@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+
+<JWM>
+
+	<!-- The root menu, if this is undefined you will not get a menu. -->
+	<RootMenu>
+		<Program label="Terminal">xterm</Program> 
+		<Menu label="Applications">
+			<Program label="Mozilla">mozilla</Program>
+			<Program label="File Manager">$HOME/bin/fm</Program>
+			<Program label="Gaim">gaim</Program>
+			<Program label="Gimp">gimp</Program>
+			<Program label="XMMS">xmms</Program>
+		</Menu>
+		<Menu label="Utilities">
+			<Program>xfontsel</Program>
+			<Program>xmag</Program>
+		</Menu>
+		<Menu label="Games">
+			<Program label="Doom">/usr/games/doom/doom</Program>
+			<Program label="Doom II">/usr/games/doom2/doom2</Program>
+			<Program label="Hacknoid">/usr/games/hacknoid/run</Program>
+			<Program label="Mines">/usr/games/mines/run</Program>
+			<Program label="Quake II">/usr/games/quake2/quake2</Program>
+		</Menu>
+		<Separator/>
+		<Restart/>
+		<Exit/>
+	</RootMenu>
+
+	<Border>
+		<Font antialias="true">-sgi-rock-*-*-*-*-18-*-*-*-*-*-*-*</Font>
+		<Width>5</Width>
+		<Height>20</Height>
+		<Foreground>black</Foreground>
+		<Background>#DCDAD5</Background>
+		<ActiveForeground>white</ActiveForeground>
+		<ActiveBackground>#3A4956</ActiveBackground>
+	</Border>
+
+	<Tray autohide="false">
+		<Font antialias="true">-sgi-rock-*-*-*-*-18-*-*-*-*-*-*-*</Font>
+		<Height>28</Height>
+		<Foreground>black</Foreground>
+		<Background>#DCDAD5</Background>
+		<ActiveForeground>black</ActiveForeground>
+		<ActiveBackground>#8899AA</ActiveBackground>
+	</Tray>
+
+	<Pager>
+		<Outline>black</Outline>
+		<Foreground>#DCDAD5</Foreground>
+		<Background>#888888</Background>
+		<ActiveForeground>#8899AA</ActiveForeground>
+		<ActiveBackground>#3A4956</ActiveBackground>
+	</Pager>
+
+	<Load>
+		<Program>xload</Program>
+		<Outline>black</Outline>
+		<Foreground>red</Foreground>
+		<Background>#DCDAD5</Background>
+	</Load>
+
+	<Clock>
+		<Program>xclock</Program>
+	</Clock>
+
+	<Popup enabled="true">
+		<Font antialias="true">-sgi-screen-*-r-*-*-15-*-*-*-*-*-*-*</Font>
+		<Outline>black</Outline>
+		<Foreground>black</Foreground>
+		<Background>yellow</Background>
+	</Popup>
+
+	<Menu>
+		<Font antialias="true">-sgi-screen-*-r-*-*-15-*-*-*-*-*-*-*</Font>
+		<Foreground>black</Foreground>
+		<Background>#DCDAD5</Background>
+		<ActiveForeground>white</ActiveForeground>
+		<ActiveBackground>#3A4956</ActiveBackground>
+	</Menu>
+
+	<!-- Number of virtual desktops -->
+	<DesktopCount>4</DesktopCount>
+
+	<!-- Double click speed (in milliseconds) -->
+	<DoubleClickSpeed>400</DoubleClickSpeed>
+
+	<!-- Double click delta (in pixels) -->
+	<DoubleClickDelta>2</DoubleClickDelta>
+
+	<!-- The focus model (sloppy or click) -->
+	<FocusModel>sloppy</FocusModel>
+
+	<!-- Key bindings -->
+	<Key key="Up">up</Key>
+	<Key key="Down">down</Key>
+	<Key key="Right">right</Key>
+	<Key key="Left">left</Key>
+	<Key key="Return">select</Key>
+	<Key key="Escape">escape</Key>
+
+	<Key mask="A" key="Tab">next</Key>
+	<Key mask="A" key="F4">close</Key>
+	<Key mask="A" key="#">desktop#</Key>
+	<Key mask="A" key="F1">root</Key>
+	<Key mask="A" key="F2">window</Key>
+
+</JWM>
+

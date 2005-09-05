@@ -1,0 +1,23 @@
+product jwm
+    id "JWM v@VERSION@ - Joe's Window Manager"
+    image sw
+        id "Software"
+        version @INSTVERSION@
+        order 9999
+        subsys base default
+            id "Base Software"
+            replaces self
+            exp jwm.sw.base
+        endsubsys
+    endimage
+    image man
+        id "Man Pages"
+        version @INSTVERSION@
+        order 9999
+        subsys manpages default
+            id "Man Pages"
+            replaces self
+            exp jwm.man.manpages
+        endsubsys
+    endimage
+endproduct

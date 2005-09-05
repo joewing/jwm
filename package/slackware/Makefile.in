@@ -1,0 +1,27 @@
+
+BINDIR = @BINDIR@
+MANDIR = @MANDIR@
+SYSCONF = @SYSCONF@
+VERSION = @VERSION@
+ARCH = @ARCH@
+
+PACKAGE_FILE = "jwm-$(VERSION)-slackware-$(ARCH).tgz"
+
+all:
+	mkdir -p "pkg/install"
+	mkdir -p "pkg/$(BINDIR)"
+	mkdir -p "pkg/$(MANDIR)/man1"
+	mkdir -p "pkg/$(SYSCONF)"
+	cp ../../src/jwm "pkg/$(BINDIR)"
+	cp ../../jwm.1 "pkg/$(MANDIR)/man1"
+	cp slackware.jwmrc "pkg/$(SYSCONF)/system.jwmrc"
+	cp slack-desc pkg/install
+	cd pkg ; tar -cf - * | gzip > ../$(PACKAGE_FILE) ; cd ..
+
+clean:
+	rm -f $(PACKAGE_FILE)
+	rm -rf pkg
+
+distclean:
+	rm -f slack-desc Makefile
+

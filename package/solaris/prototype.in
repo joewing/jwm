@@ -1,0 +1,4 @@
+i pkginfo
+f none .@BINDIR@/jwm 0755 root root
+f none .@SYSCONF@/system.jwmrc 0644 root root
+f none .@MANDIR@/man1/jwm.1 0644 root root

@@ -1,0 +1,3 @@
+f 0755 root sys .@BINDIR@/jwm ../../src/jwm jwm.sw.base
+f 0644 root sys .@SYSCONF@/system.jwmrc ../../example.jwmrc jwm.sw.base
+f 0644 root sys .@MANDIR@/man1/jwm.1 ../../jwm.1 jwm.man.manpages

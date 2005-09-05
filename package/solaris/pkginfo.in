@@ -1,0 +1,9 @@
+
+PKG="JWM"
+NAME="JWM v@VERSION@"
+VERSION="@INSTVERSION@"
+BASEDIR="/"
+ARCH="@ARCH@"
+CATEGORY="utility"
+EMAIL="joewing@joewing.net"
+

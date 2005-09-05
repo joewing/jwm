@@ -1,0 +1,603 @@
+./"
+./" groff -man -Tascii jwm.1
+./"
+
+.TH jwm 1 "@DATE@" "v@VERSION@"
+.SH NAME
+JWM - Joe's Window Manager
+
+.SH SYNOPSIS
+.BR jwm " [options]"
+.SH DESCRIPTION
+JWM is a window manager for the X11 Window System.
+
+.SH OPTIONS
+\fB\-display\fP \fIdisplay\fP
+.RS
+This option specifies the display to use; see \fBX\fP(1).
+.RE
+.P
+.B "-exit"
+.RS
+Exit JWM by sending _JWM_EXIT to the root window.
+.RE
+.P
+.B "-h"
+.RS
+Display a help message and exit.
+.RE
+.P
+.B "-p"
+.RS
+Parse the configuration file and exit.
+It is a good idea to use this after making modifications to the configuration
+file to ensure there are no errors.
+.RE
+.P
+.B "-restart"
+.RS
+Restart JWM by sending _JWM_RESTART to the root window.
+.RE
+.P
+.B "-v"
+.RS
+Display version information and exit.
+.RE
+
+.SH FILES
+.IP "@SYSCONF@/system.jwmrc"
+The default JWM configuration file.
+.IP "~/.jwmrc"
+Local configuration file. Copy the default configuration file to this
+location to make user-specific changes.
+
+.SH CONFIGURATION
+.B OVERVIEW
+.RS
+Configureation of JWM is done by editing ".jwmrc".  This file is XML
+making it easy to edit, either by hand or programmatically. The
+example.jwmrc gives an example configuration file which specifies all the
+options.  Before restarting JWM, it is a good idea to run "jwm -p" to make
+sure the configuration file is free of errors.  Otherwise you may end up
+without a root menu.
+.RE
+.P
+.B "ROOT MENU"
+.RS
+The root menu in JWM is the primary way of starting programs.
+It also provides a way to restart or exit the window manager.
+The outer most tag is \fBRootMenu\fP. An optional attribute, \fBlabel\fP,
+allows one to specify the name of this menu as shown in the tray.
+If this attribute is not given, "JWM" will be used.  The \fBicon\fP
+attribute allows one to specify and icon to appear with the menu name.
+Within this tag the following tags are supported:
+.P
+.B Menu
+.RS
+This tag creates a submenu item. Any of the tags allowed within the 
+\fBRootMenu\fP tag, including the \fBMenu\fP tag are allowed within this
+element. The \fBlabel\fP arrtibute specifies the name of the submenu. The 
+\fBicon\fP attribute allows one to specify and icon for this submenu.
+.RE
+.P
+.B Program
+.RS
+The \fBProgram\fP tag provides a way to start an external program. The text
+in this tag is the command used to start he program. An optional attribute, 
+\fBlabel\fP, allows one to specify what to show on the menu. If this
+attribute is not given the command is shown. The \fBicon\fP attribute
+allows one to specify an icon for this menu item.
+.RE
+.P
+.B Separator
+.RS
+This tag simply puts a line in the menu allowing menu divisions.
+No text or attributes are used.
+.RE
+.P
+.B Restart
+.RS
+This tag adds a menu item to restart the window manager. An optional
+attribute, \fBlabel\fP, allows one to specify what to show on the menu.
+If this attribute is not given, "Restart" will be shown. The \fBicon\fP
+attribute allows one to specify an icon for this menu item.
+.RE
+.P
+.B Exit
+.RS
+This tag adds a menu item to exit the window manager.  An optional attribute, 
+\fBlabel\fP, allows one to specify what to show on the menu. If this
+attribute is not given, "Exit" will be shown. If text is specified inside
+this tag it will be interpreted as a command to run when JWM exits.
+This can be used to start another window manager. The \fBicon\fP
+attribute allows one to specify an icon for this menu item.
+Finally, the \fBconfirm\fP attribute allows one to specify whether a
+confirm dialog is displayed after clicking this item. Possible values are 
+\fBtrue\fP and \fBfalse\fP The default is \fBtrue\fP.
+.P
+Note that confirm dialogs can be disabled completely at the compile-time.
+.RE
+.RE
+
+.B INCLUDES
+.RS
+Other configuration files may be included under the JWM tag via the 
+\fBInclude\fP tag.  The text of this tag specifies the location of an
+additional configuration file. The path may be relative to the loacation
+JWM was started, an absolute path, or a path referencing an environment
+variable (using '$'). The format of the configuration file is the same as
+the main configuration file.
+.RE
+
+.B "GROUP SETTINGS"
+.RS
+Program groups allow one to specify options which apply to a group of
+programs by name and/or class. A program group is created with the 
+\fBGroup\fP tag. As many program groups can be created as desired. Within the 
+\fBGroup\fP tag the following tags are supported:
+.P
+.B Name
+.RS
+The title of a program to match to be in this group. This field is case
+sensitive. a wild card, \fB*\fP, may be used.
+.RE
+.B Class
+.RS
+The window class for a program to match to be in this group. This field is
+case sensitive. A wild card, \fB*\fP, may be used.
+.RE
+.B Option
+.RS
+An option for this group. Possible options are given below:
+.RE
+.P
+\fBdesktop:\fP\fI#\fP
+.RS
+The desktop on which windows in this group will be started.
+.RE
+.P
+\fBicon:\fP\fIimage.xpm\fP
+.RS
+The icon to be used for windows in this group.
+.RE
+.P
+.\fBlayer:\fP\fI#\fP
+.RS
+The layer on which windows in this group will be started.
+.RE
+.P
+.B nolist
+.RS
+Causes the tray to ignore windows in this group.
+.RE
+.P
+.B sticky
+.RS
+Make windows in this group sticky.
+.RE
+.RE
+
+.B "BORDER SETTINGS"
+.RS
+The \fBBorder\fP tag controls the look of window borders. Within this tag,
+the following tags are supported:
+.P
+.B Font
+.RS
+The font used for title bars. See Fonts section for more information
+.RE
+.P
+.B Width
+.RS
+The width of window borders in pixels. The default is 5, the minimum is 3,
+and the maximum is 32.
+.RE
+.P
+.B Height
+.RS
+The height of window title bars in pixels. The default is 21, the minimum
+is 2, and the maximum is 64.
+.RE
+.P
+.B Foreground
+.RS
+The color of text on inactive title bars. See the \fBCOLORS\fP section for
+more information.
+.RE
+.P
+.B Background
+.RS
+The border background color for inactive borders. See the \fBCOLORS\fP
+section for more information.
+.RE
+.P
+.B ActiveForeground
+.RS
+The color of text on active title bars. See the \fBCOLORS\fP section for
+more information.
+.RE
+.P
+.B ActiveBackground
+.RS
+The border background color for active borders. See the \fBCOLORS\fP
+section for more information.
+.RE
+.RE
+
+.B "TRAY SETTINGS"
+.RS
+The \fBTray\fP tag controls the look of the tray. An optional attribute, 
+\fBautohide\fP, may be specified to turn on or off automatic hidding of
+the tray. Possible values for the \fBautohide\fP attribute are \fBtrue\fP
+and \fBfalse\fP. By default, automatic hidding is disabled.
+An optional attribute, \fBmaxwidth\fP, may be specified to set the maximum
+width of a program in the tray in pixels. The default is 0 (zero), which
+specifies no limit.  Finally, an optional attribute, \fBinsert\fP, may be
+specified to indicate how programs are added to the tray. Possible values are
+\fBright\fP and \fBleft\fP. The default is \fBleft\fP.
+Within the \fBTray\fP tag, the following tags are supported:
+.P
+.B Font
+.RS
+The font used on the tray. See the \fBFONTS\fP section for more information.
+.RE
+.P
+.B Height
+.RS
+The height of the tray in pixels. The default is 28, the minimum is 8,
+and the maximum is 128.
+.RE
+.P
+.B Width
+.RS
+The width of the tray in pixels. The default is 0 (zero) indicating full
+screen width, the minimum is 320.
+.RE
+.P
+.B Alignment
+.RS
+The horizontal alignment of the tay. Possible values are \fBleft\fP,
+\fBcenter\fP, and \fBright\fP. The default value is \fBcenter\fP.
+.RE
+.P
+.B Foreground
+.RS
+The text color of inactive items on the tray. See the \fBCOLORS\fP section
+for more information.
+.RE
+.P
+.B Background
+.RS
+The background color of inactive items on the tray. See the \fBCOLORS\fP
+section for more information.
+.RE
+.P
+.B ActiveForeground
+.RS
+The text color of active items on the tray. See the \fBCOLORS\fP section
+for more information.
+.RE
+.P
+.B ActiveBackground
+.RS
+The bacground color of active items on the tray. See the \fBCOLORS\fP
+section for more information.
+.RE
+.RE
+
+.B "PAGER SETTINGS"
+.RS
+The \fBPager\fP tag controls the look of the pager on the tray. Within
+this tag the following tags are supported:
+.P
+.B Outline
+.RS
+The color of the outline around windows shown in the pager. See the
+\fBCOLORS\fP section for more information.
+.RE
+.P
+.B Foreground
+.RS
+The color of inactive windows shown in the pager. See the \fBCOLORS\fP
+section for more information.
+.RE
+.P
+.B Background
+.RS
+The background color of inactive desktops shown in the pager. See the
+\fBCOLORS\fP section for more information.
+.RE
+.P
+.B ActiveForeground
+.RS
+The color of active windows shown in the pager. See the \fBCOLORS\fP section
+for more information.
+.RE
+.P
+.B ActiveBackground
+.RS
+The color of active desktops shown in the pager. See the \fBCOLORS\fP
+section for more information.
+.RE
+.RE
+
+.B "LOAD SETTINGS"
+.RS
+The \fBLoad\fP tag controls the look of the load status graph on the tray
+(note that this is an optional feature at compile time and is only supported
+on some platforms). Within this tag, the following tags are supported:
+.P
+.B Outline
+.RS
+The color of scale lines. See the \fBCOLORS\fP section for more information.
+.RE
+.P
+.B Foreground
+.RS
+The foreground color of the load graph. See the \fBCOLORS\fP section for
+more information.
+.RE
+.P
+.B Background
+.RS
+The background color of the load graph. See the \fBCOLORS\fP section for more
+information.
+.RE
+.RE
+
+.B "CLOCK SETTINGS"
+.RS
+The \fBClock\fP tag controls the look of the clock on the tray. This tag
+has an optional attribute, \fBformat\fP, which specifies the format of the
+clock (See "man strftime" for formatting options). Within this tag, the
+following tag is supported:
+.P
+.B Program
+.RS
+The program to launch when the clock is clicked.
+.RE
+.RE
+
+.B "MENU SETTINGS"
+.RS
+The \fBMenu\fP tag controls the look of the menus in JWM
+(this includes the root menu and window menus). Within this tag, the
+following tags are supported:
+.P
+.B Font
+.RS
+The font used on menus See the \fBFONTS\fP section for more information.
+.RE
+.P
+.B Foreground
+.RS
+The text color of inactive menu items. See the \fBCOLORS\fP section for more
+information.
+.RE
+.P
+.B Background
+.RS
+The background color of inactive menu items. See the \fBCOLORS\fPsection for
+more information.
+.RE
+.P
+.B ActiveForeground
+.RS
+The text color of active menu items. See the \fBCOLORS\fP section for more
+information.
+.RE
+.P
+.B ActiveBackground
+.RS
+Text background color of active menu items. See the \fBCOLORS\fP section
+for more information.
+.RE
+.RE
+
+.B FONTS
+.RS
+Fonts for various parts of JWM are specified within a \fBFont\fP tag. The
+text of this tag determines the font to use. This is a standard X font string.  To easily generate such a string, use the "xfontsel" program. An optional
+attribute, \fBantialias\fP, may be specified to turn on or off antialiasing
+for this font. By default, antialiasing is enabled. Valid values for the 
+\fBantialias\fP attribute are \fBtrue\fP and \fBfalse\fP.
+.RE
+
+.B COLORS
+.RS
+Colors for various parts of JWM are specified within specific tags
+(discribed above). Colors may either be hex triplets in RGB format
+(for example, #FF0000 is red) or by a name recognized by the X server.
+.RE
+
+.B ICONS
+.RS
+Icons for windows that don't supply an icon via the _NET_WM_ICON hint are
+located by searching the icon search path(s) for an icon whose name
+(minus the ".xpm" extension) matches the instance name of the window as
+returned in the WM_CLASS hint. If this lookup fails, a default icon is
+supplied. This icon will be displayed for the window on it's title bar and
+on the task bar. Icons that are not an appropriate size as determined by
+taking the minimum of the title bar height and the tray height will be scaled.  Square icons work best.
+.P
+For menu items, the icon path is searched for a match. the icon specified for
+a menu item must be the exact name of the icon file with the extension.
+If no match is found, a blank area will appear where the icon should appear.
+If an icon is not specified for any menu item in a menu, no space will be
+allocated for icons.
+.P
+Icon properties are contained within the \fBIcons\fP tag. Within this tag,
+zero or more \fBIconPath\fP tags may be specified. The text of this tag is
+assumed to be an absolute directory path to a directory containing XPM icons.
+When searching for icons, if multiple paths are provided, they will be
+searched in order until a match is made.
+.RE
+
+.B "KEY BINDINGS"
+.RS
+Keyboard bindings in JWM are specified in \fBKey\fP tags. The required
+attribute, \fBkey\fP, specifies which key will cause an action. The optional
+attribute, \fBmask\fP, specifies what key mask, if any, must be in effect
+for the binding to match. Finally, the text of the \fBKey\fP tag is the
+action to perform.
+.P
+One or more of the following key masks may be specified for \fBmask\fP:
+.RS
+.IP \fBA\fP
+The "Alt" key.
+.IP \fBC\fP
+Control
+.IP \fBS\fP
+Shift
+.IP \fBH\fP
+Hyper
+.IP \fBM\fP
+Meta
+.IP \fBP\fP
+Super
+.RE
+.P
+The key specified in the \fBkey\fP attribute must contain a valid key
+string for \fBXStringToKeysym\fP(3). These values are usually what one would
+expect (for example, the escape key is called "Escape").
+.P
+Valid actions for a key binding are:
+.RS
+.IP \fBup\fP
+Move up. Not grabbed.
+.IP \fBdown\fP
+Move down. Not grabbed.
+.IP \fBright\fP
+Move right. Not grabbed.
+.IP \fBleft\fP
+Move left. Not grabbed.
+.IP \fBescape\fP
+Stop a move/resize or exit a menu. Not grabbed.
+.IP \fBselect\fP
+Make a menu selection. Not grabbed.
+.IP \fBnext\fP
+Move to the next window. Grabbed.
+.IP \fBclose\fP
+Close the active window. Grabbed.
+.IP \fBminimize\fP
+Minimize the active window. Grabbed.
+.IP \fBmaximize\fP
+Maximize the active window. Grabbed.
+.IP \fBshade\fP
+Shade the active window. Grabbed.
+.IP \fBmove\fP
+Move the active window. Grabbed.
+.IP \fBresize\fP
+Resize the active window. Grabbed.
+.IP \fBroot\fP
+Show the root menu. Grabbed.
+.IP \fBwindow\fP
+Show the window menu for the active window. Grabbed.
+.IP \fBdesktop\fP
+Switch to the next desktop. Grabbed.
+.IP \fBdesktop#\fP
+Switch to a specific desktop. To use this, "#" must be specified in
+the key section. The number 1 to the number of desktops configured
+are then substituted for "#". Grabbed.
+.IP \fBexec:\fP\fIcommand\fP
+Execute \fIcommand\fP. Grabbed.
+.IP \fBrestart\fP
+Restart JWM. Grabbed.
+.RE
+.P
+Note that keys that are grabbed will not be available to applications other
+than JWM since JWM will interpret these. Also note that there are no
+default key bindings. Finally, it is possible to bind multiple key
+combinations to the same action.
+.RE
+
+.B "MOUSE BINDINGS"
+.RS
+Note that in the future this may be configurable.
+.RE
+.P
+.RS
+Any button on the root window will bring up the root menu.
+.RE
+.P
+.RS
+The right button will show the window menu on the frame.
+.RE
+.P
+.RS
+The left button will resize if on the border or move if in the title bar.
+.RE
+.P
+.RS
+The middle button will move anywhere on the frame.
+.RE
+.P
+.RS
+A double click on the title bar of a window will toggle shading.
+The mouse wheel will move through menus when a menu is open, show the root
+menu when over root, or switch desktops when over the pager.
+.RE
+
+.B "OTHER SETTINGS"
+.P
+.RS
+The following tags may also be supplied:
+.B DesktopCount
+.RS
+The number of desktops. The default is 4. Valid values are between 1 and 8
+inclusive.
+.RE
+.P
+.B DoubleClickDelta
+.RS
+The number of pixels the mouse can move during a double click.
+The default is 2. Valid values are between 0 and 32 inclusive.
+.RE
+.P
+.B DoubleClickSpeed
+.RS
+The maximum number of milliseconds between clicks for a double click.
+The default is 400. Valid values are between 1 and 2000 inclusive.
+.RE
+.P
+.B FocusModel
+.RS
+The focus model to be used. The default is "sloppy". Valid values
+are "click" (click to focus) and "sloppy" (focus follows mouse).
+.RE
+.P
+.B MoveMode
+.RS
+The move mode. The default is "opaque". Valid values are
+"opaque" and "outline".
+.RE
+.P
+.B ResizeMode
+.RS
+The resize mode. The default is "opaque". Valid values are
+"opaque" and "outline".
+.RE
+.P
+.B SnapMode
+.RS
+The snap mode. The default is "border". Valid values are
+"none", "screen", and "border". An optional attribute, \fBdistance\fP,
+specifies the distance for snapping. The default is 5. Valid values
+are between 1 and 32 inclusive.
+.RE
+.RE
+.P
+
+.SH BUGS
+Please report all bugs to http://joewing.net/board/index.php in the
+JWM forum.  Membership to post is required. Membership is free.
+
+.SH AUTHOR
+Joe Wingbermuehle <joewing@joewing.net>
+
+.SH MAINTAINER
+Joe Wiles <joesboxd3b@gmail.com>
+
+.SH "SEE ALSO"
+.BR X (1)
+

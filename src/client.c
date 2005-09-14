@@ -1257,6 +1257,7 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	attr.event_mask = ButtonPressMask | ButtonReleaseMask | ExposureMask
 		| PointerMotionMask | SubstructureRedirectMask | SubstructureNotifyMask
 		| EnterWindowMask | LeaveWindowMask | KeyPressMask;
+	attr.do_not_propagate_mask = ButtonPressMask | ButtonReleaseMask;
 	attr.background_pixel = colors[COLOR_BORDER_BG];
 
 	if(np->borderFlags & BORDER_OUTLINE) {
@@ -1278,7 +1279,9 @@ void ReparentClient(ClientNode *np, int notOwner) {
 
 	np->parent = JXCreateWindow(display, rootWindow,
 		x, y, width, height, 0, rootDepth, InputOutput,
-		rootVisual, CWOverrideRedirect | CWBackPixel | CWEventMask, &attr);
+		rootVisual,
+		CWOverrideRedirect | CWBackPixel | CWEventMask | CWDontPropagate,
+		&attr);
 	np->parentGC = JXCreateGC(display, np->parent, 0, NULL);
 
 	JXSetWindowBorderWidth(display, np->window, 0);

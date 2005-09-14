@@ -652,7 +652,7 @@ void DrawTray() {
 	/* Draw top bevel (this is done directly on the tray). */
 	JXSetForeground(display, trayGC, colors[COLOR_TRAY_DOWN]);
 	JXFillRectangle(display, trayWindow, trayGC, 0, 0,
-		trayWidth - 1, TRAY_BEVEL);
+		trayWidth, TRAY_BEVEL);
 
 	SetButtonDrawable(buffer, bufferGC);
 	SetButtonFont(FONT_TRAY);

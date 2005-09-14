@@ -9,6 +9,41 @@
  ****************************************************************************/
 void DisplayAbout() {
 	printf("JWM v%s by Joe Wingbermuehle\n", VERSION);
+	DisplayCompileOptions();
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void DisplayCompileOptions() {
+
+	printf("compiled options: ");
+
+#ifndef DISABLE_CONFIRM
+	printf("confirm ");
+#endif
+
+#ifdef DEBUG
+	printf("debug ");
+#endif
+
+#ifdef USE_ICONS
+	printf("icons ");
+#endif
+
+#ifdef SHOW_LOAD
+	printf("load ");
+#endif
+
+#ifdef USE_SHAPE
+	printf("shape ");
+#endif
+
+#ifdef USE_XINERAMA
+	printf("xinerama ");
+#endif
+
+	printf("\nsystem configuration: %s\n", SYSTEM_CONFIG);
+
 }
 
 /****************************************************************************

@@ -7,6 +7,7 @@
 #define HELP_H
 
 void DisplayAbout();
+void DisplayCompileOptions();
 void DisplayHelp();
 void DisplayUsage();
 

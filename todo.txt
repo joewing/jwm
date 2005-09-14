@@ -3,6 +3,13 @@ Todo:
 	- Add load status support for AIX, HPUX, ...
 	- More support for GNOME, Motif, and WMSpec hints.
 	- Add some way to remember window states.
+	- Make windows larger than the X desktop behave in a more sane manner.
+
+20050913:
+	- Added the "tarball" option to make and made "distclean" do more cleaning.
+
+20050905:
+	- Fixed (?) mouse clicks going through some windows.
 
 20050904:
 	- "make install" no longer installs a .jwmrc to $HOME.

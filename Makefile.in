@@ -1,6 +1,7 @@
 
 SYSCONF = @SYSCONF@
 MANDIR = @MANDIR@
+VERSION = @VERSION@
 
 all:
 	cd src ; $(MAKE) all
@@ -14,6 +15,15 @@ install: all
 	fi
 	mkdir -p $(MANDIR)/man1
 	cp jwm.1 $(MANDIR)/man1/jwm.1
+
+tarball:
+	rm -f ../jwm-$(VERSION).tar.bz2 ;
+	rm -fr ../jwm-$(VERSION) ;
+	cp -r ../jwm ../jwm-$(VERSION) ;
+	(cd ../jwm-$(VERSION) && $(MAKE) distclean) ;
+	(cd .. && tar -cf jwm-$(VERSION).tar jwm-$(VERSION));
+	rm -fr ../jwm-$(VERSION) ;
+	(cd .. && bzip2 jwm-$(VERSION).tar)
 
 irix-package: all
 	(cd package/irix && $(MAKE))
@@ -31,9 +41,10 @@ clean:
 	done
 
 distclean: clean
-	rm -f *~ config.cache config.log config.status config.h
-	rm -f Makefile src/Makefile jwm.tardist jwm.1
-	rm -fr autom4te.cache
+	rm -f *~ config.cache config.log config.status config.h ;
+	rm -f Makefile src/Makefile jwm.tardist jwm.1 ;
+	rm -fr autom4te.cache ;
+	rm -fr `find . \( -name .svn -o -name .gdb_history \) -print` ;
 	for x in package/* ; do \
 		(cd $$x && $(MAKE) distclean ) ; \
 	done

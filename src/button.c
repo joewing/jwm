@@ -69,9 +69,9 @@ void DrawButton(int x, int y, ButtonType type, const char *str) {
 		break;
 	case BUTTON_TRAY:
 		ramp = RAMP_TRAY;
-		outlinePixel = colors[COLOR_BORDER_DOWN];
-		topPixel = colors[COLOR_BORDER_UP];
-		bottomPixel = colors[COLOR_BORDER_DOWN];
+		outlinePixel = colors[COLOR_TRAY_DOWN];
+		topPixel = colors[COLOR_TRAY_UP];
+		bottomPixel = colors[COLOR_TRAY_DOWN];
 		break;
 	case BUTTON_TRAY_ACTIVE:
 		ramp = RAMP_TRAY_ACTIVE;

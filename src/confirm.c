@@ -188,7 +188,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 
 	ComputeDimensions(dp);
 
-	attrs.background_pixel = colors[COLOR_BORDER_BG];
+	attrs.background_pixel = colors[COLOR_TRAY_BG];
 	attrs.event_mask = ButtonReleaseMask | ExposureMask;
 
 	window = JXCreateWindow(display, rootWindow,

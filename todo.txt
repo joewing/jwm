@@ -5,6 +5,10 @@ Todo:
 	- Add some way to remember window states.
 	- Make windows larger than the X desktop behave in a more sane manner.
 
+20050915:
+	- Fixed the tray using the wrong colors for the button outlines.
+	- Fixed the confirm dialog using the wrong color for the background.
+
 20050913:
 	- Added the "tarball" option to make and made "distclean" do more cleaning.
 

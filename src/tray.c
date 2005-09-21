@@ -176,10 +176,12 @@ void StartupTray() {
 	/* Compute the size of the clock. */
 	temp = Allocate(MAX_CLOCK_LENGTH + 1 + 2);
 	strcpy(temp, GetShortTimeString());
-	strcat(temp, "MM");
-	trayStop = JXTextWidth(fonts[FONT_TRAY], temp, strlen(temp));
-	trayStop += loadWidth + 5;
+	if(strlen(temp)) {
+		strcat(temp, "MM");
+		trayStop = JXTextWidth(fonts[FONT_TRAY], temp, strlen(temp));
+	}
 	Release(temp);
+	trayStop += loadWidth + 5;
 
 	trayTextOffset = (trayHeight / 2)
 		- (fonts[FONT_TRAY]->ascent + fonts[FONT_TRAY]->descent) / 2;

@@ -15,5 +15,7 @@ void DestroyLoadDisplay();
 
 void UpdateLoadDisplay(Window w, GC gc, int xoffset);
 
+void SetLoadEnabled(int e);
+
 #endif
 

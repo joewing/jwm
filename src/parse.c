@@ -16,6 +16,7 @@ static const char *ICON_ATTRIBUTE = "icon";
 static const char *CONFIRM_ATTRIBUTE = "confirm";
 static const char *ANTIALIAS_ATTRIBUTE = "antialias";
 static const char *FORMAT_ATTRIBUTE = "format";
+static const char *ENABLED_ATTRIBUTE = "enabled";
 static const char *LABELED_ATTRIBUTE = "labeled";
 static const char *ONROOT_ATTRIBUTE = "onroot";
 
@@ -758,7 +759,7 @@ void ParsePopup(const TokenNode *tp) {
 
 	Assert(tp);
 
-	aa = FindAttribute(tp->attributes, "enabled");
+	aa = FindAttribute(tp->attributes, ENABLED_ATTRIBUTE);
 	if(aa && !strcmp(aa, FALSE_VALUE)) {
 		SetPopupEnabled(0);
 	} else {
@@ -795,9 +796,18 @@ void ParsePopup(const TokenNode *tp) {
 /***************************************************************************
  ***************************************************************************/
 void ParseLoad(const TokenNode *tp) {
+#ifdef SHOW_LOAD
 	const TokenNode *np;
+	const char *aa;
 
 	Assert(tp);
+
+	aa = FindAttribute(tp->attributes, ENABLED_ATTRIBUTE);
+	if(aa && !strcmp(aa, FALSE_VALUE)) {
+		SetLoadEnabled(0);
+	} else {
+		SetLoadEnabled(1);
+	}
 
 	for(np = tp->subnodeHead; np; np = np->next) {
 		switch(np->type) {
@@ -818,7 +828,7 @@ void ParseLoad(const TokenNode *tp) {
 			break;
 		}
 	}
-
+#endif /* SHOW_LOAD */
 }
 
 /****************************************************************************
@@ -831,6 +841,13 @@ void ParseClock(const TokenNode *tp) {
 
 	aa = FindAttribute(tp->attributes, FORMAT_ATTRIBUTE);
 	SetClockFormat(aa);
+
+	aa = FindAttribute(tp->attributes, ENABLED_ATTRIBUTE);
+	if(aa && !strcmp(aa, FALSE_VALUE)) {
+		SetClockEnabled(0);
+	} else {
+		SetClockEnabled(1);
+	}
 
 	for(np = tp->subnodeHead; np; np = np->next) {
 		switch(np->type) {

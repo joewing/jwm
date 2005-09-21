@@ -9,16 +9,20 @@
 
 int loadWidth = 0;
 
-static int loadHeight = 0;
-
 #ifdef SHOW_LOAD
+
+static int loadEnabled = 1;
+static int loadHeight = 0;
 static float *loads = NULL;
-#endif
+
+#endif /* SHOW_LOAD */
 
 /****************************************************************************
  ****************************************************************************/
 void InitializeLoadDisplay() {
 #ifdef SHOW_LOAD
+
+	loadEnabled = 1;
 
 #endif
 }
@@ -29,13 +33,20 @@ void StartupLoadDisplay() {
 #ifdef SHOW_LOAD
 	int x;
 
-	loadHeight = trayHeight - 4;
-	loadWidth = (loadHeight * rootWidth) / rootHeight;
+	if(loadEnabled) {
 
-	loads = Allocate(loadWidth * sizeof(float));
-	for(x = 0; x < loadWidth; x++) {
-		loads[x] = 0.0;
+		loadHeight = trayHeight - 4;
+		loadWidth = (loadHeight * rootWidth) / rootHeight;
+
+		loads = Allocate(loadWidth * sizeof(float));
+		for(x = 0; x < loadWidth; x++) {
+			loads[x] = 0.0;
+		}
+	} else {
+		loadWidth = 0;
+		loadHeight = 0;
 	}
+
 #endif
 }
 
@@ -66,6 +77,10 @@ void UpdateLoadDisplay(Window w, GC gc, int xoffset) {
 	int loadLines;
 	float divideSize, y;
 	int x;
+
+	if(!loadEnabled) {
+		return;
+	}
 
 	/* Compute the current load. */
 	currentLoad = GetLoad();
@@ -112,4 +127,13 @@ void UpdateLoadDisplay(Window w, GC gc, int xoffset) {
 #endif /* SHOW_LOAD */
 
 }
+
+/****************************************************************************
+ ****************************************************************************/
+void SetLoadEnabled(int e) {
+#ifdef SHOW_LOAD
+	loadEnabled = e;
+#endif /* SHOW_LOAD */
+}
+
 

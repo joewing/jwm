@@ -5,12 +5,15 @@ Todo:
 	- Add some way to remember window states.
 	- Make windows larger than the X desktop behave in a more sane manner.
 	- Add noborder, border, notitle, and title options for Group.
-	- Add "enabled" options for Load and Clock.
 	- Add the ability to change the level of the tray.
 	- Continue work on Xinerama support.
 	- Make JWM able to swallow other applications (like xload) in the tray.
 	- Add an option to make "alt-tabbing" go through the z-stack instead of
 	  the tray.
+
+20050920:
+	- Added an "enabled" option to Load.
+	- Added an "enabled" option to Clock.
 
 20050915:
 	- Fixed the tray using the wrong colors for the button outlines.

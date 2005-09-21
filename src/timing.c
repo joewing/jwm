@@ -8,6 +8,7 @@
 static const unsigned long MAX_TIME_SECONDS = 60;
 
 static char *clockFormat = NULL;
+static int clockEnabled = 1;
 
 /****************************************************************************
  ****************************************************************************/
@@ -46,6 +47,12 @@ void SetClockFormat(const char *f) {
 		clockFormat = Allocate(strlen(f) + 1);
 		strcpy(clockFormat, f);
 	}
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void SetClockEnabled(int e) {
+	clockEnabled = e;
 }
 
 /****************************************************************************
@@ -99,19 +106,25 @@ char *GetShortTimeString() {
 	int x, len;
 	const char *f;
 
-	if(clockFormat) {
-		f = clockFormat;
-	} else {
-		f = DEFAULT_CLOCK_FORMAT;
-	}
+	if(clockEnabled) {
 
-	clock = time(NULL);
-	len = strftime(str, sizeof(str), f, localtime(&clock));
-
-	if(str[0] == '0') {
-		for(x = 0; x < len; x++) {
-			str[x] = str[x + 1];
+		if(clockFormat) {
+			f = clockFormat;
+		} else {
+			f = DEFAULT_CLOCK_FORMAT;
 		}
+
+		clock = time(NULL);
+		len = strftime(str, sizeof(str), f, localtime(&clock));
+
+		if(str[0] == '0') {
+			for(x = 0; x < len; x++) {
+				str[x] = str[x + 1];
+			}
+		}
+
+	} else {
+		str[0] = 0;
 	}
 
 	return str;

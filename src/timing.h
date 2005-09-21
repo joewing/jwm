@@ -21,6 +21,7 @@ char *GetShortTimeString();
 char *GetLongTimeString();
 
 void SetClockFormat(const char *f);
+void SetClockEnabled(int e);
 
 #endif
 

@@ -10,6 +10,8 @@ Todo:
 	- Make JWM able to swallow other applications (like xload) in the tray.
 	- Add an option to make "alt-tabbing" go through the z-stack instead of
 	  the tray.
+	- Fix antialiasing and WMSpec icons on AMD64.
+	- Added a compile time option to disable antialiasing support.
 
 20050920:
 	- Added an "enabled" option to Load.

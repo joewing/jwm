@@ -325,7 +325,10 @@ section for more information.
 .RS
 The \fBLoad\fP tag controls the look of the load status graph on the tray
 (note that this is an optional feature at compile time and is only supported
-on some platforms). Within this tag, the following tags are supported:
+on some platforms). An optional attribute, \fBenabled\fP, determines if the
+load display is shown. Possible values are \fBtrue\fP and \fBfalse\fP. By
+default the load graph is enabled.
+Within this tag, the following tags are supported:
 .P
 .B Outline
 .RS
@@ -347,9 +350,11 @@ information.
 
 .B "CLOCK SETTINGS"
 .RS
-The \fBClock\fP tag controls the look of the clock on the tray. This tag
-has an optional attribute, \fBformat\fP, which specifies the format of the
-clock (See "man strftime" for formatting options). Within this tag, the
+The \fBClock\fP tag controls the look of the clock on the tray.
+An optional attribute, \fBenabled\fP, specifies whether or not the clock
+is displayed. Possible values are \fBtrue\fP and \fBfalse\fP. It is enabled
+by default. Another optional attribute, \fBformat\fP, specifies the format of
+the clock (See "man strftime" for formatting options). Within this tag, the
 following tag is supported:
 .P
 .B Program

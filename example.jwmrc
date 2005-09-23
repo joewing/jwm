@@ -4,33 +4,25 @@
 
 	<!-- The root menu, if this is undefined you will not get a menu. -->
 	<RootMenu label="JWM">
-		<Program icon="wterm.xpm" label="Terminal (sindy)">xwsh</Program>
-		<Program icon="wterm.xpm" label="Terminal (iris)">
-			xon iris xwsh
-		</Program> 
-		<Program icon="wterm.xpm" label="Terminal (floyd)">
-			xon floyd xterm
-		</Program>
+		<Program icon="wterm.xpm" label="Terminal">rxvt</Program>
 		<Menu icon="folder.xpm" label="Applications">
-			<Program icon="firefox.xpm" label="Firefox">firefox</Program>
-			<Program icon="fm.xpm" label="File Manager">fm</Program>
-			<Program icon="gaim.xpm" label="Gaim">gaim</Program>
+			<Program icon="dia.xpm" label="Dia">dia</Program>
 			<Program icon="gimp.xpm" label="Gimp">gimp</Program>
-			<Program icon="iconcatalog.xpm" label="Icon Catalog">
-				iconcatalog
-			</Program>
+			<Program icon="xine.xpm" label="gxine">gxine</Program>
 			<Program icon="xmms.xpm" label="XMMS">xmms</Program>
+		</Menu>
+		<Menu icon="folder.xpm" label="Network">
+			<Program icon="firefox.xpm" label="Firefox">firefox</Program>
+			<Program icon="gaim.xpm" label="Gaim">gaim</Program>
+			<Program label="gFTP">gftp</Program>
+			<Program label="gnutella" icon="gnutella.xpm">gtk-gnutella</Program>
 		</Menu>
 		<Menu icon="folder.xpm" label="Utilities">
 			<Program>xfontsel</Program>
 			<Program icon="xmag.xpm">xmag</Program>
 		</Menu>
-		<Menu icon="folder.xpm" label="Games">
-			<Program label="Doom">/usr/games/doom/doom</Program>
-			<Program label="Doom II">/usr/games/doom2/doom2</Program>
-			<Program label="Hacknoid">/usr/games/hacknoid/run</Program>
-			<Program label="Mines">/usr/games/mines/run</Program>
-			<Program label="Quake II">/usr/games/quake2/quake2</Program>
+		<Menu icon="folder.xpm" label="Misc">
+			<Exit confirm="true" label="Exit to Terminal">rxvt</Exit>
 		</Menu>
 		<Separator/>
 		<Restart icon="restart.xpm"/>
@@ -43,17 +35,17 @@
 	</Group>
 
 	<Border>
-		<Font antialias="true">-sgi-screen-*-r-*-*-15-*-*-*-*-*-*-*</Font>
+		<Font antialias="true">-adobe-helvetica-*-r-*-*-17-*-*-*-*-*-*-*</Font>
 		<Width>5</Width>
 		<Height>20</Height>
 		<Foreground>black</Foreground>
 		<Background>#DCDAD5</Background>
 		<ActiveForeground>white</ActiveForeground>
-		<ActiveBackground>#3A4956</ActiveBackground>
+		<ActiveBackground>#4A5966</ActiveBackground>
 	</Border>
 
 	<Tray autohide="false">
-		<Font antialias="true">-sgi-screen-*-r-*-*-15-*-*-*-*-*-*-*</Font>
+		<Font antialias="true">-adobe-helvetica-*-r-*-*-17-*-*-*-*-*-*-*</Font>
 		<Width>0</Width>
 		<Height>28</Height>
 		<Alignment>center</Alignment>
@@ -71,26 +63,26 @@
 		<ActiveBackground>#3A4956</ActiveBackground>
 	</Pager>
 
-	<Load>
+	<Load enabled="true">
 		<Program>xload</Program>
 		<Outline>black</Outline>
 		<Foreground>red</Foreground>
 		<Background>#DCDAD5</Background>
 	</Load>
 
-	<Clock>
+	<Clock enabled="true">
 		<Program>xclock</Program>
 	</Clock>
 
 	<Popup enabled="true">
-		<Font antialias="true">-sgi-screen-*-r-*-*-15-*-*-*-*-*-*-*</Font>
+		<Font antialias="true">-adobe-helvetica-*-r-*-*-12-*-*-*-*-*-*-*</Font>
 		<Outline>black</Outline>
 		<Foreground>black</Foreground>
 		<Background>yellow</Background>
 	</Popup>
 
 	<Menu>
-		<Font antialias="true">-sgi-screen-*-r-*-*-15-*-*-*-*-*-*-*</Font>
+		<Font antialias="true">-adobe-helvetica-*-r-*-*-17-*-*-*-*-*-*-*</Font>
 		<Foreground>black</Foreground>
 		<Background>#DCDAD5</Background>
 		<ActiveForeground>white</ActiveForeground>
@@ -100,6 +92,10 @@
 	<Icons>
 		<IconPath>$HOME/.icons</IconPath>
 	</Icons>
+
+	<StartupCommand>
+		xli -onroot /export0/images/formulae.jpg
+	</StartupCommand>
 
 	<!-- Number of virtual desktops -->
 	<DesktopCount>4</DesktopCount>

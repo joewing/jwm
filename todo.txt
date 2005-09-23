@@ -10,6 +10,7 @@ Todo:
 	  the tray.
 	- Fix antialiasing and WMSpec icons on AMD64.
 	- Added a compile time option to disable antialiasing support.
+	- Add the ability to name desktops.
 
 20050922:
 	- Added noborder, border, notitle, and title options to Group.

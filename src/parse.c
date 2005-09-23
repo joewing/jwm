@@ -937,6 +937,14 @@ void ParseGroupOption(struct GroupType *group, const char *option) {
 		AddGroupOption(group, OPTION_STICKY);
 	} else if(!strcmp(option, "nolist")) {
 		AddGroupOption(group, OPTION_NOLIST);
+	} else if(!strcmp(option, "border")) {
+		AddGroupOption(group, OPTION_BORDER);
+	} else if(!strcmp(option, "noborder")) {
+		AddGroupOption(group, OPTION_NOBORDER);
+	} else if(!strcmp(option, "title")) {
+		AddGroupOption(group, OPTION_TITLE);
+	} else if(!strcmp(option, "notitle")) {
+		AddGroupOption(group, OPTION_NOTITLE);
 	} else if(!strncmp(option, "layer:", 6)) {
 		AddGroupOptionValue(group, OPTION_LAYER, option + 6);
 	} else if(!strncmp(option, "desktop:", 8)) {

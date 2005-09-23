@@ -212,6 +212,8 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 		np->statusFlags |= STAT_MAPPED;
 	}
 
+	ApplyGroups(np);
+
 	SetDefaultCursor(np->window);
 	ReparentClient(np, notOwner);
 	PlaceWindow(np, alreadyMapped);
@@ -237,7 +239,6 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 
 	++clientCount;
 
-	ApplyGroups(np);
 
 	if(np->statusFlags & STAT_STICKY) {
 		SetCardinalAtom(np->window, ATOM_NET_WM_DESKTOP, 0xFFFFFFFF);

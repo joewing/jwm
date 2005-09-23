@@ -231,6 +231,18 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
 		case OPTION_NOLIST:
 			np->statusFlags |= STAT_NOLIST;
 			break;
+		case OPTION_BORDER:
+			np->borderFlags |= BORDER_OUTLINE;
+			break;
+		case OPTION_NOBORDER:
+			np->borderFlags &= ~BORDER_OUTLINE;
+			break;
+		case OPTION_TITLE:
+			np->borderFlags |= BORDER_TITLE;
+			break;
+		case OPTION_NOTITLE:
+			np->borderFlags &= ~BORDER_TITLE;
+			break;
 		case OPTION_LAYER:
 			temp = atoi(lp->value);
 			if(temp >= 0 && temp <= LAYER_COUNT) {

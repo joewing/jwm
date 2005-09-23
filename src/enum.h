@@ -355,7 +355,11 @@ typedef enum {
 	OPTION_LAYER    = 2,
 	OPTION_DESKTOP  = 3,
 	OPTION_ICON     = 4,
-	OPTION_NOLIST   = 5
+	OPTION_NOLIST   = 5,
+	OPTION_BORDER   = 6,
+	OPTION_NOBORDER = 7,
+	OPTION_TITLE    = 8,
+	OPTION_NOTITLE  = 9
 } OptionType;
 
 /****************************************************************************

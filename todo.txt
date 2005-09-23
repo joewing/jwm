@@ -1,10 +1,9 @@
 
 Todo:
-	- Add load status support for AIX, HPUX, ...
+	- Add load status support for AIX, HPUX, FreeBSD, ...
 	- More support for GNOME, Motif, and WMSpec hints.
 	- Add some way to remember window states.
 	- Make windows larger than the X desktop behave in a more sane manner.
-	- Add noborder, border, notitle, and title options for Group.
 	- Add the ability to change the level of the tray.
 	- Continue work on Xinerama support.
 	- Make JWM able to swallow other applications (like xload) in the tray.
@@ -12,6 +11,9 @@ Todo:
 	  the tray.
 	- Fix antialiasing and WMSpec icons on AMD64.
 	- Added a compile time option to disable antialiasing support.
+
+20050922:
+	- Added noborder, border, notitle, and title options to Group.
 
 20050920:
 	- Added an "enabled" option to Load.

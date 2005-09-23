@@ -4,7 +4,6 @@ Todo:
 	- More support for GNOME, Motif, and WMSpec hints.
 	- Add some way to remember window states.
 	- Make windows larger than the X desktop behave in a more sane manner.
-	- Add the ability to change the level of the tray.
 	- Continue work on Xinerama support.
 	- Make JWM able to swallow other applications (like xload) in the tray.
 	- Add an option to make "alt-tabbing" go through the z-stack instead of
@@ -14,6 +13,8 @@ Todo:
 
 20050922:
 	- Added noborder, border, notitle, and title options to Group.
+	- Added "layer" attribute to Tray.
+	- Now restacks the clients after startup.
 
 20050920:
 	- Added an "enabled" option to Load.

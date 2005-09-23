@@ -27,6 +27,7 @@ int trayHeight = DEFAULT_TRAY_HEIGHT - TRAY_BEVEL;
 int trayWidth = 0;
 int trayX = 0;
 int trayY = 0;
+int trayLayer = DEFAULT_TRAY_LAYER;
 
 static TrayAlignmentType trayAlignment = TRAY_ALIGN_CENTER;
 static TrayInsertModeType trayInsertMode = TRAY_INSERT_LEFT;
@@ -90,6 +91,7 @@ static int HandleTrayMotionNotify(const XMotionEvent *event);
 /***************************************************************************
  ***************************************************************************/
 void InitializeTray() {
+	trayLayer = DEFAULT_TRAY_LAYER;
 }
 
 /***************************************************************************
@@ -1086,4 +1088,20 @@ void SetMaxTrayItemWidth(const char *str) {
 
 }
 
+/***************************************************************************
+ ***************************************************************************/
+void SetTrayLayer(const char *str) {
+
+	int temp;
+
+	Assert(str);
+
+	temp = atoi(str);
+	if(temp < LAYER_BOTTOM || temp > LAYER_TOP) {
+		Warning("invalid tray layer: %d", temp);
+	} else {
+		trayLayer = temp;
+	}
+
+}
 

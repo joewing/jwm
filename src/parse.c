@@ -19,6 +19,10 @@ static const char *FORMAT_ATTRIBUTE = "format";
 static const char *ENABLED_ATTRIBUTE = "enabled";
 static const char *LABELED_ATTRIBUTE = "labeled";
 static const char *ONROOT_ATTRIBUTE = "onroot";
+static const char *LAYER_ATTRIBUTE = "layer";
+static const char *AUTOHIDE_ATTRIBUTE = "autohide";
+static const char *MAXWIDTH_ATTRIBUTE = "maxwidth";
+static const char *INSERT_ATTRIBUTE = "insert";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -663,21 +667,26 @@ void ParseTray(const TokenNode *tp) {
 
 	Assert(tp);
 
-	aa = FindAttribute(tp->attributes, "autohide");
+	aa = FindAttribute(tp->attributes, AUTOHIDE_ATTRIBUTE);
 	if(aa && !strcmp(aa, TRUE_VALUE)) {
 		SetAutoHideTray(1);
 	} else {
 		SetAutoHideTray(0);
 	}
 
-	aa = FindAttribute(tp->attributes, "maxwidth");
+	aa = FindAttribute(tp->attributes, MAXWIDTH_ATTRIBUTE);
 	if(aa) {
 		SetMaxTrayItemWidth(aa);
 	}
 
-	aa = FindAttribute(tp->attributes, "insert");
+	aa = FindAttribute(tp->attributes, INSERT_ATTRIBUTE);
 	if(aa) {
 		SetTrayInsertMode(aa);
+	}
+
+	aa = FindAttribute(tp->attributes, LAYER_ATTRIBUTE);
+	if(aa) {
+		SetTrayLayer(aa);
 	}
 
 	for(np = tp->subnodeHead; np; np = np->next) {

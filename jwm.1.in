@@ -149,6 +149,10 @@ case sensitive. A wild card, \fB*\fP, may be used.
 .B Option
 .RS
 An option for this group. Possible options are given below:
+.P
+.B border
+.RS
+Causes windows in this group to have a border.
 .RE
 .P
 \fBdesktop:\fP\fI#\fP
@@ -166,14 +170,30 @@ The icon to be used for windows in this group.
 The layer on which windows in this group will be started.
 .RE
 .P
+.B noborder
+.RS
+Causes windows in this group to be displayed without a border.
+.RE
+.P
 .B nolist
 .RS
 Causes the tray to ignore windows in this group.
 .RE
 .P
+.B notitle
+.RS
+Causes windows in this group to be displayed without a title bar.
+.RE
+.P
 .B sticky
 .RS
 Make windows in this group sticky.
+.RE
+.P
+.B title
+.RS
+Causes windows in this group to have a title bar.
+.RE
 .RE
 .RE
 
@@ -232,7 +252,10 @@ the tray. Possible values for the \fBautohide\fP attribute are \fBtrue\fP
 and \fBfalse\fP. By default, automatic hidding is disabled.
 An optional attribute, \fBmaxwidth\fP, may be specified to set the maximum
 width of a program in the tray in pixels. The default is 0 (zero), which
-specifies no limit.  Finally, an optional attribute, \fBinsert\fP, may be
+specifies no limit.  An optional attribute, \fBlayer\fP, may be specified
+to determine the layer of the tray. Valid values are integers between 0
+(the lowest layer) and 12 (the top\-most layer) inclusive. The default is
+8. Finally, an optional attribute, \fBinsert\fP, may be
 specified to indicate how programs are added to the tray. Possible values are
 \fBright\fP and \fBleft\fP. The default is \fBleft\fP.
 Within the \fBTray\fP tag, the following tags are supported:

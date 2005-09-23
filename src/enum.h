@@ -299,7 +299,7 @@ typedef enum {
 typedef enum {
 	LAYER_BOTTOM              = 0,
 	LAYER_NORMAL              = 4,
-	LAYER_TRAY                = 8,
+	DEFAULT_TRAY_LAYER        = 8,
 	LAYER_TOP                 = 12,
 	LAYER_COUNT               = 13
 } WinLayerType;

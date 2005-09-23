@@ -1043,7 +1043,7 @@ void RestackClients() {
 				stack[index++] = np->parent;
 			}
 		}
-		if(layer == LAYER_TRAY) {
+		if(layer == trayLayer) {
 			stack[index++] = trayWindow;
 		}
 	}

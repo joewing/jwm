@@ -10,6 +10,7 @@ extern int autoHideTray;
 extern int trayHeight;
 extern int trayWidth;
 extern int trayX, trayY;
+extern int trayLayer;
 
 extern Window trayWindow;
 extern int trayIsHidden;
@@ -47,6 +48,7 @@ void SetLoadProgram(const char *command);
 void SetMenuTitle(const char *title);
 void SetMenuIcon(const char *name);
 void SetTrayInsertMode(const char *str);
+void SetTrayLayer(const char *str);
 
 #endif
 

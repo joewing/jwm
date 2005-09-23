@@ -270,6 +270,8 @@ void Startup() {
 	ReadCurrentDesktop();
 	JXFlush(display);
 
+	RestackClients();
+
 }
 
 /****************************************************************************

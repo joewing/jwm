@@ -310,7 +310,9 @@ section for more information.
 
 .B "PAGER SETTINGS"
 .RS
-The \fBPager\fP tag controls the look of the pager on the tray. Within
+The \fBPager\fP tag controls the look of the pager on the tray. An optional
+attribute, \fBenabled\fP, may be specified to disable the pager. Possible
+values are \fBtrue\fP (the default) or \fBfalse\fP. Within
 this tag the following tags are supported:
 .P
 .B Outline

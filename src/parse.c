@@ -732,8 +732,16 @@ void ParseTray(const TokenNode *tp) {
  ***************************************************************************/
 void ParsePager(const TokenNode *tp) {
 	const TokenNode *np;
+	const char *aa;
 
 	Assert(tp);
+
+	aa = FindAttribute(tp->attributes, ENABLED_ATTRIBUTE);
+	if(aa && !strcmp(aa, FALSE_VALUE)) {
+		SetPagerEnabled(0);
+	} else {
+		SetPagerEnabled(1);
+	} 
 
 	for(np = tp->subnodeHead; np; np = np->next) {
 		switch(np->type) {

@@ -7,6 +7,8 @@
 
 int pagerWidth;
 
+static int pagerEnabled = 1;
+
 static int pagerDeskWidth;
 
 static double scalex, scaley;
@@ -17,18 +19,23 @@ static void DrawPagerClient(Window w, GC gc, int xoffset,
 /****************************************************************************
  ****************************************************************************/
 void InitializePager() {
+	pagerEnabled = 1;
 }
 
 /****************************************************************************
  ****************************************************************************/
 void StartupPager() {
 
-	pagerDeskWidth = (trayHeight * rootWidth) / rootHeight;
+	if(pagerEnabled) {
+		pagerDeskWidth = (trayHeight * rootWidth) / rootHeight;
 
-	pagerWidth = (pagerDeskWidth + 1) * desktopCount;
+		pagerWidth = (pagerDeskWidth + 1) * desktopCount;
 
-	scalex = (double)(pagerDeskWidth - 2) / (double)rootWidth;
-	scaley = (double)(trayHeight - 2) / (double)rootHeight;
+		scalex = (double)(pagerDeskWidth - 2) / (double)rootWidth;
+		scaley = (double)(trayHeight - 2) / (double)rootHeight;
+	} else {	
+		pagerWidth = 0;
+	}
 
 }
 
@@ -48,6 +55,10 @@ void DrawPager(Window w, GC gc, int xoffset) {
 
 	ClientNode *np;
 	int x;
+
+	if(!pagerEnabled) {
+		return;
+	}
 
 	JXSetForeground(display, gc, colors[COLOR_PAGER_BG]);
 	JXFillRectangle(display, w, gc, xoffset, 0,
@@ -137,4 +148,9 @@ void DrawPagerClient(Window w, GC gc, int xoffset,
 
 }
 
+/****************************************************************************
+ ****************************************************************************/
+void SetPagerEnabled(int e) {
+	pagerEnabled = e;
+}
 

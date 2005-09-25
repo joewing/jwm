@@ -15,5 +15,7 @@ void DestroyPager();
 
 void DrawPager(Window w, GC gc, int xoffset);
 
+void SetPagerEnabled(int e);
+
 #endif
 

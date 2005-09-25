@@ -38,6 +38,10 @@ void DisplayCompileOptions() {
 	printf("shape ");
 #endif
 
+#ifdef USE_XFT
+	printf("xft ");
+#endif
+
 #ifdef USE_XINERAMA
 	printf("xinerama ");
 #endif

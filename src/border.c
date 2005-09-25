@@ -38,6 +38,11 @@ static Pixmap maxActivePixmap;
 static Pixmap maxaPixmap;
 static Pixmap maxaActivePixmap;
 
+static Pixmap buffer = None;
+static GC bufferGC = None;
+static int bufferWidth;
+static int bufferHeight;
+
 static void DrawBorderHelper(const ClientNode *np, unsigned int height);
 static void DrawButtonBorder(const ClientNode *np, int offset,
 	Pixmap canvas, GC gc);
@@ -96,6 +101,13 @@ void ShutdownBorders() {
 
 	JXFreePixmap(display, maxaPixmap);
 	JXFreePixmap(display, maxaActivePixmap);
+
+	if(buffer != None) {
+		JXFreePixmap(display, buffer);
+		JXFreeGC(display, bufferGC);
+		buffer = None;
+		bufferGC = None;
+	}
 
 }
 
@@ -254,11 +266,27 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 		pixelDown = colors[COLOR_BORDER_DOWN];
 	}
 
-	canvas = np->parent;
-	gc = np->parentGC;
+	if(buffer == None || bufferWidth < width || bufferHeight < height) {
+
+		if(buffer != None) {
+			XFreePixmap(display, buffer);
+			XFreeGC(display, bufferGC);
+		}
+
+		bufferWidth = width;
+		bufferHeight = height;
+		buffer = JXCreatePixmap(display, np->parent, bufferWidth, bufferHeight,
+			rootDepth);
+		bufferGC = JXCreateGC(display, buffer, 0, NULL);
+
+	}
+
+	canvas = buffer;
+	gc = bufferGC;
 
 	JXSetWindowBackground(display, np->parent, borderPixel);
-	JXClearWindow(display, canvas);
+	JXSetForeground(display, bufferGC, borderPixel);
+	JXFillRectangle(display, buffer, bufferGC, 0, 0, width, height);
 
 	buttonCount = DrawBorderButtons(np, canvas, gc);
 	titleWidth = width - (titleHeight + 2) * buttonCount - borderWidth
@@ -386,6 +414,9 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 			width - titleHeight - borderWidth, height - borderWidth + 1);
 
 	}
+
+	JXCopyArea(display, canvas, np->parent, np->parentGC, 0, 0,
+		width, height, 0, 0);
 
 }
 

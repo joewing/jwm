@@ -13,6 +13,7 @@ Todo:
 
 20050925:
 	- Now uses Xft for antialiasing, which can be disabled at compile time.
+	- Made drawing of border double-buffered.
 
 20050924:
 	- Added "enabled" option to Pager.

@@ -212,6 +212,8 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 		np->statusFlags |= STAT_MAPPED;
 	}
 
+	LoadIcon(np);
+
 	ApplyGroups(np);
 
 	SetDefaultCursor(np->window);
@@ -228,8 +230,6 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 	}
 
 	DrawBorder(np);
-
-	LoadIcon(np);
 
 	AddClientToTray(np);
 

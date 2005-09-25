@@ -10,8 +10,8 @@ static const int COLOR_HASH_BITS = 3;
 static const int COLOR_HASH_SIZE = 512;
 
 typedef struct ColorNode {
-	unsigned short red, green, blue;
-	unsigned long pixel;
+	CARD16 red, green, blue;
+	CARD32 pixel;
 	struct ColorNode *prev;
 	struct ColorNode *next;
 } ColorNode;
@@ -25,10 +25,10 @@ static ColorNode **colorHash = NULL;
 
 static const float COLOR_DELTA = 0.45;
 
-unsigned long colors[COLOR_COUNT];
-unsigned int rgbColors[COLOR_COUNT];
-unsigned long white;
-unsigned long black;
+CARD32 colors[COLOR_COUNT];
+CARD32 rgbColors[COLOR_COUNT];
+CARD32 white;
+CARD32 black;
 
 static DefaultColorNode DEFAULT_COLORS[] = {
 	{ COLOR_BORDER_BG,          "gray"    },
@@ -60,50 +60,50 @@ static DefaultColorNode DEFAULT_COLORS[] = {
 static int ParseColor(ColorType type, const char *value);
 static void SetDefaultColor(ColorType type); 
 
-static unsigned int ReadHex(const char *hex);
+static CARD32 ReadHex(const char *hex);
 
-static unsigned int GetRGBFromXColor(const XColor *c);
-static XColor GetXColorFromRGB(unsigned int rgb);
+static CARD32 GetRGBFromXColor(const XColor *c);
+static XColor GetXColorFromRGB(CARD32 rgb);
 
 static int GetColorByName(const char *str, XColor *c);
-static unsigned long FindClosestColor(const XColor *c);
+static CARD32 FindClosestColor(const XColor *c);
 static void InitializeNames();
 
 static void LightenColor(ColorType oldColor, ColorType newColor);
 static void DarkenColor(ColorType oldColor, ColorType newColor);
 
-static void CreateColorRamp(unsigned int a, unsigned int b,
-	unsigned long *ramp);
+static void CreateColorRamp(CARD32 a, CARD32 b,
+	CARD32 *ramp);
 
 static char **names = NULL;
-unsigned long *ramps[RAMP_COUNT];
+CARD32 *ramps[RAMP_COUNT];
 
 /****************************************************************************
  ****************************************************************************/
-unsigned int GetRGBFromXColor(const XColor *c) {
+CARD32 GetRGBFromXColor(const XColor *c) {
 	float red, green, blue;
-	unsigned int rgb;
+	CARD32 rgb;
 
 	red = (float)c->red / 65535.0;
 	green = (float)c->green / 65535.0;
 	blue = (float)c->blue / 65535.0;
 
-	rgb = (unsigned int)(red * 255.0) << 16;
-	rgb |= (unsigned int)(green * 255.0) << 8;
-	rgb |= (unsigned int)(blue * 255.0);
+	rgb = (CARD32)(red * 255.0) << 16;
+	rgb |= (CARD32)(green * 255.0) << 8;
+	rgb |= (CARD32)(blue * 255.0);
 
 	return rgb;
 }
 
 /****************************************************************************
  ****************************************************************************/
-XColor GetXColorFromRGB(unsigned int rgb) {
+XColor GetXColorFromRGB(CARD32 rgb) {
 	XColor ret;
 
 	ret.flags = DoRed | DoGreen | DoBlue;
-	ret.red = ((rgb >> 16) & 0xFF) * 257;
-	ret.green = ((rgb >> 8) & 0xFF) * 257;
-	ret.blue = (rgb & 0xFF) * 257;
+	ret.red = (CARD16)(((rgb >> 16) & 0xFF) * 257);
+	ret.green = (CARD16)(((rgb >> 8) & 0xFF) * 257);
+	ret.blue = (CARD16)((rgb & 0xFF) * 257);
 
 	return ret;
 }
@@ -119,7 +119,7 @@ void InitializeColors() {
 	}
 
 	for(x = 0; x < RAMP_COUNT; x++) {
-		ramps[x] = Allocate(8 * sizeof(unsigned long));
+		ramps[x] = Allocate(8 * sizeof(CARD32));
 	}
 
 }
@@ -268,7 +268,7 @@ void SetColor(ColorType c, const char *value) {
  ****************************************************************************/
 int ParseColor(ColorType type, const char *value) {
 	XColor temp;
-	unsigned int rgb;
+	CARD32 rgb;
 
 	if(!value) {
 		return 0;
@@ -322,9 +322,9 @@ void InitializeNames() {
 
 /****************************************************************************
  ****************************************************************************/
-unsigned int ReadHex(const char *hex) {
-	unsigned int value = 0;
-	unsigned int x;
+CARD32 ReadHex(const char *hex) {
+	CARD32 value = 0;
+	int x;
 
 	for(x = 0; hex[x]; x++) {
 		value *= 16;
@@ -398,10 +398,10 @@ void DarkenColor(ColorType oldColor, ColorType newColor) {
 
 /***************************************************************************
  ***************************************************************************/
-void CreateColorRamp(unsigned int a, unsigned int b, unsigned long *ramp) {
+void CreateColorRamp(CARD32 a, CARD32 b, CARD32 *ramp) {
 
 	XColor color;
-	unsigned int x;
+	int x;
 	float value, inv;
 
 	float reda = (float)((a >> 16) & 0xFF) / 255.0;
@@ -419,11 +419,11 @@ void CreateColorRamp(unsigned int a, unsigned int b, unsigned long *ramp) {
 		value = (float)x / 7.0;
 		inv = 1.0 - value;
 
-		color.red = (unsigned int)((reda * inv + redb * value)
+		color.red = (CARD16)((reda * inv + redb * value)
 			* 65535.0 + 0.5);
-		color.green = (unsigned int)((greena * inv + greenb * value)
+		color.green = (CARD16)((greena * inv + greenb * value)
 			* 65535.0 + 0.5);
-		color.blue = (unsigned int)((bluea * inv + blueb * value)
+		color.blue = (CARD16)((bluea * inv + blueb * value)
 			* 65535.0 + 0.5);
 
 		GetColor(&color);
@@ -452,12 +452,12 @@ int GetColorByName(const char *str, XColor *c) {
 
 /***************************************************************************
  ***************************************************************************/
-unsigned long FindClosestColor(const XColor *c) {
+CARD32 FindClosestColor(const XColor *c) {
 
 	ColorNode *closest;
 	ColorNode *np;
-	long closestDistance;
-	long distance;
+	CARD32 closestDistance;
+	CARD32 distance;
 	int x;
 
 	Assert(c);
@@ -494,7 +494,7 @@ unsigned long FindClosestColor(const XColor *c) {
 void GetColor(XColor *c) {
 
 	ColorNode *np;
-	unsigned int hash;
+	CARD32 hash;
 
 	Assert(c);
 

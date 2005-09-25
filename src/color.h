@@ -6,12 +6,12 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-extern unsigned long colors[COLOR_COUNT];
-extern unsigned int rgbColors[COLOR_COUNT];
-extern unsigned long *ramps[RAMP_COUNT];
+extern CARD32 colors[COLOR_COUNT];
+extern CARD32 rgbColors[COLOR_COUNT];
+extern CARD32 *ramps[RAMP_COUNT];
 
-extern unsigned long white;
-extern unsigned long black;
+extern CARD32 white;
+extern CARD32 black;
 
 void InitializeColors();
 void StartupColors();

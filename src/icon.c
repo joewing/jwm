@@ -527,7 +527,7 @@ IconNode *CreateIconFromBinary(const CARD32 *input, int length) {
 		srcx = 0.0;
 		for(destx = 0; destx < iconSize; destx++) {
 			index = 2 + (CARD32)srcy * width + (CARD32)srcx;
-			alpha = input[index] >> 24;
+			alpha = (input[index] >> 24) & 0xFF;
 			color.red = ((input[index] >> 16) & 0xFF) * 257;
 			color.green = ((input[index] >> 8) & 0xFF) * 257;
 			color.blue = (input[index] & 0xFF) * 257;

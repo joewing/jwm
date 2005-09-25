@@ -14,6 +14,8 @@ Todo:
 
 20050924:
 	- Added "enabled" option to Pager.
+	- Fixed a bug with loading icons.
+	- Attempted to fix color issues on 64-bit X-Servers.
 
 20050922:
 	- Added noborder, border, notitle, and title options to Group.

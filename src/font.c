@@ -192,8 +192,8 @@ void Antialias16(int width, int height, RampType ramp) {
 	int value;
 	int line = inputImage->width;
 
-	unsigned short *in = (unsigned short*)inputData;
-	unsigned short *out = (unsigned short*)outputData;
+	CARD16 *in = (CARD16*)inputData;
+	CARD16 *out = (CARD16*)outputData;
 
 	for(y = 1; y < height - 1; y++) {
 		for(x = 1; x < width - 1; x++) {
@@ -249,8 +249,8 @@ void Antialias32(int width, int height, RampType ramp) {
 	int value;
 	int line = inputImage->width;
 
-	unsigned long *in = (unsigned long*)inputData;
-	unsigned long *out = (unsigned long*)outputData;
+	CARD32 *in = (CARD32*)inputData;
+	CARD32 *out = (CARD32*)outputData;
 
 	for(y = 1; y < height - 1; y++) {
 		for(x = 1; x < width - 1; x++) {

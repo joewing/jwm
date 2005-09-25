@@ -415,7 +415,10 @@ void DoSnapScreen(ClientNode *np, int north) {
 void DoSnapBorder(ClientNode *np, int north) {
 	const ClientNode *tp;
 	RectangleType client, other;
-	RectangleType left, right, top, bottom;
+	RectangleType left = { 0 };
+	RectangleType right = { 0 };
+	RectangleType  top = { 0 };
+	RectangleType bottom = { 0 };
 	int layer;
 
 	left.valid = 0;

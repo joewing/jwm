@@ -8,9 +8,11 @@ Todo:
 	- Make JWM able to swallow other applications (like xload) in the tray.
 	- Add an option to make "alt-tabbing" go through the z-stack instead of
 	  the tray.
-	- Fix antialiasing and WMSpec icons on AMD64.
-	- Add a compile time option to disable antialiasing support.
+	- Fix WMSpec icons on AMD64.
 	- Add the ability to name desktops.
+
+20050925:
+	- Now uses Xft for antialiasing, which can be disabled at compile time.
 
 20050924:
 	- Added "enabled" option to Pager.

@@ -164,7 +164,7 @@ void StartupTray() {
 
 	x = strlen(menuTitle);
 	if(x) {
-		trayStart = XTextWidth(fonts[FONT_TRAY], menuTitle, x);
+		trayStart = GetStringWidth(FONT_TRAY, menuTitle);
 		trayStart += 20;
 		if(menuIcon) {
 			trayStart += iconSize;
@@ -180,13 +180,13 @@ void StartupTray() {
 	strcpy(temp, GetShortTimeString());
 	if(strlen(temp)) {
 		strcat(temp, "MM");
-		trayStop = JXTextWidth(fonts[FONT_TRAY], temp, strlen(temp));
+		trayStop = GetStringWidth(FONT_TRAY, temp);
 	}
 	Release(temp);
 	trayStop += loadWidth + 5;
 
 	trayTextOffset = (trayHeight / 2)
-		- (fonts[FONT_TRAY]->ascent + fonts[FONT_TRAY]->descent) / 2;
+		- GetStringHeight(FONT_TRAY) / 2;
 
 	trayNodes = NULL;
 	trayNodesTail = NULL;
@@ -831,15 +831,14 @@ int UpdateTime() {
 	}
 
 	tstring = GetShortTimeString();
-	x = trayWidth - 4 
-		- JXTextWidth(fonts[FONT_TRAY], tstring, strlen(tstring));
+	x = trayWidth - 4 - GetStringWidth(FONT_TRAY, tstring);
 
 	JXSetForeground(display, bufferGC, colors[COLOR_TRAY_BG]);
 	JXFillRectangle(display, buffer, bufferGC,
 		trayWidth - trayStop + loadWidth + 2, 0,
 		trayStop - loadWidth - 2, trayHeight);
 
-	RenderString(buffer, bufferGC, FONT_TRAY, RAMP_TRAY,
+	RenderString(buffer, bufferGC, FONT_TRAY, COLOR_TRAY_FG,
 		x, trayTextOffset, trayWidth, tstring);
 
 #ifdef SHOW_LOAD

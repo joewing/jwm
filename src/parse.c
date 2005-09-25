@@ -14,7 +14,6 @@ static const char *DEFAULT_TITLE = "JWM";
 static const char *LABEL_ATTRIBUTE = "label";
 static const char *ICON_ATTRIBUTE = "icon";
 static const char *CONFIRM_ATTRIBUTE = "confirm";
-static const char *ANTIALIAS_ATTRIBUTE = "antialias";
 static const char *FORMAT_ATTRIBUTE = "format";
 static const char *ENABLED_ATTRIBUTE = "enabled";
 static const char *LABELED_ATTRIBUTE = "labeled";
@@ -599,19 +598,13 @@ void ParseKey(const TokenNode *tp) {
  ***************************************************************************/
 void ParseBorder(const TokenNode *tp) {
 	const TokenNode *np;
-	const char *aa;
 
 	Assert(tp);
 
 	for(np = tp->subnodeHead; np; np = np->next) {
 		switch(np->type) {
 		case TOK_FONT:
-			aa = FindAttribute(np->attributes, ANTIALIAS_ATTRIBUTE);
-			if(aa && !strcmp(aa, FALSE_VALUE)) {
-				SetFont(FONT_BORDER, np->value, 0);
-			} else {
-				SetFont(FONT_BORDER, np->value, 1);
-			}
+			SetFont(FONT_BORDER, np->value);
 			break;
 		case TOK_WIDTH:
 			SetBorderWidth(np->value);
@@ -701,12 +694,7 @@ void ParseTray(const TokenNode *tp) {
 			SetTrayAlignment(np->value);
 			break;
 		case TOK_FONT:
-			aa = FindAttribute(np->attributes, ANTIALIAS_ATTRIBUTE);
-			if(aa && !strcmp(aa, FALSE_VALUE)) {
-				SetFont(FONT_TRAY, np->value, 0);
-			} else {
-				SetFont(FONT_TRAY, np->value, 1);
-			}
+			SetFont(FONT_TRAY, np->value);
 			break;
 		case TOK_FOREGROUND:
 			SetColor(COLOR_TRAY_FG, np->value);
@@ -786,12 +774,7 @@ void ParsePopup(const TokenNode *tp) {
 	for(np = tp->subnodeHead; np; np = np->next) {
 		switch(np->type) {
 		case TOK_FONT:
-			aa = FindAttribute(np->attributes, ANTIALIAS_ATTRIBUTE);
-			if(aa && !strcmp(aa, FALSE_VALUE)) {
-				SetFont(FONT_POPUP, np->value, 0);
-			} else {
-				SetFont(FONT_POPUP, np->value, 1);
-			}
+			SetFont(FONT_POPUP, np->value);
 			break;
 		case TOK_OUTLINE:
 			SetColor(COLOR_POPUP_OUTLINE, np->value);
@@ -883,19 +866,13 @@ void ParseClock(const TokenNode *tp) {
  ***************************************************************************/
 void ParseMenu(const TokenNode *tp) {
 	const TokenNode *np;
-	const char *aa;
 
 	Assert(tp);
 
 	for(np = tp->subnodeHead; np; np = np->next) {
 		switch(np->type) {
 		case TOK_FONT:
-			aa = FindAttribute(np->attributes, ANTIALIAS_ATTRIBUTE);
-			if(aa && !strcmp(aa, FALSE_VALUE)) {
-				SetFont(FONT_MENU, np->value, 0);
-			} else {
-				SetFont(FONT_MENU, np->value, 1);
-			}
+			SetFont(FONT_MENU, np->value);
 			break;
 		case TOK_FOREGROUND:
 			SetColor(COLOR_MENU_FG, np->value);

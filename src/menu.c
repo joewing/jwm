@@ -50,7 +50,7 @@ void InitializeMenu(MenuType *menu) {
 	menu->itemCount = 0;
 
 	/* Compute the max size needed */
-	menu->itemHeight = fonts[FONT_MENU]->ascent + fonts[FONT_MENU]->descent;
+	menu->itemHeight = GetStringHeight(FONT_MENU);
 	for(np = menu->items; np; np = np->next) {
 		if(np->iconName) {
 			np->icon = LoadNamedIcon(np->iconName, 0);
@@ -90,7 +90,7 @@ void InitializeMenu(MenuType *menu) {
 			menu->height += 5;
 		}
 		if(np->name) {
-			temp = JXTextWidth(fonts[FONT_MENU], np->name, strlen(np->name));
+			temp = GetStringWidth(FONT_MENU, np->name);
 			if(temp > menu->width) {
 				menu->width = temp;
 			}
@@ -275,7 +275,6 @@ void CreateMenu(MenuType *menu, int x, int y) {
 
 	JXSetInputFocus(display, menu->window, RevertToPointerRoot, CurrentTime);
 	menu->gc = JXCreateGC(display, menu->window, 0, NULL);
-	JXSetFont(display, menu->gc, fonts[FONT_MENU]->fid);
 
 	DrawMenu(menu);
 
@@ -530,7 +529,6 @@ void UpdateMenu(MenuType *menu) {
 				menu->width - 9,
 				menu->offsets[menu->currentIndex] + menu->itemHeight / 2 - 4);
 			JXFreePixmap(display, pixmap);
-
 		}
 	}
 
@@ -551,12 +549,11 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 			JXSetForeground(display, menu->gc, colors[COLOR_MENU_BG]);
 			JXFillRectangle(display, menu->window, menu->gc,
 				2, 2, menu->width - 4, menu->itemHeight - 1);
-			xoffset = menu->width / 2;
-			xoffset -= JXTextWidth(fonts[FONT_MENU], menu->label,
-				strlen(menu->label)) / 2;
-			yoffset = 1 + menu->itemHeight / 2;
-			yoffset -= (fonts[FONT_MENU]->ascent + fonts[FONT_MENU]->descent) / 2;
-			RenderString(menu->window, menu->gc, FONT_MENU, RAMP_MENU,
+			xoffset = 1 + menu->width / 2;
+			xoffset -= GetStringWidth(FONT_MENU, menu->label) / 2;
+			yoffset = 2 + menu->itemHeight / 2;
+			yoffset -= GetStringHeight(FONT_MENU) / 2;
+			RenderString(menu->window, menu->gc, FONT_MENU, COLOR_MENU_FG,
 				xoffset, yoffset, rootWidth, menu->label);
 		}
 		return;
@@ -564,7 +561,9 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 
 	if(item->name) {
 
-		xoffset = 5 + menu->textOffset;
+		xoffset = 6 + menu->textOffset;
+		yoffset = 1 + menu->offsets[index] + menu->itemHeight / 2;
+		yoffset -= GetStringHeight(FONT_MENU) / 2;
 
 		JXSetForeground(display, menu->gc, colors[COLOR_MENU_BG]);
 		JXFillRectangle(display, menu->window, menu->gc,
@@ -577,10 +576,8 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 				- item->icon->height / 2);
 		}
 
-		RenderString(menu->window, menu->gc, FONT_MENU, RAMP_MENU,
-			xoffset, menu->offsets[index] + menu->itemHeight / 2
-			- (fonts[FONT_MENU]->ascent + fonts[FONT_MENU]->descent) / 2,
-			rootWidth, item->name);
+		RenderString(menu->window, menu->gc, FONT_MENU, COLOR_MENU_FG,
+			xoffset, yoffset, rootWidth, item->name);
 
 	} else if(!item->command && !item->submenu) {
 		JXSetForeground(display, menu->gc, colors[COLOR_MENU_DOWN]);

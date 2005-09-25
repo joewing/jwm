@@ -427,10 +427,8 @@ for more information.
 .B FONTS
 .RS
 Fonts for various parts of JWM are specified within a \fBFont\fP tag. The
-text of this tag determines the font to use. This is a standard X font string.  To easily generate such a string, use the "xfontsel" program. An optional
-attribute, \fBantialias\fP, may be specified to turn on or off antialiasing
-for this font. By default, antialiasing is enabled. Valid values for the 
-\fBantialias\fP attribute are \fBtrue\fP and \fBfalse\fP.
+text of this tag determines the font to use. This is a standard X font string.
+To easily generate such a string, use the "xfontsel" program.
 .RE
 
 .B COLORS

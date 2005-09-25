@@ -35,6 +35,9 @@
 #ifdef USE_XINERAMA
 #include <X11/extensions/Xinerama.h>
 #endif
+#ifdef USE_XFT
+#include <X11/Xft/Xft.h>
+#endif
 
 #include "enum.h"
 #include "struct.h"

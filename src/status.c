@@ -18,9 +18,8 @@ void CreateMoveWindow() {
 	XSetWindowAttributes attrs;
 	int x, y;
 
-	statusWindowHeight = fonts[FONT_MENU]->ascent
-		+ fonts[FONT_MENU]->descent + 8;
-	statusWindowWidth = XTextWidth(fonts[FONT_MENU], " 00000 x 00000 ", 15);
+	statusWindowHeight = GetStringHeight(FONT_MENU) + 8;
+	statusWindowWidth = GetStringWidth(FONT_MENU, " 00000 x 00000 ");
 
 	x = rootWidth / 2 - statusWindowWidth / 2;
 	y = rootHeight / 2 - statusWindowHeight / 2;
@@ -37,7 +36,6 @@ void CreateMoveWindow() {
 
 	JXMapRaised(display, statusWindow);
 	statusGC = JXCreateGC(display, statusWindow, 0, NULL);
-	JXSetFont(display, statusGC, fonts[FONT_MENU]->fid);
 	JXSetBackground(display, statusGC, colors[COLOR_MENU_BG]);
 
 }
@@ -85,8 +83,8 @@ void UpdateMoveWindow(int x, int y) {
 	DrawMoveResizeWindow();
 
 	snprintf(str, sizeof(str), "(%d, %d)", x, y);
-	width = JXTextWidth(fonts[FONT_MENU], str, strlen(str));
-	RenderString(statusWindow, statusGC, FONT_MENU, RAMP_MENU,
+	width = GetStringWidth(FONT_MENU, str);
+	RenderString(statusWindow, statusGC, FONT_MENU, COLOR_MENU_FG,
 		statusWindowWidth / 2 - width / 2, 4, rootWidth, str);
 
 	JXFlush(display);
@@ -117,8 +115,8 @@ void UpdateResizeWindow(int width, int height) {
 	DrawMoveResizeWindow();
 
 	snprintf(str, sizeof(str), "%d x %d", width, height);
-	fontWidth = JXTextWidth(fonts[FONT_MENU], str, strlen(str));
-	RenderString(statusWindow, statusGC, FONT_MENU, RAMP_MENU,
+	fontWidth = GetStringWidth(FONT_MENU, str);
+	RenderString(statusWindow, statusGC, FONT_MENU, COLOR_MENU_FG,
 		statusWindowWidth / 2 - fontWidth / 2, 4, rootWidth, str);
 
 	JXFlush(display);

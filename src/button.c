@@ -25,7 +25,7 @@ void SetButtonDrawable(Drawable d, GC g) {
  ***************************************************************************/
 void SetButtonFont(FontType f) {
 	font = f;
-	yoffset = 1 + height / 2 - (fonts[f]->ascent + fonts[f]->descent) / 2;
+	yoffset = 1 + height / 2 - GetStringHeight(f) / 2;
 }
 
 /***************************************************************************
@@ -33,10 +33,7 @@ void SetButtonFont(FontType f) {
 void SetButtonSize(int w, int h) {
 	width = w;
 	height = h;
-	if(fonts[font]) {
-		yoffset = 1 + height / 2
-			- (fonts[font]->ascent + fonts[font]->descent) / 2;
-	}
+	yoffset = 1 + height / 2 - GetStringHeight(font) / 2;
 }
 
 /***************************************************************************
@@ -56,39 +53,43 @@ void SetButtonTextOffset(int o) {
 void DrawButton(int x, int y, ButtonType type, const char *str) {
 	long outlinePixel;
 	long topPixel, bottomPixel;
-	RampType ramp;
+	ColorType fg, bg;
 	int xoffset;
 	int len;
 
 	switch(type) {
 	case BUTTON_MENU_ACTIVE:
-		ramp = RAMP_MENU_ACTIVE;
+		fg = COLOR_MENU_ACTIVE_FG;
+		bg = COLOR_MENU_ACTIVE_BG;
 		outlinePixel = colors[COLOR_MENU_ACTIVE_DOWN];
 		topPixel = colors[COLOR_MENU_ACTIVE_UP];
 		bottomPixel = colors[COLOR_MENU_ACTIVE_DOWN];
 		break;
 	case BUTTON_TRAY:
-		ramp = RAMP_TRAY;
+		fg = COLOR_TRAY_FG;
+		bg = COLOR_TRAY_BG;
 		outlinePixel = colors[COLOR_TRAY_DOWN];
 		topPixel = colors[COLOR_TRAY_UP];
 		bottomPixel = colors[COLOR_TRAY_DOWN];
 		break;
 	case BUTTON_TRAY_ACTIVE:
-		ramp = RAMP_TRAY_ACTIVE;
+		fg = COLOR_TRAY_ACTIVE_FG;
+		bg = COLOR_TRAY_ACTIVE_BG;
 		outlinePixel = colors[COLOR_TRAY_ACTIVE_DOWN];
 		topPixel = colors[COLOR_TRAY_ACTIVE_DOWN];
 		bottomPixel = colors[COLOR_TRAY_ACTIVE_UP];
 		break;
 	case BUTTON_MENU:
 	default:
-		ramp = RAMP_MENU;
+		fg = COLOR_MENU_FG;
+		bg = COLOR_MENU_BG;
 		outlinePixel = colors[COLOR_MENU_DOWN];
 		topPixel = colors[COLOR_MENU_UP];
 		bottomPixel = colors[COLOR_MENU_DOWN];
 		break;
 	}
 
-	JXSetForeground(display, gc, ramps[ramp][0]);
+	JXSetForeground(display, gc, colors[bg]);
 	JXFillRectangle(display, drawable, gc, x + 2, y + 2, width - 3, height - 3);
 
 	JXSetForeground(display, gc, outlinePixel);
@@ -118,14 +119,14 @@ void DrawButton(int x, int y, ButtonType type, const char *str) {
 	if(len) {
 		switch(alignment) {
 		case ALIGN_CENTER:
-			xoffset = 1 + width / 2 - JXTextWidth(fonts[font], str, len) / 2;
+			xoffset = 1 + width / 2 - GetStringWidth(font, str) / 2;
 			break;
 		default:
 			xoffset = 4 + textOffset;
 			width -= textOffset;
 			break;
 		}
-		RenderString(drawable, gc, font, ramp, x + xoffset, y + yoffset,
+		RenderString(drawable, gc, font, fg, x + xoffset, y + yoffset,
 			width - 8, str);
 	}
 

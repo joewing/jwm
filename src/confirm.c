@@ -211,7 +211,6 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 	FocusClient(dp->node);
 
 	dp->gc = JXCreateGC(display, window, 0, NULL);
-	JXSetFont(display, dp->gc, fonts[FONT_BORDER]->fid);
 
 	DrawConfirmDialog(dp);
 
@@ -272,10 +271,8 @@ void ComputeDimensions(DialogType *dp) {
 	int x;
 
 	if(!minWidth) {
-		minWidth = JXTextWidth(fonts[FONT_BORDER], CANCEL_STRING,
-			strlen(CANCEL_STRING)) * 3;
-		width = JXTextWidth(fonts[FONT_BORDER], OK_STRING,
-			strlen(OK_STRING)) * 3;
+		minWidth = GetStringWidth(FONT_BORDER, CANCEL_STRING) * 3;
+		width = GetStringWidth(FONT_BORDER, OK_STRING) * 3;
 		if(width > minWidth) {
 			minWidth = width;
 		}
@@ -284,13 +281,12 @@ void ComputeDimensions(DialogType *dp) {
 	dp->width = minWidth;
 
 	for(x = 0; x < dp->lineCount; x++) {
-		width = JXTextWidth(fonts[FONT_BORDER], dp->message[x],
-			strlen(dp->message[x]));
+		width = GetStringWidth(FONT_BORDER, dp->message[x]);
 		if(width > dp->width) {
 			dp->width = width;
 		}
 	}
-	dp->lineHeight = fonts[FONT_BORDER]->ascent + fonts[FONT_BORDER]->descent;
+	dp->lineHeight = GetStringHeight(FONT_BORDER);
 	dp->width += 8;
 	dp->height = (dp->lineCount + 2) * dp->lineHeight;
 
@@ -331,7 +327,7 @@ void DrawMessage(DialogType *dp) {
 
 	yoffset = 4;
 	for(x = 0; x < dp->lineCount; x++) {
-		RenderString(dp->node->window, dp->gc, FONT_BORDER, RAMP_MENU,
+		RenderString(dp->node->window, dp->gc, FONT_BORDER, COLOR_BORDER_FG,
 			4, yoffset, dp->width, dp->message[x]);
 		yoffset += dp->lineHeight;
 	}
@@ -343,9 +339,8 @@ void DrawMessage(DialogType *dp) {
 void DrawButtons(DialogType *dp) {
 	int temp;
 
-	dp->buttonWidth = JXTextWidth(fonts[FONT_BORDER], CANCEL_STRING,
-		strlen(CANCEL_STRING));
-	temp = JXTextWidth(fonts[FONT_BORDER], OK_STRING, strlen(OK_STRING));
+	dp->buttonWidth = GetStringWidth(FONT_BORDER, CANCEL_STRING);
+	temp = GetStringWidth(FONT_BORDER, OK_STRING);
 	if(temp > dp->buttonWidth) {
 		dp->buttonWidth = temp;
 	}

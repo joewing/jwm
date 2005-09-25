@@ -105,5 +105,8 @@
 /* Define to enable the X shape extension */
 #undef USE_SHAPE
 
+/* Define to enable Xft */
+#undef USE_XFT
+
 /* Define to enable Xinerama */
 #undef USE_XINERAMA

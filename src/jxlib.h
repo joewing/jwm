@@ -307,5 +307,35 @@
 #define JXWarpPointer( a, b, c, d, e, f, g, h, i ) \
 	( SetCheckpoint(), XWarpPointer( a, b, c, d, e, f, g, h, i ) )
 
+#define JXftFontOpenXlfd( a, b, c ) \
+	( SetCheckpoint(), XftFontOpenXlfd( a, b, c ) )
+
+#define JXftDrawCreate( a, b, c, d ) \
+	( SetCheckpoint(), XftDrawCreate( a, b, c, d ) )
+
+#define JXftDrawDestroy( a ) \
+	( SetCheckpoint(), XftDrawDestroy( a ) )
+
+#define JXftTextExtents8( a, b, c, d, e ) \
+	( SetCheckpoint(), XftTextExtents8( a, b, c, d, e ) )
+
+#define JXftDrawChange( a, b ) \
+	( SetCheckpoint(), XftDrawChange( a, b ) )
+
+#define JXftDrawSetClipRectangles( a, b, c, d, e ) \
+	( SetCheckpoint(), XftDrawSetClipRectangles( a, b, c, d, e ) )
+
+#define JXftDrawString8( a, b, c, d, e, f, g ) \
+	( SetCheckpoint(), XftDrawString8( a, b, c, d, e, f, g ) )
+
+#define JXftColorFree( a, b, c, d ) \
+	( SetCheckpoint(), XftColorFree( a, b, c, d ) )
+
+#define JXftColorAllocValue( a, b, c, d, e ) \
+	( SetCheckpoint(), XftColorAllocValue( a, b, c, d, e ) )
+
+#define JXftFontClose( a, b ) \
+	( SetCheckpoint(), XftFontClose( a, b ) )
+
 #endif /* JXLIB_H */
 

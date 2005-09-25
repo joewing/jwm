@@ -30,6 +30,10 @@ CARD32 rgbColors[COLOR_COUNT];
 CARD32 white;
 CARD32 black;
 
+#ifdef USE_XFT
+static XftColor *xftColors[COLOR_COUNT] = { NULL };
+#endif
+
 static DefaultColorNode DEFAULT_COLORS[] = {
 	{ COLOR_BORDER_BG,          "gray"    },
 	{ COLOR_BORDER_FG,          "black"   },
@@ -72,11 +76,7 @@ static void InitializeNames();
 static void LightenColor(ColorType oldColor, ColorType newColor);
 static void DarkenColor(ColorType oldColor, ColorType newColor);
 
-static void CreateColorRamp(CARD32 a, CARD32 b,
-	CARD32 *ramp);
-
 static char **names = NULL;
-CARD32 *ramps[RAMP_COUNT];
 
 /****************************************************************************
  ****************************************************************************/
@@ -116,10 +116,6 @@ void InitializeColors() {
 	colorHash = Allocate(sizeof(ColorNode*) * COLOR_HASH_SIZE);
 	for(x = 0; x < COLOR_HASH_SIZE; x++) {
 		colorHash[x] = NULL;
-	}
-
-	for(x = 0; x < RAMP_COUNT; x++) {
-		ramps[x] = Allocate(8 * sizeof(CARD32));
 	}
 
 }
@@ -167,27 +163,6 @@ void StartupColors() {
 	LightenColor(COLOR_MENU_ACTIVE_BG, COLOR_MENU_ACTIVE_UP);
 	DarkenColor(COLOR_MENU_ACTIVE_BG, COLOR_MENU_ACTIVE_DOWN);
 
-	CreateColorRamp(rgbColors[COLOR_BORDER_BG], rgbColors[COLOR_BORDER_FG],
-		ramps[RAMP_BORDER]);
-
-	CreateColorRamp(rgbColors[COLOR_BORDER_ACTIVE_BG],
-		rgbColors[COLOR_BORDER_ACTIVE_FG], ramps[RAMP_BORDER_ACTIVE]);
-
-	CreateColorRamp(rgbColors[COLOR_TRAY_BG], rgbColors[COLOR_TRAY_FG],
-		ramps[RAMP_TRAY]);
-
-	CreateColorRamp(rgbColors[COLOR_TRAY_ACTIVE_BG],
-		rgbColors[COLOR_TRAY_ACTIVE_FG], ramps[RAMP_TRAY_ACTIVE]);
-
-	CreateColorRamp(rgbColors[COLOR_MENU_BG], rgbColors[COLOR_MENU_FG],
-		ramps[RAMP_MENU]);
-
-	CreateColorRamp(rgbColors[COLOR_MENU_ACTIVE_BG],
-		rgbColors[COLOR_MENU_ACTIVE_FG], ramps[RAMP_MENU_ACTIVE]);
-
-	CreateColorRamp(rgbColors[COLOR_POPUP_BG],
-		rgbColors[COLOR_POPUP_FG], ramps[RAMP_POPUP]);
-
 	white = WhitePixel(display, rootScreen);
 	black = BlackPixel(display, rootScreen);
 
@@ -206,6 +181,17 @@ void ShutdownColors() {
 			}
 		}
 	}
+
+#ifdef USE_XFT
+	for(x = 0; x < COLOR_COUNT; x++) {
+		if(xftColors[x]) {
+			JXftColorFree(display, rootVisual, rootColormap, xftColors[x]);
+			Release(xftColors[x]);
+			xftColors[x] = NULL;
+		}
+	}
+#endif
+
 }
 
 /****************************************************************************
@@ -222,12 +208,6 @@ void DestroyColors() {
 		}
 		Release(names);
 		names = NULL;
-	}
-
-	for(x = 0; x < RAMP_COUNT; x++) {
-		if(ramps[x]) {
-			Release(ramps[x]);
-		}
 	}
 
 	if(colorHash) {
@@ -398,43 +378,6 @@ void DarkenColor(ColorType oldColor, ColorType newColor) {
 
 /***************************************************************************
  ***************************************************************************/
-void CreateColorRamp(CARD32 a, CARD32 b, CARD32 *ramp) {
-
-	XColor color;
-	int x;
-	float value, inv;
-
-	float reda = (float)((a >> 16) & 0xFF) / 255.0;
-	float greena = (float)((a >> 8) & 0xFF) / 255.0;
-	float bluea = (float)(a & 0xFF) / 255.0;
-
-	float redb = (float)((b >> 16) & 0xFF) / 255.0;
-	float greenb = (float)((b >> 8) & 0xFF) / 255.0;
-	float blueb = (float)(b & 0xFF) / 255.0;
-
-	Assert(ramp);
-
-	for(x = 0; x < 8; x++) {
-
-		value = (float)x / 7.0;
-		inv = 1.0 - value;
-
-		color.red = (CARD16)((reda * inv + redb * value)
-			* 65535.0 + 0.5);
-		color.green = (CARD16)((greena * inv + greenb * value)
-			* 65535.0 + 0.5);
-		color.blue = (CARD16)((bluea * inv + blueb * value)
-			* 65535.0 + 0.5);
-
-		GetColor(&color);
-		ramp[x] = color.pixel;
-
-	}
-
-}
-
-/***************************************************************************
- ***************************************************************************/
 int GetColorByName(const char *str, XColor *c) {
 
 	Assert(str);
@@ -548,4 +491,28 @@ void GetColor(XColor *c) {
 	colorHash[hash] = np;
 
 }
+
+/****************************************************************************
+ ****************************************************************************/
+#ifdef USE_XFT
+XftColor *GetXftColor(ColorType type) {
+
+	CARD32 rgb;
+	XRenderColor rcolor;
+
+	if(!xftColors[type]) {
+		rgb = rgbColors[type];
+		xftColors[type] = Allocate(sizeof(XftColor));
+		rcolor.alpha = 65535;
+		rcolor.red = ((rgb >> 16) & 0xFF) * 257;
+		rcolor.green = ((rgb >> 8) & 0xFF) * 257;
+		rcolor.blue = (rgb & 0xFF) * 257;
+		JXftColorAllocValue(display, rootVisual, rootColormap, &rcolor,
+			xftColors[type]);
+	}
+
+	return xftColors[type];
+
+}
+#endif
 

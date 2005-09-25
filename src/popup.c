@@ -86,8 +86,8 @@ void ShowPopup(int x, int y, const char *text) {
 	popup.text = Allocate(len + 1);
 	strcpy(popup.text, text);
 
-	popup.height = fonts[FONT_POPUP]->ascent + fonts[FONT_POPUP]->descent;
-	popup.width = XTextWidth(fonts[FONT_POPUP], popup.text, len);
+	popup.height = GetStringHeight(FONT_POPUP);
+	popup.width = GetStringWidth(FONT_POPUP, popup.text);
 
 	popup.height += 1;
 	popup.width += 1; 
@@ -173,7 +173,7 @@ void DrawPopup() {
 	Assert(popup.isActive);
 
 	JXClearWindow(display, popup.window);
-	RenderString(popup.window, popup.gc, FONT_POPUP, RAMP_POPUP, 1, 1,
+	RenderString(popup.window, popup.gc, FONT_POPUP, COLOR_POPUP_FG, 1, 1,
 		popup.width, popup.text);
 
 }

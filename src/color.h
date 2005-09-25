@@ -8,7 +8,6 @@
 
 extern CARD32 colors[COLOR_COUNT];
 extern CARD32 rgbColors[COLOR_COUNT];
-extern CARD32 *ramps[RAMP_COUNT];
 
 extern CARD32 white;
 extern CARD32 black;
@@ -21,6 +20,10 @@ void DestroyColors();
 void SetColor(ColorType c, const char *value);
 
 void GetColor(XColor *c);
+
+#ifdef USE_XFT
+XftColor *GetXftColor(ColorType type);
+#endif
 
 #endif
 

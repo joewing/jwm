@@ -253,25 +253,6 @@ typedef enum {
 /****************************************************************************
  ****************************************************************************/
 typedef enum {
-
-	RAMP_BORDER        = 0,
-	RAMP_BORDER_ACTIVE = 1,
-
-	RAMP_TRAY          = 2,
-	RAMP_TRAY_ACTIVE   = 3,
-
-	RAMP_MENU          = 4,
-	RAMP_MENU_ACTIVE   = 5,
-
-	RAMP_POPUP         = 6,
-
-	RAMP_COUNT         = 7
-
-} RampType;
-
-/****************************************************************************
- ****************************************************************************/
-typedef enum {
 	WIN_STATE_STICKY          = 1 << 0,
 	WIN_STATE_MINIMIZED       = 1 << 1,
 	WIN_STATE_MAXIMIZED_VERT  = 1 << 2,

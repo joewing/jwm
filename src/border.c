@@ -231,8 +231,8 @@ void DrawBorder(const ClientNode *np) {
 void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 
 	unsigned int width;
+	ColorType borderTextColor;
 	long borderPixel, borderTextPixel;
-	RampType ramp;
 	long pixelUp, pixelDown;
 	int buttonCount, titleWidth;
 	Pixmap canvas;
@@ -241,13 +241,13 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 	width = np->width + borderWidth + borderWidth;
 
 	if(np->statusFlags & STAT_ACTIVE) {
-		ramp = RAMP_BORDER_ACTIVE;
+		borderTextColor = COLOR_BORDER_ACTIVE_FG;
 		borderPixel = colors[COLOR_BORDER_ACTIVE_BG];
 		borderTextPixel = colors[COLOR_BORDER_ACTIVE_FG];
 		pixelUp = colors[COLOR_BORDER_ACTIVE_UP];
 		pixelDown = colors[COLOR_BORDER_ACTIVE_DOWN];
 	} else {
-		ramp = RAMP_BORDER;
+		borderTextColor = COLOR_BORDER_FG;
 		borderPixel = colors[COLOR_BORDER_BG];
 		borderTextPixel = colors[COLOR_BORDER_FG];
 		pixelUp = colors[COLOR_BORDER_UP];
@@ -272,9 +272,9 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 		}
 
 		if(np->name && np->name[0] && titleWidth > 0) {
-			RenderString(canvas, gc, FONT_BORDER, ramp,
+			RenderString(canvas, gc, FONT_BORDER, borderTextColor,
 				titleSize + 4, borderWidth + titleHeight / 2
-				- (fonts[FONT_BORDER]->ascent + fonts[FONT_BORDER]->descent) / 2,
+				- GetStringHeight(FONT_BORDER) / 2,
 				titleWidth, np->name);
 		}
 

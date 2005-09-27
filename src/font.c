@@ -5,7 +5,7 @@
 
 #include "jwm.h"
 
-static const char *DEFAULT_FONT = "5x7";
+static const char *DEFAULT_FONT = "default";
 
 static char *fontNames[FONT_COUNT] = { NULL };
 
@@ -29,12 +29,18 @@ void StartupFonts() {
 #ifdef USE_XFT
 
 	for(x = 0; x < FONT_COUNT; x++) {
-		fonts[x] = JXftFontOpenXlfd(display, rootScreen, fontNames[x]);
+		fonts[x] = JXftFontOpenName(display, rootScreen, fontNames[x]);
+		if(!fonts[x]) {
+			fonts[x] = JXftFontOpenXlfd(display, rootScreen, fontNames[x]);
+		}
+		if(!fonts[x] && fontNames[x]) {
+			Warning("could not load font: %s", fontNames[x]);
+		}
 		if(!fonts[x]) {
 			fonts[x] = JXftFontOpenXlfd(display, rootScreen, DEFAULT_FONT);
-			if(!fonts[x]) {
-				FatalError("Could not load the default font: %s", DEFAULT_FONT);
-			}
+		}
+		if(!fonts[x]) {
+			FatalError("could not load the default font: %s", DEFAULT_FONT);
 		}
 	}
 
@@ -42,11 +48,14 @@ void StartupFonts() {
 
 	for(x = 0; x < FONT_COUNT; x++) {
 		fonts[x] = JXLoadQueryFont(display, fontNames[x]);
+		if(!fonts[x] && fontNames[x]) {
+			Warning("could not load font: %s", fontNames[x]);
+		}
 		if(!fonts[x]) {
 			fonts[x] = JXLoadQueryFont(display, DEFAULT_FONT);
-			if(!fonts[x]) {
-				FatalError("Could not load the default font: %s", DEFAULT_FONT);
-			}
+		}
+		if(!fonts[x]) {
+			FatalError("could not load the default font: %s", DEFAULT_FONT);
 		}
 	}
 
@@ -67,10 +76,6 @@ void ShutdownFonts() {
 			JXFreeFont(display, fonts[x]);
 #endif
 			fonts[x] = NULL;
-		}
-		if(fontNames[x]) {
-			Release(fontNames[x]);
-			fontNames[x] = NULL;
 		}
 	}
 
@@ -161,10 +166,12 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 #ifdef USE_XFT
 
 	xd = JXftDrawCreate(display, d, rootVisual, rootColormap);
-	JXftDrawSetClipRectangles(xd, 0, 0, &rect, 1);
-	JXftDrawString8(xd, GetXftColor(color), fonts[font],
-		x, y + fonts[font]->ascent, (const unsigned char*)str, len);
-	JXftDrawDestroy(xd);
+	if(xd) {
+		JXftDrawSetClipRectangles(xd, 0, 0, &rect, 1);
+		JXftDrawString8(xd, GetXftColor(color), fonts[font],
+			x, y + fonts[font]->ascent, (const unsigned char*)str, len);
+		JXftDrawDestroy(xd);
+	}
 
 #else
 

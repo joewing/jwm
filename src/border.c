@@ -103,10 +103,12 @@ void ShutdownBorders() {
 	JXFreePixmap(display, maxaActivePixmap);
 
 	if(buffer != None) {
-		JXFreePixmap(display, buffer);
 		JXFreeGC(display, bufferGC);
+		JXFreePixmap(display, buffer);
 		buffer = None;
 		bufferGC = None;
+		bufferWidth = 0;
+		bufferHeight = 0;
 	}
 
 }
@@ -269,8 +271,8 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 	if(buffer == None || bufferWidth < width || bufferHeight < height) {
 
 		if(buffer != None) {
-			XFreePixmap(display, buffer);
 			XFreeGC(display, bufferGC);
+			XFreePixmap(display, buffer);
 		}
 
 		bufferWidth = width;

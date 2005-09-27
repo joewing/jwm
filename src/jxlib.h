@@ -307,6 +307,9 @@
 #define JXWarpPointer( a, b, c, d, e, f, g, h, i ) \
 	( SetCheckpoint(), XWarpPointer( a, b, c, d, e, f, g, h, i ) )
 
+#define JXftFontOpenName( a, b, c ) \
+	( SetCheckpoint(), XftFontOpenName( a, b, c ) )
+
 #define JXftFontOpenXlfd( a, b, c ) \
 	( SetCheckpoint(), XftFontOpenXlfd( a, b, c ) )
 

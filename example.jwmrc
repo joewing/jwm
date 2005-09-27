@@ -40,7 +40,7 @@
 	</Group>
 
 	<Border>
-		<Font>-adobe-helvetica-bold-r-*-*-17-*-*-*-*-*-*-*</Font>
+		<Font>FreeSans-12:bold</Font>
 		<Width>5</Width>
 		<Height>20</Height>
 		<Foreground>black</Foreground>
@@ -50,7 +50,7 @@
 	</Border>
 
 	<Tray autohide="false">
-		<Font>-adobe-helvetica-bold-r-*-*-17-*-*-*-*-*-*-*</Font>
+		<Font>FreeSans-12:bold</Font>
 		<Width>0</Width>
 		<Height>28</Height>
 		<Alignment>center</Alignment>
@@ -80,14 +80,14 @@
 	</Clock>
 
 	<Popup enabled="true">
-		<Font>-adobe-helvetica-*-r-*-*-12-*-*-*-*-*-*-*</Font>
+		<Font>FreeSans-10</Font>
 		<Outline>black</Outline>
 		<Foreground>black</Foreground>
 		<Background>yellow</Background>
 	</Popup>
 
 	<Menu>
-		<Font>-adobe-helvetica-bold-r-*-*-17-*-*-*-*-*-*-*</Font>
+		<Font>FreeSans-12:bold</Font>
 		<Foreground>black</Foreground>
 		<Background>#DCDAD5</Background>
 		<ActiveForeground>white</ActiveForeground>

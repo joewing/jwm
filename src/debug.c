@@ -196,7 +196,11 @@ void *DEBUG_Allocate(size_t size, const char *file, unsigned int line) {
 	mp->size = size;
 
 	mp->pointer = malloc(size);
-	Assert(mp->pointer);
+	if(!mp->pointer) {
+		Debug("MEMORY: %s[%u]: Memory allocation failed (%d bytes)",
+			file, line, size);
+		Assert(0);
+	}
 
 	mp->next = allocations;
 	allocations = mp;
@@ -228,7 +232,11 @@ void *DEBUG_Reallocate(void *ptr, size_t size, const char *file,
 				mp->line = line;
 				mp->size = size;
 				mp->pointer = realloc(ptr, size);
-				Assert(mp->pointer);
+				if(!mp->pointer) {
+					Debug("MEMORY: %s[%u]: Failed to reallocate %d bytes.",
+						file, line, size);
+					Assert(0);
+				}
 				return mp->pointer;
 			}
 		}
@@ -241,6 +249,11 @@ void *DEBUG_Reallocate(void *ptr, size_t size, const char *file,
 		mp->line = line;
 		mp->size = size;
 		mp->pointer = malloc(size);
+		if(!mp->pointer) {
+			Debug("MEMORY: %s[%u]: Failed to reallocate %d bytes.",
+				file, line, size);
+			Assert(0);
+		}
 		Assert(mp->pointer);
 		mp->next = allocations;
 		allocations = mp;

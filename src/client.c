@@ -1195,7 +1195,8 @@ void RemoveClient(ClientNode *np) {
 		np->colormaps = cp;
 	}
 
-	DestroyIcon(np->icon);
+	DestroyIcon(np->titleIcon);
+	DestroyIcon(np->trayIcon);
 
 	Release(np);
 

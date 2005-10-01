@@ -24,14 +24,31 @@ typedef struct ColormapNode {
  ****************************************************************************/
 typedef struct IconNode {
 	char *name;
-	int scaled;
+	int size;
 	int width;
 	int height;
 	Pixmap image;
 	Pixmap mask;
+#ifdef USE_XRENDER
+	Picture imagePicture;
+	Picture maskPicture;
+#endif
 	struct IconNode *next;
 	struct IconNode *prev;
 } IconNode;
+
+/****************************************************************************
+ ****************************************************************************/
+typedef struct ImageNode {
+#ifdef USE_PNG
+	png_uint_32 width;
+	png_uint_32 height;
+#else
+	int width;
+	int height;
+#endif
+	unsigned char *data;
+} ImageNode;
 
 /****************************************************************************
  ****************************************************************************/
@@ -68,7 +85,8 @@ typedef struct ClientNode {
 	StatusFlags statusFlags;
 	int layer;
 
-	IconNode *icon;
+	IconNode *titleIcon;
+	IconNode *trayIcon;
 
 	void (*controller)(int wasDestroyed);
 

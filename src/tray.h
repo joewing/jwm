@@ -20,6 +20,8 @@ void StartupTray();
 void ShutdownTray();
 void DestroyTray();
 
+int GetTrayIconSize();
+
 void ShowTray();
 void HideTray();
 

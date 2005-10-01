@@ -15,6 +15,9 @@
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 
+/* Define to 1 if you have the <png.h> header file. */
+#undef HAVE_PNG_H
+
 /* Define to 1 if you have the <signal.h> header file. */
 #undef HAVE_SIGNAL_H
 
@@ -102,6 +105,9 @@
 /* Define to enable icon support */
 #undef USE_ICONS
 
+/* Define to use libpng */
+#undef USE_PNG
+
 /* Define to enable the X shape extension */
 #undef USE_SHAPE
 
@@ -110,3 +116,9 @@
 
 /* Define to enable Xinerama */
 #undef USE_XINERAMA
+
+/* Define to enable XPM support */
+#undef USE_XPM
+
+/* Define to enable the XRender extension */
+#undef USE_XRENDER

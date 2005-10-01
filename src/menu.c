@@ -45,15 +45,24 @@ void InitializeMenu(MenuType *menu) {
 	MenuItemType *np;
 	int index, temp;
 	int hasSubmenu;
+	int userHeight;
 
 	menu->textOffset = 0;
 	menu->itemCount = 0;
 
 	/* Compute the max size needed */
+	userHeight = menu->itemHeight;
+	if(userHeight < 0) {
+		userHeight = 0;
+	}
 	menu->itemHeight = GetStringHeight(FONT_MENU);
 	for(np = menu->items; np; np = np->next) {
 		if(np->iconName) {
-			np->icon = LoadNamedIcon(np->iconName, 0);
+			if(userHeight) {
+				np->icon = LoadNamedIcon(np->iconName, userHeight - 4);
+			} else {
+				np->icon = LoadNamedIcon(np->iconName, 0);
+			}
 			if(np->icon) {
 				if(menu->itemHeight < np->icon->height) {
 					menu->itemHeight = np->icon->height;
@@ -68,6 +77,10 @@ void InitializeMenu(MenuType *menu) {
 		++menu->itemCount;
 	}
 	menu->itemHeight += 7;
+
+	if(userHeight) {
+		menu->itemHeight = userHeight;
+	}
 
 	menu->width = 5;
 	menu->parent = NULL;

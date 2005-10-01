@@ -120,6 +120,12 @@ void DestroyBorders() {
 
 /****************************************************************************
  ****************************************************************************/
+int GetBorderIconSize() {
+	return titleHeight - 4;
+}
+
+/****************************************************************************
+ ****************************************************************************/
 BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 	int north;
 	int offset;
@@ -296,9 +302,9 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 
 	if(np->borderFlags & BORDER_TITLE) {
 
-		if(np->icon) {
-			PutIcon(np->icon, canvas, gc, borderWidth + 2,
-				borderWidth + titleHeight / 2 - iconSize / 2);
+		if(np->titleIcon) {
+			PutIcon(np->titleIcon, canvas, gc, borderWidth + 2,
+				borderWidth + titleHeight / 2 - np->titleIcon->height / 2);
 		}
 
 		if(np->name && np->name[0] && titleWidth > 0) {

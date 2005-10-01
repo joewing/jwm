@@ -8,8 +8,14 @@ Todo:
 	- Make JWM able to swallow other applications (like xload) in the tray.
 	- Add an option to make "alt-tabbing" go through the z-stack instead of
 	  the tray.
-	- Fix WMSpec icons on AMD64.
+	- Fix WMSpec icons on AMD64 (fixed?).
 	- Add the ability to name desktops.
+
+20051001:
+	- Can now use XRender for rendering icons.
+	- Added support for PNG icons (optional).
+	- Icons are now scaled independently for title bars and the task bar.
+	- Added "height" attribute to RootMenu and Menu.
 
 20050925:
 	- Now uses Xft for antialiasing, which can be disabled at compile time.

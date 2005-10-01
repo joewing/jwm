@@ -4,8 +4,6 @@
 #ifndef ICON_H
 #define ICON_H
 
-extern int iconSize;
-
 #ifdef USE_ICONS
 
 void InitializeIcons();
@@ -18,8 +16,10 @@ void AddIconPath(const char *path);
 void PutIcon(const IconNode *icon, Drawable d, GC g, int x, int y);
 
 void LoadIcon(ClientNode *np);
-IconNode *LoadNamedIcon(char *name, int scale);
+IconNode *LoadNamedIcon(char *name, int size);
 void DestroyIcon(IconNode *icon);
+
+IconNode *CreateIcon();
 
 #else
 

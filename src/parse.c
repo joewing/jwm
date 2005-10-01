@@ -22,6 +22,7 @@ static const char *LAYER_ATTRIBUTE = "layer";
 static const char *AUTOHIDE_ATTRIBUTE = "autohide";
 static const char *MAXWIDTH_ATTRIBUTE = "maxwidth";
 static const char *INSERT_ATTRIBUTE = "insert";
+static const char *HEIGHT_ATTRIBUTE = "height";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -321,6 +322,13 @@ void ParseRootMenu(const TokenNode *start) {
 
 	menu = Allocate(sizeof(MenuType));
 
+	value = FindAttribute(start->attributes, HEIGHT_ATTRIBUTE);
+	if(value) {
+		menu->itemHeight = atoi(value);
+	} else {
+		menu->itemHeight = 0;
+	}
+
 	value = FindAttribute(start->attributes, LABELED_ATTRIBUTE);
 	if(value && !strcmp(value, TRUE_VALUE)) {
 		if(title) {
@@ -396,6 +404,13 @@ void ParseMenuItem(const TokenNode *start, MenuType *menu) {
 
 			last->submenu = Allocate(sizeof(MenuType));
 			child = last->submenu;
+
+			value = FindAttribute(start->attributes, HEIGHT_ATTRIBUTE);
+			if(value) {
+				child->itemHeight = atoi(value);
+			} else {
+				child->itemHeight = menu->itemHeight;
+			}
 
 			value = FindAttribute(start->attributes, LABELED_ATTRIBUTE);
 			if(value && !strcmp(value, TRUE_VALUE)) {

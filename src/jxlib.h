@@ -307,6 +307,8 @@
 #define JXWarpPointer( a, b, c, d, e, f, g, h, i ) \
 	( SetCheckpoint(), XWarpPointer( a, b, c, d, e, f, g, h, i ) )
 
+/* XFT */
+
 #define JXftFontOpenName( a, b, c ) \
 	( SetCheckpoint(), XftFontOpenName( a, b, c ) )
 
@@ -339,6 +341,24 @@
 
 #define JXftFontClose( a, b ) \
 	( SetCheckpoint(), XftFontClose( a, b ) )
+
+/* Xrender */
+
+#define JXRenderFindVisualFormat( a, b ) \
+	( SetCheckpoint(), XRenderFindVisualFormat( a, b ) )
+
+#define JXRenderFindFormat( a, b, c, d ) \
+	( SetCheckpoint(), XRenderFindFormat( a, b, c, d ) )
+
+#define JXRenderCreatePicture( a, b, c, d, e ) \
+	( SetCheckpoint(), XRenderCreatePicture( a, b, c, d, e ) )
+
+#define JXRenderFreePicture( a, b ) \
+	( SetCheckpoint(), XRenderFreePicture( a, b ) )
+
+#define JXRenderComposite( a, b, c, d, e, f, g, h, i, j, k, l, m ) \
+	( SetCheckpoint(), \
+	  XRenderComposite( a, b, c, d, e, f, g, h, i, j, k, l, m) )
 
 #endif /* JXLIB_H */
 

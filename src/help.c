@@ -34,6 +34,10 @@ void DisplayCompileOptions() {
 	printf("load ");
 #endif
 
+#ifdef USE_PNG
+	printf("png ");
+#endif
+
 #ifdef USE_SHAPE
 	printf("shape ");
 #endif
@@ -44,6 +48,14 @@ void DisplayCompileOptions() {
 
 #ifdef USE_XINERAMA
 	printf("xinerama ");
+#endif
+
+#ifdef USE_XPM
+	printf("xpm ");
+#endif
+
+#ifdef USE_XRENDER
+	printf("xrender ");
 #endif
 
 	printf("\nsystem configuration: %s\n", SYSTEM_CONFIG);

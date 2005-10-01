@@ -29,6 +29,12 @@
 #include <X11/Xatom.h>
 #include <X11/keysym.h>
 
+#ifdef USE_XPM
+#include <X11/xpm.h>
+#endif
+#ifdef USE_PNG
+#include <png.h>
+#endif
 #ifdef USE_SHAPE
 #include <X11/extensions/shape.h>
 #endif
@@ -37,6 +43,9 @@
 #endif
 #ifdef USE_XFT
 #include <X11/Xft/Xft.h>
+#endif
+#ifdef USE_XRENDER
+#include <X11/extensions/Xrender.h>
 #endif
 
 #include "enum.h"
@@ -59,6 +68,7 @@
 #include "help.h"
 #include "hint.h"
 #include "icon.h"
+#include "image.h"
 #include "jxlib.h"
 #include "key.h"
 #include "lex.h" 
@@ -73,6 +83,7 @@
 #include "pager.h"
 #include "parse.h"
 #include "popup.h"
+#include "render.h"
 #include "resize.h"
 #include "root.h"
 #include "screen.h"

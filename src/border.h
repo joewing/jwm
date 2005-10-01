@@ -14,6 +14,8 @@ void DestroyBorders();
 BorderActionType GetBorderActionType(const ClientNode *np, int x, int y);
 void DrawBorder(const ClientNode *np);
 
+int GetBorderIconSize();
+
 void SetBorderWidth(const char *str);
 void SetTitleHeight(const char *str);
 

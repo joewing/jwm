@@ -1,11 +1,9 @@
 /****************************************************************************
  ****************************************************************************/
 
-#include <X11/xpm.h>
-
 #include "jwm.h"
 
-int iconSize = 0;
+static int iconSize = 0;
 
 #ifdef USE_ICONS
 
@@ -18,8 +16,6 @@ typedef struct IconPathNode {
 	struct IconPathNode *next;
 } IconPathNode;
 
-static const char *iconSuffix = ".xpm";
-
 static IconNode **iconHash;
 
 static IconPathNode *iconPaths;
@@ -27,20 +23,21 @@ static IconPathNode *iconPathsTail;
 
 static void SetIconSize();
 
-static IconNode *CreateScaledIconFromXImages(XImage *image, XImage *shape);
-static IconNode *CreateIconFromXImages(XImage *image, XImage *shape);
-static IconNode *CreateIcon();
 static void DoDestroyIcon(int index, IconNode *icon);
 static void ReadNetWMIcon(ClientNode *np);
-static IconNode *GetDefaultIcon();
-static IconNode *CreateIconFromData(const char *name, char **data);
-static IconNode *CreateIconFromFile(char *fileName, int scale);
-static IconNode *CreateIconFromBinary(const CARD32 *data, int length);
+static IconNode *GetDefaultIcon(int size);
+static IconNode *CreateIconFromData(const char *name, char **data, int size);
+static IconNode *CreateIconFromFile(char *fileName, int size);
+static IconNode *CreateIconFromBinary(const CARD32 *data, int length,
+	int size);
+static IconNode *CreateIconFromImage(ImageNode *image);
+static IconNode *LoadSuffixedIcon(const char *path, const char *name,
+	const char *suffix, int size);
 
 static void InsertIcon(IconNode *icon);
-static IconNode *FindIcon(const char *name, int scaled);
+static IconNode *FindIcon(const char *name, int size);
 static int AreEqual(const char *a, int sa, const char *b, int sb);
-static int GetHash(const char *str, int scaled);
+static int GetHash(const char *str, int size);
 
 /****************************************************************************
  * Must be initialized before parsing the configuration.
@@ -104,7 +101,7 @@ void SetIconSize() {
 	if(!iconSize) {
 
 		iconSize = trayHeight - 9;
-		if(iconSize > titleHeight - 4) {
+		if(iconSize < titleHeight - 4) {
 			iconSize = titleHeight - 4;
 		}
 
@@ -161,6 +158,10 @@ void AddIconPath(const char *path) {
  ****************************************************************************/
 void PutIcon(const IconNode *icon, Drawable d, GC g, int x, int y) {
 
+	if(PutRenderIcon(icon, d, x, y)) {
+		return;
+	}
+
 	if(icon->image != None) {
 		if(icon->mask != None) {
 			JXSetClipOrigin(display, g, x, y);
@@ -183,18 +184,19 @@ void PutIcon(const IconNode *icon, Drawable d, GC g, int x, int y) {
 void LoadIcon(ClientNode *np) {
 
 	IconPathNode *ip;
-	char *iconName;
 
 	Assert(np);
 
 	SetIconSize();
 
-	DestroyIcon(np->icon);
-	np->icon = NULL;
+	DestroyIcon(np->titleIcon);
+	np->titleIcon = NULL;
+	DestroyIcon(np->trayIcon);
+	np->trayIcon = NULL;
 
 	/* Attempt to read _NET_WM_ICON for an icon */
 	ReadNetWMIcon(np);
-	if(np->icon) {
+	if(np->titleIcon) {
 		return;
 	}
 
@@ -202,30 +204,68 @@ void LoadIcon(ClientNode *np) {
 	if(np->instanceName) {
 		for(ip = iconPaths; ip; ip = ip->next) {
 
-			iconName = Allocate(strlen(np->instanceName)
-				+ strlen(ip->path) + strlen(iconSuffix) + 1);
-			strcpy(iconName, ip->path);
-			strcat(iconName, np->instanceName);
-			strcat(iconName, iconSuffix);
-
-			np->icon = CreateIconFromFile(iconName, 1);
-
-			Release(iconName);
-			if(np->icon) {
-				return;
+#ifdef USE_PNG
+			np->titleIcon = LoadSuffixedIcon(ip->path, np->instanceName,
+				".png", GetBorderIconSize());
+			if(np->titleIcon) {
+				np->trayIcon = LoadSuffixedIcon(ip->path, np->instanceName,
+					".png", GetTrayIconSize());
+				break;
 			}
+#endif
+
+#ifdef USE_XPM
+			np->titleIcon = LoadSuffixedIcon(ip->path, np->instanceName,
+				".xpm", GetBorderIconSize());
+			if(np->titleIcon) {
+				np->trayIcon = LoadSuffixedIcon(ip->path, np->instanceName,
+					".xpm", GetTrayIconSize());
+				break;
+			}
+#endif
 
 		}
 	}
 
 	/* Load the default icon */
-	np->icon = GetDefaultIcon();
+	np->titleIcon = GetDefaultIcon(GetBorderIconSize());
+	np->trayIcon = GetDefaultIcon(GetTrayIconSize());
 
 }
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *LoadNamedIcon(char *name, int scale) {
+IconNode *LoadSuffixedIcon(const char *path, const char *name,
+	const char *suffix, int size) {
+
+	IconNode *result = NULL;
+	ImageNode *image;
+	char *iconName;
+
+	iconName = Allocate(strlen(name)
+		+ strlen(path) + strlen(suffix) + 1);
+	strcpy(iconName, path);
+	strcat(iconName, name);
+	strcat(iconName, suffix);
+
+	image = LoadImage(iconName);
+	if(image) {
+		ScaleImage(image, size);
+		result = CreateIconFromImage(image);
+		result->size = size;
+		InsertIcon(result);
+		DestroyImage(image);
+	}
+
+	Release(iconName);
+
+	return result;
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+IconNode *LoadNamedIcon(char *name, int size) {
 
 	IconPathNode *ip;
 	IconNode *icon;
@@ -236,13 +276,13 @@ IconNode *LoadNamedIcon(char *name, int scale) {
 	SetIconSize();
 
 	if(name[0] == '/') {
-		return CreateIconFromFile(name, scale);
+		return CreateIconFromFile(name, size);
 	} else {
 		for(ip = iconPaths; ip; ip = ip->next) {
 			temp = Allocate(strlen(name) + strlen(ip->path) + 1);
 			strcpy(temp, ip->path);
 			strcat(temp, name);
-			icon = CreateIconFromFile(temp, scale);
+			icon = CreateIconFromFile(temp, size);
 			Release(temp);
 			if(icon) {
 				return icon;
@@ -269,9 +309,15 @@ void ReadNetWMIcon(ClientNode *np) {
 		&extra, &data);
 
 	if(status == Success && data) {
-		np->icon = CreateIconFromBinary((CARD32*)data, count);
-		if(np->icon) {
-			InsertIcon(np->icon);
+		np->titleIcon = CreateIconFromBinary((CARD32*)data, count,
+			GetBorderIconSize());
+		if(np->titleIcon) {
+			InsertIcon(np->titleIcon);
+		}
+		np->trayIcon = CreateIconFromBinary((CARD32*)data, count,
+			GetTrayIconSize());
+		if(np->trayIcon) {
+			InsertIcon(np->trayIcon);
 		}
 		JXFree(data);
 	}
@@ -281,15 +327,15 @@ void ReadNetWMIcon(ClientNode *np) {
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *GetDefaultIcon() {
-	return CreateIconFromData("default", x_xpm);
+IconNode *GetDefaultIcon(int size) {
+	return CreateIconFromData("default", x_xpm, size);
 }
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *CreateIconFromData(const char *name, char **data) {
+IconNode *CreateIconFromData(const char *name, char **data, int size) {
 
-	XImage *image, *shape;
+	ImageNode *image;
 	IconNode *result;
 
 	Assert(name);
@@ -299,25 +345,22 @@ IconNode *CreateIconFromData(const char *name, char **data) {
 	}
 
 	/* Check if this icon has already been loaded */
-	result = FindIcon(name, 1);
+	result = FindIcon(name, size);
 	if(result) {
 		return result;
 	}
 
-	if(XpmCreateImageFromData(display, data, &image,
-		&shape, NULL) == XpmSuccess) {
-
-		result = CreateScaledIconFromXImages(image, shape);
-		if(result) {
-			result->name = Allocate(strlen(name) + 1);
-			strcpy(result->name, name);
-			InsertIcon(result);
-		}
-
+	image = LoadImageFromData(data);
+	if(image) {
+		ScaleImage(image, size);
+		result = CreateIconFromImage(image);
+		DestroyImage(image);
+		result->name = Allocate(strlen(name) + 1);
+		strcpy(result->name, name);
+		result->size = size;
+		InsertIcon(result);
 		return result;
-
 	} else {
-		Debug("invalid xpm");
 		return NULL;
 	}
 
@@ -326,76 +369,33 @@ IconNode *CreateIconFromData(const char *name, char **data) {
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *CreateIconFromFile(char *fileName, int scale) {
+IconNode *CreateIconFromFile(char *fileName, int size) {
 
-	XImage *image, *shape;
-	IconNode *result;
+	IconNode *result = NULL;
+	ImageNode *image;
 
 	if(!fileName) {
 		return NULL;
 	}
 
 	/* Check if this icon has already been loaded */
-	result = FindIcon(fileName, scale);
+	result = FindIcon(fileName, size);
 	if(result) {
 		return result;
 	}
 
-	/* Load the icon */
-	if(XpmReadFileToImage(display, fileName, &image,
-		&shape, NULL) == XpmSuccess) {
-		if(scale) {
-			result = CreateScaledIconFromXImages(image, shape);
-		} else {
-			result = CreateIconFromXImages(image, shape);
-		}
+	image = LoadImage(fileName);
+	if(image) {
+		ScaleImage(image, size);
+		result = CreateIconFromImage(image);
 		if(result) {
 			result->name = Allocate(strlen(fileName) + 1);
 			strcpy(result->name, fileName);
+			result->size = size;
 			InsertIcon(result);
 		}
-		return result;
-	} else {
-		Debug("error reading xpm: %s", fileName);
-		return NULL;
+		DestroyImage(image);
 	}
-
-}
-
-/****************************************************************************
- ****************************************************************************/
-IconNode *CreateIconFromXImages(XImage *simage, XImage *shape) {
-
-	IconNode *result;
-	GC gc;
-
-	result = CreateIcon();
-	result->scaled = 0;
-	result->width = simage->width;
-	result->height = simage->height;
-
-	/* Create the mask pixmap */
-	result->mask = JXCreatePixmap(display, rootWindow,
-		simage->width, simage->height, 1);
-	gc = JXCreateGC(display, result->mask, 0, NULL);
-	JXSetForeground(display, gc, 1);
-	JXFillRectangle(display, result->mask, gc, 0, 0,
-		simage->width, simage->height);
-	if(shape) {
-		JXPutImage(display, result->mask, gc, shape, 0, 0, 0, 0,
-			shape->width, shape->height);
-		JXDestroyImage(shape);
-	}
-	JXFreeGC(display, gc);
-
-	/* Create the image pixmap */
-	result->image = JXCreatePixmap(display, rootWindow,
-		simage->width, simage->height, rootDepth);
-	gc = JXCreateGC(display, result->image, 0, NULL);
-	JXPutImage(display, result->image, gc, simage, 0, 0, 0, 0,
-		simage->width, simage->height);
-	JXFreeGC(display, gc);
-	JXDestroyImage(simage);
 
 	return result;
 
@@ -403,94 +403,66 @@ IconNode *CreateIconFromXImages(XImage *simage, XImage *shape) {
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *CreateScaledIconFromXImages(XImage *simage, XImage *shape) {
+IconNode *CreateIconFromImage(ImageNode *image) {
 
-	XImage *dimage;
-	double scalex, scaley;
-	double srcx, srcy;
-	int destx, desty;
-	CARD32 pixel, pixelMask;
-	GC gc;
-	char *data;
 	IconNode *result;
-
-	Assert(simage);
-
-	scalex = (double)simage->width / iconSize;
-	scaley = (double)simage->height / iconSize;
-
-	data = Allocate(iconSize * iconSize * sizeof(CARD32));
-
-	result = CreateIcon();
-	result->scaled = 1;
-	result->width = iconSize;
-	result->height = iconSize;
-
-	dimage = JXCreateImage(display, rootVisual, rootDepth, ZPixmap, 0,
-		data, iconSize, iconSize, 32, 0);
-
-	result->mask = JXCreatePixmap(display, rootWindow, iconSize, iconSize, 1);
-	gc = JXCreateGC(display, result->mask, 0, NULL);
-	JXSetForeground(display, gc, 0);
-	JXFillRectangle(display, result->mask, gc, 0, 0, iconSize, iconSize);
-	JXSetForeground(display, gc, 1);
-
-	srcy = 0.0;
-	for(desty = 0; desty < iconSize; desty++) {
-		srcx = 0.0;
-		for(destx = 0; destx < iconSize; destx++) {
-			pixel = XGetPixel(simage, (int)srcx, (int)srcy);
-			if(shape) {
-				pixelMask = XGetPixel(shape, (int)srcx, (int)srcy);
-			} else {
-				pixelMask = 1;
-			}
-			XPutPixel(dimage, destx, desty, pixel);
-			if(pixelMask) {
-				XDrawPoint(display, result->mask, gc, destx, desty);
-			}
-			srcx += scalex;
-		}
-		srcy += scaley;
-	}
-
-	JXFreeGC(display, gc);
-	JXDestroyImage(simage);
-	if(shape) {
-		JXDestroyImage(shape);
-	}
-
-	/* Create the image pixmap */
-	result->image = JXCreatePixmap(display, rootWindow, iconSize,
-		iconSize, rootDepth);
-
-	gc = JXCreateGC(display, result->image, 0, NULL);
-	JXPutImage(display, result->image, gc, dimage, 0, 0, 0, 0,
-		iconSize, iconSize);
-	JXFreeGC(display, gc);
-
-	Release(dimage->data);
-	dimage->data = NULL;
-	JXDestroyImage(dimage);
-
-	return result;
-}
-
-/****************************************************************************
- ****************************************************************************/
-IconNode *CreateIconFromBinary(const CARD32 *input, int length) {
-
-	double scalex, scaley;
-	CARD32 height, width;
-	CARD32 destx, desty;
-	CARD32 index;
-	double srcx, srcy;
-	CARD32 alpha;
-	char *data;
 	XColor color;
+	unsigned char alpha;
+	int x, y;
+	int index;
+	GC imageGC, maskGC;
+
+	Assert(image);
+
+	result = CreateRenderIconFromImage(image);
+	if(result) {
+		return result;
+	}
+
+	result = CreateIcon();
+	result->width = image->width;
+	result->height = image->height;
+
+	result->mask = JXCreatePixmap(display, rootWindow,
+		image->width, image->height, 1);
+	maskGC = JXCreateGC(display, result->mask, 0, NULL);
+	result->image = JXCreatePixmap(display, rootWindow,
+		image->width, image->height, rootDepth);
+	imageGC = JXCreateGC(display, result->image, 0, NULL);
+
+	for(y = 0; y < image->height; y++) {
+		for(x = 0; x < image->width; x++) {
+			index = y * image->width + x;
+			alpha = image->data[index++];
+			color.red = image->data[index++] * 257;
+			color.green = image->data[index++] * 257;
+			color.blue = image->data[index] * 257;
+			GetColor(&color);
+			JXSetForeground(display, imageGC, color.pixel);
+			XDrawPoint(display, result->image, imageGC, x, y);
+			if(alpha >= 128) {
+				JXSetForeground(display, maskGC, 1);
+			} else {
+				JXSetForeground(display, maskGC, 0);
+			}
+			XDrawPoint(display, result->mask, maskGC, x, y);
+		}
+	}
+
+	JXFreeGC(display, maskGC);
+	JXFreeGC(display, imageGC);
+
+	return result;
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+IconNode *CreateIconFromBinary(const CARD32 *input, int length, int size) {
+
+	CARD32 height, width;
 	IconNode *result;
-	XImage *image;
-	GC gc;
+	ImageNode *image;
 
 	if(!input) {
 		return NULL;
@@ -504,55 +476,18 @@ IconNode *CreateIconFromBinary(const CARD32 *input, int length) {
 		return NULL;
 	}
 
-	scalex = (double)width / iconSize;
-	scaley = (double)height / iconSize;
+	image = Allocate(sizeof(ImageNode));
+	image->width = width;
+	image->height = height;
 
-	data = Allocate(iconSize * iconSize * sizeof(CARD32));
-	image = XCreateImage(display, rootVisual, rootDepth, ZPixmap, 0,
-		data, iconSize, iconSize, 32, 0);
+	image->data = Allocate(width * height * sizeof(CARD32));
+	memcpy(image->data, input + 2, width * height * sizeof(CARD32));
 
-	result = CreateIcon();
-	result->scaled = 1;
-	result->width = iconSize;
-	result->height = iconSize;
-
-	result->mask = JXCreatePixmap(display, rootWindow, iconSize, iconSize, 1);
-	gc = JXCreateGC(display, result->mask, 0, NULL);
-	JXSetForeground(display, gc, 0);
-	JXFillRectangle(display, result->mask, gc, 0, 0, iconSize, iconSize);
-	JXSetForeground(display, gc, 1);
-
-	srcy = 0.0;
-	for(desty = 0; desty < iconSize; desty++) {
-		srcx = 0.0;
-		for(destx = 0; destx < iconSize; destx++) {
-			index = 2 + (CARD32)srcy * width + (CARD32)srcx;
-			alpha = (input[index] >> 24) & 0xFF;
-			color.red = ((input[index] >> 16) & 0xFF) * 257;
-			color.green = ((input[index] >> 8) & 0xFF) * 257;
-			color.blue = (input[index] & 0xFF) * 257;
-			if(alpha >= 128) {
-				GetColor(&color);
-				XPutPixel(image, destx, desty, color.pixel);
-				XDrawPoint(display, result->mask, gc, destx, desty);
-			}
-			srcx += scalex;
-		}
-		srcy += scaley;
-	}
-
-	JXFreeGC(display, gc);
-
-	result->image = JXCreatePixmap(display, rootWindow,
-		iconSize, iconSize, rootDepth);
-	gc = JXCreateGC(display, result->image, 0, NULL);
-	JXPutImage(display, result->image, gc, image, 0, 0, 0, 0,
-		iconSize, iconSize);
-	JXFreeGC(display, gc);
-
-	Release(image->data);
-	image->data = NULL;
-	JXDestroyImage(image);
+	ScaleImage(image, size);
+	result = CreateIconFromImage(image);
+	result->size = size;
+	/* Don't insert this icon since it is transient. */
+	DestroyImage(image);
 
 	return result;
 
@@ -568,7 +503,11 @@ IconNode *CreateIcon() {
 	icon->name = NULL;
 	icon->image = None;
 	icon->mask = None;
-	icon->scaled = 0;
+#ifdef USE_XRENDER
+	icon->imagePicture = None;
+	icon->maskPicture = None;
+#endif
+	icon->size = 0;
 	icon->width = 0;
 	icon->height = 0;
 	icon->next = NULL;
@@ -583,7 +522,15 @@ IconNode *CreateIcon() {
 void DoDestroyIcon(int index, IconNode *icon) {
 
 	if(icon) {
-		if(icon->image) {
+#ifdef USE_XRENDER
+		if(icon->imagePicture != None) {
+			JXRenderFreePicture(display, icon->imagePicture);
+		}
+		if(icon->maskPicture != None) {
+			JXRenderFreePicture(display, icon->maskPicture);
+		}
+#endif
+		if(icon->image != None) {
 			JXFreePixmap(display, icon->image);
 		}
 		if(icon->mask != None) {
@@ -611,7 +558,7 @@ void DestroyIcon(IconNode *icon) {
 	int index;
 
 	if(icon && !icon->name) {
-		index = GetHash(icon->name, icon->scaled);
+		index = GetHash(icon->name, icon->size);
 		DoDestroyIcon(index, icon);
 	}
 
@@ -625,7 +572,7 @@ void InsertIcon(IconNode *icon) {
 
 	Assert(icon);
 
-	index = GetHash(icon->name, icon->scaled);
+	index = GetHash(icon->name, icon->size);
 
 	icon->prev = NULL;
 	if(iconHash[index]) {
@@ -638,16 +585,16 @@ void InsertIcon(IconNode *icon) {
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *FindIcon(const char *name, int scaled) {
+IconNode *FindIcon(const char *name, int size) {
 
 	IconNode *icon;
 	int index;
 
-	index = GetHash(name, scaled);
+	index = GetHash(name, size);
 
 	icon = iconHash[index];
 	while(icon) {
-		if(AreEqual(icon->name, icon->scaled, name, scaled)) {
+		if(AreEqual(icon->name, icon->size, name, size)) {
 			return icon;
 		}
 		icon = icon->next;
@@ -677,10 +624,10 @@ int AreEqual(const char *a, int sa, const char *b, int sb) {
 
 /****************************************************************************
  ****************************************************************************/
-int GetHash(const char *str, int scaled) {
+int GetHash(const char *str, int size) {
 
 	int x;
-	int hash = scaled;
+	int hash = size;
 
 	if(!str || !str[0]) {
 		return hash % HASH_SIZE;

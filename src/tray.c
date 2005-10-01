@@ -167,7 +167,7 @@ void StartupTray() {
 		trayStart = GetStringWidth(FONT_TRAY, menuTitle);
 		trayStart += 20;
 		if(menuIcon) {
-			trayStart += iconSize;
+			trayStart += trayHeight - 9;
 		}
 	} else if(menuIcon) {
 		trayStart = trayHeight;
@@ -237,6 +237,16 @@ void DestroyTray() {
 		Release(menuIconName);
 		menuIconName = NULL;
 	}
+}
+
+/***************************************************************************
+ ***************************************************************************/
+int GetTrayIconSize() {
+#ifdef USE_ICONS
+	return trayHeight - 9;
+#else
+	return 0;
+#endif
 }
 
 /***************************************************************************
@@ -666,14 +676,14 @@ void DrawTray() {
 		SetButtonSize(trayStart - 4, trayHeight - 3);
 		if(menuIcon) {
 			SetButtonAlignment(ALIGN_LEFT);
-			SetButtonTextOffset(iconSize);
+			SetButtonTextOffset(GetTrayIconSize());
 		} else {
 			SetButtonAlignment(ALIGN_CENTER);
 		}
 		DrawButton(1, 1, BUTTON_TRAY, menuTitle);
 		if(menuIcon) {
 			PutIcon(menuIcon, buffer, bufferGC, 5,
-				trayHeight / 2 - iconSize / 2);
+				trayHeight / 2 - menuIcon->height / 2);
 		}
 
 	}
@@ -693,7 +703,7 @@ void DrawTray() {
 		- trayStop - (width * itemCount);
 
 	SetButtonAlignment(ALIGN_LEFT);
-	SetButtonTextOffset(iconSize);
+	SetButtonTextOffset(GetTrayIconSize());
 
 	x = trayStart + pagerWidth + 2;
 	for(tp = trayNodes; tp; tp = tp->next) {
@@ -716,9 +726,9 @@ void DrawTray() {
 
 		DrawButton(x, 1, buttonType, tp->client->name);
 
-		if(tp->client->icon) {
-			PutIcon(tp->client->icon, buffer, bufferGC, x + 3,
-				trayHeight / 2 - iconSize / 2);
+		if(tp->client->trayIcon) {
+			PutIcon(tp->client->trayIcon, buffer, bufferGC, x + 3,
+				trayHeight / 2 - tp->client->trayIcon->height / 2);
 		}
 
 		if(tp->client->statusFlags & STAT_MINIMIZED) {

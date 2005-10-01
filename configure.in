@@ -41,6 +41,8 @@ AC_CHECK_HEADERS([X11/Xutil.h X11/cursorfont.h X11/Xproto.h \
 		#include <X11/Xlib.h>
 	])
 
+NEED_XEXT="false"
+
 # Confirm dialogs
 AC_ARG_ENABLE(confirm,
 	AC_HELP_STRING([--disable-confirm], [don't enable confirm dialogs]) )
@@ -48,21 +50,45 @@ if test "$enable_confirm" = "no"; then
 	AC_DEFINE(DISABLE_CONFIRM, 1, [Define to disable confirm dialogs])
 fi
 
-# Icon Support (libXpm)
+# Icon suport
 AC_ARG_ENABLE(icons,
 	AC_HELP_STRING([--disable-icons], [don't enable icon support]) )
 if test "$enable_icons" != "no"; then
-	AC_CHECK_HEADERS([X11/xpm.h], [],
+	AC_DEFINE(USE_ICONS, 1, [Define to enable icon support] )
+fi
+
+# PNG
+AC_ARG_ENABLE(png,
+	AC_HELP_STRING([--disable-png], [don't support PNG images]) )
+if test "$enable_png" != "no"; then
+	AC_CHECK_HEADERS([png.h], [],
 		[
-			enable_icons="no";
-			AC_MSG_WARN([unabled to use X11/xpm.h, disabling icon support])
+			enable_png="no";
+			AC_MSG_WARN([unable to use png.h, PNG support disabled])
 		])
 fi
-if test "$enable_icons" != "no"; then
+if test "$enable_png" != "no"; then
+	AC_CHECK_LIB(png, png_read_image,
+		[ LDFLAGS="$LDFLAGS -lpng"
+		  AC_DEFINE(USE_PNG, 1, [Define to use libpng]) ],
+		[ AC_MSG_WARN([unable to use libpng, PNG support disabled]) ])
+fi
+
+# Xpm
+AC_ARG_ENABLE(xpm,
+	AC_HELP_STRING([--disable-xpm], [don't support XPM images]) )
+if test "$enable_xpm" != "no"; then
+	AC_CHECK_HEADERS([X11/xpm.h], [],
+		[
+			enable_xpm="no";
+			AC_MSG_WARN([unable to use X11/xpm.h, disabling XPM support])
+		])
+fi
+if test "$enable_xpm" != "no"; then
 	AC_CHECK_LIB(Xpm, XpmReadFileToImage,
 		[ LDFLAGS="$LDFLAGS -lXpm"
-			AC_DEFINE(USE_ICONS, 1, [Define to enable icon support]) ],
-		[ AC_MSG_WARN([unable to use libXpm, disabling icon support]) ])
+		  AC_DEFINE(USE_XPM, 1, [Define to enable XPM support]) ],
+		[ AC_MSG_WARN([unable to use libXpm, disabling XPM support]) ])
 fi
 
 # Shape extension
@@ -70,7 +96,7 @@ AC_ARG_ENABLE(shape,
 	AC_HELP_STRING([--disable-shape], [don't use the X shape extension]) )
 if test "$enable_shape" != "no"; then
 	AC_CHECK_LIB(Xext, XShapeCombineRectangles,
-		[ LDFLAGS="$LDFLAGS -lXext"
+		[ NEED_XEXT="true"
 		  AC_DEFINE(USE_SHAPE, 1, [Define to enable the X shape extension]) ],
 		[ AC_MSG_WARN([unable to use the X shape extension]) ])
 fi
@@ -94,6 +120,21 @@ if test "$enable_xft" != "no"; then
 		  CFLAGS="$CFLAGS $(xft-config --cflags)"
 		  AC_DEFINE(USE_XFT, 1, [Define to enable Xft]) ],
 		[ AC_MSG_WARN([unable to use Xft]) ])
+fi
+
+# XRender
+AC_ARG_ENABLE(xrender,
+	AC_HELP_STRING([--disable-xrender], [don't use the XRender extension]) )
+if test "$enable_xrender" != "no"; then
+	AC_CHECK_LIB(Xext, XRenderComposite,
+		[ NEED_XEXT="true"
+		  AC_DEFINE(USE_XRENDER, 1, [Define to enable the XRender extension]) ],
+		[ AC_MSG_WARN([unable to use the XRender extension]) ])
+fi
+
+# See if libXext is needed.
+if test "$NEED_XEXT" == "true"; then
+	LDFLAGS="$LDFLAGS -lXext"
 fi
 
 # Load display

@@ -260,8 +260,10 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
 			}
 			break;
 		case OPTION_ICON:
-			DestroyIcon(np->icon);
-			np->icon = LoadNamedIcon(lp->value, 1);
+			DestroyIcon(np->titleIcon);
+			DestroyIcon(np->trayIcon);
+			np->titleIcon = LoadNamedIcon(lp->value, GetBorderIconSize());
+			np->trayIcon = LoadNamedIcon(lp->value, GetTrayIconSize());
 			break;
 		default:
 			Debug("invalid option: %d", lp->option);

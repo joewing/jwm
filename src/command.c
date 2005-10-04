@@ -38,6 +38,14 @@ void ShutdownCommands() {
 /****************************************************************************
  ****************************************************************************/
 void DestroyCommands() {
+	if(startupCommand) {
+		Release(startupCommand);
+		startupCommand = NULL;
+	}
+	if(shutdownCommand) {
+		Release(shutdownCommand);
+		shutdownCommand = NULL;
+	}
 }
 
 /****************************************************************************

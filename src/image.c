@@ -1,4 +1,6 @@
 /****************************************************************************
+ * Functions to load images.
+ * Copyright (C) 2005 Joe Wingbermuehle
  ****************************************************************************/
 
 #include "jwm.h"
@@ -13,6 +15,10 @@ static void ResizeImage(ImageNode *image, int width, int height);
 ImageNode *LoadImage(const char *fileName) {
 
 	ImageNode *result;
+
+	if(!fileName) {
+		return NULL;
+	}
 
 	/* Attempt to load the file as a PNG image. */
 	result = LoadPNGImage(fileName);
@@ -41,6 +47,8 @@ ImageNode *LoadImageFromData(char **data) {
 	XImage *image;
 	XImage *shape;
 	int rc;
+
+	Assert(data);
 
 	rc = XpmCreateImageFromData(display, data, &image, &shape, NULL);
 	if(rc == XpmSuccess) {
@@ -74,13 +82,15 @@ ImageNode *LoadPNGImage(const char *fileName) {
 	unsigned char **rows;
 	int x, y;
 
+	Assert(fileName);
+
 	fd = fopen(fileName, "rb");
 	if(!fd) {
 		return NULL;
 	}
 
-	fread(header, 1, sizeof(header), fd);
-	if(png_sig_cmp(header, 0, sizeof(header))) {
+	x = fread(header, 1, sizeof(header), fd);
+	if(x != sizeof(header) || png_sig_cmp(header, 0, sizeof(header))) {
 		fclose(fd);
 		return NULL;
 	}
@@ -189,6 +199,8 @@ ImageNode *LoadXPMImage(const char *fileName) {
 	XImage *image;
 	XImage *shape;
 	int rc;
+
+	Assert(fileName);
 
 	rc = XpmReadFileToImage(display, (char*)fileName, &image, &shape, NULL);
 	if(rc == XpmSuccess) {

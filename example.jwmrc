@@ -3,30 +3,29 @@
 <JWM>
 
 	<!-- The root menu, if this is undefined you will not get a menu. -->
-	<RootMenu label="JWM">
-		<Program icon="rxvt.xpm" label="Terminal">rxvt</Program>
-		<Menu icon="folder.xpm" label="Applications">
-			<Program icon="dia.xpm" label="Dia">dia</Program>
-			<Program icon="gimp.xpm" label="Gimp">gimp</Program>
-			<Program icon="xine.xpm" label="gxine">gxine</Program>
-			<Program icon="xmms.xpm" label="XMMS">xmms</Program>
+	<RootMenu label="JWM" height="32">
+		<Program icon="rxvt.png" label="Terminal">rxvt</Program>
+		<Menu icon="folder.png" label="Applications">
+			<Program icon="dia.png" label="Dia">dia</Program>
+			<Program icon="firefox.png" label="Firefox">firefox</Program>
+			<Program icon="gaim.png" label="Gaim">gaim</Program>
+			<Program icon="gftp.png" label="gFTP">gftp</Program>
+			<Program icon="gimp.png" label="Gimp">gimp</Program>
+			<Program icon="gnutella.png" label="gnutella">gtk-gnutella</Program>
+			<Program icon="xine.png" label="gxine">gxine</Program>
+			<Program icon="xmms.png" label="XMMS">xmms</Program>
 		</Menu>
-		<Menu icon="folder.xpm" label="Network">
-			<Program icon="firefox.xpm" label="Firefox">firefox</Program>
-			<Program icon="gaim.xpm" label="Gaim">gaim</Program>
-			<Program label="gFTP">gftp</Program>
-			<Program label="gnutella" icon="gnutella.xpm">gtk-gnutella</Program>
-		</Menu>
-		<Menu icon="folder.xpm" label="Utilities">
-			<Program>xfontsel</Program>
-			<Program icon="xmag.xpm">xmag</Program>
-		</Menu>
-		<Menu icon="folder.xpm" label="Misc">
-			<Exit confirm="true" label="Exit to Terminal">rxvt</Exit>
+		<Menu icon="folder.png" label="Utilities">
+			<Program icon="xcalc.png">xcalc</Program>
+			<Program icon="xfontsel.png">xfontsel</Program>
+			<Program icon="xmag.png">xmag</Program>
+			<Program icon="xprop.png" label="xprop">
+				xprop | xmessage -file -
+			</Program>
 		</Menu>
 		<Separator/>
-		<Restart icon="restart.xpm"/>
-		<Exit confirm="true" icon="exit.xpm"/>
+		<Restart icon="restart.png"/>
+		<Exit confirm="true" icon="exit.png"/>
 	</RootMenu>
 
 	<Group>
@@ -36,7 +35,7 @@
 
 	<Group>
 		<Class>xmms</Class>
-		<Option>icon:xmms.xpm</Option>
+		<Option>icon:xmms.png</Option>
 	</Group>
 
 	<Border>

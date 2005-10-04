@@ -780,6 +780,7 @@ char *GetLoadString() {
 		len = fread(str, sizeof(char), sizeof(str), fd);
 		pclose(fd);
 		if(len > 0) {
+			str[len - 1] = 0;
 			return str;
 		}
 	}

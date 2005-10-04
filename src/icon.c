@@ -27,7 +27,7 @@ static void DoDestroyIcon(int index, IconNode *icon);
 static void ReadNetWMIcon(ClientNode *np);
 static IconNode *GetDefaultIcon(int size);
 static IconNode *CreateIconFromData(const char *name, char **data, int size);
-static IconNode *CreateIconFromFile(char *fileName, int size);
+static IconNode *CreateIconFromFile(const char *fileName, int size);
 static IconNode *CreateIconFromBinary(const CARD32 *data, int length,
 	int size);
 static IconNode *CreateIconFromImage(ImageNode *image);
@@ -59,6 +59,7 @@ void InitializeIcons() {
 /****************************************************************************
  ****************************************************************************/
 void StartupIcons() {
+	QueryRenderExtension();
 }
 
 /****************************************************************************
@@ -112,7 +113,7 @@ void SetIconSize() {
 		size.width_inc = iconSize;
 		size.height_inc = iconSize;
 
-		XSetIconSizes(display, rootWindow, &size, 1);
+		JXSetIconSizes(display, rootWindow, &size, 1);
 
 	}
 
@@ -157,6 +158,8 @@ void AddIconPath(const char *path) {
 /****************************************************************************
  ****************************************************************************/
 void PutIcon(const IconNode *icon, Drawable d, GC g, int x, int y) {
+
+	Assert(icon);
 
 	if(PutRenderIcon(icon, d, x, y)) {
 		return;
@@ -210,7 +213,7 @@ void LoadIcon(ClientNode *np) {
 			if(np->titleIcon) {
 				np->trayIcon = LoadSuffixedIcon(ip->path, np->instanceName,
 					".png", GetTrayIconSize());
-				break;
+				return;
 			}
 #endif
 
@@ -220,7 +223,7 @@ void LoadIcon(ClientNode *np) {
 			if(np->titleIcon) {
 				np->trayIcon = LoadSuffixedIcon(ip->path, np->instanceName,
 					".xpm", GetTrayIconSize());
-				break;
+				return;
 			}
 #endif
 
@@ -242,22 +245,33 @@ IconNode *LoadSuffixedIcon(const char *path, const char *name,
 	ImageNode *image;
 	char *iconName;
 
+	Assert(path);
+	Assert(name);
+	Assert(suffix);
+
 	iconName = Allocate(strlen(name)
 		+ strlen(path) + strlen(suffix) + 1);
 	strcpy(iconName, path);
 	strcat(iconName, name);
 	strcat(iconName, suffix);
 
+	result = FindIcon(iconName, size);
+	if(result) {
+		Release(iconName);
+		return result;
+	}
+
 	image = LoadImage(iconName);
 	if(image) {
 		ScaleImage(image, size);
 		result = CreateIconFromImage(image);
 		result->size = size;
+		result->name = iconName;
 		InsertIcon(result);
 		DestroyImage(image);
+	} else {
+		Release(iconName);
 	}
-
-	Release(iconName);
 
 	return result;
 
@@ -265,7 +279,7 @@ IconNode *LoadSuffixedIcon(const char *path, const char *name,
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *LoadNamedIcon(char *name, int size) {
+IconNode *LoadNamedIcon(const char *name, int size) {
 
 	IconPathNode *ip;
 	IconNode *icon;
@@ -369,7 +383,7 @@ IconNode *CreateIconFromData(const char *name, char **data, int size) {
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *CreateIconFromFile(char *fileName, int size) {
+IconNode *CreateIconFromFile(const char *fileName, int size) {
 
 	IconNode *result = NULL;
 	ImageNode *image;
@@ -439,13 +453,13 @@ IconNode *CreateIconFromImage(ImageNode *image) {
 			color.blue = image->data[index] * 257;
 			GetColor(&color);
 			JXSetForeground(display, imageGC, color.pixel);
-			XDrawPoint(display, result->image, imageGC, x, y);
+			JXDrawPoint(display, result->image, imageGC, x, y);
 			if(alpha >= 128) {
 				JXSetForeground(display, maskGC, 1);
 			} else {
 				JXSetForeground(display, maskGC, 0);
 			}
-			XDrawPoint(display, result->mask, maskGC, x, y);
+			JXDrawPoint(display, result->mask, maskGC, x, y);
 		}
 	}
 

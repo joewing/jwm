@@ -111,6 +111,7 @@ typedef struct MenuType {
 	/* These fields must be set before calling ShowMenu */
 	MenuItemType *items;
 	char *label;
+	int itemHeight;
 
 	/* These fields are handled by menu.c */
 	Window window;
@@ -118,7 +119,6 @@ typedef struct MenuType {
 	int x, y;
 	int width, height;
 	int currentIndex, lastIndex;
-	int itemHeight;
 	int itemCount;
 	int parentOffset;
 	int wasCovered;

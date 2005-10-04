@@ -80,6 +80,9 @@
 #define JXDestroyWindow( a, b ) \
 	( SetCheckpoint(), XDestroyWindow( a, b ) )
 
+#define JXDrawPoint( a, b, c, d, e ) \
+	( SetCheckpoint(), XDrawPoint( a, b, c, d, e ) )
+
 #define JXDrawLine( a, b, c, d, e, f, g ) \
 	( SetCheckpoint(), XDrawLine( a, b, c, d, e, f, g ) )
 
@@ -143,6 +146,9 @@
 
 #define JXGetWMNormalHints( a, b, c, d ) \
 	( SetCheckpoint(), XGetWMNormalHints( a, b, c, d ) )
+
+#define JXSetIconSizes( a, b, c, d ) \
+	( SetCheckpoint(), XSetIconSizes( a, b, c, d ) )
 
 #define JXGrabButton( a, b, c, d, e, f, g, h, i, j ) \
 	( SetCheckpoint(), XGrabButton( a, b, c, d, e, f, g, h, i, j ) )
@@ -343,6 +349,9 @@
 	( SetCheckpoint(), XftFontClose( a, b ) )
 
 /* Xrender */
+
+#define JXRenderQueryExtension( a, b, c ) \
+	( SetCheckpoint(), XRenderQueryExtension( a, b, c ) )
 
 #define JXRenderFindVisualFormat( a, b ) \
 	( SetCheckpoint(), XRenderFindVisualFormat( a, b ) )

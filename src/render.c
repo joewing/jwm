@@ -1,7 +1,27 @@
 /****************************************************************************
+ * Functions to render icons using the XRender extension.
+ * Copyright (C) 2005 Joe Wingbermuehle
  ****************************************************************************/
 
 #include "jwm.h"
+
+static int haveRender = 0;
+
+/****************************************************************************
+ ****************************************************************************/
+void QueryRenderExtension() {
+
+	int event, error;
+	Bool rc;
+
+	rc = JXRenderQueryExtension(display, &event, &error);
+	if(rc == True) {
+		haveRender = 1;
+	} else {
+		haveRender = 0;
+	}
+
+}
 
 /****************************************************************************
  ****************************************************************************/
@@ -13,10 +33,18 @@ int PutRenderIcon(const IconNode *icon, Drawable d, int x, int y) {
 	Picture source;
 	XRenderPictFormat *fp;
 
+	Assert(icon);
+
+	if(!haveRender) {
+		return 0;
+	}
+
 	source = icon->imagePicture;
 	if(source != None) {
 
 		fp = JXRenderFindVisualFormat(display, rootVisual);
+		Assert(fp);
+
 		dest = JXRenderCreatePicture(display, d, fp, 0, NULL);
 
 		JXRenderComposite(display, PictOpOver, source, None, dest,
@@ -54,6 +82,12 @@ IconNode *CreateRenderIconFromImage(ImageNode *image) {
 	int index;
 	int x, y;
 
+	Assert(image);
+
+	if(!haveRender) {
+		return NULL;
+	}
+
 	result = CreateIcon();
 	result->width = image->width;
 	result->height = image->height;
@@ -76,7 +110,7 @@ IconNode *CreateRenderIconFromImage(ImageNode *image) {
 
 			GetColor(&color);
 			JXSetForeground(display, imageGC, color.pixel);
-			XDrawPoint(display, result->image, imageGC, x, y);
+			JXDrawPoint(display, result->image, imageGC, x, y);
 
 			color.red = alpha * 257;
 			color.green = alpha * 257;
@@ -84,7 +118,7 @@ IconNode *CreateRenderIconFromImage(ImageNode *image) {
 
 			GetColor(&color);
 			JXSetForeground(display, maskGC, color.pixel);
-			XDrawPoint(display, result->mask, maskGC, x, y);
+			JXDrawPoint(display, result->mask, maskGC, x, y);
 
 		}
 	}
@@ -98,11 +132,13 @@ IconNode *CreateRenderIconFromImage(ImageNode *image) {
 	fp = JXRenderFindFormat(display,
 		PictFormatType | PictFormatDepth | PictFormatAlphaMask,
 		&picFormat, 0);
+	Assert(fp);
 	result->maskPicture = JXRenderCreatePicture(display, result->mask,
 		fp, 0, NULL);
 
 	picAttributes.alpha_map = result->maskPicture;
 	fp = JXRenderFindVisualFormat(display, rootVisual);
+	Assert(fp);
 	result->imagePicture = JXRenderCreatePicture(display, result->image,
 		fp, CPAlphaMap, &picAttributes);
 

@@ -10,7 +10,7 @@ AC_CONFIG_HEADER([config.h])
 
 AC_PATH_X
 
-CFLAGS="-O2 $CFLAGS"
+CFLAGS="-O2 $CFLAGS -ansi -D_XOPEN_SOURCE=600"
 
 if test ! "$no_x" = "yes" ; then
 	if test ! x"$x_libraries" = x ; then
@@ -154,7 +154,7 @@ AC_ARG_ENABLE(debug,
 	AC_HELP_STRING([--enable-debug], [use this to debug JWM]) )
 if test "$enable_debug" = "yes"; then
 	AC_DEFINE(DEBUG, 1, [Define to debug JWM])
-	CFLAGS="$CFLAGS -Wall -pedantic -ansi -g -DDEBUG"
+	CFLAGS="$CFLAGS -Wall -pedantic -g -DDEBUG"
 	LDFLAGS="$LDFLAGS -g"
 fi
 

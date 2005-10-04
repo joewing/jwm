@@ -245,6 +245,7 @@ void Startup() {
 
 	StartupGroups();
 	StartupColors();
+	StartupIcons();
 	StartupFonts();
 	StartupCursors();
 	StartupOutline();
@@ -257,7 +258,6 @@ void Startup() {
 	StartupBorders();
 	StartupClients();
 
-	StartupIcons();
 	StartupTiming();
 	#ifndef DISABLE_CONFIRM
 		StartupDialogs();

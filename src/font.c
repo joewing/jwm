@@ -5,19 +5,27 @@
 
 #include "jwm.h"
 
-static const char *DEFAULT_FONT = "default";
+static const char *DEFAULT_FONT = "-*-courier-*-r-*-*-14-*-*-*-*-*-*-*";
 
-static char *fontNames[FONT_COUNT] = { NULL };
+static char *fontNames[FONT_COUNT];
 
 #ifdef USE_XFT
-static XftFont *fonts[FONT_COUNT] = { NULL };
+static XftFont *fonts[FONT_COUNT];
 #else
-static XFontStruct *fonts[FONT_COUNT] = { NULL };
+static XFontStruct *fonts[FONT_COUNT];
 #endif
 
 /****************************************************************************
  ****************************************************************************/
 void InitializeFonts() {
+
+	int x;
+
+	for(x = 0; x < FONT_COUNT; x++) {
+		fonts[x] = NULL;
+		fontNames[x] = NULL;
+	}
+
 }
 
 /****************************************************************************
@@ -29,12 +37,14 @@ void StartupFonts() {
 #ifdef USE_XFT
 
 	for(x = 0; x < FONT_COUNT; x++) {
-		fonts[x] = JXftFontOpenName(display, rootScreen, fontNames[x]);
-		if(!fonts[x]) {
-			fonts[x] = JXftFontOpenXlfd(display, rootScreen, fontNames[x]);
-		}
-		if(!fonts[x] && fontNames[x]) {
-			Warning("could not load font: %s", fontNames[x]);
+		if(fontNames[x]) {
+			fonts[x] = JXftFontOpenName(display, rootScreen, fontNames[x]);
+			if(!fonts[x]) {
+				fonts[x] = JXftFontOpenXlfd(display, rootScreen, fontNames[x]);
+			}
+			if(!fonts[x]) {
+				Warning("could not load font: %s", fontNames[x]);
+			}
 		}
 		if(!fonts[x]) {
 			fonts[x] = JXftFontOpenXlfd(display, rootScreen, DEFAULT_FONT);
@@ -47,9 +57,11 @@ void StartupFonts() {
 #else
 
 	for(x = 0; x < FONT_COUNT; x++) {
-		fonts[x] = JXLoadQueryFont(display, fontNames[x]);
-		if(!fonts[x] && fontNames[x]) {
-			Warning("could not load font: %s", fontNames[x]);
+		if(fontNames[x]) {
+			fonts[x] = JXLoadQueryFont(display, fontNames[x]);
+			if(!fonts[x] && fontNames[x]) {
+				Warning("could not load font: %s", fontNames[x]);
+			}
 		}
 		if(!fonts[x]) {
 			fonts[x] = JXLoadQueryFont(display, DEFAULT_FONT);
@@ -104,6 +116,9 @@ int GetStringWidth(FontType type, const char *str) {
 	XGlyphInfo extents;
 	unsigned int length;
 
+	Assert(str);
+	Assert(fonts[type]);
+
 	length = strlen(str);
 
 	JXftTextExtents8(display, fonts[type], (const unsigned char*)str,
@@ -113,6 +128,9 @@ int GetStringWidth(FontType type, const char *str) {
 
 #else
 
+	Assert(str);
+	Assert(fonts[type]);
+
 	return XTextWidth(fonts[type], str, strlen(str));
 
 #endif
@@ -121,6 +139,7 @@ int GetStringWidth(FontType type, const char *str) {
 /****************************************************************************
  ****************************************************************************/
 int GetStringHeight(FontType type) {
+	Assert(fonts[type]);
 	return fonts[type]->ascent + fonts[type]->descent;
 }
 
@@ -152,6 +171,7 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 #endif
 
 	Assert(str);
+	Assert(fonts[font]);
 
 	len = strlen(str);
 
@@ -166,12 +186,12 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 #ifdef USE_XFT
 
 	xd = JXftDrawCreate(display, d, rootVisual, rootColormap);
-	if(xd) {
-		JXftDrawSetClipRectangles(xd, 0, 0, &rect, 1);
-		JXftDrawString8(xd, GetXftColor(color), fonts[font],
-			x, y + fonts[font]->ascent, (const unsigned char*)str, len);
-		JXftDrawDestroy(xd);
-	}
+	Assert(xd);
+
+	JXftDrawSetClipRectangles(xd, 0, 0, &rect, 1);
+	JXftDrawString8(xd, GetXftColor(color), fonts[font],
+		x, y + fonts[font]->ascent, (const unsigned char*)str, len);
+	JXftDrawDestroy(xd);
 
 #else
 

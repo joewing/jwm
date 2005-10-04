@@ -16,7 +16,7 @@ void AddIconPath(const char *path);
 void PutIcon(const IconNode *icon, Drawable d, GC g, int x, int y);
 
 void LoadIcon(ClientNode *np);
-IconNode *LoadNamedIcon(char *name, int size);
+IconNode *LoadNamedIcon(const char *name, int size);
 void DestroyIcon(IconNode *icon);
 
 IconNode *CreateIcon();

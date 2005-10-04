@@ -201,6 +201,7 @@ void *DEBUG_Allocate(size_t size, const char *file, unsigned int line) {
 			file, line, size);
 		Assert(0);
 	}
+	memset(mp->pointer, 85, size);
 
 	mp->next = allocations;
 	allocations = mp;
@@ -254,7 +255,8 @@ void *DEBUG_Reallocate(void *ptr, size_t size, const char *file,
 				file, line, size);
 			Assert(0);
 		}
-		Assert(mp->pointer);
+		memset(mp->pointer, 85, size);
+
 		mp->next = allocations;
 		allocations = mp;
 

@@ -38,6 +38,7 @@ void ShowWindowMenu(ClientNode *np, int x, int y) {
  ****************************************************************************/
 MenuType *CreateWindowMenu() {
 	MenuType *menu = Allocate(sizeof(MenuType));
+	menu->itemHeight = 0;
 	menu->items = NULL;
 	menu->label = NULL;
 
@@ -114,6 +115,7 @@ void CreateWindowLayerMenu(MenuType *menu) {
 
 	submenu = Allocate(sizeof(MenuType));
 	item->submenu = submenu;
+	submenu->itemHeight = 0;
 	submenu->items = NULL;
 	submenu->label = NULL;
 
@@ -185,6 +187,7 @@ void CreateWindowSendToMenu(MenuType *menu) {
 
 	submenu = Allocate(sizeof(MenuType));
 	item->submenu = submenu;
+	submenu->itemHeight = 0;
 	submenu->items = NULL;
 	submenu->label = NULL;
 

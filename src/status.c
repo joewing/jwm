@@ -16,13 +16,18 @@ static void DrawMoveResizeWindow();
  *************************************************************************/
 void CreateMoveWindow() {
 	XSetWindowAttributes attrs;
+	int screen;
 	int x, y;
 
 	statusWindowHeight = GetStringHeight(FONT_MENU) + 8;
 	statusWindowWidth = GetStringWidth(FONT_MENU, " 00000 x 00000 ");
 
-	x = rootWidth / 2 - statusWindowWidth / 2;
-	y = rootHeight / 2 - statusWindowHeight / 2;
+	screen = GetMouseScreen();
+
+	x = GetScreenWidth(screen) / 2 - statusWindowWidth / 2;
+	x += GetScreenX(screen);
+	y = GetScreenHeight(screen) / 2 - statusWindowHeight / 2;
+	y += GetScreenY(screen);
 
 	attrs.background_pixel = colors[COLOR_MENU_BG];
 	attrs.save_under = True;

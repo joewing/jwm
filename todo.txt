@@ -13,6 +13,7 @@ Todo:
 
 20051003:
 	- Flush the X connection before closing it.
+	- Make status windows show on the screen with the mouse.
 
 20051001:
 	- Can now use XRender for rendering icons.

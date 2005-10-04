@@ -11,6 +11,9 @@ Todo:
 	- Fix WMSpec icons on AMD64 (fixed?).
 	- Add the ability to name desktops.
 
+20051003:
+	- Flush the X connection before closing it.
+
 20051001:
 	- Can now use XRender for rendering icons.
 	- Added support for PNG icons (optional).

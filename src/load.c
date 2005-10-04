@@ -98,7 +98,7 @@ void UpdateLoadDisplay(Window w, GC gc, int xoffset) {
 	/* Clear the draw area. */
 	JXSetForeground(display, gc, colors[COLOR_LOAD_BG]);
 	JXFillRectangle(display, w, gc, xoffset, LOAD_YOFFSET,
-		loadWidth, loadHeight + LOAD_YOFFSET);
+		loadWidth, loadHeight + LOAD_YOFFSET - 1);
 
 	/* Draw the graph. */
 	JXSetForeground(display, gc, colors[COLOR_LOAD_FG]);

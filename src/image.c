@@ -223,15 +223,18 @@ ImageNode *LoadXPMImage(const char *fileName) {
 ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
 
 	ImageNode *result;
+	CARD32 *data;
 	XColor color;
 	unsigned char red, green, blue, alpha;
 	int index;
 	int x, y;
 
 	result = Allocate(sizeof(ImageNode));
-	result->data = Allocate(4 * image->width * image->height);
+	result->data = Allocate(sizeof(CARD32) * image->width * image->height);
 	result->width = image->width;
 	result->height = image->height;
+
+	data = (CARD32*)result->data;
 
 	index = 0;
 	for(y = 0; y < image->height; y++) {
@@ -247,10 +250,12 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
 				alpha = 255;
 			}
 
-			result->data[index++] = alpha;
-			result->data[index++] = red;
-			result->data[index++] = green;
-			result->data[index++] = blue;
+			data[index] = alpha << 24;
+			data[index] |= red << 16;
+			data[index] |= green << 8;
+			data[index] |= blue;
+
+			++index;
 
 		}
 	}
@@ -283,12 +288,12 @@ void ScaleImage(ImageNode *image, int size) {
  ****************************************************************************/
 void ResizeImage(ImageNode *image, int width, int height) {
 
-	unsigned char *data;
 	double scalex, scaley;
 	double srcx, srcy;
 	int sourceIndex;
 	int destIndex;
 	int x, y;
+	CARD32 *dest;
 	CARD32 *source;
 
 	Assert(image);
@@ -298,7 +303,7 @@ void ResizeImage(ImageNode *image, int width, int height) {
 		return;
 	}
 
-	data = Allocate(4 * width * height);
+	dest = Allocate(sizeof(CARD32) * width * height);
 
 	scalex = (double)image->width / width;
 	scaley = (double)image->height / height;
@@ -310,14 +315,8 @@ void ResizeImage(ImageNode *image, int width, int height) {
 	for(y = 0; y < height; y++) {
 		srcx = 0.0;
 		for(x = 0; x < width; x++) {
-
 			sourceIndex = (int)srcy * image->width + (int)srcx;
-
-			data[destIndex++] = (source[sourceIndex] >> 24) & 0xFF;
-			data[destIndex++] = (source[sourceIndex] >> 16) & 0xFF;
-			data[destIndex++] = (source[sourceIndex] >> 8) & 0xFF;
-			data[destIndex++] = source[sourceIndex] & 0xFF;
-
+			dest[destIndex++] = source[sourceIndex];
 			srcx += scalex;
 		}
 		srcy += scaley;
@@ -326,7 +325,7 @@ void ResizeImage(ImageNode *image, int width, int height) {
 	image->width = width;
 	image->height = height;
 	Release(image->data);
-	image->data = data;
+	image->data = (unsigned char*)dest;
 
 }
 

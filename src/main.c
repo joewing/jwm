@@ -172,8 +172,10 @@ void StartupConnection() {
 
 #ifdef USE_SHAPE
 	haveShape = JXShapeQueryExtension(display, &shapeEvent, &temp);
-	if(!haveShape) {
-		Debug("No shape extension.");
+	if (haveShape) {
+		Debug("shape extension enabled");
+	} else {
+		Debug("shape extension disabled");
 	}
 #endif
 

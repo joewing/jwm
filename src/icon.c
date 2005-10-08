@@ -425,6 +425,7 @@ IconNode *CreateIconFromImage(ImageNode *image) {
 	int x, y;
 	int index;
 	GC imageGC, maskGC;
+	CARD32 *data;
 
 	Assert(image);
 
@@ -444,13 +445,17 @@ IconNode *CreateIconFromImage(ImageNode *image) {
 		image->width, image->height, rootDepth);
 	imageGC = JXCreateGC(display, result->image, 0, NULL);
 
+	data = (CARD32*)image->data;
+
 	for(y = 0; y < image->height; y++) {
 		for(x = 0; x < image->width; x++) {
 			index = y * image->width + x;
-			alpha = image->data[index++];
-			color.red = image->data[index++] * 257;
-			color.green = image->data[index++] * 257;
-			color.blue = image->data[index] * 257;
+
+			alpha = (data[index] >> 24) & 0xFF;
+			color.red = ((data[index] >> 16) & 0xFF) * 257;
+			color.green = ((data[index] >> 8) & 0xFF) * 257;
+			color.blue = (data[index] & 0xFF) * 257;
+
 			GetColor(&color);
 			JXSetForeground(display, imageGC, color.pixel);
 			JXDrawPoint(display, result->image, imageGC, x, y);

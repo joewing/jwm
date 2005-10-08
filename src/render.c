@@ -5,21 +5,27 @@
 
 #include "jwm.h"
 
+#ifdef USE_XRENDER
 static int haveRender = 0;
+#endif
 
 /****************************************************************************
  ****************************************************************************/
 void QueryRenderExtension() {
 
+#ifdef USE_XRENDER
 	int event, error;
 	Bool rc;
 
 	rc = JXRenderQueryExtension(display, &event, &error);
 	if(rc == True) {
 		haveRender = 1;
+		Debug("render extension enabled");
 	} else {
 		haveRender = 0;
+		Debug("render extension disabled");
 	}
+#endif
 
 }
 

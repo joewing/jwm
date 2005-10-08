@@ -11,6 +11,9 @@ Todo:
 	- Fix WMSpec icons on AMD64 (fixed?).
 	- Add the ability to name desktops.
 
+20051007:
+	- Large windows are now handled in a more sane manner.
+
 20051003:
 	- Flush the X connection before closing it.
 	- Make status windows show on the screen with the mouse.

@@ -239,7 +239,6 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 
 	++clientCount;
 
-
 	if(np->statusFlags & STAT_STICKY) {
 		SetCardinalAtom(np->window, ATOM_NET_WM_DESKTOP, 0xFFFFFFFF);
 	} else {
@@ -277,15 +276,16 @@ void PlaceWindow(ClientNode *np, int alreadyMapped) {
 
 	GetBorderOffsets(np, &north, &west);
 
+	index = GetMouseScreen();
+	width = GetScreenWidth(index);
+	height = GetScreenHeight(index);
+	x = GetScreenX(index);
+	y = GetScreenY(index);
+
 	if(!(np->sizeFlags & PPosition) && !alreadyMapped) {
 
-		index = GetMouseScreen();
-		width = GetScreenWidth(index);
-		height = GetScreenHeight(index);
-		x = GetScreenX(index);
-		y = GetScreenY(index);
 
-		if(np->width + cascadeOffset + west > width) {
+		if(np->width + cascadeOffset + west - x > width) {
 			if(np->width + west * 2 < width) {
 				np->x = west + width / 2 - np->width / 2 + x;
 			} else {
@@ -295,7 +295,7 @@ void PlaceWindow(ClientNode *np, int alreadyMapped) {
 			np->x = west + cascadeOffset + x;
 		}
 
-		if(np->height + cascadeOffset + north > height - trayHeight) {
+		if(np->height + cascadeOffset + north + y > height - trayHeight) {
 			if(np->height + north + west < height) {
 				np->y = north + width / 2 - np->width / 2 + y;
 			} else {
@@ -312,6 +312,14 @@ void PlaceWindow(ClientNode *np, int alreadyMapped) {
 		}
 
 	} else {
+
+		if(np->x + np->width - x > width) {
+			np->x = x;
+		}
+		if(np->y + np->height - y > height - trayHeight) {
+			np->y = y;
+		}
+
 		Gravitate(np, 0);
 	}
 

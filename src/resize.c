@@ -113,7 +113,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 				delta = (event.xmotion.y - starty) / np->yinc;
 				delta *= np->yinc;
 				if(oldh - delta >= np->minHeight
-					&& oldh - delta <= np->maxHeight) {
+					&& (oldh - delta <= np->maxHeight || delta > 0)) {
 					np->height = oldh - delta;
 					np->y = oldy + delta;
 				}
@@ -145,7 +145,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 				delta = (event.xmotion.x - startx) / np->xinc;
 				delta *= np->xinc;
 				if(oldw - delta >= np->minWidth
-					&& oldw - delta <= np->maxWidth) {
+					&& (oldw - delta <= np->maxWidth || delta > 0)) {
 					np->width = oldw - delta;
 					np->x = oldx + delta;
 				}

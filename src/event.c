@@ -32,7 +32,6 @@ static void HandleShapeEvent(const XShapeEvent *event);
 /****************************************************************************
  ****************************************************************************/
 void WaitForEvent(XEvent *event) {
-	struct timeval timeout;
 	int fd;
 	int handled;
 	fd_set fds;
@@ -44,14 +43,8 @@ void WaitForEvent(XEvent *event) {
 		while(JXPending(display) == 0) {
 			FD_ZERO(&fds);
 			FD_SET(fd, &fds);
-			timeout.tv_usec = 0;
-			timeout.tv_sec = 1;
-			if(select(fd + 1, &fds, NULL, NULL, &timeout) <= 0) {
-				UpdateTime();
-			}
+			select(fd + 1, &fds, NULL, NULL, NULL);
 		}
-
-		UpdateTime();
 
 		JXNextEvent(display, event);
 
@@ -476,7 +469,8 @@ int HandlePropertyNotify(const XPropertyEvent *event) {
 
 		if(changed) {
 			DrawBorder(np);
-			DrawTray();
+			UpdateTaskBar();
+			UpdatePager();
 		}
 		if(np->statusFlags & STAT_WMDIALOG) {
 			return 0;
@@ -535,7 +529,8 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 				} else {
 					np->statusFlags &= ~STAT_NOLIST;
 				}
-				DrawTray();
+				UpdateTaskBar();
+				UpdatePager();
 			}
 
 		} else if(event->message_type == atoms[ATOM_WIN_LAYER]) {
@@ -675,7 +670,8 @@ void HandleMapRequest(const XMapEvent *event) {
 			if(focusModel == FOCUS_CLICK) {
 				FocusClient(np);
 			}
-			DrawTray();
+			UpdateTaskBar();
+			UpdatePager();
 		}
 	}
 	RestackClients();

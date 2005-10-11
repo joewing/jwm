@@ -195,13 +195,18 @@ void *DEBUG_Allocate(size_t size, const char *file, unsigned int line) {
 	mp->line = line;
 	mp->size = size;
 
-	mp->pointer = malloc(size);
+	mp->pointer = malloc(size + sizeof(char));
 	if(!mp->pointer) {
 		Debug("MEMORY: %s[%u]: Memory allocation failed (%d bytes)",
 			file, line, size);
 		Assert(0);
 	}
+
+	/* Make uninitialized accesses easy to find. */
 	memset(mp->pointer, 85, size);
+
+	/* Canary value for buffer overflow checking. */
+	((char*)mp->pointer)[size] = 42;
 
 	mp->next = allocations;
 	allocations = mp;
@@ -229,15 +234,21 @@ void *DEBUG_Reallocate(void *ptr, size_t size, const char *file,
 
 		for(mp = allocations; mp; mp = mp->next) {
 			if(mp->pointer == ptr) {
+
+				if(((char*)ptr)[mp->size] != 42) {
+					Debug("MEMORY: %s[%u]: The canary is dead.", file, line);
+				}
+
 				mp->file = file;
 				mp->line = line;
 				mp->size = size;
-				mp->pointer = realloc(ptr, size);
+				mp->pointer = realloc(ptr, size + sizeof(char));
 				if(!mp->pointer) {
 					Debug("MEMORY: %s[%u]: Failed to reallocate %d bytes.",
 						file, line, size);
 					Assert(0);
 				}
+				((char*)mp->pointer)[size] = 42;
 				return mp->pointer;
 			}
 		}
@@ -249,13 +260,14 @@ void *DEBUG_Reallocate(void *ptr, size_t size, const char *file,
 		mp->file = file;
 		mp->line = line;
 		mp->size = size;
-		mp->pointer = malloc(size);
+		mp->pointer = malloc(size + sizeof(char));
 		if(!mp->pointer) {
 			Debug("MEMORY: %s[%u]: Failed to reallocate %d bytes.",
 				file, line, size);
 			Assert(0);
 		}
 		memset(mp->pointer, 85, size);
+		((char*)mp->pointer)[size] = 42;
 
 		mp->next = allocations;
 		allocations = mp;
@@ -285,8 +297,13 @@ void DEBUG_Release(void **ptr, const char *file, unsigned int line) {
 				} else {
 					allocations = mp->next;
 				}
+
+				if(((char*)*ptr)[mp->size] != 42) {
+					Debug("MEMORY: %s[%u]: The canary is dead.", file, line);
+				}
+
 				free(mp);
-				memset(*ptr, 0, mp->size);
+				memset(*ptr, 0xFF, mp->size);
 				free(*ptr);
 				*ptr = NULL;
 				return;
@@ -295,9 +312,12 @@ void DEBUG_Release(void **ptr, const char *file, unsigned int line) {
 		}
 		Debug("MEMORY: %s[%u]: Attempt to delete unallocated pointer",
 			file, line);
-		memset(*ptr, 0, mp->size);
+		memset(*ptr, 0xFF, mp->size);
 		free(*ptr);
-		*ptr = NULL;
+
+		/* This address should cause a segfault or bus error. */
+		*ptr = (void*)1;
+
 	}
 }
 

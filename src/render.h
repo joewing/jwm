@@ -8,9 +8,10 @@
 
 void QueryRenderExtension();
 
-int PutRenderIcon(const IconNode *icon, Drawable d, int x, int y);
+int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
+	int x, int y);
 
-IconNode *CreateRenderIconFromImage(ImageNode *image);
+ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, int size);
 
 #endif
 

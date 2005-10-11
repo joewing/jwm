@@ -11,7 +11,8 @@ static int haveRender = 0;
 
 /****************************************************************************
  ****************************************************************************/
-void QueryRenderExtension() {
+void QueryRenderExtension()
+{
 
 #ifdef USE_XRENDER
 	int event, error;
@@ -31,13 +32,16 @@ void QueryRenderExtension() {
 
 /****************************************************************************
  ****************************************************************************/
-int PutRenderIcon(const IconNode *icon, Drawable d, int x, int y) {
+int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
+	int x, int y)
+{
 
 #ifdef USE_XRENDER
 
 	Picture dest;
 	Picture source;
 	XRenderPictFormat *fp;
+	int width, height;
 
 	Assert(icon);
 
@@ -45,7 +49,7 @@ int PutRenderIcon(const IconNode *icon, Drawable d, int x, int y) {
 		return 0;
 	}
 
-	source = icon->imagePicture;
+	source = node->imagePicture;
 	if(source != None) {
 
 		fp = JXRenderFindVisualFormat(display, rootVisual);
@@ -53,8 +57,16 @@ int PutRenderIcon(const IconNode *icon, Drawable d, int x, int y) {
 
 		dest = JXRenderCreatePicture(display, d, fp, 0, NULL);
 
+		if(node->size == 0) {
+			width = icon->image->width;
+			height = icon->image->height;
+		} else {
+			width = node->size;
+			height = node->size;
+		}
+
 		JXRenderComposite(display, PictOpOver, source, None, dest,
-			0, 0, 0, 0, x, y, icon->width, icon->height);
+			0, 0, 0, 0, x, y, width, height);
 
 		JXRenderFreePicture(display, dest);
 
@@ -72,9 +84,10 @@ int PutRenderIcon(const IconNode *icon, Drawable d, int x, int y) {
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *CreateRenderIconFromImage(ImageNode *image) {
+ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, int size)
+{
 
-	IconNode *result = NULL;
+	ScaledIconNode *result = NULL;
 
 #ifdef USE_XRENDER
 
@@ -87,32 +100,51 @@ IconNode *CreateRenderIconFromImage(ImageNode *image) {
 	unsigned char alpha;
 	int index;
 	int x, y;
+	int width, height;
+	double scalex, scaley;
+	double srcx, srcy;
+	CARD32 *data;
 
-	Assert(image);
+	Assert(icon);
 
 	if(!haveRender) {
 		return NULL;
 	}
 
-	result = CreateIcon();
-	result->width = image->width;
-	result->height = image->height;
+	result = Allocate(sizeof(ScaledIconNode));
+	result->next = icon->nodes;
+	icon->nodes = result;
+	result->size = size;
 
-	result->mask = JXCreatePixmap(display, rootWindow,
-		image->width, image->height, 8);
+	if(size == 0) {
+		width = icon->image->width;
+		height = icon->image->height;
+	} else {
+		width = size;
+		height = size;
+	}
+
+	scalex = (double)icon->image->width / width;
+	scaley = (double)icon->image->height / height;
+
+	result->mask = JXCreatePixmap(display, rootWindow, width, height, 8);
 	maskGC = JXCreateGC(display, result->mask, 0, NULL);
 	result->image = JXCreatePixmap(display, rootWindow,
-		image->width, image->height, rootDepth);
+		width, height, rootDepth);
 	imageGC = JXCreateGC(display, result->image, 0, NULL);
 
-	index = 0;
-	for(y = 0; y < image->height; y++) {
-		for(x = 0; x < image->width; x++) {
+	data = (CARD32*)icon->image->data;
 
-			alpha = image->data[index++];
-			color.red = image->data[index++] * 257;
-			color.green = image->data[index++] * 257;
-			color.blue = image->data[index++] * 257;
+	srcy = 0.0;
+	for(y = 0; y < height; y++) {
+		srcx = 0.0;
+		for(x = 0; x < width; x++) {
+
+			index = (int)srcy * icon->image->width + (int)srcx;
+			alpha = (data[index] >> 24) & 0xFF;
+			color.red = ((data[index] >> 16) & 0xFF) * 257;
+			color.green = ((data[index] >> 8) & 0xFF) * 257;
+			color.blue = (data[index] & 0xFF) * 257;
 
 			GetColor(&color);
 			JXSetForeground(display, imageGC, color.pixel);
@@ -126,7 +158,10 @@ IconNode *CreateRenderIconFromImage(ImageNode *image) {
 			JXSetForeground(display, maskGC, color.pixel);
 			JXDrawPoint(display, result->mask, maskGC, x, y);
 
+			srcx += scalex;
+
 		}
+		srcy += scaley;
 	}
 
 	JXFreeGC(display, maskGC);

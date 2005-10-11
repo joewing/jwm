@@ -58,17 +58,15 @@ void InitializeMenu(MenuType *menu) {
 	menu->itemHeight = GetStringHeight(FONT_MENU);
 	for(np = menu->items; np; np = np->next) {
 		if(np->iconName) {
-			if(userHeight) {
-				np->icon = LoadNamedIcon(np->iconName, userHeight - 4);
-			} else {
-				np->icon = LoadNamedIcon(np->iconName, 0);
-			}
+			np->icon = LoadNamedIcon(np->iconName);
 			if(np->icon) {
-				if(menu->itemHeight < np->icon->height) {
-					menu->itemHeight = np->icon->height;
-				}
-				if(menu->textOffset < np->icon->width + 4) {
-					menu->textOffset = np->icon->width + 4;
+				if(userHeight == 0) {
+					if(menu->itemHeight < np->icon->image->height) {
+						menu->itemHeight = np->icon->image->height;
+					}
+					if(menu->textOffset < np->icon->image->width + 4) {
+						menu->textOffset = np->icon->image->width + 4;
+					}
 				}
 			}
 		} else {
@@ -268,8 +266,8 @@ void CreateMenu(MenuType *menu, int x, int y) {
 		}
 	}
 	temp = y;
-	if(y + menu->height > rootHeight - trayHeight) {
-		y = rootHeight - trayHeight - menu->height;
+	if(y + menu->height > rootHeight) {
+		y = rootHeight - menu->height;
 	}
 	if(y < 0) {
 		y = 0;
@@ -529,9 +527,9 @@ void UpdateMenu(MenuType *menu) {
 
 		if(ip->icon) {
 			PutIcon(ip->icon, menu->window, menu->gc,
-				menu->textOffset / 2 - ip->icon->width / 2 + BASE_ICON_OFFSET,
-				menu->offsets[menu->currentIndex]
-				+ menu->itemHeight / 2 - ip->icon->height / 2);
+				BASE_ICON_OFFSET,
+				menu->offsets[menu->currentIndex] + BASE_ICON_OFFSET,
+				menu->itemHeight - BASE_ICON_OFFSET * 2);
 		}
 
 		if(ip->submenu) {
@@ -584,9 +582,9 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 
 		if(item->icon) {
 			PutIcon(item->icon, menu->window, menu->gc,
-				menu->textOffset / 2 - item->icon->width / 2 + BASE_ICON_OFFSET,
-				menu->offsets[index] + menu->itemHeight / 2
-				- item->icon->height / 2);
+				BASE_ICON_OFFSET,
+				menu->offsets[index] + BASE_ICON_OFFSET,
+				menu->itemHeight - BASE_ICON_OFFSET * 2);
 		}
 
 		RenderString(menu->window, menu->gc, FONT_MENU, COLOR_MENU_FG,

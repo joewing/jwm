@@ -254,7 +254,6 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
 			data[index] |= red << 16;
 			data[index] |= green << 8;
 			data[index] |= blue;
-
 			++index;
 
 		}
@@ -279,7 +278,6 @@ void ScaleImage(ImageNode *image, int size) {
 		height = image->height;
 	}
 
-
 	ResizeImage(image, width, height);
 
 }
@@ -287,7 +285,9 @@ void ScaleImage(ImageNode *image, int size) {
 /****************************************************************************
  ****************************************************************************/
 void ResizeImage(ImageNode *image, int width, int height) {
+/*
 
+	ImageNode *result;
 	double scalex, scaley;
 	double srcx, srcy;
 	int sourceIndex;
@@ -299,11 +299,10 @@ void ResizeImage(ImageNode *image, int width, int height) {
 	Assert(image);
 	Assert(image->data);
 
-	if(image->width == width && image->height == height) {
-		return;
-	}
-
-	dest = Allocate(sizeof(CARD32) * width * height);
+	result = Allocate(sizeof(ImageNode));
+	result->data = Allocate(sizeof(CARD32) * width * height);
+	result->width = width;
+	result->height = height;
 
 	scalex = (double)image->width / width;
 	scaley = (double)image->height / height;
@@ -326,6 +325,7 @@ void ResizeImage(ImageNode *image, int width, int height) {
 	image->height = height;
 	Release(image->data);
 	image->data = (unsigned char*)dest;
+*/
 
 }
 

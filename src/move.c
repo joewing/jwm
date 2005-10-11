@@ -371,7 +371,6 @@ void DoSnap(ClientNode *np, int north) {
 void DoSnapScreen(ClientNode *np, int north) {
 
 	RectangleType client;
-	int height;
 	int screen;
 	int screenHeight;
 	int screenWidth;
@@ -384,12 +383,6 @@ void DoSnapScreen(ClientNode *np, int north) {
 	screenx = GetScreenX(screen);
 	screeny = GetScreenY(screen);
 
-	if(trayIsHidden) {
-		height = screenHeight - 2;
-	} else {
- 		height = screenHeight - trayHeight;
-	}
-
 	GetClientRectangle(np, &client);
 
 	if(abs(client.right - screenWidth) <= snapDistance) {
@@ -398,8 +391,8 @@ void DoSnapScreen(ClientNode *np, int north) {
 	if(abs(client.left) <= snapDistance) {
 		np->x = screenx + borderWidth;
 	}
-	if(abs(client.bottom - height) <= snapDistance) {
-		np->y = height - borderWidth;
+	if(abs(client.bottom - screenHeight) <= snapDistance) {
+		np->y = screenHeight - borderWidth;
 		if(!(np->statusFlags & STAT_SHADED)) {
 			np->y -= np->height;
 		}

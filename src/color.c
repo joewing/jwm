@@ -40,17 +40,15 @@ static DefaultColorNode DEFAULT_COLORS[] = {
 	{ COLOR_BORDER_ACTIVE_BG,   "red"     },
 	{ COLOR_BORDER_ACTIVE_FG,   "white"   },
 	{ COLOR_TRAY_BG,            "gray"    },
-	{ COLOR_TRAY_FG,            "black"   },
-	{ COLOR_TRAY_ACTIVE_BG,     "red"     },
-	{ COLOR_TRAY_ACTIVE_FG,     "white"   },
+	{ COLOR_TASK_BG,            "gray"    },
+	{ COLOR_TASK_FG,            "black"   },
+	{ COLOR_TASK_ACTIVE_BG,     "red"     },
+	{ COLOR_TASK_ACTIVE_FG,     "white"   },
 	{ COLOR_PAGER_BG,           "black"   },
 	{ COLOR_PAGER_FG,           "gray"    },
 	{ COLOR_PAGER_ACTIVE_BG,    "red"     },
 	{ COLOR_PAGER_ACTIVE_FG,    "red"     },
 	{ COLOR_PAGER_OUTLINE,      "black"   },
-	{ COLOR_LOAD_BG,            "gray"    },
-	{ COLOR_LOAD_FG,            "red"     },
-	{ COLOR_LOAD_OUTLINE,       "black"   },
 	{ COLOR_MENU_BG,            "gray"    },
 	{ COLOR_MENU_FG,            "black"   },
 	{ COLOR_MENU_ACTIVE_BG,     "red"     },
@@ -154,8 +152,11 @@ void StartupColors() {
 	LightenColor(COLOR_TRAY_BG, COLOR_TRAY_UP);
 	DarkenColor(COLOR_TRAY_BG, COLOR_TRAY_DOWN);
 
-	LightenColor(COLOR_TRAY_ACTIVE_BG, COLOR_TRAY_ACTIVE_UP);
-	DarkenColor(COLOR_TRAY_ACTIVE_BG, COLOR_TRAY_ACTIVE_DOWN);
+	LightenColor(COLOR_TASK_BG, COLOR_TASK_UP);
+	DarkenColor(COLOR_TASK_BG, COLOR_TASK_DOWN);
+
+	LightenColor(COLOR_TASK_ACTIVE_BG, COLOR_TASK_ACTIVE_UP);
+	DarkenColor(COLOR_TASK_ACTIVE_BG, COLOR_TASK_ACTIVE_DOWN);
 
 	LightenColor(COLOR_MENU_BG, COLOR_MENU_UP);
 	DarkenColor(COLOR_MENU_BG, COLOR_MENU_DOWN);

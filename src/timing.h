@@ -17,11 +17,5 @@ void GetCurrentTime(TimeType *t);
 
 unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2);
 
-char *GetShortTimeString();
-char *GetLongTimeString();
-
-void SetClockFormat(const char *f);
-void SetClockEnabled(int e);
-
 #endif
 

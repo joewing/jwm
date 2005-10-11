@@ -22,23 +22,6 @@ typedef struct ColormapNode {
 
 /****************************************************************************
  ****************************************************************************/
-typedef struct IconNode {
-	char *name;
-	int size;
-	int width;
-	int height;
-	Pixmap image;
-	Pixmap mask;
-#ifdef USE_XRENDER
-	Picture imagePicture;
-	Picture maskPicture;
-#endif
-	struct IconNode *next;
-	struct IconNode *prev;
-} IconNode;
-
-/****************************************************************************
- ****************************************************************************/
 typedef struct ImageNode {
 #ifdef USE_PNG
 	png_uint_32 width;
@@ -49,6 +32,38 @@ typedef struct ImageNode {
 #endif
 	unsigned char *data;
 } ImageNode;
+
+/****************************************************************************
+ ****************************************************************************/
+typedef struct ScaledIconNode {
+
+	int size;
+
+	Pixmap image;
+	Pixmap mask;
+#ifdef USE_XRENDER
+	Picture imagePicture;
+	Picture maskPicture;
+#endif
+
+	struct ScaledIconNode *next;
+
+} ScaledIconNode;
+
+/****************************************************************************
+ ****************************************************************************/
+typedef struct IconNode {
+
+	char *name;
+
+	ImageNode *image;
+
+	ScaledIconNode *nodes;
+	
+	struct IconNode *next;
+	struct IconNode *prev;
+
+} IconNode;
 
 /****************************************************************************
  ****************************************************************************/
@@ -85,14 +100,74 @@ typedef struct ClientNode {
 	StatusFlags statusFlags;
 	int layer;
 
-	IconNode *titleIcon;
-	IconNode *trayIcon;
+	IconNode *icon;
 
 	void (*controller)(int wasDestroyed);
 
 	struct ClientNode *prev;
 	struct ClientNode *next;
 } ClientNode;
+
+/****************************************************************************
+ ****************************************************************************/
+typedef struct TrayComponentType {
+
+	void *object;
+
+	/* Create the component.
+ 	 * Here the width and height will specify what the task bar has
+	 * allocated for the component. The allocated size should always
+	 * be greater than zero.
+	 */
+	void (*Create)(void *object, void *owner, void (*Update)(void *owner),
+		int width, int height);
+
+	void (*Destroy)(void *object);
+
+	/* Functions to get the height and width of the component.
+	 * Before Create is called, these should return the preferred size.
+	 * After Create, they should return the size passed to Create.
+	 * Never should either return zero.
+	 */
+	int (*GetWidth)(void *object);
+	int (*GetHeight)(void *object);
+
+	/* Set the size known so far for items that need width/height ratios.
+	 * Either width or height may be zero.
+	 * This is called before Create.
+	 */
+	void (*SetSize)(void *object, int width, int height);
+
+	Window (*GetWindow)(void *object);
+	Pixmap (*GetPixmap)(void *object);
+
+	void (*ProcessButtonEvent)(void *object, int x, int y, int mask);
+
+	struct TrayComponentType *next;
+
+} TrayComponentType;
+
+/****************************************************************************
+ ****************************************************************************/
+typedef struct TrayType {
+
+	int x, y;
+	int width, height;
+	WinLayerType layer;
+	LayoutType layout;
+
+	int autoHide;
+	int hidden;
+
+	Window window;
+	GC gc;
+
+	TrayComponentType *components;
+	TrayComponentType *componentsTail;
+
+	struct TrayType *next;
+
+} TrayType;
 
 /****************************************************************************
  ****************************************************************************/

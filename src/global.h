@@ -8,12 +8,12 @@
 
 extern Display *display;
 extern Window rootWindow;
-extern unsigned int rootWidth, rootHeight;
-extern unsigned int rootDepth;
-extern unsigned int rootScreen;
+extern int rootWidth, rootHeight;
+extern int rootDepth;
+extern int rootScreen;
 extern Colormap rootColormap;
 extern Visual *rootVisual;
-extern unsigned int colormapCount;
+extern int colormapCount;
 
 extern char *exitCommand;
 

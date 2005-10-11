@@ -356,8 +356,9 @@ void DrawButtons(DialogType *dp) {
 	dp->cancelx = 2 * dp->width / 3 - dp->buttonWidth / 2;
 	dp->buttony = dp->height - dp->lineHeight - dp->lineHeight / 2;
 
-	DrawButton(dp->okx, dp->buttony, BUTTON_TRAY, OK_STRING);
-	DrawButton(dp->cancelx, dp->buttony, BUTTON_TRAY, CANCEL_STRING);
+/*FIXME: should have different colors and buttons for this. */
+	DrawButton(dp->okx, dp->buttony, BUTTON_TASK, OK_STRING);
+	DrawButton(dp->cancelx, dp->buttony, BUTTON_TASK, CANCEL_STRING);
 
 }
 

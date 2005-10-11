@@ -65,19 +65,19 @@ void DrawButton(int x, int y, ButtonType type, const char *str) {
 		topPixel = colors[COLOR_MENU_ACTIVE_UP];
 		bottomPixel = colors[COLOR_MENU_ACTIVE_DOWN];
 		break;
-	case BUTTON_TRAY:
-		fg = COLOR_TRAY_FG;
-		bg = COLOR_TRAY_BG;
-		outlinePixel = colors[COLOR_TRAY_DOWN];
-		topPixel = colors[COLOR_TRAY_UP];
-		bottomPixel = colors[COLOR_TRAY_DOWN];
+	case BUTTON_TASK:
+		fg = COLOR_TASK_FG;
+		bg = COLOR_TASK_BG;
+		outlinePixel = colors[COLOR_TASK_DOWN];
+		topPixel = colors[COLOR_TASK_UP];
+		bottomPixel = colors[COLOR_TASK_DOWN];
 		break;
-	case BUTTON_TRAY_ACTIVE:
-		fg = COLOR_TRAY_ACTIVE_FG;
-		bg = COLOR_TRAY_ACTIVE_BG;
-		outlinePixel = colors[COLOR_TRAY_ACTIVE_DOWN];
-		topPixel = colors[COLOR_TRAY_ACTIVE_DOWN];
-		bottomPixel = colors[COLOR_TRAY_ACTIVE_UP];
+	case BUTTON_TASK_ACTIVE:
+		fg = COLOR_TASK_ACTIVE_FG;
+		bg = COLOR_TASK_ACTIVE_BG;
+		outlinePixel = colors[COLOR_TASK_ACTIVE_DOWN];
+		topPixel = colors[COLOR_TASK_ACTIVE_DOWN];
+		bottomPixel = colors[COLOR_TASK_ACTIVE_UP];
 		break;
 	case BUTTON_MENU:
 	default:

@@ -134,6 +134,9 @@
 #define JXGetTransientForHint( a, b, c ) \
 	( SetCheckpoint(), XGetTransientForHint( a, b, c ) )
 
+#define JXGetClassHint( a, b, c ) \
+	( SetCheckpoint(), XGetClassHint( a, b, c ) )
+
 #define JXGetWindowAttributes( a, b, c ) \
 	( SetCheckpoint(), XGetWindowAttributes( a, b, c ) )
 

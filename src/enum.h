@@ -129,11 +129,9 @@ typedef enum {
 
 	TOK_ACTIVEBACKGROUND,
 	TOK_ACTIVEFOREGROUND,
-	TOK_ALIGNMENT,
 	TOK_BACKGROUND,
-	TOK_BORDER,
+	TOK_BORDERSTYLE,
 	TOK_CLASS,
-	TOK_CLOCK,
 	TOK_DESKTOPCOUNT,
 	TOK_DOUBLECLICKSPEED,
 	TOK_DOUBLECLICKDELTA,
@@ -148,14 +146,16 @@ typedef enum {
 	TOK_INCLUDE,
 	TOK_JWM,
 	TOK_KEY,
-	TOK_LOAD,
 	TOK_MENU,
+	TOK_MENUSTYLE,
 	TOK_MOVEMODE,
 	TOK_NAME,
 	TOK_OPTION,
 	TOK_OUTLINE,
 	TOK_PAGER,
+	TOK_PAGERSTYLE,
 	TOK_POPUP,
+	TOK_POPUPSTYLE,
 	TOK_PROGRAM,
 	TOK_RESIZEMODE,
 	TOK_RESTART,
@@ -164,7 +164,11 @@ typedef enum {
 	TOK_SHUTDOWNCOMMAND,
 	TOK_SNAPMODE,
 	TOK_STARTUPCOMMAND,
+	TOK_SWALLOW,
+	TOK_TASKLISTSTYLE,
+	TOK_TASKLIST,
 	TOK_TRAY,
+	TOK_TRAYSTYLE,
 	TOK_WIDTH
 
 } TokenType;
@@ -173,51 +177,52 @@ typedef enum {
  ****************************************************************************/
 typedef enum {
 
-	COLOR_BORDER_BG          = 0,
-	COLOR_BORDER_FG          = 1,
-	COLOR_BORDER_ACTIVE_BG   = 2,
-	COLOR_BORDER_ACTIVE_FG   = 3,
+	COLOR_BORDER_BG,
+	COLOR_BORDER_FG,
+	COLOR_BORDER_ACTIVE_BG,
+	COLOR_BORDER_ACTIVE_FG,
 
-	COLOR_TRAY_BG            = 4,
-	COLOR_TRAY_FG            = 5,
-	COLOR_TRAY_ACTIVE_BG     = 6,
-	COLOR_TRAY_ACTIVE_FG     = 7,
+	COLOR_TRAY_BG,
 
-	COLOR_PAGER_BG           = 8,
-	COLOR_PAGER_FG           = 9,
-	COLOR_PAGER_ACTIVE_BG    = 10,
-	COLOR_PAGER_ACTIVE_FG    = 11,
-	COLOR_PAGER_OUTLINE      = 12,
+	COLOR_TASK_BG,
+	COLOR_TASK_FG,
+	COLOR_TASK_ACTIVE_BG,
+	COLOR_TASK_ACTIVE_FG,
 
-	COLOR_LOAD_BG            = 13,
-	COLOR_LOAD_FG            = 14,
-	COLOR_LOAD_OUTLINE       = 15,
+	COLOR_PAGER_BG,
+	COLOR_PAGER_FG,
+	COLOR_PAGER_ACTIVE_BG,
+	COLOR_PAGER_ACTIVE_FG,
+	COLOR_PAGER_OUTLINE,
 
-	COLOR_MENU_BG            = 16,
-	COLOR_MENU_FG            = 17,
-	COLOR_MENU_ACTIVE_BG     = 18,
-	COLOR_MENU_ACTIVE_FG     = 19,
+	COLOR_MENU_BG,
+	COLOR_MENU_FG,
+	COLOR_MENU_ACTIVE_BG,
+	COLOR_MENU_ACTIVE_FG,
 
-	COLOR_BORDER_UP          = 20,
-	COLOR_BORDER_DOWN        = 21,
-	COLOR_BORDER_ACTIVE_UP   = 22,
-	COLOR_BORDER_ACTIVE_DOWN = 23,
+	COLOR_BORDER_UP,
+	COLOR_BORDER_DOWN,
+	COLOR_BORDER_ACTIVE_UP,
+	COLOR_BORDER_ACTIVE_DOWN,
 
-	COLOR_TRAY_UP            = 24,
-	COLOR_TRAY_DOWN          = 25,
-	COLOR_TRAY_ACTIVE_UP     = 26,
-	COLOR_TRAY_ACTIVE_DOWN   = 27,
+	COLOR_TRAY_UP,
+	COLOR_TRAY_DOWN,
 
-	COLOR_MENU_UP            = 28,
-	COLOR_MENU_DOWN          = 29,
-	COLOR_MENU_ACTIVE_UP     = 30,
-	COLOR_MENU_ACTIVE_DOWN   = 31,
+	COLOR_TASK_UP,
+	COLOR_TASK_DOWN,
+	COLOR_TASK_ACTIVE_UP,
+	COLOR_TASK_ACTIVE_DOWN,
 
-	COLOR_POPUP_BG           = 32,
-	COLOR_POPUP_FG           = 33,
-	COLOR_POPUP_OUTLINE      = 34,
+	COLOR_MENU_UP,
+	COLOR_MENU_DOWN,
+	COLOR_MENU_ACTIVE_UP,
+	COLOR_MENU_ACTIVE_DOWN,
 
-	COLOR_COUNT              = 35
+	COLOR_POPUP_BG,
+	COLOR_POPUP_FG,
+	COLOR_POPUP_OUTLINE,
+
+	COLOR_COUNT
 
 } ColorType;
 
@@ -225,12 +230,12 @@ typedef enum {
  ****************************************************************************/
 typedef enum {
 
-	FONT_BORDER  = 0,
-	FONT_MENU    = 1,
-	FONT_TRAY    = 2,
-	FONT_POPUP   = 3,
+	FONT_BORDER,
+	FONT_MENU,
+	FONT_TASK,
+	FONT_POPUP,
 
-	FONT_COUNT   = 4
+	FONT_COUNT
 
 } FontType;
 
@@ -239,15 +244,16 @@ typedef enum {
 typedef enum {
 	BUTTON_MENU,
 	BUTTON_MENU_ACTIVE,
-	BUTTON_TRAY,
-	BUTTON_TRAY_ACTIVE
+	BUTTON_TASK,
+	BUTTON_TASK_ACTIVE
 } ButtonType;
 
 /****************************************************************************
  ****************************************************************************/
 typedef enum {
 	ALIGN_LEFT,
-	ALIGN_CENTER
+	ALIGN_CENTER,
+	ALIGN_RIGHT
 } AlignmentType;
 
 /****************************************************************************
@@ -356,6 +362,20 @@ typedef enum {
 	RESIZE_OPAQUE,
 	RESIZE_OUTLINE
 } ResizeModeType;
+
+/****************************************************************************
+ ****************************************************************************/
+typedef enum {
+	SWALLOW_LEFT,
+	SWALLOW_RIGHT
+} SwallowLocationType;
+
+/****************************************************************************
+ ****************************************************************************/
+typedef enum {
+	LAYOUT_HORIZONTAL,
+	LAYOUT_VERTICAL
+} LayoutType;
 
 #endif
 

@@ -76,8 +76,10 @@ void StartupKeys() {
 		if(ShouldGrab(np->key)) {
 			JXGrabKey(display, np->code, np->state,
 				rootWindow, True, GrabModeSync, GrabModeAsync);
+/*TODO: grab for all trays.
 			JXGrabKey(display, np->code, np->state,
 				trayWindow, True, GrabModeSync, GrabModeAsync);
+*/
 		}
 
 	}

@@ -14,14 +14,14 @@ static const char *DEFAULT_TITLE = "JWM";
 static const char *LABEL_ATTRIBUTE = "label";
 static const char *ICON_ATTRIBUTE = "icon";
 static const char *CONFIRM_ATTRIBUTE = "confirm";
-static const char *FORMAT_ATTRIBUTE = "format";
-static const char *ENABLED_ATTRIBUTE = "enabled";
 static const char *LABELED_ATTRIBUTE = "labeled";
 static const char *ONROOT_ATTRIBUTE = "onroot";
 static const char *LAYER_ATTRIBUTE = "layer";
+static const char *LAYOUT_ATTRIBUTE = "layout";
 static const char *AUTOHIDE_ATTRIBUTE = "autohide";
-static const char *MAXWIDTH_ATTRIBUTE = "maxwidth";
-static const char *INSERT_ATTRIBUTE = "insert";
+static const char *X_ATTRIBUTE = "x";
+static const char *Y_ATTRIBUTE = "y";
+static const char *WIDTH_ATTRIBUTE = "width";
 static const char *HEIGHT_ATTRIBUTE = "height";
 
 static const char *FALSE_VALUE = "false";
@@ -30,36 +30,52 @@ static const char *TRUE_VALUE = "true";
 static int ParseFile(const char *fileName, int depth);
 static char *ReadFile(FILE *fd);
 
+/* Misc. */
 static void Parse(const TokenNode *start, int depth);
+static void ParseInclude(const TokenNode *tp, int depth);
+static void ParseShutdownCommand(const TokenNode *tp);
+static void ParseStartupCommand(const TokenNode *tp);
 
+/* Menus. */
 static void ParseRootMenu(const TokenNode *start);
 static void ParseMenuItem(const TokenNode *start, MenuType *menu);
-static void ParseInclude(const TokenNode *tp, int depth);
-static void ParseKey(const TokenNode *tp);
-static void ParseBorder(const TokenNode *tp);
+static MenuItemType *InsertMenuItem(MenuItemType *last);
+
+/* Tray. */
 static void ParseTray(const TokenNode *tp);
-static void ParsePager(const TokenNode *tp);
+static void ParsePager(const TokenNode *tp, TrayType *tray);
+static void ParseTaskList(const TokenNode *tp, TrayType *tray);
+static void ParseSwallow(const TokenNode *tp, TrayType *tray);
+
+/* Groups. */
+static void ParseGroup(const TokenNode *tp);
+static void ParseGroupOption(struct GroupType *group, const char *option);
+
+/* Style. */
+static void ParseBorderStyle(const TokenNode *start);
+static void ParseTaskListStyle(const TokenNode *start);
+static void ParseTrayStyle(const TokenNode *start);
+static void ParsePagerStyle(const TokenNode *start);
+static void ParseMenuStyle(const TokenNode *start);
+static void ParsePopupStyle(const TokenNode *start);
+static void ParseIcons(const TokenNode *tp);
+
+/* Feel. */
+static void ParseKey(const TokenNode *tp);
 static void ParsePopup(const TokenNode *tp);
-static void ParseLoad(const TokenNode *tp);
-static void ParseClock(const TokenNode *tp);
-static void ParseMenu(const TokenNode *tp);
 static void ParseSnapMode(const TokenNode *tp);
 static void ParseMoveMode(const TokenNode *tp);
 static void ParseResizeMode(const TokenNode *tp);
-static void ParseFocusModel(const char *model);
-static void ParseGroup(const TokenNode *tp);
-static void ParseGroupOption(struct GroupType *group, const char *option);
-static void ParseIcons(const TokenNode *tp);
+static void ParseFocusModel(const TokenNode *tp);
 
-static MenuItemType *InsertMenuItem(MenuItemType *last);
 static char *FindAttribute(AttributeNode *ap, const char *name);
 static void ReleaseTokens(TokenNode *np);
 static void ParseError(const char *str, ...);
-static void SetDesktopCount(const char *value);
 
 /****************************************************************************
  ****************************************************************************/
-void ParseConfig(const char *fileName) {
+void ParseConfig(const char *fileName)
+{
 	if(!ParseFile(fileName, 0)) {
 		if(!ParseFile(SYSTEM_CONFIG, 0)) {
 			ParseError("could not open %s or %s", fileName, SYSTEM_CONFIG);
@@ -71,7 +87,8 @@ void ParseConfig(const char *fileName) {
  * Parse a specific file.
  * Returns 1 on success and 0 on failure.
  ****************************************************************************/
-int ParseFile(const char *fileName, int depth) {
+int ParseFile(const char *fileName, int depth)
+{
 
 	TokenNode *tokens;
 	FILE *fd;
@@ -102,7 +119,9 @@ int ParseFile(const char *fileName, int depth) {
 
 /***************************************************************************
  ***************************************************************************/
-void ReleaseTokens(TokenNode *np) {
+void ReleaseTokens(TokenNode *np)
+{
+
 	AttributeNode *ap;
 	TokenNode *tp;
 
@@ -137,7 +156,8 @@ void ReleaseTokens(TokenNode *np) {
 
 /***************************************************************************
  ***************************************************************************/
-void Parse(const TokenNode *start, int depth) {
+void Parse(const TokenNode *start, int depth)
+{
 
 	TokenNode *tp;
 
@@ -148,29 +168,8 @@ void Parse(const TokenNode *start, int depth) {
 	if(start->type == TOK_JWM) {
 		for(tp = start->subnodeHead; tp; tp = tp->next) {
 			switch(tp->type) {
-			case TOK_BORDER:
-				ParseBorder(tp);
-				break;
-			case TOK_INCLUDE:
-				ParseInclude(tp, depth);
-				break;
-			case TOK_TRAY:
-				ParseTray(tp);
-				break;
-			case TOK_PAGER:
-				ParsePager(tp);
-				break;
-			case TOK_POPUP:
-				ParsePopup(tp);
-				break;
-			case TOK_LOAD:
-				ParseLoad(tp);
-				break;
-			case TOK_CLOCK:
-				ParseClock(tp);
-				break;
-			case TOK_MENU:
-				ParseMenu(tp);
+			case TOK_BORDERSTYLE:
+				ParseBorderStyle(tp);
 				break;
 			case TOK_DESKTOPCOUNT:
 				SetDesktopCount(tp->value);
@@ -182,22 +181,7 @@ void Parse(const TokenNode *start, int depth) {
 				SetDoubleClickDelta(tp->value);
 				break;
 			case TOK_FOCUSMODEL:
-				ParseFocusModel(tp->value);
-				break;
-			case TOK_SNAPMODE:
-				ParseSnapMode(tp);
-				break;
-			case TOK_MOVEMODE:
-				ParseMoveMode(tp);
-				break;
-			case TOK_RESIZEMODE:
-				ParseResizeMode(tp);
-				break;
-			case TOK_ROOTMENU:
-				ParseRootMenu(tp);
-				break;
-			case TOK_KEY:
-				ParseKey(tp);
+				ParseFocusModel(tp);
 				break;
 			case TOK_GROUP:
 				ParseGroup(tp);
@@ -205,11 +189,50 @@ void Parse(const TokenNode *start, int depth) {
 			case TOK_ICONS:
 				ParseIcons(tp);
 				break;
+			case TOK_INCLUDE:
+				ParseInclude(tp, depth);
+				break;
+			case TOK_KEY:
+				ParseKey(tp);
+				break;
+			case TOK_MENUSTYLE:
+				ParseMenuStyle(tp);
+				break;
+			case TOK_MOVEMODE:
+				ParseMoveMode(tp);
+				break;
+			case TOK_PAGERSTYLE:
+				ParsePagerStyle(tp);
+				break;
+			case TOK_POPUP:
+				ParsePopup(tp);
+				break;
+			case TOK_POPUPSTYLE:
+				ParsePopupStyle(tp);
+				break;
+			case TOK_RESIZEMODE:
+				ParseResizeMode(tp);
+				break;
+			case TOK_ROOTMENU:
+				ParseRootMenu(tp);
+				break;
 			case TOK_SHUTDOWNCOMMAND:
-				SetShutdownCommand(tp->value);
+				ParseShutdownCommand(tp);
+				break;
+			case TOK_SNAPMODE:
+				ParseSnapMode(tp);
 				break;
 			case TOK_STARTUPCOMMAND:
-				SetStartupCommand(tp->value);
+				ParseStartupCommand(tp);
+				break;
+			case TOK_TASKLISTSTYLE:
+				ParseTaskListStyle(tp);
+				break;
+			case TOK_TRAY:
+				ParseTray(tp);
+				break;
+			case TOK_TRAYSTYLE:
+				ParseTrayStyle(tp);
 				break;
 			default:
 				ParseError("invalid tag in JWM: %s", GetTokenName(tp->type));
@@ -224,14 +247,15 @@ void Parse(const TokenNode *start, int depth) {
 
 /****************************************************************************
  ****************************************************************************/
-void ParseFocusModel(const char *model) {
-	if(model) {
-		if(!strcmp(model, "sloppy")) {
+void ParseFocusModel(const TokenNode *tp)
+{
+	if(tp->value) {
+		if(!strcmp(tp->value, "sloppy")) {
 			focusModel = FOCUS_SLOPPY;
-		} else if(!strcmp(model, "click")) {
+		} else if(!strcmp(tp->value, "click")) {
 			focusModel = FOCUS_CLICK;
 		} else {
-			ParseError("invalid focus model: %s", model);
+			ParseError("invalid focus model: \"%s\"", tp->value);
 		}
 	} else {
 		ParseError("focus model not specified");
@@ -240,7 +264,9 @@ void ParseFocusModel(const char *model) {
 
 /****************************************************************************
  ****************************************************************************/
-void ParseSnapMode(const TokenNode *tp) {
+void ParseSnapMode(const TokenNode *tp)
+{
+
 	const char *distance;
 
 	distance = FindAttribute(tp->attributes, "distance");
@@ -267,7 +293,8 @@ void ParseSnapMode(const TokenNode *tp) {
 
 /****************************************************************************
  ****************************************************************************/
-void ParseMoveMode(const TokenNode *tp) {
+void ParseMoveMode(const TokenNode *tp)
+{
 	if(tp->value) {
 		if(!strcmp(tp->value, "outline")) {
 			SetMoveMode(MOVE_OUTLINE);
@@ -283,7 +310,8 @@ void ParseMoveMode(const TokenNode *tp) {
 
 /****************************************************************************
  ****************************************************************************/
-void ParseResizeMode(const TokenNode *tp) {
+void ParseResizeMode(const TokenNode *tp)
+{
 	if(tp->value) {
 		if(!strcmp(tp->value, "outline")) {
 			SetResizeMode(RESIZE_OUTLINE);
@@ -299,20 +327,12 @@ void ParseResizeMode(const TokenNode *tp) {
 
 /****************************************************************************
  ****************************************************************************/
-void ParseRootMenu(const TokenNode *start) {
+void ParseRootMenu(const TokenNode *start)
+{
 
-	char *title;
 	char *value;
 	MenuType *menu;
 
-	title = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
-	if(title) {
-		SetMenuTitle(title);
-	}
-	value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
-	if(value) {
-		SetMenuIcon(value);
-	}
 	value = FindAttribute(start->attributes, ONROOT_ATTRIBUTE);
 	if(value && !strcmp(value, FALSE_VALUE)) {
 		SetShowMenuOnRoot(0);
@@ -331,13 +351,8 @@ void ParseRootMenu(const TokenNode *start) {
 
 	value = FindAttribute(start->attributes, LABELED_ATTRIBUTE);
 	if(value && !strcmp(value, TRUE_VALUE)) {
-		if(title) {
-			menu->label = Allocate(strlen(title) + 1);
-			strcpy(menu->label, title);
-		} else {
-			menu->label = Allocate(strlen(DEFAULT_TITLE) + 1);
-			strcpy(menu->label, DEFAULT_TITLE);
-		}
+		menu->label = Allocate(strlen(DEFAULT_TITLE) + 1);
+		strcpy(menu->label, DEFAULT_TITLE);
 	} else {
 		menu->label = NULL;
 	}
@@ -349,7 +364,8 @@ void ParseRootMenu(const TokenNode *start) {
 
 /****************************************************************************
  ****************************************************************************/
-MenuItemType *InsertMenuItem(MenuItemType *last) {
+MenuItemType *InsertMenuItem(MenuItemType *last)
+{
 
 	MenuItemType *item;
 
@@ -370,7 +386,8 @@ MenuItemType *InsertMenuItem(MenuItemType *last) {
 
 /****************************************************************************
  ****************************************************************************/
-void ParseMenuItem(const TokenNode *start, MenuType *menu) {
+void ParseMenuItem(const TokenNode *start, MenuType *menu)
+{
 
 	MenuItemType *last;
 	MenuType *child;
@@ -537,7 +554,8 @@ void ParseMenuItem(const TokenNode *start, MenuType *menu) {
 
 /****************************************************************************
  ****************************************************************************/
-void ParseKey(const TokenNode *tp) {
+void ParseKey(const TokenNode *tp)
+{
 	const char *key;
 	const char *mask;
 	const char *action;
@@ -611,7 +629,8 @@ void ParseKey(const TokenNode *tp) {
 
 /***************************************************************************
  ***************************************************************************/
-void ParseBorder(const TokenNode *tp) {
+void ParseBorderStyle(const TokenNode *tp)
+{
 	const TokenNode *np;
 
 	Assert(tp);
@@ -649,7 +668,8 @@ void ParseBorder(const TokenNode *tp) {
 
 /***************************************************************************
  ***************************************************************************/
-void ParseInclude(const TokenNode *tp, int depth) {
+void ParseInclude(const TokenNode *tp, int depth)
+{
 
 	char *temp;
 
@@ -669,59 +689,117 @@ void ParseInclude(const TokenNode *tp, int depth) {
 
 /***************************************************************************
  ***************************************************************************/
-void ParseTray(const TokenNode *tp) {
+void ParseTaskListStyle(const TokenNode *tp)
+{
+
+	TokenNode *np;
+
+	for(np = tp->subnodeHead; np; np = np->next) {
+		switch(np->type) {
+		case TOK_FONT:
+			SetFont(FONT_TASK, np->value);
+			break;
+		case TOK_FOREGROUND:
+			SetColor(COLOR_TASK_FG, np->value);
+			break;
+		case TOK_BACKGROUND:
+			SetColor(COLOR_TASK_BG, np->value);
+			break;
+		case TOK_ACTIVEFOREGROUND:
+			SetColor(COLOR_TASK_ACTIVE_FG, np->value);
+			break;
+		case TOK_ACTIVEBACKGROUND:
+			SetColor(COLOR_TASK_ACTIVE_BG, np->value);
+			break;
+		default:
+			ParseError("invalid TaskListStyle option: %s",
+				GetTokenName(np->type));
+			break;
+		}
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void ParseTrayStyle(const TokenNode *tp)
+{
+
 	const TokenNode *np;
-	const char *aa;
+
+	for(np = tp->subnodeHead; np; np = np->next) {
+		switch(np->type) {
+		case TOK_BACKGROUND:
+			SetColor(COLOR_TRAY_BG, np->value);
+			break;
+		default:
+			ParseError("invalid TrayStyle option: %s", GetTokenName(np->type));
+			break;
+		}
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void ParseTray(const TokenNode *tp)
+{
+
+	const TokenNode *np;
+	const char *attr;
+	TrayType *tray;
 
 	Assert(tp);
 
-	aa = FindAttribute(tp->attributes, AUTOHIDE_ATTRIBUTE);
-	if(aa && !strcmp(aa, TRUE_VALUE)) {
-		SetAutoHideTray(1);
+	tray = CreateTray();
+
+	attr = FindAttribute(tp->attributes, AUTOHIDE_ATTRIBUTE);
+	if(attr && !strcmp(attr, TRUE_VALUE)) {
+		SetAutoHideTray(tray, 1);
 	} else {
-		SetAutoHideTray(0);
+		SetAutoHideTray(tray, 0);
 	}
 
-	aa = FindAttribute(tp->attributes, MAXWIDTH_ATTRIBUTE);
-	if(aa) {
-		SetMaxTrayItemWidth(aa);
+	attr = FindAttribute(tp->attributes, X_ATTRIBUTE);
+	if(attr) {
+		SetTrayX(tray, attr);
 	}
 
-	aa = FindAttribute(tp->attributes, INSERT_ATTRIBUTE);
-	if(aa) {
-		SetTrayInsertMode(aa);
+	attr = FindAttribute(tp->attributes, Y_ATTRIBUTE);
+	if(attr) {
+		SetTrayY(tray, attr);
 	}
 
-	aa = FindAttribute(tp->attributes, LAYER_ATTRIBUTE);
-	if(aa) {
-		SetTrayLayer(aa);
+	attr = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
+	if(attr) {
+		SetTrayWidth(tray, attr);
+	}
+
+	attr = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
+	if(attr) {
+		SetTrayHeight(tray, attr);
+	}
+
+	attr = FindAttribute(tp->attributes, LAYOUT_ATTRIBUTE);
+	if(attr) {
+		SetTrayLayout(tray, attr);
+	}
+
+	attr = FindAttribute(tp->attributes, LAYER_ATTRIBUTE);
+	if(attr) {
+		SetTrayLayer(tray, attr);
 	}
 
 	for(np = tp->subnodeHead; np; np = np->next) {
 		switch(np->type) {
-		case TOK_HEIGHT:
-			SetTrayHeight(np->value);
+		case TOK_PAGER:
+			ParsePager(np, tray);
 			break;
-		case TOK_WIDTH:
-			SetTrayWidth(np->value);
+		case TOK_TASKLIST:
+			ParseTaskList(np, tray);
 			break;
-		case TOK_ALIGNMENT:
-			SetTrayAlignment(np->value);
-			break;
-		case TOK_FONT:
-			SetFont(FONT_TRAY, np->value);
-			break;
-		case TOK_FOREGROUND:
-			SetColor(COLOR_TRAY_FG, np->value);
-			break;
-		case TOK_BACKGROUND:
-			SetColor(COLOR_TRAY_BG, np->value);
-			break;
-		case TOK_ACTIVEFOREGROUND:
-			SetColor(COLOR_TRAY_ACTIVE_FG, np->value);
-			break;
-		case TOK_ACTIVEBACKGROUND:
-			SetColor(COLOR_TRAY_ACTIVE_BG, np->value);
+		case TOK_SWALLOW:
+			ParseSwallow(np, tray);
 			break;
 		default:
 			ParseError("invalid Tray option: %s", GetTokenName(np->type));
@@ -733,18 +811,54 @@ void ParseTray(const TokenNode *tp) {
 
 /***************************************************************************
  ***************************************************************************/
-void ParsePager(const TokenNode *tp) {
-	const TokenNode *np;
-	const char *aa;
+void ParsePager(const TokenNode *tp, TrayType *tray)
+{
+
+	TrayComponentType *cp;
 
 	Assert(tp);
+	Assert(tray);
 
-	aa = FindAttribute(tp->attributes, ENABLED_ATTRIBUTE);
-	if(aa && !strcmp(aa, FALSE_VALUE)) {
-		SetPagerEnabled(0);
-	} else {
-		SetPagerEnabled(1);
-	} 
+	cp = CreatePager(0, 0);
+	AddTrayComponent(tray, cp);
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void ParseTaskList(const TokenNode *tp, TrayType *tray)
+{
+
+	TrayComponentType *cp;
+
+	Assert(tp);
+	Assert(tray);
+
+	cp = CreateTaskBar(0, 0);
+	AddTrayComponent(tray, cp);
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void ParseSwallow(const TokenNode *tp, TrayType *tray)
+{
+
+	Assert(tp);
+	Assert(tray);
+
+/*TODO*/
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void ParsePagerStyle(const TokenNode *tp)
+{
+
+	const TokenNode *np;
+
+	Assert(tp);
 
 	for(np = tp->subnodeHead; np; np = np->next) {
 		switch(np->type) {
@@ -764,7 +878,7 @@ void ParsePager(const TokenNode *tp) {
 			SetColor(COLOR_PAGER_ACTIVE_BG, np->value);
 			break;
 		default:
-			ParseError("invalid Pager option: %s", GetTokenName(np->type));
+			ParseError("invalid PagerStyle option: %s", GetTokenName(np->type));
 			break;
 		}
 	}
@@ -773,18 +887,12 @@ void ParsePager(const TokenNode *tp) {
 
 /***************************************************************************
  ***************************************************************************/
-void ParsePopup(const TokenNode *tp) {
+void ParsePopupStyle(const TokenNode *tp)
+{
+
 	const TokenNode *np;
-	const char *aa;
 
 	Assert(tp);
-
-	aa = FindAttribute(tp->attributes, ENABLED_ATTRIBUTE);
-	if(aa && !strcmp(aa, FALSE_VALUE)) {
-		SetPopupEnabled(0);
-	} else {
-		SetPopupEnabled(1);
-	}
 
 	for(np = tp->subnodeHead; np; np = np->next) {
 		switch(np->type) {
@@ -801,7 +909,7 @@ void ParsePopup(const TokenNode *tp) {
 			SetColor(COLOR_POPUP_BG, np->value);
 			break;
 		default:
-			ParseError("invalid Popup option: %s", GetTokenName(np->type));
+			ParseError("invalid PopupStyle option: %s", GetTokenName(np->type));
 			break;
 		}
 	}
@@ -810,76 +918,16 @@ void ParsePopup(const TokenNode *tp) {
 
 /***************************************************************************
  ***************************************************************************/
-void ParseLoad(const TokenNode *tp) {
-#ifdef SHOW_LOAD
-	const TokenNode *np;
-	const char *aa;
-
-	Assert(tp);
-
-	aa = FindAttribute(tp->attributes, ENABLED_ATTRIBUTE);
-	if(aa && !strcmp(aa, FALSE_VALUE)) {
-		SetLoadEnabled(0);
-	} else {
-		SetLoadEnabled(1);
-	}
-
-	for(np = tp->subnodeHead; np; np = np->next) {
-		switch(np->type) {
-		case TOK_PROGRAM:
-			SetLoadProgram(np->value);
-			break;
-		case TOK_OUTLINE:
-			SetColor(COLOR_LOAD_OUTLINE, np->value);
-			break;
-		case TOK_FOREGROUND:
-			SetColor(COLOR_LOAD_FG, np->value);
-			break;
-		case TOK_BACKGROUND:
-			SetColor(COLOR_LOAD_BG, np->value);
-			break;
-		default:
-			ParseError("invalid Load option: %s", GetTokenName(np->type));
-			break;
-		}
-	}
-#endif /* SHOW_LOAD */
-}
-
-/****************************************************************************
- ****************************************************************************/
-void ParseClock(const TokenNode *tp) {
-	const TokenNode *np;
-	const char *aa;
-
-	Assert(tp);
-
-	aa = FindAttribute(tp->attributes, FORMAT_ATTRIBUTE);
-	SetClockFormat(aa);
-
-	aa = FindAttribute(tp->attributes, ENABLED_ATTRIBUTE);
-	if(aa && !strcmp(aa, FALSE_VALUE)) {
-		SetClockEnabled(0);
-	} else {
-		SetClockEnabled(1);
-	}
-
-	for(np = tp->subnodeHead; np; np = np->next) {
-		switch(np->type) {
-		case TOK_PROGRAM:
-			SetClockProgram(np->value);
-			break;
-		default:
-			ParseError("invalid Clock option: %s", GetTokenName(np->type));
-			break;
-		}
-	}
-
+void ParsePopup(const TokenNode *tp)
+{
+/*TODO*/
 }
 
 /***************************************************************************
  ***************************************************************************/
-void ParseMenu(const TokenNode *tp) {
+void ParseMenuStyle(const TokenNode *tp)
+{
+
 	const TokenNode *np;
 
 	Assert(tp);
@@ -902,7 +950,7 @@ void ParseMenu(const TokenNode *tp) {
 			SetColor(COLOR_MENU_ACTIVE_BG, np->value);
 			break;
 		default:
-			ParseError("invalid Menu option: %s", GetTokenName(np->type));
+			ParseError("invalid MenuStyle option: %s", GetTokenName(np->type));
 			break;
 		}
 	}
@@ -911,7 +959,9 @@ void ParseMenu(const TokenNode *tp) {
 
 /***************************************************************************
  ***************************************************************************/
-void ParseGroup(const TokenNode *tp) {
+void ParseGroup(const TokenNode *tp)
+{
+
 	const TokenNode *np;
 	struct GroupType *group;
 
@@ -940,7 +990,8 @@ void ParseGroup(const TokenNode *tp) {
 
 /***************************************************************************
  ***************************************************************************/
-void ParseGroupOption(struct GroupType *group, const char *option) {
+void ParseGroupOption(struct GroupType *group, const char *option)
+{
 
 	if(!strcmp(option, "sticky")) {
 		AddGroupOption(group, OPTION_STICKY);
@@ -968,7 +1019,22 @@ void ParseGroupOption(struct GroupType *group, const char *option) {
 
 /****************************************************************************
  ****************************************************************************/
-void ParseIcons(const TokenNode *tp) {
+void ParseShutdownCommand(const TokenNode *tp)
+{
+	SetShutdownCommand(tp->value);
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void ParseStartupCommand(const TokenNode *tp)
+{
+	SetStartupCommand(tp->value);
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void ParseIcons(const TokenNode *tp)
+{
 
 	TokenNode *np;
 
@@ -989,7 +1055,8 @@ void ParseIcons(const TokenNode *tp) {
 
 /***************************************************************************
  ***************************************************************************/
-char *FindAttribute(AttributeNode *ap, const char *name) {
+char *FindAttribute(AttributeNode *ap, const char *name)
+{
 
 	while(ap) {
 		if(!strcmp(name, ap->name)) {
@@ -1003,9 +1070,10 @@ char *FindAttribute(AttributeNode *ap, const char *name) {
 
 /***************************************************************************
  ***************************************************************************/
-char *ReadFile(FILE *fd) {
+char *ReadFile(FILE *fd)
+{
 
-	const int BLOCK_SIZE = 16;
+	const int BLOCK_SIZE = 1024;
 
 	char *buffer;
 	int len, max;
@@ -1033,25 +1101,12 @@ char *ReadFile(FILE *fd) {
 
 /****************************************************************************
  ****************************************************************************/
-void ParseError(const char *str, ...) {
+void ParseError(const char *str, ...)
+{
 	va_list ap;
 	va_start(ap, str);
-
 	WarningVA("configuration error", str, ap);
-
 	va_end(ap);
-}
-
-/****************************************************************************
- ****************************************************************************/
-void SetDesktopCount(const char *value) {
-	desktopCount = atoi(value);
-	if(desktopCount <= 0) {
-		desktopCount = 0;
-	}
-	if(desktopCount > MAX_DESKTOP_COUNT) {
-		desktopCount = MAX_DESKTOP_COUNT;
-	}
 }
 
 

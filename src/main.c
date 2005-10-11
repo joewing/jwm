@@ -222,13 +222,13 @@ void Initialize() {
 	InitializeHints();
 	InitializeIcons();
 	InitializeKeys();
-	InitializeLoadDisplay();
 	InitializeOutline();
-	InitializeOSDependent();
 	InitializePager();
 	InitializePopup();
 	InitializeRootMenu();
 	InitializeScreens();
+	InitializeSwallow();
+	InitializeTaskBar();
 	InitializeTiming();
 	InitializeTray();
 }
@@ -253,8 +253,9 @@ void Startup() {
 	StartupCursors();
 	StartupOutline();
 
-	StartupLoadDisplay();
 	StartupPager();
+	StartupSwallow();
+	StartupTaskBar();
 	StartupTray();
 	StartupKeys();
 	StartupHints();
@@ -292,8 +293,9 @@ void Shutdown() {
 	ShutdownKeys();
 	ShutdownPager();
 	ShutdownRootMenu();
-	ShutdownLoadDisplay();
 	ShutdownTray();
+	ShutdownTaskBar();
+	ShutdownSwallow();
 	ShutdownBorders();
 	ShutdownClients();
 	ShutdownIcons();
@@ -330,13 +332,13 @@ void Destroy() {
 	DestroyHints();
 	DestroyIcons();
 	DestroyKeys();
-	DestroyLoadDisplay();
 	DestroyOutline();
-	DestroyOSDependent();
 	DestroyPager();
 	DestroyPopup();
 	DestroyRootMenu();
 	DestroyScreens();
+	DestroySwallow();
+	DestroyTaskBar();
 	DestroyTiming();
 	DestroyTray();
 }

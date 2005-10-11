@@ -6,51 +6,37 @@
 #ifndef TRAY_H
 #define TRAY_H
 
-extern int autoHideTray;
-extern int trayHeight;
-extern int trayWidth;
-extern int trayX, trayY;
-extern int trayLayer;
-
-extern Window trayWindow;
-extern int trayIsHidden;
-
 void InitializeTray();
 void StartupTray();
 void ShutdownTray();
 void DestroyTray();
 
-int GetTrayIconSize();
 
-void ShowTray();
-void HideTray();
+TrayType *CreateTray();
+void AddTrayComponent(TrayType *tp, TrayComponentType *cp);
 
-void FocusNext();
+int GetTrayWidth(TrayType *tp);
+int GetTrayHeight(TrayType *tp);
+int GetTrayX(TrayType *tp);
+int GetTrayY(TrayType *tp);
 
-void NextDesktop();
-void PreviousDesktop();
-void ChangeDesktop(int desktop);
+int GetTrayIconSize(TrayType *tp);
+
+void ShowTray(TrayType *tp);
+void HideTray(TrayType *tp);
 
 void DrawTray();
-int UpdateTime();
-void UpdatePager();
-
-void AddClientToTray(ClientNode *np);
-void RemoveClientFromTray(ClientNode *np);
+void DrawSpecificTray(const TrayType *tp);
 
 int ProcessTrayEvent(const XEvent *event);
 
-void SetAutoHideTray(int v);
-void SetMaxTrayItemWidth(const char *str);
-void SetTrayHeight(const char *str);
-void SetTrayWidth(const char *str);
-void SetTrayAlignment(const char *str);
-void SetClockProgram(const char *command);
-void SetLoadProgram(const char *command);
-void SetMenuTitle(const char *title);
-void SetMenuIcon(const char *name);
-void SetTrayInsertMode(const char *str);
-void SetTrayLayer(const char *str);
+void SetAutoHideTray(TrayType *tp, int v);
+void SetTrayX(TrayType *tp, const char *str);
+void SetTrayY(TrayType *tp, const char *str);
+void SetTrayWidth(TrayType *tp, const char *str);
+void SetTrayHeight(TrayType *tp, const char *str);
+void SetTrayLayout(TrayType *tp, const char *str);
+void SetTrayLayer(TrayType *tp, const char *str);
 
 #endif
 

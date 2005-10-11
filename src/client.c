@@ -231,7 +231,7 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 
 	DrawBorder(np);
 
-	AddClientToTray(np);
+	AddClientToTaskBar(np);
 
 	if(!alreadyMapped) {
 		RaiseClient(np);
@@ -295,7 +295,7 @@ void PlaceWindow(ClientNode *np, int alreadyMapped) {
 			np->x = west + cascadeOffset + x;
 		}
 
-		if(np->height + cascadeOffset + north + y > height - trayHeight) {
+		if(np->height + cascadeOffset + north + y > height) {
 			if(np->height + north + west < height) {
 				np->y = north + width / 2 - np->width / 2 + y;
 			} else {
@@ -316,7 +316,7 @@ void PlaceWindow(ClientNode *np, int alreadyMapped) {
 		if(np->x + np->width - x > width) {
 			np->x = x;
 		}
-		if(np->y + np->height - y > height - trayHeight) {
+		if(np->y + np->height - y > height) {
 			np->y = y;
 		}
 
@@ -427,7 +427,8 @@ void MinimizeClient(ClientNode *np) {
 	}
 
 	MinimizeTransients(np);
-	DrawTray();
+	UpdateTaskBar();
+	UpdatePager();
 
 }
 
@@ -552,7 +553,8 @@ void SetClientWithdrawn(ClientNode *np, int isWithdrawn) {
 		}
 	}
 
-	DrawTray();
+	UpdateTaskBar();
+	UpdatePager();
 
 }
 
@@ -729,7 +731,8 @@ void SetClientDesktop(ClientNode *np, int desktop) {
 				}
 			}
 		}
-		DrawTray();
+		UpdatePager();
+		UpdateTaskBar();
 	}
 
 }
@@ -809,9 +812,6 @@ void MaximizeClient(ClientNode *np) {
 		np->y = GetScreenY(screen) + north;
 		np->width = GetScreenWidth(screen) - 2 * borderWidth;
 		np->height = GetScreenHeight(screen) - titleSize - borderWidth;
-		if(!autoHideTray) {
-			np->height -= trayHeight;
-		}
 
 		if(np->width > np->maxWidth) {
 			np->width = np->maxWidth;
@@ -876,7 +876,8 @@ void FocusClient(ClientNode *np) {
 		}
 
 		DrawBorder(np);
-		DrawTray();
+		UpdatePager();
+		UpdateTaskBar();
 
 	}
 
@@ -1051,9 +1052,12 @@ void RestackClients() {
 				stack[index++] = np->parent;
 			}
 		}
+/*
+XXX
 		if(layer == trayLayer) {
 			stack[index++] = trayWindow;
 		}
+*/
 	}
 
 	JXRestackWindows(display, stack, index);
@@ -1195,7 +1199,8 @@ void RemoveClient(ClientNode *np) {
 		JXFree(np->className);
 	}
 
-	RemoveClientFromTray(np);
+	RemoveClientFromTaskBar(np);
+	UpdatePager();
 
 	while(np->colormaps) {
 		cp = np->colormaps->next;
@@ -1203,8 +1208,7 @@ void RemoveClient(ClientNode *np) {
 		np->colormaps = cp;
 	}
 
-	DestroyIcon(np->titleIcon);
-	DestroyIcon(np->trayIcon);
+	DestroyIcon(np->icon);
 
 	Release(np);
 

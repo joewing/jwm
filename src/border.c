@@ -257,8 +257,10 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 	int buttonCount, titleWidth;
 	Pixmap canvas;
 	GC gc;
+	int iconSize;
 
 	width = np->width + borderWidth + borderWidth;
+	iconSize = GetBorderIconSize();
 
 	if(np->statusFlags & STAT_ACTIVE) {
 		borderTextColor = COLOR_BORDER_ACTIVE_FG;
@@ -302,9 +304,11 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 
 	if(np->borderFlags & BORDER_TITLE) {
 
-		if(np->titleIcon) {
-			PutIcon(np->titleIcon, canvas, gc, borderWidth + 2,
-				borderWidth + titleHeight / 2 - np->titleIcon->height / 2);
+		if(np->icon) {
+			PutIcon(np->icon, canvas, gc,
+				borderWidth + 2,
+				borderWidth + titleHeight / 2 - iconSize / 2,
+				iconSize);
 		}
 
 		if(np->name && np->name[0] && titleWidth > 0) {

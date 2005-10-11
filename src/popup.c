@@ -104,8 +104,8 @@ void ShowPopup(int x, int y, const char *text) {
 	if(popup.width + popup.x >= GetScreenWidth(screenIndex)) {
 		popup.x = GetScreenWidth(screenIndex) - popup.width - 2;
 	}
-	if(popup.height + popup.y >= GetScreenHeight(screenIndex) - trayHeight) {
-		popup.y = GetScreenHeight(screenIndex) - trayHeight - popup.height - 2;
+	if(popup.height + popup.y >= GetScreenHeight(screenIndex)) {
+		popup.y = GetScreenHeight(screenIndex) - popup.height - 2;
 	}
 
 	if(popup.window == None) {

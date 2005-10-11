@@ -7,12 +7,12 @@
 
 Display *display = NULL;
 Window rootWindow;
-unsigned int rootWidth, rootHeight;
-unsigned int rootDepth;
-unsigned int rootScreen;
+int rootWidth, rootHeight;
+int rootDepth;
+int rootScreen;
 Colormap rootColormap;
 Visual *rootVisual;
-unsigned int colormapCount;
+int colormapCount;
 
 int shouldExit = 0;
 int shouldRestart = 0;

@@ -116,11 +116,13 @@ void StartupHints() {
 		XA_CARDINAL, 32, PropModeReplace,
 		(unsigned char*)array, desktopCount * 4);
 
+/*TODO: note, we may not have a tray
 	SetWindowAtom(rootWindow, ATOM_NET_SUPPORTING_WM_CHECK, trayWindow);
 	SetWindowAtom(trayWindow, ATOM_NET_SUPPORTING_WM_CHECK, trayWindow);
 
 	SetCardinalAtom(rootWindow, ATOM_WIN_SUPPORTING_WM_CHECK, trayWindow);
 	SetCardinalAtom(trayWindow, ATOM_WIN_SUPPORTING_WM_CHECK, trayWindow);
+*/
 
 	SetCardinalAtom(rootWindow, ATOM_WIN_WORKSPACE_COUNT, desktopCount);
 
@@ -340,7 +342,7 @@ void ReadWMClass(ClientNode *np) {
 
 	Assert(np);
 
-	if(XGetClassHint(display, np->window, &hint)) {
+	if(JXGetClassHint(display, np->window, &hint)) {
 		np->instanceName = hint.res_name;
 		np->className = hint.res_class;
 	}

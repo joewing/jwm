@@ -173,10 +173,8 @@ void SetSize(void *object, int width, int height) {
 
 	if(width) {
 		pp->width = width;
-		GetHeight(object);
 	} else {
 		pp->height = height;
-		GetWidth(object);
 	}
 
 }

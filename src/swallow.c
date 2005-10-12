@@ -149,9 +149,7 @@ int GetWidth(void *object) {
 
 	Assert(np);
 
-	if(!np->started) {
-		StartSwallowedClient(np);
-	}
+	StartSwallowedClient(np);
 
 	return np->width + 2 * np->border;
 
@@ -165,9 +163,7 @@ int GetHeight(void *object) {
 
 	Assert(np);
 
-	if(!np->started) {
-		StartSwallowedClient(np);
-	}
+	StartSwallowedClient(np);
 
 	return np->height + 2 * np->border;
 
@@ -235,6 +231,7 @@ void StartSwallowedClient(SwallowNode *np) {
 	np->width = attributes.width;
 	np->height = attributes.height;
 	np->border = attributes.border_width;
+Debug("%s: %d x %d", np->name, np->width, np->height);
 
 }
 

@@ -283,6 +283,9 @@ void PlaceWindow(ClientNode *np, int alreadyMapped) {
 	x = GetScreenX(index);
 	y = GetScreenY(index);
 
+	if(!(np->sizeFlags & PPosition) && !alreadyMapped) {
+
+
 	/* Avoid trays if possible. */
 	for(tp = GetTrays(); tp; tp = tp->next) {
 
@@ -316,9 +319,6 @@ void PlaceWindow(ClientNode *np, int alreadyMapped) {
 		}
 
 	}
-
-	if(!(np->sizeFlags & PPosition) && !alreadyMapped) {
-
 
 		if(np->width + cascadeOffset + west - x > width) {
 			if(np->width + west * 2 < width) {

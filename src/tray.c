@@ -222,9 +222,9 @@ TrayType *CreateTray()
 	tp = Allocate(sizeof(TrayType));
 
 	tp->x = 0;
-	tp->y = -32;
+	tp->y = -1;
 	tp->width = 0;
-	tp->height = 32;
+	tp->height = 0;
 	tp->border = 1;
 	tp->layer = DEFAULT_TRAY_LAYER;
 	tp->layout = LAYOUT_HORIZONTAL;
@@ -273,12 +273,32 @@ int GetTrayWidth(TrayType *tp)
 
 	if(tp->width == 0) {
 		if(tp->layout == LAYOUT_HORIZONTAL) {
-			tp->width = rootWidth;
-		} else {
-			tp->width = 64;
 			for(cp = tp->components; cp; cp = cp->next) {
+				if(tp->height > 0 && cp->SetSize) {
+					temp = tp->height - 2 * tp->border;
+					(cp->SetSize)(cp->object, 0, temp);
+				}
 				if(cp->GetWidth) {
 					temp = (cp->GetWidth)(cp->object);
+					if(temp == rootWidth) {
+						tp->width = rootWidth;
+						break;
+					}
+					temp += 2 * tp->border;
+					if(temp > tp->width && temp < rootWidth) {
+						tp->width += temp;
+					}
+				}
+			}
+		} else {
+			tp->width = 2 * tp->border;
+			for(cp = tp->components; cp; cp = cp->next) {
+				if(tp->height > 0 && cp->SetSize) {
+					temp = tp->height - 2 * tp->border;
+					(cp->SetSize)(cp->object, 0, temp);
+				}
+				if(cp->GetWidth) {
+					temp = (cp->GetWidth)(cp->object) + 2 * tp->border;
 					if(temp > tp->width && temp < rootWidth) {
 						tp->width = temp;
 					}
@@ -301,15 +321,35 @@ int GetTrayHeight(TrayType *tp)
 		if(tp->layout == LAYOUT_HORIZONTAL) {
 			tp->height = 16;
 			for(cp = tp->components; cp; cp = cp->next) {
+				if(tp->width > 0 && cp->SetSize) {
+					temp = tp->width - 2 * tp->border;
+					(cp->SetSize)(cp->object, temp, 0);
+				}
 				if(cp->GetHeight) {
-					temp = (cp->GetHeight)(cp->object);
+					temp = (cp->GetHeight)(cp->object) + 2 * tp->border;
 					if(temp > tp->height && temp < rootHeight) {
 						tp->height = temp;
 					}
 				}
 			}
 		} else {
-			tp->height = rootHeight;
+			for(cp = tp->components; cp; cp = cp->next) {
+				if(tp->width > 0 && cp->SetSize) {
+					temp = tp->width - 2 * tp->border;
+					(cp->SetSize)(cp->object, temp, 0);
+				}
+				if(cp->GetHeight) {
+					temp = (cp->GetHeight)(cp->object);
+					if(temp == rootHeight) {
+						tp->height = rootHeight;
+						break;
+					}
+					temp =+ 2 * tp->border;
+					if(temp > tp->height && temp < rootHeight) {
+						tp->height += temp;
+					}
+				}
+			}
 		}
 	}
 	return tp->height;

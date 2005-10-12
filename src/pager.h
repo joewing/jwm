@@ -11,7 +11,7 @@ void StartupPager();
 void ShutdownPager();
 void DestroyPager();
 
-TrayComponentType *CreatePager(int width, int height);
+TrayComponentType *CreatePager();
 
 void UpdatePager();
 

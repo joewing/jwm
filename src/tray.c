@@ -5,9 +5,8 @@
 
 #include "jwm.h"
 
-static const int trayBorderSize = 2;
-
 static TrayType *trays;
+static Window supportingWindow;
 
 static void Update(void *object);
 
@@ -23,6 +22,7 @@ static void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event);
 void InitializeTray()
 {
 	trays = NULL;
+	supportingWindow = None;
 }
 
 /***************************************************************************
@@ -50,13 +50,13 @@ void StartupTray()
 
 		/* Get the remaining size after setting fixed size components. */
 		/* Also, keep track of the number of variable size components. */
-		width = tp->width;
-		height = tp->height;
+		width = tp->width - 2 * tp->border;
+		height = tp->height - 2 * tp->border;
 		variableCount = 0;
 		for(cp = tp->components; cp; cp = cp->next) {
 			if(tp->layout == LAYOUT_HORIZONTAL) {
 				if(cp->SetSize) {
-					(cp->SetSize)(cp->object, 0, tp->height);
+					(cp->SetSize)(cp->object, 0, tp->height - 2 * tp->border);
 				}
 				temp = (cp->GetWidth)(cp->object);
 				if(temp < rootWidth) {
@@ -66,7 +66,7 @@ void StartupTray()
 				}
 			} else {
 				if(cp->SetSize) {
-					(cp->SetSize)(cp->object, tp->width, 0);
+					(cp->SetSize)(cp->object, tp->width - 2 * tp->border, 0);
 				}
 				temp = (cp->GetHeight)(cp->object);
 				if(temp < rootHeight) {
@@ -77,7 +77,7 @@ void StartupTray()
 			}
 		}
 
-		/* Distribute excess size amoung variable size components.
+		/* Distribute excess size among variable size components.
 		 * If there are no variable size components, shrink the tray.
 		 * If we are out of room, just give them a size of one.
 		 */
@@ -110,8 +110,7 @@ void StartupTray()
 		attr.background_pixel = colors[COLOR_TRAY_BG];
 
 		tp->window = JXCreateWindow(display, rootWindow,
-			tp->x - trayBorderSize, tp->y - trayBorderSize,
-			tp->width + 2 * trayBorderSize, tp->height + 2 * trayBorderSize,
+			tp->x, tp->y, tp->width, tp->height,
 			0, rootDepth, InputOutput, rootVisual,
 			CWOverrideRedirect | CWBackPixel | CWEventMask, &attr);
 
@@ -124,8 +123,8 @@ void StartupTray()
 		tp->gc = JXCreateGC(display, tp->window, 0, NULL);
 
 		/* Create and layout items on the tray. */
-		xoffset = trayBorderSize;
-		yoffset = trayBorderSize;
+		xoffset = tp->border;
+		yoffset = tp->border;
 		for(cp = tp->components; cp; cp = cp->next) {
 			if(cp->Create) {
 				if(tp->layout == LAYOUT_HORIZONTAL) {
@@ -137,9 +136,9 @@ void StartupTray()
 							--variableRemainder;
 						}
 					}
-					height = tp->height;
+					height = tp->height - 2 * tp->border;
 				} else {
-					width = tp->width;
+					width = tp->width - 2 * tp->border;
 					height = (cp->GetHeight)(cp->object);
 					if(height == rootHeight) {
 						height = variableSize;
@@ -199,6 +198,11 @@ void ShutdownTray()
 		trays = tp;
 	}
 
+	if(supportingWindow != None) {
+		XDestroyWindow(display, supportingWindow);
+		supportingWindow = None;
+	}
+
 }
 
 
@@ -221,6 +225,7 @@ TrayType *CreateTray()
 	tp->y = -32;
 	tp->width = 0;
 	tp->height = 32;
+	tp->border = 1;
 	tp->layer = DEFAULT_TRAY_LAYER;
 	tp->layout = LAYOUT_HORIZONTAL;
 
@@ -392,36 +397,37 @@ int ProcessTrayEvent(const XEvent *event) {
 
 /***************************************************************************
  ***************************************************************************/
-void HandleTrayExpose(TrayType *tp, const XExposeEvent *event)
-{
+void HandleTrayExpose(TrayType *tp, const XExposeEvent *event) {
+
 	DrawTray(tp);
+
 }
 
 /***************************************************************************
  ***************************************************************************/
-void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event)
-{
+void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event) {
+
 	ShowTray(tp);
+
 }
 
 /***************************************************************************
  ***************************************************************************/
-void HandleTrayLeaveNotify(TrayType *tp, const XCrossingEvent *event)
-{
+void HandleTrayLeaveNotify(TrayType *tp, const XCrossingEvent *event) {
 }
 
 /***************************************************************************
  ***************************************************************************/
-void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event)
-{
+void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event) {
+
 	TrayComponentType *cp;
 	int xoffset, yoffset;
 	int width, height;
 	int x, y;
 	int mask;
 
-	xoffset = trayBorderSize;
-	yoffset = trayBorderSize;
+	xoffset = tp->border;
+	yoffset = tp->border;
 	for(cp = tp->components; cp; cp = cp->next) {
 		width = (cp->GetWidth)(cp->object);
 		height = (cp->GetHeight)(cp->object);
@@ -446,14 +452,14 @@ void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event)
 
 /***************************************************************************
  ***************************************************************************/
-void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event)
-{
+void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event) {
+
 	TrayComponentType *cp;
 	int xoffset, yoffset;
 	int width, height;
 
-	xoffset = trayBorderSize;
-	yoffset = trayBorderSize;
+	xoffset = tp->border;
+	yoffset = tp->border;
 	for(cp = tp->components; cp; cp = cp->next) {
 		width = (cp->GetWidth)(cp->object);
 		height = (cp->GetHeight)(cp->object);
@@ -477,15 +483,13 @@ void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event)
 
 /***************************************************************************
  ***************************************************************************/
-void Update(void *object)
-{
+void Update(void *object) {
 	DrawSpecificTray((TrayType*)object);
 }
 
 /***************************************************************************
  ***************************************************************************/
-void DrawTray()
-{
+void DrawTray() {
 
 	TrayType *tp;
 
@@ -501,18 +505,18 @@ void DrawTray()
 
 /***************************************************************************
  ***************************************************************************/
-void DrawSpecificTray(const TrayType *tp)
-{
+void DrawSpecificTray(const TrayType *tp) {
 
 	TrayComponentType *cp;
 	int width, height;
 	int xoffset, yoffset;
+	int x;
 
 	Assert(tp);
 
 	/* Draw components. */
-	xoffset = trayBorderSize;
-	yoffset = trayBorderSize;
+	xoffset = tp->border;
+	yoffset = tp->border;
 	for(cp = tp->components; cp; cp = cp->next) {
 
 		width = (cp->GetWidth)(cp->object);
@@ -532,52 +536,69 @@ void DrawSpecificTray(const TrayType *tp)
 
 	}
 
-	/* Top border. */
-	JXSetForeground(display, tp->gc, colors[COLOR_TRAY_UP]);
-	JXFillRectangle(display, tp->window, tp->gc, 0, 0,
-		tp->width + 2 * trayBorderSize, trayBorderSize);
+	/* Draw the border. */
+	for(x = 0; x < tp->border; x++) {
 
-	/* Bottom border. */
-	JXSetForeground(display, tp->gc, colors[COLOR_TRAY_DOWN]);
-	JXFillRectangle(display, tp->window, tp->gc,
-		0, tp->height + trayBorderSize,
-		tp->width + 2 * trayBorderSize, trayBorderSize);
+		/* Top */
+		JXSetForeground(display, tp->gc, colors[COLOR_TRAY_UP]);
+		JXDrawLine(display, tp->window, tp->gc,
+			0, x,
+			tp->width - x - 1, x);
 
-	/* Right border. */
-	JXDrawLine(display, tp->window, tp->gc,
-		tp->width + 3, 1, tp->width + 3, tp->height + 2);
-	JXDrawLine(display, tp->window, tp->gc,
-		tp->width + 2, 2, tp->width + 2, tp->height + 3);
+		/* Bottom */
+		JXSetForeground(display, tp->gc, colors[COLOR_TRAY_DOWN]);
+		JXDrawLine(display, tp->window, tp->gc,
+			x + 1, tp->height - x - 1,
+			tp->width - x - 2, tp->height - x - 1);
 
-	/* Left border. */
-	JXSetForeground(display, tp->gc, colors[COLOR_TRAY_UP]);
-	JXDrawLine(display, tp->window, tp->gc,
-		0, 2, 0, tp->height + 3);
-	JXDrawLine(display, tp->window, tp->gc,
-		1, 2, 1, tp->height + 2);
+		/* Left */
+		JXSetForeground(display, tp->gc, colors[COLOR_TRAY_UP]);
+		JXDrawLine(display, tp->window, tp->gc,
+			x, x,
+			x, tp->height - x - 1);
 
+		/* Right */
+		JXSetForeground(display, tp->gc, colors[COLOR_TRAY_DOWN]);
+		JXDrawLine(display, tp->window, tp->gc, 
+			tp->width - x - 1, x + 1,
+			tp->width - x - 1, tp->height - x - 1);
+
+	}
 
 }
 
 /***************************************************************************
  ***************************************************************************/
-TrayType *GetTrays()
-{
+TrayType *GetTrays() {
 	return trays;
 }
 
 /***************************************************************************
  ***************************************************************************/
-void SetAutoHideTray(TrayType *tp, int v)
-{
+Window GetSupportingWindow() {
+
+	if(trays) {
+		return trays->window;
+	} else if(supportingWindow != None) {
+		return supportingWindow;
+	} else {
+		supportingWindow = JXCreateSimpleWindow(display, rootWindow,
+			0, 0, 1, 1, 0, 0, 0);
+		return supportingWindow;
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void SetAutoHideTray(TrayType *tp, int v) {
 	Assert(tp);
 	tp->autoHide = v;
 }
 
 /***************************************************************************
  ***************************************************************************/
-void SetTrayX(TrayType *tp, const char *str)
-{
+void SetTrayX(TrayType *tp, const char *str) {
 	Assert(tp);
 	Assert(str);
 	tp->x = atoi(str);
@@ -585,8 +606,7 @@ void SetTrayX(TrayType *tp, const char *str)
 
 /***************************************************************************
  ***************************************************************************/
-void SetTrayY(TrayType *tp, const char *str)
-{
+void SetTrayY(TrayType *tp, const char *str) {
 	Assert(tp);
 	Assert(str);
 	tp->y = atoi(str);
@@ -594,8 +614,7 @@ void SetTrayY(TrayType *tp, const char *str)
 
 /***************************************************************************
  ***************************************************************************/
-void SetTrayWidth(TrayType *tp, const char *str)
-{
+void SetTrayWidth(TrayType *tp, const char *str) {
 
 	int width;
 
@@ -615,8 +634,7 @@ void SetTrayWidth(TrayType *tp, const char *str)
 
 /***************************************************************************
  ***************************************************************************/
-void SetTrayHeight(TrayType *tp, const char *str)
-{
+void SetTrayHeight(TrayType *tp, const char *str) {
 
 	int height;
 
@@ -636,8 +654,7 @@ void SetTrayHeight(TrayType *tp, const char *str)
 
 /***************************************************************************
  ***************************************************************************/
-void SetTrayLayout(TrayType *tp, const char *str)
-{
+void SetTrayLayout(TrayType *tp, const char *str) {
 
 	Assert(tp);
 	Assert(str);
@@ -664,9 +681,30 @@ void SetTrayLayer(TrayType *tp, const char *str) {
 	temp = atoi(str);
 	if(temp < LAYER_BOTTOM || temp > LAYER_TOP) {
 		Warning("invalid tray layer: %d", temp);
+		tp->layer = DEFAULT_TRAY_LAYER;
 	} else {
 		tp->layer = temp;
 	}
 
 }
+
+/***************************************************************************
+ ***************************************************************************/
+void SetTrayBorder(TrayType *tp, const char *str) {
+
+	int temp;
+
+	Assert(tp);
+	Assert(str);
+
+	temp = atoi(str);
+	if(temp < MIN_TRAY_BORDER || temp > MAX_TRAY_BORDER) {
+		Warning("invalid tray border: %d", temp);
+		tp->border = DEFAULT_TRAY_BORDER;
+	} else {
+		tp->border = temp;
+	}
+
+}
+
 

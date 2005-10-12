@@ -156,6 +156,9 @@
 #define JXSetWindowBorder( a, b, c ) \
 	( SetCheckpoint(), XSetWindowBorder( a, b, c ) )
 
+#define JXGetWMHints( a, b ) \
+	( SetCheckpoint(), XGetWMHints( a, b ) )
+
 #define JXGrabButton( a, b, c, d, e, f, g, h, i, j ) \
 	( SetCheckpoint(), XGrabButton( a, b, c, d, e, f, g, h, i, j ) )
 

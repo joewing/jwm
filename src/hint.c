@@ -67,8 +67,10 @@ void InitializeHints() {
 /****************************************************************************
  ****************************************************************************/
 void StartupHints() {
+
 	long array[128];
 	Atom supported[ATOM_COUNT];
+	Window win;
 	int x;
 
 	/* Intern the atoms */
@@ -116,13 +118,13 @@ void StartupHints() {
 		XA_CARDINAL, 32, PropModeReplace,
 		(unsigned char*)array, desktopCount * 4);
 
-/*TODO: note, we may not have a tray
-	SetWindowAtom(rootWindow, ATOM_NET_SUPPORTING_WM_CHECK, trayWindow);
-	SetWindowAtom(trayWindow, ATOM_NET_SUPPORTING_WM_CHECK, trayWindow);
 
-	SetCardinalAtom(rootWindow, ATOM_WIN_SUPPORTING_WM_CHECK, trayWindow);
-	SetCardinalAtom(trayWindow, ATOM_WIN_SUPPORTING_WM_CHECK, trayWindow);
-*/
+	win = GetSupportingWindow();
+	SetWindowAtom(rootWindow, ATOM_NET_SUPPORTING_WM_CHECK, win);
+	SetWindowAtom(win, ATOM_NET_SUPPORTING_WM_CHECK, win);
+
+	SetCardinalAtom(rootWindow, ATOM_WIN_SUPPORTING_WM_CHECK, win);
+	SetCardinalAtom(win, ATOM_WIN_SUPPORTING_WM_CHECK, win);
 
 	SetCardinalAtom(rootWindow, ATOM_WIN_WORKSPACE_COUNT, desktopCount);
 

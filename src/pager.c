@@ -38,21 +38,18 @@ static void DrawPagerClient(const PagerType *pp, const ClientNode *np);
 
 /****************************************************************************
  ****************************************************************************/
-void InitializePager()
-{
+void InitializePager() {
 	pagers = NULL;
 }
 
 /****************************************************************************
  ****************************************************************************/
-void StartupPager()
-{
+void StartupPager() {
 }
 
 /****************************************************************************
  ****************************************************************************/
-void ShutdownPager()
-{
+void ShutdownPager() {
 
 	PagerType *pp;
 
@@ -67,14 +64,12 @@ void ShutdownPager()
 
 /****************************************************************************
  ****************************************************************************/
-void DestroyPager()
-{
+void DestroyPager() {
 }
 
 /****************************************************************************
  ****************************************************************************/
-TrayComponentType *CreatePager(int width, int height)
-{
+TrayComponentType *CreatePager() {
 
 	TrayComponentType *cp;
 	PagerType *pp;
@@ -89,9 +84,8 @@ TrayComponentType *CreatePager(int width, int height)
 	 * By the time GetWidth or GetHeight is called, the desktop count will
 	 * be known.
 	 */
-	/* TODO: if the pager is to be vertical, this is backwards. */
 	pp->width = 0;
-	pp->height = height;
+	pp->height = 0;
 
 	pp->next = pagers;
 	pagers = pp;
@@ -118,8 +112,7 @@ TrayComponentType *CreatePager(int width, int height)
 /****************************************************************************
  ****************************************************************************/
 void Create(void *object, void *owner, void (*Update)(void *owner),
-	 int width, int height)
-{
+	 int width, int height) {
 
 	PagerType *pp = (PagerType*)object;
 
@@ -140,15 +133,15 @@ void Create(void *object, void *owner, void (*Update)(void *owner),
 
 /****************************************************************************
  ****************************************************************************/
-void Destroy(void *object)
-{
+void Destroy(void *object) {
+
 	/* Handled in ShutdownPager. */
+
 }
 
 /****************************************************************************
  ****************************************************************************/
-int GetWidth(void *object)
-{
+int GetWidth(void *object) {
 
 	PagerType *pp = (PagerType*)object;
 
@@ -165,16 +158,14 @@ int GetWidth(void *object)
 
 /****************************************************************************
  ****************************************************************************/
-int GetHeight(void *object)
-{
+int GetHeight(void *object) {
 	Assert(object);
 	return ((PagerType*)object)->height;
 }
 
 /****************************************************************************
  ****************************************************************************/
-void SetSize(void *object, int width, int height)
-{
+void SetSize(void *object, int width, int height) {
 
 	PagerType *pp = (PagerType*)object;
 
@@ -192,16 +183,14 @@ void SetSize(void *object, int width, int height)
 
 /****************************************************************************
  ****************************************************************************/
-Pixmap GetPixmap(void *object)
-{
+Pixmap GetPixmap(void *object) {
 	Assert(object);
 	return ((PagerType*)object)->buffer;
 }
 
 /****************************************************************************
  ****************************************************************************/
-void ProcessPagerButtonEvent(void *object, int x, int y, int mask)
-{
+void ProcessPagerButtonEvent(void *object, int x, int y, int mask) {
 
 	PagerType *pp = (PagerType*)object;
 
@@ -227,8 +216,7 @@ void ProcessPagerButtonEvent(void *object, int x, int y, int mask)
 
 /****************************************************************************
  ****************************************************************************/
-void UpdatePager()
-{
+void UpdatePager() {
 
 	PagerType *pp;
 	ClientNode *np;
@@ -278,8 +266,7 @@ void UpdatePager()
 
 /****************************************************************************
  ****************************************************************************/
-void DrawPagerClient(const PagerType *pp, const ClientNode *np)
-{
+void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
 
 	int x, y;
 	int width, height;

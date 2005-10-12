@@ -153,6 +153,7 @@ typedef struct TrayType {
 
 	int x, y;
 	int width, height;
+	int border;
 	WinLayerType layer;
 	LayoutType layout;
 

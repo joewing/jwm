@@ -195,7 +195,7 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 	}
 	nodes[np->layer] = np;
 
-	wmhints = XGetWMHints(display, np->window);
+	wmhints = JXGetWMHints(display, np->window);
 	if(wmhints) {
 		switch(wmhints->flags & StateHint) {
 		case IconicState:
@@ -267,6 +267,7 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
  ****************************************************************************/
 void PlaceWindow(ClientNode *np, int alreadyMapped) {
 
+	TrayType *tp;
 	int north, west;
 	int index;
 	int width, height;
@@ -281,6 +282,40 @@ void PlaceWindow(ClientNode *np, int alreadyMapped) {
 	height = GetScreenHeight(index);
 	x = GetScreenX(index);
 	y = GetScreenY(index);
+
+	/* Avoid trays if possible. */
+	for(tp = GetTrays(); tp; tp = tp->next) {
+
+		/* Check if the tray is in the current bounding box. */
+		if(tp->x >= x && tp->x < x + width) {
+			if(tp->y >= y && tp->y < y + height) {
+
+				if(tp->width > tp->height) {
+
+					/* Restrict horizontally */
+					if(tp->y - y > height - tp->y - tp->height) {
+						height = tp->y - y;
+					} else {
+						y = tp->y + tp->height;
+						height = height - tp->y - tp->height;
+					}
+
+				} else {
+
+					/* Restrict vertically */
+					if(tp->x - x > width - tp->x - tp->width) {
+						width = tp->x - x;
+					} else {
+						x = tp->x + tp->width;
+						width = width - tp->x - tp->width;
+					}
+
+				}
+
+			}
+		}
+
+	}
 
 	if(!(np->sizeFlags & PPosition) && !alreadyMapped) {
 

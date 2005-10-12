@@ -16,6 +16,7 @@ typedef struct SwallowNode {
 
 	Window window;
 	int width, height;
+	int border;
 
 } SwallowNode;
 
@@ -107,11 +108,11 @@ void Create(void *object, void *owner, void (*Update)(void *owner),
 
 	StartSwallowedClient(np);
 
-	np->width = width;
-	np->height = height;
+	np->width = width - np->border * 2;
+	np->height = height - np->border * 2;
 
 	if(np->window != None) {
-		JXResizeWindow(display, np->window, width, height);
+		JXResizeWindow(display, np->window, np->width, np->height);
 	}
 
 }
@@ -133,6 +134,7 @@ void Destroy(void *object) {
 
 	if(np->window != None) {
 		JXReparentWindow(display, np->window, rootWindow, 0, 0);
+		JXRemoveFromSaveSet(display, np->window);
 	}
 
 	Release(np);
@@ -151,7 +153,7 @@ int GetWidth(void *object) {
 		StartSwallowedClient(np);
 	}
 
-	return np->width;
+	return np->width + 2 * np->border;
 
 }
 
@@ -167,7 +169,7 @@ int GetHeight(void *object) {
 		StartSwallowedClient(np);
 	}
 
-	return np->height;
+	return np->height + 2 * np->border;
 
 }
 
@@ -198,6 +200,7 @@ void StartSwallowedClient(SwallowNode *np) {
 
 	np->width = 0;
 	np->height = 0;
+	np->border = 0;
 	np->started = 1;
 	np->window = FindSwallowedClient(np->name);
 	if(np->window == None) {
@@ -227,9 +230,11 @@ void StartSwallowedClient(SwallowNode *np) {
 	if(!JXGetWindowAttributes(display, np->window, &attributes)) {
 		attributes.width = 0;
 		attributes.height = 0;
+		attributes.border_width = 0;
 	}
 	np->width = attributes.width;
 	np->height = attributes.height;
+	np->border = attributes.border_width;
 
 }
 
@@ -254,6 +259,7 @@ Window FindSwallowedClient(const char *name) {
 		if(JXGetClassHint(display, childrenReturn[x], &hint)) {
 			if(!strcmp(hint.res_name, name)) {
 				result = childrenReturn[x];
+				JXAddToSaveSet(display, result);
 				JXSetWindowBorder(display, result, colors[COLOR_TRAY_BG]);
 				JXMapRaised(display, result);
 				break;

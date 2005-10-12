@@ -406,7 +406,9 @@ void DoSnapScreen(ClientNode *np, int north) {
 /****************************************************************************
  ****************************************************************************/
 void DoSnapBorder(ClientNode *np, int north) {
+
 	const ClientNode *tp;
+	const TrayType *tray;
 	RectangleType client, other;
 	RectangleType left = { 0 };
 	RectangleType right = { 0 };
@@ -423,6 +425,40 @@ void DoSnapBorder(ClientNode *np, int north) {
 
 	/* Work from the bottom of the window stack to the top. */
 	for(layer = 0; layer < LAYER_COUNT; layer++) {
+
+		/* Check tray windows. */
+		for(tray = GetTrays(); tray; tray = tray->next) {
+
+			other.left = tray->x;
+			other.right = tray->x + tray->width;
+			other.top = tray->y;
+			other.bottom = tray->y + tray->height;
+
+			left.valid = CheckLeftValid(&client, &other, &left);
+			right.valid = CheckRightValid(&client, &other, &right);
+			top.valid = CheckTopValid(&client, &other, &top);
+			bottom.valid = CheckBottomValid(&client, &other, &bottom);
+
+			if(CheckOverlapTopBottom(&client, &other)) {
+				if(abs(client.left - other.right) <= snapDistance) {
+					left = other;
+				}
+				if(abs(client.right - other.left) <= snapDistance) {
+					right = other;
+				}
+			}
+			if(CheckOverlapLeftRight(&client, &other)) {
+				if(abs(client.top - other.bottom) <= snapDistance) {
+					top = other;
+				}
+				if(abs(client.bottom - other.top) <= snapDistance) {
+					bottom = other;
+				}
+			}
+
+		}
+
+		/* Check client windows. */
 		for(tp = nodeTail[layer]; tp; tp = tp->prev) {
 
 			if(tp == np || !ShouldSnap(tp)) {
@@ -456,6 +492,7 @@ void DoSnapBorder(ClientNode *np, int north) {
 			}
 
 		}
+
 	}
 
 	if(right.valid) {

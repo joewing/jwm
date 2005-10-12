@@ -13,6 +13,8 @@ typedef struct TaskBarType {
 
 	void *owner;
 	int width, height;
+	int itemHeight;
+	LayoutType layout;
 
 	void (*Update)(void *owner);
 
@@ -49,6 +51,7 @@ static int ShouldShowItem(const ClientNode *np);
 static int ShouldFocusItem(const ClientNode *np);
 static unsigned int GetItemWidth(unsigned int width, unsigned int itemCount);
 static void Render(const TaskBarType *bp);
+static void ShowTaskWindowMenu(TaskBarType *bar, Node *np);
 
 static void Create(void *object, void *owner, void (*Update)(void *owner),
 	int width, int height);
@@ -60,8 +63,7 @@ static void ProcessTaskButtonEvent(void *object, int x, int y, int mask);
 
 /***************************************************************************
  ***************************************************************************/
-void InitializeTaskBar()
-{
+void InitializeTaskBar() {
 	bars = NULL;
 	taskBarNodes = NULL;
 	taskBarNodesTail = NULL;
@@ -71,8 +73,7 @@ void InitializeTaskBar()
 
 /***************************************************************************
  ***************************************************************************/
-void StartupTaskBar()
-{
+void StartupTaskBar() {
 	minimizedPixmap = JXCreatePixmapFromBitmapData(display, rootWindow,
 		minimized_bitmap, 4, 4, colors[COLOR_TASK_FG],
 		colors[COLOR_TASK_BG], rootDepth);
@@ -80,8 +81,7 @@ void StartupTaskBar()
 
 /***************************************************************************
  ***************************************************************************/
-void ShutdownTaskBar()
-{
+void ShutdownTaskBar() {
 
 	TaskBarType *bp;
 
@@ -100,14 +100,12 @@ void ShutdownTaskBar()
 
 /***************************************************************************
  ***************************************************************************/
-void DestroyTaskBar()
-{
+void DestroyTaskBar() {
 }
 
 /***************************************************************************
  ***************************************************************************/
-TrayComponentType *CreateTaskBar(int width, int height)
-{
+TrayComponentType *CreateTaskBar() {
 
 	TrayComponentType *cp;
 	TaskBarType *tp;
@@ -119,8 +117,10 @@ TrayComponentType *CreateTaskBar(int width, int height)
 	tp->owner = NULL;
 	tp->Update = NULL;
 
-	tp->width = rootWidth;
-	tp->height = height;
+	tp->width = 0;
+	tp->height = 0;
+	tp->itemHeight = 0;
+	tp->layout = LAYOUT_HORIZONTAL;
 
 	cp = Allocate(sizeof(TrayComponentType));
 	cp->next = NULL;
@@ -143,12 +143,17 @@ TrayComponentType *CreateTaskBar(int width, int height)
 /***************************************************************************
  ***************************************************************************/
 void Create(void *object, void *owner, void (*Update)(void *owner),
-	int width, int height)
-{
+	int width, int height) {
 
 	TaskBarType *tp;
 
 	tp = (TaskBarType*)object;
+
+	if(width > height) {
+		tp->layout = LAYOUT_HORIZONTAL;
+	} else {
+		tp->layout = LAYOUT_VERTICAL;
+	}
 
 	tp->owner = owner;
 	tp->Update = Update;
@@ -167,15 +172,15 @@ void Create(void *object, void *owner, void (*Update)(void *owner),
 
 /***************************************************************************
  ***************************************************************************/
-void Destroy(void *object)
-{
+void Destroy(void *object) {
+
 	/* This is handled in ShutdownTaskBar. */
+
 }
 
 /***************************************************************************
  ***************************************************************************/
-int GetWidth(void *object)
-{
+int GetWidth(void *object) {
 
 	TaskBarType *tp = (TaskBarType*)object;
 
@@ -190,8 +195,7 @@ int GetWidth(void *object)
 
 /***************************************************************************
  ***************************************************************************/
-int GetHeight(void *object)
-{
+int GetHeight(void *object) {
 
 	TaskBarType *tp = (TaskBarType*)object;
 
@@ -207,23 +211,25 @@ int GetHeight(void *object)
 
 /***************************************************************************
  ***************************************************************************/
-Pixmap GetPixmap(void *object)
-{
+Pixmap GetPixmap(void *object) {
 	Assert(object);
 	return ((TaskBarType*)object)->buffer;
 }
 
 /***************************************************************************
  ***************************************************************************/
-void ProcessTaskButtonEvent(void *object, int x, int y, int mask)
-{
+void ProcessTaskButtonEvent(void *object, int x, int y, int mask) {
 
 	TaskBarType *bar = (TaskBarType*)object;
 	Node *np;
 
 	Assert(bar);
 
-	np = GetNode(bar, x);
+	if(bar->layout == LAYOUT_HORIZONTAL) {
+		np = GetNode(bar, x);
+	} else {
+		np = GetNode(bar, y);
+	}
 
 	if(np) {
 		switch(mask) {
@@ -237,7 +243,7 @@ void ProcessTaskButtonEvent(void *object, int x, int y, int mask)
 			}
 			break;
 		case Button3:
-			ShowWindowMenu(np->client, np->client->x, np->client->y);
+			ShowTaskWindowMenu(bar, np);
 			break;
 		default:
 			break;
@@ -248,8 +254,15 @@ void ProcessTaskButtonEvent(void *object, int x, int y, int mask)
 
 /***************************************************************************
  ***************************************************************************/
-void AddClientToTaskBar(ClientNode *np)
-{
+void ShowTaskWindowMenu(TaskBarType *bar, Node *np) {
+	int x, y;
+	GetMousePosition(&x, &y);
+	ShowWindowMenu(np->client, x, y);
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void AddClientToTaskBar(ClientNode *np) {
 
 	Node *tp;
 
@@ -280,8 +293,7 @@ void AddClientToTaskBar(ClientNode *np)
 
 /***************************************************************************
  ***************************************************************************/
-void RemoveClientFromTaskBar(ClientNode *np)
-{
+void RemoveClientFromTaskBar(ClientNode *np) {
 
 	Node *tp;
 	Node *lp;
@@ -311,8 +323,8 @@ void RemoveClientFromTaskBar(ClientNode *np)
 
 /***************************************************************************
  ***************************************************************************/
-void UpdateTaskBar()
-{
+void UpdateTaskBar() {
+
 	TaskBarType *bp;
 
 	for(bp = bars; bp; bp = bp->next) {
@@ -323,14 +335,13 @@ void UpdateTaskBar()
 
 /***************************************************************************
  ***************************************************************************/
-void Render(const TaskBarType *bp)
-{
+void Render(const TaskBarType *bp) {
 
 	Node *tp;
 	ButtonType buttonType;
-	int x;
+	int x, y;
 	int remainder;
-	int itemWidth, itemCount;
+	int itemWidth, itemHeight, itemCount;
 	int width, height;
 	int iconSize;
 	Pixmap buffer;
@@ -347,6 +358,8 @@ void Render(const TaskBarType *bp)
 
 	x = TASK_SPACER;
 	width -= x;
+	y = TASK_SPACER;
+	height -= y;
 
 	JXSetForeground(display, gc, colors[COLOR_TRAY_BG]);
 	JXFillRectangle(display, buffer, gc, 0, 0, width, height);
@@ -358,8 +371,15 @@ void Render(const TaskBarType *bp)
 		}
 		return;
 	}
-	itemWidth = GetItemWidth(width, itemCount);
-	remainder = width - itemWidth * itemCount;
+	if(bp->layout == LAYOUT_HORIZONTAL) {
+		itemWidth = GetItemWidth(width, itemCount);
+		remainder = width - itemWidth * itemCount;
+		itemHeight = height;
+	} else {
+		itemHeight = 20; /*TODO*/
+		itemWidth = width;
+		remainder = 0;
+	}
 
 	iconSize = height - 2 * TASK_SPACER - 6;
 
@@ -379,10 +399,10 @@ void Render(const TaskBarType *bp)
 
 			if(remainder) {
 				SetButtonSize(itemWidth - TASK_SPACER,
-					height - 2 * TASK_SPACER);
+					height - 2 * TASK_SPACER + 1);
 			} else {
 				SetButtonSize(itemWidth - TASK_SPACER - 1,
-					height - 2 * TASK_SPACER);
+					height - 2 * TASK_SPACER + 1);
 			}
 
 			DrawButton(x, TASK_SPACER, buttonType, tp->client->name);
@@ -397,10 +417,18 @@ void Render(const TaskBarType *bp)
 					0, 0, 4, 4, x + 3, height - 8);
 			}
 
-			x += itemWidth;
-			if(remainder) {
-				++x;
-				--remainder;
+			if(bp->layout == LAYOUT_HORIZONTAL) {
+				x += itemWidth;
+				if(remainder) {
+					++x;
+					--remainder;
+				}
+			} else {
+				y += itemHeight;
+				if(remainder) {
+					++y;
+					--remainder;
+				}
 			}
 
 		}
@@ -414,8 +442,7 @@ void Render(const TaskBarType *bp)
 
 /***************************************************************************
  ***************************************************************************/
-void FocusNext()
-{
+void FocusNext() {
 
 	Node *tp;
 
@@ -490,8 +517,7 @@ Node *GetNode(TaskBarType *bar, int x)
 
 /***************************************************************************
  ***************************************************************************/
-unsigned int GetItemCount()
-{
+unsigned int GetItemCount() {
 
 	Node *tp;
 	unsigned int count;
@@ -509,8 +535,7 @@ unsigned int GetItemCount()
 
 /***************************************************************************
  ***************************************************************************/
-int ShouldShowItem(const ClientNode *np)
-{
+int ShouldShowItem(const ClientNode *np) {
 
 	if(np->desktop != currentDesktop && !(np->statusFlags & STAT_STICKY)) {
 		return 0;
@@ -535,8 +560,7 @@ int ShouldShowItem(const ClientNode *np)
 
 /***************************************************************************
  ***************************************************************************/
-int ShouldFocusItem(const ClientNode *np)
-{
+int ShouldFocusItem(const ClientNode *np) {
 
 	if(np->desktop != currentDesktop && !(np->statusFlags & STAT_STICKY)) {
 		return 0;
@@ -560,8 +584,7 @@ int ShouldFocusItem(const ClientNode *np)
 
 /***************************************************************************
  ***************************************************************************/
-unsigned int GetItemWidth(unsigned int width, unsigned int itemCount)
-{
+unsigned int GetItemWidth(unsigned int width, unsigned int itemCount) {
 
 	unsigned int itemWidth;
 
@@ -586,15 +609,13 @@ unsigned int GetItemWidth(unsigned int width, unsigned int itemCount)
 
 /***************************************************************************
  ***************************************************************************/
-void SetMaxTaskBarItemWidth(unsigned int w)
-{
+void SetMaxTaskBarItemWidth(unsigned int w) {
 	maxItemWidth = w;
 }
 
 /***************************************************************************
  ***************************************************************************/
-void SetTaskBarInsertMode(const char *mode)
-{
+void SetTaskBarInsertMode(const char *mode) {
 
 	Assert(mode);
 

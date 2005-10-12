@@ -9,7 +9,7 @@ void StartupTaskBar();
 void ShutdownTaskBar();
 void DestroyTaskBar();
 
-TrayComponentType *CreateTaskBar(int width, int height);
+TrayComponentType *CreateTaskBar();
 
 void AddClientToTaskBar(ClientNode *np);
 void RemoveClientFromTaskBar(ClientNode *np);

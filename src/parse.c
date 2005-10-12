@@ -24,6 +24,7 @@ static const char *Y_ATTRIBUTE = "y";
 static const char *WIDTH_ATTRIBUTE = "width";
 static const char *HEIGHT_ATTRIBUTE = "height";
 static const char *NAME_ATTRIBUTE = "name";
+static const char *BORDER_ATTRIBUTE = "border";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -791,6 +792,11 @@ void ParseTray(const TokenNode *tp)
 		SetTrayLayer(tray, attr);
 	}
 
+	attr = FindAttribute(tp->attributes, BORDER_ATTRIBUTE);
+	if(attr) {
+		SetTrayBorder(tray, attr);
+	}
+
 	for(np = tp->subnodeHead; np; np = np->next) {
 		switch(np->type) {
 		case TOK_PAGER:
@@ -820,7 +826,7 @@ void ParsePager(const TokenNode *tp, TrayType *tray)
 	Assert(tp);
 	Assert(tray);
 
-	cp = CreatePager(0, 0);
+	cp = CreatePager();
 	AddTrayComponent(tray, cp);
 
 }
@@ -835,7 +841,7 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray)
 	Assert(tp);
 	Assert(tray);
 
-	cp = CreateTaskBar(0, 0);
+	cp = CreateTaskBar();
 	AddTrayComponent(tray, cp);
 
 }

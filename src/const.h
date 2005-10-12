@@ -28,6 +28,10 @@
 #define MIN_SNAP_DISTANCE 1
 #define DEFAULT_SNAP_DISTANCE 5
 
+#define MAX_TRAY_BORDER 32
+#define MIN_TRAY_BORDER 0
+#define DEFAULT_TRAY_BORDER 1
+
 #define MOVE_DELTA 3
 
 #define SHELL_NAME "/bin/sh"

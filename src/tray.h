@@ -27,6 +27,8 @@ void DrawSpecificTray(const TrayType *tp);
 
 TrayType *GetTrays();
 
+Window GetSupportingWindow();
+
 int ProcessTrayEvent(const XEvent *event);
 
 void SetAutoHideTray(TrayType *tp, int v);
@@ -36,6 +38,7 @@ void SetTrayWidth(TrayType *tp, const char *str);
 void SetTrayHeight(TrayType *tp, const char *str);
 void SetTrayLayout(TrayType *tp, const char *str);
 void SetTrayLayer(TrayType *tp, const char *str);
+void SetTrayBorder(TrayType *tp, const char *str);
 
 #endif
 

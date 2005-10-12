@@ -231,7 +231,6 @@ void StartSwallowedClient(SwallowNode *np) {
 	np->width = attributes.width;
 	np->height = attributes.height;
 	np->border = attributes.border_width;
-Debug("%s: %d x %d", np->name, np->width, np->height);
 
 }
 

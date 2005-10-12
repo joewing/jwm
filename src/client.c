@@ -286,39 +286,39 @@ void PlaceWindow(ClientNode *np, int alreadyMapped) {
 	if(!(np->sizeFlags & PPosition) && !alreadyMapped) {
 
 
-	/* Avoid trays if possible. */
-	for(tp = GetTrays(); tp; tp = tp->next) {
+		/* Avoid trays if possible. */
+		for(tp = GetTrays(); tp; tp = tp->next) {
 
-		/* Check if the tray is in the current bounding box. */
-		if(tp->x >= x && tp->x < x + width) {
-			if(tp->y >= y && tp->y < y + height) {
+			/* Check if the tray is in the current bounding box. */
+			if(tp->x >= x && tp->x < x + width) {
+				if(tp->y >= y && tp->y < y + height) {
 
-				if(tp->width > tp->height) {
+					if(tp->width > tp->height) {
 
-					/* Restrict horizontally */
-					if(tp->y - y > height - tp->y - tp->height) {
-						height = tp->y - y;
+						/* Restrict horizontally */
+						if(tp->y - y > height - tp->y - tp->height) {
+							height = tp->y - y;
+						} else {
+							y = tp->y + tp->height;
+							height = height - tp->y - tp->height;
+						}
+
 					} else {
-						y = tp->y + tp->height;
-						height = height - tp->y - tp->height;
-					}
 
-				} else {
+						/* Restrict vertically */
+						if(tp->x - x > width - tp->x - tp->width) {
+							width = tp->x - x;
+						} else {
+							x = tp->x + tp->width;
+							width = width - tp->x - tp->width;
+						}
 
-					/* Restrict vertically */
-					if(tp->x - x > width - tp->x - tp->width) {
-						width = tp->x - x;
-					} else {
-						x = tp->x + tp->width;
-						width = width - tp->x - tp->width;
 					}
 
 				}
-
 			}
-		}
 
-	}
+		}
 
 		if(np->width + cascadeOffset + west - x > width) {
 			if(np->width + west * 2 < width) {

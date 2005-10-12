@@ -320,7 +320,7 @@ int GetTrayHeight(TrayType *tp)
 int GetTrayX(TrayType *tp)
 {
 	if(tp->x < 0) {
-		tp->x = rootWidth + tp->x;
+		tp->x = rootWidth + tp->x - GetTrayWidth(tp);
 	}
 	return tp->x;
 }
@@ -330,7 +330,7 @@ int GetTrayX(TrayType *tp)
 int GetTrayY(TrayType *tp)
 {
 	if(tp->y < 0) {
-		tp->y = rootHeight + tp->y;
+		tp->y = rootHeight + tp->y - GetTrayHeight(tp);
 	}
 	return tp->y;
 }

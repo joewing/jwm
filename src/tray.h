@@ -11,7 +11,6 @@ void StartupTray();
 void ShutdownTray();
 void DestroyTray();
 
-
 TrayType *CreateTray();
 void AddTrayComponent(TrayType *tp, TrayComponentType *cp);
 
@@ -20,13 +19,13 @@ int GetTrayHeight(TrayType *tp);
 int GetTrayX(TrayType *tp);
 int GetTrayY(TrayType *tp);
 
-int GetTrayIconSize(TrayType *tp);
-
 void ShowTray(TrayType *tp);
 void HideTray(TrayType *tp);
 
 void DrawTray();
 void DrawSpecificTray(const TrayType *tp);
+
+TrayType *GetTrays();
 
 int ProcessTrayEvent(const XEvent *event);
 

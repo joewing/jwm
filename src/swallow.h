@@ -9,8 +9,7 @@ void StartupSwallow();
 void ShutdownSwallow();
 void DestroySwallow();
 
-void Swallow(const char *name, const char *command,
-	SwallowLocationType location);
+TrayComponentType *CreateSwallow(const char *name, const char *command);
 
 #endif
 

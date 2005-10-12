@@ -124,8 +124,8 @@ void StartupTray()
 		tp->gc = JXCreateGC(display, tp->window, 0, NULL);
 
 		/* Create and layout items on the tray. */
-		xoffset = 0;
-		yoffset = 0;
+		xoffset = trayBorderSize;
+		yoffset = trayBorderSize;
 		for(cp = tp->components; cp; cp = cp->next) {
 			if(cp->Create) {
 				if(tp->layout == LAYOUT_HORIZONTAL) {
@@ -328,17 +328,6 @@ int GetTrayY(TrayType *tp)
 		tp->y = rootHeight + tp->y;
 	}
 	return tp->y;
-}
-
-/***************************************************************************
- ***************************************************************************/
-int GetTrayIconSize(TrayType *tp)
-{
-#ifdef USE_ICONS
-	return GetTrayHeight(tp) - 9;
-#else
-	return 0;
-#endif
 }
 
 /***************************************************************************
@@ -568,6 +557,13 @@ void DrawSpecificTray(const TrayType *tp)
 		1, 2, 1, tp->height + 2);
 
 
+}
+
+/***************************************************************************
+ ***************************************************************************/
+TrayType *GetTrays()
+{
+	return trays;
 }
 
 /***************************************************************************

@@ -361,12 +361,12 @@ void Render(const TaskBarType *bp)
 	itemWidth = GetItemWidth(width, itemCount);
 	remainder = width - itemWidth * itemCount;
 
-	iconSize = height - 9;
+	iconSize = height - 2 * TASK_SPACER - 6;
 
 	SetButtonDrawable(buffer, gc);
 	SetButtonFont(FONT_TASK);
 	SetButtonAlignment(ALIGN_LEFT);
-	SetButtonTextOffset(GetTrayIconSize((TrayType*)bp->owner));
+	SetButtonTextOffset(iconSize + 4);
 
 	for(tp = taskBarNodes; tp; tp = tp->next) {
 		if(ShouldShowItem(tp->client)) {
@@ -388,7 +388,8 @@ void Render(const TaskBarType *bp)
 			DrawButton(x, TASK_SPACER, buttonType, tp->client->name);
 
 			if(tp->client->icon) {
-				PutIcon(tp->client->icon, buffer, gc, x + 3, 3, iconSize);
+				PutIcon(tp->client->icon, buffer, gc,
+					x + TASK_SPACER + 3, TASK_SPACER + 3, iconSize);
 			}
 
 			if(tp->client->statusFlags & STAT_MINIMIZED) {

@@ -1026,19 +1026,28 @@ void RaiseClient(ClientNode *np) {
 /****************************************************************************
  ****************************************************************************/
 void RestackClients() {
+
+	TrayType *tp;
 	ClientNode *np;
 	int layer, index;
+	int trayCount;
 
 	if(!stack) {
 		return;
 	}
 
-	/* Make sure an appropriate amount of memory is allocated. */
-	if(clientCount + 1 >= stackSize
-		|| clientCount + 1 < stackSize - STACK_BLOCK_SIZE) {
+	/* Determine how many tray windows exist. */
+	trayCount = 0;
+	for(tp = GetTrays(); tp; tp = tp->next) {
+		++trayCount;
+	}
 
-		stackSize = (clientCount + 1) + STACK_BLOCK_SIZE
-			- ((clientCount + 1) % STACK_BLOCK_SIZE);
+	/* Make sure an appropriate amount of memory is allocated. */
+	if(clientCount + trayCount >= stackSize
+		|| clientCount + trayCount < stackSize - STACK_BLOCK_SIZE) {
+
+		stackSize = (clientCount + trayCount) + STACK_BLOCK_SIZE
+			- ((clientCount + trayCount) % STACK_BLOCK_SIZE);
 		stack = Reallocate(stack, sizeof(Window) * stackSize);
 
 	}
@@ -1046,18 +1055,20 @@ void RestackClients() {
 	/* Prepare the stacking array. */
 	index = 0;
 	for(layer = LAYER_TOP; layer >= LAYER_BOTTOM; layer--) {
+
+
 		for(np = nodes[layer]; np; np = np->next) {
 			if(!(np->statusFlags
 				& (STAT_MINIMIZED | STAT_HIDDEN | STAT_WITHDRAWN))) {
 				stack[index++] = np->parent;
 			}
 		}
-/*
-XXX
-		if(layer == trayLayer) {
-			stack[index++] = trayWindow;
+
+		for(tp = GetTrays(); tp; tp = tp->next) {
+			if(layer == tp->layer) {
+				stack[index++] = tp->window;
+			}
 		}
-*/
 	}
 
 	JXRestackWindows(display, stack, index);

@@ -91,6 +91,7 @@
 #include "taskbar.h"
 #include "timing.h"
 #include "tray.h"
+#include "traybutton.h"
 #include "winmenu.h"
 
 #endif

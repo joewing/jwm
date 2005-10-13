@@ -8,16 +8,13 @@
 
 typedef struct PagerType {
 
-	void *owner;
+	TrayComponentType *cp;
 
-	int width, height;
 	int deskWidth;
 	double scalex, scaley;
 
 	Pixmap buffer;
 	GC bufferGC;
-
-	void (*Update)(void *owner);
 
 	struct PagerType *next;
 
@@ -25,14 +22,13 @@ typedef struct PagerType {
 
 static PagerType *pagers;
 
-static void Create(void *object, void *owner, void (*Update)(void *owner),
-	int width, int height);
-static void Destroy(void *object);
-static int GetWidth(void *object);
-static int GetHeight(void *object);
-static void SetSize(void *object, int width, int height);
-static Pixmap GetPixmap(void *object);
-static void ProcessPagerButtonEvent(void *object, int x, int y, int mask);
+static void Create(TrayComponentType *cp);
+static void Destroy(TrayComponentType *cp);
+
+static void SetSize(TrayComponentType *cp, int width, int height);
+
+static void ProcessPagerButtonEvent(TrayComponentType *cp,
+	int x, int y, int mask);
 
 static void DrawPagerClient(const PagerType *pp, const ClientNode *np);
 
@@ -55,11 +51,14 @@ void ShutdownPager() {
 
 	while(pagers) {
 		pp = pagers->next;
+
 		JXFreeGC(display, pagers->bufferGC);
 		JXFreePixmap(display, pagers->buffer);
+
 		Release(pagers);
 		pagers = pp;
 	}
+
 }
 
 /****************************************************************************
@@ -75,130 +74,90 @@ TrayComponentType *CreatePager() {
 	PagerType *pp;
 
 	pp = Allocate(sizeof(PagerType));
-
-	pp->owner = NULL;
-	pp->Update = NULL;
-
-	/* At this point we don't know for sure how many desktops are
-	 * going to be used. So we just accept the default values.
-	 * By the time GetWidth or GetHeight is called, the desktop count will
-	 * be known.
-	 */
-	pp->width = 0;
-	pp->height = 0;
-
 	pp->next = pagers;
 	pagers = pp;
 
-	cp = Allocate(sizeof(TrayComponentType));
-
+	cp = CreateTrayComponent();
 	cp->object = pp;
-
+	pp->cp = cp;
 	cp->Create = Create;
 	cp->Destroy = Destroy;
-	cp->GetWidth = GetWidth;
-	cp->GetHeight = GetHeight;
 	cp->SetSize = SetSize;
-	cp->GetWindow = NULL;
-	cp->GetPixmap = GetPixmap;
-
 	cp->ProcessButtonEvent = ProcessPagerButtonEvent;
-
-	cp->next = NULL;
 
 	return cp;
 }
 
 /****************************************************************************
  ****************************************************************************/
-void Create(void *object, void *owner, void (*Update)(void *owner),
-	 int width, int height) {
+void Create(TrayComponentType *cp) {
 
-	PagerType *pp = (PagerType*)object;
+	PagerType *pp;
 
-	pp->owner = owner;
-	pp->Update = Update;
+	Assert(cp);
 
-	pp->height = height;
-	pp->deskWidth = (pp->height * rootWidth) / rootHeight;
-	pp->width = (pp->deskWidth + 1) * desktopCount;
-	pp->scalex = (double)(pp->deskWidth - 2) / rootWidth;
-	pp->scaley = (double)(pp->height - 2) / rootHeight;
-
-	pp->buffer = JXCreatePixmap(display, rootWindow, pp->width,
-		pp->height, rootDepth);
-	pp->bufferGC = JXCreateGC(display, pp->buffer, 0, NULL);
-
-}
-
-/****************************************************************************
- ****************************************************************************/
-void Destroy(void *object) {
-
-	/* Handled in ShutdownPager. */
-
-}
-
-/****************************************************************************
- ****************************************************************************/
-int GetWidth(void *object) {
-
-	PagerType *pp = (PagerType*)object;
+	pp = (PagerType*)cp->object;
 
 	Assert(pp);
 
-	if(pp->width == 0) {
-		pp->deskWidth = (pp->height * rootWidth) / rootHeight;
-		pp->width = (pp->deskWidth + 1) * desktopCount;
-	}
+	pp->deskWidth = (cp->height * rootWidth) / rootHeight;
+	cp->width = (pp->deskWidth + 1) * desktopCount;
+	pp->scalex = (double)(pp->deskWidth - 2) / rootWidth;
+	pp->scaley = (double)(cp->height - 2) / rootHeight;
 
-	return pp->width;
+	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width,
+		cp->height, rootDepth);
+	pp->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
+	pp->buffer = cp->pixmap;
 
 }
 
 /****************************************************************************
  ****************************************************************************/
-int GetHeight(void *object) {
-	Assert(object);
-	return ((PagerType*)object)->height;
+void Destroy(TrayComponentType *cp) {
+
 }
 
 /****************************************************************************
  ****************************************************************************/
-void SetSize(void *object, int width, int height) {
+void SetSize(TrayComponentType *cp, int width, int height) {
 
-	PagerType *pp = (PagerType*)object;
+	PagerType *pp;
+
+	Assert(cp);
+
+	pp = (PagerType*)cp->object;
 
 	Assert(pp);
 
 	if(width) {
-		pp->width = width;
+		/* Vertical pager, compute height from width. */
+		cp->width = width;
+Assert(0);
+	} else if(height) {
+
+		/* Horizontal pager, compute width from height. */
+		cp->height = height;
+		pp->deskWidth = (cp->height * rootWidth) / rootHeight;
+		cp->width = (pp->deskWidth + 1) * desktopCount;
+
 	} else {
-		pp->height = height;
+		Assert(0);
 	}
 
 }
 
 /****************************************************************************
  ****************************************************************************/
-Pixmap GetPixmap(void *object) {
-	Assert(object);
-	return ((PagerType*)object)->buffer;
-}
+void ProcessPagerButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
-/****************************************************************************
- ****************************************************************************/
-void ProcessPagerButtonEvent(void *object, int x, int y, int mask) {
+	PagerType *pp;
 
-	PagerType *pp = (PagerType*)object;
-
-	Assert(pp);
-
-	switch(mask)
-	{
+	switch(mask) {
 	case Button1:
 	case Button2:
 	case Button3:
+		pp = (PagerType*)cp->object;
 		ChangeDesktop(x / (pp->deskWidth + 1));
 		break;
 	case Button4:
@@ -226,10 +185,10 @@ void UpdatePager() {
 
 	for(pp = pagers; pp; pp = pp->next) {
 
-		buffer = pp->buffer;
+		buffer = pp->cp->pixmap;
 		gc = pp->bufferGC;
-		width = pp->width;
-		height = pp->height;
+		width = pp->cp->width;
+		height = pp->cp->height;
 		deskWidth = pp->deskWidth;
 
 		JXSetForeground(display, gc, colors[COLOR_PAGER_BG]);
@@ -254,9 +213,7 @@ void UpdatePager() {
 				(deskWidth + 1) * x - 1, height);
 		}
 
-		if(pp->Update) {
-			(pp->Update)(pp->owner);
-		}
+		UpdateSpecificTray(pp->cp->tray, pp->cp);
 
 	}
 
@@ -299,7 +256,8 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
 	x += deskOffset;
 
 	JXSetForeground(display, pp->bufferGC, colors[COLOR_PAGER_OUTLINE]);
-	JXDrawRectangle(display, pp->buffer, pp->bufferGC, x, y, width, height);
+	JXDrawRectangle(display, pp->cp->pixmap, pp->bufferGC,
+		x, y, width, height);
 
 	if(width > 1 && height > 1) {
 		if((np->statusFlags & STAT_ACTIVE)
@@ -311,7 +269,7 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
 		}
 	}
 
-	JXFillRectangle(display, pp->buffer, pp->bufferGC, x + 1, y + 1,
+	JXFillRectangle(display, pp->cp->pixmap, pp->bufferGC, x + 1, y + 1,
 		width - 1, height - 1);
 
 }

@@ -10,39 +10,65 @@
 
 typedef struct SwallowNode {
 
+	TrayComponentType *cp;
+
 	char *name;
 	char *command;
 	int started;
-
-	Window window;
-	int width, height;
 	int border;
+
+	struct SwallowNode *next;
 
 } SwallowNode;
 
-static void StartSwallowedClient(SwallowNode *np);
+static SwallowNode *swallowNodes;
+
+static void StartSwallowedClient(TrayComponentType *cp);
 static Window FindSwallowedClient(const char *name);
 
-static void Create(void *object, void *owner, void (*Update)(void *owner),
-	int width, int height);
-static void Destroy(void *object);
-static int GetWidth(void *object);
-static int GetHeight(void *object);
-static Window GetWindow(void *object);
+static void Create(TrayComponentType *cp);
+static void Destroy(TrayComponentType *cp);
 
 /****************************************************************************
  ****************************************************************************/
 void InitializeSwallow() {
+	swallowNodes = NULL;
 }
 
 /****************************************************************************
  ****************************************************************************/
 void StartupSwallow() {
+
+	SwallowNode *np;
+
+	for(np = swallowNodes; np; np = np->next) {
+		StartSwallowedClient(np->cp);
+	}
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 void ShutdownSwallow() {
+
+	SwallowNode *np;
+
+	while(swallowNodes) {
+
+		np = swallowNodes->next;
+
+		Assert(swallowNodes->name);
+		Release(swallowNodes->name);
+
+		if(swallowNodes->command) {
+			Release(swallowNodes->command);
+		}
+
+		Release(swallowNodes);
+		swallowNodes = np;
+
+	}
+
 }
 
 /****************************************************************************
@@ -71,27 +97,16 @@ TrayComponentType *CreateSwallow(const char *name, const char *command) {
 	} else {
 		np->command = NULL;
 	}
-
-	np->window = None;
-	np->width = 0;
-	np->height = 0;
 	np->started = 0;
 
-	cp = Allocate(sizeof(TrayComponentType));
+	np->next = swallowNodes;
+	swallowNodes = np;
 
+	cp = CreateTrayComponent();
+	np->cp = cp;
 	cp->object = np;
-
 	cp->Create = Create;
 	cp->Destroy = Destroy;
-	cp->GetWidth = GetWidth;
-	cp->GetHeight = GetHeight;
-	cp->SetSize = NULL;
-	cp->GetWindow = GetWindow;
-	cp->GetPixmap = NULL;
-
-	cp->ProcessButtonEvent = NULL;
-
-	cp->next = NULL;
 
 	return cp;
 
@@ -99,94 +114,42 @@ TrayComponentType *CreateSwallow(const char *name, const char *command) {
 
 /****************************************************************************
  ****************************************************************************/
-void Create(void *object, void *owner, void (*Update)(void *owner),
-	int width, int height) {
+void Create(TrayComponentType *cp) {
 
-	SwallowNode *np = (SwallowNode*)object;
+	int width, height;
 
-	Assert(np);
+	SwallowNode *np = (SwallowNode*)cp->object;
 
-	StartSwallowedClient(np);
-
-	np->width = width - np->border * 2;
-	np->height = height - np->border * 2;
-
-	if(np->window != None) {
-		JXResizeWindow(display, np->window, np->width, np->height);
+	if(cp->window != None) {
+		width = cp->width - np->border * 2;
+		height = cp->height - np->border * 2;
+		JXResizeWindow(display, cp->window, width, height);
 	}
 
 }
 
 /****************************************************************************
  ****************************************************************************/
-void Destroy(void *object) {
+void Destroy(TrayComponentType *cp) {
 
-	SwallowNode *np = (SwallowNode*)object;
-
-	Assert(np);
-
-	Assert(np->name);
-	Release(np->name);
-
-	if(np->command) {
-		Release(np->command);
+	if(cp->window) {
+		JXReparentWindow(display, cp->window, rootWindow, 0, 0);
+		JXRemoveFromSaveSet(display, cp->window);
 	}
 
-	if(np->window != None) {
-		JXReparentWindow(display, np->window, rootWindow, 0, 0);
-		JXRemoveFromSaveSet(display, np->window);
-	}
-
-	Release(np);
-
 }
 
 /****************************************************************************
  ****************************************************************************/
-int GetWidth(void *object) {
-
-	SwallowNode *np = (SwallowNode*)object;
-
-	Assert(np);
-
-	StartSwallowedClient(np);
-
-	return np->width + 2 * np->border;
-
-}
-
-/****************************************************************************
- ****************************************************************************/
-int GetHeight(void *object) {
-
-	SwallowNode *np = (SwallowNode*)object;
-
-	Assert(np);
-
-	StartSwallowedClient(np);
-
-	return np->height + 2 * np->border;
-
-}
-
-/****************************************************************************
- ****************************************************************************/
-Window GetWindow(void *object) {
-
-	SwallowNode *np = (SwallowNode*)object;
-
-	Assert(np);
-
-	return np->window;
-
-}
-
-/****************************************************************************
- ****************************************************************************/
-void StartSwallowedClient(SwallowNode *np) {
+void StartSwallowedClient(TrayComponentType *cp) {
 
 	XWindowAttributes attributes;
+	SwallowNode *np;
 	int x;
+
+	Assert(cp);
+
+	np = (SwallowNode*)cp->object;
 
 	Assert(np);
 
@@ -194,12 +157,14 @@ void StartSwallowedClient(SwallowNode *np) {
 		return;
 	}
 
-	np->width = 0;
-	np->height = 0;
+	cp->width = 0;
+	cp->height = 0;
+
 	np->border = 0;
 	np->started = 1;
-	np->window = FindSwallowedClient(np->name);
-	if(np->window == None) {
+
+	cp->window = FindSwallowedClient(np->name);
+	if(cp->window == None) {
 
 		if(!np->command) {
 			Warning("client to be swallowed (%s) not found and no command given",
@@ -210,26 +175,26 @@ void StartSwallowedClient(SwallowNode *np) {
 		RunCommand(np->command);
 
 		for(x = 0; x < FIND_RETRY_COUNT; x++) {
-			np->window = FindSwallowedClient(np->name);
-			if(np->window != None) {
+			cp->window = FindSwallowedClient(np->name);
+			if(cp->window != None) {
 				break;
 			}
 			usleep(FIND_USLEEP);
 		}
 
-		if(np->window == None) {
+		if(cp->window == None) {
 			Warning("%s not found after running %s", np->name, np->command);
 			return;
 		}
 	}
 
-	if(!JXGetWindowAttributes(display, np->window, &attributes)) {
+	if(!JXGetWindowAttributes(display, cp->window, &attributes)) {
 		attributes.width = 0;
 		attributes.height = 0;
 		attributes.border_width = 0;
 	}
-	np->width = attributes.width;
-	np->height = attributes.height;
+	cp->width = attributes.width;
+	cp->height = attributes.height;
 	np->border = attributes.border_width;
 
 }

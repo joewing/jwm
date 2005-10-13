@@ -8,14 +8,18 @@
 static TrayType *trays;
 static Window supportingWindow;
 
-static void Update(void *object);
-
 static void HandleTrayExpose(TrayType *tp, const XExposeEvent *event);
 static void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event);
 static void HandleTrayLeaveNotify(TrayType *tp, const XCrossingEvent *event);
 
 static void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event);
 static void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event);
+
+static void ComputeTraySize(TrayType *tp);
+static int ComputeMaxWidth(TrayType *tp);
+static int ComputeMaxHeight(TrayType *tp);
+static int CheckHorizontalFill(TrayType *tp);
+static int CheckVerticalFill(TrayType *tp);
 
 /***************************************************************************
  ***************************************************************************/
@@ -33,7 +37,6 @@ void StartupTray()
 	XSetWindowAttributes attr;
 	TrayType *tp;
 	TrayComponentType *cp;
-	Window w;
 	int temp;
 	int variableCount;
 	int variableSize;
@@ -43,10 +46,7 @@ void StartupTray()
 
 	for(tp = trays; tp; tp = tp->next) {
 
-		GetTrayX(tp);
-		GetTrayY(tp);
-		GetTrayWidth(tp);
-		GetTrayHeight(tp);
+		ComputeTraySize(tp);
 
 		/* Get the remaining size after setting fixed size components. */
 		/* Also, keep track of the number of variable size components. */
@@ -55,21 +55,15 @@ void StartupTray()
 		variableCount = 0;
 		for(cp = tp->components; cp; cp = cp->next) {
 			if(tp->layout == LAYOUT_HORIZONTAL) {
-				if(cp->SetSize) {
-					(cp->SetSize)(cp->object, 0, tp->height - 2 * tp->border);
-				}
-				temp = (cp->GetWidth)(cp->object);
-				if(temp < rootWidth) {
+				temp = cp->width;
+				if(temp > 0) {
 					width -= temp;
 				} else {
 					++variableCount;
 				}
 			} else {
-				if(cp->SetSize) {
-					(cp->SetSize)(cp->object, tp->width - 2 * tp->border, 0);
-				}
-				temp = (cp->GetHeight)(cp->object);
-				if(temp < rootHeight) {
+				temp = cp->height;
+				if(temp > 0) {
 					height -= temp;
 				} else {
 					++variableCount;
@@ -126,21 +120,22 @@ void StartupTray()
 		xoffset = tp->border;
 		yoffset = tp->border;
 		for(cp = tp->components; cp; cp = cp->next) {
+
 			if(cp->Create) {
 				if(tp->layout == LAYOUT_HORIZONTAL) {
-					width = (cp->GetWidth)(cp->object);
-					if(width == rootWidth) {
+					height = tp->height - 2 * tp->border;
+					width = cp->width;
+					if(width == 0) {
 						width = variableSize;
 						if(variableRemainder) {
 							++width;
 							--variableRemainder;
 						}
 					}
-					height = tp->height - 2 * tp->border;
 				} else {
 					width = tp->width - 2 * tp->border;
-					height = (cp->GetHeight)(cp->object);
-					if(height == rootHeight) {
+					height = cp->height;
+					if(height == 0) {
 						height = variableSize;
 						if(variableRemainder) {
 							++height;
@@ -148,18 +143,23 @@ void StartupTray()
 						}
 					}
 				}
-				(cp->Create)(cp->object, tp, Update, width, height);
+				cp->width = width;
+				cp->height = height;
+				(cp->Create)(cp);
 			}
-			if(cp->GetWindow) {
-				w = (cp->GetWindow)(cp->object);
-				if(w != None) {
-					JXReparentWindow(display, w, tp->window, xoffset, yoffset);
-				}
+
+			cp->x = xoffset;
+			cp->y = yoffset;
+
+			if(cp->window != None) {
+				JXReparentWindow(display, cp->window, tp->window,
+					xoffset, yoffset);
 			}
+
 			if(tp->layout == LAYOUT_HORIZONTAL) {
-				xoffset += (cp->GetWidth)(cp->object);
+				xoffset += cp->width;
 			} else {
-				yoffset += (cp->GetHeight)(cp->object);
+				yoffset += cp->height;
 			}
 		}
 
@@ -184,7 +184,7 @@ void ShutdownTray()
 		while(trays->components) {
 			cp = trays->components->next;
 			if(trays->components->Destroy) {
-				(trays->components->Destroy)(trays->components->object);
+				(trays->components->Destroy)(trays->components);
 			}
 			Release(trays->components);
 			trays->components = cp;
@@ -247,11 +247,45 @@ TrayType *CreateTray()
 
 /***************************************************************************
  ***************************************************************************/
+TrayComponentType *CreateTrayComponent() {
+
+	TrayComponentType *cp;
+
+	cp = Allocate(sizeof(TrayComponentType));
+
+	cp->tray = NULL;
+	cp->object = NULL;
+
+	cp->x = 0;
+	cp->y = 0;
+	cp->width = 0;
+	cp->height = 0;
+
+	cp->window = None;
+	cp->pixmap = None;
+
+	cp->Create = NULL;
+	cp->Destroy = NULL;
+
+	cp->SetSize = NULL;
+
+	cp->ProcessButtonEvent = NULL;
+
+	cp->next = NULL;
+
+	return cp;
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
 void AddTrayComponent(TrayType *tp, TrayComponentType *cp)
 {
 
 	Assert(tp);
 	Assert(cp);
+
+	cp->tray = tp;
 
 	if(tp->componentsTail) {
 		tp->componentsTail->next = cp;
@@ -264,115 +298,158 @@ void AddTrayComponent(TrayType *tp, TrayComponentType *cp)
 }
 
 /***************************************************************************
+ * Compute the max component width.
  ***************************************************************************/
-int GetTrayWidth(TrayType *tp)
-{
+int ComputeMaxWidth(TrayType *tp) {
 
 	TrayComponentType *cp;
+	int result;
 	int temp;
 
-	if(tp->width == 0) {
-		if(tp->layout == LAYOUT_HORIZONTAL) {
-			for(cp = tp->components; cp; cp = cp->next) {
-				if(tp->height > 0 && cp->SetSize) {
-					temp = tp->height - 2 * tp->border;
-					(cp->SetSize)(cp->object, 0, temp);
-				}
-				if(cp->GetWidth) {
-					temp = (cp->GetWidth)(cp->object);
-					if(temp == rootWidth) {
-						tp->width = rootWidth;
-						break;
-					}
-					temp += 2 * tp->border;
-					if(temp > tp->width && temp < rootWidth) {
-						tp->width += temp;
-					}
-				}
-			}
-		} else {
-			tp->width = 2 * tp->border;
-			for(cp = tp->components; cp; cp = cp->next) {
-				if(tp->height > 0 && cp->SetSize) {
-					temp = tp->height - 2 * tp->border;
-					(cp->SetSize)(cp->object, 0, temp);
-				}
-				if(cp->GetWidth) {
-					temp = (cp->GetWidth)(cp->object) + 2 * tp->border;
-					if(temp > tp->width && temp < rootWidth) {
-						tp->width = temp;
-					}
-				}
+	result = 0;
+	for(cp = tp->components; cp; cp = cp->next) {
+		temp = cp->width;
+		if(temp > 0) {
+			temp += 2 * tp->border;
+			if(temp > result) {
+				result = temp;
 			}
 		}
 	}
-	return tp->width;
+
+	return result;
+
+}
+
+/***************************************************************************
+ * Compute the max component height.
+ ***************************************************************************/
+int ComputeMaxHeight(TrayType *tp) {
+
+	TrayComponentType *cp;
+	int result;
+	int temp;
+
+	result = 0;
+	for(cp = tp->components; cp; cp = cp->next) {
+		temp = cp->height;
+		if(temp > 0) {
+			temp += 2 * tp->border;
+			if(temp > result) {
+				result = temp;
+			}
+		}
+	}
+
+	return result;
+
 }
 
 /***************************************************************************
  ***************************************************************************/
-int GetTrayHeight(TrayType *tp)
-{
+int CheckHorizontalFill(TrayType *tp) {
 
 	TrayComponentType *cp;
-	int temp;
 
-	if(tp->height == 0) {
-		if(tp->layout == LAYOUT_HORIZONTAL) {
-			tp->height = 16;
-			for(cp = tp->components; cp; cp = cp->next) {
-				if(tp->width > 0 && cp->SetSize) {
-					temp = tp->width - 2 * tp->border;
-					(cp->SetSize)(cp->object, temp, 0);
-				}
-				if(cp->GetHeight) {
-					temp = (cp->GetHeight)(cp->object) + 2 * tp->border;
-					if(temp > tp->height && temp < rootHeight) {
-						tp->height = temp;
-					}
-				}
-			}
-		} else {
-			for(cp = tp->components; cp; cp = cp->next) {
-				if(tp->width > 0 && cp->SetSize) {
-					temp = tp->width - 2 * tp->border;
-					(cp->SetSize)(cp->object, temp, 0);
-				}
-				if(cp->GetHeight) {
-					temp = (cp->GetHeight)(cp->object);
-					if(temp == rootHeight) {
-						tp->height = rootHeight;
-						break;
-					}
-					temp =+ 2 * tp->border;
-					if(temp > tp->height && temp < rootHeight) {
-						tp->height += temp;
-					}
-				}
-			}
+	for(cp = tp->components; cp; cp = cp->next) {
+		if(cp->width == 0) {
+			return 1;
 		}
 	}
-	return tp->height;
+
+	return 0;
+
 }
 
 /***************************************************************************
  ***************************************************************************/
-int GetTrayX(TrayType *tp)
-{
+int CheckVerticalFill(TrayType *tp) {
+
+	TrayComponentType *cp;
+
+	for(cp = tp->components; cp; cp = cp->next) {
+		if(cp->height == 0) {
+			return 1;
+		}
+	}
+
+	return 0;
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void ComputeTraySize(TrayType *tp) {
+
+	TrayComponentType *cp;
+
+	/* Determine the first dimension. */
+	if(tp->layout == LAYOUT_HORIZONTAL) {
+
+		if(tp->height == 0) {
+			tp->height = ComputeMaxHeight(tp);
+		}
+
+		if(tp->height == 0) {
+			tp->height = 32;
+		}
+
+	} else {
+
+		if(tp->width == 0) {
+			tp->width = ComputeMaxWidth(tp);
+		}
+
+		if(tp->width == 0) {
+			tp->width = 32;
+		}
+
+	}
+
+	/* Now at least one size is known. Inform the components. */
+	for(cp = tp->components; cp; cp = cp->next) {
+		if(cp->SetSize) {
+			if(tp->layout == LAYOUT_HORIZONTAL) {
+				(cp->SetSize)(cp, 0, tp->height - 2 * tp->border);
+			} else {
+				(cp->SetSize)(cp, tp->width - 2 * tp->border, 0);
+			}
+		}
+	}
+
+	/* Determine the missing dimension (if there is one). */
+	if(tp->layout == LAYOUT_HORIZONTAL) {
+		if(tp->width == 0) {
+			if(CheckHorizontalFill(tp)) {
+				tp->width = rootWidth;
+			} else {
+				tp->width = ComputeMaxWidth(tp);
+			}
+			if(tp->width == 0) {
+				tp->width = 32;
+			}
+		}
+	} else {
+		if(tp->height == 0) {
+			if(CheckVerticalFill(tp)) {
+				tp->height = rootHeight;
+			} else {
+				tp->height = ComputeMaxHeight(tp);
+			}
+			if(tp->height == 0) {
+				tp->height = 32;
+			}
+		}
+	}
+
+	/* Determine the screen offset. */
 	if(tp->x < 0) {
-		tp->x = rootWidth + tp->x - GetTrayWidth(tp) + 1;
+		tp->x = rootWidth + tp->x - tp->width + 1;
 	}
-	return tp->x;
-}
-
-/***************************************************************************
- ***************************************************************************/
-int GetTrayY(TrayType *tp)
-{
 	if(tp->y < 0) {
-		tp->y = rootHeight + tp->y - GetTrayHeight(tp) + 1;
+		tp->y = rootHeight + tp->y - tp->height + 1;
 	}
-	return tp->y;
+
 }
 
 /***************************************************************************
@@ -469,15 +546,15 @@ void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event) {
 	xoffset = tp->border;
 	yoffset = tp->border;
 	for(cp = tp->components; cp; cp = cp->next) {
-		width = (cp->GetWidth)(cp->object);
-		height = (cp->GetHeight)(cp->object);
+		width = cp->width;
+		height = cp->height;
 		if(event->x >= xoffset && event->x < xoffset + width) {
 			if(event->y >= yoffset && event->y < yoffset + height) {
 				if(cp->ProcessButtonEvent) {
 					x = event->x - xoffset;
 					y = event->y - yoffset;
 					mask = event->button;
-					(cp->ProcessButtonEvent)(cp->object, x, y, mask);
+					(cp->ProcessButtonEvent)(cp, x, y, mask);
 				}
 				break;
 			}
@@ -501,8 +578,8 @@ void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event) {
 	xoffset = tp->border;
 	yoffset = tp->border;
 	for(cp = tp->components; cp; cp = cp->next) {
-		width = (cp->GetWidth)(cp->object);
-		height = (cp->GetHeight)(cp->object);
+		width = cp->width;
+		height = cp->height;
 		if(event->x >= xoffset && event->x < xoffset + width) {
 			if(event->y >= yoffset && event->y < yoffset + height) {
 /*
@@ -519,12 +596,6 @@ void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event) {
 			yoffset += height;
 		}
 	}
-}
-
-/***************************************************************************
- ***************************************************************************/
-void Update(void *object) {
-	DrawSpecificTray((TrayType*)object);
 }
 
 /***************************************************************************
@@ -548,32 +619,13 @@ void DrawTray() {
 void DrawSpecificTray(const TrayType *tp) {
 
 	TrayComponentType *cp;
-	int width, height;
-	int xoffset, yoffset;
 	int x;
 
 	Assert(tp);
 
 	/* Draw components. */
-	xoffset = tp->border;
-	yoffset = tp->border;
 	for(cp = tp->components; cp; cp = cp->next) {
-
-		width = (cp->GetWidth)(cp->object);
-		height = (cp->GetHeight)(cp->object);
-
-		if(cp->GetPixmap) {
-			JXCopyArea(display, (cp->GetPixmap)(cp->object),
-				tp->window, tp->gc, 0, 0, width, height,
-				xoffset, yoffset);
-		}
-
-		if(tp->layout == LAYOUT_HORIZONTAL) {
-			xoffset += width;
-		} else {
-			yoffset += height;
-		}
-
+		UpdateSpecificTray(tp, cp);
 	}
 
 	/* Draw the border. */
@@ -605,6 +657,15 @@ void DrawSpecificTray(const TrayType *tp) {
 
 	}
 
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void UpdateSpecificTray(const TrayType *tp, const TrayComponentType *cp) {
+	if(cp->pixmap != None && !shouldExit) {
+		JXCopyArea(display, cp->pixmap, tp->window, tp->gc, 0, 0,
+			cp->width, cp->height, cp->x, cp->y);
+	}
 }
 
 /***************************************************************************

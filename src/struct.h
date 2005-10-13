@@ -112,37 +112,50 @@ typedef struct ClientNode {
  ****************************************************************************/
 typedef struct TrayComponentType {
 
+	/* The tray containing the component.
+	 * UpdateSpecificTray(TrayType*, TrayComponentType*) should be called
+	 * when content changes.
+	 */
+	struct TrayType *tray;
+
+	/* Additional information needed for the component. */
 	void *object;
 
-	/* Create the component.
- 	 * Here the width and height will specify what the task bar has
-	 * allocated for the component. The allocated size should always
-	 * be greater than zero.
-	 */
-	void (*Create)(void *object, void *owner, void (*Update)(void *owner),
-		int width, int height);
+	/* Coordinates on the tray (valid only after Create). */
+	int x, y;
 
-	void (*Destroy)(void *object);
-
-	/* Functions to get the height and width of the component.
-	 * Before Create is called, these should return the preferred size.
-	 * After Create, they should return the size passed to Create.
-	 * Never should either return zero.
+	/* Component size.
+	 * Sizing is handled as follows:
+	 *  - The component is created via a factory method. It sets its
+	 *    preferred size (0 for no preference).
+	 *  - The SetSize callback is issued with size constraints
+	 *    (0 for no constraint). The component should update its preference
+	 *    during SetSize.
+	 *  - The Create callback is issued with finalized size information.
 	 */
-	int (*GetWidth)(void *object);
-	int (*GetHeight)(void *object);
+	int width, height;
+
+	/* Content. */
+	Window window;
+	Pixmap pixmap;
+
+	/* Create the component. */
+	void (*Create)(struct TrayComponentType *cp);
+
+	/* Destroy the component. */
+	void (*Destroy)(struct TrayComponentType *cp);
 
 	/* Set the size known so far for items that need width/height ratios.
 	 * Either width or height may be zero.
 	 * This is called before Create.
 	 */
-	void (*SetSize)(void *object, int width, int height);
+	void (*SetSize)(struct TrayComponentType *cp, int width, int height);
 
-	Window (*GetWindow)(void *object);
-	Pixmap (*GetPixmap)(void *object);
+	/* Callback for mouse clicks. */
+	void (*ProcessButtonEvent)(struct TrayComponentType *cp,
+		int x, int y, int mask);
 
-	void (*ProcessButtonEvent)(void *object, int x, int y, int mask);
-
+	/* The next component in the tray. */
 	struct TrayComponentType *next;
 
 } TrayComponentType;

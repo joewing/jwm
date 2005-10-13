@@ -416,6 +416,8 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int size)
 	int x, y;
 	int index;
 	int alpha;
+	double scalex, scaley;
+	double srcx, srcy;
 
 	Assert(icon);
 	Assert(icon->image);
@@ -450,9 +452,15 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int size)
 
 	data = (CARD32*)icon->image->data;
 
-	index = 0;
-	for(y = 0; y < icon->image->height; y++) {
-		for(x = 0; x < icon->image->width; x++) {
+	scalex = (double)icon->image->width / size;
+	scaley = (double)icon->image->height / size;
+
+	srcy = 0.0;
+	for(y = 0; y < size; y++) {
+		srcx = 0.0;
+		for(x = 0; x < size; x++) {
+
+			index = (int)srcy * icon->image->width + (int)srcx;
 
 			alpha = (data[index] >> 24) & 0xFF;
 			if(alpha >= 128) {
@@ -472,9 +480,11 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int size)
 			}
 			JXDrawPoint(display, np->mask, maskGC, x, y);
 
-			++index;
+			srcx += scalex;
 
 		}
+
+		srcy += scaley;
 	}
 
 	JXFreeGC(display, maskGC);

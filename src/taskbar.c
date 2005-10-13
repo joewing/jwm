@@ -140,7 +140,7 @@ void Create(TrayComponentType *cp) {
 
 	if(cp->width > cp->height) {
 		tp->layout = LAYOUT_HORIZONTAL;
-		tp->itemHeight = cp->height;
+		tp->itemHeight = cp->height - TASK_SPACER;
 	} else {
 		tp->layout = LAYOUT_VERTICAL;
 		tp->itemHeight = GetStringHeight(FONT_TASK) + 12;
@@ -366,7 +366,7 @@ void Render(const TaskBarType *bp) {
 
 			if(tp->client->statusFlags & STAT_MINIMIZED) {
 				JXCopyArea(display, minimizedPixmap, buffer, gc,
-					0, 0, 4, 4, x + 3, y + bp->itemHeight - 8);
+					0, 0, 4, 4, x + 3, y + bp->itemHeight - 9);
 			}
 
 			if(bp->layout == LAYOUT_HORIZONTAL) {

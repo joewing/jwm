@@ -11,5 +11,7 @@ void DestroySwallow();
 
 TrayComponentType *CreateSwallow(const char *name, const char *command);
 
+int ProcessSwallowEvent(const XEvent *event);
+
 #endif
 

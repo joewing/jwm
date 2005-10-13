@@ -16,7 +16,7 @@ static int HandlePropertyNotify(const XPropertyEvent *event);
 static void HandleConfigureNotify(const XConfigureEvent *event);
 static void HandleClientMessage(const XClientMessageEvent *event);
 static void HandleColormapChange(const XColormapEvent *event);
-static void HandleDestroyNotify(const XDestroyWindowEvent *event);
+static int HandleDestroyNotify(const XDestroyWindowEvent *event);
 static void HandleMapRequest(const XMapEvent *event);
 static void HandleUnmapNotify(const XUnmapEvent *event);
 static void HandleButtonEvent(const XButtonEvent *event);
@@ -32,19 +32,9 @@ static void HandleShapeEvent(const XShapeEvent *event);
 /****************************************************************************
  ****************************************************************************/
 void WaitForEvent(XEvent *event) {
-	int fd;
 	int handled;
-	fd_set fds;
-
-	fd = JXConnectionNumber(display);
 
 	do {
-
-		while(JXPending(display) == 0) {
-			FD_ZERO(&fds);
-			FD_SET(fd, &fds);
-			select(fd + 1, &fds, NULL, NULL, NULL);
-		}
 
 		JXNextEvent(display, event);
 
@@ -76,8 +66,7 @@ void WaitForEvent(XEvent *event) {
 			handled = 1;
 			break;
 		case DestroyNotify:
-			HandleDestroyNotify(&event->xdestroywindow);
-			handled = 1;
+			handled = HandleDestroyNotify(&event->xdestroywindow);
 			break;
 		case ConfigureNotify:
 			HandleConfigureNotify(&event->xconfigure);
@@ -110,6 +99,9 @@ void WaitForEvent(XEvent *event) {
 		if(!handled) {
 			handled = ProcessDialogEvent(event);
 		}
+		if(!handled) {
+			handled = ProcessSwallowEvent(event);
+		}
 
 		handled |= ProcessPopupEvent(event);
 
@@ -139,6 +131,8 @@ void ProcessEvent(XEvent *event) {
 		while(JXCheckTypedEvent(display, MotionNotify, event));
 		HandleMotionNotify(&event->xmotion);
 		break;
+	case DestroyNotify:
+	case Expose:
 	case KeyRelease:
 		break;
 	default:
@@ -702,7 +696,7 @@ void HandleUnmapNotify(const XUnmapEvent *event) {
 
 /****************************************************************************
  ****************************************************************************/
-void HandleDestroyNotify(const XDestroyWindowEvent *event) {
+int HandleDestroyNotify(const XDestroyWindowEvent *event) {
 	ClientNode *np;
 
 	np = FindClientByWindow(event->window);
@@ -713,7 +707,12 @@ void HandleDestroyNotify(const XDestroyWindowEvent *event) {
 		}
 
 		RemoveClient(np);
+
+		return 1;
+
 	}
+
+	return 0;
 
 }
 

@@ -114,6 +114,27 @@ TrayComponentType *CreateSwallow(const char *name, const char *command) {
 
 /****************************************************************************
  ****************************************************************************/
+int ProcessSwallowEvent(const XEvent *event) {
+
+	Window w;
+	SwallowNode *np;
+
+	if(event->type == DestroyNotify) {
+		w = event->xdestroywindow.window;
+		for(np = swallowNodes; np; np = np->next) {
+			if(np->cp->window == w) {
+				np->cp->window = None;
+				return 1;
+			}
+		}
+	}
+
+	return 0;
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
 void Create(TrayComponentType *cp) {
 
 	int width, height;
@@ -193,9 +214,9 @@ void StartSwallowedClient(TrayComponentType *cp) {
 		attributes.height = 0;
 		attributes.border_width = 0;
 	}
-	cp->width = attributes.width;
-	cp->height = attributes.height;
 	np->border = attributes.border_width;
+	cp->width = attributes.width + 2 * np->border;
+	cp->height = attributes.height + 2 * np->border;
 
 }
 
@@ -223,6 +244,7 @@ Window FindSwallowedClient(const char *name) {
 				JXAddToSaveSet(display, result);
 				JXSetWindowBorder(display, result, colors[COLOR_TRAY_BG]);
 				JXMapRaised(display, result);
+				JXSelectInput(display, result, StructureNotifyMask);
 				break;
 			}
 			JXFree(hint.res_name);

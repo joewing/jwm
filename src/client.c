@@ -1314,9 +1314,18 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	GrabKeys(np);
 
 	attr.override_redirect = True;
-	attr.event_mask = ButtonPressMask | ButtonReleaseMask | ExposureMask
-		| PointerMotionMask | SubstructureRedirectMask | SubstructureNotifyMask
-		| EnterWindowMask | LeaveWindowMask | KeyPressMask;
+
+	attr.event_mask
+		= ButtonPressMask
+		| ButtonReleaseMask
+		| ExposureMask
+		| PointerMotionMask
+		| SubstructureRedirectMask
+		| SubstructureNotifyMask
+		| EnterWindowMask
+		| LeaveWindowMask
+		| KeyPressMask;
+
 	attr.do_not_propagate_mask = ButtonPressMask | ButtonReleaseMask;
 	attr.background_pixel = colors[COLOR_BORDER_BG];
 

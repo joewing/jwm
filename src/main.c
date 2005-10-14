@@ -231,6 +231,7 @@ void Initialize() {
 	InitializeTaskBar();
 	InitializeTiming();
 	InitializeTray();
+	InitializeTrayButtons();
 }
 
 /****************************************************************************
@@ -256,6 +257,7 @@ void Startup() {
 	StartupPager();
 	StartupSwallow();
 	StartupTaskBar();
+	StartupTrayButtons();
 	StartupTray();
 	StartupKeys();
 	StartupHints();
@@ -294,6 +296,7 @@ void Shutdown() {
 	ShutdownPager();
 	ShutdownRootMenu();
 	ShutdownTray();
+	ShutdownTrayButtons();
 	ShutdownTaskBar();
 	ShutdownSwallow();
 	ShutdownBorders();
@@ -341,6 +344,7 @@ void Destroy() {
 	DestroyTaskBar();
 	DestroyTiming();
 	DestroyTray();
+	DestroyTrayButtons();
 }
 
 /****************************************************************************

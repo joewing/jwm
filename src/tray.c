@@ -35,6 +35,7 @@ void StartupTray()
 {
 
 	XSetWindowAttributes attr;
+	long attrMask;
 	TrayType *tp;
 	TrayComponentType *cp;
 	int temp;
@@ -99,18 +100,24 @@ void StartupTray()
 
 		/* Create the tray window. */
 		/* The window is created larger for a border. */
+		attrMask = CWOverrideRedirect;
 		attr.override_redirect = True;
-		attr.event_mask = ButtonPressMask | ExposureMask | KeyPressMask;
+
+		attrMask |= CWEventMask;
+		attr.event_mask
+			= ButtonPressMask
+			| ExposureMask
+			| KeyPressMask
+			| LeaveWindowMask
+			| EnterWindowMask
+			| PointerMotionMask;
+
+		attrMask |= CWBackPixel;
 		attr.background_pixel = colors[COLOR_TRAY_BG];
 
 		tp->window = JXCreateWindow(display, rootWindow,
 			tp->x, tp->y, tp->width, tp->height,
-			0, rootDepth, InputOutput, rootVisual,
-			CWOverrideRedirect | CWBackPixel | CWEventMask, &attr);
-
-		JXSelectInput(display, tp->window, EnterWindowMask
-			| LeaveWindowMask | ExposureMask | ButtonPressMask
-			| PointerMotionMask);
+			0, rootDepth, InputOutput, rootVisual, attrMask, &attr);
 
 		SetDefaultCursor(tp->window);
 

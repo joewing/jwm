@@ -9,7 +9,8 @@ void StartupSwallow();
 void ShutdownSwallow();
 void DestroySwallow();
 
-TrayComponentType *CreateSwallow(const char *name, const char *command);
+TrayComponentType *CreateSwallow(const char *name, const char *command,
+	int width, int height);
 
 int ProcessSwallowEvent(const XEvent *event);
 

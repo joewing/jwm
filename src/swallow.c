@@ -78,7 +78,8 @@ void DestroySwallow() {
 
 /****************************************************************************
  ****************************************************************************/
-TrayComponentType *CreateSwallow(const char *name, const char *command) {
+TrayComponentType *CreateSwallow(const char *name, const char *command,
+	int width, int height) {
 
 	TrayComponentType *cp;
 	SwallowNode *np;
@@ -107,6 +108,9 @@ TrayComponentType *CreateSwallow(const char *name, const char *command) {
 	cp->object = np;
 	cp->Create = Create;
 	cp->Destroy = Destroy;
+
+	cp->width = width;
+	cp->height = height;
 
 	return cp;
 
@@ -178,6 +182,8 @@ void StartSwallowedClient(TrayComponentType *cp) {
 		return;
 	}
 
+	Debug("starting %s...", np->name);
+
 	cp->width = 0;
 	cp->height = 0;
 
@@ -215,8 +221,24 @@ void StartSwallowedClient(TrayComponentType *cp) {
 		attributes.border_width = 0;
 	}
 	np->border = attributes.border_width;
-	cp->width = attributes.width + 2 * np->border;
-	cp->height = attributes.height + 2 * np->border;
+
+	if(cp->width < 0 || cp->width > rootWidth) {
+		Warning("invalid width for swallow: %d", cp->width);
+		cp->width = 0;
+	}
+	if(cp->height < 0 || cp->height > rootHeight) {
+		Warning("invalid height for swallow: %d", cp->height);
+		cp->height = 0;
+	}
+
+	if(cp->width == 0) {
+		cp->width = attributes.width + 2 * np->border;
+	}
+	if(cp->height == 0) {
+		cp->height = attributes.height + 2 * np->border;
+	}
+
+	Debug("%s started", np->name);
 
 }
 

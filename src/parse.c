@@ -48,6 +48,7 @@ static void ParseTray(const TokenNode *tp);
 static void ParsePager(const TokenNode *tp, TrayType *tray);
 static void ParseTaskList(const TokenNode *tp, TrayType *tray);
 static void ParseSwallow(const TokenNode *tp, TrayType *tray);
+static void ParseTrayButton(const TokenNode *tp, TrayType *tray);
 
 /* Groups. */
 static void ParseGroup(const TokenNode *tp);
@@ -76,8 +77,7 @@ static void ParseError(const char *str, ...);
 
 /****************************************************************************
  ****************************************************************************/
-void ParseConfig(const char *fileName)
-{
+void ParseConfig(const char *fileName) {
 	if(!ParseFile(fileName, 0)) {
 		if(!ParseFile(SYSTEM_CONFIG, 0)) {
 			ParseError("could not open %s or %s", fileName, SYSTEM_CONFIG);
@@ -89,8 +89,7 @@ void ParseConfig(const char *fileName)
  * Parse a specific file.
  * Returns 1 on success and 0 on failure.
  ****************************************************************************/
-int ParseFile(const char *fileName, int depth)
-{
+int ParseFile(const char *fileName, int depth) {
 
 	TokenNode *tokens;
 	FILE *fd;
@@ -121,8 +120,7 @@ int ParseFile(const char *fileName, int depth)
 
 /***************************************************************************
  ***************************************************************************/
-void ReleaseTokens(TokenNode *np)
-{
+void ReleaseTokens(TokenNode *np) {
 
 	AttributeNode *ap;
 	TokenNode *tp;
@@ -158,8 +156,7 @@ void ReleaseTokens(TokenNode *np)
 
 /***************************************************************************
  ***************************************************************************/
-void Parse(const TokenNode *start, int depth)
-{
+void Parse(const TokenNode *start, int depth) {
 
 	TokenNode *tp;
 
@@ -249,8 +246,7 @@ void Parse(const TokenNode *start, int depth)
 
 /****************************************************************************
  ****************************************************************************/
-void ParseFocusModel(const TokenNode *tp)
-{
+void ParseFocusModel(const TokenNode *tp) {
 	if(tp->value) {
 		if(!strcmp(tp->value, "sloppy")) {
 			focusModel = FOCUS_SLOPPY;
@@ -266,8 +262,7 @@ void ParseFocusModel(const TokenNode *tp)
 
 /****************************************************************************
  ****************************************************************************/
-void ParseSnapMode(const TokenNode *tp)
-{
+void ParseSnapMode(const TokenNode *tp) {
 
 	const char *distance;
 
@@ -295,8 +290,7 @@ void ParseSnapMode(const TokenNode *tp)
 
 /****************************************************************************
  ****************************************************************************/
-void ParseMoveMode(const TokenNode *tp)
-{
+void ParseMoveMode(const TokenNode *tp) {
 	if(tp->value) {
 		if(!strcmp(tp->value, "outline")) {
 			SetMoveMode(MOVE_OUTLINE);
@@ -329,8 +323,7 @@ void ParseResizeMode(const TokenNode *tp)
 
 /****************************************************************************
  ****************************************************************************/
-void ParseRootMenu(const TokenNode *start)
-{
+void ParseRootMenu(const TokenNode *start) {
 
 	char *value;
 	MenuType *menu;
@@ -366,8 +359,7 @@ void ParseRootMenu(const TokenNode *start)
 
 /****************************************************************************
  ****************************************************************************/
-MenuItemType *InsertMenuItem(MenuItemType *last)
-{
+MenuItemType *InsertMenuItem(MenuItemType *last) {
 
 	MenuItemType *item;
 
@@ -388,8 +380,7 @@ MenuItemType *InsertMenuItem(MenuItemType *last)
 
 /****************************************************************************
  ****************************************************************************/
-void ParseMenuItem(const TokenNode *start, MenuType *menu)
-{
+void ParseMenuItem(const TokenNode *start, MenuType *menu) {
 
 	MenuItemType *last;
 	MenuType *child;
@@ -556,8 +547,8 @@ void ParseMenuItem(const TokenNode *start, MenuType *menu)
 
 /****************************************************************************
  ****************************************************************************/
-void ParseKey(const TokenNode *tp)
-{
+void ParseKey(const TokenNode *tp) {
+
 	const char *key;
 	const char *mask;
 	const char *action;
@@ -631,8 +622,8 @@ void ParseKey(const TokenNode *tp)
 
 /***************************************************************************
  ***************************************************************************/
-void ParseBorderStyle(const TokenNode *tp)
-{
+void ParseBorderStyle(const TokenNode *tp) {
+
 	const TokenNode *np;
 
 	Assert(tp);
@@ -670,8 +661,7 @@ void ParseBorderStyle(const TokenNode *tp)
 
 /***************************************************************************
  ***************************************************************************/
-void ParseInclude(const TokenNode *tp, int depth)
-{
+void ParseInclude(const TokenNode *tp, int depth) {
 
 	char *temp;
 
@@ -691,8 +681,7 @@ void ParseInclude(const TokenNode *tp, int depth)
 
 /***************************************************************************
  ***************************************************************************/
-void ParseTaskListStyle(const TokenNode *tp)
-{
+void ParseTaskListStyle(const TokenNode *tp) {
 
 	TokenNode *np;
 
@@ -724,8 +713,7 @@ void ParseTaskListStyle(const TokenNode *tp)
 
 /***************************************************************************
  ***************************************************************************/
-void ParseTrayStyle(const TokenNode *tp)
-{
+void ParseTrayStyle(const TokenNode *tp) {
 
 	const TokenNode *np;
 
@@ -744,8 +732,7 @@ void ParseTrayStyle(const TokenNode *tp)
 
 /***************************************************************************
  ***************************************************************************/
-void ParseTray(const TokenNode *tp)
-{
+void ParseTray(const TokenNode *tp) {
 
 	const TokenNode *np;
 	const char *attr;
@@ -808,6 +795,9 @@ void ParseTray(const TokenNode *tp)
 		case TOK_SWALLOW:
 			ParseSwallow(np, tray);
 			break;
+		case TOK_TRAYBUTTON:
+			ParseTrayButton(np, tray);
+			break;
 		default:
 			ParseError("invalid Tray option: %s", GetTokenName(np->type));
 			break;
@@ -818,8 +808,7 @@ void ParseTray(const TokenNode *tp)
 
 /***************************************************************************
  ***************************************************************************/
-void ParsePager(const TokenNode *tp, TrayType *tray)
-{
+void ParsePager(const TokenNode *tp, TrayType *tray) {
 
 	TrayComponentType *cp;
 
@@ -833,8 +822,7 @@ void ParsePager(const TokenNode *tp, TrayType *tray)
 
 /***************************************************************************
  ***************************************************************************/
-void ParseTaskList(const TokenNode *tp, TrayType *tray)
-{
+void ParseTaskList(const TokenNode *tp, TrayType *tray) {
 
 	TrayComponentType *cp;
 
@@ -848,18 +836,34 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray)
 
 /***************************************************************************
  ***************************************************************************/
-void ParseSwallow(const TokenNode *tp, TrayType *tray)
-{
+void ParseSwallow(const TokenNode *tp, TrayType *tray) {
 
 	TrayComponentType *cp;
 	const char *name;
+	const char *temp;
+	int width, height;
 
 	Assert(tp);
 	Assert(tray);
 
 	name = FindAttribute(tp->attributes, NAME_ATTRIBUTE);
+	if(name == NULL) {
+		name = tp->value;
+	}
 
-	cp = CreateSwallow(name, tp->value);
+	width = 0;
+	temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
+	if(temp) {
+		width = atoi(temp);
+	}
+
+	height = 0;
+	temp = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
+	if(temp) {
+		height = atoi(temp);
+	}
+
+	cp = CreateSwallow(name, tp->value, width, height);
 	if(cp) {
 		AddTrayComponent(tray, cp);
 	}
@@ -868,8 +872,26 @@ void ParseSwallow(const TokenNode *tp, TrayType *tray)
 
 /***************************************************************************
  ***************************************************************************/
-void ParsePagerStyle(const TokenNode *tp)
-{
+void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
+
+	TrayComponentType *cp;
+	const char *icon;
+
+	Assert(tp);
+	Assert(tray);
+
+	icon = FindAttribute(tp->attributes, ICON_ATTRIBUTE);
+
+	cp = CreateTrayButton(icon);
+	if(cp) {
+		AddTrayComponent(tray, cp);
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void ParsePagerStyle(const TokenNode *tp) {
 
 	const TokenNode *np;
 

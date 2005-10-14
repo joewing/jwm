@@ -95,8 +95,10 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, int size)
 	XRenderPictFormat picFormat;
 	XRenderPictFormat *fp;
 	XColor color;
-	GC maskGC;
 	GC imageGC;
+	GC maskGC;
+	XImage *destImage;
+	XImage *destMask;
 	unsigned char alpha;
 	int index;
 	int x, y;
@@ -133,6 +135,14 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, int size)
 		width, height, rootDepth);
 	imageGC = JXCreateGC(display, result->image, 0, NULL);
 
+	destImage = JXCreateImage(display, rootVisual, rootDepth, ZPixmap, 0,
+		NULL, width, height, 8, 0);
+	destImage->data = Allocate(sizeof(CARD32) * width * height);
+
+	destMask = JXCreateImage(display, rootVisual, 8, ZPixmap, 0,
+		NULL, width, height, 8, 0);
+	destMask->data = Allocate(width * height);
+
 	data = (CARD32*)icon->image->data;
 
 	srcy = 0.0;
@@ -147,16 +157,14 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, int size)
 			color.blue = (data[index] & 0xFF) * 257;
 
 			GetColor(&color);
-			JXSetForeground(display, imageGC, color.pixel);
-			JXDrawPoint(display, result->image, imageGC, x, y);
+			XPutPixel(destImage, x, y, color.pixel);
 
 			color.red = alpha * 257;
 			color.green = alpha * 257;
 			color.blue = alpha * 257;
 
 			GetColor(&color);
-			JXSetForeground(display, maskGC, color.pixel);
-			JXDrawPoint(display, result->mask, maskGC, x, y);
+			XPutPixel(destMask, x, y, color.pixel);
 
 			srcx += scalex;
 
@@ -164,9 +172,23 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, int size)
 		srcy += scaley;
 	}
 
-	JXFreeGC(display, maskGC);
+	/* Render the image data to the image pixmap. */
+	JXPutImage(display, result->image, imageGC, destImage, 0, 0, 0, 0,
+		width, height);
+	Release(destImage->data);
+	destImage->data = NULL;
+	JXDestroyImage(destImage);
 	JXFreeGC(display, imageGC);
 
+	/* Render the alpha data to the mask pixmap. */
+	JXPutImage(display, result->mask, maskGC, destMask, 0, 0, 0, 0,
+		width, height);
+	Release(destMask->data);
+	destMask->data = NULL;
+	JXDestroyImage(destMask);
+	JXFreeGC(display, maskGC);
+
+	/* Create the render picture. */
 	picFormat.type = PictTypeDirect;
 	picFormat.depth = 8;
 	picFormat.direct.alphaMask = 0xFF;
@@ -176,12 +198,17 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, int size)
 	Assert(fp);
 	result->maskPicture = JXRenderCreatePicture(display, result->mask,
 		fp, 0, NULL);
-
 	picAttributes.alpha_map = result->maskPicture;
 	fp = JXRenderFindVisualFormat(display, rootVisual);
 	Assert(fp);
 	result->imagePicture = JXRenderCreatePicture(display, result->image,
 		fp, CPAlphaMap, &picAttributes);
+
+	/* Free unneeded pixmaps. */
+	JXFreePixmap(display, result->image);
+	result->image = None;
+	JXFreePixmap(display, result->mask);
+	result->mask = None;
 
 #endif
 

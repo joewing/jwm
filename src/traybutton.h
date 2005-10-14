@@ -4,7 +4,12 @@
 #ifndef TRAY_BUTTON_H
 #define TRAY_BUTTON_H
 
-TrayComponentType *CreateTrayButton(const char *icon, const char *label);
+void InitializeTrayButtons();
+void StartupTrayButtons();
+void ShutdownTrayButtons();
+void DestroyTrayButtons();
+
+TrayComponentType *CreateTrayButton(const char *iconName);
 
 #endif
 

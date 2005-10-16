@@ -9,7 +9,8 @@ void StartupTrayButtons();
 void ShutdownTrayButtons();
 void DestroyTrayButtons();
 
-TrayComponentType *CreateTrayButton(const char *iconName);
+TrayComponentType *CreateTrayButton(const char *iconName,
+	const char *action);
 
 #endif
 

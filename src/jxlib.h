@@ -216,6 +216,9 @@
 #define JXPutBackEvent( a, b ) \
 	( SetCheckpoint(), XPutBackEvent( a, b ) )
 
+#define JXGetImage( a, b, c, d, e, f, g, h ) \
+	( SetCheckpoint(), XGetImage( a, b, c, d, e, f, g, h ) )
+
 #define JXPutImage( a, b, c, d, e, f, g, h, i, j ) \
 	( SetCheckpoint(), XPutImage( a, b, c, d, e, f, g, h, i, j ) )
 

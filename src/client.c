@@ -1294,7 +1294,9 @@ ClientNode *FindClientByParent(Window p) {
 /****************************************************************************
  ****************************************************************************/
 void ReparentClient(ClientNode *np, int notOwner) {
+
 	XSetWindowAttributes attr;
+	int attrMask;
 	int x, y, width, height;
 
 	Assert(np);
@@ -1313,8 +1315,12 @@ void ReparentClient(ClientNode *np, int notOwner) {
 		True, ButtonPressMask, GrabModeSync, GrabModeAsync, None, None);
 	GrabKeys(np);
 
+	attrMask = 0;
+
+	attrMask |= CWOverrideRedirect;
 	attr.override_redirect = True;
 
+	attrMask |= CWEventMask;
 	attr.event_mask
 		= ButtonPressMask
 		| ButtonReleaseMask
@@ -1326,7 +1332,10 @@ void ReparentClient(ClientNode *np, int notOwner) {
 		| LeaveWindowMask
 		| KeyPressMask;
 
+	attrMask |= CWDontPropagate;
 	attr.do_not_propagate_mask = ButtonPressMask | ButtonReleaseMask;
+
+	attrMask |= CWBackPixel;
 	attr.background_pixel = colors[COLOR_BORDER_BG];
 
 	if(np->borderFlags & BORDER_OUTLINE) {
@@ -1348,9 +1357,7 @@ void ReparentClient(ClientNode *np, int notOwner) {
 
 	np->parent = JXCreateWindow(display, rootWindow,
 		x, y, width, height, 0, rootDepth, InputOutput,
-		rootVisual,
-		CWOverrideRedirect | CWBackPixel | CWEventMask | CWDontPropagate,
-		&attr);
+		rootVisual, attrMask, &attr);
 	np->parentGC = JXCreateGC(display, np->parent, 0, NULL);
 
 	JXSetWindowBorderWidth(display, np->window, 0);

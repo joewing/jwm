@@ -10,6 +10,8 @@ typedef struct TrayButtonType {
 	char *iconName;
 	IconNode *icon;
 
+	char *action;
+
 	struct TrayButtonType *next;
 
 } TrayButtonType;
@@ -60,7 +62,8 @@ void DestroyTrayButtons() {
 
 /***************************************************************************
  ***************************************************************************/
-TrayComponentType *CreateTrayButton(const char *iconName) {
+TrayComponentType *CreateTrayButton(const char *iconName,
+	const char *action) {
 
 	TrayButtonType *bp;
 	TrayComponentType *cp;
@@ -77,6 +80,13 @@ TrayComponentType *CreateTrayButton(const char *iconName) {
 	bp->icon = NULL;
 	bp->iconName = Allocate(strlen(iconName) + 1);
 	strcpy(bp->iconName, iconName);
+
+	if(action) {
+		bp->action = Allocate(strlen(action) + 1);
+		strcpy(bp->action, action);
+	} else {
+		bp->action = NULL;
+	}
 
 	cp = CreateTrayComponent();
 	cp->object = bp;
@@ -127,6 +137,10 @@ void Destroy(TrayComponentType *cp) {
 
 	Release(bp->iconName);
 
+	if(bp->action) {
+		Release(bp->action);
+	}
+
 	if(cp->pixmap != None) {
 		JXFreePixmap(display, cp->pixmap);
 	}
@@ -138,8 +152,18 @@ void Destroy(TrayComponentType *cp) {
 /***************************************************************************
  ***************************************************************************/
 void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
-	GetMousePosition(&x, &y);
-	ShowRootMenu(x, y);
+
+	TrayButtonType *bp = (TrayButtonType*)cp->object;
+
+	Assert(bp);
+
+	if(bp->action && strlen(bp->action) > 0) {
+		RunCommand(bp->action);
+	} else {
+		GetMousePosition(&x, &y);
+		ShowRootMenu(x, y);
+	}
+
 }
 
 

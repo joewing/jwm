@@ -882,7 +882,7 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
 
 	icon = FindAttribute(tp->attributes, ICON_ATTRIBUTE);
 
-	cp = CreateTrayButton(icon);
+	cp = CreateTrayButton(icon, tp->value);
 	if(cp) {
 		AddTrayComponent(tray, cp);
 	}

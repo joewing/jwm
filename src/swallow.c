@@ -184,9 +184,6 @@ void StartSwallowedClient(TrayComponentType *cp) {
 
 	Debug("starting %s...", np->name);
 
-	cp->width = 0;
-	cp->height = 0;
-
 	np->border = 0;
 	np->started = 1;
 

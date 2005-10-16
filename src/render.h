@@ -11,7 +11,7 @@ void QueryRenderExtension();
 int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
 	int x, int y);
 
-ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, int size);
+ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, int width, int height);
 
 #endif
 

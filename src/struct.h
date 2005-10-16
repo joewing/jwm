@@ -37,7 +37,8 @@ typedef struct ImageNode {
  ****************************************************************************/
 typedef struct ScaledIconNode {
 
-	int size;
+	int width;
+	int height;
 
 	Pixmap image;
 	Pixmap mask;

@@ -314,8 +314,7 @@ void Render(const TaskBarType *bp) {
 
 	x = TASK_SPACER;
 	width -= x;
-	y = TASK_SPACER;
-	height -= y;
+	y = 1;
 
 	JXSetForeground(display, gc, colors[COLOR_TRAY_BG]);
 	JXFillRectangle(display, buffer, gc, 0, 0, width, height);
@@ -333,7 +332,7 @@ void Render(const TaskBarType *bp) {
 		remainder = 0;
 	}
 
-	iconSize = bp->itemHeight - 2 * TASK_SPACER - 6;
+	iconSize = bp->itemHeight - 2 * TASK_SPACER - 4;
 
 	SetButtonDrawable(buffer, gc);
 	SetButtonFont(FONT_TASK);
@@ -351,22 +350,23 @@ void Render(const TaskBarType *bp) {
 
 			if(remainder) {
 				SetButtonSize(itemWidth - TASK_SPACER,
-					bp->itemHeight - 2 * TASK_SPACER + 1);
+					bp->itemHeight - 1);
 			} else {
 				SetButtonSize(itemWidth - TASK_SPACER - 1,
-					bp->itemHeight - 2 * TASK_SPACER + 1);
+					bp->itemHeight - 1);
 			}
 
 			DrawButton(x, y, buttonType, tp->client->name);
 
 			if(tp->client->icon) {
 				PutIcon(tp->client->icon, buffer, gc,
-					x + TASK_SPACER + 2, y + TASK_SPACER + 2, iconSize);
+					x + TASK_SPACER + 2, y + TASK_SPACER + 2,
+					iconSize, iconSize);
 			}
 
 			if(tp->client->statusFlags & STAT_MINIMIZED) {
 				JXCopyArea(display, minimizedPixmap, buffer, gc,
-					0, 0, 4, 4, x + 3, y + bp->itemHeight - 9);
+					0, 0, 4, 4, x + 3, y + bp->itemHeight - 7);
 			}
 
 			if(bp->layout == LAYOUT_HORIZONTAL) {

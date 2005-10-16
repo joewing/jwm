@@ -57,12 +57,15 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
 
 		dest = JXRenderCreatePicture(display, d, fp, 0, NULL);
 
-		if(node->size == 0) {
+		if(node->width == 0) {
 			width = icon->image->width;
+		} else {
+			width = node->width;
+		}
+		if(node->height == 0) {
 			height = icon->image->height;
 		} else {
-			width = node->size;
-			height = node->size;
+			height = node->height;
 		}
 
 		JXRenderComposite(display, PictOpOver, source, None, dest,
@@ -84,8 +87,8 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
 
 /****************************************************************************
  ****************************************************************************/
-ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, int size)
-{
+ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
+	int width, int height) {
 
 	ScaledIconNode *result = NULL;
 
@@ -102,7 +105,6 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, int size)
 	unsigned char alpha;
 	int index;
 	int x, y;
-	int width, height;
 	double scalex, scaley;
 	double srcx, srcy;
 	CARD32 *data;
@@ -116,15 +118,15 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, int size)
 	result = Allocate(sizeof(ScaledIconNode));
 	result->next = icon->nodes;
 	icon->nodes = result;
-	result->size = size;
 
-	if(size == 0) {
+	if(width == 0) {
 		width = icon->image->width;
-		height = icon->image->height;
-	} else {
-		width = size;
-		height = size;
 	}
+	if(height == 0) {
+		height = icon->image->height;
+	}
+	result->width = width;
+	result->height = height;
 
 	scalex = (double)icon->image->width / width;
 	scaley = (double)icon->image->height / height;

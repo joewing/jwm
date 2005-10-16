@@ -109,7 +109,7 @@ void Create(TrayComponentType *cp) {
 		JXSetForeground(display, gc, colors[COLOR_TRAY_BG]);
 		JXFillRectangle(display, cp->pixmap, gc, 0, 0, cp->width, cp->height);
 
-		PutIcon(bp->icon, cp->pixmap, gc, 0, 0, cp->width);
+		PutIcon(bp->icon, cp->pixmap, gc, 0, 0, cp->width, cp->height);
 
 		JXFreeGC(display, gc);
 

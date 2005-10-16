@@ -33,7 +33,7 @@ static IconNode *CreateIconFromBinary(const CARD32 *data, int length);
 static IconNode *LoadSuffixedIcon(const char *path, const char *name,
 	const char *suffix);
 
-static ScaledIconNode *GetScaledIcon(IconNode *icon, int size);
+static ScaledIconNode *GetScaledIcon(IconNode *icon, int width, int height);
 
 static void InsertIcon(IconNode *icon);
 static IconNode *FindIcon(const char *name);
@@ -155,14 +155,15 @@ void AddIconPath(const char *path) {
 
 /****************************************************************************
  ****************************************************************************/
-void PutIcon(IconNode *icon, Drawable d, GC g, int x, int y, int size)
+void PutIcon(IconNode *icon, Drawable d, GC g, int x, int y,
+	int width, int height)
 {
 
 	ScaledIconNode *node;
 
 	Assert(icon);
 
-	node = GetScaledIcon(icon, size);
+	node = GetScaledIcon(icon, width, height);
 
 	if(node) {
 
@@ -178,7 +179,7 @@ void PutIcon(IconNode *icon, Drawable d, GC g, int x, int y, int size)
 			}
 
 			JXCopyArea(display, node->image, d, g, 0, 0,
-				node->size, node->size, x, y);
+				node->width, node->height, x, y);
 
 			if(node->mask != None) {
 				JXSetClipMask(display, g, None);
@@ -406,7 +407,7 @@ IconNode *CreateIconFromFile(const char *fileName)
 
 /****************************************************************************
  ****************************************************************************/
-ScaledIconNode *GetScaledIcon(IconNode *icon, int size)
+ScaledIconNode *GetScaledIcon(IconNode *icon, int width, int height)
 {
 
 	XColor color;
@@ -424,41 +425,45 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int size)
 
 	/* Check if this size already exists. */
 	for(np = icon->nodes; np; np = np->next) {
-		if(np->size == size) {
+		if(np->width == width && np->height == height) {
 			return np;
 		}
 	}
 
 	/* See if we can use XRender to create the icon. */
-	np = CreateScaledRenderIcon(icon, size);
+	np = CreateScaledRenderIcon(icon, width, height);
 	if(np) {
 		return np;
 	}
 
 	/* Create a new ScaledIconNode the old-fashioned way. */
 	np = Allocate(sizeof(ScaledIconNode));
-	np->size = size;
+	np->width = width;
+	np->height = height;
 	np->next = icon->nodes;
 	icon->nodes = np;
 
-	if(size == 0) {
-		size = icon->image->width;
+	if(width == 0) {
+		width = icon->image->width; 
+	}
+	if(height == 0) {
+		height = icon->image->height;
 	}
 
-	np->mask = JXCreatePixmap(display, rootWindow, size, size, 1);
+	np->mask = JXCreatePixmap(display, rootWindow, width, height, 1);
 	maskGC = JXCreateGC(display, np->mask, 0, NULL);
-	np->image = JXCreatePixmap(display, rootWindow, size, size, rootDepth);
+	np->image = JXCreatePixmap(display, rootWindow, width, height, rootDepth);
 	imageGC = JXCreateGC(display, np->image, 0, NULL);
 
 	data = (CARD32*)icon->image->data;
 
-	scalex = (double)icon->image->width / size;
-	scaley = (double)icon->image->height / size;
+	scalex = (double)icon->image->width / width;
+	scaley = (double)icon->image->height / height;
 
 	srcy = 0.0;
-	for(y = 0; y < size; y++) {
+	for(y = 0; y < height; y++) {
 		srcx = 0.0;
-		for(x = 0; x < size; x++) {
+		for(x = 0; x < width; x++) {
 
 			index = (int)srcy * icon->image->width + (int)srcx;
 

@@ -78,6 +78,7 @@ void InitializeMenu(MenuType *menu) {
 
 	if(userHeight) {
 		menu->itemHeight = userHeight;
+		menu->textOffset = menu->itemHeight;
 	}
 
 	menu->width = 5;
@@ -529,6 +530,7 @@ void UpdateMenu(MenuType *menu) {
 			PutIcon(ip->icon, menu->window, menu->gc,
 				BASE_ICON_OFFSET,
 				menu->offsets[menu->currentIndex] + BASE_ICON_OFFSET,
+				menu->itemHeight - BASE_ICON_OFFSET * 2,
 				menu->itemHeight - BASE_ICON_OFFSET * 2);
 		}
 
@@ -584,6 +586,7 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 			PutIcon(item->icon, menu->window, menu->gc,
 				BASE_ICON_OFFSET,
 				menu->offsets[index] + BASE_ICON_OFFSET,
+				menu->itemHeight - BASE_ICON_OFFSET * 2,
 				menu->itemHeight - BASE_ICON_OFFSET * 2);
 		}
 

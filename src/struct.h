@@ -125,6 +125,9 @@ typedef struct TrayComponentType {
 	/* Coordinates on the tray (valid only after Create). */
 	int x, y;
 
+	/* Coordinates on the screen (valid only after Create). */
+	int screenx, screeny;
+
 	/* Component size.
 	 * Sizing is handled as follows:
 	 *  - The component is created via a factory method. It sets its
@@ -154,6 +157,10 @@ typedef struct TrayComponentType {
 
 	/* Callback for mouse clicks. */
 	void (*ProcessButtonEvent)(struct TrayComponentType *cp,
+		int x, int y, int mask);
+
+	/* Callback for mouse motion. */
+	void (*ProcessMotionEvent)(struct TrayComponentType *cp,
 		int x, int y, int mask);
 
 	/* The next component in the tray. */

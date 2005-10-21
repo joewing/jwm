@@ -1360,6 +1360,11 @@ void ReparentClient(ClientNode *np, int notOwner) {
 		rootVisual, attrMask, &attr);
 	np->parentGC = JXCreateGC(display, np->parent, 0, NULL);
 
+	attrMask = CWDontPropagate;
+	attr.do_not_propagate_mask = ButtonPressMask | ButtonReleaseMask;
+
+	JXChangeWindowAttributes(display, np->window, attrMask, &attr);
+
 	JXSetWindowBorderWidth(display, np->window, 0);
 	if(np->borderFlags & BORDER_OUTLINE) {
 		if(np->borderFlags & BORDER_TITLE) {

@@ -113,7 +113,7 @@ void InitializeMenu(MenuType *menu) {
 		}
 	}
 	menu->height += 2;
-	menu->width += 11 + hasSubmenu + menu->textOffset;
+	menu->width += 15 + hasSubmenu + menu->textOffset;
 
 }
 

@@ -157,6 +157,8 @@ void StartupTray()
 
 			cp->x = xoffset;
 			cp->y = yoffset;
+			cp->screenx = tp->x + xoffset;
+			cp->screeny = tp->y + yoffset;
 
 			if(cp->window != None) {
 				JXReparentWindow(display, cp->window, tp->window,
@@ -281,6 +283,7 @@ TrayComponentType *CreateTrayComponent() {
 	cp->SetSize = NULL;
 
 	cp->ProcessButtonEvent = NULL;
+	cp->ProcessMotionEvent = NULL;
 
 	cp->next = NULL;
 
@@ -585,6 +588,8 @@ void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event) {
 	TrayComponentType *cp;
 	int xoffset, yoffset;
 	int width, height;
+	int x, y;
+	int mask;
 
 	xoffset = tp->border;
 	yoffset = tp->border;
@@ -593,11 +598,12 @@ void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event) {
 		height = cp->height;
 		if(event->x >= xoffset && event->x < xoffset + width) {
 			if(event->y >= yoffset && event->y < yoffset + height) {
-/*
-				if(cp->ProcessEvent) {
-					(cp->ProcessEvent)(cp->object, event);
+				if(cp->ProcessMotionEvent) {
+					x = event->x - xoffset;
+					y = event->y - yoffset;
+					mask = event->state;
+					(cp->ProcessMotionEvent)(cp, x, y, mask);
 				}
-*/
 				break;
 			}
 		}

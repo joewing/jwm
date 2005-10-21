@@ -16,6 +16,8 @@ void RemoveClientFromTaskBar(ClientNode *np);
 
 void UpdateTaskBar();
 
+void SignalTaskbar();
+
 void FocusNext();
 
 void SetMaxTaskBarItemWidth(unsigned int w);

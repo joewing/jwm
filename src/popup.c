@@ -89,8 +89,8 @@ void ShowPopup(int x, int y, const char *text) {
 	popup.height = GetStringHeight(FONT_POPUP);
 	popup.width = GetStringWidth(FONT_POPUP, popup.text);
 
-	popup.height += 1;
-	popup.width += 1; 
+	popup.height += 2;
+	popup.width += 2; 
 
 	screenIndex = GetCurrentScreen(x, y);
 

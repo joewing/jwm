@@ -1,5 +1,4 @@
 /***************************************************************************
- * TODO: Support vertical taskbars.
  ***************************************************************************/
 
 #include "jwm.h"
@@ -18,6 +17,9 @@ typedef struct TaskBarType {
 
 	Pixmap buffer;
 	GC bufferGC;
+
+	TimeType mouseTime;
+	int mousex, mousey;
 
 	struct TaskBarType *next;
 
@@ -54,6 +56,8 @@ static void ShowTaskWindowMenu(TaskBarType *bar, Node *np);
 static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
 static void ProcessTaskButtonEvent(TrayComponentType *cp,
+	int x, int y, int mask);
+static void ProcessTaskMotionEvent(TrayComponentType *cp,
 	int x, int y, int mask);
 
 /***************************************************************************
@@ -110,6 +114,10 @@ TrayComponentType *CreateTaskBar() {
 	bars = tp;
 	tp->itemHeight = 0;
 	tp->layout = LAYOUT_HORIZONTAL;
+	tp->mousex = -1;
+	tp->mousey = -1;
+	tp->mouseTime.seconds = 0;
+	tp->mouseTime.ms = 0;
 
 	cp = CreateTrayComponent();
 	cp->object = tp;
@@ -121,6 +129,7 @@ TrayComponentType *CreateTaskBar() {
 	cp->Create = Create;
 	cp->Destroy = Destroy;
 	cp->ProcessButtonEvent = ProcessTaskButtonEvent;
+	cp->ProcessMotionEvent = ProcessTaskMotionEvent;
 
 	return cp;
 
@@ -204,6 +213,18 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 /***************************************************************************
  ***************************************************************************/
+void ProcessTaskMotionEvent(TrayComponentType *cp, int x, int y, int mask) {
+
+	TaskBarType *bp = (TaskBarType*)cp->object;
+
+	bp->mousex = cp->screenx + x;
+	bp->mousey = cp->screeny + y;
+	GetCurrentTime(&bp->mouseTime);
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
 void ShowTaskWindowMenu(TaskBarType *bar, Node *np) {
 	int x, y;
 	GetMousePosition(&x, &y);
@@ -279,6 +300,36 @@ void UpdateTaskBar() {
 
 	for(bp = bars; bp; bp = bp->next) {
 		Render(bp);
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void SignalTaskbar() {
+
+	TimeType now;
+	TaskBarType *bp;
+	Node *np;
+	int x, y;
+
+	GetCurrentTime(&now);
+	GetMousePosition(&x, &y);
+
+	for(bp = bars; bp; bp = bp->next) {
+		if(abs(bp->mousex - x) < 2 && abs(bp->mousey - y) < 2) {
+			if(GetTimeDifference(&now, &bp->mouseTime) >= 2000) {
+				if(bp->layout == LAYOUT_HORIZONTAL) {
+					np = GetNode(bp, x - bp->cp->screenx);
+				} else {
+					np = GetNode(bp, y - bp->cp->screeny);
+				}
+				if(np) {
+					ShowPopup(x, y - GetStringHeight(FONT_POPUP) - 4,
+						np->client->name);
+				}
+			}
+		}
 	}
 
 }

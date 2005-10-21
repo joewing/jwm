@@ -32,9 +32,27 @@ static void HandleShapeEvent(const XShapeEvent *event);
 /****************************************************************************
  ****************************************************************************/
 void WaitForEvent(XEvent *event) {
+
+	struct timeval timeout;
+	fd_set fds;
+	int fd;
 	int handled;
 
+	fd = JXConnectionNumber(display);
+
 	do {
+
+		while(JXPending(display) == 0) {
+			FD_ZERO(&fds);
+			FD_SET(fd, &fds);
+			timeout.tv_usec = 0;
+			timeout.tv_sec = 1;
+			if(select(fd + 1, &fds, NULL, NULL, &timeout) <= 0) {
+				SignalTaskbar();
+			}
+		}
+
+		SignalTaskbar();
 
 		JXNextEvent(display, event);
 

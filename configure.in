@@ -137,18 +137,6 @@ if test "$NEED_XEXT" == "true"; then
 	LDFLAGS="$LDFLAGS -lXext"
 fi
 
-# Load display
-AC_ARG_ENABLE(load,
-	AC_HELP_STRING([--disable-load], [don't show a load meter]) )
-if test "$enable_load" != "no" ; then
-	AC_DEFINE(SHOW_LOAD, 1, [Define to enable the load meter])
-	if test `uname` = "SunOS" ; then
-		AC_CHECK_LIB([kstat], kstat_open,
-			[ LDFLAGS="$LDFLAGS -lkstat" ],
-			[ AC_MSG_ERROR([libkstat not found]) ])
-	fi
-fi
-
 # Debug
 AC_ARG_ENABLE(debug,
 	AC_HELP_STRING([--enable-debug], [use this to debug JWM]) )
@@ -173,25 +161,12 @@ if test "$sysconfdir" = "" ; then
 	sysconfdir="$ac_default_sysconfdir"
 fi
 
-if `uname -p 2> /dev/null ; echo $?` = "0" ; then
-	ARCH=`uname -p`
-else
-	ARCH=`uname -m`
-fi
-
 BINDIR=`eval echo \""$bindir"\"`
 SYSCONF=`eval echo \"$sysconfdir\"`
 MANDIR=`eval echo \"$mandir\"`
 
 AC_DEFINE_UNQUOTED(SYSTEM_CONFIG, "$SYSCONF/system.jwmrc",
 	[default system configuration path])
-
-OSNAME=`uname | tr "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "abcdefghijklmnopqrstuvwxyz"`
-OSNAME=`echo $OSNAME | tr -dc "abcdefghijklmnopqrstuvwxyz0123456789"`
-if test ! -r "src/os/$OSNAME.c" ; then
-	OSNAME="unsupported"
-fi
-echo "defining $OSNAME as the machine type"
 
 AC_SUBST(CFLAGS)
 AC_SUBST(LDFLAGS)
@@ -201,8 +176,6 @@ AC_SUBST(BINDIR)
 AC_SUBST(MANDIR)
 AC_SUBST(DATE, `date "+%Y-%m-%d"`)
 AC_SUBST(SYSCONF, "$SYSCONF")
-AC_SUBST(OSNAME, "$OSNAME")
-AC_SUBST(ARCH)
 
 AC_OUTPUT(
 

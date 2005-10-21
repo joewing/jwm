@@ -69,4 +69,3 @@ unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2) {
 
 }
 
-

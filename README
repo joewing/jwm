@@ -5,8 +5,13 @@ See LICENSE for license information.
 To build JWM you will need a C compiler (gcc works), X11, and the
 "development headers" for X11 and Xlib.
 If available and not disabled at compile time, JWM will also use
-libXext for the shape extension, libXpm for icon support, and
-libXinerama for multiple head support.
+the following libraries:
+	libXext for the shape extension.
+	libXext for the render extension.
+	libXinerama for multiple head support.
+	libXpm for XPM icons.
+	libpng for PNG icons.
+	libxft for antialiased and true type fonts.
 
 > Installation
 Run "./configure --help" for configuration options.

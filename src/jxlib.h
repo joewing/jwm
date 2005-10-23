@@ -204,6 +204,12 @@
 #define JXNextEvent( a, b ) \
 	( SetCheckpoint(), XNextEvent( a, b ) )
 
+#define JXMaskEvent( a, b, c ) \
+	( SetCheckpoint(), XMaskEvent( a, b, c ) )
+
+#define JXCheckMaskEvent( a, b, c ) \
+	( SetCheckpoint(), XCheckMaskEvent( a, b, c ) )
+
 #define JXOpenDisplay( a ) \
 	( SetCheckpoint(), XOpenDisplay( a ) )
 

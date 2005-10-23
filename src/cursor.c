@@ -177,13 +177,21 @@ void SetDefaultCursor(Window w) {
 
 /****************************************************************************
  ****************************************************************************/
+void SetMousePosition(Window win, int x, int y) {
+
+	JXWarpPointer(display, None, win, 0, 0, 0, 0, x, y);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
 void GetMousePosition(int *x, int *y) {
 	Window win1, win2;
 	int winx, winy;
 	unsigned int mask;
 
-	JXQueryPointer(display, rootWindow, &win1, &win2, x, y, &winx,
-		&winy, &mask);
+	JXQueryPointer(display, rootWindow, &win1, &win2, x, y,
+		&winx, &winy, &mask);
 
 }
 

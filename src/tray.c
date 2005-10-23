@@ -175,6 +175,10 @@ void StartupTray()
 		/* Show the tray. */
 		JXMapWindow(display, tp->window);
 
+		if(tp->autoHide) {
+			HideTray(tp);
+		}
+
 	}
 
 	UpdatePager();
@@ -469,24 +473,73 @@ void ComputeTraySize(TrayType *tp) {
 /***************************************************************************
  ***************************************************************************/
 void ShowTray(TrayType *tp) {
+
+	int x, y;
+	int moveMouse;
+	XEvent event;
+
 	if(tp->hidden) {
-/*
-		JXMoveWindow(display, tp->window, 0,
-			rootHeight - trayHeight - TRAY_BEVEL);
-*/
+
+		JXMoveWindow(display, tp->window, tp->x, tp->y);
+
+		GetMousePosition(&x, &y);
+
+		moveMouse = 0;
+
+		if(x < tp->x || x >= tp->x + tp->width) {
+			x = tp->x + tp->width / 2;
+			moveMouse = 1;
+		}
+
+		if(y < tp->y || y >= tp->y + tp->height) {
+			y = tp->y + tp->height / 2;
+			moveMouse = 1;
+		}
+
+		if(moveMouse) {
+			SetMousePosition(rootWindow, x, y);
+			JXCheckMaskEvent(display, LeaveWindowMask, &event);
+		}
+
 		tp->hidden = 0;
 	}
+
 }
 
 /***************************************************************************
  ***************************************************************************/
 void HideTray(TrayType *tp) {
 
+	int x, y;
+
 	if(tp->autoHide && !tp->hidden) {
 		tp->hidden = 1;
-/*
-		JXMoveWindow(display, tp->window, 0, rootHeight - 1);
-*/
+
+		/* Determine where to move the tray. */
+		if(tp->layout == LAYOUT_HORIZONTAL) {
+
+			x = tp->x;
+
+			if(tp->y >= rootHeight / 2) {
+				y = rootHeight - 1;
+			} else {
+				y = 1 - tp->height;
+			}
+
+		} else {
+
+			y = tp->y;
+
+			if(tp->x >= rootWidth / 2) {
+				x = rootWidth - 1;
+			} else {
+				x = 1 - tp->width;
+			}
+
+		}
+
+		/* Move it. */
+		JXMoveWindow(display, tp->window, x, y);
 	}
 
 }
@@ -545,6 +598,9 @@ void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event) {
 /***************************************************************************
  ***************************************************************************/
 void HandleTrayLeaveNotify(TrayType *tp, const XCrossingEvent *event) {
+
+	HideTray(tp);
+
 }
 
 /***************************************************************************

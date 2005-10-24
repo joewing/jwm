@@ -1,15 +1,23 @@
 
 Todo:
-	- Add load status support for AIX, HPUX, FreeBSD, ...
 	- More support for GNOME, Motif, and WMSpec hints.
 	- Add some way to remember window states.
-	- Make windows larger than the X desktop behave in a more sane manner.
-	- Continue work on Xinerama support.
-	- Make JWM able to swallow other applications (like xload) in the tray.
 	- Add an option to make "alt-tabbing" go through the z-stack instead of
 	  the tray.
-	- Fix WMSpec icons on AMD64 (fixed?).
 	- Add the ability to name desktops.
+
+20051016:
+	- Tray button can now execute external programs (or show the root menu).
+
+20051013:
+	- Support for vertical trays, pagers, and task lists.
+
+20051012:
+	- Added the ability to swallow applications in the tray.
+
+20051010:
+	- Overhaul of the tray. Multiple trays now supported.
+	  [The configuration file changed]
 
 20051007:
 	- Large windows are now handled in a more sane manner.

@@ -28,11 +28,11 @@ void ReadNetWMDesktop(ClientNode *np);
 void ReadWinLayer(ClientNode *np);
 void WriteWinState(ClientNode *np);
 
-int GetCardinalAtom(Window window, AtomType atom, CARD32 *value);
+int GetCardinalAtom(Window window, AtomType atom, unsigned long *value);
 int GetWindowAtom(Window window, AtomType atom, Window *value);
 
-void SetCardinalAtom(Window window, AtomType atom, CARD32 value);
-void SetWindowAtom(Window window, AtomType atom, CARD32 value);
+void SetCardinalAtom(Window window, AtomType atom, unsigned long value);
+void SetWindowAtom(Window window, AtomType atom, unsigned long value);
 
 #endif
 

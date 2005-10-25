@@ -143,7 +143,8 @@ void DestroyHints() {
 /****************************************************************************
  ****************************************************************************/
 void ReadCurrentDesktop() {
-	CARD32 temp;
+
+	unsigned long temp;
 
 	currentDesktop = 0;
 
@@ -162,6 +163,7 @@ void ReadCurrentDesktop() {
  * This is called while the client is being added to management.
  ****************************************************************************/
 void ReadClientProtocols(ClientNode *np) {
+
 	unsigned long count, x;
 	Status status;
 	unsigned long extra;
@@ -169,7 +171,7 @@ void ReadClientProtocols(ClientNode *np) {
 	int realFormat;
 	unsigned char *temp;
 	Atom *state;
-	CARD32 card;
+	unsigned long card;
 
 	/* Read the standard hints */
 	ReadWMName(np);
@@ -251,7 +253,8 @@ void ReadClientProtocols(ClientNode *np) {
 /****************************************************************************
  ****************************************************************************/
 void ReadNetWMDesktop(ClientNode *np) {
-	CARD32 temp;
+
+	unsigned long temp;
 
 	Assert(np);
 
@@ -298,7 +301,8 @@ void WriteWinState(ClientNode *np) {
 /****************************************************************************
  ****************************************************************************/
 void ReadWinLayer(ClientNode *np) {
-	CARD32 temp;
+
+	unsigned long temp;
 
 	Assert(np);
 
@@ -506,7 +510,8 @@ void ReadWMColormaps(ClientNode *np) {
 
 /****************************************************************************
  ****************************************************************************/
-int GetCardinalAtom(Window window, AtomType atom, CARD32 *value) {
+int GetCardinalAtom(Window window, AtomType atom, unsigned long *value) {
+
 	unsigned long count;
 	int status;
 	unsigned long extra;
@@ -564,7 +569,7 @@ int GetWindowAtom(Window window, AtomType atom, Window *value) {
 
 /****************************************************************************
  ****************************************************************************/
-void SetCardinalAtom(Window window, AtomType atom, CARD32 value) {
+void SetCardinalAtom(Window window, AtomType atom, unsigned long value) {
 
 	JXChangeProperty(display, window, atoms[atom], XA_CARDINAL, 32,
 		PropModeReplace, (unsigned char*)&value, 1);
@@ -573,7 +578,7 @@ void SetCardinalAtom(Window window, AtomType atom, CARD32 value) {
 
 /****************************************************************************
  ****************************************************************************/
-void SetWindowAtom(Window window, AtomType atom, CARD32 value) {
+void SetWindowAtom(Window window, AtomType atom, unsigned long value) {
 
 	JXChangeProperty(display, window, atoms[atom], XA_WINDOW, 32,
 		PropModeReplace, (unsigned char*)&value, 1);

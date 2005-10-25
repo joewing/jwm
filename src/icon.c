@@ -28,7 +28,7 @@ static void ReadNetWMIcon(ClientNode *np);
 static IconNode *GetDefaultIcon();
 static IconNode *CreateIconFromData(const char *name, char **data);
 static IconNode *CreateIconFromFile(const char *fileName);
-static IconNode *CreateIconFromBinary(const CARD32 *data, int length);
+static IconNode *CreateIconFromBinary(const unsigned long *data, int length);
 
 static IconNode *LoadSuffixedIcon(const char *path, const char *name,
 	const char *suffix);
@@ -156,8 +156,7 @@ void AddIconPath(const char *path) {
 /****************************************************************************
  ****************************************************************************/
 void PutIcon(IconNode *icon, Drawable d, GC g, int x, int y,
-	int width, int height)
-{
+	int width, int height) {
 
 	ScaledIconNode *node;
 
@@ -194,8 +193,7 @@ void PutIcon(IconNode *icon, Drawable d, GC g, int x, int y,
 
 /****************************************************************************
  ****************************************************************************/
-void LoadIcon(ClientNode *np)
-{
+void LoadIcon(ClientNode *np) {
 
 	IconPathNode *ip;
 
@@ -241,8 +239,7 @@ void LoadIcon(ClientNode *np)
 /****************************************************************************
  ****************************************************************************/
 IconNode *LoadSuffixedIcon(const char *path, const char *name,
-	const char *suffix)
-{
+	const char *suffix) {
 
 	IconNode *result;
 	ImageNode *image;
@@ -280,8 +277,7 @@ IconNode *LoadSuffixedIcon(const char *path, const char *name,
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *LoadNamedIcon(const char *name)
-{
+IconNode *LoadNamedIcon(const char *name) {
 
 	IconPathNode *ip;
 	IconNode *icon;
@@ -325,7 +321,7 @@ void ReadNetWMIcon(ClientNode *np) {
 		&extra, &data);
 
 	if(status == Success && data) {
-		np->icon = CreateIconFromBinary((CARD32*)data, count);
+		np->icon = CreateIconFromBinary((unsigned long*)data, count);
 		if(np->icon) {
 			InsertIcon(np->icon);
 		}
@@ -501,11 +497,12 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int width, int height)
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *CreateIconFromBinary(const CARD32 *input, int length)
-{
+IconNode *CreateIconFromBinary(const unsigned long *input, int length) {
 
-	CARD32 height, width;
+	unsigned long height, width;
 	IconNode *result;
+	CARD32 *data;
+	int x;
 
 	if(!input) {
 		return NULL;
@@ -517,6 +514,9 @@ IconNode *CreateIconFromBinary(const CARD32 *input, int length)
 	if(width * height + 2 > length) {
 		Debug("invalid image size: %d x %d + 2 > %d", width, height, length);
 		return NULL;
+	} else if(width == 0 || height == 0) {
+		Debug("invalid image size: %d x %d", width, height);
+		return NULL;
 	}
 
 	result = CreateIcon();
@@ -526,7 +526,12 @@ IconNode *CreateIconFromBinary(const CARD32 *input, int length)
 	result->image->height = height;
 
 	result->image->data = Allocate(width * height * sizeof(CARD32));
-	memcpy(result->image->data, input + 2, width * height * sizeof(CARD32));
+	data = (CARD32*)result->image->data;
+
+	/* Note: the data types here might be of different sizes. */
+	for(x = 0; x < width * height; x++) {
+		data[x] = input[x + 2];
+	}
 
 	/* Don't insert this icon since it is transient. */
 

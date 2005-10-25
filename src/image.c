@@ -8,7 +8,6 @@
 static ImageNode *LoadPNGImage(const char *fileName);
 static ImageNode *LoadXPMImage(const char *fileName);
 static ImageNode *CreateImageFromXImages(XImage *image, XImage *shape);
-static void ResizeImage(ImageNode *image, int width, int height);
 
 /****************************************************************************
  ****************************************************************************/
@@ -260,72 +259,6 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
 	}
 
 	return result;
-
-}
-
-/****************************************************************************
- ****************************************************************************/
-void ScaleImage(ImageNode *image, int size) {
-
-	int width;
-	int height;
-
-	if(size) {
-		width = size;
-		height = size;
-	} else {
-		width = image->width;
-		height = image->height;
-	}
-
-	ResizeImage(image, width, height);
-
-}
-
-/****************************************************************************
- ****************************************************************************/
-void ResizeImage(ImageNode *image, int width, int height) {
-/*
-
-	ImageNode *result;
-	double scalex, scaley;
-	double srcx, srcy;
-	int sourceIndex;
-	int destIndex;
-	int x, y;
-	CARD32 *dest;
-	CARD32 *source;
-
-	Assert(image);
-	Assert(image->data);
-
-	result = Allocate(sizeof(ImageNode));
-	result->data = Allocate(sizeof(CARD32) * width * height);
-	result->width = width;
-	result->height = height;
-
-	scalex = (double)image->width / width;
-	scaley = (double)image->height / height;
-
-	source = (CARD32*)image->data;
-
-	srcy = 0.0;
-	destIndex = 0;
-	for(y = 0; y < height; y++) {
-		srcx = 0.0;
-		for(x = 0; x < width; x++) {
-			sourceIndex = (int)srcy * image->width + (int)srcx;
-			dest[destIndex++] = source[sourceIndex];
-			srcx += scalex;
-		}
-		srcy += scaley;
-	}
-
-	image->width = width;
-	image->height = height;
-	Release(image->data);
-	image->data = (unsigned char*)dest;
-*/
 
 }
 

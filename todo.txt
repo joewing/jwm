@@ -6,6 +6,9 @@ Todo:
 	  the tray.
 	- Add the ability to name desktops.
 
+20051024:
+	- Fix 64-bit X server issues.
+
 20051016:
 	- Tray button can now execute external programs (or show the root menu).
 

@@ -10,8 +10,8 @@ static const int COLOR_HASH_BITS = 3;
 static const int COLOR_HASH_SIZE = 512;
 
 typedef struct ColorNode {
-	CARD16 red, green, blue;
-	CARD32 pixel;
+	unsigned short red, green, blue;
+	unsigned long pixel;
 	struct ColorNode *prev;
 	struct ColorNode *next;
 } ColorNode;
@@ -25,10 +25,10 @@ static ColorNode **colorHash = NULL;
 
 static const float COLOR_DELTA = 0.45;
 
-CARD32 colors[COLOR_COUNT];
+unsigned long colors[COLOR_COUNT];
 CARD32 rgbColors[COLOR_COUNT];
-CARD32 white;
-CARD32 black;
+unsigned long white;
+unsigned long black;
 
 #ifdef USE_XFT
 static XftColor *xftColors[COLOR_COUNT] = { NULL };
@@ -68,7 +68,7 @@ static CARD32 GetRGBFromXColor(const XColor *c);
 static XColor GetXColorFromRGB(CARD32 rgb);
 
 static int GetColorByName(const char *str, XColor *c);
-static CARD32 FindClosestColor(const XColor *c);
+static unsigned long FindClosestColor(const XColor *c);
 static void InitializeNames();
 
 static void LightenColor(ColorType oldColor, ColorType newColor);
@@ -99,9 +99,9 @@ XColor GetXColorFromRGB(CARD32 rgb) {
 	XColor ret;
 
 	ret.flags = DoRed | DoGreen | DoBlue;
-	ret.red = (CARD16)(((rgb >> 16) & 0xFF) * 257);
-	ret.green = (CARD16)(((rgb >> 8) & 0xFF) * 257);
-	ret.blue = (CARD16)((rgb & 0xFF) * 257);
+	ret.red = (unsigned short)(((rgb >> 16) & 0xFF) * 257);
+	ret.green = (unsigned short)(((rgb >> 8) & 0xFF) * 257);
+	ret.blue = (unsigned short)((rgb & 0xFF) * 257);
 
 	return ret;
 }
@@ -396,12 +396,12 @@ int GetColorByName(const char *str, XColor *c) {
 
 /***************************************************************************
  ***************************************************************************/
-CARD32 FindClosestColor(const XColor *c) {
+unsigned long FindClosestColor(const XColor *c) {
 
 	ColorNode *closest;
 	ColorNode *np;
-	CARD32 closestDistance;
-	CARD32 distance;
+	unsigned long closestDistance;
+	unsigned long distance;
 	int x;
 
 	Assert(c);

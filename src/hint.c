@@ -528,7 +528,7 @@ int GetCardinalAtom(Window window, AtomType atom, unsigned long *value) {
 	ret = 0;
 	if(status == Success && data) {
 		if(count == 1) {
-			*value = *(CARD32*)data;
+			*value = *(unsigned long*)data;
 			ret = 1;
 		}
 		JXFree(data);
@@ -557,7 +557,7 @@ int GetWindowAtom(Window window, AtomType atom, Window *value) {
 	ret = 0;
 	if(status == Success && data) {
 		if(count == 1) {
-			*value = *(CARD32*)data;
+			*value = *(Window*)data;
 			ret = 1;
 		}
 		JXFree(data);

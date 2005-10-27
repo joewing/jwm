@@ -8,6 +8,7 @@ Todo:
 
 20051026:
 	- Fix lockup issue when restoring transient windows.
+	- Added a separator to the window menu before kill/close.
 
 20051024:
 	- Fix 64-bit X server issues.

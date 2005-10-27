@@ -49,6 +49,8 @@ MenuType *CreateWindowMenu() {
 		AddWindowMenuItem(menu, "Kill", "kill");
 	}
 
+	AddWindowMenuItem(menu, NULL, NULL);
+
 	if(client->statusFlags & (STAT_MAPPED | STAT_SHADED)) {
 		if(client->borderFlags & BORDER_RESIZE) {
 			AddWindowMenuItem(menu, "Resize", "resize");
@@ -222,10 +224,18 @@ void AddWindowMenuItem(MenuType *menu, const char *name,
 	item->submenu = NULL;
 	item->next = menu->items;
 	menu->items = item;
-	item->name = Allocate(strlen(name) + 1);
-	strcpy(item->name, name);
-	item->command = Allocate(strlen(command) + 1);
-	strcpy(item->command, command);
+	if(name) {
+		item->name = Allocate(strlen(name) + 1);
+		strcpy(item->name, name);
+	} else {
+		item->name = NULL;
+	}
+	if(command) {
+		item->command = Allocate(strlen(command) + 1);
+		strcpy(item->command, command);
+	} else {
+		item->command = NULL;
+	}
 
 }
 

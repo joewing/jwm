@@ -32,7 +32,7 @@ static void UpdateState(ClientNode *np);
 static void MinimizeTransients(ClientNode *np);
 static void CheckShape(ClientNode *np);
 
-static void RestoreSingleClient(ClientNode *np);
+static void RestoreTransients(ClientNode *np);
 
 static void KillClientHandler(ClientNode *np);
 
@@ -462,6 +462,7 @@ void MinimizeClient(ClientNode *np) {
 	}
 
 	MinimizeTransients(np);
+
 	UpdateTaskBar();
 	UpdatePager();
 
@@ -595,40 +596,48 @@ void SetClientWithdrawn(ClientNode *np, int isWithdrawn) {
 
 /****************************************************************************
  ****************************************************************************/
-void RestoreSingleClient(ClientNode *np) {
+void RestoreTransients(ClientNode *np) {
 
-	Assert(np);
-
-	if(np->statusFlags & STAT_MINIMIZED) {
-		JXMapWindow(display, np->window);
-		JXMapWindow(display, np->parent);
-		np->statusFlags |= STAT_MAPPED;
-		np->statusFlags &= ~STAT_MINIMIZED;
-	}
-	RaiseClient(np);
-	UpdateState(np);
-	WriteWinState(np);
-}
-
-/****************************************************************************
- ****************************************************************************/
-void RestoreClient(ClientNode *np) {
 	ClientNode *tp;
 	int x;
 
 	Assert(np);
 
-	RestoreSingleClient(np);
+	if(!(np->statusFlags & STAT_MAPPED)) {
+		JXMapWindow(display, np->window);
+		JXMapWindow(display, np->parent);
+	}
+	np->statusFlags |= STAT_MAPPED;
+	np->statusFlags &= ~STAT_MINIMIZED;
+	np->statusFlags &= ~STAT_WITHDRAWN;
+
+	UpdateState(np);
 
 	for(x = 0; x < LAYER_COUNT; x++) {
 		for(tp = nodes[x]; tp; tp = tp->next) {
-			if(tp->owner == np->window) {
-				RestoreSingleClient(tp);
+			if(tp->owner == np->window
+				&& !(tp->statusFlags & STAT_MAPPED)
+				&& (tp->statusFlags & STAT_MINIMIZED)) {
+				RestoreTransients(tp);
 			}
 		}
 	}
 
+	RaiseClient(np);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void RestoreClient(ClientNode *np) {
+
+	Assert(np);
+
+	RestoreTransients(np);
+
 	RestackClients();
+	UpdateTaskBar();
+	UpdatePager();
 
 }
 
@@ -1468,6 +1477,7 @@ void UpdateClientColormap(ClientNode *np) {
 /****************************************************************************
  ****************************************************************************/
 void UpdateState(ClientNode *np) {
+
 	unsigned long data[2];
 
 	Assert(np);

@@ -6,6 +6,9 @@ Todo:
 	  the tray.
 	- Add the ability to name desktops.
 
+20051026:
+	- Fix lockup issue when restoring transient windows.
+
 20051024:
 	- Fix 64-bit X server issues.
 

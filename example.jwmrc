@@ -4,16 +4,18 @@
 
 	<!-- The root menu, if this is undefined you will not get a menu. -->
 	<RootMenu label="JWM" height="32">
-		<Program icon="rxvt.png" label="Terminal">rxvt</Program>
+		<Program icon="xterm.png" label="Terminal">xterm</Program>
 		<Menu icon="folder.png" label="Applications">
 			<Program icon="dia.png" label="Dia">dia</Program>
 			<Program icon="firefox.png" label="Firefox">firefox</Program>
 			<Program icon="gaim.png" label="Gaim">gaim</Program>
 			<Program icon="gftp.png" label="gFTP">gftp</Program>
 			<Program icon="gimp.png" label="Gimp">gimp</Program>
-			<Program icon="gnutella.png" label="gnutella">gtk-gnutella</Program>
-			<Program icon="xine.png" label="gxine">gxine</Program>
-			<Program icon="xmms.png" label="XMMS">xmms</Program>
+			<Program icon="gtk-gnutella.png" label="gtk-gnutella">
+				gtk-gnutella
+			</Program>
+			<Program icon="gxine.png" label="gxine">gxine</Program>
+			<Program icon="xmms.xpm" label="XMMS">xmms</Program>
 		</Menu>
 		<Menu icon="folder.png" label="Utilities">
 			<Program icon="xcalc.png">xcalc</Program>
@@ -35,63 +37,72 @@
 
 	<Group>
 		<Class>xmms</Class>
-		<Option>icon:xmms.png</Option>
+		<Option>icon:xmms.xpm</Option>
 	</Group>
 
-	<Border>
+	<Tray x="10" y="10" height="64" border="2" autohide="false">
+		<Pager/>
+	</Tray>
+
+	<Tray autohide="false" x="0" y="-1" width="0" height="32" border="1">
+		<TrayButton icon="colors.png"/>
+		<Pager/>
+		<TaskList/>
+		<Swallow name="xload" width="64">
+			xload -nolabel -bg black -fg red -hl white
+		</Swallow>
+		<Swallow name="xclock">
+			xclock -brief -digital -twelve -bg gray90 -padding 7 
+		</Swallow>
+	</Tray>
+
+	<!-- Visual Styles -->
+
+	<BorderStyle>
 		<Font>FreeSans-12:bold</Font>
 		<Width>5</Width>
 		<Height>20</Height>
 		<Foreground>black</Foreground>
-		<Background>#DCDAD5</Background>
+		<Background>gray90</Background>
 		<ActiveForeground>white</ActiveForeground>
 		<ActiveBackground>#4A5966</ActiveBackground>
-	</Border>
+	</BorderStyle>
 
-	<Tray autohide="false">
+	<TaskListStyle>
 		<Font>FreeSans-12:bold</Font>
-		<Width>0</Width>
-		<Height>28</Height>
-		<Alignment>center</Alignment>
 		<Foreground>black</Foreground>
 		<Background>#DCDAD5</Background>
-		<ActiveForeground>black</ActiveForeground>
-		<ActiveBackground>#8899AA</ActiveBackground>
-	</Tray>
+		<ActiveForeground>white</ActiveForeground>
+		<ActiveBackground>#8899A6</ActiveBackground>
+	</TaskListStyle>
 
-	<Pager enabled="true">
+	<TrayStyle>
+		<Background>gray90</Background>
+	</TrayStyle>
+
+	<PagerStyle>
 		<Outline>black</Outline>
-		<Foreground>#DCDAD5</Foreground>
+		<Foreground>gray90</Foreground>
 		<Background>#888888</Background>
 		<ActiveForeground>#8899AA</ActiveForeground>
 		<ActiveBackground>#3A4956</ActiveBackground>
-	</Pager>
+	</PagerStyle>
 
-	<Load enabled="true">
-		<Program>xload</Program>
-		<Outline>black</Outline>
-		<Foreground>red</Foreground>
-		<Background>#DCDAD5</Background>
-	</Load>
+	<MenuStyle>
+		<Font>FreeSans-12:bold</Font>
+		<Foreground>black</Foreground>
+		<Background>gray90</Background>
+		<ActiveForeground>white</ActiveForeground>
+		<ActiveBackground>#3A4956</ActiveBackground>
+	</MenuStyle>
 
-	<Clock enabled="true">
-		<Program>xclock</Program>
-	</Clock>
-
-	<Popup enabled="true">
+	<PopupStyle>
 		<Font>FreeSans-10</Font>
 		<Outline>black</Outline>
 		<Foreground>black</Foreground>
 		<Background>yellow</Background>
-	</Popup>
+	</PopupStyle>
 
-	<Menu>
-		<Font>FreeSans-12:bold</Font>
-		<Foreground>black</Foreground>
-		<Background>#DCDAD5</Background>
-		<ActiveForeground>white</ActiveForeground>
-		<ActiveBackground>#3A4956</ActiveBackground>
-	</Menu>
 
 	<Icons>
 		<IconPath>$HOME/.icons</IconPath>

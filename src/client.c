@@ -348,10 +348,10 @@ void PlaceWindow(ClientNode *np, int alreadyMapped) {
 
 	} else {
 
-		if(np->x + np->width - x > width) {
+		if(np->x + np->width - x > rootWidth) {
 			np->x = x;
 		}
-		if(np->y + np->height - y > height) {
+		if(np->y + np->height - y > rootHeight) {
 			np->y = y;
 		}
 
@@ -494,6 +494,7 @@ void MinimizeTransients(ClientNode *np) {
 	np->statusFlags &= ~STAT_MAPPED;
 	np->statusFlags &= ~STAT_WITHDRAWN;
 	UpdateState(np);
+	WriteWinState(np);
 
 	for(x = 0; x < LAYER_COUNT; x++) {
 		for(tp = nodes[x]; tp; tp = tp->next) {
@@ -578,6 +579,7 @@ void SetClientWithdrawn(ClientNode *np, int isWithdrawn) {
 			JXUnmapWindow(display, np->window);
 			JXUnmapWindow(display, np->parent);
 			UpdateState(np);
+			WriteWinState(np);
 		}
 
 	} else {
@@ -586,6 +588,7 @@ void SetClientWithdrawn(ClientNode *np, int isWithdrawn) {
 			JXMapWindow(display, np->window);
 			JXMapWindow(display, np->parent);
 			UpdateState(np);
+			WriteWinState(np);
 		}
 	}
 
@@ -612,6 +615,7 @@ void RestoreTransients(ClientNode *np) {
 	np->statusFlags &= ~STAT_WITHDRAWN;
 
 	UpdateState(np);
+	WriteWinState(np);
 
 	for(x = 0; x < LAYER_COUNT; x++) {
 		for(tp = nodes[x]; tp; tp = tp->next) {

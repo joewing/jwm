@@ -272,7 +272,8 @@ void ReadNetWMDesktop(ClientNode *np) {
 /****************************************************************************
  ****************************************************************************/
 void WriteWinState(ClientNode *np) {
-	CARD32 flags;
+
+	unsigned long flags;
 
 	Assert(np);
 

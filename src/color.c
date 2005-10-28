@@ -26,7 +26,7 @@ static ColorNode **colorHash = NULL;
 static const float COLOR_DELTA = 0.45;
 
 unsigned long colors[COLOR_COUNT];
-CARD32 rgbColors[COLOR_COUNT];
+unsigned long rgbColors[COLOR_COUNT];
 unsigned long white;
 unsigned long black;
 
@@ -62,10 +62,10 @@ static DefaultColorNode DEFAULT_COLORS[] = {
 static int ParseColor(ColorType type, const char *value);
 static void SetDefaultColor(ColorType type); 
 
-static CARD32 ReadHex(const char *hex);
+static unsigned long ReadHex(const char *hex);
 
-static CARD32 GetRGBFromXColor(const XColor *c);
-static XColor GetXColorFromRGB(CARD32 rgb);
+static unsigned long GetRGBFromXColor(const XColor *c);
+static XColor GetXColorFromRGB(unsigned long rgb);
 
 static int GetColorByName(const char *str, XColor *c);
 static unsigned long FindClosestColor(const XColor *c);
@@ -78,24 +78,24 @@ static char **names = NULL;
 
 /****************************************************************************
  ****************************************************************************/
-CARD32 GetRGBFromXColor(const XColor *c) {
+unsigned long GetRGBFromXColor(const XColor *c) {
 	float red, green, blue;
-	CARD32 rgb;
+	unsigned long rgb;
 
 	red = (float)c->red / 65535.0;
 	green = (float)c->green / 65535.0;
 	blue = (float)c->blue / 65535.0;
 
-	rgb = (CARD32)(red * 255.0) << 16;
-	rgb |= (CARD32)(green * 255.0) << 8;
-	rgb |= (CARD32)(blue * 255.0);
+	rgb = (unsigned long)(red * 255.0) << 16;
+	rgb |= (unsigned long)(green * 255.0) << 8;
+	rgb |= (unsigned long)(blue * 255.0);
 
 	return rgb;
 }
 
 /****************************************************************************
  ****************************************************************************/
-XColor GetXColorFromRGB(CARD32 rgb) {
+XColor GetXColorFromRGB(unsigned long rgb) {
 	XColor ret;
 
 	ret.flags = DoRed | DoGreen | DoBlue;
@@ -249,7 +249,7 @@ void SetColor(ColorType c, const char *value) {
  ****************************************************************************/
 int ParseColor(ColorType type, const char *value) {
 	XColor temp;
-	CARD32 rgb;
+	unsigned long rgb;
 
 	if(!value) {
 		return 0;
@@ -303,8 +303,8 @@ void InitializeNames() {
 
 /****************************************************************************
  ****************************************************************************/
-CARD32 ReadHex(const char *hex) {
-	CARD32 value = 0;
+unsigned long ReadHex(const char *hex) {
+	unsigned long value = 0;
 	int x;
 
 	for(x = 0; hex[x]; x++) {
@@ -438,7 +438,7 @@ unsigned long FindClosestColor(const XColor *c) {
 void GetColor(XColor *c) {
 
 	ColorNode *np;
-	CARD32 hash;
+	unsigned long hash;
 
 	Assert(c);
 
@@ -498,7 +498,7 @@ void GetColor(XColor *c) {
 #ifdef USE_XFT
 XftColor *GetXftColor(ColorType type) {
 
-	CARD32 rgb;
+	unsigned long rgb;
 	XRenderColor rcolor;
 
 	if(!xftColors[type]) {

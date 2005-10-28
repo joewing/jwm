@@ -4,9 +4,13 @@
 
 #include "jwm.h"
 
-/* Spend 5 seconds looking. */
-#define FIND_RETRY_COUNT 10
-#define FIND_USLEEP ((5 * 1000 * 1000) / FIND_RETRY_COUNT)
+/* Spend 15 seconds looking. */
+#define FIND_SECONDS 15
+
+/* Check 30 times. */
+#define FIND_RETRY_COUNT 30
+
+#define FIND_USLEEP ((FIND_SECONDS * 1000 * 1000) / FIND_RETRY_COUNT)
 
 typedef struct SwallowNode {
 

@@ -409,7 +409,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int width, int height)
 	XColor color;
 	ScaledIconNode *np;
 	GC imageGC, maskGC;
-	CARD32 *data;
+	unsigned long *data;
 	int x, y;
 	int index;
 	int alpha;
@@ -451,7 +451,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int width, int height)
 	np->image = JXCreatePixmap(display, rootWindow, width, height, rootDepth);
 	imageGC = JXCreateGC(display, np->image, 0, NULL);
 
-	data = (CARD32*)icon->image->data;
+	data = (unsigned long*)icon->image->data;
 
 	scalex = (double)icon->image->width / width;
 	scaley = (double)icon->image->height / height;
@@ -501,7 +501,7 @@ IconNode *CreateIconFromBinary(const unsigned long *input, int length) {
 
 	unsigned long height, width;
 	IconNode *result;
-	CARD32 *data;
+	unsigned long *data;
 	int x;
 
 	if(!input) {
@@ -525,8 +525,8 @@ IconNode *CreateIconFromBinary(const unsigned long *input, int length) {
 	result->image->width = width;
 	result->image->height = height;
 
-	result->image->data = Allocate(width * height * sizeof(CARD32));
-	data = (CARD32*)result->image->data;
+	result->image->data = Allocate(width * height * sizeof(unsigned long));
+	data = (unsigned long*)result->image->data;
 
 	/* Note: the data types here might be of different sizes. */
 	for(x = 0; x < width * height; x++) {

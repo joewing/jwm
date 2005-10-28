@@ -107,7 +107,7 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 	int x, y;
 	double scalex, scaley;
 	double srcx, srcy;
-	CARD32 *data;
+	unsigned long *data;
 
 	Assert(icon);
 
@@ -139,13 +139,13 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 
 	destImage = JXCreateImage(display, rootVisual, rootDepth, ZPixmap, 0,
 		NULL, width, height, 8, 0);
-	destImage->data = Allocate(sizeof(CARD32) * width * height);
+	destImage->data = Allocate(sizeof(unsigned long) * width * height);
 
 	destMask = JXCreateImage(display, rootVisual, 8, ZPixmap, 0,
 		NULL, width, height, 8, 0);
 	destMask->data = Allocate(width * height);
 
-	data = (CARD32*)icon->image->data;
+	data = (unsigned long*)icon->image->data;
 
 	srcy = 0.0;
 	for(y = 0; y < height; y++) {

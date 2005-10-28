@@ -30,7 +30,7 @@ typedef struct ImageNode {
 	int width;
 	int height;
 #endif
-	unsigned char *data;
+	unsigned long *data;
 } ImageNode;
 
 /****************************************************************************

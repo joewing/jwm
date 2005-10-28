@@ -7,7 +7,7 @@
 #define COLOR_H
 
 extern unsigned long colors[COLOR_COUNT];
-extern CARD32 rgbColors[COLOR_COUNT];
+extern unsigned long rgbColors[COLOR_COUNT];
 
 extern unsigned long white;
 extern unsigned long black;

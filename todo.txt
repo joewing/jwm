@@ -6,6 +6,9 @@ Todo:
 	  the tray.
 	- Add the ability to name desktops.
 
+20051027:
+	- Fix byte-order issue with PNG images.
+
 20051026:
 	- Fix lockup issue when restoring transient windows.
 	- Added a separator to the window menu before kill/close.

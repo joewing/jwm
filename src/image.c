@@ -74,12 +74,15 @@ ImageNode *LoadPNGImage(const char *fileName) {
 
 	FILE *fd = NULL;
 	unsigned char header[8];
+	unsigned long rowBytes;
 	int bitDepth, colorType;
 	png_structp pngData = NULL;
 	png_infop pngInfo = NULL;
 	png_infop pngEndInfo = NULL;
+	unsigned char *data;
 	unsigned char **rows;
 	int x, y;
+	unsigned long temp;
 
 	Assert(fileName);
 
@@ -162,13 +165,14 @@ ImageNode *LoadPNGImage(const char *fileName) {
 
 	png_read_update_info(pngData, pngInfo);
 
-	result->data = Allocate(4 * result->width * result->height);
+	rowBytes = png_get_rowbytes(pngData, pngInfo);
+	data = Allocate(rowBytes * result->height);
 
 	rows = Allocate(result->height * sizeof(result->data));
 
 	y = 0;
 	for(x = 0; x < result->height; x++) {
-		rows[x] = &result->data[y];
+		rows[x] = &data[y];
 		y += result->width * 4;
 	}
 
@@ -179,7 +183,23 @@ ImageNode *LoadPNGImage(const char *fileName) {
 
 	fclose(fd);
 
+	/* Convert the row data to ARGB format. */
+	/* Source is stored ARGB bytes. */
+	/* Destination is stored in unsigned longs with A most significant. */
+	result->data = Allocate(sizeof(unsigned long)
+		* result->width * result->height);
+	for(y = 0; y < result->height; y++) {
+		for(x = 0; x < result->width; x++) {
+			temp  = rows[y][4 * x + 0] << 24;
+			temp |= rows[y][4 * x + 1] << 16;
+			temp |= rows[y][4 * x + 2] << 8;
+			temp |= rows[y][4 * x + 3] << 0;
+			result->data[y * result->width + x] = temp;
+		}
+	}
+
 	Release(rows);
+	Release(data);
 
 #endif
 
@@ -222,18 +242,19 @@ ImageNode *LoadXPMImage(const char *fileName) {
 ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
 
 	ImageNode *result;
-	CARD32 *data;
+	unsigned long *data;
 	XColor color;
 	unsigned char red, green, blue, alpha;
 	int index;
 	int x, y;
 
 	result = Allocate(sizeof(ImageNode));
-	result->data = Allocate(sizeof(CARD32) * image->width * image->height);
+	result->data = Allocate(sizeof(unsigned long)
+		* image->width * image->height);
 	result->width = image->width;
 	result->height = image->height;
 
-	data = (CARD32*)result->data;
+	data = (unsigned long*)result->data;
 
 	index = 0;
 	for(y = 0; y < image->height; y++) {

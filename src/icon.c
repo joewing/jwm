@@ -322,9 +322,6 @@ void ReadNetWMIcon(ClientNode *np) {
 
 	if(status == Success && data) {
 		np->icon = CreateIconFromBinary((unsigned long*)data, count);
-		if(np->icon) {
-			InsertIcon(np->icon);
-		}
 		JXFree(data);
 	}
 
@@ -627,6 +624,7 @@ void InsertIcon(IconNode *icon)
 	int index;
 
 	Assert(icon);
+	Assert(icon->name);
 
 	index = GetHash(icon->name);
 

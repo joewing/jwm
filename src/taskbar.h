@@ -4,15 +4,17 @@
 #ifndef TASKBAR_H
 #define TASKBAR_H
 
+struct ClientNode;
+
 void InitializeTaskBar();
 void StartupTaskBar();
 void ShutdownTaskBar();
 void DestroyTaskBar();
 
-TrayComponentType *CreateTaskBar();
+struct TrayComponentType *CreateTaskBar();
 
-void AddClientToTaskBar(ClientNode *np);
-void RemoveClientFromTaskBar(ClientNode *np);
+void AddClientToTaskBar(struct ClientNode *np);
+void RemoveClientFromTaskBar(struct ClientNode *np);
 
 void UpdateTaskBar();
 

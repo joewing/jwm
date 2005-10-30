@@ -4,6 +4,70 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "main.h"
+#include "lex.h"
+#include "parse.h"
+#include "help.h"
+#include "error.h"
+#include "event.h"
+
+#include "border.h"
+#include "client.h"
+#include "color.h"
+#include "command.h"
+#include "cursor.h"
+#include "confirm.h"
+#include "font.h"
+#include "hint.h"
+#include "group.h"
+#include "key.h"
+#include "icon.h"
+#include "outline.h"
+#include "timing.h"
+#include "taskbar.h"
+#include "tray.h"
+#include "traybutton.h"
+#include "popup.h"
+#include "pager.h"
+#include "swallow.h"
+#include "screen.h"
+#include "root.h"
+
+Display *display = NULL;
+Window rootWindow;
+int rootWidth, rootHeight;
+int rootDepth;
+int rootScreen;
+Colormap rootColormap;
+Visual *rootVisual;
+int colormapCount;
+
+int shouldExit = 0;
+int shouldRestart = 0;
+int initializing = 0;
+
+int desktopCount = 4;
+int currentDesktop = 0;
+
+char *exitCommand = NULL;
+
+int borderWidth = DEFAULT_BORDER_WIDTH;
+int titleHeight = DEFAULT_TITLE_HEIGHT;
+int titleSize = DEFAULT_TITLE_HEIGHT + DEFAULT_BORDER_WIDTH;
+
+int doubleClickSpeed = DEFAULT_DOUBLE_CLICK_SPEED;
+int doubleClickDelta = DEFAULT_DOUBLE_CLICK_DELTA;
+
+FocusModelType focusModel = FOCUS_SLOPPY;
+
+XContext clientContext;
+XContext frameContext;
+
+#ifdef USE_SHAPE
+int haveShape;
+int shapeEvent;
+#endif
+
 
 static const char *CONFIG_FILE = "/.jwmrc";
 

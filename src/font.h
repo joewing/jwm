@@ -6,7 +6,18 @@
 #ifndef FONT_H
 #define FONT_H
 
-/*extern XFontStruct *fonts[FONT_COUNT];*/
+#include "color.h"
+
+typedef enum {
+
+	FONT_BORDER,
+	FONT_MENU,
+	FONT_TASK,
+	FONT_POPUP,
+
+	FONT_COUNT
+
+} FontType;
 
 void InitializeFonts();
 void StartupFonts();

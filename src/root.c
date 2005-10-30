@@ -4,6 +4,12 @@
  ***************************************************************************/
 
 #include "jwm.h"
+#include "root.h"
+#include "menu.h"
+#include "client.h"
+#include "main.h"
+#include "error.h"
+#include "confirm.h"
 
 static MenuType *rootMenu = NULL;
 static int showExitConfirmation = 1;

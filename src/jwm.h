@@ -48,51 +48,42 @@
 #include <X11/extensions/Xrender.h>
 #endif
 
-#include "enum.h"
-#include "struct.h"
+#define MAX_INCLUDE_DEPTH 16
 
-#include "border.h"
-#include "button.h"
-#include "client.h"
-#include "color.h"
-#include "command.h"
-#include "confirm.h"
-#include "const.h"
-#include "cursor.h"
-#include "event.h"
+#define MAX_BORDER_WIDTH 32
+#define MIN_BORDER_WIDTH 3
+#define DEFAULT_BORDER_WIDTH 5
+
+#define MAX_TITLE_HEIGHT 64
+#define MIN_TITLE_HEIGHT 2
+#define DEFAULT_TITLE_HEIGHT 21
+
+#define MAX_DOUBLE_CLICK_DELTA 32
+#define MIN_DOUBLE_CLICK_DELTA 0
+#define DEFAULT_DOUBLE_CLICK_DELTA 2
+
+#define MAX_DOUBLE_CLICK_SPEED 2000
+#define MIN_DOUBLE_CLICK_SPEED 1
+#define DEFAULT_DOUBLE_CLICK_SPEED 400
+
+#define MAX_SNAP_DISTANCE 32
+#define MIN_SNAP_DISTANCE 1
+#define DEFAULT_SNAP_DISTANCE 5
+
+#define MAX_TRAY_BORDER 32
+#define MIN_TRAY_BORDER 0
+#define DEFAULT_TRAY_BORDER 1
+
+#define MOVE_DELTA 3
+
+#define SHELL_NAME "/bin/sh"
+
+#define DEFAULT_MENU_TITLE "JWM"
+
+#define DEFAULT_DESKTOP_COUNT 4
+
 #include "debug.h"
-#include "desktop.h"
-#include "error.h"
-#include "font.h"
-#include "global.h"
-#include "group.h"
-#include "help.h"
-#include "hint.h"
-#include "icon.h"
-#include "image.h"
 #include "jxlib.h"
-#include "key.h"
-#include "lex.h" 
-#include "main.h"
-#include "match.h"
-#include "menu.h"
-#include "misc.h"
-#include "move.h"
-#include "outline.h"
-#include "pager.h"
-#include "parse.h"
-#include "popup.h"
-#include "render.h"
-#include "resize.h"
-#include "root.h"
-#include "screen.h"
-#include "status.h"
-#include "swallow.h"
-#include "taskbar.h"
-#include "timing.h"
-#include "tray.h"
-#include "traybutton.h"
-#include "winmenu.h"
 
 #endif
 

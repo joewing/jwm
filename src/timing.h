@@ -8,6 +8,15 @@
 
 #define ZERO_TIME { 0, 0 }
 
+/****************************************************************************
+ ****************************************************************************/
+typedef struct {
+
+	unsigned long seconds;
+	int ms;
+
+} TimeType;
+
 void InitializeTiming();
 void StartupTiming();
 void ShutdownTiming();

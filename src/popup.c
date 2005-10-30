@@ -4,6 +4,12 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "popup.h"
+#include "main.h"
+#include "color.h"
+#include "font.h"
+#include "screen.h"
+#include "cursor.h"
 
 typedef struct PopupType {
 	int isActive;

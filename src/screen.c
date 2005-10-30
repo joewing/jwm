@@ -1,5 +1,8 @@
 
 #include "jwm.h"
+#include "screen.h"
+#include "main.h"
+#include "cursor.h"
 
 #ifdef USE_XINERAMA
 static XineramaScreenInfo *screens = NULL;

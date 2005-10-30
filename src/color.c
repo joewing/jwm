@@ -4,6 +4,10 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "main.h"
+#include "color.h"
+#include "error.h"
+#include "misc.h"
 
 /* Note: COLOR_HASH_SIZE = 2 ** (3 * COLOR_HASH_BITS) */
 static const int COLOR_HASH_BITS = 3;

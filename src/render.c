@@ -4,6 +4,11 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "render.h"
+#include "icon.h"
+#include "image.h"
+#include "main.h"
+#include "color.h"
 
 #ifdef USE_XRENDER
 static int haveRender = 0;

@@ -4,6 +4,9 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "cursor.h"
+#include "main.h"
+#include "error.h"
 
 static Cursor defaultCursor;
 static Cursor moveCursor;

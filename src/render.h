@@ -6,12 +6,16 @@
 #ifndef RENDER_H
 #define RENDER_H
 
+struct IconNode;
+struct ScaledIconNode;
+
 void QueryRenderExtension();
 
-int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
-	int x, int y);
+int PutScaledRenderIcon(struct IconNode *icon, struct ScaledIconNode *node,
+	Drawable d, int x, int y);
 
-ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, int width, int height);
+struct ScaledIconNode *CreateScaledRenderIcon(struct IconNode *icon,
+	int width, int height);
 
 #endif
 

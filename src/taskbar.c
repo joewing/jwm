@@ -2,6 +2,19 @@
  ***************************************************************************/
 
 #include "jwm.h"
+#include "taskbar.h"
+#include "tray.h"
+#include "timing.h"
+#include "main.h"
+#include "client.h"
+#include "color.h"
+#include "popup.h"
+#include "button.h"
+#include "icon.h"
+#include "error.h"
+#include "font.h"
+#include "cursor.h"
+#include "winmenu.h"
 
 typedef enum {
 	INSERT_LEFT,

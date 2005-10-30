@@ -6,12 +6,14 @@
 #ifndef PAGER_H
 #define PAGER_H
 
+struct TrayComponentType;
+
 void InitializePager();
 void StartupPager();
 void ShutdownPager();
 void DestroyPager();
 
-TrayComponentType *CreatePager();
+struct TrayComponentType *CreatePager();
 
 void UpdatePager();
 

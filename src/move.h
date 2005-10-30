@@ -6,8 +6,21 @@
 #ifndef MOVE_H
 #define MOVE_H
 
-int MoveClient(ClientNode *np, int startx, int starty);
-int MoveClientKeyboard(ClientNode *np);
+struct ClientNode;
+
+typedef enum {
+	SNAP_NONE                 = 0,
+	SNAP_SCREEN               = 1,
+	SNAP_BORDER               = 2
+} SnapModeType;
+
+typedef enum {
+	MOVE_OPAQUE,
+	MOVE_OUTLINE
+} MoveModeType;
+
+int MoveClient(struct ClientNode *np, int startx, int starty);
+int MoveClientKeyboard(struct ClientNode *np);
 
 void SetSnapMode(SnapModeType mode);
 void SetSnapDistance(const char *value);

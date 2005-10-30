@@ -6,9 +6,18 @@
 #ifndef RESIZE_H
 #define RESIZE_H
 
-void ResizeClient(ClientNode *np, BorderActionType action,
+#include "border.h"
+
+struct ClientNode;
+
+typedef enum {
+	RESIZE_OPAQUE,
+	RESIZE_OUTLINE
+} ResizeModeType;
+
+void ResizeClient(struct ClientNode *np, BorderActionType action,
 	int startx, int starty);
-void ResizeClientKeyboard(ClientNode *np);
+void ResizeClientKeyboard(struct ClientNode *np);
 
 void SetResizeMode(ResizeModeType mode);
 

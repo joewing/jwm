@@ -4,6 +4,12 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "hint.h"
+#include "client.h"
+#include "main.h"
+#include "tray.h"
+#include "desktop.h"
+#include "misc.h"
 
 typedef struct {
 	Atom *atom;

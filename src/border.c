@@ -4,6 +4,13 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "border.h"
+#include "client.h"
+#include "color.h"
+#include "main.h"
+#include "icon.h"
+#include "font.h"
+#include "error.h"
 
 static unsigned char x_bitmap[] = {
 	0x00, 0x00, 0x00, 0x00, 0x0C, 0x30, 0x18, 0x18, 0x30, 0x0C, 0x60, 0x06,
@@ -127,6 +134,7 @@ int GetBorderIconSize() {
 /****************************************************************************
  ****************************************************************************/
 BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
+
 	int north;
 	int offset;
 	int height, width;

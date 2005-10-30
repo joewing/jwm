@@ -4,6 +4,8 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "command.h"
+#include "root.h"
 
 static char *startupCommand = NULL;
 static char *shutdownCommand = NULL;

@@ -3,6 +3,12 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "swallow.h"
+#include "main.h"
+#include "tray.h"
+#include "error.h"
+#include "root.h"
+#include "color.h"
 
 /* Spend 15 seconds looking. */
 #define FIND_SECONDS 15

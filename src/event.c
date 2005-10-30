@@ -4,6 +4,24 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "event.h"
+#include "client.h"
+#include "main.h"
+#include "hint.h"
+#include "tray.h"
+#include "pager.h"
+#include "desktop.h"
+#include "cursor.h"
+#include "icon.h"
+#include "taskbar.h"
+#include "confirm.h"
+#include "swallow.h"
+#include "popup.h"
+#include "winmenu.h"
+#include "root.h"
+#include "move.h"
+#include "resize.h"
+#include "key.h"
 
 static int showMenuOnRoot = 1;
 

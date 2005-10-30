@@ -4,10 +4,12 @@
  *****************************************************************************/
 
 #include "jwm.h"
+#include "lex.h"
+#include "error.h"
 
 static const int BLOCK_SIZE = 16;
 
-/* Order is important! The order must match the order in enum.h */
+/* Order is important! The order must match the order in lex.h */
 static const char *TOKEN_MAP[] = {
 	"[invalid]",
 	"ActiveBackground",

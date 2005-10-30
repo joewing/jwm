@@ -6,6 +6,8 @@
 #ifndef CURSOR_H
 #define CURSOR_H
 
+#include "border.h"
+
 void InitializeCursors();
 void StartupCursors();
 void ShutdownCursors();

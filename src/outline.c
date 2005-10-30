@@ -4,6 +4,8 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "outline.h"
+#include "main.h"
 
 static GC outlineGC;
 

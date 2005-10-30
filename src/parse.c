@@ -4,6 +4,31 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "parse.h"
+#include "lex.h"
+#include "menu.h"
+#include "root.h"
+#include "client.h"
+#include "tray.h"
+#include "group.h"
+#include "desktop.h"
+#include "move.h"
+#include "resize.h"
+#include "misc.h"
+#include "swallow.h"
+#include "pager.h"
+#include "error.h"
+#include "key.h"
+#include "cursor.h"
+#include "main.h"
+#include "font.h"
+#include "color.h"
+#include "icon.h"
+#include "command.h"
+#include "button.h"
+#include "event.h"
+#include "taskbar.h"
+#include "traybutton.h"
 
 static const char *RESTART_COMMAND = "#restart";
 static const char *RESTART_NAME = "Restart";

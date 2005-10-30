@@ -4,6 +4,17 @@
  ***************************************************************************/
 
 #include "jwm.h"
+#include "menu.h"
+#include "font.h"
+#include "client.h"
+#include "color.h"
+#include "icon.h"
+#include "image.h"
+#include "main.h"
+#include "cursor.h"
+#include "key.h"
+#include "button.h"
+#include "event.h"
 
 #define BASE_ICON_OFFSET 3
 

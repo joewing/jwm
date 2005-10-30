@@ -4,6 +4,12 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "pager.h"
+#include "tray.h"
+#include "main.h"
+#include "desktop.h"
+#include "client.h"
+#include "color.h"
 
 typedef struct PagerType {
 

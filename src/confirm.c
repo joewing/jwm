@@ -4,6 +4,12 @@
  ***************************************************************************/
 
 #include "jwm.h"
+#include "client.h"
+#include "main.h"
+#include "font.h"
+#include "button.h"
+#include "screen.h"
+#include "color.h"
 
 #ifndef DISABLE_CONFIRM
 

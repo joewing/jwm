@@ -4,6 +4,13 @@
  ***************************************************************************/
 
 #include "jwm.h"
+#include "tray.h"
+#include "color.h"
+#include "main.h"
+#include "pager.h"
+#include "cursor.h"
+#include "error.h"
+#include "taskbar.h"
 
 static TrayType *trays;
 static Window supportingWindow;

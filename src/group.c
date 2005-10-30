@@ -4,6 +4,13 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "group.h"
+#include "client.h"
+#include "icon.h"
+#include "error.h"
+#include "match.h"
+#include "desktop.h"
+#include "main.h"
 
 typedef enum {
 	MATCH_NAME,

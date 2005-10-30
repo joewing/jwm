@@ -2,6 +2,14 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "icon.h"
+#include "client.h"
+#include "render.h"
+#include "main.h"
+#include "image.h"
+#include "misc.h"
+#include "hint.h"
+#include "color.h"
 
 static int iconSize = 0;
 

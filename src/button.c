@@ -4,6 +4,10 @@
  ***************************************************************************/
 
 #include "jwm.h"
+#include "button.h"
+#include "font.h"
+#include "color.h"
+#include "main.h"
 
 static Drawable drawable;
 static GC gc;

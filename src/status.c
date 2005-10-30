@@ -4,6 +4,11 @@
  *************************************************************************/
 
 #include "jwm.h"
+#include "status.h"
+#include "font.h"
+#include "screen.h"
+#include "color.h"
+#include "main.h"
 
 static Window statusWindow;
 static GC statusGC;

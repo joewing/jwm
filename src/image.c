@@ -4,6 +4,9 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "image.h"
+#include "main.h"
+#include "error.h"
 
 static ImageNode *LoadPNGImage(const char *fileName);
 static ImageNode *LoadXPMImage(const char *fileName);

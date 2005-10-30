@@ -6,7 +6,9 @@
 #ifndef WINMENU_H
 #define WINMENU_H
 
-void ShowWindowMenu(ClientNode *np, int x, int y);
+struct ClientNode;
+
+void ShowWindowMenu(struct ClientNode *np, int x, int y);
 
 #endif
 

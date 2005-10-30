@@ -4,6 +4,11 @@
  ***************************************************************************/
 
 #include "jwm.h"
+#include "key.h"
+#include "main.h"
+#include "client.h"
+#include "root.h"
+#include "error.h"
 
 typedef enum {
 	MASK_NONE  = 0,

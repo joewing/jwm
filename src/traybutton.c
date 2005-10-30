@@ -2,6 +2,15 @@
  ***************************************************************************/
 
 #include "jwm.h"
+#include "traybutton.h"
+#include "tray.h"
+#include "icon.h"
+#include "image.h"
+#include "error.h"
+#include "root.h"
+#include "cursor.h"
+#include "main.h"
+#include "color.h"
 
 typedef struct TrayButtonType {
 

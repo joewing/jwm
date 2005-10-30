@@ -7,7 +7,6 @@
 #include "font.h"
 #include "main.h"
 #include "error.h"
-#include "font.h"
 #include "color.h"
 #include "misc.h"
 

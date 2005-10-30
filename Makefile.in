@@ -16,6 +16,9 @@ install: all
 	mkdir -p $(MANDIR)/man1
 	cp jwm.1 $(MANDIR)/man1/jwm.1
 
+depend:
+	cd src ; $(MAKE) depend
+
 tarball:
 	rm -f ../jwm-$(VERSION).tar.bz2 ;
 	rm -fr ../jwm-$(VERSION) ;

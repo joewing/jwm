@@ -22,6 +22,9 @@ all: $(EXE)
 install: all
 	cp $(EXE) $(BINDIR)/$(EXE)
 
+depend:
+	makedepend -Ym *.c
+
 $(EXE): $(OBJECTS)
 	$(CC) -o $(EXE) $(OBJECTS) $(LDFLAGS)
 

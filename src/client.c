@@ -730,7 +730,7 @@ void SetClientSticky(ClientNode *np, int isSticky) {
 			for(tp = nodes[x]; tp; tp = tp->next) {
 				if(tp == np || tp->owner == np->window) {
 					tp->statusFlags |= STAT_STICKY;
-					SetCardinalAtom(tp->window, ATOM_NET_WM_DESKTOP, 0xFFFFFFFF);
+					SetCardinalAtom(tp->window, ATOM_NET_WM_DESKTOP, 0xFFFFFFFFUL);
 					WriteWinState(np);
 				}
 			}

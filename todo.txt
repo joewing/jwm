@@ -5,6 +5,8 @@ Todo:
 	- Add an option to make "alt-tabbing" go through the z-stack instead of
 	  the tray.
 	- Add the ability to name desktops.
+	- Add desktop root menu item.
+	- Add window list root menu item.
 
 20051027:
 	- Fix byte-order issue with PNG images.

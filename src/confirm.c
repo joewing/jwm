@@ -188,7 +188,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 
 	ComputeDimensions(dp);
 
-	attrs.background_pixel = colors[COLOR_TRAY_BG];
+	attrs.background_pixel = colors[COLOR_MENU_BG];
 	attrs.event_mask = ButtonReleaseMask | ExposureMask;
 
 	window = JXCreateWindow(display, rootWindow,
@@ -271,8 +271,8 @@ void ComputeDimensions(DialogType *dp) {
 	int x;
 
 	if(!minWidth) {
-		minWidth = GetStringWidth(FONT_BORDER, CANCEL_STRING) * 3;
-		width = GetStringWidth(FONT_BORDER, OK_STRING) * 3;
+		minWidth = GetStringWidth(FONT_MENU, CANCEL_STRING) * 3;
+		width = GetStringWidth(FONT_MENU, OK_STRING) * 3;
 		if(width > minWidth) {
 			minWidth = width;
 		}
@@ -281,12 +281,12 @@ void ComputeDimensions(DialogType *dp) {
 	dp->width = minWidth;
 
 	for(x = 0; x < dp->lineCount; x++) {
-		width = GetStringWidth(FONT_BORDER, dp->message[x]);
+		width = GetStringWidth(FONT_MENU, dp->message[x]);
 		if(width > dp->width) {
 			dp->width = width;
 		}
 	}
-	dp->lineHeight = GetStringHeight(FONT_BORDER);
+	dp->lineHeight = GetStringHeight(FONT_MENU);
 	dp->width += 8;
 	dp->height = (dp->lineCount + 2) * dp->lineHeight;
 
@@ -327,7 +327,7 @@ void DrawMessage(DialogType *dp) {
 
 	yoffset = 4;
 	for(x = 0; x < dp->lineCount; x++) {
-		RenderString(dp->node->window, dp->gc, FONT_BORDER, COLOR_BORDER_FG,
+		RenderString(dp->node->window, dp->gc, FONT_MENU, COLOR_MENU_FG,
 			4, yoffset, dp->width, dp->message[x]);
 		yoffset += dp->lineHeight;
 	}
@@ -339,8 +339,8 @@ void DrawMessage(DialogType *dp) {
 void DrawButtons(DialogType *dp) {
 	int temp;
 
-	dp->buttonWidth = GetStringWidth(FONT_BORDER, CANCEL_STRING);
-	temp = GetStringWidth(FONT_BORDER, OK_STRING);
+	dp->buttonWidth = GetStringWidth(FONT_MENU, CANCEL_STRING);
+	temp = GetStringWidth(FONT_MENU, OK_STRING);
 	if(temp > dp->buttonWidth) {
 		dp->buttonWidth = temp;
 	}
@@ -348,7 +348,7 @@ void DrawButtons(DialogType *dp) {
 	dp->buttonHeight = dp->lineHeight + 4;
 
 	SetButtonDrawable(dp->node->window, dp->gc);
-	SetButtonFont(FONT_BORDER);
+	SetButtonFont(FONT_MENU);
 	SetButtonSize(dp->buttonWidth, dp->buttonHeight);
 	SetButtonAlignment(ALIGN_CENTER);
 
@@ -356,9 +356,8 @@ void DrawButtons(DialogType *dp) {
 	dp->cancelx = 2 * dp->width / 3 - dp->buttonWidth / 2;
 	dp->buttony = dp->height - dp->lineHeight - dp->lineHeight / 2;
 
-/*FIXME: should have different colors and buttons for this. */
-	DrawButton(dp->okx, dp->buttony, BUTTON_TASK, OK_STRING);
-	DrawButton(dp->cancelx, dp->buttony, BUTTON_TASK, CANCEL_STRING);
+	DrawButton(dp->okx, dp->buttony, BUTTON_MENU, OK_STRING);
+	DrawButton(dp->cancelx, dp->buttony, BUTTON_MENU, CANCEL_STRING);
 
 }
 

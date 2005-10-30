@@ -190,10 +190,10 @@ ImageNode *LoadPNGImage(const char *fileName) {
 		* result->width * result->height);
 	for(y = 0; y < result->height; y++) {
 		for(x = 0; x < result->width; x++) {
-			temp  = rows[y][4 * x + 0] << 24;
-			temp |= rows[y][4 * x + 1] << 16;
-			temp |= rows[y][4 * x + 2] << 8;
-			temp |= rows[y][4 * x + 3] << 0;
+			temp  = (unsigned long)rows[y][4 * x + 0] << 24;
+			temp |= (unsigned long)rows[y][4 * x + 1] << 16;
+			temp |= (unsigned long)rows[y][4 * x + 2] << 8;
+			temp |= (unsigned long)rows[y][4 * x + 3] << 0;
 			result->data[y * result->width + x] = temp;
 		}
 	}
@@ -242,7 +242,6 @@ ImageNode *LoadXPMImage(const char *fileName) {
 ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
 
 	ImageNode *result;
-	unsigned long *data;
 	XColor color;
 	unsigned char red, green, blue, alpha;
 	int index;
@@ -253,8 +252,6 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
 		* image->width * image->height);
 	result->width = image->width;
 	result->height = image->height;
-
-	data = (unsigned long*)result->data;
 
 	index = 0;
 	for(y = 0; y < image->height; y++) {
@@ -270,10 +267,10 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
 				alpha = 255;
 			}
 
-			data[index] = alpha << 24;
-			data[index] |= red << 16;
-			data[index] |= green << 8;
-			data[index] |= blue;
+			result->data[index] = alpha << 24;
+			result->data[index] |= red << 16;
+			result->data[index] |= green << 8;
+			result->data[index] |= blue;
 			++index;
 
 		}

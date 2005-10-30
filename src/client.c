@@ -292,7 +292,7 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 	++clientCount;
 
 	if(np->statusFlags & STAT_STICKY) {
-		SetCardinalAtom(np->window, ATOM_NET_WM_DESKTOP, 0xFFFFFFFF);
+		SetCardinalAtom(np->window, ATOM_NET_WM_DESKTOP, ~0UL);
 	} else {
 		SetCardinalAtom(np->window, ATOM_NET_WM_DESKTOP, np->desktop);
 	}
@@ -782,7 +782,7 @@ void SetClientSticky(ClientNode *np, int isSticky) {
 			for(tp = nodes[x]; tp; tp = tp->next) {
 				if(tp == np || tp->owner == np->window) {
 					tp->statusFlags |= STAT_STICKY;
-					SetCardinalAtom(tp->window, ATOM_NET_WM_DESKTOP, 0xFFFFFFFFUL);
+					SetCardinalAtom(tp->window, ATOM_NET_WM_DESKTOP, ~0UL);
 					WriteWinState(np);
 				}
 			}

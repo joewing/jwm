@@ -465,12 +465,12 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int width, int height)
 
 			index = (int)srcy * icon->image->width + (int)srcx;
 
-			alpha = (icon->image->data[index] >> 24) & 0xFF;
+			alpha = (icon->image->data[index] >> 24) & 0xFFUL;
 			if(alpha >= 128) {
 
-				color.red = ((icon->image->data[index] >> 16) & 0xFF) * 257;
-				color.green = ((icon->image->data[index] >> 8) & 0xFF) * 257;
-				color.blue = (icon->image->data[index] & 0xFF) * 257;
+				color.red = ((icon->image->data[index] >> 16) & 0xFFUL) * 257;
+				color.green = ((icon->image->data[index] >> 8) & 0xFFUL) * 257;
+				color.blue = (icon->image->data[index] & 0xFFUL) * 257;
 				GetColor(&color);
 
 				JXSetForeground(display, imageGC, color.pixel);

@@ -595,7 +595,7 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 
 		} else if(event->message_type == atoms[ATOM_NET_WM_DESKTOP]) {
 
-			if(event->data.l[0] == 0xFFFFFFFF) {
+			if(event->data.l[0] == ~0UL) {
 				SetClientSticky(np, 1);
 			} else {
 

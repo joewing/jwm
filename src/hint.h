@@ -66,26 +66,22 @@ typedef enum {
 #define FIRST_MWM_ATOM ATOM_MOTIF_WM_HINTS
 #define LAST_MWM_ATOM  ATOM_MOTIF_WM_HINTS
 
-typedef enum {
-	WIN_STATE_STICKY          = 1 << 0,
-	WIN_STATE_MINIMIZED       = 1 << 1,
-	WIN_STATE_MAXIMIZED_VERT  = 1 << 2,
-	WIN_STATE_MAXIMIZED_HORIZ = 1 << 3,
-	WIN_STATE_HIDDEN          = 1 << 4,
-	WIN_STATE_SHADED          = 1 << 5,
-	WIN_STATE_HIDE_WORKSPACE  = 1 << 6,
-	WIN_STATE_HIDE_TRANSIENT  = 1 << 7,
-	WIN_STATE_FIXED_POSITION  = 1 << 8,
-	WIN_STATE_ARRANGE_IGNORE  = 1 << 9
-} WinStateType;
+#define WIN_STATE_STICKY          (1UL << 0)
+#define WIN_STATE_MINIMIZED       (1UL << 1)
+#define WIN_STATE_MAXIMIZED_VERT  (1UL << 2)
+#define WIN_STATE_MAXIMIZED_HORIZ (1UL << 3)
+#define WIN_STATE_HIDDEN          (1UL << 4)
+#define WIN_STATE_SHADED          (1UL << 5)
+#define WIN_STATE_HIDE_WORKSPACE  (1UL << 6)
+#define WIN_STATE_HIDE_TRANSIENT  (1UL << 7)
+#define WIN_STATE_FIXED_POSITION  (1UL << 8)
+#define WIN_STATE_ARRANGE_IGNORE  (1UL << 9)
 
-typedef enum {
-	WIN_HINT_SKIP_FOCUS       = 1 << 0,
-	WIN_HINT_SKIP_WINLIST     = 1 << 1,
-	WIN_HINT_SKIP_TASKBAR     = 1 << 2,
-	WIN_HINT_GROUP_TRANSIENT  = 1 << 3,
-	WIN_HINT_FOCUS_ON_CLICK   = 1 << 4
-} WinHintType;
+#define WIN_HINT_SKIP_FOCUS      (1UL << 0)
+#define WIN_HINT_SKIP_WINLIST    (1UL << 1)
+#define WIN_HINT_SKIP_TASKBAR    (1UL << 2)
+#define WIN_HINT_GROUP_TRANSIENT (1UL << 3)
+#define WIN_HINT_FOCUS_ON_CLICK  (1UL << 4)
 
 typedef enum {
 	LAYER_BOTTOM              = 0,

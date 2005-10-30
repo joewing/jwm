@@ -246,7 +246,7 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
 
 	ImageNode *result;
 	XColor color;
-	unsigned char red, green, blue, alpha;
+	unsigned long red, green, blue, alpha;
 	int index;
 	int x, y;
 

@@ -129,8 +129,12 @@ void StartupHints() {
 	SetWindowAtom(rootWindow, ATOM_NET_SUPPORTING_WM_CHECK, win);
 	SetWindowAtom(win, ATOM_NET_SUPPORTING_WM_CHECK, win);
 
+/*
 	SetCardinalAtom(rootWindow, ATOM_WIN_SUPPORTING_WM_CHECK, win);
 	SetCardinalAtom(win, ATOM_WIN_SUPPORTING_WM_CHECK, win);
+*/
+	SetWindowAtom(rootWindow, ATOM_WIN_SUPPORTING_WM_CHECK, win);
+	SetWindowAtom(win, ATOM_WIN_SUPPORTING_WM_CHECK, win);
 
 	SetCardinalAtom(rootWindow, ATOM_WIN_WORKSPACE_COUNT, desktopCount);
 
@@ -192,7 +196,7 @@ void ReadClientProtocols(ClientNode *np) {
 
 	/* Read WM Spec hints */
 	if(GetCardinalAtom(np->window, ATOM_NET_WM_DESKTOP, &card)) {
-		if(card == 0xFFFFFFFF) {
+		if(card == ~0UL) {
 			np->statusFlags |= STAT_STICKY;
 		} else {
 			np->desktop = card;
@@ -265,7 +269,7 @@ void ReadNetWMDesktop(ClientNode *np) {
 	Assert(np);
 
 	if(GetCardinalAtom(np->window, ATOM_NET_WM_DESKTOP, &temp)) {
-		if(temp == 0xFFFFFFFF) {
+		if(temp == ~0UL) {
 			SetClientSticky(np, 1);
 		} else {
 			np->statusFlags &= ~STAT_STICKY;

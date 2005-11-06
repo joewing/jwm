@@ -46,12 +46,12 @@ void ChangeDesktop(int desktop)
 
 	for(x = 0; x < LAYER_COUNT; x++) {
 		for(np = nodes[x]; np; np = np->next) {
-			if(np->statusFlags & STAT_STICKY) {
+			if(np->state.status & STAT_STICKY) {
 				continue;
 			}
-			if(np->desktop == desktop) {
+			if(np->state.desktop == desktop) {
 				ShowClient(np);
-			} else if(np->desktop == currentDesktop) {
+			} else if(np->state.desktop == currentDesktop) {
 				HideClient(np);
 			}
 		}

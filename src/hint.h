@@ -12,6 +12,7 @@ typedef enum {
 
 	/* Misc */
 	ATOM_COMPOUND_TEXT,
+	ATOM_UTF8_STRING,
 
 	/* Standard atoms */
 	ATOM_WM_STATE,
@@ -31,9 +32,17 @@ typedef enum {
 	ATOM_NET_ACTIVE_WINDOW,
 	ATOM_NET_WORKAREA,
 	ATOM_NET_SUPPORTING_WM_CHECK,
+   ATOM_NET_FRAME_EXTENTS,
 	ATOM_NET_WM_DESKTOP,
+
 	ATOM_NET_WM_STATE,
 	ATOM_NET_WM_STATE_STICKY,
+	ATOM_NET_WM_STATE_MAXIMIZED_VERT,
+	ATOM_NET_WM_STATE_MAXIMIZED_HORZ,
+	ATOM_NET_WM_STATE_SHADED,
+
+	ATOM_NET_CLOSE_WINDOW,
+
 	ATOM_NET_WM_NAME,
 	ATOM_NET_WM_ICON,
 	ATOM_NET_WM_WINDOW_TYPE,
@@ -91,6 +100,13 @@ typedef enum {
 	LAYER_COUNT               = 13
 } WinLayerType;
 
+typedef struct ClientState {
+	unsigned int status;
+	unsigned int border;
+	unsigned int layer;
+	unsigned int desktop;
+} ClientState;
+
 extern Atom atoms[ATOM_COUNT];
 
 void InitializeHints();
@@ -108,10 +124,13 @@ void ReadWMNormalHints(struct ClientNode *np);
 void ReadWMProtocols(struct ClientNode *np);
 void ReadWMColormaps(struct ClientNode *np);
 
-void ReadNetWMDesktop(struct ClientNode *np);
-
 void ReadWinLayer(struct ClientNode *np);
-void WriteWinState(struct ClientNode *np);
+
+ClientState ReadWindowState(Window win);
+
+void ApplyState(struct ClientNode *np);
+
+void WriteState(struct ClientNode *np);
 
 int GetCardinalAtom(Window window, AtomType atom, unsigned long *value);
 int GetWindowAtom(Window window, AtomType atom, Window *value);

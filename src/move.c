@@ -112,8 +112,8 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 
 	Assert(np);
 
-	if(!(np->borderFlags & BORDER_OUTLINE)
-		|| !(np->borderFlags & BORDER_MOVE)) {
+	if(!(np->state.border & BORDER_OUTLINE)
+		|| !(np->state.border & BORDER_MOVE)) {
 		return 0;
 	}
 
@@ -133,7 +133,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 		return 0;
 	}
 
-	if(np->borderFlags & BORDER_TITLE) {
+	if(np->state.border & BORDER_TITLE) {
 		north = titleSize;
 	} else {
 		north = borderWidth;
@@ -177,7 +177,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 				if(moveMode == MOVE_OUTLINE) {
 					ClearOutline();
 					height = north + borderWidth;
-					if(!(np->statusFlags & STAT_SHADED)) {
+					if(!(np->state.status & STAT_SHADED)) {
 						height += np->height;
 					}
 					DrawOutline(np->x - borderWidth, np->y - north,
@@ -208,8 +208,8 @@ int MoveClientKeyboard(ClientNode *np) {
 
 	Assert(np);
 
-	if(!(np->borderFlags & BORDER_OUTLINE)
-		|| !(np->borderFlags & BORDER_MOVE)) {
+	if(!(np->state.border & BORDER_OUTLINE)
+		|| !(np->state.border & BORDER_MOVE)) {
 		return 0;
 	}
 
@@ -233,7 +233,7 @@ int MoveClientKeyboard(ClientNode *np) {
 		np->x, np->y);
 	JXCheckTypedEvent(display, MotionNotify, &event);
 
-	if(np->statusFlags & STAT_SHADED) {
+	if(np->state.status & STAT_SHADED) {
 		height = 0;
 	} else {
 		height = np->height;
@@ -306,7 +306,7 @@ int MoveClientKeyboard(ClientNode *np) {
 
 			if(moveMode == MOVE_OUTLINE) {
 				ClearOutline();
-				if(np->borderFlags & BORDER_TITLE) {
+				if(np->state.border & BORDER_TITLE) {
 					DrawOutline(np->x - borderWidth, np->y - titleSize,
 						np->width + borderWidth * 2,
 						height + titleSize + borderWidth);
@@ -316,7 +316,7 @@ int MoveClientKeyboard(ClientNode *np) {
 						height + borderWidth * 2);
 				}
 			} else {
-				if(np->borderFlags & BORDER_TITLE) {
+				if(np->state.border & BORDER_TITLE) {
 					JXMoveWindow(display, np->parent, np->x - borderWidth,
 						np->y - titleSize);
 				} else {
@@ -352,7 +352,7 @@ void StopMove(ClientNode *np, int doMove, int oldx, int oldy) {
 		return;
 	}
 
-	if(np->borderFlags & BORDER_TITLE) {
+	if(np->state.border & BORDER_TITLE) {
 		JXMoveWindow(display, np->parent, np->x - borderWidth,
 			np->y - titleSize);
 	} else {
@@ -406,7 +406,7 @@ void DoSnapScreen(ClientNode *np, int north) {
 	}
 	if(abs(client.bottom - screenHeight) <= snapDistance) {
 		np->y = screenHeight - borderWidth;
-		if(!(np->statusFlags & STAT_SHADED)) {
+		if(!(np->state.status & STAT_SHADED)) {
 			np->y -= np->height;
 		}
 	}
@@ -516,7 +516,7 @@ void DoSnapBorder(ClientNode *np, int north) {
 	}
 	if(bottom.valid) {
 		np->y = bottom.top - borderWidth;
-		if(!(np->statusFlags & STAT_SHADED)) {
+		if(!(np->state.status & STAT_SHADED)) {
 			np->y -= np->height;
 		}
 	}
@@ -529,9 +529,9 @@ void DoSnapBorder(ClientNode *np, int north) {
 /****************************************************************************
  ****************************************************************************/
 int ShouldSnap(const ClientNode *np) {
-	if(np->statusFlags & STAT_HIDDEN) {
+	if(np->state.status & STAT_HIDDEN) {
 		return 0;
-	} else if(np->statusFlags & STAT_MINIMIZED) {
+	} else if(np->state.status & STAT_MINIMIZED) {
 		return 0;
 	} else {
 		return 1;
@@ -546,13 +546,13 @@ void GetClientRectangle(const ClientNode *np, RectangleType *r) {
 	r->left = np->x;
 	r->right = np->x + np->width;
 	r->top = np->y;
-	if(np->statusFlags & STAT_SHADED) {
+	if(np->state.status & STAT_SHADED) {
 		r->bottom = np->y;
 	} else {
 		r->bottom = np->y + np->height;
 	}
 
-	if(np->borderFlags & BORDER_OUTLINE) {
+	if(np->state.border & BORDER_OUTLINE) {
 		border = borderWidth;
 		r->left -= border;
 		r->right += border;
@@ -561,7 +561,7 @@ void GetClientRectangle(const ClientNode *np, RectangleType *r) {
 		border = 0;
 	}
 
-	if(np->borderFlags & BORDER_TITLE) {
+	if(np->state.border & BORDER_TITLE) {
 		r->top -= titleHeight + border;
 	} else {
 		r->top -= border;

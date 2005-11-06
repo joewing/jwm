@@ -233,22 +233,22 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
 	for(lp = gp->options; lp; lp = lp->next) {
 		switch(lp->option) {
 		case OPTION_STICKY:
-			np->statusFlags |= STAT_STICKY;
+			np->state.status |= STAT_STICKY;
 			break;
 		case OPTION_NOLIST:
-			np->statusFlags |= STAT_NOLIST;
+			np->state.status |= STAT_NOLIST;
 			break;
 		case OPTION_BORDER:
-			np->borderFlags |= BORDER_OUTLINE;
+			np->state.border |= BORDER_OUTLINE;
 			break;
 		case OPTION_NOBORDER:
-			np->borderFlags &= ~BORDER_OUTLINE;
+			np->state.border &= ~BORDER_OUTLINE;
 			break;
 		case OPTION_TITLE:
-			np->borderFlags |= BORDER_TITLE;
+			np->state.border |= BORDER_TITLE;
 			break;
 		case OPTION_NOTITLE:
-			np->borderFlags &= ~BORDER_TITLE;
+			np->state.border &= ~BORDER_TITLE;
 			break;
 		case OPTION_LAYER:
 			temp = atoi(lp->value);
@@ -261,7 +261,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
 		case OPTION_DESKTOP:
 			temp = atoi(lp->value);
 			if(temp >= 1 && temp <= desktopCount) {
-				np->desktop = temp - 1;
+				np->state.desktop = temp - 1;
 			} else {
 				Warning("invalid group desktop: %s", lp->value);
 			}

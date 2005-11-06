@@ -199,15 +199,15 @@ void HandleButtonEvent(const XButtonEvent *event) {
 		case Button3:
 			x = event->x + np->x;
 			y = event->y + np->y;
-			if(np->borderFlags & BORDER_OUTLINE) {
+			if(np->state.border & BORDER_OUTLINE) {
 				x -= borderWidth;
-				if(np->borderFlags & BORDER_TITLE) {
+				if(np->state.border & BORDER_TITLE) {
 					y -= titleSize;
 				} else {
 					y -= borderWidth;
 				}
 			} else {
-				if(np->borderFlags & BORDER_TITLE) {
+				if(np->state.border & BORDER_TITLE) {
 					y -= titleSize;
 				}
 			}
@@ -277,7 +277,7 @@ void HandleKeyPress(const XKeyEvent *event) {
 		break;
 	case KEY_SHADE:
 		if(np) {
-			if(np->statusFlags & STAT_SHADED) {
+			if(np->state.status & STAT_SHADED) {
 				UnshadeClient(np);
 			} else {
 				ShadeClient(np);
@@ -361,11 +361,11 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 			return;
 		}
 
-		if(np->borderFlags & BORDER_OUTLINE) {
+		if(np->state.border & BORDER_OUTLINE) {
 			east = borderWidth;
 			west = borderWidth;
 			south = borderWidth;
-			if(np->borderFlags & BORDER_TITLE) {
+			if(np->state.border & BORDER_TITLE) {
 				north = titleSize;
 			} else {
 				north = borderWidth;
@@ -414,7 +414,7 @@ void HandleEnterNotify(const XCrossingEvent *event) {
 
 	np = FindClientByWindow(event->window);
 	if(np) {
-		if(!(np->statusFlags & STAT_ACTIVE) && (focusModel == FOCUS_SLOPPY)) {
+		if(!(np->state.status & STAT_ACTIVE) && (focusModel == FOCUS_SLOPPY)) {
 			FocusClient(np);
 		}
 		if(np->parent == event->window) {
@@ -454,7 +454,7 @@ int HandleExpose(const XExposeEvent *event) {
 			DrawBorder(np);
 			return 1;
 		} else if(event->window == np->window
-			&& np->statusFlags & STAT_WMDIALOG) {
+			&& np->state.status & STAT_WMDIALOG) {
 			return 0;
 		} else {
 			return 1;
@@ -467,6 +467,7 @@ int HandleExpose(const XExposeEvent *event) {
 /****************************************************************************
  ****************************************************************************/
 int HandlePropertyNotify(const XPropertyEvent *event) {
+
 	ClientNode *np;
 	int changed;
 
@@ -493,6 +494,9 @@ int HandlePropertyNotify(const XPropertyEvent *event) {
 			} else if(event->atom == atoms[ATOM_NET_WM_ICON]) {
 				LoadIcon(np);
 				changed = 1;
+			} else if(event->atom == atoms[ATOM_NET_WM_NAME]) {
+				ReadWMName(np);
+				changed = 1;
 			}
 			break;
 		}
@@ -502,7 +506,7 @@ int HandlePropertyNotify(const XPropertyEvent *event) {
 			UpdateTaskBar();
 			UpdatePager();
 		}
-		if(np->statusFlags & STAT_WMDIALOG) {
+		if(np->state.status & STAT_WMDIALOG) {
 			return 0;
 		} else {
 			return 1;
@@ -525,7 +529,7 @@ void HandleConfigureNotify(const XConfigureEvent *event) {
 	ClientNode *np;
 
 	np = FindClientByWindow(event->window);
-	if(np && (np->statusFlags & STAT_USESHAPE)) {
+	if(np && (np->state.status & STAT_USESHAPE)) {
 		SetShape(np);
 	}
 #endif
@@ -555,9 +559,9 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 
 			if(mask & WIN_STATE_HIDDEN) {
 				if(flags & WIN_STATE_HIDDEN) {
-					np->statusFlags |= STAT_NOLIST;
+					np->state.status |= STAT_NOLIST;
 				} else {
-					np->statusFlags &= ~STAT_NOLIST;
+					np->state.status &= ~STAT_NOLIST;
 				}
 				UpdateTaskBar();
 				UpdatePager();
@@ -589,9 +593,7 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 
 		} else if(event->message_type == atoms[ATOM_NET_ACTIVE_WINDOW]) {
 
-			if(event->data.l[0] == 0) {
-				RestoreClient(np);
-			}
+			RestoreClient(np);
 
 		} else if(event->message_type == atoms[ATOM_NET_WM_DESKTOP]) {
 
@@ -604,10 +606,18 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 				}
 
 				if(event->data.l[0] >= 0 && event->data.l[0] < desktopCount) {
-					np->statusFlags &= ~STAT_STICKY;
+					np->state.status &= ~STAT_STICKY;
 					SetClientDesktop(np, event->data.l[0]);
 				}
 			}
+
+		} else if(event->message_type == atoms[ATOM_NET_CLOSE_WINDOW]) {
+
+			DeleteClient(np);
+
+		} else if(event->message_type == atoms[ATOM_NET_WM_STATE]) {
+
+			ApplyState(np);
 
 		} else {
 			atomName = JXGetAtomName(display, event->message_type);
@@ -630,7 +640,7 @@ void HandleMotionNotify(const XMotionEvent *event) {
 	}
 
 	np = FindClientByParent(event->window);
-	if(np && (np->borderFlags & BORDER_OUTLINE)) {
+	if(np && (np->state.border & BORDER_OUTLINE)) {
 		action = GetBorderActionType(np, event->x, event->y);
 		if(np->borderAction != action) {
 			np->borderAction = action;
@@ -690,10 +700,10 @@ void HandleMapRequest(const XMapEvent *event) {
 		JXUngrabServer(display);
 		JXSync(display, False);
 	} else {
-		if(!(np->statusFlags & STAT_MAPPED)) {
-			np->statusFlags |= STAT_MAPPED;
-			np->statusFlags &= ~STAT_MINIMIZED;
-			np->statusFlags &= ~STAT_WITHDRAWN;
+		if(!(np->state.status & STAT_MAPPED)) {
+			np->state.status |= STAT_MAPPED;
+			np->state.status &= ~STAT_MINIMIZED;
+			np->state.status &= ~STAT_WITHDRAWN;
 			JXMapWindow(display, np->window);
 			JXMapWindow(display, np->parent);
 			RaiseClient(np);
@@ -721,8 +731,8 @@ void HandleUnmapNotify(const XUnmapEvent *event) {
 			(np->controller)(1);
 		}
 
-		if(np->statusFlags & STAT_MAPPED) {
-			np->statusFlags &= ~STAT_MAPPED;
+		if(np->state.status & STAT_MAPPED) {
+			np->state.status &= ~STAT_MAPPED;
 			JXUnmapWindow(display, np->parent);
 		}
 
@@ -760,7 +770,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
 	static int doubleClickActive = 0;
 	BorderActionType action;
 
-	if(!(np->borderFlags & BORDER_OUTLINE)) {
+	if(!(np->state.border & BORDER_OUTLINE)) {
 		return;
 	}
 
@@ -778,7 +788,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
 				&& abs(event->time - lastClickTime) <= doubleClickSpeed
 				&& abs(event->x - lastX) <= doubleClickDelta
 				&& abs(event->y - lastY) <= doubleClickDelta) {
-				if(np->statusFlags & STAT_SHADED) {
+				if(np->state.status & STAT_SHADED) {
 					UnshadeClient(np);
 				} else {
 					ShadeClient(np);

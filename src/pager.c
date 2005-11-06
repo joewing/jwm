@@ -263,14 +263,14 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
 	int width, height;
 	int deskOffset;
 
-	if(!(np->statusFlags & STAT_MAPPED)) {
+	if(!(np->state.status & STAT_MAPPED)) {
 		return;
 	}
 
-	if(np->statusFlags & STAT_STICKY) {
+	if(np->state.status & STAT_STICKY) {
 		deskOffset = currentDesktop;
 	} else {
-		deskOffset = np->desktop;
+		deskOffset = np->state.desktop;
 	}
 	if(pp->layout == LAYOUT_HORIZONTAL) {
 		deskOffset *= pp->deskWidth + 1;
@@ -312,9 +312,9 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
 		x, y, width, height);
 
 	if(width > 1 && height > 1) {
-		if((np->statusFlags & STAT_ACTIVE)
-			&& (np->desktop == currentDesktop
-			|| (np->statusFlags & STAT_STICKY))) {
+		if((np->state.status & STAT_ACTIVE)
+			&& (np->state.desktop == currentDesktop
+			|| (np->state.status & STAT_STICKY))) {
 			JXSetForeground(display, pp->bufferGC, colors[COLOR_PAGER_ACTIVE_FG]);
 		} else {
 			JXSetForeground(display, pp->bufferGC, colors[COLOR_PAGER_FG]);

@@ -139,27 +139,27 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 	int offset;
 	int height, width;
 
-	if(!(np->borderFlags & BORDER_OUTLINE)) {
+	if(!(np->state.border & BORDER_OUTLINE)) {
 		return BA_NONE;
 	}
 
-	if(np->borderFlags & BORDER_TITLE) {
+	if(np->state.border & BORDER_TITLE) {
 
 		if(y > borderWidth && y <= borderWidth + titleHeight) {
 			offset = np->width + borderWidth - titleHeight;
-			if(np->borderFlags & BORDER_CLOSE) {
+			if(np->state.border & BORDER_CLOSE) {
 				if(x > offset && x < offset + titleHeight) {
 					return BA_CLOSE;
 				}
 				offset -= titleHeight;
 			}
-			if(np->borderFlags & BORDER_MAX) {
+			if(np->state.border & BORDER_MAX) {
 				if(x > offset && x < offset + titleHeight) {
 					return BA_MAXIMIZE;
 				}
 				offset -= titleHeight;
 			}
-			if(np->borderFlags & BORDER_MIN) {
+			if(np->state.border & BORDER_MIN) {
 				if(x > offset && x < offset + titleHeight) {
 					return BA_MINIMIZE;
 				}
@@ -168,7 +168,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 
 		if(y >= borderWidth && y <= titleSize) {
 			if(x >= borderWidth && x <= np->width + borderWidth) {
-				if(np->borderFlags & BORDER_MOVE) {
+				if(np->state.border & BORDER_MOVE) {
 					return BA_MOVE;
 				} else {
 					return BA_NONE;
@@ -181,13 +181,13 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 		north = borderWidth;
 	}
 
-	if(!(np->borderFlags & BORDER_RESIZE)) {
+	if(!(np->state.border & BORDER_RESIZE)) {
 		return BA_NONE;
 	}
 
 	width = np->width;
 
-	if(np->statusFlags & STAT_SHADED) {
+	if(np->state.status & STAT_SHADED) {
 		if(x < borderWidth) {
 			return BA_RESIZE_W | BA_RESIZE;
 		} else if(x >= width + borderWidth) {
@@ -233,18 +233,18 @@ void DrawBorder(const ClientNode *np) {
 		return;
 	}
 
-	if(np->statusFlags & (STAT_MINIMIZED | STAT_WITHDRAWN | STAT_HIDDEN)) {
+	if(np->state.status & (STAT_MINIMIZED | STAT_WITHDRAWN | STAT_HIDDEN)) {
 		return;
 	}
 
-	if(!(np->borderFlags & BORDER_TITLE)
-		&& !(np->borderFlags & BORDER_OUTLINE)) {
+	if(!(np->state.border & BORDER_TITLE)
+		&& !(np->state.border & BORDER_OUTLINE)) {
 		return;
 	}
 
-	if(np->statusFlags & STAT_SHADED) {
+	if(np->state.status & STAT_SHADED) {
 		height = titleSize + borderWidth;
-	} else if(np->borderFlags & BORDER_TITLE) {
+	} else if(np->state.border & BORDER_TITLE) {
 		height = np->height + titleSize + borderWidth;
 	} else {
 		height = np->height + 2 * borderWidth;
@@ -270,7 +270,7 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 	width = np->width + borderWidth + borderWidth;
 	iconSize = GetBorderIconSize();
 
-	if(np->statusFlags & STAT_ACTIVE) {
+	if(np->state.status & STAT_ACTIVE) {
 		borderTextColor = COLOR_BORDER_ACTIVE_FG;
 		borderPixel = colors[COLOR_BORDER_ACTIVE_BG];
 		borderTextPixel = colors[COLOR_BORDER_ACTIVE_FG];
@@ -310,7 +310,7 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 	titleWidth = width - (titleHeight + 2) * buttonCount - borderWidth
 		- (titleSize + 4) - 2;
 
-	if(np->borderFlags & BORDER_TITLE) {
+	if(np->state.border & BORDER_TITLE) {
 
 		if(np->icon) {
 			PutIcon(np->icon, canvas, gc,
@@ -363,7 +363,8 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 	JXDrawLine(display, canvas, gc, 1, 0, width - 1, 0);
 	JXDrawLine(display, canvas, gc, 1, 1, width - 2, 1);
 
-	if((np->borderFlags & BORDER_RESIZE) && !(np->statusFlags & STAT_SHADED)) {
+	if((np->state.border & BORDER_RESIZE)
+		&& !(np->state.status & STAT_SHADED)) {
 
 		/* Draw marks */
 		JXSetForeground(display, gc, pixelDown);
@@ -449,7 +450,7 @@ void DrawButtonBorder(const ClientNode *np, int offset,
 
 	Assert(np);
 
-	if(np->statusFlags & STAT_ACTIVE) {
+	if(np->state.status & STAT_ACTIVE) {
 		up = colors[COLOR_BORDER_ACTIVE_UP];
 		down = colors[COLOR_BORDER_ACTIVE_DOWN];
 	} else {
@@ -476,7 +477,7 @@ int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
 
 	Assert(np);
 
-	if(!(np->borderFlags & BORDER_TITLE)) {
+	if(!(np->state.border & BORDER_TITLE)) {
 		return count;
 	}
 
@@ -486,11 +487,11 @@ int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
 		return count;
 	}
 
-	if(np->borderFlags & BORDER_CLOSE) {
+	if(np->state.border & BORDER_CLOSE) {
 
 		DrawButtonBorder(np, offset, canvas, gc);
 
-		if(np->statusFlags & STAT_ACTIVE) {
+		if(np->state.status & STAT_ACTIVE) {
 			pixmap = closeActivePixmap;
 		} else {
 			pixmap = closePixmap;
@@ -508,16 +509,16 @@ int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
 
 	}
 
-	if(np->borderFlags & BORDER_MAX) {
+	if(np->state.border & BORDER_MAX) {
 
-		if(np->statusFlags & STAT_MAXIMIZED) {
-			if(np->statusFlags & STAT_ACTIVE) {
+		if(np->state.status & STAT_MAXIMIZED) {
+			if(np->state.status & STAT_ACTIVE) {
 				pixmap = maxaActivePixmap;
 			} else {
 				pixmap = maxaPixmap;
 			}
 		} else {
-			if(np->statusFlags & STAT_ACTIVE) {
+			if(np->state.status & STAT_ACTIVE) {
 				pixmap = maxActivePixmap;
 			} else {
 				pixmap = maxPixmap;
@@ -537,11 +538,11 @@ int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
 
 	}
 
-	if(np->borderFlags & BORDER_MIN) {
+	if(np->state.border & BORDER_MIN) {
 
 		DrawButtonBorder(np, offset, canvas, gc);
 
-		if(np->statusFlags & STAT_ACTIVE) {
+		if(np->state.status & STAT_ACTIVE) {
 			pixmap = minActivePixmap;
 		} else {
 			pixmap = minPixmap;
@@ -571,7 +572,7 @@ void ExposeCurrentDesktop() {
 
 	for(layer = 0; layer < LAYER_COUNT; layer++) {
 		for(np = nodes[layer]; np; np = np->next) {
-			if(!(np->statusFlags & (STAT_HIDDEN | STAT_MINIMIZED))) {
+			if(!(np->state.status & (STAT_HIDDEN | STAT_MINIMIZED))) {
 				DrawBorder(np);
 			}
 		}

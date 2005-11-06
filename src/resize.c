@@ -57,9 +57,9 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 
 	Assert(np);
 
-	if(!(np->borderFlags & BORDER_OUTLINE)
-		|| !(np->borderFlags & BORDER_RESIZE)
-		|| (np->statusFlags & STAT_MAXIMIZED)) {
+	if(!(np->state.border & BORDER_OUTLINE)
+		|| !(np->state.border & BORDER_RESIZE)
+		|| (np->state.status & STAT_MAXIMIZED)) {
 		return;
 	}
 
@@ -68,7 +68,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 		return;
 	}
 
-	if(np->statusFlags & STAT_SHADED) {
+	if(np->state.status & STAT_SHADED) {
 		action &= ~(BA_RESIZE_N | BA_RESIZE_S);
 	}
 
@@ -83,7 +83,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 	gwidth = (np->width - np->baseWidth) / np->xinc;
 	gheight = (np->height - np->baseHeight) / np->yinc;
 
-	if(np->borderFlags & BORDER_TITLE) {
+	if(np->state.border & BORDER_TITLE) {
 		north = titleSize;
 	} else {
 		north = borderWidth;
@@ -194,7 +194,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 
 				if(resizeMode == RESIZE_OUTLINE) {
 					ClearOutline();
-					if(np->statusFlags & STAT_SHADED) {
+					if(np->state.status & STAT_SHADED) {
 						DrawOutline(np->x - borderWidth, np->y - north,
 							np->width + borderWidth * 2,
 							north + borderWidth);
@@ -204,7 +204,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 							np->height + north + borderWidth);
 					}
 				} else {
-					if(np->statusFlags & STAT_SHADED) {
+					if(np->state.status & STAT_SHADED) {
 						JXMoveResizeWindow(display, np->parent,
 							np->x - borderWidth, np->y - north,
 							np->width + borderWidth * 2, north + borderWidth);
@@ -242,8 +242,8 @@ void ResizeClientKeyboard(ClientNode *np) {
 
 	Assert(np);
 
-	if(!(np->borderFlags & BORDER_RESIZE)
-		|| (np->statusFlags & STAT_MAXIMIZED)) {
+	if(!(np->state.border & BORDER_RESIZE)
+		|| (np->state.status & STAT_MAXIMIZED)) {
 		return;
 	}
 
@@ -260,12 +260,12 @@ void ResizeClientKeyboard(ClientNode *np) {
 	gwidth = (np->width - np->baseWidth) / np->xinc;
 	gheight = (np->height - np->baseHeight) / np->yinc;
 
-	if(np->borderFlags & BORDER_OUTLINE) {
+	if(np->state.border & BORDER_OUTLINE) {
 		west = borderWidth;
 	} else {
 		west = 0;
 	}
-	if(np->borderFlags & BORDER_TITLE) {
+	if(np->state.border & BORDER_TITLE) {
 		north = titleSize;
 	} else {
 		north = west;
@@ -361,7 +361,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 
 			if(resizeMode == RESIZE_OUTLINE) {
 				ClearOutline();
-				if(np->statusFlags & STAT_SHADED) {
+				if(np->state.status & STAT_SHADED) {
 					DrawOutline(np->x - borderWidth, np->y - north,
 						np->width + borderWidth * 2,
 						north + borderWidth);
@@ -371,7 +371,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 						np->height + north + borderWidth);
 				}
 			} else {
-				if(np->statusFlags & STAT_SHADED) {
+				if(np->state.status & STAT_SHADED) {
 					JXResizeWindow(display, np->parent,
 						np->width + west * 2, north + west);
 				} else {
@@ -405,7 +405,7 @@ void StopResize(ClientNode *np, int north) {
 
 	DestroyResizeWindow();
 
-	if(np->statusFlags & STAT_SHADED) {
+	if(np->state.status & STAT_SHADED) {
 		JXMoveResizeWindow(display, np->parent,
 			np->x - borderWidth, np->y - north,
 			np->width + borderWidth * 2, north + borderWidth);

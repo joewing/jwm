@@ -206,8 +206,8 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 	if(np) {
 		switch(mask) {
 		case Button1:
-			if(np->client->statusFlags & STAT_ACTIVE
-				&& np->client == nodes[np->client->layer]) {
+			if(np->client->state.status & STAT_ACTIVE
+				&& np->client == nodes[np->client->state.layer]) {
 				MinimizeClient(np->client);
 			} else {
 				RestoreClient(np->client);
@@ -406,7 +406,7 @@ void Render(const TaskBarType *bp) {
 	for(tp = taskBarNodes; tp; tp = tp->next) {
 		if(ShouldShowItem(tp->client)) {
 
-			if(tp->client->statusFlags & STAT_ACTIVE) {
+			if(tp->client->state.status & STAT_ACTIVE) {
 				buttonType = BUTTON_TASK_ACTIVE;
 			} else {
 				buttonType = BUTTON_TASK;
@@ -428,7 +428,7 @@ void Render(const TaskBarType *bp) {
 					iconSize, iconSize);
 			}
 
-			if(tp->client->statusFlags & STAT_MINIMIZED) {
+			if(tp->client->state.status & STAT_MINIMIZED) {
 				JXCopyArea(display, minimizedPixmap, buffer, gc,
 					0, 0, 4, 4, x + 3, y + bp->itemHeight - 7);
 			}
@@ -462,7 +462,7 @@ void FocusNext() {
 
 	for(tp = taskBarNodes; tp; tp = tp->next) {
 		if(ShouldFocusItem(tp->client)) {
-			if(tp->client->statusFlags & STAT_ACTIVE) {
+			if(tp->client->state.status & STAT_ACTIVE) {
 				tp = tp->next;
 				break;
 			}
@@ -568,11 +568,12 @@ unsigned int GetItemCount() {
  ***************************************************************************/
 int ShouldShowItem(const ClientNode *np) {
 
-	if(np->desktop != currentDesktop && !(np->statusFlags & STAT_STICKY)) {
+	if(np->state.desktop != currentDesktop
+		&& !(np->state.status & STAT_STICKY)) {
 		return 0;
 	}
 
-	if(np->statusFlags & (STAT_NOLIST | STAT_WITHDRAWN)) {
+	if(np->state.status & (STAT_NOLIST | STAT_WITHDRAWN)) {
 		return 0;
 	}
 
@@ -580,8 +581,8 @@ int ShouldShowItem(const ClientNode *np) {
 		return 0;
 	}
 
-	if(!(np->statusFlags & STAT_MAPPED)
-		&& !(np->statusFlags & (STAT_MINIMIZED | STAT_SHADED))) {
+	if(!(np->state.status & STAT_MAPPED)
+		&& !(np->state.status & (STAT_MINIMIZED | STAT_SHADED))) {
 		return 0;
 	}
 
@@ -593,15 +594,16 @@ int ShouldShowItem(const ClientNode *np) {
  ***************************************************************************/
 int ShouldFocusItem(const ClientNode *np) {
 
-	if(np->desktop != currentDesktop && !(np->statusFlags & STAT_STICKY)) {
+	if(np->state.desktop != currentDesktop
+		&& !(np->state.status & STAT_STICKY)) {
 		return 0;
 	}
 
-	if(np->statusFlags & (STAT_NOLIST | STAT_WITHDRAWN)) {
+	if(np->state.status & (STAT_NOLIST | STAT_WITHDRAWN)) {
 		return 0;
 	}
 
-	if(!(np->statusFlags & STAT_MAPPED)) {
+	if(!(np->state.status & STAT_MAPPED)) {
 		return 0;
 	}
 

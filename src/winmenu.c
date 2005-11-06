@@ -51,28 +51,28 @@ MenuType *CreateWindowMenu() {
 
 	/* Note that items are added in reverse order of display. */
 
-	if(!(client->statusFlags & STAT_WMDIALOG)) {
+	if(!(client->state.status & STAT_WMDIALOG)) {
 		AddWindowMenuItem(menu, "Close", "close");
 		AddWindowMenuItem(menu, "Kill", "kill");
 	}
 
 	AddWindowMenuItem(menu, NULL, NULL);
 
-	if(client->statusFlags & (STAT_MAPPED | STAT_SHADED)) {
-		if(client->borderFlags & BORDER_RESIZE) {
+	if(client->state.status & (STAT_MAPPED | STAT_SHADED)) {
+		if(client->state.border & BORDER_RESIZE) {
 			AddWindowMenuItem(menu, "Resize", "resize");
 		}
-		if(client->borderFlags & BORDER_MOVE) {
+		if(client->state.border & BORDER_MOVE) {
 			AddWindowMenuItem(menu, "Move", "move");
 		}
 	}
 
-	if(client->borderFlags & BORDER_MIN) {
+	if(client->state.border & BORDER_MIN) {
 
-		if(client->statusFlags & STAT_MINIMIZED) {
+		if(client->state.status & STAT_MINIMIZED) {
 			AddWindowMenuItem(menu, "Restore", "restore");
 		} else {
-			if(client->statusFlags & STAT_SHADED) {
+			if(client->state.status & STAT_SHADED) {
 				AddWindowMenuItem(menu, "Unshade", "unshade");
 			} else {
 				AddWindowMenuItem(menu, "Shade", "shade");
@@ -82,15 +82,15 @@ MenuType *CreateWindowMenu() {
 
 	}
 
-	if((client->borderFlags & BORDER_MAX)
-		&& (client->statusFlags & STAT_MAPPED)) {
+	if((client->state.border & BORDER_MAX)
+		&& (client->state.status & STAT_MAPPED)) {
 
 		AddWindowMenuItem(menu, "Maximize", "maximize");
 	}
 
-	if(!(client->statusFlags & STAT_WMDIALOG)) {
+	if(!(client->state.status & STAT_WMDIALOG)) {
 
-		if(client->statusFlags & STAT_STICKY) {
+		if(client->state.status & STAT_STICKY) {
 			AddWindowMenuItem(menu, "Unstick", "unstick");
 		} else {
 			AddWindowMenuItem(menu, "Stick", "stick");
@@ -132,7 +132,7 @@ void CreateWindowLayerMenu(MenuType *menu) {
 	command[5] = (LAYER_TOP / 10) + '0';
 	command[6] = (LAYER_TOP % 10) + '0';
 
-	if(client->layer == LAYER_TOP) {
+	if(client->state.layer == LAYER_TOP) {
 		AddWindowMenuItem(submenu, "[Top]", command);
 	} else {
 		AddWindowMenuItem(submenu, "Top", command);
@@ -143,13 +143,13 @@ void CreateWindowLayerMenu(MenuType *menu) {
 		command[5] = (x / 10) + '0';
 		command[6] = (x % 10) + '0';
 		if(x == LAYER_NORMAL) {
-			if(client->layer == x) {
+			if(client->state.layer == x) {
 				AddWindowMenuItem(submenu, "[Normal]", command);
 			} else {
 				AddWindowMenuItem(submenu, "Normal", command);
 			}
 		} else {
-			if(client->layer == x) {
+			if(client->state.layer == x) {
 				str[0] = '[';
 				str[3] = ']';
 			} else {
@@ -168,7 +168,7 @@ void CreateWindowLayerMenu(MenuType *menu) {
 
 	command[5] = (LAYER_BOTTOM / 10) + '0';
 	command[6] = (LAYER_BOTTOM % 10) + '0';
-	if(client->layer == LAYER_BOTTOM) {
+	if(client->state.layer == LAYER_BOTTOM) {
 		AddWindowMenuItem(submenu, "[Bottom]", command);
 	} else {
 		AddWindowMenuItem(submenu, "Bottom", command);
@@ -204,8 +204,8 @@ void CreateWindowSendToMenu(MenuType *menu) {
 
 	str[3] = 0;
 	for(x = desktopCount - 1; x >= 0; x--) {
-		if(client->desktop == x
-			|| (client->statusFlags & STAT_STICKY)) {
+		if(client->state.desktop == x
+			|| (client->state.status & STAT_STICKY)) {
 			str[0] = '[';
 			str[2] = ']';
 		} else {

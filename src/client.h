@@ -26,6 +26,15 @@ typedef enum {
 	BORDER_MOVE    = 64
 } BorderFlags;
 
+#define BORDER_DEFAULT ( \
+		  BORDER_OUTLINE \
+		| BORDER_TITLE   \
+		| BORDER_MIN     \
+		| BORDER_MAX     \
+		| BORDER_CLOSE   \
+		| BORDER_RESIZE  \
+		| BORDER_MOVE    )
+
 typedef enum {
 	STAT_NONE      = 0,
 	STAT_ACTIVE    = 1 << 0,
@@ -40,7 +49,6 @@ typedef enum {
 	STAT_USESHAPE  = 1 << 9,
 	STAT_WMDIALOG  = 1 << 10
 } StatusFlags;
-
 
 typedef struct ColormapNode {
 	Window window;
@@ -57,7 +65,6 @@ typedef struct ClientNode {
 	Window window;
 	Window parent;
 	GC parentGC;
-	int desktop;
 
 	Window owner;
 
@@ -79,12 +86,11 @@ typedef struct ClientNode {
 	char *instanceName;
 	char *className;
 
-	BorderFlags borderFlags;
+	ClientState state;
+
 	BorderActionType borderAction;
 
 	ClientProtocolType protocols;
-	StatusFlags statusFlags;
-	int layer;
 
 	struct IconNode *icon;
 
@@ -130,9 +136,6 @@ void SetClientSticky(ClientNode *np, int isSticky);
 
 void HideClient(ClientNode *np);
 void ShowClient(ClientNode *np);
-
-void ReadClientHints(ClientNode *np);
-void ReadMotifHints(ClientNode *np);
 
 void UpdateClientColormap(ClientNode *np);
 

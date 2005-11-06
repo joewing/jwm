@@ -18,45 +18,6 @@
 #include "pager.h"
 #include "color.h"
 
-/* MWM Defines */
-#define MWM_HINTS_FUNCTIONS   (1L << 0)
-#define MWM_HINTS_DECORATIONS (1L << 1)
-#define MWM_HINTS_INPUT_MODE  (1L << 2)
-#define MWM_HINTS_STATUS      (1L << 3)
-
-#define MWM_FUNC_ALL      (1L << 0)
-#define MWM_FUNC_RESIZE   (1L << 1)
-#define MWM_FUNC_MOVE     (1L << 2)
-#define MWM_FUNC_MINIMIZE (1L << 3)
-#define MWM_FUNC_MAXIMIZE (1L << 4)
-#define MWM_FUNC_CLOSE    (1L << 5)
-
-#define MWM_DECOR_ALL      (1L << 0)
-#define MWM_DECOR_BORDER   (1L << 1)
-#define MWM_DECOR_RESIZEH  (1L << 2)
-#define MWM_DECOR_TITLE    (1L << 3)
-#define MWM_DECOR_MENU     (1L << 4)
-#define MWM_DECOR_MINIMIZE (1L << 5)
-#define MWM_DECOR_MAXIMIZE (1L << 6)
-
-#define MWM_INPUT_MODELESS                  0
-#define MWM_INPUT_PRIMARY_APPLICATION_MODAL 1
-#define MWM_INPUT_SYSTEM_MODAL              2
-#define MWM_INPUT_FULL_APPLICATION_MODAL    3
-
-#define MWM_TEAROFF_WINDOW (1L << 0)
-
-
-typedef struct {
-
-	unsigned long flags;
-	unsigned long functions;
-	unsigned long decorations;
-	long          inputMode;
-	unsigned long status;
-
-} PropMwmHints;
-
 static const int STACK_BLOCK_SIZE = 8;
 
 ClientNode *nodes[LAYER_COUNT];
@@ -80,7 +41,6 @@ static void SendClientMessage(ClientNode *np, AtomType type,
 static void GetBorderOffsets(ClientNode *np, int *north, int *west);
 static void PlaceWindow(ClientNode *np, int alreadyMapped);
 static void Gravitate(ClientNode *np, int negate);
-static void UpdateState(ClientNode *np);
 static void MinimizeTransients(ClientNode *np);
 static void CheckShape(ClientNode *np);
 
@@ -188,8 +148,8 @@ void LoadFocus() {
  * Add a window to management.
  ****************************************************************************/
 ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
+
 	XWindowAttributes attr;
-	XWMHints *wmhints;
 	ClientNode *np;
 
 	Assert(w != None);
@@ -210,7 +170,7 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 
 	np->window = w;
 	np->owner = None;
-	np->desktop = currentDesktop;
+	np->state.desktop = currentDesktop;
 	np->controller = NULL;
 	np->name = NULL;
 	np->colormaps = NULL;
@@ -221,48 +181,28 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 	np->height = attr.height;
 	np->cmap = attr.colormap;
 	np->colormaps = NULL;
-	np->statusFlags = STAT_NONE;
-	np->layer = LAYER_NORMAL;
+	np->state.status = STAT_NONE;
+	np->state.layer = LAYER_NORMAL;
 
 	if(notOwner) {
-		np->borderFlags = BORDER_OUTLINE | BORDER_TITLE
-			| BORDER_MIN | BORDER_MAX | BORDER_CLOSE
-			| BORDER_MOVE | BORDER_RESIZE;
+		np->state.border = BORDER_DEFAULT;
 	} else {
-		np->borderFlags = BORDER_OUTLINE | BORDER_TITLE | BORDER_MOVE;
-		np->statusFlags |= STAT_WMDIALOG | STAT_STICKY;
+		np->state.border = BORDER_OUTLINE | BORDER_TITLE | BORDER_MOVE;
+		np->state.status |= STAT_WMDIALOG | STAT_STICKY;
 	}
 	np->borderAction = BA_NONE;
 
-	ReadMotifHints(np);
 	ReadClientProtocols(np);
 
 	/* We now know the layer, so insert */
 	np->prev = NULL;
-	np->next = nodes[np->layer];
+	np->next = nodes[np->state.layer];
 	if(np->next) {
 		np->next->prev = np;
 	} else {
-		nodeTail[np->layer] = np;
+		nodeTail[np->state.layer] = np;
 	}
-	nodes[np->layer] = np;
-
-	wmhints = JXGetWMHints(display, np->window);
-	if(wmhints) {
-		switch(wmhints->flags & StateHint) {
-		case IconicState:
-			np->statusFlags |= STAT_MINIMIZED;
-			break;
-		default:
-			if(!(np->statusFlags & STAT_MINIMIZED)) {
-				np->statusFlags |= STAT_MAPPED;
-			}
-			break;
-		}
-		JXFree(wmhints);
-	} else {
-		np->statusFlags |= STAT_MAPPED;
-	}
+	nodes[np->state.layer] = np;
 
 	LoadIcon(np);
 
@@ -276,7 +216,7 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 	XSaveContext(display, np->window, clientContext, (void*)np);
 	XSaveContext(display, np->parent, frameContext, (void*)np);
 
-	if(np->statusFlags & STAT_MAPPED) {
+	if(np->state.status & STAT_MAPPED) {
 		JXMapWindow(display, np->window);
 		JXMapWindow(display, np->parent);
 	}
@@ -291,22 +231,24 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 
 	++clientCount;
 
-	if(np->statusFlags & STAT_STICKY) {
+	if(np->state.status & STAT_STICKY) {
 		SetCardinalAtom(np->window, ATOM_NET_WM_DESKTOP, ~0UL);
 	} else {
-		SetCardinalAtom(np->window, ATOM_NET_WM_DESKTOP, np->desktop);
+		SetCardinalAtom(np->window, ATOM_NET_WM_DESKTOP, np->state.desktop);
 	}
 
-	if(np->statusFlags & STAT_SHADED) {
+	if(np->state.status & STAT_SHADED) {
 		ShadeClient(np);
 	}
 
 	/* Make sure we're still in sync */
-	UpdateState(np);
+	WriteState(np);
 	SendConfigureEvent(np);
-	WriteWinState(np);
 
-	if(np->desktop != currentDesktop && !(np->statusFlags & STAT_STICKY)) {
+np->state.status &= ~STAT_MAXIMIZED;
+
+	if(np->state.desktop != currentDesktop
+		&& !(np->state.status & STAT_STICKY)) {
 		HideClient(np);
 	}
 
@@ -426,9 +368,9 @@ void GetBorderOffsets(ClientNode *np, int *north, int *west) {
 	*north = 0;
 	*west = 0;
 
-	if(np->borderFlags & BORDER_OUTLINE) {
+	if(np->state.border & BORDER_OUTLINE) {
 		*west = borderWidth;
-		if(np->borderFlags & BORDER_TITLE) {
+		if(np->state.border & BORDER_TITLE) {
 			*north = titleSize;
 		} else {
 			*north = borderWidth;
@@ -531,27 +473,26 @@ void MinimizeTransients(ClientNode *np) {
 
 	if(activeClient == np) {
 		activeClient = NULL;
-		np->statusFlags &= ~STAT_ACTIVE;
+		np->state.status &= ~STAT_ACTIVE;
 	}
 
-	if(np->statusFlags & STAT_SHADED) {
+	if(np->state.status & STAT_SHADED) {
 		UnshadeClient(np);
 	}
 
-	if(np->statusFlags & STAT_MAPPED) {
+	if(np->state.status & STAT_MAPPED) {
 		JXUnmapWindow(display, np->window);
 		JXUnmapWindow(display, np->parent);
 	}
-	np->statusFlags |= STAT_MINIMIZED;
-	np->statusFlags &= ~STAT_MAPPED;
-	np->statusFlags &= ~STAT_WITHDRAWN;
-	UpdateState(np);
-	WriteWinState(np);
+	np->state.status |= STAT_MINIMIZED;
+	np->state.status &= ~STAT_MAPPED;
+	np->state.status &= ~STAT_WITHDRAWN;
+	WriteState(np);
 
 	for(x = 0; x < LAYER_COUNT; x++) {
 		for(tp = nodes[x]; tp; tp = tp->next) {
-			if(tp->owner == np->window && (tp->statusFlags & STAT_MAPPED)
-				&& !(tp->statusFlags & STAT_MINIMIZED)) {
+			if(tp->owner == np->window && (tp->state.status & STAT_MAPPED)
+				&& !(tp->state.status & STAT_MINIMIZED)) {
 				MinimizeTransients(tp);
 			}
 		}
@@ -565,23 +506,23 @@ void ShadeClient(ClientNode *np) {
 
 	Assert(np);
 
-	if(!(np->borderFlags & BORDER_OUTLINE)
-		|| !(np->borderFlags & BORDER_TITLE)) {
+	if(!(np->state.border & BORDER_OUTLINE)
+		|| !(np->state.border & BORDER_TITLE)) {
 		return;
 	}
 
-	if(np->statusFlags & STAT_MAPPED) {
+	if(np->state.status & STAT_MAPPED) {
 		JXUnmapWindow(display, np->window);
 	}
-	np->statusFlags |= STAT_SHADED;
-	np->statusFlags &= ~STAT_MINIMIZED;
-	np->statusFlags &= ~STAT_MAPPED;
-	np->statusFlags &= ~STAT_WITHDRAWN;
+	np->state.status |= STAT_SHADED;
+	np->state.status &= ~STAT_MINIMIZED;
+	np->state.status &= ~STAT_MAPPED;
+	np->state.status &= ~STAT_WITHDRAWN;
 
 	JXResizeWindow(display, np->parent, np->width + 2 * borderWidth,
 		titleSize + borderWidth);
 
-	WriteWinState(np);
+	WriteState(np);
 
 }
 
@@ -592,22 +533,22 @@ void UnshadeClient(ClientNode *np) {
 
 	Assert(np);
 
-	if(!(np->borderFlags & BORDER_OUTLINE)
-		|| !(np->borderFlags & BORDER_TITLE)) {
+	if(!(np->state.border & BORDER_OUTLINE)
+		|| !(np->state.border & BORDER_TITLE)) {
 		return;
 	}
 
-	if(np->statusFlags & STAT_SHADED) {
+	if(np->state.status & STAT_SHADED) {
 		JXMapWindow(display, np->window);
-		np->statusFlags |= STAT_MAPPED;
-		np->statusFlags &= ~STAT_SHADED;
+		np->state.status |= STAT_MAPPED;
+		np->state.status &= ~STAT_SHADED;
 	}
-	np->statusFlags &= ~STAT_WITHDRAWN;
+	np->state.status &= ~STAT_WITHDRAWN;
 
 	JXResizeWindow(display, np->parent, np->width + 2 * borderWidth,
 		np->height + titleSize + borderWidth);
 
-	WriteWinState(np);
+	WriteState(np);
 
 	RefocusClient();
 
@@ -624,23 +565,21 @@ void SetClientWithdrawn(ClientNode *np, int isWithdrawn) {
 
 		if(activeClient == np) {
 			activeClient = NULL;
-			np->statusFlags &= ~STAT_ACTIVE;
+			np->state.status &= ~STAT_ACTIVE;
 		}
-		np->statusFlags |= STAT_WITHDRAWN;
-		if(np->statusFlags & STAT_MAPPED) {
+		np->state.status |= STAT_WITHDRAWN;
+		if(np->state.status & STAT_MAPPED) {
 			JXUnmapWindow(display, np->window);
 			JXUnmapWindow(display, np->parent);
-			UpdateState(np);
-			WriteWinState(np);
+			WriteState(np);
 		}
 
 	} else {
-		np->statusFlags &= ~STAT_WITHDRAWN;
-		if(np->statusFlags & STAT_MAPPED) {
+		np->state.status &= ~STAT_WITHDRAWN;
+		if(np->state.status & STAT_MAPPED) {
 			JXMapWindow(display, np->window);
 			JXMapWindow(display, np->parent);
-			UpdateState(np);
-			WriteWinState(np);
+			WriteState(np);
 		}
 	}
 
@@ -658,22 +597,21 @@ void RestoreTransients(ClientNode *np) {
 
 	Assert(np);
 
-	if(!(np->statusFlags & STAT_MAPPED)) {
+	if(!(np->state.status & STAT_MAPPED)) {
 		JXMapWindow(display, np->window);
 		JXMapWindow(display, np->parent);
 	}
-	np->statusFlags |= STAT_MAPPED;
-	np->statusFlags &= ~STAT_MINIMIZED;
-	np->statusFlags &= ~STAT_WITHDRAWN;
+	np->state.status |= STAT_MAPPED;
+	np->state.status &= ~STAT_MINIMIZED;
+	np->state.status &= ~STAT_WITHDRAWN;
 
-	UpdateState(np);
-	WriteWinState(np);
+	WriteState(np);
 
 	for(x = 0; x < LAYER_COUNT; x++) {
 		for(tp = nodes[x]; tp; tp = tp->next) {
 			if(tp->owner == np->window
-				&& !(tp->statusFlags & STAT_MAPPED)
-				&& (tp->statusFlags & STAT_MINIMIZED)) {
+				&& !(tp->state.status & STAT_MAPPED)
+				&& (tp->state.status & STAT_MINIMIZED)) {
 				RestoreTransients(tp);
 			}
 		}
@@ -710,7 +648,7 @@ void SetClientLayer(ClientNode *np, int layer) {
 		return;
 	}
 
-	if(np->layer != layer) {
+	if(np->state.layer != layer) {
 
 		/* Loop through all clients so we get transients. */
 		for(x = 0; x < LAYER_COUNT; x++) {
@@ -724,12 +662,12 @@ void SetClientLayer(ClientNode *np, int layer) {
 					if(next) {
 						next->prev = tp->prev;
 					} else {
-						nodeTail[tp->layer] = tp->prev;
+						nodeTail[tp->state.layer] = tp->prev;
 					}
 					if(tp->prev) {
 						tp->prev->next = next;
 					} else {
-						nodes[tp->layer] = next;
+						nodes[tp->state.layer] = next;
 					}
 
 					/* Insert into the new node list */
@@ -743,7 +681,7 @@ void SetClientLayer(ClientNode *np, int layer) {
 					nodes[layer] = tp;
 
 					/* Set the new layer */
-					tp->layer = layer;
+					tp->state.layer = layer;
 					SetCardinalAtom(tp->window, ATOM_WIN_LAYER, layer);
 
 					/* Make sure we continue on the correct layer list. */
@@ -771,7 +709,7 @@ void SetClientSticky(ClientNode *np, int isSticky) {
 
 	Assert(np);
 
-	if(np->statusFlags & STAT_STICKY) {
+	if(np->state.status & STAT_STICKY) {
 		old = 1;
 	} else {
 		old = 0;
@@ -781,9 +719,9 @@ void SetClientSticky(ClientNode *np, int isSticky) {
 		for(x = 0; x < LAYER_COUNT; x++) {
 			for(tp = nodes[x]; tp; tp = tp->next) {
 				if(tp == np || tp->owner == np->window) {
-					tp->statusFlags |= STAT_STICKY;
+					tp->state.status |= STAT_STICKY;
 					SetCardinalAtom(tp->window, ATOM_NET_WM_DESKTOP, ~0UL);
-					WriteWinState(np);
+					WriteState(tp);
 				}
 			}
 		}
@@ -791,8 +729,8 @@ void SetClientSticky(ClientNode *np, int isSticky) {
 		for(x = 0; x < LAYER_COUNT; x++) {
 			for(tp = nodes[x]; tp; tp = tp->next) {
 				if(tp == np || tp->owner == np->window) {
-					tp->statusFlags &= ~STAT_STICKY;
-					WriteWinState(tp);
+					tp->state.status &= ~STAT_STICKY;
+					WriteState(tp);
 				}
 			}
 		}
@@ -814,12 +752,12 @@ void SetClientDesktop(ClientNode *np, int desktop) {
 		return;
 	}
 
-	if(!(np->statusFlags & STAT_STICKY)) {
+	if(!(np->state.status & STAT_STICKY)) {
 		for(x = 0; x < LAYER_COUNT; x++) {
 			for(tp = nodes[x]; tp; tp = tp->next) {
 				if(tp == np || tp->owner == np->window) {
 
-					tp->desktop = desktop;
+					tp->state.desktop = desktop;
 
 					if(desktop == currentDesktop) {
 						ShowClient(tp);
@@ -827,7 +765,8 @@ void SetClientDesktop(ClientNode *np, int desktop) {
 						HideClient(tp);
 					}
 
-					SetCardinalAtom(tp->window, ATOM_NET_WM_DESKTOP, tp->desktop);
+					SetCardinalAtom(tp->window, ATOM_NET_WM_DESKTOP,
+						tp->state.desktop);
 				}
 			}
 		}
@@ -847,8 +786,8 @@ void HideClient(ClientNode *np) {
 	if(activeClient == np) {
 		activeClient = NULL;
 	}
-	np->statusFlags |= STAT_HIDDEN;
-	if(np->statusFlags & (STAT_MAPPED | STAT_SHADED)) {
+	np->state.status |= STAT_HIDDEN;
+	if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
 		JXUnmapWindow(display, np->parent);
 	}
 }
@@ -860,11 +799,11 @@ void ShowClient(ClientNode *np) {
 
 	Assert(np);
 
-	if(np->statusFlags & STAT_HIDDEN) {
-		np->statusFlags &= ~STAT_HIDDEN;
-		if(np->statusFlags & (STAT_MAPPED | STAT_SHADED)) {
+	if(np->state.status & STAT_HIDDEN) {
+		np->state.status &= ~STAT_HIDDEN;
+		if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
 			JXMapWindow(display, np->parent);
-			if(np->statusFlags & STAT_ACTIVE) {
+			if(np->state.status & STAT_ACTIVE) {
 				FocusClient(np);
 			}
 		}
@@ -879,27 +818,27 @@ void MaximizeClient(ClientNode *np) {
 
 	Assert(np);
 
-	if(np->statusFlags & STAT_SHADED) {
+	if(np->state.status & STAT_SHADED) {
 		UnshadeClient(np);
 	}
 
-	if(np->borderFlags & BORDER_OUTLINE) {
+	if(np->state.border & BORDER_OUTLINE) {
 		west = borderWidth;
 	} else {
 		west = 0;
 	}
-	if(np->borderFlags & BORDER_TITLE) {
+	if(np->state.border & BORDER_TITLE) {
 		north = titleSize;
 	} else {
 		north = west;
 	}
 
-	if(np->statusFlags & STAT_MAXIMIZED) {
+	if(np->state.status & STAT_MAXIMIZED) {
 		np->x = np->oldx;
 		np->y = np->oldy;
 		np->width = np->oldWidth;
 		np->height = np->oldHeight;
-		np->statusFlags &= ~STAT_MAXIMIZED;
+		np->state.status &= ~STAT_MAXIMIZED;
 	} else {
 		np->oldx = np->x;
 		np->oldy = np->y;
@@ -934,7 +873,7 @@ void MaximizeClient(ClientNode *np) {
 		np->width -= np->width % np->xinc;
 		np->height -= np->height % np->yinc;
 
-		np->statusFlags |= STAT_MAXIMIZED;
+		np->state.status |= STAT_MAXIMIZED;
 	}
 
 	JXMoveResizeWindow(display, np->parent,
@@ -945,7 +884,7 @@ void MaximizeClient(ClientNode *np) {
 		north, np->width, np->height);
 
 	SendConfigureEvent(np);
-	WriteWinState(np);
+	WriteState(np);
 
 }
 
@@ -955,19 +894,19 @@ void FocusClient(ClientNode *np) {
 
 	Assert(np);
 
-	if(np->statusFlags & (STAT_MINIMIZED | STAT_WITHDRAWN | STAT_HIDDEN)) {
+	if(np->state.status & (STAT_MINIMIZED | STAT_WITHDRAWN | STAT_HIDDEN)) {
 		return;
 	}
 
 	if(activeClient != np) {
 		if(activeClient) {
-			activeClient->statusFlags &= ~STAT_ACTIVE;
+			activeClient->state.status &= ~STAT_ACTIVE;
 			DrawBorder(activeClient);
 		}
-		np->statusFlags |= STAT_ACTIVE;
+		np->state.status |= STAT_ACTIVE;
 		activeClient = np;
 
-		if(!(np->statusFlags & STAT_SHADED)) {
+		if(!(np->state.status & STAT_SHADED)) {
 			UpdateClientColormap(np);
 			if(np->protocols & PROT_TAKE_FOCUS) {
 				SendClientMessage(np, ATOM_WM_PROTOCOLS, ATOM_WM_TAKE_FOCUS);
@@ -981,7 +920,7 @@ void FocusClient(ClientNode *np) {
 
 	}
 
-	if(np->statusFlags & STAT_MAPPED && !(np->statusFlags & STAT_HIDDEN)) {
+	if(np->state.status & STAT_MAPPED && !(np->state.status & STAT_HIDDEN)) {
 		JXSetInputFocus(display, np->window, RevertToPointerRoot, CurrentTime);
 	} else {
 		JXSetInputFocus(display, rootWindow, RevertToPointerRoot, CurrentTime);
@@ -1000,14 +939,14 @@ void FocusNextStacked(ClientNode *np) {
 	Assert(np);
 
 	for(tp = np->next; tp; tp = tp->next) {
-		if(!(tp->statusFlags & FLAGS)) {
+		if(!(tp->state.status & FLAGS)) {
 			FocusClient(tp);
 			return;
 		}
 	}
-	for(x = np->layer - 1; x >= LAYER_BOTTOM; x--) {
+	for(x = np->state.layer - 1; x >= LAYER_BOTTOM; x--) {
 		for(tp = nodes[x]; tp; tp = tp->next) {
-			if(!(tp->statusFlags & FLAGS)) {
+			if(!(tp->state.status & FLAGS)) {
 				FocusClient(tp);
 				return;
 			}
@@ -1074,7 +1013,7 @@ void RaiseClient(ClientNode *np) {
 
 	Assert(np);
 
-	if(np->layer > LAYER_BOTTOM && nodes[np->layer] != np) {
+	if(np->state.layer > LAYER_BOTTOM && nodes[np->state.layer] != np) {
 
 		/* Raise the window */
 		Assert(np->prev);
@@ -1082,12 +1021,12 @@ void RaiseClient(ClientNode *np) {
 		if(np->next) {
 			np->next->prev = np->prev;
 		} else {
-			nodeTail[np->layer] = np->prev;
+			nodeTail[np->state.layer] = np->prev;
 		}
-		np->next = nodes[np->layer];
-		nodes[np->layer]->prev = np;
+		np->next = nodes[np->state.layer];
+		nodes[np->state.layer]->prev = np;
 		np->prev = NULL;
-		nodes[np->layer] = np;
+		nodes[np->state.layer] = np;
 
 		/* Place any transient windows on top of the owner */
 		for(x = 0; x < LAYER_COUNT; x++) {
@@ -1100,12 +1039,12 @@ void RaiseClient(ClientNode *np) {
 					if(tp->next) {
 						tp->next->prev = tp->prev;
 					} else {
-						nodeTail[tp->layer] = tp->prev;
+						nodeTail[tp->state.layer] = tp->prev;
 					}
-					tp->next = nodes[tp->layer];
-					nodes[tp->layer]->prev = tp;
+					tp->next = nodes[tp->state.layer];
+					nodes[tp->state.layer]->prev = tp;
 					tp->prev = NULL;
-					nodes[tp->layer] = tp;
+					nodes[tp->state.layer] = tp;
 
 					tp = next;
 
@@ -1158,7 +1097,7 @@ void RestackClients() {
 
 
 		for(np = nodes[layer]; np; np = np->next) {
-			if(!(np->statusFlags
+			if(!(np->state.status
 				& (STAT_MINIMIZED | STAT_HIDDEN | STAT_WITHDRAWN))) {
 				stack[index++] = np->parent;
 			}
@@ -1206,12 +1145,12 @@ void SetShape(ClientNode *np) {
 
 	Assert(np);
 
-	if(np->borderFlags & BORDER_OUTLINE) {
+	if(np->state.border & BORDER_OUTLINE) {
 		west = borderWidth;
 	} else {
 		west = 0;
 	}
-	if(np->borderFlags & BORDER_TITLE) {
+	if(np->state.border & BORDER_TITLE) {
 		north = titleSize;
 	} else {
 		north = west;
@@ -1264,12 +1203,12 @@ void RemoveClient(ClientNode *np) {
 	if(np->next) {
 		np->next->prev = np->prev;
 	} else {
-		nodeTail[np->layer] = np->prev;
+		nodeTail[np->state.layer] = np->prev;
 	}
 	if(np->prev) {
 		np->prev->next = np->next;
 	} else {
-		nodes[np->layer] = np->next;
+		nodes[np->state.layer] = np->next;
 	}
 	--clientCount;
 	XDeleteContext(display, np->window, clientContext);
@@ -1283,10 +1222,10 @@ void RemoveClient(ClientNode *np) {
 
 	/* If the window manager is exiting (ie, not the client), then
 	 * reparent etc. */
-	if(shouldExit && !(np->statusFlags & STAT_WMDIALOG)) {
+	if(shouldExit && !(np->state.status & STAT_WMDIALOG)) {
 		Gravitate(np, 1);
-		if(!(np->statusFlags & STAT_MAPPED)
-			&& (np->statusFlags & (STAT_MINIMIZED | STAT_SHADED))) {
+		if(!(np->state.status & STAT_MAPPED)
+			&& (np->state.status & (STAT_MINIMIZED | STAT_SHADED))) {
 			JXMapWindow(display, np->window);
 		}
 		JXUngrabButton(display, AnyButton, AnyModifier, np->window);
@@ -1403,10 +1342,10 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	attrMask |= CWBackPixel;
 	attr.background_pixel = colors[COLOR_BORDER_BG];
 
-	if(np->borderFlags & BORDER_OUTLINE) {
+	if(np->state.border & BORDER_OUTLINE) {
 		x = np->x - borderWidth;
 		width = np->width + borderWidth + borderWidth;
-		if(np->borderFlags & BORDER_TITLE) {
+		if(np->state.border & BORDER_TITLE) {
 			y = np->y - titleSize;
 			height = np->height + titleSize + borderWidth;
 		} else {
@@ -1431,8 +1370,8 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	JXChangeWindowAttributes(display, np->window, attrMask, &attr);
 
 	JXSetWindowBorderWidth(display, np->window, 0);
-	if(np->borderFlags & BORDER_OUTLINE) {
-		if(np->borderFlags & BORDER_TITLE) {
+	if(np->state.border & BORDER_OUTLINE) {
+		if(np->state.border & BORDER_TITLE) {
 			JXReparentWindow(display, np->window, np->parent, borderWidth,
 				titleSize);
 		} else {
@@ -1466,7 +1405,7 @@ void CheckShape(ClientNode *np) {
 		&xb, &yb, &wb, &hb, &clipShaped, &xc, &yc, &wc, &hc);
 
 	if(boundingShaped == True) {
-		np->statusFlags |= STAT_USESHAPE;
+		np->state.status |= STAT_USESHAPE;
 		SetShape(np);
 	}
 }
@@ -1528,90 +1467,5 @@ void UpdateClientColormap(ClientNode *np) {
 
 	}
 
-}
-
-/****************************************************************************
- ****************************************************************************/
-void UpdateState(ClientNode *np) {
-
-	unsigned long data[2];
-
-	Assert(np);
-
-	if(np->statusFlags & STAT_WITHDRAWN) {
-		data[0] = WithdrawnState;
-	} else if(np->statusFlags & STAT_MINIMIZED) {
-		data[0] = IconicState;
-	} else {
-		data[0] = NormalState;
-	}
-	data[1] = None;
-
-	JXChangeProperty(display, np->window, atoms[ATOM_WM_STATE],
-		atoms[ATOM_WM_STATE], 32, PropModeReplace,
-		(unsigned char*)data, 2);
-
-}
-
-/****************************************************************************
- * Read Motif hints.
- ****************************************************************************/
-void ReadMotifHints(ClientNode *np) {
-	PropMwmHints *mhints;
-	Atom type;
-	unsigned long itemCount, bytesLeft;
-	unsigned char *data;
-	int format;
-
-	Assert(np);
-
-	if(JXGetWindowProperty(display, np->window, atoms[ATOM_MOTIF_WM_HINTS],
-		0L, 20L, False, atoms[ATOM_MOTIF_WM_HINTS], &type, &format,
-		&itemCount, &bytesLeft, &data) != Success) {
-		return;
-	}
-
-	mhints = (PropMwmHints*)data;
-	if(mhints) {
-
-		if((mhints->flags & MWM_HINTS_FUNCTIONS)
-			&& !(mhints->functions & MWM_FUNC_ALL)) {
-
-			if(!(mhints->functions & MWM_FUNC_RESIZE)) {
-				np->borderFlags &= ~BORDER_RESIZE;
-			}
-			if(!(mhints->functions & MWM_FUNC_MOVE)) {
-				np->borderFlags &= ~BORDER_MOVE;
-			}
-			if(!(mhints->functions & MWM_FUNC_MINIMIZE)) {
-				np->borderFlags &= ~BORDER_MIN;
-			}
-			if(!(mhints->functions & MWM_FUNC_MAXIMIZE)) {
-				np->borderFlags &= ~BORDER_MAX;
-			}
-			if(!(mhints->functions & MWM_FUNC_CLOSE)) {
-				np->borderFlags &= ~BORDER_CLOSE;
-			}
-		}
-
-		if((mhints->flags & MWM_HINTS_DECORATIONS)
-			&& !(mhints->decorations & MWM_DECOR_ALL)) {
-
-			if(!(mhints->decorations & MWM_DECOR_BORDER)) {
-				np->borderFlags &= ~BORDER_OUTLINE;
-			}
-			if(!(mhints->decorations & MWM_DECOR_TITLE)) {
-				np->borderFlags &= ~BORDER_TITLE;
-			}
-			if(!(mhints->decorations & MWM_DECOR_MINIMIZE)) {
-				np->borderFlags &= ~BORDER_MIN;
-			}
-			if(!(mhints->decorations & MWM_DECOR_MAXIMIZE)) {
-				np->borderFlags &= ~BORDER_MAX;
-			}
-		}
-
-		JXFree(mhints);
-	}
 }
 

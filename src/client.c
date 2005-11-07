@@ -17,6 +17,7 @@
 #include "screen.h"
 #include "pager.h"
 #include "color.h"
+#include "error.h"
 
 static const int STACK_BLOCK_SIZE = 8;
 
@@ -241,11 +242,14 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 		ShadeClient(np);
 	}
 
+	if(np->state.status & STAT_MAXIMIZED) {
+		np->state.status &= ~STAT_MAXIMIZED;
+		MaximizeClient(np);
+	}
+
 	/* Make sure we're still in sync */
 	WriteState(np);
 	SendConfigureEvent(np);
-
-np->state.status &= ~STAT_MAXIMIZED;
 
 	if(np->state.desktop != currentDesktop
 		&& !(np->state.status & STAT_STICKY)) {
@@ -645,6 +649,7 @@ void SetClientLayer(ClientNode *np, int layer) {
 	Assert(np);
 
 	if(layer < LAYER_BOTTOM || layer > LAYER_TOP) {
+		Warning("Client %s requested an invalid layer: %d", np->name, layer);
 		return;
 	}
 
@@ -1223,6 +1228,10 @@ void RemoveClient(ClientNode *np) {
 	/* If the window manager is exiting (ie, not the client), then
 	 * reparent etc. */
 	if(shouldExit && !(np->state.status & STAT_WMDIALOG)) {
+		if(np->state.status & STAT_MAXIMIZED) {
+			JXMoveResizeWindow(display, np->window,
+				np->oldx, np->oldy, np->oldWidth, np->oldHeight);
+		}
 		Gravitate(np, 1);
 		if(!(np->state.status & STAT_MAPPED)
 			&& (np->state.status & (STAT_MINIMIZED | STAT_SHADED))) {

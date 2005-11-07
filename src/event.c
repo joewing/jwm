@@ -538,9 +538,14 @@ void HandleConfigureNotify(const XConfigureEvent *event) {
 /****************************************************************************
  ****************************************************************************/
 void HandleClientMessage(const XClientMessageEvent *event) {
+
 	ClientNode *np;
 	long mask, flags;
 	char *atomName;
+	int actionMaximize;
+	int actionStick;
+	int actionShade;
+	int x;
 
 	np = FindClientByWindow(event->window);
 	if(np) {
@@ -594,6 +599,7 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 		} else if(event->message_type == atoms[ATOM_NET_ACTIVE_WINDOW]) {
 
 			RestoreClient(np);
+			FocusClient(np);
 
 		} else if(event->message_type == atoms[ATOM_NET_WM_DESKTOP]) {
 
@@ -617,7 +623,71 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 
 		} else if(event->message_type == atoms[ATOM_NET_WM_STATE]) {
 
-			ApplyState(np);
+			/* Up to two actions to be applied together, figure it out. */
+			actionMaximize = 0;
+			actionStick = 0;
+			actionShade = 0;
+
+			for(x = 1; x <= 2; x++) {
+				if(event->data.l[x] == atoms[ATOM_NET_WM_STATE_STICKY]) {
+					actionStick = 1;
+				} else if(event->data.l[x]
+					== atoms[ATOM_NET_WM_STATE_MAXIMIZED_VERT]) {
+					actionMaximize = 1;
+				} else if(event->data.l[x]
+					== atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ]) {
+					actionMaximize = 1;
+				} else if(event->data.l[x] == atoms[ATOM_NET_WM_STATE_SHADED]) {
+					actionShade = 1;
+				}
+			}
+
+			switch(event->data.l[0]) {
+			case 0: /* Remove */
+				if(actionStick) {
+					SetClientSticky(np, 0);
+				}
+				if(actionMaximize && (np->state.status & STAT_MAXIMIZED)) {
+					MaximizeClient(np);
+				}
+				if(actionShade) {
+					UnshadeClient(np);
+				}
+				break;
+			case 1: /* Add */
+				if(actionStick) {
+					SetClientSticky(np, 1);
+				}
+				if(actionMaximize && !(np->state.status & STAT_MAXIMIZED)) {
+					MaximizeClient(np);
+				}
+				if(actionShade) {
+					ShadeClient(np);
+				}
+				break;
+			case 2: /* Toggle */
+				if(actionStick) {
+					if(np->state.status & STAT_STICKY) {
+						SetClientSticky(np, 0);
+					} else {
+						SetClientSticky(np, 1);
+					}
+				}
+				if(actionMaximize) {
+					MaximizeClient(np);
+				}
+				if(actionShade) {
+					if(np->state.status & STAT_SHADED) {
+						UnshadeClient(np);
+					} else {
+						ShadeClient(np);
+					}
+				}
+				break;
+			default:
+				Debug("bad _NET_WM_STATE action: %ld", event->data.l[0]);
+				break;
+			}
 
 		} else {
 			atomName = JXGetAtomName(display, event->message_type);

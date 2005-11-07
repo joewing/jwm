@@ -128,8 +128,6 @@ void ReadWinLayer(struct ClientNode *np);
 
 ClientState ReadWindowState(Window win);
 
-void ApplyState(struct ClientNode *np);
-
 void WriteState(struct ClientNode *np);
 
 int GetCardinalAtom(Window window, AtomType atom, unsigned long *value);

@@ -8,6 +8,9 @@ Todo:
 	- Add desktop root menu item.
 	- Add window list root menu item.
 
+20051106:
+	- Restore maximization status on restart.
+
 20051027:
 	- Fix byte-order issue with PNG images.
 

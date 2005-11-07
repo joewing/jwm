@@ -120,7 +120,6 @@ void MinimizeClient(ClientNode *np);
 void ShadeClient(ClientNode *np);
 void UnshadeClient(ClientNode *np);
 void SetClientWithdrawn(ClientNode *np, int isWithdrawn);
-void WithdrawClient(ClientNode *np);
 void RestoreClient(ClientNode *np);
 void MaximizeClient(ClientNode *np);
 void FocusClient(ClientNode *np);

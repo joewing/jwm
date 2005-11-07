@@ -243,14 +243,6 @@ void ReadClientProtocols(ClientNode *np) {
 }
 
 /****************************************************************************
- * Read the requested window state and make any necessary changes.
- ****************************************************************************/
-void ApplyState(ClientNode *np) {
-
-
-}
-
-/****************************************************************************
  ****************************************************************************/
 void WriteState(ClientNode *np) {
 
@@ -432,6 +424,10 @@ ClientState ReadWindowState(Window win) {
 		}
 		if(card & WIN_STATE_SHADED) {
 			result.status |= STAT_SHADED;
+		}
+		if((card & WIN_STATE_MAXIMIZED_VERT)
+			&& (card & WIN_STATE_MAXIMIZED_HORIZ)) {
+			result.status |= STAT_MAXIMIZED;
 		}
 	}
 

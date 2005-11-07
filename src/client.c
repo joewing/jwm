@@ -888,8 +888,8 @@ void MaximizeClient(ClientNode *np) {
 	JXMoveResizeWindow(display, np->window, west,
 		north, np->width, np->height);
 
-	SendConfigureEvent(np);
 	WriteState(np);
+	SendConfigureEvent(np);
 
 }
 

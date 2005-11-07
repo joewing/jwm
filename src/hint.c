@@ -292,7 +292,7 @@ void WriteNetState(ClientNode *np) {
 		values[index++] = atoms[ATOM_NET_WM_STATE_STICKY];
 	}
 
-	JXChangeProperty(display, np->window, atoms[ATOM_WM_STATE],
+	JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_STATE],
 		XA_ATOM, 32, PropModeReplace, (unsigned char*)values, index);
 
 }

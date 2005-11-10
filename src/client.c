@@ -281,7 +281,7 @@ void PlaceWindow(ClientNode *np, int alreadyMapped) {
 	x = GetScreenX(index);
 	y = GetScreenY(index);
 
-	if(!(np->sizeFlags & PPosition) && !alreadyMapped) {
+	if(!(np->sizeFlags & (PPosition | USPosition)) && !alreadyMapped) {
 
 
 		/* Avoid trays if possible. */

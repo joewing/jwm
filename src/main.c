@@ -416,17 +416,20 @@ void Destroy() {
  ****************************************************************************/
 void SendRestart() {
 
-	Atom atom;
+	XEvent event;
 
 	OpenConnection();
-	atom = JXInternAtom(display, "_JWM_RESTART", False);
 
-	JXChangeProperty(display, rootWindow, atom, XA_CARDINAL, 32,
-		PropModeReplace, (unsigned char*)&atom, 1);
+	memset(&event, 0, sizeof(event));
+	event.xclient.type = ClientMessage;
+	event.xclient.window = rootWindow;
+	event.xclient.message_type = JXInternAtom(display, "_JWM_RESTART", False);
+	event.xclient.format = 32;
 
-	ShutdownHints();
+	JXSendEvent(display, rootWindow, False, SubstructureRedirectMask, &event);
+
 	CloseConnection();
-	DestroyHints();
+
 }
 
 /****************************************************************************
@@ -434,13 +437,17 @@ void SendRestart() {
  ****************************************************************************/
 void SendExit() {
 
-	Atom atom;
+	XEvent event;
 
 	OpenConnection();
-	atom = JXInternAtom(display, "_JWM_EXIT", False);
 
-	JXChangeProperty(display, rootWindow, atom, XA_CARDINAL, 32,
-		PropModeReplace, (unsigned char*)&atom, 1);
+	memset(&event, 0, sizeof(event));
+	event.xclient.type = ClientMessage;
+	event.xclient.window = rootWindow;
+	event.xclient.message_type = JXInternAtom(display, "_JWM_EXIT", False);
+	event.xclient.format = 32;
+
+	JXSendEvent(display, rootWindow, False, SubstructureRedirectMask, &event);
 
 	CloseConnection();
 }

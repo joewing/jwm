@@ -8,6 +8,9 @@ Todo:
 	- Add desktop root menu item.
 	- Add window list root menu item.
 
+20051109:
+	- Send ClientMessage instead of PropertyNotify for _JWM commands.
+
 20051106:
 	- Restore maximization status on restart.
 

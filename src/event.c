@@ -511,12 +511,6 @@ int HandlePropertyNotify(const XPropertyEvent *event) {
 		} else {
 			return 1;
 		}
-	} else if(event->window == rootWindow) {
-		if(event->atom == atoms[ATOM_JWM_RESTART]) {
-			Restart();
-		} else if(event->atom == atoms[ATOM_JWM_EXIT]) {
-			Exit();
-		}
 	}
 
 	return 1;
@@ -694,6 +688,14 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 			Debug("Uknown ClientMessage: %s", atomName);
 			JXFree(atomName);
 		}
+	} else if(event->window == rootWindow) {
+
+		if(event->message_type == atoms[ATOM_JWM_RESTART]) {
+			Restart();
+		} else if(event->message_type == atoms[ATOM_JWM_EXIT]) {
+			Exit();
+		}
+
 	}
 
 }

@@ -13,6 +13,7 @@ Todo:
 	- More EWMH support.
 	- Fix label attribute for RootMenu.
 	- Added menu includes (rarsa).
+	- Fix a minor menu bug.
 
 20051106:
 	- Restore maximization status on restart.

@@ -11,6 +11,8 @@ Todo:
 20051109:
 	- Send ClientMessage instead of PropertyNotify for _JWM commands.
 	- More EWMH support.
+	- Fix label attribute for RootMenu.
+	- Added menu includes (rarsa).
 
 20051106:
 	- Restore maximization status on restart.

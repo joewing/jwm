@@ -66,6 +66,7 @@ static void ParseStartupCommand(const TokenNode *tp);
 /* Menus. */
 static void ParseRootMenu(const TokenNode *start);
 static void ParseMenuItem(const TokenNode *start, MenuType *menu);
+static void ParseMenuInclude(const TokenNode *tp, MenuType *menu);
 static MenuItemType *InsertMenuItem(MenuItemType *last);
 
 /* Tray. */
@@ -371,8 +372,14 @@ void ParseRootMenu(const TokenNode *start) {
 
 	value = FindAttribute(start->attributes, LABELED_ATTRIBUTE);
 	if(value && !strcmp(value, TRUE_VALUE)) {
-		menu->label = Allocate(strlen(DEFAULT_TITLE) + 1);
-		strcpy(menu->label, DEFAULT_TITLE);
+		value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
+		if(value) {
+			menu->label = Allocate(strlen(value) + 1);
+			strcpy(menu->label, value);
+		} else {
+			menu->label = Allocate(strlen(DEFAULT_TITLE) + 1);
+			strcpy(menu->label, DEFAULT_TITLE);
+		}
 	} else {
 		menu->label = NULL;
 	}
@@ -418,6 +425,11 @@ void ParseMenuItem(const TokenNode *start, MenuType *menu) {
 	last = NULL;
 	while(start) {
 		switch(start->type) {
+		case TOK_INCLUDE:
+
+			ParseMenuInclude(start, menu);
+
+			break;
 		case TOK_MENU:
 
 			last = InsertMenuItem(last);
@@ -568,6 +580,68 @@ void ParseMenuItem(const TokenNode *start, MenuType *menu) {
 		}
 		start = start->next;
 	}
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void ParseMenuInclude(const TokenNode *tp, MenuType *menu) {
+
+	FILE *fd;
+	char *path;
+	char *buffer;
+	TokenNode *mp;
+
+	Assert(tp);
+
+	if(!strncmp(tp->value, "exec:", 5)) {
+
+		path = Allocate(strlen(tp->value) - 5 + 1);
+		strcpy(path, tp->value + 5);
+		ExpandPath(&path);
+
+		fd = popen(path, "r");
+		if(fd) {
+			buffer = ReadFile(fd);
+			pclose(fd);
+		} else {
+			ParseError("could not execute included program: %s", path);
+		}
+		Release(path);
+
+	} else {
+
+		path = Allocate(strlen(tp->value) + 1);
+		strcpy(path, tp->value);
+		ExpandPath(&path);
+
+		fd = fopen(path, "r");
+		if(fd) {
+			buffer = ReadFile(fd);
+			fclose(fd);
+		} else {
+			ParseError("could not open include: %s", path);
+		}
+		Release(path);
+
+	}
+
+	if(!buffer) {
+		return;
+	}
+
+	mp = Tokenize(buffer);
+	Release(buffer);
+
+	if(!mp || mp->type != TOK_MENU) {
+		ParseError("invalid included menu: %s", tp->value);
+	} else {
+		ParseMenuItem(mp, menu);
+	}
+
+	if(mp) {
+		ReleaseTokens(mp);
+	}
+
 }
 
 /****************************************************************************

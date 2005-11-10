@@ -10,6 +10,7 @@ Todo:
 
 20051109:
 	- Send ClientMessage instead of PropertyNotify for _JWM commands.
+	- More EWMH support.
 
 20051106:
 	- Restore maximization status on restart.

@@ -89,6 +89,17 @@ static const AtomNode atomList[] = {
 	{ &atoms[ATOM_NET_WM_STATE_MAXIMIZED_VERT], "_NET_WM_STATE_MAXIMIZED_VERT"},
 	{ &atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ], "_NET_WM_STATE_MAXIMIZED_HORZ"},
 	{ &atoms[ATOM_NET_WM_STATE_SHADED],       "_NET_WM_STATE_SHADED"        },
+	{ &atoms[ATOM_NET_WM_ALLOWED_ACTIONS],    "_NET_WM_ALLOWED_ACTIONS"     },
+	{ &atoms[ATOM_NET_WM_ACTION_MOVE],        "_NET_WM_ACTION_MOVE"         },
+	{ &atoms[ATOM_NET_WM_ACTION_RESIZE],      "_NET_WM_ACTION_RESIZE"       },
+	{ &atoms[ATOM_NET_WM_ACTION_MINIMIZE],    "_NET_WM_ACTION_MINIMIZE"     },
+	{ &atoms[ATOM_NET_WM_ACTION_SHADE],       "_NET_WM_ACTION_SHADE"        },
+	{ &atoms[ATOM_NET_WM_ACTION_STICK],       "_NET_WM_ACTION_STICK"        },
+	{ &atoms[ATOM_NET_WM_ACTION_MAXIMIZE_HORZ], "_NET_WM_ACTION_MAXIMIZE_HORZ"},
+	{ &atoms[ATOM_NET_WM_ACTION_MAXIMIZE_VERT], "_NET_WM_ACTION_MAXIMIZE_VERT"},
+	{ &atoms[ATOM_NET_WM_ACTION_CHANGE_DESKTOP],
+		"_NET_WM_ACTION_CHANGE_DESKTOP"},
+	{ &atoms[ATOM_NET_WM_ACTION_CLOSE],       "_NET_WM_ACTION_CLOSE"        },
 	{ &atoms[ATOM_NET_CLOSE_WINDOW],          "_NET_CLOSE_WINDOW"           },
 	{ &atoms[ATOM_NET_WM_NAME],               "_NET_WM_NAME"                },
 	{ &atoms[ATOM_NET_WM_ICON],               "_NET_WM_ICON"                },
@@ -110,6 +121,7 @@ static const AtomNode atomList[] = {
 };
 
 static void WriteNetState(ClientNode *np);
+static void WriteNetAllowed(ClientNode *np);
 static void WriteWinState(ClientNode *np);
 static void ReadWMHints(Window win, ClientState *state);
 static void ReadMotifHints(Window win, ClientState *state);
@@ -264,6 +276,7 @@ void WriteState(ClientNode *np) {
 		(unsigned char*)data, 2);
 
 	WriteNetState(np);
+	WriteNetAllowed(np);
 	WriteWinState(np);
 
 }
@@ -273,6 +286,8 @@ void WriteState(ClientNode *np) {
 void WriteNetState(ClientNode *np) {
 
 	unsigned long values[4];
+	unsigned long sideSize;
+	unsigned long topSize;
 	int index;
 
 	Assert(np);
@@ -293,6 +308,73 @@ void WriteNetState(ClientNode *np) {
 	}
 
 	JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_STATE],
+		XA_ATOM, 32, PropModeReplace, (unsigned char*)values, index);
+
+	if(np->state.border & BORDER_OUTLINE) {
+		sideSize = borderWidth;
+	} else {
+		sideSize = 0;
+	}
+
+	topSize = sideSize;
+	if(np->state.border & BORDER_TITLE) {
+		topSize += titleSize;
+	}
+
+	/* left, right, top, bottom */
+	values[0] = sideSize;
+	values[1] = sideSize;
+	values[2] = topSize;
+	values[3] = sideSize;
+
+	JXChangeProperty(display, np->window, atoms[ATOM_NET_FRAME_EXTENTS],
+		XA_CARDINAL, 32, PropModeReplace, (unsigned char*)values, 4);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void WriteNetAllowed(ClientNode *np) {
+
+	unsigned long values[10];
+	int index;
+
+	Assert(np);
+
+	index = 0;
+
+	if(np->state.border & BORDER_TITLE) {
+		values[index++] = atoms[ATOM_NET_WM_ACTION_SHADE];
+	}
+
+	if(np->state.border & BORDER_MIN) {
+		values[index++] = atoms[ATOM_NET_WM_ACTION_MINIMIZE];
+	}
+
+	if(np->state.border & BORDER_MAX) {
+		values[index++] = atoms[ATOM_NET_WM_ACTION_MAXIMIZE_HORZ];
+		values[index++] = atoms[ATOM_NET_WM_ACTION_MAXIMIZE_VERT];
+	}
+
+	if(np->state.border & BORDER_CLOSE) {
+		values[index++] = atoms[ATOM_NET_WM_ACTION_CLOSE];
+	}
+
+	if(np->state.border & BORDER_RESIZE) {
+		values[index++] = atoms[ATOM_NET_WM_ACTION_RESIZE];
+	}
+
+	if(np->state.border & BORDER_MOVE) {
+		values[index++] = atoms[ATOM_NET_WM_ACTION_MOVE];
+	}
+
+	if(!(np->state.status & STAT_STICKY)) {
+		values[index++] = atoms[ATOM_NET_WM_ACTION_CHANGE_DESKTOP];
+	}
+
+	values[index++] = atoms[ATOM_NET_WM_ACTION_STICK];
+
+	JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_ALLOWED_ACTIONS],
 		XA_ATOM, 32, PropModeReplace, (unsigned char*)values, index);
 
 }

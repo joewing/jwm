@@ -65,8 +65,10 @@ static void ParseStartupCommand(const TokenNode *tp);
 
 /* Menus. */
 static void ParseRootMenu(const TokenNode *start);
-static void ParseMenuItem(const TokenNode *start, MenuType *menu);
-static void ParseMenuInclude(const TokenNode *tp, MenuType *menu);
+static MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
+	MenuItemType *last);
+static MenuItemType *ParseMenuInclude(const TokenNode *tp, MenuType *menu,
+	MenuItemType *last);
 static MenuItemType *InsertMenuItem(MenuItemType *last);
 
 /* Tray. */
@@ -384,7 +386,8 @@ void ParseRootMenu(const TokenNode *start) {
 		menu->label = NULL;
 	}
 
-	ParseMenuItem(start->subnodeHead, menu);
+	menu->items = NULL;
+	ParseMenuItem(start->subnodeHead, menu, NULL);
 	SetRootMenu(menu);
 
 }
@@ -412,22 +415,20 @@ MenuItemType *InsertMenuItem(MenuItemType *last) {
 
 /****************************************************************************
  ****************************************************************************/
-void ParseMenuItem(const TokenNode *start, MenuType *menu) {
+MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
+	MenuItemType *last) {
 
-	MenuItemType *last;
 	MenuType *child;
 	const char *value;
 
 	Assert(menu);
 
 	menu->offsets = NULL;
-	menu->items = NULL;
-	last = NULL;
 	while(start) {
 		switch(start->type) {
 		case TOK_INCLUDE:
 
-			ParseMenuInclude(start, menu);
+			last = ParseMenuInclude(start, menu, last);
 
 			break;
 		case TOK_MENU:
@@ -472,7 +473,8 @@ void ParseMenuItem(const TokenNode *start, MenuType *menu) {
 				child->label = NULL;
 			}
 
-			ParseMenuItem(start->subnodeHead, last->submenu);
+			last->submenu->items = NULL;
+			ParseMenuItem(start->subnodeHead, last->submenu, NULL);
 
 			break;
 		case TOK_PROGRAM:
@@ -580,11 +582,15 @@ void ParseMenuItem(const TokenNode *start, MenuType *menu) {
 		}
 		start = start->next;
 	}
+
+	return last;
+
 }
 
 /****************************************************************************
  ****************************************************************************/
-void ParseMenuInclude(const TokenNode *tp, MenuType *menu) {
+MenuItemType *ParseMenuInclude(const TokenNode *tp, MenuType *menu,
+	MenuItemType *last) {
 
 	FILE *fd;
 	char *path;
@@ -626,7 +632,7 @@ void ParseMenuInclude(const TokenNode *tp, MenuType *menu) {
 	}
 
 	if(!buffer) {
-		return;
+		return last;
 	}
 
 	mp = Tokenize(buffer);
@@ -635,12 +641,14 @@ void ParseMenuInclude(const TokenNode *tp, MenuType *menu) {
 	if(!mp || mp->type != TOK_MENU) {
 		ParseError("invalid included menu: %s", tp->value);
 	} else {
-		ParseMenuItem(mp, menu);
+		last = ParseMenuItem(mp, menu, last);
 	}
 
 	if(mp) {
 		ReleaseTokens(mp);
 	}
+
+	return last;
 
 }
 

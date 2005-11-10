@@ -470,19 +470,33 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 		return MENU_SUBSELECT;
 	}
 
+
 	/* Update the selection on the current menu */
 	if(x > 0 && y > 0 && x < menu->width && y < menu->height) {
 		menu->currentIndex = GetMenuIndex(menu, y);
-	} else {
-		for(tp = menu->parent; tp; tp = tp->parent) {
-			if(subwindow == tp->window) {
-				if(y < menu->parentOffset
-					|| y > tp->itemHeight + menu->parentOffset) {
-					return MENU_LEAVE;
-				}
+	} else if(menu->parent && subwindow != menu->parent->window) {
+
+		/* Leave if over a menu window. */
+		for(tp = menu->parent->parent; tp; tp = tp->parent) {
+			if(tp->window == subwindow) {
+				return MENU_LEAVE;
 			}
 		}
 		menu->currentIndex = -1;
+
+	} else {
+
+		/* Leave if over the parent, but not on this selection. */
+		tp = menu->parent;
+		if(tp && subwindow == tp->window) {
+			if(y < menu->parentOffset
+				|| y > tp->itemHeight + menu->parentOffset) {
+				return MENU_LEAVE;
+			}
+		}
+
+		menu->currentIndex = -1;
+
 	}
 	if(menu->lastIndex != menu->currentIndex) {
 		UpdateMenu(menu);

@@ -10,6 +10,7 @@
 #include "main.h"
 #include "error.h"
 #include "confirm.h"
+#include "desktop.h"
 
 static MenuType *rootMenu = NULL;
 static int showExitConfirmation = 1;
@@ -118,6 +119,9 @@ void RunCommand(const char *command) {
 		return;
 	} else if(!strcmp(command, "#restart")) {
 		Restart();
+		return;
+	} else if(!strncmp(command, "#desk", 5)) {
+		ChangeDesktop(command[5] - '0');
 		return;
 	}
 

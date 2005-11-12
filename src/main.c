@@ -32,6 +32,7 @@
 #include "swallow.h"
 #include "screen.h"
 #include "root.h"
+#include "desktop.h"
 
 Display *display = NULL;
 Window rootWindow;
@@ -278,6 +279,7 @@ void Initialize() {
 	InitializeColors();
 	InitializeCommands();
 	InitializeCursors();
+	InitializeDesktops();
 	#ifndef DISABLE_CONFIRM
 		InitializeDialogs();
 	#endif
@@ -327,6 +329,7 @@ void Startup() {
 	StartupHints();
 	StartupBorders();
 	StartupClients();
+	StartupDesktops();
 
 	StartupTiming();
 	#ifndef DISABLE_CONFIRM
@@ -370,6 +373,7 @@ void Shutdown() {
 	ShutdownFonts();
 	ShutdownColors();
 	ShutdownGroups();
+	ShutdownDesktops();
 
 	ShutdownHints();
 	ShutdownTiming();
@@ -391,6 +395,7 @@ void Destroy() {
 	DestroyColors();
 	DestroyCommands();
 	DestroyCursors();
+	DestroyDesktops();
 	#ifndef DISABLE_CONFIRM
 		DestroyDialogs();
 	#endif

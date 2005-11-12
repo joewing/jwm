@@ -50,6 +50,8 @@ static const char *WIDTH_ATTRIBUTE = "width";
 static const char *HEIGHT_ATTRIBUTE = "height";
 static const char *NAME_ATTRIBUTE = "name";
 static const char *BORDER_ATTRIBUTE = "border";
+static const char *COUNT_ATTRIBUTE = "count";
+static const char *DISTANCE_ATTRIBUTE = "distance";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -62,6 +64,7 @@ static void Parse(const TokenNode *start, int depth);
 static void ParseInclude(const TokenNode *tp, int depth);
 static void ParseShutdownCommand(const TokenNode *tp);
 static void ParseStartupCommand(const TokenNode *tp);
+static void ParseDesktops(const TokenNode *tp);
 
 /* Menus. */
 static void ParseRootMenu(const TokenNode *start);
@@ -198,8 +201,8 @@ void Parse(const TokenNode *start, int depth) {
 			case TOK_BORDERSTYLE:
 				ParseBorderStyle(tp);
 				break;
-			case TOK_DESKTOPCOUNT:
-				SetDesktopCount(tp->value);
+			case TOK_DESKTOPS:
+				ParseDesktops(tp);
 				break;
 			case TOK_DOUBLECLICKSPEED:
 				SetDoubleClickSpeed(tp->value);
@@ -294,7 +297,7 @@ void ParseSnapMode(const TokenNode *tp) {
 
 	const char *distance;
 
-	distance = FindAttribute(tp->attributes, "distance");
+	distance = FindAttribute(tp->attributes, DISTANCE_ATTRIBUTE);
 	if(distance) {
 		SetSnapDistance(distance);
 	} else {
@@ -400,6 +403,7 @@ MenuItemType *InsertMenuItem(MenuItemType *last) {
 
 	item = Allocate(sizeof(MenuItemType));
 	item->name = NULL;
+	item->flags = MENU_ITEM_NORMAL;
 	item->iconName = NULL;
 	item->command = NULL;
 	item->submenu = NULL;
@@ -508,6 +512,15 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 		case TOK_SEPARATOR:
 
 			last = InsertMenuItem(last);
+			if(!menu->items) {
+				menu->items = last;
+			}
+
+			break;
+		case TOK_DESKTOPS:
+
+			last = InsertMenuItem(last);
+			last->flags |= MENU_ITEM_DESKTOPS;
 			if(!menu->items) {
 				menu->items = last;
 			}
@@ -783,6 +796,40 @@ void ParseInclude(const TokenNode *tp, int depth) {
 		ParseError("could not open included file %s", temp);
 	}
 	Release(temp);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void ParseDesktops(const TokenNode *tp) {
+
+	TokenNode *np;
+	char *attr;
+	int x;
+
+	Assert(tp);
+
+	attr = FindAttribute(tp->attributes, COUNT_ATTRIBUTE);
+	if(attr) {
+		SetDesktopCount(attr);
+	}	else {
+		desktopCount = DEFAULT_DESKTOP_COUNT;
+	}
+
+	x = 0;
+	for(x = 0, np = tp->subnodeHead; np; np = np->next, x++) {
+		if(x >= desktopCount) {
+			break;
+		}
+		switch(np->type) {
+		case TOK_NAME:
+			SetDesktopName(x, np->value);
+			break;
+		default:
+			ParseError("invalid tag in Desktops: %s", GetTokenName(np->type));
+			break;
+		}
+	}
 
 }
 

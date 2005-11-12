@@ -964,7 +964,6 @@ void FocusNextStacked(ClientNode *np) {
  * Refocus the active client, if existent.
  ****************************************************************************/
 void RefocusClient() {
-
 	if(activeClient) {
 		FocusClient(activeClient);
 	}
@@ -991,7 +990,7 @@ void KillClientHandler(ClientNode *np) {
 	Assert(np);
 
 	if(np == activeClient) {
-		activeClient = NULL;
+		FocusNextStacked(np);
 	}
 
 	JXKillClient(display, np->window);
@@ -1220,6 +1219,9 @@ void RemoveClient(ClientNode *np) {
 	XDeleteContext(display, np->parent, frameContext);
 
 	/* Make sure this client isn't active */
+	if(activeClient == np && !shouldExit) {
+		FocusNextStacked(np);
+	}
 	if(activeClient == np) {
 		SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, None);
 		activeClient = NULL;

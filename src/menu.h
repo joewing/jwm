@@ -6,8 +6,11 @@
 #ifndef MENU_H
 #define MENU_H
 
-/****************************************************************************
- ****************************************************************************/
+typedef enum {
+	MENU_ITEM_NORMAL   = 0,
+	MENU_ITEM_DESKTOPS = 1
+} MenuItemFlags;
+
 typedef struct MenuItemType {
 
 	char *name;
@@ -16,11 +19,10 @@ typedef struct MenuItemType {
 	struct IconNode *icon;  /* This field is handled by menu.c */
 	struct MenuItemType *next;
 	struct MenuType *submenu;
+	MenuItemFlags flags;
 
 } MenuItemType;
 
-/****************************************************************************
- ****************************************************************************/
 typedef struct MenuType {
 
 	/* These fields must be set before calling ShowMenu */

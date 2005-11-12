@@ -17,7 +17,7 @@ static const char *TOKEN_MAP[] = {
 	"Background",
 	"BorderStyle",
 	"Class",
-	"DesktopCount",
+	"Desktops",
 	"DoubleClickSpeed",
 	"DoubleClickDelta",
 	"Exit",

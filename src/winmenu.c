@@ -18,8 +18,8 @@ static const char *LAYER_TEXT = "Layer";
 static MenuType *CreateWindowMenu();
 static void RunWindowCommand(const char *command);
 
-static void CreateWindowSendToMenu(MenuType *menu);
 static void CreateWindowLayerMenu(MenuType *menu);
+static void CreateWindowSendToMenu(MenuType *menu);
 static void AddWindowMenuItem(MenuType *menu, const char *name,
 	const char *command);
 
@@ -97,7 +97,10 @@ MenuType *CreateWindowMenu() {
 		}
 
 		CreateWindowLayerMenu(menu);
-		CreateWindowSendToMenu(menu);
+
+		if(!(client->state.status & STAT_STICKY)) {
+			CreateWindowSendToMenu(menu);
+		}
 
 	}
 
@@ -114,6 +117,7 @@ void CreateWindowLayerMenu(MenuType *menu) {
 	int x;
 
 	item = Allocate(sizeof(MenuItemType));
+	item->flags = MENU_ITEM_NORMAL;
 	item->iconName = NULL;
 	item->next = menu->items;
 	menu->items = item;
@@ -179,43 +183,19 @@ void CreateWindowLayerMenu(MenuType *menu) {
 /****************************************************************************
  ****************************************************************************/
 void CreateWindowSendToMenu(MenuType *menu) {
-	MenuType *submenu;
-	MenuItemType *item;
-	char str[4];
-	char command[10];
+
+	unsigned int mask;
 	int x;
 
-	item = Allocate(sizeof(MenuItemType));
-	item->iconName = NULL;
-	item->next = menu->items;
-	menu->items = item;
-
-	item->name = Allocate(strlen(SENDTO_TEXT) + 1);
-	strcpy(item->name, SENDTO_TEXT);
-	item->command = NULL;
-
-	submenu = Allocate(sizeof(MenuType));
-	item->submenu = submenu;
-	submenu->itemHeight = 0;
-	submenu->items = NULL;
-	submenu->label = NULL;
-
-	strcpy(command, "send ");
-
-	str[3] = 0;
-	for(x = desktopCount - 1; x >= 0; x--) {
+	mask = 0;
+	for(x = 0; x < desktopCount; x++) {
 		if(client->state.desktop == x
 			|| (client->state.status & STAT_STICKY)) {
-			str[0] = '[';
-			str[2] = ']';
-		} else {
-			str[0] = ' ';
-			str[2] = ' ';
+			mask |= 1 << x;
 		}
-		str[1] = '1' + x;
-		command[4] = '0' + x;
-		AddWindowMenuItem(submenu, str, command);
 	}
+
+	CreateDesktopMenu(SENDTO_TEXT, mask, menu);
 
 }
 
@@ -227,6 +207,7 @@ void AddWindowMenuItem(MenuType *menu, const char *name,
 	MenuItemType *item;
 
 	item = Allocate(sizeof(MenuItemType));
+	item->flags = MENU_ITEM_NORMAL;
 	item->iconName = NULL;
 	item->submenu = NULL;
 	item->next = menu->items;
@@ -267,8 +248,8 @@ void RunWindowCommand(const char *command) {
 		RestoreClient(client);
 	} else if(!strcmp(command, "close")) {
 		DeleteClient(client);
-	} else if(!strncmp(command, "send", 4)) {
-		x = command[4] - '0';
+	} else if(!strncmp(command, "#desk", 5)) {
+		x = command[5] - '0';
 		SetClientDesktop(client, x);
 	} else if(!strcmp(command, "shade")) {
 		ShadeClient(client);

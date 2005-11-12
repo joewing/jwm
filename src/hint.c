@@ -76,6 +76,7 @@ static const AtomNode atomList[] = {
 
 	{ &atoms[ATOM_NET_SUPPORTED],             "_NET_SUPPORTED"              },
 	{ &atoms[ATOM_NET_NUMBER_OF_DESKTOPS],    "_NET_NUMBER_OF_DESKTOPS"     },
+	{ &atoms[ATOM_NET_DESKTOP_NAMES],         "_NET_DESKTOP_NAMES"          },
 	{ &atoms[ATOM_NET_DESKTOP_GEOMETRY],      "_NET_DESKTOP_GEOMETRY"       },
 	{ &atoms[ATOM_NET_DESKTOP_VIEWPORT],      "_NET_DESKTOP_VIEWPORT"       },
 	{ &atoms[ATOM_NET_CURRENT_DESKTOP],       "_NET_CURRENT_DESKTOP"        },
@@ -138,7 +139,9 @@ void StartupHints() {
 	unsigned long array[128];
 	Atom supported[ATOM_COUNT];
 	Window win;
+	char *data;
 	int x;
+	int count;
 
 	/* Intern the atoms */
 	for(x = 0; x < ATOM_COUNT; x++) {
@@ -163,6 +166,22 @@ void StartupHints() {
 
 	/* _NET_NUMBER_OF_DESKTOPS */
 	SetCardinalAtom(rootWindow, ATOM_NET_NUMBER_OF_DESKTOPS, desktopCount);
+
+	/* _NET_DESKTOP_NAMES */
+	count = 0;
+	for(x = 0; x < desktopCount; x++) {
+		count += strlen(desktopNames[x]) + 1;
+	}
+	data = Allocate(count);
+	count = 0;
+	for(x = 0; x < desktopCount; x++) {
+		strcpy(data + count, desktopNames[x]);
+		count += strlen(desktopNames[x]) + 1;
+	}
+	JXChangeProperty(display, rootWindow, atoms[ATOM_NET_DESKTOP_NAMES],
+		atoms[ATOM_UTF8_STRING], 8, PropModeReplace,
+		(unsigned char*)data, count);
+	Release(data);
 
 	/* _NET_DESKTOP_GEOMETRY */
 	array[0] = rootWidth;

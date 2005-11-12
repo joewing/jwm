@@ -533,6 +533,12 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 			last->name = Allocate(strlen(value) + 1);
 			strcpy(last->name, value);
 
+			value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
+			if(value) {
+				last->iconName = Allocate(strlen(value) + 1);
+				strcpy(last->iconName, value);
+			}
+
 			break;
 		case TOK_EXIT:
 

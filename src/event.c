@@ -250,11 +250,7 @@ void HandleKeyPress(const XKeyEvent *event) {
 
 	key = GetKey(event);
 
-	if(focusModel == FOCUS_CLICK) {
-		np = FindClientByWindow(event->subwindow);
-	} else {
-		np = GetActiveClient();
-	}
+	np = GetActiveClient();
 
 	switch(key & 0xFF) {
 	case KEY_EXEC:

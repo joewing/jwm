@@ -18,6 +18,7 @@
 #include "pager.h"
 #include "color.h"
 #include "error.h"
+#include "place.h"
 
 static const int STACK_BLOCK_SIZE = 8;
 
@@ -30,18 +31,11 @@ static Window *stack;
 static int stackSize;
 static int clientCount;
 
-static unsigned int cascadeOffset;
-static unsigned int cascadeStart;
-static unsigned int cascadeStop;
-
 static void LoadFocus();
 static void ReparentClient(ClientNode *np, int notOwner);
  
 static void SendClientMessage(ClientNode *np, AtomType type,
 	AtomType message);
-static void GetBorderOffsets(ClientNode *np, int *north, int *west);
-static void PlaceWindow(ClientNode *np, int alreadyMapped);
-static void Gravitate(ClientNode *np, int negate);
 static void MinimizeTransients(ClientNode *np);
 static void CheckShape(ClientNode *np);
 
@@ -72,15 +66,10 @@ void StartupClients() {
 	activeClient = NULL;
 	currentDesktop = 0;
 
-	cascadeStart = titleHeight + borderWidth;
-	cascadeStop = rootHeight / 3;
-	cascadeOffset = cascadeStart;
-
 	for(x = 0; x < LAYER_COUNT; x++) {
 		nodes[x] = NULL;
 		nodeTail[x] = NULL;
 	}
-
 
 	JXQueryTree(display, rootWindow, &rootReturn, &parentReturn,
 		&childrenReturn, &childrenCount);
@@ -211,7 +200,7 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 
 	SetDefaultCursor(np->window);
 	ReparentClient(np, notOwner);
-	PlaceWindow(np, alreadyMapped);
+	PlaceClient(np, alreadyMapped);
 
 	/* If one of these fails we are SOL, so who cares. */
 	XSaveContext(display, np->window, clientContext, (void*)np);
@@ -257,194 +246,6 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 	}
 
 	return np;
-
-}
-
-/****************************************************************************
- * Place a window on the screen.
- ****************************************************************************/
-void PlaceWindow(ClientNode *np, int alreadyMapped) {
-
-	TrayType *tp;
-	int north, west;
-	int index;
-	int width, height;
-	int x, y;
-
-	Assert(np);
-
-	GetBorderOffsets(np, &north, &west);
-
-	index = GetMouseScreen();
-	width = GetScreenWidth(index);
-	height = GetScreenHeight(index);
-	x = GetScreenX(index);
-	y = GetScreenY(index);
-
-	if(!(np->sizeFlags & (PPosition | USPosition)) && !alreadyMapped) {
-
-
-		/* Avoid trays if possible. */
-		for(tp = GetTrays(); tp; tp = tp->next) {
-
-			/* Check if the tray is in the current bounding box. */
-			if(tp->x >= x && tp->x < x + width) {
-				if(tp->y >= y && tp->y < y + height) {
-
-					if(tp->width > tp->height) {
-
-						/* Restrict horizontally */
-						if(tp->y - y > height - tp->y - tp->height) {
-							height = tp->y - y;
-						} else {
-							y = tp->y + tp->height;
-							height = height - tp->y - tp->height;
-						}
-
-					} else {
-
-						/* Restrict vertically */
-						if(tp->x - x > width - tp->x - tp->width) {
-							width = tp->x - x;
-						} else {
-							x = tp->x + tp->width;
-							width = width - tp->x - tp->width;
-						}
-
-					}
-
-				}
-			}
-
-		}
-
-		if(np->width + cascadeOffset + west - x > width) {
-			if(np->width + west * 2 < width) {
-				np->x = west + width / 2 - np->width / 2 + x;
-			} else {
-				np->x = west + x;
-			}
-		} else {
-			np->x = west + cascadeOffset + x;
-		}
-
-		if(np->height + cascadeOffset + north + y > height) {
-			if(np->height + north + west < height) {
-				np->y = north + width / 2 - np->width / 2 + y;
-			} else {
-				np->y = north + y;
-			}
-		} else {
-			np->y = north + cascadeOffset + y;
-		}
-
-		if(cascadeOffset >= cascadeStop) {
-			cascadeOffset = cascadeStart;
-		} else {
-			cascadeOffset += titleHeight + borderWidth;
-		}
-
-	} else {
-
-		if(np->x + np->width - x > rootWidth) {
-			np->x = x;
-		}
-		if(np->y + np->height - y > rootHeight) {
-			np->y = y;
-		}
-
-		Gravitate(np, 0);
-	}
-
-	JXMoveWindow(display, np->parent, np->x - west, np->y - north);
-
-}
-
-/****************************************************************************
- * Get the offsets of the child window with respect to the parent.
- ****************************************************************************/
-void GetBorderOffsets(ClientNode *np, int *north, int *west) {
-
-	Assert(np);
-	Assert(north);
-	Assert(west);
-
-	*north = 0;
-	*west = 0;
-
-	if(np->state.border & BORDER_OUTLINE) {
-		*west = borderWidth;
-		if(np->state.border & BORDER_TITLE) {
-			*north = titleSize;
-		} else {
-			*north = borderWidth;
-		}
-	}
-
-}
-
-/****************************************************************************
- * Move the window in the specified direction for reparenting.
- ****************************************************************************/
-void Gravitate(ClientNode *np, int negate) {
-	int north, south, west;
-	int northDelta, westDelta;
-
-	Assert(np);
-
-	GetBorderOffsets(np, &north, &west);
-	if(north) {
-		south = borderWidth;
-	} else {
-		south = 0;
-	}
-
-	northDelta = 0;
-	westDelta = 0;
-	switch(np->gravity) {
-	case NorthWestGravity:
-		northDelta = -north;
-		westDelta = -west;
-		break;
-	case NorthGravity:
-		northDelta = -north;
-		break;
-	case NorthEastGravity:
-		northDelta = -north;
-		westDelta = west;
-		break;
-	case WestGravity:
-		westDelta = -west;
-		break;
-	case CenterGravity:
-		northDelta = (north + south) / 2;
-		westDelta = west;
-		break;
-	case EastGravity:
-		westDelta = west;
-		break;
-	case SouthWestGravity:
-		northDelta = south;
-		westDelta = -west;
-		break;
-	case SouthGravity:
-		northDelta = south;
-		break;
-	case SouthEastGravity:
-		northDelta = south;
-		westDelta = west;
-		break;
-	default: /* Static */
-		break;
-	}
-
-	if(negate) {
-		np->x += westDelta;
-		np->y += northDelta;
-	} else {
-		np->x -= westDelta;
-		np->y -= northDelta;
-	}
 
 }
 
@@ -1234,7 +1035,7 @@ void RemoveClient(ClientNode *np) {
 			JXMoveResizeWindow(display, np->window,
 				np->oldx, np->oldy, np->oldWidth, np->oldHeight);
 		}
-		Gravitate(np, 1);
+		GravitateClient(np, 1);
 		if(!(np->state.status & STAT_MAPPED)
 			&& (np->state.status & (STAT_MINIMIZED | STAT_SHADED))) {
 			JXMapWindow(display, np->window);

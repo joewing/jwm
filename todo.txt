@@ -11,6 +11,7 @@ Todo:
 	- Focus next client in the stacking order when the active client is closed.
 	- Added "Desktops" root menu item.
 	- Fixed key actions with click-to-focus.
+	- Improved window placement.
 
 20051110:
 	- Now desktops can be named, changes to the configuration for this.

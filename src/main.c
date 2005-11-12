@@ -33,6 +33,7 @@
 #include "screen.h"
 #include "root.h"
 #include "desktop.h"
+#include "place.h"
 
 Display *display = NULL;
 Window rootWindow;
@@ -290,6 +291,7 @@ void Initialize() {
 	InitializeKeys();
 	InitializeOutline();
 	InitializePager();
+	InitializePlacement();
 	InitializePopup();
 	InitializeRootMenu();
 	InitializeScreens();
@@ -330,6 +332,7 @@ void Startup() {
 	StartupBorders();
 	StartupClients();
 	StartupDesktops();
+	StartupPlacement();
 
 	StartupTiming();
 	#ifndef DISABLE_CONFIRM
@@ -375,6 +378,7 @@ void Shutdown() {
 	ShutdownGroups();
 	ShutdownDesktops();
 
+	ShutdownPlacement();
 	ShutdownHints();
 	ShutdownTiming();
 	ShutdownScreens();
@@ -406,6 +410,7 @@ void Destroy() {
 	DestroyKeys();
 	DestroyOutline();
 	DestroyPager();
+	DestroyPlacement();
 	DestroyPopup();
 	DestroyRootMenu();
 	DestroyScreens();

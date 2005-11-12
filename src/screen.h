@@ -1,3 +1,7 @@
+/****************************************************************************
+ * Header for screen functions.
+ * Copyright (C) 2005 Joe Wingbermuehle
+ ****************************************************************************/
 
 #ifndef SCREEN_H
 #define SCREEN_H
@@ -16,6 +20,8 @@ int GetScreenY(int index);
 
 int GetMinScreenWidth();
 int GetMinScreenHeight();
+
+int GetScreenCount();
 
 #endif
 

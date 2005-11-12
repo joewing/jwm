@@ -11,11 +11,13 @@
 #include "cursor.h"
 #include "main.h"
 #include "color.h"
+#include "font.h"
 
 typedef struct TrayButtonType {
 
 	TrayComponentType *cp;
 
+	char *label;
 	char *iconName;
 	IconNode *icon;
 
@@ -46,13 +48,26 @@ void StartupTrayButtons() {
 	TrayButtonType *bp;
 
 	for(bp = buttons; bp; bp = bp->next) {
-		bp->icon = LoadNamedIcon(bp->iconName);
-		if(bp->icon) {
-			bp->cp->width = bp->icon->image->width;
-			bp->cp->height = bp->icon->image->height;
+		if(bp->label) {
+			bp->cp->width = GetStringWidth(FONT_TASK, bp->label) + 4;
+			bp->cp->height = GetStringHeight(FONT_TASK);
 		} else {
-			Warning("could not load tray icon: \"%s\"", bp->iconName);
+			bp->cp->width = 0;
+			bp->cp->height = 0;
+		}
+		if(bp->iconName) {
+			bp->icon = LoadNamedIcon(bp->iconName);
+			if(bp->icon) {
+				bp->cp->width += bp->icon->image->width;
+				bp->cp->height += bp->icon->image->height;
+			} else {
+				Warning("could not load tray icon: \"%s\"", bp->iconName);
+			}
+		}
+		if(bp->cp->width == 0) {
 			bp->cp->width = 1;
+		}
+		if(bp->cp->height == 0) {
 			bp->cp->height = 1;
 		}
 	}
@@ -72,13 +87,14 @@ void DestroyTrayButtons() {
 /***************************************************************************
  ***************************************************************************/
 TrayComponentType *CreateTrayButton(const char *iconName,
-	const char *action) {
+	const char *label, const char *action) {
 
 	TrayButtonType *bp;
 	TrayComponentType *cp;
 
-	if(iconName == NULL || strlen(iconName) == 0) {
-		Warning("no icon for TrayButton");
+	if((label == NULL || strlen(label) == 0)
+		&& (iconName == NULL || strlen(iconName) == 0)) {
+		Warning("no icon or label for TrayButton");
 		return NULL;
 	}
 
@@ -87,8 +103,19 @@ TrayComponentType *CreateTrayButton(const char *iconName,
 	buttons = bp;
 
 	bp->icon = NULL;
-	bp->iconName = Allocate(strlen(iconName) + 1);
-	strcpy(bp->iconName, iconName);
+	if(iconName) {
+		bp->iconName = Allocate(strlen(iconName) + 1);
+		strcpy(bp->iconName, iconName);
+	} else {
+		bp->iconName = NULL;
+	}
+
+	if(label) {
+		bp->label = Allocate(strlen(label) + 1);
+		strcpy(bp->label, label);
+	} else {
+		bp->label = NULL;
+	}
 
 	if(action) {
 		bp->action = Allocate(strlen(action) + 1);
@@ -116,23 +143,34 @@ void Create(TrayComponentType *cp) {
 
 	TrayButtonType *bp;
 	GC gc;
+	int labelx;
 
 	bp = (TrayButtonType*)cp->object;
 
-	if(bp->icon) {
+	cp->pixmap = JXCreatePixmap(display, rootWindow,
+		cp->width, cp->height, rootDepth);
+	gc = JXCreateGC(display, cp->pixmap, 0, NULL);
 
-		cp->pixmap = JXCreatePixmap(display, rootWindow,
-			cp->width, cp->height, rootDepth);
-		gc = JXCreateGC(display, cp->pixmap, 0, NULL);
+	JXSetForeground(display, gc, colors[COLOR_TRAY_BG]);
+	JXFillRectangle(display, cp->pixmap, gc, 0, 0, cp->width, cp->height);
 
-		JXSetForeground(display, gc, colors[COLOR_TRAY_BG]);
-		JXFillRectangle(display, cp->pixmap, gc, 0, 0, cp->width, cp->height);
-
-		PutIcon(bp->icon, cp->pixmap, gc, 0, 0, cp->width, cp->height);
-
-		JXFreeGC(display, gc);
-
+	if(bp->label) {
+		labelx = cp->width - (GetStringWidth(FONT_TASK, bp->label) + 4);
+	} else {
+		labelx = cp->width;
 	}
+
+	if(bp->icon) {
+		PutIcon(bp->icon, cp->pixmap, gc, 0, 0, labelx, cp->height);
+	}
+
+	if(bp->label) {
+		RenderString(cp->pixmap, gc, FONT_TASK, COLOR_TASK_FG,
+			labelx + 2, cp->height / 2 - GetStringHeight(FONT_TASK) / 2,
+			cp->width - labelx, bp->label);
+	}
+
+	JXFreeGC(display, gc);
 
 }
 
@@ -144,7 +182,13 @@ void Destroy(TrayComponentType *cp) {
 
 	Assert(bp);
 
-	Release(bp->iconName);
+	if(bp->iconName) {
+		Release(bp->iconName);
+	}
+
+	if(bp->label) {
+		Release(bp->label);
+	}
 
 	if(bp->action) {
 		Release(bp->action);

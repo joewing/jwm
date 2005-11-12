@@ -97,7 +97,6 @@ static void ParseIcons(const TokenNode *tp);
 
 /* Feel. */
 static void ParseKey(const TokenNode *tp);
-static void ParsePopup(const TokenNode *tp);
 static void ParseSnapMode(const TokenNode *tp);
 static void ParseMoveMode(const TokenNode *tp);
 static void ParseResizeMode(const TokenNode *tp);
@@ -234,9 +233,6 @@ void Parse(const TokenNode *start, int depth) {
 				break;
 			case TOK_PAGERSTYLE:
 				ParsePagerStyle(tp);
-				break;
-			case TOK_POPUP:
-				ParsePopup(tp);
 				break;
 			case TOK_POPUPSTYLE:
 				ParsePopupStyle(tp);
@@ -1044,13 +1040,15 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
 
 	TrayComponentType *cp;
 	const char *icon;
+	const char *label;
 
 	Assert(tp);
 	Assert(tray);
 
 	icon = FindAttribute(tp->attributes, ICON_ATTRIBUTE);
+	label = FindAttribute(tp->attributes, LABEL_ATTRIBUTE);
 
-	cp = CreateTrayButton(icon, tp->value);
+	cp = CreateTrayButton(icon, label, tp->value);
 	if(cp) {
 		AddTrayComponent(tray, cp);
 	}
@@ -1092,8 +1090,7 @@ void ParsePagerStyle(const TokenNode *tp) {
 
 /***************************************************************************
  ***************************************************************************/
-void ParsePopupStyle(const TokenNode *tp)
-{
+void ParsePopupStyle(const TokenNode *tp) {
 
 	const TokenNode *np;
 
@@ -1123,15 +1120,7 @@ void ParsePopupStyle(const TokenNode *tp)
 
 /***************************************************************************
  ***************************************************************************/
-void ParsePopup(const TokenNode *tp)
-{
-/*TODO*/
-}
-
-/***************************************************************************
- ***************************************************************************/
-void ParseMenuStyle(const TokenNode *tp)
-{
+void ParseMenuStyle(const TokenNode *tp) {
 
 	const TokenNode *np;
 
@@ -1164,8 +1153,7 @@ void ParseMenuStyle(const TokenNode *tp)
 
 /***************************************************************************
  ***************************************************************************/
-void ParseGroup(const TokenNode *tp)
-{
+void ParseGroup(const TokenNode *tp) {
 
 	const TokenNode *np;
 	struct GroupType *group;
@@ -1195,8 +1183,7 @@ void ParseGroup(const TokenNode *tp)
 
 /***************************************************************************
  ***************************************************************************/
-void ParseGroupOption(struct GroupType *group, const char *option)
-{
+void ParseGroupOption(struct GroupType *group, const char *option) {
 
 	if(!strcmp(option, "sticky")) {
 		AddGroupOption(group, OPTION_STICKY);
@@ -1224,22 +1211,19 @@ void ParseGroupOption(struct GroupType *group, const char *option)
 
 /****************************************************************************
  ****************************************************************************/
-void ParseShutdownCommand(const TokenNode *tp)
-{
+void ParseShutdownCommand(const TokenNode *tp) {
 	SetShutdownCommand(tp->value);
 }
 
 /****************************************************************************
  ****************************************************************************/
-void ParseStartupCommand(const TokenNode *tp)
-{
+void ParseStartupCommand(const TokenNode *tp) {
 	SetStartupCommand(tp->value);
 }
 
 /****************************************************************************
  ****************************************************************************/
-void ParseIcons(const TokenNode *tp)
-{
+void ParseIcons(const TokenNode *tp) {
 
 	TokenNode *np;
 
@@ -1260,8 +1244,7 @@ void ParseIcons(const TokenNode *tp)
 
 /***************************************************************************
  ***************************************************************************/
-char *FindAttribute(AttributeNode *ap, const char *name)
-{
+char *FindAttribute(AttributeNode *ap, const char *name) {
 
 	while(ap) {
 		if(!strcmp(name, ap->name)) {
@@ -1275,8 +1258,7 @@ char *FindAttribute(AttributeNode *ap, const char *name)
 
 /***************************************************************************
  ***************************************************************************/
-char *ReadFile(FILE *fd)
-{
+char *ReadFile(FILE *fd) {
 
 	const int BLOCK_SIZE = 1024;
 
@@ -1306,8 +1288,7 @@ char *ReadFile(FILE *fd)
 
 /****************************************************************************
  ****************************************************************************/
-void ParseError(const char *str, ...)
-{
+void ParseError(const char *str, ...) {
 	va_list ap;
 	va_start(ap, str);
 	WarningVA("configuration error", str, ap);

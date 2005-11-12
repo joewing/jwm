@@ -7,6 +7,9 @@ Todo:
 	- Add the ability to name desktops.
 	- Add window list root menu item.
 
+20051112:
+	- Make maximization work in a more sane manner.
+
 20051111:
 	- Focus next client in the stacking order when the active client is closed.
 	- Added "Desktops" root menu item.

@@ -3,8 +3,8 @@
 <JWM>
 
 	<!-- The root menu, if this is undefined you will not get a menu. -->
-	<RootMenu label="JWM" height="32">
-		<Program icon="xterm.png" label="Terminal">xterm</Program>
+	<RootMenu height="32">
+		<Program icon="rxvt.png" label="Terminal">xterm</Program>
 		<Menu icon="folder.png" label="Applications">
 			<Program icon="dia.png" label="Dia">dia</Program>
 			<Program icon="firefox.png" label="Firefox">firefox</Program>
@@ -40,10 +40,6 @@
 		<Option>icon:xmms.xpm</Option>
 	</Group>
 
-	<Tray x="10" y="10" height="64" border="2" autohide="false">
-		<Pager/>
-	</Tray>
-
 	<Tray autohide="false" x="0" y="-1" width="0" height="32" border="1">
 		<TrayButton icon="colors.png"/>
 		<Pager/>
@@ -52,7 +48,7 @@
 			xload -nolabel -bg black -fg red -hl white
 		</Swallow>
 		<Swallow name="xclock">
-			xclock -brief -digital -twelve -bg gray90 -padding 7 
+			xclock -digital -brief -twelve -bg gray90 -fg black
 		</Swallow>
 	</Tray>
 
@@ -112,8 +108,8 @@
 		xli -onroot /export0/images/formulae.jpg
 	</StartupCommand>
 
-	<!-- Number of virtual desktops -->
-	<DesktopCount>4</DesktopCount>
+	<!-- Virtual Desktops -->
+	<Desktops count="4"/>
 
 	<!-- Double click speed (in milliseconds) -->
 	<DoubleClickSpeed>400</DoubleClickSpeed>

@@ -619,8 +619,8 @@ void ShowClient(ClientNode *np) {
 /****************************************************************************
  ****************************************************************************/
 void MaximizeClient(ClientNode *np) {
+
 	int north, west;
-	int screen;
 
 	Assert(np);
 
@@ -646,40 +646,7 @@ void MaximizeClient(ClientNode *np) {
 		np->height = np->oldHeight;
 		np->state.status &= ~STAT_MAXIMIZED;
 	} else {
-		np->oldx = np->x;
-		np->oldy = np->y;
-		np->oldWidth = np->width;
-		np->oldHeight = np->height;
-
-		screen = GetCurrentScreen(np->x, np->y);
-
-		np->x = GetScreenX(screen) + west;
-		np->y = GetScreenY(screen) + north;
-		np->width = GetScreenWidth(screen) - 2 * borderWidth;
-		np->height = GetScreenHeight(screen) - titleSize - borderWidth;
-
-		if(np->width > np->maxWidth) {
-			np->width = np->maxWidth;
-		}
-		if(np->height > np->maxHeight) {
-			np->height = np->maxHeight;
-		}
-
-		if(np->sizeFlags & PAspect) {
-			if((float)np->width / np->height
-				< (float)np->aspect.minx / np->aspect.miny) {
-				np->height = np->width * np->aspect.miny / np->aspect.minx;
-			}
-			if((float)np->width / np->height
-				> (float)np->aspect.maxx / np->aspect.maxy) {
-				np->width = np->height * np->aspect.maxx / np->aspect.maxy;
-			}
-		}
-
-		np->width -= np->width % np->xinc;
-		np->height -= np->height % np->yinc;
-
-		np->state.status |= STAT_MAXIMIZED;
+		PlaceMaximizedClient(np);
 	}
 
 	JXMoveResizeWindow(display, np->parent,
@@ -1032,8 +999,12 @@ void RemoveClient(ClientNode *np) {
 	 * reparent etc. */
 	if(shouldExit && !(np->state.status & STAT_WMDIALOG)) {
 		if(np->state.status & STAT_MAXIMIZED) {
+			np->x = np->oldx;
+			np->y = np->oldy;
+			np->width = np->oldWidth;
+			np->height = np->oldHeight;
 			JXMoveResizeWindow(display, np->window,
-				np->oldx, np->oldy, np->oldWidth, np->oldHeight);
+				np->x, np->y, np->width, np->height);
 		}
 		GravitateClient(np, 1);
 		if(!(np->state.status & STAT_MAPPED)

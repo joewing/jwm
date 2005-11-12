@@ -21,7 +21,7 @@ typedef struct BoundingBox {
 static int *cascadeOffsets = NULL;
 
 static void GetScreenBounds(int index, BoundingBox *box);
-static void UpdateTrayBounds(BoundingBox *box);
+static void UpdateTrayBounds(BoundingBox *box, int layer);
 static void SubtractBounds(const BoundingBox *src, BoundingBox *dest);
 
 /****************************************************************************
@@ -40,7 +40,7 @@ void StartupPlacement() {
 	cascadeOffsets = Allocate(count * sizeof(int));
 
 	for(x = 0; x < count; x++) {
-		cascadeOffsets[x] = titleSize;
+		cascadeOffsets[x] = borderWidth + titleHeight;
 	}
 
 }
@@ -135,7 +135,7 @@ void SubtractBounds(const BoundingBox *src, BoundingBox *dest) {
 
 /****************************************************************************
  ****************************************************************************/
-void UpdateTrayBounds(BoundingBox *box) {
+void UpdateTrayBounds(BoundingBox *box, int layer) {
 
 	TrayType *tp;
 	BoundingBox src;
@@ -143,16 +143,20 @@ void UpdateTrayBounds(BoundingBox *box) {
 
 	for(tp = GetTrays(); tp; tp = tp->next) {
 
-		src.x = tp->x;
-		src.y = tp->y;
-		src.width = tp->width;
-		src.height = tp->height;
+		if(tp->layer > layer) {
 
-		last = *box;
-		SubtractBounds(&src, box);
-		if(box->width * box->height <= 0) {
-			*box = last;
-			break;
+			src.x = tp->x;
+			src.y = tp->y;
+			src.width = tp->width;
+			src.height = tp->height;
+
+			last = *box;
+			SubtractBounds(&src, box);
+			if(box->width * box->height <= 0) {
+				*box = last;
+				break;
+			}
+
 		}
 
 	}
@@ -179,7 +183,7 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 		west = borderWidth;
 	}
 	if(np->state.border & BORDER_TITLE) {
-		north += titleSize;
+		north += titleHeight;
 	}
 
 	screenIndex = GetMouseScreen();
@@ -199,7 +203,7 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 
 	} else {
 
-		UpdateTrayBounds(&box);
+		UpdateTrayBounds(&box, np->state.layer);
 
 		cascadeMultiplier = GetScreenCount() * desktopCount;
 		cascadeIndex = screenIndex * cascadeMultiplier + currentDesktop;
@@ -207,7 +211,7 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 		/* Set the cascaded location. */
 		np->x = box.x + west + cascadeOffsets[cascadeIndex];
 		np->y = box.y + north + cascadeOffsets[cascadeIndex];
-		cascadeOffsets[cascadeIndex] += titleSize;
+		cascadeOffsets[cascadeIndex] += borderWidth + titleHeight;
 
 		/* Check for cascade overflow. */
 		overflow = 0;
@@ -219,7 +223,7 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 
 		if(overflow) {
 
-			cascadeOffsets[cascadeIndex] = titleSize;
+			cascadeOffsets[cascadeIndex] = borderWidth + titleHeight;
 			np->x = box.x + west + cascadeOffsets[cascadeIndex];
 			np->y = box.y + north + cascadeOffsets[cascadeIndex];
 
@@ -236,7 +240,7 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 				np->x = box.x + west;
 				np->y = box.y + north;
 			} else {
-				cascadeOffsets[cascadeIndex] += titleSize;
+				cascadeOffsets[cascadeIndex] += borderWidth + titleHeight;
 			}
 
 		}
@@ -244,6 +248,65 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 	}
 
 	JXMoveWindow(display, np->parent, np->x - west, np->y - north);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void PlaceMaximizedClient(ClientNode *np) {
+
+	BoundingBox box;
+	int screenIndex;
+	int north, west;
+
+	np->oldx = np->x;
+	np->oldy = np->y;
+	np->oldWidth = np->width;
+	np->oldHeight = np->height;
+
+	north = 0;
+	west = 0;
+	if(np->state.border & BORDER_OUTLINE) {
+		north = borderWidth;
+		west = borderWidth;
+	}
+	if(np->state.border & BORDER_TITLE) {
+		north += titleHeight;
+	}
+
+	screenIndex = GetCurrentScreen(np->x, np->y);
+	GetScreenBounds(screenIndex, &box);
+	UpdateTrayBounds(&box, np->state.layer);
+
+	box.x += west;
+	box.y += north;
+	box.width -= west + west;
+	box.height -= north + west;
+
+	if(box.width > np->maxWidth) {
+		box.width = np->maxWidth;
+	}
+	if(box.height > np->maxHeight) {
+		box.height = np->maxHeight;
+	}
+
+	if(np->sizeFlags & PAspect) {
+		if((float)box.width / box.height
+			< (float)np->aspect.minx / np->aspect.miny) {
+			box.height = box.width * np->aspect.miny / np->aspect.minx;
+		}
+		if((float)box.width / box.height
+			> (float)np->aspect.maxx / np->aspect.maxy) {
+			box.width = box.height * np->aspect.maxx / np->aspect.maxy;
+		}
+	}
+
+	np->x = box.x;
+	np->y = box.y;
+	np->width = box.width - (box.width % np->xinc);
+	np->height = box.height - (box.height % np->yinc);
+
+	np->state.status |= STAT_MAXIMIZED;
 
 }
 
@@ -264,7 +327,7 @@ void GravitateClient(ClientNode *np, int negate) {
 		west = borderWidth;
 	}
 	if(np->state.border & BORDER_TITLE) {
-		north += titleSize;
+		north += titleHeight;
 	}
 
 	if(north) {

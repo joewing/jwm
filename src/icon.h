@@ -61,13 +61,15 @@ IconNode *CreateIcon();
 
 #define ICON_DUMMY_FUNCTION 0
 
-#define InitializeIcons()        ICON_DUMMY_FUNCTION
-#define DestroyIcons()           ICON_DUMMY_FUNCTION
-#define AddIconPath( a )         ICON_DUMMY_FUNCTION
-#define PutIcon( a, b, c, d, e ) ICON_DUMMY_FUNCTION
-#define LoadIcon( a )            ICON_DUMMY_FUNCTION
-#define LoadNamedIcon( a )       ICON_DUMMY_FUNCTION
-#define DestroyIcon( a )         ICON_DUMMY_FUNCTION
+#define InitializeIcons()               ICON_DUMMY_FUNCTION
+#define StartupIcons()                  ICON_DUMMY_FUNCTION
+#define ShutdownIcons()                 ICON_DUMMY_FUNCTION
+#define DestroyIcons()                  ICON_DUMMY_FUNCTION
+#define AddIconPath( a )                ICON_DUMMY_FUNCTION
+#define PutIcon( a, b, c, d, e, f, g  ) ICON_DUMMY_FUNCTION
+#define LoadIcon( a )                   ICON_DUMMY_FUNCTION
+#define LoadNamedIcon( a )              ICON_DUMMY_FUNCTION
+#define DestroyIcon( a )                ICON_DUMMY_FUNCTION
 
 #endif /* USE_ICONS */
 

@@ -328,10 +328,10 @@ void Startup() {
 	StartupTrayButtons();
 	StartupTray();
 	StartupKeys();
+	StartupDesktops();
 	StartupHints();
 	StartupBorders();
 	StartupClients();
-	StartupDesktops();
 	StartupPlacement();
 
 	StartupTiming();

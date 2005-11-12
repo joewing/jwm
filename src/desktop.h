@@ -17,8 +17,7 @@ void NextDesktop();
 void PreviousDesktop();
 void ChangeDesktop(int desktop);
 
-void CreateDesktopMenu(const char *name, unsigned int mask,
-	struct MenuType *menu);
+struct MenuType *CreateDesktopMenu(unsigned int mask);
 
 void SetDesktopCount(const char *str);
 void SetDesktopName(int desktop, const char *str);

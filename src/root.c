@@ -14,7 +14,10 @@
 
 static MenuType *rootMenu = NULL;
 static int showExitConfirmation = 1;
+
 static void ExitHandler(ClientNode *np);
+static void PatchRootMenu(MenuType *menu);
+static void UnpatchRootMenu(MenuType *menu);
 
 /***************************************************************************
  ***************************************************************************/
@@ -66,7 +69,44 @@ void ShowRootMenu(int x, int y) {
 		return;
 	}
 
+	PatchRootMenu(rootMenu);
 	ShowMenu(rootMenu, RunCommand, x, y);
+	UnpatchRootMenu(rootMenu);
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void PatchRootMenu(MenuType *menu) {
+
+	MenuItemType *item;
+
+	for(item = menu->items; item; item = item->next) {
+		if(item->submenu) {
+			PatchRootMenu(item->submenu);
+		}
+		if(item->flags & MENU_ITEM_DESKTOPS) {
+			item->submenu = CreateDesktopMenu(1 << currentDesktop);
+			InitializeMenu(item->submenu);
+		}
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void UnpatchRootMenu(MenuType *menu) {
+
+	MenuItemType *item;
+
+	for(item = menu->items; item; item = item->next) {
+		if(item->flags & MENU_ITEM_DESKTOPS) {
+			DestroyMenu(item->submenu);
+			item->submenu = NULL;
+		} else if(item->submenu) {
+			UnpatchRootMenu(item->submenu);
+		}
+	}
 
 }
 

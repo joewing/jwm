@@ -15,7 +15,6 @@
 #include "key.h"
 #include "button.h"
 #include "event.h"
-#include "desktop.h"
 
 #define BASE_ICON_OFFSET 3
 
@@ -119,9 +118,7 @@ void InitializeMenu(MenuType *menu) {
 				menu->width = temp;
 			}
 		}
-		if(np->flags & MENU_ITEM_DESKTOPS) {
-			hasSubmenu = 7;
-		} else if(np->submenu) {
+		if(np->submenu) {
 			hasSubmenu = 7;
 			InitializeMenu(np->submenu);
 		}

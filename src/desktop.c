@@ -119,28 +119,16 @@ void ChangeDesktop(int desktop) {
 
 /***************************************************************************
  ***************************************************************************/
-void CreateDesktopMenu(const char *name, unsigned int mask,
-	MenuType *menu) {
+MenuType *CreateDesktopMenu(unsigned int mask) {
 
-	MenuType *submenu;
+	MenuType *menu;
 	MenuItemType *item;
 	int x;
 
-	item = Allocate(sizeof(MenuItemType));
-	item->iconName = NULL;
-	item->flags = MENU_ITEM_NORMAL;
-	item->next = menu->items;
-	menu->items = item;
-
-	item->name = Allocate(strlen(name) + 1);
-	strcpy(item->name, name);
-	item->command = NULL;
-
-	submenu = Allocate(sizeof(MenuType));
-	item->submenu = submenu;
-	submenu->itemHeight = 0;
-	submenu->items = NULL;
-	submenu->label = NULL;
+	menu = Allocate(sizeof(MenuType));
+	menu->itemHeight = 0;
+	menu->items = NULL;
+	menu->label = NULL;
 
 	for(x = desktopCount - 1; x >= 0; x--) {
 
@@ -148,8 +136,8 @@ void CreateDesktopMenu(const char *name, unsigned int mask,
 		item->iconName = NULL;
 		item->submenu = NULL;
 		item->flags = MENU_ITEM_NORMAL;
-		item->next = submenu->items;
-		submenu->items = item;
+		item->next = menu->items;
+		menu->items = item;
 
 		item->command = Allocate(8 * sizeof(char));
 		strcpy(item->command, "#desk ");
@@ -167,6 +155,8 @@ void CreateDesktopMenu(const char *name, unsigned int mask,
 		}
 
 	}
+
+	return menu;
 
 }
 

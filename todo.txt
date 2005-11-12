@@ -5,8 +5,14 @@ Todo:
 	- Add an option to make "alt-tabbing" go through the z-stack instead of
 	  the tray.
 	- Add the ability to name desktops.
-	- Add desktop root menu item.
 	- Add window list root menu item.
+
+20051111:
+	- Focus next client in the stacking order when the active client is closed.
+	- Added "Desktops" root menu item.
+
+20051110:
+	- Now desktops can be named, changes to the configuration for this.
 
 20051109:
 	- Send ClientMessage instead of PropertyNotify for _JWM commands.

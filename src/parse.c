@@ -34,6 +34,7 @@ static const char *RESTART_COMMAND = "#restart";
 static const char *RESTART_NAME = "Restart";
 static const char *EXIT_COMMAND = "#exit";
 static const char *EXIT_NAME = "Exit";
+static const char *DESKTOPS_NAME = "Desktops";
 
 static const char *DEFAULT_TITLE = "JWM";
 static const char *LABEL_ATTRIBUTE = "label";
@@ -524,6 +525,13 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 			if(!menu->items) {
 				menu->items = last;
 			}
+
+			value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
+			if(!value) {
+				value = DESKTOPS_NAME;
+			}
+			last->name = Allocate(strlen(value) + 1);
+			strcpy(last->name, value);
 
 			break;
 		case TOK_EXIT:

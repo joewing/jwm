@@ -195,7 +195,10 @@ void CreateWindowSendToMenu(MenuType *menu) {
 		}
 	}
 
-	CreateDesktopMenu(SENDTO_TEXT, mask, menu);
+	AddWindowMenuItem(menu, SENDTO_TEXT, NULL);
+
+	/* Now the first item in the menu is for the desktop list. */
+	menu->items->submenu = CreateDesktopMenu(mask);
 
 }
 

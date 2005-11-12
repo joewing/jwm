@@ -337,7 +337,7 @@ void WriteNetState(ClientNode *np) {
 
 	topSize = sideSize;
 	if(np->state.border & BORDER_TITLE) {
-		topSize += titleSize;
+		topSize += titleHeight;
 	}
 
 	/* left, right, top, bottom */

@@ -997,7 +997,7 @@ void RemoveClient(ClientNode *np) {
 
 	/* If the window manager is exiting (ie, not the client), then
 	 * reparent etc. */
-	if(shouldExit && !(np->state.status & STAT_WMDIALOG)) {
+	if(shouldExit && !(np->state.status & (STAT_WMDIALOG | STAT_WITHDRAWN))) {
 		if(np->state.status & STAT_MAXIMIZED) {
 			np->x = np->oldx;
 			np->y = np->oldy;

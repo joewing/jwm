@@ -214,6 +214,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 	if(np) {
 		dp->node->owner = np->window;
 	}
+	dp->node->state.status |= STAT_WMDIALOG;
 	FocusClient(dp->node);
 
 	dp->gc = JXCreateGC(display, window, 0, NULL);

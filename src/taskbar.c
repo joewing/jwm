@@ -34,6 +34,8 @@ typedef struct TaskBarType {
 	TimeType mouseTime;
 	int mousex, mousey;
 
+	unsigned int maxItemWidth;
+
 	struct TaskBarType *next;
 
 } TaskBarType;
@@ -51,7 +53,6 @@ static char minimized_bitmap[] = {
 static const int TASK_SPACER = 2;
 
 static Pixmap minimizedPixmap;
-static unsigned int maxItemWidth;
 static InsertModeType insertMode;
 
 static TaskBarType *bars;
@@ -62,7 +63,8 @@ static Node *GetNode(TaskBarType *bar, int x);
 static unsigned int GetItemCount();
 static int ShouldShowItem(const ClientNode *np);
 static int ShouldFocusItem(const ClientNode *np);
-static unsigned int GetItemWidth(unsigned int width, unsigned int itemCount);
+static unsigned int GetItemWidth(const TaskBarType *bp,
+	unsigned int itemCount);
 static void Render(const TaskBarType *bp);
 static void ShowTaskWindowMenu(TaskBarType *bar, Node *np);
 
@@ -79,7 +81,6 @@ void InitializeTaskBar() {
 	bars = NULL;
 	taskBarNodes = NULL;
 	taskBarNodesTail = NULL;
-	maxItemWidth = 0;
 	insertMode = INSERT_RIGHT;
 }
 
@@ -389,7 +390,7 @@ void Render(const TaskBarType *bp) {
 		return;
 	}
 	if(bp->layout == LAYOUT_HORIZONTAL) {
-		itemWidth = GetItemWidth(width, itemCount);
+		itemWidth = GetItemWidth(bp, itemCount);
 		remainder = width - itemWidth * itemCount;
 	} else {
 		itemWidth = width;
@@ -510,7 +511,7 @@ Node *GetNode(TaskBarType *bar, int x)
 	if(bar->layout == LAYOUT_HORIZONTAL) {
 
 		width = bar->cp->width - index; 
-		itemWidth = GetItemWidth(width, itemCount);
+		itemWidth = GetItemWidth(bar, itemCount);
 		remainder = width - itemWidth * itemCount;
 
 		for(tp = taskBarNodes; tp; tp = tp->next) {
@@ -617,11 +618,11 @@ int ShouldFocusItem(const ClientNode *np) {
 
 /***************************************************************************
  ***************************************************************************/
-unsigned int GetItemWidth(unsigned int width, unsigned int itemCount) {
+unsigned int GetItemWidth(const TaskBarType *bp, unsigned int itemCount) {
 
 	unsigned int itemWidth;
 
-	itemWidth = width;
+	itemWidth = bp->cp->width;
 
 	if(!itemCount) {
 		return itemWidth;
@@ -632,8 +633,8 @@ unsigned int GetItemWidth(unsigned int width, unsigned int itemCount) {
 		itemWidth = 1;
 	}
 
-	if(maxItemWidth > 0 && itemWidth > maxItemWidth) {
-		itemWidth = maxItemWidth;
+	if(bp->maxItemWidth > 0 && itemWidth > bp->maxItemWidth) {
+		itemWidth = bp->maxItemWidth;
 	}
 
 	return itemWidth;
@@ -642,15 +643,33 @@ unsigned int GetItemWidth(unsigned int width, unsigned int itemCount) {
 
 /***************************************************************************
  ***************************************************************************/
-void SetMaxTaskBarItemWidth(unsigned int w) {
-	maxItemWidth = w;
+void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value) {
+
+	int temp;
+	TaskBarType *bp;
+
+	Assert(cp);
+
+	if(value) {
+		temp = atoi(value);
+		if(temp < 0) {
+			Warning("invalid maxwidth for TaskList: %s", value);
+			return;
+		}
+		bp = (TaskBarType*)cp->object;
+		bp->maxItemWidth = temp;
+	}
+
 }
 
 /***************************************************************************
  ***************************************************************************/
 void SetTaskBarInsertMode(const char *mode) {
 
-	Assert(mode);
+	if(!mode) {
+		insertMode = INSERT_RIGHT;
+		return;
+	}
 
 	if(!strcmp(mode, "right")) {
 		insertMode = INSERT_RIGHT;

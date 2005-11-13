@@ -22,7 +22,8 @@ void SignalTaskbar();
 
 void FocusNext();
 
-void SetMaxTaskBarItemWidth(unsigned int w);
+void SetMaxTaskBarItemWidth(struct TrayComponentType *cp, const char *value);
+void SetTaskBarInsertMode(const char *mode);
 
 #endif
 

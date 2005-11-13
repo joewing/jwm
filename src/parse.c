@@ -53,6 +53,8 @@ static const char *NAME_ATTRIBUTE = "name";
 static const char *BORDER_ATTRIBUTE = "border";
 static const char *COUNT_ATTRIBUTE = "count";
 static const char *DISTANCE_ATTRIBUTE = "distance";
+static const char *INSERT_ATTRIBUTE = "insert";
+static const char *MAX_WIDTH_ATTRIBUTE = "maxwidth";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -847,7 +849,13 @@ void ParseDesktops(const TokenNode *tp) {
  ***************************************************************************/
 void ParseTaskListStyle(const TokenNode *tp) {
 
+	const char *temp;
 	TokenNode *np;
+
+	temp = FindAttribute(tp->attributes, INSERT_ATTRIBUTE);
+	if(temp) {
+		SetTaskBarInsertMode(temp);
+	}
 
 	for(np = tp->subnodeHead; np; np = np->next) {
 		switch(np->type) {
@@ -989,12 +997,18 @@ void ParsePager(const TokenNode *tp, TrayType *tray) {
 void ParseTaskList(const TokenNode *tp, TrayType *tray) {
 
 	TrayComponentType *cp;
+	const char *temp;
 
 	Assert(tp);
 	Assert(tray);
 
 	cp = CreateTaskBar();
 	AddTrayComponent(tray, cp);
+
+	temp = FindAttribute(tp->attributes, MAX_WIDTH_ATTRIBUTE);
+	if(temp) {
+		SetMaxTaskBarItemWidth(cp, temp);
+	}
 
 }
 

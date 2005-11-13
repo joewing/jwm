@@ -152,7 +152,10 @@ int GetStringHeight(FontType type) {
  ****************************************************************************/
 void SetFont(FontType type, const char *value) {
 
-	Assert(value);
+	if(!value) {
+		Warning("empty Font tag");
+		return;
+	}
 
 	if(fontNames[type]) {
 		Release(fontNames[type]);

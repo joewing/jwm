@@ -236,6 +236,10 @@ void DestroyColors() {
  ****************************************************************************/
 void SetColor(ColorType c, const char *value) {
 
+	if(!value) {
+		Warning("empty color tag");
+		return;
+	}
 	Assert(value);
 
 	InitializeNames();

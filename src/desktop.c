@@ -174,7 +174,10 @@ const char *GetDesktopName(int desktop) {
  ***************************************************************************/
 void SetDesktopCount(const char *str) {
 
-	Assert(str);
+	if(!str) {
+		Warning("invalid desktop count");
+		return;
+	}
 
 	desktopCount = atoi(str);
 	if(desktopCount <= 0 || desktopCount > MAX_DESKTOP_COUNT) {
@@ -189,6 +192,11 @@ void SetDesktopCount(const char *str) {
 void SetDesktopName(int desktop, const char *str) {
 
 	int x;
+
+	if(!str) {
+		Warning("empty Desktops Name tag");
+		return;
+	}
 
 	Assert(desktop >= 0);
 	Assert(desktop < desktopCount);

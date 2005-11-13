@@ -3,8 +3,11 @@
 <JWM>
 
 	<!-- The root menu, if this is undefined you will not get a menu. -->
+	<!-- Additional RootMenu attributes: onroot, labeled, label -->
 	<RootMenu height="32">
 		<Program icon="rxvt.png" label="Terminal">xterm</Program>
+
+		<!-- Addititional Menu attributes: height, labeled -->
 		<Menu icon="folder.png" label="Applications">
 			<Program icon="dia.png" label="Dia">dia</Program>
 			<Program icon="firefox.png" label="Firefox">firefox</Program>
@@ -25,9 +28,10 @@
 				xprop | xmessage -file -
 			</Program>
 		</Menu>
+		<!-- <Desktops label="Desktops" icon="desktops.png"/> -->
 		<Separator/>
-		<Restart icon="restart.png"/>
-		<Exit confirm="true" icon="exit.png"/>
+		<Restart label="Restart" icon="restart.png"/>
+		<Exit label="Exit" confirm="true" icon="exit.png"/>
 	</RootMenu>
 
 	<Group>
@@ -40,10 +44,19 @@
 		<Option>icon:xmms.xpm</Option>
 	</Group>
 
-	<Tray autohide="false" x="0" y="-1" width="0" height="32" border="1">
+	<!-- Additional tray attributes: autohide, width, border, layer, layout -->
+	<Tray  x="0" y="-1" height="32">
+
+		<!-- Additional TrayButton attribute: label -->
 		<TrayButton icon="colors.png"/>
+
+		<!-- Additional Pager attributes; width, height -->
 		<Pager/>
+
+		<!-- Additional TaskList attributes: width, height -->
 		<TaskList/>
+
+		<!-- Additional Swallow attribute: height -->
 		<Swallow name="xload" width="64">
 			xload -nolabel -bg black -fg red -hl white
 		</Swallow>
@@ -99,7 +112,6 @@
 		<Background>yellow</Background>
 	</PopupStyle>
 
-
 	<Icons>
 		<IconPath>$HOME/.icons</IconPath>
 	</Icons>
@@ -109,6 +121,7 @@
 	</StartupCommand>
 
 	<!-- Virtual Desktops -->
+	<!-- Name tags can be contained within Desktops for desktop names. -->
 	<Desktops count="4"/>
 
 	<!-- Double click speed (in milliseconds) -->

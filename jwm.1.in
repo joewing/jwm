@@ -321,6 +321,12 @@ from the tray. 0 is the default.
 The height of the task list. 0 indicates that the height should be
 determined from the tray. 0 is the default.
 .RE
+.P
+\fBmaxwidth\fP \fIint\fP
+.RS
+The maximum width of an item in the task bar. 0 indicates no maximum.
+The default is 0.
+.RE
 .RE
 .P
 .B TrayButton
@@ -480,6 +486,14 @@ more information.
 .B "TASK LIST STYLE"
 .RS
 The \fBTaskListStyle\fP tag controls the look of task lists.
+This tag supports the following attribute:
+.P
+\fBinsert\fP \fImode\fP
+.RS
+This determines how new items are added to the task list. Valid options
+are \fBleft\fP and \fBright\fP. The default is \fBright\fP.
+.RE
+.P
 Within this tag the following tags are supported:
 .P
 .B Font

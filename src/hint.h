@@ -3,8 +3,8 @@
  * Copyright (C) 2004 Joe Wingbermuehle
  ****************************************************************************/
 
-#ifndef PROT_H
-#define PROT_H
+#ifndef HINT_H
+#define HINT_H
 
 struct ClientNode;
 

@@ -30,16 +30,14 @@ static int CheckVerticalFill(TrayType *tp);
 
 /***************************************************************************
  ***************************************************************************/
-void InitializeTray()
-{
+void InitializeTray() {
 	trays = NULL;
 	supportingWindow = None;
 }
 
 /***************************************************************************
  ***************************************************************************/
-void StartupTray()
-{
+void StartupTray() {
 
 	XSetWindowAttributes attr;
 	long attrMask;
@@ -196,8 +194,7 @@ void StartupTray()
 
 /***************************************************************************
  ***************************************************************************/
-void ShutdownTray()
-{
+void ShutdownTray() {
 
 	TrayType *tp;
 	TrayComponentType *cp;
@@ -232,14 +229,12 @@ void ShutdownTray()
 
 /***************************************************************************
  ***************************************************************************/
-void DestroyTray()
-{
+void DestroyTray() {
 }
 
 /***************************************************************************
  ***************************************************************************/
-TrayType *CreateTray()
-{
+TrayType *CreateTray() {
 
 	TrayType *tp;
 
@@ -304,8 +299,7 @@ TrayComponentType *CreateTrayComponent() {
 
 /***************************************************************************
  ***************************************************************************/
-void AddTrayComponent(TrayType *tp, TrayComponentType *cp)
-{
+void AddTrayComponent(TrayType *tp, TrayComponentType *cp) {
 
 	Assert(tp);
 	Assert(cp);

@@ -54,10 +54,10 @@ location to make user-specific changes.
 .SH CONFIGURATION
 .B OVERVIEW
 .RS
-Configureation of JWM is done by editing ".jwmrc".  This file is XML
+Configuration of JWM is done by editing ".jwmrc".  This file is XML
 making it easy to edit, either by hand or programmatically. The
-example.jwmrc gives an example configuration file which specifies all the
-options.  Before restarting JWM, it is a good idea to run "jwm -p" to make
+example.jwmrc gives an example configuration file.
+Before restarting JWM, it is a good idea to run "jwm -p" to make
 sure the configuration file is free of errors.  Otherwise you may end up
 without a root menu.
 .RE
@@ -66,27 +66,82 @@ without a root menu.
 .RS
 The root menu in JWM is the primary way of starting programs.
 It also provides a way to restart or exit the window manager.
-The outer most tag is \fBRootMenu\fP. An optional attribute, \fBlabel\fP,
-allows one to specify the name of this menu as shown in the tray.
-If this attribute is not given, "JWM" will be used.  The \fBicon\fP
-attribute allows one to specify and icon to appear with the menu name.
-Within this tag the following tags are supported:
+The outer most tag is \fBRootMenu\fP. The following attributes are
+supported:
+.P
+\fBonroot\fP \fIbool\fP
+.RS
+Display the root menu when the root window is clicked. Default is true.
+.RE
+.P
+\fBheight\fP \fIint\fP
+.RS
+Height of each menu item in pixels. 0 indicates the largest menu item
+will determine the height. The default is 0.
+.RE
+.P
+\fBlabeled\fP \fIbool\fP
+.RS
+Determines if a label appears at the top of the menu. Default is false.
+.RE
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to display at the top of the menu. Default is "JWM".
+.RE
+.P
+Within the \fBRootMenu\fP tag, the following tags are supported:
 .P
 .B Menu
 .RS
 This tag creates a submenu item. Any of the tags allowed within the 
 \fBRootMenu\fP tag, including the \fBMenu\fP tag are allowed within this
-element. The \fBlabel\fP arrtibute specifies the name of the submenu. The 
-\fBicon\fP attribute allows one to specify and icon for this submenu.
+element. The following attributes are supported:
+.P
+\fBheight\fP \fIint\fP
+.RS
+Height of each menu item in pixels. 0 indicates the largest menu item
+will determine the height. The default is inherited from the parent menu.
+.RE
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to use. No default.
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use for this menu. No default.
+.RE
+.P
+\fBlabeled\fP \fIbool\fP
+.RS
+Determines if a label appears at the top of the menu. Default is false.
+.RE
+.RE
+.P
+.B Include
+.RS
+Include the contents of a file into the menu structure. The file must
+start with a "Menu" tag. The file is specified by the text of the tag.
+If the text starts with "exec:" then the output of a program is used.
 .RE
 .P
 .B Program
 .RS
 The \fBProgram\fP tag provides a way to start an external program. The text
-in this tag is the command used to start he program. An optional attribute, 
-\fBlabel\fP, allows one to specify what to show on the menu. If this
-attribute is not given the command is shown. The \fBicon\fP attribute
-allows one to specify an icon for this menu item.
+in this tag is the command used to start he program.
+The following attributes are supported:
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to display. Default is the text of the tag.
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use. No default.
+.RE
 .RE
 .P
 .B Separator
@@ -95,27 +150,193 @@ This tag simply puts a line in the menu allowing menu divisions.
 No text or attributes are used.
 .RE
 .P
+.B Desktops
+.RS
+Add a desktop menu. This will add a submenu with a list of desktops that
+can be used to change the current desktop.
+The following attributes are supported:
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to use for the menu. The default is "Desktops".
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use for this item. No default.
+.RE
+.RE
+.P
 .B Restart
 .RS
-This tag adds a menu item to restart the window manager. An optional
-attribute, \fBlabel\fP, allows one to specify what to show on the menu.
-If this attribute is not given, "Restart" will be shown. The \fBicon\fP
-attribute allows one to specify an icon for this menu item.
+This tag adds a menu item to restart the window manager.
+The following attributes are supported:
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to use. The default is "Restart".
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use. No default.
+.RE
 .RE
 .P
 .B Exit
 .RS
-This tag adds a menu item to exit the window manager.  An optional attribute, 
-\fBlabel\fP, allows one to specify what to show on the menu. If this
-attribute is not given, "Exit" will be shown. If text is specified inside
-this tag it will be interpreted as a command to run when JWM exits.
-This can be used to start another window manager. The \fBicon\fP
-attribute allows one to specify an icon for this menu item.
-Finally, the \fBconfirm\fP attribute allows one to specify whether a
-confirm dialog is displayed after clicking this item. Possible values are 
-\fBtrue\fP and \fBfalse\fP The default is \fBtrue\fP.
+This tag adds a menu item to exit the window manager.
+The following attributes are supported:
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to use. The default is "Exit".
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use. No default.
+.RE
+.P
+\fBconfirm\fP \fIbool\fP
+.RS
+Determine if a confirm dialog appears before exiting. Default is true.
+.RE
 .P
 Note that confirm dialogs can be disabled completely at the compile-time.
+.RE
+.RE
+
+.B TRAYS
+.RS
+One or more trays may be created via the \fBTray\fP tag.
+This tag supports the following attributes:
+.P
+\fBautohide\fP \fIbool\fP
+.RS
+Allows this tray to hide itself when not activated. Default is false.
+.RE
+.P
+\fBx\fP \fIint\fP
+.RS
+The x-coordinate of the tray. This may be negative to indicate an offset
+from the right of the screen.
+.RE
+.P
+\fBy\fP \fIint\fP
+.RS
+The y-coordinate of the tray. This may be negative to indicate an offset
+from the bottom of the screen.
+.RE
+.P
+\fBwidth\fP \fIint\fP
+.RS
+The width of the tray. 0 indicates that the tray should compute an
+optimal width depending on what it contains and the layout. 0 is the
+default.
+.RE
+.P
+\fBheight\fP \fIint\fP
+.RS
+The height of the tray. 0 indicates that the tray should compute an
+optimal height depending on what it contains and the layout. 0 is the
+default.
+.RE
+.P
+\fBborder\fP \fIint\fP
+.RS
+The width of a border. The default is 1. Valid values are between 0 and 32
+inclusive.
+.RE
+.P
+\fBlayer\fP \fIint\fP
+.RS
+The layer of the tray. The default is 8. Valid values are between 0 and
+12 inclusive.
+.RE
+.P
+\fBlayout\fP { \fBvertical\fP | \fBhorizontal\fP }
+.RS
+The layout of the tray. The default is horizontal.
+.RE
+.P
+Within this tag the following tags are supported:
+.P
+.B Pager
+.RS
+Add a pager to the tray. This tag supports the following attributes:
+.P
+\fBwidth\fP \fIint\fP
+.RS
+The width of the pager. 0 indicates that the width should be determined
+from the tray. 0 is the default.
+.RE
+.P
+\fBheight\fP \fIint\fP
+.RS
+The height of the pager. 0 indicates that the height should be determined
+from the tray. 0 is the default.
+.RE
+.RE
+.P
+.B Swallow
+.RS
+Swallow a program into the tray. The text of this tag gives the
+command to run.
+This tag supports the following attributes:
+.P
+\fBname\fP \fIstring\fP
+.RS
+The name of the program to swallow. This attribute is required.
+.RE
+.P
+\fBwidth\fP \fIint\fP
+.RS
+The width of the swallowed program. 0 indicates that the width should
+be determined from the tray and size requested from the program. 0 is
+the default.
+.RE
+.P
+\fBheight\fP \fIint\fP
+.RS
+The height of the swallowed program. 0 indicates that the height should
+be determined from the tray and the size requested from the program. 0 is
+the default.
+.RE
+.RE
+.P
+.B TaskList
+.RS
+Add a task list to the tray.
+This tag supports the following attributes:
+.P
+\fBwidth\fP \fIint\fP
+.RS
+The width of the task list. 0 indicates that the width should be determined
+from the tray. 0 is the default.
+.RE
+.P
+\fBheight\fP \fIint\fP
+.RS
+The height of the task list. 0 indicates that the height should be
+determined from the tray. 0 is the default.
+.RE
+.RE
+.P
+.B TrayButton
+.RS
+Add a root menu button to the tray.
+This tag supports the following attributes:
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+A label to display. No default.
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+An icon to display. No default.
+.RE
 .RE
 .RE
 
@@ -197,10 +418,10 @@ Causes windows in this group to have a title bar.
 .RE
 .RE
 
-.B "BORDER SETTINGS"
+.B "BORDER STYLE"
 .RS
-The \fBBorder\fP tag controls the look of window borders. Within this tag,
-the following tags are supported:
+The \fBBorderStyle\fP tag controls the look of window borders.
+Within this tag, the following tags are supported:
 .P
 .B Font
 .RS
@@ -244,76 +465,58 @@ section for more information.
 .RE
 .RE
 
-.B "TRAY SETTINGS"
+.B "TRAY STYLE"
 .RS
-The \fBTray\fP tag controls the look of the tray. An optional attribute, 
-\fBautohide\fP, may be specified to turn on or off automatic hidding of
-the tray. Possible values for the \fBautohide\fP attribute are \fBtrue\fP
-and \fBfalse\fP. By default, automatic hidding is disabled.
-An optional attribute, \fBmaxwidth\fP, may be specified to set the maximum
-width of a program in the tray in pixels. The default is 0 (zero), which
-specifies no limit.  An optional attribute, \fBlayer\fP, may be specified
-to determine the layer of the tray. Valid values are integers between 0
-(the lowest layer) and 12 (the top\-most layer) inclusive. The default is
-8. Finally, an optional attribute, \fBinsert\fP, may be
-specified to indicate how programs are added to the tray. Possible values are
-\fBright\fP and \fBleft\fP. The default is \fBleft\fP.
-Within the \fBTray\fP tag, the following tags are supported:
+The \fBTrayStyle\fP tag controls the look of trays.
+Within this tag the following tag is supported:
+.P
+.B Background
+.RS
+The background color for the tray. See the \fBCOLORS\fP section for
+more information.
+.RE
+.RE
+
+.B "TASK LIST STYLE"
+.RS
+The \fBTaskListStyle\fP tag controls the look of task lists.
+Within this tag the following tags are supported:
 .P
 .B Font
 .RS
-The font used on the tray. See the \fBFONTS\fP section for more information.
-.RE
-.P
-.B Height
-.RS
-The height of the tray in pixels. The default is 28, the minimum is 8,
-and the maximum is 128.
-.RE
-.P
-.B Width
-.RS
-The width of the tray in pixels. The default is 0 (zero) indicating full
-screen width, the minimum is 320.
-.RE
-.P
-.B Alignment
-.RS
-The horizontal alignment of the tay. Possible values are \fBleft\fP,
-\fBcenter\fP, and \fBright\fP. The default value is \fBcenter\fP.
+The font used for program names. See the \fBFONTS\fP section for more
+information.
 .RE
 .P
 .B Foreground
 .RS
-The text color of inactive items on the tray. See the \fBCOLORS\fP section
-for more information.
+The foreground color of the task bar. See the \fBCOLORS\fP section for
+more information.
 .RE
 .P
 .B Background
 .RS
-The background color of inactive items on the tray. See the \fBCOLORS\fP
-section for more information.
+The background color of the task bar. See the \fBCOLORS\fP section for
+more information.
 .RE
 .P
 .B ActiveForeground
 .RS
-The text color of active items on the tray. See the \fBCOLORS\fP section
-for more information.
+The foreground color of an active item on the task bar. See the \fBCOLORS\fP
+section for more information.
 .RE
 .P
 .B ActiveBackground
 .RS
-The bacground color of active items on the tray. See the \fBCOLORS\fP
+The background color of an active item on the task bar. See the \fBCOLORS\fP
 section for more information.
 .RE
 .RE
 
-.B "PAGER SETTINGS"
+.B "PAGER STYLE"
 .RS
-The \fBPager\fP tag controls the look of the pager on the tray. An optional
-attribute, \fBenabled\fP, may be specified to disable the pager. Possible
-values are \fBtrue\fP (the default) or \fBfalse\fP. Within
-this tag the following tags are supported:
+The \fBPagerStyle\fP tag controls the look of pagers.
+Within this tag, the following tags are supported:
 .P
 .B Outline
 .RS
@@ -346,53 +549,11 @@ section for more information.
 .RE
 .RE
 
-.B "LOAD SETTINGS"
+.B "MENU STYLE"
 .RS
-The \fBLoad\fP tag controls the look of the load status graph on the tray
-(note that this is an optional feature at compile time and is only supported
-on some platforms). An optional attribute, \fBenabled\fP, determines if the
-load display is shown. Possible values are \fBtrue\fP and \fBfalse\fP. By
-default the load graph is enabled.
-Within this tag, the following tags are supported:
-.P
-.B Outline
-.RS
-The color of scale lines. See the \fBCOLORS\fP section for more information.
-.RE
-.P
-.B Foreground
-.RS
-The foreground color of the load graph. See the \fBCOLORS\fP section for
-more information.
-.RE
-.P
-.B Background
-.RS
-The background color of the load graph. See the \fBCOLORS\fP section for more
-information.
-.RE
-.RE
-
-.B "CLOCK SETTINGS"
-.RS
-The \fBClock\fP tag controls the look of the clock on the tray.
-An optional attribute, \fBenabled\fP, specifies whether or not the clock
-is displayed. Possible values are \fBtrue\fP and \fBfalse\fP. It is enabled
-by default. Another optional attribute, \fBformat\fP, specifies the format of
-the clock (See "man strftime" for formatting options). Within this tag, the
-following tag is supported:
-.P
-.B Program
-.RS
-The program to launch when the clock is clicked.
-.RE
-.RE
-
-.B "MENU SETTINGS"
-.RS
-The \fBMenu\fP tag controls the look of the menus in JWM
-(this includes the root menu and window menus). Within this tag, the
-following tags are supported:
+The \fBMenuStyle\fP tag controls the look of the menus in JWM
+(this includes the root menu and window menus).
+Within this tag the following tags are supported:
 .P
 .B Font
 .RS
@@ -424,11 +585,43 @@ for more information.
 .RE
 .RE
 
+.B "POPUP STYLE"
+.RS
+The \fBPopupStyle\fP tag controls the look of popup windows such as those
+shown when the mouse sits over a task bar item.
+Within this tag the following tags are supported:
+.P
+.RS
+.B Font
+.RS
+The font to use. See the \fBFONTS\fP section for more information.
+.RE
+.P
+.B Outline
+.RS
+The color of the window outline. See the \fBCOLORS\fP section for more
+information.
+.RE
+.P
+.B Foreground
+.RS
+The text color. See the \fBCOLORS\fP section for more information.
+.RE
+.P
+.B Background
+.RS
+The background color. See the \fBCOLORS\fP section for more information.
+.RE
+.P
+.RE
+.RE
+
 .B FONTS
 .RS
 Fonts for various parts of JWM are specified within a \fBFont\fP tag. The
-text of this tag determines the font to use. This is a standard X font string.
-To easily generate such a string, use the "xfontsel" program.
+text of this tag determines the font to use.
+This can be either a standard X font string or, if compiled with XFT
+support, an XFT font string.
 .RE
 
 .B COLORS
@@ -442,11 +635,11 @@ Colors for various parts of JWM are specified within specific tags
 .RS
 Icons for windows that don't supply an icon via the _NET_WM_ICON hint are
 located by searching the icon search path(s) for an icon whose name
-(minus the ".xpm" extension) matches the instance name of the window as
-returned in the WM_CLASS hint. If this lookup fails, a default icon is
-supplied. This icon will be displayed for the window on it's title bar and
-on the task bar. Icons that are not an appropriate size as determined by
-taking the minimum of the title bar height and the tray height will be scaled.  Square icons work best.
+(minus the ".xpm" or ".png" extension) matches the instance name of the
+window as returned in the WM_CLASS hint. If this lookup fails, a default
+icon is supplied. This icon will be displayed for the window on it's title
+bar and on the task bar. Icons that are not an appropriate size will be
+scaled. Square icons work best.
 .P
 For menu items, the icon path is searched for a match. the icon specified for
 a menu item must be the exact name of the icon file with the extension.
@@ -456,9 +649,11 @@ allocated for icons.
 .P
 Icon properties are contained within the \fBIcons\fP tag. Within this tag,
 zero or more \fBIconPath\fP tags may be specified. The text of this tag is
-assumed to be an absolute directory path to a directory containing XPM icons.
+assumed to be an absolute directory path to a directory containing XPM 
+and/or PNG icons.
 When searching for icons, if multiple paths are provided, they will be
 searched in order until a match is made.
+Note that icon, PNG, and XPM support are compile-time options.
 .RE
 
 .B "KEY BINDINGS"
@@ -545,7 +740,8 @@ Note that in the future this may be configurable.
 .RE
 .P
 .RS
-Any button on the root window will bring up the root menu.
+Any button on the root window will bring up the root menu unless
+disabled via the \fBonroot\fP attribute of \fBRootMenu\fP.
 .RE
 .P
 .RS
@@ -566,15 +762,25 @@ The mouse wheel will move through menus when a menu is open, show the root
 menu when over root, or switch desktops when over the pager.
 .RE
 
+.B DESKTOPS
+.RS
+Virtual desktops are controlled with the \fBDesktops\fP tag.
+Within this tag the following attribute is supported:
+.P
+\fBcount\fP \fIint\fP
+.RS
+The number of virtual desktops. The default is 4. Valid values are between
+1 and 8 inclusive.
+.RE
+.P
+Desktop names may be assigned via the \fBName\fP tag within the
+\fBDesktops\fP tag.
+.RE
+
 .B "OTHER SETTINGS"
 .P
 .RS
 The following tags may also be supplied:
-.B DesktopCount
-.RS
-The number of desktops. The default is 4. Valid values are between 1 and 8
-inclusive.
-.RE
 .P
 .B DoubleClickDelta
 .RS
@@ -622,9 +828,6 @@ JWM forum.  Membership to post is required. Membership is free.
 
 .SH AUTHOR
 Joe Wingbermuehle <joewing@joewing.net>
-
-.SH MAINTAINER
-Joe Wiles <joesboxd3b@gmail.com>
 
 .SH "SEE ALSO"
 .BR X (1)

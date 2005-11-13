@@ -9,7 +9,7 @@
 void WaitForEvent();
 void ProcessEvent(XEvent *event);
 
-void SetShowMenuOnRoot(int v);
+void SetShowMenuOnRoot(const char *mask);
 
 #endif
 

@@ -69,9 +69,11 @@ It also provides a way to restart or exit the window manager.
 The outer most tag is \fBRootMenu\fP. The following attributes are
 supported:
 .P
-\fBonroot\fP \fIbool\fP
+\fBonroot\fP \fIlist\fP
 .RS
-Display the root menu when the root window is clicked. Default is true.
+Determine which buttons on the root window activate the menu.
+This is a list of integers specifying buttons. The default is
+"123456789".
 .RE
 .P
 \fBheight\fP \fIint\fP
@@ -185,7 +187,9 @@ The icon to use. No default.
 .P
 .B Exit
 .RS
-This tag adds a menu item to exit the window manager.
+This tag adds a menu item to exit the window manager. If text is
+present within this tag, it is interpreted as a command to run when JWM
+exits. This can be used to start another window manager.
 The following attributes are supported:
 .P
 \fBlabel\fP \fIstring\fP
@@ -245,7 +249,7 @@ default.
 .P
 \fBborder\fP \fIint\fP
 .RS
-The width of a border. The default is 1. Valid values are between 0 and 32
+The width of the border. The default is 1. Valid values are between 0 and 32
 inclusive.
 .RE
 .P
@@ -308,23 +312,11 @@ the default.
 .B TaskList
 .RS
 Add a task list to the tray.
-This tag supports the following attributes:
-.P
-\fBwidth\fP \fIint\fP
-.RS
-The width of the task list. 0 indicates that the width should be determined
-from the tray. 0 is the default.
-.RE
-.P
-\fBheight\fP \fIint\fP
-.RS
-The height of the task list. 0 indicates that the height should be
-determined from the tray. 0 is the default.
-.RE
+This tag supports the following attribute:
 .P
 \fBmaxwidth\fP \fIint\fP
 .RS
-The maximum width of an item in the task bar. 0 indicates no maximum.
+The maximum width of an item in the task list. 0 indicates no maximum.
 The default is 0.
 .RE
 .RE
@@ -504,25 +496,25 @@ information.
 .P
 .B Foreground
 .RS
-The foreground color of the task bar. See the \fBCOLORS\fP section for
+The foreground color of the task list. See the \fBCOLORS\fP section for
 more information.
 .RE
 .P
 .B Background
 .RS
-The background color of the task bar. See the \fBCOLORS\fP section for
+The background color of the task list. See the \fBCOLORS\fP section for
 more information.
 .RE
 .P
 .B ActiveForeground
 .RS
-The foreground color of an active item on the task bar. See the \fBCOLORS\fP
+The foreground color of an active item on the task list. See the \fBCOLORS\fP
 section for more information.
 .RE
 .P
 .B ActiveBackground
 .RS
-The background color of an active item on the task bar. See the \fBCOLORS\fP
+The background color of an active item on the task list. See the \fBCOLORS\fP
 section for more information.
 .RE
 .RE
@@ -602,7 +594,7 @@ for more information.
 .B "POPUP STYLE"
 .RS
 The \fBPopupStyle\fP tag controls the look of popup windows such as those
-shown when the mouse sits over a task bar item.
+shown when the mouse sits over a task list item.
 Within this tag the following tags are supported:
 .P
 .RS
@@ -652,7 +644,7 @@ located by searching the icon search path(s) for an icon whose name
 (minus the ".xpm" or ".png" extension) matches the instance name of the
 window as returned in the WM_CLASS hint. If this lookup fails, a default
 icon is supplied. This icon will be displayed for the window on it's title
-bar and on the task bar. Icons that are not an appropriate size will be
+bar and on the task list. Icons that are not an appropriate size will be
 scaled. Square icons work best.
 .P
 For menu items, the icon path is searched for a match. the icon specified for

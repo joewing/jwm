@@ -359,10 +359,10 @@ void ParseRootMenu(const TokenNode *start) {
 	MenuType *menu;
 
 	value = FindAttribute(start->attributes, ONROOT_ATTRIBUTE);
-	if(value && !strcmp(value, FALSE_VALUE)) {
-		SetShowMenuOnRoot(0);
+	if(value) {
+		SetShowMenuOnRoot(value);
 	} else {
-		SetShowMenuOnRoot(1);
+		SetShowMenuOnRoot("0123456789");
 	}
 
 	menu = Allocate(sizeof(MenuType));

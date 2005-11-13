@@ -23,7 +23,7 @@
 #include "resize.h"
 #include "key.h"
 
-static int showMenuOnRoot = 1;
+static unsigned int onRootMask = ~0;
 
 static void DispatchBorderButtonEvent(const XButtonEvent *event,
 	ClientNode *np);
@@ -217,7 +217,7 @@ void HandleButtonEvent(const XButtonEvent *event) {
 			break;
 		}
 	} else if(event->window == rootWindow) {
-		if(showMenuOnRoot) {
+		if((1 << event->button) & onRootMask) {
 			ShowRootMenu(event->x, event->y);
 		}
 	} else {
@@ -897,8 +897,17 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
 
 /****************************************************************************
  ****************************************************************************/
-void SetShowMenuOnRoot(int v) {
-	showMenuOnRoot = v;
+void SetShowMenuOnRoot(const char *mask) {
+
+	int x;
+
+	Assert(mask);
+
+	onRootMask = 0;
+	for(x = 0; mask[x]; x++) {
+		onRootMask |= 1 << (mask[x] - '0');
+	}
+
 }
 
 

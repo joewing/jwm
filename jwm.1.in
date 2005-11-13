@@ -819,6 +819,16 @@ The snap mode. The default is "border". Valid values are
 specifies the distance for snapping. The default is 5. Valid values
 are between 1 and 32 inclusive.
 .RE
+.P
+.B StartupCommand
+.RS
+A command to run when JWM starts.
+.RE
+.P
+.B ShutdownCommand
+.RS
+A command to run when JWM exits.
+.RE
 .RE
 .P
 

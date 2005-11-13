@@ -53,7 +53,7 @@
 		<!-- Additional Pager attributes; width, height -->
 		<Pager/>
 
-		<!-- Additional TaskList attributes: width, height -->
+		<!-- Additional TaskList attribute: maxwidth -->
 		<TaskList/>
 
 		<!-- Additional Swallow attribute: height -->
@@ -85,6 +85,7 @@
 		<ActiveBackground>#8899A6</ActiveBackground>
 	</TaskListStyle>
 
+	<!-- Additional TrayStyle attribute: insert -->
 	<TrayStyle>
 		<Background>gray90</Background>
 	</TrayStyle>

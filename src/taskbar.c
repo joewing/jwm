@@ -622,7 +622,7 @@ unsigned int GetItemWidth(const TaskBarType *bp, unsigned int itemCount) {
 
 	unsigned int itemWidth;
 
-	itemWidth = bp->cp->width;
+	itemWidth = bp->cp->width - TASK_SPACER;
 
 	if(!itemCount) {
 		return itemWidth;

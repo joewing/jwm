@@ -7,6 +7,12 @@ Todo:
 	- Add the ability to name desktops.
 	- Add window list root menu item.
 
+20051114:
+	- Fixed task list overflow.
+
+20051113:
+	- Released v1.0.
+
 20051112:
 	- Make maximization work in a more sane manner.
 

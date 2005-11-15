@@ -9,6 +9,7 @@ Todo:
 
 20051114:
 	- Fixed task list overflow.
+	- Fixed minimization on restart.
 
 20051113:
 	- Released v1.0.

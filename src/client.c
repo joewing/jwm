@@ -231,6 +231,11 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 		ShadeClient(np);
 	}
 
+	if(np->state.status & STAT_MINIMIZED) {
+		np->state.status &= ~STAT_MINIMIZED;
+		MinimizeClient(np);
+	}
+
 	if(np->state.status & STAT_MAXIMIZED) {
 		np->state.status &= ~STAT_MAXIMIZED;
 		MaximizeClient(np);

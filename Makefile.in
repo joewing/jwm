@@ -8,13 +8,10 @@ all:
 
 install: all
 	cd src ; $(MAKE) install ; cd ..
-	if ! test -e $(SYSCONF)/system.jwmrc ; then \
-		echo "Installing \"example.jwmrc\" to \"$(SYSCONF)/system.jwmrc\"" ; \
-		mkdir -p $(SYSCONF) ; \
-		cp example.jwmrc $(SYSCONF)/system.jwmrc ; \
-	fi
-	mkdir -p $(MANDIR)/man1
-	cp jwm.1 $(MANDIR)/man1/jwm.1
+	install -d $(SYSCONF)
+	install -m 644 example.jwmrc $(SYSCONF)/system.jwmrc
+	install -d $(MANDIR)/man1
+	install -m 644 jwm.1 $(MANDIR)/man1/jwm.1
 
 depend:
 	cd src ; $(MAKE) depend

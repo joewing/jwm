@@ -20,7 +20,9 @@ EXE = jwm
 all: $(EXE)
 
 install: all
-	cp $(EXE) $(BINDIR)/$(EXE)
+	strip $(EXE)
+	install -d $(BINDIR)
+	install $(EXE) $(BINDIR)/$(EXE)
 
 depend:
 	makedepend -Ym *.c

@@ -99,6 +99,7 @@ static void ParseIcons(const TokenNode *tp);
 
 /* Feel. */
 static void ParseKey(const TokenNode *tp);
+static void ParseMouse(const TokenNode *tp);
 static void ParseSnapMode(const TokenNode *tp);
 static void ParseMoveMode(const TokenNode *tp);
 static void ParseResizeMode(const TokenNode *tp);
@@ -229,6 +230,9 @@ void Parse(const TokenNode *start, int depth) {
 				break;
 			case TOK_MENUSTYLE:
 				ParseMenuStyle(tp);
+				break;
+			case TOK_MOUSE:
+				ParseMouse(tp);
 				break;
 			case TOK_MOVEMODE:
 				ParseMoveMode(tp);
@@ -750,6 +754,11 @@ void ParseKey(const TokenNode *tp) {
 
 	InsertBinding(k, mask, key, command);
 
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void ParseMouse(const TokenNode *tp) {
 }
 
 /***************************************************************************

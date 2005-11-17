@@ -34,6 +34,7 @@
 #include "root.h"
 #include "desktop.h"
 #include "place.h"
+#include "clock.h"
 
 Display *display = NULL;
 Window rootWindow;
@@ -277,6 +278,7 @@ void HandleExit() {
 void Initialize() {
 	InitializeBorders();
 	InitializeClients();
+	InitializeClock();
 	InitializeColors();
 	InitializeCommands();
 	InitializeCursors();
@@ -324,6 +326,7 @@ void Startup() {
 
 	StartupPager();
 	StartupSwallow();
+	StartupClock();
 	StartupTaskBar();
 	StartupTrayButtons();
 	StartupTray();
@@ -369,6 +372,7 @@ void Shutdown() {
 	ShutdownTrayButtons();
 	ShutdownTaskBar();
 	ShutdownSwallow();
+	ShutdownClock();
 	ShutdownBorders();
 	ShutdownClients();
 	ShutdownIcons();
@@ -396,6 +400,7 @@ void Shutdown() {
 void Destroy() {
 	DestroyBorders();
 	DestroyClients();
+	DestroyClock();
 	DestroyColors();
 	DestroyCommands();
 	DestroyCursors();

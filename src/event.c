@@ -22,6 +22,7 @@
 #include "move.h"
 #include "resize.h"
 #include "key.h"
+#include "clock.h"
 
 static unsigned int onRootMask = ~0;
 
@@ -67,10 +68,12 @@ void WaitForEvent(XEvent *event) {
 			timeout.tv_sec = 1;
 			if(select(fd + 1, &fds, NULL, NULL, &timeout) <= 0) {
 				SignalTaskbar();
+				UpdateClocks();
 			}
 		}
 
 		SignalTaskbar();
+		UpdateClocks();
 
 		JXNextEvent(display, event);
 

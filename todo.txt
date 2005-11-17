@@ -7,6 +7,7 @@ Todo:
 
 20051116:
 	- Added button border to TrayButtons.
+	- Added Clock.
 
 20051114:
 	- Fixed task list overflow.

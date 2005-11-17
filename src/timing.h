@@ -8,8 +8,6 @@
 
 #define ZERO_TIME { 0, 0 }
 
-/****************************************************************************
- ****************************************************************************/
 typedef struct {
 
 	unsigned long seconds;
@@ -25,6 +23,8 @@ void DestroyTiming();
 void GetCurrentTime(TimeType *t);
 
 unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2);
+
+const char *GetTimeString(const char *format);
 
 #endif
 

@@ -584,7 +584,7 @@ int ProcessTrayEvent(const XEvent *event) {
  ***************************************************************************/
 void HandleTrayExpose(TrayType *tp, const XExposeEvent *event) {
 
-	DrawTray(tp);
+	DrawSpecificTray(tp);
 
 }
 

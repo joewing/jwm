@@ -70,3 +70,22 @@ unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2) {
 
 }
 
+/****************************************************************************
+ * Get the current time.
+ * Not reenterent.
+ ****************************************************************************/
+const char *GetTimeString(const char *format) {
+
+	static char str[80];
+	time_t t;
+
+	Assert(format);
+
+	time(&t);
+	strftime(str, sizeof(str), format, localtime(&t));
+
+	return str;
+
+}
+
+

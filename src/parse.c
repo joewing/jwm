@@ -29,6 +29,7 @@
 #include "event.h"
 #include "taskbar.h"
 #include "traybutton.h"
+#include "clock.h"
 
 static const char *RESTART_COMMAND = "#restart";
 static const char *RESTART_NAME = "Restart";
@@ -55,6 +56,7 @@ static const char *COUNT_ATTRIBUTE = "count";
 static const char *DISTANCE_ATTRIBUTE = "distance";
 static const char *INSERT_ATTRIBUTE = "insert";
 static const char *MAX_WIDTH_ATTRIBUTE = "maxwidth";
+static const char *FORMAT_ATTRIBUTE = "format";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -83,6 +85,7 @@ static void ParsePager(const TokenNode *tp, TrayType *tray);
 static void ParseTaskList(const TokenNode *tp, TrayType *tray);
 static void ParseSwallow(const TokenNode *tp, TrayType *tray);
 static void ParseTrayButton(const TokenNode *tp, TrayType *tray);
+static void ParseClock(const TokenNode *tp, TrayType *tray);
 
 /* Groups. */
 static void ParseGroup(const TokenNode *tp);
@@ -95,6 +98,7 @@ static void ParseTrayStyle(const TokenNode *start);
 static void ParsePagerStyle(const TokenNode *start);
 static void ParseMenuStyle(const TokenNode *start);
 static void ParsePopupStyle(const TokenNode *start);
+static void ParseClockStyle(const TokenNode *start);
 static void ParseIcons(const TokenNode *tp);
 
 /* Feel. */
@@ -266,6 +270,9 @@ void Parse(const TokenNode *start, int depth) {
 				break;
 			case TOK_TRAYSTYLE:
 				ParseTrayStyle(tp);
+				break;
+			case TOK_CLOCKSTYLE:
+				ParseClockStyle(tp);
 				break;
 			default:
 				ParseError("invalid tag in JWM: %s", GetTokenName(tp->type));
@@ -979,6 +986,9 @@ void ParseTray(const TokenNode *tp) {
 		case TOK_TRAYBUTTON:
 			ParseTrayButton(np, tray);
 			break;
+		case TOK_CLOCK:
+			ParseClock(np, tray);
+			break;
 		default:
 			ParseError("invalid Tray option: %s", GetTokenName(np->type));
 			break;
@@ -1080,6 +1090,32 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
 
 /***************************************************************************
  ***************************************************************************/
+void ParseClock(const TokenNode *tp, TrayType *tray) {
+
+	TrayComponentType *cp;
+	const char *format;
+	const char *command;
+
+	Assert(tp);
+	Assert(tray);
+
+	format = FindAttribute(tp->attributes, FORMAT_ATTRIBUTE);
+
+	if(tp->value && strlen(tp->value) > 0) {
+		command = tp->value;
+	} else {
+		command = NULL;
+	}
+
+	cp = CreateClock(format, command);
+	if(cp) {
+		AddTrayComponent(tray, cp);
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
 void ParsePagerStyle(const TokenNode *tp) {
 
 	const TokenNode *np;
@@ -1171,6 +1207,14 @@ void ParseMenuStyle(const TokenNode *tp) {
 			break;
 		}
 	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void ParseClockStyle(const TokenNode *tp) {
+
+	Assert(tp);
 
 }
 

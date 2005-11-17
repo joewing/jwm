@@ -1,11 +1,12 @@
 
 Todo:
 	- More support for GNOME, Motif, and WMSpec hints.
-	- Add some way to remember window states.
 	- Add an option to make "alt-tabbing" go through the z-stack instead of
 	  the tray.
-	- Add the ability to name desktops.
 	- Add window list root menu item.
+
+20051116:
+	- Added button border to TrayButtons.
 
 20051114:
 	- Fixed task list overflow.

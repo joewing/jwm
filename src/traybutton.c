@@ -12,6 +12,9 @@
 #include "main.h"
 #include "color.h"
 #include "font.h"
+#include "button.h"
+
+#define BUTTON_SIZE 4
 
 typedef struct TrayButtonType {
 
@@ -64,12 +67,8 @@ void StartupTrayButtons() {
 				Warning("could not load tray icon: \"%s\"", bp->iconName);
 			}
 		}
-		if(bp->cp->width == 0) {
-			bp->cp->width = 1;
-		}
-		if(bp->cp->height == 0) {
-			bp->cp->height = 1;
-		}
+		bp->cp->width += 2 * BUTTON_SIZE;
+		bp->cp->height += 2 * BUTTON_SIZE;
 	}
 
 }
@@ -154,14 +153,21 @@ void Create(TrayComponentType *cp) {
 	JXSetForeground(display, gc, colors[COLOR_TRAY_BG]);
 	JXFillRectangle(display, cp->pixmap, gc, 0, 0, cp->width, cp->height);
 
+	SetButtonDrawable(cp->pixmap, gc);
+	SetButtonSize(cp->width - 3, cp->height - 3);
+	DrawButton(1, 1, BUTTON_TASK, NULL);
+
+	/* Compute the offset of the text. */
 	if(bp->label) {
 		labelx = cp->width - (GetStringWidth(FONT_TASK, bp->label) + 4);
 	} else {
 		labelx = cp->width;
 	}
+	labelx -= BUTTON_SIZE;
 
 	if(bp->icon) {
-		PutIcon(bp->icon, cp->pixmap, gc, 0, 0, labelx, cp->height);
+		PutIcon(bp->icon, cp->pixmap, gc, BUTTON_SIZE, BUTTON_SIZE,
+			labelx - BUTTON_SIZE, cp->height - BUTTON_SIZE * 2);
 	}
 
 	if(bp->label) {

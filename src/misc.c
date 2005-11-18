@@ -3,9 +3,24 @@
 
 #include "jwm.h"
 
+static int IsSpace(char ch);
 static int IsSymbolic(char ch);
 static char *GetSymbolName(const char *str);
 static void ReplaceSymbol(char **str, const char *name, const char *value);
+
+/****************************************************************************
+ ****************************************************************************/
+int IsSpace(char ch) {
+	switch(ch) {
+	case ' ':
+	case '\t':
+	case '\n':
+	case '\r':
+		return 1;
+	default:
+		return 0;
+	}
+}
 
 /****************************************************************************
  ****************************************************************************/
@@ -127,6 +142,34 @@ void ExpandPath(char **path) {
 			}
 		}
 
+	}
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void Trim(char *str) {
+
+	int length;
+	int start;
+	int x;
+
+	Assert(str);
+
+	length = strlen(str);
+
+	for(start = 0; IsSpace(str[start]); start++);
+
+	if(start > 0) {
+		length -= start;
+		for(x = 0; x < length + 1; x++) {
+			str[x] = str[x + start];
+		}
+	}
+
+	while(IsSpace(str[length - 1])) {
+		--length;
+		str[length] = 0;
 	}
 
 }

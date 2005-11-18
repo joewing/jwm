@@ -13,6 +13,7 @@
 #include "root.h"
 #include "cursor.h"
 #include "popup.h"
+#include "misc.h"
 
 typedef struct ClockType {
 
@@ -214,7 +215,8 @@ void UpdateClocks() {
 void DrawClock(ClockType *clock, TimeType *now) {
 
 	TrayComponentType *cp;
-	const char *str;
+	const char *shortTime;
+	char *longTime;
 	int x, y;
 	time_t t;
 
@@ -224,13 +226,13 @@ void DrawClock(ClockType *clock, TimeType *now) {
 	JXFillRectangle(display, clock->buffer, clock->bufferGC, 0, 0,
 		cp->width, cp->height);
 
-	str = GetTimeString(clock->format);
+	shortTime = GetTimeString(clock->format);
 
 	RenderString(clock->buffer, clock->bufferGC, FONT_TASK,
 		COLOR_TASK_FG,
-		cp->width / 2 - GetStringWidth(FONT_TASK, str) / 2,
+		cp->width / 2 - GetStringWidth(FONT_TASK, shortTime) / 2,
 		cp->height / 2 - GetStringHeight(FONT_TASK) / 2,
-		cp->width, str);
+		cp->width, shortTime);
 
 	UpdateSpecificTray(clock->cp->tray, clock->cp);
 
@@ -239,8 +241,9 @@ void DrawClock(ClockType *clock, TimeType *now) {
 	if(abs(clock->mousex - x) < 2 && abs(clock->mousey - y) < 2) {
 		if(GetTimeDifference(now, &clock->mouseTime) >= 2000) {
 			time(&t);
-			str = asctime(localtime(&t));
-			ShowPopup(x, y - GetStringHeight(FONT_POPUP) - 4, str);
+			longTime = asctime(localtime(&t));
+			Trim(longTime);
+			ShowPopup(x, y - GetStringHeight(FONT_POPUP) - 4, longTime);
 		}
 	}
 

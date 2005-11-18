@@ -13,6 +13,7 @@
 #define Round( x ) ( (long)((x) + 0.5) )
 
 void ExpandPath(char **path);
+void Trim(char *str);
 
 #endif
 

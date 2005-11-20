@@ -98,14 +98,9 @@ void ShutdownTaskBar() {
 
 	TaskBarType *bp;
 
-	while(bars) {
-		bp = bars->next;
-
-		JXFreeGC(display, bars->bufferGC);
-		JXFreePixmap(display, bars->buffer);
-
-		Release(bars);
-		bars = bp;
+	for(bp = bars; bp; bp = bp->next) {
+		JXFreeGC(display, bp->bufferGC);
+		JXFreePixmap(display, bp->buffer);
 	}
 
 	JXFreePixmap(display, minimizedPixmap);
@@ -114,6 +109,15 @@ void ShutdownTaskBar() {
 /***************************************************************************
  ***************************************************************************/
 void DestroyTaskBar() {
+
+	TaskBarType *bp;
+
+	while(bars) {
+		bp = bars->next;
+		Release(bars);
+		bars = bp;
+	}
+
 }
 
 /***************************************************************************

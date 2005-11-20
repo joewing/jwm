@@ -56,14 +56,9 @@ void ShutdownPager() {
 
 	PagerType *pp;
 
-	while(pagers) {
-		pp = pagers->next;
-
-		JXFreeGC(display, pagers->bufferGC);
-		JXFreePixmap(display, pagers->buffer);
-
-		Release(pagers);
-		pagers = pp;
+	for(pp = pagers; pp; pp = pp->next) {
+		JXFreeGC(display, pp->bufferGC);
+		JXFreePixmap(display, pp->buffer);
 	}
 
 }
@@ -71,6 +66,15 @@ void ShutdownPager() {
 /****************************************************************************
  ****************************************************************************/
 void DestroyPager() {
+
+	PagerType *pp;
+
+	while(pagers) {
+		pp = pagers->next;
+		Release(pagers);
+		pagers = pp;
+	}
+
 }
 
 /****************************************************************************
@@ -201,6 +205,10 @@ void UpdatePager() {
 	int width, height;
 	int deskWidth, deskHeight;
 	int x;
+
+	if(shouldExit) {
+		return;
+	}
 
 	for(pp = pagers; pp; pp = pp->next) {
 

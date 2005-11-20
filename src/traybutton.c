@@ -81,6 +81,24 @@ void ShutdownTrayButtons() {
 /***************************************************************************
  ***************************************************************************/
 void DestroyTrayButtons() {
+
+	TrayButtonType *bp;
+
+	while(buttons) {
+		bp = buttons->next;
+		if(buttons->label) {
+			Release(buttons->label);
+		}
+		if(buttons->iconName) {
+			Release(buttons->iconName);
+		}
+		if(buttons->action) {
+			Release(buttons->action);
+		}
+		Release(buttons);
+		buttons = bp;
+	}
+
 }
 
 /***************************************************************************
@@ -183,29 +201,9 @@ void Create(TrayComponentType *cp) {
 /***************************************************************************
  ***************************************************************************/
 void Destroy(TrayComponentType *cp) {
-
-	TrayButtonType *bp = (TrayButtonType*)cp->object;
-
-	Assert(bp);
-
-	if(bp->iconName) {
-		Release(bp->iconName);
-	}
-
-	if(bp->label) {
-		Release(bp->label);
-	}
-
-	if(bp->action) {
-		Release(bp->action);
-	}
-
 	if(cp->pixmap != None) {
 		JXFreePixmap(display, cp->pixmap);
 	}
-
-	Release(bp);
-
 }
 
 /***************************************************************************

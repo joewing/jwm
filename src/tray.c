@@ -199,24 +199,14 @@ void ShutdownTray() {
 	TrayType *tp;
 	TrayComponentType *cp;
 
-	while(trays) {
-		tp = trays->next;
-
-		while(trays->components) {
-			cp = trays->components->next;
-			if(trays->components->Destroy) {
-				(trays->components->Destroy)(trays->components);
+	for(tp = trays; tp; tp = tp->next) {
+		for(cp = tp->components; cp; cp = cp->next) {
+			if(cp->Destroy) {
+				(cp->Destroy)(cp);
 			}
-			Release(trays->components);
-			trays->components = cp;
 		}
-
-		JXFreeGC(display, trays->gc);
-		JXDestroyWindow(display, trays->window);
-
-		Release(trays);
-
-		trays = tp;
+		JXFreeGC(display, tp->gc);
+		JXDestroyWindow(display, tp->window);
 	}
 
 	if(supportingWindow != None) {
@@ -230,6 +220,23 @@ void ShutdownTray() {
 /***************************************************************************
  ***************************************************************************/
 void DestroyTray() {
+
+	TrayType *tp;
+	TrayComponentType *cp;
+
+	while(trays) {
+		tp = trays->next;
+
+		while(trays->components) {
+			cp = trays->components->next;
+			Release(trays->components);
+			trays->components = cp;
+		}
+		Release(trays);
+
+		trays = tp;
+	}
+
 }
 
 /***************************************************************************

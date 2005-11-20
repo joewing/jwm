@@ -60,8 +60,8 @@ void StartupClock() {
 	ClockType *clock;
 
 	for(clock = clocks; clock; clock = clock->next) {
-		clock->cp->width = GetStringWidth(FONT_TASK, clock->format) + 4;
-		clock->cp->height = GetStringHeight(FONT_TASK) + 4;
+		clock->cp->width = GetStringWidth(FONT_CLOCK, clock->format) + 4;
+		clock->cp->height = GetStringHeight(FONT_CLOCK) + 4;
 	}
 
 }
@@ -227,16 +227,16 @@ void DrawClock(ClockType *clock, TimeType *now) {
 
 	cp = clock->cp;
 
-	JXSetForeground(display, clock->bufferGC, colors[COLOR_TRAY_BG]);
+	JXSetForeground(display, clock->bufferGC, colors[COLOR_CLOCK_BG]);
 	JXFillRectangle(display, clock->buffer, clock->bufferGC, 0, 0,
 		cp->width, cp->height);
 
 	shortTime = GetTimeString(clock->format);
 
-	RenderString(clock->buffer, clock->bufferGC, FONT_TASK,
-		COLOR_TASK_FG,
-		cp->width / 2 - GetStringWidth(FONT_TASK, shortTime) / 2,
-		cp->height / 2 - GetStringHeight(FONT_TASK) / 2,
+	RenderString(clock->buffer, clock->bufferGC, FONT_CLOCK,
+		COLOR_CLOCK_FG,
+		cp->width / 2 - GetStringWidth(FONT_CLOCK, shortTime) / 2,
+		cp->height / 2 - GetStringHeight(FONT_CLOCK) / 2,
 		cp->width, shortTime);
 
 	UpdateSpecificTray(clock->cp->tray, clock->cp);

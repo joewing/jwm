@@ -39,6 +39,17 @@ void StartupFonts() {
 
 	int x;
 
+	/* Inherit unset fonts from the tray for tray items. */
+	if(!fontNames[FONT_TASK]) {
+		fontNames[FONT_TASK] = CopyString(fontNames[FONT_TRAY]);
+	}
+	if(!fontNames[FONT_TRAYBUTTON]) {
+		fontNames[FONT_TRAYBUTTON] = CopyString(fontNames[FONT_TRAY]);
+	}
+	if(!fontNames[FONT_CLOCK]) {
+		fontNames[FONT_CLOCK] = CopyString(fontNames[FONT_TRAY]);
+	}
+
 #ifdef USE_XFT
 
 	for(x = 0; x < FONT_COUNT; x++) {

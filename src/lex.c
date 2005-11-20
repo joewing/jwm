@@ -57,6 +57,7 @@ static const char *TOKEN_MAP[] = {
 	"TaskList",
 	"Tray",
 	"TrayButton",
+	"TrayButtonStyle",
 	"TrayStyle",
 	"Width"
 };

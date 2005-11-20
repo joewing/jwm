@@ -5,6 +5,9 @@ Todo:
 	  the tray.
 	- Add window list root menu item.
 
+20051119:
+	- Added ClockStyle, TrayButtonStyle, and TrayStyle options.
+
 20051116:
 	- Added button border to TrayButtons.
 	- Added Clock.

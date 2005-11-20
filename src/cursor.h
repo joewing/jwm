@@ -8,10 +8,6 @@
 
 #include "border.h"
 
-typedef enum {
-	MOUSE_NONE = 0
-} MouseType;
-
 void InitializeCursors();
 void StartupCursors();
 void ShutdownCursors();

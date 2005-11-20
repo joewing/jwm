@@ -14,6 +14,7 @@
 
 void ExpandPath(char **path);
 void Trim(char *str);
+char *CopyString(const char *str);
 
 #endif
 

@@ -99,6 +99,7 @@ static void ParsePagerStyle(const TokenNode *start);
 static void ParseMenuStyle(const TokenNode *start);
 static void ParsePopupStyle(const TokenNode *start);
 static void ParseClockStyle(const TokenNode *start);
+static void ParseTrayButtonStyle(const TokenNode *start);
 static void ParseIcons(const TokenNode *tp);
 
 /* Feel. */
@@ -270,6 +271,9 @@ void Parse(const TokenNode *start, int depth) {
 				break;
 			case TOK_TRAYSTYLE:
 				ParseTrayStyle(tp);
+				break;
+			case TOK_TRAYBUTTONSTYLE:
+				ParseTrayButtonStyle(tp);
 				break;
 			case TOK_CLOCKSTYLE:
 				ParseClockStyle(tp);
@@ -907,8 +911,14 @@ void ParseTrayStyle(const TokenNode *tp) {
 
 	for(np = tp->subnodeHead; np; np = np->next) {
 		switch(np->type) {
+		case TOK_FONT:
+			SetFont(FONT_TRAY, np->value);
+			break;
 		case TOK_BACKGROUND:
 			SetColor(COLOR_TRAY_BG, np->value);
+			break;
+		case TOK_FOREGROUND:
+			SetColor(COLOR_TRAY_FG, np->value);
 			break;
 		default:
 			ParseError("invalid TrayStyle option: %s", GetTokenName(np->type));
@@ -1214,7 +1224,54 @@ void ParseMenuStyle(const TokenNode *tp) {
  ***************************************************************************/
 void ParseClockStyle(const TokenNode *tp) {
 
+	const TokenNode *np;
+
 	Assert(tp);
+
+	for(np = tp->subnodeHead; np; np = np->next) {
+		switch(np->type) {
+		case TOK_FONT:
+			SetFont(FONT_CLOCK, np->value);
+			break;
+		case TOK_FOREGROUND:
+			SetColor(COLOR_CLOCK_FG, np->value);
+			break;
+		case TOK_BACKGROUND:
+			SetColor(COLOR_CLOCK_BG, np->value);
+			break;
+		default:
+			ParseError("invalid ClockStyle option: %s", GetTokenName(np->type));
+			break;
+		}
+	}
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void ParseTrayButtonStyle(const TokenNode *tp) {
+
+	const TokenNode *np;
+
+	Assert(tp);
+
+	for(np = tp->subnodeHead; np; np = np->next) {
+		switch(np->type) {
+		case TOK_FONT:
+			SetFont(FONT_TRAYBUTTON, np->value);
+			break;
+		case TOK_FOREGROUND:
+			SetColor(COLOR_TRAYBUTTON_FG, np->value);
+			break;
+		case TOK_BACKGROUND:
+			SetColor(COLOR_TRAYBUTTON_BG, np->value);
+			break;
+		default:
+			ParseError("invalid TrayButtonStyle option: %s",
+				GetTokenName(np->type));
+			break;
+		}
+	}
 
 }
 

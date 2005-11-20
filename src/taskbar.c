@@ -88,8 +88,8 @@ void InitializeTaskBar() {
  ***************************************************************************/
 void StartupTaskBar() {
 	minimizedPixmap = JXCreatePixmapFromBitmapData(display, rootWindow,
-		minimized_bitmap, 4, 4, colors[COLOR_TASK_FG],
-		colors[COLOR_TASK_BG], rootDepth);
+		minimized_bitmap, 4, 4, colors[COLOR_TRAYBUTTON_FG],
+		colors[COLOR_TRAYBUTTON_BG], rootDepth);
 }
 
 /***************************************************************************
@@ -177,7 +177,7 @@ void Create(TrayComponentType *cp) {
 	tp->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
 	tp->buffer = cp->pixmap;
 
-	JXSetForeground(display, tp->bufferGC, colors[COLOR_TRAY_BG]);
+	JXSetForeground(display, tp->bufferGC, colors[COLOR_TRAYBUTTON_BG]);
 	JXFillRectangle(display, cp->pixmap, tp->bufferGC,
 		0, 0, cp->width, cp->height);
 
@@ -381,7 +381,7 @@ void Render(const TaskBarType *bp) {
 	width -= x;
 	y = 1;
 
-	JXSetForeground(display, gc, colors[COLOR_TRAY_BG]);
+	JXSetForeground(display, gc, colors[COLOR_TRAYBUTTON_BG]);
 	JXFillRectangle(display, buffer, gc, 0, 0, width, height);
 
 	itemCount = GetItemCount();

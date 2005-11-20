@@ -44,6 +44,7 @@ static DefaultColorNode DEFAULT_COLORS[] = {
 	{ COLOR_BORDER_ACTIVE_BG,   "red"     },
 	{ COLOR_BORDER_ACTIVE_FG,   "white"   },
 	{ COLOR_TRAY_BG,            "gray"    },
+	{ COLOR_TRAY_FG,            "black"   },
 	{ COLOR_TASK_BG,            "gray"    },
 	{ COLOR_TASK_FG,            "black"   },
 	{ COLOR_TASK_ACTIVE_BG,     "red"     },
@@ -60,6 +61,10 @@ static DefaultColorNode DEFAULT_COLORS[] = {
 	{ COLOR_POPUP_BG,           "yellow"  },
 	{ COLOR_POPUP_FG,           "black"   },
 	{ COLOR_POPUP_OUTLINE,      "black"   },
+	{ COLOR_TRAYBUTTON_FG,      "black"   },
+	{ COLOR_TRAYBUTTON_BG,      "gray"    },
+	{ COLOR_CLOCK_FG,           "black"   },
+	{ COLOR_CLOCK_BG,           "gray"    },
 	{ COLOR_COUNT,              NULL      }
 };
 
@@ -126,6 +131,28 @@ void InitializeColors() {
  ****************************************************************************/
 void StartupColors() {
 	int x;
+
+	/* Inherit unset colors from the tray for tray items. */
+	if(names) {
+		if(!names[COLOR_TASK_BG]) {
+			names[COLOR_TASK_BG] = CopyString(names[COLOR_TRAY_BG]);
+		}
+		if(!names[COLOR_TRAYBUTTON_BG]) {
+			names[COLOR_TRAYBUTTON_BG] = CopyString(names[COLOR_TRAY_BG]);
+		}
+		if(!names[COLOR_CLOCK_BG]) {
+			names[COLOR_CLOCK_BG] = CopyString(names[COLOR_TRAY_BG]);
+		}
+		if(!names[COLOR_TASK_FG]) {
+			names[COLOR_TASK_FG] = CopyString(names[COLOR_TRAY_FG]);
+		}
+		if(!names[COLOR_TRAYBUTTON_FG]) {
+			names[COLOR_TRAYBUTTON_FG] = CopyString(names[COLOR_TRAY_FG]);
+		}
+		if(!names[COLOR_CLOCK_FG]) {
+			names[COLOR_CLOCK_FG] = CopyString(names[COLOR_TRAY_FG]);
+		}
+	}
 
 	for(x = 0; x < COLOR_COUNT; x++) {
 		if(names && names[x]) {

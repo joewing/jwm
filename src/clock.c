@@ -75,7 +75,12 @@ void ShutdownClock() {
 	while(clocks) {
 		cp = clocks->next;
 
-		Release(clocks->format);
+		if(clocks->format) {
+			Release(clocks->format);
+		}
+		if(clocks->command) {
+			Release(clocks->command);
+		}
 
 		Release(clocks);
 		clocks = cp;

@@ -174,3 +174,21 @@ void Trim(char *str) {
 
 }
 
+/****************************************************************************
+ ****************************************************************************/
+char *CopyString(const char *str) {
+
+	char *temp;
+
+	if(!str) {
+		return NULL;
+	}
+
+	temp = Allocate(strlen(str) + 1);
+	strcpy(temp, str);
+
+	return temp;
+
+}
+
+

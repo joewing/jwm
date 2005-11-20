@@ -52,8 +52,8 @@ void StartupTrayButtons() {
 
 	for(bp = buttons; bp; bp = bp->next) {
 		if(bp->label) {
-			bp->cp->width = GetStringWidth(FONT_TASK, bp->label) + 4;
-			bp->cp->height = GetStringHeight(FONT_TASK);
+			bp->cp->width = GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
+			bp->cp->height = GetStringHeight(FONT_TRAYBUTTON);
 		} else {
 			bp->cp->width = 0;
 			bp->cp->height = 0;
@@ -150,7 +150,7 @@ void Create(TrayComponentType *cp) {
 		cp->width, cp->height, rootDepth);
 	gc = JXCreateGC(display, cp->pixmap, 0, NULL);
 
-	JXSetForeground(display, gc, colors[COLOR_TRAY_BG]);
+	JXSetForeground(display, gc, colors[COLOR_TRAYBUTTON_BG]);
 	JXFillRectangle(display, cp->pixmap, gc, 0, 0, cp->width, cp->height);
 
 	SetButtonDrawable(cp->pixmap, gc);
@@ -159,7 +159,7 @@ void Create(TrayComponentType *cp) {
 
 	/* Compute the offset of the text. */
 	if(bp->label) {
-		labelx = cp->width - (GetStringWidth(FONT_TASK, bp->label) + 4);
+		labelx = cp->width - (GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4);
 	} else {
 		labelx = cp->width;
 	}
@@ -171,8 +171,8 @@ void Create(TrayComponentType *cp) {
 	}
 
 	if(bp->label) {
-		RenderString(cp->pixmap, gc, FONT_TASK, COLOR_TASK_FG,
-			labelx + 2, cp->height / 2 - GetStringHeight(FONT_TASK) / 2,
+		RenderString(cp->pixmap, gc, FONT_TRAYBUTTON, COLOR_TRAYBUTTON_FG,
+			labelx + 2, cp->height / 2 - GetStringHeight(FONT_TRAYBUTTON) / 2,
 			cp->width - labelx, bp->label);
 	}
 

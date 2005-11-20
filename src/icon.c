@@ -432,6 +432,12 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 	nwidth = Min(rwidth, rheight * ratio);
 	nheight = Min(rheight, nwidth / ratio);
 	nwidth = nheight * ratio;
+	if(nwidth < 1) {
+		nwidth = 1;
+	}
+	if(nheight < 1) {
+		nheight = 1;
+	}
 
 	/* Check if this size already exists. */
 	for(np = icon->nodes; np; np = np->next) {

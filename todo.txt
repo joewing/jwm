@@ -7,6 +7,7 @@ Todo:
 
 20051119:
 	- Added ClockStyle, TrayButtonStyle, and TrayStyle options.
+	- Now icon aspect ratios are preserved when resized.
 
 20051116:
 	- Added button border to TrayButtons.

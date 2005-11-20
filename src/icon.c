@@ -338,15 +338,13 @@ void ReadNetWMIcon(ClientNode *np) {
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *GetDefaultIcon()
-{
+IconNode *GetDefaultIcon() {
 	return CreateIconFromData("default", x_xpm);
 }
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *CreateIconFromData(const char *name, char **data)
-{
+IconNode *CreateIconFromData(const char *name, char **data) {
 
 	ImageNode *image;
 	IconNode *result;
@@ -376,8 +374,7 @@ IconNode *CreateIconFromData(const char *name, char **data)
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *CreateIconFromFile(const char *fileName)
-{
+IconNode *CreateIconFromFile(const char *fileName) {
 
 	ImageNode *image;
 	IconNode *result;
@@ -408,8 +405,7 @@ IconNode *CreateIconFromFile(const char *fileName)
 
 /****************************************************************************
  ****************************************************************************/
-ScaledIconNode *GetScaledIcon(IconNode *icon, int width, int height)
-{
+ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 
 	XColor color;
 	ScaledIconNode *np;
@@ -419,49 +415,56 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int width, int height)
 	int alpha;
 	double scalex, scaley;
 	double srcx, srcy;
+	double ratio;
+	int nwidth, nheight;
 
 	Assert(icon);
 	Assert(icon->image);
 
+	if(rwidth == 0) {
+		rwidth = icon->image->width;
+	}
+	if(rheight == 0) {
+		rheight = icon->image->height;
+	}
+
+	ratio = (double)icon->image->width / icon->image->height;
+	nwidth = Min(rwidth, rheight * ratio);
+	nheight = Min(rheight, nwidth / ratio);
+	nwidth = nheight * ratio;
+
 	/* Check if this size already exists. */
 	for(np = icon->nodes; np; np = np->next) {
-		if(np->width == width && np->height == height) {
+		if(np->width == nwidth && np->height == nheight) {
 			return np;
 		}
 	}
 
 	/* See if we can use XRender to create the icon. */
-	np = CreateScaledRenderIcon(icon, width, height);
+	np = CreateScaledRenderIcon(icon, nwidth, nheight);
 	if(np) {
 		return np;
 	}
 
 	/* Create a new ScaledIconNode the old-fashioned way. */
 	np = Allocate(sizeof(ScaledIconNode));
-	np->width = width;
-	np->height = height;
+	np->width = nwidth;
+	np->height = nheight;
 	np->next = icon->nodes;
 	icon->nodes = np;
 
-	if(width == 0) {
-		width = icon->image->width; 
-	}
-	if(height == 0) {
-		height = icon->image->height;
-	}
-
-	np->mask = JXCreatePixmap(display, rootWindow, width, height, 1);
+	np->mask = JXCreatePixmap(display, rootWindow, nwidth, nheight, 1);
 	maskGC = JXCreateGC(display, np->mask, 0, NULL);
-	np->image = JXCreatePixmap(display, rootWindow, width, height, rootDepth);
+	np->image = JXCreatePixmap(display, rootWindow, nwidth, nheight, rootDepth);
 	imageGC = JXCreateGC(display, np->image, 0, NULL);
 
-	scalex = (double)icon->image->width / width;
-	scaley = (double)icon->image->height / height;
+	scalex = (double)icon->image->width / nwidth;
+	scaley = (double)icon->image->height / nheight;
 
 	srcy = 0.0;
-	for(y = 0; y < height; y++) {
+	for(y = 0; y < nheight; y++) {
 		srcx = 0.0;
-		for(x = 0; x < width; x++) {
+		for(x = 0; x < nwidth; x++) {
 
 			index = (int)srcy * icon->image->width + (int)srcx;
 
@@ -543,8 +546,7 @@ IconNode *CreateIconFromBinary(const unsigned long *input, int length) {
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *CreateIcon()
-{
+IconNode *CreateIcon() {
 
 	IconNode *icon;
 
@@ -561,8 +563,7 @@ IconNode *CreateIcon()
 
 /****************************************************************************
  ****************************************************************************/
-void DoDestroyIcon(int index, IconNode *icon)
-{
+void DoDestroyIcon(int index, IconNode *icon) {
 
 	ScaledIconNode *np;
 
@@ -609,8 +610,7 @@ void DoDestroyIcon(int index, IconNode *icon)
 
 /****************************************************************************
  ****************************************************************************/
-void DestroyIcon(IconNode *icon)
-{
+void DestroyIcon(IconNode *icon) {
 
 	int index;
 
@@ -623,8 +623,7 @@ void DestroyIcon(IconNode *icon)
 
 /****************************************************************************
  ****************************************************************************/
-void InsertIcon(IconNode *icon)
-{
+void InsertIcon(IconNode *icon) {
 
 	int index;
 
@@ -644,8 +643,7 @@ void InsertIcon(IconNode *icon)
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *FindIcon(const char *name)
-{
+IconNode *FindIcon(const char *name) {
 
 	IconNode *icon;
 	int index;
@@ -666,8 +664,7 @@ IconNode *FindIcon(const char *name)
 
 /****************************************************************************
  ****************************************************************************/
-int GetHash(const char *str)
-{
+int GetHash(const char *str) {
 
 	int x;
 	int hash = 0;

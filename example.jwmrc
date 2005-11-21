@@ -48,7 +48,7 @@
 	<Tray  x="0" y="-1" height="32">
 
 		<!-- Additional TrayButton attribute: label -->
-		<TrayButton icon="colors.png"/>
+		<TrayButton label="JWM"/>
 
 		<!-- Additional Pager attributes; width, height -->
 		<Pager/>
@@ -60,9 +60,7 @@
 		<Swallow name="xload" width="64">
 			xload -nolabel -bg black -fg red -hl white
 		</Swallow>
-		<Swallow name="xclock">
-			xclock -digital -brief -twelve -bg gray90 -fg black
-		</Swallow>
+		<Clock>xclock</Clock>
 	</Tray>
 
 	<!-- Visual Styles -->
@@ -79,15 +77,15 @@
 
 	<TaskListStyle>
 		<Font>FreeSans-12:bold</Font>
-		<Foreground>black</Foreground>
-		<Background>#DCDAD5</Background>
 		<ActiveForeground>white</ActiveForeground>
 		<ActiveBackground>#8899A6</ActiveBackground>
 	</TaskListStyle>
 
 	<!-- Additional TrayStyle attribute: insert -->
 	<TrayStyle>
+		<Font>FreeSans-12:bold</Font>
 		<Background>gray90</Background>
+		<Foreground>black</Foreground>
 	</TrayStyle>
 
 	<PagerStyle>

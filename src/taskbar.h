@@ -21,6 +21,7 @@ void UpdateTaskBar();
 void SignalTaskbar();
 
 void FocusNext();
+void FocusNextStackedCircular();
 
 void SetMaxTaskBarItemWidth(struct TrayComponentType *cp, const char *value);
 void SetTaskBarInsertMode(const char *mode);

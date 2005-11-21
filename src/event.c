@@ -269,6 +269,9 @@ void HandleKeyPress(const XKeyEvent *event) {
 	case KEY_NEXT:
 		FocusNext();
 		break;
+	case KEY_NEXT_STACKED:
+		FocusNextStackedCircular();
+		break;
 	case KEY_CLOSE:
 		if(np) {
 			DeleteClient(np);

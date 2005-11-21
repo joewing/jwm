@@ -761,7 +761,9 @@ Stop a move/resize or exit a menu. Not grabbed.
 .IP \fBselect\fP
 Make a menu selection. Not grabbed.
 .IP \fBnext\fP
-Move to the next window. Grabbed.
+Move to the next window in the task list. Grabbed.
+.IP \fBnextstacked\fP
+Move to the next window in the stacking order. Grabbed.
 .IP \fBclose\fP
 Close the active window. Grabbed.
 .IP \fBminimize\fP

@@ -147,6 +147,7 @@ void RunKeyCommand(const XKeyEvent *event) {
 int ShouldGrab(KeyType key) {
 	switch(key & 0xFF) {
 	case KEY_NEXT:
+	case KEY_NEXT_STACKED:
 	case KEY_CLOSE:
 	case KEY_MIN:
 	case KEY_MAX:

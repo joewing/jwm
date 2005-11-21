@@ -5,6 +5,9 @@ Todo:
 	  the tray.
 	- Add window list root menu item.
 
+20051120:
+	- Added "nextstacked" key binding.
+
 20051119:
 	- Added ClockStyle, TrayButtonStyle, and TrayStyle options.
 	- Now icon aspect ratios are preserved when resized.

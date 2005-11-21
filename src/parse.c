@@ -31,6 +31,35 @@
 #include "traybutton.h"
 #include "clock.h"
 
+typedef struct KeyMapType {
+	char *name;
+	KeyType key;
+} KeyMapType;
+
+static const KeyMapType KEY_MAP[] = {
+	{ "up",          KEY_UP           },
+	{ "down",        KEY_DOWN         },
+	{ "right",       KEY_RIGHT        },
+	{ "left",        KEY_LEFT         },
+	{ "escape",      KEY_ESC          },
+	{ "select",      KEY_ENTER        },
+	{ "next",        KEY_NEXT         },
+	{ "nextstacked", KEY_NEXT_STACKED },
+	{ "close",       KEY_CLOSE        },
+	{ "minimize",    KEY_MIN          },
+	{ "maximize",    KEY_MAX          },
+	{ "shade",       KEY_SHADE        },
+	{ "move",        KEY_MOVE         },
+	{ "resize",      KEY_RESIZE       },
+	{ "root",        KEY_ROOT         },
+	{ "window",      KEY_WIN          },
+	{ "restart",     KEY_RESTART      },
+	{ "exit",        KEY_EXIT         },
+	{ "desktop",     KEY_DESKTOP      },
+	{ "desktop#",    KEY_DESKTOP      },
+	{ NULL,          KEY_NONE         }
+};
+
 static const char *RESTART_COMMAND = "#restart";
 static const char *RESTART_NAME = "Restart";
 static const char *EXIT_COMMAND = "#exit";
@@ -701,6 +730,7 @@ void ParseKey(const TokenNode *tp) {
 	const char *action;
 	const char *command;
 	KeyType k;
+	int x;
 
 	Assert(tp);
 
@@ -718,52 +748,24 @@ void ParseKey(const TokenNode *tp) {
 	}
 
 	command = NULL;
-	if(!strcmp(action, "up")) {
-		k = KEY_UP;
-	} else if(!strcmp(action, "down")) {
-		k = KEY_DOWN;
-	} else if(!strcmp(action, "right")) {
-		k = KEY_RIGHT;
-	} else if(!strcmp(action, "left")) {
-		k = KEY_LEFT;
-	} else if(!strcmp(action, "escape")) {
-		k = KEY_ESC;
-	} else if(!strcmp(action, "select")) {
-		k = KEY_ENTER;
-	} else if(!strcmp(action, "next")) {
-		k = KEY_NEXT;
-	} else if(!strcmp(action, "close")) {
-		k = KEY_CLOSE;
-	} else if(!strcmp(action, "minimize")) {
-		k = KEY_MIN;
-	} else if(!strcmp(action, "maximize")) {
-		k = KEY_MAX;
-	} else if(!strcmp(action, "shade")) {
-		k = KEY_SHADE;
-	} else if(!strcmp(action, "move")) {
-		k = KEY_MOVE;
-	} else if(!strcmp(action, "resize")) {
-		k = KEY_RESIZE;
-	} else if(!strcmp(action, "root")) {
-		k = KEY_ROOT;
-	} else if(!strcmp(action, "window")) {
-		k = KEY_WIN;
-	} else if(!strcmp(action, "restart")) {
-		k = KEY_RESTART;
-	} else if(!strcmp(action, "exit")) {
-		k = KEY_EXIT;
-	} else if(!strcmp(action, "desktop")
-		|| !strcmp(action, "desktop#")) {
-		k = KEY_DESKTOP;
-	} else if(!strncmp(action, "exec:", 5)) {
+	k = KEY_NONE;
+	if(!strncmp(action, "exec:", 5)) {
 		k = KEY_EXEC;
 		command = action + 5;
 	} else {
-		ParseError("invalid action: \"%s\"", action);
-		return;
+		for(x = 0; KEY_MAP[x].name; x++) {
+			if(!strcmp(action, KEY_MAP[x].name)) {
+				k = KEY_MAP[x].key;
+				break;
+			}
+		}
 	}
 
-	InsertBinding(k, mask, key, command);
+	if(k == KEY_NONE) {
+		ParseError("invalid Key action: \"%s\"", action);
+	} else {
+		InsertBinding(k, mask, key, command);
+	}
 
 }
 

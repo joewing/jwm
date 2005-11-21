@@ -498,6 +498,60 @@ void FocusNext() {
 
 /***************************************************************************
  ***************************************************************************/
+void FocusNextStackedCircular() {
+
+	ClientNode *ac;
+	ClientNode *np;
+	int x;
+
+	ac = GetActiveClient();
+	np = NULL;
+
+	/* Check for a valid client below this client in the same layer. */
+	if(ac) {
+		for(np = ac->next; np; np = np->next) {
+			if(ShouldFocusItem(np)) {
+				break;
+			}
+		}
+	}
+
+	/* Check for a valid client in lower layers. */
+	if(ac && !np) {
+		for(x = ac->state.layer - 1; x >= LAYER_BOTTOM; x--) {
+			for(np = nodes[x]; np; np = np->next) {
+				if(ShouldFocusItem(np)) {
+					break;
+				}
+			}
+			if(np) {
+				break;
+			}
+		}
+	}
+
+	/* Revert to the top-most valid client. */
+	if(!np) {
+		for(x = LAYER_TOP; x >= LAYER_BOTTOM; x--) {
+			for(np = nodes[x]; np; np = np->next) {
+				if(ShouldFocusItem(np)) {
+					break;
+				}
+			}
+			if(np) {
+				break;
+			}
+		}
+	}
+
+	if(np) {
+		FocusClient(np);
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
 Node *GetNode(TaskBarType *bar, int x)
 {
 

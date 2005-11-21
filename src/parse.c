@@ -1058,16 +1058,18 @@ void ParseSwallow(const TokenNode *tp, TrayType *tray) {
 		name = tp->value;
 	}
 
-	width = 0;
 	temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
 	if(temp) {
 		width = atoi(temp);
+	} else {
+		width = 0;
 	}
 
-	height = 0;
 	temp = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
 	if(temp) {
 		height = atoi(temp);
+	} else {
+		height = 0;
 	}
 
 	cp = CreateSwallow(name, tp->value, width, height);
@@ -1084,6 +1086,8 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
 	TrayComponentType *cp;
 	const char *icon;
 	const char *label;
+	const char *temp;
+	int width, height;
 
 	Assert(tp);
 	Assert(tray);
@@ -1091,7 +1095,21 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
 	icon = FindAttribute(tp->attributes, ICON_ATTRIBUTE);
 	label = FindAttribute(tp->attributes, LABEL_ATTRIBUTE);
 
-	cp = CreateTrayButton(icon, label, tp->value);
+	temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
+	if(temp) {
+		width = atoi(temp);
+	} else {
+		width = 0;
+	}
+
+	temp = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
+	if(temp) {
+		height = atoi(temp);
+	} else {
+		height = 0;
+	}
+
+	cp = CreateTrayButton(icon, label, tp->value, width, height);
 	if(cp) {
 		AddTrayComponent(tray, cp);
 	}
@@ -1105,6 +1123,8 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
 	TrayComponentType *cp;
 	const char *format;
 	const char *command;
+	const char *temp;
+	int width, height;
 
 	Assert(tp);
 	Assert(tray);
@@ -1117,7 +1137,22 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
 		command = NULL;
 	}
 
-	cp = CreateClock(format, command);
+	temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
+	if(temp) {
+		width = atoi(temp);
+	} else {
+		width = 0;
+	}
+
+	temp = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
+	if(temp) {
+		height = atoi(temp);
+	} else {
+		height = 0;
+	}
+		
+
+	cp = CreateClock(format, command, width, height);
 	if(cp) {
 		AddTrayComponent(tray, cp);
 	}

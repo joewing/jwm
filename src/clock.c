@@ -95,7 +95,8 @@ void DestroyClock() {
 
 /***************************************************************************
  ***************************************************************************/
-TrayComponentType *CreateClock(const char *format, const char *command) {
+TrayComponentType *CreateClock(const char *format, const char *command,
+	int width, int height) {
 
 	TrayComponentType *cp;
 	ClockType *clock;
@@ -127,6 +128,8 @@ TrayComponentType *CreateClock(const char *format, const char *command) {
 	cp = CreateTrayComponent();
 	cp->object = clock;
 	clock->cp = cp;
+	cp->width = width;
+	cp->height = height;
 
 	cp->Create = Create;
 	cp->Destroy = Destroy;

@@ -266,6 +266,29 @@ The layout of the tray. The default is horizontal.
 .P
 Within this tag the following tags are supported:
 .P
+.B Clock
+.RS
+Add a clock to the tray. The text of this tag is a command to run
+when the clock is clicked. This tag supports the following attributes:
+.P
+\fBformat\fP \fIstring\fP
+.RS
+The format of the clock. See \fBstrftime\fP(3).
+.RE
+.P
+\fBwidth\fP \fIint\fP
+.RS
+The width of the clock. 0 indicates that the width should be determined
+from the length of the text to be displayed.
+.RE
+.P
+\fBheight\fP \fIint\fP
+.RS
+The height of the clock. 0 indicates that the height should be determined
+from the font used.
+.RE
+.RE
+.P
 .B Pager
 .RS
 Add a pager to the tray. This tag supports the following attributes:
@@ -468,9 +491,21 @@ section for more information.
 The \fBTrayStyle\fP tag controls the look of trays.
 Within this tag the following tag is supported:
 .P
+.B Font
+.RS
+The default tray font to use. See the \fBFONTS\fP section for more
+information.
+.RE
+.P
+.B Foreground
+.RS
+The default foreground color. See the \fBCOLORS\fP section for
+more information.
+.RE
+.P
 .B Background
 .RS
-The background color for the tray. See the \fBCOLORS\fP section for
+The default background color. See the \fBCOLORS\fP section for
 more information.
 .RE
 .RE
@@ -516,6 +551,27 @@ section for more information.
 .RS
 The background color of an active item on the task list. See the \fBCOLORS\fP
 section for more information.
+.RE
+.RE
+
+.B "CLOCK STYLE"
+.RS
+The \fBClockStyle\fP tag controls the look of clocks.
+Within this tag, the following tags are supported.
+.P
+.B Font
+.RS
+The font used. See the \fBFONTS\fP section for more information.
+.RE
+.P
+.B Foreground
+.RS
+The color of the text. See the \fBCOLORS\fP section for more information.
+.RE
+.P
+.B Background
+.RS
+The background color. See the \fBCOLORS\fP section for more information.
 .RE
 .RE
 

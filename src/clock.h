@@ -13,7 +13,8 @@ void StartupClock();
 void ShutdownClock();
 void DestroyClock();
 
-struct TrayComponentType *CreateClock(const char *format, const char *command);
+struct TrayComponentType *CreateClock(const char *format,
+	const char *command, int width, int height);
 
 void UpdateClocks();
 

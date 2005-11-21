@@ -12,8 +12,8 @@ void ShutdownTrayButtons();
 void DestroyTrayButtons();
 
 struct TrayComponentType *CreateTrayButton(
-	const char *iconName, const char *label,
-	const char *action);
+	const char *iconName, const char *label, const char *action,
+	int width, int height);
 
 #endif
 

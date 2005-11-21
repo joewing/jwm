@@ -13,6 +13,7 @@
 #include "color.h"
 #include "font.h"
 #include "button.h"
+#include "misc.h"
 
 #define BUTTON_SIZE 4
 
@@ -34,6 +35,7 @@ static TrayButtonType *buttons;
 
 static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
+static void SetSize(TrayComponentType *cp, int width, int height);
 
 static void ProcessButtonEvent(TrayComponentType *cp,
 	int x, int y, int mask);
@@ -104,7 +106,7 @@ void DestroyTrayButtons() {
 /***************************************************************************
  ***************************************************************************/
 TrayComponentType *CreateTrayButton(const char *iconName,
-	const char *label, const char *action) {
+	const char *label, const char *action, int width, int height) {
 
 	TrayButtonType *bp;
 	TrayComponentType *cp;
@@ -113,6 +115,15 @@ TrayComponentType *CreateTrayButton(const char *iconName,
 		&& (iconName == NULL || strlen(iconName) == 0)) {
 		Warning("no icon or label for TrayButton");
 		return NULL;
+	}
+
+	if(width < 0) {
+		Warning("invalid TrayButton width: %d", width);
+		width = 0;
+	}
+	if(height < 0) {
+		Warning("invalid TrayButton height: %d", height);
+		height = 0;
 	}
 
 	bp = Allocate(sizeof(TrayButtonType));
@@ -144,13 +155,64 @@ TrayComponentType *CreateTrayButton(const char *iconName,
 	cp = CreateTrayComponent();
 	cp->object = bp;
 	bp->cp = cp;
+	cp->width = width;
+	cp->height = height;
 
 	cp->Create = Create;
 	cp->Destroy = Destroy;
+	cp->SetSize = SetSize;
 
 	cp->ProcessButtonEvent = ProcessButtonEvent;
 
 	return cp;
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void SetSize(TrayComponentType *cp, int width, int height) {
+
+	TrayButtonType *bp;
+	int lwidth, lheight;
+	int iwidth, iheight;
+	double ratio;
+
+	bp = (TrayButtonType*)cp->object;
+
+	if(bp->icon) {
+
+		if(bp->label) {
+			lwidth = GetStringWidth(FONT_TRAYBUTTON, bp->label);
+			lheight = GetStringHeight(FONT_TRAYBUTTON);
+		} else {
+			lwidth = 0;
+			lheight = 0;
+		}
+
+		iwidth = bp->icon->image->width;
+		iheight = bp->icon->image->height;
+		ratio = (double)iwidth / iheight;
+
+		if(width > 0) {
+
+			/* Compute size from width. */
+			iwidth = width - lwidth - 2 * BUTTON_SIZE;
+			iheight = iwidth / ratio;
+			height = Max(iheight, lheight);
+
+		} else if(height > 0) {
+
+			/* Compute size from height. */
+			iheight = height;
+			iwidth = iheight * ratio;
+			width = iwidth + lwidth + 2 * BUTTON_SIZE;
+
+		}
+
+		cp->width = width;
+		cp->height = height;
+
+	}
 
 }
 

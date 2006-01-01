@@ -129,8 +129,8 @@ void DeleteClient(ClientNode *np);
 void KillClient(ClientNode *np);
 void RaiseClient(ClientNode *np);
 void RestackClients();
-void SetClientLayer(ClientNode *np, int layer);
-void SetClientDesktop(ClientNode *np, int desktop);
+void SetClientLayer(ClientNode *np, unsigned int layer);
+void SetClientDesktop(ClientNode *np, unsigned int desktop);
 void SetClientSticky(ClientNode *np, int isSticky);
 
 void HideClient(ClientNode *np);

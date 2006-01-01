@@ -55,7 +55,7 @@ void StartupClients() {
 	XWindowAttributes attr;
 	Window rootReturn, parentReturn, *childrenReturn;
 	unsigned int childrenCount;
-	int x;
+	unsigned int x;
 
 	JXSync(display, False);
 	JXGrabServer(display);
@@ -448,13 +448,14 @@ void RestoreClient(ClientNode *np) {
 /****************************************************************************
  * Set the client layer. This will affect transients.
  ****************************************************************************/
-void SetClientLayer(ClientNode *np, int layer) {
+void SetClientLayer(ClientNode *np, unsigned int layer) {
+
 	ClientNode *tp, *next;
 	int x;
 
 	Assert(np);
 
-	if(layer < LAYER_BOTTOM || layer > LAYER_TOP) {
+	if(layer > LAYER_TOP) {
 		Warning("Client %s requested an invalid layer: %d", np->name, layer);
 		return;
 	}
@@ -553,13 +554,13 @@ void SetClientSticky(ClientNode *np, int isSticky) {
 /****************************************************************************
  * Set a client's desktop. This will update transients.
  ****************************************************************************/
-void SetClientDesktop(ClientNode *np, int desktop) {
+void SetClientDesktop(ClientNode *np, unsigned int desktop) {
 	ClientNode *tp;
 	int x;
 
 	Assert(np);
 
-	if(desktop < 0 || desktop >= desktopCount) {
+	if(desktop >= desktopCount) {
 		return;
 	}
 
@@ -845,7 +846,7 @@ void RestackClients() {
 
 	TrayType *tp;
 	ClientNode *np;
-	int layer, index;
+	unsigned int layer, index;
 	int trayCount;
 
 	if(!stack) {
@@ -870,8 +871,8 @@ void RestackClients() {
 
 	/* Prepare the stacking array. */
 	index = 0;
-	for(layer = LAYER_TOP; layer >= LAYER_BOTTOM; layer--) {
-
+	layer = LAYER_TOP;
+	for(;;) {
 
 		for(np = nodes[layer]; np; np = np->next) {
 			if(!(np->state.status
@@ -885,6 +886,12 @@ void RestackClients() {
 				stack[index++] = tp->window;
 			}
 		}
+
+		if(layer == 0) {
+			break;
+		}
+		--layer;
+
 	}
 
 	JXRestackWindows(display, stack, index);

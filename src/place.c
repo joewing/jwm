@@ -21,7 +21,7 @@ typedef struct BoundingBox {
 static int *cascadeOffsets = NULL;
 
 static void GetScreenBounds(int index, BoundingBox *box);
-static void UpdateTrayBounds(BoundingBox *box, int layer);
+static void UpdateTrayBounds(BoundingBox *box, unsigned int layer);
 static void SubtractBounds(const BoundingBox *src, BoundingBox *dest);
 
 /****************************************************************************
@@ -135,7 +135,7 @@ void SubtractBounds(const BoundingBox *src, BoundingBox *dest) {
 
 /****************************************************************************
  ****************************************************************************/
-void UpdateTrayBounds(BoundingBox *box, int layer) {
+void UpdateTrayBounds(BoundingBox *box, unsigned int layer) {
 
 	TrayType *tp;
 	BoundingBox src;

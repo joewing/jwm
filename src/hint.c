@@ -140,8 +140,8 @@ void StartupHints() {
 	Atom supported[ATOM_COUNT];
 	Window win;
 	char *data;
-	int x;
-	int count;
+	unsigned int x;
+	unsigned int count;
 
 	/* Intern the atoms */
 	for(x = 0; x < ATOM_COUNT; x++) {
@@ -612,7 +612,7 @@ void ReadWMProtocols(ClientNode *np) {
 		0, 32, False, XA_ATOM, &realType, &realFormat, &count, &extra, &temp);
 	p = (Atom*)temp;
 
-	if(status != Success || !p || count < 0) {
+	if(status != Success || !p) {
 		return;
 	}
 

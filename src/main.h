@@ -22,8 +22,8 @@ extern int colormapCount;
 
 extern char *exitCommand;
 
-extern int desktopCount;
-extern int currentDesktop;
+extern unsigned int desktopCount;
+extern unsigned int currentDesktop;
 
 extern int shouldExit;
 extern int shouldRestart;
@@ -33,8 +33,8 @@ extern int initializing;
 extern int borderWidth;
 extern int titleSize, titleHeight;
 
-extern int doubleClickSpeed;
-extern int doubleClickDelta;
+extern unsigned int doubleClickSpeed;
+extern unsigned int doubleClickDelta;
 
 extern FocusModelType focusModel;
 

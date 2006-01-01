@@ -9,6 +9,7 @@
 #include "image.h"
 #include "main.h"
 #include "color.h"
+#include "error.h"
 
 #ifdef USE_XRENDER
 static int haveRender = 0;
@@ -31,6 +32,12 @@ void QueryRenderExtension()
 		haveRender = 0;
 		Debug("render extension disabled");
 	}
+
+	if(haveRender && rootDepth < 24) {
+		Warning("color depth is %d, disabling icon alpha channel", rootDepth);
+		haveRender = 0;
+	}
+
 #endif
 
 }

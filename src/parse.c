@@ -663,7 +663,7 @@ MenuItemType *ParseMenuInclude(const TokenNode *tp, MenuType *menu,
 
 	FILE *fd;
 	char *path;
-	char *buffer;
+	char *buffer = NULL;
 	TokenNode *mp;
 
 	Assert(tp);
@@ -839,7 +839,7 @@ void ParseDesktops(const TokenNode *tp) {
 
 	TokenNode *np;
 	char *attr;
-	int x;
+	unsigned int x;
 
 	Assert(tp);
 

@@ -45,7 +45,7 @@ static void ProcessClockButtonEvent(TrayComponentType *cp,
 static void ProcessClockMotionEvent(TrayComponentType *cp,
 	int x, int y, int mask);
 
-static void DrawClock(ClockType *clock, TimeType *now);
+static void DrawClock(ClockType *clk, TimeType *now);
 
 /***************************************************************************
  ***************************************************************************/
@@ -57,11 +57,11 @@ void InitializeClock() {
  ***************************************************************************/
 void StartupClock() {
 
-	ClockType *clock;
+	ClockType *clk;
 
-	for(clock = clocks; clock; clock = clock->next) {
-		clock->cp->width = GetStringWidth(FONT_CLOCK, clock->format) + 4;
-		clock->cp->height = GetStringHeight(FONT_CLOCK) + 4;
+	for(clk = clocks; clk; clk = clk->next) {
+		clk->cp->width = GetStringWidth(FONT_CLOCK, clk->format) + 4;
+		clk->cp->height = GetStringHeight(FONT_CLOCK) + 4;
 	}
 
 }
@@ -99,35 +99,35 @@ TrayComponentType *CreateClock(const char *format, const char *command,
 	int width, int height) {
 
 	TrayComponentType *cp;
-	ClockType *clock;
+	ClockType *clk;
 
-	clock = Allocate(sizeof(ClockType));
-	clock->next = clocks;
-	clocks = clock;
+	clk = Allocate(sizeof(ClockType));
+	clk->next = clocks;
+	clocks = clk;
 
-	clock->mousex = 0;
-	clock->mousey = 0;
-	clock->mouseTime.seconds = 0;
-	clock->mouseTime.ms = 0;
+	clk->mousex = 0;
+	clk->mousey = 0;
+	clk->mouseTime.seconds = 0;
+	clk->mouseTime.ms = 0;
 
 	if(format) {
-		clock->format = Allocate(strlen(format) + 1);
-		strcpy(clock->format, format);
+		clk->format = Allocate(strlen(format) + 1);
+		strcpy(clk->format, format);
 	} else {
-		clock->format = Allocate(strlen(DEFAULT_FORMAT) + 1);
-		strcpy(clock->format, DEFAULT_FORMAT);
+		clk->format = Allocate(strlen(DEFAULT_FORMAT) + 1);
+		strcpy(clk->format, DEFAULT_FORMAT);
 	}
 
 	if(command) {
-		clock->command = Allocate(strlen(command) + 1);
-		strcpy(clock->command, command);
+		clk->command = Allocate(strlen(command) + 1);
+		strcpy(clk->command, command);
 	} else {
-		clock->command = NULL;
+		clk->command = NULL;
 	}
 
 	cp = CreateTrayComponent();
-	cp->object = clock;
-	clock->cp = cp;
+	cp->object = clk;
+	clk->cp = cp;
 	cp->width = width;
 	cp->height = height;
 
@@ -144,22 +144,22 @@ TrayComponentType *CreateClock(const char *format, const char *command,
  ***************************************************************************/
 void Create(TrayComponentType *cp) {
 
-	ClockType *clock;
+	ClockType *clk;
 	TimeType now;
 
 	Assert(cp);
 
-	clock = (ClockType*)cp->object;
+	clk = (ClockType*)cp->object;
 
-	Assert(clock);
+	Assert(clk);
 
 	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
 		rootDepth);
-	clock->buffer = cp->pixmap;
-	clock->bufferGC = JXCreateGC(display, clock->buffer, 0, NULL);
+	clk->buffer = cp->pixmap;
+	clk->bufferGC = JXCreateGC(display, clk->buffer, 0, NULL);
 
 	GetCurrentTime(&now);
-	DrawClock(clock, &now);
+	DrawClock(clk, &now);
 
 }
 
@@ -173,16 +173,16 @@ void Destroy(TrayComponentType *cp) {
 static void ProcessClockButtonEvent(TrayComponentType *cp,
 	int x, int y, int mask) {
 
-	ClockType *clock;
+	ClockType *clk;
 
 	Assert(cp);
 
-	clock = (ClockType*)cp->object;
+	clk = (ClockType*)cp->object;
 
-	Assert(clock);
+	Assert(clk);
 
-	if(clock->command) {
-		RunCommand(clock->command);
+	if(clk->command) {
+		RunCommand(clk->command);
 	}
 
 }
@@ -192,10 +192,10 @@ static void ProcessClockButtonEvent(TrayComponentType *cp,
 static void ProcessClockMotionEvent(TrayComponentType *cp,
 	int x, int y, int mask) {
 
-	ClockType *clock = (ClockType*)cp->object;
-	clock->mousex = cp->screenx + x;
-	clock->mousey = cp->screeny + y;
-	GetCurrentTime(&clock->mouseTime);
+	ClockType *clk = (ClockType*)cp->object;
+	clk->mousex = cp->screenx + x;
+	clk->mousey = cp->screeny + y;
+	GetCurrentTime(&clk->mouseTime);
 
 }
 
@@ -220,7 +220,7 @@ void UpdateClocks() {
 
 /***************************************************************************
  ***************************************************************************/
-void DrawClock(ClockType *clock, TimeType *now) {
+void DrawClock(ClockType *clk, TimeType *now) {
 
 	TrayComponentType *cp;
 	const char *shortTime;
@@ -228,26 +228,26 @@ void DrawClock(ClockType *clock, TimeType *now) {
 	int x, y;
 	time_t t;
 
-	cp = clock->cp;
+	cp = clk->cp;
 
-	JXSetForeground(display, clock->bufferGC, colors[COLOR_CLOCK_BG]);
-	JXFillRectangle(display, clock->buffer, clock->bufferGC, 0, 0,
+	JXSetForeground(display, clk->bufferGC, colors[COLOR_CLOCK_BG]);
+	JXFillRectangle(display, clk->buffer, clk->bufferGC, 0, 0,
 		cp->width, cp->height);
 
-	shortTime = GetTimeString(clock->format);
+	shortTime = GetTimeString(clk->format);
 
-	RenderString(clock->buffer, clock->bufferGC, FONT_CLOCK,
+	RenderString(clk->buffer, clk->bufferGC, FONT_CLOCK,
 		COLOR_CLOCK_FG,
 		cp->width / 2 - GetStringWidth(FONT_CLOCK, shortTime) / 2,
 		cp->height / 2 - GetStringHeight(FONT_CLOCK) / 2,
 		cp->width, shortTime);
 
-	UpdateSpecificTray(clock->cp->tray, clock->cp);
+	UpdateSpecificTray(clk->cp->tray, clk->cp);
 
 	GetMousePosition(&x, &y);
 
-	if(abs(clock->mousex - x) < 2 && abs(clock->mousey - y) < 2) {
-		if(GetTimeDifference(now, &clock->mouseTime) >= 2000) {
+	if(abs(clk->mousex - x) < 2 && abs(clk->mousey - y) < 2) {
+		if(GetTimeDifference(now, &clk->mouseTime) >= 2000) {
 			time(&t);
 			longTime = asctime(localtime(&t));
 			Trim(longTime);

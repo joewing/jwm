@@ -4,6 +4,7 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "match.h"
 
 typedef struct MatchStateType {
 	const char *pattern;

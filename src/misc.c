@@ -2,6 +2,7 @@
  ****************************************************************************/
 
 #include "jwm.h"
+#include "misc.h"
 
 static int IsSpace(char ch);
 static int IsSymbolic(char ch);

@@ -225,7 +225,7 @@ void ApplyGroups(ClientNode *np) {
 void ApplyGroup(const GroupType *gp, ClientNode *np) {
 
 	OptionListType *lp;
-	int temp;
+	unsigned int temp;
 
 	Assert(gp);
 	Assert(np);
@@ -252,7 +252,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
 			break;
 		case OPTION_LAYER:
 			temp = atoi(lp->value);
-			if(temp >= 0 && temp <= LAYER_COUNT) {
+			if(temp <= LAYER_COUNT) {
 				SetClientLayer(np, temp);
 			} else {
 				Warning("invalid group layer: %s", lp->value);

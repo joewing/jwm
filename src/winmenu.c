@@ -114,7 +114,7 @@ void CreateWindowLayerMenu(MenuType *menu) {
 	MenuItemType *item;
 	char str[10];
 	char command[10];
-	int x;
+	unsigned int x;
 
 	item = Allocate(sizeof(MenuItemType));
 	item->flags = MENU_ITEM_NORMAL;
@@ -185,7 +185,7 @@ void CreateWindowLayerMenu(MenuType *menu) {
 void CreateWindowSendToMenu(MenuType *menu) {
 
 	unsigned int mask;
-	int x;
+	unsigned int x;
 
 	mask = 0;
 	for(x = 0; x < desktopCount; x++) {

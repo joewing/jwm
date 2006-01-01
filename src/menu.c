@@ -72,10 +72,10 @@ void InitializeMenu(MenuType *menu) {
 			np->icon = LoadNamedIcon(np->iconName);
 			if(np->icon) {
 				if(userHeight == 0) {
-					if(menu->itemHeight < np->icon->image->height) {
+					if(menu->itemHeight < (int)np->icon->image->height) {
 						menu->itemHeight = np->icon->image->height;
 					}
-					if(menu->textOffset < np->icon->image->width + 4) {
+					if(menu->textOffset < (int)np->icon->image->width + 4) {
 						menu->textOffset = np->icon->image->width + 4;
 					}
 				}
@@ -645,7 +645,7 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
  ***************************************************************************/
 int GetNextMenuIndex(MenuType *menu) {
 	MenuItemType *item;
-	int x;
+	unsigned int x;
 
 	for(x = menu->currentIndex + 1; x < menu->itemCount; x++) {
 		item = GetMenuItem(menu, x);
@@ -677,7 +677,7 @@ int GetPreviousMenuIndex(MenuType *menu) {
 /***************************************************************************
  ***************************************************************************/
 int GetMenuIndex(MenuType *menu, int y) {
-	int x;
+	unsigned int x;
 
 	if(y < menu->offsets[0]) {
 		return -1;

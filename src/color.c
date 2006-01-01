@@ -105,7 +105,8 @@ unsigned long GetRGBFromXColor(const XColor *c) {
 /****************************************************************************
  ****************************************************************************/
 XColor GetXColorFromRGB(unsigned long rgb) {
-	XColor ret;
+
+	XColor ret = { 0 };
 
 	ret.flags = DoRed | DoGreen | DoBlue;
 	ret.red = (unsigned short)(((rgb >> 16) & 0xFF) * 257);
@@ -113,6 +114,7 @@ XColor GetXColorFromRGB(unsigned long rgb) {
 	ret.blue = (unsigned short)((rgb & 0xFF) * 257);
 
 	return ret;
+
 }
 
 /****************************************************************************

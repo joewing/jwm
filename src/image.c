@@ -68,26 +68,37 @@ ImageNode *LoadImageFromData(char **data) {
 }
 
 /****************************************************************************
+ * Load a PNG image from the given file name. Returns NULL on error.
+ * Since libpng uses longjmp, this function is not reentrant to simplify
+ * the issues surrounding longjmp and local variables.
  ****************************************************************************/
 ImageNode *LoadPNGImage(const char *fileName) {
 
-	ImageNode *result = NULL;
-
 #ifdef USE_PNG
 
-	FILE *fd = NULL;
+	static ImageNode *result;
+	static FILE *fd;
+	static unsigned char **rows;
+	static png_structp pngData;
+	static png_infop pngInfo;
+	static png_infop pngEndInfo;
+	static unsigned char *data;
+
 	unsigned char header[8];
 	unsigned long rowBytes;
 	int bitDepth, colorType;
-	png_structp pngData = NULL;
-	png_infop pngInfo = NULL;
-	png_infop pngEndInfo = NULL;
-	unsigned char *data;
-	unsigned char **rows;
-	int x, y;
+	unsigned int x, y;
 	unsigned long temp;
 
 	Assert(fileName);
+
+	result = NULL;
+	fd = NULL;
+	rows = NULL;
+	pngData = NULL;
+	pngInfo = NULL;
+	pngEndInfo = NULL;
+	data = NULL;
 
 	fd = fopen(fileName, "rb");
 	if(!fd) {
@@ -204,9 +215,13 @@ ImageNode *LoadPNGImage(const char *fileName) {
 	Release(rows);
 	Release(data);
 
-#endif
-
 	return result;
+
+#else
+
+	return NULL;
+
+#endif
 
 }
 

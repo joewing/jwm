@@ -49,8 +49,8 @@ int shouldExit = 0;
 int shouldRestart = 0;
 int initializing = 0;
 
-int desktopCount = 4;
-int currentDesktop = 0;
+unsigned int desktopCount = 4;
+unsigned int currentDesktop = 0;
 
 char *exitCommand = NULL;
 
@@ -58,8 +58,8 @@ int borderWidth = DEFAULT_BORDER_WIDTH;
 int titleHeight = DEFAULT_TITLE_HEIGHT;
 int titleSize = DEFAULT_TITLE_HEIGHT + DEFAULT_BORDER_WIDTH;
 
-int doubleClickSpeed = DEFAULT_DOUBLE_CLICK_SPEED;
-int doubleClickDelta = DEFAULT_DOUBLE_CLICK_DELTA;
+unsigned int doubleClickSpeed = DEFAULT_DOUBLE_CLICK_SPEED;
+unsigned int doubleClickDelta = DEFAULT_DOUBLE_CLICK_DELTA;
 
 FocusModelType focusModel = FOCUS_SLOPPY;
 

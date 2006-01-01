@@ -437,7 +437,7 @@ char *ReadAttributeValue(const char *line) {
 /*****************************************************************************
  *****************************************************************************/
 TokenType LookupType(const char *name) {
-	int x;
+	unsigned int x;
 
 	Assert(name);
 
@@ -454,7 +454,7 @@ TokenType LookupType(const char *name) {
 /*****************************************************************************
  *****************************************************************************/
 const char *GetTokenName(TokenType type) {
-	if(type < 0 || type >= sizeof(TOKEN_MAP) / sizeof(const char*)) {
+	if(type >= sizeof(TOKEN_MAP) / sizeof(const char*)) {
 		return "[invalid]";
 	} else {
 		return TOKEN_MAP[type];

@@ -6,6 +6,8 @@
 #ifndef CONFIRM_H
 #define CONFIRM_H
 
+struct ClientNode;
+
 void InitializeDialogs();
 void StartupDialogs();
 void ShutdownDialogs();
@@ -13,7 +15,8 @@ void DestroyDialogs();
 
 int ProcessDialogEvent(const XEvent *event);
 
-void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...);
+void ShowConfirmDialog(struct ClientNode *np,
+	void (*action)(struct ClientNode*), ...);
 
 #endif
 

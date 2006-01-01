@@ -19,6 +19,22 @@
 
 #include "debug.h"
 
+/***************************************************************************
+ * Emit a message.
+ ***************************************************************************/
+void Debug(const char *str, ...) {
+#ifdef DEBUG
+	va_list ap;
+	va_start(ap, str);
+
+	fprintf(stderr, "DEBUG: ");
+	vfprintf(stderr, str, ap);
+	fprintf(stderr, "\n");
+
+	va_end(ap);
+#endif
+}
+
 #ifdef DEBUG
 
 #define CHECKPOINT_LIST_SIZE 10
@@ -52,20 +68,6 @@ static unsigned int checkpointLine[CHECKPOINT_LIST_SIZE];
 static int checkpointOffset;
 
 static void DEBUG_PrintResourceStack(ResourceType *rp);
-
-/***************************************************************************
- * Emit a message.
- ***************************************************************************/
-void DEBUG_Debug(const char *str, ...) {
-	va_list ap;
-	va_start(ap, str);
-
-	fprintf(stderr, "DEBUG: ");
-	vfprintf(stderr, str, ap);
-	fprintf(stderr, "\n");
-
-	va_end(ap);
-}
 
 /***************************************************************************
  * Start the debugger.

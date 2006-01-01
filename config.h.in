@@ -119,3 +119,12 @@
 
 /* Define to enable the XRender extension */
 #undef USE_XRENDER
+
+/* Define for single UNIX conformance */
+#undef _XOPEN_SOURCE
+
+/* Define for timeval on IRIX 6.2 */
+#undef _XOPEN_SOURCE_EXTENDED
+
+/* Define for timeval on Solaris 2.5.1 */
+#undef __EXTENSIONS__

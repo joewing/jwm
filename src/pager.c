@@ -204,7 +204,7 @@ void UpdatePager() {
 	GC gc;
 	int width, height;
 	int deskWidth, deskHeight;
-	int x;
+	unsigned int x;
 
 	if(shouldExit) {
 		return;

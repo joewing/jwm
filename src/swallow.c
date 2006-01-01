@@ -26,6 +26,7 @@ typedef struct SwallowNode {
 	char *command;
 	int started;
 	int border;
+	int queued;
 
 	struct SwallowNode *next;
 
@@ -33,7 +34,8 @@ typedef struct SwallowNode {
 
 static SwallowNode *swallowNodes;
 
-static void StartSwallowedClient(TrayComponentType *cp);
+static void QueueStartup(TrayComponentType *cp);
+static void AwaitStartup(TrayComponentType *cp);
 static Window FindSwallowedClient(const char *name);
 
 static void Create(TrayComponentType *cp);
@@ -52,7 +54,10 @@ void StartupSwallow() {
 	SwallowNode *np;
 
 	for(np = swallowNodes; np; np = np->next) {
-		StartSwallowedClient(np->cp);
+		QueueStartup(np->cp);
+	}
+	for(np = swallowNodes; np; np = np->next) {
+		AwaitStartup(np->cp);
 	}
 
 }
@@ -109,6 +114,7 @@ TrayComponentType *CreateSwallow(const char *name, const char *command,
 		np->command = NULL;
 	}
 	np->started = 0;
+	np->queued = 0;
 
 	np->next = swallowNodes;
 	swallowNodes = np;
@@ -176,37 +182,46 @@ void Destroy(TrayComponentType *cp) {
 
 /****************************************************************************
  ****************************************************************************/
-void StartSwallowedClient(TrayComponentType *cp) {
+void QueueStartup(TrayComponentType *cp) {
 
-	XWindowAttributes attributes;
 	SwallowNode *np;
-	int x;
-
-	Assert(cp);
 
 	np = (SwallowNode*)cp->object;
 
 	Assert(np);
 
-	if(np->started) {
-		return;
-	}
-
-	Debug("starting %s...", np->name);
-
-	np->border = 0;
-	np->started = 1;
-
 	cp->window = FindSwallowedClient(np->name);
 	if(cp->window == None) {
 
+		Debug("starting %s", np->name);
+
 		if(!np->command) {
 			Warning("client to be swallowed (%s) not found and no command given",
-					np->name);
-			return;
+				np->name);
+		} else {
+			RunCommand(np->command);
+			np->queued = 1;
 		}
 
-		RunCommand(np->command);
+	}
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void AwaitStartup(TrayComponentType *cp) {
+
+	SwallowNode *np;
+	XWindowAttributes attributes;
+	int x;
+
+	np = (SwallowNode*)cp->object;
+
+	Assert(np);
+
+	if(cp->window == None) {
+
+		Debug("waiting for %s", np->name);
 
 		for(x = 0; x < FIND_RETRY_COUNT; x++) {
 			cp->window = FindSwallowedClient(np->name);
@@ -220,6 +235,7 @@ void StartSwallowedClient(TrayComponentType *cp) {
 			Warning("%s not found after running %s", np->name, np->command);
 			return;
 		}
+
 	}
 
 	if(!JXGetWindowAttributes(display, cp->window, &attributes)) {
@@ -245,7 +261,7 @@ void StartSwallowedClient(TrayComponentType *cp) {
 		cp->height = attributes.height + 2 * np->border;
 	}
 
-	Debug("%s started", np->name);
+	Debug("%s swallowed", np->name);
 
 }
 

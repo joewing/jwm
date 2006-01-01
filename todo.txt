@@ -5,8 +5,17 @@ Todo:
 	  the tray.
 	- Add window list root menu item.
 
+20060101:
+	- Updates to configure.in to check if _XOPEN_SOURCE can safely be used.
+	- Fix some compiler warnings.
+	- Grab keys for trays.
+	- Fix a potential issue with bad PNG icons.
+	- Improved loading of swallowed clients.
+	- Don't use alpha blending for icons on color depths less than 24 bits.
+
 20051120:
 	- Added "nextstacked" key binding.
+	- Released v1.1.
 
 20051119:
 	- Added ClockStyle, TrayButtonStyle, and TrayStyle options.

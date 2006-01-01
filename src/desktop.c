@@ -22,7 +22,7 @@ void InitializeDesktops() {
  ***************************************************************************/
 void StartupDesktops() {
 
-	int x;
+	unsigned int x;
 
 	if(desktopNames == NULL) {
 		desktopNames = Allocate(desktopCount * sizeof(char*));
@@ -50,7 +50,8 @@ void ShutdownDesktops() {
  ***************************************************************************/
 void DestroyDesktops() {
 
-	int x;
+	unsigned int x;
+
 	if(desktopNames) {
 		for(x = 0; x < desktopCount; x++) {
 			Release(desktopNames[x]);
@@ -79,12 +80,12 @@ void PreviousDesktop() {
 
 /***************************************************************************
  ***************************************************************************/
-void ChangeDesktop(int desktop) {
+void ChangeDesktop(unsigned int desktop) {
 
 	ClientNode *np;
-	int x;
+	unsigned int x;
 
-	if(desktop >= desktopCount || desktop < 0) {
+	if(desktop >= desktopCount) {
 		return;
 	}
 
@@ -162,6 +163,7 @@ MenuType *CreateDesktopMenu(unsigned int mask) {
 
 /***************************************************************************
  ***************************************************************************/
+/*
 const char *GetDesktopName(int desktop) {
 
 	Assert(desktop >= 0);
@@ -169,6 +171,7 @@ const char *GetDesktopName(int desktop) {
 
 	return desktopNames[desktop];
 }
+*/
 
 /***************************************************************************
  ***************************************************************************/
@@ -189,9 +192,9 @@ void SetDesktopCount(const char *str) {
 
 /***************************************************************************
  ***************************************************************************/
-void SetDesktopName(int desktop, const char *str) {
+void SetDesktopName(unsigned int desktop, const char *str) {
 
-	int x;
+	unsigned int x;
 
 	if(!str) {
 		Warning("empty Desktops Name tag");

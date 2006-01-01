@@ -15,12 +15,12 @@ void DestroyDesktops();
 
 void NextDesktop();
 void PreviousDesktop();
-void ChangeDesktop(int desktop);
+void ChangeDesktop(unsigned int desktop);
 
 struct MenuType *CreateDesktopMenu(unsigned int mask);
 
 void SetDesktopCount(const char *str);
-void SetDesktopName(int desktop, const char *str);
+void SetDesktopName(unsigned int desktop, const char *str);
 
 #endif
 

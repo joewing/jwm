@@ -15,7 +15,7 @@ typedef struct PopupType {
 	int isActive;
 	int x, y;   /* The coordinates of the upper-left corner of the popup. */
 	int mx, my; /* The mouse position when the popup was created. */
-	unsigned int width, height;
+	int width, height;
 	char *text;
 	Window window;
 	GC gc;

@@ -36,7 +36,8 @@ static void ReadNetWMIcon(ClientNode *np);
 static IconNode *GetDefaultIcon();
 static IconNode *CreateIconFromData(const char *name, char **data);
 static IconNode *CreateIconFromFile(const char *fileName);
-static IconNode *CreateIconFromBinary(const unsigned long *data, int length);
+static IconNode *CreateIconFromBinary(const unsigned long *data,
+	unsigned int length);
 
 static IconNode *LoadSuffixedIcon(const char *path, const char *name,
 	const char *suffix);
@@ -508,12 +509,13 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 
 /****************************************************************************
  ****************************************************************************/
-IconNode *CreateIconFromBinary(const unsigned long *input, int length) {
+IconNode *CreateIconFromBinary(const unsigned long *input,
+	unsigned int length) {
 
 	unsigned long height, width;
 	IconNode *result;
 	unsigned long *data;
-	int x;
+	unsigned int x;
 
 	if(!input) {
 		return NULL;

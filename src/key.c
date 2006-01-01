@@ -9,6 +9,7 @@
 #include "client.h"
 #include "root.h"
 #include "error.h"
+#include "tray.h"
 
 typedef enum {
 	MASK_NONE  = 0,
@@ -25,7 +26,7 @@ typedef struct KeyNode {
 	/* These are filled in when the configuration file is parsed */
 	int key;
 	unsigned int mask;
-	int code;
+	unsigned int code;
 	char *command;
 	struct KeyNode *next;
 
@@ -52,7 +53,9 @@ void InitializeKeys() {
 /***************************************************************************
  ***************************************************************************/
 void StartupKeys() {
+
 	KeyNode *np;
+	TrayType *tp;
 
 	modmap = JXGetModifierMapping(display);
 
@@ -81,10 +84,10 @@ void StartupKeys() {
 		if(ShouldGrab(np->key)) {
 			JXGrabKey(display, np->code, np->state,
 				rootWindow, True, GrabModeSync, GrabModeAsync);
-/*TODO: grab for all trays.
-			JXGrabKey(display, np->code, np->state,
-				trayWindow, True, GrabModeSync, GrabModeAsync);
-*/
+			for(tp = GetTrays(); tp; tp = tp->next) {
+				JXGrabKey(display, np->code, np->state,
+					tp->window, True, GrabModeSync, GrabModeAsync);
+			}
 		}
 
 	}

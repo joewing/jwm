@@ -47,8 +47,8 @@ static Pixmap maxaActivePixmap;
 
 static Pixmap buffer = None;
 static GC bufferGC = None;
-static int bufferWidth;
-static int bufferHeight;
+static unsigned int bufferWidth;
+static unsigned int bufferHeight;
 
 static void DrawBorderHelper(const ClientNode *np, unsigned int height);
 static void DrawButtonBorder(const ClientNode *np, int offset,

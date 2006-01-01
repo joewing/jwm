@@ -25,34 +25,32 @@
 #include <stdlib.h>
 #include <string.h>
 
+void Debug(const char *str, ...);
+
 #ifdef DEBUG
 
-	#define Assert( x ) \
+#	define Assert( x ) \
 		if(!( x )) {     \
 			Debug("ASSERT FAILED: %s[%u]", __FILE__, __LINE__ ); \
 			abort(); \
 		}
 
-	#define Debug DEBUG_Debug
-
-	#define SetCheckpoint() \
+#	define SetCheckpoint() \
 		DEBUG_SetCheckpoint( __FILE__, __LINE__ )
-	#define ShowCheckpoint() \
+#	define ShowCheckpoint() \
 		DEBUG_ShowCheckpoint()
 
-	#define StartDebug() \
+#	define StartDebug() \
 		DEBUG_StartDebug( __FILE__, __LINE__ )
-	#define StopDebug() \
+#	define StopDebug() \
 		DEBUG_StopDebug( __FILE__, __LINE__ )
 
-	#define Allocate( x ) \
+#	define Allocate( x ) \
 		DEBUG_Allocate( (x), __FILE__, __LINE__ )
-	#define Reallocate( x, y ) \
+#	define Reallocate( x, y ) \
 		DEBUG_Reallocate( (x), (y), __FILE__, __LINE__ )
-	#define Release( x ) \
+#	define Release( x ) \
 		DEBUG_Release( (void*)(& x), __FILE__, __LINE__ )
-
-	void DEBUG_Debug(const char *str, ...);
 
 	void DEBUG_SetCheckpoint(const char*, unsigned int);
 	void DEBUG_ShowCheckpoint();
@@ -66,19 +64,17 @@
 
 #else
 
-	#define Assert( x )           ((void)0)
+#	define Assert( x )           ((void)0)
 
-	#define Debug                 (void)
+#	define SetCheckpoint()       ((void)0)
+#	define ShowCheckpoint()      ((void)0)
 
-	#define SetCheckpoint()       ((void)0)
-	#define ShowCheckpoint()      ((void)0)
+#	define StartDebug()          ((void)0)
+#	define StopDebug()           ((void)0)
 
-	#define StartDebug()          ((void)0)
-	#define StopDebug()           ((void)0)
-
-	#define Allocate( x )         malloc( (x) )
-	#define Reallocate( x, y )    realloc( (x), (y) )
-	#define Release( x )          free( (x) )
+#	define Allocate( x )         malloc( (x) )
+#	define Reallocate( x, y )    realloc( (x), (y) )
+#	define Release( x )          free( (x) )
 
 #endif
 

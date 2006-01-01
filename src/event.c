@@ -599,7 +599,7 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 
 		} else if(event->message_type == atoms[ATOM_NET_WM_DESKTOP]) {
 
-			if(event->data.l[0] == ~0UL) {
+			if(event->data.l[0] == ~0L) {
 				SetClientSticky(np, 1);
 			} else {
 
@@ -607,7 +607,7 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 					(np->controller)(0);
 				}
 
-				if(event->data.l[0] >= 0 && event->data.l[0] < desktopCount) {
+				if(event->data.l[0] >= 0 && event->data.l[0] < (long)desktopCount) {
 					np->state.status &= ~STAT_STICKY;
 					SetClientDesktop(np, event->data.l[0]);
 				}
@@ -625,15 +625,17 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 			actionShade = 0;
 
 			for(x = 1; x <= 2; x++) {
-				if(event->data.l[x] == atoms[ATOM_NET_WM_STATE_STICKY]) {
+				if(event->data.l[x]
+					== (long)atoms[ATOM_NET_WM_STATE_STICKY]) {
 					actionStick = 1;
 				} else if(event->data.l[x]
-					== atoms[ATOM_NET_WM_STATE_MAXIMIZED_VERT]) {
+					== (long)atoms[ATOM_NET_WM_STATE_MAXIMIZED_VERT]) {
 					actionMaximize = 1;
 				} else if(event->data.l[x]
-					== atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ]) {
+					== (long)atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ]) {
 					actionMaximize = 1;
-				} else if(event->data.l[x] == atoms[ATOM_NET_WM_STATE_SHADED]) {
+				} else if(event->data.l[x]
+					== (long)atoms[ATOM_NET_WM_STATE_SHADED]) {
 					actionShade = 1;
 				}
 			}

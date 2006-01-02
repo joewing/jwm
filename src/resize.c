@@ -170,13 +170,21 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 
 					if((float)np->width / np->height
 						< (float)np->aspect.minx / np->aspect.miny) {
+						delta = np->width;
 						np->width = np->height * np->aspect.minx
 							/ np->aspect.miny;
+						if(action & BA_RESIZE_W) {
+							np->x -= np->width - delta;
+						}
 					}
 					if((float)np->width / np->height
 						> (float)np->aspect.maxx / np->aspect.maxy) {
+						delta = np->height;
 						np->height = np->width * np->aspect.maxy
 							/ np->aspect.maxx;
+						if(action & BA_RESIZE_N) {
+							np->y -= np->height - delta;
+						}
 					}
 
 				}

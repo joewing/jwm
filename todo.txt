@@ -12,6 +12,7 @@ Todo:
 	- Fix a potential issue with bad PNG icons.
 	- Improved loading of swallowed clients.
 	- Don't use alpha blending for icons on color depths less than 24 bits.
+	- Fix resize when resizing a window that specifies an aspect ratio.
 
 20051120:
 	- Added "nextstacked" key binding.

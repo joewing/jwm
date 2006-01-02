@@ -9,6 +9,7 @@
 #include "error.h"
 #include "root.h"
 #include "color.h"
+#include "client.h"
 
 /* Spend 15 seconds looking. */
 #define FIND_SECONDS 15
@@ -176,6 +177,7 @@ void Destroy(TrayComponentType *cp) {
 	if(cp->window) {
 		JXReparentWindow(display, cp->window, rootWindow, 0, 0);
 		JXRemoveFromSaveSet(display, cp->window);
+		SendClientMessage(cp->window, ATOM_WM_PROTOCOLS, ATOM_WM_DELETE_WINDOW);
 	}
 
 }

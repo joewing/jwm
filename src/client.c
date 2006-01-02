@@ -34,8 +34,6 @@ static int clientCount;
 static void LoadFocus();
 static void ReparentClient(ClientNode *np, int notOwner);
  
-static void SendClientMessage(ClientNode *np, AtomType type,
-	AtomType message);
 static void MinimizeTransients(ClientNode *np);
 static void CheckShape(ClientNode *np);
 
@@ -688,7 +686,8 @@ void FocusClient(ClientNode *np) {
 		if(!(np->state.status & STAT_SHADED)) {
 			UpdateClientColormap(np);
 			if(np->protocols & PROT_TAKE_FOCUS) {
-				SendClientMessage(np, ATOM_WM_PROTOCOLS, ATOM_WM_TAKE_FOCUS);
+				SendClientMessage(np->window, ATOM_WM_PROTOCOLS,
+					ATOM_WM_TAKE_FOCUS);
 			}
 			SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, np->window);
 		}
@@ -751,7 +750,8 @@ void DeleteClient(ClientNode *np) {
 
 	ReadWMProtocols(np);
 	if(np->protocols & PROT_DELETE) {
-		SendClientMessage(np, ATOM_WM_PROTOCOLS, ATOM_WM_DELETE_WINDOW);
+		SendClientMessage(np->window, ATOM_WM_PROTOCOLS,
+			ATOM_WM_DELETE_WINDOW);
 	} else {
 		KillClient(np);
 	}
@@ -900,21 +900,20 @@ void RestackClients() {
 
 /****************************************************************************
  ****************************************************************************/
-void SendClientMessage(ClientNode *np, AtomType type, AtomType message) {
+void SendClientMessage(Window w, AtomType type, AtomType message) {
+
 	XEvent event;
 	int status;
 
-	Assert(np);
-
 	memset(&event, 0, sizeof(event));
 	event.xclient.type = ClientMessage;
-	event.xclient.window = np->window;
+	event.xclient.window = w;
 	event.xclient.message_type = atoms[type];
 	event.xclient.format = 32;
 	event.xclient.data.l[0] = atoms[message];
 	event.xclient.data.l[1] = CurrentTime;
 
-	status = JXSendEvent(display, np->window, False, 0, &event);
+	status = JXSendEvent(display, w, False, 0, &event);
 	if(status == False) {
 		Debug("SendClientMessage failed");
 	}

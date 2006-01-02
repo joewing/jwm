@@ -142,5 +142,7 @@ void SetShape(ClientNode *np);
 
 void SendConfigureEvent(ClientNode *np);
 
+void SendClientMessage(Window w, AtomType type, AtomType message);
+
 #endif
 

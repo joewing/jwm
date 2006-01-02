@@ -6,6 +6,8 @@
 #ifndef EVENT_H
 #define EVENT_H
 
+void HandleStartupEvents();
+
 void WaitForEvent();
 void ProcessEvent(XEvent *event);
 

@@ -10,6 +10,7 @@
 #include "root.h"
 #include "color.h"
 #include "client.h"
+#include "event.h"
 
 /* Spend 15 seconds looking. */
 #define FIND_SECONDS 15
@@ -272,6 +273,7 @@ void AwaitStartup(TrayComponentType *cp) {
 Window FindSwallowedClient(const char *name) {
 
 	XClassHint hint;
+	XWindowAttributes attr;
 	Window rootReturn, parentReturn, *childrenReturn;
 	Window result;
 	unsigned int childrenCount;
@@ -281,10 +283,22 @@ Window FindSwallowedClient(const char *name) {
 
 	result = None;
 
+	/* Process any pending events before searching. */
+	HandleStartupEvents();
+
 	JXQueryTree(display, rootWindow, &rootReturn, &parentReturn,
 			&childrenReturn, &childrenCount);
 
 	for(x = 0; x < childrenCount; x++) {
+
+		if(!JXGetWindowAttributes(display, childrenReturn[x], &attr)) {
+			continue;
+		}
+
+		if(attr.map_state != IsViewable || attr.override_redirect == True) {
+			continue;
+		}
+
 		if(JXGetClassHint(display, childrenReturn[x], &hint)) {
 			if(!strcmp(hint.res_name, name)) {
 				result = childrenReturn[x];

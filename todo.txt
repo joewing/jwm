@@ -5,6 +5,10 @@ Todo:
 	  the tray.
 	- Add window list root menu item.
 
+20060107:
+	- Added support for _NET_CLIENT_LIST and _NET_CLIENT_LIST_STACKING.
+	- Added support for _NET_WM_STRUT and _NET_WM_STRUT_PARTIAL.
+
 20060101:
 	- Updates to configure.in to check if _XOPEN_SOURCE can safely be used.
 	- Fix some compiler warnings.
@@ -15,6 +19,7 @@ Todo:
 	- Fix resize when resizing a window that specifies an aspect ratio.
 	- Now sends WM_DELETE_WINDOW to swallowed clients before exiting.
 	- Fixed a problem with swallowing some programs (notably GTK+ programs).
+	- Released v1.2.
 
 20051120:
 	- Added "nextstacked" key binding.

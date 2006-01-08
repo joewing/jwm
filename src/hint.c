@@ -106,6 +106,10 @@ static const AtomNode atomList[] = {
 	{ &atoms[ATOM_NET_WM_ICON],               "_NET_WM_ICON"                },
 	{ &atoms[ATOM_NET_WM_WINDOW_TYPE],        "_NET_WM_WINDOW_TYPE"         },
 	{ &atoms[ATOM_NET_WM_WINDOW_TYPE_DESKTOP],"_NET_WM_WINDOW_TYPE_DESKTOP" },
+	{ &atoms[ATOM_NET_CLIENT_LIST],           "_NET_CLIENT_LIST"            },
+	{ &atoms[ATOM_NET_CLIENT_LIST_STACKING],  "_NET_CLIENT_LIST_STACKING"   },
+	{ &atoms[ATOM_NET_WM_STRUT_PARTIAL],      "_NET_WM_STRUT_PARTIAL"       },
+	{ &atoms[ATOM_NET_WM_STRUT],              "_NET_WM_STRUT"               },
 
 	{ &atoms[ATOM_WIN_LAYER],                 "_WIN_LAYER"                  },
 	{ &atoms[ATOM_WIN_STATE],                 "_WIN_STATE"                  },

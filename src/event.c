@@ -23,6 +23,7 @@
 #include "resize.h"
 #include "key.h"
 #include "clock.h"
+#include "place.h"
 
 static unsigned int onRootMask = ~0;
 
@@ -534,6 +535,10 @@ int HandlePropertyNotify(const XPropertyEvent *event) {
 			} else if(event->atom == atoms[ATOM_NET_WM_NAME]) {
 				ReadWMName(np);
 				changed = 1;
+			} else if(event->atom == atoms[ATOM_NET_WM_STRUT_PARTIAL]) {
+				ReadClientStrut(np);
+			} else if(event->atom == atoms[ATOM_NET_WM_STRUT]) {
+				ReadClientStrut(np);
 			}
 			break;
 		}

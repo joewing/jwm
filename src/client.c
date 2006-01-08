@@ -248,6 +248,8 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 		HideClient(np);
 	}
 
+	ReadClientStrut(np);
+
 	return np;
 
 }
@@ -896,6 +898,8 @@ void RestackClients() {
 
 	JXRestackWindows(display, stack, index);
 
+	UpdateNetClientList();
+
 }
 
 /****************************************************************************
@@ -1044,6 +1048,7 @@ void RemoveClient(ClientNode *np) {
 	}
 
 	RemoveClientFromTaskBar(np);
+	RemoveClientStrut(np);
 	UpdatePager();
 
 	while(np->colormaps) {

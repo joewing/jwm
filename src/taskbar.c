@@ -278,6 +278,8 @@ void AddClientToTaskBar(ClientNode *np) {
 
 	UpdateTaskBar();
 
+	UpdateNetClientList();
+
 }
 
 /***************************************************************************
@@ -307,6 +309,8 @@ void RemoveClientFromTaskBar(ClientNode *np) {
 	}
 
 	UpdateTaskBar();
+
+	UpdateNetClientList();
 
 }
 
@@ -738,5 +742,51 @@ void SetTaskBarInsertMode(const char *mode) {
 		insertMode = INSERT_RIGHT;
 	}
 
+}
+
+/***************************************************************************
+ * Maintain the _NET_CLIENT_LIST[_STACKING] properties on the root window.
+ ***************************************************************************/
+void UpdateNetClientList() {
+
+	Node *np;
+	ClientNode *client;
+	Window *windows;
+	int count;
+	int layer;
+
+	count = 0;
+	for(np = taskBarNodes; np; np = np->next) {
+		++count;
+	}
+
+	if(count == 0) {
+		windows = NULL;
+	} else {
+		windows = Allocate(count * sizeof(Window));
+	}
+
+	/* Set _NET_CLIENT_LIST */
+	count = 0;
+	for(np = taskBarNodes; np; np = np->next) {
+		windows[count++] = np->client->window;
+	}
+	JXChangeProperty(display, rootWindow, atoms[ATOM_NET_CLIENT_LIST],
+		XA_WINDOW, 32, PropModeReplace, (unsigned char*)windows, count);
+
+	/* Set _NET_CLIENT_LIST_STACKING */
+	count = 0;
+	for(layer = LAYER_BOTTOM; layer <= LAYER_TOP; layer++) {
+		for(client = nodes[layer]; client; client = client->next) {
+			windows[count++] = client->window;
+		}
+	}
+	JXChangeProperty(display, rootWindow, atoms[ATOM_NET_CLIENT_LIST_STACKING],
+		XA_WINDOW, 32, PropModeReplace, (unsigned char*)windows, count);
+
+	if(windows != NULL) {
+		Release(windows);
+	}
+	
 }
 

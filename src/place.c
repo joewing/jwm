@@ -16,12 +16,23 @@ typedef struct BoundingBox {
 	int width, height;
 } BoundingBox;
 
+typedef struct Strut {
+	ClientNode *client;
+	BoundingBox box;
+	struct Strut *prev;
+	struct Strut *next;
+} Strut;
+
+static Strut *struts = NULL;
+static Strut *strutsTail = NULL;
+
 /* desktopCount x screenCount */
 /* Note that we assume x and y are 0 based for all screens here. */
 static int *cascadeOffsets = NULL;
 
 static void GetScreenBounds(int index, BoundingBox *box);
 static void UpdateTrayBounds(BoundingBox *box, unsigned int layer);
+static void UpdateStrutBounds(BoundingBox *box);
 static void SubtractBounds(const BoundingBox *src, BoundingBox *dest);
 
 /****************************************************************************
@@ -48,12 +59,185 @@ void StartupPlacement() {
 /****************************************************************************
  ****************************************************************************/
 void ShutdownPlacement() {
+
+	Strut *sp;
+
 	Release(cascadeOffsets);
+
+	while(struts) {
+		sp = struts->next;
+		Release(struts);
+		struts = sp;
+	}
+	strutsTail = NULL;
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 void DestroyPlacement() {
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void RemoveClientStrut(ClientNode *np) {
+
+	Strut *sp;
+
+	for(sp = struts; sp; sp = sp->next) {
+		if(sp->client == np) {
+			if(sp->prev) {
+				sp->prev->next = sp->next;
+			} else {
+				struts = sp->next;
+			}
+			if(sp->next) {
+				sp->next->prev = sp->prev;
+			} else {
+				strutsTail = sp->prev;
+			}
+			Release(sp);
+		}
+	}
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void ReadClientStrut(ClientNode *np) {
+
+	BoundingBox box;
+	Strut *sp;
+	int status;
+	Atom actualType;
+	int actualFormat;
+	unsigned long count;
+	unsigned long bytesLeft;
+	unsigned char *value;
+	long *lvalue;
+	long leftWidth, rightWidth, topHeight, bottomHeight;
+	long leftStart, leftEnd, rightStart, rightEnd;
+	long topStart, topEnd, bottomStart, bottomEnd;
+
+	RemoveClientStrut(np);
+
+	box.x = 0;
+	box.y = 0;
+	box.width = 0;
+	box.height = 0;
+
+	/* First try to read _NET_WM_STRUT_PARTIAL */
+	/* Format is:
+	 *   left_width, right_width, top_width, bottom_width,
+	 *   left_start_y, left_end_y, right_start_y, right_end_y,
+	 *   top_start_x, top_end_x, bottom_start_x, bottom_end_x
+	 */
+	status = JXGetWindowProperty(display, np->window,
+		atoms[ATOM_NET_WM_STRUT_PARTIAL], 0, 12, False, XA_CARDINAL,
+		&actualType, &actualFormat, &count, &bytesLeft, &value);
+	if(status == Success) {
+		if(count == 12) {
+			lvalue = (long*)value;
+			leftWidth = lvalue[0];
+			rightWidth = lvalue[1];
+			topHeight = lvalue[2];
+			bottomHeight = lvalue[3];
+			leftStart = lvalue[4];
+			leftEnd = lvalue[5];
+			rightStart = lvalue[6];
+			rightEnd = lvalue[7];
+			topStart = lvalue[8];
+			topEnd = lvalue[9];
+			bottomStart = lvalue[10];
+			bottomEnd = lvalue[11];
+
+			if(leftWidth > 0) {
+				box.width = leftWidth;
+				box.x = leftStart;
+			}
+
+			if(rightWidth > 0) {
+				box.width = rightWidth;
+				box.x = rightStart;
+			}
+
+			if(topHeight > 0) {
+				box.height = topHeight;
+				box.y = topStart;
+			}
+
+			if(bottomHeight > 0) {
+				box.height = bottomHeight;
+				box.y = bottomStart;
+			}
+
+			sp = Allocate(sizeof(Strut));
+			sp->client = np;
+			sp->box = box;
+			sp->prev = NULL;
+			sp->next = struts;
+			if(struts) {
+				struts->prev = sp;
+			} else {
+				strutsTail = sp;
+			}
+			struts = sp;
+
+		}
+		JXFree(value);
+		return;
+	}
+
+	/* Next try to read _NET_WM_STRUT */
+	/* Format is: left_width, right_width, top_width, bottom_width */
+	status = JXGetWindowProperty(display, np->window,
+		atoms[ATOM_NET_WM_STRUT], 0, 4, False, XA_CARDINAL,
+		&actualType, &actualFormat, &count, &bytesLeft, &value);
+	if(status == Success) {
+		if(count == 4) {
+			lvalue = (long*)value;
+			leftWidth = lvalue[0];
+			rightWidth = lvalue[1];
+			topHeight = lvalue[2];
+			bottomHeight = lvalue[3];
+
+			if(leftWidth > 0) {
+				box.x = 0;
+				box.width = leftWidth;
+			}
+
+			if(rightWidth > 0) {
+				box.x = rootWidth - rightWidth;
+				box.width = rightWidth;
+			}
+
+			if(topHeight > 0) {
+				box.y = 0;
+				box.height = topHeight;
+			}
+
+			if(bottomHeight > 0) {
+				box.y = rootHeight - bottomHeight;
+				box.height = bottomHeight;
+			}
+
+			sp = Allocate(sizeof(Strut));
+			sp->client = np;
+			sp->box = box;
+			sp->prev = NULL;
+			sp->next = struts;
+			if(struts) {
+				struts->prev = sp;
+			} else {
+				strutsTail = sp;
+			}
+			struts = sp;
+
+		}
+		JXFree(value);
+		return;
+	}
+
 }
 
 /****************************************************************************
@@ -165,6 +349,28 @@ void UpdateTrayBounds(BoundingBox *box, unsigned int layer) {
 
 /****************************************************************************
  ****************************************************************************/
+void UpdateStrutBounds(BoundingBox *box) {
+
+	Strut *sp;
+	BoundingBox last;
+
+	for(sp = struts; sp; sp = sp->next) {
+		if(sp->client->state.desktop == currentDesktop
+			|| (sp->client->state.status & STAT_STICKY)) {
+			continue;
+		}
+		last = *box;
+		SubtractBounds(&sp->box, box);
+		if(box->width * box->height <= 0) {
+			*box = last;
+			break;
+		}
+	}
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
 void PlaceClient(ClientNode *np, int alreadyMapped) {
 
 	BoundingBox box;
@@ -204,6 +410,7 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 	} else {
 
 		UpdateTrayBounds(&box, np->state.layer);
+		UpdateStrutBounds(&box);
 
 		cascadeMultiplier = GetScreenCount() * desktopCount;
 		cascadeIndex = screenIndex * cascadeMultiplier + currentDesktop;
@@ -277,6 +484,7 @@ void PlaceMaximizedClient(ClientNode *np) {
 	screenIndex = GetCurrentScreen(np->x, np->y);
 	GetScreenBounds(screenIndex, &box);
 	UpdateTrayBounds(&box, np->state.layer);
+	UpdateStrutBounds(&box);
 
 	box.x += west;
 	box.y += north;

@@ -13,6 +13,9 @@ void StartupPlacement();
 void ShutdownPlacement();
 void DestroyPlacement();
 
+void RemoveClientStrut(struct ClientNode *np);
+void ReadClientStrut(struct ClientNode *np);
+
 void PlaceClient(struct ClientNode *np, int alreadyMapped);
 void PlaceMaximizedClient(struct ClientNode *np);
 void GravitateClient(struct ClientNode *np, int negate);

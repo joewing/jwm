@@ -35,6 +35,7 @@
 #include "desktop.h"
 #include "place.h"
 #include "clock.h"
+#include "dock.h"
 
 Display *display = NULL;
 Window rootWindow;
@@ -219,7 +220,7 @@ void StartupConnection() {
 	initializing = 1;
 	OpenConnection();
 
-#if 0
+#if 1
 	XSynchronize(display, True);
 #endif
 
@@ -286,6 +287,7 @@ void Initialize() {
 	#ifndef DISABLE_CONFIRM
 		InitializeDialogs();
 	#endif
+	InitializeDock();
 	InitializeFonts();
 	InitializeGroups();
 	InitializeHints();
@@ -329,6 +331,7 @@ void Startup() {
 	StartupClock();
 	StartupTaskBar();
 	StartupTrayButtons();
+	StartupDock();
 	StartupTray();
 	StartupKeys();
 	StartupDesktops();
@@ -368,6 +371,7 @@ void Shutdown() {
 	ShutdownKeys();
 	ShutdownPager();
 	ShutdownRootMenu();
+	ShutdownDock();
 	ShutdownTray();
 	ShutdownTrayButtons();
 	ShutdownTaskBar();
@@ -408,6 +412,7 @@ void Destroy() {
 	#ifndef DISABLE_CONFIRM
 		DestroyDialogs();
 	#endif
+	DestroyDock();
 	DestroyFonts();
 	DestroyGroups();
 	DestroyHints();

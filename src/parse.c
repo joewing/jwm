@@ -30,6 +30,7 @@
 #include "taskbar.h"
 #include "traybutton.h"
 #include "clock.h"
+#include "dock.h"
 
 typedef struct KeyMapType {
 	char *name;
@@ -115,6 +116,7 @@ static void ParseTaskList(const TokenNode *tp, TrayType *tray);
 static void ParseSwallow(const TokenNode *tp, TrayType *tray);
 static void ParseTrayButton(const TokenNode *tp, TrayType *tray);
 static void ParseClock(const TokenNode *tp, TrayType *tray);
+static void ParseDock(const TokenNode *tp, TrayType *tray);
 
 /* Groups. */
 static void ParseGroup(const TokenNode *tp);
@@ -1001,6 +1003,9 @@ void ParseTray(const TokenNode *tp) {
 		case TOK_CLOCK:
 			ParseClock(np, tray);
 			break;
+		case TOK_DOCK:
+			ParseDock(np, tray);
+			break;
 		default:
 			ParseError("invalid Tray option: %s", GetTokenName(np->type));
 			break;
@@ -1152,9 +1157,40 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
 	} else {
 		height = 0;
 	}
-		
 
 	cp = CreateClock(format, command, width, height);
+	if(cp) {
+		AddTrayComponent(tray, cp);
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void ParseDock(const TokenNode *tp, TrayType *tray) {
+
+	TrayComponentType *cp;
+	const char *temp;
+	int width, height;
+
+	temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
+	if(temp) {
+		width = atoi(temp);
+	} else {
+		width = 0;
+	}
+
+	temp = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
+	if(temp) {
+		height = atoi(temp);
+	} else {
+		height = 0;
+	}
+
+	Assert(tp);
+	Assert(tray);
+
+	cp = CreateDock(width, height);
 	if(cp) {
 		AddTrayComponent(tray, cp);
 	}

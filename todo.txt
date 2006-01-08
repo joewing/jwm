@@ -1,9 +1,11 @@
 
 Todo:
 	- More support for GNOME, Motif, and WMSpec hints.
-	- Add an option to make "alt-tabbing" go through the z-stack instead of
-	  the tray.
 	- Add window list root menu item.
+
+20060108:
+	- Added Dock item for Tray. This adds support for programs to dock
+	  in the tray via _NET_SYSTEM_TRAY_Sn.
 
 20060107:
 	- Added support for _NET_CLIENT_LIST and _NET_CLIENT_LIST_STACKING.

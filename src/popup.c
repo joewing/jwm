@@ -48,11 +48,11 @@ void ShutdownPopup() {
 		popup.text = NULL;
 	}
 	if(popup.gc != None) {
-		XFreeGC(display, popup.gc);
+		JXFreeGC(display, popup.gc);
 		popup.gc = None;
 	}
 	if(popup.window != None) {
-		XDestroyWindow(display, popup.window);
+		JXDestroyWindow(display, popup.window);
 		popup.window = None;
 	}
 }

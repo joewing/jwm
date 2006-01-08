@@ -331,6 +331,12 @@
 #define JXWarpPointer( a, b, c, d, e, f, g, h, i ) \
 	( SetCheckpoint(), XWarpPointer( a, b, c, d, e, f, g, h, i ) )
 
+#define JXSetSelectionOwner( a, b, c, d ) \
+	( SetCheckpoint(), XSetSelectionOwner( a, b, c, d ) )
+
+#define JXGetSelectionOwner( a, b ) \
+	( SetCheckpoint(), XGetSelectionOwner( a, b ) )
+
 /* XFT */
 
 #define JXftFontOpenName( a, b, c ) \

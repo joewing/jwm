@@ -102,6 +102,7 @@ static const AtomNode atomList[] = {
 		"_NET_WM_ACTION_CHANGE_DESKTOP"},
 	{ &atoms[ATOM_NET_WM_ACTION_CLOSE],       "_NET_WM_ACTION_CLOSE"        },
 	{ &atoms[ATOM_NET_CLOSE_WINDOW],          "_NET_CLOSE_WINDOW"           },
+	{ &atoms[ATOM_NET_MOVERESIZE_WINDOW],     "_NET_MOVERESIZE_WINDOW"      },
 	{ &atoms[ATOM_NET_WM_NAME],               "_NET_WM_NAME"                },
 	{ &atoms[ATOM_NET_WM_ICON],               "_NET_WM_ICON"                },
 	{ &atoms[ATOM_NET_WM_WINDOW_TYPE],        "_NET_WM_WINDOW_TYPE"         },

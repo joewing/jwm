@@ -45,6 +45,9 @@ static void HandleEnterNotify(const XCrossingEvent *event);
 static void HandleLeaveNotify(const XCrossingEvent *event);
 static void HandleMotionNotify(const XMotionEvent *event);
 
+static void HandleNetMoveResize(const XClientMessageEvent *event,
+	ClientNode *np);
+
 #ifdef USE_SHAPE
 static void HandleShapeEvent(const XShapeEvent *event);
 #endif
@@ -657,6 +660,10 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 
 			DeleteClient(np);
 
+		} else if(event->message_type == atoms[ATOM_NET_MOVERESIZE_WINDOW]) {
+
+			HandleNetMoveResize(event, np);
+
 		} else if(event->message_type == atoms[ATOM_NET_WM_STATE]) {
 
 			/* Up to two actions to be applied together, figure it out. */
@@ -741,6 +748,68 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 		}
 
 	}
+
+}
+
+/****************************************************************************
+ * Handle a _NET_MOVERESIZE_WINDOW request.
+ ****************************************************************************/
+void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np) {
+
+	long flags, gravity;
+	long x, y;
+	long width, height;
+	int deltax, deltay;
+	int north, south, east, west;
+
+	Assert(event);
+	Assert(np);
+
+	gravity = event->data.l[0] & 0xFF;
+	flags = event->data.l[0] >> 8;
+
+	x = np->x;
+	y = np->y;
+	width = np->width;
+	height = np->height;
+
+	if(flags & (1 << 0)) {
+		x = event->data.l[1];
+	}
+	if(flags & (1 << 1)) {
+		y = event->data.l[2];
+	}
+	if(flags & (1 << 2)) {
+		width = event->data.l[3];
+	}
+	if(flags & (1 << 3)) {
+		height = event->data.l[4];
+	}
+
+	if(gravity == 0) {
+		gravity = np->gravity;
+	}
+
+	GetBorderSize(np, &north, &south, &east, &west);
+	GetGravityDelta(gravity, north, south, east, west, &deltax, &deltay);
+
+	x -= deltax;
+	y -= deltay;
+
+	np->x = x;
+	np->y = y;
+	np->width = width;
+	np->height = height;
+
+	JXMoveResizeWindow(display, np->parent,
+		np->x - west, np->y - north,
+		np->width + east + west,
+		np->height + north + south);
+	JXMoveResizeWindow(display, np->window, west, north,
+		np->width, np->height);
+
+	WriteState(np);
+	SendConfigureEvent(np);
 
 }
 

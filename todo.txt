@@ -8,6 +8,7 @@ Todo:
 20060107:
 	- Added support for _NET_CLIENT_LIST and _NET_CLIENT_LIST_STACKING.
 	- Added support for _NET_WM_STRUT and _NET_WM_STRUT_PARTIAL.
+	- Added support for _NET_MOVERESIZE_WINDOW.
 
 20060101:
 	- Updates to configure.in to check if _XOPEN_SOURCE can safely be used.

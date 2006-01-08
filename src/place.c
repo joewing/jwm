@@ -519,76 +519,100 @@ void PlaceMaximizedClient(ClientNode *np) {
 }
 
 /****************************************************************************
- * Move the window in the specified direction for reparenting.
  ****************************************************************************/
-void GravitateClient(ClientNode *np, int negate) {
-
-	int north, south, west;
-	int northDelta, westDelta;
+void GetBorderSize(const ClientNode *np,
+	int *north, int *south, int *east, int *west) {
 
 	Assert(np);
+	Assert(north);
+	Assert(south);
+	Assert(east);
+	Assert(west);
 
-	north = 0;
-	west = 0;
+	*north = 0;
+	*south = 0;
+	*east = 0;
+	*west = 0;
 	if(np->state.border & BORDER_OUTLINE) {
-		north = borderWidth;
-		west = borderWidth;
+		*north = borderWidth;
+		*south = borderWidth;
+		*east = borderWidth;
+		*west = borderWidth;
 	}
 	if(np->state.border & BORDER_TITLE) {
-		north += titleHeight;
+		*north += titleHeight;
 	}
 
-	if(north) {
-		south = borderWidth;
-	} else {
-		south = 0;
-	}
+}
 
-	northDelta = 0;
-	westDelta = 0;
-	switch(np->gravity) {
+/****************************************************************************
+ ****************************************************************************/
+void GetGravityDelta(int gravity, int north, int south, int east, int west,
+	int *x, int  *y) {
+
+	Assert(x);
+	Assert(y);
+
+	*y = 0;
+	*x = 0;
+	switch(gravity) {
 	case NorthWestGravity:
-		northDelta = -north;
-		westDelta = -west;
+		*y = -north;
+		*x = -west;
 		break;
 	case NorthGravity:
-		northDelta = -north;
+		*y = -north;
 		break;
 	case NorthEastGravity:
-		northDelta = -north;
-		westDelta = west;
+		*y = -north;
+		*x = west;
 		break;
 	case WestGravity:
-		westDelta = -west;
+		*x = -west;
 		break;
 	case CenterGravity:
-		northDelta = (north + south) / 2;
-		westDelta = west;
+		*y = (north + south) / 2;
+		*x = (east + west) / 2;
 		break;
 	case EastGravity:
-		westDelta = west;
+		*x = west;
 		break;
 	case SouthWestGravity:
-		northDelta = south;
-		westDelta = -west;
+		*y = south;
+		*x = -west;
 		break;
 	case SouthGravity:
-		northDelta = south;
+		*y = south;
 		break;
 	case SouthEastGravity:
-		northDelta = south;
-		westDelta = west;
+		*y = south;
+		*x = west;
 		break;
 	default: /* Static */
 		break;
 	}
 
+}
+
+/****************************************************************************
+ * Move the window in the specified direction for reparenting.
+ ****************************************************************************/
+void GravitateClient(ClientNode *np, int negate) {
+
+	int north, south, east, west;
+	int deltax, deltay;
+
+	Assert(np);
+
+	GetBorderSize(np, &north, &south, &east, &west);
+	GetGravityDelta(np->gravity, north, south, east, west, &deltax, &deltay);
+
 	if(negate) {
-		np->x += westDelta;
-		np->y += northDelta;
+		np->x += deltax;
+		np->y += deltay;
 	} else {
-		np->x -= westDelta;
-		np->y -= northDelta;
+		np->x -= deltax;
+		np->y -= deltay;
 	}
 
 }

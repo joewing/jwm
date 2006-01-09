@@ -88,6 +88,7 @@ typedef struct TrayComponentType {
 typedef struct TrayType {
 
 	int x, y;
+	int requestedWidth, requestedHeight;
 	int width, height;
 	int border;
 	WinLayerType layer;

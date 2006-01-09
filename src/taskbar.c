@@ -70,6 +70,7 @@ static void ShowTaskWindowMenu(TaskBarType *bar, Node *np);
 
 static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
+static void Resize(TrayComponentType *cp);
 static void ProcessTaskButtonEvent(TrayComponentType *cp,
 	int x, int y, int mask);
 static void ProcessTaskMotionEvent(TrayComponentType *cp,
@@ -141,11 +142,9 @@ TrayComponentType *CreateTaskBar() {
 	cp->object = tp;
 	tp->cp = cp;
 
-	cp->width = 0;
-	cp->height = 0;
-
 	cp->Create = Create;
 	cp->Destroy = Destroy;
+	cp->Resize = Resize;
 	cp->ProcessButtonEvent = ProcessTaskButtonEvent;
 	cp->ProcessMotionEvent = ProcessTaskMotionEvent;
 
@@ -185,6 +184,46 @@ void Create(TrayComponentType *cp) {
 	JXFillRectangle(display, cp->pixmap, tp->bufferGC,
 		0, 0, cp->width, cp->height);
 
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void Resize(TrayComponentType *cp) {
+
+	TaskBarType *tp;
+
+	Assert(cp);
+
+	tp = (TaskBarType*)cp->object;
+
+	Assert(tp);
+
+	if(tp->bufferGC != None) {
+		JXFreeGC(display, tp->bufferGC);
+	}
+	if(tp->buffer != None) {
+		JXFreePixmap(display, tp->buffer);
+	}
+
+	if(cp->width > cp->height) {
+		tp->layout = LAYOUT_HORIZONTAL;
+		tp->itemHeight = cp->height - TASK_SPACER;
+	} else {
+		tp->layout = LAYOUT_VERTICAL;
+		tp->itemHeight = GetStringHeight(FONT_TASK) + 12;
+	}
+
+	Assert(cp->width > 0);
+	Assert(cp->height > 0);
+
+	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
+		rootDepth);
+	tp->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
+	tp->buffer = cp->pixmap;
+
+	JXSetForeground(display, tp->bufferGC, colors[COLOR_TRAYBUTTON_BG]);
+	JXFillRectangle(display, cp->pixmap, tp->bufferGC,
+		0, 0, cp->width, cp->height);
 }
 
 /***************************************************************************

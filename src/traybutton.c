@@ -36,6 +36,7 @@ static TrayButtonType *buttons;
 static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
 static void SetSize(TrayComponentType *cp, int width, int height);
+static void Resize(TrayComponentType *cp);
 
 static void ProcessButtonEvent(TrayComponentType *cp,
 	int x, int y, int mask);
@@ -54,23 +55,25 @@ void StartupTrayButtons() {
 
 	for(bp = buttons; bp; bp = bp->next) {
 		if(bp->label) {
-			bp->cp->width = GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
-			bp->cp->height = GetStringHeight(FONT_TRAYBUTTON);
+			bp->cp->requestedWidth
+				= GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
+			bp->cp->requestedHeight
+				= GetStringHeight(FONT_TRAYBUTTON);
 		} else {
-			bp->cp->width = 0;
-			bp->cp->height = 0;
+			bp->cp->requestedWidth = 0;
+			bp->cp->requestedHeight = 0;
 		}
 		if(bp->iconName) {
 			bp->icon = LoadNamedIcon(bp->iconName);
 			if(bp->icon) {
-				bp->cp->width += bp->icon->image->width;
-				bp->cp->height += bp->icon->image->height;
+				bp->cp->requestedWidth += bp->icon->image->width;
+				bp->cp->requestedHeight += bp->icon->image->height;
 			} else {
 				Warning("could not load tray icon: \"%s\"", bp->iconName);
 			}
 		}
-		bp->cp->width += 2 * BUTTON_SIZE;
-		bp->cp->height += 2 * BUTTON_SIZE;
+		bp->cp->requestedWidth += 2 * BUTTON_SIZE;
+		bp->cp->requestedHeight += 2 * BUTTON_SIZE;
 	}
 
 }
@@ -155,12 +158,13 @@ TrayComponentType *CreateTrayButton(const char *iconName,
 	cp = CreateTrayComponent();
 	cp->object = bp;
 	bp->cp = cp;
-	cp->width = width;
-	cp->height = height;
+	cp->requestedWidth = width;
+	cp->requestedHeight = height;
 
 	cp->Create = Create;
 	cp->Destroy = Destroy;
 	cp->SetSize = SetSize;
+	cp->Resize = Resize;
 
 	cp->ProcessButtonEvent = ProcessButtonEvent;
 
@@ -258,6 +262,13 @@ void Create(TrayComponentType *cp) {
 
 	JXFreeGC(display, gc);
 
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void Resize(TrayComponentType *cp) {
+	Destroy(cp);
+	Create(cp);
 }
 
 /***************************************************************************

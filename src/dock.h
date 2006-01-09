@@ -13,7 +13,7 @@ void StartupDock();
 void ShutdownDock();
 void DestroyDock();
 
-struct TrayComponentType *CreateDock(int width, int height);
+struct TrayComponentType *CreateDock();
 
 void HandleDockEvent(const XClientMessageEvent *event);
 int HandleDockDestroy(Window win);

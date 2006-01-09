@@ -39,6 +39,7 @@ static ClockType *clocks;
 static TimeType lastUpdate = ZERO_TIME;
 
 static void Create(TrayComponentType *cp);
+static void Resize(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
 static void ProcessClockButtonEvent(TrayComponentType *cp,
 	int x, int y, int mask);
@@ -60,8 +61,8 @@ void StartupClock() {
 	ClockType *clk;
 
 	for(clk = clocks; clk; clk = clk->next) {
-		clk->cp->width = GetStringWidth(FONT_CLOCK, clk->format) + 4;
-		clk->cp->height = GetStringHeight(FONT_CLOCK) + 4;
+		clk->cp->requestedWidth = GetStringWidth(FONT_CLOCK, clk->format) + 4;
+		clk->cp->requestedHeight = GetStringHeight(FONT_CLOCK) + 4;
 	}
 
 }
@@ -128,10 +129,11 @@ TrayComponentType *CreateClock(const char *format, const char *command,
 	cp = CreateTrayComponent();
 	cp->object = clk;
 	clk->cp = cp;
-	cp->width = width;
-	cp->height = height;
+	cp->requestedWidth = width;
+	cp->requestedHeight = height;
 
 	cp->Create = Create;
+	cp->Resize = Resize;
 	cp->Destroy = Destroy;
 	cp->ProcessButtonEvent = ProcessClockButtonEvent;
 	cp->ProcessMotionEvent = ProcessClockMotionEvent;
@@ -165,7 +167,48 @@ void Create(TrayComponentType *cp) {
 
 /***************************************************************************
  ***************************************************************************/
+void Resize(TrayComponentType *cp) {
+
+	ClockType *clk;
+	TimeType now;
+
+	Assert(cp);
+
+	clk = (ClockType*)cp->object;
+
+	Assert(clk);
+
+	if(clk->buffer != None) {
+		JXFreeGC(display, clk->bufferGC);
+		JXFreePixmap(display, clk->buffer);
+	}
+
+	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
+		rootDepth);
+	clk->buffer = cp->pixmap;
+	clk->bufferGC = JXCreateGC(display, clk->buffer, 0, NULL);
+
+	GetCurrentTime(&now);
+	DrawClock(clk, &now);
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
 void Destroy(TrayComponentType *cp) {
+
+	ClockType *clk;
+
+	Assert(cp);
+
+	clk = (ClockType*)cp->object;
+
+	Assert(clk);
+
+	if(clk->buffer != None) {
+		JXFreeGC(display, clk->bufferGC);
+		JXFreePixmap(display, clk->buffer);
+	}
 }
 
 /***************************************************************************

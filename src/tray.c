@@ -27,6 +27,8 @@ static int ComputeMaxWidth(TrayType *tp);
 static int ComputeMaxHeight(TrayType *tp);
 static int CheckHorizontalFill(TrayType *tp);
 static int CheckVerticalFill(TrayType *tp);
+static void LayoutTray(TrayType *tp, int *variableSize,
+	int *variableRemainder);
 
 /***************************************************************************
  ***************************************************************************/
@@ -43,8 +45,6 @@ void StartupTray() {
 	long attrMask;
 	TrayType *tp;
 	TrayComponentType *cp;
-	int temp;
-	int variableCount;
 	int variableSize;
 	int variableRemainder;
 	int width, height;
@@ -52,56 +52,7 @@ void StartupTray() {
 
 	for(tp = trays; tp; tp = tp->next) {
 
-		ComputeTraySize(tp);
-
-		/* Get the remaining size after setting fixed size components. */
-		/* Also, keep track of the number of variable size components. */
-		width = tp->width - 2 * tp->border;
-		height = tp->height - 2 * tp->border;
-		variableCount = 0;
-		for(cp = tp->components; cp; cp = cp->next) {
-			if(tp->layout == LAYOUT_HORIZONTAL) {
-				temp = cp->width;
-				if(temp > 0) {
-					width -= temp;
-				} else {
-					++variableCount;
-				}
-			} else {
-				temp = cp->height;
-				if(temp > 0) {
-					height -= temp;
-				} else {
-					++variableCount;
-				}
-			}
-		}
-
-		/* Distribute excess size among variable size components.
-		 * If there are no variable size components, shrink the tray.
-		 * If we are out of room, just give them a size of one.
-		 */
-		variableSize = 1;
-		variableRemainder = 0;
-		if(tp->layout == LAYOUT_HORIZONTAL) {
-			if(variableCount) {
-				if(width >= variableCount) {
-					variableSize = width / variableCount;
-					variableRemainder = width % variableCount;
-				}
-			} else if(width > 0) {
-				tp->width = tp->width - width;
-			}
-		} else {
-			if(variableCount) {
-				if(height >= variableCount) {
-					variableSize = height / variableCount;
-					variableRemainder = height % variableCount;
-				}
-			} else if(height > 0) {
-				tp->height = tp->height - height;
-			}
-		}
+		LayoutTray(tp, &variableSize, &variableRemainder);
 
 		/* Create the tray window. */
 		/* The window is created larger for a border. */
@@ -284,6 +235,8 @@ TrayComponentType *CreateTrayComponent() {
 
 	cp->x = 0;
 	cp->y = 0;
+	cp->requestedWidth = 0;
+	cp->requestedHeight = 0;
 	cp->width = 0;
 	cp->height = 0;
 
@@ -294,6 +247,7 @@ TrayComponentType *CreateTrayComponent() {
 	cp->Destroy = NULL;
 
 	cp->SetSize = NULL;
+	cp->Resize = NULL;
 
 	cp->ProcessButtonEvent = NULL;
 	cp->ProcessMotionEvent = NULL;
@@ -747,6 +701,141 @@ void UpdateSpecificTray(const TrayType *tp, const TrayComponentType *cp) {
 		JXCopyArea(display, cp->pixmap, tp->window, tp->gc, 0, 0,
 			cp->width, cp->height, cp->x, cp->y);
 	}
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void LayoutTray(TrayType *tp, int *variableSize, int *variableRemainder) {
+
+	TrayComponentType *cp;
+	int variableCount;
+	int width, height;
+	int temp;
+
+	for(cp = tp->components; cp; cp = cp->next) {
+		cp->width = cp->requestedWidth;
+		cp->height = cp->requestedHeight;
+	}
+
+	ComputeTraySize(tp);
+
+	/* Get the remaining size after setting fixed size components. */
+	/* Also, keep track of the number of variable size components. */
+	width = tp->width - 2 * tp->border;
+	height = tp->height - 2 * tp->border;
+	variableCount = 0;
+	for(cp = tp->components; cp; cp = cp->next) {
+		if(tp->layout == LAYOUT_HORIZONTAL) {
+			temp = cp->width;
+			if(temp > 0) {
+				width -= temp;
+			} else {
+				++variableCount;
+			}
+		} else {
+			temp = cp->height;
+			if(temp > 0) {
+				height -= temp;
+			} else {
+				++variableCount;
+			}
+		}
+	}
+
+	/* Distribute excess size among variable size components.
+	 * If there are no variable size components, shrink the tray.
+	 * If we are out of room, just give them a size of one.
+	 */
+	*variableSize = 1;
+	*variableRemainder = 0;
+	if(tp->layout == LAYOUT_HORIZONTAL) {
+		if(variableCount) {
+			if(width >= variableCount) {
+				*variableSize = width / variableCount;
+				*variableRemainder = width % variableCount;
+			}
+		} else if(width > 0) {
+			tp->width = tp->width - width;
+		}
+	} else {
+		if(variableCount) {
+			if(height >= variableCount) {
+				*variableSize = height / variableCount;
+				*variableRemainder = height % variableCount;
+			}
+		} else if(height > 0) {
+			tp->height = tp->height - height;
+		}
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void ResizeTray(TrayType *tp) {
+
+	TrayComponentType *cp;
+	int variableSize;
+	int variableRemainder;
+	int xoffset, yoffset;
+	int width, height;
+
+	LayoutTray(tp, &variableSize, &variableRemainder);
+
+	/* Reposition items on the tray. */
+	xoffset = tp->border;
+	yoffset = tp->border;
+	for(cp = tp->components; cp; cp = cp->next) {
+
+		if(cp->Resize) {
+			if(tp->layout == LAYOUT_HORIZONTAL) {
+				height = tp->height - 2 * tp->border;
+				width = cp->width;
+				if(width == 0) {
+					width = variableSize;
+					if(variableRemainder) {
+						++width;
+						--variableRemainder;
+					}
+				}
+			} else {
+				width = tp->width - 2 * tp->border;
+				height = cp->height;
+				if(height == 0) {
+					height = variableSize;
+					if(variableRemainder) {
+						++height;
+						--variableRemainder;
+					}
+				}
+			}
+			cp->width = width;
+			cp->height = height;
+			(cp->Resize)(cp);
+		}
+
+		cp->x = xoffset;
+		cp->y = yoffset;
+		cp->screenx = tp->x + xoffset;
+		cp->screeny = tp->y + yoffset;
+
+		if(cp->window != None) {
+			JXMoveWindow(display, cp->window, xoffset, yoffset);
+		}
+
+		if(tp->layout == LAYOUT_HORIZONTAL) {
+			xoffset += cp->width;
+		} else {
+			yoffset += cp->height;
+		}
+	}
+
+	JXMoveResizeWindow(display, tp->window, tp->x, tp->y,
+		tp->width, tp->height);
+
+	UpdateTaskBar();
+	DrawSpecificTray(tp);
+
 }
 
 /***************************************************************************

@@ -1170,27 +1170,11 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
 void ParseDock(const TokenNode *tp, TrayType *tray) {
 
 	TrayComponentType *cp;
-	const char *temp;
-	int width, height;
-
-	temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
-	if(temp) {
-		width = atoi(temp);
-	} else {
-		width = 0;
-	}
-
-	temp = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
-	if(temp) {
-		height = atoi(temp);
-	} else {
-		height = 0;
-	}
 
 	Assert(tp);
 	Assert(tray);
 
-	cp = CreateDock(width, height);
+	cp = CreateDock();
 	if(cp) {
 		AddTrayComponent(tray, cp);
 	}

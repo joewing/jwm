@@ -42,6 +42,7 @@ static Window FindSwallowedClient(const char *name);
 
 static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
+static void Resize(TrayComponentType *cp);
 
 /****************************************************************************
  ****************************************************************************/
@@ -126,9 +127,10 @@ TrayComponentType *CreateSwallow(const char *name, const char *command,
 	cp->object = np;
 	cp->Create = Create;
 	cp->Destroy = Destroy;
+	cp->Resize = Resize;
 
-	cp->width = width;
-	cp->height = height;
+	cp->requestedWidth = width;
+	cp->requestedHeight = height;
 
 	return cp;
 
@@ -158,6 +160,22 @@ int ProcessSwallowEvent(const XEvent *event) {
 /****************************************************************************
  ****************************************************************************/
 void Create(TrayComponentType *cp) {
+
+	int width, height;
+
+	SwallowNode *np = (SwallowNode*)cp->object;
+
+	if(cp->window != None) {
+		width = cp->width - np->border * 2;
+		height = cp->height - np->border * 2;
+		JXResizeWindow(display, cp->window, width, height);
+	}
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void Resize(TrayComponentType *cp) {
 
 	int width, height;
 

@@ -20,7 +20,6 @@
 typedef struct DockNode {
 
 	Window window;
-	int width, height;
 
 	struct DockNode *next;
 
@@ -43,6 +42,7 @@ static unsigned long orientation;
 
 static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
+static void Resize(TrayComponentType *cp);
 
 static void DockWindow(Window win);
 static int UndockWindow(Window win);
@@ -72,7 +72,7 @@ void StartupDock() {
 
 	/* The location and size of the window doesn't matter here. */
 	dock->cp->window = JXCreateSimpleWindow(display, rootWindow,
-		/* x, y, width, height */ 0, 0, 64, 64,
+		/* x, y, width, height */ 0, 0, 1, 1,
 		/* border_size, border_color */ 0, 0,
 		/* background */ colors[COLOR_TRAY_BG]);
 
@@ -84,17 +84,17 @@ void ShutdownDock() {
 
 	DockNode *np;
 
-
 	if(dock) {
-
-		if(owner) {
-			JXSetSelectionOwner(display, dockAtom, None, CurrentTime);
-		}
 
 		while(dock->nodes) {
 			np = dock->nodes->next;
+			JXReparentWindow(display, dock->nodes->window, rootWindow, 0, 0);
 			Release(dock->nodes);
 			dock->nodes = np;
+		}
+
+		if(owner) {
+			JXSetSelectionOwner(display, dockAtom, None, CurrentTime);
 		}
 
 		JXDestroyWindow(display, dock->cp->window);
@@ -112,7 +112,7 @@ void DestroyDock() {
 
 /***************************************************************************
  ***************************************************************************/
-TrayComponentType *CreateDock(int width, int height) {
+TrayComponentType *CreateDock() {
 
 	TrayComponentType *cp;
 
@@ -127,11 +127,12 @@ TrayComponentType *CreateDock(int width, int height) {
 	cp = CreateTrayComponent();
 	cp->object = dock;
 	dock->cp = cp;
-	cp->width = width;
-	cp->height = height;
+	cp->requestedWidth = 1;
+	cp->requestedHeight = 1;
 
 	cp->Create = Create;
 	cp->Destroy = Destroy;
+	cp->Resize = Resize;
 
 	return cp;
 
@@ -153,13 +154,13 @@ void Create(TrayComponentType *cp) {
 
 	orientationAtom = JXInternAtom(display, "_NET_SYSTEM_TRAY_ORIENTATION",
 		False);
-	if(cp->width >= cp->height) {
-		orientation = SYSTEM_TRAY_ORIENTATION_HORZ;
-	} else {
+	if(cp->height == 1) {
 		orientation = SYSTEM_TRAY_ORIENTATION_VERT;
+	} else {
+		orientation = SYSTEM_TRAY_ORIENTATION_HORZ;
 	}
-	JXChangeProperty(display, rootWindow, orientationAtom, XA_CARDINAL, 32,
-		PropModeReplace, (unsigned char*)&orientation, 1);
+	JXChangeProperty(display, dock->cp->window, orientationAtom,
+		XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&orientation, 1);
 
 	owner = 1;
 	JXSetSelectionOwner(display, dockAtom, dock->cp->window, CurrentTime);
@@ -182,6 +183,15 @@ void Create(TrayComponentType *cp) {
 		JXSendEvent(display, rootWindow, False, StructureNotifyMask, &event);
 
 	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void Resize(TrayComponentType *cp) {
+
+	JXResizeWindow(display, cp->window, cp->width, cp->height);
+	UpdateDock();
 
 }
 
@@ -231,7 +241,6 @@ int HandleDockDestroy(Window win) {
  ***************************************************************************/
 void DockWindow(Window win) {
 
-	XWindowAttributes attr;
 	DockNode *np;
 
 	Assert(dock);
@@ -245,20 +254,28 @@ void DockWindow(Window win) {
 		np->next = dock->nodes;
 		dock->nodes = np;
 
-		if(JXGetWindowAttributes(display, win, &attr)) {
-			np->width = attr.width;
-			np->height = attr.height;
+		if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
+			if(dock->cp->requestedWidth > 1) {
+				dock->cp->requestedWidth += dock->cp->height;
+			} else {
+				dock->cp->requestedWidth = dock->cp->height;
+			}
 		} else {
-			np->width = 0;
-			np->height = 0;
+			if(dock->cp->requestedHeight > 1) {
+				dock->cp->requestedHeight += dock->cp->width;
+			} else {
+				dock->cp->requestedHeight = dock->cp->width;
+			}
 		}
 
+		JXAddToSaveSet(display, win);
 		JXReparentWindow(display, win, dock->cp->window, 0, 0);
 		JXMapRaised(display, win);
+		JXSelectInput(display, win, SubstructureNotifyMask | StructureNotifyMask);
 
 	}
 
-	UpdateDock();
+	ResizeTray(dock->cp->tray);
 
 }
 
@@ -282,9 +299,22 @@ int UndockWindow(Window win) {
 
 			Release(np);
 
-			UpdateDock();
+			if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
+				dock->cp->requestedWidth -= dock->cp->height;
+				if(dock->cp->requestedWidth <= 0) {
+					dock->cp->requestedWidth = 1;
+				}
+			} else {
+				dock->cp->requestedHeight -= dock->cp->width;
+				if(dock->cp->requestedHeight <= 0) {
+					dock->cp->requestedHeight = 1;
+				}
+			}
+
+			ResizeTray(dock->cp->tray);
 
 			return 1;
+
 		}
 		last = np;
 	}

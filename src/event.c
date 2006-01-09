@@ -683,8 +683,11 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 			Exit();
 		}
 
+
 	} else if(event->message_type == atoms[ATOM_NET_SYSTEM_TRAY_OPCODE]) {
+
 		HandleDockEvent(event);
+
 	}
 
 }
@@ -939,7 +942,9 @@ void HandleUnmapNotify(const XUnmapEvent *event) {
 		}
 
 	} else if(!np) {
+
 		HandleDockDestroy(event->window);
+
 	}
 
 }
@@ -961,7 +966,9 @@ int HandleDestroyNotify(const XDestroyWindowEvent *event) {
 		return 1;
 
 	} else if(!np) {
+
 		return HandleDockDestroy(event->window);
+
 	}
 
 	return 0;

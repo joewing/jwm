@@ -30,15 +30,27 @@ typedef struct TrayComponentType {
 	/* Coordinates on the screen (valid only after Create). */
 	int screenx, screeny;
 
-	/* Component size.
-	 * Sizing is handled as follows:
+	/* Sizing is handled as follows:
 	 *  - The component is created via a factory method. It sets its
-	 *    preferred size (0 for no preference).
+	 *    requested size (0 for no preference).
 	 *  - The SetSize callback is issued with size constraints
-	 *    (0 for no constraint). The component should update its preference
-	 *    during SetSize.
+	 *    (0 for no constraint). The component should update
+	 *    width and height in SetSize.
 	 *  - The Create callback is issued with finalized size information.
+	 * Resizing is handled as follows:
+	 *  - A component determines that it needs to change size. It updates
+	 *    its requested size (0 for no preference).
+	 *  - The component calls ResizeTray.
+	 *  - The SetSize callback is issued with size constraints
+	 *    (0 for no constraint). The component should update
+	 *    width and height in SetSize.
+	 *  - The Resize callback is issued with finalized size information.
 	 */
+
+	/* Requested component size. */
+	int requestedWidth, requestedHeight;
+
+	/* Actual component size. */
 	int width, height;
 
 	/* Content. */
@@ -56,6 +68,9 @@ typedef struct TrayComponentType {
 	 * This is called before Create.
 	 */
 	void (*SetSize)(struct TrayComponentType *cp, int width, int height);
+
+	/* Resize the component. */
+	void (*Resize)(struct TrayComponentType *cp);
 
 	/* Callback for mouse clicks. */
 	void (*ProcessButtonEvent)(struct TrayComponentType *cp,
@@ -107,6 +122,8 @@ void HideTray(TrayType *tp);
 void DrawTray();
 void DrawSpecificTray(const TrayType *tp);
 void UpdateSpecificTray(const TrayType *tp, const TrayComponentType *cp);
+
+void ResizeTray(TrayType *tp);
 
 TrayType *GetTrays();
 

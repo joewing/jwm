@@ -304,7 +304,7 @@ Window FindSwallowedClient(const char *name) {
 	/* Process any pending events before searching. */
 	HandleStartupEvents();
 
-	JXGrabServer(display);
+	JXFlush(display);
 
 	JXQueryTree(display, rootWindow, &rootReturn, &parentReturn,
 			&childrenReturn, &childrenCount);
@@ -334,8 +334,6 @@ Window FindSwallowedClient(const char *name) {
 	}
 
 	JXFree(childrenReturn);
-
-	JXUngrabServer(display);
 
 	return result;
 

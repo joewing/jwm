@@ -145,27 +145,14 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 
 	Assert(w != None);
 
-	if(!alreadyMapped) {
-		JXGrabServer(display);
-	}
-
 	if(JXGetWindowAttributes(display, w, &attr) == 0) {
-		if(!alreadyMapped) {
-			JXUngrabServer(display);
-		}
 		return NULL;
 	}
 
 	if(attr.override_redirect == True && notOwner) {
-		if(!alreadyMapped) {
-			JXUngrabServer(display);
-		}
 		return NULL;
 	}
 	if(attr.class == InputOnly) {
-		if(!alreadyMapped) {
-			JXUngrabServer(display);
-		}
 		return NULL;
 	}
 
@@ -265,10 +252,6 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 	}
 
 	ReadClientStrut(np);
-
-	if(!alreadyMapped) {
-		JXUngrabServer(display);
-	}
 
 	return np;
 

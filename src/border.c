@@ -147,19 +147,19 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 
 		if(y > borderWidth && y <= borderWidth + titleHeight) {
 			offset = np->width + borderWidth - titleHeight;
-			if(np->state.border & BORDER_CLOSE) {
+			if((np->state.border & BORDER_CLOSE) && offset > titleSize) {
 				if(x > offset && x < offset + titleHeight) {
 					return BA_CLOSE;
 				}
 				offset -= titleHeight;
 			}
-			if(np->state.border & BORDER_MAX) {
+			if((np->state.border & BORDER_MAX) && offset > titleSize) {
 				if(x > offset && x < offset + titleHeight) {
 					return BA_MAXIMIZE;
 				}
 				offset -= titleHeight;
 			}
-			if(np->state.border & BORDER_MIN) {
+			if((np->state.border & BORDER_MIN) && offset > titleSize) {
 				if(x > offset && x < offset + titleHeight) {
 					return BA_MINIMIZE;
 				}
@@ -199,18 +199,21 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 
 	height = np->height;
 
-	if(x < borderWidth + titleHeight && y < titleHeight + borderWidth) {
-		return  BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE;
-	} else if(x < titleHeight + borderWidth
-		&& y - north >= height - titleHeight) {
-		return BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE;
-	} else if(x - borderWidth >= width - titleHeight
-		&& y < titleHeight + borderWidth) {
-		return BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE;
-	} else if(x - borderWidth >= width - titleHeight
-		&& y - north >= height - titleHeight) {
-		return BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE;
-	} else if(x < borderWidth) {
+	if(width >= titleHeight * 2 && height >= titleHeight * 2) {
+		if(x < borderWidth + titleHeight && y < titleHeight + borderWidth) {
+			return  BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE;
+		} else if(x < titleHeight + borderWidth
+			&& y - north >= height - titleHeight) {
+			return BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE;
+		} else if(x - borderWidth >= width - titleHeight
+			&& y < titleHeight + borderWidth) {
+			return BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE;
+		} else if(x - borderWidth >= width - titleHeight
+			&& y - north >= height - titleHeight) {
+			return BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE;
+		}
+	}
+	if(x < borderWidth) {
 		return BA_RESIZE_W | BA_RESIZE;
 	} else if(x >= width + borderWidth) {
 		return BA_RESIZE_E | BA_RESIZE;

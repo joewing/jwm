@@ -315,7 +315,7 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 
 	if(np->state.border & BORDER_TITLE) {
 
-		if(np->icon) {
+		if(np->icon && np->width >= titleHeight) {
 			PutIcon(np->icon, canvas, gc,
 				borderWidth + 2,
 				borderWidth + titleHeight / 2 - iconSize / 2,
@@ -367,7 +367,9 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 	JXDrawLine(display, canvas, gc, 1, 1, width - 2, 1);
 
 	if((np->state.border & BORDER_RESIZE)
-		&& !(np->state.status & STAT_SHADED)) {
+		&& !(np->state.status & STAT_SHADED)
+		&& np->width >= 2 * titleHeight * 2
+		&& np->height >= titleHeight * 2) {
 
 		/* Draw marks */
 		JXSetForeground(display, gc, pixelDown);

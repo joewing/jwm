@@ -157,6 +157,9 @@ void WaitForEvent(XEvent *event) {
 		case SelectionClear:
 			handled = HandleSelectionClear(&event->xselectionclear);
 			break;
+		case ResizeRequest:
+			handled = HandleDockResizeRequest(&event->xresizerequest);
+			break;
 		case CreateNotify:
 		case MapNotify:
 		case NoExpose:
@@ -914,8 +917,8 @@ void HandleMapRequest(const XMapEvent *event) {
 		} else {
 			JXMapWindow(display, event->window);
 		}
-		JXUngrabServer(display);
 		JXSync(display, False);
+		JXUngrabServer(display);
 	} else {
 		if(!(np->state.status & STAT_MAPPED)) {
 			np->state.status |= STAT_MAPPED;

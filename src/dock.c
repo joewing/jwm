@@ -229,6 +229,25 @@ void HandleDockEvent(const XClientMessageEvent *event) {
 
 /***************************************************************************
  ***************************************************************************/
+int HandleDockResizeRequest(const XResizeRequestEvent *event) {
+
+	DockNode *np;
+
+	for(np = dock->nodes; np; np = np->next) {
+		if(np->window == event->window) {
+
+			JXResizeWindow(display, np->window, event->width, event->height);
+			UpdateDock();
+
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+/***************************************************************************
+ ***************************************************************************/
 int HandleDockDestroy(Window win) {
 	if(dock) {
 		return UndockWindow(win);
@@ -282,9 +301,10 @@ void DockWindow(Window win) {
 		}
 
 		JXAddToSaveSet(display, win);
+		JXSelectInput(display, win,
+			SubstructureNotifyMask | StructureNotifyMask | ResizeRedirectMask);
 		JXReparentWindow(display, win, dock->cp->window, 0, 0);
 		JXMapRaised(display, win);
-		JXSelectInput(display, win, SubstructureNotifyMask | StructureNotifyMask);
 
 	}
 
@@ -339,9 +359,7 @@ int UndockWindow(Window win) {
  ***************************************************************************/
 void UpdateDock() {
 
-	XSizeHints hints;
 	XWindowAttributes attr;
-	long sizeFlags;
 	DockNode *np;
 	int x, y;
 	int width, height;
@@ -354,15 +372,13 @@ void UpdateDock() {
 	if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
 		itemWidth = dock->cp->height;
 		itemHeight = dock->cp->height;
-		x = 0;
-		y = 2;
 	} else {
 		itemHeight = dock->cp->width;
 		itemWidth = dock->cp->width;
-		x = 2;
-		y = 0;
 	}
 
+	x = 0;
+	y = 0;
 	for(np = dock->nodes; np; np = np->next) {
 
 		xoffset = 0;
@@ -372,9 +388,22 @@ void UpdateDock() {
 
 		if(JXGetWindowAttributes(display, np->window, &attr)) {
 
-			if(!JXGetWMNormalHints(display, np->window, &hints, &sizeFlags)) {
-				sizeFlags = 0;
+			ratio = (double)attr.width / attr.height;
+
+			if(ratio > 1.0) {
+				if(width > attr.width) {
+					width = attr.width;
+				}
+				height = width / ratio;
+			} else {
+				if(height > attr.height) {
+					height = attr.height;
+				}
+				width = height * ratio;
 			}
+
+			xoffset = (itemWidth - width) / 2;
+			yoffset = (itemHeight - height) / 2;
 
 		}
 

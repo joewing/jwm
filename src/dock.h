@@ -17,6 +17,7 @@ struct TrayComponentType *CreateDock();
 
 void HandleDockEvent(const XClientMessageEvent *event);
 int HandleDockDestroy(Window win);
+int HandleDockSelectionClear(const XSelectionClearEvent *event);
 
 #endif
 

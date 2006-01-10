@@ -45,6 +45,7 @@ static void HandleKeyPress(const XKeyEvent *event);
 static void HandleEnterNotify(const XCrossingEvent *event);
 static void HandleLeaveNotify(const XCrossingEvent *event);
 static void HandleMotionNotify(const XMotionEvent *event);
+static int HandleSelectionClear(const XSelectionClearEvent *event);
 
 static void HandleNetMoveResize(const XClientMessageEvent *event,
 	ClientNode *np);
@@ -153,6 +154,9 @@ void WaitForEvent(XEvent *event) {
 			HandleConfigureNotify(&event->xconfigure);
 			handled = 1;
 			break;
+		case SelectionClear:
+			handled = HandleSelectionClear(&event->xselectionclear);
+			break;
 		case CreateNotify:
 		case MapNotify:
 		case NoExpose:
@@ -220,6 +224,14 @@ void ProcessEvent(XEvent *event) {
 		Debug("Unknown event type: %d", event->type);
 		break;
 	}
+}
+
+/****************************************************************************
+ ****************************************************************************/
+int HandleSelectionClear(const XSelectionClearEvent *event) {
+
+	return HandleDockSelectionClear(event);
+
 }
 
 /****************************************************************************

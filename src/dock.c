@@ -239,6 +239,19 @@ int HandleDockDestroy(Window win) {
 
 /***************************************************************************
  ***************************************************************************/
+int HandleDockSelectionClear(const XSelectionClearEvent *event) {
+
+	if(event->selection == dockAtom) {
+		Debug("lost _NET_SYSTEM_TRAY selection");
+		owner = 0;
+	}
+
+	return 0;
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
 void DockWindow(Window win) {
 
 	DockNode *np;
@@ -326,43 +339,53 @@ int UndockWindow(Window win) {
  ***************************************************************************/
 void UpdateDock() {
 
+	XSizeHints hints;
+	XWindowAttributes attr;
+	long sizeFlags;
 	DockNode *np;
-	int count;
-	int itemWidth, itemHeight;
 	int x, y;
+	int width, height;
+	int xoffset, yoffset;
+	int itemWidth, itemHeight;
+	double ratio;
 
 	Assert(dock);
 
-	count = 0;
-	for(np = dock->nodes; np; np = np->next) {
-		++count;
+	if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
+		itemWidth = dock->cp->height;
+		itemHeight = dock->cp->height;
+		x = 0;
+		y = 2;
+	} else {
+		itemHeight = dock->cp->width;
+		itemWidth = dock->cp->width;
+		x = 2;
+		y = 0;
 	}
 
-	if(count > 0) {
+	for(np = dock->nodes; np; np = np->next) {
+
+		xoffset = 0;
+		yoffset = 0;
+		width = itemWidth;
+		height = itemHeight;
+
+		if(JXGetWindowAttributes(display, np->window, &attr)) {
+
+			if(!JXGetWMNormalHints(display, np->window, &hints, &sizeFlags)) {
+				sizeFlags = 0;
+			}
+
+		}
+
+		JXMoveResizeWindow(display, np->window, x + xoffset, y + yoffset,
+			width, height);
 
 		if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-			itemWidth = dock->cp->width / count;
-			itemHeight = dock->cp->height;
-			x = 0;
-			y = 2;
+			x += itemWidth;
 		} else {
-			itemHeight = dock->cp->height / count;
-			itemWidth = dock->cp->width;
-			x = 2;
-			y = 0;
+			y += itemHeight;
 		}
-
-		for(np = dock->nodes; np; np = np->next) {
-
-			JXMoveResizeWindow(display, np->window, x, y, itemWidth, itemHeight);
-
-			if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-				x += itemWidth;
-			} else {
-				y += itemHeight;
-			}
-		}
-
 	}
 
 }

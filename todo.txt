@@ -5,6 +5,7 @@ Todo:
 
 20060109:
 	- Fixed the centering of icons in tray buttons.
+	- Fixed a bug where TrayButtonStyle was being used for task lists.
 
 20060108:
 	- Added Dock item for Tray. This adds support for programs to dock

@@ -177,8 +177,8 @@ TrayComponentType *CreateTrayButton(const char *iconName,
 void SetSize(TrayComponentType *cp, int width, int height) {
 
 	TrayButtonType *bp;
-	int lwidth, lheight;
-	int iwidth, iheight;
+	int labelWidth, labelHeight;
+	int iconWidth, iconHeight;
 	double ratio;
 
 	bp = (TrayButtonType*)cp->object;
@@ -186,30 +186,30 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 	if(bp->icon) {
 
 		if(bp->label) {
-			lwidth = GetStringWidth(FONT_TRAYBUTTON, bp->label);
-			lheight = GetStringHeight(FONT_TRAYBUTTON);
+			labelWidth = GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
+			labelHeight = GetStringHeight(FONT_TRAYBUTTON);
 		} else {
-			lwidth = 0;
-			lheight = 0;
+			labelWidth = 0;
+			labelHeight = 0;
 		}
 
-		iwidth = bp->icon->image->width;
-		iheight = bp->icon->image->height;
-		ratio = (double)iwidth / iheight;
+		iconWidth = bp->icon->image->width;
+		iconHeight = bp->icon->image->height;
+		ratio = (double)iconWidth / iconHeight;
 
 		if(width > 0) {
 
-			/* Compute size from width. */
-			iwidth = width - lwidth - 2 * BUTTON_SIZE;
-			iheight = iwidth / ratio;
-			height = Max(iheight, lheight);
+			/* Compute height from width. */
+			iconWidth = width - labelWidth - 2 * BUTTON_SIZE;
+			iconHeight = iconWidth / ratio;
+			height = Max(iconHeight, labelHeight) + 2 * BUTTON_SIZE;
 
 		} else if(height > 0) {
 
-			/* Compute size from height. */
-			iheight = height;
-			iwidth = iheight * ratio;
-			width = iwidth + lwidth + 2 * BUTTON_SIZE;
+			/* Compute width from height. */
+			iconHeight = height - 2 * BUTTON_SIZE;
+			iconWidth = iconHeight * ratio;
+			width = iconWidth + labelWidth + 2 * BUTTON_SIZE;
 
 		}
 

@@ -24,7 +24,9 @@ static void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event);
 
 static void ComputeTraySize(TrayType *tp);
 static int ComputeMaxWidth(TrayType *tp);
+static int ComputeTotalWidth(TrayType *tp);
 static int ComputeMaxHeight(TrayType *tp);
+static int ComputeTotalHeight(TrayType *tp);
 static int CheckHorizontalFill(TrayType *tp);
 static int CheckVerticalFill(TrayType *tp);
 static void LayoutTray(TrayType *tp, int *variableSize,
@@ -304,6 +306,22 @@ int ComputeMaxWidth(TrayType *tp) {
 }
 
 /***************************************************************************
+ ***************************************************************************/
+int ComputeTotalWidth(TrayType *tp) {
+
+	TrayComponentType *cp;
+	int result;
+
+	result = 2 * tp->border;
+	for(cp = tp->components; cp; cp = cp->next) {
+		result += cp->width;
+	}
+
+	return result;
+
+}
+
+/***************************************************************************
  * Compute the max component height.
  ***************************************************************************/
 int ComputeMaxHeight(TrayType *tp) {
@@ -321,6 +339,22 @@ int ComputeMaxHeight(TrayType *tp) {
 				result = temp;
 			}
 		}
+	}
+
+	return result;
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+int ComputeTotalHeight(TrayType *tp) {
+
+	TrayComponentType *cp;
+	int result;
+
+	result = 2 * tp->border;
+	for(cp = tp->components; cp; cp = cp->next) {
+		result += cp->height;
 	}
 
 	return result;
@@ -405,7 +439,7 @@ void ComputeTraySize(TrayType *tp) {
 			if(CheckHorizontalFill(tp)) {
 				tp->width = rootWidth;
 			} else {
-				tp->width = ComputeMaxWidth(tp);
+				tp->width = ComputeTotalWidth(tp);
 			}
 			if(tp->width == 0) {
 				tp->width = 32;
@@ -416,7 +450,7 @@ void ComputeTraySize(TrayType *tp) {
 			if(CheckVerticalFill(tp)) {
 				tp->height = rootHeight;
 			} else {
-				tp->height = ComputeMaxHeight(tp);
+				tp->height = ComputeTotalHeight(tp);
 			}
 			if(tp->height == 0) {
 				tp->height = 32;
@@ -760,7 +794,7 @@ void LayoutTray(TrayType *tp, int *variableSize, int *variableRemainder) {
 				*variableRemainder = width % variableCount;
 			}
 		} else if(width > 0) {
-			tp->width = tp->width - width;
+			tp->width -= width;
 		}
 	} else {
 		if(variableCount) {
@@ -769,7 +803,7 @@ void LayoutTray(TrayType *tp, int *variableSize, int *variableRemainder) {
 				*variableRemainder = height % variableCount;
 			}
 		} else if(height > 0) {
-			tp->height = tp->height - height;
+			tp->height -= height;
 		}
 	}
 

@@ -61,8 +61,12 @@ void StartupClock() {
 	ClockType *clk;
 
 	for(clk = clocks; clk; clk = clk->next) {
-		clk->cp->requestedWidth = GetStringWidth(FONT_CLOCK, clk->format) + 4;
-		clk->cp->requestedHeight = GetStringHeight(FONT_CLOCK) + 4;
+		if(clk->cp->requestedWidth == 0) {
+			clk->cp->requestedWidth = GetStringWidth(FONT_CLOCK, clk->format) + 4;
+		}
+		if(clk->cp->requestedHeight == 0) {
+			clk->cp->requestedHeight = GetStringHeight(FONT_CLOCK) + 4;
+		}
 	}
 
 }

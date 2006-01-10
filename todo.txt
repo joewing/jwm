@@ -8,6 +8,7 @@ Todo:
 	- Fixed a bug where TrayButtonStyle was being used for task lists.
 	- Handle really small window borders/buttons in a more sane manner.
 	- Make vertical trays size-to-fit.
+	- Fixed size computation of fixed-size trays.
 
 20060108:
 	- Added Dock item for Tray. This adds support for programs to dock

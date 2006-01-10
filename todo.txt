@@ -1,5 +1,6 @@
 
 Todo:
+	- Support multiple root menus.
 	- Add window list root menu item.
 
 20060109:

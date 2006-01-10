@@ -1,6 +1,5 @@
 
 Todo:
-	- More support for GNOME, Motif, and WMSpec hints.
 	- Add window list root menu item.
 
 20060109:

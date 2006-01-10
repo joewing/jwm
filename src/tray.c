@@ -902,7 +902,7 @@ void SetTrayWidth(TrayType *tp, const char *str) {
 	if(width < 0) {
 		Warning("invalid tray width: %d", width);
 	} else {
-		tp->requestedHeight = width;
+		tp->requestedWidth = width;
 	}
 
 }

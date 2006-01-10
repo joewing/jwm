@@ -68,6 +68,7 @@ static unsigned int GetItemWidth(const TaskBarType *bp,
 static void Render(const TaskBarType *bp);
 static void ShowTaskWindowMenu(TaskBarType *bar, Node *np);
 
+static void SetSize(TrayComponentType *cp, int width, int height);
 static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
@@ -142,6 +143,7 @@ TrayComponentType *CreateTaskBar() {
 	cp->object = tp;
 	tp->cp = cp;
 
+	cp->SetSize = SetSize;
 	cp->Create = Create;
 	cp->Destroy = Destroy;
 	cp->Resize = Resize;
@@ -149,6 +151,30 @@ TrayComponentType *CreateTaskBar() {
 	cp->ProcessMotionEvent = ProcessTaskMotionEvent;
 
 	return cp;
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void SetSize(TrayComponentType *cp, int width, int height) {
+
+	TaskBarType *tp;
+
+	Assert(cp);
+
+	tp = (TaskBarType*)cp->object;
+
+	Assert(tp);
+
+	if(width == 0) {
+		tp->layout = LAYOUT_HORIZONTAL;
+	} else if(height == 0) {
+		tp->layout = LAYOUT_VERTICAL;
+	} else if(width > height) {
+		tp->layout = LAYOUT_HORIZONTAL;
+	} else {
+		tp->layout = LAYOUT_VERTICAL;
+	}
 
 }
 
@@ -164,11 +190,9 @@ void Create(TrayComponentType *cp) {
 
 	Assert(tp);
 
-	if(cp->width > cp->height) {
-		tp->layout = LAYOUT_HORIZONTAL;
+	if(tp->layout == LAYOUT_HORIZONTAL) {
 		tp->itemHeight = cp->height - TASK_SPACER;
 	} else {
-		tp->layout = LAYOUT_VERTICAL;
 		tp->itemHeight = GetStringHeight(FONT_TASK) + 12;
 	}
 
@@ -205,11 +229,9 @@ void Resize(TrayComponentType *cp) {
 		JXFreePixmap(display, tp->buffer);
 	}
 
-	if(cp->width > cp->height) {
-		tp->layout = LAYOUT_HORIZONTAL;
+	if(tp->layout == LAYOUT_HORIZONTAL) {
 		tp->itemHeight = cp->height - TASK_SPACER;
 	} else {
-		tp->layout = LAYOUT_VERTICAL;
 		tp->itemHeight = GetStringHeight(FONT_TASK) + 12;
 	}
 
@@ -358,8 +380,26 @@ void RemoveClientFromTaskBar(ClientNode *np) {
 void UpdateTaskBar() {
 
 	TaskBarType *bp;
+	unsigned int count;
+	int lastHeight;
+
+	if(shouldExit) {
+		return;
+	}
 
 	for(bp = bars; bp; bp = bp->next) {
+
+		if(bp->layout == LAYOUT_VERTICAL) {
+			lastHeight = bp->cp->requestedHeight;
+			count = GetItemCount();
+			bp->cp->requestedHeight = GetStringHeight(FONT_TASK) + 12;
+			bp->cp->requestedHeight *= count;
+			bp->cp->requestedHeight += 2;
+			if(lastHeight != bp->cp->requestedHeight) {
+				ResizeTray(bp->cp->tray);
+			}
+		}
+
 		Render(bp);
 	}
 
@@ -595,8 +635,7 @@ void FocusNextStackedCircular() {
 
 /***************************************************************************
  ***************************************************************************/
-Node *GetNode(TaskBarType *bar, int x)
-{
+Node *GetNode(TaskBarType *bar, int x) {
 
 	Node *tp;
 	int remainder;

@@ -243,7 +243,13 @@ void Create(TrayComponentType *cp) {
 
 	/* Compute the offset of the text. */
 	if(bp->label) {
-		labelx = cp->width - (GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4);
+		if(!bp->icon) {
+			labelx = 2 + cp->width / 2;
+			labelx -= GetStringWidth(FONT_TRAYBUTTON, bp->label) / 2;
+		} else {
+			labelx = cp->width;
+			labelx -= GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
+		}
 	} else {
 		labelx = cp->width;
 	}

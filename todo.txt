@@ -9,6 +9,7 @@ Todo:
 	- Handle really small window borders/buttons in a more sane manner.
 	- Make vertical trays size-to-fit.
 	- Fixed size computation of fixed-size trays.
+	- Center tray button text when no icon is present.
 
 20060108:
 	- Added Dock item for Tray. This adds support for programs to dock

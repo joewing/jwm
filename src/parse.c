@@ -120,7 +120,8 @@ static void ParseDock(const TokenNode *tp, TrayType *tray);
 
 /* Groups. */
 static void ParseGroup(const TokenNode *tp);
-static void ParseGroupOption(struct GroupType *group, const char *option);
+static void ParseGroupOption(const TokenNode *tp,
+	struct GroupType *group, const char *option);
 
 /* Style. */
 static void ParseBorderStyle(const TokenNode *start);
@@ -143,14 +144,14 @@ static void ParseFocusModel(const TokenNode *tp);
 
 static char *FindAttribute(AttributeNode *ap, const char *name);
 static void ReleaseTokens(TokenNode *np);
-static void ParseError(const char *str, ...);
+static void ParseError(const TokenNode *tp, const char *str, ...);
 
 /****************************************************************************
  ****************************************************************************/
 void ParseConfig(const char *fileName) {
 	if(!ParseFile(fileName, 0)) {
 		if(!ParseFile(SYSTEM_CONFIG, 0)) {
-			ParseError("could not open %s or %s", fileName, SYSTEM_CONFIG);
+			ParseError(NULL, "could not open %s or %s", fileName, SYSTEM_CONFIG);
 		}
 	}
 }
@@ -167,7 +168,7 @@ int ParseFile(const char *fileName, int depth) {
 
 	++depth;
 	if(depth > MAX_INCLUDE_DEPTH) {
-		ParseError("include depth (%d) exceeded", MAX_INCLUDE_DEPTH);
+		ParseError(NULL, "include depth (%d) exceeded", MAX_INCLUDE_DEPTH);
 		return 0;
 	}
 
@@ -179,7 +180,7 @@ int ParseFile(const char *fileName, int depth) {
 	buffer = ReadFile(fd);
 	fclose(fd);
 
-	tokens = Tokenize(buffer);
+	tokens = Tokenize(buffer, fileName);
 	Release(buffer);
 	Parse(tokens, depth);
 	ReleaseTokens(tokens);
@@ -216,6 +217,14 @@ void ReleaseTokens(TokenNode *np) {
 
 		if(np->value) {
 			Release(np->value);
+		}
+
+		if(np->invalidName) {
+			Release(np->invalidName);
+		}
+
+		if(np->fileName) {
+			Release(np->fileName);
 		}
 
 		Release(np);
@@ -310,12 +319,12 @@ void Parse(const TokenNode *start, int depth) {
 				ParseClockStyle(tp);
 				break;
 			default:
-				ParseError("invalid tag in JWM: %s", GetTokenName(tp->type));
+				ParseError(tp, "invalid tag in JWM: %s", GetTokenName(tp));
 				break;
 			}
 		}
 	} else {
-		ParseError("invalid start tag: %s", GetTokenName(start->type));
+		ParseError(start, "invalid start tag: %s", GetTokenName(start));
 	}
 
 }
@@ -329,10 +338,10 @@ void ParseFocusModel(const TokenNode *tp) {
 		} else if(!strcmp(tp->value, "click")) {
 			focusModel = FOCUS_CLICK;
 		} else {
-			ParseError("invalid focus model: \"%s\"", tp->value);
+			ParseError(tp, "invalid focus model: \"%s\"", tp->value);
 		}
 	} else {
-		ParseError("focus model not specified");
+		ParseError(tp, "focus model not specified");
 	}
 }
 
@@ -357,10 +366,10 @@ void ParseSnapMode(const TokenNode *tp) {
 		} else if(!strcmp(tp->value, "border")) {
 			SetSnapMode(SNAP_BORDER);
 		} else {
-			ParseError("invalid snap mode: %s", tp->value);
+			ParseError(tp, "invalid snap mode: %s", tp->value);
 		}
 	} else {
-		ParseError("snap mode not specified");
+		ParseError(tp, "snap mode not specified");
 	}
 }
 
@@ -373,10 +382,10 @@ void ParseMoveMode(const TokenNode *tp) {
 		} else if(!strcmp(tp->value, "opaque")) {
 			SetMoveMode(MOVE_OPAQUE);
 		} else {
-			ParseError("invalid move mode: %s", tp->value);
+			ParseError(tp, "invalid move mode: %s", tp->value);
 		}
 	} else {
-		ParseError("move mode not specified");
+		ParseError(tp, "move mode not specified");
 	}
 }
 
@@ -390,10 +399,10 @@ void ParseResizeMode(const TokenNode *tp)
 		} else if(!strcmp(tp->value, "opaque")) {
 			SetResizeMode(RESIZE_OPAQUE);
 		} else {
-			ParseError("invalid resize mode: %s", tp->value);
+			ParseError(tp, "invalid resize mode: %s", tp->value);
 		}
 	} else {
-		ParseError("resize mode not specified");
+		ParseError(tp, "resize mode not specified");
 	}
 }
 
@@ -648,7 +657,7 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 
 			break;
 		default:
-			ParseError("invalid tag in Menu: %s", GetTokenName(start->type));
+			ParseError(start, "invalid tag in Menu: %s", GetTokenName(start));
 			break;
 		}
 		start = start->next;
@@ -681,7 +690,7 @@ MenuItemType *ParseMenuInclude(const TokenNode *tp, MenuType *menu,
 			buffer = ReadFile(fd);
 			pclose(fd);
 		} else {
-			ParseError("could not execute included program: %s", path);
+			ParseError(tp, "could not execute included program: %s", path);
 		}
 		Release(path);
 
@@ -696,21 +705,23 @@ MenuItemType *ParseMenuInclude(const TokenNode *tp, MenuType *menu,
 			buffer = ReadFile(fd);
 			fclose(fd);
 		} else {
-			ParseError("could not open include: %s", path);
+			ParseError(tp, "could not open include: %s", path);
 		}
 		Release(path);
 
 	}
 
 	if(!buffer) {
+		Release(path);
 		return last;
 	}
 
-	mp = Tokenize(buffer);
+	mp = Tokenize(buffer, path);
 	Release(buffer);
+	Release(path);
 
 	if(!mp || mp->type != TOK_MENU) {
-		ParseError("invalid included menu: %s", tp->value);
+		ParseError(tp, "invalid included menu: %s", tp->value);
 	} else {
 		last = ParseMenuItem(mp, menu, last);
 	}
@@ -739,13 +750,13 @@ void ParseKey(const TokenNode *tp) {
 	mask = FindAttribute(tp->attributes, "mask");
 	key = FindAttribute(tp->attributes, "key");
 	if(key == NULL) {
-		ParseError("no key specified for Key");
+		ParseError(tp, "no key specified for Key");
 		return;
 	}
 
 	action = tp->value;
 	if(action == NULL) {
-		ParseError("no action specified for Key");
+		ParseError(tp, "no action specified for Key");
 		return;
 	}
 
@@ -764,7 +775,7 @@ void ParseKey(const TokenNode *tp) {
 	}
 
 	if(k == KEY_NONE) {
-		ParseError("invalid Key action: \"%s\"", action);
+		ParseError(tp, "invalid Key action: \"%s\"", action);
 	} else {
 		InsertBinding(k, mask, key, command);
 	}
@@ -808,7 +819,7 @@ void ParseBorderStyle(const TokenNode *tp) {
 			SetColor(COLOR_BORDER_ACTIVE_BG, np->value);
 			break;
 		default:
-			ParseError("invalid Border option: %s", GetTokenName(np->type));
+			ParseError(np, "invalid Border option: %s", GetTokenName(np));
 			break;
 		}
 	}
@@ -829,7 +840,7 @@ void ParseInclude(const TokenNode *tp, int depth) {
 	ExpandPath(&temp);
 
 	if(!ParseFile(temp, depth)) {
-		ParseError("could not open included file %s", temp);
+		ParseError(tp, "could not open included file %s", temp);
 	}
 	Release(temp);
 
@@ -862,7 +873,7 @@ void ParseDesktops(const TokenNode *tp) {
 			SetDesktopName(x, np->value);
 			break;
 		default:
-			ParseError("invalid tag in Desktops: %s", GetTokenName(np->type));
+			ParseError(np, "invalid tag in Desktops: %s", GetTokenName(np));
 			break;
 		}
 	}
@@ -899,8 +910,8 @@ void ParseTaskListStyle(const TokenNode *tp) {
 			SetColor(COLOR_TASK_ACTIVE_BG, np->value);
 			break;
 		default:
-			ParseError("invalid TaskListStyle option: %s",
-				GetTokenName(np->type));
+			ParseError(np, "invalid TaskListStyle option: %s",
+				GetTokenName(np));
 			break;
 		}
 	}
@@ -925,7 +936,8 @@ void ParseTrayStyle(const TokenNode *tp) {
 			SetColor(COLOR_TRAY_FG, np->value);
 			break;
 		default:
-			ParseError("invalid TrayStyle option: %s", GetTokenName(np->type));
+			ParseError(np, "invalid TrayStyle option: %s",
+				GetTokenName(np));
 			break;
 		}
 	}
@@ -1007,7 +1019,7 @@ void ParseTray(const TokenNode *tp) {
 			ParseDock(np, tray);
 			break;
 		default:
-			ParseError("invalid Tray option: %s", GetTokenName(np->type));
+			ParseError(np, "invalid Tray option: %s", GetTokenName(np));
 			break;
 		}
 	}
@@ -1207,7 +1219,8 @@ void ParsePagerStyle(const TokenNode *tp) {
 			SetColor(COLOR_PAGER_ACTIVE_BG, np->value);
 			break;
 		default:
-			ParseError("invalid PagerStyle option: %s", GetTokenName(np->type));
+			ParseError(np, "invalid PagerStyle option: %s",
+				GetTokenName(np));
 			break;
 		}
 	}
@@ -1237,7 +1250,8 @@ void ParsePopupStyle(const TokenNode *tp) {
 			SetColor(COLOR_POPUP_BG, np->value);
 			break;
 		default:
-			ParseError("invalid PopupStyle option: %s", GetTokenName(np->type));
+			ParseError(np, "invalid PopupStyle option: %s",
+				GetTokenName(np));
 			break;
 		}
 	}
@@ -1270,7 +1284,8 @@ void ParseMenuStyle(const TokenNode *tp) {
 			SetColor(COLOR_MENU_ACTIVE_BG, np->value);
 			break;
 		default:
-			ParseError("invalid MenuStyle option: %s", GetTokenName(np->type));
+			ParseError(np, "invalid MenuStyle option: %s",
+				GetTokenName(np));
 			break;
 		}
 	}
@@ -1297,7 +1312,8 @@ void ParseClockStyle(const TokenNode *tp) {
 			SetColor(COLOR_CLOCK_BG, np->value);
 			break;
 		default:
-			ParseError("invalid ClockStyle option: %s", GetTokenName(np->type));
+			ParseError(np, "invalid ClockStyle option: %s",
+				GetTokenName(np));
 			break;
 		}
 	}
@@ -1324,8 +1340,8 @@ void ParseTrayButtonStyle(const TokenNode *tp) {
 			SetColor(COLOR_TRAYBUTTON_BG, np->value);
 			break;
 		default:
-			ParseError("invalid TrayButtonStyle option: %s",
-				GetTokenName(np->type));
+			ParseError(np, "invalid TrayButtonStyle option: %s",
+				GetTokenName(np));
 			break;
 		}
 	}
@@ -1352,10 +1368,10 @@ void ParseGroup(const TokenNode *tp) {
 			AddGroupName(group, np->value);
 			break;
 		case TOK_OPTION:
-			ParseGroupOption(group, np->value);
+			ParseGroupOption(np, group, np->value);
 			break;
 		default:
-			ParseError("invalid Group setting: %s", GetTokenName(np->type));
+			ParseError(np, "invalid Group setting: %s", GetTokenName(np));
 			break;
 		}
 	}
@@ -1364,7 +1380,8 @@ void ParseGroup(const TokenNode *tp) {
 
 /***************************************************************************
  ***************************************************************************/
-void ParseGroupOption(struct GroupType *group, const char *option) {
+void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
+	const char *option) {
 
 	if(!strcmp(option, "sticky")) {
 		AddGroupOption(group, OPTION_STICKY);
@@ -1385,7 +1402,7 @@ void ParseGroupOption(struct GroupType *group, const char *option) {
 	} else if(!strncmp(option, "icon:", 5)) {
 		AddGroupOptionValue(group, OPTION_ICON, option + 5);
 	} else {
-		ParseError("invalid Group Option: %s", option);
+		ParseError(tp, "invalid Group Option: %s", option);
 	}
 
 }
@@ -1416,7 +1433,7 @@ void ParseIcons(const TokenNode *tp) {
 			AddIconPath(np->value);
 			break;
 		default:
-			ParseError("invalid Icons setting: %s", GetTokenName(np->type));
+			ParseError(np, "invalid Icons setting: %s", GetTokenName(np));
 			break;
 		}
 	}
@@ -1469,11 +1486,30 @@ char *ReadFile(FILE *fd) {
 
 /****************************************************************************
  ****************************************************************************/
-void ParseError(const char *str, ...) {
+void ParseError(const TokenNode *tp, const char *str, ...) {
+
 	va_list ap;
+
+	char *msg;
+	static const char *NULL_MESSAGE = "configuration error";
+	static const char *FILE_MESSAGE = "%s[%d]";
+
 	va_start(ap, str);
-	WarningVA("configuration error", str, ap);
+
+	if(tp) {
+		msg = Allocate(strlen(FILE_MESSAGE) + strlen(tp->fileName) + 1);
+		sprintf(msg, FILE_MESSAGE, tp->fileName, tp->line);
+	} else {
+		msg = Allocate(strlen(NULL_MESSAGE) + 1);
+		strcpy(msg, NULL_MESSAGE);
+	}
+
+	WarningVA(msg, str, ap);
+
+	Release(msg);
+
 	va_end(ap);
+
 }
 
 

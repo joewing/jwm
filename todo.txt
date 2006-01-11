@@ -3,6 +3,9 @@ Todo:
 	- Support multiple root menus.
 	- Add window list root menu item.
 
+20060110:
+	- Added more descriptive error messages for configuration parsing.
+
 20060109:
 	- Fixed the centering of icons in tray buttons.
 	- Fixed a bug where TrayButtonStyle was being used for task lists.

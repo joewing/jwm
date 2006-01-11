@@ -81,7 +81,10 @@ typedef struct AttributeNode {
 typedef struct TokenNode {
 
 	TokenType type;
+	char *invalidName;
 	char *value;
+	char *fileName;
+	int line;
 	struct AttributeNode *attributes;
 	struct TokenNode *parent;
 	struct TokenNode *subnodeHead, *subnodeTail;
@@ -89,9 +92,9 @@ typedef struct TokenNode {
 
 } TokenNode;
 
-TokenNode *Tokenize(const char *line);
+TokenNode *Tokenize(const char *line, const char *fileName);
 
-const char *GetTokenName(TokenType type);
+const char *GetTokenName(const TokenNode *tp);
 
 #endif
 

@@ -65,40 +65,49 @@ static const char *TOKEN_MAP[] = {
 
 static TokenNode *head, *current;
 
-static TokenNode *CreateNode(TokenNode *parent);
+static TokenNode *CreateNode(TokenNode *parent, const char *file, int line);
 static AttributeNode *CreateAttribute(TokenNode *np); 
 
 static int IsElementEnd(char ch);
 static int IsValueEnd(char ch);
 static int IsAttributeEnd(char ch);
-static int IsSpace(char ch);
+static int IsSpace(char ch, int *lineNumber);
 static char *ReadElementName(const char *line);
-static char *ReadElementValue(const char *line);
-static char *ReadAttributeValue(const char *line);
-static int ParseEntity(const char *entity, char *ch);
-static TokenType LookupType(const char *name);
+static char *ReadElementValue(const char *line,
+	const char *file, int *lineNumber);
+static char *ReadAttributeValue(const char *line, const char *file,
+	int *lineNumber);
+static int ParseEntity(const char *entity, char *ch,
+	const char *file, int line);
+static TokenType LookupType(const char *name, TokenNode *np);
 
 /*****************************************************************************
  *****************************************************************************/
-TokenNode *Tokenize(const char *line) {
+TokenNode *Tokenize(const char *line, const char *fileName) {
+
 	TokenNode *np;
 	AttributeNode *ap;
 	char *temp;
 	int inElement;
 	int x;
 	int found;
+	int lineNumber;
 
 	head = NULL;
 	current = NULL;
 	inElement = 0;
+	lineNumber = 1;
 
 	x = 0;
 	/* Skip any initial white space */
-	while(IsSpace(line[x])) ++x;
+	while(IsSpace(line[x], &lineNumber)) ++x;
 
 	/* Skip any XML stuff */
 	if(!strncmp(line + x, "<?", 2)) {
 		while(line[x]) {
+			if(line[x] == '\n') {
+				++lineNumber;
+			}
 			if(!strncmp(line + x, "?>", 2)) {
 				x += 2;
 				break;
@@ -111,12 +120,15 @@ TokenNode *Tokenize(const char *line) {
 
 		do {
 
-			while(IsSpace(line[x])) ++x;
+			while(IsSpace(line[x], &lineNumber)) ++x;
 
 			/* Skip comments */
 			found = 0;
 			if(!strncmp(line + x, "<!--", 4)) {
 				while(line[x]) {
+					if(line[x] == '\n') {
+						++lineNumber;
+					}
 					if(!strncmp(line + x, "-->", 3)) {
 						x += 3;
 						found = 1;
@@ -138,23 +150,25 @@ TokenNode *Tokenize(const char *line) {
 
 					if(temp) {
 
-						if(current->type != LookupType(temp)) {
-							Warning("configuration: close tag \"%s\" does not "
-								"match open tag \"%s\"", temp,
-								GetTokenName(current->type));
+						if(current->type != LookupType(temp, NULL)) {
+							Warning("%s[%d]: close tag \"%s\" does not "
+								"match open tag \"%s\"",
+								fileName, lineNumber, temp,
+								GetTokenName(current));
 						}
 
 					} else {
-						Warning("configuration: unexpected and invalid close tag");
+						Warning("%s[%d]: unexpected and invalid close tag",
+							fileName, lineNumber);
 					}
 
 					current = current->parent;
 				} else {
 					if(temp) {
-						Warning("configuration: close tag \"%s\" without open "
-							"tag", temp);
+						Warning("%s[%d]: close tag \"%s\" without open "
+							"tag", fileName, lineNumber, temp);
 					} else {
-						Warning("configuration: invalid close tag");
+						Warning("%s[%d]: invalid close tag", fileName, lineNumber);
 					}
 				}
 
@@ -166,14 +180,14 @@ TokenNode *Tokenize(const char *line) {
 			} else {
 				np = current;
 				current = NULL;
-				np = CreateNode(np);
+				np = CreateNode(np, fileName, lineNumber);
 				temp = ReadElementName(line + x);
 				if(temp) {
 					x += strlen(temp);
-					np->type = LookupType(temp);
+					LookupType(temp, np);
 					Release(temp);
 				} else {
-					Warning("configuration: invalid open tag");
+					Warning("%s[%d]: invalid open tag", fileName, lineNumber);
 				}
 			}
 			inElement = 1;
@@ -186,7 +200,7 @@ TokenNode *Tokenize(const char *line) {
 					current = current->parent;
 					inElement = 0;
 				} else {
-					Warning("configuration: invalid tag");
+					Warning("%s[%d]: invalid tag", fileName, lineNumber);
 				}
 			} else {
 				goto ReadDefault;
@@ -209,7 +223,8 @@ ReadDefault:
 					if(line[x] == '\"') {
 						++x;
 					}
-					ap->value = ReadAttributeValue(line + x);
+					ap->value = ReadAttributeValue(line + x, fileName,
+						&lineNumber);
 					if(ap->value) {
 						x += strlen(ap->value);
 					}
@@ -218,7 +233,7 @@ ReadDefault:
 					}
 				}
 			} else {
-				temp = ReadElementValue(line + x);
+				temp = ReadElementValue(line + x, fileName, &lineNumber);
 				if(temp) {
 					x += strlen(temp);
 					if(current) {
@@ -232,8 +247,8 @@ ReadDefault:
 						}
 					} else {
 						if(temp[0]) {
-							Warning("configuration: unexpected text: \"%s\"",
-								temp);
+							Warning("%s[%d]: unexpected text: \"%s\"",
+								fileName, lineNumber, temp);
 						}
 						Release(temp);
 					}
@@ -251,7 +266,7 @@ ReadDefault:
  * The entity value is returned in ch and the length of the entity
  * is returned as the value of the function.
  *****************************************************************************/
-int ParseEntity(const char *entity, char *ch) {
+int ParseEntity(const char *entity, char *ch, const char *file, int line) {
 	char *temp;
 	int x;
 
@@ -279,7 +294,7 @@ int ParseEntity(const char *entity, char *ch) {
 		temp = Allocate(x + 2);
 		strncpy(temp, entity, x + 1);
 		temp[x + 1] = 0;
-		Warning("configuration: invalid entity: \"%s\"", temp);
+		Warning("%s[%d]: invalid entity: \"%.8s\"", file, line, temp);
 		Release(temp);
 		*ch = '&';
 		return 1;
@@ -332,12 +347,14 @@ int IsValueEnd(char ch) {
 
 /*****************************************************************************
  *****************************************************************************/
-int IsSpace(char ch) {
+int IsSpace(char ch, int *lineNumber) {
 	switch(ch) {
 	case ' ':
 	case '\t':
-	case '\n':
 	case '\r':
+		return 1;
+	case '\n':
+		++*lineNumber;
 		return 1;
 	default:
 		return 0;
@@ -369,7 +386,7 @@ char *ReadElementName(const char *line) {
 
 /*****************************************************************************
  *****************************************************************************/
-char *ReadElementValue(const char *line) {
+char *ReadElementValue(const char *line, const char *file, int *lineNumber) {
 	char *buffer;
 	char ch;
 	int len, max;
@@ -381,13 +398,16 @@ char *ReadElementValue(const char *line) {
 
 	for(x = 0; !IsValueEnd(line[x]); x++) {
 		if(line[x] == '&') {
-			x += ParseEntity(line + x, &ch) - 1;
+			x += ParseEntity(line + x, &ch, file, *lineNumber) - 1;
 			if(ch) {
 				buffer[len] = ch;
 			} else {
 				buffer[len] = line[x];
 			}
 		} else {
+			if(line[x] == '\n') {
+				++*lineNumber;
+			}
 			buffer[len] = line[x];
 		}
 		++len;
@@ -403,7 +423,9 @@ char *ReadElementValue(const char *line) {
 
 /*****************************************************************************
  *****************************************************************************/
-char *ReadAttributeValue(const char *line) {
+char *ReadAttributeValue(const char *line, const char *file,
+	int *lineNumber) {
+
 	char *buffer;
 	char ch;
 	int len, max;
@@ -415,13 +437,16 @@ char *ReadAttributeValue(const char *line) {
 
 	for(x = 0; !IsAttributeEnd(line[x]); x++) {
 		if(line[x] == '&') {
-			x += ParseEntity(line + x, &ch) - 1;
+			x += ParseEntity(line + x, &ch, file, *lineNumber) - 1;
 			if(ch) {
 				buffer[len] = ch;
 			} else {
 				buffer[len] = line[x];
 			}
 		} else {
+			if(line[x] == '\n') {
+				++*lineNumber;
+			}
 			buffer[len] = line[x];
 		}
 		++len;
@@ -437,15 +462,24 @@ char *ReadAttributeValue(const char *line) {
 
 /*****************************************************************************
  *****************************************************************************/
-TokenType LookupType(const char *name) {
+TokenType LookupType(const char *name, TokenNode *np) {
 	unsigned int x;
 
 	Assert(name);
 
 	for(x = 0; x < sizeof(TOKEN_MAP) / sizeof(char*); x++) {
 		if(!strcmp(name, TOKEN_MAP[x])) {
+			if(np) {
+				np->type = x;
+			}
 			return x;
 		}
+	}
+
+	if(np) {
+		np->type = TOK_INVALID;
+		np->invalidName = Allocate(strlen(name) + 1);
+		strcpy(np->invalidName, name);
 	}
 
 	return TOK_INVALID;
@@ -454,17 +488,19 @@ TokenType LookupType(const char *name) {
 
 /*****************************************************************************
  *****************************************************************************/
-const char *GetTokenName(TokenType type) {
-	if(type >= sizeof(TOKEN_MAP) / sizeof(const char*)) {
+const char *GetTokenName(const TokenNode *tp) {
+	if(tp->invalidName) {
+		return tp->invalidName;
+	} else if(tp->type >= sizeof(TOKEN_MAP) / sizeof(const char*)) {
 		return "[invalid]";
 	} else {
-		return TOKEN_MAP[type];
+		return TOKEN_MAP[tp->type];
 	}
 }
 
 /*****************************************************************************
  *****************************************************************************/
-TokenNode *CreateNode(TokenNode *parent) {
+TokenNode *CreateNode(TokenNode *parent, const char *file, int line) {
 	TokenNode *np;
 
 	np = Allocate(sizeof(TokenNode));
@@ -475,6 +511,11 @@ TokenNode *CreateNode(TokenNode *parent) {
 	np->subnodeTail = NULL;
 	np->parent = parent;
 	np->next = NULL;
+
+	np->fileName = Allocate(strlen(file) + 1);
+	strcpy(np->fileName, file);
+	np->line = line;
+	np->invalidName = NULL;
 
 	if(!head) {
 		head = np;

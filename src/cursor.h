@@ -15,7 +15,6 @@ void DestroyCursors();
 
 int GrabMouseForMove();
 int GrabMouseForMenu();
-int GrabMouseForWM(Window w);
 int GrabMouseForResize(BorderActionType action);
 
 Cursor GetFrameCursor(BorderActionType action);

@@ -2,6 +2,7 @@
 Todo:
 	- Support multiple root menus.
 	- Add window list root menu item.
+	- Add mouse bindings.
 
 20060110:
 	- Added more descriptive error messages for configuration parsing.

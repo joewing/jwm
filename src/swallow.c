@@ -326,6 +326,8 @@ Window FindSwallowedClient(const char *name) {
 				JXSetWindowBorder(display, result, colors[COLOR_TRAY_BG]);
 				JXMapRaised(display, result);
 				JXSelectInput(display, result, StructureNotifyMask);
+				JXFree(hint.res_name);
+				JXFree(hint.res_class);
 				break;
 			}
 			JXFree(hint.res_name);

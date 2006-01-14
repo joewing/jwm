@@ -29,17 +29,20 @@ typedef struct DockType {
 
 	TrayComponentType *cp;
 
+	Window window;
+
 	DockNode *nodes;
 
 } DockType;
 
 static const char *BASE_SELECTION_NAME = "_NET_SYSTEM_TRAY_S%d";
 
-static DockType *dock;
+static DockType *dock = NULL;
 static int owner;
 static Atom dockAtom;
 static unsigned long orientation;
 
+static void SetSize(TrayComponentType *cp, int width, int height);
 static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
@@ -52,7 +55,6 @@ static void UpdateDock();
 /***************************************************************************
  ***************************************************************************/
 void InitializeDock() {
-	dock = NULL;
 }
 
 /***************************************************************************
@@ -71,10 +73,13 @@ void StartupDock() {
 	Release(selectionName);
 
 	/* The location and size of the window doesn't matter here. */
-	dock->cp->window = JXCreateSimpleWindow(display, rootWindow,
-		/* x, y, width, height */ 0, 0, 1, 1,
-		/* border_size, border_color */ 0, 0,
-		/* background */ colors[COLOR_TRAY_BG]);
+	if(dock->window == None) {
+		dock->window = JXCreateSimpleWindow(display, rootWindow,
+			/* x, y, width, height */ 0, 0, 1, 1,
+			/* border_size, border_color */ 0, 0,
+			/* background */ colors[COLOR_TRAY_BG]);
+	}
+	dock->cp->window = dock->window;
 
 }
 
@@ -86,18 +91,27 @@ void ShutdownDock() {
 
 	if(dock) {
 
-		while(dock->nodes) {
-			np = dock->nodes->next;
-			JXReparentWindow(display, dock->nodes->window, rootWindow, 0, 0);
-			Release(dock->nodes);
-			dock->nodes = np;
-		}
+		if(shouldRestart) {
 
-		if(owner) {
-			JXSetSelectionOwner(display, dockAtom, None, CurrentTime);
-		}
+			JXReparentWindow(display, dock->window, rootWindow, 0, 0);
+			JXUnmapWindow(display, dock->window);
 
-		JXDestroyWindow(display, dock->cp->window);
+		} else {
+
+			while(dock->nodes) {
+				np = dock->nodes->next;
+				JXReparentWindow(display, dock->nodes->window, rootWindow, 0, 0);
+				Release(dock->nodes);
+				dock->nodes = np;
+			}
+
+			if(owner) {
+				JXSetSelectionOwner(display, dockAtom, None, CurrentTime);
+			}
+
+			JXDestroyWindow(display, dock->window);
+
+		}
 
 	}
 
@@ -108,7 +122,11 @@ void ShutdownDock() {
 void DestroyDock() {
 
 	if(dock) {
-		Release(dock);
+		if(shouldRestart) {
+			dock->cp = NULL;
+		} else {
+			Release(dock);
+		}
 	}
 
 }
@@ -119,13 +137,14 @@ TrayComponentType *CreateDock() {
 
 	TrayComponentType *cp;
 
-	if(dock != NULL) {
+	if(dock != NULL && dock->cp != NULL) {
 		Warning("only one Dock allowed");
 		return NULL;
+	} else if(dock == NULL) {
+		dock = Allocate(sizeof(DockType));
+		dock->nodes = NULL;
+		dock->window = None;
 	}
-
-	dock = Allocate(sizeof(DockType));
-	dock->nodes = NULL;
 
 	cp = CreateTrayComponent();
 	cp->object = dock;
@@ -133,11 +152,44 @@ TrayComponentType *CreateDock() {
 	cp->requestedWidth = 1;
 	cp->requestedHeight = 1;
 
+	cp->SetSize = SetSize;
 	cp->Create = Create;
 	cp->Destroy = Destroy;
 	cp->Resize = Resize;
 
 	return cp;
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void SetSize(TrayComponentType *cp, int width, int height) {
+
+	int count;
+	DockNode *np;
+
+	count = 0;
+	for(np = dock->nodes; np; np = np->next) {
+		++count;
+	}
+
+	if(width == 0) {
+		if(count > 0) {
+			cp->width = count * height;
+			cp->requestedWidth = cp->width;
+		} else {
+			cp->width = 1;
+			cp->requestedWidth = 1;
+		}
+	} else if(height == 0) {
+		if(count > 0) {
+			cp->height = count * width;
+			cp->requestedHeight = cp->height;
+		} else {
+			cp->height = 1;
+			cp->requestedHeight = 1;
+		}
+	}
 
 }
 

@@ -136,6 +136,7 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	StartupConnection();
 	do {
 		shouldExit = 0;
 		shouldRestart = 0;
@@ -146,6 +147,7 @@ int main(int argc, char *argv[]) {
 		Shutdown();
 		Destroy();
 	} while(shouldRestart);
+	ShutdownConnection();
 
 	if(exitCommand) {
 		execl(SHELL_NAME, SHELL_NAME, "-c", exitCommand, NULL);
@@ -313,8 +315,6 @@ void Startup() {
 
 	/* This order is important. */
 
-	StartupConnection();
-
 	StartupCommands();
 
 	StartupScreens();
@@ -392,8 +392,6 @@ void Shutdown() {
 	ShutdownScreens();
 
 	ShutdownCommands();
-
-	ShutdownConnection();
 
 }
 

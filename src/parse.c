@@ -1389,6 +1389,8 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
 		AddGroupOption(group, OPTION_TITLE);
 	} else if(!strcmp(option, "notitle")) {
 		AddGroupOption(group, OPTION_NOTITLE);
+	} else if (!strcmp(option, "pignore")) {
+		AddGroupOption(group, OPTION_PIGNORE);
 	} else if(!strncmp(option, "layer:", 6)) {
 		AddGroupOptionValue(group, OPTION_LAYER, option + 6);
 	} else if(!strncmp(option, "desktop:", 8)) {

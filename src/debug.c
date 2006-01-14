@@ -304,8 +304,8 @@ void DEBUG_Release(void **ptr, const char *file, unsigned int line) {
 					Debug("MEMORY: %s[%u]: The canary is dead.", file, line);
 				}
 
-				free(mp);
 				memset(*ptr, 0xFF, mp->size);
+				free(mp);
 				free(*ptr);
 				*ptr = NULL;
 				return;

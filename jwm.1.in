@@ -289,6 +289,14 @@ from the font used.
 .RE
 .RE
 .P
+.B Dock
+.RS
+Add a dock for system notifications. This can be used by those programs
+that use the _NET_SYSTEM_TRAY_Sn selection. The size of the Dock is
+dynamic based on the size of the tray and the number of items contained.
+Only one Dock is allowed per instance of JWM.
+.RE
+.P
 .B Pager
 .RS
 Add a pager to the tray. This tag supports the following attributes:
@@ -895,10 +903,6 @@ A command to run when JWM exits.
 .RE
 .RE
 .P
-
-.SH BUGS
-Please report all bugs to http://joewing.net/board/index.php in the
-JWM forum.  Membership to post is required. Membership is free.
 
 .SH AUTHOR
 Joe Wingbermuehle <joewing@joewing.net>

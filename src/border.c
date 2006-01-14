@@ -12,38 +12,45 @@
 #include "font.h"
 #include "error.h"
 
-static unsigned char x_bitmap[] = {
-	0x00, 0x00, 0x00, 0x00, 0x0C, 0x30, 0x18, 0x18, 0x30, 0x0C, 0x60, 0x06,
-	0xC0, 0x03, 0x80, 0x01, 0xC0, 0x03, 0x60, 0x06, 0x30, 0x0C, 0x18, 0x18,
-	0x0C, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+typedef enum {
+	BP_CLOSE,
+	BP_ACTIVE_CLOSE,
+	BP_MINIMIZE,
+	BP_ACTIVE_MINIMIZE,
+	BP_MAXIMIZE,
+	BP_ACTIVE_MAXIMIZE,
+	BP_MAXIMIZE_ACTIVE,
+	BP_ACTIVE_MAXIMIZE_ACTIVE,
+	BP_COUNT
+} BorderPixmapType;
+
+typedef unsigned char BorderPixmapDataType[32];
+
+static BorderPixmapDataType bitmaps[BP_COUNT >> 1] = {
+
+	/* Close */
+	{ 0x00, 0x00, 0x00, 0x00, 0x0C, 0x30, 0x18, 0x18, 0x30, 0x0C, 0x60, 0x06,
+	  0xC0, 0x03, 0x80, 0x01, 0xC0, 0x03, 0x60, 0x06, 0x30, 0x0C, 0x18, 0x18,
+	  0x0C, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+
+	/* Minimize */
+	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFC, 0x3F,
+	  0xFC, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+
+	/* Maximize */
+	{ 0x00, 0x00, 0x00, 0x00, 0xFC, 0x3F, 0xFC, 0x3F, 0x04, 0x20, 0x04, 0x20,
+	  0x04, 0x20, 0x04, 0x20, 0x04, 0x20, 0x04, 0x20, 0x04, 0x20, 0x04, 0x20,
+	  0xFC, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+
+	/* Maximize Active */
+	{ 0x00, 0x00, 0x00, 0x00, 0xFC, 0x3F, 0xFC, 0x3F, 0x04, 0x20, 0xE4, 0x27,
+	  0xE4, 0x27, 0x24, 0x24, 0x24, 0x24, 0x24, 0x24, 0xE4, 0x27, 0x04, 0x20,
+	  0xFC, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+
 };
 
-static unsigned char min_bitmap[] = {
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFC, 0x3F,
-	0xFC, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-};
-
-static unsigned char max_bitmap[] = {
-	0x00, 0x00, 0x00, 0x00, 0xFC, 0x3F, 0xFC, 0x3F, 0x04, 0x20, 0x04, 0x20,
-	0x04, 0x20, 0x04, 0x20, 0x04, 0x20, 0x04, 0x20, 0x04, 0x20, 0x04, 0x20,
-	0xFC, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-};
-
-static unsigned char maxa_bitmap[] = {
-	0x00, 0x00, 0x00, 0x00, 0xFC, 0x3F, 0xFC, 0x3F, 0x04, 0x20, 0xE4, 0x27,
-	0xE4, 0x27, 0x24, 0x24, 0x24, 0x24, 0x24, 0x24, 0xE4, 0x27, 0x04, 0x20,
-	0xFC, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-};
-
-static Pixmap closePixmap;
-static Pixmap closeActivePixmap;
-static Pixmap minPixmap;
-static Pixmap minActivePixmap;
-static Pixmap maxPixmap;
-static Pixmap maxActivePixmap;
-static Pixmap maxaPixmap;
-static Pixmap maxaActivePixmap;
+static Pixmap pixmaps[BP_COUNT];
 
 static Pixmap buffer = None;
 static GC bufferGC = None;
@@ -63,33 +70,24 @@ void InitializeBorders() {
 /****************************************************************************
  ****************************************************************************/
 void StartupBorders() {
-	long fg, bg;         /* Inactive foreground/background colors */
-	long afg, abg;       /* Active foreground/background colors */
 
-	afg = colors[COLOR_BORDER_ACTIVE_FG];
-	abg = colors[COLOR_BORDER_ACTIVE_BG];
-	fg = colors[COLOR_BORDER_FG];
-	bg = colors[COLOR_BORDER_BG];
+	long fg, bg;
+	int x;
 
-	closePixmap = JXCreatePixmapFromBitmapData(display, rootWindow,
-		(char*)x_bitmap, 16, 16, fg, bg, rootDepth);
-	closeActivePixmap = XCreatePixmapFromBitmapData(display, rootWindow,
-		(char*)x_bitmap, 16, 16, afg, abg, rootDepth);
+	for(x = 0; x < BP_COUNT; x++) {
 
-	minPixmap = JXCreatePixmapFromBitmapData(display, rootWindow,
-		(char*)min_bitmap, 16, 16, fg, bg, rootDepth);
-	minActivePixmap = JXCreatePixmapFromBitmapData(display, rootWindow,
-		(char*)min_bitmap, 16, 16, afg, abg, rootDepth);
+		if(x & 1) {
+			fg = colors[COLOR_BORDER_ACTIVE_FG];
+			bg = colors[COLOR_BORDER_ACTIVE_BG];
+		} else {
+			fg = colors[COLOR_BORDER_FG];
+			bg = colors[COLOR_BORDER_BG];
+		}
 
-	maxPixmap = JXCreatePixmapFromBitmapData(display, rootWindow,
-		(char*)max_bitmap, 16, 16, fg, bg, rootDepth);
-	maxActivePixmap = JXCreatePixmapFromBitmapData(display, rootWindow,
-		(char*)max_bitmap, 16, 16, afg, abg, rootDepth);
+		pixmaps[x] = JXCreatePixmapFromBitmapData(display, rootWindow,
+			(char*)bitmaps[x >> 1], 16, 16, fg, bg, rootDepth);
 
-	maxaPixmap = JXCreatePixmapFromBitmapData(display, rootWindow,
-		(char*)maxa_bitmap, 16, 16, fg, bg, rootDepth);
-	maxaActivePixmap = JXCreatePixmapFromBitmapData(display, rootWindow,
-		(char*)maxa_bitmap, 16, 16, afg, abg, rootDepth);
+	}
 
 }
 
@@ -97,17 +95,11 @@ void StartupBorders() {
  ****************************************************************************/
 void ShutdownBorders() {
 
-	JXFreePixmap(display, closePixmap);
-	JXFreePixmap(display, closeActivePixmap);
+	int x;
 
-	JXFreePixmap(display, minPixmap);
-	JXFreePixmap(display, minActivePixmap);
-
-	JXFreePixmap(display, maxPixmap);
-	JXFreePixmap(display, maxActivePixmap);
-
-	JXFreePixmap(display, maxaPixmap);
-	JXFreePixmap(display, maxaActivePixmap);
+	for(x = 0; x < BP_COUNT; x++) {
+		JXFreePixmap(display, pixmaps[x]);
+	}
 
 	if(buffer != None) {
 		JXFreeGC(display, bufferGC);
@@ -497,9 +489,9 @@ int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
 		DrawButtonBorder(np, offset, canvas, gc);
 
 		if(np->state.status & STAT_ACTIVE) {
-			pixmap = closeActivePixmap;
+			pixmap = pixmaps[BP_ACTIVE_CLOSE];
 		} else {
-			pixmap = closePixmap;
+			pixmap = pixmaps[BP_CLOSE];
 		}
 
 		JXCopyArea(display, pixmap, canvas, gc, 0, 0, 16, 16,
@@ -518,15 +510,15 @@ int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
 
 		if(np->state.status & STAT_MAXIMIZED) {
 			if(np->state.status & STAT_ACTIVE) {
-				pixmap = maxaActivePixmap;
+				pixmap = pixmaps[BP_ACTIVE_MAXIMIZE_ACTIVE];
 			} else {
-				pixmap = maxaPixmap;
+				pixmap = pixmaps[BP_MAXIMIZE_ACTIVE];
 			}
 		} else {
 			if(np->state.status & STAT_ACTIVE) {
-				pixmap = maxActivePixmap;
+				pixmap = pixmaps[BP_ACTIVE_MAXIMIZE];
 			} else {
-				pixmap = maxPixmap;
+				pixmap = pixmaps[BP_MAXIMIZE];
 			}
 		}
 		JXCopyArea(display, pixmap, canvas, gc, 0, 0, 16, 16,
@@ -548,9 +540,9 @@ int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
 		DrawButtonBorder(np, offset, canvas, gc);
 
 		if(np->state.status & STAT_ACTIVE) {
-			pixmap = minActivePixmap;
+			pixmap = pixmaps[BP_ACTIVE_MINIMIZE];
 		} else {
-			pixmap = minPixmap;
+			pixmap = pixmaps[BP_MINIMIZE];
 		}
 
 		JXCopyArea(display, pixmap, canvas, gc, 0, 0, 16, 16,

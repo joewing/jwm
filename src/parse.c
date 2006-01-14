@@ -144,6 +144,7 @@ static void ParseFocusModel(const TokenNode *tp);
 
 static char *FindAttribute(AttributeNode *ap, const char *name);
 static void ReleaseTokens(TokenNode *np);
+static void InvalidTag(const TokenNode *tp, const char *parent);
 static void ParseError(const TokenNode *tp, const char *str, ...);
 
 /****************************************************************************
@@ -319,7 +320,7 @@ void Parse(const TokenNode *start, int depth) {
 				ParseClockStyle(tp);
 				break;
 			default:
-				ParseError(tp, "invalid tag in JWM: %s", GetTokenName(tp));
+				InvalidTag(tp, "JWM");
 				break;
 			}
 		}
@@ -657,7 +658,7 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 
 			break;
 		default:
-			ParseError(start, "invalid tag in Menu: %s", GetTokenName(start));
+			InvalidTag(start, "Menu");
 			break;
 		}
 		start = start->next;
@@ -819,7 +820,7 @@ void ParseBorderStyle(const TokenNode *tp) {
 			SetColor(COLOR_BORDER_ACTIVE_BG, np->value);
 			break;
 		default:
-			ParseError(np, "invalid Border option: %s", GetTokenName(np));
+			InvalidTag(np, "BorderStyle");
 			break;
 		}
 	}
@@ -873,7 +874,7 @@ void ParseDesktops(const TokenNode *tp) {
 			SetDesktopName(x, np->value);
 			break;
 		default:
-			ParseError(np, "invalid tag in Desktops: %s", GetTokenName(np));
+			InvalidTag(np, "Desktops");
 			break;
 		}
 	}
@@ -910,8 +911,7 @@ void ParseTaskListStyle(const TokenNode *tp) {
 			SetColor(COLOR_TASK_ACTIVE_BG, np->value);
 			break;
 		default:
-			ParseError(np, "invalid TaskListStyle option: %s",
-				GetTokenName(np));
+			InvalidTag(np, "TaskListStyle");
 			break;
 		}
 	}
@@ -936,8 +936,7 @@ void ParseTrayStyle(const TokenNode *tp) {
 			SetColor(COLOR_TRAY_FG, np->value);
 			break;
 		default:
-			ParseError(np, "invalid TrayStyle option: %s",
-				GetTokenName(np));
+			InvalidTag(np, "TrayStyle");
 			break;
 		}
 	}
@@ -1019,7 +1018,7 @@ void ParseTray(const TokenNode *tp) {
 			ParseDock(np, tray);
 			break;
 		default:
-			ParseError(np, "invalid Tray option: %s", GetTokenName(np));
+			InvalidTag(np, "Tray");
 			break;
 		}
 	}
@@ -1219,8 +1218,7 @@ void ParsePagerStyle(const TokenNode *tp) {
 			SetColor(COLOR_PAGER_ACTIVE_BG, np->value);
 			break;
 		default:
-			ParseError(np, "invalid PagerStyle option: %s",
-				GetTokenName(np));
+			InvalidTag(np, "PagerStyle");
 			break;
 		}
 	}
@@ -1250,8 +1248,7 @@ void ParsePopupStyle(const TokenNode *tp) {
 			SetColor(COLOR_POPUP_BG, np->value);
 			break;
 		default:
-			ParseError(np, "invalid PopupStyle option: %s",
-				GetTokenName(np));
+			InvalidTag(np, "PopupStyle");
 			break;
 		}
 	}
@@ -1284,8 +1281,7 @@ void ParseMenuStyle(const TokenNode *tp) {
 			SetColor(COLOR_MENU_ACTIVE_BG, np->value);
 			break;
 		default:
-			ParseError(np, "invalid MenuStyle option: %s",
-				GetTokenName(np));
+			InvalidTag(np, "MenuStyle");
 			break;
 		}
 	}
@@ -1312,8 +1308,7 @@ void ParseClockStyle(const TokenNode *tp) {
 			SetColor(COLOR_CLOCK_BG, np->value);
 			break;
 		default:
-			ParseError(np, "invalid ClockStyle option: %s",
-				GetTokenName(np));
+			InvalidTag(np, "ClockStyle");
 			break;
 		}
 	}
@@ -1340,8 +1335,7 @@ void ParseTrayButtonStyle(const TokenNode *tp) {
 			SetColor(COLOR_TRAYBUTTON_BG, np->value);
 			break;
 		default:
-			ParseError(np, "invalid TrayButtonStyle option: %s",
-				GetTokenName(np));
+			InvalidTag(np, "TrayButtonStyle");
 			break;
 		}
 	}
@@ -1371,7 +1365,7 @@ void ParseGroup(const TokenNode *tp) {
 			ParseGroupOption(np, group, np->value);
 			break;
 		default:
-			ParseError(np, "invalid Group setting: %s", GetTokenName(np));
+			InvalidTag(np, "Group");
 			break;
 		}
 	}
@@ -1433,7 +1427,7 @@ void ParseIcons(const TokenNode *tp) {
 			AddIconPath(np->value);
 			break;
 		default:
-			ParseError(np, "invalid Icons setting: %s", GetTokenName(np));
+			InvalidTag(np, "Icons");
 			break;
 		}
 	}
@@ -1482,6 +1476,14 @@ char *ReadFile(FILE *fd) {
 	buffer[len] = 0;
 
 	return buffer;
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void InvalidTag(const TokenNode *tp, const char *parent) {
+
+	ParseError(tp, "invalid tag in %s: %s", parent, GetTokenName(tp));
+
 }
 
 /****************************************************************************

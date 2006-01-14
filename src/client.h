@@ -47,7 +47,8 @@ typedef enum {
 	STAT_MINIMIZED = 1 << 7,
 	STAT_SHADED    = 1 << 8,
 	STAT_USESHAPE  = 1 << 9,
-	STAT_WMDIALOG  = 1 << 10
+	STAT_WMDIALOG  = 1 << 10,
+	STAT_PIGNORE   = 1 << 11
 } StatusFlags;
 
 typedef struct ColormapNode {

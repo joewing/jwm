@@ -396,7 +396,9 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 
 	GetScreenBounds(screenIndex, &box);
 
-	if(alreadyMapped || (np->sizeFlags & (PPosition | USPosition))) {
+	if(alreadyMapped
+		|| (!(np->state.status & STAT_PIGNORE)
+		&& (np->sizeFlags & (PPosition | USPosition)))) {
 
 		if(np->x + np->width - box.x > box.width) {
 			np->x = box.x;

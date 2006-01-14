@@ -435,6 +435,11 @@ Causes the tray to ignore windows in this group.
 Causes windows in this group to be displayed without a title bar.
 .RE
 .P
+.B pignore
+.RS
+Ignore initial window position requested by program.
+.RE
+.P
 .B sticky
 .RS
 Make windows in this group sticky.

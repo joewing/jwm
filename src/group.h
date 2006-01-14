@@ -19,7 +19,8 @@ typedef enum {
 	OPTION_BORDER   = 6,
 	OPTION_NOBORDER = 7,
 	OPTION_TITLE    = 8,
-	OPTION_NOTITLE  = 9
+	OPTION_NOTITLE  = 9,
+	OPTION_PIGNORE  = 10
 } OptionType;
 
 void InitializeGroups();

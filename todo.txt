@@ -7,6 +7,7 @@ Todo:
 20060114:
 	- Added support for _NET_WM_WINDOW_TYPE_DOCK.
 	- Added support for sending _NET_CURRENT_DESKTOP to root.
+	- Added the "pignore" group option.
 
 20060110:
 	- Added more descriptive error messages for configuration parsing.

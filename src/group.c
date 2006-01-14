@@ -270,6 +270,9 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
 			DestroyIcon(np->icon);
 			np->icon = LoadNamedIcon(lp->value);
 			break;
+		case OPTION_PIGNORE:
+			np->state.status |= STAT_PIGNORE;
+			break;
 		default:
 			Debug("invalid option: %d", lp->option);
 			break;

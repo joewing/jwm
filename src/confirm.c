@@ -68,11 +68,6 @@ void StartupDialogs() {
 /***************************************************************************
  ***************************************************************************/
 void ShutdownDialogs() {
-
-	while(dialogList) {
-		DestroyConfirmDialog(dialogList);
-	}
-
 }
 
 /***************************************************************************
@@ -245,6 +240,8 @@ void DrawConfirmDialog(DialogType *dp) {
  ***************************************************************************/
 void DestroyConfirmDialog(DialogType *dp) {
 	int x;
+
+	JXFreeGC(display, dp->gc);
 
 	/* This will take care of destroying the dialog window since
 	 * its parent will be destroyed. */

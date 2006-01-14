@@ -4,6 +4,10 @@ Todo:
 	- Add window list root menu item.
 	- Add mouse bindings.
 
+20060114:
+	- Added support for _NET_WM_WINDOW_TYPE_DOCK.
+	- Added support for sending _NET_CURRENT_DESKTOP to root.
+
 20060110:
 	- Added more descriptive error messages for configuration parsing.
 

@@ -107,6 +107,7 @@ static const AtomNode atomList[] = {
 	{ &atoms[ATOM_NET_WM_ICON],               "_NET_WM_ICON"                },
 	{ &atoms[ATOM_NET_WM_WINDOW_TYPE],        "_NET_WM_WINDOW_TYPE"         },
 	{ &atoms[ATOM_NET_WM_WINDOW_TYPE_DESKTOP],"_NET_WM_WINDOW_TYPE_DESKTOP" },
+	{ &atoms[ATOM_NET_WM_WINDOW_TYPE_DOCK],   "_NET_WM_WINDOW_TYPE_DOCK"    },
 	{ &atoms[ATOM_NET_CLIENT_LIST],           "_NET_CLIENT_LIST"            },
 	{ &atoms[ATOM_NET_CLIENT_LIST_STACKING],  "_NET_CLIENT_LIST_STACKING"   },
 	{ &atoms[ATOM_NET_WM_STRUT_PARTIAL],      "_NET_WM_STRUT_PARTIAL"       },
@@ -507,6 +508,10 @@ ClientState ReadWindowState(Window win) {
 			state = (unsigned long*)temp;
 			for(x = 0; x < count; x++) {
 				if(state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DESKTOP]) {
+					result.status |= STAT_STICKY | STAT_NOLIST;
+					result.layer = 0;
+					result.border = BORDER_NONE;
+				} else if(state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DOCK]) {
 					result.status |= STAT_STICKY | STAT_NOLIST;
 					result.layer = 0;
 					result.border = BORDER_NONE;

@@ -273,6 +273,15 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
 		case OPTION_PIGNORE:
 			np->state.status |= STAT_PIGNORE;
 			break;
+		case OPTION_MAXIMIZED:
+			np->state.status |= STAT_MAXIMIZED;
+			break;
+		case OPTION_MINIMIZED:
+			np->state.status |= STAT_MINIMIZED;
+			break;
+		case OPTION_SHADED:
+			np->state.status |= STAT_SHADED;
+			break;
 		default:
 			Debug("invalid option: %d", lp->option);
 			break;

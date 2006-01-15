@@ -420,6 +420,16 @@ The icon to be used for windows in this group.
 The layer on which windows in this group will be started.
 .RE
 .P
+.B maximized
+.RS
+Make windows in this group initially maximized.
+.RE
+.P
+.B minimized
+.RS
+Make windows in this group initially minimized.
+.RE
+.P
 .B noborder
 .RS
 Causes windows in this group to be displayed without a border.
@@ -438,6 +448,11 @@ Causes windows in this group to be displayed without a title bar.
 .B pignore
 .RS
 Ignore initial window position requested by program.
+.RE
+.P
+.B shaded
+.RS
+Make windows in this group initially shaded.
 .RE
 .P
 .B sticky

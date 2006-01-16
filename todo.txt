@@ -3,6 +3,9 @@ Todo:
 	- Support multiple root menus.
 	- Add window list root menu item.
 	- Add mouse bindings.
+	- Fix key binding-restart issue (removed keybinds quit working, but
+	  seem to still be grabbed).
+	- Fix "title" with "noborder" group option.
 
 20060114:
 	- Added support for _NET_WM_WINDOW_TYPE_DOCK.

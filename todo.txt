@@ -6,6 +6,7 @@ Todo:
 	- Fix key binding-restart issue (removed keybinds quit working, but
 	  seem to still be grabbed).
 	- Fix "title" with "noborder" group option.
+	- Fix swallow items getting more space than requested.
 
 20060114:
 	- Added support for _NET_WM_WINDOW_TYPE_DOCK.

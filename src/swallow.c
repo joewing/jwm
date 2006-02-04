@@ -266,20 +266,20 @@ void AwaitStartup(TrayComponentType *cp) {
 	}
 	np->border = attributes.border_width;
 
-	if(cp->width < 0 || cp->width > rootWidth) {
-		Warning("invalid width for swallow: %d", cp->width);
-		cp->width = 0;
+	if(cp->requestedWidth < 0 || cp->requestedWidth > rootWidth) {
+		Warning("invalid width for swallow: %d", cp->requestedWidth);
+		cp->requestedWidth = 0;
 	}
-	if(cp->height < 0 || cp->height > rootHeight) {
-		Warning("invalid height for swallow: %d", cp->height);
-		cp->height = 0;
+	if(cp->requestedHeight < 0 || cp->requestedHeight > rootHeight) {
+		Warning("invalid height for swallow: %d", cp->requestedHeight);
+		cp->requestedHeight = 0;
 	}
 
-	if(cp->width == 0) {
-		cp->width = attributes.width + 2 * np->border;
+	if(cp->requestedWidth == 0) {
+		cp->requestedWidth = attributes.width + 2 * np->border;
 	}
-	if(cp->height == 0) {
-		cp->height = attributes.height + 2 * np->border;
+	if(cp->requestedHeight == 0) {
+		cp->requestedHeight = attributes.height + 2 * np->border;
 	}
 
 	Debug("%s swallowed", np->name);

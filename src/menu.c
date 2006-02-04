@@ -85,11 +85,11 @@ void InitializeMenu(MenuType *menu) {
 		}
 		++menu->itemCount;
 	}
-	menu->itemHeight += 7;
+	menu->itemHeight += BASE_ICON_OFFSET * 2;
 
 	if(userHeight) {
-		menu->itemHeight = userHeight;
-		menu->textOffset = menu->itemHeight;
+		menu->itemHeight = userHeight + BASE_ICON_OFFSET * 2;
+		menu->textOffset = menu->itemHeight + BASE_ICON_OFFSET * 2;
 	}
 
 	menu->width = 5;

@@ -10,6 +10,7 @@ Todo:
 
 20060203:
 	- Make tray menus popup in a more natural location.
+	- Made menu sizes specified in terms of the size of icons.
 
 20060114:
 	- Added support for _NET_WM_WINDOW_TYPE_DOCK.

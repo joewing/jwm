@@ -5,7 +5,6 @@ Todo:
 	- Add mouse bindings.
 	- Fix key binding-restart issue (removed keybinds quit working, but
 	  seem to still be grabbed).
-	- Fix "title" with "noborder" group option.
 
 20060203:
 	- Make tray menus popup in a more natural location.

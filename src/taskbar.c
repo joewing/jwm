@@ -43,6 +43,7 @@ typedef struct TaskBarType {
 
 typedef struct Node {
 	ClientNode *client;
+	int y;
 	struct Node *next;
 } Node;
 
@@ -311,13 +312,11 @@ void ShowTaskWindowMenu(TaskBarType *bar, Node *np) {
 	int mwidth, mheight;
 	int screen;
 
-	GetMousePosition(&x, &y);
-
 	screen = GetCurrentScreen(x, y);
 	GetWindowMenuSize(np->client, &mwidth, &mheight);
 
 	if(bar->layout == LAYOUT_HORIZONTAL) {
-		/* Leave the x-coordinate alone, compute a good y-coordinate. */
+		GetMousePosition(&x, &y);
 		if(bar->cp->screeny + bar->cp->height / 2
 			< GetScreenY(screen) + GetScreenHeight(screen) / 2) {
 			y = bar->cp->screeny + bar->cp->height;
@@ -332,7 +331,7 @@ void ShowTaskWindowMenu(TaskBarType *bar, Node *np) {
 		} else {
 			x = bar->cp->screenx - mwidth;
 		}
-		y -= mheight / 2;
+		y = bar->cp->screeny + np->y;
 	}
 
 	ShowWindowMenu(np->client, x, y);
@@ -522,6 +521,8 @@ void Render(const TaskBarType *bp) {
 
 	for(tp = taskBarNodes; tp; tp = tp->next) {
 		if(ShouldShowItem(tp->client)) {
+
+			tp->y = y;
 
 			if(tp->client->state.status & STAT_ACTIVE) {
 				buttonType = BUTTON_TASK_ACTIVE;

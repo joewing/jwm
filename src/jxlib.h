@@ -165,6 +165,9 @@
 #define JXGrabKey( a, b, c, d, e, f, g ) \
 	( SetCheckpoint(), XGrabKey( a, b, c, d, e, f, g ) )
 
+#define JXUngrabKey( a, b, c, d ) \
+	( SetCheckpoint(), XUngrabKey( a, b, c, d ) )
+
 #define JXGrabKeyboard( a, b, c, d, e, f ) \
 	( SetCheckpoint(), XGrabKeyboard( a, b, c, d, e, f ) )
 

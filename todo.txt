@@ -3,8 +3,6 @@ Todo:
 	- Support multiple root menus.
 	- Add window list root menu item.
 	- Add mouse bindings.
-	- Fix key binding-restart issue (removed keybinds quit working, but
-	  seem to still be grabbed).
 
 20060203:
 	- Make tray menus popup in a more natural location.
@@ -14,6 +12,7 @@ Todo:
 	- Fixed swallow items getting more space than requested.
 	- Made Swallow more sane when an error is encountered.
 	- Now supports windows without a border, but with a title bar.
+	- Fixed a key binding issue on restart.
 
 20060114:
 	- Added support for _NET_WM_WINDOW_TYPE_DOCK.

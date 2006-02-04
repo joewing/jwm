@@ -107,6 +107,14 @@ TrayComponentType *CreateSwallow(const char *name, const char *command,
 		return NULL;
 	}
 
+	/* Make sure this name isn't already used. */
+	for(np = swallowNodes; np; np = np->next) {
+		if(!strcmp(np->name, name)) {
+			Warning("cannot swallow the same client multiple times");
+			return NULL;
+		}
+	}
+
 	np = Allocate(sizeof(SwallowNode));
 	np->name = Allocate(strlen(name) + 1);
 	strcpy(np->name, name);
@@ -219,6 +227,8 @@ void QueueStartup(TrayComponentType *cp) {
 		if(!np->command) {
 			Warning("client to be swallowed (%s) not found and no command given",
 				np->name);
+			cp->requestedWidth = 1;
+			cp->requestedHeight = 1;
 		} else {
 			RunCommand(np->command);
 			np->queued = 1;
@@ -254,6 +264,8 @@ void AwaitStartup(TrayComponentType *cp) {
 
 		if(cp->window == None) {
 			Warning("%s not found after running %s", np->name, np->command);
+			cp->requestedWidth = 1;
+			cp->requestedHeight = 1;
 			return;
 		}
 

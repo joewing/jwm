@@ -13,6 +13,7 @@ Todo:
 	- Make the tray figure out its layout from its size if the layout
 	  isn't given explicitly.
 	- Fixed swallow items getting more space than requested.
+	- Made Swallow more sane when an error is encountered.
 
 20060114:
 	- Added support for _NET_WM_WINDOW_TYPE_DOCK.

@@ -16,6 +16,7 @@ void DestroyRootMenu();
 void SetRootMenu(struct MenuType *m);
 void SetShowExitConfirmation(int v);
 
+void GetRootMenuSize(int *width, int *height);
 void ShowRootMenu(int x, int y);
 
 void RunCommand(const char *command);

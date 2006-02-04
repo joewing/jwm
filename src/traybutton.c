@@ -8,12 +8,12 @@
 #include "image.h"
 #include "error.h"
 #include "root.h"
-#include "cursor.h"
 #include "main.h"
 #include "color.h"
 #include "font.h"
 #include "button.h"
 #include "misc.h"
+#include "screen.h"
 
 #define BUTTON_SIZE 4
 
@@ -289,6 +289,9 @@ void Destroy(TrayComponentType *cp) {
  ***************************************************************************/
 void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
+	int screen;
+	int mwidth, mheight;
+
 	TrayButtonType *bp = (TrayButtonType*)cp->object;
 
 	Assert(bp);
@@ -296,8 +299,29 @@ void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 	if(bp->action && strlen(bp->action) > 0) {
 		RunCommand(bp->action);
 	} else {
-		GetMousePosition(&x, &y);
+
+		screen = GetCurrentScreen(cp->screenx, cp->screeny);
+		GetRootMenuSize(&mwidth, &mheight);
+		if(cp->tray->layout == LAYOUT_HORIZONTAL) {
+			x = cp->screenx;
+			if(cp->screeny + cp->height / 2
+				< GetScreenY(screen) + GetScreenHeight(screen) / 2) {
+				y = cp->screeny + cp->height;
+			} else {
+				y = cp->screeny - mheight;
+			}
+		} else {
+			y = cp->screeny;
+			if(cp->screenx + cp->width / 2
+				< GetScreenX(screen) + GetScreenWidth(screen) / 2) {
+				x = cp->screenx + cp->width;
+			} else {
+				x = cp->screenx - mwidth;
+			}
+		}
+
 		ShowRootMenu(x, y);
+
 	}
 
 }

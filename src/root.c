@@ -63,6 +63,22 @@ void SetShowExitConfirmation(int v) {
 
 /***************************************************************************
  ***************************************************************************/
+void GetRootMenuSize(int *width, int *height) {
+
+	if(!rootMenu) {
+		*width = 0;
+		*height = 0;
+	}
+
+	PatchRootMenu(rootMenu);
+	*width = rootMenu->width;
+	*height = rootMenu->height;
+	UnpatchRootMenu(rootMenu);
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
 void ShowRootMenu(int x, int y) {
 
 	if(!rootMenu) {

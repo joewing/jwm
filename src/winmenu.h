@@ -8,6 +8,7 @@
 
 struct ClientNode;
 
+void GetWindowMenuSize(struct ClientNode *np, int *width, int *height);
 void ShowWindowMenu(struct ClientNode *np, int x, int y);
 
 #endif

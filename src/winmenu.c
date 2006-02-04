@@ -27,7 +27,23 @@ static ClientNode *client = NULL;
 
 /****************************************************************************
  ****************************************************************************/
+void GetWindowMenuSize(ClientNode *np, int *width, int *height) {
+
+	MenuType *menu;
+
+	client = np;
+	menu = CreateWindowMenu();
+	InitializeMenu(menu);
+	*width = menu->width;
+	*height = menu->height;
+	DestroyMenu(menu);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
 void ShowWindowMenu(ClientNode *np, int x, int y) {
+
 	MenuType *menu;
 
 	client = np;

@@ -8,6 +8,9 @@ Todo:
 	- Fix "title" with "noborder" group option.
 	- Fix swallow items getting more space than requested.
 
+20060203:
+	- Make tray menus popup in a more natural location.
+
 20060114:
 	- Added support for _NET_WM_WINDOW_TYPE_DOCK.
 	- Added support for sending _NET_CURRENT_DESKTOP to root.

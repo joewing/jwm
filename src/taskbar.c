@@ -10,11 +10,12 @@
 #include "color.h"
 #include "popup.h"
 #include "button.h"
+#include "cursor.h"
 #include "icon.h"
 #include "error.h"
 #include "font.h"
-#include "cursor.h"
 #include "winmenu.h"
+#include "screen.h"
 
 typedef enum {
 	INSERT_LEFT,
@@ -305,9 +306,37 @@ void ProcessTaskMotionEvent(TrayComponentType *cp, int x, int y, int mask) {
 /***************************************************************************
  ***************************************************************************/
 void ShowTaskWindowMenu(TaskBarType *bar, Node *np) {
+
 	int x, y;
+	int mwidth, mheight;
+	int screen;
+
 	GetMousePosition(&x, &y);
+
+	screen = GetCurrentScreen(x, y);
+	GetWindowMenuSize(np->client, &mwidth, &mheight);
+
+	if(bar->layout == LAYOUT_HORIZONTAL) {
+		/* Leave the x-coordinate alone, compute a good y-coordinate. */
+		if(bar->cp->screeny + bar->cp->height / 2
+			< GetScreenY(screen) + GetScreenHeight(screen) / 2) {
+			y = bar->cp->screeny + bar->cp->height;
+		} else {
+			y = bar->cp->screeny - mheight;
+		}
+		x -= mwidth / 2;
+	} else {
+		if(bar->cp->screenx + bar->cp->width / 2
+			< GetScreenX(screen) + GetScreenWidth(screen) / 2) {
+			x = bar->cp->screenx + bar->cp->width;
+		} else {
+			x = bar->cp->screenx - mwidth;
+		}
+		y -= mheight / 2;
+	}
+
 	ShowWindowMenu(np->client, x, y);
+
 }
 
 /***************************************************************************

@@ -19,7 +19,7 @@ static ResizeModeType resizeMode = RESIZE_OPAQUE;
 
 static int shouldStopResize;
 
-static void StopResize(ClientNode *np, int north);
+static void StopResize(ClientNode *np, int north, int west);
 static void ResizeController(int wasDestroyed);
 static void FixWidth(ClientNode *np);
 static void FixHeight(ClientNode *np);
@@ -54,11 +54,11 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 	int lastgwidth, lastgheight;
 	int delta;
 	int north;
+	int west;
 
 	Assert(np);
 
-	if(!(np->state.border & BORDER_OUTLINE)
-		|| !(np->state.border & BORDER_RESIZE)
+	if(!(np->state.border & BORDER_RESIZE)
 		|| (np->state.status & STAT_MAXIMIZED)) {
 		return;
 	}
@@ -83,19 +83,24 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 	gwidth = (np->width - np->baseWidth) / np->xinc;
 	gheight = (np->height - np->baseHeight) / np->yinc;
 
-	if(np->state.border & BORDER_TITLE) {
-		north = titleSize;
-	} else {
-		north = borderWidth;
+	north = 0;
+	west = 0;
+	if(np->state.border & BORDER_OUTLINE) {
+		north += borderWidth;
+		west += borderWidth;
 	}
-	startx += np->x - borderWidth;
+	if(np->state.border & BORDER_TITLE) {
+		north += titleHeight;
+	}
+
+	startx += np->x - west;
 	starty += np->y - north;
 
 	CreateResizeWindow();
 	UpdateResizeWindow(gwidth, gheight);
 
 	if(!(GetMouseMask() & Button1Mask)) {
-		StopResize(np, north);
+		StopResize(np, north, west);
 		return;
 	}
 
@@ -111,7 +116,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 		switch(event.type) {
 		case ButtonRelease:
 			if(event.xbutton.button == Button1) {
-				StopResize(np, north);
+				StopResize(np, north, west);
 				return;
 			}
 			break;
@@ -203,26 +208,25 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 				if(resizeMode == RESIZE_OUTLINE) {
 					ClearOutline();
 					if(np->state.status & STAT_SHADED) {
-						DrawOutline(np->x - borderWidth, np->y - north,
-							np->width + borderWidth * 2,
-							north + borderWidth);
+						DrawOutline(np->x - west, np->y - north,
+							np->width + west * 2, north + west);
 					} else {
-						DrawOutline(np->x - borderWidth, np->y - north,
-							np->width + borderWidth * 2,
-							np->height + north + borderWidth);
+						DrawOutline(np->x - west, np->y - north,
+							np->width + west * 2,
+							np->height + north + west);
 					}
 				} else {
 					if(np->state.status & STAT_SHADED) {
 						JXMoveResizeWindow(display, np->parent,
-							np->x - borderWidth, np->y - north,
-							np->width + borderWidth * 2, north + borderWidth);
+							np->x - west, np->y - north,
+							np->width + west * 2, north + west);
 					} else {
 						JXMoveResizeWindow(display, np->parent,
-							np->x - borderWidth, np->y - north,
-							np->width + borderWidth + borderWidth,
-							np->height + north + borderWidth);
+							np->x - west, np->y - north,
+							np->width + west + west,
+							np->height + north + west);
 					}
-					JXMoveResizeWindow(display, np->window, borderWidth,
+					JXMoveResizeWindow(display, np->window, west,
 						north, np->width, np->height);
 					SendConfigureEvent(np);
 				}
@@ -242,6 +246,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 /****************************************************************************
  ****************************************************************************/
 void ResizeClientKeyboard(ClientNode *np) {
+
 	XEvent event;
 	int gwidth, gheight;
 	int lastgwidth, lastgheight;
@@ -274,7 +279,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 		west = 0;
 	}
 	if(np->state.border & BORDER_TITLE) {
-		north = titleSize;
+		north = west + titleHeight;
 	} else {
 		north = west;
 	}
@@ -316,7 +321,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 				deltax = Min(-np->xinc, -10);
 				break;
 			default:
-				StopResize(np, north);
+				StopResize(np, north, west);
 				return;
 			}
 
@@ -329,7 +334,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 
 		} else if(event.type == ButtonRelease) {
 
-			StopResize(np, north);
+			StopResize(np, north, west);
 			return;
 
 		}
@@ -370,13 +375,13 @@ void ResizeClientKeyboard(ClientNode *np) {
 			if(resizeMode == RESIZE_OUTLINE) {
 				ClearOutline();
 				if(np->state.status & STAT_SHADED) {
-					DrawOutline(np->x - borderWidth, np->y - north,
-						np->width + borderWidth * 2,
-						north + borderWidth);
+					DrawOutline(np->x - west, np->y - north,
+						np->width + west * 2,
+						north + west);
 				} else {
-					DrawOutline(np->x - borderWidth, np->y - north,
-						np->width + borderWidth * 2,
-						np->height + north + borderWidth);
+					DrawOutline(np->x - west, np->y - north,
+						np->width + west * 2,
+						np->height + north + west);
 				}
 			} else {
 				if(np->state.status & STAT_SHADED) {
@@ -400,7 +405,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 
 /****************************************************************************
  ****************************************************************************/
-void StopResize(ClientNode *np, int north) {
+void StopResize(ClientNode *np, int north, int west) {
 
 	np->controller = NULL;
 
@@ -415,15 +420,15 @@ void StopResize(ClientNode *np, int north) {
 
 	if(np->state.status & STAT_SHADED) {
 		JXMoveResizeWindow(display, np->parent,
-			np->x - borderWidth, np->y - north,
-			np->width + borderWidth * 2, north + borderWidth);
+			np->x - west, np->y - north,
+			np->width + west * 2, north + west);
 	} else {
 		JXMoveResizeWindow(display, np->parent,
-			np->x - borderWidth, np->y - north,
-			np->width + borderWidth + borderWidth,
-			np->height + north + borderWidth);
+			np->x - west, np->y - north,
+			np->width + west + west,
+			np->height + north + west);
 	}
-	JXMoveResizeWindow(display, np->window, borderWidth,
+	JXMoveResizeWindow(display, np->window, west,
 		north, np->width, np->height);
 	SendConfigureEvent(np);
 

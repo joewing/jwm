@@ -57,7 +57,6 @@ char *exitCommand = NULL;
 
 int borderWidth = DEFAULT_BORDER_WIDTH;
 int titleHeight = DEFAULT_TITLE_HEIGHT;
-int titleSize = DEFAULT_TITLE_HEIGHT + DEFAULT_BORDER_WIDTH;
 
 unsigned int doubleClickSpeed = DEFAULT_DOUBLE_CLICK_SPEED;
 unsigned int doubleClickDelta = DEFAULT_DOUBLE_CLICK_DELTA;

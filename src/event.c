@@ -261,15 +261,10 @@ void HandleButtonEvent(const XButtonEvent *event) {
 			y = event->y + np->y;
 			if(np->state.border & BORDER_OUTLINE) {
 				x -= borderWidth;
-				if(np->state.border & BORDER_TITLE) {
-					y -= titleSize;
-				} else {
-					y -= borderWidth;
-				}
-			} else {
-				if(np->state.border & BORDER_TITLE) {
-					y -= titleSize;
-				}
+				y -= borderWidth;
+			}
+			if(np->state.border & BORDER_TITLE) {
+				y -= titleHeight;
 			}
 			ShowWindowMenu(np, x, y);
 			break;
@@ -420,20 +415,18 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 			return;
 		}
 
+		north = 0;
+		south = 0;
+		east = 0;
+		west = 0;
 		if(np->state.border & BORDER_OUTLINE) {
-			east = borderWidth;
-			west = borderWidth;
-			south = borderWidth;
-			if(np->state.border & BORDER_TITLE) {
-				north = titleSize;
-			} else {
-				north = borderWidth;
-			}
-		} else {
-			north = 0;
-			south = 0;
-			east = 0;
-			west = 0;
+			north += borderWidth;
+			south += borderWidth;
+			east += borderWidth;
+			west += borderWidth;
+		}
+		if(np->state.border & BORDER_TITLE) {
+			north += titleHeight;
 		}
 
 		wc.stack_mode = Above;
@@ -995,14 +988,11 @@ int HandleDestroyNotify(const XDestroyWindowEvent *event) {
 /****************************************************************************
  ****************************************************************************/
 void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
+
 	static Time lastClickTime = 0;
 	static int lastX = 0, lastY = 0;
 	static int doubleClickActive = 0;
 	BorderActionType action;
-
-	if(!(np->state.border & BORDER_OUTLINE)) {
-		return;
-	}
 
 	action = GetBorderActionType(np, event->x, event->y);
 

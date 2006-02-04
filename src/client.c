@@ -317,11 +317,17 @@ void MinimizeTransients(ClientNode *np) {
  ****************************************************************************/
 void ShadeClient(ClientNode *np) {
 
+	int bsize;
+
 	Assert(np);
 
-	if(!(np->state.border & BORDER_OUTLINE)
-		|| !(np->state.border & BORDER_TITLE)) {
+	if(!(np->state.border & BORDER_TITLE)) {
 		return;
+	}
+	if(np->state.border & BORDER_OUTLINE) {
+		bsize = borderWidth;
+	} else {
+		bsize = 0;
 	}
 
 	if(np->state.status & STAT_MAPPED) {
@@ -332,8 +338,8 @@ void ShadeClient(ClientNode *np) {
 	np->state.status &= ~STAT_MAPPED;
 	np->state.status &= ~STAT_WITHDRAWN;
 
-	JXResizeWindow(display, np->parent, np->width + 2 * borderWidth,
-		titleSize + borderWidth);
+	JXResizeWindow(display, np->parent, np->width + 2 * bsize,
+		titleHeight + 2 * bsize);
 
 	WriteState(np);
 
@@ -344,11 +350,17 @@ void ShadeClient(ClientNode *np) {
  ****************************************************************************/
 void UnshadeClient(ClientNode *np) {
 
+	int bsize;
+
 	Assert(np);
 
-	if(!(np->state.border & BORDER_OUTLINE)
-		|| !(np->state.border & BORDER_TITLE)) {
+	if(!(np->state.border & BORDER_TITLE)) {
 		return;
+	}
+	if(np->state.border & BORDER_OUTLINE) {
+		bsize = borderWidth;
+	} else {
+		bsize = 0;
 	}
 
 	if(np->state.status & STAT_SHADED) {
@@ -358,8 +370,8 @@ void UnshadeClient(ClientNode *np) {
 	}
 	np->state.status &= ~STAT_WITHDRAWN;
 
-	JXResizeWindow(display, np->parent, np->width + 2 * borderWidth,
-		np->height + titleSize + borderWidth);
+	JXResizeWindow(display, np->parent, np->width + 2 * bsize,
+		np->height + titleHeight + 2 * bsize);
 
 	WriteState(np);
 
@@ -643,7 +655,7 @@ void MaximizeClient(ClientNode *np) {
 		west = 0;
 	}
 	if(np->state.border & BORDER_TITLE) {
-		north = titleSize;
+		north = west + titleHeight;
 	} else {
 		north = west;
 	}
@@ -941,7 +953,7 @@ void SetShape(ClientNode *np) {
 		west = 0;
 	}
 	if(np->state.border & BORDER_TITLE) {
-		north = titleSize;
+		north = west + titleHeight;
 	} else {
 		north = west;
 	}
@@ -1148,21 +1160,19 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	attrMask |= CWBackPixel;
 	attr.background_pixel = colors[COLOR_BORDER_BG];
 
+	x = np->x;
+	y = np->y;
+	width = np->width;
+	height = np->height;
 	if(np->state.border & BORDER_OUTLINE) {
-		x = np->x - borderWidth;
-		width = np->width + borderWidth + borderWidth;
-		if(np->state.border & BORDER_TITLE) {
-			y = np->y - titleSize;
-			height = np->height + titleSize + borderWidth;
-		} else {
-			y = np->y - borderWidth;
-			height = np->height + 2 * borderWidth;
-		}
-	} else {
-		x = np->x;
-		y = np->y;
-		width = np->width;
-		height = np->height;
+		x -= borderWidth;
+		y -= borderWidth;
+		width += borderWidth * 2;
+		height += borderWidth * 2;
+	}
+	if(np->state.border & BORDER_TITLE) {
+		y -= titleHeight;
+		height += titleHeight;
 	}
 
 	np->parent = JXCreateWindow(display, rootWindow,
@@ -1176,14 +1186,16 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	JXChangeWindowAttributes(display, np->window, attrMask, &attr);
 
 	JXSetWindowBorderWidth(display, np->window, 0);
-	if(np->state.border & BORDER_OUTLINE) {
-		if(np->state.border & BORDER_TITLE) {
-			JXReparentWindow(display, np->window, np->parent, borderWidth,
-				titleSize);
-		} else {
-			JXReparentWindow(display, np->window, np->parent, borderWidth,
-				borderWidth);
-		}
+	if((np->state.border & BORDER_OUTLINE)
+		&& (np->state.border & BORDER_TITLE)) {
+		JXReparentWindow(display, np->window, np->parent,
+			borderWidth, borderWidth + titleHeight);
+	} else if(np->state.border & BORDER_OUTLINE) {
+		JXReparentWindow(display, np->window, np->parent,
+			borderWidth, borderWidth);
+	} else if(np->state.border & BORDER_TITLE) {
+		JXReparentWindow(display, np->window, np->parent,
+			0, titleHeight);
 	} else {
 		JXReparentWindow(display, np->window, np->parent, 0, 0);
 	}

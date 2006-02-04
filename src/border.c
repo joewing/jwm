@@ -57,7 +57,8 @@ static GC bufferGC = None;
 static unsigned int bufferWidth;
 static unsigned int bufferHeight;
 
-static void DrawBorderHelper(const ClientNode *np, unsigned int height);
+static void DrawBorderHelper(const ClientNode *np,
+	unsigned int width, unsigned int height);
 static void DrawButtonBorder(const ClientNode *np, int offset,
 	Pixmap canvas, GC gc);
 static int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc);
@@ -130,36 +131,41 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 	int north;
 	int offset;
 	int height, width;
+	int bsize;
 
-	if(!(np->state.border & BORDER_OUTLINE)) {
-		return BA_NONE;
+	if(np->state.border & BORDER_OUTLINE) {
+		bsize = borderWidth;
+	} else {
+		bsize = 0;
 	}
 
 	if(np->state.border & BORDER_TITLE) {
 
-		if(y > borderWidth && y <= borderWidth + titleHeight) {
-			offset = np->width + borderWidth - titleHeight;
-			if((np->state.border & BORDER_CLOSE) && offset > titleSize) {
+		if(y > bsize && y <= bsize + titleHeight) {
+			offset = np->width + bsize - titleHeight;
+			if((np->state.border & BORDER_CLOSE)
+				&& offset > bsize + titleHeight) {
 				if(x > offset && x < offset + titleHeight) {
 					return BA_CLOSE;
 				}
 				offset -= titleHeight;
 			}
-			if((np->state.border & BORDER_MAX) && offset > titleSize) {
+			if((np->state.border & BORDER_MAX)
+				&& offset > bsize + titleHeight) {
 				if(x > offset && x < offset + titleHeight) {
 					return BA_MAXIMIZE;
 				}
 				offset -= titleHeight;
 			}
-			if((np->state.border & BORDER_MIN) && offset > titleSize) {
+			if((np->state.border & BORDER_MIN) && offset > bsize + titleHeight) {
 				if(x > offset && x < offset + titleHeight) {
 					return BA_MINIMIZE;
 				}
 			}
 		}
 
-		if(y >= borderWidth && y <= titleSize) {
-			if(x >= borderWidth && x <= np->width + borderWidth) {
+		if(y >= bsize && y <= bsize + titleHeight) {
+			if(x >= bsize && x <= np->width + bsize) {
 				if(np->state.border & BORDER_MOVE) {
 					return BA_MOVE;
 				} else {
@@ -168,9 +174,9 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 			}
 		}
 
-		north = titleSize;
+		north = bsize + titleHeight;
 	} else {
-		north = borderWidth;
+		north = bsize;
 	}
 
 	if(!(np->state.border & BORDER_RESIZE)) {
@@ -180,9 +186,9 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 	width = np->width;
 
 	if(np->state.status & STAT_SHADED) {
-		if(x < borderWidth) {
+		if(x < bsize) {
 			return BA_RESIZE_W | BA_RESIZE;
-		} else if(x >= width + borderWidth) {
+		} else if(x >= width + bsize) {
 			return BA_RESIZE_E | BA_RESIZE;
 		} else {
 			return BA_NONE;
@@ -192,24 +198,24 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 	height = np->height;
 
 	if(width >= titleHeight * 2 && height >= titleHeight * 2) {
-		if(x < borderWidth + titleHeight && y < titleHeight + borderWidth) {
+		if(x < bsize + titleHeight && y < titleHeight + bsize) {
 			return  BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE;
-		} else if(x < titleHeight + borderWidth
+		} else if(x < titleHeight + bsize
 			&& y - north >= height - titleHeight) {
 			return BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE;
-		} else if(x - borderWidth >= width - titleHeight
-			&& y < titleHeight + borderWidth) {
+		} else if(x - bsize >= width - titleHeight
+			&& y < titleHeight + bsize) {
 			return BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE;
-		} else if(x - borderWidth >= width - titleHeight
+		} else if(x - bsize >= width - titleHeight
 			&& y - north >= height - titleHeight) {
 			return BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE;
 		}
 	}
-	if(x < borderWidth) {
+	if(x < bsize) {
 		return BA_RESIZE_W | BA_RESIZE;
-	} else if(x >= width + borderWidth) {
+	} else if(x >= width + bsize) {
 		return BA_RESIZE_E | BA_RESIZE;
-	} else if(y < borderWidth) {
+	} else if(y < bsize) {
 		return BA_RESIZE_N | BA_RESIZE;
 	} else if(y >= height) {
 		return BA_RESIZE_S | BA_RESIZE;
@@ -222,7 +228,9 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
  ****************************************************************************/
 void DrawBorder(const ClientNode *np) {
 
+	unsigned int width;
 	unsigned int height;
+	int bsize;
 
 	if(shouldExit) {
 		return;
@@ -232,28 +240,34 @@ void DrawBorder(const ClientNode *np) {
 		return;
 	}
 
-	if(!(np->state.border & BORDER_TITLE)
-		&& !(np->state.border & BORDER_OUTLINE)) {
+	if(np->state.border & BORDER_OUTLINE) {
+		bsize = borderWidth;
+	} else {
+		bsize = 0;
+	}
+
+	if(bsize == 0 && !(np->state.border & BORDER_TITLE)) {
 		return;
 	}
 
 	if(np->state.status & STAT_SHADED) {
-		height = titleSize + borderWidth;
+		height = titleHeight + bsize * 2;
 	} else if(np->state.border & BORDER_TITLE) {
-		height = np->height + titleSize + borderWidth;
+		height = np->height + titleHeight + bsize * 2;
 	} else {
-		height = np->height + 2 * borderWidth;
+		height = np->height + 2 * bsize;
 	}
+	width = np->width + bsize * 2;
 
-	DrawBorderHelper(np, height);
+	DrawBorderHelper(np, width, height);
 
 }
 
 /****************************************************************************
  ****************************************************************************/
-void DrawBorderHelper(const ClientNode *np, unsigned int height) {
+void DrawBorderHelper(const ClientNode *np,
+	unsigned int width, unsigned int height) {
 
-	unsigned int width;
 	ColorType borderTextColor;
 	long borderPixel, borderTextPixel;
 	long pixelUp, pixelDown;
@@ -261,8 +275,8 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 	Pixmap canvas;
 	GC gc;
 	int iconSize;
+	int bsize;
 
-	width = np->width + borderWidth + borderWidth;
 	iconSize = GetBorderIconSize();
 
 	if(np->state.status & STAT_ACTIVE) {
@@ -277,6 +291,12 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 		borderTextPixel = colors[COLOR_BORDER_FG];
 		pixelUp = colors[COLOR_BORDER_UP];
 		pixelDown = colors[COLOR_BORDER_DOWN];
+	}
+
+	if(np->state.border & BORDER_OUTLINE) {
+		bsize = borderWidth;
+	} else {
+		bsize = 0;
 	}
 
 	if(buffer == None || bufferWidth < width || bufferHeight < height) {
@@ -302,134 +322,138 @@ void DrawBorderHelper(const ClientNode *np, unsigned int height) {
 	JXFillRectangle(display, buffer, bufferGC, 0, 0, width, height);
 
 	buttonCount = DrawBorderButtons(np, canvas, gc);
-	titleWidth = width - (titleHeight + 2) * buttonCount - borderWidth
-		- (titleSize + 4) - 2;
+	titleWidth = width - (titleHeight + 2) * buttonCount - bsize
+		- (titleHeight + bsize + 4) - 2;
 
 	if(np->state.border & BORDER_TITLE) {
 
 		if(np->icon && np->width >= titleHeight) {
 			PutIcon(np->icon, canvas, gc,
-				borderWidth + 2,
-				borderWidth + titleHeight / 2 - iconSize / 2,
+				bsize + 2,
+				bsize + titleHeight / 2 - iconSize / 2,
 				iconSize, iconSize);
 		}
 
 		if(np->name && np->name[0] && titleWidth > 0) {
 			RenderString(canvas, gc, FONT_BORDER, borderTextColor,
-				titleSize + 4, borderWidth + titleHeight / 2
+				titleHeight + bsize + 4, bsize + titleHeight / 2
 				- GetStringHeight(FONT_BORDER) / 2,
 				titleWidth, np->name);
 		}
 
 	}
 
-	/* Draw title outline */
-	JXSetForeground(display, gc, pixelUp);
-	JXDrawLine(display, canvas, gc, borderWidth, borderWidth,
-		width - borderWidth - 1, borderWidth);
-	JXDrawLine(display, canvas, gc, borderWidth, borderWidth + 1,
-		borderWidth, titleHeight + borderWidth - 1);
+	if(np->state.border & BORDER_OUTLINE) {
 
-	JXSetForeground(display, gc, pixelDown);
-	JXDrawLine(display, canvas, gc, borderWidth + 1,
-		titleHeight + borderWidth - 1, width - borderWidth,
-		titleHeight + borderWidth - 1);
-	JXDrawLine(display, canvas, gc, width - borderWidth - 1,
-		borderWidth + 1, width - borderWidth - 1, titleHeight + borderWidth);
-
-	/* Draw outline */
-	JXSetForeground(display, gc, pixelUp);
-	JXDrawLine(display, canvas, gc, width - borderWidth,
-		borderWidth, width - borderWidth, height - borderWidth);
-	JXDrawLine(display, canvas, gc, borderWidth,
-		height - borderWidth, width - borderWidth, height - borderWidth);
-
-	JXSetForeground(display, gc, pixelDown);
-	JXDrawLine(display, canvas, gc, borderWidth - 1,
-		borderWidth - 1, width - borderWidth, borderWidth - 1);
-	JXDrawLine(display, canvas, gc, borderWidth - 1, borderWidth,
-		borderWidth - 1, height - borderWidth);
-
-	JXFillRectangle(display, canvas, gc, width - 2, 0, 2, height);
-	JXFillRectangle(display, canvas, gc, 0, height - 2, width, 2);
-	JXSetForeground(display, gc, pixelUp);
-	JXDrawLine(display, canvas, gc, 0, 0, 0, height - 1);
-	JXDrawLine(display, canvas, gc, 1, 1, 1, height - 2);
-	JXDrawLine(display, canvas, gc, 1, 0, width - 1, 0);
-	JXDrawLine(display, canvas, gc, 1, 1, width - 2, 1);
-
-	if((np->state.border & BORDER_RESIZE)
-		&& !(np->state.status & STAT_SHADED)
-		&& np->width >= 2 * titleHeight * 2
-		&& np->height >= titleHeight * 2) {
-
-		/* Draw marks */
-		JXSetForeground(display, gc, pixelDown);
-
-		/* Upper left */
-		JXDrawLine(display, canvas, gc,
-			titleHeight + borderWidth - 1, 2, titleHeight + borderWidth - 1,
-			borderWidth - 2);
-		JXDrawLine(display, canvas, gc, 2,
-			titleHeight + borderWidth - 1, borderWidth - 2,
-			titleHeight + borderWidth - 1);
-
-		/* Upper right */
-		JXDrawLine(display, canvas, gc,
-			width - titleHeight - borderWidth - 1,
-			2, width - titleHeight - borderWidth - 1, borderWidth - 2);
-		JXDrawLine(display, canvas, gc, width - 3,
-			titleHeight + borderWidth - 1, width - borderWidth + 1,
-			titleHeight + borderWidth - 1);
-
-		/* Lower left */
-		JXDrawLine(display, canvas, gc, 2,
-			height - titleHeight - borderWidth - 1, borderWidth - 2,
-			height - titleHeight - borderWidth - 1);
-		JXDrawLine(display, canvas, gc,
-			titleHeight + borderWidth - 1, height - 3,
-			titleHeight + borderWidth - 1, height - borderWidth + 1);
-
-		/* Lower right */
-		JXDrawLine(display, canvas, gc, width - 3,
-			height - titleHeight - borderWidth - 1, width - borderWidth + 1,
-			height - titleHeight - borderWidth - 1);
-		JXDrawLine(display, canvas, gc,
-			width - titleHeight - borderWidth - 1,
-			height - 3, width - titleHeight - borderWidth - 1,
-			height - borderWidth + 1);
-
+		/* Draw title outline */
 		JXSetForeground(display, gc, pixelUp);
+		JXDrawLine(display, canvas, gc, borderWidth, borderWidth,
+			width - borderWidth - 1, borderWidth);
+		JXDrawLine(display, canvas, gc, borderWidth, borderWidth + 1,
+			borderWidth, titleHeight + borderWidth - 1);
 
-		/* Upper left */
-		JXDrawLine(display, canvas, gc, titleHeight + borderWidth,
-			2, titleHeight + borderWidth, borderWidth - 2);
-		JXDrawLine(display, canvas, gc, 2,
-			titleHeight + borderWidth, borderWidth - 2,
-			titleHeight + borderWidth);
+		JXSetForeground(display, gc, pixelDown);
+		JXDrawLine(display, canvas, gc, borderWidth + 1,
+			titleHeight + borderWidth - 1, width - borderWidth,
+			titleHeight + borderWidth - 1);
+		JXDrawLine(display, canvas, gc, width - borderWidth - 1,
+			borderWidth + 1, width - borderWidth - 1, titleHeight + borderWidth);
 
-		/* Upper right */
-		JXDrawLine(display, canvas, gc,
-			width - titleHeight - borderWidth, 2,
-			width - titleHeight - borderWidth, borderWidth - 2);
-		JXDrawLine(display, canvas, gc, width - 3,
-			titleHeight + borderWidth, width - borderWidth + 1,
-			titleHeight + borderWidth);
+		/* Draw outline */
+		JXSetForeground(display, gc, pixelUp);
+		JXDrawLine(display, canvas, gc, width - borderWidth,
+			borderWidth, width - borderWidth, height - borderWidth);
+		JXDrawLine(display, canvas, gc, borderWidth,
+			height - borderWidth, width - borderWidth, height - borderWidth);
 
-		/* Lower left */
-		JXDrawLine(display, canvas, gc, 2,
-			height - titleHeight - borderWidth,
-			borderWidth - 2, height - titleHeight - borderWidth);
-		JXDrawLine(display, canvas, gc, titleHeight + borderWidth,
-			height - 3, titleHeight + borderWidth, height - borderWidth + 1);
+		JXSetForeground(display, gc, pixelDown);
+		JXDrawLine(display, canvas, gc, borderWidth - 1,
+			borderWidth - 1, width - borderWidth, borderWidth - 1);
+		JXDrawLine(display, canvas, gc, borderWidth - 1, borderWidth,
+			borderWidth - 1, height - borderWidth);
 
-		/* Lower right */
-		JXDrawLine(display, canvas, gc, width - 3,
-			height - titleHeight - borderWidth, width - borderWidth + 1,
-			height - titleHeight - borderWidth);
-		JXDrawLine(display, canvas, gc,
-			width - titleHeight - borderWidth, height - 3,
-			width - titleHeight - borderWidth, height - borderWidth + 1);
+		JXFillRectangle(display, canvas, gc, width - 2, 0, 2, height);
+		JXFillRectangle(display, canvas, gc, 0, height - 2, width, 2);
+		JXSetForeground(display, gc, pixelUp);
+		JXDrawLine(display, canvas, gc, 0, 0, 0, height - 1);
+		JXDrawLine(display, canvas, gc, 1, 1, 1, height - 2);
+		JXDrawLine(display, canvas, gc, 1, 0, width - 1, 0);
+		JXDrawLine(display, canvas, gc, 1, 1, width - 2, 1);
+
+		if((np->state.border & BORDER_RESIZE)
+			&& !(np->state.status & STAT_SHADED)
+			&& np->width >= 2 * titleHeight * 2
+			&& np->height >= titleHeight * 2) {
+
+			/* Draw marks */
+			JXSetForeground(display, gc, pixelDown);
+
+			/* Upper left */
+			JXDrawLine(display, canvas, gc,
+				titleHeight + borderWidth - 1, 2, titleHeight + borderWidth - 1,
+				borderWidth - 2);
+			JXDrawLine(display, canvas, gc, 2,
+				titleHeight + borderWidth - 1, borderWidth - 2,
+				titleHeight + borderWidth - 1);
+
+			/* Upper right */
+			JXDrawLine(display, canvas, gc,
+				width - titleHeight - borderWidth - 1,
+				2, width - titleHeight - borderWidth - 1, borderWidth - 2);
+			JXDrawLine(display, canvas, gc, width - 3,
+				titleHeight + borderWidth - 1, width - borderWidth + 1,
+				titleHeight + borderWidth - 1);
+
+			/* Lower left */
+			JXDrawLine(display, canvas, gc, 2,
+				height - titleHeight - borderWidth - 1, borderWidth - 2,
+				height - titleHeight - borderWidth - 1);
+			JXDrawLine(display, canvas, gc,
+				titleHeight + borderWidth - 1, height - 3,
+				titleHeight + borderWidth - 1, height - borderWidth + 1);
+
+			/* Lower right */
+			JXDrawLine(display, canvas, gc, width - 3,
+				height - titleHeight - borderWidth - 1, width - borderWidth + 1,
+				height - titleHeight - borderWidth - 1);
+			JXDrawLine(display, canvas, gc,
+				width - titleHeight - borderWidth - 1,
+				height - 3, width - titleHeight - borderWidth - 1,
+				height - borderWidth + 1);
+
+			JXSetForeground(display, gc, pixelUp);
+
+			/* Upper left */
+			JXDrawLine(display, canvas, gc, titleHeight + borderWidth,
+				2, titleHeight + borderWidth, borderWidth - 2);
+			JXDrawLine(display, canvas, gc, 2,
+				titleHeight + borderWidth, borderWidth - 2,
+				titleHeight + borderWidth);
+
+			/* Upper right */
+			JXDrawLine(display, canvas, gc,
+				width - titleHeight - borderWidth, 2,
+				width - titleHeight - borderWidth, borderWidth - 2);
+			JXDrawLine(display, canvas, gc, width - 3,
+				titleHeight + borderWidth, width - borderWidth + 1,
+				titleHeight + borderWidth);
+
+			/* Lower left */
+			JXDrawLine(display, canvas, gc, 2,
+				height - titleHeight - borderWidth,
+				borderWidth - 2, height - titleHeight - borderWidth);
+			JXDrawLine(display, canvas, gc, titleHeight + borderWidth,
+				height - 3, titleHeight + borderWidth, height - borderWidth + 1);
+
+			/* Lower right */
+			JXDrawLine(display, canvas, gc, width - 3,
+				height - titleHeight - borderWidth, width - borderWidth + 1,
+				height - titleHeight - borderWidth);
+			JXDrawLine(display, canvas, gc,
+				width - titleHeight - borderWidth, height - 3,
+				width - titleHeight - borderWidth, height - borderWidth + 1);
+
+		}
 
 	}
 
@@ -444,6 +468,7 @@ void DrawButtonBorder(const ClientNode *np, int offset,
 	Pixmap canvas, GC gc) {
 
 	long up, down;
+	long bsize;
 
 	Assert(np);
 
@@ -455,32 +480,45 @@ void DrawButtonBorder(const ClientNode *np, int offset,
 		down = colors[COLOR_BORDER_DOWN];
 	}
 
+	if(np->state.border & BORDER_OUTLINE) {
+		bsize = borderWidth;
+	} else {
+		bsize = 0;
+	}
+
 	JXSetForeground(display, gc, up);
-	JXDrawLine(display, canvas, gc, offset, borderWidth + 1,
-		offset, titleHeight + borderWidth  - 2);
+	JXDrawLine(display, canvas, gc, offset, bsize + 1,
+		offset, titleHeight + bsize  - 2);
 
 	JXSetForeground(display, gc, down);
 	JXDrawLine(display, canvas, gc, offset - 1,
-		borderWidth + 1, offset - 1, titleHeight + borderWidth - 2);
+		bsize + 1, offset - 1, titleHeight + bsize - 2);
 
 }
 
 /****************************************************************************
  ****************************************************************************/
 int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
+
 	Pixmap pixmap;
 	int count = 0;
 	int offset;
+	int bsize;
 
 	Assert(np);
 
 	if(!(np->state.border & BORDER_TITLE)) {
 		return count;
 	}
+	if(np->state.border & BORDER_OUTLINE) {
+		bsize = borderWidth;
+	} else {
+		bsize = 0;
+	}
 
-	offset = np->width + borderWidth - titleHeight;
+	offset = np->width + bsize - titleHeight;
 
-	if(offset <= titleSize) {
+	if(offset <= bsize + titleHeight) {
 		return count;
 	}
 
@@ -495,12 +533,12 @@ int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
 		}
 
 		JXCopyArea(display, pixmap, canvas, gc, 0, 0, 16, 16,
-			offset + titleHeight / 2 - 8, borderWidth + titleHeight / 2 - 8);
+			offset + titleHeight / 2 - 8, bsize + titleHeight / 2 - 8);
 
 		offset -= titleHeight;
 		++count;
 
-		if(offset <= titleSize) {
+		if(offset <= bsize + titleHeight) {
 			return count;
 		}
 
@@ -522,14 +560,14 @@ int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
 			}
 		}
 		JXCopyArea(display, pixmap, canvas, gc, 0, 0, 16, 16,
-			offset + titleHeight / 2 - 8, borderWidth + titleHeight / 2 - 8);
+			offset + titleHeight / 2 - 8, bsize + titleHeight / 2 - 8);
 
 		DrawButtonBorder(np, offset, canvas, gc);
 
 		offset -= titleHeight;
 		++count;
 
-		if(offset <= titleSize) {
+		if(offset <= bsize + titleHeight) {
 			return count;
 		}
 
@@ -546,7 +584,7 @@ int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
 		}
 
 		JXCopyArea(display, pixmap, canvas, gc, 0, 0, 16, 16,
-			offset + titleHeight / 2 - 8, borderWidth + titleHeight / 2 - 8);
+			offset + titleHeight / 2 - 8, bsize + titleHeight / 2 - 8);
 
 		++count;
 
@@ -591,7 +629,6 @@ void SetBorderWidth(const char *str) {
 	} else {
 		borderWidth = width;
 	}
-	titleSize = titleHeight + borderWidth;
 
 }
 
@@ -609,7 +646,6 @@ void SetTitleHeight(const char *str) {
 	} else {
 		titleHeight = height;
 	}
-	titleSize = titleHeight + borderWidth;
 
 }
 

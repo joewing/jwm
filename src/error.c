@@ -47,7 +47,10 @@ void WarningVA(const char *part, const char *str, va_list ap) {
 /****************************************************************************
  ****************************************************************************/
 int ErrorHandler(Display *d, XErrorEvent *e) {
+
+#ifdef DEBUG
 	char message[80], code[10], request[80];
+#endif
 
 	if(initializing) {
 		if(e->request_code == X_ChangeWindowAttributes
@@ -56,6 +59,7 @@ int ErrorHandler(Display *d, XErrorEvent *e) {
 		}
 	}
 
+#ifdef DEBUG
 	snprintf(code, sizeof(code), "%d", e->request_code);
 	XGetErrorDatabaseText(display, "XRequest", code, "", request,
 		sizeof(request));
@@ -71,6 +75,7 @@ int ErrorHandler(Display *d, XErrorEvent *e) {
 
 	ShowCheckpoint();
 	Warning("XError: %s[%d]: %s", request, e->minor_code, message);
+#endif
 
 	return 0;
 }

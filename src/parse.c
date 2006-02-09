@@ -87,6 +87,8 @@ static const char *DISTANCE_ATTRIBUTE = "distance";
 static const char *INSERT_ATTRIBUTE = "insert";
 static const char *MAX_WIDTH_ATTRIBUTE = "maxwidth";
 static const char *FORMAT_ATTRIBUTE = "format";
+static const char *VALIGN_ATTRIBUTE = "valign";
+static const char *HALIGN_ATTRIBUTE = "halign";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -980,6 +982,16 @@ void ParseTray(const TokenNode *tp) {
 	attr = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
 	if(attr) {
 		SetTrayHeight(tray, attr);
+	}
+
+	attr = FindAttribute(tp->attributes, VALIGN_ATTRIBUTE);
+	if(attr) {
+		SetTrayVerticalAlignment(tray, attr);
+	}
+
+	attr = FindAttribute(tp->attributes, HALIGN_ATTRIBUTE);
+	if(attr) {
+		SetTrayHorizontalAlignment(tray, attr);
 	}
 
 	attr = FindAttribute(tp->attributes, LAYOUT_ATTRIBUTE);

@@ -209,6 +209,8 @@ TrayType *CreateTray() {
 	tp->border = 1;
 	tp->layer = DEFAULT_TRAY_LAYER;
 	tp->layout = LAYOUT_HORIZONTAL;
+	tp->valign = TALIGN_FIXED;
+	tp->halign = TALIGN_FIXED;
 
 	tp->autoHide = 0;
 	tp->hidden = 0;
@@ -458,12 +460,39 @@ void ComputeTraySize(TrayType *tp) {
 		}
 	}
 
-	/* Determine the screen offset. */
-	if(tp->x < 0) {
-		tp->x = rootWidth + tp->x - tp->width + 1;
+	/* Compute the tray location. */
+	switch(tp->valign) {
+	case TALIGN_TOP:
+		tp->y = 0;
+		break;
+	case TALIGN_BOTTOM:
+		tp->y = rootHeight - tp->height + 1;
+		break;
+	case TALIGN_CENTER:
+		tp->y = rootHeight / 2 - tp->height / 2;
+		break;
+	default:
+		if(tp->y < 0) {
+			tp->y = rootHeight + tp->y - tp->height + 1;
+		}
+		break;
 	}
-	if(tp->y < 0) {
-		tp->y = rootHeight + tp->y - tp->height + 1;
+
+	switch(tp->halign) {
+	case TALIGN_LEFT:
+		tp->x = 0;
+		break;
+	case TALIGN_RIGHT:
+		tp->x = rootWidth - tp->width + 1;
+		break;
+	case TALIGN_CENTER:
+		tp->x = rootWidth / 2 - tp->width / 2;
+		break;
+	default:
+		if(tp->x < 0) {
+			tp->x = rootWidth + tp->x - tp->width + 1;
+		}
+		break;
 	}
 
 }
@@ -1012,6 +1041,50 @@ void SetTrayBorder(TrayType *tp, const char *str) {
 		tp->border = DEFAULT_TRAY_BORDER;
 	} else {
 		tp->border = temp;
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void SetTrayHorizontalAlignment(TrayType *tp, const char *str) {
+
+	Assert(tp);
+	Assert(str);
+
+	if(!strcmp(str, "fixed")) {
+		tp->halign = TALIGN_FIXED;
+	} else if(!strcmp(str, "left")) {
+		tp->halign = TALIGN_LEFT;
+	} else if(!strcmp(str, "right")) {
+		tp->halign = TALIGN_RIGHT;
+	} else if(!strcmp(str, "center")) {
+		tp->halign = TALIGN_CENTER;
+	} else {
+		Warning("invalid tray horizontal alignment: \"%s\"", str);
+		tp->halign = TALIGN_FIXED;
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void SetTrayVerticalAlignment(TrayType *tp, const char *str) {
+
+	Assert(tp);
+	Assert(str);
+
+	if(!strcmp(str, "fixed")) {
+		tp->valign = TALIGN_FIXED;
+	} else if(!strcmp(str, "top")) {
+		tp->valign = TALIGN_TOP;
+	} else if(!strcmp(str, "bottom")) {
+		tp->valign = TALIGN_BOTTOM;
+	} else if(!strcmp(str, "center")) {
+		tp->valign = TALIGN_CENTER;
+	} else {
+		Warning("invalid tray vertical alignment: \"%s\"", str);
+		tp->valign = TALIGN_FIXED;
 	}
 
 }

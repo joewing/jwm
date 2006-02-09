@@ -43,6 +43,7 @@ clean:
 distclean: clean
 	rm -f *~ config.cache config.log config.status config.h ;
 	rm -f Makefile src/Makefile jwm.tardist jwm.1 ;
+	rm -f Makefile.bak src/Makefile.bak ;
 	rm -fr autom4te.cache ;
 	rm -fr `find . \( -name .svn -o -name .gdb_history \) -print` ;
 	for x in package/* ; do \

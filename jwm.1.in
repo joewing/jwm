@@ -264,6 +264,16 @@ The layer of the tray. The default is 8. Valid values are between 0 and
 The layout of the tray. The default is horizontal.
 .RE
 .P
+\fBvalign\fP { \fBfixed\fP | \fBtop\fP | \fBcenter\fP | \fBbottom\fP }
+.RS
+The vertical alignment of the tray. The default is \fBfixed\fP.
+.RE
+.P
+\fBhalign\fP { \fBfixed\fP | \fBleft\fP | \fBcenter\fP | \fBright\fP }
+.RS
+The horizontal alignment of the tray. The default is \fBfixed\fP.
+.RE
+.P
 Within this tag the following tags are supported:
 .P
 .B Clock

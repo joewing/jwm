@@ -13,6 +13,15 @@ typedef enum {
 	LAYOUT_VERTICAL
 } LayoutType;
 
+typedef enum {
+	TALIGN_FIXED,
+	TALIGN_LEFT,
+	TALIGN_TOP,
+	TALIGN_CENTER,
+	TALIGN_RIGHT,
+	TALIGN_BOTTOM
+} TrayAlignmentType;
+
 typedef struct TrayComponentType {
 
 	/* The tray containing the component.
@@ -93,6 +102,7 @@ typedef struct TrayType {
 	int border;
 	WinLayerType layer;
 	LayoutType layout;
+	TrayAlignmentType valign, halign;
 
 	int autoHide;
 	int hidden;
@@ -140,6 +150,8 @@ void SetTrayHeight(TrayType *tp, const char *str);
 void SetTrayLayout(TrayType *tp, const char *str);
 void SetTrayLayer(TrayType *tp, const char *str);
 void SetTrayBorder(TrayType *tp, const char *str);
+void SetTrayHorizontalAlignment(TrayType *tp, const char *str);
+void SetTrayVerticalAlignment(TrayType *tp, const char *str);
 
 #endif
 

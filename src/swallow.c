@@ -148,16 +148,23 @@ TrayComponentType *CreateSwallow(const char *name, const char *command,
  ****************************************************************************/
 int ProcessSwallowEvent(const XEvent *event) {
 
-	Window w;
 	SwallowNode *np;
 
-	if(event->type == DestroyNotify) {
-		w = event->xdestroywindow.window;
-		for(np = swallowNodes; np; np = np->next) {
-			if(np->cp->window == w) {
+	for(np = swallowNodes; np; np = np->next) {
+		if(event->xany.window == np->cp->window) {
+			switch(event->type) {
+			case DestroyNotify:
 				np->cp->window = None;
-				return 1;
+				break;
+			case ConfigureNotify:
+				np->cp->requestedWidth = event->xconfigure.width;
+				np->cp->requestedHeight = event->xconfigure.height;
+				ResizeTray(np->cp->tray);
+				break;
+			default:
+				break;
 			}
+			return 1;
 		}
 	}
 

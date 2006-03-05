@@ -10,6 +10,7 @@ Todo:
 	- Added a "showdesktop" action for TrayButton. This will minimize all
 	  programs on the current desktop.
 	- Support for UTF-8.
+	- Added support for resizing of swallowed clients (lior2b).
 
 20060226:
 	- Fixed an issue with menu includes.

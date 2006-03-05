@@ -37,8 +37,6 @@ void StartupDesktops() {
 		}
 	}
 
-	
-
 }
 
 /***************************************************************************
@@ -163,15 +161,22 @@ MenuType *CreateDesktopMenu(unsigned int mask) {
 
 /***************************************************************************
  ***************************************************************************/
-/*
-const char *GetDesktopName(int desktop) {
+void ShowDesktop() {
 
-	Assert(desktop >= 0);
-	Assert(desktop < desktopCount);
+	ClientNode *np;
+	int layer;
 
-	return desktopNames[desktop];
+	for(layer = 0; layer < LAYER_COUNT; layer++) {
+		for(np = nodes[layer]; np; np = np->next) {
+			if(   np->state.desktop == currentDesktop
+				 || (np->state.status & STAT_STICKY))
+			{
+				MinimizeClient(np);
+			}
+		}
+	}
+
 }
-*/
 
 /***************************************************************************
  ***************************************************************************/

@@ -4,8 +4,19 @@ Todo:
 	- Add window list root menu item.
 	- Add mouse bindings.
 
+20060304:
+	- Now to run a program from TrayButton, the program needs to be preceeded
+	  with "exec:".
+	- Added a "showdesktop" action for TrayButton. This will minimize all
+	  programs on the current desktop.
+
+20060226:
+	- Fixed an issue with menu includes.
+	- Patch, v1.4p1.
+
 20060208:
 	- Added "valign" and "halign" attributes for Tray.
+	- Released v1.4.
 
 20060203:
 	- Make tray menus popup in a more natural location.
@@ -23,6 +34,7 @@ Todo:
 	- Added support for sending _NET_CURRENT_DESKTOP to root.
 	- Added the "pignore" group option.
 	- Added the "maximized", "minimized", and "shaded" group options.
+	- Released v1.3.
 
 20060110:
 	- Added more descriptive error messages for configuration parsing.

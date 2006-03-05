@@ -14,6 +14,7 @@
 #include "button.h"
 #include "misc.h"
 #include "screen.h"
+#include "desktop.h"
 
 #define BUTTON_SIZE 4
 
@@ -297,7 +298,13 @@ void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 	Assert(bp);
 
 	if(bp->action && strlen(bp->action) > 0) {
-		RunCommand(bp->action);
+		if(!strncmp(bp->action, "exec:", 5)) {
+			RunCommand(bp->action + 5);
+		} else if(!strcmp(bp->action, "showdesktop")) {
+			ShowDesktop();
+		} else {
+			Warning("invalid TrayButton action");
+		}
 	} else {
 
 		screen = GetCurrentScreen(cp->screenx, cp->screeny);

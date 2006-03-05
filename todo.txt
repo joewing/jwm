@@ -9,6 +9,7 @@ Todo:
 	  with "exec:".
 	- Added a "showdesktop" action for TrayButton. This will minimize all
 	  programs on the current desktop.
+	- Support for UTF-8.
 
 20060226:
 	- Fixed an issue with menu includes.

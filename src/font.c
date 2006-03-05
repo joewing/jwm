@@ -137,7 +137,7 @@ int GetStringWidth(FontType type, const char *str) {
 
 	length = strlen(str);
 
-	JXftTextExtents8(display, fonts[type], (const unsigned char*)str,
+	JXftTextExtentsUtf8(display, fonts[type], (const unsigned char*)str,
 		length, &extents);
 
 	return extents.width;
@@ -208,7 +208,7 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 	Assert(xd);
 
 	JXftDrawSetClipRectangles(xd, 0, 0, &rect, 1);
-	JXftDrawString8(xd, GetXftColor(color), fonts[font],
+	JXftDrawStringUtf8(xd, GetXftColor(color), fonts[font],
 		x, y + fonts[font]->ascent, (const unsigned char*)str, len);
 	JXftDrawDestroy(xd);
 

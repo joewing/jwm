@@ -354,8 +354,8 @@
 #define JXftDrawDestroy( a ) \
 	( SetCheckpoint(), XftDrawDestroy( a ) )
 
-#define JXftTextExtents8( a, b, c, d, e ) \
-	( SetCheckpoint(), XftTextExtents8( a, b, c, d, e ) )
+#define JXftTextExtentsUtf8( a, b, c, d, e ) \
+	( SetCheckpoint(), XftTextExtentsUtf8( a, b, c, d, e ) )
 
 #define JXftDrawChange( a, b ) \
 	( SetCheckpoint(), XftDrawChange( a, b ) )
@@ -363,8 +363,8 @@
 #define JXftDrawSetClipRectangles( a, b, c, d, e ) \
 	( SetCheckpoint(), XftDrawSetClipRectangles( a, b, c, d, e ) )
 
-#define JXftDrawString8( a, b, c, d, e, f, g ) \
-	( SetCheckpoint(), XftDrawString8( a, b, c, d, e, f, g ) )
+#define JXftDrawStringUtf8( a, b, c, d, e, f, g ) \
+	( SetCheckpoint(), XftDrawStringUtf8( a, b, c, d, e, f, g ) )
 
 #define JXftColorFree( a, b, c, d ) \
 	( SetCheckpoint(), XftColorFree( a, b, c, d ) )

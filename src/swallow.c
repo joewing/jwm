@@ -155,10 +155,13 @@ int ProcessSwallowEvent(const XEvent *event) {
 			switch(event->type) {
 			case DestroyNotify:
 				np->cp->window = None;
+				np->cp->requestedWidth = 1;
+				np->cp->requestedHeight = 1;
+				ResizeTray(np->cp->tray);
 				break;
-			case ConfigureNotify:
-				np->cp->requestedWidth = event->xconfigure.width;
-				np->cp->requestedHeight = event->xconfigure.height;
+			case ResizeRequest:
+				np->cp->requestedWidth = event->xresizerequest.width;
+				np->cp->requestedHeight = event->xresizerequest.height;
 				ResizeTray(np->cp->tray);
 				break;
 			default:
@@ -344,7 +347,8 @@ Window FindSwallowedClient(const char *name) {
 				JXAddToSaveSet(display, result);
 				JXSetWindowBorder(display, result, colors[COLOR_TRAY_BG]);
 				JXMapRaised(display, result);
-				JXSelectInput(display, result, StructureNotifyMask);
+				JXSelectInput(display, result,
+					StructureNotifyMask | ResizeRedirectMask);
 				JXFree(hint.res_name);
 				JXFree(hint.res_class);
 				break;

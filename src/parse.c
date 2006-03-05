@@ -695,7 +695,6 @@ MenuItemType *ParseMenuInclude(const TokenNode *tp, MenuType *menu,
 		} else {
 			ParseError(tp, "could not execute included program: %s", path);
 		}
-		Release(path);
 
 	} else {
 
@@ -710,7 +709,6 @@ MenuItemType *ParseMenuInclude(const TokenNode *tp, MenuType *menu,
 		} else {
 			ParseError(tp, "could not open include: %s", path);
 		}
-		Release(path);
 
 	}
 

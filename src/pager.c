@@ -270,6 +270,7 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
 	int x, y;
 	int width, height;
 	int deskOffset;
+	ColorType fillColor;
 
 	if(!(np->state.status & STAT_MAPPED)) {
 		return;
@@ -323,14 +324,14 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
 		if((np->state.status & STAT_ACTIVE)
 			&& (np->state.desktop == currentDesktop
 			|| (np->state.status & STAT_STICKY))) {
-			JXSetForeground(display, pp->bufferGC, colors[COLOR_PAGER_ACTIVE_FG]);
+			fillColor = COLOR_PAGER_ACTIVE_FG;
 		} else {
-			JXSetForeground(display, pp->bufferGC, colors[COLOR_PAGER_FG]);
+			fillColor = COLOR_PAGER_FG;
 		}
+		JXSetForeground(display, pp->bufferGC, colors[fillColor]);
+		JXFillRectangle(display, pp->cp->pixmap, pp->bufferGC, x + 1, y + 1,
+			width - 1, height - 1);
 	}
-
-	JXFillRectangle(display, pp->cp->pixmap, pp->bufferGC, x + 1, y + 1,
-		width - 1, height - 1);
 
 }
 

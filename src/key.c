@@ -269,65 +269,87 @@ KeySym ParseKeyString(const char *str) {
 /***************************************************************************
  ***************************************************************************/
 void InsertBinding(KeyType key, const char *modifiers,
-	const char *stroke, const char *command) {
+	const char *stroke, const char *code, const char *command) {
 
 	KeyNode *np;
 	unsigned int modifierMask;
 	char *temp;
 	int offset;
-	KeySym code;
-
-	Assert(stroke);
+	KeySym sym;
 
 	modifierMask = ParseModifierString(modifiers);
 
-	for(offset = 0; stroke[offset]; offset++) {
-		if(stroke[offset] == '#') {
+	if(stroke && strlen(stroke) > 0) {
 
-			temp = Allocate(strlen(stroke) + 1);
-			strcpy(temp, stroke);
+		for(offset = 0; stroke[offset]; offset++) {
+			if(stroke[offset] == '#') {
 
-			for(temp[offset] = '1'; temp[offset] <= '9'; temp[offset]++) {
-				code = ParseKeyString(temp);
-				if(code == NoSymbol) {
-					Release(temp);
-					return;
+				temp = Allocate(strlen(stroke) + 1);
+				strcpy(temp, stroke);
+
+				for(temp[offset] = '1'; temp[offset] <= '9'; temp[offset]++) {
+					sym = ParseKeyString(temp);
+					if(sym == NoSymbol) {
+						Release(temp);
+						return;
+					}
+
+					np = Allocate(sizeof(KeyNode));
+					np->next = bindings;
+					bindings = np;
+
+					np->key = key | ((temp[offset] - '1' + 1) << 8);
+					np->mask = modifierMask;
+					np->code = sym;
+					np->command = NULL;
+
 				}
 
-				np = Allocate(sizeof(KeyNode));
-				np->next = bindings;
-				bindings = np;
+				Release(temp);
 
-				np->key = key | ((temp[offset] - '1' + 1) << 8);
-				np->mask = modifierMask;
-				np->code = code;
-				np->command = NULL;
-
+				return;
 			}
+		}
 
-			Release(temp);
-
+		sym = ParseKeyString(stroke);
+		if(sym == NoSymbol) {
+			Warning("keycode not found for symbol: %s", stroke);
 			return;
 		}
-	}
+		np = Allocate(sizeof(KeyNode));
+		np->next = bindings;
+		bindings = np;
 
-	code = ParseKeyString(stroke);
-	if(code == NoSymbol) {
-		return;
-	}
+		np->key = key;
+		np->mask = modifierMask;
+		np->code = sym;
+		if(command) {
+			np->command = Allocate(strlen(command) + 1);
+			strcpy(np->command, command);
+		} else {
+			np->command = NULL;
+		}
 
-	np = Allocate(sizeof(KeyNode));
-	np->next = bindings;
-	bindings = np;
+	} else if(code && strlen(code) > 0) {
 
-	np->key = key;
-	np->mask = modifierMask;
-	np->code = code;
-	if(command) {
-		np->command = Allocate(strlen(command) + 1);
-		strcpy(np->command, command);
+		np = Allocate(sizeof(KeyNode));
+		np->next = bindings;
+		bindings = np;
+
+		np->key = key;
+		np->mask = modifierMask;
+		np->code = atoi(code);
+		if(command) {
+			np->command = Allocate(strlen(command) + 1);
+			strcpy(np->command, command);
+		} else {
+			np->command = NULL;
+		}
+
 	} else {
-		np->command = NULL;
+
+		Warning("neither key nor keycode specified for Key");
+
 	}
 
 }

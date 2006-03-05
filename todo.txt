@@ -2,7 +2,13 @@
 Todo:
 	- Support multiple root menus.
 	- Add window list root menu item.
+	- Make the window menu configurable (other languages, order, etc.).
 	- Add mouse bindings.
+	- Add popup item for TrayButton.
+	- Look into caps/num/etc lock issue with key bindings.
+	- Support keybinds for keys without a keysym.
+	- Fix window maximization with tray autohide.
+	- Fix tray autohide with window menu and root menus.
 
 20060304:
 	- Now to run a program from TrayButton, the program needs to be preceeded
@@ -11,6 +17,7 @@ Todo:
 	  programs on the current desktop.
 	- Support for UTF-8.
 	- Added support for resizing of swallowed clients (lior2b).
+	- Allow "keycode" to be specified instead of "key" for key bindings.
 
 20060226:
 	- Fixed an issue with menu includes.

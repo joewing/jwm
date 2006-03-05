@@ -740,6 +740,7 @@ MenuItemType *ParseMenuInclude(const TokenNode *tp, MenuType *menu,
 void ParseKey(const TokenNode *tp) {
 
 	const char *key;
+	const char *code;
 	const char *mask;
 	const char *action;
 	const char *command;
@@ -750,10 +751,7 @@ void ParseKey(const TokenNode *tp) {
 
 	mask = FindAttribute(tp->attributes, "mask");
 	key = FindAttribute(tp->attributes, "key");
-	if(key == NULL) {
-		ParseError(tp, "no key specified for Key");
-		return;
-	}
+	code = FindAttribute(tp->attributes, "keycode");
 
 	action = tp->value;
 	if(action == NULL) {
@@ -778,7 +776,7 @@ void ParseKey(const TokenNode *tp) {
 	if(k == KEY_NONE) {
 		ParseError(tp, "invalid Key action: \"%s\"", action);
 	} else {
-		InsertBinding(k, mask, key, command);
+		InsertBinding(k, mask, key, code, command);
 	}
 
 }

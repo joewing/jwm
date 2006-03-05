@@ -41,7 +41,7 @@ KeyType GetKey(const XKeyEvent *event);
 void GrabKeys(struct ClientNode *np);
 
 void InsertBinding(KeyType key, const char *modifiers,
-	const char *stroke, const char *command);
+	const char *stroke, const char *code, const char *command);
 
 void RunKeyCommand(const XKeyEvent *event);
 

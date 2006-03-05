@@ -221,6 +221,7 @@ void ProcessEvent(XEvent *event) {
 	case DestroyNotify:
 	case Expose:
 	case KeyRelease:
+	case ConfigureNotify:
 		break;
 	default:
 		Debug("Unknown event type: %d", event->type);

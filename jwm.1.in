@@ -364,7 +364,24 @@ The default is 0.
 .P
 .B TrayButton
 .RS
-Add a root menu button to the tray.
+Add a button to the tray. The text of this tag determines what action to
+take when the button is clicked. The following actions are supported:
+.P
+\fBroot\fP
+.RS
+Show the root menu. This is the default.
+.RE
+.P
+\fBexec:\fP \fIstring\fP
+.RS
+Execute a command.
+.RE
+.P
+\fBshowdesktop\fP
+.RS
+Minimize all windows on the current desktop.
+.RE
+.P
 This tag supports the following attributes:
 .P
 \fBlabel\fP \fIstring\fP

@@ -297,13 +297,13 @@ void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 	Assert(bp);
 
-	if(bp->action && strlen(bp->action) > 0) {
+	if(bp->action && strlen(bp->action) > 0 && strcmp(bp->action, "root")) {
 		if(!strncmp(bp->action, "exec:", 5)) {
 			RunCommand(bp->action + 5);
 		} else if(!strcmp(bp->action, "showdesktop")) {
 			ShowDesktop();
 		} else {
-			Warning("invalid TrayButton action");
+			Warning("invalid TrayButton action: \"%s\"", bp->action);
 		}
 	} else {
 

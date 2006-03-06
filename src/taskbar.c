@@ -140,6 +140,7 @@ TrayComponentType *CreateTaskBar() {
 	tp->mousey = -1;
 	tp->mouseTime.seconds = 0;
 	tp->mouseTime.ms = 0;
+	tp->maxItemWidth = 0;
 
 	cp = CreateTrayComponent();
 	cp->object = tp;

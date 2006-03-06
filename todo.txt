@@ -13,6 +13,7 @@ Todo:
 20060305:
 	- Use ResizeRedirect instead of ConfigureNotify for resizing swallow items.
 	- Resize to 1 pixel in the tray when a swallow item dies.
+	- Support right-to-left text using FriBidi.
 
 20060304:
 	- Now to run a program from TrayButton, the program needs to be preceeded

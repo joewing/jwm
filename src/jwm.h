@@ -48,6 +48,10 @@
 #ifdef USE_XRENDER
 #include <X11/extensions/Xrender.h>
 #endif
+#ifdef USE_FRIBIDI
+#include <fribidi/fribidi.h>
+#include <fribidi/fribidi_char_sets_utf8.h>
+#endif
 
 #define MAX_INCLUDE_DEPTH 16
 

@@ -185,6 +185,15 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 	XRectangle rect;
 	int len, h, w;
 
+	char *output;
+
+#ifdef USE_FRIBIDI
+
+	FriBidiChar *temp;
+	FriBidiChar type = FRIBIDI_TYPE_ON;
+
+#endif
+
 #ifdef USE_XFT
 	XftDraw *xd;
 #endif
@@ -202,6 +211,27 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 	rect.width = w;
 	rect.height = h;
 
+	/* Apply the bidi algorithm if requested. */
+
+#ifdef USE_FRIBIDI
+
+	temp = Allocate((len + 1) * sizeof(FriBidiChar));
+	fribidi_utf8_to_unicode((char*)str, len, temp);
+
+	fribidi_log2vis(temp, len, &type, temp, NULL, NULL, NULL);
+
+	output = Allocate(len + 1);
+	fribidi_unicode_to_utf8(temp, len, output);
+	Release(temp);
+
+#else
+
+	output = str;
+
+#endif
+
+	/* Display the string. */
+
 #ifdef USE_XFT
 
 	xd = JXftDrawCreate(display, d, rootVisual, rootColormap);
@@ -209,7 +239,7 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 
 	JXftDrawSetClipRectangles(xd, 0, 0, &rect, 1);
 	JXftDrawStringUtf8(xd, GetXftColor(color), fonts[font],
-		x, y + fonts[font]->ascent, (const unsigned char*)str, len);
+		x, y + fonts[font]->ascent, (const unsigned char*)output, len);
 	JXftDrawDestroy(xd);
 
 #else
@@ -217,11 +247,18 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 	JXSetForeground(display, g, colors[color]);
 	JXSetClipRectangles(display, g, 0, 0, &rect, 1, Unsorted);
 	JXSetFont(display, g, fonts[font]->fid);
-	JXDrawString(display, d, g, x, y + fonts[font]->ascent, str, len);
+	JXDrawString(display, d, g, x, y + fonts[font]->ascent, output, len);
 	JXSetClipMask(display, g, None);
 
 #endif
 
-}
+	/* Free any memory used for UTF conversion. */
 
+#ifdef USE_FRIBIDI
+
+	Release(output);
+
+#endif
+
+}
 

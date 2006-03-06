@@ -99,6 +99,9 @@
 /* default system configuration path */
 #undef SYSTEM_CONFIG
 
+/* Define to use FriBidi */
+#undef USE_FRIBIDI
+
 /* Define to enable icon support */
 #undef USE_ICONS
 

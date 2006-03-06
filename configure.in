@@ -151,6 +151,17 @@ if test "$enable_xrender" != "no"; then
 		[ AC_MSG_WARN([unable to use the XRender extension]) ])
 fi
 
+# FriBidi
+AC_ARG_ENABLE(fribidi,
+	AC_HELP_STRING([--disable-fribidi],
+		[disable bi-directional unicode support]) )
+if test "enable_fribidi" != "no"; then
+	AC_CHECK_LIB(fribidi, fribidi_log2vis,
+		[ LDFLAGS="$LDFLAGS -lfribidi"
+		  AC_DEFINE(USE_FRIBIDI, 1, [Define to use FriBidi]) ],
+		[ AC_MSG_WARN([unable to use FriBidi]) ])
+fi
+
 # See if libXext is needed.
 if test "$NEED_XEXT" == "true"; then
 	LDFLAGS="$LDFLAGS -lXext"

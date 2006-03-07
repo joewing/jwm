@@ -10,8 +10,16 @@
 #include "misc.h"
 
 /* Note: COLOR_HASH_SIZE = 2 ** (3 * COLOR_HASH_BITS) */
-static const int COLOR_HASH_BITS = 3;
-static const int COLOR_HASH_SIZE = 512;
+#define COLOR_HASH_BITS 4
+#define COLOR_HASH_SIZE 4096
+
+#define RED_HASH_MASK    0x0F00
+#define GREEN_HASH_MASK  0x00F0
+#define BLUE_HASH_MASK   0x000F
+
+#define RED_HASH_SHIFT   (COLOR_HASH_BITS * 2)
+#define GREEN_HASH_SHIFT (COLOR_HASH_BITS * 1)
+#define BLUE_HASH_SHIFT  (COLOR_HASH_BITS * 0)
 
 typedef struct ColorNode {
 	unsigned short red, green, blue;
@@ -476,12 +484,22 @@ void GetColor(XColor *c) {
 
 	ColorNode *np;
 	unsigned long hash;
+	unsigned long red;
+	unsigned long green;
+	unsigned long blue;
 
 	Assert(c);
 
-	hash = c->red >> (8 + 5 - COLOR_HASH_BITS * 2);
-	hash |= c->green >> (8 + 5 - COLOR_HASH_BITS);
-	hash |= c->blue >> (8 + 5);
+	red = c->red >> 8;
+	red = (red >> (8 - RED_HASH_SHIFT)) & RED_HASH_MASK;
+
+	green = c->green >> 8;
+	green = (green >> (8 - GREEN_HASH_SHIFT)) & GREEN_HASH_MASK;
+
+	blue = c->blue >> 8;
+	blue = (blue >> (8 - BLUE_HASH_SHIFT)) & BLUE_HASH_MASK;
+
+	hash = red | green | blue;
 
 	Assert(hash >= 0);
 	Assert(hash < COLOR_HASH_SIZE);

@@ -482,9 +482,9 @@ void GetColor(XColor *c) {
 
 	Assert(c);
 
-	red = (c->red >> 4) & 0x0F00;
-	green = (c->green >> 8) & 0x00F0;
-	blue = (c->blue >> 12) & 0x000F;
+	red = (c->red >> 0) & 0x0F00;
+	green = (c->green >> 4) & 0x00F0;
+	blue = (c->blue >> 8) & 0x000F;
 
 	hash = red | green | blue;
 
@@ -496,16 +496,6 @@ void GetColor(XColor *c) {
 	np = colorHash[hash];
 	while(np) {
 		if(c->red == np->red && c->green == np->green && c->blue == np->blue) {
-			if(np->prev) {
-				np->prev->next = np->next;
-				if(np->next) {
-					np->next->prev = np->prev;
-				}
-				np->prev = NULL;
-				colorHash[hash]->prev = np;
-				np->next = colorHash[hash];
-				colorHash[hash] = np;
-			}
 			c->pixel = np->pixel;
 			return;
 		}

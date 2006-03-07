@@ -16,7 +16,6 @@
 typedef struct ColorNode {
 	unsigned short red, green, blue;
 	unsigned long pixel;
-	struct ColorNode *prev;
 	struct ColorNode *next;
 } ColorNode;
 
@@ -482,6 +481,14 @@ void GetColor(XColor *c) {
 
 	Assert(c);
 
+	if(rootDepth >= 24) {
+		red = (c->red << 8) & 0xFF0000;
+		green = (c->green) & 0x00FF00;
+		blue = (c->blue >> 8) & 0x0000FF;
+		c->pixel = red | green | blue;
+		return;
+	}
+
 	red = (c->red >> 0) & 0x0F00;
 	green = (c->green >> 4) & 0x00F0;
 	blue = (c->blue >> 8) & 0x000F;
@@ -490,7 +497,6 @@ void GetColor(XColor *c) {
 
 	Assert(hash >= 0);
 	Assert(hash < COLOR_HASH_SIZE);
-
 	Assert(colorHash);
 
 	np = colorHash[hash];
@@ -516,10 +522,6 @@ void GetColor(XColor *c) {
 		np->pixel = c->pixel;
 	}
 
-	if(colorHash[hash]) {
-		colorHash[hash]->prev = np;
-	}
-	np->prev = NULL;
 	np->next = colorHash[hash];
 	colorHash[hash] = np;
 

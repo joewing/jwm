@@ -13,14 +13,6 @@
 #define COLOR_HASH_BITS 4
 #define COLOR_HASH_SIZE 4096
 
-#define RED_HASH_MASK    0x0F00
-#define GREEN_HASH_MASK  0x00F0
-#define BLUE_HASH_MASK   0x000F
-
-#define RED_HASH_SHIFT   (COLOR_HASH_BITS * 2)
-#define GREEN_HASH_SHIFT (COLOR_HASH_BITS * 1)
-#define BLUE_HASH_SHIFT  (COLOR_HASH_BITS * 0)
-
 typedef struct ColorNode {
 	unsigned short red, green, blue;
 	unsigned long pixel;
@@ -490,14 +482,9 @@ void GetColor(XColor *c) {
 
 	Assert(c);
 
-	red = c->red >> 8;
-	red = (red >> (8 - RED_HASH_SHIFT)) & RED_HASH_MASK;
-
-	green = c->green >> 8;
-	green = (green >> (8 - GREEN_HASH_SHIFT)) & GREEN_HASH_MASK;
-
-	blue = c->blue >> 8;
-	blue = (blue >> (8 - BLUE_HASH_SHIFT)) & BLUE_HASH_MASK;
+	red = (c->red >> 4) & 0x0F00;
+	green = (c->green >> 8) & 0x00F0;
+	blue = (c->blue >> 12) & 0x000F;
 
 	hash = red | green | blue;
 

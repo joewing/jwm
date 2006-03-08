@@ -48,6 +48,7 @@ void StartupPlacement() {
 	int x;
 
 	count = desktopCount * GetScreenCount();
+Debug("ALLOCATING %d OFFSET COUNTERS", count);
 	cascadeOffsets = Allocate(count * sizeof(int));
 
 	for(x = 0; x < count; x++) {

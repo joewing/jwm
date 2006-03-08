@@ -119,6 +119,8 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 	int x, y;
 	double scalex, scaley;
 	double srcx, srcy;
+	int imageLine;
+	int maskLine;
 
 	Assert(icon);
 
@@ -156,6 +158,8 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 		NULL, width, height, 8, 0);
 	destMask->data = Allocate(width * height);
 
+	imageLine = 0;
+	maskLine = 0;
 	srcy = 0.0;
 	for(y = 0; y < height; y++) {
 		srcx = 0.0;
@@ -169,18 +173,14 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 
 			GetColor(&color);
 			XPutPixel(destImage, x, y, color.pixel);
-
-			color.red = alpha * 257;
-			color.green = alpha * 257;
-			color.blue = alpha * 257;
-
-			GetColor(&color);
-			XPutPixel(destMask, x, y, color.pixel);
+			destMask->data[maskLine + x] = alpha * 257;
 
 			srcx += scalex;
 
 		}
 		srcy += scaley;
+		imageLine += destImage->bytes_per_line;
+		maskLine += destMask->bytes_per_line;
 	}
 
 	/* Render the image data to the image pixmap. */

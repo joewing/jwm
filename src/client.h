@@ -53,7 +53,6 @@ typedef enum {
 
 typedef struct ColormapNode {
 	Window window;
-	struct ClientNode *owner;
 	struct ColormapNode *next;
 } ColormapNode;
 

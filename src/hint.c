@@ -748,7 +748,6 @@ void ReadWMColormaps(ClientNode *np) {
 			count = Min(colormapCount, count);
 			for(x = 0; x < count; x++) {
 				cp = Allocate(sizeof(ColormapNode));
-				cp->owner = np;
 				cp->window = windows[x];
 				cp->next = np->colormaps;
 				np->colormaps = cp;

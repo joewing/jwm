@@ -724,6 +724,7 @@ void ReadWMNormalHints(ClientNode *np) {
 /****************************************************************************
  ****************************************************************************/
 void ReadWMColormaps(ClientNode *np) {
+
 	Window *windows;
 	ColormapNode *cp;
 	int count;
@@ -747,6 +748,7 @@ void ReadWMColormaps(ClientNode *np) {
 			count = Min(colormapCount, count);
 			for(x = 0; x < count; x++) {
 				cp = Allocate(sizeof(ColormapNode));
+				cp->owner = np;
 				cp->window = windows[x];
 				cp->next = np->colormaps;
 				np->colormaps = cp;

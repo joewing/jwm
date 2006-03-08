@@ -898,6 +898,7 @@ void HandleColormapChange(const XColormapEvent *event) {
 			UpdateClientColormap(np);
 		}
 	}
+
 }
 
 /****************************************************************************
@@ -953,10 +954,7 @@ void HandleUnmapNotify(const XUnmapEvent *event) {
 			(np->controller)(1);
 		}
 
-		if(np->state.status & STAT_MAPPED) {
-			np->state.status &= ~STAT_MAPPED;
-			JXUnmapWindow(display, np->parent);
-		}
+		np->state.status &= ~STAT_MAPPED;
 
 	} else if(!np) {
 
@@ -969,6 +967,7 @@ void HandleUnmapNotify(const XUnmapEvent *event) {
 /****************************************************************************
  ****************************************************************************/
 int HandleDestroyNotify(const XDestroyWindowEvent *event) {
+
 	ClientNode *np;
 
 	np = FindClientByWindow(event->window);

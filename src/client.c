@@ -772,6 +772,7 @@ void DeleteClient(ClientNode *np) {
 	} else {
 		KillClient(np);
 	}
+
 }
 
 /****************************************************************************
@@ -784,7 +785,17 @@ void KillClientHandler(ClientNode *np) {
 		FocusNextStacked(np);
 	}
 
+	JXGrabServer(display);
+	JXSync(display, False);
+
 	JXKillClient(display, np->window);
+
+	JXSync(display, True);
+	JXUngrabServer(display);
+
+	np->window = None;
+	RemoveClient(np);
+
 }
 
 /****************************************************************************
@@ -997,6 +1008,7 @@ void SetShape(ClientNode *np) {
 /****************************************************************************
  ****************************************************************************/
 void RemoveClient(ClientNode *np) {
+
 	ColormapNode *cp;
 
 	Assert(np);
@@ -1257,11 +1269,14 @@ void SendConfigureEvent(ClientNode *np) {
  * client is active.
  ****************************************************************************/
 void UpdateClientColormap(ClientNode *np) {
+
 	XWindowAttributes attr;
 	ColormapNode *cp;
 	int wasInstalled;
 
 	Assert(np);
+
+	cp = np->colormaps;
 
 	if(np == activeClient) {
 

@@ -328,6 +328,8 @@ Window FindSwallowedClient(const char *name) {
 
 	JXFlush(display);
 
+	JXGrabServer(display);
+
 	JXQueryTree(display, rootWindow, &rootReturn, &parentReturn,
 			&childrenReturn, &childrenCount);
 
@@ -357,6 +359,8 @@ Window FindSwallowedClient(const char *name) {
 			JXFree(hint.res_class);
 		}
 	}
+
+	JXUngrabServer(display);
 
 	JXFree(childrenReturn);
 

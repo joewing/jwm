@@ -220,9 +220,8 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 
 	fribidi_log2vis(temp, len, &type, temp, NULL, NULL, NULL);
 
-	output = Allocate(len + 1);
+	output = (char*)temp;
 	fribidi_unicode_to_utf8(temp, len, output);
-	Release(temp);
 
 #else
 

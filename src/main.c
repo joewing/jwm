@@ -221,7 +221,7 @@ void StartupConnection() {
 	initializing = 1;
 	OpenConnection();
 
-#if 0
+#if 1
 	XSynchronize(display, True);
 #endif
 

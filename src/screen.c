@@ -29,7 +29,6 @@ void StartupScreens() {
 
 	if(XineramaIsActive(display)) {
 		screens = XineramaQueryScreens(display, &screenCount);
-Debug("XINERAMA IS ACTIVE, HEAD COUNT IS: %d", screenCount);
 		minWidth = screens[0].width;
 		minHeight = screens[0].height;
 		for(x = 1; x < screenCount; x++) {
@@ -44,7 +43,6 @@ Debug("XINERAMA IS ACTIVE, HEAD COUNT IS: %d", screenCount);
 		minWidth = rootWidth;
 		minHeight = rootHeight;
 		screenCount = 1;
-Debug("XINERAMA IS NOT ACTIVE, HEAD COUNT IS: %d", screenCount);
 	}
 
 #else

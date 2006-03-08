@@ -78,6 +78,7 @@ void DestroyColors();
 void SetColor(ColorType c, const char *value);
 
 void GetColor(XColor *c);
+void GetColorFromPixel(XColor *c);
 
 #ifdef USE_XFT
 XftColor *GetXftColor(ColorType type);

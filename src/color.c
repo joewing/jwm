@@ -471,6 +471,29 @@ unsigned long FindClosestColor(const XColor *c) {
 
 /***************************************************************************
  ***************************************************************************/
+void GetColorFromPixel(XColor *c) {
+
+	if(rootDepth >= 24) {
+
+		c->red = c->pixel >> 16;
+		c->red |= c->red << 8;
+
+		c->green = (c->pixel >> 8) & 0xFF;
+		c->green |= c->green << 8;
+
+		c->blue = c->pixel & 0xFF;
+		c->blue |= c->blue << 8;
+
+	} else {
+
+		JXQueryColor(display, rootColormap, c);
+
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
 void GetColor(XColor *c) {
 
 	ColorNode *np;

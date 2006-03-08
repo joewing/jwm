@@ -7,6 +7,7 @@
 #include "image.h"
 #include "main.h"
 #include "error.h"
+#include "color.h"
 
 static ImageNode *LoadPNGImage(const char *fileName);
 static ImageNode *LoadXPMImage(const char *fileName);
@@ -276,10 +277,12 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
 		for(x = 0; x < image->width; x++) {
 
 			color.pixel = XGetPixel(image, x, y);
-			XQueryColor(display, rootColormap, &color);
+			GetColorFromPixel(&color);
+
 			red = color.red >> 8;
 			green = color.green >> 8;
 			blue = color.blue >> 8;
+
 			alpha = 0;
 			if(!shape || XGetPixel(shape, x, y)) {
 				alpha = 255;

@@ -8,6 +8,9 @@
 #define JXAllocColor( a, b, c ) \
 	( SetCheckpoint(), XAllocColor( a, b, c ) )
 
+#define JXQueryColor( a, b, c ) \
+	( SetCheckpoint(), XQueryColor( a, b, c ) )
+
 #define JXAllowEvents( a, b, c ) \
 	( SetCheckpoint(), XAllowEvents( a, b, c ) )
 

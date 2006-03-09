@@ -954,8 +954,10 @@ void HandleUnmapNotify(const XUnmapEvent *event) {
 			(np->controller)(1);
 		}
 
-		JXUnmapWindow(display, np->parent);
-		np->state.status &= ~STAT_MAPPED;
+		if(np->state.status & STAT_MAPPED) {
+			np->state.status &= ~STAT_MAPPED;
+			JXUnmapWindow(display, np->parent);
+		}
 
 	} else if(!np) {
 

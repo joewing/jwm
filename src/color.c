@@ -473,21 +473,38 @@ unsigned long FindClosestColor(const XColor *c) {
  ***************************************************************************/
 void GetColorFromPixel(XColor *c) {
 
-	if(rootDepth >= 24) {
-
+	switch(rootDepth) {
+	case 32:
+	case 24:
 		c->red = c->pixel >> 16;
 		c->red |= c->red << 8;
-
 		c->green = (c->pixel >> 8) & 0xFF;
 		c->green |= c->green << 8;
-
 		c->blue = c->pixel & 0xFF;
 		c->blue |= c->blue << 8;
-
-	} else {
-
+		break;
+	case 16:
+		c->red = c->pixel & 0xF800;
+		c->green = (c->pixel >> 5) & 0x3F;
+		c->green <<= 10;
+		c->blue = c->pixel & 0x1F;
+		c->blue <<= 11;
+		break;
+	case 15:
+		c->red = c->pixel >> 11;
+		c->green = (c->pixel >> 6) & 0x1F;
+		c->green <<= 11;
+		c->blue = c->pixel & 0x1F;
+		c->blue <<= 11;
+		break;
+	case 8:
+		c->red = (c->pixel >> 5) << 13;
+		c->green = ((c->pixel >> 2) & 0x1C) << 13;
+		c->blue = (c->pixel & 0x03)<< 13;
+		break;
+	default:
 		JXQueryColor(display, rootColormap, c);
-
+		break;
 	}
 
 }
@@ -512,11 +529,16 @@ void GetColor(XColor *c) {
 		blue = (c->blue >> 8) & 0x0000FF;
 		c->pixel = red | green | blue;
 		return;
-	case 16: /* 6, 5, 5 */
-		red = c->red & 0xFC00;
-		green = (c->green >> 6) & 0x03E0;
+	case 16: /* 5, 6, 5 */
+		red = c->red & 0xF800;
+		green = (c->green >> 5) & 0x07E0;
 		blue = (c->blue >> 11) & 0x001F;
 		c->pixel = red | green | blue;
+		return;
+	case 15: /* 5, 5, 5 */
+		red = c->red & 0xF800;
+		green = (c->green >> 5) & 0x07C0;
+		blue = (c->blue >> 11) & 0x001F;
 		return;
 	case 8: /* 3, 3, 2 */
 		red = (c->red >> 8) & 0xE0;

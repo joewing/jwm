@@ -504,12 +504,28 @@ void GetColor(XColor *c) {
 
 	Assert(c);
 
-	if(rootDepth >= 24) {
+	switch(rootDepth) {
+	case 32:
+	case 24:
 		red = (c->red << 8) & 0xFF0000;
-		green = (c->green) & 0x00FF00;
+		green = c->green & 0x00FF00;
 		blue = (c->blue >> 8) & 0x0000FF;
 		c->pixel = red | green | blue;
 		return;
+	case 16: /* 6, 5, 5 */
+		red = c->red & 0xFC00;
+		green = (c->green >> 6) & 0x03E0;
+		blue = (c->blue >> 11) & 0x001F;
+		c->pixel = red | green | blue;
+		return;
+	case 8: /* 3, 3, 2 */
+		red = (c->red >> 8) & 0xE0;
+		green = (c->green >> 11) & 0x1C;
+		blue = (c->blue >> 14) & 0x03;
+		c->pixel = red | green | blue;
+		return;
+	default:
+		break;
 	}
 
 	red = (c->red >> 0) & 0x0F00;

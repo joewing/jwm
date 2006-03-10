@@ -228,16 +228,11 @@ void ComputeShiftMask(unsigned long maskIn,
 	 * shift = 16 - <shift-to-ones> + <shift-to-zeros>
 	 */
 
-	shift = 16;
+	shift = 0;
 	*maskOut = maskIn;
-	while(maskIn && (maskIn & 1) == 0) {
-		--shift;
-		++*shiftOut;
-		maskIn >>= 1;
-	}
-	while(maskIn) {
+	while(maskIn && (maskIn & (1 << 31)) == 0) {
 		++shift;
-		maskIn >>= 1;
+		maskIn <<= 1;
 	}
 	*shiftOut = shift;
 

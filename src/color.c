@@ -125,7 +125,9 @@ void StartupColors() {
 					c.red = red;
 					c.green = green;
 					c.blue = blue;
-					JXAllocColor(display, rootColormap, &c);
+					if(JXAllocColor(display, rootColormap, &c) == 0) {
+						Warning("color allocation failed");
+					}
 					map[x++] = c.pixel;
 				}
 			}
@@ -207,10 +209,15 @@ void StartupColors() {
  ****************************************************************************/
 void ShutdownColors() {
 
+	int x;
+
+	if(map != NULL) {
+		JXFreeColors(display, rootColormap, map, 256, AllPlanes);
+		Release(map);
+		map = NULL;
+	}
 
 #ifdef USE_XFT
-
-	int x;
 
 	for(x = 0; x < COLOR_COUNT; x++) {
 		if(xftColors[x]) {

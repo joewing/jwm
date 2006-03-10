@@ -185,7 +185,7 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 	XRectangle rect;
 	int len, h, w;
 
-	char *output;
+	const char *output;
 
 #ifdef USE_FRIBIDI
 
@@ -220,8 +220,8 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 
 	fribidi_log2vis(temp, len, &type, temp, NULL, NULL, NULL);
 
+	fribidi_unicode_to_utf8(temp, len, (char*)temp);
 	output = (char*)temp;
-	fribidi_unicode_to_utf8(temp, len, output);
 
 #else
 

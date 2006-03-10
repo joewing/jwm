@@ -183,9 +183,11 @@ void StartupColors() {
  ****************************************************************************/
 void ShutdownColors() {
 
-	int x;
 
 #ifdef USE_XFT
+
+	int x;
+
 	for(x = 0; x < COLOR_COUNT; x++) {
 		if(xftColors[x]) {
 			JXftColorFree(display, rootVisual, rootColormap, xftColors[x]);
@@ -193,6 +195,7 @@ void ShutdownColors() {
 			xftColors[x] = NULL;
 		}
 	}
+
 #endif
 
 }

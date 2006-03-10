@@ -9,22 +9,10 @@
 #include "error.h"
 #include "misc.h"
 
-/* Note: COLOR_HASH_SIZE = 2 ** (3 * COLOR_HASH_BITS) */
-#define COLOR_HASH_BITS 4
-#define COLOR_HASH_SIZE 4096
-
-typedef struct ColorNode {
-	unsigned short red, green, blue;
-	unsigned long pixel;
-	struct ColorNode *next;
-} ColorNode;
-
 typedef struct {
 	ColorType type;
 	const char *value;
 } DefaultColorNode;
-
-static ColorNode **colorHash = NULL;
 
 static const float COLOR_DELTA = 0.45;
 
@@ -67,6 +55,21 @@ static DefaultColorNode DEFAULT_COLORS[] = {
 	{ COLOR_COUNT,              NULL      }
 };
 
+static char **names = NULL;
+
+static unsigned long redShift;
+static unsigned long greenShift;
+static unsigned long blueShift;
+static unsigned long redMask;
+static unsigned long greenMask;
+static unsigned long blueMask;
+
+static void ComputeShiftMask(unsigned long maskIn,
+	unsigned long *shiftOut, unsigned long *maskOut);
+
+static void GetDirectColor(XColor *c);
+static void GetDirectPixel(XColor *c);
+
 static int ParseColor(ColorType type, const char *value);
 static void SetDefaultColor(ColorType type); 
 
@@ -76,62 +79,36 @@ static unsigned long GetRGBFromXColor(const XColor *c);
 static XColor GetXColorFromRGB(unsigned long rgb);
 
 static int GetColorByName(const char *str, XColor *c);
-static unsigned long FindClosestColor(const XColor *c);
 static void InitializeNames();
 
 static void LightenColor(ColorType oldColor, ColorType newColor);
 static void DarkenColor(ColorType oldColor, ColorType newColor);
 
-static char **names = NULL;
-
-/****************************************************************************
- ****************************************************************************/
-unsigned long GetRGBFromXColor(const XColor *c) {
-	float red, green, blue;
-	unsigned long rgb;
-
-	red = (float)c->red / 65535.0;
-	green = (float)c->green / 65535.0;
-	blue = (float)c->blue / 65535.0;
-
-	rgb = (unsigned long)(red * 255.0) << 16;
-	rgb |= (unsigned long)(green * 255.0) << 8;
-	rgb |= (unsigned long)(blue * 255.0);
-
-	return rgb;
-}
-
-/****************************************************************************
- ****************************************************************************/
-XColor GetXColorFromRGB(unsigned long rgb) {
-
-	XColor ret = { 0 };
-
-	ret.flags = DoRed | DoGreen | DoBlue;
-	ret.red = (unsigned short)(((rgb >> 16) & 0xFF) * 257);
-	ret.green = (unsigned short)(((rgb >> 8) & 0xFF) * 257);
-	ret.blue = (unsigned short)((rgb & 0xFF) * 257);
-
-	return ret;
-
-}
-
 /****************************************************************************
  ****************************************************************************/
 void InitializeColors() {
-	int x;
-
-	colorHash = Allocate(sizeof(ColorNode*) * COLOR_HASH_SIZE);
-	for(x = 0; x < COLOR_HASH_SIZE; x++) {
-		colorHash[x] = NULL;
-	}
 
 }
 
 /****************************************************************************
  ****************************************************************************/
 void StartupColors() {
+
 	int x;
+
+	/* Determine how to convert between RGB triples and pixels. */
+	Assert(rootVisual);
+	switch(rootVisual->class) {
+	case DirectColor:
+	case TrueColor:
+		ComputeShiftMask(rootVisual->red_mask, &redShift, &redMask);
+		ComputeShiftMask(rootVisual->green_mask, &greenShift, &greenMask);
+		ComputeShiftMask(rootVisual->blue_mask, &blueShift, &blueMask);
+		break;
+	default:
+		Warning("visual class not supported, performance will suffer");
+		break;
+	}
 
 	/* Inherit unset colors from the tray for tray items. */
 	if(names) {
@@ -155,6 +132,7 @@ void StartupColors() {
 		}
 	}
 
+	/* Get color information used for JWM stuff. */
 	for(x = 0; x < COLOR_COUNT; x++) {
 		if(names && names[x]) {
 			if(!ParseColor(x, names[x])) {
@@ -204,16 +182,8 @@ void StartupColors() {
 /****************************************************************************
  ****************************************************************************/
 void ShutdownColors() {
-	ColorNode *np;
-	int x;
 
-	if(colorHash) {
-		for(x = 0; x < COLOR_HASH_SIZE; x++) {
-			for(np = colorHash[x]; np; np = np->next) {
-				JXFreeColors(display, rootColormap, &np->pixel, 1, 0);
-			}
-		}
-	}
+	int x;
 
 #ifdef USE_XFT
 	for(x = 0; x < COLOR_COUNT; x++) {
@@ -230,7 +200,7 @@ void ShutdownColors() {
 /****************************************************************************
  ****************************************************************************/
 void DestroyColors() {
-	ColorNode *np;
+
 	int x;
 
 	if(names) {
@@ -243,20 +213,65 @@ void DestroyColors() {
 		names = NULL;
 	}
 
-	if(colorHash) {
+}
 
-		for(x = 0; x < COLOR_HASH_SIZE; x++) {
-			while(colorHash[x]) {
-				np = colorHash[x]->next;
-				Release(colorHash[x]);
-				colorHash[x] = np;
-			}
-		}
+/****************************************************************************
+ ****************************************************************************/
+void ComputeShiftMask(unsigned long maskIn,
+	unsigned long *shiftOut, unsigned long *maskOut) {
 
-		Release(colorHash);
-		colorHash = NULL;
+	int shift;
 
+	/* Components are stored in 16 bits.
+	 * When computing pixels, we'll first shift left 16 bits
+	 * so to the shift will be an offset from that 32 bit entity.
+	 * shift = 16 - <shift-to-ones> + <shift-to-zeros>
+	 */
+
+	shift = 16;
+	*maskOut = maskIn;
+	while(maskIn && (maskIn & 1) == 0) {
+		--shift;
+		++*shiftOut;
+		maskIn >>= 1;
 	}
+	while(maskIn) {
+		++shift;
+		maskIn >>= 1;
+	}
+	*shiftOut = shift;
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+unsigned long GetRGBFromXColor(const XColor *c) {
+	float red, green, blue;
+	unsigned long rgb;
+
+	red = (float)c->red / 65535.0;
+	green = (float)c->green / 65535.0;
+	blue = (float)c->blue / 65535.0;
+
+	rgb = (unsigned long)(red * 255.0) << 16;
+	rgb |= (unsigned long)(green * 255.0) << 8;
+	rgb |= (unsigned long)(blue * 255.0);
+
+	return rgb;
+}
+
+/****************************************************************************
+ ****************************************************************************/
+XColor GetXColorFromRGB(unsigned long rgb) {
+
+	XColor ret = { 0 };
+
+	ret.flags = DoRed | DoGreen | DoBlue;
+	ret.red = (unsigned short)(((rgb >> 16) & 0xFF) * 257);
+	ret.green = (unsigned short)(((rgb >> 8) & 0xFF) * 257);
+	ret.blue = (unsigned short)((rgb & 0xFF) * 257);
+
+	return ret;
 
 }
 
@@ -431,160 +446,85 @@ int GetColorByName(const char *str, XColor *c) {
 }
 
 /***************************************************************************
+ * Compute the RGB components from a pixel value.
  ***************************************************************************/
-unsigned long FindClosestColor(const XColor *c) {
+void GetDirectColor(XColor *c) {
 
-	ColorNode *closest;
-	ColorNode *np;
-	unsigned long closestDistance;
-	unsigned long distance;
-	int x;
-
-	Assert(c);
-
-	closest = NULL;
-	closestDistance = 0;
-	for(x = 0; x < COLOR_HASH_SIZE; x++) {
-		np = colorHash[x];
-		while(np) {
-
-			distance = abs(c->red - np->red)
-				+ abs(c->green - np->green)
-				+ abs(c->blue - np->blue);
-
-			if(!closest || distance < closestDistance) {
-				closest = np;
-				closestDistance = distance;
-			}
-
-			np = np->next;
-		}
-	}
-
-	if(closest) {
-		return closest->pixel;
-	} else {
-		return black;
-	}
-
-}
-
-/***************************************************************************
- ***************************************************************************/
-void GetColorFromPixel(XColor *c) {
-
-	switch(rootDepth) {
-	case 32:
-	case 24:
-		c->red = c->pixel >> 16;
-		c->red |= c->red << 8;
-		c->green = (c->pixel >> 8) & 0xFF;
-		c->green |= c->green << 8;
-		c->blue = c->pixel & 0xFF;
-		c->blue |= c->blue << 8;
-		break;
-	case 16:
-		c->red = c->pixel & 0xF800;
-		c->green = (c->pixel >> 5) & 0x3F;
-		c->green <<= 10;
-		c->blue = c->pixel & 0x1F;
-		c->blue <<= 11;
-		break;
-	case 15:
-		c->red = c->pixel >> 11;
-		c->green = (c->pixel >> 6) & 0x1F;
-		c->green <<= 11;
-		c->blue = c->pixel & 0x1F;
-		c->blue <<= 11;
-		break;
-	case 8:
-		c->red = (c->pixel >> 5) << 13;
-		c->green = ((c->pixel >> 2) & 0x1C) << 13;
-		c->blue = (c->pixel & 0x03)<< 13;
-		break;
-	default:
-		JXQueryColor(display, rootColormap, c);
-		break;
-	}
-
-}
-
-/***************************************************************************
- ***************************************************************************/
-void GetColor(XColor *c) {
-
-	ColorNode *np;
-	unsigned long hash;
 	unsigned long red;
 	unsigned long green;
 	unsigned long blue;
 
-	Assert(c);
+	red = (c->pixel & redMask) << redShift;
+	green = (c->pixel & greenMask) << greenShift;
+	blue = (c->pixel & blueMask) << blueShift;
 
-	switch(rootDepth) {
-	case 32:
-	case 24:
-		red = (c->red << 8) & 0xFF0000;
-		green = c->green & 0x00FF00;
-		blue = (c->blue >> 8) & 0x0000FF;
-		c->pixel = red | green | blue;
-		return;
-	case 16: /* 5, 6, 5 */
-		red = c->red & 0xF800;
-		green = (c->green >> 5) & 0x07E0;
-		blue = (c->blue >> 11) & 0x001F;
-		c->pixel = red | green | blue;
-		return;
-	case 15: /* 5, 5, 5 */
-		red = c->red & 0xF800;
-		green = (c->green >> 5) & 0x07C0;
-		blue = (c->blue >> 11) & 0x001F;
-		return;
-	case 8: /* 3, 3, 2 */
-		red = (c->red >> 8) & 0xE0;
-		green = (c->green >> 11) & 0x1C;
-		blue = (c->blue >> 14) & 0x03;
-		c->pixel = red | green | blue;
+	c->red = red >> 16;
+	c->green = green >> 16;
+	c->blue = blue >> 16;
+
+}
+
+/***************************************************************************
+ * Compute the RGB components from a pixel value.
+ ***************************************************************************/
+void GetColorFromPixel(XColor *c) {
+
+	Assert(c);
+	Assert(rootVisual);
+
+	switch(rootVisual->class) {
+	case DirectColor:
+	case TrueColor:
+		GetDirectColor(c);
 		return;
 	default:
-		break;
+		JXQueryColor(display, rootColormap, c);
+		return;
 	}
 
-	red = (c->red >> 0) & 0x0F00;
-	green = (c->green >> 4) & 0x00F0;
-	blue = (c->blue >> 8) & 0x000F;
+}
 
-	hash = red | green | blue;
+/***************************************************************************
+ * Compute the pixel value from RGB components.
+ ***************************************************************************/
+void GetDirectPixel(XColor *c) {
 
-	Assert(hash >= 0);
-	Assert(hash < COLOR_HASH_SIZE);
-	Assert(colorHash);
+	unsigned long red;
+	unsigned long green;
+	unsigned long blue;
 
-	np = colorHash[hash];
-	while(np) {
-		if(c->red == np->red && c->green == np->green && c->blue == np->blue) {
-			c->pixel = np->pixel;
-			return;
-		}
-		np = np->next;
+	/* Normalize. */
+	red = c->red << 16;
+	green = c->green << 16;
+	blue = c->blue << 16;
+
+	/* Shift to the correct offsets and mask. */
+	red = (red >> redShift) & redMask;
+	green = (green >> greenShift) & greenMask;
+	blue = (blue >> blueShift) & blueMask;
+
+	/* Combine. */
+	c->pixel = red | green | blue;
+
+}
+
+/***************************************************************************
+ * Compute the pixel value from RGB components.
+ ***************************************************************************/
+void GetColor(XColor *c) {
+
+	Assert(c);
+	Assert(rootVisual);
+
+	switch(rootVisual->class) {
+	case DirectColor:
+	case TrueColor:
+		GetDirectPixel(c);
+		return;
+	default:
+		JXAllocColor(display, rootColormap, c);
+		return;
 	}
-
-	np = Allocate(sizeof(ColorNode));
-
-	np->red = c->red;
-	np->green = c->green;
-	np->blue = c->blue;
-
-	if(!JXAllocColor(display, rootColormap, c)) {
-		Warning("could not allocate color: %4X %4X %4X",
-			c->red, c->green, c->blue);
-		np->pixel = FindClosestColor(c);
-	} else {
-		np->pixel = c->pixel;
-	}
-
-	np->next = colorHash[hash];
-	colorHash[hash] = np;
 
 }
 

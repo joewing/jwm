@@ -8,6 +8,9 @@
 #define JXAllocColor( a, b, c ) \
 	( SetCheckpoint(), XAllocColor( a, b, c ) )
 
+#define JXGetRGBColormaps( a, b, c, d, e ) \
+	( SetCheckpoint(), XGetRGBColormaps( a, b, c, d, e ) )
+
 #define JXQueryColor( a, b, c ) \
 	( SetCheckpoint(), XQueryColor( a, b, c ) )
 

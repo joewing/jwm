@@ -21,6 +21,8 @@ unsigned long rgbColors[COLOR_COUNT];
 unsigned long white;
 unsigned long black;
 
+unsigned long *map;
+
 #ifdef USE_XFT
 static XftColor *xftColors[COLOR_COUNT] = { NULL };
 #endif
@@ -68,7 +70,9 @@ static void ComputeShiftMask(unsigned long maskIn,
 	unsigned long *shiftOut, unsigned long *maskOut);
 
 static void GetDirectColor(XColor *c);
+static void GetMappedColor(XColor *c);
 static void GetDirectPixel(XColor *c);
+static void GetMappedPixel(XColor *c);
 
 static int ParseColor(ColorType type, const char *value);
 static void SetDefaultColor(ColorType type); 
@@ -95,6 +99,8 @@ void InitializeColors() {
 void StartupColors() {
 
 	int x;
+	unsigned long red, green, blue;
+	XColor c;
 
 	/* Determine how to convert between RGB triples and pixels. */
 	Assert(rootVisual);
@@ -104,9 +110,27 @@ void StartupColors() {
 		ComputeShiftMask(rootVisual->red_mask, &redShift, &redMask);
 		ComputeShiftMask(rootVisual->green_mask, &greenShift, &greenMask);
 		ComputeShiftMask(rootVisual->blue_mask, &blueShift, &blueMask);
+		map = NULL;
 		break;
 	default:
-		Warning("visual class not supported, performance will suffer");
+
+		/* Attempt to allocate 256 colors, pretend it worked. */
+		map = Allocate(sizeof(unsigned long) * 256);
+
+		/* RGB: 3, 3, 2 */
+		x = 0;
+		for(red = 0; red < 65536; red += 8192) {
+			for(green = 0; green < 65536; green += 8192) {
+				for(blue = 0; blue < 65536; blue += 16384) {
+					c.red = red;
+					c.green = green;
+					c.blue = blue;
+					JXAllocColor(display, rootColormap, &c);
+					map[x++] = c.pixel;
+				}
+			}
+		}
+
 		break;
 	}
 
@@ -465,6 +489,24 @@ void GetDirectColor(XColor *c) {
 /***************************************************************************
  * Compute the RGB components from a pixel value.
  ***************************************************************************/
+void GetMappedColor(XColor *c) {
+
+	int x;
+
+	for(x = 0; x < 256; x++) {
+		if(map[x] == c->pixel) {
+			c->red = (x & 0xE0) << 8;
+			c->green = (x & 0x1C) << 11;
+			c->blue = (x & 0x03) << 14;
+			return;
+		}
+	}
+
+}
+
+/***************************************************************************
+ * Compute the RGB components from a pixel value.
+ ***************************************************************************/
 void GetColorFromPixel(XColor *c) {
 
 	Assert(c);
@@ -476,7 +518,7 @@ void GetColorFromPixel(XColor *c) {
 		GetDirectColor(c);
 		return;
 	default:
-		JXQueryColor(display, rootColormap, c);
+		GetMappedColor(c);
 		return;
 	}
 
@@ -509,6 +551,26 @@ void GetDirectPixel(XColor *c) {
 /***************************************************************************
  * Compute the pixel value from RGB components.
  ***************************************************************************/
+void GetMappedPixel(XColor *c) {
+
+	unsigned long red;
+	unsigned long green;
+	unsigned long blue;
+
+	/* Compute the index into the pixel table. */
+	/* 3, 3, 2 */
+	red = c->red >> 8;
+	green = (c->green >> 11) & 0x1C;
+	blue = (c->blue >> 14) & 0x03;
+
+	/* Get the pixel */
+	c->pixel = map[red | green | blue];
+
+}
+
+/***************************************************************************
+ * Compute the pixel value from RGB components.
+ ***************************************************************************/
 void GetColor(XColor *c) {
 
 	Assert(c);
@@ -520,7 +582,7 @@ void GetColor(XColor *c) {
 		GetDirectPixel(c);
 		return;
 	default:
-		JXAllocColor(display, rootColormap, c);
+		GetMappedPixel(c);
 		return;
 	}
 

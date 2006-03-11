@@ -246,13 +246,18 @@ ImageNode *LoadXPMImage(const char *fileName) {
 
 #ifdef USE_XPM
 
+	XpmAttributes attr;
 	XImage *image;
 	XImage *shape;
 	int rc;
 
 	Assert(fileName);
 
-	rc = XpmReadFileToImage(display, (char*)fileName, &image, &shape, NULL);
+	attr.valuemask = XpmAllocColor | XpmFreeColors | XpmColorClosure;
+	attr.alloc_color = AllocateColor;
+	attr.free_colors = FreeColors;
+	attr.color_closure = NULL;
+	rc = XpmReadFileToImage(display, (char*)fileName, &image, &shape, &attr);
 	if(rc == XpmSuccess) {
 		result = CreateImageFromXImages(image, shape);
 

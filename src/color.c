@@ -69,8 +69,6 @@ static unsigned long blueMask;
 static void ComputeShiftMask(unsigned long maskIn,
 	unsigned long *shiftOut, unsigned long *maskOut);
 
-static void GetDirectColor(XColor *c);
-static void GetMappedColor(XColor *c);
 static void GetDirectPixel(XColor *c);
 static void GetMappedPixel(XColor *c);
 
@@ -230,6 +228,7 @@ void ShutdownColors() {
 #endif
 
 	if(map != NULL) {
+		JXFreeColors(display, rootColormap, map, 256, 0);
 		Release(map);
 		map = NULL;
 	}
@@ -480,9 +479,11 @@ int GetColorByName(const char *str, XColor *c) {
 }
 
 /***************************************************************************
- * Compute the RGB components from a pixel value.
+ * Compute the RGB components from an index into our RGB colormap.
  ***************************************************************************/
-void GetDirectColor(XColor *c) {
+void GetColorFromIndex(XColor *c) {
+
+	Assert(c);
 
 	unsigned long red;
 	unsigned long green;
@@ -495,35 +496,6 @@ void GetDirectColor(XColor *c) {
 	c->red = red >> 16;
 	c->green = green >> 16;
 	c->blue = blue >> 16;
-
-}
-
-/***************************************************************************
- * Compute the RGB components from a pixel value.
- ***************************************************************************/
-void GetMappedColor(XColor *c) {
-
-	JXQueryColor(display, rootColormap, c);
-
-}
-
-/***************************************************************************
- * Compute the RGB components from a pixel value.
- ***************************************************************************/
-void GetColorFromPixel(XColor *c) {
-
-	Assert(c);
-	Assert(rootVisual);
-
-	switch(rootVisual->class) {
-	case DirectColor:
-	case TrueColor:
-		GetDirectColor(c);
-		return;
-	default:
-		GetMappedColor(c);
-		return;
-	}
 
 }
 
@@ -578,6 +550,20 @@ void GetColor(XColor *c) {
 		GetMappedPixel(c);
 		return;
 	}
+
+}
+
+/***************************************************************************
+ * When loading images from external sources, we need to know the color
+ * components even if running with a colormap. So here we pretend
+ * we have a linear RGB colormap even if we don't.
+ * This prevents calls to XQueryColor later.
+ ***************************************************************************/
+void GetColorIndex(XColor *c) {
+
+	Assert(c);
+
+	GetDirectPixel(c);
 
 }
 

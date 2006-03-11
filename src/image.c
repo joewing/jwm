@@ -13,6 +13,13 @@ static ImageNode *LoadPNGImage(const char *fileName);
 static ImageNode *LoadXPMImage(const char *fileName);
 static ImageNode *CreateImageFromXImages(XImage *image, XImage *shape);
 
+#ifdef USE_XPM
+static int AllocateColor(Display *d, Colormap cmap, char *name,
+	XColor *c, void *closure);
+static int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
+	void *closure);
+#endif
+
 /****************************************************************************
  ****************************************************************************/
 ImageNode *LoadImage(const char *fileName) {
@@ -47,13 +54,18 @@ ImageNode *LoadImageFromData(char **data) {
 
 #ifdef USE_XPM
 
+	XpmAttributes attr;
 	XImage *image;
 	XImage *shape;
 	int rc;
 
 	Assert(data);
 
-	rc = XpmCreateImageFromData(display, data, &image, &shape, NULL);
+	attr.valuemask = XpmAllocColor | XpmFreeColors | XpmColorClosure;
+	attr.alloc_color = AllocateColor;
+	attr.free_colors = FreeColors;
+	attr.color_closure = NULL;
+	rc = XpmCreateImageFromData(display, data, &image, &shape, &attr);
 	if(rc == XpmSuccess) {
 		result = CreateImageFromXImages(image, shape);
 		JXDestroyImage(image);
@@ -277,7 +289,7 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
 		for(x = 0; x < image->width; x++) {
 
 			color.pixel = XGetPixel(image, x, y);
-			GetColorFromPixel(&color);
+			GetColorFromIndex(&color);
 
 			red = color.red >> 8;
 			green = color.green >> 8;
@@ -309,4 +321,37 @@ void DestroyImage(ImageNode *image) {
 		Release(image);
 	}
 }
+
+/****************************************************************************
+ * Function to allocate a color for libxpm.
+ ****************************************************************************/
+#ifdef USE_XPM
+int AllocateColor(Display *d, Colormap cmap, char *name,
+	XColor *c, void *closure)
+{
+
+	if(name) {
+		if(!JXParseColor(d, cmap, name, c)) {
+			return -1;
+		}
+	}
+
+	GetColorIndex(c);
+	return 1;
+
+}
+#endif
+
+/****************************************************************************
+ * Function to free colors allocated by libxpm.
+ * We don't need to do anything here as color.c takes care of this.
+ ****************************************************************************/
+#ifdef USE_XPM
+int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
+	void *closure) {
+
+	return 1;
+
+}
+#endif
 

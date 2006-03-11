@@ -860,6 +860,11 @@ void ResizeTray(TrayType *tp) {
 	yoffset = tp->border;
 	for(cp = tp->components; cp; cp = cp->next) {
 
+		cp->x = xoffset;
+		cp->y = yoffset;
+		cp->screenx = tp->x + xoffset;
+		cp->screeny = tp->y + yoffset;
+
 		if(cp->Resize) {
 			if(tp->layout == LAYOUT_HORIZONTAL) {
 				height = tp->height - 2 * tp->border;
@@ -886,11 +891,6 @@ void ResizeTray(TrayType *tp) {
 			cp->height = height;
 			(cp->Resize)(cp);
 		}
-
-		cp->x = xoffset;
-		cp->y = yoffset;
-		cp->screenx = tp->x + xoffset;
-		cp->screeny = tp->y + yoffset;
 
 		if(cp->window != None) {
 			JXMoveWindow(display, cp->window, xoffset, yoffset);

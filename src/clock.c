@@ -22,7 +22,6 @@ typedef struct ClockType {
 	char *format;
 	char *command;
 
-	Pixmap buffer;
 	GC bufferGC;
 
 	int mousex;
@@ -151,8 +150,6 @@ TrayComponentType *CreateClock(const char *format, const char *command,
 void Create(TrayComponentType *cp) {
 
 	ClockType *clk;
-	TimeType now;
-	int x, y;
 
 	Assert(cp);
 
@@ -162,12 +159,7 @@ void Create(TrayComponentType *cp) {
 
 	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
 		rootDepth);
-	clk->buffer = cp->pixmap;
-	clk->bufferGC = JXCreateGC(display, clk->buffer, 0, NULL);
-
-	GetCurrentTime(&now);
-	GetMousePosition(&x, &y);
-	DrawClock(clk, &now, x, y);
+	clk->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
 
 }
 
@@ -185,15 +177,14 @@ void Resize(TrayComponentType *cp) {
 
 	Assert(clk);
 
-	if(clk->buffer != None) {
+	if(cp->pixmap != None) {
 		JXFreeGC(display, clk->bufferGC);
-		JXFreePixmap(display, clk->buffer);
+		JXFreePixmap(display, cp->pixmap);
 	}
 
 	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
 		rootDepth);
-	clk->buffer = cp->pixmap;
-	clk->bufferGC = JXCreateGC(display, clk->buffer, 0, NULL);
+	clk->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
 
 	GetCurrentTime(&now);
 	GetMousePosition(&x, &y);
@@ -213,9 +204,9 @@ void Destroy(TrayComponentType *cp) {
 
 	Assert(clk);
 
-	if(clk->buffer != None) {
+	if(cp->pixmap != None) {
 		JXFreeGC(display, clk->bufferGC);
-		JXFreePixmap(display, clk->buffer);
+		JXFreePixmap(display, cp->pixmap);
 	}
 }
 
@@ -276,19 +267,21 @@ void DrawClock(ClockType *clk, TimeType *now, int x, int y) {
 	char *longTime;
 	time_t t;
 	int width;
+	int rwidth;
 
 	cp = clk->cp;
 
 	JXSetForeground(display, clk->bufferGC, colors[COLOR_CLOCK_BG]);
-	JXFillRectangle(display, clk->buffer, clk->bufferGC, 0, 0,
+	JXFillRectangle(display, cp->pixmap, clk->bufferGC, 0, 0,
 		cp->width, cp->height);
 
 	shortTime = GetTimeString(clk->format);
 
-	width = GetStringWidth(FONT_CLOCK, shortTime) + 4;
-	if(width <= clk->cp->requestedWidth) {
+	width = GetStringWidth(FONT_CLOCK, shortTime);
+	rwidth = width + 4;
+	if(rwidth == clk->cp->requestedWidth) {
 
-		RenderString(clk->buffer, clk->bufferGC, FONT_CLOCK,
+		RenderString(cp->pixmap, clk->bufferGC, FONT_CLOCK,
 			COLOR_CLOCK_FG,
 			cp->width / 2 - width / 2,
 			cp->height / 2 - GetStringHeight(FONT_CLOCK) / 2,
@@ -298,7 +291,7 @@ void DrawClock(ClockType *clk, TimeType *now, int x, int y) {
 
 	} else {
 
-		clk->cp->requestedWidth = width;
+		clk->cp->requestedWidth = rwidth;
 		ResizeTray(clk->cp->tray);
 
 	}

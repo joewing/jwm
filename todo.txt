@@ -8,10 +8,10 @@ Todo:
 	- Support keybinds for keys without a keysym.
 	- Fix window maximization with tray autohide.
 	- Fix tray autohide with window menu and root menus.
-	- Resize clock as needed.
 
 20060311:
 	- Added popup for TrayButton.
+	- The clock now resizes itself as needed.
 
 20060310:
 	- Much faster color allocation.

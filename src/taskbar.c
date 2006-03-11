@@ -436,27 +436,21 @@ void UpdateTaskBar() {
 
 /***************************************************************************
  ***************************************************************************/
-void SignalTaskbar() {
+void SignalTaskbar(TimeType *now, int x, int y) {
 
-	TimeType now;
 	TaskBarType *bp;
 	Node *np;
-	int x, y;
-
-	GetCurrentTime(&now);
-	GetMousePosition(&x, &y);
 
 	for(bp = bars; bp; bp = bp->next) {
 		if(abs(bp->mousex - x) < 2 && abs(bp->mousey - y) < 2) {
-			if(GetTimeDifference(&now, &bp->mouseTime) >= 2000) {
+			if(GetTimeDifference(now, &bp->mouseTime) >= 2000) {
 				if(bp->layout == LAYOUT_HORIZONTAL) {
 					np = GetNode(bp, x - bp->cp->screenx);
 				} else {
 					np = GetNode(bp, y - bp->cp->screeny);
 				}
 				if(np) {
-					ShowPopup(x, y - GetStringHeight(FONT_POPUP) - 4,
-						np->client->name);
+					ShowPopup(x, y, np->client->name);
 				}
 			}
 		}

@@ -7,6 +7,7 @@
 #define CLOCK_H
 
 struct TrayComponentType;
+struct TimeType;
 
 void InitializeClock();
 void StartupClock();
@@ -16,7 +17,7 @@ void DestroyClock();
 struct TrayComponentType *CreateClock(const char *format,
 	const char *command, int width, int height);
 
-void UpdateClocks();
+void SignalClock(struct TimeType *now, int x, int y);
 
 #endif
 

@@ -25,9 +25,12 @@
 #include "clock.h"
 #include "place.h"
 #include "dock.h"
+#include "timing.h"
+#include "traybutton.h"
 
 static unsigned int onRootMask = ~0;
 
+static void Signal();
 static void DispatchBorderButtonEvent(const XButtonEvent *event,
 	ClientNode *np);
 
@@ -110,13 +113,11 @@ void WaitForEvent(XEvent *event) {
 			timeout.tv_usec = 0;
 			timeout.tv_sec = 1;
 			if(select(fd + 1, &fds, NULL, NULL, &timeout) <= 0) {
-				SignalTaskbar();
-				UpdateClocks();
+				Signal();
 			}
 		}
 
-		SignalTaskbar();
-		UpdateClocks();
+		Signal();
 
 		JXNextEvent(display, event);
 
@@ -193,6 +194,22 @@ void WaitForEvent(XEvent *event) {
 		handled |= ProcessPopupEvent(event);
 
 	} while(handled && !shouldExit);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void Signal() {
+
+	TimeType now;
+	int x, y;
+
+	GetCurrentTime(&now);
+	GetMousePosition(&x, &y);
+
+	SignalTaskbar(&now, x, y);
+	SignalTrayButton(&now, x, y);
+	SignalClock(&now, x, y);
 
 }
 

@@ -12,6 +12,9 @@
 #include "error.h"
 #include "taskbar.h"
 
+#define DEFAULT_TRAY_WIDTH 32
+#define DEFAULT_TRAY_HEIGHT 32
+
 static TrayType *trays;
 static Window supportingWindow;
 
@@ -409,7 +412,7 @@ void ComputeTraySize(TrayType *tp) {
 		}
 
 		if(tp->height == 0) {
-			tp->height = 32;
+			tp->height = DEFAULT_TRAY_HEIGHT;
 		}
 
 	} else {
@@ -419,7 +422,7 @@ void ComputeTraySize(TrayType *tp) {
 		}
 
 		if(tp->width == 0) {
-			tp->width = 32;
+			tp->width = DEFAULT_TRAY_WIDTH;
 		}
 
 	}
@@ -435,7 +438,7 @@ void ComputeTraySize(TrayType *tp) {
 		}
 	}
 
-	/* Determine the missing dimension (if there is one). */
+	/* Determine the missing dimension. */
 	if(tp->layout == LAYOUT_HORIZONTAL) {
 		if(tp->width == 0) {
 			if(CheckHorizontalFill(tp)) {
@@ -444,7 +447,7 @@ void ComputeTraySize(TrayType *tp) {
 				tp->width = ComputeTotalWidth(tp);
 			}
 			if(tp->width == 0) {
-				tp->width = 32;
+				tp->width = DEFAULT_TRAY_WIDTH;
 			}
 		}
 	} else {
@@ -455,7 +458,7 @@ void ComputeTraySize(TrayType *tp) {
 				tp->height = ComputeTotalHeight(tp);
 			}
 			if(tp->height == 0) {
-				tp->height = 32;
+				tp->height = DEFAULT_TRAY_HEIGHT;
 			}
 		}
 	}
@@ -847,6 +850,8 @@ void ResizeTray(TrayType *tp) {
 	int variableRemainder;
 	int xoffset, yoffset;
 	int width, height;
+
+	Assert(tp);
 
 	LayoutTray(tp, &variableSize, &variableRemainder);
 

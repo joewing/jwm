@@ -15,6 +15,8 @@
 #include "misc.h"
 #include "screen.h"
 #include "desktop.h"
+#include "popup.h"
+#include "timing.h"
 
 #define BUTTON_SIZE 4
 
@@ -23,10 +25,15 @@ typedef struct TrayButtonType {
 	TrayComponentType *cp;
 
 	char *label;
+	char *popup;
 	char *iconName;
 	IconNode *icon;
 
 	char *action;
+
+	int mousex;
+	int mousey;
+	TimeType mouseTime;
 
 	struct TrayButtonType *next;
 
@@ -40,6 +47,8 @@ static void SetSize(TrayComponentType *cp, int width, int height);
 static void Resize(TrayComponentType *cp);
 
 static void ProcessButtonEvent(TrayComponentType *cp,
+	int x, int y, int mask);
+static void ProcessMotionEvent(TrayComponentType *cp,
 	int x, int y, int mask);
 
 /***************************************************************************
@@ -110,7 +119,8 @@ void DestroyTrayButtons() {
 /***************************************************************************
  ***************************************************************************/
 TrayComponentType *CreateTrayButton(const char *iconName,
-	const char *label, const char *action, int width, int height) {
+	const char *label, const char *action,
+	const char *popup, int width, int height) {
 
 	TrayButtonType *bp;
 	TrayComponentType *cp;
@@ -156,6 +166,13 @@ TrayComponentType *CreateTrayButton(const char *iconName,
 		bp->action = NULL;
 	}
 
+	if(popup) {
+		bp->popup = Allocate(strlen(popup) + 1);
+		strcpy(bp->popup, popup);
+	} else {
+		bp->popup = NULL;
+	}
+
 	cp = CreateTrayComponent();
 	cp->object = bp;
 	bp->cp = cp;
@@ -168,6 +185,9 @@ TrayComponentType *CreateTrayButton(const char *iconName,
 	cp->Resize = Resize;
 
 	cp->ProcessButtonEvent = ProcessButtonEvent;
+	if(popup || label) {
+		cp->ProcessMotionEvent = ProcessMotionEvent;
+	}
 
 	return cp;
 
@@ -333,5 +353,40 @@ void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 }
 
+/***************************************************************************
+ ***************************************************************************/
+void ProcessMotionEvent(TrayComponentType *cp, int x, int y, int mask) {
+
+	TrayButtonType *bp = (TrayButtonType*)cp->object;
+
+	bp->mousex = cp->screenx + x;
+	bp->mousey = cp->screeny + y;
+	GetCurrentTime(&bp->mouseTime);
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void SignalTrayButton(TimeType *now, int x, int y) {
+
+	TrayButtonType *bp;
+	const char *popup;
+
+	for(bp = buttons; bp; bp = bp->next) {
+		if(bp->popup) {
+			popup = bp->popup;
+		} else if(bp->label) {
+			popup = bp->label;
+		} else {
+			continue;
+		}
+		if(abs(bp->mousex - x) < 2 && abs(bp->mousey - y) < 2) {
+			if(GetTimeDifference(now, &bp->mouseTime) >= 2000) {
+				ShowPopup(x, y, popup);
+			}
+		}
+	}
+
+}
 
 

@@ -4,12 +4,14 @@ Todo:
 	- Add window list root menu item.
 	- Make the window menu configurable (other languages, order, etc.).
 	- Add mouse bindings.
-	- Add popup item for TrayButton.
 	- Look into caps/num/etc lock issue with key bindings.
 	- Support keybinds for keys without a keysym.
 	- Fix window maximization with tray autohide.
 	- Fix tray autohide with window menu and root menus.
 	- Resize clock as needed.
+
+20060311:
+	- Added popup for TrayButton.
 
 20060310:
 	- Much faster color allocation.

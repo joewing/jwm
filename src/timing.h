@@ -8,7 +8,7 @@
 
 #define ZERO_TIME { 0, 0 }
 
-typedef struct {
+typedef struct TimeType {
 
 	unsigned long seconds;
 	int ms;

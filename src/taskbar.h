@@ -5,6 +5,7 @@
 #define TASKBAR_H
 
 struct ClientNode;
+struct TimeType;
 
 void InitializeTaskBar();
 void StartupTaskBar();
@@ -18,7 +19,7 @@ void RemoveClientFromTaskBar(struct ClientNode *np);
 
 void UpdateTaskBar();
 
-void SignalTaskbar();
+void SignalTaskbar(struct TimeType *now, int x, int y);
 
 void FocusNext();
 void FocusNextStackedCircular();

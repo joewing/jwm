@@ -89,6 +89,7 @@ static const char *MAX_WIDTH_ATTRIBUTE = "maxwidth";
 static const char *FORMAT_ATTRIBUTE = "format";
 static const char *VALIGN_ATTRIBUTE = "valign";
 static const char *HALIGN_ATTRIBUTE = "halign";
+static const char *POPUP_ATTRIBUTE = "popup";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -1123,6 +1124,7 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
 	TrayComponentType *cp;
 	const char *icon;
 	const char *label;
+	const char *popup;
 	const char *temp;
 	int width, height;
 
@@ -1131,6 +1133,7 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
 
 	icon = FindAttribute(tp->attributes, ICON_ATTRIBUTE);
 	label = FindAttribute(tp->attributes, LABEL_ATTRIBUTE);
+	popup = FindAttribute(tp->attributes, POPUP_ATTRIBUTE);
 
 	temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
 	if(temp) {
@@ -1146,7 +1149,7 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
 		height = 0;
 	}
 
-	cp = CreateTrayButton(icon, label, tp->value, width, height);
+	cp = CreateTrayButton(icon, label, tp->value, popup, width, height);
 	if(cp) {
 		AddTrayComponent(tray, cp);
 	}

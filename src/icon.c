@@ -458,6 +458,10 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 	np->width = nwidth;
 	np->height = nheight;
 	np->next = icon->nodes;
+#ifdef USE_XRENDER
+	np->imagePicture = None;
+	np->maskPicture = None;
+#endif
 	icon->nodes = np;
 
 	np->mask = JXCreatePixmap(display, rootWindow, nwidth, nheight, 1);

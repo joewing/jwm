@@ -436,14 +436,9 @@ void DoSnapBorder(ClientNode *np, int north, int west) {
 	RectangleType client, other;
 	RectangleType left = { 0 };
 	RectangleType right = { 0 };
-	RectangleType  top = { 0 };
+	RectangleType top = { 0 };
 	RectangleType bottom = { 0 };
 	int layer;
-
-	left.valid = 0;
-	right.valid = 0;
-	top.valid = 0;
-	bottom.valid = 0;
 
 	GetClientRectangle(np, &client);
 
@@ -552,6 +547,7 @@ int ShouldSnap(const ClientNode *np) {
 /****************************************************************************
  ****************************************************************************/
 void GetClientRectangle(const ClientNode *np, RectangleType *r) {
+
 	int border;
 
 	r->left = np->x;

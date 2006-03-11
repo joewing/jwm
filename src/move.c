@@ -442,6 +442,8 @@ void DoSnapBorder(ClientNode *np, int north, int west) {
 
 	GetClientRectangle(np, &client);
 
+	other.valid = 1;
+
 	/* Work from the bottom of the window stack to the top. */
 	for(layer = 0; layer < LAYER_COUNT; layer++) {
 

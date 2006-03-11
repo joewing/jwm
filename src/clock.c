@@ -246,14 +246,33 @@ static void ProcessClockMotionEvent(TrayComponentType *cp,
 void SignalClock(TimeType *now, int x, int y) {
 
 	ClockType *cp;
+	int shouldDraw;
+	char *longTime;
+	time_t t;
 
-	if(GetTimeDifference(&lastUpdate, now) < 900) {
-		return;
+	if(GetTimeDifference(&lastUpdate, now) > 900) {
+		shouldDraw = 1;
+		lastUpdate = *now;
+	} else {
+		shouldDraw = 0;
 	}
-	lastUpdate = *now;
 
 	for(cp = clocks; cp; cp = cp->next) {
-		DrawClock(cp, now, x, y);
+
+		if(shouldDraw) {
+			DrawClock(cp, now, x, y);
+		}
+
+		if(abs(cp->mousex - x) < POPUP_DELTA
+			&& abs(cp->mousey - y) < POPUP_DELTA) {
+			if(GetTimeDifference(now, &cp->mouseTime) >= popupDelay) {
+				time(&t);
+				longTime = asctime(localtime(&t));
+				Trim(longTime);
+				ShowPopup(x, y, longTime);
+			}
+		}
+
 	}
 
 }
@@ -264,8 +283,6 @@ void DrawClock(ClockType *clk, TimeType *now, int x, int y) {
 
 	TrayComponentType *cp;
 	const char *shortTime;
-	char *longTime;
-	time_t t;
 	int width;
 	int rwidth;
 
@@ -294,16 +311,6 @@ void DrawClock(ClockType *clk, TimeType *now, int x, int y) {
 		clk->cp->requestedWidth = rwidth;
 		ResizeTray(clk->cp->tray);
 
-	}
-
-	if(abs(clk->mousex - x) < POPUP_DELTA
-		&& abs(clk->mousey - y) < POPUP_DELTA) {
-		if(GetTimeDifference(now, &clk->mouseTime) >= popupDelay) {
-			time(&t);
-			longTime = asctime(localtime(&t));
-			Trim(longTime);
-			ShowPopup(x, y, longTime);
-		}
 	}
 
 }

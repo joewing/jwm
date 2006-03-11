@@ -25,8 +25,7 @@ typedef struct PopupType {
 } PopupType;
 
 static PopupType popup;
-static int popupEnabled = 1;
-
+static int popupEnabled;
 int popupDelay;
 
 static void DrawPopup();
@@ -35,6 +34,7 @@ static void DrawPopup();
  ****************************************************************************/
 void InitializePopup() {
 	popupDelay = DEFAULT_POPUP_DELAY;
+	popupEnabled = 1;
 }
 
 /****************************************************************************

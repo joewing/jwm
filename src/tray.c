@@ -11,6 +11,8 @@
 #include "cursor.h"
 #include "error.h"
 #include "taskbar.h"
+#include "menu.h"
+#include "timing.h"
 
 #define DEFAULT_TRAY_WIDTH 32
 #define DEFAULT_TRAY_HEIGHT 32
@@ -135,10 +137,6 @@ void StartupTray() {
 
 		/* Show the tray. */
 		JXMapWindow(display, tp->window);
-
-		if(tp->autoHide) {
-			HideTray(tp);
-		}
 
 	}
 
@@ -532,6 +530,7 @@ void ShowTray(TrayType *tp) {
 		}
 
 		tp->hidden = 0;
+
 	}
 
 }
@@ -542,7 +541,7 @@ void HideTray(TrayType *tp) {
 
 	int x, y;
 
-	if(tp->autoHide && !tp->hidden) {
+	if(tp->autoHide && !tp->hidden && !menuShown) {
 		tp->hidden = 1;
 
 		/* Determine where to move the tray. */
@@ -606,6 +605,23 @@ int ProcessTrayEvent(const XEvent *event) {
 	}
 
 	return 0;
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void SignalTray(TimeType *now, int x, int y) {
+
+	TrayType *tp;
+
+	for(tp = trays; tp; tp = tp->next) {
+		if(tp->autoHide && !tp->hidden) {
+			if(x < tp->x || x >= tp->x + tp->width
+				|| y < tp->y || y >= tp->y + tp->height) {
+				HideTray(tp);
+			}
+		}
+	}
 
 }
 

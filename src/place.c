@@ -327,7 +327,7 @@ void UpdateTrayBounds(BoundingBox *box, unsigned int layer) {
 
 	for(tp = GetTrays(); tp; tp = tp->next) {
 
-		if(tp->layer > layer) {
+		if(tp->layer > layer && !tp->autoHide) {
 
 			src.x = tp->x;
 			src.y = tp->y;

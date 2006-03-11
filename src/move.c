@@ -450,6 +450,10 @@ void DoSnapBorder(ClientNode *np, int north, int west) {
 		/* Check tray windows. */
 		for(tray = GetTrays(); tray; tray = tray->next) {
 
+			if(tray->hidden) {
+				continue;
+			}
+
 			other.left = tray->x;
 			other.right = tray->x + tray->width;
 			other.top = tray->y;

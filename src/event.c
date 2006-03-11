@@ -210,6 +210,7 @@ void Signal() {
 	SignalTaskbar(&now, x, y);
 	SignalTrayButton(&now, x, y);
 	SignalClock(&now, x, y);
+	SignalTray(&now, x, y);
 
 }
 

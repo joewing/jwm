@@ -25,5 +25,7 @@ void GetBorderSize(const struct ClientNode *np,
 void GetGravityDelta(int gravity, int north, int south, int east, int west,
 	int *x, int *y);
 
+void ConstrainSize(struct ClientNode *np);
+
 #endif
 

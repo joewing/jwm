@@ -462,6 +462,70 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 
 /****************************************************************************
  ****************************************************************************/
+void ConstrainSize(ClientNode *np) {
+
+	BoundingBox box;
+	int screen;
+	int north, west;
+
+	Assert(np);
+
+	/* Determine if the size needs to be constrained. */
+	screen = GetCurrentScreen(np->x, np->y);
+	if(np->width < GetScreenWidth(screen)
+		&& np->height < GetScreenHeight(screen)) {
+
+		return;
+
+	}
+
+	/* Constrain the size. */
+	north = 0;
+	west = 0;
+	if(np->state.border & BORDER_OUTLINE) {
+		north = borderWidth;
+		west = borderWidth;
+	}
+	if(np->state.border & BORDER_TITLE) {
+		north += titleHeight;
+	}
+
+	GetScreenBounds(screen, &box);
+	UpdateTrayBounds(&box, np->state.layer);
+	UpdateStrutBounds(&box);
+
+	box.x += west;
+	box.y += north;
+	box.width -= west + west;
+	box.height -= north + west;
+
+	if(box.width > np->maxWidth) {
+		box.width = np->maxWidth;
+	}
+	if(box.height > np->maxHeight) {
+		box.height = np->maxHeight;
+	}
+
+	if(np->sizeFlags & PAspect) {
+		if((float)box.width / box.height
+			< (float)np->aspect.minx / np->aspect.miny) {
+			box.height = box.width * np->aspect.miny / np->aspect.minx;
+		}
+		if((float)box.width / box.height
+			> (float)np->aspect.maxx / np->aspect.maxy) {
+			box.width = box.height * np->aspect.maxx / np->aspect.maxy;
+		}
+	}
+
+	np->x = box.x;
+	np->y = box.y;
+	np->width = box.width - (box.width % np->xinc);
+	np->height = box.height - (box.height % np->yinc);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
 void PlaceMaximizedClient(ClientNode *np) {
 
 	BoundingBox box;

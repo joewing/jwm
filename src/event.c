@@ -381,6 +381,7 @@ void HandleKeyPress(const XKeyEvent *event) {
 /****************************************************************************
  ****************************************************************************/
 void HandleConfigureRequest(const XConfigureRequestEvent *event) {
+
 	XWindowChanges wc;
 	ClientNode *np;
 	int north, south, east, west;
@@ -433,6 +434,8 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 		wc.sibling = np->parent;
 		wc.border_width = 0;
 
+		ConstrainSize(np);
+
 		wc.x = np->x;
 		wc.y = np->y;
 		wc.width = np->width + east + west;
@@ -446,14 +449,16 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 		JXConfigureWindow(display, np->window, event->value_mask, &wc);
 
 	} else {
+
 		wc.stack_mode = event->detail;
 		wc.sibling = event->above;
 		wc.border_width = event->border_width;
 		wc.x = event->x;
 		wc.y = event->y;
-		wc.width = event->width;
-		wc.height = event->height;
+		wc.width = event->width > rootWidth ? rootWidth : event->width;
+		wc.height = event->height > rootHeight ? rootHeight : event->height;
 		JXConfigureWindow(display, event->window, event->value_mask, &wc);
+
 	}
 
 }

@@ -10,6 +10,10 @@ Todo:
 	- Fix window maximization with tray autohide.
 	- Fix tray autohide with window menu and root menus.
 
+20060310:
+	- Much faster color allocation.
+	- Constrain client requested resizes.
+
 20060305:
 	- Use ResizeRedirect instead of ConfigureNotify for resizing swallow items.
 	- Resize to 1 pixel in the tray when a swallow item dies.

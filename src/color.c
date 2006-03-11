@@ -21,7 +21,7 @@ unsigned long rgbColors[COLOR_COUNT];
 unsigned long white;
 unsigned long black;
 
-unsigned long *map;
+static unsigned long *map;
 
 #ifdef USE_XFT
 static XftColor *xftColors[COLOR_COUNT] = { NULL };
@@ -99,7 +99,7 @@ void InitializeColors() {
 void StartupColors() {
 
 	int x;
-	unsigned long red, green, blue;
+	int red, green, blue;
 	XColor c;
 
 	/* Determine how to convert between RGB triples and pixels. */
@@ -114,21 +114,27 @@ void StartupColors() {
 		break;
 	default:
 
-		/* Attempt to allocate 256 colors, pretend it worked. */
+		/* Attempt to get 256 colors, pretend it worked. */
+		redMask = 0xE0;
+		greenMask = 0x1C;
+		blueMask = 0x03;
+		ComputeShiftMask(redMask, &redShift, &redMask);
+		ComputeShiftMask(greenMask, &greenShift, &greenMask);
+		ComputeShiftMask(blueMask, &blueShift, &blueMask);
 		map = Allocate(sizeof(unsigned long) * 256);
 
 		/* RGB: 3, 3, 2 */
 		x = 0;
-		for(red = 0; red < 65536; red += 8192) {
-			for(green = 0; green < 65536; green += 8192) {
-				for(blue = 0; blue < 65536; blue += 16384) {
-					c.red = red;
-					c.green = green;
-					c.blue = blue;
-					if(JXAllocColor(display, rootColormap, &c) == 0) {
-						Warning("color allocation failed");
-					}
-					map[x++] = c.pixel;
+		for(red = 0; red < 8; red++) {
+			for(green = 0; green < 8; green++) {
+				for(blue = 0; blue < 4; blue++) {
+					c.red = 74898 * red / 8;
+					c.green = 74898 * green / 8;
+					c.blue = 87381 * blue / 4;
+					c.flags = DoRed | DoGreen | DoBlue;
+					JXAllocColor(display, rootColormap, &c);
+					map[x] = c.pixel;
+					++x;
 				}
 			}
 		}
@@ -209,15 +215,9 @@ void StartupColors() {
  ****************************************************************************/
 void ShutdownColors() {
 
-	int x;
-
-	if(map != NULL) {
-		JXFreeColors(display, rootColormap, map, 256, AllPlanes);
-		Release(map);
-		map = NULL;
-	}
-
 #ifdef USE_XFT
+
+	int x;
 
 	for(x = 0; x < COLOR_COUNT; x++) {
 		if(xftColors[x]) {
@@ -228,6 +228,11 @@ void ShutdownColors() {
 	}
 
 #endif
+
+	if(map != NULL) {
+		Release(map);
+		map = NULL;
+	}
 
 }
 
@@ -498,16 +503,7 @@ void GetDirectColor(XColor *c) {
  ***************************************************************************/
 void GetMappedColor(XColor *c) {
 
-	int x;
-
-	for(x = 0; x < 256; x++) {
-		if(map[x] == c->pixel) {
-			c->red = (x & 0xE0) << 8;
-			c->green = (x & 0x1C) << 11;
-			c->blue = (x & 0x03) << 14;
-			return;
-		}
-	}
+	JXQueryColor(display, rootColormap, c);
 
 }
 
@@ -560,18 +556,8 @@ void GetDirectPixel(XColor *c) {
  ***************************************************************************/
 void GetMappedPixel(XColor *c) {
 
-	unsigned long red;
-	unsigned long green;
-	unsigned long blue;
-
-	/* Compute the index into the pixel table. */
-	/* 3, 3, 2 */
-	red = c->red >> 8;
-	green = (c->green >> 11) & 0x1C;
-	blue = (c->blue >> 14) & 0x03;
-
-	/* Get the pixel */
-	c->pixel = map[red | green | blue];
+	GetDirectPixel(c);
+	c->pixel = map[c->pixel];
 
 }
 

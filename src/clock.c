@@ -296,8 +296,9 @@ void DrawClock(ClockType *clk, TimeType *now, int x, int y) {
 
 	}
 
-	if(abs(clk->mousex - x) < 2 && abs(clk->mousey - y) < 2) {
-		if(GetTimeDifference(now, &clk->mouseTime) >= 2000) {
+	if(abs(clk->mousex - x) < POPUP_DELTA
+		&& abs(clk->mousey - y) < POPUP_DELTA) {
+		if(GetTimeDifference(now, &clk->mouseTime) >= popupDelay) {
 			time(&t);
 			longTime = asctime(localtime(&t));
 			Trim(longTime);

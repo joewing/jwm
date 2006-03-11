@@ -31,6 +31,7 @@
 #include "traybutton.h"
 #include "clock.h"
 #include "dock.h"
+#include "popup.h"
 
 typedef struct KeyMapType {
 	char *name;
@@ -90,6 +91,8 @@ static const char *FORMAT_ATTRIBUTE = "format";
 static const char *VALIGN_ATTRIBUTE = "valign";
 static const char *HALIGN_ATTRIBUTE = "halign";
 static const char *POPUP_ATTRIBUTE = "popup";
+static const char *DELAY_ATTRIBUTE = "delay";
+static const char *ENABLED_ATTRIBUTE = "enabled";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -1252,8 +1255,25 @@ void ParsePagerStyle(const TokenNode *tp) {
 void ParsePopupStyle(const TokenNode *tp) {
 
 	const TokenNode *np;
+	const char *str;
 
 	Assert(tp);
+
+	str = FindAttribute(tp->attributes, ENABLED_ATTRIBUTE);
+	if(str) {
+		if(!strcmp(str, TRUE_VALUE)) {
+			SetPopupEnabled(1);
+		} else if(!strcmp(str, FALSE_VALUE)) {
+			SetPopupEnabled(0);
+		} else {
+			ParseError(tp, "invalid enabled value: \"%s\"", str);
+		}
+	}
+
+	str = FindAttribute(tp->attributes, DELAY_ATTRIBUTE);
+	if(str) {
+		SetPopupDelay(str);
+	}
 
 	for(np = tp->subnodeHead; np; np = np->next) {
 		switch(np->type) {

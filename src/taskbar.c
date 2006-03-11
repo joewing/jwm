@@ -442,8 +442,9 @@ void SignalTaskbar(TimeType *now, int x, int y) {
 	Node *np;
 
 	for(bp = bars; bp; bp = bp->next) {
-		if(abs(bp->mousex - x) < 2 && abs(bp->mousey - y) < 2) {
-			if(GetTimeDifference(now, &bp->mouseTime) >= 2000) {
+		if(abs(bp->mousex - x) < POPUP_DELTA
+			&& abs(bp->mousey - y) < POPUP_DELTA) {
+			if(GetTimeDifference(now, &bp->mouseTime) >= popupDelay) {
 				if(bp->layout == LAYOUT_HORIZONTAL) {
 					np = GetNode(bp, x - bp->cp->screenx);
 				} else {

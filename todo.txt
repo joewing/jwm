@@ -11,6 +11,7 @@ Todo:
 	- The clock now resizes itself as needed.
 	- Fixed window maximization with tray autohide.
 	- Fixed tray autohide with window menu and root menus.
+	- Added "enabled" and "delay" PopupStyle attributes.
 
 20060310:
 	- Much faster color allocation.

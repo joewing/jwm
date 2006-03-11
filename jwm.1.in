@@ -389,6 +389,13 @@ This tag supports the following attributes:
 A label to display. No default.
 .RE
 .P
+\fBpopup\fP \fIstring\fP
+.RS
+A string to be displayed for a popup. This will default to the value
+specified for \fBlabel\fP, if provided. If neither \fBpopup\fP nor
+\fBlabel\fP are specified no popup will be shown.
+.RE
+.P
 \fBicon\fP \fIstring\fP
 .RS
 An icon to display. No default.
@@ -706,9 +713,21 @@ for more information.
 .RS
 The \fBPopupStyle\fP tag controls the look of popup windows such as those
 shown when the mouse sits over a task list item.
+This tag supports the following attributes:
+.P
+\fBdelay\fP \fIint\fP
+.RS
+The delay in milliseconds before popups activate.
+The default is 2000.
+.RE
+.P
+\fBenabled\fP \fIbool\fP
+.RS
+Determine if popups are shown. Default is true.
+.RE
+.P
 Within this tag the following tags are supported:
 .P
-.RS
 .B Font
 .RS
 The font to use. See the \fBFONTS\fP section for more information.
@@ -728,8 +747,6 @@ The text color. See the \fBCOLORS\fP section for more information.
 .B Background
 .RS
 The background color. See the \fBCOLORS\fP section for more information.
-.RE
-.P
 .RE
 .RE
 

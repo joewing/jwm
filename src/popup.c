@@ -10,6 +10,9 @@
 #include "font.h"
 #include "screen.h"
 #include "cursor.h"
+#include "error.h"
+
+#define DEFAULT_POPUP_DELAY 2000
 
 typedef struct PopupType {
 	int isActive;
@@ -24,11 +27,14 @@ typedef struct PopupType {
 static PopupType popup;
 static int popupEnabled = 1;
 
+int popupDelay;
+
 static void DrawPopup();
 
 /****************************************************************************
  ****************************************************************************/
 void InitializePopup() {
+	popupDelay = DEFAULT_POPUP_DELAY;
 }
 
 /****************************************************************************
@@ -140,6 +146,26 @@ void ShowPopup(int x, int y, const char *text) {
  ****************************************************************************/
 void SetPopupEnabled(int e) {
 	popupEnabled = e;
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void SetPopupDelay(const char *str) {
+
+	int temp;
+
+	if(str == NULL) {
+		return;
+	}
+
+	temp = atoi(str);
+
+	if(temp < 0) {
+		Warning("invalid popup delay specified: %s\n", str);
+	} else {
+		popupDelay = temp;
+	}
+
 }
 
 /****************************************************************************

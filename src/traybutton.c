@@ -380,8 +380,9 @@ void SignalTrayButton(TimeType *now, int x, int y) {
 		} else {
 			continue;
 		}
-		if(abs(bp->mousex - x) < 2 && abs(bp->mousey - y) < 2) {
-			if(GetTimeDifference(now, &bp->mouseTime) >= 2000) {
+		if(abs(bp->mousex - x) < POPUP_DELTA
+			&& abs(bp->mousey - y) < POPUP_DELTA) {
+			if(GetTimeDifference(now, &bp->mouseTime) >= popupDelay) {
 				ShowPopup(x, y, popup);
 			}
 		}

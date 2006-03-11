@@ -17,9 +17,7 @@ typedef struct {
 static const float COLOR_DELTA = 0.45;
 
 unsigned long colors[COLOR_COUNT];
-unsigned long rgbColors[COLOR_COUNT];
-unsigned long white;
-unsigned long black;
+static unsigned long rgbColors[COLOR_COUNT];
 
 static unsigned long *map;
 
@@ -204,9 +202,6 @@ void StartupColors() {
 	LightenColor(COLOR_MENU_ACTIVE_BG, COLOR_MENU_ACTIVE_UP);
 	DarkenColor(COLOR_MENU_ACTIVE_BG, COLOR_MENU_ACTIVE_DOWN);
 
-	white = WhitePixel(display, rootScreen);
-	black = BlackPixel(display, rootScreen);
-
 }
 
 /****************************************************************************
@@ -316,7 +311,6 @@ void SetColor(ColorType c, const char *value) {
 		Warning("empty color tag");
 		return;
 	}
-	Assert(value);
 
 	InitializeNames();
 

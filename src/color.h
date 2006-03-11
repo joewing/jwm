@@ -65,10 +65,6 @@ typedef enum {
 } ColorType;
 
 extern unsigned long colors[COLOR_COUNT];
-extern unsigned long rgbColors[COLOR_COUNT];
-
-extern unsigned long white;
-extern unsigned long black;
 
 void InitializeColors();
 void StartupColors();

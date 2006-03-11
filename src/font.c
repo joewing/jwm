@@ -185,7 +185,7 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 	XRectangle rect;
 	int len, h, w;
 
-	const char *output;
+	char *output;
 
 #ifdef USE_FRIBIDI
 
@@ -225,7 +225,7 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 
 #else
 
-	output = str;
+	output = (char*)str;
 
 #endif
 

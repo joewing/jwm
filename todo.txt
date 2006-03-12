@@ -4,8 +4,9 @@ Todo:
 	- Add window list root menu item.
 	- Make the window menu configurable (other languages, order, etc.).
 	- Add mouse bindings.
-	- Look into caps/num/etc lock issue with key bindings.
-	- Fix move/resize performance issue.
+
+20060312:
+	- Ignore caps lock and num lock for key bindings.
 
 20060311:
 	- Added popup for TrayButton.

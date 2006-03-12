@@ -88,9 +88,11 @@ if test "$enable_png" != "no"; then
 fi
 if test "$enable_png" != "no"; then
 	AC_CHECK_LIB(png, png_read_image,
-		[ LDFLAGS="$LDFLAGS -lm -lpng"
+		[ LDFLAGS="$LDFLAGS `libpng-config --libs`"
+		  CLFLAGS="$LDFLAGS `libpng-config --cflags`"
 		  AC_DEFINE(USE_PNG, 1, [Define to use libpng]) ],
-		[ AC_MSG_WARN([unable to use libpng, PNG support disabled]) ])
+		[ AC_MSG_WARN([unable to use libpng, PNG support disabled]) ],
+		[ `libpng-config --libs` ])
 fi
 
 # Xpm
@@ -138,7 +140,8 @@ if test "$enable_xft" != "no"; then
 		[ LDFLAGS="$LDFLAGS `xft-config --libs`"
 		  CFLAGS="$CFLAGS `xft-config --cflags`"
 		  AC_DEFINE(USE_XFT, 1, [Define to enable Xft]) ],
-		[ AC_MSG_WARN([unable to use Xft]) ])
+		[ AC_MSG_WARN([unable to use Xft]) ],
+		[ `xft-config --libs` ])
 fi
 
 # XRender
@@ -161,9 +164,11 @@ AC_ARG_ENABLE(fribidi,
 		[disable bi-directional unicode support]) )
 if test "enable_fribidi" != "no"; then
 	AC_CHECK_LIB(fribidi, fribidi_log2vis,
-		[ LDFLAGS="$LDFLAGS -lfribidi"
+		[ LDFLAGS="$LDFLAGS `fribidi-config --libs`"
+		  CFLAGS="$CFLAGS `fribidi-config --cflags`"
 		  AC_DEFINE(USE_FRIBIDI, 1, [Define to use FriBidi]) ],
-		[ AC_MSG_WARN([unable to use FriBidi]) ])
+		[ AC_MSG_WARN([unable to use FriBidi]) ],
+		[ `fribidi-config --libs` ])
 fi
 
 # See if libXext is needed.

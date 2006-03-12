@@ -2,7 +2,6 @@
 CC = @CC@
 CFLAGS = @CFLAGS@
 LDFLAGS = @LDFLAGS@
-VERSION = @VERSION@
 BINDIR = @BINDIR@
 
 VPATH=.:os
@@ -30,9 +29,6 @@ depend:
 
 $(EXE): $(OBJECTS)
 	$(CC) -o $(EXE) $(OBJECTS) $(LDFLAGS)
-
-help.o: help.c
-	$(CC) -c $(CFLAGS) -DVERSION=\"$(VERSION)\" help.c
 
 .c.o: $<
 	$(CC) -c $(CFLAGS) $<

@@ -9,7 +9,7 @@
 /****************************************************************************
  ****************************************************************************/
 void DisplayAbout() {
-	printf("JWM v%s by Joe Wingbermuehle\n", VERSION);
+	printf("JWM v%s by Joe Wingbermuehle\n", PACKAGE_VERSION);
 	DisplayCompileOptions();
 }
 

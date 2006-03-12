@@ -106,7 +106,10 @@ fi
 if test "$enable_xpm" != "no"; then
 	AC_CHECK_DECL(XpmAllocColor, [],
 		[ enable_xpm="no"
-		  AC_MSG_WARN([XPM library too old, disabling XPM support]) ])
+		  AC_MSG_WARN([XPM library too old, disabling XPM support]) ],
+		[
+#include <X11/xpm.h>
+])
 fi
 if test "$enable_xpm" != "no"; then
 	AC_CHECK_LIB(Xpm, XpmReadFileToImage,

@@ -953,6 +953,7 @@ void SendClientMessage(Window w, AtomType type, AtomType message) {
  ****************************************************************************/
 #ifdef USE_SHAPE
 void SetShape(ClientNode *np) {
+
 	XRectangle rect[4];
 	int north, west;
 

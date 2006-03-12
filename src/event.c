@@ -170,7 +170,7 @@ void WaitForEvent(XEvent *event) {
 		default:
 #ifdef USE_SHAPE
 			if(haveShape && event->type == shapeEvent) {
-				HandleShapeEvent((XShapeEvent*)(void*)&event);
+				HandleShapeEvent((XShapeEvent*)event);
 				handled = 1;
 			} else {
 				handled = 0;
@@ -900,12 +900,14 @@ void HandleMotionNotify(const XMotionEvent *event) {
  ****************************************************************************/
 #ifdef USE_SHAPE
 void HandleShapeEvent(const XShapeEvent *event) {
+
 	ClientNode *np;
 
 	np = FindClientByWindow(event->window);
 	if(np) {
 		SetShape(np);
 	}
+
 }
 #endif /* USE_SHAPE */
 

@@ -92,7 +92,7 @@ AC_DEFUN([JWM_PKGCONFIG],
 		else
 			$1="no"
 		fi
-		AC_MSG_RESULT($1)
+		AC_MSG_RESULT($$1)
 	else
 		$1="no"
 	fi
@@ -175,12 +175,6 @@ if test "$enable_xft" != "no"; then
 	else
 		XFT_LDFLAGS="-lXft"
 	fi
-
-	AC_CHECK_HEADERS([X11/Xft/Xft.h], [],
-		[
-			enable_xft="no";
-			AC_MSG_WARN([unable to use X11/Xft/Xft.h])
-		])
 
 fi
 if test "$enable_xft" != "no" ; then

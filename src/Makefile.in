@@ -25,7 +25,7 @@ install: all
 	install $(EXE) $(BINDIR)/$(EXE)
 
 depend:
-	makedepend -Ym *.c
+	makedepend -m -- $(CFLAGS) -- *.c
 
 $(EXE): $(OBJECTS)
 	$(CC) -o $(EXE) $(OBJECTS) $(LDFLAGS)

@@ -792,8 +792,9 @@ Note that icon, PNG, and XPM support are compile-time options.
 
 .B "KEY BINDINGS"
 .RS
-Keyboard bindings in JWM are specified in \fBKey\fP tags. The required
-attribute, \fBkey\fP, specifies which key will cause an action. The optional
+Keyboard bindings in JWM are specified in \fBKey\fP tags.
+Either the \fBkey\fP or \fBkeycode\fP attributes must be specified
+to determine which key will cause an action. The optional
 attribute, \fBmask\fP, specifies what key mask, if any, must be in effect
 for the binding to match. Finally, the text of the \fBKey\fP tag is the
 action to perform.

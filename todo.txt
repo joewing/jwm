@@ -5,6 +5,7 @@ Todo:
 	- Make the window menu configurable (other languages, order, etc.).
 	- Add mouse bindings.
 	- Look into caps/num/etc lock issue with key bindings.
+	- Fix move/resize performance issue.
 
 20060311:
 	- Added popup for TrayButton.
@@ -12,6 +13,7 @@ Todo:
 	- Fixed window maximization with tray autohide.
 	- Fixed tray autohide with window menu and root menus.
 	- Added "enabled" and "delay" PopupStyle attributes.
+	- Fixed a bug in the way JWM handled shape events.
 
 20060310:
 	- Much faster color allocation.

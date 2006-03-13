@@ -37,7 +37,6 @@ static void DispatchBorderButtonEvent(const XButtonEvent *event,
 static void HandleConfigureRequest(const XConfigureRequestEvent *event);
 static int HandleExpose(const XExposeEvent *event);
 static int HandlePropertyNotify(const XPropertyEvent *event);
-static int HandleConfigureNotify(const XConfigureEvent *event);
 static void HandleClientMessage(const XClientMessageEvent *event);
 static void HandleColormapChange(const XColormapEvent *event);
 static int HandleDestroyNotify(const XDestroyWindowEvent *event);
@@ -151,15 +150,13 @@ void WaitForEvent(XEvent *event) {
 		case DestroyNotify:
 			handled = HandleDestroyNotify(&event->xdestroywindow);
 			break;
-		case ConfigureNotify:
-			handled = HandleConfigureNotify(&event->xconfigure);
-			break;
 		case SelectionClear:
 			handled = HandleSelectionClear(&event->xselectionclear);
 			break;
 		case ResizeRequest:
 			handled = HandleDockResizeRequest(&event->xresizerequest);
 			break;
+		case ConfigureNotify:
 		case CreateNotify:
 		case MapNotify:
 		case NoExpose:
@@ -594,26 +591,6 @@ int HandlePropertyNotify(const XPropertyEvent *event) {
 	}
 
 	return 1;
-}
-
-/****************************************************************************
- ****************************************************************************/
-int HandleConfigureNotify(const XConfigureEvent *event) {
-
-#ifdef USE_SHAPE
-
-	ClientNode *np;
-
-	np = FindClientByWindow(event->window);
-	if(np && (np->state.status & STAT_USESHAPE)) {
-		SetShape(np);
-		return 1;
-	}
-
-#endif
-
-	return 0;
-
 }
 
 /****************************************************************************

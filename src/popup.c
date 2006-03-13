@@ -11,6 +11,7 @@
 #include "screen.h"
 #include "cursor.h"
 #include "error.h"
+#include "timing.h"
 
 #define DEFAULT_POPUP_DELAY 2000
 
@@ -170,32 +171,30 @@ void SetPopupDelay(const char *str) {
 
 /****************************************************************************
  ****************************************************************************/
-int ProcessPopupEvent(const XEvent *event) {
-	int x, y;
+void SignalPopup(TimeType *now, int x, int y) {
 
 	if(popup.isActive) {
-
-		GetMousePosition(&x, &y);
-
 		if(abs(popup.mx - x) > 2 || abs(popup.my - y) > 2) {
 			JXUnmapWindow(display, popup.window);
 			popup.isActive = 0;
-			return 0;
 		}
+	}
 
-		switch(event->type) {
-		case Expose:
-			if(event->xexpose.window == popup.window) {
-				DrawPopup();
-				return 1;
-			}
-			break;
-		default:
-			break;
+}
+
+/****************************************************************************
+ ****************************************************************************/
+int ProcessPopupEvent(const XEvent *event) {
+
+	if(popup.isActive && event->type == Expose) {
+		if(event->xexpose.window == popup.window) {
+			DrawPopup();
+			return 1;
 		}
 	}
 
 	return 0;
+
 }
 
 /****************************************************************************

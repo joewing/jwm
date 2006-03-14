@@ -198,10 +198,18 @@ void WaitForEvent(XEvent *event) {
  ****************************************************************************/
 void Signal() {
 
+	static TimeType last = ZERO_TIME;
+
 	TimeType now;
 	int x, y;
 
 	GetCurrentTime(&now);
+
+	if(GetTimeDifference(&now, &last) < 250) {
+		return;
+	}
+	last = now;
+
 	GetMousePosition(&x, &y);
 
 	SignalTaskbar(&now, x, y);
@@ -243,6 +251,20 @@ void ProcessEvent(XEvent *event) {
 		Debug("Unknown event type: %d", event->type);
 		break;
 	}
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void DiscardMotionEvents(XEvent *event, Window w) {
+
+	XEvent temp;
+
+	while(JXCheckTypedEvent(display, MotionNotify, &temp)) {
+		if(temp.xmotion.window == w) {
+			*event = temp;
+		}
+	}
+
 }
 
 /****************************************************************************

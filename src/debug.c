@@ -37,7 +37,7 @@ void Debug(const char *str, ...) {
 
 #ifdef DEBUG
 
-#define CHECKPOINT_LIST_SIZE 10
+#define CHECKPOINT_LIST_SIZE 8
 
 typedef struct MemoryType {
 	const char *file;

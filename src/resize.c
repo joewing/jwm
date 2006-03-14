@@ -122,8 +122,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 			break;
 		case MotionNotify:
 
-			while(JXCheckTypedWindowEvent(display, np->window,
-				MotionNotify, &event));
+			DiscardMotionEvents(&event, np->window);
 
 			if(action & BA_RESIZE_N) {
 				delta = (event.xmotion.y - starty) / np->yinc;
@@ -290,7 +289,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 
 	JXWarpPointer(display, None, rootWindow, 0, 0, 0, 0,
 		np->x + np->width, np->y + np->height);
-	JXCheckTypedWindowEvent(display, np->window, MotionNotify, &event);
+	DiscardMotionEvents(&event, np->window);
 
 	for(;;) {
 
@@ -328,8 +327,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 
 		} else if(event.type == MotionNotify) {
 
-			while(JXCheckTypedWindowEvent(display, np->window,
-				MotionNotify, &event));
+			DiscardMotionEvents(&event, np->window);
 
 			deltax = event.xmotion.x - (np->x + np->width);
 			deltay = event.xmotion.y - (np->y + np->height);

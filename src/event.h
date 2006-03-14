@@ -10,6 +10,7 @@ void HandleStartupEvents();
 
 void WaitForEvent();
 void ProcessEvent(XEvent *event);
+void DiscardMotionEvents(XEvent *event, Window w);
 
 void SetShowMenuOnRoot(const char *mask);
 

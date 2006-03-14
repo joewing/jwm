@@ -18,9 +18,6 @@ int GetScreenHeight(int index);
 int GetScreenX(int index);
 int GetScreenY(int index);
 
-int GetMinScreenWidth();
-int GetMinScreenHeight();
-
 int GetScreenCount();
 
 #endif

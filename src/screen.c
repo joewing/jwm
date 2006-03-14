@@ -13,8 +13,6 @@ static XineramaScreenInfo *screens = NULL;
 static int screenCount = 0;
 #endif
 
-static int minWidth, minHeight;
-
 /****************************************************************************
  ****************************************************************************/
 void InitializeScreens() {
@@ -25,30 +23,11 @@ void InitializeScreens() {
 void StartupScreens() {
 #ifdef USE_XINERAMA
 
-	int x;
-
 	if(XineramaIsActive(display)) {
 		screens = XineramaQueryScreens(display, &screenCount);
-		minWidth = screens[0].width;
-		minHeight = screens[0].height;
-		for(x = 1; x < screenCount; x++) {
-			if(screens[x].width < minWidth) {
-				minWidth = screens[x].width;
-			}
-			if(screens[x].height < minHeight) {
-				minHeight = screens[x].height;
-			}
-		}
 	} else {
-		minWidth = rootWidth;
-		minHeight = rootHeight;
 		screenCount = 1;
 	}
-
-#else
-
-	minWidth = rootWidth;
-	minHeight = rootHeight;
 
 #endif /* USE_XINERAMA */
 }
@@ -164,18 +143,6 @@ int GetScreenY(int index) {
 #else
 	return 0;
 #endif
-}
-
-/****************************************************************************
- ****************************************************************************/
-int GetMinScreenWidth() {
-	return minWidth;
-}
-
-/****************************************************************************
- ****************************************************************************/
-int GetMinScreenHeight() {
-	return minHeight;
 }
 
 /****************************************************************************

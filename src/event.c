@@ -854,6 +854,7 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
 /****************************************************************************
  ****************************************************************************/
 void HandleMotionNotify(const XMotionEvent *event) {
+
 	ClientNode *np;
 	Cursor cur;
 	BorderActionType action;

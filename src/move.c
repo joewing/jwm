@@ -165,7 +165,8 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 			break;
 		case MotionNotify:
 
-			while(JXCheckTypedEvent(display, MotionNotify, &event));
+			while(JXCheckTypedWindowEvent(display, np->window,
+				MotionNotify, &event));
 
 			np->x = oldx + event.xmotion.x - startx;
 			np->y = oldy + event.xmotion.y - starty;
@@ -248,7 +249,7 @@ int MoveClientKeyboard(ClientNode *np) {
 
 	JXWarpPointer(display, None, rootWindow, 0, 0, 0, 0,
 		np->x, np->y);
-	JXCheckTypedEvent(display, MotionNotify, &event);
+	JXCheckTypedWindowEvent(display, np->window, MotionNotify, &event);
 
 	if(np->state.status & STAT_SHADED) {
 		height = 0;
@@ -269,7 +270,7 @@ int MoveClientKeyboard(ClientNode *np) {
 
 		if(event.type == KeyPress) {
 
-			while(JXCheckTypedEvent(display, KeyPress, &event));
+			while(JXCheckTypedWindowEvent(display, np->window, KeyPress, &event));
 
 			switch(GetKey(&event.xkey) & 0xFF) {
 			case KEY_UP:
@@ -299,13 +300,14 @@ int MoveClientKeyboard(ClientNode *np) {
 
 			JXWarpPointer(display, None, rootWindow, 0, 0, 0, 0,
 				np->x, np->y);
-			JXCheckTypedEvent(display, MotionNotify, &event);
+			JXCheckTypedWindowEvent(display, np->window, MotionNotify, &event);
 
 			moved = 1;
 
 		} else if(event.type == MotionNotify) {
 
-			while(JXCheckTypedEvent(display, MotionNotify, &event));
+			while(JXCheckTypedWindowEvent(display, np->window,
+				MotionNotify, &event));
 
 			np->x = event.xmotion.x;
 			np->y = event.xmotion.y;

@@ -37,17 +37,16 @@ typedef enum {
 
 typedef enum {
 	STAT_NONE      = 0,
-	STAT_ACTIVE    = 1 << 0,
-	STAT_MAPPED    = 1 << 1,
-	STAT_MAXIMIZED = 1 << 2,
-	STAT_HIDDEN    = 1 << 3,
-	STAT_STICKY    = 1 << 4,
-	STAT_NOLIST    = 1 << 5,
-	STAT_MINIMIZED = 1 << 6,
-	STAT_SHADED    = 1 << 7,
-	STAT_USESHAPE  = 1 << 8,
-	STAT_WMDIALOG  = 1 << 9,
-	STAT_PIGNORE   = 1 << 10
+	STAT_ACTIVE    = 1 << 0,  /* This client has focus. */
+	STAT_MAPPED    = 1 << 1,  /* This client is shown (on some desktop). */
+	STAT_MAXIMIZED = 1 << 2,  /* This client is maximized. */
+	STAT_HIDDEN    = 1 << 3,  /* This client is not on the current desktop. */
+	STAT_STICKY    = 1 << 4,  /* This client is on all desktops. */
+	STAT_NOLIST    = 1 << 5,  /* Skip this client in the task list. */
+	STAT_MINIMIZED = 1 << 6,  /* This client is minimized. */
+	STAT_SHADED    = 1 << 7,  /* This client is shaded. */
+	STAT_WMDIALOG  = 1 << 8,  /* This is a JWM dialog window. */
+	STAT_PIGNORE   = 1 << 9   /* Ignore the program-specified position. */
 } StatusFlags;
 
 typedef struct ColormapNode {

@@ -26,6 +26,9 @@
 #define JXCheckTypedEvent( a, b, c ) \
 	( SetCheckpoint(), XCheckTypedEvent( a, b, c ) )
 
+#define JXCheckTypedWindowEvent( a, b, c, d ) \
+	( SetCheckpoint(), XCheckTypedWindowEvent( a, b, c, d ) )
+
 #define JXClearWindow( a, b ) \
 	( SetCheckpoint(), XClearWindow( a, b ) )
 

@@ -392,24 +392,22 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 		north += titleHeight;
 	}
 
-	screenIndex = GetMouseScreen();
+	if(np->x + np->width > rootWidth || np->y + np->height > rootWidth) {
+		overflow = 1;
+	} else {
+		overflow = 0;
+	}
 
-	GetScreenBounds(screenIndex, &box);
-
-	if(alreadyMapped
+	if(!overflow && (alreadyMapped
 		|| (!(np->state.status & STAT_PIGNORE)
-		&& (np->sizeFlags & (PPosition | USPosition)))) {
-
-		if(np->x + np->width - box.x > box.width) {
-			np->x = box.x;
-		}
-		if(np->y + np->height - box.y > box.height) {
-			np->y = box.y;
-		}
+		&& (np->sizeFlags & (PPosition | USPosition))))) {
 
 		GravitateClient(np, 0);
 
 	} else {
+
+		screenIndex = GetMouseScreen();
+		GetScreenBounds(screenIndex, &box);
 
 		UpdateTrayBounds(&box, np->state.layer);
 		UpdateStrutBounds(&box);

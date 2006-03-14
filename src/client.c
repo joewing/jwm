@@ -1219,6 +1219,7 @@ void ReparentClient(ClientNode *np, int notOwner) {
  ****************************************************************************/
 #ifdef USE_SHAPE
 void CheckShape(ClientNode *np) {
+
 	int xb, yb;
 	int xc, yc;
 	unsigned int wb, hb;
@@ -1229,9 +1230,9 @@ void CheckShape(ClientNode *np) {
 		&xb, &yb, &wb, &hb, &clipShaped, &xc, &yc, &wc, &hc);
 
 	if(boundingShaped == True) {
-		np->state.status |= STAT_USESHAPE;
 		SetShape(np);
 	}
+
 }
 #endif
 

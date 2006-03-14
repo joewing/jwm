@@ -374,7 +374,8 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 
 	if(event->type == MotionNotify) {
 
-		while(JXCheckTypedEvent(display, MotionNotify, event));
+		while(JXCheckTypedWindowEvent(display, menu->window,
+			MotionNotify, event));
 
 		x = event->xmotion.x - menu->x;
 		y = event->xmotion.y - menu->y;

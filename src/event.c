@@ -28,6 +28,8 @@
 #include "timing.h"
 #include "traybutton.h"
 
+#define MIN_TIME_DELTA 50
+
 static unsigned int onRootMask = ~0;
 
 static void Signal();
@@ -205,7 +207,7 @@ void Signal() {
 
 	GetCurrentTime(&now);
 
-	if(GetTimeDifference(&now, &last) < 250) {
+	if(GetTimeDifference(&now, &last) < MIN_TIME_DELTA) {
 		return;
 	}
 	last = now;

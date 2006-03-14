@@ -52,11 +52,6 @@ static BorderPixmapDataType bitmaps[BP_COUNT >> 1] = {
 
 static Pixmap pixmaps[BP_COUNT];
 
-static Pixmap buffer = None;
-static GC bufferGC = None;
-static unsigned int bufferWidth;
-static unsigned int bufferHeight;
-
 static void DrawBorderHelper(const ClientNode *np,
 	unsigned int width, unsigned int height);
 static void DrawButtonBorder(const ClientNode *np, int offset,
@@ -100,15 +95,6 @@ void ShutdownBorders() {
 
 	for(x = 0; x < BP_COUNT; x++) {
 		JXFreePixmap(display, pixmaps[x]);
-	}
-
-	if(buffer != None) {
-		JXFreeGC(display, bufferGC);
-		JXFreePixmap(display, buffer);
-		buffer = None;
-		bufferGC = None;
-		bufferWidth = 0;
-		bufferHeight = 0;
 	}
 
 }
@@ -302,27 +288,12 @@ void DrawBorderHelper(const ClientNode *np,
 		bsize = 0;
 	}
 
-	if(buffer == None || bufferWidth < width || bufferHeight < height) {
-
-		if(buffer != None) {
-			XFreeGC(display, bufferGC);
-			XFreePixmap(display, buffer);
-		}
-
-		bufferWidth = width;
-		bufferHeight = height;
-		buffer = JXCreatePixmap(display, np->parent, bufferWidth, bufferHeight,
-			rootDepth);
-		bufferGC = JXCreateGC(display, buffer, 0, NULL);
-
-	}
-
-	canvas = buffer;
-	gc = bufferGC;
+	canvas = np->parent;
+	gc = np->parentGC;
 
 	JXSetWindowBackground(display, np->parent, borderPixel);
-	JXSetForeground(display, bufferGC, borderPixel);
-	JXFillRectangle(display, buffer, bufferGC, 0, 0, width, height);
+	JXClearWindow(display, np->parent);
+	JXSetForeground(display, gc, borderPixel);
 
 	buttonCount = DrawBorderButtons(np, canvas, gc);
 	titleWidth = width - (titleHeight + 2) * buttonCount - bsize
@@ -459,9 +430,6 @@ void DrawBorderHelper(const ClientNode *np,
 		}
 
 	}
-
-	JXCopyArea(display, canvas, np->parent, np->parentGC, 0, 0,
-		width, height, 0, 0);
 
 }
 

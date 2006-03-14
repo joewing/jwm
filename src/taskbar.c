@@ -740,7 +740,7 @@ int ShouldShowItem(const ClientNode *np) {
 		return 0;
 	}
 
-	if(np->state.status & (STAT_NOLIST | STAT_WITHDRAWN)) {
+	if(np->state.status & STAT_NOLIST) {
 		return 0;
 	}
 
@@ -766,7 +766,7 @@ int ShouldFocusItem(const ClientNode *np) {
 		return 0;
 	}
 
-	if(np->state.status & (STAT_NOLIST | STAT_WITHDRAWN)) {
+	if(np->state.status & STAT_NOLIST) {
 		return 0;
 	}
 

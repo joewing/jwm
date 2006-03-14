@@ -236,7 +236,10 @@ void DrawBorder(const ClientNode *np) {
 		return;
 	}
 
-	if(np->state.status & (STAT_MINIMIZED | STAT_WITHDRAWN | STAT_HIDDEN)) {
+	if(!(np->state.status & (STAT_MAPPED | STAT_SHADED))) {
+		return;
+	}
+	if(np->state.status & STAT_HIDDEN) {
 		return;
 	}
 

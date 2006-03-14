@@ -288,12 +288,12 @@ void WriteState(ClientNode *np) {
 
 	Assert(np);
 
-	if(np->state.status & STAT_WITHDRAWN) {
-		data[0] = WithdrawnState;
+	if(np->state.status & STAT_MAPPED) {
+		data[0] = NormalState;
 	} else if(np->state.status & STAT_MINIMIZED) {
 		data[0] = IconicState;
 	} else {
-		data[0] = NormalState;
+		data[0] = WithdrawnState;
 	}
 	data[1] = None;
 

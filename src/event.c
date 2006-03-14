@@ -638,7 +638,7 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 
 			switch(event->data.l[0]) {
 			case WithdrawnState:
-				SetClientWithdrawn(np, 1);
+				SetClientWithdrawn(np);
 				break;
 			case IconicState:
 				MinimizeClient(np);
@@ -929,7 +929,6 @@ void HandleMapRequest(const XMapEvent *event) {
 		if(!(np->state.status & STAT_MAPPED)) {
 			np->state.status |= STAT_MAPPED;
 			np->state.status &= ~STAT_MINIMIZED;
-			np->state.status &= ~STAT_WITHDRAWN;
 			JXMapWindow(display, np->window);
 			JXMapWindow(display, np->parent);
 			RaiseClient(np);
@@ -958,8 +957,14 @@ void HandleUnmapNotify(const XUnmapEvent *event) {
 		}
 
 		if(np->state.status & STAT_MAPPED) {
+
 			np->state.status &= ~STAT_MAPPED;
 			JXUnmapWindow(display, np->parent);
+
+			WriteState(np);
+			UpdateTaskBar();
+			UpdatePager();
+
 		}
 
 	} else if(!np) {

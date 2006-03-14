@@ -43,12 +43,11 @@ typedef enum {
 	STAT_HIDDEN    = 1 << 3,
 	STAT_STICKY    = 1 << 4,
 	STAT_NOLIST    = 1 << 5,
-	STAT_WITHDRAWN = 1 << 6,
-	STAT_MINIMIZED = 1 << 7,
-	STAT_SHADED    = 1 << 8,
-	STAT_USESHAPE  = 1 << 9,
-	STAT_WMDIALOG  = 1 << 10,
-	STAT_PIGNORE   = 1 << 11
+	STAT_MINIMIZED = 1 << 6,
+	STAT_SHADED    = 1 << 7,
+	STAT_USESHAPE  = 1 << 8,
+	STAT_WMDIALOG  = 1 << 9,
+	STAT_PIGNORE   = 1 << 10
 } StatusFlags;
 
 typedef struct ColormapNode {
@@ -120,7 +119,7 @@ void RemoveClient(ClientNode *np);
 void MinimizeClient(ClientNode *np);
 void ShadeClient(ClientNode *np);
 void UnshadeClient(ClientNode *np);
-void SetClientWithdrawn(ClientNode *np, int isWithdrawn);
+void SetClientWithdrawn(ClientNode *np);
 void RestoreClient(ClientNode *np);
 void MaximizeClient(ClientNode *np);
 void FocusClient(ClientNode *np);

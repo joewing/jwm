@@ -299,7 +299,6 @@ void MinimizeTransients(ClientNode *np) {
 	}
 	np->state.status |= STAT_MINIMIZED;
 	np->state.status &= ~STAT_MAPPED;
-	np->state.status &= ~STAT_WITHDRAWN;
 	WriteState(np);
 
 	for(x = 0; x < LAYER_COUNT; x++) {
@@ -336,7 +335,6 @@ void ShadeClient(ClientNode *np) {
 	np->state.status |= STAT_SHADED;
 	np->state.status &= ~STAT_MINIMIZED;
 	np->state.status &= ~STAT_MAPPED;
-	np->state.status &= ~STAT_WITHDRAWN;
 
 	JXResizeWindow(display, np->parent, np->width + 2 * bsize,
 		titleHeight + 2 * bsize);
@@ -368,7 +366,6 @@ void UnshadeClient(ClientNode *np) {
 		np->state.status |= STAT_MAPPED;
 		np->state.status &= ~STAT_SHADED;
 	}
-	np->state.status &= ~STAT_WITHDRAWN;
 
 	JXResizeWindow(display, np->parent, np->width + 2 * bsize,
 		np->height + titleHeight + 2 * bsize);
@@ -382,31 +379,24 @@ void UnshadeClient(ClientNode *np) {
 /****************************************************************************
  * Set a client's state to withdrawn.
  ****************************************************************************/
-void SetClientWithdrawn(ClientNode *np, int isWithdrawn) {
+void SetClientWithdrawn(ClientNode *np) {
 
 	Assert(np);
 
-	if(isWithdrawn) {
-
-		if(activeClient == np) {
-			activeClient = NULL;
-			np->state.status &= ~STAT_ACTIVE;
-		}
-		np->state.status |= STAT_WITHDRAWN;
-		if(np->state.status & STAT_MAPPED) {
-			JXUnmapWindow(display, np->window);
-			JXUnmapWindow(display, np->parent);
-			WriteState(np);
-		}
-
-	} else {
-		np->state.status &= ~STAT_WITHDRAWN;
-		if(np->state.status & STAT_MAPPED) {
-			JXMapWindow(display, np->window);
-			JXMapWindow(display, np->parent);
-			WriteState(np);
-		}
+	if(activeClient == np) {
+		activeClient = NULL;
+		np->state.status &= ~STAT_ACTIVE;
+		FocusNextStacked(np);
 	}
+
+	if(np->state.status & STAT_MAPPED) {
+		JXUnmapWindow(display, np->window);
+		JXUnmapWindow(display, np->parent);
+		WriteState(np);
+	}
+
+	np->state.status &= ~STAT_MAPPED;
+	np->state.status &= ~STAT_MINIMIZED;
 
 	UpdateTaskBar();
 	UpdatePager();
@@ -428,7 +418,6 @@ void RestoreTransients(ClientNode *np) {
 	}
 	np->state.status |= STAT_MAPPED;
 	np->state.status &= ~STAT_MINIMIZED;
-	np->state.status &= ~STAT_WITHDRAWN;
 
 	WriteState(np);
 
@@ -688,7 +677,10 @@ void FocusClient(ClientNode *np) {
 
 	Assert(np);
 
-	if(np->state.status & (STAT_MINIMIZED | STAT_WITHDRAWN | STAT_HIDDEN)) {
+	if(!(np->state.status & STAT_MAPPED)) {
+		return;
+	}
+	if(np->state.status & STAT_HIDDEN) {
 		return;
 	}
 
@@ -727,21 +719,22 @@ void FocusClient(ClientNode *np) {
  ****************************************************************************/
 void FocusNextStacked(ClientNode *np) {
 
-	const int FLAGS = STAT_MINIMIZED | STAT_WITHDRAWN | STAT_HIDDEN;
 	int x;
 	ClientNode *tp;
 
 	Assert(np);
 
 	for(tp = np->next; tp; tp = tp->next) {
-		if(!(tp->state.status & FLAGS)) {
+		if((tp->state.status & STAT_MAPPED)
+			&& !(tp->state.status & STAT_HIDDEN)) {
 			FocusClient(tp);
 			return;
 		}
 	}
 	for(x = np->state.layer - 1; x >= LAYER_BOTTOM; x--) {
 		for(tp = nodes[x]; tp; tp = tp->next) {
-			if(!(tp->state.status & FLAGS)) {
+			if((tp->state.status & STAT_MAPPED)
+				&& !(tp->state.status & STAT_HIDDEN)) {
 				FocusClient(tp);
 				return;
 			}
@@ -903,8 +896,8 @@ void RestackClients() {
 	for(;;) {
 
 		for(np = nodes[layer]; np; np = np->next) {
-			if(!(np->state.status
-				& (STAT_MINIMIZED | STAT_HIDDEN | STAT_WITHDRAWN))) {
+			if((np->state.status & STAT_MAPPED)
+				&& !(np->state.status & STAT_HIDDEN)) {
 				stack[index++] = np->parent;
 			}
 		}

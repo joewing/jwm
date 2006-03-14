@@ -5,6 +5,9 @@ Todo:
 	- Make the window menu configurable (other languages, order, etc.).
 	- Add mouse bindings.
 
+20060313:
+	- Fix a bug causing JWM to lose the state of withdrawn windows.
+
 20060312:
 	- Ignore caps lock and num lock for key bindings.
 

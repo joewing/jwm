@@ -4,6 +4,10 @@ Todo:
 	- Add window list root menu item.
 	- Make the window menu configurable (other languages, order, etc.).
 	- Add mouse bindings.
+	- Support menus that are too big for the screen.
+
+20060314:
+	- Fix a Xinerama window placement issue.
 
 20060313:
 	- Fix a bug causing JWM to lose the state of withdrawn windows.

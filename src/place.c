@@ -272,43 +272,43 @@ void SubtractBounds(const BoundingBox *src, BoundingBox *dest) {
 	}
 
 	/* There are four ways to do this:
-	 *  1. Increase the x-coordinate and decrease the width of dest.
-	 *  2. Increase the y-coordinate and decrease the height of dest.
-	 *  3. Decrease the width of dest.
-	 *  4. Decrease the height of dest.
+	 *  0. Increase the x-coordinate and decrease the width of dest.
+	 *  1. Increase the y-coordinate and decrease the height of dest.
+	 *  2. Decrease the width of dest.
+	 *  3. Decrease the height of dest.
 	 * We will chose the option which leaves the greatest area.
 	 * Note that negative areas are possible.
 	 */
 
-	/* 1 */
+	/* 0 */
 	boxes[0] = *dest;
 	boxes[0].x = src->x + src->width;
 	boxes[0].width = dest->x + dest->width - boxes[0].x;
 
-	/* 2 */
+	/* 1 */
 	boxes[1] = *dest;
 	boxes[1].y = src->y + src->height;
 	boxes[1].height = dest->y + dest->height - boxes[1].y;
 
-	/* 3 */
+	/* 2 */
 	boxes[2] = *dest;
 	boxes[2].width = src->x - dest->x;
 
-	/* 4 */
+	/* 3 */
 	boxes[3] = *dest;
 	boxes[3].height = src->y - dest->y;
 
-	/* 1 and 2, winner in 1. */
+	/* 0 and 1, winner in 0. */
 	if(boxes[0].width * boxes[0].height < boxes[1].width * boxes[1].height) {
 		boxes[0] = boxes[1];
 	}
 
-	/* 3 and 4, winner in 3. */
+	/* 2 and 3, winner in 2. */
 	if(boxes[2].width * boxes[2].height < boxes[3].width * boxes[3].height) {
 		boxes[2] = boxes[3];
 	}
 
-	/* 1 and 3, winner in dest. */
+	/* 0 and 2, winner in dest. */
 	if(boxes[0].width * boxes[0].height < boxes[2].width * boxes[2].height) {
 		*dest = boxes[2];
 	} else {
@@ -376,7 +376,6 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 	BoundingBox box;
 	int north, west;
 	int screenIndex;
-	int cascadeMultiplier;
 	int cascadeIndex;
 	int overflow;
 
@@ -412,8 +411,7 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 		UpdateTrayBounds(&box, np->state.layer);
 		UpdateStrutBounds(&box);
 
-		cascadeMultiplier = GetScreenCount() * desktopCount;
-		cascadeIndex = screenIndex * cascadeMultiplier + currentDesktop;
+		cascadeIndex = screenIndex * desktopCount + currentDesktop;
 
 		/* Set the cascaded location. */
 		np->x = box.x + west + cascadeOffsets[cascadeIndex];

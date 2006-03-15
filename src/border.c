@@ -293,7 +293,6 @@ void DrawBorderHelper(const ClientNode *np,
 
 	JXSetWindowBackground(display, np->parent, borderPixel);
 	JXClearWindow(display, np->parent);
-	JXSetForeground(display, gc, borderPixel);
 
 	buttonCount = DrawBorderButtons(np, canvas, gc);
 	titleWidth = width - (titleHeight + 2) * buttonCount - bsize

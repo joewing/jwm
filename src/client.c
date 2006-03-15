@@ -341,6 +341,10 @@ void ShadeClient(ClientNode *np) {
 
 	WriteState(np);
 
+	if(np->state.status & STAT_SHAPE) {
+		SetShape(np);
+	}
+
 }
 
 /****************************************************************************
@@ -371,6 +375,10 @@ void UnshadeClient(ClientNode *np) {
 		np->height + titleHeight + 2 * bsize);
 
 	WriteState(np);
+
+	if(np->state.status & STAT_SHAPE) {
+		SetShape(np);
+	}
 
 	RefocusClient();
 
@@ -988,7 +996,11 @@ void SetShape(ClientNode *np) {
 
 		/* Bottom */
 		rect[3].x = 0;
-		rect[3].y = np->height + north;
+		if(np->state.status & STAT_SHADED) {
+			rect[3].y = north;
+		} else {
+			rect[3].y = np->height + north;
+		}
 		rect[3].width = np->width + west * 2;
 		rect[3].height = west;
 
@@ -1230,6 +1242,7 @@ void CheckShape(ClientNode *np) {
 		&xb, &yb, &wb, &hb, &clipShaped, &xc, &yc, &wc, &hc);
 
 	if(boundingShaped == True) {
+		np->state.status |= STAT_SHAPE;
 		SetShape(np);
 	}
 

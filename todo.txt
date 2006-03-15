@@ -8,6 +8,7 @@ Todo:
 
 20060314:
 	- Fix a Xinerama window placement issue.
+	- Fix shading of shaped windows.
 
 20060313:
 	- Fix a bug causing JWM to lose the state of withdrawn windows.

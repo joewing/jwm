@@ -46,7 +46,8 @@ typedef enum {
 	STAT_MINIMIZED = 1 << 6,  /* This client is minimized. */
 	STAT_SHADED    = 1 << 7,  /* This client is shaded. */
 	STAT_WMDIALOG  = 1 << 8,  /* This is a JWM dialog window. */
-	STAT_PIGNORE   = 1 << 9   /* Ignore the program-specified position. */
+	STAT_PIGNORE   = 1 << 9,  /* Ignore the program-specified position. */
+	STAT_SHAPE     = 1 << 10  /* This client uses the shape extension. */
 } StatusFlags;
 
 typedef struct ColormapNode {

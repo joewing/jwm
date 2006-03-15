@@ -970,12 +970,19 @@ void HandleMapRequest(const XMapEvent *event) {
 /****************************************************************************
  ****************************************************************************/
 void HandleUnmapNotify(const XUnmapEvent *event) {
+
 	ClientNode *np;
+	XEvent e;
 
 	Assert(event);
 
 	np = FindClientByWindow(event->window);
 	if(np && np->window == event->window) {
+
+		if(JXCheckTypedWindowEvent(display, np->window, DestroyNotify, &e)) {
+			HandleDestroyNotify(&e.xdestroywindow);
+			return;
+		}
 
 		if(np->controller) {
 			(np->controller)(1);

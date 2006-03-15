@@ -960,6 +960,8 @@ void SetShape(ClientNode *np) {
 
 	Assert(np);
 
+	np->state.status |= STAT_SHAPE;
+
 	if(np->state.border & BORDER_OUTLINE) {
 		west = borderWidth;
 	} else {
@@ -969,6 +971,19 @@ void SetShape(ClientNode *np) {
 		north = west + titleHeight;
 	} else {
 		north = west;
+	}
+
+	if(np->state.status & STAT_SHADED) {
+
+		rect[0].x = 0;
+		rect[0].y = 0;
+		rect[0].width = np->width + west * 2;
+		rect[0].height = west * 2 + north;
+
+		JXShapeCombineRectangles(display, np->parent, ShapeBounding,
+			0, 0, rect, 1, ShapeSet, Unsorted);
+
+		return;
 	}
 
 	JXShapeCombineShape(display, np->parent, ShapeBounding, west, north,
@@ -996,11 +1011,7 @@ void SetShape(ClientNode *np) {
 
 		/* Bottom */
 		rect[3].x = 0;
-		if(np->state.status & STAT_SHADED) {
-			rect[3].y = north;
-		} else {
-			rect[3].y = np->height + north;
-		}
+		rect[3].y = np->height + north;
 		rect[3].width = np->width + west * 2;
 		rect[3].height = west;
 
@@ -1242,7 +1253,6 @@ void CheckShape(ClientNode *np) {
 		&xb, &yb, &wb, &hb, &clipShaped, &xc, &yc, &wc, &hc);
 
 	if(boundingShaped == True) {
-		np->state.status |= STAT_SHAPE;
 		SetShape(np);
 	}
 

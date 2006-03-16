@@ -28,6 +28,8 @@ typedef struct ClockType {
 	int mousey;
 	TimeType mouseTime;
 
+	int userWidth;
+
 	struct ClockType *next;
 
 } ClockType;
@@ -62,6 +64,8 @@ void StartupClock() {
 	for(clk = clocks; clk; clk = clk->next) {
 		if(clk->cp->requestedWidth == 0) {
 			clk->cp->requestedWidth = 1;
+		} else {
+			clk->userWidth = 1;
 		}
 		if(clk->cp->requestedHeight == 0) {
 			clk->cp->requestedHeight = GetStringHeight(FONT_CLOCK) + 4;
@@ -113,6 +117,7 @@ TrayComponentType *CreateClock(const char *format, const char *command,
 	clk->mousey = 0;
 	clk->mouseTime.seconds = 0;
 	clk->mouseTime.ms = 0;
+	clk->userWidth = 0;
 
 	if(format) {
 		clk->format = Allocate(strlen(format) + 1);
@@ -296,7 +301,7 @@ void DrawClock(ClockType *clk, TimeType *now, int x, int y) {
 
 	width = GetStringWidth(FONT_CLOCK, shortTime);
 	rwidth = width + 4;
-	if(rwidth == clk->cp->requestedWidth) {
+	if(rwidth == clk->cp->requestedWidth || clk->userWidth) {
 
 		RenderString(cp->pixmap, clk->bufferGC, FONT_CLOCK,
 			COLOR_CLOCK_FG,

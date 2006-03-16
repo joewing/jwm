@@ -1000,30 +1000,13 @@ void ParseTray(const TokenNode *tp) {
 	}
 
 	attr = FindAttribute(tp->attributes, VALIGN_ATTRIBUTE);
-	if(attr) {
-		SetTrayVerticalAlignment(tray, attr);
-	}
+	SetTrayVerticalAlignment(tray, attr);
 
 	attr = FindAttribute(tp->attributes, HALIGN_ATTRIBUTE);
-	if(attr) {
-		SetTrayHorizontalAlignment(tray, attr);
-	}
+	SetTrayHorizontalAlignment(tray, attr);
 
 	attr = FindAttribute(tp->attributes, LAYOUT_ATTRIBUTE);
-	if(attr) {
-		SetTrayLayout(tray, attr);
-	} else {
-		/* Prefer horizontal layout, but use vertical if
-		 * width is finite and height is larger than width or infinite.
-		 */
-		if(tray->requestedWidth > 0
-			&& (tray->requestedHeight == 0
-			|| tray->requestedHeight > tray->requestedWidth)) {
-			SetTrayLayout(tray, "vertical");
-		} else {
-			SetTrayLayout(tray, "horizontal");
-		}
-	}
+	SetTrayLayout(tray, attr);
 
 	attr = FindAttribute(tp->attributes, LAYER_ATTRIBUTE);
 	if(attr) {

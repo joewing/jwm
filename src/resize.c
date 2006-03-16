@@ -96,8 +96,8 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 	startx += np->x - west;
 	starty += np->y - north;
 
-	CreateResizeWindow();
-	UpdateResizeWindow(gwidth, gheight);
+	CreateResizeWindow(np);
+	UpdateResizeWindow(np, gwidth, gheight);
 
 	if(!(GetMouseMask() & Button1Mask)) {
 		StopResize(np, north, west);
@@ -203,7 +203,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 
 			if(lastgheight != gheight || lastgwidth != gwidth) {
 
-				UpdateResizeWindow(gwidth, gheight);
+				UpdateResizeWindow(np, gwidth, gheight);
 
 				if(resizeMode == RESIZE_OUTLINE) {
 					ClearOutline();
@@ -284,8 +284,8 @@ void ResizeClientKeyboard(ClientNode *np) {
 		north = west;
 	}
 
-	CreateResizeWindow();
-	UpdateResizeWindow(gwidth, gheight);
+	CreateResizeWindow(np);
+	UpdateResizeWindow(np, gwidth, gheight);
 
 	JXWarpPointer(display, None, rootWindow, 0, 0, 0, 0,
 		np->x + np->width, np->y + np->height);
@@ -370,7 +370,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 
 		if(lastgwidth != gwidth || lastgheight != gheight) {
 
-			UpdateResizeWindow(gwidth, gheight);
+			UpdateResizeWindow(np, gwidth, gheight);
 
 			if(resizeMode == RESIZE_OUTLINE) {
 				ClearOutline();

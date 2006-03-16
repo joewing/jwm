@@ -174,7 +174,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 
 			if(!doMove && (abs(np->x - oldx) > MOVE_DELTA
 				|| abs(np->y - oldy) > MOVE_DELTA)) {
-				CreateMoveWindow();
+				CreateMoveWindow(np);
 				doMove = 1;
 			}
 
@@ -192,7 +192,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 						np->y - north);
 					SendConfigureEvent(np);
 				}
-				UpdateMoveWindow(np->x, np->y);
+				UpdateMoveWindow(np);
 				UpdatePager();
 			}
 
@@ -243,8 +243,8 @@ int MoveClientKeyboard(ClientNode *np) {
 	np->controller = MoveController;
 	shouldStopMove = 0;
 
-	CreateMoveWindow();
-	UpdateMoveWindow(np->x, np->y);
+	CreateMoveWindow(np);
+	UpdateMoveWindow(np);
 
 	JXWarpPointer(display, None, rootWindow, 0, 0, 0, 0,
 		np->x, np->y);
@@ -331,7 +331,7 @@ int MoveClientKeyboard(ClientNode *np) {
 				SendConfigureEvent(np);
 			}
 
-			UpdateMoveWindow(np->x, np->y);
+			UpdateMoveWindow(np);
 			UpdatePager();
 
 		}

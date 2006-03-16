@@ -6,13 +6,18 @@
 #ifndef STATUS_H
 #define STATUS_H
 
-void CreateMoveWindow();
-void UpdateMoveWindow(int x, int y);
+struct ClientNode;
+
+void CreateMoveWindow(struct ClientNode *np);
+void UpdateMoveWindow(struct ClientNode *np);
 void DestroyMoveWindow();
 
-void CreateResizeWindow();
-void UpdateResizeWindow(int width, int height);
+void CreateResizeWindow(struct ClientNode *np);
+void UpdateResizeWindow(struct ClientNode *np, int gwidth, int gheight);
 void DestroyResizeWindow();
+
+void SetMoveStatusType(const char *str);
+void SetResizeStatusType(const char *str);
 
 #endif
 

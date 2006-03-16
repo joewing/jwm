@@ -32,6 +32,7 @@
 #include "clock.h"
 #include "dock.h"
 #include "popup.h"
+#include "status.h"
 
 typedef struct KeyMapType {
 	char *name;
@@ -93,6 +94,7 @@ static const char *HALIGN_ATTRIBUTE = "halign";
 static const char *POPUP_ATTRIBUTE = "popup";
 static const char *DELAY_ATTRIBUTE = "delay";
 static const char *ENABLED_ATTRIBUTE = "enabled";
+static const char *COORDINATES_ATTRIBUTE = "coordinates";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -383,6 +385,12 @@ void ParseSnapMode(const TokenNode *tp) {
 /****************************************************************************
  ****************************************************************************/
 void ParseMoveMode(const TokenNode *tp) {
+
+	const char *str;
+
+	str = FindAttribute(tp->attributes, COORDINATES_ATTRIBUTE);
+	SetMoveStatusType(str);
+
 	if(tp->value) {
 		if(!strcmp(tp->value, "outline")) {
 			SetMoveMode(MOVE_OUTLINE);
@@ -394,12 +402,18 @@ void ParseMoveMode(const TokenNode *tp) {
 	} else {
 		ParseError(tp, "move mode not specified");
 	}
+
 }
 
 /****************************************************************************
  ****************************************************************************/
-void ParseResizeMode(const TokenNode *tp)
-{
+void ParseResizeMode(const TokenNode *tp) {
+
+	const char *str;
+
+	str = FindAttribute(tp->attributes, COORDINATES_ATTRIBUTE);
+	SetResizeStatusType(str);
+
 	if(tp->value) {
 		if(!strcmp(tp->value, "outline")) {
 			SetResizeMode(RESIZE_OUTLINE);
@@ -411,6 +425,7 @@ void ParseResizeMode(const TokenNode *tp)
 	} else {
 		ParseError(tp, "resize mode not specified");
 	}
+
 }
 
 /****************************************************************************

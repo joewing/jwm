@@ -9,36 +9,89 @@
 #include "screen.h"
 #include "color.h"
 #include "main.h"
+#include "client.h"
+#include "error.h"
+
+typedef enum {
+	SW_INVALID,
+	SW_OFF,
+	SW_SCREEN,
+	SW_WINDOW,
+	SW_CORNER
+} StatusWindowType;
 
 static Window statusWindow;
 static GC statusGC;
 static unsigned int statusWindowHeight;
 static unsigned int statusWindowWidth;
+static int statusWindowX, statusWindowY;
+static StatusWindowType moveStatusType;
+static StatusWindowType resizeStatusType;
 
-static void DrawMoveResizeWindow();
+static void CreateMoveResizeWindow(const ClientNode *np,
+	StatusWindowType type);
+static void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type);
+static void DestroyMoveResizeWindow();
+static void GetMoveResizeCoordinates(const ClientNode *np,
+	StatusWindowType type, int *x, int *y);
+static StatusWindowType ParseType(const char *str);
 
 /*************************************************************************
  *************************************************************************/
-void CreateMoveWindow() {
-	XSetWindowAttributes attrs;
+void GetMoveResizeCoordinates(const ClientNode *np, StatusWindowType type,
+	int *x, int *y) {
+
 	int screen;
-	int x, y;
+	int screenx, screeny;
+	int screenWidth, screenHeight;
+
+	if(type == SW_WINDOW) {
+		*x = np->x + np->width / 2 - statusWindowWidth / 2;
+		*y = np->y + np->height / 2 - statusWindowHeight / 2;
+		return;
+	}
+
+	screen = GetCurrentScreen(np->x, np->y);
+	screenx = GetScreenX(screen);
+	screeny = GetScreenY(screen);
+
+	if(type == SW_CORNER) {
+		*x = screenx;
+		*y = screeny;
+		return;
+	}
+
+	/* SW_SCREEN */
+
+	screenWidth = GetScreenWidth(screen);
+	screenHeight = GetScreenHeight(screen);
+
+	*x = screenx + screenWidth / 2 - statusWindowWidth / 2;
+	*y = screeny + screenHeight / 2 - statusWindowHeight / 2;
+
+}
+
+/*************************************************************************
+ *************************************************************************/
+void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
+
+	XSetWindowAttributes attrs;
+
+	if(type == SW_OFF) {
+		return;
+	}
 
 	statusWindowHeight = GetStringHeight(FONT_MENU) + 8;
 	statusWindowWidth = GetStringWidth(FONT_MENU, " 00000 x 00000 ");
 
-	screen = GetMouseScreen();
-
-	x = GetScreenWidth(screen) / 2 - statusWindowWidth / 2;
-	x += GetScreenX(screen);
-	y = GetScreenHeight(screen) / 2 - statusWindowHeight / 2;
-	y += GetScreenY(screen);
+	GetMoveResizeCoordinates(np, type, &statusWindowX, &statusWindowY);
 
 	attrs.background_pixel = colors[COLOR_MENU_BG];
 	attrs.save_under = True;
 	attrs.override_redirect = True;
 
-	statusWindow = JXCreateWindow(display, rootWindow, x, y,
+	statusWindow = JXCreateWindow(display, rootWindow,
+		statusWindowX, statusWindowY,
 		statusWindowWidth, statusWindowHeight, 0,
 		CopyFromParent, InputOutput, CopyFromParent,
 		CWBackPixel | CWOverrideRedirect | CWSaveUnder,
@@ -52,7 +105,17 @@ void CreateMoveWindow() {
 
 /*************************************************************************
  *************************************************************************/
-void DrawMoveResizeWindow() {
+void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
+
+	int x, y;
+
+	GetMoveResizeCoordinates(np, type, &x, &y);
+	if(x != statusWindowX || y != statusWindowX) {
+		statusWindowX = x;
+		statusWindowY = y;
+		JXMoveResizeWindow(display, statusWindow, x, y,
+			statusWindowWidth, statusWindowHeight);
+	}
 
 	JXSetForeground(display, statusGC, colors[COLOR_MENU_BG]);
 	JXFillRectangle(display, statusWindow, statusGC, 2, 2,
@@ -86,55 +149,137 @@ void DrawMoveResizeWindow() {
 
 /*************************************************************************
  *************************************************************************/
-void UpdateMoveWindow(int x, int y) {
-	char str[80];
-	unsigned int width;
+void DestroyMoveResizeWindow() {
 
-	DrawMoveResizeWindow();
-
-	snprintf(str, sizeof(str), "(%d, %d)", x, y);
-	width = GetStringWidth(FONT_MENU, str);
-	RenderString(statusWindow, statusGC, FONT_MENU, COLOR_MENU_FG,
-		statusWindowWidth / 2 - width / 2, 4, rootWidth, str);
-
-	JXFlush(display);
-}
-
-/*************************************************************************
- *************************************************************************/
-void DestroyMoveWindow() {
 	if(statusWindow != None) {
 		JXFreeGC(display, statusGC);
 		JXDestroyWindow(display, statusWindow);
 		statusWindow = None;
 	}
+
 }
 
 /*************************************************************************
  *************************************************************************/
-void CreateResizeWindow() {
-	CreateMoveWindow();
+void CreateMoveWindow(ClientNode *np) {
+
+	CreateMoveResizeWindow(np, moveStatusType);
+
 }
 
 /*************************************************************************
  *************************************************************************/
-void UpdateResizeWindow(int width, int height) {
+void UpdateMoveWindow(ClientNode *np) {
+
+	char str[80];
+	unsigned int width;
+
+	if(moveStatusType == SW_OFF) {
+		return;
+	}
+
+	DrawMoveResizeWindow(np, moveStatusType);
+
+	snprintf(str, sizeof(str), "(%d, %d)", np->x, np->y);
+	width = GetStringWidth(FONT_MENU, str);
+	RenderString(statusWindow, statusGC, FONT_MENU, COLOR_MENU_FG,
+		statusWindowWidth / 2 - width / 2, 4, rootWidth, str);
+
+}
+
+/*************************************************************************
+ *************************************************************************/
+void DestroyMoveWindow() {
+
+	DestroyMoveResizeWindow();
+
+}
+
+/*************************************************************************
+ *************************************************************************/
+void CreateResizeWindow(ClientNode *np) {
+
+	CreateMoveResizeWindow(np, resizeStatusType);
+
+}
+
+/*************************************************************************
+ *************************************************************************/
+void UpdateResizeWindow(ClientNode *np, int gwidth, int gheight) {
+
 	char str[80];
 	unsigned int fontWidth;
 
-	DrawMoveResizeWindow();
+	if(resizeStatusType == SW_OFF) {
+		return;
+	}
 
-	snprintf(str, sizeof(str), "%d x %d", width, height);
+	DrawMoveResizeWindow(np, resizeStatusType);
+
+	snprintf(str, sizeof(str), "%d x %d", gwidth, gheight);
 	fontWidth = GetStringWidth(FONT_MENU, str);
 	RenderString(statusWindow, statusGC, FONT_MENU, COLOR_MENU_FG,
 		statusWindowWidth / 2 - fontWidth / 2, 4, rootWidth, str);
 
-	JXFlush(display);
 }
 
 /*************************************************************************
  *************************************************************************/
 void DestroyResizeWindow() {
-	DestroyMoveWindow();
+
+	DestroyMoveResizeWindow();
+
+}
+
+/*************************************************************************
+ *************************************************************************/
+StatusWindowType ParseType(const char *str) {
+
+	if(!str) {
+		return SW_SCREEN;
+	} else if(!strcmp(str, "off")) {
+		return SW_OFF;
+	} else if(!strcmp(str, "screen")) {
+		return SW_SCREEN;
+	} else if(!strcmp(str, "window")) {
+		return SW_WINDOW;
+	} else if(!strcmp(str, "corner")) {
+		return SW_CORNER;
+	} else {
+		return SW_INVALID;
+	}
+
+}
+
+/*************************************************************************
+ *************************************************************************/
+void SetMoveStatusType(const char *str) {
+
+	StatusWindowType type;
+
+	type = ParseType(str);
+	if(type == SW_INVALID) {
+		moveStatusType = SW_SCREEN;
+		Warning("invalid MoveMode coordinates: \"%s\"", str);
+	} else {
+		moveStatusType = type;
+	}
+
+}
+
+/*************************************************************************
+ *************************************************************************/
+void SetResizeStatusType(const char *str) {
+
+	StatusWindowType type;
+
+	type = ParseType(str);
+	if(type == SW_INVALID) {
+		resizeStatusType = SW_SCREEN;
+		Warning("invalid ResizeMode coordinates: \"%s\"", str);
+	} else {
+		resizeStatusType = type;
+	}
+
 }
 

@@ -6,6 +6,9 @@ Todo:
 	- Add mouse bindings.
 	- Support menus that are too big for the screen.
 
+20060315:
+	- Fix snap-to-screen with Xinerama.
+
 20060314:
 	- Fix a Xinerama window placement issue.
 	- Fix shading of shaped windows.

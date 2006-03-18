@@ -413,19 +413,19 @@ void DoSnapScreen(ClientNode *np, int north, int west) {
 		screenx = GetScreenX(screen);
 		screeny = GetScreenY(screen);
 
-		if(abs(client.right - screenWidth) <= snapDistance) {
+		if(abs(client.right - screenWidth - screenx) <= snapDistance) {
 			np->x = screenWidth - west - np->width;
 		}
-		if(abs(client.left) <= snapDistance) {
+		if(abs(client.left - screenx) <= snapDistance) {
 			np->x = screenx + west;
 		}
-		if(abs(client.bottom - screenHeight) <= snapDistance) {
+		if(abs(client.bottom - screenHeight - screeny) <= snapDistance) {
 			np->y = screenHeight - west;
 			if(!(np->state.status & STAT_SHADED)) {
 				np->y -= np->height;
 			}
 		}
-		if(abs(client.top) <= snapDistance) {
+		if(abs(client.top - screeny) <= snapDistance) {
 			np->y = north + screeny;
 		}
 

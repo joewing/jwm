@@ -335,8 +335,8 @@ void Startup() {
 	StartupDesktops();
 	StartupHints();
 	StartupBorders();
-	StartupClients();
 	StartupPlacement();
+	StartupClients();
 
 	StartupTiming();
 	#ifndef DISABLE_CONFIRM

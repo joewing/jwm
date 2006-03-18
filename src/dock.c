@@ -64,6 +64,15 @@ void StartupDock() {
 	char *selectionName;
 
 	if(!dock) {
+		/* No dock has been requested. */
+		return;
+	}
+
+	if(!dock->cp) {
+		/* The Dock item has been removed from the configuration. */
+		JXDestroyWindow(display, dock->window);
+		Release(dock);
+		dock = NULL;
 		return;
 	}
 
@@ -126,6 +135,7 @@ void DestroyDock() {
 			dock->cp = NULL;
 		} else {
 			Release(dock);
+			dock = NULL;
 		}
 	}
 

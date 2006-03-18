@@ -326,12 +326,12 @@ void Startup() {
 	StartupOutline();
 
 	StartupPager();
-	StartupSwallow();
 	StartupClock();
 	StartupTaskBar();
 	StartupTrayButtons();
 	StartupDock();
 	StartupTray();
+	StartupSwallow();
 	StartupKeys();
 	StartupDesktops();
 	StartupHints();
@@ -371,10 +371,10 @@ void Shutdown() {
 	ShutdownPager();
 	ShutdownRootMenu();
 	ShutdownDock();
+	ShutdownSwallow();
 	ShutdownTray();
 	ShutdownTrayButtons();
 	ShutdownTaskBar();
-	ShutdownSwallow();
 	ShutdownClock();
 	ShutdownBorders();
 	ShutdownClients();

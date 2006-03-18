@@ -231,6 +231,8 @@ int CheckSwallowMap(const XMapEvent *event) {
 			continue;
 		}
 
+		Assert(np->cp->tray->window != None);
+
 		if(JXGetClassHint(display, event->window, &hint)) {
 			if(!strcmp(hint.res_name, np->name)) {
 

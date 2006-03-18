@@ -12,33 +12,21 @@
 #include "client.h"
 #include "event.h"
 
-/* Spend 15 seconds looking. */
-#define FIND_SECONDS 15
-
-/* Check 30 times. */
-#define FIND_RETRY_COUNT 30
-
-#define FIND_USLEEP ((FIND_SECONDS * 1000 * 1000) / FIND_RETRY_COUNT)
-
 typedef struct SwallowNode {
 
 	TrayComponentType *cp;
 
 	char *name;
 	char *command;
-	int started;
 	int border;
-	int queued;
+	int userWidth;
+	int userHeight;
 
 	struct SwallowNode *next;
 
 } SwallowNode;
 
 static SwallowNode *swallowNodes;
-
-static void QueueStartup(TrayComponentType *cp);
-static void AwaitStartup(TrayComponentType *cp);
-static Window FindSwallowedClient(const char *name);
 
 static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
@@ -57,10 +45,9 @@ void StartupSwallow() {
 	SwallowNode *np;
 
 	for(np = swallowNodes; np; np = np->next) {
-		QueueStartup(np->cp);
-	}
-	for(np = swallowNodes; np; np = np->next) {
-		AwaitStartup(np->cp);
+		if(np->command) {
+			RunCommand(np->command);
+		}
 	}
 
 }
@@ -124,8 +111,6 @@ TrayComponentType *CreateSwallow(const char *name, const char *command,
 	} else {
 		np->command = NULL;
 	}
-	np->started = 0;
-	np->queued = 0;
 
 	np->next = swallowNodes;
 	swallowNodes = np;
@@ -137,8 +122,20 @@ TrayComponentType *CreateSwallow(const char *name, const char *command,
 	cp->Destroy = Destroy;
 	cp->Resize = Resize;
 
-	cp->requestedWidth = width;
-	cp->requestedHeight = height;
+	if(width) {
+		cp->requestedWidth = width;
+		np->userWidth = 1;
+	} else {
+		cp->requestedWidth = 1;
+		np->userWidth = 0;
+	}
+	if(height) {
+		cp->requestedHeight = height;
+		np->userHeight = 1;
+	} else {
+		cp->requestedHeight = 1;
+		np->userHeight = 0;
+	}
 
 	return cp;
 
@@ -220,148 +217,55 @@ void Destroy(TrayComponentType *cp) {
 }
 
 /****************************************************************************
+ * Determine if this is a window to be swallowed, if it is, swallow it.
  ****************************************************************************/
-void QueueStartup(TrayComponentType *cp) {
+int CheckSwallowMap(const XMapEvent *event) {
 
 	SwallowNode *np;
-
-	np = (SwallowNode*)cp->object;
-
-	Assert(np);
-
-	cp->window = FindSwallowedClient(np->name);
-	if(cp->window == None) {
-
-		Debug("starting %s", np->name);
-
-		if(!np->command) {
-			Warning("client to be swallowed (%s) not found and no command given",
-				np->name);
-			cp->requestedWidth = 1;
-			cp->requestedHeight = 1;
-		} else {
-			RunCommand(np->command);
-			np->queued = 1;
-		}
-
-	}
-
-}
-
-/****************************************************************************
- ****************************************************************************/
-void AwaitStartup(TrayComponentType *cp) {
-
-	SwallowNode *np;
-	XWindowAttributes attributes;
-	int x;
-
-	np = (SwallowNode*)cp->object;
-
-	Assert(np);
-
-	if(cp->window == None) {
-
-		Debug("waiting for %s", np->name);
-
-		for(x = 0; x < FIND_RETRY_COUNT; x++) {
-			cp->window = FindSwallowedClient(np->name);
-			if(cp->window != None) {
-				break;
-			}
-			usleep(FIND_USLEEP);
-		}
-
-		if(cp->window == None) {
-			Warning("%s not found after running %s", np->name, np->command);
-			cp->requestedWidth = 1;
-			cp->requestedHeight = 1;
-			return;
-		}
-
-	}
-
-	if(!JXGetWindowAttributes(display, cp->window, &attributes)) {
-		attributes.width = 0;
-		attributes.height = 0;
-		attributes.border_width = 0;
-	}
-	np->border = attributes.border_width;
-
-	if(cp->requestedWidth < 0 || cp->requestedWidth > rootWidth) {
-		Warning("invalid width for swallow: %d", cp->requestedWidth);
-		cp->requestedWidth = 0;
-	}
-	if(cp->requestedHeight < 0 || cp->requestedHeight > rootHeight) {
-		Warning("invalid height for swallow: %d", cp->requestedHeight);
-		cp->requestedHeight = 0;
-	}
-
-	if(cp->requestedWidth == 0) {
-		cp->requestedWidth = attributes.width + 2 * np->border;
-	}
-	if(cp->requestedHeight == 0) {
-		cp->requestedHeight = attributes.height + 2 * np->border;
-	}
-
-	Debug("%s swallowed", np->name);
-
-}
-
-/****************************************************************************
- ****************************************************************************/
-Window FindSwallowedClient(const char *name) {
-
 	XClassHint hint;
 	XWindowAttributes attr;
-	Window rootReturn, parentReturn, *childrenReturn;
-	Window result;
-	unsigned int childrenCount;
-	unsigned int x;
 
-	Assert(name);
+	for(np = swallowNodes; np; np = np->next) {
 
-	result = None;
-
-	/* Process any pending events before searching. */
-	HandleStartupEvents();
-
-	JXSync(display, False);
-
-	JXQueryTree(display, rootWindow, &rootReturn, &parentReturn,
-			&childrenReturn, &childrenCount);
-
-	for(x = 0; x < childrenCount; x++) {
-
-		if(!JXGetWindowAttributes(display, childrenReturn[x], &attr)) {
+		if(np->cp->window != None) {
 			continue;
 		}
 
-		if(attr.map_state != IsViewable || attr.override_redirect == True) {
-			continue;
-		}
+		if(JXGetClassHint(display, event->window, &hint)) {
+			if(!strcmp(hint.res_name, np->name)) {
 
-		if(JXGetClassHint(display, childrenReturn[x], &hint)) {
-			if(!strcmp(hint.res_name, name)) {
-				result = childrenReturn[x];
-				JXAddToSaveSet(display, result);
-				JXSetWindowBorder(display, result, colors[COLOR_TRAY_BG]);
-				JXMapRaised(display, result);
-				JXSelectInput(display, result,
+				/* Swallow the window. */
+				JXAddToSaveSet(display, event->window);
+				JXSetWindowBorder(display, event->window, colors[COLOR_TRAY_BG]);
+				JXReparentWindow(display, event->window,
+					np->cp->tray->window, 0, 0);
+				JXMapRaised(display, event->window);
+				JXSelectInput(display, event->window,
 					StructureNotifyMask | ResizeRedirectMask);
 				JXFree(hint.res_name);
 				JXFree(hint.res_class);
-				break;
+				np->cp->window = event->window;
+
+				/* Update the size. */
+				JXGetWindowAttributes(display, event->window, &attr);
+				np->border = attr.border_width;
+				if(!np->userWidth) {
+					np->cp->requestedWidth = attr.width + 2 * np->border;
+				}
+				if(!np->userHeight) {
+					np->cp->requestedHeight = attr.height + 2 * np->border;
+				}
+
+				ResizeTray(np->cp->tray);
+
+				return 1;
+
 			}
-			JXFree(hint.res_name);
-			JXFree(hint.res_class);
 		}
+
 	}
 
-	JXFree(childrenReturn);
-
-	return result;
+	return 0;
 
 }
-
 

@@ -18,6 +18,7 @@ struct TrayComponentType *CreateSwallow(
 	const char *name, const char *command,
 	int width, int height);
 
+int CheckSwallowMap(const XMapEvent *event);
 int ProcessSwallowEvent(const XEvent *event);
 
 #endif

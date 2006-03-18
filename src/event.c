@@ -932,9 +932,14 @@ void HandleColormapChange(const XColormapEvent *event) {
 /****************************************************************************
  ****************************************************************************/
 void HandleMapRequest(const XMapEvent *event) {
+
 	ClientNode *np;
 
 	Assert(event);
+
+	if(CheckSwallowMap(event)) {
+		return;
+	}
 
 	np = FindClientByWindow(event->window);
 	if(!np) {

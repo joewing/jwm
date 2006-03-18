@@ -11,6 +11,7 @@ Todo:
 
 20060317:
 	- Fix a bug related to removing Dock and restarting.
+	- Don't pause waiting for Swallow items. 
 
 20060315:
 	- Fix snap-to-screen with Xinerama.

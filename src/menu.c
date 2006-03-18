@@ -459,8 +459,8 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 
 			/* We need to do this twice so the event gets registered
 			 * on the submenu if one exists. */
-			JXWarpPointer(display, None, tp->window, 0, 0, 0, 0, 6, y);
-			JXWarpPointer(display, None, tp->window, 0, 0, 0, 0, 6, y);
+			SetMousePosition(tp->window, 6, y);
+			SetMousePosition(tp->window, 6, y);
 		}
 
 		return MENU_NOSELECTION;

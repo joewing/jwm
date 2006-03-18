@@ -28,7 +28,6 @@ typedef struct SwallowNode {
 
 static SwallowNode *swallowNodes;
 
-static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 
@@ -118,7 +117,6 @@ TrayComponentType *CreateSwallow(const char *name, const char *command,
 	cp = CreateTrayComponent();
 	np->cp = cp;
 	cp->object = np;
-	cp->Create = Create;
 	cp->Destroy = Destroy;
 	cp->Resize = Resize;
 
@@ -157,8 +155,10 @@ int ProcessSwallowEvent(const XEvent *event) {
 				ResizeTray(np->cp->tray);
 				break;
 			case ResizeRequest:
-				np->cp->requestedWidth = event->xresizerequest.width;
-				np->cp->requestedHeight = event->xresizerequest.height;
+				np->cp->requestedWidth
+					= event->xresizerequest.width + np->border * 2;
+				np->cp->requestedHeight
+					= event->xresizerequest.height + np->border * 2;
 				ResizeTray(np->cp->tray);
 				break;
 			default:
@@ -169,22 +169,6 @@ int ProcessSwallowEvent(const XEvent *event) {
 	}
 
 	return 0;
-
-}
-
-/****************************************************************************
- ****************************************************************************/
-void Create(TrayComponentType *cp) {
-
-	int width, height;
-
-	SwallowNode *np = (SwallowNode*)cp->object;
-
-	if(cp->window != None) {
-		width = cp->width - np->border * 2;
-		height = cp->height - np->border * 2;
-		JXResizeWindow(display, cp->window, width, height);
-	}
 
 }
 
@@ -238,12 +222,12 @@ int CheckSwallowMap(const XMapEvent *event) {
 
 				/* Swallow the window. */
 				JXAddToSaveSet(display, event->window);
+				JXSelectInput(display, event->window,
+					StructureNotifyMask | ResizeRedirectMask);
 				JXSetWindowBorder(display, event->window, colors[COLOR_TRAY_BG]);
 				JXReparentWindow(display, event->window,
 					np->cp->tray->window, 0, 0);
 				JXMapRaised(display, event->window);
-				JXSelectInput(display, event->window,
-					StructureNotifyMask | ResizeRedirectMask);
 				JXFree(hint.res_name);
 				JXFree(hint.res_class);
 				np->cp->window = event->window;

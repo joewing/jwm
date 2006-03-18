@@ -61,41 +61,6 @@ static void HandleShapeEvent(const XShapeEvent *event);
 #endif
 
 /****************************************************************************
- * Handle events that come through while JWM is starting.
- ****************************************************************************/
-void HandleStartupEvents() {
-
-	const long eventMask = SubstructureRedirectMask;
-
-	XEvent event;
-	XWindowChanges wc;
-
-	while(JXCheckMaskEvent(display, eventMask, &event)) {
-
-		switch(event.type) {
-		case ConfigureRequest:
-			wc.stack_mode = event.xconfigurerequest.detail;
-			wc.sibling = event.xconfigurerequest.above;
-			wc.border_width = event.xconfigurerequest.border_width;
-			wc.x = event.xconfigurerequest.x;
-			wc.y = event.xconfigurerequest.y;
-			wc.width = event.xconfigurerequest.width;
-			wc.height = event.xconfigurerequest.height;
-			JXConfigureWindow(display, event.xconfigurerequest.window,
-				event.xconfigurerequest.value_mask, &wc);
-			break;
-		case MapRequest:
-			JXMapWindow(display, event.xmap.window);
-			break;
-		default:
-			break;
-		}
-
-	}
-
-}
-
-/****************************************************************************
  ****************************************************************************/
 void WaitForEvent(XEvent *event) {
 

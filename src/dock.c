@@ -298,6 +298,10 @@ int HandleDockResizeRequest(const XResizeRequestEvent *event) {
 
 	DockNode *np;
 
+	if(!dock) {
+		return 0;
+	}
+
 	for(np = dock->nodes; np; np = np->next) {
 		if(np->window == event->window) {
 

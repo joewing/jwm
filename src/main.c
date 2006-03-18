@@ -331,7 +331,6 @@ void Startup() {
 	StartupTrayButtons();
 	StartupDock();
 	StartupTray();
-	StartupSwallow();
 	StartupKeys();
 	StartupDesktops();
 	StartupHints();
@@ -353,6 +352,8 @@ void Startup() {
 
 	RestackClients();
 
+	StartupSwallow();
+
 }
 
 /****************************************************************************
@@ -361,6 +362,8 @@ void Startup() {
 void Shutdown() {
 
 	/* This order is important. */
+
+	ShutdownSwallow();
 
 	ShutdownOutline();
 	#ifndef DISABLE_CONFIRM
@@ -371,7 +374,6 @@ void Shutdown() {
 	ShutdownPager();
 	ShutdownRootMenu();
 	ShutdownDock();
-	ShutdownSwallow();
 	ShutdownTray();
 	ShutdownTrayButtons();
 	ShutdownTaskBar();

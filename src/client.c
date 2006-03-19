@@ -381,6 +381,7 @@ void UnshadeClient(ClientNode *np) {
 	}
 
 	RefocusClient();
+	RestackClients();
 
 }
 

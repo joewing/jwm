@@ -27,6 +27,10 @@ void DisplayCompileOptions() {
 	printf("debug ");
 #endif
 
+#ifdef USE_FRIBIDI
+	printf("fribidi ");
+#endif
+
 #ifdef USE_ICONS
 	printf("icons ");
 #endif

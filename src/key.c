@@ -115,6 +115,15 @@ void StartupKeys() {
  ***************************************************************************/
 void ShutdownKeys() {
 
+	ClientNode *np;
+	int layer;
+
+	for(layer = 0; layer < LAYER_COUNT; layer++) {
+		for(np = nodes[layer]; np; np = np->next) {
+			JXUngrabKey(display, AnyKey, AnyModifier, np->window);
+		}
+	}
+
 	JXUngrabKey(display, AnyKey, AnyModifier, rootWindow);
 
 }

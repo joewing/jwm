@@ -131,6 +131,7 @@ void InitializeMenu(MenuType *menu) {
 /***************************************************************************
  ***************************************************************************/
 void ShowMenu(MenuType *menu, RunMenuCommandType runner, int x, int y) {
+
 	int mouseStatus, keyboardStatus;
 
 	mouseStatus = GrabMouseForMenu();
@@ -208,10 +209,12 @@ int ShowSubmenu(MenuType *menu, MenuType *parent, int x, int y) {
  * Returns 0 if no selection was made or 1 if a selection was made.
  ***************************************************************************/
 int MenuLoop(MenuType *menu) {
+
 	XEvent event;
 	MenuItemType *ip;
 	int count;
 	int hadMotion = 0;
+	int hadPress = 0;
 
 	for(;;) {
 
@@ -222,6 +225,7 @@ int MenuLoop(MenuType *menu) {
 			RedrawMenuTree(menu);
 			break;
 		case ButtonPress:
+			hadPress = 1;
 			if(event.xbutton.button != Button4
 				&& event.xbutton.button != Button5) {
 				break;		
@@ -242,7 +246,7 @@ int MenuLoop(MenuType *menu) {
 		case ButtonRelease:
 			if(event.xbutton.button == Button4
 				|| event.xbutton.button == Button5
-				|| !hadMotion) {
+				|| (!hadMotion && !hadPress)) {
 				break;
 			}
 			if(menu->currentIndex >= 0) {

@@ -70,9 +70,8 @@ MenuType *CreateWindowMenu() {
 	if(!(client->state.status & STAT_WMDIALOG)) {
 		AddWindowMenuItem(menu, "Close", "close");
 		AddWindowMenuItem(menu, "Kill", "kill");
+		AddWindowMenuItem(menu, NULL, NULL);
 	}
-
-	AddWindowMenuItem(menu, NULL, NULL);
 
 	if(client->state.status & (STAT_MAPPED | STAT_SHADED)) {
 		if(client->state.border & BORDER_RESIZE) {

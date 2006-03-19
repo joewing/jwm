@@ -175,15 +175,15 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 	np->state.status = STAT_NONE;
 	np->state.layer = LAYER_NORMAL;
 
-	if(notOwner) {
-		np->state.border = BORDER_DEFAULT;
-	} else {
-		np->state.border = BORDER_OUTLINE | BORDER_TITLE | BORDER_MOVE;
-		np->state.status |= STAT_WMDIALOG | STAT_STICKY;
-	}
+	np->state.border = BORDER_DEFAULT;
 	np->borderAction = BA_NONE;
 
 	ReadClientProtocols(np);
+
+	if(!notOwner) {
+		np->state.border = BORDER_OUTLINE | BORDER_TITLE | BORDER_MOVE;
+		np->state.status |= STAT_WMDIALOG | STAT_STICKY;
+	}
 
 	/* We now know the layer, so insert */
 	np->prev = NULL;

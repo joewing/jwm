@@ -62,11 +62,6 @@ void StartupClock() {
 	ClockType *clk;
 
 	for(clk = clocks; clk; clk = clk->next) {
-		if(clk->cp->requestedWidth == 0) {
-			clk->cp->requestedWidth = 1;
-		} else {
-			clk->userWidth = 1;
-		}
 		if(clk->cp->requestedHeight == 0) {
 			clk->cp->requestedHeight = GetStringHeight(FONT_CLOCK) + 4;
 		}
@@ -137,7 +132,13 @@ TrayComponentType *CreateClock(const char *format, const char *command,
 	cp = CreateTrayComponent();
 	cp->object = clk;
 	clk->cp = cp;
-	cp->requestedWidth = width;
+	if(width > 0) {
+		cp->requestedWidth = width;
+		clk->userWidth = 1;
+	} else {
+		cp->requestedWidth = 1;
+		clk->userWidth = 0;
+	}
 	cp->requestedHeight = height;
 
 	cp->Create = Create;

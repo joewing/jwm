@@ -23,7 +23,6 @@
 #include "key.h"
 #include "icon.h"
 #include "outline.h"
-#include "timing.h"
 #include "taskbar.h"
 #include "tray.h"
 #include "traybutton.h"
@@ -302,7 +301,6 @@ void Initialize() {
 	InitializeScreens();
 	InitializeSwallow();
 	InitializeTaskBar();
-	InitializeTiming();
 	InitializeTray();
 	InitializeTrayButtons();
 }
@@ -338,7 +336,6 @@ void Startup() {
 	StartupPlacement();
 	StartupClients();
 
-	StartupTiming();
 	#ifndef DISABLE_CONFIRM
 		StartupDialogs();
 	#endif
@@ -389,7 +386,6 @@ void Shutdown() {
 
 	ShutdownPlacement();
 	ShutdownHints();
-	ShutdownTiming();
 	ShutdownScreens();
 
 	ShutdownCommands();
@@ -425,7 +421,6 @@ void Destroy() {
 	DestroyScreens();
 	DestroySwallow();
 	DestroyTaskBar();
-	DestroyTiming();
 	DestroyTray();
 	DestroyTrayButtons();
 }

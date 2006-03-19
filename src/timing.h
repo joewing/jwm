@@ -15,11 +15,6 @@ typedef struct TimeType {
 
 } TimeType;
 
-void InitializeTiming();
-void StartupTiming();
-void ShutdownTiming();
-void DestroyTiming();
-
 void GetCurrentTime(TimeType *t);
 
 unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2);

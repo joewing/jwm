@@ -6,17 +6,20 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
+typedef struct ScreenType {
+	int index;
+	int x, y;
+	int width, height;
+} ScreenType;
+
 void InitializeScreens();
 void StartupScreens();
 void ShutdownScreens();
 void DestroyScreens();
 
-int GetCurrentScreen(int x, int y);
-int GetMouseScreen();
-int GetScreenWidth(int index);
-int GetScreenHeight(int index);
-int GetScreenX(int index);
-int GetScreenY(int index);
+const ScreenType *GetCurrentScreen(int x, int y);
+const ScreenType *GetMouseScreen();
+const ScreenType *GetScreen(int index);
 
 int GetScreenCount();
 

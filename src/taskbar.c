@@ -311,23 +311,22 @@ void ShowTaskWindowMenu(TaskBarType *bar, Node *np) {
 
 	int x, y;
 	int mwidth, mheight;
-	int screen;
+	const ScreenType *sp;
 
-	screen = GetCurrentScreen(x, y);
 	GetWindowMenuSize(np->client, &mwidth, &mheight);
+
+	sp = GetCurrentScreen(x, y);
 
 	if(bar->layout == LAYOUT_HORIZONTAL) {
 		GetMousePosition(&x, &y);
-		if(bar->cp->screeny + bar->cp->height / 2
-			< GetScreenY(screen) + GetScreenHeight(screen) / 2) {
+		if(bar->cp->screeny + bar->cp->height / 2 < sp->y + sp->height / 2) {
 			y = bar->cp->screeny + bar->cp->height;
 		} else {
 			y = bar->cp->screeny - mheight;
 		}
 		x -= mwidth / 2;
 	} else {
-		if(bar->cp->screenx + bar->cp->width / 2
-			< GetScreenX(screen) + GetScreenWidth(screen) / 2) {
+		if(bar->cp->screenx + bar->cp->width / 2 < sp->x + sp->width / 2) {
 			x = bar->cp->screenx + bar->cp->width;
 		} else {
 			x = bar->cp->screenx - mwidth;

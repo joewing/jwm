@@ -272,6 +272,8 @@ void DestroyConfirmDialog(DialogType *dp) {
 /***************************************************************************
  ***************************************************************************/
 void ComputeDimensions(DialogType *dp) {
+
+	const ScreenType *sp;
 	int width;
 	int x;
 
@@ -315,10 +317,10 @@ void ComputeDimensions(DialogType *dp) {
 
 	} else {
 
-		x = GetMouseScreen();
+		sp = GetMouseScreen();
 
-		dp->x = GetScreenWidth(x) / 2 - dp->width / 2 + GetScreenX(x);
-		dp->y = GetScreenHeight(x) / 2 - dp->height / 2 + GetScreenY(x);
+		dp->x = sp->width / 2 - dp->width / 2 + sp->x;
+		dp->y = sp->height / 2 - dp->height / 2 + sp->y;
 
 	}
 

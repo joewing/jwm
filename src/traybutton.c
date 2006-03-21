@@ -310,7 +310,7 @@ void Destroy(TrayComponentType *cp) {
  ***************************************************************************/
 void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
-	int screen;
+	const ScreenType *sp;
 	int mwidth, mheight;
 
 	TrayButtonType *bp = (TrayButtonType*)cp->object;
@@ -327,20 +327,20 @@ void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 		}
 	} else {
 
-		screen = GetCurrentScreen(cp->screenx, cp->screeny);
 		GetRootMenuSize(&mwidth, &mheight);
+
+		sp = GetCurrentScreen(cp->screenx, cp->screeny);
+
 		if(cp->tray->layout == LAYOUT_HORIZONTAL) {
 			x = cp->screenx;
-			if(cp->screeny + cp->height / 2
-				< GetScreenY(screen) + GetScreenHeight(screen) / 2) {
+			if(cp->screeny + cp->height / 2 < sp->y + sp->height / 2) {
 				y = cp->screeny + cp->height;
 			} else {
 				y = cp->screeny - mheight;
 			}
 		} else {
 			y = cp->screeny;
-			if(cp->screenx + cp->width / 2
-				< GetScreenX(screen) + GetScreenWidth(screen) / 2) {
+			if(cp->screenx + cp->width / 2 < sp->x + sp->width / 2) {
 				x = cp->screenx + cp->width;
 			} else {
 				x = cp->screenx - mwidth;

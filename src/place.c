@@ -30,7 +30,7 @@ static Strut *strutsTail = NULL;
 /* Note that we assume x and y are 0 based for all screens here. */
 static int *cascadeOffsets = NULL;
 
-static void GetScreenBounds(int index, BoundingBox *box);
+static void GetScreenBounds(const ScreenType *sp, BoundingBox *box);
 static void UpdateTrayBounds(BoundingBox *box, unsigned int layer);
 static void UpdateStrutBounds(BoundingBox *box);
 static void SubtractBounds(const BoundingBox *src, BoundingBox *dest);
@@ -242,12 +242,12 @@ void ReadClientStrut(ClientNode *np) {
 
 /****************************************************************************
  ****************************************************************************/
-void GetScreenBounds(int index, BoundingBox *box) {
+void GetScreenBounds(const ScreenType *sp, BoundingBox *box) {
 
-	box->x = GetScreenX(index);
-	box->y = GetScreenY(index);
-	box->width = GetScreenWidth(index);
-	box->height = GetScreenHeight(index);
+	box->x = sp->x;
+	box->y = sp->y;
+	box->width = sp->width;
+	box->height = sp->height;
 
 }
 
@@ -375,7 +375,7 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 
 	BoundingBox box;
 	int north, west;
-	int screenIndex;
+	const ScreenType *sp;
 	int cascadeIndex;
 	int overflow;
 
@@ -405,13 +405,13 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 
 	} else {
 
-		screenIndex = GetMouseScreen();
-		GetScreenBounds(screenIndex, &box);
+		sp = GetMouseScreen();
+		GetScreenBounds(sp, &box);
 
 		UpdateTrayBounds(&box, np->state.layer);
 		UpdateStrutBounds(&box);
 
-		cascadeIndex = screenIndex * desktopCount + currentDesktop;
+		cascadeIndex = sp->index * desktopCount + currentDesktop;
 
 		/* Set the cascaded location. */
 		np->x = box.x + west + cascadeOffsets[cascadeIndex];
@@ -461,18 +461,15 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 void ConstrainSize(ClientNode *np) {
 
 	BoundingBox box;
-	int screen;
+	const ScreenType *sp;
 	int north, west;
 
 	Assert(np);
 
 	/* Determine if the size needs to be constrained. */
-	screen = GetCurrentScreen(np->x, np->y);
-	if(np->width < GetScreenWidth(screen)
-		&& np->height < GetScreenHeight(screen)) {
-
+	sp = GetCurrentScreen(np->x, np->y);
+	if(np->width < sp->width && np->height < sp->height) {
 		return;
-
 	}
 
 	/* Constrain the size. */
@@ -486,7 +483,7 @@ void ConstrainSize(ClientNode *np) {
 		north += titleHeight;
 	}
 
-	GetScreenBounds(screen, &box);
+	GetScreenBounds(sp, &box);
 	UpdateTrayBounds(&box, np->state.layer);
 	UpdateStrutBounds(&box);
 
@@ -525,7 +522,7 @@ void ConstrainSize(ClientNode *np) {
 void PlaceMaximizedClient(ClientNode *np) {
 
 	BoundingBox box;
-	int screenIndex;
+	const ScreenType *sp;
 	int north, west;
 
 	np->oldx = np->x;
@@ -543,8 +540,8 @@ void PlaceMaximizedClient(ClientNode *np) {
 		north += titleHeight;
 	}
 
-	screenIndex = GetCurrentScreen(np->x, np->y);
-	GetScreenBounds(screenIndex, &box);
+	sp = GetCurrentScreen(np->x, np->y);
+	GetScreenBounds(sp, &box);
 	UpdateTrayBounds(&box, np->state.layer);
 	UpdateStrutBounds(&box);
 

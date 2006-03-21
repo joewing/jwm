@@ -8,14 +8,13 @@
 #include "main.h"
 #include "cursor.h"
 
-#ifdef USE_XINERAMA
-static XineramaScreenInfo *screens = NULL;
-static int screenCount = 0;
-#endif
+static ScreenType *screens;
+static int screenCount;
 
 /****************************************************************************
  ****************************************************************************/
 void InitializeScreens() {
+	screens = NULL;
 }
 
 /****************************************************************************
@@ -23,11 +22,45 @@ void InitializeScreens() {
 void StartupScreens() {
 #ifdef USE_XINERAMA
 
+	XineramaScreenInfo *info;
+	int x;
+
 	if(XineramaIsActive(display)) {
-		screens = XineramaQueryScreens(display, &screenCount);
+
+		info = XineramaQueryScreens(display, &screenCount);
+
+		screens = Allocate(sizeof(ScreenType) * screenCount);
+		for(x = 0; x < screenCount; x++) {
+			screens[x].index = x;
+			screens[x].x = info[x].x_org;
+			screens[x].y = info[x].y_org;
+			screens[x].width = info[x].width;
+			screens[x].height = info[x].height;
+		}
+
+		JXFree(info);
+
 	} else {
+
 		screenCount = 1;
+		screens = Allocate(sizeof(ScreenType));
+		screens->index = 0;
+		screens->x = 0;
+		screens->y = 0;
+		screens->width = rootWidth;
+		screens->height = rootHeight;
+
 	}
+
+#else
+
+	screenCount = 1;
+	screens = Allocate(sizeof(ScreenType));
+	screens->index = 0;
+	screens->x = 0;
+	screens->y = 0;
+	screens->width = rootWidth;
+	screens->height = rootHeight;
 
 #endif /* USE_XINERAMA */
 }
@@ -35,12 +68,10 @@ void StartupScreens() {
 /****************************************************************************
  ****************************************************************************/
 void ShutdownScreens() {
-#ifdef USE_XINERAMA
 	if(screens) {
-		JXFree(screens);
+		Release(screens);
 		screens = NULL;
 	}
-#endif
 }
 
 /****************************************************************************
@@ -50,33 +81,27 @@ void DestroyScreens() {
 
 /****************************************************************************
  ****************************************************************************/
-int GetCurrentScreen(int x, int y) {
-#ifdef USE_XINERAMA
+const ScreenType *GetCurrentScreen(int x, int y) {
 
-	int s;
-	XineramaScreenInfo *info;
+	ScreenType *sp;
+	int index;
 
-	for(s = 1; s < screenCount; s++) {
-		info = &screens[s];
-		if(x >= info->x_org && x < info->x_org + info->width) {
-			if(y >= info->y_org && y < info->y_org + info->height) {
-				return s;
+	for(index = 1; index < screenCount; index++) {
+		sp = &screens[index];
+		if(x >= sp->x && x < sp->x + sp->width) {
+			if(y >= sp->y && y <= sp->y + sp->height) {
+				return sp;
 			}
 		}
 	}
 
-	return 0;
+	return &screens[0];
 
-#else
-
-	return 0;
-
-#endif
 }
 
 /****************************************************************************
  ****************************************************************************/
-int GetMouseScreen() {
+const ScreenType *GetMouseScreen() {
 #ifdef USE_XINERAMA
 
 	int x, y;
@@ -85,74 +110,29 @@ int GetMouseScreen() {
 	return GetCurrentScreen(x, y);
 
 #else
-	return 0;
+
+	return &screens[0];
+
 #endif
 }
 
 /****************************************************************************
  ****************************************************************************/
-int GetScreenWidth(int index) {
-#ifdef USE_XINERAMA
-	if(screens) {
-		return screens[index].width;
-	} else {
-		return rootWidth;
-	}
-#else
-	return rootWidth;
-#endif
-}
+const ScreenType *GetScreen(int index) {
 
-/****************************************************************************
- ****************************************************************************/
-int GetScreenHeight(int index) {
-#ifdef USE_XINERAMA
-	if(screens) {
-		return screens[index].height;
-	} else {
-		return rootHeight;
-	}
-#else
-	return rootHeight;
-#endif
-}
+	Assert(index >= 0);
+	Assert(index < screenCount);
 
-/****************************************************************************
- ****************************************************************************/
-int GetScreenX(int index) {
-#ifdef USE_XINERAMA
-	if(screens) {
-		return screens[index].x_org;
-	} else {
-		return 0;
-	}
-#else
-	return 0;
-#endif
-}
+	return &screens[index];
 
-/****************************************************************************
- ****************************************************************************/
-int GetScreenY(int index) {
-#ifdef USE_XINERAMA
-	if(screens) {
-		return screens[index].y_org;
-	} else {
-		return 0;
-	}
-#else
-	return 0;
-#endif
 }
 
 /****************************************************************************
  ****************************************************************************/
 int GetScreenCount() {
-#ifdef USE_XINERAMA
+
 	return screenCount;
-#else
-	return 1;
-#endif
+
 }
 
 

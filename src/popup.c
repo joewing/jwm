@@ -77,7 +77,7 @@ void DestroyPopup() {
  ****************************************************************************/
 void ShowPopup(int x, int y, const char *text) {
 
-	int screenIndex;
+	const ScreenType *sp;
 	int len;
 
 	Assert(text);
@@ -105,20 +105,20 @@ void ShowPopup(int x, int y, const char *text) {
 	popup.height += 2;
 	popup.width += 2; 
 
-	screenIndex = GetCurrentScreen(x, y);
+	sp = GetCurrentScreen(x, y);
 
-	if(popup.width > GetScreenWidth(screenIndex)) {
-		popup.width = GetScreenWidth(screenIndex);
+	if(popup.width > sp->width) {
+		popup.width = sp->width;
 	}
 
 	popup.x = x;
 	popup.y = y - popup.height - 2;
 
-	if(popup.width + popup.x >= GetScreenWidth(screenIndex)) {
-		popup.x = GetScreenWidth(screenIndex) - popup.width - 2;
+	if(popup.width + popup.x >= sp->width) {
+		popup.x = sp->width - popup.width - 2;
 	}
-	if(popup.height + popup.y >= GetScreenHeight(screenIndex)) {
-		popup.y = GetScreenHeight(screenIndex) - popup.height - 2;
+	if(popup.height + popup.y >= sp->height) {
+		popup.y = sp->height - popup.height - 2;
 	}
 
 	if(popup.window == None) {

@@ -397,36 +397,30 @@ void DoSnapScreen(ClientNode *np, int north, int west) {
 
 	RectangleType client;
 	int screen;
+	const ScreenType *sp;
 	int screenCount;
-	int screenHeight;
-	int screenWidth;
-	int screenx;
-	int screeny;
 
 	GetClientRectangle(np, &client);
 
 	screenCount = GetScreenCount();
 	for(screen = 0; screen < screenCount; screen++) {
 
-		screenHeight = GetScreenHeight(screen);
-		screenWidth = GetScreenWidth(screen);
-		screenx = GetScreenX(screen);
-		screeny = GetScreenY(screen);
+		sp = GetScreen(screen);
 
-		if(abs(client.right - screenWidth - screenx) <= snapDistance) {
-			np->x = screenWidth - west - np->width;
+		if(abs(client.right - sp->width - sp->x) <= snapDistance) {
+			np->x = sp->width - west - np->width;
 		}
-		if(abs(client.left - screenx) <= snapDistance) {
-			np->x = screenx + west;
+		if(abs(client.left - sp->x) <= snapDistance) {
+			np->x = sp->x + west;
 		}
-		if(abs(client.bottom - screenHeight - screeny) <= snapDistance) {
-			np->y = screenHeight - west;
+		if(abs(client.bottom - sp->height - sp->y) <= snapDistance) {
+			np->y = sp->height - west;
 			if(!(np->state.status & STAT_SHADED)) {
 				np->y -= np->height;
 			}
 		}
-		if(abs(client.top - screeny) <= snapDistance) {
-			np->y = north + screeny;
+		if(abs(client.top - sp->y) <= snapDistance) {
+			np->y = north + sp->y;
 		}
 
 	}

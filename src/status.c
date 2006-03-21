@@ -41,9 +41,7 @@ static StatusWindowType ParseType(const char *str);
 void GetMoveResizeCoordinates(const ClientNode *np, StatusWindowType type,
 	int *x, int *y) {
 
-	int screen;
-	int screenx, screeny;
-	int screenWidth, screenHeight;
+	const ScreenType *sp;
 
 	if(type == SW_WINDOW) {
 		*x = np->x + np->width / 2 - statusWindowWidth / 2;
@@ -51,23 +49,18 @@ void GetMoveResizeCoordinates(const ClientNode *np, StatusWindowType type,
 		return;
 	}
 
-	screen = GetCurrentScreen(np->x, np->y);
-	screenx = GetScreenX(screen);
-	screeny = GetScreenY(screen);
+	sp = GetCurrentScreen(np->x, np->y);
 
 	if(type == SW_CORNER) {
-		*x = screenx;
-		*y = screeny;
+		*x = sp->x;
+		*y = sp->y;
 		return;
 	}
 
 	/* SW_SCREEN */
 
-	screenWidth = GetScreenWidth(screen);
-	screenHeight = GetScreenHeight(screen);
-
-	*x = screenx + screenWidth / 2 - statusWindowWidth / 2;
-	*y = screeny + screenHeight / 2 - statusWindowHeight / 2;
+	*x = sp->x + sp->width / 2 - statusWindowWidth / 2;
+	*y = sp->y + sp->height / 2 - statusWindowHeight / 2;
 
 }
 

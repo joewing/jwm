@@ -402,8 +402,12 @@ void SetClientWithdrawn(ClientNode *np) {
 		JXUnmapWindow(display, np->window);
 		JXUnmapWindow(display, np->parent);
 		WriteState(np);
+	} else if(np->state.status & STAT_SHADED) {
+		JXUnmapWindow(display, np->parent);
+		WriteState(np);
 	}
 
+	np->state.status &= ~STAT_SHADED;
 	np->state.status &= ~STAT_MAPPED;
 	np->state.status &= ~STAT_MINIMIZED;
 
@@ -686,7 +690,7 @@ void FocusClient(ClientNode *np) {
 
 	Assert(np);
 
-	if(!(np->state.status & STAT_MAPPED)) {
+	if(!(np->state.status & (STAT_MAPPED | STAT_SHADED))) {
 		return;
 	}
 	if(np->state.status & STAT_HIDDEN) {
@@ -734,7 +738,7 @@ void FocusNextStacked(ClientNode *np) {
 	Assert(np);
 
 	for(tp = np->next; tp; tp = tp->next) {
-		if((tp->state.status & STAT_MAPPED)
+		if((tp->state.status & (STAT_MAPPED | STAT_SHADED))
 			&& !(tp->state.status & STAT_HIDDEN)) {
 			FocusClient(tp);
 			return;
@@ -742,7 +746,7 @@ void FocusNextStacked(ClientNode *np) {
 	}
 	for(x = np->state.layer - 1; x >= LAYER_BOTTOM; x--) {
 		for(tp = nodes[x]; tp; tp = tp->next) {
-			if((tp->state.status & STAT_MAPPED)
+			if((tp->state.status & (STAT_MAPPED | STAT_SHADED))
 				&& !(tp->state.status & STAT_HIDDEN)) {
 				FocusClient(tp);
 				return;
@@ -905,7 +909,7 @@ void RestackClients() {
 	for(;;) {
 
 		for(np = nodes[layer]; np; np = np->next) {
-			if((np->state.status & STAT_MAPPED)
+			if((np->state.status & (STAT_MAPPED | STAT_SHADED))
 				&& !(np->state.status & STAT_HIDDEN)) {
 				stack[index++] = np->parent;
 			}

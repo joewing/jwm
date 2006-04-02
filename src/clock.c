@@ -62,6 +62,9 @@ void StartupClock() {
 	ClockType *clk;
 
 	for(clk = clocks; clk; clk = clk->next) {
+		if(clk->cp->requestedWidth == 0) {
+			clk->cp->requestedWidth = GetStringWidth(FONT_CLOCK, clk->format) + 4;
+		}
 		if(clk->cp->requestedHeight == 0) {
 			clk->cp->requestedHeight = GetStringHeight(FONT_CLOCK) + 4;
 		}
@@ -136,7 +139,7 @@ TrayComponentType *CreateClock(const char *format, const char *command,
 		cp->requestedWidth = width;
 		clk->userWidth = 1;
 	} else {
-		cp->requestedWidth = 1;
+		cp->requestedWidth = 0;
 		clk->userWidth = 0;
 	}
 	cp->requestedHeight = height;
@@ -166,6 +169,10 @@ void Create(TrayComponentType *cp) {
 	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
 		rootDepth);
 	clk->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
+
+	JXSetForeground(display, clk->bufferGC, colors[COLOR_CLOCK_BG]);
+	JXFillRectangle(display, cp->pixmap, clk->bufferGC, 0, 0,
+		cp->width, cp->height);
 
 }
 

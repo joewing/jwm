@@ -11,6 +11,7 @@ Todo:
 
 20060402:
 	- Fix a key binding issue with keycode.
+	- Fix a bug involving maximized windows and the clock.
 
 20060318:
 	- Fix key binding issue on shutdown/restart (lior2b).

@@ -171,6 +171,9 @@
 #define JXGrabButton( a, b, c, d, e, f, g, h, i, j ) \
 	( SetCheckpoint(), XGrabButton( a, b, c, d, e, f, g, h, i, j ) )
 
+#define JXKeycodeToKeysym( a, b, c ) \
+	( SetCheckpoint(), XKeycodeToKeysym( a, b, c ) )
+
 #define JXGrabKey( a, b, c, d, e, f, g ) \
 	( SetCheckpoint(), XGrabKey( a, b, c, d, e, f, g ) )
 

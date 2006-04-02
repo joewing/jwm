@@ -323,12 +323,12 @@ void InsertBinding(KeyType key, const char *modifiers,
 	const char *stroke, const char *code, const char *command) {
 
 	KeyNode *np;
-	unsigned int modifierMask;
+	unsigned int mask;
 	char *temp;
 	int offset;
 	KeySym sym;
 
-	modifierMask = ParseModifierString(modifiers);
+	mask = ParseModifierString(modifiers);
 
 	if(stroke && strlen(stroke) > 0) {
 
@@ -350,7 +350,7 @@ void InsertBinding(KeyType key, const char *modifiers,
 					bindings = np;
 
 					np->key = key | ((temp[offset] - '1' + 1) << 8);
-					np->mask = modifierMask;
+					np->mask = mask;
 					np->code = sym;
 					np->command = NULL;
 
@@ -364,7 +364,7 @@ void InsertBinding(KeyType key, const char *modifiers,
 
 		sym = ParseKeyString(stroke);
 		if(sym == NoSymbol) {
-			Warning("keycode not found for symbol: %s", stroke);
+			Warning("keysym not found for symbol: %s", stroke);
 			return;
 		}
 		np = Allocate(sizeof(KeyNode));
@@ -372,7 +372,7 @@ void InsertBinding(KeyType key, const char *modifiers,
 		bindings = np;
 
 		np->key = key;
-		np->mask = modifierMask;
+		np->mask = mask;
 		np->code = sym;
 		if(command) {
 			np->command = Allocate(strlen(command) + 1);
@@ -383,13 +383,19 @@ void InsertBinding(KeyType key, const char *modifiers,
 
 	} else if(code && strlen(code) > 0) {
 
+		sym = JXKeycodeToKeysym(display, atoi(code), 0);
+		if(sym == NoSymbol) {
+			Warning("keysym not found for keycode: %s", code);
+			return;
+		}
+
 		np = Allocate(sizeof(KeyNode));
 		np->next = bindings;
 		bindings = np;
 
 		np->key = key;
-		np->mask = modifierMask;
-		np->code = atoi(code);
+		np->mask = mask;
+		np->code = sym;
 		if(command) {
 			np->command = Allocate(strlen(command) + 1);
 			strcpy(np->command, command);

@@ -718,7 +718,7 @@ This tag supports the following attributes:
 \fBdelay\fP \fIint\fP
 .RS
 The delay in milliseconds before popups activate.
-The default is 2000.
+The default is 600.
 .RE
 .P
 \fBenabled\fP \fIbool\fP

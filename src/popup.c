@@ -13,7 +13,7 @@
 #include "error.h"
 #include "timing.h"
 
-#define DEFAULT_POPUP_DELAY 2000
+#define DEFAULT_POPUP_DELAY 600
 
 typedef struct PopupType {
 	int isActive;
@@ -103,7 +103,7 @@ void ShowPopup(int x, int y, const char *text) {
 	popup.width = GetStringWidth(FONT_POPUP, popup.text);
 
 	popup.height += 2;
-	popup.width += 2; 
+	popup.width += 8; 
 
 	sp = GetCurrentScreen(x, y);
 
@@ -204,7 +204,7 @@ void DrawPopup() {
 	Assert(popup.isActive);
 
 	JXClearWindow(display, popup.window);
-	RenderString(popup.window, popup.gc, FONT_POPUP, COLOR_POPUP_FG, 1, 1,
+	RenderString(popup.window, popup.gc, FONT_POPUP, COLOR_POPUP_FG, 4, 1,
 		popup.width, popup.text);
 
 }

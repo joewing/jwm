@@ -8,10 +8,14 @@ Todo:
 	- Add the ability to move windows via the pager.
 	- Add the ability to change desktops with the mouse pointer.
 	- Add the ability to drag windows to different desktops.
+	- Fix num lock bug with multiple key masks.
+	- Make second click on "showdesktop" restore minimized windows.
 
 20060402:
 	- Fix a key binding issue with keycode.
 	- Fix a bug involving maximized windows and the clock.
+	- Decreased the default popup delay to 600 ms.
+	- Added a 3 pixel border to popups.
 
 20060318:
 	- Fix key binding issue on shutdown/restart (lior2b).

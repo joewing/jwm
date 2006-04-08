@@ -22,6 +22,7 @@ void UpdateTaskBar();
 void SignalTaskbar(struct TimeType *now, int x, int y);
 
 void FocusNext();
+void FocusPrevious();
 void FocusNextStackedCircular();
 
 void SetMaxTaskBarItemWidth(struct TrayComponentType *cp, const char *value);

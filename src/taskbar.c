@@ -45,6 +45,7 @@ typedef struct Node {
 	ClientNode *client;
 	int y;
 	struct Node *next;
+	struct Node *prev;
 } Node;
 
 static char minimized_bitmap[] = {
@@ -286,6 +287,12 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 		case Button3:
 			ShowTaskWindowMenu(bar, np);
 			break;
+		case Button4:
+			FocusPrevious();
+			break;
+		case Button5:
+			FocusNext();
+			break;
 		default:
 			break;
 		}
@@ -351,6 +358,7 @@ void AddClientToTaskBar(ClientNode *np) {
 
 	if(insertMode == INSERT_RIGHT) {
 		tp->next = NULL;
+		tp->prev = taskBarNodesTail;
 		if(taskBarNodesTail) {
 			taskBarNodesTail->next = tp;
 		} else {
@@ -358,7 +366,11 @@ void AddClientToTaskBar(ClientNode *np) {
 		}
 		taskBarNodesTail = tp;
 	} else {
+		tp->prev = NULL;
 		tp->next = taskBarNodes;
+		if(taskBarNodes) {
+			taskBarNodes->prev = tp;
+		}
 		taskBarNodes = tp;
 		if(!taskBarNodesTail) {
 			taskBarNodesTail = tp;
@@ -376,25 +388,24 @@ void AddClientToTaskBar(ClientNode *np) {
 void RemoveClientFromTaskBar(ClientNode *np) {
 
 	Node *tp;
-	Node *lp;
 
 	Assert(np);
 
-	lp = NULL;
 	for(tp = taskBarNodes; tp; tp = tp->next) {
 		if(tp->client == np) {
-			if(tp == taskBarNodesTail) {
-				taskBarNodesTail = lp;
-			}
-			if(lp) {
-				lp->next = tp->next;
+			if(tp->prev) {
+				tp->prev->next = tp->next;
 			} else {
 				taskBarNodes = tp->next;
+			}
+			if(tp->next) {
+				tp->next->prev = tp->prev;
+			} else {
+				taskBarNodesTail = tp->prev;
 			}
 			Release(tp);
 			break;
 		}
-		lp = tp;
 	}
 
 	UpdateTaskBar();
@@ -594,6 +605,43 @@ void FocusNext() {
 		tp = taskBarNodes;
 		while(tp && !ShouldFocusItem(tp->client)) {
 			tp = tp->next;
+		}
+	}
+
+	if(tp) {
+		RestoreClient(tp->client);
+		FocusClient(tp->client);
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void FocusPrevious() {
+
+	Node *tp;
+
+	for(tp = taskBarNodesTail; tp; tp = tp->prev) {
+		if(ShouldFocusItem(tp->client)) {
+			if(tp->client->state.status & STAT_ACTIVE) {
+				tp = tp->prev;
+				break;
+			}
+		}
+	}
+
+	if(!tp) {
+		tp = taskBarNodesTail;
+	}
+
+	while(tp && !ShouldFocusItem(tp->client)) {
+		tp = tp->prev;
+	}
+
+	if(!tp) {
+		tp = taskBarNodesTail;
+		while(tp && !ShouldFocusItem(tp->client)) {
+			tp = tp->prev;
 		}
 	}
 

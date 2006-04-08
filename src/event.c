@@ -273,12 +273,22 @@ void HandleButtonEvent(const XButtonEvent *event) {
 			}
 			ShowWindowMenu(np, x, y);
 			break;
+		case Button4:
+			ShadeClient(np);
+			break;
+		case Button5:
+			UnshadeClient(np);
+			break;
 		default:
 			break;
 		}
-	} else if(event->window == rootWindow) {
+	} else if(event->window == rootWindow && event->type == ButtonPress) {
 		if((1 << event->button) & onRootMask) {
 			ShowRootMenu(event->x, event->y);
+		} else if(event->button == 4) {
+			PreviousDesktop();
+		} else if(event->button == 5) {
+			NextDesktop();
 		}
 	} else {
 		np = FindClientByWindow(event->window);
@@ -1027,11 +1037,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
 				&& abs(event->time - lastClickTime) <= doubleClickSpeed
 				&& abs(event->x - lastX) <= doubleClickDelta
 				&& abs(event->y - lastY) <= doubleClickDelta) {
-				if(np->state.status & STAT_SHADED) {
-					UnshadeClient(np);
-				} else {
-					ShadeClient(np);
-				}
+				MaximizeClient(np);
 				doubleClickActive = 0;
 			} else {
 				if(MoveClient(np, event->x, event->y)) {

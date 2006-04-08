@@ -439,7 +439,7 @@ void ParseRootMenu(const TokenNode *start) {
 	if(value) {
 		SetShowMenuOnRoot(value);
 	} else {
-		SetShowMenuOnRoot("0123456789");
+		SetShowMenuOnRoot("123");
 	}
 
 	menu = Allocate(sizeof(MenuType));

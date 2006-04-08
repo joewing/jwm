@@ -54,7 +54,7 @@ static unsigned int GetModifierMask(KeySym key);
 static unsigned int ParseModifierString(const char *str);
 static KeySym ParseKeyString(const char *str);
 static int ShouldGrab(KeyType key);
-static void GrabKey(KeyNode *np, int index);
+static void GrabKey(KeyNode *np);
 
 /***************************************************************************
  ***************************************************************************/
@@ -102,7 +102,7 @@ void StartupKeys() {
 		np->code = JXKeysymToKeycode(display, np->code);
 
 		if(ShouldGrab(np->key)) {
-			GrabKey(np, 0);
+			GrabKey(np);
 		}
 
 	}
@@ -146,30 +146,31 @@ void DestroyKeys() {
 
 /***************************************************************************
  ***************************************************************************/
-void GrabKey(KeyNode *np, int index) {
+void GrabKey(KeyNode *np) {
 
 	TrayType *tp;
 	int x;
+	int index, maxIndex;
 	unsigned int mask;
 
-	mask = 0;
-	for(x = 0; x < sizeof(mods) / sizeof(mods[0]); x++) {
-		if(index & (1 << x)) {
-			mask |= mods[x].mask;
+	maxIndex = 1 << (sizeof(mods) / sizeof(mods[0]));
+	for(index = 0; index < maxIndex; index++) {
+
+		mask = 0;
+		for(x = 0; x < sizeof(mods) / sizeof(mods[0]); x++) {
+			if(index & (1 << x)) {
+				mask |= mods[x].mask;
+			}
 		}
-	}
 
-	mask |= np->state;
-	JXGrabKey(display, np->code, mask,
-		rootWindow, True, GrabModeSync, GrabModeAsync);
-	for(tp = GetTrays(); tp; tp = tp->next) {
+		mask |= np->state;
 		JXGrabKey(display, np->code, mask,
-			tp->window, True, GrabModeSync, GrabModeAsync);
-	}
+			rootWindow, True, GrabModeSync, GrabModeAsync);
+		for(tp = GetTrays(); tp; tp = tp->next) {
+			JXGrabKey(display, np->code, mask,
+				tp->window, True, GrabModeSync, GrabModeAsync);
+		}
 
-	++index;
-	if(!(index & (1 << sizeof(mods) / sizeof(mods[0])))) {
-		GrabKey(np, index);
 	}
 
 }

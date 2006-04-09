@@ -263,7 +263,7 @@ void RunWindowCommand(const char *command) {
 	} else if(!strcmp(command, "minimize")) {
 		MinimizeClient(client);
 	} else if(!strcmp(command, "restore")) {
-		RestoreClient(client);
+		RestoreClient(client, 1);
 	} else if(!strcmp(command, "close")) {
 		DeleteClient(client);
 	} else if(!strncmp(command, "#desk", 5)) {

@@ -643,7 +643,7 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 				MinimizeClient(np);
 				break;
 			case NormalState:
-				RestoreClient(np);
+				RestoreClient(np, 1);
 				break;
 			default:
 				break;
@@ -651,7 +651,7 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 
 		} else if(event->message_type == atoms[ATOM_NET_ACTIVE_WINDOW]) {
 
-			RestoreClient(np);
+			RestoreClient(np, 1);
 			FocusClient(np);
 
 		} else if(event->message_type == atoms[ATOM_NET_WM_DESKTOP]) {

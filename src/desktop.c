@@ -174,7 +174,7 @@ void ShowDesktop() {
 		for(np = nodes[layer]; np; np = np->next) {
 			if(showingDesktop) {
 				if(np->state.status & STAT_SDESKTOP) {
-					RestoreClient(np);
+					RestoreClient(np, 0);
 				}
 			} else if(np->state.desktop == currentDesktop
 				 || (np->state.status & STAT_STICKY)) {
@@ -187,6 +187,8 @@ void ShowDesktop() {
 	}
 
 	showingDesktop = !showingDesktop;
+
+	RestackClients();
 
 }
 

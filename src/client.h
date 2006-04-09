@@ -121,7 +121,7 @@ void MinimizeClient(ClientNode *np);
 void ShadeClient(ClientNode *np);
 void UnshadeClient(ClientNode *np);
 void SetClientWithdrawn(ClientNode *np);
-void RestoreClient(ClientNode *np);
+void RestoreClient(ClientNode *np, int raise);
 void MaximizeClient(ClientNode *np);
 void FocusClient(ClientNode *np);
 void FocusNextStacked(ClientNode *np);

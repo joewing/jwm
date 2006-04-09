@@ -37,7 +37,7 @@ static void ReparentClient(ClientNode *np, int notOwner);
 static void MinimizeTransients(ClientNode *np);
 static void CheckShape(ClientNode *np);
 
-static void RestoreTransients(ClientNode *np);
+static void RestoreTransients(ClientNode *np, int raise);
 
 static void KillClientHandler(ClientNode *np);
 
@@ -420,7 +420,7 @@ void SetClientWithdrawn(ClientNode *np) {
 
 /****************************************************************************
  ****************************************************************************/
-void RestoreTransients(ClientNode *np) {
+void RestoreTransients(ClientNode *np, int raise) {
 
 	ClientNode *tp;
 	int x;
@@ -442,22 +442,24 @@ void RestoreTransients(ClientNode *np) {
 			if(tp->owner == np->window
 				&& !(tp->state.status & STAT_MAPPED)
 				&& (tp->state.status & STAT_MINIMIZED)) {
-				RestoreTransients(tp);
+				RestoreTransients(tp, raise);
 			}
 		}
 	}
 
-	RaiseClient(np);
+	if(raise) {
+		RaiseClient(np);
+	}
 
 }
 
 /****************************************************************************
  ****************************************************************************/
-void RestoreClient(ClientNode *np) {
+void RestoreClient(ClientNode *np, int raise) {
 
 	Assert(np);
 
-	RestoreTransients(np);
+	RestoreTransients(np, raise);
 
 	RestackClients();
 	UpdateTaskBar();

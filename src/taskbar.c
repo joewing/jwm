@@ -280,7 +280,7 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 				&& np->client == nodes[np->client->state.layer]) {
 				MinimizeClient(np->client);
 			} else {
-				RestoreClient(np->client);
+				RestoreClient(np->client, 1);
 				FocusClient(np->client);
 			}
 			break;
@@ -609,7 +609,7 @@ void FocusNext() {
 	}
 
 	if(tp) {
-		RestoreClient(tp->client);
+		RestoreClient(tp->client, 1);
 		FocusClient(tp->client);
 	}
 
@@ -646,7 +646,7 @@ void FocusPrevious() {
 	}
 
 	if(tp) {
-		RestoreClient(tp->client);
+		RestoreClient(tp->client, 1);
 		FocusClient(tp->client);
 	}
 

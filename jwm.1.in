@@ -72,8 +72,7 @@ supported:
 \fBonroot\fP \fIlist\fP
 .RS
 Determine which buttons on the root window activate the menu.
-This is a list of integers specifying buttons. The default is
-"123456789".
+This is a list of integers specifying buttons. The default is "123".
 .RE
 .P
 \fBheight\fP \fIint\fP
@@ -873,12 +872,10 @@ combinations to the same action.
 
 .B "MOUSE BINDINGS"
 .RS
-Note that in the future this may be configurable.
-.RE
-.P
-.RS
-Any button on the root window will bring up the root menu unless
-disabled via the \fBonroot\fP attribute of \fBRootMenu\fP.
+Any button (other than the scroll wheel) on the root window will bring up
+the root menu unless otherwise specified  via the \fBonroot\fP attribute of
+\fBRootMenu\fP. Scrolling up on the root window switches to the previous
+desktop and scrolling down switches to the next desktop.
 .RE
 .P
 .RS
@@ -894,9 +891,11 @@ The middle button will move anywhere on the frame.
 .RE
 .P
 .RS
-A double click on the title bar of a window will toggle shading.
-The mouse wheel will move through menus when a menu is open, show the root
-menu when over root, or switch desktops when over the pager.
+A double click on the title bar of a window will toggle the maximized state
+of the window. Scrolling up over the title bar will shade the window and
+scrolling down will unshade the window.
+When a menu is open, the scroll wheel will move through menus.
+When over the pager, the scroll wheel will switch desktops.
 .RE
 
 .B DESKTOPS

@@ -934,6 +934,7 @@ void HandleMapRequest(const XMapEvent *event) {
 		if(!(np->state.status & STAT_MAPPED)) {
 			np->state.status |= STAT_MAPPED;
 			np->state.status &= ~STAT_MINIMIZED;
+			np->state.status &= ~STAT_SDESKTOP;
 			JXMapWindow(display, np->window);
 			JXMapWindow(display, np->parent);
 			RaiseClient(np);

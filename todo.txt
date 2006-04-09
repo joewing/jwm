@@ -8,8 +8,10 @@ Todo:
 	- Add the ability to move windows via the pager.
 	- Add the ability to change desktops with the mouse pointer.
 	- Add the ability to drag windows to different desktops.
-	- Make second click on "showdesktop" restore minimized windows.
 	- Make pixel threshold for mouse clicks on menus configurable.
+
+20060408:
+	- A second click on a "showdesktop" button will restore minimized windows.
 
 20060407:
 	- Scrollwheel now switches windows when over the task list.

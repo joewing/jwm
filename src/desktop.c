@@ -13,6 +13,8 @@
 
 char **desktopNames = NULL;
 
+static int showingDesktop;
+
 /***************************************************************************
  ***************************************************************************/
 void InitializeDesktops() {
@@ -36,6 +38,8 @@ void StartupDesktops() {
 			snprintf(desktopNames[x], 4, "%d", x + 1);
 		}
 	}
+
+	showingDesktop = 0;
 
 }
 
@@ -168,13 +172,21 @@ void ShowDesktop() {
 
 	for(layer = 0; layer < LAYER_COUNT; layer++) {
 		for(np = nodes[layer]; np; np = np->next) {
-			if(   np->state.desktop == currentDesktop
-				 || (np->state.status & STAT_STICKY))
-			{
-				MinimizeClient(np);
+			if(showingDesktop) {
+				if(np->state.status & STAT_SDESKTOP) {
+					RestoreClient(np);
+				}
+			} else if(np->state.desktop == currentDesktop
+				 || (np->state.status & STAT_STICKY)) {
+				if(np->state.status & STAT_MAPPED) {
+					MinimizeClient(np);
+					np->state.status |= STAT_SDESKTOP;
+				}
 			}
 		}
 	}
+
+	showingDesktop = !showingDesktop;
 
 }
 

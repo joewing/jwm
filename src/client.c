@@ -334,6 +334,7 @@ void ShadeClient(ClientNode *np) {
 	}
 	np->state.status |= STAT_SHADED;
 	np->state.status &= ~STAT_MINIMIZED;
+	np->state.status &= ~STAT_SDESKTOP;
 	np->state.status &= ~STAT_MAPPED;
 
 	JXResizeWindow(display, np->parent, np->width + 2 * bsize,
@@ -410,6 +411,7 @@ void SetClientWithdrawn(ClientNode *np) {
 	np->state.status &= ~STAT_SHADED;
 	np->state.status &= ~STAT_MAPPED;
 	np->state.status &= ~STAT_MINIMIZED;
+	np->state.status &= ~STAT_SDESKTOP;
 
 	UpdateTaskBar();
 	UpdatePager();
@@ -431,6 +433,7 @@ void RestoreTransients(ClientNode *np) {
 	}
 	np->state.status |= STAT_MAPPED;
 	np->state.status &= ~STAT_MINIMIZED;
+	np->state.status &= ~STAT_SDESKTOP;
 
 	WriteState(np);
 

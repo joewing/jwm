@@ -20,7 +20,10 @@
 #include <time.h>
 #include <sys/wait.h>
 #include <sys/time.h>
+
+#ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
+#endif
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>

@@ -190,6 +190,9 @@ if test "$enable_xft" != "no" ; then
 		  AC_MSG_WARN([unable to use Xft]) ],
 		[ $XFT_LDFLAGS ])
 fi
+if test "$enable_xft" != "no" ; then
+	AC_CHECK_HEADERS([ft2build.h])
+fi
 
 ############################################################################
 # Check if support for the XRENDER extension was requested and available.

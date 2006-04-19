@@ -12,6 +12,9 @@
 /* Define to 1 if you have the <fribidi/fribidi.h> header file. */
 #undef HAVE_FRIBIDI_FRIBIDI_H
 
+/* Define to 1 if you have the <ft2build.h> header file. */
+#undef HAVE_FT2BUILD_H
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 

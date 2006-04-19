@@ -6,55 +6,82 @@
 #ifndef JWM_H
 #define JWM_H
 
-#define MAX_DESKTOP_COUNT 8
-
 #include "../config.h"
 
-#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <signal.h>
-#include <unistd.h>
 #include <limits.h>
-#include <time.h>
-#include <sys/wait.h>
-#include <sys/time.h>
 
+#ifdef HAVE_STDARG_H
+#	include <stdarg.h>
+#endif
+#ifdef HAVE_SIGNAL_H
+#	include <signal.h>
+#endif
+#ifdef HAVE_UNISTD_H
+#	include <unistd.h>
+#endif
+#ifdef HAVE_TIME_H
+#	include <time.h>
+#endif
+#ifdef HAVE_SYS_WAIT_H
+#	include <sys/wait.h>
+#endif
+#ifdef HAVE_SYS_TIME_H
+#	include <sys/time.h>
+#endif
 #ifdef HAVE_SYS_SELECT_H
-#include <sys/select.h>
+#	include <sys/select.h>
 #endif
 
 #include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/Xresource.h>
-#include <X11/cursorfont.h>
-#include <X11/Xproto.h>
-#include <X11/Xatom.h>
-#include <X11/keysym.h>
+#ifdef HAVE_X11_XUTIL_H
+#	include <X11/Xutil.h>
+#endif
+#ifdef HAVE_X11_XRESOURCE_H
+#	include <X11/Xresource.h>
+#endif
+#ifdef HAVE_X11_CURSORFONT_H
+#	include <X11/cursorfont.h>
+#endif
+#ifdef HAVE_X11_XPROTO_H
+#	include <X11/Xproto.h>
+#endif
+#ifdef HAVE_X11_XATOM_H
+#	include <X11/Xatom.h>
+#endif
+#ifdef HAVE_X11_KEYSYM_H
+#	include <X11/keysym.h>
+#endif
 
 #ifdef USE_XPM
-#include <X11/xpm.h>
+#	include <X11/xpm.h>
 #endif
 #ifdef USE_PNG
-#include <png.h>
+#	include <png.h>
 #endif
 #ifdef USE_SHAPE
-#include <X11/extensions/shape.h>
+#	include <X11/extensions/shape.h>
 #endif
 #ifdef USE_XINERAMA
-#include <X11/extensions/Xinerama.h>
+#	include <X11/extensions/Xinerama.h>
 #endif
 #ifdef USE_XFT
-#include <X11/Xft/Xft.h>
+#	ifdef HAVE_FT2BUILD_H
+#		include <ft2build.h>
+#	endif
+#	include <X11/Xft/Xft.h>
 #endif
 #ifdef USE_XRENDER
-#include <X11/extensions/Xrender.h>
+#	include <X11/extensions/Xrender.h>
 #endif
 #ifdef USE_FRIBIDI
-#include <fribidi/fribidi.h>
-#include <fribidi/fribidi_char_sets_utf8.h>
+#	include <fribidi/fribidi.h>
+#	include <fribidi/fribidi_char_sets_utf8.h>
 #endif
+
+#define MAX_DESKTOP_COUNT 8
 
 #define MAX_INCLUDE_DEPTH 16
 

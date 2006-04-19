@@ -12,6 +12,8 @@ Todo:
 
 20060418:
 	- New window buttons (lior2b).
+	- New minimized icon (lior2b).
+	- Put brackets around minimized items (lior2b).
 
 20060408:
 	- A second click on a "showdesktop" button will restore minimized windows.

@@ -49,8 +49,8 @@ typedef struct Node {
 } Node;
 
 static char minimized_bitmap[] = {
-	0x06, 0x0F,
-	0x0F, 0x06
+	0x01, 0x03,
+	0x07, 0x0F
 };
 
 static const int TASK_SPACER = 2;
@@ -482,6 +482,7 @@ void Render(const TaskBarType *bp) {
 	int iconSize;
 	Pixmap buffer;
 	GC gc;
+	char *minimizedName;
 
 	if(shouldExit) {
 		return;
@@ -544,7 +545,14 @@ void Render(const TaskBarType *bp) {
 					bp->itemHeight - 1);
 			}
 
-			DrawButton(x, y, buttonType, tp->client->name);
+			if(tp->client->state.status & STAT_MINIMIZED) {
+				minimizedName = Allocate(strlen(tp->client->name) + 3);
+				sprintf(minimizedName, "[%s]", tp->client->name);
+				DrawButton(x, y, buttonType, minimizedName);
+				Release(minimizedName);
+			} else {
+				DrawButton(x, y, buttonType, tp->client->name);
+			}
 
 			if(tp->client->icon) {
 				PutIcon(tp->client->icon, buffer, gc,

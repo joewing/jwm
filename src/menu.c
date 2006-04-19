@@ -45,6 +45,7 @@ static MenuItemType *GetMenuItem(MenuType *menu, int index);
 static int GetNextMenuIndex(MenuType *menu);
 static int GetPreviousMenuIndex(MenuType *menu);
 static int GetMenuIndex(MenuType *menu, int index);
+static void SetPosition(MenuType *menu, MenuType *tp, int index);
 
 static char *runCommand = NULL;
 
@@ -400,12 +401,7 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 		}
 
 		if(y >= 0) {
-			y = tp->offsets[y] + menu->itemHeight / 2;
-
-			/* We need to do this twice so the event gets registered
-			 * on the submenu if one exists. */
-			SetMousePosition(tp->window, 6, y);
-			SetMousePosition(tp->window, 6, y);
+			SetPosition(menu, tp, y);
 		}
 
 		return MENU_NOSELECTION;
@@ -459,12 +455,7 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 		}
 
 		if(y >= 0) {
-			y = tp->offsets[y] + menu->itemHeight / 2;
-
-			/* We need to do this twice so the event gets registered
-			 * on the submenu if one exists. */
-			SetMousePosition(tp->window, 6, y);
-			SetMousePosition(tp->window, 6, y);
+			SetPosition(menu, tp, y);
 		}
 
 		return MENU_NOSELECTION;
@@ -473,7 +464,6 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 		Debug("invalid event type in menu.c:UpdateMotion");
 		return MENU_SUBSELECT;
 	}
-
 
 	/* Update the selection on the current menu */
 	if(x > 0 && y > 0 && x < menu->width && y < menu->height) {
@@ -502,6 +492,28 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 		menu->currentIndex = -1;
 
 	}
+
+	/* Move the menu if needed. */
+	if(menu->height > rootHeight && menu->currentIndex >= 0) {
+
+		/* If near the top, shift down. */
+		while(y + menu->y <= 0) {
+			menu->y += menu->itemHeight;
+			y += menu->itemHeight;
+			JXMoveWindow(display, menu->window, menu->x, menu->y);
+			SetMousePosition(menu->window, x, y);
+		}
+
+		/* If near the bottom, shift up. */
+		while(y + menu->y + menu->itemHeight / 2 >= rootHeight) {
+			menu->y -= menu->itemHeight;
+			y -= menu->itemHeight;
+			JXMoveWindow(display, menu->window, menu->x, menu->y);
+			SetMousePosition(menu->window, x, y);
+		}
+
+	}
+
 	if(menu->lastIndex != menu->currentIndex) {
 		UpdateMenu(menu);
 		menu->lastIndex = menu->currentIndex;
@@ -648,8 +660,9 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 /***************************************************************************
  ***************************************************************************/
 int GetNextMenuIndex(MenuType *menu) {
+
 	MenuItemType *item;
-	unsigned int x;
+	int x;
 
 	for(x = menu->currentIndex + 1; x < menu->itemCount; x++) {
 		item = GetMenuItem(menu, x);
@@ -665,6 +678,7 @@ int GetNextMenuIndex(MenuType *menu) {
 /***************************************************************************
  ***************************************************************************/
 int GetPreviousMenuIndex(MenuType *menu) {
+
 	MenuItemType *item;
 	int x;
 
@@ -676,12 +690,14 @@ int GetPreviousMenuIndex(MenuType *menu) {
 	}
 
 	return menu->itemCount - 1;
+
 }
 
 /***************************************************************************
  ***************************************************************************/
 int GetMenuIndex(MenuType *menu, int y) {
-	unsigned int x;
+
+	int x;
 
 	if(y < menu->offsets[0]) {
 		return -1;
@@ -713,4 +729,33 @@ MenuItemType *GetMenuItem(MenuType *menu, int index) {
 
 	return ip;
 }
+
+/***************************************************************************
+ ***************************************************************************/
+void SetPosition(MenuType *menu, MenuType *tp, int index) {
+
+	int y;
+
+	y = tp->offsets[index] + menu->itemHeight / 2;
+
+	if(tp->height > rootHeight) {
+
+		/* Determine if this offset is not currently shown. */
+		if(y + tp->y <= 0) {
+			tp->y = y;
+			JXMoveWindow(display, tp->window, tp->x, tp->y);
+		} else if(y + tp->y >= rootHeight) {
+			tp->y = rootHeight - y - tp->itemHeight;
+			JXMoveWindow(display, tp->window, tp->x, tp->y);
+		}
+
+	}
+
+	/* We need to do this twice so the event gets registered
+	 * on the submenu if one exists. */
+	SetMousePosition(tp->window, 6, y);
+	SetMousePosition(tp->window, 6, y);
+
+}
+
 

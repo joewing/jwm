@@ -87,6 +87,9 @@
 /* Define to 1 if you have the <X11/Xproto.h> header file. */
 #undef HAVE_X11_XPROTO_H
 
+/* Define to 1 if you have the <X11/Xresource.h> header file. */
+#undef HAVE_X11_XRESOURCE_H
+
 /* Define to 1 if you have the <X11/Xutil.h> header file. */
 #undef HAVE_X11_XUTIL_H
 

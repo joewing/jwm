@@ -56,18 +56,16 @@ AC_CHECK_LIB([X11], XOpenDisplay,
 ############################################################################
 # Check for necessary include files.
 ############################################################################
-AC_CHECK_HEADERS([stdarg.h stdio.h stdlib.h ctype.h signal.h unistd.h \
-	time.h sys/wait.h sys/time.h], [],
+AC_CHECK_HEADERS([stdarg.h stdio.h stdlib.h ctype.h], [],
 	[ AC_MSG_ERROR([one or more necessary header files not found]) ])
 
-AC_CHECK_HEADERS([sys/select.h])
+AC_CHECK_HEADERS([sys/select.h signal.h unistd.h time.h sys/wait.h sys/time.h])
 
 AC_CHECK_HEADERS([X11/Xlib.h], [],
 	[ AC_MSG_ERROR([Xlib.h could not be found]) ])
 
 AC_CHECK_HEADERS([X11/Xutil.h X11/cursorfont.h X11/Xproto.h \
-	X11/Xatom.h X11/keysym.h], [],
-	[ AC_MSG_ERROR([one or more necessary X11 header files not found]) ],
+	X11/Xatom.h X11/keysym.h X11/Xresource.h], [], [],
 	[
 #include <X11/Xlib.h>
 	])

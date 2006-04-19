@@ -142,12 +142,6 @@ if test "$enable_png" != "no" ; then
 		PNG_LDFLAGS="-lpng -lz -lm"
 	fi
 
-	AC_CHECK_HEADERS([png.h], [],
-		[
-			enable_png="no";
-			AC_MSG_WARN([unable to use png.h])
-		])
-
 fi
 if test "$enable_png" != "no" ; then
 	AC_CHECK_LIB(png, png_read_image,
@@ -241,12 +235,6 @@ if test "$enable_fribidi" != "no" ; then
 	else
 		FRIBIDI_LDFLAGS="-lfribidi"
 	fi
-
-	AC_CHECK_HEADERS([fribidi/fribidi.h], [],
-		[
-			enable_fribidi="no";
-			AC_MSG_WARN([unable to use fribidi/fribidi.h])
-		])
 
 fi
 if test "$enable_fribidi" != "no" ; then

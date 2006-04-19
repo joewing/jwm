@@ -6,6 +6,7 @@ To build JWM you will need a C compiler (gcc works), X11, and the
 "development headers" for X11 and Xlib.
 If available and not disabled at compile time, JWM will also use
 the following libraries:
+	libfribidi for bi-directional text support.
 	libXext for the shape extension.
 	libXext for the render extension.
 	libXinerama for multiple head support.

@@ -4,11 +4,13 @@ Todo:
 	- Add window list root menu item.
 	- Make the window menu configurable (other languages, order, etc.).
 	- Add mouse bindings.
-	- Support menus that are too big for the screen.
 	- Add the ability to move windows via the pager.
 	- Add the ability to change desktops with the mouse pointer.
 	- Add the ability to drag windows to different desktops.
 	- Make pixel threshold for mouse clicks on menus configurable.
+
+20060422:
+	- Scroll menus that are too big for the screen.
 
 20060418:
 	- New window buttons (lior2b).

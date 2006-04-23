@@ -45,7 +45,7 @@ static MenuItemType *GetMenuItem(MenuType *menu, int index);
 static int GetNextMenuIndex(MenuType *menu);
 static int GetPreviousMenuIndex(MenuType *menu);
 static int GetMenuIndex(MenuType *menu, int index);
-static void SetPosition(MenuType *menu, MenuType *tp, int index);
+static void SetPosition(MenuType *tp, int index);
 
 static char *runCommand = NULL;
 
@@ -401,7 +401,7 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 		}
 
 		if(y >= 0) {
-			SetPosition(menu, tp, y);
+			SetPosition(tp, y);
 		}
 
 		return MENU_NOSELECTION;
@@ -455,7 +455,7 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 		}
 
 		if(y >= 0) {
-			SetPosition(menu, tp, y);
+			SetPosition(tp, y);
 		}
 
 		return MENU_NOSELECTION;
@@ -497,19 +497,19 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 	if(menu->height > rootHeight && menu->currentIndex >= 0) {
 
 		/* If near the top, shift down. */
-		while(y + menu->y <= 0) {
-			menu->y += menu->itemHeight;
-			y += menu->itemHeight;
-			JXMoveWindow(display, menu->window, menu->x, menu->y);
-			SetMousePosition(menu->window, x, y);
+		if(y + menu->y <= 0) {
+			if(menu->currentIndex > 0) {
+				--menu->currentIndex;
+				SetPosition(menu, menu->currentIndex);
+			}
 		}
 
 		/* If near the bottom, shift up. */
-		while(y + menu->y + menu->itemHeight / 2 >= rootHeight) {
-			menu->y -= menu->itemHeight;
-			y -= menu->itemHeight;
-			JXMoveWindow(display, menu->window, menu->x, menu->y);
-			SetMousePosition(menu->window, x, y);
+		if(y + menu->y + menu->itemHeight / 2 >= rootHeight) {
+			if(menu->currentIndex + 1 < menu->itemCount) {
+				++menu->currentIndex;
+				SetPosition(menu, menu->currentIndex);
+			}
 		}
 
 	}
@@ -732,21 +732,27 @@ MenuItemType *GetMenuItem(MenuType *menu, int index) {
 
 /***************************************************************************
  ***************************************************************************/
-void SetPosition(MenuType *menu, MenuType *tp, int index) {
+void SetPosition(MenuType *tp, int index) {
 
 	int y;
+	int updated;
 
-	y = tp->offsets[index] + menu->itemHeight / 2;
+	y = tp->offsets[index] + tp->itemHeight / 2;
 
 	if(tp->height > rootHeight) {
 
-		/* Determine if this offset is not currently shown. */
-		if(y + tp->y <= 0) {
-			tp->y = y;
+		updated = 0;
+		while(y + tp->y < tp->itemHeight / 2) {
+			tp->y += tp->itemHeight;
+			updated = tp->itemHeight;
+		}
+		while(y + tp->y >= rootHeight) {
+			tp->y -= tp->itemHeight;
+			updated = -tp->itemHeight;
+		}
+		if(updated) {
 			JXMoveWindow(display, tp->window, tp->x, tp->y);
-		} else if(y + tp->y >= rootHeight) {
-			tp->y = rootHeight - y - tp->itemHeight;
-			JXMoveWindow(display, tp->window, tp->x, tp->y);
+			y += updated;
 		}
 
 	}

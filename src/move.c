@@ -117,6 +117,13 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 		return 0;
 	}
 
+	if(np->state.status & STAT_MAXIMIZED) {
+		MaximizeClient(np);
+		SetMousePosition(np->parent, np->width / 2, titleHeight / 2);
+		startx = np->width / 2;
+		starty = titleHeight / 2;
+	}
+
 	if(!GrabMouseForMove()) {
 		Debug("MoveClient: could not grab mouse");
 		return 0;
@@ -218,6 +225,10 @@ int MoveClientKeyboard(ClientNode *np) {
 
 	if(!(np->state.border & BORDER_MOVE)) {
 		return 0;
+	}
+
+	if(np->state.status & STAT_MAXIMIZED) {
+		MaximizeClient(np);
 	}
 
 	if(JXGrabKeyboard(display, np->window, True, GrabModeAsync,

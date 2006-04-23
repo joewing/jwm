@@ -11,6 +11,8 @@ Todo:
 
 20060422:
 	- Scroll menus that are too big for the screen.
+	- Moving a maximized window now un-maximizes it.
+	- Resizing a maximized window now un-maximizes it (lior2b).
 
 20060418:
 	- New window buttons (lior2b).

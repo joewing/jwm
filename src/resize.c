@@ -58,8 +58,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 
 	Assert(np);
 
-	if(!(np->state.border & BORDER_RESIZE)
-		|| (np->state.status & STAT_MAXIMIZED)) {
+	if(!(np->state.border & BORDER_RESIZE)) {
 		return;
 	}
 
@@ -203,6 +202,12 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 
 			if(lastgheight != gheight || lastgwidth != gwidth) {
 
+				if(np->state.status & STAT_MAXIMIZED) {
+					np->state.status &= ~STAT_MAXIMIZED;
+					WriteState(np);
+					SendConfigureEvent(np);
+				}
+
 				UpdateResizeWindow(np, gwidth, gheight);
 
 				if(resizeMode == RESIZE_OUTLINE) {
@@ -255,8 +260,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 
 	Assert(np);
 
-	if(!(np->state.border & BORDER_RESIZE)
-		|| (np->state.status & STAT_MAXIMIZED)) {
+	if(!(np->state.border & BORDER_RESIZE)) {
 		return;
 	}
 
@@ -369,6 +373,12 @@ void ResizeClientKeyboard(ClientNode *np) {
 		gheight = (np->height - np->baseHeight) / np->yinc;
 
 		if(lastgwidth != gwidth || lastgheight != gheight) {
+
+			if(np->state.status & STAT_MAXIMIZED) {
+				np->state.status &= ~STAT_MAXIMIZED;
+				WriteState(np);
+				SendConfigureEvent(np);
+			}
 
 			UpdateResizeWindow(np, gwidth, gheight);
 

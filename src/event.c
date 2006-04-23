@@ -1023,6 +1023,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
 	static int lastX = 0, lastY = 0;
 	static int doubleClickActive = 0;
 	BorderActionType action;
+	int bsize;
 
 	action = GetBorderActionType(np, event->x, event->y);
 
@@ -1050,6 +1051,17 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
 					lastY = event->y;
 				}
 			}
+		}
+		break;
+	case BA_MENU:
+		if(event->type == ButtonPress) {
+			if(np->state.border & BORDER_OUTLINE) {
+				bsize = borderWidth;
+			} else {
+				bsize = 0;
+			}
+			ShowWindowMenu(np, np->x + event->x - bsize,
+				np->y + event->y - titleHeight - bsize);
 		}
 		break;
 	case BA_CLOSE:

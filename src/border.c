@@ -128,6 +128,11 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 	if(np->state.border & BORDER_TITLE) {
 
 		if(y > bsize && y <= bsize + titleHeight) {
+			if(np->icon && np->width >= titleHeight) {
+				if(x > bsize && x < bsize + titleHeight) {
+					return BA_MENU;
+				}
+			}
 			offset = np->width + bsize - titleHeight;
 			if((np->state.border & BORDER_CLOSE)
 				&& offset > bsize + titleHeight) {

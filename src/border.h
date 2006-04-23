@@ -15,6 +15,7 @@ typedef enum {
 	BA_CLOSE     = 3,
 	BA_MAXIMIZE  = 4,
 	BA_MINIMIZE  = 5,
+	BA_MENU      = 6,
 	BA_RESIZE_N  = 0x10,
 	BA_RESIZE_S  = 0x20,
 	BA_RESIZE_E  = 0x40,

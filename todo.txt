@@ -14,6 +14,7 @@ Todo:
 	- Moving a maximized window now un-maximizes it.
 	- Resizing a maximized window now un-maximizes it (lior2b).
 	- Left clicking on a window icon now shows the window menu (lior2b).
+	- Clock draw optimization (lior2b).
 
 20060418:
 	- New window buttons (lior2b).

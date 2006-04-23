@@ -21,6 +21,7 @@ typedef struct ClockType {
 
 	char *format;
 	char *command;
+	char shortTime[80];
 
 	GC bufferGC;
 
@@ -132,6 +133,8 @@ TrayComponentType *CreateClock(const char *format, const char *command,
 		clk->command = NULL;
 	}
 
+	clk->shortTime[0] = 0;
+
 	cp = CreateTrayComponent();
 	cp->object = clk;
 	clk->cp = cp;
@@ -198,6 +201,8 @@ void Resize(TrayComponentType *cp) {
 	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
 		rootDepth);
 	clk->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
+
+	clk->shortTime[0] = 0;
 
 	GetCurrentTime(&now);
 	GetMousePosition(&x, &y);
@@ -306,6 +311,10 @@ void DrawClock(ClockType *clk, TimeType *now, int x, int y) {
 		cp->width, cp->height);
 
 	shortTime = GetTimeString(clk->format);
+	if(!strcmp(clk->shortTime, shortTime)) {
+		return;
+	}
+	strcpy(clk->shortTime, shortTime);
 
 	width = GetStringWidth(FONT_CLOCK, shortTime);
 	rwidth = width + 4;

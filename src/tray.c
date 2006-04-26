@@ -37,8 +37,6 @@ static int CheckVerticalFill(TrayType *tp);
 static void LayoutTray(TrayType *tp, int *variableSize,
 	int *variableRemainder);
 
-static TrayAlignmentType ParseTrayAlignment(const char *str);
-
 /***************************************************************************
  ***************************************************************************/
 void InitializeTray() {
@@ -1090,30 +1088,19 @@ void SetTrayBorder(TrayType *tp, const char *str) {
 
 /***************************************************************************
  ***************************************************************************/
-TrayAlignmentType ParseTrayAlignment(const char *str) {
-
-	if(!str || !strcmp(str, "fixed")) {
-		return TALIGN_FIXED;
-	} else if(!strcmp(str, "left")) {
-		return TALIGN_LEFT;
-	} else if(!strcmp(str, "right")) {
-		return TALIGN_RIGHT;
-	} else if(!strcmp(str, "center")) {
-		return TALIGN_CENTER;
-	} else {
-		return TALIGN_INVALID;
-	}
-
-}
-
-/***************************************************************************
- ***************************************************************************/
 void SetTrayHorizontalAlignment(TrayType *tp, const char *str) {
 
 	Assert(tp);
 
-	tp->halign = ParseTrayAlignment(str);
-	if(tp->halign == TALIGN_INVALID) {
+	if(!str || !strcmp(str, "fixed")) {
+		tp->halign = TALIGN_FIXED;
+	} else if(!strcmp(str, "left")) {
+		tp->halign = TALIGN_LEFT;
+	} else if(!strcmp(str, "right")) {
+		tp->halign = TALIGN_RIGHT;
+	} else if(!strcmp(str, "center")) {
+		tp->halign = TALIGN_CENTER;
+	} else {
 		Warning("invalid tray horizontal alignment: \"%s\"", str);
 		tp->halign = TALIGN_FIXED;
 	}
@@ -1126,8 +1113,15 @@ void SetTrayVerticalAlignment(TrayType *tp, const char *str) {
 
 	Assert(tp);
 
-	tp->valign = ParseTrayAlignment(str);
-	if(tp->valign == TALIGN_INVALID) {
+	if(!str || !strcmp(str, "fixed")) {
+		tp->valign = TALIGN_FIXED;
+	} else if(!strcmp(str, "top")) {
+		tp->valign = TALIGN_TOP;
+	} else if(!strcmp(str, "bottom")) {
+		tp->valign = TALIGN_BOTTOM;
+	} else if(!strcmp(str, "center")) {
+		tp->valign = TALIGN_CENTER;
+	} else {
 		Warning("invalid tray vertical alignment: \"%s\"", str);
 		tp->valign = TALIGN_FIXED;
 	}

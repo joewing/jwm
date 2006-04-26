@@ -9,6 +9,14 @@ Todo:
 	- Add the ability to drag windows to different desktops.
 	- Make pixel threshold for mouse clicks on menus configurable.
 
+20060425:
+	- Fixed clock redrawing issue.
+	- Fixed Tray valign attribute.
+	- Don't un-maximize on a single click to the title bar.
+
+20060423:
+	- Released v1.6.
+
 20060422:
 	- Scroll menus that are too big for the screen.
 	- Moving a maximized window now un-maximizes it.
@@ -59,6 +67,7 @@ Todo:
 
 20060312:
 	- Ignore caps lock and num lock for key bindings.
+	- Released v1.5.
 
 20060311:
 	- Added popup for TrayButton.

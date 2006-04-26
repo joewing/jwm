@@ -117,13 +117,6 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 		return 0;
 	}
 
-	if(np->state.status & STAT_MAXIMIZED) {
-		MaximizeClient(np);
-		SetMousePosition(np->parent, np->width / 2, titleHeight / 2);
-		startx = np->width / 2;
-		starty = titleHeight / 2;
-	}
-
 	if(!GrabMouseForMove()) {
 		Debug("MoveClient: could not grab mouse");
 		return 0;
@@ -181,11 +174,20 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 
 			if(!doMove && (abs(np->x - oldx) > MOVE_DELTA
 				|| abs(np->y - oldy) > MOVE_DELTA)) {
+
+				if(np->state.status & STAT_MAXIMIZED) {
+					MaximizeClient(np);
+					SetMousePosition(np->parent, np->width / 2, titleHeight / 2);
+					startx = np->width / 2;
+					starty = titleHeight / 2;
+				}
+
 				CreateMoveWindow(np);
 				doMove = 1;
 			}
 
 			if(doMove) {
+
 				if(moveMode == MOVE_OUTLINE) {
 					ClearOutline();
 					height = north + west;

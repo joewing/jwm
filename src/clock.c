@@ -304,17 +304,17 @@ void DrawClock(ClockType *clk, TimeType *now, int x, int y) {
 	int width;
 	int rwidth;
 
-	cp = clk->cp;
-
-	JXSetForeground(display, clk->bufferGC, colors[COLOR_CLOCK_BG]);
-	JXFillRectangle(display, cp->pixmap, clk->bufferGC, 0, 0,
-		cp->width, cp->height);
-
 	shortTime = GetTimeString(clk->format);
 	if(!strcmp(clk->shortTime, shortTime)) {
 		return;
 	}
 	strcpy(clk->shortTime, shortTime);
+
+	cp = clk->cp;
+
+	JXSetForeground(display, clk->bufferGC, colors[COLOR_CLOCK_BG]);
+	JXFillRectangle(display, cp->pixmap, clk->bufferGC, 0, 0,
+		cp->width, cp->height);
 
 	width = GetStringWidth(FONT_CLOCK, shortTime);
 	rwidth = width + 4;

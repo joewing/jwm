@@ -16,7 +16,6 @@ typedef enum {
 } LayoutType;
 
 typedef enum {
-	TALIGN_INVALID,
 	TALIGN_FIXED,
 	TALIGN_LEFT,
 	TALIGN_TOP,

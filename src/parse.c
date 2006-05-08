@@ -33,6 +33,12 @@
 #include "dock.h"
 #include "popup.h"
 #include "status.h"
+#include "theme.h"
+
+typedef struct ThemePathType {
+	char *path;
+	struct ThemePathType *next;
+} ThemePathType;
 
 typedef struct KeyMapType {
 	char *name;
@@ -62,6 +68,8 @@ static const KeyMapType KEY_MAP[] = {
 	{ "desktop#",    KEY_DESKTOP      },
 	{ NULL,          KEY_NONE         }
 };
+
+static const char *THEME_FILE = "theme.xml";
 
 static const char *RESTART_COMMAND = "#restart";
 static const char *RESTART_NAME = "Restart";
@@ -95,9 +103,16 @@ static const char *POPUP_ATTRIBUTE = "popup";
 static const char *DELAY_ATTRIBUTE = "delay";
 static const char *ENABLED_ATTRIBUTE = "enabled";
 static const char *COORDINATES_ATTRIBUTE = "coordinates";
+static const char *NORTH_ATTRIBUTE = "north";
+static const char *SOUTH_ATTRIBUTE = "south";
+static const char *EAST_ATTRIBUTE = "east";
+static const char *WEST_ATTRIBUTE = "west";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
+
+static ThemePathType *themePaths;
+static char *themeName;
 
 static int ParseFile(const char *fileName, int depth);
 static char *ReadFile(FILE *fd);
@@ -140,7 +155,6 @@ static void ParseMenuStyle(const TokenNode *start);
 static void ParsePopupStyle(const TokenNode *start);
 static void ParseClockStyle(const TokenNode *start);
 static void ParseTrayButtonStyle(const TokenNode *start);
-static void ParseIcons(const TokenNode *tp);
 
 /* Feel. */
 static void ParseKey(const TokenNode *tp);
@@ -150,6 +164,12 @@ static void ParseMoveMode(const TokenNode *tp);
 static void ParseResizeMode(const TokenNode *tp);
 static void ParseFocusModel(const TokenNode *tp);
 
+/* Theme. */
+static void AddThemePath(const char *path);
+static void SetThemeName(const char *name);
+static void ParseWindowButton(const TokenNode *tp);
+static void ParseButton(const TokenNode *tp);
+
 static char *FindAttribute(AttributeNode *ap, const char *name);
 static void ReleaseTokens(TokenNode *np);
 static void InvalidTag(const TokenNode *tp, const char *parent);
@@ -158,11 +178,18 @@ static void ParseError(const TokenNode *tp, const char *str, ...);
 /****************************************************************************
  ****************************************************************************/
 void ParseConfig(const char *fileName) {
+
+	themeName = NULL;
+	themePaths = NULL;
+
+	SetButtonOffsets(0, 0, 0, 0);
+
 	if(!ParseFile(fileName, 0)) {
 		if(!ParseFile(SYSTEM_CONFIG, 0)) {
 			ParseError(NULL, "could not open %s or %s", fileName, SYSTEM_CONFIG);
 		}
 	}
+
 }
 
 /****************************************************************************
@@ -171,9 +198,12 @@ void ParseConfig(const char *fileName) {
  ****************************************************************************/
 int ParseFile(const char *fileName, int depth) {
 
+	ThemePathType *tp;
 	TokenNode *tokens;
 	FILE *fd;
 	char *buffer;
+	char *path;
+	int length;
 
 	++depth;
 	if(depth > MAX_INCLUDE_DEPTH) {
@@ -193,6 +223,48 @@ int ParseFile(const char *fileName, int depth) {
 	Release(buffer);
 	Parse(tokens, depth);
 	ReleaseTokens(tokens);
+
+	/* Parse the theme file at the very end. */
+	if(depth == 1 && themeName) {
+
+		length = strlen(themeName) + strlen(THEME_FILE) + 3;
+
+		fd = NULL;
+		path = NULL;
+		for(tp = themePaths; tp; tp = tp->next) {
+			path = Allocate(strlen(tp->path) + length);
+			sprintf(path, "%s/%s/%s", tp->path, themeName, THEME_FILE);
+			ExpandPath(&path);
+			fd = fopen(path, "r");
+			if(fd) {
+				SetThemePath(tp->path, themeName);
+				break;
+			}
+			Release(path);
+		}
+
+		while(themePaths) {
+			tp = themePaths->next;
+			Release(themePaths->path);
+			Release(themePaths);
+			themePaths = tp;
+		}
+
+		if(fd) {
+			buffer = ReadFile(fd);
+			tokens = Tokenize(buffer, path);
+			Release(buffer);
+			Parse(tokens, 0);
+			ReleaseTokens(tokens);
+			fclose(fd);
+			Release(path);
+		} else {
+			Warning("theme \"%s\" not found", themeName);
+		}
+
+		Release(themeName);
+
+	}
 
 	return 1;
 
@@ -258,6 +330,9 @@ void Parse(const TokenNode *start, int depth) {
 			case TOK_BORDERSTYLE:
 				ParseBorderStyle(tp);
 				break;
+			case TOK_BUTTON:
+				ParseButton(tp);
+				break;
 			case TOK_DESKTOPS:
 				ParseDesktops(tp);
 				break;
@@ -273,8 +348,8 @@ void Parse(const TokenNode *start, int depth) {
 			case TOK_GROUP:
 				ParseGroup(tp);
 				break;
-			case TOK_ICONS:
-				ParseIcons(tp);
+			case TOK_ICONPATH:
+				AddIconPath(tp->value);
 				break;
 			case TOK_INCLUDE:
 				ParseInclude(tp, depth);
@@ -315,6 +390,12 @@ void Parse(const TokenNode *start, int depth) {
 			case TOK_TASKLISTSTYLE:
 				ParseTaskListStyle(tp);
 				break;
+			case TOK_THEME:
+				SetThemeName(tp->value);
+				break;
+			case TOK_THEMEPATH:
+				AddThemePath(tp->value);
+				break;
 			case TOK_TRAY:
 				ParseTray(tp);
 				break;
@@ -326,6 +407,9 @@ void Parse(const TokenNode *start, int depth) {
 				break;
 			case TOK_CLOCKSTYLE:
 				ParseClockStyle(tp);
+				break;
+			case TOK_WINDOWBUTTON:
+				ParseWindowButton(tp);
 				break;
 			default:
 				InvalidTag(tp, "JWM");
@@ -817,12 +901,6 @@ void ParseBorderStyle(const TokenNode *tp) {
 		switch(np->type) {
 		case TOK_FONT:
 			SetFont(FONT_BORDER, np->value);
-			break;
-		case TOK_WIDTH:
-			SetBorderWidth(np->value);
-			break;
-		case TOK_HEIGHT:
-			SetTitleHeight(np->value);
 			break;
 		case TOK_FOREGROUND:
 			SetColor(COLOR_BORDER_FG, np->value);
@@ -1463,21 +1541,90 @@ void ParseStartupCommand(const TokenNode *tp) {
 
 /****************************************************************************
  ****************************************************************************/
-void ParseIcons(const TokenNode *tp) {
+void ParseButton(const TokenNode *tp) {
 
-	TokenNode *np;
+	const char *temp;
+	int north, south, east, west;
 
-	Assert(tp);
+	north = 0;
+	south = 0;
+	east = 0;
+	west = 0;
 
-	for(np = tp->subnodeHead; np; np = np->next) {
-		switch(np->type) {
-		case TOK_ICONPATH:
-			AddIconPath(np->value);
-			break;
-		default:
-			InvalidTag(np, "Icons");
-			break;
-		}
+	temp = FindAttribute(tp->attributes, NORTH_ATTRIBUTE);
+	if(temp) {
+		north = atoi(temp);
+	}
+	temp = FindAttribute(tp->attributes, SOUTH_ATTRIBUTE);
+	if(temp) {
+		south = atoi(temp);
+	}
+	temp = FindAttribute(tp->attributes, EAST_ATTRIBUTE);
+	if(temp) {
+		east = atoi(temp);
+	}
+	temp = FindAttribute(tp->attributes, WEST_ATTRIBUTE);
+	if(temp) {
+		west = atoi(temp);
+	}
+
+	SetButtonOffsets(north, south, east, west);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void ParseWindowButton(const TokenNode *tp) {
+
+	const char *temp;
+	const char *action;
+	int y;
+
+	action = tp->value;
+	if(!action) {
+		ParseError(tp, "action required");
+		return;
+	}
+
+	temp = FindAttribute(tp->attributes, Y_ATTRIBUTE);
+	if(temp) {
+		y = atoi(temp);
+	} else {
+		y = 0;
+	}
+
+	SetWindowButtonLocation(action, y);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void AddThemePath(const char *path) {
+
+	ThemePathType *tp;
+
+	if(path) {
+		tp = Allocate(sizeof(ThemePathType));
+		tp->next = themePaths;
+		themePaths = tp;
+		tp->path = Allocate(strlen(path) + 1);
+		strcpy(tp->path, path);
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void SetThemeName(const char *name) {
+
+	if(themeName) {
+		Release(themeName);
+		themeName = NULL;
+	}
+
+	if(name) {
+		themeName = Allocate(strlen(name) + 1);
+		strcpy(themeName, name);
 	}
 
 }

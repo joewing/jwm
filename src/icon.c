@@ -42,7 +42,8 @@ static IconNode *CreateIconFromBinary(const unsigned long *data,
 static IconNode *LoadSuffixedIcon(const char *path, const char *name,
 	const char *suffix);
 
-static ScaledIconNode *GetScaledIcon(IconNode *icon, int width, int height);
+static ScaledIconNode *GetScaledIcon(IconNode *icon,
+	int width, int height, int useRender);
 
 static void InsertIcon(IconNode *icon);
 static IconNode *FindIcon(const char *name);
@@ -171,7 +172,7 @@ void PutIcon(IconNode *icon, Drawable d, GC g, int x, int y,
 
 	Assert(icon);
 
-	node = GetScaledIcon(icon, width, height);
+	node = GetScaledIcon(icon, width, height, 1);
 
 	if(node) {
 
@@ -406,7 +407,8 @@ IconNode *CreateIconFromFile(const char *fileName) {
 
 /****************************************************************************
  ****************************************************************************/
-ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
+ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight,
+	int useRender) {
 
 	XColor color;
 	ScaledIconNode *np;
@@ -448,9 +450,11 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 	}
 
 	/* See if we can use XRender to create the icon. */
-	np = CreateScaledRenderIcon(icon, nwidth, nheight);
-	if(np) {
-		return np;
+	if(useRender) {
+		np = CreateScaledRenderIcon(icon, nwidth, nheight);
+		if(np) {
+			return np;
+		}
 	}
 
 	/* Create a new ScaledIconNode the old-fashioned way. */

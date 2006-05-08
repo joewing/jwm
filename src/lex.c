@@ -16,6 +16,7 @@ static const char *TOKEN_MAP[] = {
 	"ActiveForeground",
 	"Background",
 	"BorderStyle",
+	"Button",
 	"Class",
 	"Clock",
 	"ClockStyle",
@@ -30,7 +31,6 @@ static const char *TOKEN_MAP[] = {
 	"Group",
 	"Height",
 	"IconPath",
-	"Icons",
 	"Include",
 	"JWM",
 	"Key",
@@ -56,11 +56,14 @@ static const char *TOKEN_MAP[] = {
 	"Swallow",
 	"TaskListStyle",
 	"TaskList",
+	"Theme",
+	"ThemePath",
 	"Tray",
 	"TrayButton",
 	"TrayButtonStyle",
 	"TrayStyle",
-	"Width"
+	"Width",
+	"WindowButton"
 };
 
 static TokenNode *head, *current;

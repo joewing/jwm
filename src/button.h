@@ -7,12 +7,16 @@
 #define BUTTON_H
 
 #include "font.h"
+#include "color.h"
+
+struct IconNode;
+struct PartNode;
 
 typedef enum {
-	BUTTON_MENU,
-	BUTTON_MENU_ACTIVE,
-	BUTTON_TASK,
-	BUTTON_TASK_ACTIVE
+	BUTTON_NORMAL,
+	BUTTON_ACTIVE,
+	BUTTON_PUSHED,
+	BUTTON_NONE
 } ButtonType;
 
 typedef enum {
@@ -21,13 +25,27 @@ typedef enum {
 	ALIGN_RIGHT
 } AlignmentType;
 
-void SetButtonDrawable(Drawable d, GC g);
-void SetButtonFont(FontType f);
-void SetButtonSize(int w, int h);
-void SetButtonAlignment(AlignmentType a);
-void SetButtonTextOffset(int o);
+typedef struct ButtonData {
+	ButtonType type;
+	AlignmentType alignment;
+	FontType font;
+	ColorType color;
+	ColorType background;
+	struct PartNode *fillPart;
+	int x, y;
+	int width, height;
+	Drawable drawable;
+	GC gc;
+	struct IconNode *icon;
+	const char *text;
+} ButtonData;
 
-void DrawButton(int x, int y, ButtonType type, const char *str);
+void ResetButton(ButtonData *button, Drawable d, GC g);
+
+void DrawButton(const ButtonData *button);
+
+void SetButtonOffsets(int north, int south, int east, int west);
+void GetButtonOffsets(int *north, int *south, int *east, int *west);
 
 #endif
 

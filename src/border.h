@@ -28,14 +28,19 @@ void ShutdownBorders();
 void DestroyBorders();
 
 BorderActionType GetBorderActionType(const struct ClientNode *np, int x, int y);
+
 void DrawBorder(const struct ClientNode *np);
+
+void ApplyBorderShape(const struct ClientNode *np);
+
+void GetBorderSize(const struct ClientNode *np,
+	int *north, int *south, int *east, int *west);
 
 int GetBorderIconSize();
 
-void SetBorderWidth(const char *str);
-void SetTitleHeight(const char *str);
-
 void ExposeCurrentDesktop();
+
+void SetWindowButtonLocation(const char *action, int y);
 
 #endif
 

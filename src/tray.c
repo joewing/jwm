@@ -13,6 +13,8 @@
 #include "taskbar.h"
 #include "menu.h"
 #include "timing.h"
+#include "theme.h"
+#include "image.h"
 
 #define DEFAULT_TRAY_WIDTH 32
 #define DEFAULT_TRAY_HEIGHT 32
@@ -738,42 +740,14 @@ void DrawTray() {
 void DrawSpecificTray(const TrayType *tp) {
 
 	TrayComponentType *cp;
-	int x;
 
 	Assert(tp);
 
-	/* Draw components. */
+	DrawThemeOutline(PART_TRAY, COLOR_TRAY_BG, tp->window, tp->gc,
+		0, 0, tp->width, tp->height, 0);
+
 	for(cp = tp->components; cp; cp = cp->next) {
 		UpdateSpecificTray(tp, cp);
-	}
-
-	/* Draw the border. */
-	for(x = 0; x < tp->border; x++) {
-
-		/* Top */
-		JXSetForeground(display, tp->gc, colors[COLOR_TRAY_UP]);
-		JXDrawLine(display, tp->window, tp->gc,
-			0, x,
-			tp->width - x - 1, x);
-
-		/* Bottom */
-		JXSetForeground(display, tp->gc, colors[COLOR_TRAY_DOWN]);
-		JXDrawLine(display, tp->window, tp->gc,
-			x + 1, tp->height - x - 1,
-			tp->width - x - 2, tp->height - x - 1);
-
-		/* Left */
-		JXSetForeground(display, tp->gc, colors[COLOR_TRAY_UP]);
-		JXDrawLine(display, tp->window, tp->gc,
-			x, x,
-			x, tp->height - x - 1);
-
-		/* Right */
-		JXSetForeground(display, tp->gc, colors[COLOR_TRAY_DOWN]);
-		JXDrawLine(display, tp->window, tp->gc, 
-			tp->width - x - 1, x + 1,
-			tp->width - x - 1, tp->height - x - 1);
-
 	}
 
 }

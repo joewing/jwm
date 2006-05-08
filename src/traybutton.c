@@ -18,8 +18,6 @@
 #include "popup.h"
 #include "timing.h"
 
-#define BUTTON_SIZE 4
-
 typedef struct TrayButtonType {
 
 	TrayComponentType *cp;
@@ -62,6 +60,9 @@ void InitializeTrayButtons() {
 void StartupTrayButtons() {
 
 	TrayButtonType *bp;
+	int north, south, east, west;
+
+	GetButtonOffsets(&north, &south, &east, &west);
 
 	for(bp = buttons; bp; bp = bp->next) {
 		if(bp->label) {
@@ -82,8 +83,8 @@ void StartupTrayButtons() {
 				Warning("could not load tray icon: \"%s\"", bp->iconName);
 			}
 		}
-		bp->cp->requestedWidth += 2 * BUTTON_SIZE;
-		bp->cp->requestedHeight += 2 * BUTTON_SIZE;
+		bp->cp->requestedWidth += east + west;
+		bp->cp->requestedHeight += north + south;
 	}
 
 }
@@ -201,13 +202,14 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 	int labelWidth, labelHeight;
 	int iconWidth, iconHeight;
 	double ratio;
+	int north, south, east, west;
 
 	bp = (TrayButtonType*)cp->object;
 
 	if(bp->icon) {
 
 		if(bp->label) {
-			labelWidth = GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
+			labelWidth = GetStringWidth(FONT_TRAYBUTTON, bp->label);
 			labelHeight = GetStringHeight(FONT_TRAYBUTTON);
 		} else {
 			labelWidth = 0;
@@ -218,19 +220,21 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 		iconHeight = bp->icon->image->height;
 		ratio = (double)iconWidth / iconHeight;
 
+		GetButtonOffsets(&north, &south, &east, &west);
+
 		if(width > 0) {
 
 			/* Compute height from width. */
-			iconWidth = width - labelWidth - 2 * BUTTON_SIZE;
+			iconWidth = width - labelWidth - east - west;
 			iconHeight = iconWidth / ratio;
-			height = Max(iconHeight, labelHeight) + 2 * BUTTON_SIZE;
+			height = Max(iconHeight, labelHeight) + north + south;
 
 		} else if(height > 0) {
 
 			/* Compute width from height. */
-			iconHeight = height - 2 * BUTTON_SIZE;
+			iconHeight = height - north - south;
 			iconWidth = iconHeight * ratio;
-			width = iconWidth + labelWidth + 2 * BUTTON_SIZE;
+			width = iconWidth + labelWidth + east + west;
 
 		}
 
@@ -245,9 +249,9 @@ void SetSize(TrayComponentType *cp, int width, int height) {
  ***************************************************************************/
 void Create(TrayComponentType *cp) {
 
+	ButtonData button;
 	TrayButtonType *bp;
 	GC gc;
-	int labelx;
 
 	bp = (TrayButtonType*)cp->object;
 
@@ -258,34 +262,17 @@ void Create(TrayComponentType *cp) {
 	JXSetForeground(display, gc, colors[COLOR_TRAYBUTTON_BG]);
 	JXFillRectangle(display, cp->pixmap, gc, 0, 0, cp->width, cp->height);
 
-	SetButtonDrawable(cp->pixmap, gc);
-	SetButtonSize(cp->width - 3, cp->height - 3);
-	DrawButton(1, 1, BUTTON_TASK, NULL);
+	ResetButton(&button, cp->pixmap, gc);
+	button.type = BUTTON_NORMAL;
+	button.width = cp->width;
+	button.height = cp->height;
+	button.alignment = ALIGN_CENTER;
+	button.x = 0;
+	button.y = 0;
+	button.icon = bp->icon;
+	button.text = bp->label;
 
-	/* Compute the offset of the text. */
-	if(bp->label) {
-		if(!bp->icon) {
-			labelx = 2 + cp->width / 2;
-			labelx -= GetStringWidth(FONT_TRAYBUTTON, bp->label) / 2;
-		} else {
-			labelx = cp->width;
-			labelx -= GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
-		}
-	} else {
-		labelx = cp->width;
-	}
-	labelx -= BUTTON_SIZE;
-
-	if(bp->icon) {
-		PutIcon(bp->icon, cp->pixmap, gc, BUTTON_SIZE, BUTTON_SIZE,
-			labelx - BUTTON_SIZE, cp->height - BUTTON_SIZE * 2);
-	}
-
-	if(bp->label) {
-		RenderString(cp->pixmap, gc, FONT_TRAYBUTTON, COLOR_TRAYBUTTON_FG,
-			labelx + 2, cp->height / 2 - GetStringHeight(FONT_TRAYBUTTON) / 2,
-			cp->width - labelx, bp->label);
-	}
+	DrawButton(&button);
 
 	JXFreeGC(display, gc);
 

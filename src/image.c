@@ -328,6 +328,58 @@ void DestroyImage(ImageNode *image) {
 }
 
 /****************************************************************************
+ ****************************************************************************/
+ThemeImageNode *LoadThemeImage(const char *name) {
+
+	ThemeImageNode *np;
+	XpmAttributes attr;
+	Pixmap image;
+	Pixmap shape;
+	int rc;
+
+	Assert(name);
+
+	attr.valuemask = XpmAllocColor | XpmFreeColors | XpmColorClosure;
+	attr.alloc_color = AllocateColor;
+	attr.free_colors = FreeColors;
+	attr.color_closure = NULL;
+	rc = XpmReadFileToPixmap(display, rootWindow, (char*)name,
+		&image, &shape, &attr);
+	if(rc == XpmSuccess) {
+
+		np = Allocate(sizeof(ThemeImageNode));
+		np->image = image;
+		np->shape = shape;
+		np->width = attr.width;
+		np->height = attr.height;
+		return np;
+
+	} else {
+
+		return NULL;
+
+	}
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void DestroyThemeImage(ThemeImageNode *image) {
+
+	Assert(image);
+
+	if(image->image != None) {
+		JXFreePixmap(display, image->image);
+	}
+	if(image->shape != None) {
+		JXFreePixmap(display, image->shape);
+	}
+
+	Release(image);
+
+}
+
+/****************************************************************************
  * Function to allocate a color for libxpm.
  ****************************************************************************/
 #ifdef USE_XPM

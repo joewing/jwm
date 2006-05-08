@@ -312,8 +312,7 @@ void WriteState(ClientNode *np) {
 void WriteNetState(ClientNode *np) {
 
 	unsigned long values[4];
-	unsigned long sideSize;
-	unsigned long topSize;
+	int north, south, east, west;
 	int index;
 
 	Assert(np);
@@ -336,22 +335,13 @@ void WriteNetState(ClientNode *np) {
 	JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_STATE],
 		XA_ATOM, 32, PropModeReplace, (unsigned char*)values, index);
 
-	if(np->state.border & BORDER_OUTLINE) {
-		sideSize = borderWidth;
-	} else {
-		sideSize = 0;
-	}
-
-	topSize = sideSize;
-	if(np->state.border & BORDER_TITLE) {
-		topSize += titleHeight;
-	}
+	GetBorderSize(np, &north, &south, &east, &west);
 
 	/* left, right, top, bottom */
-	values[0] = sideSize;
-	values[1] = sideSize;
-	values[2] = topSize;
-	values[3] = sideSize;
+	values[0] = west;
+	values[1] = east;
+	values[2] = north;
+	values[3] = south;
 
 	JXChangeProperty(display, np->window, atoms[ATOM_NET_FRAME_EXTENTS],
 		XA_CARDINAL, 32, PropModeReplace, (unsigned char*)values, 4);

@@ -30,9 +30,6 @@ extern int shouldRestart;
 
 extern int initializing;
 
-extern int borderWidth;
-extern int titleHeight;
-
 extern unsigned int doubleClickSpeed;
 extern unsigned int doubleClickDelta;
 

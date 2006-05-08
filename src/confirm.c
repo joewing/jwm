@@ -44,8 +44,6 @@ static const char *CANCEL_STRING = "Cancel";
 
 static DialogType *dialogList = NULL;
 
-static int minWidth = 0;
-
 static void DrawConfirmDialog(DialogType *d);
 static void DestroyConfirmDialog(DialogType *d);
 static void ComputeDimensions(DialogType *d);
@@ -276,16 +274,17 @@ void ComputeDimensions(DialogType *dp) {
 	const ScreenType *sp;
 	int width;
 	int x;
+	int north, south, east, west;
 
-	if(!minWidth) {
-		minWidth = GetStringWidth(FONT_MENU, CANCEL_STRING) * 3;
-		width = GetStringWidth(FONT_MENU, OK_STRING) * 3;
-		if(width > minWidth) {
-			minWidth = width;
-		}
-		minWidth += 30;
+	GetButtonOffsets(&north, &south, &east, &west);
+
+	dp->width = GetStringWidth(FONT_MENU, CANCEL_STRING);
+	width = GetStringWidth(FONT_MENU, OK_STRING);
+	if(width > dp->width) {
+		dp->width = width;
 	}
-	dp->width = minWidth;
+
+	dp->width = 3 * (dp->width + east + west);
 
 	for(x = 0; x < dp->lineCount; x++) {
 		width = GetStringWidth(FONT_MENU, dp->message[x]);
@@ -294,8 +293,8 @@ void ComputeDimensions(DialogType *dp) {
 		}
 	}
 	dp->lineHeight = GetStringHeight(FONT_MENU);
-	dp->width += 8;
-	dp->height = (dp->lineCount + 2) * dp->lineHeight;
+	dp->height = dp->lineCount * dp->lineHeight;
+	dp->height += 2 * (dp->lineHeight + north + south);
 
 	if(dp->client) {
 
@@ -309,10 +308,10 @@ void ComputeDimensions(DialogType *dp) {
 			dp->y = 0;
 		}
 		if(dp->x + dp->width >= rootWidth) {
-			dp->x = rootWidth - dp->width - (borderWidth * 2);
+			dp->x = rootWidth - dp->width;
 		}
 		if(dp->y + dp->height >= rootHeight) {
-			dp->y = rootHeight - dp->height - (borderWidth * 2 + titleHeight);
+			dp->y = rootHeight - dp->height;
 		}
 
 	} else {
@@ -344,27 +343,40 @@ void DrawMessage(DialogType *dp) {
 /***************************************************************************
  ***************************************************************************/
 void DrawButtons(DialogType *dp) {
+
+	ButtonData button;
 	int temp;
+	int north, south, east, west;
+
+	GetButtonOffsets(&north, &south, &east, &west);
 
 	dp->buttonWidth = GetStringWidth(FONT_MENU, CANCEL_STRING);
+	dp->buttonWidth += east + west;
 	temp = GetStringWidth(FONT_MENU, OK_STRING);
+	temp += east + west;
 	if(temp > dp->buttonWidth) {
 		dp->buttonWidth = temp;
 	}
-	dp->buttonWidth += 8;
-	dp->buttonHeight = dp->lineHeight + 4;
+	dp->buttonHeight = dp->lineHeight + north + south;
 
-	SetButtonDrawable(dp->node->window, dp->gc);
-	SetButtonFont(FONT_MENU);
-	SetButtonSize(dp->buttonWidth, dp->buttonHeight);
-	SetButtonAlignment(ALIGN_CENTER);
+	ResetButton(&button, dp->node->window, dp->gc);
+	button.font = FONT_MENU;
+	button.width = dp->buttonWidth;
+	button.height = dp->buttonHeight;
+	button.alignment = ALIGN_CENTER;
 
 	dp->okx = dp->width / 3 - dp->buttonWidth / 2;
 	dp->cancelx = 2 * dp->width / 3 - dp->buttonWidth / 2;
-	dp->buttony = dp->height - dp->lineHeight - dp->lineHeight / 2;
+	dp->buttony = dp->height - dp->buttonHeight - dp->buttonHeight / 2;
 
-	DrawButton(dp->okx, dp->buttony, BUTTON_MENU, OK_STRING);
-	DrawButton(dp->cancelx, dp->buttony, BUTTON_MENU, CANCEL_STRING);
+	button.x = dp->okx;
+	button.y = dp->buttony;
+	button.text = OK_STRING;
+	DrawButton(&button);
+
+	button.x = dp->cancelx;
+	button.text = CANCEL_STRING;
+	DrawButton(&button);
 
 }
 

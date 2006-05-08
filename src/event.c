@@ -245,6 +245,8 @@ int HandleSelectionClear(const XSelectionClearEvent *event) {
 /****************************************************************************
  ****************************************************************************/
 void HandleButtonEvent(const XButtonEvent *event) {
+
+	int north, south, east, west;
 	int x, y;
 	ClientNode *np;
 
@@ -262,15 +264,9 @@ void HandleButtonEvent(const XButtonEvent *event) {
 			MoveClient(np, event->x, event->y);
 			break;
 		case Button3:
-			x = event->x + np->x;
-			y = event->y + np->y;
-			if(np->state.border & BORDER_OUTLINE) {
-				x -= borderWidth;
-				y -= borderWidth;
-			}
-			if(np->state.border & BORDER_TITLE) {
-				y -= titleHeight;
-			}
+			GetBorderSize(np, &north, &south, &east, &west);
+			x = event->x + np->x - west;
+			y = event->y + np->y - north;
 			ShowWindowMenu(np, x, y);
 			break;
 		case Button4:
@@ -431,19 +427,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 			return;
 		}
 
-		north = 0;
-		south = 0;
-		east = 0;
-		west = 0;
-		if(np->state.border & BORDER_OUTLINE) {
-			north += borderWidth;
-			south += borderWidth;
-			east += borderWidth;
-			west += borderWidth;
-		}
-		if(np->state.border & BORDER_TITLE) {
-			north += titleHeight;
-		}
+		GetBorderSize(np, &north, &south, &east, &west);
 
 		wc.stack_mode = Above;
 		wc.sibling = np->parent;
@@ -1023,7 +1007,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
 	static int lastX = 0, lastY = 0;
 	static int doubleClickActive = 0;
 	BorderActionType action;
-	int bsize;
+	int north, south, east, west;
 
 	action = GetBorderActionType(np, event->x, event->y);
 
@@ -1055,13 +1039,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
 		break;
 	case BA_MENU:
 		if(event->type == ButtonPress) {
-			if(np->state.border & BORDER_OUTLINE) {
-				bsize = borderWidth;
-			} else {
-				bsize = 0;
-			}
-			ShowWindowMenu(np, np->x + event->x - bsize,
-				np->y + event->y - titleHeight - bsize);
+			GetBorderSize(np, &north, &south, &east, &west);
+			ShowWindowMenu(np, np->x + event->x - west,
+				np->y + event->y - north);
 		}
 		break;
 	case BA_CLOSE:

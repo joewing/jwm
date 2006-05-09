@@ -98,6 +98,9 @@ void DestroyTheme();
 void DrawThemeOutline(PartType part, ColorType bg, Drawable d, GC g,
 	int xoffset, int yoffset, int width, int height, int index);
 
+void DrawThemeBackground(PartType part, ColorType color, Drawable d, GC g,
+	int x, int y, int width, int height, int index);
+
 void SetThemePath(const char *path, const char *name);
 
 #endif

@@ -11,11 +11,13 @@
 #include "button.h"
 #include "screen.h"
 #include "color.h"
+#include "theme.h"
 
 #ifndef DISABLE_CONFIRM
 
 typedef struct DialogType {
 
+	Window window;
 	int x, y;
 	int width, height;
 	int lineHeight;
@@ -162,11 +164,11 @@ DialogType *FindDialogByWindow(Window w) {
 /***************************************************************************
  ***************************************************************************/
 void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
+
 	va_list ap;
 	DialogType *dp;
 	XSetWindowAttributes attrs;
 	XSizeHints shints;
-	Window window;
 	char *str;
 	int x;
 
@@ -201,7 +203,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 	attrs.background_pixel = colors[COLOR_MENU_BG];
 	attrs.event_mask = ButtonReleaseMask | ExposureMask;
 
-	window = JXCreateWindow(display, rootWindow,
+	dp->window = JXCreateWindow(display, rootWindow,
 		dp->x, dp->y, dp->width, dp->height, 0,
 		CopyFromParent, InputOutput, CopyFromParent,
 		CWBackPixel | CWEventMask, &attrs);
@@ -209,11 +211,11 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 	shints.x = dp->x;
 	shints.y = dp->y;
 	shints.flags = PPosition;
-	JXSetWMNormalHints(display, window, &shints);
+	JXSetWMNormalHints(display, dp->window, &shints);
 
-	JXStoreName(display, window, "Confirm");
+	JXStoreName(display, dp->window, "Confirm");
 
-	dp->node = AddClientWindow(window, 0, 0);
+	dp->node = AddClientWindow(dp->window, 0, 0);
 	Assert(dp->node);
 	if(np) {
 		dp->node->owner = np->window;
@@ -221,11 +223,11 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 	dp->node->state.status |= STAT_WMDIALOG;
 	FocusClient(dp->node);
 
-	dp->gc = JXCreateGC(display, window, 0, NULL);
+	dp->gc = JXCreateGC(display, dp->window, 0, NULL);
 
 	DrawConfirmDialog(dp);
 
-	JXGrabButton(display, AnyButton, AnyModifier, window,
+	JXGrabButton(display, AnyButton, AnyModifier, dp->window,
 		True, ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
 
 }
@@ -233,6 +235,9 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 /***************************************************************************
  ***************************************************************************/
 void DrawConfirmDialog(DialogType *dp) {
+
+	DrawThemeBackground(PART_MENU, COLOR_MENU_BG, dp->window, dp->gc,
+		0, 0, dp->width, dp->height, 0);
 
 	DrawMessage(dp);
 	DrawButtons(dp);

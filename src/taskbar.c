@@ -177,6 +177,7 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 void Create(TrayComponentType *cp) {
 
 	TaskBarType *tp;
+	int north, south, east, west;
 
 	Assert(cp);
 
@@ -187,7 +188,9 @@ void Create(TrayComponentType *cp) {
 	if(tp->layout == LAYOUT_HORIZONTAL) {
 		tp->itemHeight = cp->height;
 	} else {
-		tp->itemHeight = GetStringHeight(FONT_TASK) + 12;
+		GetButtonOffsets(&north, &south, &east, &west);
+		tp->itemHeight = GetStringHeight(FONT_TASK);
+		tp->itemHeight += north + south;
 	}
 
 	Assert(cp->width > 0);
@@ -198,10 +201,6 @@ void Create(TrayComponentType *cp) {
 	tp->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
 	tp->buffer = cp->pixmap;
 
-	JXSetForeground(display, tp->bufferGC, colors[COLOR_TASK_BG]);
-	JXFillRectangle(display, cp->pixmap, tp->bufferGC,
-		0, 0, cp->width, cp->height);
-
 }
 
 /***************************************************************************
@@ -209,6 +208,7 @@ void Create(TrayComponentType *cp) {
 void Resize(TrayComponentType *cp) {
 
 	TaskBarType *tp;
+	int north, south, east, west;
 
 	Assert(cp);
 
@@ -226,7 +226,9 @@ void Resize(TrayComponentType *cp) {
 	if(tp->layout == LAYOUT_HORIZONTAL) {
 		tp->itemHeight = cp->height;
 	} else {
-		tp->itemHeight = GetStringHeight(FONT_TASK) + 12;
+		GetButtonOffsets(&north, &south, &east, &west);
+		tp->itemHeight = GetStringHeight(FONT_TASK);
+		tp->itemHeight += north + south;
 	}
 
 	Assert(cp->width > 0);
@@ -488,10 +490,7 @@ void Render(const TaskBarType *bp) {
 	Assert(gc != None);
 
 	x = 0;
-	y = 1;
-
-	JXSetForeground(display, gc, colors[COLOR_TASK_BG]);
-	JXFillRectangle(display, buffer, gc, 0, 0, width, height);
+	y = 0;
 
 	itemCount = GetItemCount();
 	if(!itemCount) {
@@ -509,7 +508,7 @@ void Render(const TaskBarType *bp) {
 	ResetButton(&button, buffer, gc);
 	button.font = FONT_TASK;
 	button.alignment = ALIGN_LEFT;
-	button.height = bp->itemHeight - 1;
+	button.height = bp->itemHeight;
 
 	for(tp = taskBarNodes; tp; tp = tp->next) {
 		if(ShouldShowItem(tp->client)) {

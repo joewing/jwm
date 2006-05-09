@@ -89,13 +89,15 @@ void StartupTray() {
 		tp->gc = JXCreateGC(display, tp->window, 0, NULL);
 
 		/* Create and layout items on the tray. */
-		xoffset = tp->border;
-		yoffset = tp->border;
+		xoffset = parts[PART_TRAY_L].width;
+		yoffset = parts[PART_TRAY_T].height;
 		for(cp = tp->components; cp; cp = cp->next) {
 
 			if(cp->Create) {
 				if(tp->layout == LAYOUT_HORIZONTAL) {
-					height = tp->height - 2 * tp->border;
+					height = tp->height;
+					height -= parts[PART_TRAY_T].height;
+					height -= parts[PART_TRAY_B].height;
 					width = cp->width;
 					if(width == 0) {
 						width = variableSize;
@@ -105,7 +107,9 @@ void StartupTray() {
 						}
 					}
 				} else {
-					width = tp->width - 2 * tp->border;
+					width = tp->width;
+					width -= parts[PART_TRAY_L].width;
+					width -= parts[PART_TRAY_R].width;
 					height = cp->height;
 					if(height == 0) {
 						height = variableSize;
@@ -209,7 +213,6 @@ TrayType *CreateTray() {
 	tp->requestedHeight = 0;
 	tp->width = 0;
 	tp->height = 0;
-	tp->border = 1;
 	tp->layer = DEFAULT_TRAY_LAYER;
 	tp->layout = LAYOUT_HORIZONTAL;
 	tp->valign = TALIGN_FIXED;
@@ -299,7 +302,7 @@ int ComputeMaxWidth(TrayType *tp) {
 	for(cp = tp->components; cp; cp = cp->next) {
 		temp = cp->width;
 		if(temp > 0) {
-			temp += 2 * tp->border;
+			temp += parts[PART_TRAY_L].width + parts[PART_TRAY_R].width;
 			if(temp > result) {
 				result = temp;
 			}
@@ -317,7 +320,7 @@ int ComputeTotalWidth(TrayType *tp) {
 	TrayComponentType *cp;
 	int result;
 
-	result = 2 * tp->border;
+	result = parts[PART_TRAY_L].width + parts[PART_TRAY_R].width;
 	for(cp = tp->components; cp; cp = cp->next) {
 		result += cp->width;
 	}
@@ -339,7 +342,7 @@ int ComputeMaxHeight(TrayType *tp) {
 	for(cp = tp->components; cp; cp = cp->next) {
 		temp = cp->height;
 		if(temp > 0) {
-			temp += 2 * tp->border;
+			temp += parts[PART_TRAY_T].height + parts[PART_TRAY_B].height;
 			if(temp > result) {
 				result = temp;
 			}
@@ -357,7 +360,7 @@ int ComputeTotalHeight(TrayType *tp) {
 	TrayComponentType *cp;
 	int result;
 
-	result = 2 * tp->border;
+	result = parts[PART_TRAY_T].height + parts[PART_TRAY_B].height;
 	for(cp = tp->components; cp; cp = cp->next) {
 		result += cp->height;
 	}
@@ -403,6 +406,7 @@ int CheckVerticalFill(TrayType *tp) {
 void ComputeTraySize(TrayType *tp) {
 
 	TrayComponentType *cp;
+	int temp;
 
 	/* Determine the first dimension. */
 	if(tp->layout == LAYOUT_HORIZONTAL) {
@@ -431,9 +435,13 @@ void ComputeTraySize(TrayType *tp) {
 	for(cp = tp->components; cp; cp = cp->next) {
 		if(cp->SetSize) {
 			if(tp->layout == LAYOUT_HORIZONTAL) {
-				(cp->SetSize)(cp, 0, tp->height - 2 * tp->border);
+				temp = tp->height;
+				temp -= parts[PART_TRAY_T].height + parts[PART_TRAY_B].height;
+				(cp->SetSize)(cp, 0, temp);
 			} else {
-				(cp->SetSize)(cp, tp->width - 2 * tp->border, 0);
+				temp = tp->width;
+				temp -= parts[PART_TRAY_L].width + parts[PART_TRAY_R].width;
+				(cp->SetSize)(cp, temp, 0);
 			}
 		}
 	}
@@ -661,8 +669,8 @@ void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event) {
 	int x, y;
 	int mask;
 
-	xoffset = tp->border;
-	yoffset = tp->border;
+	xoffset = parts[PART_TRAY_L].width;
+	yoffset = parts[PART_TRAY_T].height;
 	for(cp = tp->components; cp; cp = cp->next) {
 		width = cp->width;
 		height = cp->height;
@@ -695,8 +703,8 @@ void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event) {
 	int x, y;
 	int mask;
 
-	xoffset = tp->border;
-	yoffset = tp->border;
+	xoffset = parts[PART_TRAY_L].width;
+	yoffset = parts[PART_TRAY_R].height;
 	for(cp = tp->components; cp; cp = cp->next) {
 		width = cp->width;
 		height = cp->height;
@@ -782,8 +790,12 @@ void LayoutTray(TrayType *tp, int *variableSize, int *variableRemainder) {
 
 	/* Get the remaining size after setting fixed size components. */
 	/* Also, keep track of the number of variable size components. */
-	width = tp->width - 2 * tp->border;
-	height = tp->height - 2 * tp->border;
+	width = tp->width;
+	width -= parts[PART_TRAY_L].width;
+	width -= parts[PART_TRAY_R].width;
+	height = tp->height;
+	height -= parts[PART_TRAY_T].height;
+	height -= parts[PART_TRAY_B].height;
 	variableCount = 0;
 	for(cp = tp->components; cp; cp = cp->next) {
 		if(tp->layout == LAYOUT_HORIZONTAL) {
@@ -846,8 +858,8 @@ void ResizeTray(TrayType *tp) {
 	LayoutTray(tp, &variableSize, &variableRemainder);
 
 	/* Reposition items on the tray. */
-	xoffset = tp->border;
-	yoffset = tp->border;
+	xoffset = parts[PART_TRAY_L].width;
+	yoffset = parts[PART_TRAY_T].height;
 	for(cp = tp->components; cp; cp = cp->next) {
 
 		cp->x = xoffset;
@@ -857,7 +869,9 @@ void ResizeTray(TrayType *tp) {
 
 		if(cp->Resize) {
 			if(tp->layout == LAYOUT_HORIZONTAL) {
-				height = tp->height - 2 * tp->border;
+				height = tp->height;
+				height -= parts[PART_TRAY_T].height;
+				height -= parts[PART_TRAY_B].height;
 				width = cp->width;
 				if(width == 0) {
 					width = variableSize;
@@ -867,7 +881,9 @@ void ResizeTray(TrayType *tp) {
 					}
 				}
 			} else {
-				width = tp->width - 2 * tp->border;
+				width = tp->width;
+				width -= parts[PART_TRAY_L].width;
+				width -= parts[PART_TRAY_R].width;
 				height = cp->height;
 				if(height == 0) {
 					height = variableSize;
@@ -1044,7 +1060,7 @@ void SetTrayLayer(TrayType *tp, const char *str) {
 /***************************************************************************
  ***************************************************************************/
 void SetTrayBorder(TrayType *tp, const char *str) {
-
+/*
 	int temp;
 
 	Assert(tp);
@@ -1057,6 +1073,7 @@ void SetTrayBorder(TrayType *tp, const char *str) {
 	} else {
 		tp->border = temp;
 	}
+*/
 
 }
 

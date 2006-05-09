@@ -169,20 +169,10 @@ void DestroyTheme() {
 void DrawThemeOutline(PartType part, ColorType bg, Drawable d, GC g,
 	int xoffset, int yoffset, int width, int height, int index) {
 
-	int x, y;
+	int x;
 
-	if(parts[part + OFFSET_F].image) {
-		for(y = 0; y < height;) {
-			for(x = 0; x < width;) {
-				DrawPart(part + OFFSET_F, d, g, x + xoffset, y + yoffset, index);
-				x += parts[part + OFFSET_F].width;
-			}
-			y += parts[part + OFFSET_F].height;
-		}
-	} else {
-		JXSetForeground(display, g, colors[bg]);
-		JXFillRectangle(display, d, g, xoffset, yoffset, width, height);
-	}
+	DrawThemeBackground(part, bg, d, g,
+		xoffset, yoffset, width, height, index);
 
 	/* Top left. */
 	if(parts[part + OFFSET_TL].image) {
@@ -246,6 +236,28 @@ void DrawThemeOutline(PartType part, ColorType bg, Drawable d, GC g,
 		DrawPart(part + OFFSET_BR, d, g,
 			width - parts[part + OFFSET_BR].width + xoffset,
 			height - parts[part + OFFSET_BR].height + yoffset, index);
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void DrawThemeBackground(PartType part, ColorType color, Drawable d, GC g,
+	int x, int y, int width, int height, int index) {
+
+	int xc, yc;
+
+	if(parts[part + OFFSET_F].image) {
+		for(yc = 0; yc < height;) {
+			for(xc = 0; xc < width;) {
+				DrawPart(part + OFFSET_F, d, g, x + xc, y + yc, index);
+				xc += parts[part + OFFSET_F].width;
+			}
+			yc += parts[part + OFFSET_F].height;
+		}
+	} else {
+		JXSetForeground(display, g, colors[color]);
+		JXFillRectangle(display, d, g, x, y, width, height);
 	}
 
 }

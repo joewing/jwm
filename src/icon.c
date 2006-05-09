@@ -301,11 +301,11 @@ IconNode *LoadNamedIcon(const char *name) {
 		return CreateIconFromFile(name);
 	} else {
 		for(ip = iconPaths; ip; ip = ip->next) {
-			temp = Allocate(strlen(name) + strlen(ip->path) + 1);
+			temp = AllocateStack(strlen(name) + strlen(ip->path) + 1);
 			strcpy(temp, ip->path);
 			strcat(temp, name);
 			icon = CreateIconFromFile(temp);
-			Release(temp);
+			ReleaseStack(temp);
 			if(icon) {
 				return icon;
 			}

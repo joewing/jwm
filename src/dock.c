@@ -76,10 +76,10 @@ void StartupDock() {
 		return;
 	}
 
-	selectionName = Allocate(strlen(BASE_SELECTION_NAME) + 1);
+	selectionName = AllocateStack(strlen(BASE_SELECTION_NAME) + 1);
 	sprintf(selectionName, BASE_SELECTION_NAME, rootScreen);
 	dockAtom = JXInternAtom(display, selectionName, False);
-	Release(selectionName);
+	ReleaseStack(selectionName);
 
 	/* The location and size of the window doesn't matter here. */
 	if(dock->window == None) {

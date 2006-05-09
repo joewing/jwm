@@ -294,11 +294,11 @@ int ParseEntity(const char *entity, char *ch, const char *file, int line) {
 				break;
 			}
 		}
-		temp = Allocate(x + 2);
+		temp = AllocateStack(x + 2);
 		strncpy(temp, entity, x + 1);
 		temp[x + 1] = 0;
 		Warning("%s[%d]: invalid entity: \"%.8s\"", file, line, temp);
-		Release(temp);
+		ReleaseStack(temp);
 		*ch = '&';
 		return 1;
 	}

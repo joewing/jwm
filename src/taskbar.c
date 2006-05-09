@@ -61,6 +61,7 @@ static int ShouldFocusItem(const ClientNode *np);
 static unsigned int GetItemWidth(const TaskBarType *bp,
 	unsigned int itemCount);
 static void Render(const TaskBarType *bp);
+static void DrawTaskButton(const ClientNode *np, ButtonData *button);
 static void ShowTaskWindowMenu(TaskBarType *bar, Node *np);
 
 static void SetSize(TrayComponentType *cp, int width, int height);
@@ -470,7 +471,6 @@ void Render(const TaskBarType *bp) {
 	int width, height;
 	Pixmap buffer;
 	GC gc;
-	char *minimizedName;
 
 	if(shouldExit) {
 		return;
@@ -532,16 +532,7 @@ void Render(const TaskBarType *bp) {
 			button.y = y;
 			button.icon = tp->client->icon;
 
-			if(tp->client->state.status & STAT_MINIMIZED) {
-				minimizedName = Allocate(strlen(tp->client->name) + 3);
-				sprintf(minimizedName, "[%s]", tp->client->name);
-				button.text = minimizedName;
-				DrawButton(&button);
-				Release(minimizedName);
-			} else {
-				button.text = tp->client->name;
-				DrawButton(&button);
-			}
+			DrawTaskButton(tp->client, &button);
 
 			if(bp->layout == LAYOUT_HORIZONTAL) {
 				x += itemWidth;
@@ -561,6 +552,27 @@ void Render(const TaskBarType *bp) {
 	}
 
 	UpdateSpecificTray(bp->cp->tray, bp->cp);
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void DrawTaskButton(const ClientNode *np, ButtonData *button) {
+
+	char *name;
+
+	if(np->state.status & STAT_MINIMIZED) {
+		name = AllocateStack(strlen(np->name) + 3);
+		strcpy(name, "[");
+		strcat(name, np->name);
+		strcat(name, "]");
+		button->text = name;
+		DrawButton(button);
+		ReleaseStack(name);
+	} else {
+		button->text = np->name;
+		DrawButton(button);
+	}
 
 }
 
@@ -900,7 +912,7 @@ void UpdateNetClientList() {
 	if(count == 0) {
 		windows = NULL;
 	} else {
-		windows = Allocate(count * sizeof(Window));
+		windows = AllocateStack(count * sizeof(Window));
 	}
 
 	/* Set _NET_CLIENT_LIST */
@@ -922,7 +934,7 @@ void UpdateNetClientList() {
 		XA_WINDOW, 32, PropModeReplace, (unsigned char*)windows, count);
 
 	if(windows != NULL) {
-		Release(windows);
+		ReleaseStack(windows);
 	}
 	
 }

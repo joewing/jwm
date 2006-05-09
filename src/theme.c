@@ -83,6 +83,7 @@ PartNode parts[PART_COUNT] = {
 
 static char *themePath;
 
+static void LoadThemePart(PartType part);
 static void DrawPart(PartType part, Drawable d, GC g,
 	int x, int y, int index);
 
@@ -99,35 +100,41 @@ void InitializeTheme() {
 void StartupTheme() {
 
 	int x;
-	int pathLength;
-	char *fullName;
 
 	if(themePath) {
 
-		pathLength = strlen(themePath);
-
 		for(x = 0; x < PART_COUNT; x++) {
-
-			fullName = Allocate(pathLength + strlen(parts[x].name) + 2);
-			sprintf(fullName, "%s/%s", themePath, parts[x].name);
-			parts[x].image = LoadThemeImage(fullName);
-			Release(fullName);
-
-			if(parts[x].image != NULL) {
-				parts[x].width = parts[x].image->width;
-				parts[x].height = parts[x].image->height / parts[x].count;
-			} else {
-				parts[x].width = 0;
-				parts[x].height = 0;
-				Debug("theme image %s not found", parts[x].name);
-			}
-
+			LoadThemePart(x);
 		}
 
 	} else {
 
 		Warning("no theme specified");
 
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void LoadThemePart(PartType part) {
+
+	char *fullName;
+
+	fullName = AllocateStack(strlen(themePath) + strlen(parts[part].name) + 2);
+	strcpy(fullName, themePath);
+	strcat(fullName, "/");
+	strcat(fullName, parts[part].name);
+	parts[part].image = LoadThemeImage(fullName);
+	ReleaseStack(fullName);
+
+	if(parts[part].image != NULL) {
+		parts[part].width = parts[part].image->width;
+		parts[part].height = parts[part].image->height / parts[part].count;
+	} else {
+		parts[part].width = 0;
+		parts[part].height = 0;
+		Debug("theme image %s not found", parts[part].name);
 	}
 
 }

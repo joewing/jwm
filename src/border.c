@@ -288,7 +288,9 @@ void DrawBorder(const ClientNode *np) {
 		return;
 	}
 
-	ApplyBorderShape(np);
+	if(!(np->state.status & STAT_SHAPE) || (np->state.status & STAT_SHADED)) {
+		ApplyBorderShape(np);
+	}
 
 	if(np->state.border & BORDER_TITLE) {
 
@@ -546,12 +548,6 @@ void ApplyComplexBorderShape(const ClientNode *np) {
 		JXFillRectangle(display, shape, gc, 0, 0,
 			np->width + east + west, np->height + north + south);
 
-		if(np->state.status & STAT_SHAPE) {
-			JXSetForeground(display, gc, 0);
-			JXFillRectangle(display, shape, gc, west, north,
-				np->width, np->height);
-		}
-
 	}
 
 	if(np->state.border & BORDER_TITLE) {
@@ -678,12 +674,22 @@ void ApplyComplexBorderShape(const ClientNode *np) {
 
 	}
 
+	if(!(np->state.status & STAT_SHADED) && (np->state.status & STAT_SHAPE)) {
+
+		JXSetForeground(display, gc, 0);
+		JXFillRectangle(display, shape, gc, west, north,
+			np->width, np->height);
+
+	}
+
 	JXShapeCombineMask(display, np->parent, ShapeBounding, 0, 0,
 		shape, ShapeSet);
 
 	if(!(np->state.status & STAT_SHADED) && (np->state.status & STAT_SHAPE)) {
+
 		JXShapeCombineShape(display, np->parent, ShapeBounding, west, north,
 			np->window, ShapeBounding, ShapeUnion);
+
 	}
 
 	JXFreeGC(display, gc);

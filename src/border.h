@@ -40,7 +40,7 @@ int GetBorderIconSize();
 
 void ExposeCurrentDesktop();
 
-void SetWindowButtonLocation(const char *action, int y);
+void SetWindowButtonLocation(const char *action, int x, int y);
 
 #endif
 

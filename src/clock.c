@@ -339,7 +339,7 @@ void DrawClock(ClockType *clk, TimeType *now, int x, int y) {
  ***************************************************************************/
 void DrawClockBackground(const ClockType *clk) {
 
-	DrawThemeBackground(PART_TRAY_F, COLOR_TRAY_BG,
+	DrawThemeBackground(PART_TRAY, COLOR_TRAY_BG,
 		clk->cp->pixmap, clk->bufferGC,
 		0, 0, clk->cp->width, clk->cp->height, 0);
 

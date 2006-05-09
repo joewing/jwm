@@ -1578,12 +1578,19 @@ void ParseWindowButton(const TokenNode *tp) {
 
 	const char *temp;
 	const char *action;
-	int y;
+	int x, y;
 
 	action = tp->value;
 	if(!action) {
 		ParseError(tp, "action required");
 		return;
+	}
+
+	temp = FindAttribute(tp->attributes, X_ATTRIBUTE);
+	if(temp) {
+		x = atoi(temp);
+	} else {
+		x = 0;
 	}
 
 	temp = FindAttribute(tp->attributes, Y_ATTRIBUTE);
@@ -1593,7 +1600,7 @@ void ParseWindowButton(const TokenNode *tp) {
 		y = 0;
 	}
 
-	SetWindowButtonLocation(action, y);
+	SetWindowButtonLocation(action, x, y);
 
 }
 

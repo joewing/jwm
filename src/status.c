@@ -11,6 +11,7 @@
 #include "main.h"
 #include "client.h"
 #include "error.h"
+#include "theme.h"
 
 typedef enum {
 	SW_INVALID,
@@ -92,7 +93,6 @@ void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
 
 	JXMapRaised(display, statusWindow);
 	statusGC = JXCreateGC(display, statusWindow, 0, NULL);
-	JXSetBackground(display, statusGC, colors[COLOR_MENU_BG]);
 
 }
 
@@ -110,33 +110,8 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
 			statusWindowWidth, statusWindowHeight);
 	}
 
-	JXSetForeground(display, statusGC, colors[COLOR_MENU_BG]);
-	JXFillRectangle(display, statusWindow, statusGC, 2, 2,
-		statusWindowWidth - 3, statusWindowHeight - 3);
-
-	JXSetForeground(display, statusGC, colors[COLOR_MENU_UP]);
-	JXDrawLine(display, statusWindow, statusGC,
-		0, 0, statusWindowWidth - 1, 0);
-	JXDrawLine(display, statusWindow, statusGC,
-		0, 1, statusWindowWidth - 2, 1);
-	JXDrawLine(display, statusWindow, statusGC,
-		0, 2, 0, statusWindowHeight - 1);
-	JXDrawLine(display, statusWindow, statusGC,
-		1, 2, 1, statusWindowHeight - 2);
-
-	JXSetForeground(display, statusGC, colors[COLOR_MENU_DOWN]);
-	JXDrawLine(display, statusWindow, statusGC,
-		1, statusWindowHeight - 1, statusWindowWidth - 1,
-		statusWindowHeight - 1);
-	JXDrawLine(display, statusWindow, statusGC,
-		2, statusWindowHeight - 2, statusWindowWidth - 1,
-		statusWindowHeight - 2);
-	JXDrawLine(display, statusWindow, statusGC,
-		statusWindowWidth - 1, 1, statusWindowWidth - 1,
-		statusWindowHeight - 3);
-	JXDrawLine(display, statusWindow, statusGC,
-		statusWindowWidth - 2, 2, statusWindowWidth - 2,
-		statusWindowHeight - 3);
+	DrawThemeOutline(PART_TRAY, COLOR_TRAY_BG, statusWindow, statusGC,
+		0, 0, statusWindowWidth, statusWindowHeight, 0);
 
 }
 

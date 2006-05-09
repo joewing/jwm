@@ -14,8 +14,6 @@ typedef struct {
 	const char *value;
 } DefaultColorNode;
 
-static const float COLOR_DELTA = 0.45;
-
 unsigned long colors[COLOR_COUNT];
 static unsigned long rgbColors[COLOR_COUNT];
 
@@ -76,13 +74,9 @@ static void SetDefaultColor(ColorType type);
 static unsigned long ReadHex(const char *hex);
 
 static unsigned long GetRGBFromXColor(const XColor *c);
-static XColor GetXColorFromRGB(unsigned long rgb);
 
 static int GetColorByName(const char *str, XColor *c);
 static void InitializeNames();
-
-static void LightenColor(ColorType oldColor, ColorType newColor);
-static void DarkenColor(ColorType oldColor, ColorType newColor);
 
 /****************************************************************************
  ****************************************************************************/
@@ -181,27 +175,6 @@ void StartupColors() {
 		names = NULL;
 	}
 
-	LightenColor(COLOR_BORDER_BG, COLOR_BORDER_UP);
-	DarkenColor(COLOR_BORDER_BG, COLOR_BORDER_DOWN);
-
-	LightenColor(COLOR_BORDER_ACTIVE_BG, COLOR_BORDER_ACTIVE_UP);
-	DarkenColor(COLOR_BORDER_ACTIVE_BG, COLOR_BORDER_ACTIVE_DOWN);
-
-	LightenColor(COLOR_TRAY_BG, COLOR_TRAY_UP);
-	DarkenColor(COLOR_TRAY_BG, COLOR_TRAY_DOWN);
-
-	LightenColor(COLOR_TASK_BG, COLOR_TASK_UP);
-	DarkenColor(COLOR_TASK_BG, COLOR_TASK_DOWN);
-
-	LightenColor(COLOR_TASK_ACTIVE_BG, COLOR_TASK_ACTIVE_UP);
-	DarkenColor(COLOR_TASK_ACTIVE_BG, COLOR_TASK_ACTIVE_DOWN);
-
-	LightenColor(COLOR_MENU_BG, COLOR_MENU_UP);
-	DarkenColor(COLOR_MENU_BG, COLOR_MENU_DOWN);
-
-	LightenColor(COLOR_MENU_ACTIVE_BG, COLOR_MENU_ACTIVE_UP);
-	DarkenColor(COLOR_MENU_ACTIVE_BG, COLOR_MENU_ACTIVE_DOWN);
-
 }
 
 /****************************************************************************
@@ -286,21 +259,6 @@ unsigned long GetRGBFromXColor(const XColor *c) {
 	rgb |= (unsigned long)(blue * 255.0);
 
 	return rgb;
-}
-
-/****************************************************************************
- ****************************************************************************/
-XColor GetXColorFromRGB(unsigned long rgb) {
-
-	XColor ret = { 0 };
-
-	ret.flags = DoRed | DoGreen | DoBlue;
-	ret.red = (unsigned short)(((rgb >> 16) & 0xFF) * 257);
-	ret.green = (unsigned short)(((rgb >> 8) & 0xFF) * 257);
-	ret.blue = (unsigned short)((rgb & 0xFF) * 257);
-
-	return ret;
-
 }
 
 /****************************************************************************
@@ -397,62 +355,6 @@ unsigned long ReadHex(const char *hex) {
 	}
 
 	return value;
-}
-
-/****************************************************************************
- ****************************************************************************/
-void LightenColor(ColorType oldColor, ColorType newColor) {
-
-	XColor temp;
-	float red, green, blue;
-	float delta = 1.0 + COLOR_DELTA;
-
-	temp = GetXColorFromRGB(rgbColors[oldColor]);
-
-	red = (float)temp.red / 65535.0;
-	green = (float)temp.green / 65535.0;
-	blue = (float)temp.blue / 65535.0;
-
-	red = Min(delta * red, 1.0);
-	green = Min(delta * green, 1.0);
-	blue = Min(delta * blue, 1.0);
-
-	temp.red = red * 65535.0;
-	temp.green = green * 65535.0;
-	temp.blue = blue * 65535.0;
-
-	GetColor(&temp);
-	colors[newColor] = temp.pixel;
-	rgbColors[newColor] = GetRGBFromXColor(&temp);
-
-}
-
-/****************************************************************************
- ****************************************************************************/
-void DarkenColor(ColorType oldColor, ColorType newColor) {
-
-	XColor temp;
-	float red, green, blue;
-	float delta = 1.0 - COLOR_DELTA;
-
-	temp = GetXColorFromRGB(rgbColors[oldColor]);
-
-	red = (float)temp.red / 65535.0;
-	green = (float)temp.green / 65535.0;
-	blue = (float)temp.blue / 65535.0;
-
-	red = delta * red;
-	green = delta * green;
-	blue = delta * blue;
-
-	temp.red = red * 65535.0;
-	temp.green = green * 65535.0;
-	temp.blue = blue * 65535.0;
-
-	GetColor(&temp);
-	colors[newColor] = temp.pixel;
-	rgbColors[newColor] = GetRGBFromXColor(&temp);
-
 }
 
 /***************************************************************************

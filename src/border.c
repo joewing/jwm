@@ -30,15 +30,15 @@ typedef enum {
 typedef struct {
 
 	const char *action;
-	int y;
+	int x, y;
 
 } ButtonActionNode;
 
 static ButtonActionNode buttons[ACT_COUNT] = {
-	{ "menu",  0 },
-	{ "min",   0 },
-	{ "max",   0 },
-	{ "close", 0 }
+	{ "menu",  0, 0 },
+	{ "min",   0, 0 },
+	{ "max",   0, 0 },
+	{ "close", 0, 0 }
 };
 
 static int topLeftWidth, topRightWidth;
@@ -68,6 +68,7 @@ void InitializeBorders() {
 	borderUsesShape = 0;
 	
 	for(x = 0; x < ACT_COUNT; x++) {
+		buttons[x].x = 0;
 		buttons[x].y = 0;
 	}
 
@@ -132,8 +133,16 @@ void DestroyBorders() {
 /****************************************************************************
  ****************************************************************************/
 int GetBorderIconSize() {
-	if(parts[PART_T2].width > 4) {
-		return parts[PART_T2].width - 4;
+
+	int size;
+
+	size = parts[PART_T2].width + abs(buttons[ACT_MENU].x);
+	if(size > parts[PART_T2].height) {
+		size = parts[PART_T2].height;
+	}
+
+	if(size > 4) {
+		return size - 4;
 	} else {
 		return 4;
 	}
@@ -146,6 +155,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 	int north, south, east, west;
 	int top;
 	int offset;
+	int temp;
 
 	GetBorderSize(np, &north, &south, &east, &west);
 	if(north > parts[PART_CLOSE].height) {
@@ -156,7 +166,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 
 	if(np->state.border & BORDER_TITLE) {
 
-		offset = parts[PART_T1].width;
+		offset = parts[PART_T1].width + buttons[ACT_MENU].x;
 		if(y > buttons[ACT_MENU].y
 			&& y <= buttons[ACT_MENU].y + parts[PART_T2].height) {
 			if(x > offset && x < offset + parts[PART_T2].width) {
@@ -170,7 +180,8 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 			offset -= parts[PART_CLOSE].width;
 			if(y > buttons[ACT_CLOSE].y
 				&& y <= buttons[ACT_CLOSE].y + parts[PART_CLOSE].height) {
-				if(x > offset && x <= offset + parts[PART_CLOSE].width) {
+				temp = offset + buttons[ACT_CLOSE].x;
+				if(x > temp && x <= temp + parts[PART_CLOSE].width) {
 					return BA_CLOSE;
 				}
 			}
@@ -179,7 +190,8 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 			offset -= parts[PART_MAX].width;
 			if(y > buttons[ACT_MAX].y
 				&& y <= buttons[ACT_MAX].y + parts[PART_MAX].height) {
-				if(x > offset && x <= offset + parts[PART_MAX].width) {
+				temp = offset + buttons[ACT_MAX].x;
+				if(x > temp && x <= temp + parts[PART_MAX].width) {
 					return BA_MAXIMIZE;
 				}
 			}
@@ -188,7 +200,8 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 			offset -= parts[PART_MIN].width;
 			if(y > buttons[ACT_MIN].y
 				&& y <= buttons[ACT_MIN].y + parts[PART_MIN].height) {
-				if(x > offset && x <= offset + parts[PART_MIN].width) {
+				temp = offset + buttons[ACT_MIN].x;
+				if(x > temp && x <= temp + parts[PART_MIN].width) {
 					return BA_MINIMIZE;
 				}
 			}
@@ -296,7 +309,7 @@ void DrawBorder(const ClientNode *np) {
 			DrawPart(np, PART_T2, start, 0);
 
 			PutIcon(np->icon, np->parent, np->parentGC,
-				start, buttons[ACT_MENU].y, x, x);
+				start + buttons[ACT_MENU].x, buttons[ACT_MENU].y, x, x);
 
 			start += parts[PART_T2].width;
 
@@ -468,15 +481,18 @@ void DrawButtons(const ClientNode *np) {
 
 	if(np->state.border & BORDER_CLOSE) {
 		start -= parts[PART_CLOSE].width;
-		DrawPart(np, PART_CLOSE, start, buttons[ACT_CLOSE].y);
+		DrawPart(np, PART_CLOSE, start + buttons[ACT_CLOSE].x,
+			buttons[ACT_CLOSE].y);
 	}
 	if(np->state.border & BORDER_MAX) {
 		start -= parts[PART_MAX].width;
-		DrawPart(np, PART_MAX, start, buttons[ACT_MAX].y);
+		DrawPart(np, PART_MAX, start + buttons[ACT_MAX].x,
+			buttons[ACT_MAX].y);
 	}
 	if(np->state.border & BORDER_MIN) {
 		start -= parts[PART_MIN].width;
-		DrawPart(np, PART_MIN, start, buttons[ACT_MIN].y);
+		DrawPart(np, PART_MIN, start + buttons[ACT_MIN].x,
+			buttons[ACT_MIN].y);
 	}
 
 }
@@ -547,12 +563,6 @@ void ApplyComplexBorderShape(const ClientNode *np) {
 
 		/* Window icon. */
 		if(np->icon && parts[PART_T2].width > 0) {
-
-			if(parts[PART_T2].width < parts[PART_T2].height) {
-				x = parts[PART_T2].width;
-			} else {
-				x = parts[PART_T2].height;
-			}
 
 			DrawShape(np, shape, gc, PART_T2, start, 0);
 
@@ -845,12 +855,13 @@ void GetBorderSize(const struct ClientNode *np,
 
 /****************************************************************************
  ****************************************************************************/
-void SetWindowButtonLocation(const char *action, int y) {
+void SetWindowButtonLocation(const char *action, int x, int y) {
 
 	int index;
 
 	for(index = 0; index < ACT_COUNT; index++) {
 		if(!strcmp(buttons[index].action, action)) {
+			buttons[index].x = x;
 			buttons[index].y = y;
 			return;
 		}

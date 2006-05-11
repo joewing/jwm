@@ -110,7 +110,9 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
 			statusWindowWidth, statusWindowHeight);
 	}
 
-	DrawThemeOutline(PART_TRAY, COLOR_TRAY_BG, statusWindow, statusGC,
+	DrawThemeBackground(PART_TRAY, COLOR_TRAY_BG, statusWindow, statusGC,
+		0, 0, statusWindowWidth, statusWindowHeight, 0);
+	DrawThemeOutline(PART_TRAY, statusWindow, statusGC,
 		0, 0, statusWindowWidth, statusWindowHeight, 0);
 
 }

@@ -192,7 +192,6 @@ void PutIcon(IconNode *icon, Drawable d, GC g, int x, int y,
 
 			if(node->mask != None) {
 				JXSetClipMask(display, g, None);
-				JXSetClipOrigin(display, g, 0, 0);
 			}
 
 		}

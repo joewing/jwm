@@ -49,14 +49,18 @@ void DrawButton(const ButtonData *button) {
 		rect.height = button->height;
 		XSetClipRectangles(display, button->gc, 0, 0, &rect, 1, Unsorted);
 
-		DrawThemeOutline(PART_BUTTON, button->background,
+		DrawThemeBackground(PART_BUTTON, button->background,
 			button->drawable, button->gc,
 			button->x, button->y,
 			button->width, button->height, (int)button->type);
 
+		DrawThemeOutline(PART_BUTTON, button->drawable, button->gc,
+			button->x, button->y, button->width, button->height,
+			(int)button->type);
+
 		JXSetClipMask(display, button->gc, None);
 
-	} else if(button->fillPart) {
+	} else if(button->fillPart && button->fillPart->image) {
 
 		for(y = button->y; y < button->y + button->height;) {
 			for(x = button->x; x < button->x + button->width;) {

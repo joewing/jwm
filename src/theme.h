@@ -68,6 +68,7 @@ typedef enum {
 	PART_MENU_R,
 	PART_MENU_F,
 	PART_MENU_S,
+	PART_SUBMENU,
 
 	PART_COUNT
 
@@ -95,11 +96,13 @@ void StartupTheme();
 void ShutdownTheme();
 void DestroyTheme();
 
-void DrawThemeOutline(PartType part, ColorType bg, Drawable d, GC g,
+void DrawThemeOutline(PartType part, Drawable d, GC g,
 	int xoffset, int yoffset, int width, int height, int index);
 
 void DrawThemeBackground(PartType part, ColorType color, Drawable d, GC g,
 	int x, int y, int width, int height, int index);
+
+void ApplyThemeShape(PartType part, Window w, int width, int height);
 
 void SetThemePath(const char *path, const char *name);
 

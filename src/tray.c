@@ -751,7 +751,7 @@ void DrawSpecificTray(const TrayType *tp) {
 
 	Assert(tp);
 
-	DrawThemeOutline(PART_TRAY, COLOR_TRAY_BG, tp->window, tp->gc,
+	DrawThemeOutline(PART_TRAY, tp->window, tp->gc,
 		0, 0, tp->width, tp->height, 0);
 
 	for(cp = tp->components; cp; cp = cp->next) {

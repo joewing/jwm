@@ -25,11 +25,6 @@ typedef enum {
 	MENU_SUBSELECT   = 2
 } MenuSelectionType;
 
-/* Submenu arrow, 4 x 7 pixels */
-static char menu_bitmap[] = {
-	0x01, 0x03, 0x07, 0x0F, 0x07, 0x03, 0x01
-};
-
 static int ShowSubmenu(MenuType *menu, MenuType *parent, int x, int y);
 
 static void CreateMenu(MenuType *menu, int x, int y);
@@ -115,7 +110,7 @@ void InitializeMenu(MenuType *menu) {
 			temp = 0;
 		}
 		if(np->submenu) {
-			hasSubmenu = 7;
+			hasSubmenu = parts[PART_SUBMENU].width;
 		}
 		if(temp > menu->width) {
 			menu->width = temp;
@@ -360,8 +355,13 @@ void DrawMenu(MenuType *menu) {
 	MenuItemType *np;
 	int x;
 
-	DrawThemeOutline(PART_MENU, COLOR_MENU_BG, menu->window, menu->gc,
+	DrawThemeBackground(PART_MENU, COLOR_MENU_BG, menu->window, menu->gc,
 		0, 0, menu->width, menu->height, 0);
+
+	DrawThemeOutline(PART_MENU, menu->window, menu->gc,
+		0, 0, menu->width, menu->height, 0);
+
+	ApplyThemeShape(PART_MENU, menu->window, menu->width, menu->height);
 
 	menu->wasCovered = 0;
 
@@ -557,9 +557,9 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 void UpdateMenu(MenuType *menu) {
 
 	ButtonData button;
-	Pixmap pixmap;
 	MenuItemType *ip;
 	int north, south, east, west;
+	int x, y;
 
 	/* Clear the old selection. */
 	ip = GetMenuItem(menu, menu->lastIndex);
@@ -586,17 +586,26 @@ void UpdateMenu(MenuType *menu) {
 
 		DrawButton(&button);
 
-		if(ip->submenu) {
+		if(ip->submenu && parts[PART_SUBMENU].image) {
 
 			GetButtonOffsets(&north, &south, &east, &west);
 
-			pixmap = JXCreatePixmapFromBitmapData(display, menu->window,
-				menu_bitmap, 4, 7, colors[COLOR_MENU_ACTIVE_FG],
-				colors[COLOR_MENU_ACTIVE_BG], rootDepth);
-			JXCopyArea(display, pixmap, menu->window, menu->gc, 0, 0, 4, 7,
-				menu->width - 4 - east,
-				menu->offsets[menu->currentIndex] + menu->itemHeight / 2 - 4);
-			JXFreePixmap(display, pixmap);
+			x = menu->width - parts[PART_SUBMENU].width - east;
+			y = menu->offsets[menu->currentIndex];
+			y += menu->itemHeight / 2 - parts[PART_SUBMENU].height / 2;
+
+			if(parts[PART_SUBMENU].image->shape != None) {
+				JXSetClipOrigin(display, menu->gc, x, y);
+				JXSetClipMask(display, menu->gc,
+					parts[PART_SUBMENU].image->shape);
+			}
+			JXCopyArea(display, parts[PART_SUBMENU].image->image,
+				menu->window, menu->gc, 0, parts[PART_SUBMENU].height,
+				parts[PART_SUBMENU].width, parts[PART_SUBMENU].height,
+				x, y);
+			if(parts[PART_SUBMENU].image->shape != None) {
+				JXSetClipMask(display, menu->gc, None);
+			}
 
 		}
 	}
@@ -608,9 +617,8 @@ void UpdateMenu(MenuType *menu) {
 void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 
 	ButtonData button;
-	Pixmap pixmap;
 	int north, south, east, west;
-	int x, amount;
+	int x, y, amount;
 
 	Assert(menu);
 
@@ -670,17 +678,26 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 
 	}
 
-	if(item->submenu) {
+	if(item->submenu && parts[PART_SUBMENU].image) {
 
 		GetButtonOffsets(&north, &south, &east, &west);
 
-		pixmap = JXCreatePixmapFromBitmapData(display, menu->window,
-			menu_bitmap, 4, 7, colors[COLOR_MENU_FG],
-			colors[COLOR_MENU_BG], rootDepth);
-		JXCopyArea(display, pixmap, menu->window, menu->gc, 0, 0, 4, 7,
-			menu->width - 4 - east,
-			menu->offsets[index] + menu->itemHeight / 2 - 4);
-		JXFreePixmap(display, pixmap);
+		x = menu->width - parts[PART_SUBMENU].width - east;
+		y = menu->offsets[index];
+		y += menu->itemHeight / 2 - parts[PART_SUBMENU].height / 2;
+
+		if(parts[PART_SUBMENU].image->shape != None) {
+			JXSetClipOrigin(display, menu->gc, x, y);
+			JXSetClipMask(display, menu->gc,
+				parts[PART_SUBMENU].image->shape);
+		}
+		JXCopyArea(display, parts[PART_SUBMENU].image->image,
+			menu->window, menu->gc, 0, 0,
+			parts[PART_SUBMENU].width, parts[PART_SUBMENU].height,
+			x, y);
+		if(parts[PART_SUBMENU].image->shape != None) {
+			JXSetClipMask(display, menu->gc, None);
+		}
 
 	}
 

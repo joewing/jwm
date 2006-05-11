@@ -81,7 +81,7 @@ void StartupBorders() {
 	int x;
 
 	for(x = PART_BORDER_START; x <= PART_BORDER_STOP; x++) {
-		if(parts[x].image->shape != None) {
+		if(parts[x].image && parts[x].image->shape != None) {
 			borderUsesShape = 1;
 			break;
 		}

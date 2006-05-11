@@ -20,6 +20,9 @@
 #define OFFSET_R  7
 #define OFFSET_F  8
 
+#define HasShape( part ) \
+	( parts[part].image && parts[part].image->shape != None )
+
 PartNode parts[PART_COUNT] = {
 
 	{ "title1.xpm",    2 },
@@ -77,7 +80,8 @@ PartNode parts[PART_COUNT] = {
 	{ "menuL.xpm",     1 },
 	{ "menuR.xpm",     1 },
 	{ "menuF.xpm",     1 },
-	{ "menuS.xpm",     1 }
+	{ "menuS.xpm",     1 },
+	{ "submenu.xpm",   2 }
 
 };
 
@@ -86,6 +90,7 @@ static char *themePath;
 static void LoadThemePart(PartType part);
 static void DrawPart(PartType part, Drawable d, GC g,
 	int x, int y, int index);
+static void DrawShape(PartType part, Drawable d, GC g, int x, int y);
 
 /***************************************************************************
  ***************************************************************************/
@@ -166,13 +171,10 @@ void DestroyTheme() {
 
 /***************************************************************************
  ***************************************************************************/
-void DrawThemeOutline(PartType part, ColorType bg, Drawable d, GC g,
+void DrawThemeOutline(PartType part, Drawable d, GC g,
 	int xoffset, int yoffset, int width, int height, int index) {
 
 	int x;
-
-	DrawThemeBackground(part, bg, d, g,
-		xoffset, yoffset, width, height, index);
 
 	/* Top left. */
 	if(parts[part + OFFSET_TL].image) {
@@ -264,10 +266,113 @@ void DrawThemeBackground(PartType part, ColorType color, Drawable d, GC g,
 
 /***************************************************************************
  ***************************************************************************/
+void ApplyThemeShape(PartType part, Window w, int width, int height) {
+#ifdef USE_SHAPE
+
+	int x;
+	int shapeUsed;
+	Pixmap shape;
+	GC gc;
+
+	shapeUsed = 0;
+
+	shape = JXCreatePixmap(display, w, width, height, 1);
+	gc = JXCreateGC(display, shape, 0, NULL);
+
+	JXSetForeground(display, gc, 1);
+	JXFillRectangle(display, shape, gc, 0, 0, width, height);
+
+	/* Top. */
+	if(HasShape(part + OFFSET_T)) {
+		for(x = 0; x < width;) {
+			DrawShape(part + OFFSET_T, shape, gc, x, 0);
+			x += parts[part + OFFSET_T].width;
+		}
+		shapeUsed = 1;
+	}
+
+	/* Left. */
+	if(HasShape(part + OFFSET_L)) {
+		for(x = 0; x < height;) {
+			DrawShape(part + OFFSET_L, shape, gc, 0, x);
+			x += parts[part + OFFSET_L].height;
+		}
+		shapeUsed = 1;
+	}
+
+	/* Right. */
+	if(HasShape(part + OFFSET_R)) {
+		for(x = 0; x < height;) {
+			DrawShape(part + OFFSET_R, shape, gc,
+				height - parts[part + OFFSET_R].height, x);
+			x += parts[part + OFFSET_R].height;
+		}
+		shapeUsed = 1;
+	}
+
+	/* Bottom. */
+	if(HasShape(part + OFFSET_B)) {
+		for(x = 0; x < width;) {
+			DrawShape(part + OFFSET_B, shape, gc,
+				x, height - parts[part + OFFSET_B].height);
+			x += parts[part + OFFSET_B].width;
+		}
+		shapeUsed = 1;
+	}
+
+	/* Top left. */
+	if(HasShape(part + OFFSET_TL)) {
+		DrawShape(part + OFFSET_TL, shape, gc, 0, 0);
+		shapeUsed = 1;
+	}
+
+	/* Top right. */
+	if(HasShape(part + OFFSET_TR)) {
+		DrawShape(part + OFFSET_TR, shape, gc,
+			width - parts[part + OFFSET_TR].width, 0);
+		shapeUsed = 1;
+	}
+
+	/* Bottom left. */
+	if(HasShape(part + OFFSET_BL)) {
+		DrawShape(part + OFFSET_BL, shape, gc,
+			0, height - parts[part + OFFSET_BL].height);
+		shapeUsed = 1;
+	}
+
+	/* Bottom right. */
+	if(HasShape(part + OFFSET_BR)) {
+		DrawShape(part + OFFSET_BR, shape, gc,
+			width - parts[part + OFFSET_BR].width,
+			height - parts[part + OFFSET_BR].height);
+		shapeUsed = 1;
+	}
+
+	if(shapeUsed) {
+		JXShapeCombineMask(display, w, ShapeBounding, 0, 0, shape, ShapeSet);
+	}
+
+	JXFreeGC(display, gc);
+	JXFreePixmap(display, shape);
+
+#endif
+}
+
+/***************************************************************************
+ ***************************************************************************/
 void DrawPart(PartType part, Drawable d, GC g, int x, int y, int index) {
 
 	JXCopyArea(display, parts[part].image->image, d, g,
 		0, index * parts[part].height,
+		parts[part].width, parts[part].height, x, y);
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void DrawShape(PartType part, Drawable d, GC g, int x, int y) {
+
+	JXCopyArea(display, parts[part].image->shape, d, g, 0, 0,
 		parts[part].width, parts[part].height, x, y);
 
 }

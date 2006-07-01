@@ -42,8 +42,7 @@ static IconNode *CreateIconFromBinary(const unsigned long *data,
 static IconNode *LoadSuffixedIcon(const char *path, const char *name,
 	const char *suffix);
 
-static ScaledIconNode *GetScaledIcon(IconNode *icon,
-	int width, int height, int useRender);
+static ScaledIconNode *GetScaledIcon(IconNode *icon, int width, int height);
 
 static void InsertIcon(IconNode *icon);
 static IconNode *FindIcon(const char *name);
@@ -172,7 +171,7 @@ void PutIcon(IconNode *icon, Drawable d, GC g, int x, int y,
 
 	Assert(icon);
 
-	node = GetScaledIcon(icon, width, height, 1);
+	node = GetScaledIcon(icon, width, height);
 
 	if(node) {
 
@@ -192,6 +191,7 @@ void PutIcon(IconNode *icon, Drawable d, GC g, int x, int y,
 
 			if(node->mask != None) {
 				JXSetClipMask(display, g, None);
+				JXSetClipOrigin(display, g, 0, 0);
 			}
 
 		}
@@ -300,11 +300,11 @@ IconNode *LoadNamedIcon(const char *name) {
 		return CreateIconFromFile(name);
 	} else {
 		for(ip = iconPaths; ip; ip = ip->next) {
-			temp = AllocateStack(strlen(name) + strlen(ip->path) + 1);
+			temp = Allocate(strlen(name) + strlen(ip->path) + 1);
 			strcpy(temp, ip->path);
 			strcat(temp, name);
 			icon = CreateIconFromFile(temp);
-			ReleaseStack(temp);
+			Release(temp);
 			if(icon) {
 				return icon;
 			}
@@ -406,8 +406,7 @@ IconNode *CreateIconFromFile(const char *fileName) {
 
 /****************************************************************************
  ****************************************************************************/
-ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight,
-	int useRender) {
+ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 
 	XColor color;
 	ScaledIconNode *np;
@@ -449,11 +448,9 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight,
 	}
 
 	/* See if we can use XRender to create the icon. */
-	if(useRender) {
-		np = CreateScaledRenderIcon(icon, nwidth, nheight);
-		if(np) {
-			return np;
-		}
+	np = CreateScaledRenderIcon(icon, nwidth, nheight);
+	if(np) {
+		return np;
 	}
 
 	/* Create a new ScaledIconNode the old-fashioned way. */

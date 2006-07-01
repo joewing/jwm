@@ -316,12 +316,17 @@ void MinimizeTransients(ClientNode *np) {
  ****************************************************************************/
 void ShadeClient(ClientNode *np) {
 
-	int north, south, east, west;
+	int bsize;
 
 	Assert(np);
 
 	if(!(np->state.border & BORDER_TITLE)) {
 		return;
+	}
+	if(np->state.border & BORDER_OUTLINE) {
+		bsize = borderWidth;
+	} else {
+		bsize = 0;
 	}
 
 	if(np->state.status & STAT_MAPPED) {
@@ -332,10 +337,8 @@ void ShadeClient(ClientNode *np) {
 	np->state.status &= ~STAT_SDESKTOP;
 	np->state.status &= ~STAT_MAPPED;
 
-	GetBorderSize(np, &north, &south, &east, &west);
-
-	JXResizeWindow(display, np->parent,
-		np->width + east + west, north + south);
+	JXResizeWindow(display, np->parent, np->width + 2 * bsize,
+		titleHeight + 2 * bsize);
 
 	WriteState(np);
 
@@ -350,12 +353,17 @@ void ShadeClient(ClientNode *np) {
  ****************************************************************************/
 void UnshadeClient(ClientNode *np) {
 
-	int north, south, east, west;
+	int bsize;
 
 	Assert(np);
 
 	if(!(np->state.border & BORDER_TITLE)) {
 		return;
+	}
+	if(np->state.border & BORDER_OUTLINE) {
+		bsize = borderWidth;
+	} else {
+		bsize = 0;
 	}
 
 	if(np->state.status & STAT_SHADED) {
@@ -364,10 +372,8 @@ void UnshadeClient(ClientNode *np) {
 		np->state.status &= ~STAT_SHADED;
 	}
 
-	GetBorderSize(np, &north, &south, &east, &west);
-
-	JXResizeWindow(display, np->parent,
-		np->width + east + west, np->height + north + south);
+	JXResizeWindow(display, np->parent, np->width + 2 * bsize,
+		np->height + titleHeight + 2 * bsize);
 
 	WriteState(np);
 
@@ -642,12 +648,23 @@ void ShowClient(ClientNode *np) {
  ****************************************************************************/
 void MaximizeClient(ClientNode *np) {
 
-	int north, south, east, west;
+	int north, west;
 
 	Assert(np);
 
 	if(np->state.status & STAT_SHADED) {
 		UnshadeClient(np);
+	}
+
+	if(np->state.border & BORDER_OUTLINE) {
+		west = borderWidth;
+	} else {
+		west = 0;
+	}
+	if(np->state.border & BORDER_TITLE) {
+		north = west + titleHeight;
+	} else {
+		north = west;
 	}
 
 	if(np->state.status & STAT_MAXIMIZED) {
@@ -660,12 +677,10 @@ void MaximizeClient(ClientNode *np) {
 		PlaceMaximizedClient(np);
 	}
 
-	GetBorderSize(np, &north, &south, &east, &west);
-
 	JXMoveResizeWindow(display, np->parent,
 		np->x - west, np->y - north,
-		np->width + east + west,
-		np->height + north + south);
+		np->width + 2 * west,
+		np->height + north + west);
 	JXMoveResizeWindow(display, np->window, west,
 		north, np->width, np->height);
 
@@ -950,13 +965,70 @@ void SendClientMessage(Window w, AtomType type, AtomType message) {
 #ifdef USE_SHAPE
 void SetShape(ClientNode *np) {
 
+	XRectangle rect[4];
+	int north, west;
+
 	Assert(np);
 
 	np->state.status |= STAT_SHAPE;
 
-	ApplyBorderShape(np);
+	if(np->state.border & BORDER_OUTLINE) {
+		west = borderWidth;
+	} else {
+		west = 0;
+	}
+	if(np->state.border & BORDER_TITLE) {
+		north = west + titleHeight;
+	} else {
+		north = west;
+	}
 
+	if(np->state.status & STAT_SHADED) {
 
+		rect[0].x = 0;
+		rect[0].y = 0;
+		rect[0].width = np->width + west * 2;
+		rect[0].height = west * 2 + north;
+
+		JXShapeCombineRectangles(display, np->parent, ShapeBounding,
+			0, 0, rect, 1, ShapeSet, Unsorted);
+
+		return;
+	}
+
+	JXShapeCombineShape(display, np->parent, ShapeBounding, west, north,
+		np->window, ShapeBounding, ShapeSet);
+
+	if(north > 0) {
+
+		/* Top */
+		rect[0].x = 0;
+		rect[0].y = 0;
+		rect[0].width = np->width + west * 2;
+		rect[0].height = north;
+
+		/* Left */
+		rect[1].x = 0;
+		rect[1].y = 0;
+		rect[1].width = west;
+		rect[1].height = np->height + west + north;
+
+		/* Right */
+		rect[2].x = np->width + west;
+		rect[2].y = 0;
+		rect[2].width = west;
+		rect[2].height = np->height + west + north;
+
+		/* Bottom */
+		rect[3].x = 0;
+		rect[3].y = np->height + north;
+		rect[3].width = np->width + west * 2;
+		rect[3].height = west;
+
+		JXShapeCombineRectangles(display, np->parent, ShapeBounding,
+			0, 0, rect, 4, ShapeUnion, Unsorted);
+
+	}
 }
 #endif /* USE_SHAPE */
 
@@ -1087,7 +1159,6 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	XSetWindowAttributes attr;
 	int attrMask;
 	int x, y, width, height;
-	int north, south, east, west;
 
 	Assert(np);
 
@@ -1128,11 +1199,20 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	attrMask |= CWBackPixel;
 	attr.background_pixel = colors[COLOR_BORDER_BG];
 
-	GetBorderSize(np, &north, &south, &east, &west);
-	x = np->x - west;
-	y = np->y - north;
-	width = np->width + east + west;
-	height = np->height + north + south;
+	x = np->x;
+	y = np->y;
+	width = np->width;
+	height = np->height;
+	if(np->state.border & BORDER_OUTLINE) {
+		x -= borderWidth;
+		y -= borderWidth;
+		width += borderWidth * 2;
+		height += borderWidth * 2;
+	}
+	if(np->state.border & BORDER_TITLE) {
+		y -= titleHeight;
+		height += titleHeight;
+	}
 
 	np->parent = JXCreateWindow(display, rootWindow,
 		x, y, width, height, 0, rootDepth, InputOutput,
@@ -1145,7 +1225,19 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	JXChangeWindowAttributes(display, np->window, attrMask, &attr);
 
 	JXSetWindowBorderWidth(display, np->window, 0);
-	JXReparentWindow(display, np->window, np->parent, west, north);
+	if((np->state.border & BORDER_OUTLINE)
+		&& (np->state.border & BORDER_TITLE)) {
+		JXReparentWindow(display, np->window, np->parent,
+			borderWidth, borderWidth + titleHeight);
+	} else if(np->state.border & BORDER_OUTLINE) {
+		JXReparentWindow(display, np->window, np->parent,
+			borderWidth, borderWidth);
+	} else if(np->state.border & BORDER_TITLE) {
+		JXReparentWindow(display, np->window, np->parent,
+			0, titleHeight);
+	} else {
+		JXReparentWindow(display, np->window, np->parent, 0, 0);
+	}
 
 #ifdef USE_SHAPE
 	if(haveShape) {

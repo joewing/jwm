@@ -9,111 +9,80 @@
 #include "color.h"
 #include "main.h"
 #include "icon.h"
-#include "image.h"
 #include "font.h"
 #include "error.h"
-#include "misc.h"
-#include "theme.h"
 
 typedef enum {
+	BP_CLOSE,
+	BP_ACTIVE_CLOSE,
+	BP_MINIMIZE,
+	BP_ACTIVE_MINIMIZE,
+	BP_MAXIMIZE,
+	BP_ACTIVE_MAXIMIZE,
+	BP_MAXIMIZE_ACTIVE,
+	BP_ACTIVE_MAXIMIZE_ACTIVE,
+	BP_COUNT
+} BorderPixmapType;
 
-	ACT_MENU,
+typedef unsigned char BorderPixmapDataType[32];
 
-	ACT_MIN,
-	ACT_MAX,
-	ACT_CLOSE,
+static BorderPixmapDataType bitmaps[BP_COUNT >> 1] = {
 
-	ACT_COUNT
+	/* Close */
+	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x10, 0x38, 0x38, 0x70, 0x1C,
+	  0xE0, 0x0E, 0xC0, 0x07, 0x80, 0x03, 0xC0, 0x07, 0xE0, 0x0E, 0x70, 0x1C,
+	  0x38, 0x38, 0x10, 0x10, 0x00, 0x00, 0x00, 0x00 },
 
-} ButtonActionType;
+	/* Minimize */
+	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF8, 0x07,
+	  0xF8, 0x07, 0xF8, 0x07, 0x00, 0x00, 0x00, 0x00 },
 
-typedef struct {
+	/* Maximize */
+	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF8, 0x3F, 0xF8, 0x3F, 0xF8, 0x3F,
+	  0x08, 0x20, 0x08, 0x20, 0x08, 0x20, 0x08, 0x20, 0x08, 0x20, 0x08, 0x20,
+	  0x08, 0x20, 0xF8, 0x3F, 0x00, 0x00, 0x00, 0x00 },
 
-	const char *action;
-	int x, y;
+	/* Maximize Active */
+	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC0, 0x1F, 0xC0, 0x1F,
+	  0x00, 0x10, 0xF8, 0x13, 0xF8, 0x13, 0x08, 0x12, 0x08, 0x1A, 0x08, 0x02,
+	  0x08, 0x02, 0xF8, 0x03, 0x00, 0x00, 0x00, 0x00 }
 
-} ButtonActionNode;
-
-static ButtonActionNode buttons[ACT_COUNT] = {
-	{ "menu",  0, 0 },
-	{ "min",   0, 0 },
-	{ "max",   0, 0 },
-	{ "close", 0, 0 }
 };
 
-static int topLeftWidth, topRightWidth;
-static int topLeftHeight, topRightHeight;
-static int bottomLeftWidth, bottomRightWidth;
-static int bottomLeftHeight, bottomRightHeight;
-static int borderUsesShape;
+static Pixmap pixmaps[BP_COUNT];
 
-static void DrawButtons(const ClientNode *np);
-static int GetButtonWidth(const ClientNode *np);
-
-static int DrawPart(const ClientNode *np, PartType part, int x, int y);
-static int DrawShape(const ClientNode *np, Drawable d, GC g,
-	PartType part, int x, int y);
-
-#ifdef USE_SHAPE
-static void ApplySimpleBorderShape(const ClientNode *np);
-static void ApplyComplexBorderShape(const ClientNode *np);
-#endif
+static void DrawBorderHelper(const ClientNode *np,
+	unsigned int width, unsigned int height);
+static void DrawButtonBorder(const ClientNode *np, int offset,
+	Pixmap canvas, GC gc);
+static int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc);
 
 /****************************************************************************
  ****************************************************************************/
 void InitializeBorders() {
-
-	int x;
-
-	borderUsesShape = 0;
-	
-	for(x = 0; x < ACT_COUNT; x++) {
-		buttons[x].x = 0;
-		buttons[x].y = 0;
-	}
-
 }
 
 /****************************************************************************
  ****************************************************************************/
 void StartupBorders() {
 
+	long fg, bg;
 	int x;
 
-	for(x = PART_BORDER_START; x <= PART_BORDER_STOP; x++) {
-		if(parts[x].image && parts[x].image->shape != None) {
-			borderUsesShape = 1;
-			break;
-		}
-	}
+	for(x = 0; x < BP_COUNT; x++) {
 
-	if(parts[PART_TL].image) {
-		topLeftWidth = parts[PART_TL].width;
-		topLeftHeight = parts[PART_TL].height;
-	} else {
-		topLeftWidth = parts[PART_L].width;
-		topLeftHeight = parts[PART_T].height;
-	}
-	if(parts[PART_TR].image) {
-		topRightWidth = parts[PART_TR].width;
-		topRightHeight = parts[PART_TR].height;
-	} else {
-		topRightWidth = parts[PART_R].width;
-		topRightHeight = parts[PART_T].height;
-	}
-	if(parts[PART_BL].image) {
-		bottomLeftWidth = parts[PART_BL].width;
-		bottomLeftHeight = parts[PART_BL].height;
-	} else {
-		bottomLeftWidth = parts[PART_L].width;
-		bottomLeftHeight = parts[PART_B].height;
-	}
-	if(parts[PART_BR].image) {
-		bottomRightWidth = parts[PART_BR].width;
-		bottomRightHeight = parts[PART_BR].height;
-	} else {
-		bottomRightWidth = parts[PART_R].width;
-		bottomRightHeight = parts[PART_B].height;
+		if(x & 1) {
+			fg = colors[COLOR_BORDER_ACTIVE_FG];
+			bg = colors[COLOR_BORDER_ACTIVE_BG];
+		} else {
+			fg = colors[COLOR_BORDER_FG];
+			bg = colors[COLOR_BORDER_BG];
+		}
+
+		pixmaps[x] = JXCreatePixmapFromBitmapData(display, rootWindow,
+			(char*)bitmaps[x >> 1], 16, 16, fg, bg, rootDepth);
+
 	}
 
 }
@@ -122,139 +91,124 @@ void StartupBorders() {
  ****************************************************************************/
 void ShutdownBorders() {
 
+	int x;
+
+	for(x = 0; x < BP_COUNT; x++) {
+		JXFreePixmap(display, pixmaps[x]);
+	}
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 void DestroyBorders() {
-
 }
 
 /****************************************************************************
  ****************************************************************************/
 int GetBorderIconSize() {
-
-	int size;
-
-	size = parts[PART_T2].width + abs(buttons[ACT_MENU].x);
-	if(size > parts[PART_T2].height) {
-		size = parts[PART_T2].height;
-	}
-
-	if(size > 4) {
-		return size - 4;
-	} else {
-		return 4;
-	}
+	return titleHeight - 4;
 }
 
 /****************************************************************************
  ****************************************************************************/
 BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 
-	int north, south, east, west;
-	int top;
+	int north;
 	int offset;
-	int temp;
+	int height, width;
+	int bsize;
 
-	GetBorderSize(np, &north, &south, &east, &west);
-	if(north > parts[PART_CLOSE].height) {
-		top = (north - parts[PART_CLOSE].height) / 2;
+	if(np->state.border & BORDER_OUTLINE) {
+		bsize = borderWidth;
 	} else {
-		top = north;
+		bsize = 0;
 	}
 
 	if(np->state.border & BORDER_TITLE) {
 
-		offset = parts[PART_T1].width + buttons[ACT_MENU].x;
-		if(y > buttons[ACT_MENU].y
-			&& y <= buttons[ACT_MENU].y + parts[PART_T2].height) {
-			if(x > offset && x < offset + parts[PART_T2].width) {
-				return BA_MENU;
+		if(y > bsize && y <= bsize + titleHeight) {
+			if(np->icon && np->width >= titleHeight) {
+				if(x > bsize && x < bsize + titleHeight) {
+					return BA_MENU;
+				}
 			}
-
-		}
-
-		offset = np->width + east + west - parts[PART_T11].width;
-		if(np->state.border & BORDER_CLOSE) {
-			offset -= parts[PART_CLOSE].width;
-			if(y > buttons[ACT_CLOSE].y
-				&& y <= buttons[ACT_CLOSE].y + parts[PART_CLOSE].height) {
-				temp = offset + buttons[ACT_CLOSE].x;
-				if(x > temp && x <= temp + parts[PART_CLOSE].width) {
+			offset = np->width + bsize - titleHeight;
+			if((np->state.border & BORDER_CLOSE)
+				&& offset > bsize + titleHeight) {
+				if(x > offset && x < offset + titleHeight) {
 					return BA_CLOSE;
 				}
+				offset -= titleHeight;
 			}
-		}
-		if(np->state.border & BORDER_MAX) {
-			offset -= parts[PART_MAX].width;
-			if(y > buttons[ACT_MAX].y
-				&& y <= buttons[ACT_MAX].y + parts[PART_MAX].height) {
-				temp = offset + buttons[ACT_MAX].x;
-				if(x > temp && x <= temp + parts[PART_MAX].width) {
+			if((np->state.border & BORDER_MAX)
+				&& offset > bsize + titleHeight) {
+				if(x > offset && x < offset + titleHeight) {
 					return BA_MAXIMIZE;
 				}
+				offset -= titleHeight;
 			}
-		}
-		if(np->state.border & BORDER_MIN) {
-			offset -= parts[PART_MIN].width;
-			if(y > buttons[ACT_MIN].y
-				&& y <= buttons[ACT_MIN].y + parts[PART_MIN].height) {
-				temp = offset + buttons[ACT_MIN].x;
-				if(x > temp && x <= temp + parts[PART_MIN].width) {
+			if((np->state.border & BORDER_MIN) && offset > bsize + titleHeight) {
+				if(x > offset && x < offset + titleHeight) {
 					return BA_MINIMIZE;
 				}
 			}
 		}
 
-		if(y > top && y <= north) {
-
-			if(x > topLeftWidth && x <= np->width + east + west - topRightWidth) {
+		if(y >= bsize && y <= bsize + titleHeight) {
+			if(x >= bsize && x <= np->width + bsize) {
 				if(np->state.border & BORDER_MOVE) {
 					return BA_MOVE;
 				} else {
 					return BA_NONE;
 				}
 			}
-
 		}
 
+		north = bsize + titleHeight;
+	} else {
+		north = bsize;
 	}
 
 	if(!(np->state.border & BORDER_RESIZE)) {
 		return BA_NONE;
 	}
 
+	width = np->width;
+
 	if(np->state.status & STAT_SHADED) {
-		if(x < west) {
+		if(x < bsize) {
 			return BA_RESIZE_W | BA_RESIZE;
-		} else if(x >= np->width + west) {
+		} else if(x >= width + bsize) {
 			return BA_RESIZE_E | BA_RESIZE;
 		} else {
 			return BA_NONE;
 		}
 	}
 
-	if(x < topLeftWidth && y < topLeftHeight) {
-		return  BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE;
-	} else if(x < bottomLeftWidth
-		&& y >= north + south + np->height - bottomLeftHeight) {
-		return BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE;
-	} else if(x >= np->width + east + west - topRightWidth
-		&& y < topRightHeight) {
-		return BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE;
-	} else if(x >= np->width + east + west - bottomRightWidth
-		&& y >= np->height + north + south - bottomRightHeight) {
-		return BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE;
-	}
+	height = np->height;
 
-	if(x < west) {
+	if(width >= titleHeight * 2 && height >= titleHeight * 2) {
+		if(x < bsize + titleHeight && y < titleHeight + bsize) {
+			return  BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE;
+		} else if(x < titleHeight + bsize
+			&& y - north >= height - titleHeight) {
+			return BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE;
+		} else if(x - bsize >= width - titleHeight
+			&& y < titleHeight + bsize) {
+			return BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE;
+		} else if(x - bsize >= width - titleHeight
+			&& y - north >= height - titleHeight) {
+			return BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE;
+		}
+	}
+	if(x < bsize) {
 		return BA_RESIZE_W | BA_RESIZE;
-	} else if(x >= np->width + west) {
+	} else if(x >= width + bsize) {
 		return BA_RESIZE_E | BA_RESIZE;
-	} else if(y < top) {
+	} else if(y < bsize) {
 		return BA_RESIZE_N | BA_RESIZE;
-	} else if(y >= north + np->height) {
+	} else if(y >= height) {
 		return BA_RESIZE_S | BA_RESIZE;
 	} else {
 		return BA_NONE;
@@ -265,12 +219,9 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
  ****************************************************************************/
 void DrawBorder(const ClientNode *np) {
 
-	int x, y;
-	int start, stop;
-	int titleLength;
-	int buttonWidth;
-	int north;
-	ColorType fg;
+	unsigned int width;
+	unsigned int height;
+	int bsize;
 
 	if(shouldExit) {
 		return;
@@ -283,481 +234,340 @@ void DrawBorder(const ClientNode *np) {
 		return;
 	}
 
-	if(!(np->state.border & BORDER_OUTLINE)
-		&& !(np->state.border & BORDER_TITLE)) {
+	if(np->state.border & BORDER_OUTLINE) {
+		bsize = borderWidth;
+	} else {
+		bsize = 0;
+	}
+
+	if(bsize == 0 && !(np->state.border & BORDER_TITLE)) {
 		return;
 	}
 
-	if(!(np->state.status & STAT_SHAPE) || (np->state.status & STAT_SHADED)) {
-		ApplyBorderShape(np);
+	if(np->state.status & STAT_SHADED) {
+		height = titleHeight + bsize * 2;
+	} else if(np->state.border & BORDER_TITLE) {
+		height = np->height + titleHeight + bsize * 2;
+	} else {
+		height = np->height + 2 * bsize;
 	}
+	width = np->width + bsize * 2;
+
+	DrawBorderHelper(np, width, height);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void DrawBorderHelper(const ClientNode *np,
+	unsigned int width, unsigned int height) {
+
+	ColorType borderTextColor;
+	long borderPixel, borderTextPixel;
+	long pixelUp, pixelDown;
+	int buttonCount, titleWidth;
+	Pixmap canvas;
+	GC gc;
+	int iconSize;
+	int bsize;
+
+	iconSize = GetBorderIconSize();
+
+	if(np->state.status & STAT_ACTIVE) {
+		borderTextColor = COLOR_BORDER_ACTIVE_FG;
+		borderPixel = colors[COLOR_BORDER_ACTIVE_BG];
+		borderTextPixel = colors[COLOR_BORDER_ACTIVE_FG];
+		pixelUp = colors[COLOR_BORDER_ACTIVE_UP];
+		pixelDown = colors[COLOR_BORDER_ACTIVE_DOWN];
+	} else {
+		borderTextColor = COLOR_BORDER_FG;
+		borderPixel = colors[COLOR_BORDER_BG];
+		borderTextPixel = colors[COLOR_BORDER_FG];
+		pixelUp = colors[COLOR_BORDER_UP];
+		pixelDown = colors[COLOR_BORDER_DOWN];
+	}
+
+	if(np->state.border & BORDER_OUTLINE) {
+		bsize = borderWidth;
+	} else {
+		bsize = 0;
+	}
+
+	canvas = np->parent;
+	gc = np->parentGC;
+
+	JXSetWindowBackground(display, np->parent, borderPixel);
+	JXClearWindow(display, np->parent);
+
+	buttonCount = DrawBorderButtons(np, canvas, gc);
+	titleWidth = width - (titleHeight + 2) * buttonCount - bsize
+		- (titleHeight + bsize + 4) - 2;
 
 	if(np->state.border & BORDER_TITLE) {
 
-		buttonWidth = GetButtonWidth(np);
-
-		/* Left. */
-		start = DrawPart(np, PART_T1, 0, 0);
-
-		/* Draw the window icon. */
-		if(np->icon && parts[PART_T2].width > 0) {
-
-			if(parts[PART_T2].width < parts[PART_T2].height) {
-				x = parts[PART_T2].width;
-			} else {
-				x = parts[PART_T2].height;
-			}
-
-			DrawPart(np, PART_T2, start, 0);
-
-			PutIcon(np->icon, np->parent, np->parentGC,
-				start + buttons[ACT_MENU].x, buttons[ACT_MENU].y, x, x);
-
-			start += parts[PART_T2].width;
-
+		if(np->icon && np->width >= titleHeight) {
+			PutIcon(np->icon, canvas, gc,
+				bsize + 2,
+				bsize + titleHeight / 2 - iconSize / 2,
+				iconSize, iconSize);
 		}
 
-
-		start += DrawPart(np, PART_T3, start, 0);
-
-		/* Skip PART_T4 for now, this will be used when the title
-		 * is centered or right aligned. */
-
-		start += DrawPart(np, PART_T5, start, 0);
-
-		/* Draw the title. */
-		if(np->name) {
-
-			titleLength = GetStringWidth(FONT_BORDER, np->name);
-			if(parts[PART_T6].width > 0) {
-				for(x = 0; x < titleLength;) {
-					x += DrawPart(np, PART_T6, x + start, 0);
-				}
-			}
-
-			y = parts[PART_T6].height / 2 - GetStringHeight(FONT_BORDER) / 2;
-			if(y < 0) {
-				y = 0;
-			}
-			if(np->state.status & STAT_ACTIVE) {
-				fg = COLOR_BORDER_ACTIVE_FG;
-			} else {
-				fg = COLOR_BORDER_FG;
-			}
-			RenderString(np->parent, np->parentGC, FONT_BORDER, fg,
-				start, y, titleLength, np->name);
-			start += titleLength;
-
+		if(np->name && np->name[0] && titleWidth > 0) {
+			RenderString(canvas, gc, FONT_BORDER, borderTextColor,
+				titleHeight + bsize + 4, bsize + titleHeight / 2
+				- GetStringHeight(FONT_BORDER) / 2,
+				titleWidth, np->name);
 		}
-
-		start += DrawPart(np, PART_T7, start, 0);
-
-		/* PART_T8 will be used to fill any left-over space. */
-		stop = parts[PART_L].width + parts[PART_R].width + np->width;
-		stop -= parts[PART_T11].width;
-		stop -= buttonWidth;
-		stop -= parts[PART_T9].width;
-		if(parts[PART_T8].width > 0) {
-			for(x = start; x < stop;) {
-				x += DrawPart(np, PART_T8, x, 0);
-			}
-		}
-		start = stop;
-
-		start += DrawPart(np, PART_T9, start, 0);
-
-		/* PART_T10 will be used to fill the area under the buttons. */
-		if(parts[PART_T10].width > 0) {
-			for(x = 0; x < buttonWidth;) {
-				x += DrawPart(np, PART_T10, x + start, 0);
-			}
-		}
-		start += buttonWidth;
-
-		/* Right. */
-		DrawPart(np, PART_T11, start, 0);
-
-		north = parts[PART_T6].height;
-
-	} else if(np->state.border & BORDER_OUTLINE) {
-
-		start = DrawPart(np, PART_TL, 0, 0);
-		stop = parts[PART_L].width + parts[PART_R].width + np->width;
-		stop -= parts[PART_TR].width;
-
-		if(parts[PART_T].width > 0) {
-			for(x = start; x < stop;) {
-				x += DrawPart(np, PART_T, x, 0);
-			}
-		}
-
-		DrawPart(np, PART_TR, stop, 0);
-
-		north = parts[PART_T].height;
-
-	} else {
-
-		north = 0;
 
 	}
 
 	if(np->state.border & BORDER_OUTLINE) {
 
-		/* Left. */
-		if(parts[PART_L].height > 0) {
-			stop = np->height + north + parts[PART_B].height;
-			for(y = parts[PART_T1].height; y < stop;) {
-				DrawPart(np, PART_L, 0, y);
-				y += parts[PART_L].height;
-			}
+		/* Draw title outline */
+		JXSetForeground(display, gc, pixelUp);
+		JXDrawLine(display, canvas, gc, borderWidth, borderWidth,
+			width - borderWidth - 1, borderWidth);
+		JXDrawLine(display, canvas, gc, borderWidth, borderWidth + 1,
+			borderWidth, titleHeight + borderWidth - 1);
+
+		JXSetForeground(display, gc, pixelDown);
+		JXDrawLine(display, canvas, gc, borderWidth + 1,
+			titleHeight + borderWidth - 1, width - borderWidth,
+			titleHeight + borderWidth - 1);
+		JXDrawLine(display, canvas, gc, width - borderWidth - 1,
+			borderWidth + 1, width - borderWidth - 1, titleHeight + borderWidth);
+
+		/* Draw outline */
+		JXSetForeground(display, gc, pixelUp);
+		JXDrawLine(display, canvas, gc, width - borderWidth,
+			borderWidth, width - borderWidth, height - borderWidth);
+		JXDrawLine(display, canvas, gc, borderWidth,
+			height - borderWidth, width - borderWidth, height - borderWidth);
+
+		JXSetForeground(display, gc, pixelDown);
+		JXDrawLine(display, canvas, gc, borderWidth - 1,
+			borderWidth - 1, width - borderWidth, borderWidth - 1);
+		JXDrawLine(display, canvas, gc, borderWidth - 1, borderWidth,
+			borderWidth - 1, height - borderWidth);
+
+		JXFillRectangle(display, canvas, gc, width - 2, 0, 2, height);
+		JXFillRectangle(display, canvas, gc, 0, height - 2, width, 2);
+		JXSetForeground(display, gc, pixelUp);
+		JXDrawLine(display, canvas, gc, 0, 0, 0, height - 1);
+		JXDrawLine(display, canvas, gc, 1, 1, 1, height - 2);
+		JXDrawLine(display, canvas, gc, 1, 0, width - 1, 0);
+		JXDrawLine(display, canvas, gc, 1, 1, width - 2, 1);
+
+		if((np->state.border & BORDER_RESIZE)
+			&& !(np->state.status & STAT_SHADED)
+			&& np->width >= 2 * titleHeight * 2
+			&& np->height >= titleHeight * 2) {
+
+			/* Draw marks */
+			JXSetForeground(display, gc, pixelDown);
+
+			/* Upper left */
+			JXDrawLine(display, canvas, gc,
+				titleHeight + borderWidth - 1, 2, titleHeight + borderWidth - 1,
+				borderWidth - 2);
+			JXDrawLine(display, canvas, gc, 2,
+				titleHeight + borderWidth - 1, borderWidth - 2,
+				titleHeight + borderWidth - 1);
+
+			/* Upper right */
+			JXDrawLine(display, canvas, gc,
+				width - titleHeight - borderWidth - 1,
+				2, width - titleHeight - borderWidth - 1, borderWidth - 2);
+			JXDrawLine(display, canvas, gc, width - 3,
+				titleHeight + borderWidth - 1, width - borderWidth + 1,
+				titleHeight + borderWidth - 1);
+
+			/* Lower left */
+			JXDrawLine(display, canvas, gc, 2,
+				height - titleHeight - borderWidth - 1, borderWidth - 2,
+				height - titleHeight - borderWidth - 1);
+			JXDrawLine(display, canvas, gc,
+				titleHeight + borderWidth - 1, height - 3,
+				titleHeight + borderWidth - 1, height - borderWidth + 1);
+
+			/* Lower right */
+			JXDrawLine(display, canvas, gc, width - 3,
+				height - titleHeight - borderWidth - 1, width - borderWidth + 1,
+				height - titleHeight - borderWidth - 1);
+			JXDrawLine(display, canvas, gc,
+				width - titleHeight - borderWidth - 1,
+				height - 3, width - titleHeight - borderWidth - 1,
+				height - borderWidth + 1);
+
+			JXSetForeground(display, gc, pixelUp);
+
+			/* Upper left */
+			JXDrawLine(display, canvas, gc, titleHeight + borderWidth,
+				2, titleHeight + borderWidth, borderWidth - 2);
+			JXDrawLine(display, canvas, gc, 2,
+				titleHeight + borderWidth, borderWidth - 2,
+				titleHeight + borderWidth);
+
+			/* Upper right */
+			JXDrawLine(display, canvas, gc,
+				width - titleHeight - borderWidth, 2,
+				width - titleHeight - borderWidth, borderWidth - 2);
+			JXDrawLine(display, canvas, gc, width - 3,
+				titleHeight + borderWidth, width - borderWidth + 1,
+				titleHeight + borderWidth);
+
+			/* Lower left */
+			JXDrawLine(display, canvas, gc, 2,
+				height - titleHeight - borderWidth,
+				borderWidth - 2, height - titleHeight - borderWidth);
+			JXDrawLine(display, canvas, gc, titleHeight + borderWidth,
+				height - 3, titleHeight + borderWidth, height - borderWidth + 1);
+
+			/* Lower right */
+			JXDrawLine(display, canvas, gc, width - 3,
+				height - titleHeight - borderWidth, width - borderWidth + 1,
+				height - titleHeight - borderWidth);
+			JXDrawLine(display, canvas, gc,
+				width - titleHeight - borderWidth, height - 3,
+				width - titleHeight - borderWidth, height - borderWidth + 1);
+
 		}
-
-		/* Right. */
-		if(parts[PART_R].height > 0) {
-			x = np->width + parts[PART_L].width;
-			for(y = north; y < np->height + north + parts[PART_B].height;) {
-				DrawPart(np, PART_R, x, y);
-				y += parts[PART_R].height;
-			}
-		}
-
-		/* Bottom left. */
-		y = np->height + north + parts[PART_B].height;
-		y -= parts[PART_BL].height;
-		start = DrawPart(np, PART_BL, 0, y);
-
-		/* Bottom. */
-		if(parts[PART_B].width > 0) {
-			y = np->height + north;
-			stop = np->width + parts[PART_L].width + parts[PART_R].width;
-			for(x = start; x < stop;) {
-				x += DrawPart(np, PART_B, x, y);
-			}
-		}
-
-		/* Bottom right. */
-		x = np->width + parts[PART_L].width + parts[PART_R].width;
-		x -= parts[PART_BR].width;
-		y = np->height + north + parts[PART_B].height;
-		y -= parts[PART_BR].height;
-		DrawPart(np, PART_BR, x, y);
 
 	}
-
-	DrawButtons(np);
 
 }
 
 /****************************************************************************
  ****************************************************************************/
-int GetButtonWidth(const ClientNode *np) {
+void DrawButtonBorder(const ClientNode *np, int offset,
+	Pixmap canvas, GC gc) {
 
-	int result = 0;
+	long up, down;
+	long bsize;
 
-	if(np->state.border & BORDER_CLOSE) {
-		result = parts[PART_CLOSE].width;
-	}
-	if(np->state.border & BORDER_MIN) {
-		result += parts[PART_MIN].width;
-	}
-	if(np->state.border & BORDER_MAX) {
-		result += parts[PART_MAX].width;
+	Assert(np);
+
+	if(np->state.status & STAT_ACTIVE) {
+		up = colors[COLOR_BORDER_ACTIVE_UP];
+		down = colors[COLOR_BORDER_ACTIVE_DOWN];
+	} else {
+		up = colors[COLOR_BORDER_UP];
+		down = colors[COLOR_BORDER_DOWN];
 	}
 
-	return result;
+	if(np->state.border & BORDER_OUTLINE) {
+		bsize = borderWidth;
+	} else {
+		bsize = 0;
+	}
+
+	JXSetForeground(display, gc, up);
+	JXDrawLine(display, canvas, gc, offset, bsize + 1,
+		offset, titleHeight + bsize  - 2);
+
+	JXSetForeground(display, gc, down);
+	JXDrawLine(display, canvas, gc, offset - 1,
+		bsize + 1, offset - 1, titleHeight + bsize - 2);
 
 }
 
 /****************************************************************************
  ****************************************************************************/
-void DrawButtons(const ClientNode *np) {
+int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
 
-	int start;
+	Pixmap pixmap;
+	int count = 0;
+	int offset;
+	int bsize;
+
+	Assert(np);
 
 	if(!(np->state.border & BORDER_TITLE)) {
-		return;
+		return count;
+	}
+	if(np->state.border & BORDER_OUTLINE) {
+		bsize = borderWidth;
+	} else {
+		bsize = 0;
 	}
 
-	start = np->width + parts[PART_L].width + parts[PART_R].width;
-	start -= parts[PART_T11].width;
+	offset = np->width + bsize - titleHeight;
+
+	if(offset <= bsize + titleHeight) {
+		return count;
+	}
 
 	if(np->state.border & BORDER_CLOSE) {
-		start -= parts[PART_CLOSE].width;
-		DrawPart(np, PART_CLOSE, start + buttons[ACT_CLOSE].x,
-			buttons[ACT_CLOSE].y);
+
+		DrawButtonBorder(np, offset, canvas, gc);
+
+		if(np->state.status & STAT_ACTIVE) {
+			pixmap = pixmaps[BP_ACTIVE_CLOSE];
+		} else {
+			pixmap = pixmaps[BP_CLOSE];
+		}
+
+		JXCopyArea(display, pixmap, canvas, gc, 0, 0, 16, 16,
+			offset + titleHeight / 2 - 8, bsize + titleHeight / 2 - 8);
+
+		offset -= titleHeight;
+		++count;
+
+		if(offset <= bsize + titleHeight) {
+			return count;
+		}
+
 	}
+
 	if(np->state.border & BORDER_MAX) {
-		start -= parts[PART_MAX].width;
-		DrawPart(np, PART_MAX, start + buttons[ACT_MAX].x,
-			buttons[ACT_MAX].y);
+
+		if(np->state.status & STAT_MAXIMIZED) {
+			if(np->state.status & STAT_ACTIVE) {
+				pixmap = pixmaps[BP_ACTIVE_MAXIMIZE_ACTIVE];
+			} else {
+				pixmap = pixmaps[BP_MAXIMIZE_ACTIVE];
+			}
+		} else {
+			if(np->state.status & STAT_ACTIVE) {
+				pixmap = pixmaps[BP_ACTIVE_MAXIMIZE];
+			} else {
+				pixmap = pixmaps[BP_MAXIMIZE];
+			}
+		}
+		JXCopyArea(display, pixmap, canvas, gc, 0, 0, 16, 16,
+			offset + titleHeight / 2 - 8, bsize + titleHeight / 2 - 8);
+
+		DrawButtonBorder(np, offset, canvas, gc);
+
+		offset -= titleHeight;
+		++count;
+
+		if(offset <= bsize + titleHeight) {
+			return count;
+		}
+
 	}
+
 	if(np->state.border & BORDER_MIN) {
-		start -= parts[PART_MIN].width;
-		DrawPart(np, PART_MIN, start + buttons[ACT_MIN].x,
-			buttons[ACT_MIN].y);
+
+		DrawButtonBorder(np, offset, canvas, gc);
+
+		if(np->state.status & STAT_ACTIVE) {
+			pixmap = pixmaps[BP_ACTIVE_MINIMIZE];
+		} else {
+			pixmap = pixmaps[BP_MINIMIZE];
+		}
+
+		JXCopyArea(display, pixmap, canvas, gc, 0, 0, 16, 16,
+			offset + titleHeight / 2 - 8, bsize + titleHeight / 2 - 8);
+
+		++count;
+
 	}
+
+	return count;
 
 }
-
-/****************************************************************************
- ****************************************************************************/
-void ApplyBorderShape(const ClientNode *np) {
-#ifdef USE_SHAPE
-
-	if(borderUsesShape) {
-		ApplyComplexBorderShape(np);
-	} else if(np->state.status & STAT_SHAPE) {
-		ApplySimpleBorderShape(np);
-	}
-
-#endif
-}
-
-/****************************************************************************
- ****************************************************************************/
-#ifdef USE_SHAPE
-void ApplyComplexBorderShape(const ClientNode *np) {
-
-	Pixmap shape;
-	GC gc;
-	int north, south, east, west;
-	int buttonWidth;
-	int titleLength;
-	int x, y;
-	int start, stop;
-
-	GetBorderSize(np, &north, &south, &east, &west);
-
-	if(np->state.status & STAT_SHADED) {
-
-		shape = JXCreatePixmap(display, np->parent,
-			np->width + east + west, north + south, 1);
-		gc = JXCreateGC(display, shape, 0, NULL);
-
-		JXSetForeground(display, gc, 1);
-		JXFillRectangle(display, shape, gc, 0, 0,
-			np->width + east + west, north + south);
-
-	} else {
-
-		shape = JXCreatePixmap(display, np->parent,
-			np->width + east + west, np->height + north + south, 1);
-		gc = JXCreateGC(display, shape, 0, NULL);
-
-		JXSetForeground(display, gc, 1);
-		JXFillRectangle(display, shape, gc, 0, 0,
-			np->width + east + west, np->height + north + south);
-
-	}
-
-	if(np->state.border & BORDER_TITLE) {
-
-		buttonWidth = GetButtonWidth(np);
-
-		/* Left. */
-		start = DrawShape(np, shape, gc, PART_T1, 0, 0);
-
-		/* Window icon. */
-		if(np->icon && parts[PART_T2].width > 0) {
-
-			DrawShape(np, shape, gc, PART_T2, start, 0);
-
-			start += parts[PART_T2].width;
-
-		}
-
-
-		start += DrawShape(np, shape, gc, PART_T3, start, 0);
-
-		/* Skip PART_T4 for now, this will be used when the title
-		 * is centered or right aligned. */
-
-		start += DrawShape(np, shape, gc, PART_T5, start, 0);
-
-		/* Title */
-		if(np->name) {
-
-			titleLength = GetStringWidth(FONT_BORDER, np->name);
-			if(parts[PART_T6].width > 0) {
-				for(x = 0; x < titleLength;) {
-					x += DrawShape(np, shape, gc, PART_T6, x + start, 0);
-				}
-			}
-
-			start += titleLength;
-
-		}
-
-		start += DrawShape(np, shape, gc, PART_T7, start, 0);
-
-		/* PART_T8 will be used to fill any left-over space. */
-		stop = parts[PART_L].width + parts[PART_R].width + np->width;
-		stop -= parts[PART_T11].width;
-		stop -= buttonWidth;
-		stop -= parts[PART_T9].width;
-		if(parts[PART_T8].width > 0) {
-			for(x = start; x < stop;) {
-				x += DrawShape(np, shape, gc, PART_T8, x, 0);
-			}
-		}
-		start = stop;
-
-		start += DrawShape(np, shape, gc, PART_T9, start, 0);
-
-		/* PART_T10 will be used to fill the area under the buttons. */
-		if(parts[PART_T10].width > 0) {
-			for(x = 0; x < buttonWidth;) {
-				x += DrawShape(np, shape, gc, PART_T10, x + start, 0);
-			}
-		}
-		start += buttonWidth;
-
-		/* Right. */
-		DrawShape(np, shape, gc, PART_T11, start, 0);
-
-	} else if(np->state.border & BORDER_OUTLINE) {
-
-		start = DrawShape(np, shape, gc, PART_TL, 0, 0);
-		stop = parts[PART_L].width + parts[PART_R].width + np->width;
-		stop -= parts[PART_TR].width;
-
-		if(parts[PART_T].width > 0) {
-			for(x = start; x < stop;) {
-				x += DrawShape(np, shape, gc, PART_T, x, 0);
-			}
-		}
-
-		DrawShape(np, shape, gc, PART_TR, stop, 0);
-
-	}
-
-	if(np->state.border & BORDER_OUTLINE) {
-
-		/* Left. */
-		if(parts[PART_L].height > 0) {
-			stop = np->height + north + parts[PART_B].height;
-			for(y = parts[PART_T1].height; y < stop;) {
-				DrawShape(np, shape, gc, PART_L, 0, y);
-				y += parts[PART_L].height;
-			}
-		}
-
-		/* Right. */
-		if(parts[PART_R].height > 0) {
-			x = np->width + parts[PART_L].width;
-			for(y = north; y < np->height + north + parts[PART_B].height;) {
-				DrawShape(np, shape, gc, PART_R, x, y);
-				y += parts[PART_R].height;
-			}
-		}
-
-		/* Bottom left. */
-		y = np->height + north + parts[PART_B].height;
-		y -= parts[PART_BL].height;
-		start = DrawShape(np, shape, gc, PART_BL, 0, y);
-
-		/* Bottom. */
-		if(parts[PART_B].width > 0) {
-			y = np->height + north;
-			stop = np->width + parts[PART_L].width + parts[PART_R].width;
-			for(x = start; x < stop;) {
-				x += DrawShape(np, shape, gc, PART_B, x, y);
-			}
-		}
-
-		/* Bottom right. */
-		x = np->width + parts[PART_L].width + parts[PART_R].width;
-		x -= parts[PART_BR].width;
-		y = np->height + north + parts[PART_B].height;
-		y -= parts[PART_BR].height;
-		DrawShape(np, shape, gc, PART_BR, x, y);
-
-	}
-
-	if(!(np->state.status & STAT_SHADED) && (np->state.status & STAT_SHAPE)) {
-
-		JXSetForeground(display, gc, 0);
-		JXFillRectangle(display, shape, gc, west, north,
-			np->width, np->height);
-
-	}
-
-	JXShapeCombineMask(display, np->parent, ShapeBounding, 0, 0,
-		shape, ShapeSet);
-
-	if(!(np->state.status & STAT_SHADED) && (np->state.status & STAT_SHAPE)) {
-
-		JXShapeCombineShape(display, np->parent, ShapeBounding, west, north,
-			np->window, ShapeBounding, ShapeUnion);
-
-	}
-
-	JXFreeGC(display, gc);
-	JXFreePixmap(display, shape);
-
-}
-#endif
-
-/****************************************************************************
- ****************************************************************************/
-#ifdef USE_SHAPE
-void ApplySimpleBorderShape(const ClientNode *np) {
-
-	XRectangle rect[4];
-	int north, south, east, west;
-
-	GetBorderSize(np, &north, &south, &east, &west);
-
-	if(np->state.status & STAT_SHADED) {
-
-		rect[0].x = 0;
-		rect[0].y = 0;
-		rect[0].width = np->width + east + west;
-		rect[0].height = np->height + north + south;
-
-		JXShapeCombineRectangles(display, np->parent, ShapeBounding,
-			0, 0, rect, 1, ShapeSet, Unsorted);
-
-	} else {
-
-		JXShapeCombineShape(display, np->parent, ShapeBounding, west, north,
-			np->window, ShapeBounding, ShapeSet);
-
-		if(north > 0) {
-
-			/* Top */
-			rect[0].x = 0;
-			rect[0].y = 0;
-			rect[0].width = np->width + west * 2;
-			rect[0].height = north;
-
-			/* Left */
-			rect[1].x = 0;
-			rect[1].y = 0;
-			rect[1].width = west;
-			rect[1].height = np->height + west + north;
-
-			/* Right */
-			rect[2].x = np->width + west;
-			rect[2].y = 0;
-			rect[2].width = west;
-			rect[2].height = np->height + west + north;
-
-			/* Bottom */
-			rect[3].x = 0;
-			rect[3].y = np->height + north;
-			rect[3].width = np->width + west * 2;
-			rect[3].height = west;
-
-			JXShapeCombineRectangles(display, np->parent, ShapeBounding,
-				0, 0, rect, 4, ShapeUnion, Unsorted);
-
-		}
-
-	}
-
-}
-#endif
 
 /****************************************************************************
  * Redraw the borders on the current desktop.
@@ -782,98 +592,36 @@ void ExposeCurrentDesktop() {
 
 /****************************************************************************
  ****************************************************************************/
-int DrawPart(const ClientNode *np, PartType part, int x, int y) {
+void SetBorderWidth(const char *str) {
+	int width;
 
-	int offset;
+	Assert(str);
 
-	if(parts[part].image) {
-
-		if(np->state.status & STAT_ACTIVE) {
-			offset = 0;
-		} else {
-			offset = parts[part].height;
-		}
-
-		JXCopyArea(display, parts[part].image->image, np->parent,
-			np->parentGC, 0, offset,
-			parts[part].width, parts[part].height, x, y);
-
-	}
-
-	return parts[part].width;
-
-}
-
-/****************************************************************************
- ****************************************************************************/
-int DrawShape(const ClientNode *np, Drawable d, GC g, PartType part,
-	int x, int y) {
-
-	int offset;
-
-	if(parts[part].image && parts[part].image->shape != None) {
-
-		if(np->state.status & STAT_ACTIVE) {
-			offset = 0;
-		} else {
-			offset = parts[part].height;
-		}
-
-		JXCopyArea(display, parts[part].image->shape, d, g, 0, offset,
-			parts[part].image->width, parts[part].height, x, y);
-
-	}
-
-	return parts[part].width;
-
-}
-
-/****************************************************************************
- ****************************************************************************/
-void GetBorderSize(const struct ClientNode *np,
-	int *north, int *south, int *east, int *west) {
-
-	Assert(np);
-
-	if(np->state.border & BORDER_TITLE) {
-		*north = parts[PART_T6].height;
-	} else if(np->state.border & BORDER_OUTLINE) {
-		*north = parts[PART_T].height;
+	width = atoi(str);
+	if(width < MIN_BORDER_WIDTH || width > MAX_BORDER_WIDTH) {
+		borderWidth = DEFAULT_BORDER_WIDTH;
+		Warning("invalid border width specified: %d", width);
 	} else {
-		*north = 0;
-	}
-
-	if(np->state.border & BORDER_OUTLINE) {
-		*west = parts[PART_L].width;
-		*east = parts[PART_R].width;
-		if(np->state.status & STAT_SHADED) {
-			*south = 0;
-		} else {
-			*south = parts[PART_B].height;
-		}
-	} else {
-		*west = 0;
-		*east = 0;
-		*south = 0;
+		borderWidth = width;
 	}
 
 }
 
 /****************************************************************************
  ****************************************************************************/
-void SetWindowButtonLocation(const char *action, int x, int y) {
+void SetTitleHeight(const char *str) {
+	int height;
 
-	int index;
+	Assert(str);
 
-	for(index = 0; index < ACT_COUNT; index++) {
-		if(!strcmp(buttons[index].action, action)) {
-			buttons[index].x = x;
-			buttons[index].y = y;
-			return;
-		}
+	height = atoi(str);
+	if(height < MIN_TITLE_HEIGHT || height > MAX_TITLE_HEIGHT) {
+		titleHeight = DEFAULT_TITLE_HEIGHT;
+		Warning("invalid title height specified: %d", height);
+	} else {
+		titleHeight = height;
 	}
 
-	Warning("invalid window button action: \"%s\"", action);
-
 }
+
 

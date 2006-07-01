@@ -216,7 +216,7 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 
 #ifdef USE_FRIBIDI
 
-	temp = AllocateStack((len + 1) * sizeof(FriBidiChar));
+	temp = Allocate((len + 1) * sizeof(FriBidiChar));
 	unicodeLength = fribidi_utf8_to_unicode((char*)str, len, temp);
 
 	fribidi_log2vis(temp, unicodeLength, &type, temp, NULL, NULL, NULL);
@@ -256,7 +256,7 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 
 #ifdef USE_FRIBIDI
 
-	ReleaseStack(output);
+	Release(output);
 
 #endif
 

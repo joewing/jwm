@@ -39,6 +39,7 @@ typedef struct MenuType {
 	unsigned int itemCount;
 	int parentOffset;
 	int wasCovered;
+	int textOffset;
 	int *offsets;
 	struct MenuType *parent;
 

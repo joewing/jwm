@@ -15,15 +15,19 @@
 #include "key.h"
 #include "button.h"
 #include "event.h"
-#include "theme.h"
 
-#define ICON_SPACER 4
+#define BASE_ICON_OFFSET 3
 
 typedef enum {
 	MENU_NOSELECTION = 0,
 	MENU_LEAVE       = 1,
 	MENU_SUBSELECT   = 2
 } MenuSelectionType;
+
+/* Submenu arrow, 4 x 7 pixels */
+static char menu_bitmap[] = {
+	0x01, 0x03, 0x07, 0x0F, 0x07, 0x03, 0x01
+};
 
 static int ShowSubmenu(MenuType *menu, MenuType *parent, int x, int y);
 
@@ -43,11 +47,6 @@ static int GetPreviousMenuIndex(MenuType *menu);
 static int GetMenuIndex(MenuType *menu, int index);
 static void SetPosition(MenuType *tp, int index);
 
-static int northOffset = 0;
-static int southOffset = 0;
-static int eastOffset = 0;
-static int westOffset = 0;
-
 static char *runCommand = NULL;
 
 int menuShown = 0;
@@ -55,97 +54,78 @@ int menuShown = 0;
 /***************************************************************************
  ***************************************************************************/
 void InitializeMenu(MenuType *menu) {
-
 	MenuItemType *np;
 	int index, temp;
 	int hasSubmenu;
 	int userHeight;
-	int north, south, east, west;
 
-	northOffset = parts[PART_MENU_T].height;
-	southOffset = parts[PART_MENU_B].height;
-	eastOffset = parts[PART_MENU_R].width;
-	westOffset = parts[PART_MENU_L].width;
-
+	menu->textOffset = 0;
 	menu->itemCount = 0;
 
-	GetButtonOffsets(&north, &south, &east, &west);
-
-	/* Compute the width and item height. */
-	hasSubmenu = 0;
+	/* Compute the max size needed */
 	userHeight = menu->itemHeight;
 	if(userHeight < 0) {
 		userHeight = 0;
 	}
-	if(userHeight == 0) {
-		menu->itemHeight = GetStringHeight(FONT_MENU) + north + south;
-	}
-	menu->width = 0;
+	menu->itemHeight = GetStringHeight(FONT_MENU);
 	for(np = menu->items; np; np = np->next) {
-
-		/* Load the icon (if there is one). */
 		if(np->iconName) {
 			np->icon = LoadNamedIcon(np->iconName);
 			if(np->icon) {
 				if(userHeight == 0) {
-					temp = np->icon->image->height + north + south;
-					if(menu->itemHeight < temp) {
-						menu->itemHeight = temp;
+					if(menu->itemHeight < (int)np->icon->image->height) {
+						menu->itemHeight = np->icon->image->height;
+					}
+					if(menu->textOffset < (int)np->icon->image->width + 4) {
+						menu->textOffset = np->icon->image->width + 4;
 					}
 				}
 			}
 		} else {
 			np->icon = NULL;
 		}
-
-		/* Determine the width of this item. */
-		if(np->icon && np->name) {
-			temp = menu->itemHeight + GetStringWidth(FONT_MENU, np->name);
-			temp += ICON_SPACER;
-		} else if(np->icon) {
-			temp = menu->itemHeight;
-		} else if(np->name) {
-			temp = GetStringWidth(FONT_MENU, np->name);
-		} else {
-			temp = 0;
-		}
-		if(np->submenu) {
-			hasSubmenu = parts[PART_SUBMENU].width;
-		}
-		if(temp > menu->width) {
-			menu->width = temp;
-		}
-
 		++menu->itemCount;
 	}
-	menu->width += hasSubmenu + eastOffset + westOffset + east + west;
+	menu->itemHeight += BASE_ICON_OFFSET * 2;
+
 	if(userHeight) {
-		menu->itemHeight = userHeight + north + south;
+		menu->itemHeight = userHeight + BASE_ICON_OFFSET * 2;
+		menu->textOffset = menu->itemHeight + BASE_ICON_OFFSET * 2;
 	}
 
+	menu->width = 5;
 	menu->parent = NULL;
 	menu->parentOffset = 0;
 
-	menu->offsets = Allocate(sizeof(int) * menu->itemCount);
-
-	/* Compute the height. */
-	menu->height = northOffset;
+	menu->height = 1;
 	if(menu->label) {
 		menu->height += menu->itemHeight;
 	}
+
+	menu->offsets = Allocate(sizeof(int) * menu->itemCount);
+
+	hasSubmenu = 0;
 	index = 0;
 	for(np = menu->items; np; np = np->next) {
 		menu->offsets[index++] = menu->height;
 		if(np->name || np->command || np->submenu) {
 			menu->height += menu->itemHeight;
 		} else {
-			menu->height += parts[PART_MENU_S].height;
+			menu->height += 5;
+		}
+		if(np->name) {
+			temp = GetStringWidth(FONT_MENU, np->name);
+			if(temp > menu->width) {
+				menu->width = temp;
+			}
 		}
 		if(np->submenu) {
+			hasSubmenu = 7;
 			InitializeMenu(np->submenu);
 		}
 	}
-	menu->height += southOffset;
+	menu->height += 2;
+	menu->width += 15 + hasSubmenu + menu->textOffset;
 
 }
 
@@ -351,17 +331,8 @@ void RedrawMenuTree(MenuType *menu) {
 /***************************************************************************
  ***************************************************************************/
 void DrawMenu(MenuType *menu) {
-
 	MenuItemType *np;
 	int x;
-
-	DrawThemeBackground(PART_MENU, COLOR_MENU_BG, menu->window, menu->gc,
-		0, 0, menu->width, menu->height, 0);
-
-	DrawThemeOutline(PART_MENU, menu->window, menu->gc,
-		0, 0, menu->width, menu->height, 0);
-
-	ApplyThemeShape(PART_MENU, menu->window, menu->width, menu->height);
 
 	menu->wasCovered = 0;
 
@@ -374,6 +345,26 @@ void DrawMenu(MenuType *menu) {
 		DrawMenuItem(menu, np, x);
 		++x;
 	}
+
+	JXSetForeground(display, menu->gc, colors[COLOR_MENU_UP]);
+	JXDrawLine(display, menu->window, menu->gc,
+		0, 0, menu->width - 1, 0);
+	JXDrawLine(display, menu->window, menu->gc,
+		0, 1, menu->width - 2, 1);
+	JXDrawLine(display, menu->window, menu->gc,
+		0, 2, 0, menu->height - 1);
+	JXDrawLine(display, menu->window, menu->gc,
+		1, 2, 1, menu->height - 2);
+
+	JXSetForeground(display, menu->gc, colors[COLOR_MENU_DOWN]);
+	JXDrawLine(display, menu->window, menu->gc,
+		1, menu->height - 1, menu->width - 1, menu->height - 1);
+	JXDrawLine(display, menu->window, menu->gc,
+		2, menu->height - 2, menu->width - 1, menu->height - 2);
+	JXDrawLine(display, menu->window, menu->gc,
+		menu->width - 1, 1, menu->width - 1, menu->height - 3);
+	JXDrawLine(display, menu->window, menu->gc,
+		menu->width - 2, 2, menu->width - 2, menu->height - 3);
 
 }
 
@@ -555,11 +546,8 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 /***************************************************************************
  ***************************************************************************/
 void UpdateMenu(MenuType *menu) {
-
-	ButtonData button;
+	Pixmap pixmap;
 	MenuItemType *ip;
-	int north, south, east, west;
-	int x, y;
 
 	/* Clear the old selection. */
 	ip = GetMenuItem(menu, menu->lastIndex);
@@ -568,45 +556,33 @@ void UpdateMenu(MenuType *menu) {
 	/* Highlight the new selection. */
 	ip = GetMenuItem(menu, menu->currentIndex);
 	if(ip) {
-
 		if(!ip->name && !ip->submenu && !ip->command) {
 			return;
 		}
+		SetButtonDrawable(menu->window, menu->gc);
+		SetButtonFont(FONT_MENU);
+		SetButtonSize(menu->width - 5, menu->itemHeight - 2);
+		SetButtonTextOffset(menu->textOffset);
+		SetButtonAlignment(ALIGN_LEFT);
+		DrawButton(2, menu->offsets[menu->currentIndex] + 1,
+			BUTTON_MENU_ACTIVE, ip->name);
 
-		ResetButton(&button, menu->window, menu->gc);
-		button.font = FONT_MENU;
-		button.width = menu->width - eastOffset - westOffset;
-		button.height = menu->itemHeight;
-		button.alignment = ALIGN_LEFT;
-		button.icon = ip->icon;
-		button.x = westOffset;
-		button.y = menu->offsets[menu->currentIndex];
-		button.type = BUTTON_ACTIVE;
-		button.text = ip->name;
+		if(ip->icon) {
+			PutIcon(ip->icon, menu->window, menu->gc,
+				BASE_ICON_OFFSET,
+				menu->offsets[menu->currentIndex] + BASE_ICON_OFFSET,
+				menu->itemHeight - BASE_ICON_OFFSET * 2,
+				menu->itemHeight - BASE_ICON_OFFSET * 2);
+		}
 
-		DrawButton(&button);
-
-		if(ip->submenu && parts[PART_SUBMENU].image) {
-
-			GetButtonOffsets(&north, &south, &east, &west);
-
-			x = menu->width - parts[PART_SUBMENU].width - east;
-			y = menu->offsets[menu->currentIndex];
-			y += menu->itemHeight / 2 - parts[PART_SUBMENU].height / 2;
-
-			if(parts[PART_SUBMENU].image->shape != None) {
-				JXSetClipOrigin(display, menu->gc, x, y);
-				JXSetClipMask(display, menu->gc,
-					parts[PART_SUBMENU].image->shape);
-			}
-			JXCopyArea(display, parts[PART_SUBMENU].image->image,
-				menu->window, menu->gc, 0, parts[PART_SUBMENU].height,
-				parts[PART_SUBMENU].width, parts[PART_SUBMENU].height,
-				x, y);
-			if(parts[PART_SUBMENU].image->shape != None) {
-				JXSetClipMask(display, menu->gc, None);
-			}
-
+		if(ip->submenu) {
+			pixmap = JXCreatePixmapFromBitmapData(display, menu->window,
+				menu_bitmap, 4, 7, colors[COLOR_MENU_ACTIVE_FG],
+				colors[COLOR_MENU_ACTIVE_BG], rootDepth);
+			JXCopyArea(display, pixmap, menu->window, menu->gc, 0, 0, 4, 7,
+				menu->width - 9,
+				menu->offsets[menu->currentIndex] + menu->itemHeight / 2 - 4);
+			JXFreePixmap(display, pixmap);
 		}
 	}
 
@@ -616,88 +592,66 @@ void UpdateMenu(MenuType *menu) {
  ***************************************************************************/
 void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 
-	ButtonData button;
-	int north, south, east, west;
-	int x, y, amount;
+	Pixmap pixmap;
+	int xoffset;
+	int yoffset;
 
 	Assert(menu);
 
 	if(!item) {
 		if(index == -1 && menu->label) {
-
-			ResetButton(&button, menu->window, menu->gc);
-			button.type = BUTTON_NONE;
-			button.color = COLOR_MENU_FG;
-			button.background = COLOR_MENU_BG;
-			button.fillPart = &parts[PART_MENU_F];
-			button.font = FONT_MENU;
-			button.width = menu->width - eastOffset - westOffset;
-			button.height = menu->itemHeight;
-			button.x = westOffset;
-			button.y = northOffset;
-			button.text = menu->label;
-
-			DrawButton(&button);
-
+			JXSetForeground(display, menu->gc, colors[COLOR_MENU_BG]);
+			JXFillRectangle(display, menu->window, menu->gc,
+				2, 2, menu->width - 4, menu->itemHeight - 1);
+			xoffset = 1 + menu->width / 2;
+			xoffset -= GetStringWidth(FONT_MENU, menu->label) / 2;
+			yoffset = 2 + menu->itemHeight / 2;
+			yoffset -= GetStringHeight(FONT_MENU) / 2;
+			RenderString(menu->window, menu->gc, FONT_MENU, COLOR_MENU_FG,
+				xoffset, yoffset, rootWidth, menu->label);
 		}
 		return;
 	}
 
 	if(item->name) {
 
-		ResetButton(&button, menu->window, menu->gc);
-		button.type = BUTTON_NONE;
-		button.x = westOffset;
-		button.y = menu->offsets[index];
-		button.width = menu->width - eastOffset - westOffset;
-		button.height = menu->itemHeight;
-		button.color = COLOR_MENU_FG;
-		button.background = COLOR_MENU_BG;
-		button.fillPart = &parts[PART_MENU_F];
-		button.icon = item->icon;
-		button.font = FONT_MENU;
-		button.text = item->name;
+		xoffset = 6 + menu->textOffset;
+		yoffset = 1 + menu->offsets[index] + menu->itemHeight / 2;
+		yoffset -= GetStringHeight(FONT_MENU) / 2;
 
-		DrawButton(&button);
+		JXSetForeground(display, menu->gc, colors[COLOR_MENU_BG]);
+		JXFillRectangle(display, menu->window, menu->gc,
+			2, menu->offsets[index] + 1, menu->width - 4, menu->itemHeight - 1);
+
+		if(item->icon) {
+			PutIcon(item->icon, menu->window, menu->gc,
+				BASE_ICON_OFFSET,
+				menu->offsets[index] + BASE_ICON_OFFSET,
+				menu->itemHeight - BASE_ICON_OFFSET * 2,
+				menu->itemHeight - BASE_ICON_OFFSET * 2);
+		}
+
+		RenderString(menu->window, menu->gc, FONT_MENU, COLOR_MENU_FG,
+			xoffset, yoffset, rootWidth, item->name);
 
 	} else if(!item->command && !item->submenu) {
-
-		if(parts[PART_MENU_S].image) {
-			for(x = westOffset; x < menu->width - eastOffset;) {
-				amount = parts[PART_MENU_S].width;
-				if(x + amount > menu->width - eastOffset) {
-					amount = menu->width - eastOffset - x;
-				}
-				JXCopyArea(display, parts[PART_MENU_S].image->image,
-					menu->window, menu->gc, 0, 0,
-					amount, parts[PART_MENU_S].height,
-					x, menu->offsets[index]);
-				x += amount;
-			}
-		}
-
+		JXSetForeground(display, menu->gc, colors[COLOR_MENU_DOWN]);
+		JXDrawLine(display, menu->window, menu->gc, 4,
+			menu->offsets[index] + 2, menu->width - 6,
+			menu->offsets[index] + 2);
+		JXSetForeground(display, menu->gc, colors[COLOR_MENU_UP]);
+		JXDrawLine(display, menu->window, menu->gc, 4,
+			menu->offsets[index] + 3, menu->width - 6,
+			menu->offsets[index] + 3);
 	}
 
-	if(item->submenu && parts[PART_SUBMENU].image) {
-
-		GetButtonOffsets(&north, &south, &east, &west);
-
-		x = menu->width - parts[PART_SUBMENU].width - east;
-		y = menu->offsets[index];
-		y += menu->itemHeight / 2 - parts[PART_SUBMENU].height / 2;
-
-		if(parts[PART_SUBMENU].image->shape != None) {
-			JXSetClipOrigin(display, menu->gc, x, y);
-			JXSetClipMask(display, menu->gc,
-				parts[PART_SUBMENU].image->shape);
-		}
-		JXCopyArea(display, parts[PART_SUBMENU].image->image,
-			menu->window, menu->gc, 0, 0,
-			parts[PART_SUBMENU].width, parts[PART_SUBMENU].height,
-			x, y);
-		if(parts[PART_SUBMENU].image->shape != None) {
-			JXSetClipMask(display, menu->gc, None);
-		}
+	if(item->submenu) {
+		pixmap = JXCreatePixmapFromBitmapData(display, menu->window,
+			menu_bitmap, 4, 7, colors[COLOR_MENU_FG],
+			colors[COLOR_MENU_BG], rootDepth);
+		JXCopyArea(display, pixmap, menu->window, menu->gc, 0, 0, 4, 7,
+			menu->width - 9, menu->offsets[index] + menu->itemHeight / 2 - 4);
+		JXFreePixmap(display, pixmap);
 
 	}
 

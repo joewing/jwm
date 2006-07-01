@@ -35,7 +35,6 @@
 #include "place.h"
 #include "clock.h"
 #include "dock.h"
-#include "theme.h"
 
 Display *display = NULL;
 Window rootWindow;
@@ -54,6 +53,9 @@ unsigned int desktopCount = 4;
 unsigned int currentDesktop = 0;
 
 char *exitCommand = NULL;
+
+int borderWidth = DEFAULT_BORDER_WIDTH;
+int titleHeight = DEFAULT_TITLE_HEIGHT;
 
 unsigned int doubleClickSpeed = DEFAULT_DOUBLE_CLICK_SPEED;
 unsigned int doubleClickDelta = DEFAULT_DOUBLE_CLICK_DELTA;
@@ -299,7 +301,6 @@ void Initialize() {
 	InitializeScreens();
 	InitializeSwallow();
 	InitializeTaskBar();
-	InitializeTheme();
 	InitializeTray();
 	InitializeTrayButtons();
 }
@@ -321,7 +322,6 @@ void Startup() {
 	StartupFonts();
 	StartupCursors();
 	StartupOutline();
-	StartupTheme();
 
 	StartupPager();
 	StartupClock();
@@ -377,7 +377,6 @@ void Shutdown() {
 	ShutdownClock();
 	ShutdownBorders();
 	ShutdownClients();
-	ShutdownTheme();
 	ShutdownIcons();
 	ShutdownCursors();
 	ShutdownFonts();
@@ -422,7 +421,6 @@ void Destroy() {
 	DestroyScreens();
 	DestroySwallow();
 	DestroyTaskBar();
-	DestroyTheme();
 	DestroyTray();
 	DestroyTrayButtons();
 }

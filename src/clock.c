@@ -14,7 +14,6 @@
 #include "cursor.h"
 #include "popup.h"
 #include "misc.h"
-#include "theme.h"
 
 typedef struct ClockType {
 
@@ -50,7 +49,6 @@ static void ProcessClockMotionEvent(TrayComponentType *cp,
 	int x, int y, int mask);
 
 static void DrawClock(ClockType *clk, TimeType *now, int x, int y);
-static void DrawClockBackground(const ClockType *clk);
 
 /***************************************************************************
  ***************************************************************************/
@@ -175,7 +173,9 @@ void Create(TrayComponentType *cp) {
 		rootDepth);
 	clk->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
 
-	DrawClockBackground(clk);
+	JXSetForeground(display, clk->bufferGC, colors[COLOR_CLOCK_BG]);
+	JXFillRectangle(display, cp->pixmap, clk->bufferGC, 0, 0,
+		cp->width, cp->height);
 
 }
 
@@ -312,7 +312,9 @@ void DrawClock(ClockType *clk, TimeType *now, int x, int y) {
 
 	cp = clk->cp;
 
-	DrawClockBackground(clk);
+	JXSetForeground(display, clk->bufferGC, colors[COLOR_CLOCK_BG]);
+	JXFillRectangle(display, cp->pixmap, clk->bufferGC, 0, 0,
+		cp->width, cp->height);
 
 	width = GetStringWidth(FONT_CLOCK, shortTime);
 	rwidth = width + 4;
@@ -335,13 +337,4 @@ void DrawClock(ClockType *clk, TimeType *now, int x, int y) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
-void DrawClockBackground(const ClockType *clk) {
-
-	DrawThemeBackground(PART_TRAY, COLOR_TRAY_BG,
-		clk->cp->pixmap, clk->bufferGC,
-		0, 0, clk->cp->width, clk->cp->height, 0);
-
-}
 

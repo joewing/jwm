@@ -11,8 +11,6 @@
 #include "tray.h"
 #include "main.h"
 
-#define CASCADE_INCREMENT 16
-
 typedef struct BoundingBox {
 	int x, y;
 	int width, height;
@@ -53,7 +51,7 @@ void StartupPlacement() {
 	cascadeOffsets = Allocate(count * sizeof(int));
 
 	for(x = 0; x < count; x++) {
-		cascadeOffsets[x] = CASCADE_INCREMENT;
+		cascadeOffsets[x] = borderWidth + titleHeight;
 	}
 
 }
@@ -376,14 +374,22 @@ void UpdateStrutBounds(BoundingBox *box) {
 void PlaceClient(ClientNode *np, int alreadyMapped) {
 
 	BoundingBox box;
-	int north, south, east, west;
+	int north, west;
 	const ScreenType *sp;
 	int cascadeIndex;
 	int overflow;
 
 	Assert(np);
 
-	GetBorderSize(np, &north, &south, &east, &west);
+	north = 0;
+	west = 0;
+	if(np->state.border & BORDER_OUTLINE) {
+		north = borderWidth;
+		west = borderWidth;
+	}
+	if(np->state.border & BORDER_TITLE) {
+		north += titleHeight;
+	}
 
 	if(np->x + np->width > rootWidth || np->y + np->height > rootWidth) {
 		overflow = 1;
@@ -410,7 +416,7 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 		/* Set the cascaded location. */
 		np->x = box.x + west + cascadeOffsets[cascadeIndex];
 		np->y = box.y + north + cascadeOffsets[cascadeIndex];
-		cascadeOffsets[cascadeIndex] += CASCADE_INCREMENT;
+		cascadeOffsets[cascadeIndex] += borderWidth + titleHeight;
 
 		/* Check for cascade overflow. */
 		overflow = 0;
@@ -422,7 +428,7 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 
 		if(overflow) {
 
-			cascadeOffsets[cascadeIndex] = CASCADE_INCREMENT;
+			cascadeOffsets[cascadeIndex] = borderWidth + titleHeight;
 			np->x = box.x + west + cascadeOffsets[cascadeIndex];
 			np->y = box.y + north + cascadeOffsets[cascadeIndex];
 
@@ -439,7 +445,7 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 				np->x = box.x + west;
 				np->y = box.y + north;
 			} else {
-				cascadeOffsets[cascadeIndex] += CASCADE_INCREMENT;
+				cascadeOffsets[cascadeIndex] += borderWidth + titleHeight;
 			}
 
 		}
@@ -456,7 +462,7 @@ void ConstrainSize(ClientNode *np) {
 
 	BoundingBox box;
 	const ScreenType *sp;
-	int north, south, east, west;
+	int north, west;
 
 	Assert(np);
 
@@ -467,7 +473,15 @@ void ConstrainSize(ClientNode *np) {
 	}
 
 	/* Constrain the size. */
-	GetBorderSize(np, &north, &south, &east, &west);
+	north = 0;
+	west = 0;
+	if(np->state.border & BORDER_OUTLINE) {
+		north = borderWidth;
+		west = borderWidth;
+	}
+	if(np->state.border & BORDER_TITLE) {
+		north += titleHeight;
+	}
 
 	GetScreenBounds(sp, &box);
 	UpdateTrayBounds(&box, np->state.layer);
@@ -509,14 +523,22 @@ void PlaceMaximizedClient(ClientNode *np) {
 
 	BoundingBox box;
 	const ScreenType *sp;
-	int north, south, east, west;
+	int north, west;
 
 	np->oldx = np->x;
 	np->oldy = np->y;
 	np->oldWidth = np->width;
 	np->oldHeight = np->height;
 
-	GetBorderSize(np, &north, &south, &east, &west);
+	north = 0;
+	west = 0;
+	if(np->state.border & BORDER_OUTLINE) {
+		north = borderWidth;
+		west = borderWidth;
+	}
+	if(np->state.border & BORDER_TITLE) {
+		north += titleHeight;
+	}
 
 	sp = GetCurrentScreen(np->x, np->y);
 	GetScreenBounds(sp, &box);
@@ -525,8 +547,8 @@ void PlaceMaximizedClient(ClientNode *np) {
 
 	box.x += west;
 	box.y += north;
-	box.width -= east + west;
-	box.height -= north + south;
+	box.width -= west + west;
+	box.height -= north + west;
 
 	if(box.width > np->maxWidth) {
 		box.width = np->maxWidth;
@@ -552,6 +574,33 @@ void PlaceMaximizedClient(ClientNode *np) {
 	np->height = box.height - (box.height % np->yinc);
 
 	np->state.status |= STAT_MAXIMIZED;
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void GetBorderSize(const ClientNode *np,
+	int *north, int *south, int *east, int *west) {
+
+	Assert(np);
+	Assert(north);
+	Assert(south);
+	Assert(east);
+	Assert(west);
+
+	*north = 0;
+	*south = 0;
+	*east = 0;
+	*west = 0;
+	if(np->state.border & BORDER_OUTLINE) {
+		*north = borderWidth;
+		*south = borderWidth;
+		*east = borderWidth;
+		*west = borderWidth;
+	}
+	if(np->state.border & BORDER_TITLE) {
+		*north += titleHeight;
+	}
 
 }
 

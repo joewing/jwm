@@ -179,7 +179,7 @@ void StartupHints() {
 	for(x = 0; x < desktopCount; x++) {
 		count += strlen(desktopNames[x]) + 1;
 	}
-	data = AllocateStack(count);
+	data = Allocate(count);
 	count = 0;
 	for(x = 0; x < desktopCount; x++) {
 		strcpy(data + count, desktopNames[x]);
@@ -188,7 +188,7 @@ void StartupHints() {
 	JXChangeProperty(display, rootWindow, atoms[ATOM_NET_DESKTOP_NAMES],
 		atoms[ATOM_UTF8_STRING], 8, PropModeReplace,
 		(unsigned char*)data, count);
-	ReleaseStack(data);
+	Release(data);
 
 	/* _NET_DESKTOP_GEOMETRY */
 	array[0] = rootWidth;
@@ -312,7 +312,8 @@ void WriteState(ClientNode *np) {
 void WriteNetState(ClientNode *np) {
 
 	unsigned long values[4];
-	int north, south, east, west;
+	unsigned long sideSize;
+	unsigned long topSize;
 	int index;
 
 	Assert(np);
@@ -335,13 +336,22 @@ void WriteNetState(ClientNode *np) {
 	JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_STATE],
 		XA_ATOM, 32, PropModeReplace, (unsigned char*)values, index);
 
-	GetBorderSize(np, &north, &south, &east, &west);
+	if(np->state.border & BORDER_OUTLINE) {
+		sideSize = borderWidth;
+	} else {
+		sideSize = 0;
+	}
+
+	topSize = sideSize;
+	if(np->state.border & BORDER_TITLE) {
+		topSize += titleHeight;
+	}
 
 	/* left, right, top, bottom */
-	values[0] = west;
-	values[1] = east;
-	values[2] = north;
-	values[3] = south;
+	values[0] = sideSize;
+	values[1] = sideSize;
+	values[2] = topSize;
+	values[3] = sideSize;
 
 	JXChangeProperty(display, np->window, atoms[ATOM_NET_FRAME_EXTENTS],
 		XA_CARDINAL, 32, PropModeReplace, (unsigned char*)values, 4);

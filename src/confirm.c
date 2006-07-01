@@ -11,13 +11,11 @@
 #include "button.h"
 #include "screen.h"
 #include "color.h"
-#include "theme.h"
 
 #ifndef DISABLE_CONFIRM
 
 typedef struct DialogType {
 
-	Window window;
 	int x, y;
 	int width, height;
 	int lineHeight;
@@ -45,6 +43,8 @@ static const char *OK_STRING = "Ok";
 static const char *CANCEL_STRING = "Cancel";
 
 static DialogType *dialogList = NULL;
+
+static int minWidth = 0;
 
 static void DrawConfirmDialog(DialogType *d);
 static void DestroyConfirmDialog(DialogType *d);
@@ -164,11 +164,11 @@ DialogType *FindDialogByWindow(Window w) {
 /***************************************************************************
  ***************************************************************************/
 void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
-
 	va_list ap;
 	DialogType *dp;
 	XSetWindowAttributes attrs;
 	XSizeHints shints;
+	Window window;
 	char *str;
 	int x;
 
@@ -203,7 +203,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 	attrs.background_pixel = colors[COLOR_MENU_BG];
 	attrs.event_mask = ButtonReleaseMask | ExposureMask;
 
-	dp->window = JXCreateWindow(display, rootWindow,
+	window = JXCreateWindow(display, rootWindow,
 		dp->x, dp->y, dp->width, dp->height, 0,
 		CopyFromParent, InputOutput, CopyFromParent,
 		CWBackPixel | CWEventMask, &attrs);
@@ -211,11 +211,11 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 	shints.x = dp->x;
 	shints.y = dp->y;
 	shints.flags = PPosition;
-	JXSetWMNormalHints(display, dp->window, &shints);
+	JXSetWMNormalHints(display, window, &shints);
 
-	JXStoreName(display, dp->window, "Confirm");
+	JXStoreName(display, window, "Confirm");
 
-	dp->node = AddClientWindow(dp->window, 0, 0);
+	dp->node = AddClientWindow(window, 0, 0);
 	Assert(dp->node);
 	if(np) {
 		dp->node->owner = np->window;
@@ -223,11 +223,11 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 	dp->node->state.status |= STAT_WMDIALOG;
 	FocusClient(dp->node);
 
-	dp->gc = JXCreateGC(display, dp->window, 0, NULL);
+	dp->gc = JXCreateGC(display, window, 0, NULL);
 
 	DrawConfirmDialog(dp);
 
-	JXGrabButton(display, AnyButton, AnyModifier, dp->window,
+	JXGrabButton(display, AnyButton, AnyModifier, window,
 		True, ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
 
 }
@@ -235,9 +235,6 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 /***************************************************************************
  ***************************************************************************/
 void DrawConfirmDialog(DialogType *dp) {
-
-	DrawThemeBackground(PART_MENU, COLOR_MENU_BG, dp->window, dp->gc,
-		0, 0, dp->width, dp->height, 0);
 
 	DrawMessage(dp);
 	DrawButtons(dp);
@@ -279,17 +276,16 @@ void ComputeDimensions(DialogType *dp) {
 	const ScreenType *sp;
 	int width;
 	int x;
-	int north, south, east, west;
 
-	GetButtonOffsets(&north, &south, &east, &west);
-
-	dp->width = GetStringWidth(FONT_MENU, CANCEL_STRING);
-	width = GetStringWidth(FONT_MENU, OK_STRING);
-	if(width > dp->width) {
-		dp->width = width;
+	if(!minWidth) {
+		minWidth = GetStringWidth(FONT_MENU, CANCEL_STRING) * 3;
+		width = GetStringWidth(FONT_MENU, OK_STRING) * 3;
+		if(width > minWidth) {
+			minWidth = width;
+		}
+		minWidth += 30;
 	}
-
-	dp->width = 3 * (dp->width + east + west);
+	dp->width = minWidth;
 
 	for(x = 0; x < dp->lineCount; x++) {
 		width = GetStringWidth(FONT_MENU, dp->message[x]);
@@ -298,8 +294,8 @@ void ComputeDimensions(DialogType *dp) {
 		}
 	}
 	dp->lineHeight = GetStringHeight(FONT_MENU);
-	dp->height = dp->lineCount * dp->lineHeight;
-	dp->height += 2 * (dp->lineHeight + north + south);
+	dp->width += 8;
+	dp->height = (dp->lineCount + 2) * dp->lineHeight;
 
 	if(dp->client) {
 
@@ -313,10 +309,10 @@ void ComputeDimensions(DialogType *dp) {
 			dp->y = 0;
 		}
 		if(dp->x + dp->width >= rootWidth) {
-			dp->x = rootWidth - dp->width;
+			dp->x = rootWidth - dp->width - (borderWidth * 2);
 		}
 		if(dp->y + dp->height >= rootHeight) {
-			dp->y = rootHeight - dp->height;
+			dp->y = rootHeight - dp->height - (borderWidth * 2 + titleHeight);
 		}
 
 	} else {
@@ -348,40 +344,27 @@ void DrawMessage(DialogType *dp) {
 /***************************************************************************
  ***************************************************************************/
 void DrawButtons(DialogType *dp) {
-
-	ButtonData button;
 	int temp;
-	int north, south, east, west;
-
-	GetButtonOffsets(&north, &south, &east, &west);
 
 	dp->buttonWidth = GetStringWidth(FONT_MENU, CANCEL_STRING);
-	dp->buttonWidth += east + west;
 	temp = GetStringWidth(FONT_MENU, OK_STRING);
-	temp += east + west;
 	if(temp > dp->buttonWidth) {
 		dp->buttonWidth = temp;
 	}
-	dp->buttonHeight = dp->lineHeight + north + south;
+	dp->buttonWidth += 8;
+	dp->buttonHeight = dp->lineHeight + 4;
 
-	ResetButton(&button, dp->node->window, dp->gc);
-	button.font = FONT_MENU;
-	button.width = dp->buttonWidth;
-	button.height = dp->buttonHeight;
-	button.alignment = ALIGN_CENTER;
+	SetButtonDrawable(dp->node->window, dp->gc);
+	SetButtonFont(FONT_MENU);
+	SetButtonSize(dp->buttonWidth, dp->buttonHeight);
+	SetButtonAlignment(ALIGN_CENTER);
 
 	dp->okx = dp->width / 3 - dp->buttonWidth / 2;
 	dp->cancelx = 2 * dp->width / 3 - dp->buttonWidth / 2;
-	dp->buttony = dp->height - dp->buttonHeight - dp->buttonHeight / 2;
+	dp->buttony = dp->height - dp->lineHeight - dp->lineHeight / 2;
 
-	button.x = dp->okx;
-	button.y = dp->buttony;
-	button.text = OK_STRING;
-	DrawButton(&button);
-
-	button.x = dp->cancelx;
-	button.text = CANCEL_STRING;
-	DrawButton(&button);
+	DrawButton(dp->okx, dp->buttony, BUTTON_MENU, OK_STRING);
+	DrawButton(dp->cancelx, dp->buttony, BUTTON_MENU, CANCEL_STRING);
 
 }
 

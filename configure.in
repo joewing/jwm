@@ -2,7 +2,7 @@
 # JWM autoconf.
 ############################################################################
 
-AC_INIT(jwm, 2.0.0a, joewing@joewing.net)
+AC_INIT(jwm, 1.7, joewing@joewing.net)
 AC_PREREQ(2.57)
 AC_CONFIG_SRCDIR([src])
 AC_CONFIG_HEADER([config.h])
@@ -59,8 +59,7 @@ AC_CHECK_LIB([X11], XOpenDisplay,
 AC_CHECK_HEADERS([stdarg.h stdio.h stdlib.h ctype.h], [],
 	[ AC_MSG_ERROR([one or more necessary header files not found]) ])
 
-AC_CHECK_HEADERS([sys/select.h signal.h unistd.h \
-	time.h sys/wait.h sys/time.h alloca.h])
+AC_CHECK_HEADERS([sys/select.h signal.h unistd.h time.h sys/wait.h sys/time.h])
 
 AC_CHECK_HEADERS([X11/Xlib.h], [],
 	[ AC_MSG_ERROR([Xlib.h could not be found]) ])

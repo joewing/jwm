@@ -52,14 +52,6 @@ void Debug(const char *str, ...);
 #	define Release( x ) \
 		DEBUG_Release( (void*)(& x), __FILE__, __LINE__ )
 
-#	ifdef HAVE_ALLOCA_H
-#		define AllocateStack( x ) alloca( x )
-#		define ReleaseStack( x )  ((void)0)
-#	else
-#		define AllocateStack( x ) Allocate( x )
-#		define ReleaseStack( x )  Release( x )
-#	endif
-
 	void DEBUG_SetCheckpoint(const char*, unsigned int);
 	void DEBUG_ShowCheckpoint();
 
@@ -83,14 +75,6 @@ void Debug(const char *str, ...);
 #	define Allocate( x )         malloc( (x) )
 #	define Reallocate( x, y )    realloc( (x), (y) )
 #	define Release( x )          free( (x) )
-
-#	ifdef HAVE_ALLOCA_H
-#		define AllocateStack( x ) alloca( x )
-#		define ReleaseStack( x )  ((void)0)
-#	else
-#		define AllocateStack( x ) Allocate( x )
-#		define ReleaseStack( x )  Release( x )
-#	endif
 
 #endif
 

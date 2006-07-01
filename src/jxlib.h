@@ -300,9 +300,6 @@
 #define JXSetWMNormalHints( a, b, c ) \
 	( SetCheckpoint(), XSetWMNormalHints( a, b, c ) )
 
-#define JXShapeCombineMask( a, b, c, d, e, f, g ) \
-	( SetCheckpoint(), XShapeCombineMask( a, b, c, d, e, f, g ) )
-
 #define JXShapeCombineRectangles( a, b, c, d, e, f, g, h, i ) \
 	( SetCheckpoint(), XShapeCombineRectangles( a, b, c, d, e, f, g, h, i ) )
 

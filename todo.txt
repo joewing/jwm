@@ -9,9 +9,6 @@ Todo:
 	- Add the ability to drag windows to different desktops.
 	- Make pixel threshold for mouse clicks on menus configurable.
 
-20060507:
-	- Added theme support.
-
 20060425:
 	- Fixed clock redrawing issue.
 	- Fixed Tray valign attribute.

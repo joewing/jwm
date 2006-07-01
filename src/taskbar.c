@@ -48,6 +48,14 @@ typedef struct Node {
 	struct Node *prev;
 } Node;
 
+static char minimized_bitmap[] = {
+	0x01, 0x03,
+	0x07, 0x0F
+};
+
+static const int TASK_SPACER = 2;
+
+static Pixmap minimizedPixmap;
 static InsertModeType insertMode;
 
 static TaskBarType *bars;
@@ -61,7 +69,6 @@ static int ShouldFocusItem(const ClientNode *np);
 static unsigned int GetItemWidth(const TaskBarType *bp,
 	unsigned int itemCount);
 static void Render(const TaskBarType *bp);
-static void DrawTaskButton(const ClientNode *np, ButtonData *button);
 static void ShowTaskWindowMenu(TaskBarType *bar, Node *np);
 
 static void SetSize(TrayComponentType *cp, int width, int height);
@@ -85,7 +92,9 @@ void InitializeTaskBar() {
 /***************************************************************************
  ***************************************************************************/
 void StartupTaskBar() {
-
+	minimizedPixmap = JXCreatePixmapFromBitmapData(display, rootWindow,
+		minimized_bitmap, 4, 4, colors[COLOR_TASK_FG],
+		colors[COLOR_TASK_BG], rootDepth);
 }
 
 /***************************************************************************
@@ -99,6 +108,7 @@ void ShutdownTaskBar() {
 		JXFreePixmap(display, bp->buffer);
 	}
 
+	JXFreePixmap(display, minimizedPixmap);
 }
 
 /***************************************************************************
@@ -177,7 +187,6 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 void Create(TrayComponentType *cp) {
 
 	TaskBarType *tp;
-	int north, south, east, west;
 
 	Assert(cp);
 
@@ -186,11 +195,9 @@ void Create(TrayComponentType *cp) {
 	Assert(tp);
 
 	if(tp->layout == LAYOUT_HORIZONTAL) {
-		tp->itemHeight = cp->height;
+		tp->itemHeight = cp->height - TASK_SPACER;
 	} else {
-		GetButtonOffsets(&north, &south, &east, &west);
-		tp->itemHeight = GetStringHeight(FONT_TASK);
-		tp->itemHeight += north + south;
+		tp->itemHeight = GetStringHeight(FONT_TASK) + 12;
 	}
 
 	Assert(cp->width > 0);
@@ -201,6 +208,10 @@ void Create(TrayComponentType *cp) {
 	tp->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
 	tp->buffer = cp->pixmap;
 
+	JXSetForeground(display, tp->bufferGC, colors[COLOR_TASK_BG]);
+	JXFillRectangle(display, cp->pixmap, tp->bufferGC,
+		0, 0, cp->width, cp->height);
+
 }
 
 /***************************************************************************
@@ -208,7 +219,6 @@ void Create(TrayComponentType *cp) {
 void Resize(TrayComponentType *cp) {
 
 	TaskBarType *tp;
-	int north, south, east, west;
 
 	Assert(cp);
 
@@ -224,11 +234,9 @@ void Resize(TrayComponentType *cp) {
 	}
 
 	if(tp->layout == LAYOUT_HORIZONTAL) {
-		tp->itemHeight = cp->height;
+		tp->itemHeight = cp->height - TASK_SPACER;
 	} else {
-		GetButtonOffsets(&north, &south, &east, &west);
-		tp->itemHeight = GetStringHeight(FONT_TASK);
-		tp->itemHeight += north + south;
+		tp->itemHeight = GetStringHeight(FONT_TASK) + 12;
 	}
 
 	Assert(cp->width > 0);
@@ -465,14 +473,16 @@ void SignalTaskbar(TimeType *now, int x, int y) {
  ***************************************************************************/
 void Render(const TaskBarType *bp) {
 
-	ButtonData button;
 	Node *tp;
+	ButtonType buttonType;
 	int x, y;
 	int remainder;
 	int itemWidth, itemCount;
 	int width, height;
+	int iconSize;
 	Pixmap buffer;
 	GC gc;
+	char *minimizedName;
 
 	if(shouldExit) {
 		return;
@@ -489,8 +499,12 @@ void Render(const TaskBarType *bp) {
 	Assert(buffer != None);
 	Assert(gc != None);
 
-	x = 0;
-	y = 0;
+	x = TASK_SPACER;
+	width -= x;
+	y = 1;
+
+	JXSetForeground(display, gc, colors[COLOR_TASK_BG]);
+	JXFillRectangle(display, buffer, gc, 0, 0, width, height);
 
 	itemCount = GetItemCount();
 	if(!itemCount) {
@@ -505,10 +519,12 @@ void Render(const TaskBarType *bp) {
 		remainder = 0;
 	}
 
-	ResetButton(&button, buffer, gc);
-	button.font = FONT_TASK;
-	button.alignment = ALIGN_LEFT;
-	button.height = bp->itemHeight;
+	iconSize = bp->itemHeight - 2 * TASK_SPACER - 4;
+
+	SetButtonDrawable(buffer, gc);
+	SetButtonFont(FONT_TASK);
+	SetButtonAlignment(ALIGN_LEFT);
+	SetButtonTextOffset(iconSize + 3);
 
 	for(tp = taskBarNodes; tp; tp = tp->next) {
 		if(ShouldShowItem(tp->client)) {
@@ -516,22 +532,38 @@ void Render(const TaskBarType *bp) {
 			tp->y = y;
 
 			if(tp->client->state.status & STAT_ACTIVE) {
-				button.type = BUTTON_PUSHED;
+				buttonType = BUTTON_TASK_ACTIVE;
 			} else {
-				button.type = BUTTON_NORMAL;
+				buttonType = BUTTON_TASK;
 			}
 
 			if(remainder) {
-				button.width = itemWidth + 1;
+				SetButtonSize(itemWidth - TASK_SPACER,
+					bp->itemHeight - 1);
 			} else {
-				button.width = itemWidth;
+				SetButtonSize(itemWidth - TASK_SPACER - 1,
+					bp->itemHeight - 1);
 			}
 
-			button.x = x;
-			button.y = y;
-			button.icon = tp->client->icon;
+			if(tp->client->state.status & STAT_MINIMIZED) {
+				minimizedName = Allocate(strlen(tp->client->name) + 3);
+				sprintf(minimizedName, "[%s]", tp->client->name);
+				DrawButton(x, y, buttonType, minimizedName);
+				Release(minimizedName);
+			} else {
+				DrawButton(x, y, buttonType, tp->client->name);
+			}
 
-			DrawTaskButton(tp->client, &button);
+			if(tp->client->icon) {
+				PutIcon(tp->client->icon, buffer, gc,
+					x + TASK_SPACER + 2, y + TASK_SPACER + 2,
+					iconSize, iconSize);
+			}
+
+			if(tp->client->state.status & STAT_MINIMIZED) {
+				JXCopyArea(display, minimizedPixmap, buffer, gc,
+					0, 0, 4, 4, x + 3, y + bp->itemHeight - 7);
+			}
 
 			if(bp->layout == LAYOUT_HORIZONTAL) {
 				x += itemWidth;
@@ -551,27 +583,6 @@ void Render(const TaskBarType *bp) {
 	}
 
 	UpdateSpecificTray(bp->cp->tray, bp->cp);
-
-}
-
-/***************************************************************************
- ***************************************************************************/
-void DrawTaskButton(const ClientNode *np, ButtonData *button) {
-
-	char *name;
-
-	if(np->state.status & STAT_MINIMIZED) {
-		name = AllocateStack(strlen(np->name) + 3);
-		strcpy(name, "[");
-		strcat(name, np->name);
-		strcat(name, "]");
-		button->text = name;
-		DrawButton(button);
-		ReleaseStack(name);
-	} else {
-		button->text = np->name;
-		DrawButton(button);
-	}
 
 }
 
@@ -714,7 +725,7 @@ Node *GetNode(TaskBarType *bar, int x) {
 	int index, stop;
 	int width;
 
-	index = 0;
+	index = TASK_SPACER;
 
 	itemCount = GetItemCount();
 
@@ -832,7 +843,7 @@ unsigned int GetItemWidth(const TaskBarType *bp, unsigned int itemCount) {
 
 	unsigned int itemWidth;
 
-	itemWidth = bp->cp->width;
+	itemWidth = bp->cp->width - TASK_SPACER;
 
 	if(!itemCount) {
 		return itemWidth;
@@ -911,7 +922,7 @@ void UpdateNetClientList() {
 	if(count == 0) {
 		windows = NULL;
 	} else {
-		windows = AllocateStack(count * sizeof(Window));
+		windows = Allocate(count * sizeof(Window));
 	}
 
 	/* Set _NET_CLIENT_LIST */
@@ -933,7 +944,7 @@ void UpdateNetClientList() {
 		XA_WINDOW, 32, PropModeReplace, (unsigned char*)windows, count);
 
 	if(windows != NULL) {
-		ReleaseStack(windows);
+		Release(windows);
 	}
 	
 }

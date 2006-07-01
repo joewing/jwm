@@ -33,12 +33,9 @@ static MoveModeType moveMode = MOVE_OPAQUE;
 static void StopMove(ClientNode *np, int doMove, int oldx, int oldy);
 static void MoveController(int wasDestroyed);
 
-static void DoSnap(ClientNode *np,
-	int north, int south, int east, int west);
-static void DoSnapScreen(ClientNode *np,
-	int north, int south, int east, int west);
-static void DoSnapBorder(ClientNode *np,
-	int north, int south, int east, int west);
+static void DoSnap(ClientNode *np, int north, int west);
+static void DoSnapScreen(ClientNode *np, int north, int west);
+static void DoSnapBorder(ClientNode *np, int north, int west);
 static int ShouldSnap(const ClientNode *np);
 static void GetClientRectangle(const ClientNode *np, RectangleType *r);
 
@@ -110,7 +107,8 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 	XEvent event;
 	int oldx, oldy;
 	int doMove = 0;
-	int north, south, east, west;
+	int north;
+	int west;
 	int height;
 
 	Assert(np);
@@ -135,7 +133,15 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 		return 0;
 	}
 
-	GetBorderSize(np, &north, &south, &east, &west);
+	north = 0;
+	west = 0;
+	if(np->state.border & BORDER_OUTLINE) {
+		north += borderWidth;
+		west += borderWidth;
+	}
+	if(np->state.border & BORDER_TITLE) {
+		north += titleHeight;
+	}
 
 	startx += np->x - west;
 	starty += np->y - north;
@@ -164,16 +170,16 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 			np->x = oldx + event.xmotion.x - startx;
 			np->y = oldy + event.xmotion.y - starty;
 
-			DoSnap(np, north, south, east, west);
+			DoSnap(np, north, west);
 
 			if(!doMove && (abs(np->x - oldx) > MOVE_DELTA
 				|| abs(np->y - oldy) > MOVE_DELTA)) {
 
 				if(np->state.status & STAT_MAXIMIZED) {
 					MaximizeClient(np);
-					SetMousePosition(np->parent, np->width / 2, north / 2);
+					SetMousePosition(np->parent, np->width / 2, titleHeight / 2);
 					startx = np->width / 2;
-					starty = north / 2;
+					starty = titleHeight / 2;
 				}
 
 				CreateMoveWindow(np);
@@ -184,12 +190,12 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 
 				if(moveMode == MOVE_OUTLINE) {
 					ClearOutline();
-					height = north + south;
+					height = north + west;
 					if(!(np->state.status & STAT_SHADED)) {
 						height += np->height;
 					}
 					DrawOutline(np->x - west, np->y - north,
-						np->width + west + east, height);
+						np->width + west * 2, height);
 				} else {
 					JXMoveWindow(display, np->parent, np->x - west,
 						np->y - north);
@@ -214,7 +220,8 @@ int MoveClientKeyboard(ClientNode *np) {
 	int oldx, oldy;
 	int moved;
 	int height;
-	int north, south, east, west;
+	int north;
+	int west;
 
 	Assert(np);
 
@@ -233,7 +240,15 @@ int MoveClientKeyboard(ClientNode *np) {
 	}
 	GrabMouseForMove();
 
-	GetBorderSize(np, &north, &south, &east, &west);
+	north = 0;
+	west = 0;
+	if(np->state.border & BORDER_OUTLINE) {
+		north += borderWidth;
+		west += borderWidth;
+	}
+	if(np->state.border & BORDER_TITLE) {
+		north += titleHeight;
+	}
 
 	oldx = np->x;
 	oldy = np->y;
@@ -323,7 +338,7 @@ int MoveClientKeyboard(ClientNode *np) {
 			if(moveMode == MOVE_OUTLINE) {
 				ClearOutline();
 				DrawOutline(np->x - west, np->y - west,
-					np->width + west + east, height + north + south);
+					np->width + west * 2, height + north + west);
 			} else {
 				JXMoveWindow(display, np->parent, np->x - west, np->y - north);
 				SendConfigureEvent(np);
@@ -342,7 +357,8 @@ int MoveClientKeyboard(ClientNode *np) {
  ****************************************************************************/
 void StopMove(ClientNode *np, int doMove, int oldx, int oldy) {
 
-	int north, south, east, west;
+	int north;
+	int west;
 
 	Assert(np);
 	Assert(np->controller);
@@ -357,7 +373,15 @@ void StopMove(ClientNode *np, int doMove, int oldx, int oldy) {
 		return;
 	}
 
-	GetBorderSize(np, &north, &south, &east, &west);
+	north = 0;
+	west = 0;
+	if(np->state.border & BORDER_OUTLINE) {
+		north += borderWidth;
+		west += borderWidth;
+	}
+	if(np->state.border & BORDER_TITLE) {
+		north += titleHeight;
+	}
 
 	JXMoveWindow(display, np->parent, np->x - west, np->y - north);
 	SendConfigureEvent(np);
@@ -366,16 +390,14 @@ void StopMove(ClientNode *np, int doMove, int oldx, int oldy) {
 
 /****************************************************************************
  ****************************************************************************/
-void DoSnap(ClientNode *np,
-	int north, int south, int east, int west) {
-
+void DoSnap(ClientNode *np, int north, int west) {
 	switch(snapMode) {
 	case SNAP_BORDER:
-		DoSnapBorder(np, north, south, east, west);
-		DoSnapScreen(np, north, south, east, west);
+		DoSnapBorder(np, north, west);
+		DoSnapScreen(np, north, west);
 		break;
 	case SNAP_SCREEN:
-		DoSnapScreen(np, north, south, east, west);
+		DoSnapScreen(np, north, west);
 		break;
 	default:
 		break;
@@ -384,8 +406,7 @@ void DoSnap(ClientNode *np,
 
 /****************************************************************************
  ****************************************************************************/
-void DoSnapScreen(ClientNode *np,
-	int north, int south, int east, int west) {
+void DoSnapScreen(ClientNode *np, int north, int west) {
 
 	RectangleType client;
 	int screen;
@@ -400,13 +421,13 @@ void DoSnapScreen(ClientNode *np,
 		sp = GetScreen(screen);
 
 		if(abs(client.right - sp->width - sp->x) <= snapDistance) {
-			np->x = sp->x + sp->width - east - np->width;
+			np->x = sp->x + sp->width - west - np->width;
 		}
 		if(abs(client.left - sp->x) <= snapDistance) {
 			np->x = sp->x + west;
 		}
 		if(abs(client.bottom - sp->height - sp->y) <= snapDistance) {
-			np->y = sp->y + sp->height - south;
+			np->y = sp->y + sp->height - west;
 			if(!(np->state.status & STAT_SHADED)) {
 				np->y -= np->height;
 			}
@@ -421,8 +442,7 @@ void DoSnapScreen(ClientNode *np,
 
 /****************************************************************************
  ****************************************************************************/
-void DoSnapBorder(ClientNode *np,
-	int north, int south, int east, int west) {
+void DoSnapBorder(ClientNode *np, int north, int west) {
 
 	const ClientNode *tp;
 	const TrayType *tray;
@@ -514,13 +534,13 @@ void DoSnapBorder(ClientNode *np,
 	}
 
 	if(right.valid) {
-		np->x = right.left - np->width - east;
+		np->x = right.left - np->width - west;
 	}
 	if(left.valid) {
 		np->x = left.right + west;
 	}
 	if(bottom.valid) {
-		np->y = bottom.top - south;
+		np->y = bottom.top - west;
 		if(!(np->state.status & STAT_SHADED)) {
 			np->y -= np->height;
 		}
@@ -547,7 +567,7 @@ int ShouldSnap(const ClientNode *np) {
  ****************************************************************************/
 void GetClientRectangle(const ClientNode *np, RectangleType *r) {
 
-	int north, south, east, west;
+	int border;
 
 	r->left = np->x;
 	r->right = np->x + np->width;
@@ -558,11 +578,20 @@ void GetClientRectangle(const ClientNode *np, RectangleType *r) {
 		r->bottom = np->y + np->height;
 	}
 
-	GetBorderSize(np, &north, &south, &east, &west);
-	r->left -= west;
-	r->right += east;
-	r->top -= north;
-	r->bottom += south;
+	if(np->state.border & BORDER_OUTLINE) {
+		border = borderWidth;
+		r->left -= border;
+		r->right += border;
+		r->bottom += border;
+	} else {
+		border = 0;
+	}
+
+	if(np->state.border & BORDER_TITLE) {
+		r->top -= titleHeight + border;
+	} else {
+		r->top -= border;
+	}
 
 	r->valid = 1;
 

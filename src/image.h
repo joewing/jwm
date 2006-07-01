@@ -22,27 +22,10 @@ typedef struct ImageNode {
 
 } ImageNode;
 
-/****************************************************************************
- ****************************************************************************/
-typedef struct ThemeImageNode {
-
-	int width;
-	int height;
-
-	Pixmap image;
-	Pixmap shape;
-
-} ThemeImageNode;
-
 ImageNode *LoadImage(const char *fileName);
-
 ImageNode *LoadImageFromData(char **data);
 
 void DestroyImage(ImageNode *image);
-
-ThemeImageNode *LoadThemeImage(const char *name);
-
-void DestroyThemeImage(ThemeImageNode *image);
 
 #endif
 

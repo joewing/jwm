@@ -16,7 +16,6 @@ static const char *TOKEN_MAP[] = {
 	"ActiveForeground",
 	"Background",
 	"BorderStyle",
-	"Button",
 	"Class",
 	"Clock",
 	"ClockStyle",
@@ -31,6 +30,7 @@ static const char *TOKEN_MAP[] = {
 	"Group",
 	"Height",
 	"IconPath",
+	"Icons",
 	"Include",
 	"JWM",
 	"Key",
@@ -56,14 +56,11 @@ static const char *TOKEN_MAP[] = {
 	"Swallow",
 	"TaskListStyle",
 	"TaskList",
-	"Theme",
-	"ThemePath",
 	"Tray",
 	"TrayButton",
 	"TrayButtonStyle",
 	"TrayStyle",
-	"Width",
-	"WindowButton"
+	"Width"
 };
 
 static TokenNode *head, *current;
@@ -294,11 +291,11 @@ int ParseEntity(const char *entity, char *ch, const char *file, int line) {
 				break;
 			}
 		}
-		temp = AllocateStack(x + 2);
+		temp = Allocate(x + 2);
 		strncpy(temp, entity, x + 1);
 		temp[x + 1] = 0;
 		Warning("%s[%d]: invalid entity: \"%.8s\"", file, line, temp);
-		ReleaseStack(temp);
+		Release(temp);
 		*ch = '&';
 		return 1;
 	}

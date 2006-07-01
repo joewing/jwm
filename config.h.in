@@ -6,9 +6,6 @@
 /* Define to disable confirm dialogs */
 #undef DISABLE_CONFIRM
 
-/* Define to 1 if you have the <alloca.h> header file. */
-#undef HAVE_ALLOCA_H
-
 /* Define to 1 if you have the <ctype.h> header file. */
 #undef HAVE_CTYPE_H
 

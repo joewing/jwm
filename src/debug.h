@@ -24,8 +24,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef HAVE_ALLOCA_H
+#	include <alloca.h>
+#endif
 
 void Debug(const char *str, ...);
+
+#ifdef HAVE_ALLOCA_H
+
+#	define AllocateStack( x ) alloca( x )
+#	define ReleaseStack( x ) ((void)0)
+
+#else
+
+#	define AllocateStack( x ) Allocate( x )
+#	define ReleaseStack( x ) Release( x )
+
+#endif
 
 #ifdef DEBUG
 

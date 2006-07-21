@@ -579,33 +579,6 @@ void PlaceMaximizedClient(ClientNode *np) {
 
 /****************************************************************************
  ****************************************************************************/
-void GetBorderSize(const ClientNode *np,
-	int *north, int *south, int *east, int *west) {
-
-	Assert(np);
-	Assert(north);
-	Assert(south);
-	Assert(east);
-	Assert(west);
-
-	*north = 0;
-	*south = 0;
-	*east = 0;
-	*west = 0;
-	if(np->state.border & BORDER_OUTLINE) {
-		*north = borderWidth;
-		*south = borderWidth;
-		*east = borderWidth;
-		*west = borderWidth;
-	}
-	if(np->state.border & BORDER_TITLE) {
-		*north += titleHeight;
-	}
-
-}
-
-/****************************************************************************
- ****************************************************************************/
 void GetGravityDelta(int gravity, int north, int south, int east, int west,
 	int *x, int  *y) {
 

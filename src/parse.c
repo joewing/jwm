@@ -33,6 +33,7 @@
 #include "dock.h"
 #include "popup.h"
 #include "status.h"
+#include "theme.h"
 
 typedef struct KeyMapType {
 	char *name;
@@ -140,7 +141,6 @@ static void ParseMenuStyle(const TokenNode *start);
 static void ParsePopupStyle(const TokenNode *start);
 static void ParseClockStyle(const TokenNode *start);
 static void ParseTrayButtonStyle(const TokenNode *start);
-static void ParseIcons(const TokenNode *tp);
 
 /* Feel. */
 static void ParseKey(const TokenNode *tp);
@@ -273,8 +273,8 @@ void Parse(const TokenNode *start, int depth) {
 			case TOK_GROUP:
 				ParseGroup(tp);
 				break;
-			case TOK_ICONS:
-				ParseIcons(tp);
+			case TOK_ICONPATH:
+				AddIconPath(tp->value);
 				break;
 			case TOK_INCLUDE:
 				ParseInclude(tp, depth);
@@ -326,6 +326,12 @@ void Parse(const TokenNode *start, int depth) {
 				break;
 			case TOK_CLOCKSTYLE:
 				ParseClockStyle(tp);
+				break;
+			case TOK_THEMEPATH:
+				AddThemePath(tp->value);
+				break;
+			case TOK_THEME:
+				SetTheme(tp->value);
 				break;
 			default:
 				InvalidTag(tp, "JWM");
@@ -1452,34 +1458,13 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
 /****************************************************************************
  ****************************************************************************/
 void ParseShutdownCommand(const TokenNode *tp) {
-	SetShutdownCommand(tp->value);
+	AddShutdownCommand(tp->value);
 }
 
 /****************************************************************************
  ****************************************************************************/
 void ParseStartupCommand(const TokenNode *tp) {
-	SetStartupCommand(tp->value);
-}
-
-/****************************************************************************
- ****************************************************************************/
-void ParseIcons(const TokenNode *tp) {
-
-	TokenNode *np;
-
-	Assert(tp);
-
-	for(np = tp->subnodeHead; np; np = np->next) {
-		switch(np->type) {
-		case TOK_ICONPATH:
-			AddIconPath(np->value);
-			break;
-		default:
-			InvalidTag(np, "Icons");
-			break;
-		}
-	}
-
+	AddStartupCommand(tp->value);
 }
 
 /***************************************************************************

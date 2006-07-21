@@ -32,6 +32,9 @@ void DrawBorder(const struct ClientNode *np);
 
 int GetBorderIconSize();
 
+void GetBorderSize(const struct ClientNode *np,
+	int *north, int *south, int *east, int *west);
+
 void SetBorderWidth(const char *str);
 void SetTitleHeight(const char *str);
 

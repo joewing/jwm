@@ -38,6 +38,7 @@ static IconNode *CreateIconFromData(const char *name, char **data);
 static IconNode *CreateIconFromFile(const char *fileName);
 static IconNode *CreateIconFromBinary(const unsigned long *data,
 	unsigned int length);
+static IconNode *LoadNamedIconHelper(const char *name, const char *path);
 
 static IconNode *LoadSuffixedIcon(const char *path, const char *name,
 	const char *suffix);
@@ -290,7 +291,6 @@ IconNode *LoadNamedIcon(const char *name) {
 
 	IconPathNode *ip;
 	IconNode *icon;
-	char *temp;
 
 	Assert(name);
 
@@ -300,17 +300,30 @@ IconNode *LoadNamedIcon(const char *name) {
 		return CreateIconFromFile(name);
 	} else {
 		for(ip = iconPaths; ip; ip = ip->next) {
-			temp = Allocate(strlen(name) + strlen(ip->path) + 1);
-			strcpy(temp, ip->path);
-			strcat(temp, name);
-			icon = CreateIconFromFile(temp);
-			Release(temp);
+			icon = LoadNamedIconHelper(name, ip->path);
 			if(icon) {
 				return icon;
 			}
 		}
 		return NULL;
 	}
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+IconNode *LoadNamedIconHelper(const char *name, const char *path) {
+
+	IconNode *result;
+	char *temp;
+
+	temp = AllocateStack(strlen(name) + strlen(path) + 1);
+	strcpy(temp, path);
+	strcat(temp, name);
+	result = CreateIconFromFile(temp);
+	ReleaseStack(temp);
+
+	return result;
 
 }
 

@@ -474,7 +474,7 @@ void SignalTaskbar(TimeType *now, int x, int y) {
 void Render(const TaskBarType *bp) {
 
 	Node *tp;
-	ButtonType buttonType;
+	ButtonNode button;
 	int x, y;
 	int remainder;
 	int itemWidth, itemCount;
@@ -521,10 +521,8 @@ void Render(const TaskBarType *bp) {
 
 	iconSize = bp->itemHeight - 2 * TASK_SPACER - 4;
 
-	SetButtonDrawable(buffer, gc);
-	SetButtonFont(FONT_TASK);
-	SetButtonAlignment(ALIGN_LEFT);
-	SetButtonTextOffset(iconSize + 3);
+	ResetButton(&button, buffer, gc);
+	button.font = FONT_TASK;
 
 	for(tp = taskBarNodes; tp; tp = tp->next) {
 		if(ShouldShowItem(tp->client)) {
@@ -532,32 +530,30 @@ void Render(const TaskBarType *bp) {
 			tp->y = y;
 
 			if(tp->client->state.status & STAT_ACTIVE) {
-				buttonType = BUTTON_TASK_ACTIVE;
+				button.type = BUTTON_TASK_ACTIVE;
 			} else {
-				buttonType = BUTTON_TASK;
+				button.type = BUTTON_TASK;
 			}
 
 			if(remainder) {
-				SetButtonSize(itemWidth - TASK_SPACER,
-					bp->itemHeight - 1);
+				button.width = itemWidth - TASK_SPACER;
 			} else {
-				SetButtonSize(itemWidth - TASK_SPACER - 1,
-					bp->itemHeight - 1);
+				button.width = itemWidth - TASK_SPACER - 1;
 			}
+			button.height = bp->itemHeight - 1;
+			button.x = x;
+			button.y = y;
+			button.icon = tp->client->icon;
 
 			if(tp->client->state.status & STAT_MINIMIZED) {
-				minimizedName = Allocate(strlen(tp->client->name) + 3);
+				minimizedName = AllocateStack(strlen(tp->client->name) + 3);
 				sprintf(minimizedName, "[%s]", tp->client->name);
-				DrawButton(x, y, buttonType, minimizedName);
-				Release(minimizedName);
+				button.text = minimizedName;
+				DrawButton(&button);
+				ReleaseStack(minimizedName);
 			} else {
-				DrawButton(x, y, buttonType, tp->client->name);
-			}
-
-			if(tp->client->icon) {
-				PutIcon(tp->client->icon, buffer, gc,
-					x + TASK_SPACER + 2, y + TASK_SPACER + 2,
-					iconSize, iconSize);
+				button.text = tp->client->name;
+				DrawButton(&button);
 			}
 
 			if(tp->client->state.status & STAT_MINIMIZED) {
@@ -922,7 +918,7 @@ void UpdateNetClientList() {
 	if(count == 0) {
 		windows = NULL;
 	} else {
-		windows = Allocate(count * sizeof(Window));
+		windows = AllocateStack(count * sizeof(Window));
 	}
 
 	/* Set _NET_CLIENT_LIST */
@@ -944,7 +940,7 @@ void UpdateNetClientList() {
 		XA_WINDOW, 32, PropModeReplace, (unsigned char*)windows, count);
 
 	if(windows != NULL) {
-		Release(windows);
+		ReleaseStack(windows);
 	}
 	
 }

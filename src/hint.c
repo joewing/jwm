@@ -179,7 +179,7 @@ void StartupHints() {
 	for(x = 0; x < desktopCount; x++) {
 		count += strlen(desktopNames[x]) + 1;
 	}
-	data = Allocate(count);
+	data = AllocateStack(count);
 	count = 0;
 	for(x = 0; x < desktopCount; x++) {
 		strcpy(data + count, desktopNames[x]);
@@ -188,7 +188,7 @@ void StartupHints() {
 	JXChangeProperty(display, rootWindow, atoms[ATOM_NET_DESKTOP_NAMES],
 		atoms[ATOM_UTF8_STRING], 8, PropModeReplace,
 		(unsigned char*)data, count);
-	Release(data);
+	ReleaseStack(data);
 
 	/* _NET_DESKTOP_GEOMETRY */
 	array[0] = rootWidth;

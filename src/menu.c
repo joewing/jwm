@@ -214,8 +214,14 @@ int MenuLoop(MenuType *menu) {
 	XEvent event;
 	MenuItemType *ip;
 	int count;
-	int hadMotion = 0;
-	int hadPress = 0;
+	int hadMotion;
+	int hadPress;
+	int pressx, pressy;
+
+	hadMotion = 0;
+	hadPress = 0;
+	pressx = 0;
+	pressy = 0;
 
 	for(;;) {
 
@@ -227,6 +233,8 @@ int MenuLoop(MenuType *menu) {
 			break;
 		case ButtonPress:
 			hadPress = 1;
+			pressx = event.xbutton.x;
+			pressy = event.xbutton.y;
 			if(event.xbutton.button != Button4
 				&& event.xbutton.button != Button5) {
 				break;		
@@ -247,7 +255,9 @@ int MenuLoop(MenuType *menu) {
 		case ButtonRelease:
 			if(event.xbutton.button == Button4
 				|| event.xbutton.button == Button5
-				|| (!hadMotion && !hadPress)) {
+				|| (!hadMotion && !hadPress)
+				|| (abs(event.xbutton.x - pressx) < doubleClickDelta
+				&& abs(event.xbutton.y - pressy) < doubleClickDelta)) {
 				break;
 			}
 			if(menu->currentIndex >= 0) {
@@ -546,6 +556,8 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 /***************************************************************************
  ***************************************************************************/
 void UpdateMenu(MenuType *menu) {
+
+	ButtonNode button;
 	Pixmap pixmap;
 	MenuItemType *ip;
 
@@ -559,21 +571,17 @@ void UpdateMenu(MenuType *menu) {
 		if(!ip->name && !ip->submenu && !ip->command) {
 			return;
 		}
-		SetButtonDrawable(menu->window, menu->gc);
-		SetButtonFont(FONT_MENU);
-		SetButtonSize(menu->width - 5, menu->itemHeight - 2);
-		SetButtonTextOffset(menu->textOffset);
-		SetButtonAlignment(ALIGN_LEFT);
-		DrawButton(2, menu->offsets[menu->currentIndex] + 1,
-			BUTTON_MENU_ACTIVE, ip->name);
 
-		if(ip->icon) {
-			PutIcon(ip->icon, menu->window, menu->gc,
-				BASE_ICON_OFFSET,
-				menu->offsets[menu->currentIndex] + BASE_ICON_OFFSET,
-				menu->itemHeight - BASE_ICON_OFFSET * 2,
-				menu->itemHeight - BASE_ICON_OFFSET * 2);
-		}
+		ResetButton(&button, menu->window, menu->gc);
+		button.type = BUTTON_MENU_ACTIVE;
+		button.font = FONT_MENU;
+		button.width = menu->width - 5;
+		button.height = menu->itemHeight - 2;
+		button.icon = ip->icon;
+		button.text = ip->name;
+		button.x = 2;
+		button.y = menu->offsets[menu->currentIndex] + 1;
+		DrawButton(&button);
 
 		if(ip->submenu) {
 			pixmap = JXCreatePixmapFromBitmapData(display, menu->window,
@@ -592,6 +600,9 @@ void UpdateMenu(MenuType *menu) {
  ***************************************************************************/
 void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 
+/* FIXME
+	ButtonNode button;
+*/
 	Pixmap pixmap;
 	int xoffset;
 	int yoffset;
@@ -614,6 +625,18 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 	}
 
 	if(item->name) {
+
+/* FIXME
+		ResetButton(&button, menu->window, menu->gc);
+		button.x = 6 + menu->textOffset;
+		button.y = 1 + menu->offsets[index];
+		button.font = FONT_MENU;
+		button.type = BUTTON_MENU;
+		button.text = item->name;
+		button.width = menu->width - 4;
+		button.height = menu->itemHeight;
+		DrawButton(&button);
+*/
 
 		xoffset = 6 + menu->textOffset;
 		yoffset = 1 + menu->offsets[index] + menu->itemHeight / 2;

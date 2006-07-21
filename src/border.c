@@ -592,6 +592,33 @@ void ExposeCurrentDesktop() {
 
 /****************************************************************************
  ****************************************************************************/
+void GetBorderSize(const ClientNode *np,
+	int *north, int *south, int *east, int *west) {
+
+	if(np->state.border & BORDER_OUTLINE) {
+
+		*north = borderWidth;
+		*south = borderWidth;
+		*east = borderWidth;
+		*west = borderWidth;
+
+	} else {
+
+		*north = 0;
+		*south = 0;
+		*east = 0;
+		*west = 0;
+
+	}
+
+	if(np->state.border & BORDER_TITLE) {
+		*north += titleHeight;
+	}
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
 void SetBorderWidth(const char *str) {
 	int width;
 

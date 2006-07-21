@@ -111,9 +111,7 @@
 		<Background>yellow</Background>
 	</PopupStyle>
 
-	<Icons>
-		<IconPath>$HOME/.icons</IconPath>
-	</Icons>
+	<IconPath>$HOME/.icons</IconPath>
 
 	<StartupCommand>
 		xli -onroot /export0/images/formulae.jpg

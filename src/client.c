@@ -27,8 +27,6 @@ ClientNode *nodeTail[LAYER_COUNT];
 
 static ClientNode *activeClient;
 
-static Window *stack;
-static int stackSize;
 static int clientCount;
 
 static void LoadFocus();
@@ -50,6 +48,7 @@ void InitializeClients() {
  * Load windows that are already mapped.
  ****************************************************************************/
 void StartupClients() {
+
 	XWindowAttributes attr;
 	Window rootReturn, parentReturn, *childrenReturn;
 	unsigned int childrenCount;
@@ -58,8 +57,6 @@ void StartupClients() {
 	JXSync(display, False);
 	JXGrabServer(display);
 
-	stackSize = STACK_BLOCK_SIZE;
-	stack = Allocate(sizeof(Window) * stackSize);
 	clientCount = 0;
 	activeClient = NULL;
 	currentDesktop = 0;
@@ -98,6 +95,7 @@ void StartupClients() {
 /****************************************************************************
  ****************************************************************************/
 void ShutdownClients() {
+
 	int x;
 
 	for(x = 0; x < LAYER_COUNT; x++) {
@@ -105,8 +103,6 @@ void ShutdownClients() {
 			RemoveClient(nodeTail[x]);
 		}
 	}
-	Release(stack);
-	stack = NULL;
 
 }
 
@@ -316,18 +312,15 @@ void MinimizeTransients(ClientNode *np) {
  ****************************************************************************/
 void ShadeClient(ClientNode *np) {
 
-	int bsize;
+	int north, south, east, west;
 
 	Assert(np);
 
 	if(!(np->state.border & BORDER_TITLE)) {
 		return;
 	}
-	if(np->state.border & BORDER_OUTLINE) {
-		bsize = borderWidth;
-	} else {
-		bsize = 0;
-	}
+
+	GetBorderSize(np, &north, &south, &east, &west);
 
 	if(np->state.status & STAT_MAPPED) {
 		JXUnmapWindow(display, np->window);
@@ -337,8 +330,8 @@ void ShadeClient(ClientNode *np) {
 	np->state.status &= ~STAT_SDESKTOP;
 	np->state.status &= ~STAT_MAPPED;
 
-	JXResizeWindow(display, np->parent, np->width + 2 * bsize,
-		titleHeight + 2 * bsize);
+	JXResizeWindow(display, np->parent, np->width + east + west,
+		north + south);
 
 	WriteState(np);
 
@@ -887,10 +880,7 @@ void RestackClients() {
 	ClientNode *np;
 	unsigned int layer, index;
 	int trayCount;
-
-	if(!stack) {
-		return;
-	}
+	Window *stack;
 
 	/* Determine how many tray windows exist. */
 	trayCount = 0;
@@ -898,15 +888,8 @@ void RestackClients() {
 		++trayCount;
 	}
 
-	/* Make sure an appropriate amount of memory is allocated. */
-	if(clientCount + trayCount >= stackSize
-		|| clientCount + trayCount < stackSize - STACK_BLOCK_SIZE) {
-
-		stackSize = (clientCount + trayCount) + STACK_BLOCK_SIZE
-			- ((clientCount + trayCount) % STACK_BLOCK_SIZE);
-		stack = Reallocate(stack, sizeof(Window) * stackSize);
-
-	}
+	/** Allocate memory for restacking. */
+	stack = AllocateStack((clientCount + trayCount) * sizeof(Window));
 
 	/* Prepare the stacking array. */
 	index = 0;
@@ -934,6 +917,8 @@ void RestackClients() {
 	}
 
 	JXRestackWindows(display, stack, index);
+
+	ReleaseStack(stack);
 
 	UpdateNetClientList();
 

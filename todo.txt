@@ -7,7 +7,12 @@ Todo:
 	- Add the ability to move windows via the pager.
 	- Add the ability to change desktops with the mouse pointer.
 	- Add the ability to drag windows to different desktops.
-	- Make pixel threshold for mouse clicks on menus configurable.
+
+20060704:
+	- Remove "Icons" tag.
+	- Add stack allocations.
+	- Use mouseClickDelta for checking menu selection mode.
+	- Support multiple startup/shutdown commands.
 
 20060425:
 	- Fixed clock redrawing issue.

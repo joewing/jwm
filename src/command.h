@@ -11,8 +11,8 @@ void StartupCommands();
 void ShutdownCommands();
 void DestroyCommands();
 
-void SetStartupCommand(const char *command);
-void SetShutdownCommand(const char *command);
+void AddStartupCommand(const char *command);
+void AddShutdownCommand(const char *command);
 
 #endif
 

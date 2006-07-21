@@ -245,6 +245,7 @@ void SetSize(TrayComponentType *cp, int width, int height) {
  ***************************************************************************/
 void Create(TrayComponentType *cp) {
 
+	ButtonNode button;
 	TrayButtonType *bp;
 	GC gc;
 	int labelx;
@@ -258,9 +259,13 @@ void Create(TrayComponentType *cp) {
 	JXSetForeground(display, gc, colors[COLOR_TRAYBUTTON_BG]);
 	JXFillRectangle(display, cp->pixmap, gc, 0, 0, cp->width, cp->height);
 
-	SetButtonDrawable(cp->pixmap, gc);
-	SetButtonSize(cp->width - 3, cp->height - 3);
-	DrawButton(1, 1, BUTTON_TASK, NULL);
+	ResetButton(&button, cp->pixmap, gc);
+	button.type = BUTTON_TASK;
+	button.width = cp->width - 3;
+	button.height = cp->height - 3;
+	button.x = 1;
+	button.y = 1;
+	DrawButton(&button);
 
 	/* Compute the offset of the text. */
 	if(bp->label) {

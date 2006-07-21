@@ -22,6 +22,9 @@ static Cursor southWestCursor;
 static Cursor GetResizeCursor(BorderActionType action);
 static Cursor CreateCursor(unsigned int shape);
 
+static int mousex;
+static int mousey;
+
 /****************************************************************************
  ****************************************************************************/
 void InitializeCursors() {
@@ -30,6 +33,10 @@ void InitializeCursors() {
 /****************************************************************************
  ****************************************************************************/
 void StartupCursors() {
+
+	Window win1, win2;
+	int winx, winy;
+	unsigned int mask;
 
 	defaultCursor = CreateCursor(XC_left_ptr);
 	moveCursor = CreateCursor(XC_fleur);
@@ -41,6 +48,9 @@ void StartupCursors() {
 	northWestCursor = CreateCursor(XC_ul_angle);
 	southEastCursor = CreateCursor(XC_lr_angle);
 	southWestCursor = CreateCursor(XC_ll_angle);
+
+	JXQueryPointer(display, rootWindow, &win1, &win2,
+		&mousex, &mousey, &winx, &winy, &mask);
 
 }
 
@@ -182,19 +192,32 @@ void SetDefaultCursor(Window w) {
  ****************************************************************************/
 void SetMousePosition(Window win, int x, int y) {
 
+	Window win1, win2;
+	int winx, winy;
+	unsigned int mask;
+
 	JXWarpPointer(display, None, win, 0, 0, 0, 0, x, y);
+
+	JXQueryPointer(display, rootWindow, &win1, &win2,
+		&mousex, &mousey, &winx, &winy, &mask);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void SetCurrentMousePosition(int x, int y) {
+
+	mousex = x;
+	mousey = y;
 
 }
 
 /****************************************************************************
  ****************************************************************************/
 void GetMousePosition(int *x, int *y) {
-	Window win1, win2;
-	int winx, winy;
-	unsigned int mask;
 
-	JXQueryPointer(display, rootWindow, &win1, &win2, x, y,
-		&winx, &winy, &mask);
+	*x = mousex;
+	*y = mousey;
 
 }
 

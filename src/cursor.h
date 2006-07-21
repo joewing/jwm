@@ -21,6 +21,8 @@ Cursor GetFrameCursor(BorderActionType action);
 
 void SetMousePosition(Window win, int x, int y);
 
+void SetCurrentMousePosition(int x, int y);
+
 void GetMousePosition(int *x, int *y);
 unsigned int GetMouseMask();
 

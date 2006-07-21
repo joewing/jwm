@@ -7,72 +7,105 @@
 #include "command.h"
 #include "root.h"
 
-static char *startupCommand = NULL;
-static char *shutdownCommand = NULL;
+typedef struct CommandNode {
+	char *command;
+	struct CommandNode *next;
+} CommandNode;
+
+static CommandNode *startupCommands;
+static CommandNode *shutdownCommands;
+
+static void RunCommands(CommandNode *commands);
+static void ReleaseCommands(CommandNode *commands);
+static void AddCommand(CommandNode **commands, const char *command);
 
 /****************************************************************************
  ****************************************************************************/
 void InitializeCommands() {
-	startupCommand = NULL;
-	shutdownCommand = NULL;
+	startupCommands = NULL;
+	shutdownCommands = NULL;
 }
 
 /****************************************************************************
  ****************************************************************************/
 void StartupCommands() {
-	if(startupCommand) {
-		RunCommand(startupCommand);
-		Release(startupCommand);
-		startupCommand = NULL;
-	}
+
+	RunCommands(startupCommands);
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 void ShutdownCommands() {
-	if(shutdownCommand) {
-		RunCommand(shutdownCommand);
-		Release(shutdownCommand);
-		shutdownCommand = NULL;
-	}
+
+	RunCommands(shutdownCommands);
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 void DestroyCommands() {
-	if(startupCommand) {
-		Release(startupCommand);
-		startupCommand = NULL;
-	}
-	if(shutdownCommand) {
-		Release(shutdownCommand);
-		shutdownCommand = NULL;
-	}
+	ReleaseCommands(startupCommands);
+	ReleaseCommands(shutdownCommands);
 }
 
 /****************************************************************************
  ****************************************************************************/
-void SetStartupCommand(const char *command) {
-	if(startupCommand) {
-		Release(startupCommand);
-		startupCommand = NULL;
+void RunCommands(CommandNode *commands) {
+
+	CommandNode *cp;
+
+	for(cp = commands; cp; cp = cp->next) {
+		RunCommand(cp->command);
 	}
-	if(command) {
-		startupCommand = Allocate(strlen(command) + 1);
-		strcpy(startupCommand, command);
-	}
+
 }
 
 /****************************************************************************
  ****************************************************************************/
-void SetShutdownCommand(const char *command) {
-	if(shutdownCommand) {
-		Release(shutdownCommand);
-		shutdownCommand = NULL;
+void ReleaseCommands(CommandNode *commands) {
+
+	CommandNode *cp;
+
+	while(commands) {
+		cp = commands->next;
+		Release(commands->command);
+		Release(commands);
+		commands = cp;
 	}
-	if(command) {
-		shutdownCommand = Allocate(strlen(command) + 1);
-		strcpy(shutdownCommand, command);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void AddCommand(CommandNode **commands, const char *command) {
+
+	CommandNode *cp;
+	int len;
+
+	if(!command) {
+		return;
 	}
+
+	cp = Allocate(sizeof(CommandNode));
+	cp->next = *commands;
+	*commands = cp;
+
+	len = strlen(command);
+	cp->command = Allocate(len + 1);
+	strcpy(cp->command, command);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void AddStartupCommand(const char *command) {
+	AddCommand(&startupCommands, command);
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void AddShutdownCommand(const char *command) {
+	AddCommand(&shutdownCommands, command);
 }
 

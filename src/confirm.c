@@ -83,6 +83,7 @@ void DestroyDialogs() {
 /***************************************************************************
  ***************************************************************************/
 int ProcessDialogEvent(const XEvent *event) {
+
 	int handled = 0;
 
 	switch(event->type) {
@@ -100,6 +101,7 @@ int ProcessDialogEvent(const XEvent *event) {
 /***************************************************************************
  ***************************************************************************/
 int HandleDialogExpose(const XExposeEvent *event) {
+
 	DialogType *dp;
 
 	dp = FindDialogByWindow(event->window);
@@ -114,6 +116,7 @@ int HandleDialogExpose(const XExposeEvent *event) {
 /***************************************************************************
  ***************************************************************************/
 int HandleDialogButtonRelease(const XButtonEvent *event) {
+
 	DialogType *dp;
 	int x, y;
 	int cancelPressed, okPressed;
@@ -329,6 +332,7 @@ void ComputeDimensions(DialogType *dp) {
 /***************************************************************************
  ***************************************************************************/
 void DrawMessage(DialogType *dp) {
+
 	int yoffset;
 	int x;
 
@@ -344,6 +348,8 @@ void DrawMessage(DialogType *dp) {
 /***************************************************************************
  ***************************************************************************/
 void DrawButtons(DialogType *dp) {
+
+	ButtonNode button;
 	int temp;
 
 	dp->buttonWidth = GetStringWidth(FONT_MENU, CANCEL_STRING);
@@ -354,17 +360,26 @@ void DrawButtons(DialogType *dp) {
 	dp->buttonWidth += 8;
 	dp->buttonHeight = dp->lineHeight + 4;
 
-	SetButtonDrawable(dp->node->window, dp->gc);
-	SetButtonFont(FONT_MENU);
-	SetButtonSize(dp->buttonWidth, dp->buttonHeight);
-	SetButtonAlignment(ALIGN_CENTER);
+	ResetButton(&button, dp->node->window, dp->gc);
+	button.font = FONT_MENU;
+	button.width = dp->buttonWidth;
+	button.height = dp->buttonHeight;
+	button.alignment = ALIGN_CENTER;
 
 	dp->okx = dp->width / 3 - dp->buttonWidth / 2;
 	dp->cancelx = 2 * dp->width / 3 - dp->buttonWidth / 2;
 	dp->buttony = dp->height - dp->lineHeight - dp->lineHeight / 2;
 
-	DrawButton(dp->okx, dp->buttony, BUTTON_MENU, OK_STRING);
-	DrawButton(dp->cancelx, dp->buttony, BUTTON_MENU, CANCEL_STRING);
+	button.type = BUTTON_MENU;
+	button.text = OK_STRING;
+	button.x = dp->okx;
+	button.y = dp->buttony;
+	DrawButton(&button);
+
+	button.text = CANCEL_STRING;
+	button.x = dp->cancelx;
+	button.y = dp->buttony;
+	DrawButton(&button);
 
 }
 

@@ -8,6 +8,8 @@
 
 #include "font.h"
 
+struct IconNode;
+
 typedef enum {
 	BUTTON_MENU,
 	BUTTON_MENU_ACTIVE,
@@ -21,13 +23,25 @@ typedef enum {
 	ALIGN_RIGHT
 } AlignmentType;
 
-void SetButtonDrawable(Drawable d, GC g);
-void SetButtonFont(FontType f);
-void SetButtonSize(int w, int h);
-void SetButtonAlignment(AlignmentType a);
-void SetButtonTextOffset(int o);
+typedef struct {
 
-void DrawButton(int x, int y, ButtonType type, const char *str);
+	ButtonType type;
+	Drawable drawable;
+	GC gc;
+	FontType font;
+	AlignmentType alignment;
+
+	int x, y;
+	int width, height;
+
+	struct IconNode *icon;
+	const char *text;
+
+} ButtonNode;
+
+void DrawButton(ButtonNode *bp);
+
+void ResetButton(ButtonNode *bp, Drawable d, GC g);
 
 #endif
 

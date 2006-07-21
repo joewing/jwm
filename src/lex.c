@@ -30,7 +30,6 @@ static const char *TOKEN_MAP[] = {
 	"Group",
 	"Height",
 	"IconPath",
-	"Icons",
 	"Include",
 	"JWM",
 	"Key",
@@ -56,6 +55,8 @@ static const char *TOKEN_MAP[] = {
 	"Swallow",
 	"TaskListStyle",
 	"TaskList",
+	"Theme",
+	"ThemePath",
 	"Tray",
 	"TrayButton",
 	"TrayButtonStyle",
@@ -291,11 +292,11 @@ int ParseEntity(const char *entity, char *ch, const char *file, int line) {
 				break;
 			}
 		}
-		temp = Allocate(x + 2);
+		temp = AllocateStack(x + 2);
 		strncpy(temp, entity, x + 1);
 		temp[x + 1] = 0;
 		Warning("%s[%d]: invalid entity: \"%.8s\"", file, line, temp);
-		Release(temp);
+		ReleaseStack(temp);
 		*ch = '&';
 		return 1;
 	}

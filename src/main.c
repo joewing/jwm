@@ -35,6 +35,7 @@
 #include "place.h"
 #include "clock.h"
 #include "dock.h"
+#include "theme.h"
 
 Display *display = NULL;
 Window rootWindow;

@@ -60,6 +60,7 @@ void ShowWindowMenu(ClientNode *np, int x, int y) {
 /****************************************************************************
  ****************************************************************************/
 MenuType *CreateWindowMenu() {
+
 	MenuType *menu = Allocate(sizeof(MenuType));
 	menu->itemHeight = 0;
 	menu->items = NULL;

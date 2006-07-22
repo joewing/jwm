@@ -14,6 +14,7 @@
 #include "status.h"
 #include "key.h"
 #include "event.h"
+#include "border.h"
 
 static ResizeModeType resizeMode = RESIZE_OPAQUE;
 
@@ -53,8 +54,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 	int gwidth, gheight;
 	int lastgwidth, lastgheight;
 	int delta;
-	int north;
-	int west;
+	int north, south, east, west;
 
 	Assert(np);
 
@@ -82,15 +82,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 	gwidth = (np->width - np->baseWidth) / np->xinc;
 	gheight = (np->height - np->baseHeight) / np->yinc;
 
-	north = 0;
-	west = 0;
-	if(np->state.border & BORDER_OUTLINE) {
-		north += borderWidth;
-		west += borderWidth;
-	}
-	if(np->state.border & BORDER_TITLE) {
-		north += titleHeight;
-	}
+	GetBorderSize(np, &north, &south, &east, &west);
 
 	startx += np->x - west;
 	starty += np->y - north;
@@ -215,22 +207,22 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 					ClearOutline();
 					if(np->state.status & STAT_SHADED) {
 						DrawOutline(np->x - west, np->y - north,
-							np->width + west * 2, north + west);
+							np->width + west + east, north + south);
 					} else {
 						DrawOutline(np->x - west, np->y - north,
-							np->width + west * 2,
-							np->height + north + west);
+							np->width + west + east,
+							np->height + north + south);
 					}
 				} else {
 					if(np->state.status & STAT_SHADED) {
 						JXMoveResizeWindow(display, np->parent,
 							np->x - west, np->y - north,
-							np->width + west * 2, north + west);
+							np->width + west + east, north + south);
 					} else {
 						JXMoveResizeWindow(display, np->parent,
 							np->x - west, np->y - north,
-							np->width + west + west,
-							np->height + north + west);
+							np->width + west + east,
+							np->height + north + south);
 					}
 					JXMoveResizeWindow(display, np->window, west,
 						north, np->width, np->height);
@@ -256,7 +248,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 	XEvent event;
 	int gwidth, gheight;
 	int lastgwidth, lastgheight;
-	int north, west;
+	int north, south, east, west;
 	int deltax, deltay;
 
 	Assert(np);
@@ -278,16 +270,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 	gwidth = (np->width - np->baseWidth) / np->xinc;
 	gheight = (np->height - np->baseHeight) / np->yinc;
 
-	if(np->state.border & BORDER_OUTLINE) {
-		west = borderWidth;
-	} else {
-		west = 0;
-	}
-	if(np->state.border & BORDER_TITLE) {
-		north = west + titleHeight;
-	} else {
-		north = west;
-	}
+	GetBorderSize(np, &north, &south, &east, &west);
 
 	CreateResizeWindow(np);
 	UpdateResizeWindow(np, gwidth, gheight);
@@ -387,20 +370,20 @@ void ResizeClientKeyboard(ClientNode *np) {
 				ClearOutline();
 				if(np->state.status & STAT_SHADED) {
 					DrawOutline(np->x - west, np->y - north,
-						np->width + west * 2,
-						north + west);
+						np->width + west + east,
+						north + south);
 				} else {
 					DrawOutline(np->x - west, np->y - north,
-						np->width + west * 2,
-						np->height + north + west);
+						np->width + west + east,
+						np->height + north + south);
 				}
 			} else {
 				if(np->state.status & STAT_SHADED) {
 					JXResizeWindow(display, np->parent,
-						np->width + west * 2, north + west);
+						np->width + west + east, north + south);
 				} else {
 					JXResizeWindow(display, np->parent,
-					np->width + west * 2, np->height + north + west);
+					np->width + west + east, np->height + north + south);
 				}
 				JXResizeWindow(display, np->window, np->width, np->height);
 				SendConfigureEvent(np);

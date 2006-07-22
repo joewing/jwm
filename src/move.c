@@ -106,9 +106,8 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 
 	XEvent event;
 	int oldx, oldy;
-	int doMove = 0;
-	int north;
-	int west;
+	int doMove;
+	int north, south, east, west;
 	int height;
 
 	Assert(np);
@@ -133,19 +132,12 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 		return 0;
 	}
 
-	north = 0;
-	west = 0;
-	if(np->state.border & BORDER_OUTLINE) {
-		north += borderWidth;
-		west += borderWidth;
-	}
-	if(np->state.border & BORDER_TITLE) {
-		north += titleHeight;
-	}
+	GetBorderSize(np, &north, &south, &east, &west);
 
-	startx += np->x - west;
-	starty += np->y - north;
+	startx -= west;
+	starty -= north;
 
+	doMove = 0;
 	for(;;) {
 
 		WaitForEvent(&event);
@@ -168,8 +160,8 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 			SetMousePosition(event.xmotion.x_root, event.xmotion.y_root);
 			DiscardMotionEvents(&event, np->window);
 
-			np->x = oldx + event.xmotion.x - startx;
-			np->y = oldy + event.xmotion.y - starty;
+			np->x = event.xmotion.x_root - startx;
+			np->y = event.xmotion.y_root - starty;
 
 			DoSnap(np, north, west);
 
@@ -178,9 +170,9 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 
 				if(np->state.status & STAT_MAXIMIZED) {
 					MaximizeClient(np);
-					MoveMouse(np->parent, np->width / 2, titleHeight / 2);
-					startx = np->width / 2;
-					starty = titleHeight / 2;
+					startx = west + np->width / 2;
+					starty = north / 2;
+					MoveMouse(np->parent, startx, starty);
 				}
 
 				CreateMoveWindow(np);
@@ -191,12 +183,12 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 
 				if(moveMode == MOVE_OUTLINE) {
 					ClearOutline();
-					height = north + west;
+					height = north + south;
 					if(!(np->state.status & STAT_SHADED)) {
 						height += np->height;
 					}
 					DrawOutline(np->x - west, np->y - north,
-						np->width + west * 2, height);
+						np->width + west + east, height);
 				} else {
 					JXMoveWindow(display, np->parent, np->x - west,
 						np->y - north);
@@ -221,8 +213,7 @@ int MoveClientKeyboard(ClientNode *np) {
 	int oldx, oldy;
 	int moved;
 	int height;
-	int north;
-	int west;
+	int north, south, east, west;
 
 	Assert(np);
 
@@ -241,15 +232,7 @@ int MoveClientKeyboard(ClientNode *np) {
 	}
 	GrabMouseForMove();
 
-	north = 0;
-	west = 0;
-	if(np->state.border & BORDER_OUTLINE) {
-		north += borderWidth;
-		west += borderWidth;
-	}
-	if(np->state.border & BORDER_TITLE) {
-		north += titleHeight;
-	}
+	GetBorderSize(np, &north, &south, &east, &west);
 
 	oldx = np->x;
 	oldy = np->y;
@@ -337,7 +320,7 @@ int MoveClientKeyboard(ClientNode *np) {
 			if(moveMode == MOVE_OUTLINE) {
 				ClearOutline();
 				DrawOutline(np->x - west, np->y - west,
-					np->width + west * 2, height + north + west);
+					np->width + west + east, height + north + west);
 			} else {
 				JXMoveWindow(display, np->parent, np->x - west, np->y - north);
 				SendConfigureEvent(np);
@@ -356,8 +339,7 @@ int MoveClientKeyboard(ClientNode *np) {
  ****************************************************************************/
 void StopMove(ClientNode *np, int doMove, int oldx, int oldy) {
 
-	int north;
-	int west;
+	int north, south, east, west;
 
 	Assert(np);
 	Assert(np->controller);
@@ -372,15 +354,7 @@ void StopMove(ClientNode *np, int doMove, int oldx, int oldy) {
 		return;
 	}
 
-	north = 0;
-	west = 0;
-	if(np->state.border & BORDER_OUTLINE) {
-		north += borderWidth;
-		west += borderWidth;
-	}
-	if(np->state.border & BORDER_TITLE) {
-		north += titleHeight;
-	}
+	GetBorderSize(np, &north, &south, &east, &west);
 
 	JXMoveWindow(display, np->parent, np->x - west, np->y - north);
 	SendConfigureEvent(np);

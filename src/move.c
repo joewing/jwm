@@ -165,6 +165,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 			break;
 		case MotionNotify:
 
+			SetMousePosition(event.xmotion.x_root, event.xmotion.y_root);
 			DiscardMotionEvents(&event, np->window);
 
 			np->x = oldx + event.xmotion.x - startx;
@@ -177,7 +178,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 
 				if(np->state.status & STAT_MAXIMIZED) {
 					MaximizeClient(np);
-					SetMousePosition(np->parent, np->width / 2, titleHeight / 2);
+					MoveMouse(np->parent, np->width / 2, titleHeight / 2);
 					startx = np->width / 2;
 					starty = titleHeight / 2;
 				}
@@ -259,8 +260,7 @@ int MoveClientKeyboard(ClientNode *np) {
 	CreateMoveWindow(np);
 	UpdateMoveWindow(np);
 
-	JXWarpPointer(display, None, rootWindow, 0, 0, 0, 0,
-		np->x, np->y);
+	MoveMouse(rootWindow, np->x, np->y);
 	DiscardMotionEvents(&event, np->window);
 
 	if(np->state.status & STAT_SHADED) {
@@ -310,8 +310,7 @@ int MoveClientKeyboard(ClientNode *np) {
 				return 1;
 			}
 
-			JXWarpPointer(display, None, rootWindow, 0, 0, 0, 0,
-				np->x, np->y);
+			MoveMouse(rootWindow, np->x, np->y);
 			JXCheckTypedWindowEvent(display, np->window, MotionNotify, &event);
 
 			moved = 1;

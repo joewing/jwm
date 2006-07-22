@@ -227,7 +227,7 @@ void DiscardMotionEvents(XEvent *event, Window w) {
 	XEvent temp;
 
 	while(JXCheckTypedEvent(display, MotionNotify, &temp)) {
-		SetCurrentMousePosition(temp.xmotion.x_root, temp.xmotion.y_root);
+		SetMousePosition(temp.xmotion.x_root, temp.xmotion.y_root);
 		if(temp.xmotion.window == w) {
 			*event = temp;
 		}
@@ -863,7 +863,7 @@ void HandleMotionNotify(const XMotionEvent *event) {
 		return;
 	}
 
-	SetCurrentMousePosition(event->x_root, event->y_root);
+	SetMousePosition(event->x_root, event->y_root);
 
 	np = FindClientByParent(event->window);
 	if(np && (np->state.border & BORDER_OUTLINE)) {

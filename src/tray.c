@@ -525,7 +525,7 @@ void ShowTray(TrayType *tp) {
 		}
 
 		if(moveMouse) {
-			SetMousePosition(rootWindow, x, y);
+			MoveMouse(rootWindow, x, y);
 			JXCheckMaskEvent(display, LeaveWindowMask, &event);
 		}
 

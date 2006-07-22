@@ -19,11 +19,11 @@ int GrabMouseForResize(BorderActionType action);
 
 Cursor GetFrameCursor(BorderActionType action);
 
-void SetMousePosition(Window win, int x, int y);
+void MoveMouse(Window win, int x, int y);
 
-void SetCurrentMousePosition(int x, int y);
-
+void SetMousePosition(int x, int y);
 void GetMousePosition(int *x, int *y);
+
 unsigned int GetMouseMask();
 
 void SetDefaultCursor(Window w);

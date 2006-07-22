@@ -190,7 +190,7 @@ void SetDefaultCursor(Window w) {
 
 /****************************************************************************
  ****************************************************************************/
-void SetMousePosition(Window win, int x, int y) {
+void MoveMouse(Window win, int x, int y) {
 
 	Window win1, win2;
 	int winx, winy;
@@ -205,7 +205,7 @@ void SetMousePosition(Window win, int x, int y) {
 
 /****************************************************************************
  ****************************************************************************/
-void SetCurrentMousePosition(int x, int y) {
+void SetMousePosition(int x, int y) {
 
 	mousex = x;
 	mousey = y;
@@ -224,14 +224,16 @@ void GetMousePosition(int *x, int *y) {
 /****************************************************************************
  ****************************************************************************/
 unsigned int GetMouseMask() {
+
 	Window win1, win2;
-	int rootx, rooty, winx, winy;
+	int winx, winy;
 	unsigned int mask;
 
-	JXQueryPointer(display, rootWindow, &win1, &win2, &rootx, &rooty,
-		&winx, &winy, &mask);
+	JXQueryPointer(display, rootWindow, &win1, &win2,
+		&mousex, &mousey, &winx, &winy, &mask);
 
 	return mask;
+
 }
 
 /****************************************************************************

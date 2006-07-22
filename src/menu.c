@@ -220,8 +220,8 @@ int MenuLoop(MenuType *menu) {
 
 	hadMotion = 0;
 	hadPress = 0;
-	pressx = 0;
-	pressy = 0;
+
+	GetMousePosition(&pressx, &pressy);
 
 	for(;;) {
 
@@ -232,13 +232,25 @@ int MenuLoop(MenuType *menu) {
 			RedrawMenuTree(menu);
 			break;
 		case ButtonPress:
+
 			hadPress = 1;
-			pressx = event.xbutton.x;
-			pressy = event.xbutton.y;
+			pressx = event.xbutton.x_root;
+			pressy = event.xbutton.y_root;
 			if(event.xbutton.button != Button4
 				&& event.xbutton.button != Button5) {
 				break;		
 			}
+			switch(UpdateMotion(menu, &event)) {
+			case MENU_NOSELECTION: /* no selection */
+				break;
+			case MENU_LEAVE: /* mouse left the menu */
+				JXPutBackEvent(display, &event);
+				return 0;
+			case MENU_SUBSELECT: /* selection made */
+				return 1;
+			}
+			break;
+
 		case KeyPress:
 		case MotionNotify:
 			hadMotion = 1;
@@ -252,14 +264,25 @@ int MenuLoop(MenuType *menu) {
 				return 1;
 			}
 			break;
+
 		case ButtonRelease:
-			if(event.xbutton.button == Button4
-				|| event.xbutton.button == Button5
-				|| (!hadMotion && !hadPress)
-				|| (abs(event.xbutton.x - pressx) < doubleClickDelta
-				&& abs(event.xbutton.y - pressy) < doubleClickDelta)) {
+
+			if(event.xbutton.button == Button4) {
 				break;
 			}
+			if(event.xbutton.button == Button5) {
+				break;
+			}
+			if(!hadMotion && !hadPress) {
+				break;
+			}
+			if(abs(event.xbutton.x_root - pressx) > doubleClickDelta) {
+				break;
+			}
+			if(abs(event.xbutton.y_root - pressy) > doubleClickDelta) {
+				break;
+			}
+				
 			if(menu->currentIndex >= 0) {
 				count = 0;
 				for(ip = menu->items; ip; ip = ip->next) {
@@ -389,6 +412,7 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 
 	if(event->type == MotionNotify) {
 
+		SetMousePosition(event->xmotion.x_root, event->xmotion.y_root);
 		DiscardMotionEvents(event, menu->window);
 
 		x = event->xmotion.x - menu->x;
@@ -782,8 +806,8 @@ void SetPosition(MenuType *tp, int index) {
 
 	/* We need to do this twice so the event gets registered
 	 * on the submenu if one exists. */
-	SetMousePosition(tp->window, 6, y);
-	SetMousePosition(tp->window, 6, y);
+	MoveMouse(tp->window, 6, y);
+	MoveMouse(tp->window, 6, y);
 
 }
 

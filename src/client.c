@@ -641,7 +641,7 @@ void ShowClient(ClientNode *np) {
  ****************************************************************************/
 void MaximizeClient(ClientNode *np) {
 
-	int north, west;
+	int north, south, east, west;
 
 	Assert(np);
 
@@ -649,16 +649,7 @@ void MaximizeClient(ClientNode *np) {
 		UnshadeClient(np);
 	}
 
-	if(np->state.border & BORDER_OUTLINE) {
-		west = borderWidth;
-	} else {
-		west = 0;
-	}
-	if(np->state.border & BORDER_TITLE) {
-		north = west + titleHeight;
-	} else {
-		north = west;
-	}
+	GetBorderSize(np, &north, &south, &east, &west);
 
 	if(np->state.status & STAT_MAXIMIZED) {
 		np->x = np->oldx;
@@ -672,8 +663,8 @@ void MaximizeClient(ClientNode *np) {
 
 	JXMoveResizeWindow(display, np->parent,
 		np->x - west, np->y - north,
-		np->width + 2 * west,
-		np->height + north + west);
+		np->width + east + west,
+		np->height + north + south);
 	JXMoveResizeWindow(display, np->window, west,
 		north, np->width, np->height);
 
@@ -951,29 +942,20 @@ void SendClientMessage(Window w, AtomType type, AtomType message) {
 void SetShape(ClientNode *np) {
 
 	XRectangle rect[4];
-	int north, west;
+	int north, south, east, west;
 
 	Assert(np);
 
 	np->state.status |= STAT_SHAPE;
 
-	if(np->state.border & BORDER_OUTLINE) {
-		west = borderWidth;
-	} else {
-		west = 0;
-	}
-	if(np->state.border & BORDER_TITLE) {
-		north = west + titleHeight;
-	} else {
-		north = west;
-	}
+	GetBorderSize(np, &north, &south, &east, &west);
 
 	if(np->state.status & STAT_SHADED) {
 
 		rect[0].x = 0;
 		rect[0].y = 0;
-		rect[0].width = np->width + west * 2;
-		rect[0].height = west * 2 + north;
+		rect[0].width = np->width + east + west;
+		rect[0].height = north + south;
 
 		JXShapeCombineRectangles(display, np->parent, ShapeBounding,
 			0, 0, rect, 1, ShapeSet, Unsorted);
@@ -989,26 +971,26 @@ void SetShape(ClientNode *np) {
 		/* Top */
 		rect[0].x = 0;
 		rect[0].y = 0;
-		rect[0].width = np->width + west * 2;
+		rect[0].width = np->width + east + west;
 		rect[0].height = north;
 
 		/* Left */
 		rect[1].x = 0;
 		rect[1].y = 0;
 		rect[1].width = west;
-		rect[1].height = np->height + west + north;
+		rect[1].height = np->height + north + south;
 
 		/* Right */
-		rect[2].x = np->width + west;
+		rect[2].x = np->width + east;
 		rect[2].y = 0;
 		rect[2].width = west;
-		rect[2].height = np->height + west + north;
+		rect[2].height = np->height + north + south;
 
 		/* Bottom */
 		rect[3].x = 0;
-		rect[3].y = np->height + north;
-		rect[3].width = np->width + west * 2;
-		rect[3].height = west;
+		rect[3].y = np->height + south;
+		rect[3].width = np->width + east + west;
+		rect[3].height = south;
 
 		JXShapeCombineRectangles(display, np->parent, ShapeBounding,
 			0, 0, rect, 4, ShapeUnion, Unsorted);

@@ -374,22 +374,14 @@ void UpdateStrutBounds(BoundingBox *box) {
 void PlaceClient(ClientNode *np, int alreadyMapped) {
 
 	BoundingBox box;
-	int north, west;
+	int north, south, east, west;
 	const ScreenType *sp;
 	int cascadeIndex;
 	int overflow;
 
 	Assert(np);
 
-	north = 0;
-	west = 0;
-	if(np->state.border & BORDER_OUTLINE) {
-		north = borderWidth;
-		west = borderWidth;
-	}
-	if(np->state.border & BORDER_TITLE) {
-		north += titleHeight;
-	}
+	GetBorderSize(np, &north, &south, &east, &west);
 
 	if(np->x + np->width > rootWidth || np->y + np->height > rootWidth) {
 		overflow = 1;
@@ -462,7 +454,7 @@ void ConstrainSize(ClientNode *np) {
 
 	BoundingBox box;
 	const ScreenType *sp;
-	int north, west;
+	int north, south, east, west;
 
 	Assert(np);
 
@@ -473,15 +465,7 @@ void ConstrainSize(ClientNode *np) {
 	}
 
 	/* Constrain the size. */
-	north = 0;
-	west = 0;
-	if(np->state.border & BORDER_OUTLINE) {
-		north = borderWidth;
-		west = borderWidth;
-	}
-	if(np->state.border & BORDER_TITLE) {
-		north += titleHeight;
-	}
+	GetBorderSize(np, &north, &south, &east, &west);
 
 	GetScreenBounds(sp, &box);
 	UpdateTrayBounds(&box, np->state.layer);
@@ -489,8 +473,8 @@ void ConstrainSize(ClientNode *np) {
 
 	box.x += west;
 	box.y += north;
-	box.width -= west + west;
-	box.height -= north + west;
+	box.width -= east + west;
+	box.height -= north + south;
 
 	if(box.width > np->maxWidth) {
 		box.width = np->maxWidth;
@@ -523,22 +507,14 @@ void PlaceMaximizedClient(ClientNode *np) {
 
 	BoundingBox box;
 	const ScreenType *sp;
-	int north, west;
+	int north, south, east, west;
 
 	np->oldx = np->x;
 	np->oldy = np->y;
 	np->oldWidth = np->width;
 	np->oldHeight = np->height;
 
-	north = 0;
-	west = 0;
-	if(np->state.border & BORDER_OUTLINE) {
-		north = borderWidth;
-		west = borderWidth;
-	}
-	if(np->state.border & BORDER_TITLE) {
-		north += titleHeight;
-	}
+	GetBorderSize(np, &north, &south, &east, &west);
 
 	sp = GetCurrentScreen(np->x, np->y);
 	GetScreenBounds(sp, &box);
@@ -547,8 +523,8 @@ void PlaceMaximizedClient(ClientNode *np) {
 
 	box.x += west;
 	box.y += north;
-	box.width -= west + west;
-	box.height -= north + west;
+	box.width -= east + west;
+	box.height -= north + south;
 
 	if(box.width > np->maxWidth) {
 		box.width = np->maxWidth;

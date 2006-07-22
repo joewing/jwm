@@ -432,19 +432,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 			return;
 		}
 
-		north = 0;
-		south = 0;
-		east = 0;
-		west = 0;
-		if(np->state.border & BORDER_OUTLINE) {
-			north += borderWidth;
-			south += borderWidth;
-			east += borderWidth;
-			west += borderWidth;
-		}
-		if(np->state.border & BORDER_TITLE) {
-			north += titleHeight;
-		}
+		GetBorderSize(np, &north, &south, &east, &west);
 
 		wc.stack_mode = Above;
 		wc.sibling = np->parent;

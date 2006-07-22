@@ -11,6 +11,7 @@
 struct IconNode;
 
 typedef enum {
+	BUTTON_LABEL,
 	BUTTON_MENU,
 	BUTTON_MENU_ACTIVE,
 	BUTTON_TASK,

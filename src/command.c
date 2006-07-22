@@ -16,7 +16,7 @@ static CommandNode *startupCommands;
 static CommandNode *shutdownCommands;
 
 static void RunCommands(CommandNode *commands);
-static void ReleaseCommands(CommandNode *commands);
+static void ReleaseCommands(CommandNode **commands);
 static void AddCommand(CommandNode **commands, const char *command);
 
 /****************************************************************************
@@ -45,8 +45,8 @@ void ShutdownCommands() {
 /****************************************************************************
  ****************************************************************************/
 void DestroyCommands() {
-	ReleaseCommands(startupCommands);
-	ReleaseCommands(shutdownCommands);
+	ReleaseCommands(&startupCommands);
+	ReleaseCommands(&shutdownCommands);
 }
 
 /****************************************************************************
@@ -63,15 +63,15 @@ void RunCommands(CommandNode *commands) {
 
 /****************************************************************************
  ****************************************************************************/
-void ReleaseCommands(CommandNode *commands) {
+void ReleaseCommands(CommandNode **commands) {
 
 	CommandNode *cp;
 
-	while(commands) {
-		cp = commands->next;
-		Release(commands->command);
-		Release(commands);
-		commands = cp;
+	while(*commands) {
+		cp = (*commands)->next;
+		Release((*commands)->command);
+		Release(*commands);
+		*commands = cp;
 	}
 
 }

@@ -39,6 +39,13 @@ void DrawButton(ButtonNode *bp) {
 	height = bp->height;
 
 	switch(bp->type) {
+	case BUTTON_LABEL:
+		fg = COLOR_MENU_FG;
+		bg = COLOR_MENU_BG;
+		outlinePixel = colors[COLOR_MENU_BG];
+		topPixel = colors[COLOR_MENU_BG];
+		bottomPixel = colors[COLOR_MENU_BG];
+		break;
 	case BUTTON_MENU_ACTIVE:
 		fg = COLOR_MENU_ACTIVE_FG;
 		bg = COLOR_MENU_ACTIVE_BG;
@@ -95,10 +102,10 @@ void DrawButton(ButtonNode *bp) {
 	iconHeight = 0;
 	if(bp->icon) {
 
-		if(width > height) {
-			GetScaledIconSize(bp->icon, width, &iconWidth, &iconHeight);
+		if(width < height) {
+			GetScaledIconSize(bp->icon, width - 2, &iconWidth, &iconHeight);
 		} else {
-			GetScaledIconSize(bp->icon, height, &iconWidth, &iconHeight);
+			GetScaledIconSize(bp->icon, height - 2, &iconWidth, &iconHeight);
 		}
 
 	}
@@ -108,8 +115,8 @@ void DrawButton(ButtonNode *bp) {
 	if(bp->text) {
 		textWidth = GetStringWidth(bp->font, bp->text);
 		textHeight = GetStringHeight(bp->font);
-		if(textWidth + iconWidth > width) {
-			textWidth = width - iconWidth;
+		if(textWidth + iconWidth + 2 > width) {
+			textWidth = width - iconWidth - 2;
 			if(textWidth < 0) {
 				textWidth = 0;
 			}
@@ -139,7 +146,7 @@ void DrawButton(ButtonNode *bp) {
 		yoffset = height / 2 - iconHeight / 2;
 		PutIcon(bp->icon, drawable, gc, x + xoffset, y + yoffset,
 			iconWidth, iconHeight);
-		xoffset += iconWidth;
+		xoffset += iconWidth + 2;
 	}
 
 	if(bp->text) {

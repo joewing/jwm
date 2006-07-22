@@ -215,11 +215,9 @@ int MenuLoop(MenuType *menu) {
 	MenuItemType *ip;
 	int count;
 	int hadMotion;
-	int hadPress;
 	int pressx, pressy;
 
 	hadMotion = 0;
-	hadPress = 0;
 
 	GetMousePosition(&pressx, &pressy);
 
@@ -232,28 +230,10 @@ int MenuLoop(MenuType *menu) {
 			RedrawMenuTree(menu);
 			break;
 		case ButtonPress:
-
-			hadPress = 1;
-			pressx = event.xbutton.x_root;
-			pressy = event.xbutton.y_root;
-			if(event.xbutton.button != Button4
-				&& event.xbutton.button != Button5) {
-				break;		
-			}
-			switch(UpdateMotion(menu, &event)) {
-			case MENU_NOSELECTION: /* no selection */
-				break;
-			case MENU_LEAVE: /* mouse left the menu */
-				JXPutBackEvent(display, &event);
-				return 0;
-			case MENU_SUBSELECT: /* selection made */
-				return 1;
-			}
-			break;
-
 		case KeyPress:
 		case MotionNotify:
 			hadMotion = 1;
+			GetMousePosition(&pressx, &pressy);
 			switch(UpdateMotion(menu, &event)) {
 			case MENU_NOSELECTION: /* no selection */
 				break;
@@ -273,7 +253,7 @@ int MenuLoop(MenuType *menu) {
 			if(event.xbutton.button == Button5) {
 				break;
 			}
-			if(!hadMotion && !hadPress) {
+			if(!hadMotion) {
 				break;
 			}
 			if(abs(event.xbutton.x_root - pressx) > doubleClickDelta) {
@@ -624,62 +604,39 @@ void UpdateMenu(MenuType *menu) {
  ***************************************************************************/
 void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 
-/* FIXME
 	ButtonNode button;
-*/
 	Pixmap pixmap;
-	int xoffset;
-	int yoffset;
 
 	Assert(menu);
 
 	if(!item) {
 		if(index == -1 && menu->label) {
-			JXSetForeground(display, menu->gc, colors[COLOR_MENU_BG]);
-			JXFillRectangle(display, menu->window, menu->gc,
-				2, 2, menu->width - 4, menu->itemHeight - 1);
-			xoffset = 1 + menu->width / 2;
-			xoffset -= GetStringWidth(FONT_MENU, menu->label) / 2;
-			yoffset = 2 + menu->itemHeight / 2;
-			yoffset -= GetStringHeight(FONT_MENU) / 2;
-			RenderString(menu->window, menu->gc, FONT_MENU, COLOR_MENU_FG,
-				xoffset, yoffset, rootWidth, menu->label);
+			ResetButton(&button, menu->window, menu->gc);
+			button.x = 2;
+			button.y = 2;
+			button.width = menu->width - 5;
+			button.height = menu->itemHeight - 2;
+			button.font = FONT_MENU;
+			button.type = BUTTON_LABEL;
+			button.text = menu->label;
+			button.alignment = ALIGN_CENTER;
+			DrawButton(&button);
 		}
 		return;
 	}
 
 	if(item->name) {
 
-/* FIXME
 		ResetButton(&button, menu->window, menu->gc);
-		button.x = 6 + menu->textOffset;
+		button.x = 2;
 		button.y = 1 + menu->offsets[index];
 		button.font = FONT_MENU;
-		button.type = BUTTON_MENU;
+		button.type = BUTTON_LABEL;
+		button.width = menu->width - 5;
+		button.height = menu->itemHeight - 2;
 		button.text = item->name;
-		button.width = menu->width - 4;
-		button.height = menu->itemHeight;
+		button.icon = item->icon;
 		DrawButton(&button);
-*/
-
-		xoffset = 6 + menu->textOffset;
-		yoffset = 1 + menu->offsets[index] + menu->itemHeight / 2;
-		yoffset -= GetStringHeight(FONT_MENU) / 2;
-
-		JXSetForeground(display, menu->gc, colors[COLOR_MENU_BG]);
-		JXFillRectangle(display, menu->window, menu->gc,
-			2, menu->offsets[index] + 1, menu->width - 4, menu->itemHeight - 1);
-
-		if(item->icon) {
-			PutIcon(item->icon, menu->window, menu->gc,
-				BASE_ICON_OFFSET,
-				menu->offsets[index] + BASE_ICON_OFFSET,
-				menu->itemHeight - BASE_ICON_OFFSET * 2,
-				menu->itemHeight - BASE_ICON_OFFSET * 2);
-		}
-
-		RenderString(menu->window, menu->gc, FONT_MENU, COLOR_MENU_FG,
-			xoffset, yoffset, rootWidth, item->name);
 
 	} else if(!item->command && !item->submenu) {
 		JXSetForeground(display, menu->gc, colors[COLOR_MENU_DOWN]);

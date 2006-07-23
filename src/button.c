@@ -115,8 +115,8 @@ void DrawButton(ButtonNode *bp) {
 	if(bp->text) {
 		textWidth = GetStringWidth(bp->font, bp->text);
 		textHeight = GetStringHeight(bp->font);
-		if(textWidth + iconWidth + 2 > width) {
-			textWidth = width - iconWidth - 2;
+		if(textWidth + iconWidth + 8 > width) {
+			textWidth = width - iconWidth - 8;
 			if(textWidth < 0) {
 				textWidth = 0;
 			}
@@ -152,7 +152,7 @@ void DrawButton(ButtonNode *bp) {
 	if(bp->text) {
 		yoffset = height / 2 - textHeight / 2;
 		RenderString(drawable, gc, bp->font, fg, x + xoffset, y + yoffset,
-			textWidth, bp->text);
+			textWidth - 2, bp->text);
 	}
 
 }

@@ -1027,6 +1027,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
 	case BA_MOVE:
 		if(event->type == ButtonPress) {
 			if(doubleClickActive
+				&& abs(event->time - lastClickTime) > 0
 				&& abs(event->time - lastClickTime) <= doubleClickSpeed
 				&& abs(event->x - lastX) <= doubleClickDelta
 				&& abs(event->y - lastY) <= doubleClickDelta) {

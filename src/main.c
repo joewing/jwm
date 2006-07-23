@@ -58,8 +58,8 @@ char *exitCommand = NULL;
 int borderWidth = DEFAULT_BORDER_WIDTH;
 int titleHeight = DEFAULT_TITLE_HEIGHT;
 
-unsigned int doubleClickSpeed = DEFAULT_DOUBLE_CLICK_SPEED;
-unsigned int doubleClickDelta = DEFAULT_DOUBLE_CLICK_DELTA;
+unsigned int doubleClickSpeed;
+unsigned int doubleClickDelta;
 
 FocusModelType focusModel = FOCUS_SLOPPY;
 

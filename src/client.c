@@ -988,7 +988,7 @@ void SetShape(ClientNode *np) {
 
 		/* Bottom */
 		rect[3].x = 0;
-		rect[3].y = np->height + south;
+		rect[3].y = np->height + north;
 		rect[3].width = np->width + east + west;
 		rect[3].height = south;
 

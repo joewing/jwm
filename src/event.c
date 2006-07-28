@@ -123,6 +123,10 @@ void WaitForEvent(XEvent *event) {
 		case ResizeRequest:
 			handled = HandleDockResizeRequest(&event->xresizerequest);
 			break;
+		case MotionNotify:
+			SetMousePosition(event->xmotion.x_root, event->xmotion.y_root);
+			handled = 0;
+			break;
 		case ConfigureNotify:
 		case CreateNotify:
 		case MapNotify:

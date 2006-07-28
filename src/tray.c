@@ -610,7 +610,7 @@ int ProcessTrayEvent(const XEvent *event) {
 
 /***************************************************************************
  ***************************************************************************/
-void SignalTray(TimeType *now, int x, int y) {
+void SignalTray(const TimeType *now, int x, int y) {
 
 	TrayType *tp;
 
@@ -645,7 +645,13 @@ void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event) {
  ***************************************************************************/
 void HandleTrayLeaveNotify(TrayType *tp, const XCrossingEvent *event) {
 
-	HideTray(tp);
+	TimeType now;
+	int x, y;
+
+	GetCurrentTime(&now);
+	GetMousePosition(&x, &y);
+
+	SignalTray(&now, x, y);
 
 }
 

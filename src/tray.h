@@ -144,7 +144,7 @@ Window GetSupportingWindow();
 
 int ProcessTrayEvent(const XEvent *event);
 
-void SignalTray(struct TimeType *now, int x, int y);
+void SignalTray(const struct TimeType *now, int x, int y);
 
 void SetAutoHideTray(TrayType *tp, int v);
 void SetTrayX(TrayType *tp, const char *str);

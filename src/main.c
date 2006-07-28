@@ -232,7 +232,7 @@ void StartupConnection() {
 
 	attr.event_mask = SubstructureRedirectMask | SubstructureNotifyMask
 		| PropertyChangeMask | ColormapChangeMask | ButtonPressMask
-		| ButtonReleaseMask;
+		| ButtonReleaseMask | PointerMotionMask;
 	JXChangeWindowAttributes(display, rootWindow, CWEventMask, &attr);
 
 	signal(SIGTERM, HandleExit);

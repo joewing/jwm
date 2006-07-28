@@ -16,7 +16,7 @@ struct TrayComponentType *CreateTrayButton(
 	const char *iconName, const char *label, const char *action,
 	const char *popup, int width, int height);
 
-void SignalTrayButton(struct TimeType *now, int x, int y);
+void SignalTrayButton(const struct TimeType *now, int x, int y);
 
 #endif
 

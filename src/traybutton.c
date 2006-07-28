@@ -372,7 +372,7 @@ void ProcessMotionEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 /***************************************************************************
  ***************************************************************************/
-void SignalTrayButton(TimeType *now, int x, int y) {
+void SignalTrayButton(const TimeType *now, int x, int y) {
 
 	TrayButtonType *bp;
 	const char *popup;

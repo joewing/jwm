@@ -48,7 +48,7 @@ static void ProcessClockButtonEvent(TrayComponentType *cp,
 static void ProcessClockMotionEvent(TrayComponentType *cp,
 	int x, int y, int mask);
 
-static void DrawClock(ClockType *clk, TimeType *now, int x, int y);
+static void DrawClock(ClockType *clk, const TimeType *now, int x, int y);
 
 /***************************************************************************
  ***************************************************************************/
@@ -261,7 +261,7 @@ static void ProcessClockMotionEvent(TrayComponentType *cp,
 
 /***************************************************************************
  ***************************************************************************/
-void SignalClock(TimeType *now, int x, int y) {
+void SignalClock(const TimeType *now, int x, int y) {
 
 	ClockType *cp;
 	int shouldDraw;
@@ -297,7 +297,7 @@ void SignalClock(TimeType *now, int x, int y) {
 
 /***************************************************************************
  ***************************************************************************/
-void DrawClock(ClockType *clk, TimeType *now, int x, int y) {
+void DrawClock(ClockType *clk, const TimeType *now, int x, int y) {
 
 	TrayComponentType *cp;
 	const char *shortTime;

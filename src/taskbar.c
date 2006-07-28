@@ -446,7 +446,7 @@ void UpdateTaskBar() {
 
 /***************************************************************************
  ***************************************************************************/
-void SignalTaskbar(TimeType *now, int x, int y) {
+void SignalTaskbar(const TimeType *now, int x, int y) {
 
 	TaskBarType *bp;
 	Node *np;

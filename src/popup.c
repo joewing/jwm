@@ -126,7 +126,7 @@ void ShowPopup(int x, int y, const char *text) {
 			popup.y, popup.width, popup.height, 1, colors[COLOR_POPUP_OUTLINE],
 			colors[COLOR_POPUP_BG]);
 		popup.gc = JXCreateGC(display, popup.window, 0, NULL);
-		JXSelectInput(display, popup.window, ExposureMask);
+		JXSelectInput(display, popup.window, ExposureMask | PointerMotionMask);
 	} else {
 		JXMoveResizeWindow(display, popup.window, popup.x, popup.y,
 			popup.width, popup.height);
@@ -171,7 +171,7 @@ void SetPopupDelay(const char *str) {
 
 /****************************************************************************
  ****************************************************************************/
-void SignalPopup(TimeType *now, int x, int y) {
+void SignalPopup(const TimeType *now, int x, int y) {
 
 	if(popup.isActive) {
 		if(abs(popup.mx - x) > 2 || abs(popup.my - y) > 2) {

@@ -17,7 +17,7 @@ void DestroyClock();
 struct TrayComponentType *CreateClock(const char *format,
 	const char *command, int width, int height);
 
-void SignalClock(struct TimeType *now, int x, int y);
+void SignalClock(const struct TimeType *now, int x, int y);
 
 #endif
 

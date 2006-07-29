@@ -10,6 +10,7 @@ Todo:
 
 20060728:
 	- Add the ability to move a window with alt+click (Jeremy Reed).
+	- Fix a bug with raising shaded windows from a task list.
 
 20060704:
 	- Remove "Icons" tag.

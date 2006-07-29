@@ -420,7 +420,7 @@ void RestoreTransients(ClientNode *np, int raise) {
 
 	Assert(np);
 
-	if(!(np->state.status & STAT_MAPPED)) {
+	if(!(np->state.status & (STAT_MAPPED | STAT_SHADED))) {
 		JXMapWindow(display, np->window);
 		JXMapWindow(display, np->parent);
 	}

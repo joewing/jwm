@@ -306,6 +306,9 @@ void HandleButtonEvent(const XButtonEvent *event) {
 				if(focusModel == FOCUS_CLICK) {
 					FocusClient(np);
 				}
+				if(event->state & Mod1Mask) {
+					MoveClient(np, event->x, event->y);
+				}
 				break;
 			default:
 				break;

@@ -285,11 +285,7 @@ void MinimizeTransients(ClientNode *np) {
 		np->state.status &= ~STAT_ACTIVE;
 	}
 
-	if(np->state.status & STAT_SHADED) {
-		UnshadeClient(np);
-	}
-
-	if(np->state.status & STAT_MAPPED) {
+	if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
 		JXUnmapWindow(display, np->window);
 		JXUnmapWindow(display, np->parent);
 	}
@@ -299,7 +295,8 @@ void MinimizeTransients(ClientNode *np) {
 
 	for(x = 0; x < LAYER_COUNT; x++) {
 		for(tp = nodes[x]; tp; tp = tp->next) {
-			if(tp->owner == np->window && (tp->state.status & STAT_MAPPED)
+			if(tp->owner == np->window
+				&& (tp->state.status & (STAT_MAPPED | STAT_SHADED))
 				&& !(tp->state.status & STAT_MINIMIZED)) {
 				MinimizeTransients(tp);
 			}
@@ -420,11 +417,15 @@ void RestoreTransients(ClientNode *np, int raise) {
 
 	Assert(np);
 
-	if(!(np->state.status & (STAT_MAPPED | STAT_SHADED))) {
-		JXMapWindow(display, np->window);
-		JXMapWindow(display, np->parent);
+	if(!(np->state.status & STAT_MAPPED)) {
+		if(np->state.status & STAT_SHADED) {
+			JXMapWindow(display, np->parent);
+		} else {
+			JXMapWindow(display, np->window);
+			JXMapWindow(display, np->parent);
+			np->state.status |= STAT_MAPPED;
+		}
 	}
-	np->state.status |= STAT_MAPPED;
 	np->state.status &= ~STAT_MINIMIZED;
 	np->state.status &= ~STAT_SDESKTOP;
 
@@ -433,7 +434,7 @@ void RestoreTransients(ClientNode *np, int raise) {
 	for(x = 0; x < LAYER_COUNT; x++) {
 		for(tp = nodes[x]; tp; tp = tp->next) {
 			if(tp->owner == np->window
-				&& !(tp->state.status & STAT_MAPPED)
+				&& !(tp->state.status & (STAT_MAPPED | STAT_SHADED))
 				&& (tp->state.status & STAT_MINIMIZED)) {
 				RestoreTransients(tp, raise);
 			}

@@ -178,7 +178,7 @@ void ShowDesktop() {
 				}
 			} else if(np->state.desktop == currentDesktop
 				 || (np->state.status & STAT_STICKY)) {
-				if(np->state.status & STAT_MAPPED) {
+				if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
 					MinimizeClient(np);
 					np->state.status |= STAT_SDESKTOP;
 				}

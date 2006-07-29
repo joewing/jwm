@@ -438,7 +438,7 @@ void ParseResizeMode(const TokenNode *tp) {
  ****************************************************************************/
 void ParseRootMenu(const TokenNode *start) {
 
-	char *value;
+	const char *value;
 	MenuType *menu;
 
 	value = FindAttribute(start->attributes, ONROOT_ATTRIBUTE);
@@ -460,13 +460,10 @@ void ParseRootMenu(const TokenNode *start) {
 	value = FindAttribute(start->attributes, LABELED_ATTRIBUTE);
 	if(value && !strcmp(value, TRUE_VALUE)) {
 		value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
-		if(value) {
-			menu->label = Allocate(strlen(value) + 1);
-			strcpy(menu->label, value);
-		} else {
-			menu->label = Allocate(strlen(DEFAULT_TITLE) + 1);
-			strcpy(menu->label, DEFAULT_TITLE);
+		if(!value) {
+			value = DEFAULT_TITLE;
 		}
+		menu->label = CopyString(value);
 	} else {
 		menu->label = NULL;
 	}
@@ -525,16 +522,10 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 			}
 
 			value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
-			if(value) {
-				last->name = Allocate(strlen(value) + 1);
-				strcpy(last->name, value);
-			}
+			last->name = CopyString(value);
 
 			value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
-			if(value) {
-				last->iconName = Allocate(strlen(value) + 1);
-				strcpy(last->iconName, value);
-			}
+			last->iconName = CopyString(value);
 
 			last->submenu = Allocate(sizeof(MenuType));
 			child = last->submenu;
@@ -549,11 +540,9 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 			value = FindAttribute(start->attributes, LABELED_ATTRIBUTE);
 			if(value && !strcmp(value, TRUE_VALUE)) {
 				if(last->name) {
-					child->label = Allocate(strlen(last->name) + 1);
-					strcpy(child->label, last->name);
+					child->label = CopyString(last->name);
 				} else {
-					child->label = Allocate(strlen(DEFAULT_TITLE) + 1);
-					strcpy(child->label, DEFAULT_TITLE);
+					child->label = CopyString(DEFAULT_TITLE);
 				}
 			} else {
 				child->label = NULL;
@@ -572,23 +561,15 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 
 			value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
 			if(value) {
-				last->name = Allocate(strlen(value) + 1);
-				strcpy(last->name, value);
+				last->name = CopyString(value);
 			} else if(start->value) {
-				last->name = Allocate(strlen(start->value) + 1);
-				strcpy(last->name, start->value);
+				last->name = CopyString(start->value);
 			}
 
 			value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
-			if(value) {
-				last->iconName = Allocate(strlen(value) + 1);
-				strcpy(last->iconName, value);
-			}
+			last->iconName = CopyString(value);
 
-			if(start->value) {
-				last->command = Allocate(strlen(start->value) + 1);
-				strcpy(last->command, start->value);
-			}
+			last->command = CopyString(start->value);
 
 			break;
 		case TOK_SEPARATOR:
@@ -611,14 +592,10 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 			if(!value) {
 				value = DESKTOPS_NAME;
 			}
-			last->name = Allocate(strlen(value) + 1);
-			strcpy(last->name, value);
+			last->name = CopyString(value);
 
 			value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
-			if(value) {
-				last->iconName = Allocate(strlen(value) + 1);
-				strcpy(last->iconName, value);
-			}
+			last->iconName = CopyString(value);
 
 			break;
 		case TOK_EXIT:
@@ -639,8 +616,7 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 			if(!value) {
 				value = EXIT_NAME;
 			}
-			last->name = Allocate(strlen(value) + 1);
-			strcpy(last->name, value);
+			last->name = CopyString(value);
 
 			if(start->value) {
 				last->command = Allocate(strlen(EXIT_COMMAND)
@@ -649,15 +625,11 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 				strcat(last->command, ":");
 				strcat(last->command, start->value);
 			} else {
-				last->command = Allocate(strlen(EXIT_COMMAND) + 1);
-				strcpy(last->command, EXIT_COMMAND);
+				last->command = CopyString(EXIT_COMMAND);
 			}
 
 			value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
-			if(value) {
-				last->iconName = Allocate(strlen(value) + 1);
-				strcpy(last->iconName, value);
-			}
+			last->iconName = CopyString(value);
 
 			break;
 		case TOK_RESTART:
@@ -671,17 +643,12 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 			if(!value) {
 				value = RESTART_NAME;
 			}
-			last->name = Allocate(strlen(value) + 1);
-			strcpy(last->name, value);
+			last->name = CopyString(value);
 
 			value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
-			if(value) {
-				last->iconName = Allocate(strlen(value) + 1);
-				strcpy(last->iconName, value);
-			}
+			last->iconName = CopyString(value);
 
-			last->command = Allocate(strlen(RESTART_COMMAND) + 1);
-			strcpy(last->command, RESTART_COMMAND);
+			last->command = CopyString(RESTART_COMMAND);
 
 			break;
 		default:
@@ -723,8 +690,7 @@ MenuItemType *ParseMenuInclude(const TokenNode *tp, MenuType *menu,
 
 	} else {
 
-		path = Allocate(strlen(tp->value) + 1);
-		strcpy(path, tp->value);
+		path = CopyString(tp->value);
 		ExpandPath(&path);
 
 		fd = fopen(path, "r");
@@ -858,8 +824,7 @@ void ParseInclude(const TokenNode *tp, int depth) {
 
 	Assert(tp);
 
-	temp = Allocate(strlen(tp->value) + 1);
-	strcpy(temp, tp->value);
+	temp = CopyString(tp->value);
 
 	ExpandPath(&temp);
 
@@ -1535,8 +1500,7 @@ void ParseError(const TokenNode *tp, const char *str, ...) {
 		msg = Allocate(strlen(FILE_MESSAGE) + strlen(tp->fileName) + 1);
 		sprintf(msg, FILE_MESSAGE, tp->fileName, tp->line);
 	} else {
-		msg = Allocate(strlen(NULL_MESSAGE) + 1);
-		strcpy(msg, NULL_MESSAGE);
+		msg = CopyString(NULL_MESSAGE);
 	}
 
 	WarningVA(msg, str, ap);

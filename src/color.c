@@ -318,8 +318,7 @@ void SetColor(ColorType c, const char *value) {
 		Release(names[c]);
 	}
 
-	names[c] = Allocate(strlen(value) + 1);
-	strcpy(names[c], value);
+	names[c] = CopyString(value);
 
 }
 

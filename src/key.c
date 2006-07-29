@@ -10,6 +10,7 @@
 #include "root.h"
 #include "error.h"
 #include "tray.h"
+#include "misc.h"
 
 typedef enum {
 	MASK_NONE  = 0,
@@ -336,8 +337,7 @@ void InsertBinding(KeyType key, const char *modifiers,
 		for(offset = 0; stroke[offset]; offset++) {
 			if(stroke[offset] == '#') {
 
-				temp = Allocate(strlen(stroke) + 1);
-				strcpy(temp, stroke);
+				temp = CopyString(stroke);
 
 				for(temp[offset] = '1'; temp[offset] <= '9'; temp[offset]++) {
 					sym = ParseKeyString(temp);
@@ -375,12 +375,7 @@ void InsertBinding(KeyType key, const char *modifiers,
 		np->key = key;
 		np->mask = mask;
 		np->code = sym;
-		if(command) {
-			np->command = Allocate(strlen(command) + 1);
-			strcpy(np->command, command);
-		} else {
-			np->command = NULL;
-		}
+		np->command = CopyString(command);
 
 	} else if(code && strlen(code) > 0) {
 

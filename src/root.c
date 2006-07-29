@@ -11,6 +11,7 @@
 #include "error.h"
 #include "confirm.h"
 #include "desktop.h"
+#include "misc.h"
 
 static MenuType *rootMenu = NULL;
 static int showExitConfirmation = 1;
@@ -168,8 +169,7 @@ void RunCommand(const char *command) {
 			exitCommand = NULL;
 		}
 		if(strlen(command) > 6) {
-			exitCommand = Allocate(strlen(command) - 5 + 1);
-			strcpy(exitCommand, command + 6);
+			exitCommand = CopyString(command + 6);
 		}
 		Exit();
 		return;

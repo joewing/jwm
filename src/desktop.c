@@ -10,6 +10,7 @@
 #include "taskbar.h"
 #include "error.h"
 #include "menu.h"
+#include "misc.h"
 
 char **desktopNames = NULL;
 
@@ -232,8 +233,7 @@ void SetDesktopName(unsigned int desktop, const char *str) {
 
 	Assert(desktopNames[desktop] == NULL);
 
-	desktopNames[desktop] = Allocate(strlen(str) + 1);
-	strcpy(desktopNames[desktop], str);
+	desktopNames[desktop] = CopyString(str);
 
 }
 

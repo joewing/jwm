@@ -11,6 +11,7 @@
 #include "color.h"
 #include "client.h"
 #include "event.h"
+#include "misc.h"
 
 typedef struct SwallowNode {
 
@@ -102,14 +103,8 @@ TrayComponentType *CreateSwallow(const char *name, const char *command,
 	}
 
 	np = Allocate(sizeof(SwallowNode));
-	np->name = Allocate(strlen(name) + 1);
-	strcpy(np->name, name);
-	if(command) {
-		np->command = Allocate(strlen(command) + 1);
-		strcpy(np->command, command);
-	} else {
-		np->command = NULL;
-	}
+	np->name = CopyString(name);
+	np->command = CopyString(command);
 
 	np->next = swallowNodes;
 	swallowNodes = np;

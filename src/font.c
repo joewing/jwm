@@ -172,8 +172,7 @@ void SetFont(FontType type, const char *value) {
 		Release(fontNames[type]);
 	}
 
-	fontNames[type] = Allocate(strlen(value) + 1);
-	strcpy(fontNames[type], value);
+	fontNames[type] = CopyString(value);
 
 }
 

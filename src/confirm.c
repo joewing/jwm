@@ -11,6 +11,7 @@
 #include "button.h"
 #include "screen.h"
 #include "color.h"
+#include "misc.h"
 
 #ifndef DISABLE_CONFIRM
 
@@ -195,9 +196,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 	va_start(ap, action);
 	for(x = 0; x < dp->lineCount; x++) {
 		str = va_arg(ap, char*);
-		Assert(str);
-		dp->message[x] = Allocate(strlen(str) + 1);
-		strcpy(dp->message[x], str);
+		dp->message[x] = CopyString(str);
 	}
 	va_end(ap);
 

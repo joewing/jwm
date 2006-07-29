@@ -6,6 +6,7 @@
 #include "jwm.h"
 #include "lex.h"
 #include "error.h"
+#include "misc.h"
 
 static const int BLOCK_SIZE = 16;
 
@@ -479,8 +480,7 @@ TokenType LookupType(const char *name, TokenNode *np) {
 
 	if(np) {
 		np->type = TOK_INVALID;
-		np->invalidName = Allocate(strlen(name) + 1);
-		strcpy(np->invalidName, name);
+		np->invalidName = CopyString(name);
 	}
 
 	return TOK_INVALID;

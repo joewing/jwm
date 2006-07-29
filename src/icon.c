@@ -375,8 +375,7 @@ IconNode *CreateIconFromData(const char *name, char **data) {
 	image = LoadImageFromData(data);
 	if(image) {
 		result = CreateIcon();
-		result->name = Allocate(strlen(name) + 1);
-		strcpy(result->name, name);
+		result->name = CopyString(name);
 		result->image = image;
 		InsertIcon(result);
 		return result;
@@ -406,8 +405,7 @@ IconNode *CreateIconFromFile(const char *fileName) {
 	image = LoadImage(fileName);
 	if(image) {
 		result = CreateIcon();
-		result->name = Allocate(strlen(fileName) + 1);
-		strcpy(result->name, fileName);
+		result->name = CopyString(fileName);
 		result->image = image;
 		InsertIcon(result);
 		return result;

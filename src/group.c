@@ -11,6 +11,7 @@
 #include "match.h"
 #include "desktop.h"
 #include "main.h"
+#include "misc.h"
 
 typedef enum {
 	MATCH_NAME,
@@ -153,8 +154,7 @@ void AddPattern(PatternListType **lp, const char *pattern,
 	tp->next = *lp;
 	*lp = tp;
 
-	tp->pattern = Allocate(strlen(pattern) + 1);
-	strcpy(tp->pattern, pattern);
+	tp->pattern = CopyString(pattern);
 	tp->match = match;
 
 }
@@ -184,8 +184,7 @@ void AddGroupOptionValue(GroupType *gp, OptionType option,
 
 	lp = Allocate(sizeof(OptionListType));
 	lp->option = option;
-	lp->value = Allocate(strlen(value) + 1);
-	strcpy(lp->value, value);
+	lp->value = CopyString(value);
 	lp->next = gp->options;
 	gp->options = lp;
 

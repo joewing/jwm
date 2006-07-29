@@ -36,6 +36,7 @@
 #include "clock.h"
 #include "dock.h"
 #include "theme.h"
+#include "misc.h"
 
 Display *display = NULL;
 Window rootWindow;
@@ -106,8 +107,7 @@ int main(int argc, char *argv[]) {
 		strcpy(configPath, temp);
 		strcat(configPath, CONFIG_FILE);
 	} else {
-		configPath = Allocate(strlen(CONFIG_FILE) + 1);
-		strcpy(configPath, CONFIG_FILE);
+		configPath = CopyString(CONFIG_FILE);
 	}
 
 	for(x = 1; x < argc; x++) {

@@ -12,6 +12,7 @@
 #include "cursor.h"
 #include "error.h"
 #include "timing.h"
+#include "misc.h"
 
 #define DEFAULT_POPUP_DELAY 600
 
@@ -78,7 +79,6 @@ void DestroyPopup() {
 void ShowPopup(int x, int y, const char *text) {
 
 	const ScreenType *sp;
-	int len;
 
 	Assert(text);
 
@@ -91,13 +91,11 @@ void ShowPopup(int x, int y, const char *text) {
 		popup.text = NULL;
 	}
 
-	len = strlen(text);
-	if(!len) {
+	if(!strlen(text)) {
 		return;
 	}
 
-	popup.text = Allocate(len + 1);
-	strcpy(popup.text, text);
+	popup.text = CopyString(text);
 
 	popup.height = GetStringHeight(FONT_POPUP);
 	popup.width = GetStringWidth(FONT_POPUP, popup.text);

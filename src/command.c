@@ -6,6 +6,7 @@
 #include "jwm.h"
 #include "command.h"
 #include "root.h"
+#include "misc.h"
 
 typedef struct CommandNode {
 	char *command;
@@ -81,7 +82,6 @@ void ReleaseCommands(CommandNode **commands) {
 void AddCommand(CommandNode **commands, const char *command) {
 
 	CommandNode *cp;
-	int len;
 
 	if(!command) {
 		return;
@@ -91,9 +91,7 @@ void AddCommand(CommandNode **commands, const char *command) {
 	cp->next = *commands;
 	*commands = cp;
 
-	len = strlen(command);
-	cp->command = Allocate(len + 1);
-	strcpy(cp->command, command);
+	cp->command = CopyString(command);
 
 }
 

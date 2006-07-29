@@ -118,20 +118,12 @@ TrayComponentType *CreateClock(const char *format, const char *command,
 	clk->mouseTime.ms = 0;
 	clk->userWidth = 0;
 
-	if(format) {
-		clk->format = Allocate(strlen(format) + 1);
-		strcpy(clk->format, format);
-	} else {
-		clk->format = Allocate(strlen(DEFAULT_FORMAT) + 1);
-		strcpy(clk->format, DEFAULT_FORMAT);
+	if(!format) {
+		format = DEFAULT_FORMAT;
 	}
+	clk->format = CopyString(format);
 
-	if(command) {
-		clk->command = Allocate(strlen(command) + 1);
-		strcpy(clk->command, command);
-	} else {
-		clk->command = NULL;
-	}
+	clk->command = CopyString(command);
 
 	clk->shortTime[0] = 0;
 

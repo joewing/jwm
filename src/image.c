@@ -195,7 +195,7 @@ ImageNode *LoadPNGImage(const char *fileName) {
 	rowBytes = png_get_rowbytes(pngData, pngInfo);
 	data = Allocate(rowBytes * result->height);
 
-	rows = Allocate(result->height * sizeof(result->data));
+	rows = AllocateStack(result->height * sizeof(result->data));
 
 	y = 0;
 	for(x = 0; x < result->height; x++) {
@@ -225,7 +225,7 @@ ImageNode *LoadPNGImage(const char *fileName) {
 		}
 	}
 
-	Release(rows);
+	ReleaseStack(rows);
 	Release(data);
 
 	return result;

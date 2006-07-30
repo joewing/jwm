@@ -229,11 +229,15 @@ int MenuLoop(MenuType *menu) {
 		case Expose:
 			RedrawMenuTree(menu);
 			break;
+
 		case ButtonPress:
+
+			pressx = -100;
+			pressy = -100;
+
 		case KeyPress:
 		case MotionNotify:
 			hadMotion = 1;
-			GetMousePosition(&pressx, &pressy);
 			switch(UpdateMotion(menu, &event)) {
 			case MENU_NOSELECTION: /* no selection */
 				break;
@@ -256,11 +260,10 @@ int MenuLoop(MenuType *menu) {
 			if(!hadMotion) {
 				break;
 			}
-			if(abs(event.xbutton.x_root - pressx) > doubleClickDelta) {
-				break;
-			}
-			if(abs(event.xbutton.y_root - pressy) > doubleClickDelta) {
-				break;
+			if(abs(event.xbutton.x_root - pressx) < doubleClickDelta) {
+				if(abs(event.xbutton.y_root - pressy) < doubleClickDelta) {
+					break;
+				}
 			}
 				
 			if(menu->currentIndex >= 0) {

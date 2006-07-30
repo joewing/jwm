@@ -277,6 +277,9 @@ void ReadClientProtocols(ClientNode *np) {
 	}
 
 	np->state = ReadWindowState(np->window);
+	if(np->minWidth == np->maxWidth && np->minHeight == np->maxHeight) {
+		np->state.border &= ~BORDER_RESIZE;
+	}
 
 }
 
@@ -555,11 +558,13 @@ ClientState ReadWindowState(Window win) {
 /****************************************************************************
  ****************************************************************************/
 void ReadWMName(ClientNode *np) {
+
 	unsigned long count;
 	int status;
 	unsigned long extra;
 	Atom realType;
 	int realFormat;
+	unsigned char *name;
 
 	Assert(np);
 
@@ -569,10 +574,11 @@ void ReadWMName(ClientNode *np) {
 
 	status = JXGetWindowProperty(display, np->window,
 		atoms[ATOM_NET_WM_NAME], 0, 1024, False,
-		atoms[ATOM_UTF8_STRING], &realType, &realFormat, &count, &extra,
-		(unsigned char**)&np->name);
+		atoms[ATOM_UTF8_STRING], &realType, &realFormat, &count, &extra, &name);
 	if(status != Success) {
 		np->name = NULL;
+	} else {
+		np->name = (char*)name;
 	}
 
 	if(!np->name) {
@@ -584,9 +590,11 @@ void ReadWMName(ClientNode *np) {
 	if(!np->name) {
 		status = JXGetWindowProperty(display, np->window, XA_WM_NAME,
 			0, 1024, False, atoms[ATOM_COMPOUND_TEXT], &realType,
-			&realFormat, &count, &extra, (unsigned char**)&np->name);
+			&realFormat, &count, &extra, &name);
 		if(status != Success) {
 			np->name = NULL;
+		} else {
+			np->name = (char*)name;
 		}
 	}
 
@@ -643,6 +651,7 @@ void ReadWMProtocols(ClientNode *np) {
 /****************************************************************************
  ****************************************************************************/
 void ReadWMNormalHints(ClientNode *np) {
+
 	XSizeHints hints;
 	long temp;
 
@@ -719,6 +728,7 @@ void ReadWMNormalHints(ClientNode *np) {
 	} else {
 		np->gravity = 1;
 	}
+
 }
 
 /****************************************************************************

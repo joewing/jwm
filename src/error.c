@@ -28,18 +28,17 @@ void FatalError(const char *str, ...) {
 void Warning(const char *str, ...) {
 	va_list ap;
 	va_start(ap, str);
-
-	fprintf(stderr, "JWM: warning: ");
-	vfprintf(stderr, str, ap);
-	fprintf(stderr, "\n");
-
+	WarningVA(NULL, str, ap);
 	va_end(ap);
 }
 
 /****************************************************************************
  ****************************************************************************/
 void WarningVA(const char *part, const char *str, va_list ap) {
-	fprintf(stderr, "JWM: warning: %s: ", part);
+	fprintf(stderr, "JWM: warning: ");
+	if(part) {
+		fprintf(stderr, "%s: ", part);
+	}
 	vfprintf(stderr, str, ap);
 	fprintf(stderr, "\n");
 }

@@ -594,7 +594,9 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 
 	ClientNode *np;
 	long mask, flags;
+#ifdef DEBUG
 	char *atomName;
+#endif
 
 	np = FindClientByWindow(event->window);
 	if(np) {
@@ -680,9 +682,11 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 
 		} else {
 
+#ifdef DEBUG
 			atomName = JXGetAtomName(display, event->message_type);
-			Debug("Uknown ClientMessage: %s", atomName);
+			Debug("Uknown ClientMessage to client: %s", atomName);
 			JXFree(atomName);
+#endif
 
 		}
 
@@ -694,8 +698,13 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 			Exit();
 		} else if(event->message_type == atoms[ATOM_NET_CURRENT_DESKTOP]) {
 			ChangeDesktop(event->data.l[0]);
+		} else {
+#ifdef DEBUG
+			atomName = JXGetAtomName(display, event->message_type);
+			Debug("Uknown ClientMessage to root: %s", atomName);
+			JXFree(atomName);
+#endif
 		}
-
 
 	} else if(event->message_type == atoms[ATOM_NET_SYSTEM_TRAY_OPCODE]) {
 

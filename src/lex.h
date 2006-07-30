@@ -96,6 +96,7 @@ typedef struct TokenNode {
 TokenNode *Tokenize(const char *line, const char *fileName);
 
 const char *GetTokenName(const TokenNode *tp);
+const char *GetTokenTypeName(TokenType type);
 
 #endif
 

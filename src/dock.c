@@ -36,6 +36,7 @@ typedef struct DockType {
 } DockType;
 
 static const char *BASE_SELECTION_NAME = "_NET_SYSTEM_TRAY_S%d";
+static const char *ORIENTATION_ATOM = "_NET_SYSTEM_TRAY_ORIENTATION";
 
 static DockType *dock = NULL;
 static int owner;
@@ -217,8 +218,7 @@ void Create(TrayComponentType *cp) {
 		JXMapRaised(display, cp->window);
 	}
 
-	orientationAtom = JXInternAtom(display, "_NET_SYSTEM_TRAY_ORIENTATION",
-		False);
+	orientationAtom = JXInternAtom(display, ORIENTATION_ATOM, False);
 	if(cp->height == 1) {
 		orientation = SYSTEM_TRAY_ORIENTATION_VERT;
 	} else {
@@ -269,17 +269,11 @@ void Destroy(TrayComponentType *cp) {
  ***************************************************************************/
 void HandleDockEvent(const XClientMessageEvent *event) {
 
-	long opcode;
-	Window win;
-
 	Assert(event);
 
-	opcode = event->data.l[1];
-	win = event->data.l[2];
-
-	switch(opcode) {
+	switch(event->data.l[1]) {
 	case SYSTEM_TRAY_REQUEST_DOCK:
-		DockWindow(win);
+		DockWindow(event->data.l[2]);
 		break;
 	case SYSTEM_TRAY_BEGIN_MESSAGE:
 		break;
@@ -371,7 +365,10 @@ void DockWindow(Window win) {
 
 		JXAddToSaveSet(display, win);
 		JXSelectInput(display, win,
-			SubstructureNotifyMask | StructureNotifyMask | ResizeRedirectMask);
+			  SubstructureNotifyMask
+			| StructureNotifyMask
+			| ResizeRedirectMask
+			| PointerMotionMask);
 		JXReparentWindow(display, win, dock->cp->window, 0, 0);
 		JXMapRaised(display, win);
 
@@ -487,5 +484,4 @@ void UpdateDock() {
 	}
 
 }
-
 

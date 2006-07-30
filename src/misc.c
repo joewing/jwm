@@ -180,13 +180,15 @@ void Trim(char *str) {
 char *CopyString(const char *str) {
 
 	char *temp;
+	int len;
 
 	if(!str) {
 		return NULL;
 	}
 
-	temp = Allocate(strlen(str) + 1);
-	strcpy(temp, str);
+	len = strlen(str) + 1;
+	temp = Allocate(len);
+	memcpy(temp, str, len);
 
 	return temp;
 

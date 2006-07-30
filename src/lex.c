@@ -501,6 +501,12 @@ const char *GetTokenName(const TokenNode *tp) {
 
 /*****************************************************************************
  *****************************************************************************/
+const char *GetTokenTypeName(TokenType type) {
+	return TOKEN_MAP[type];
+}
+
+/*****************************************************************************
+ *****************************************************************************/
 TokenNode *CreateNode(TokenNode *parent, const char *file, int line) {
 	TokenNode *np;
 

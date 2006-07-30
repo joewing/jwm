@@ -152,7 +152,7 @@ static void ParseFocusModel(const TokenNode *tp);
 
 static char *FindAttribute(AttributeNode *ap, const char *name);
 static void ReleaseTokens(TokenNode *np);
-static void InvalidTag(const TokenNode *tp, const char *parent);
+static void InvalidTag(const TokenNode *tp, TokenType parent);
 static void ParseError(const TokenNode *tp, const char *str, ...);
 
 /****************************************************************************
@@ -334,7 +334,7 @@ void Parse(const TokenNode *start, int depth) {
 				SetTheme(tp->value);
 				break;
 			default:
-				InvalidTag(tp, "JWM");
+				InvalidTag(tp, TOK_JWM);
 				break;
 			}
 		}
@@ -652,7 +652,7 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 
 			break;
 		default:
-			InvalidTag(start, "Menu");
+			InvalidTag(start, TOK_MENU);
 			break;
 		}
 		start = start->next;
@@ -809,7 +809,7 @@ void ParseBorderStyle(const TokenNode *tp) {
 			SetColor(COLOR_BORDER_ACTIVE_BG, np->value);
 			break;
 		default:
-			InvalidTag(np, "BorderStyle");
+			InvalidTag(np, TOK_BORDERSTYLE);
 			break;
 		}
 	}
@@ -862,7 +862,7 @@ void ParseDesktops(const TokenNode *tp) {
 			SetDesktopName(x, np->value);
 			break;
 		default:
-			InvalidTag(np, "Desktops");
+			InvalidTag(np, TOK_DESKTOPS);
 			break;
 		}
 	}
@@ -899,7 +899,7 @@ void ParseTaskListStyle(const TokenNode *tp) {
 			SetColor(COLOR_TASK_ACTIVE_BG, np->value);
 			break;
 		default:
-			InvalidTag(np, "TaskListStyle");
+			InvalidTag(np, TOK_TASKLISTSTYLE);
 			break;
 		}
 	}
@@ -924,7 +924,7 @@ void ParseTrayStyle(const TokenNode *tp) {
 			SetColor(COLOR_TRAY_FG, np->value);
 			break;
 		default:
-			InvalidTag(np, "TrayStyle");
+			InvalidTag(np, TOK_TRAYSTYLE);
 			break;
 		}
 	}
@@ -1010,7 +1010,7 @@ void ParseTray(const TokenNode *tp) {
 			ParseDock(np, tray);
 			break;
 		default:
-			InvalidTag(np, "Tray");
+			InvalidTag(np, TOK_TRAY);
 			break;
 		}
 	}
@@ -1212,7 +1212,7 @@ void ParsePagerStyle(const TokenNode *tp) {
 			SetColor(COLOR_PAGER_ACTIVE_BG, np->value);
 			break;
 		default:
-			InvalidTag(np, "PagerStyle");
+			InvalidTag(np, TOK_PAGERSTYLE);
 			break;
 		}
 	}
@@ -1259,7 +1259,7 @@ void ParsePopupStyle(const TokenNode *tp) {
 			SetColor(COLOR_POPUP_BG, np->value);
 			break;
 		default:
-			InvalidTag(np, "PopupStyle");
+			InvalidTag(np, TOK_POPUPSTYLE);
 			break;
 		}
 	}
@@ -1292,7 +1292,7 @@ void ParseMenuStyle(const TokenNode *tp) {
 			SetColor(COLOR_MENU_ACTIVE_BG, np->value);
 			break;
 		default:
-			InvalidTag(np, "MenuStyle");
+			InvalidTag(np, TOK_MENUSTYLE);
 			break;
 		}
 	}
@@ -1319,7 +1319,7 @@ void ParseClockStyle(const TokenNode *tp) {
 			SetColor(COLOR_CLOCK_BG, np->value);
 			break;
 		default:
-			InvalidTag(np, "ClockStyle");
+			InvalidTag(np, TOK_CLOCKSTYLE);
 			break;
 		}
 	}
@@ -1346,7 +1346,7 @@ void ParseTrayButtonStyle(const TokenNode *tp) {
 			SetColor(COLOR_TRAYBUTTON_BG, np->value);
 			break;
 		default:
-			InvalidTag(np, "TrayButtonStyle");
+			InvalidTag(np, TOK_TRAYBUTTONSTYLE);
 			break;
 		}
 	}
@@ -1376,7 +1376,7 @@ void ParseGroup(const TokenNode *tp) {
 			ParseGroupOption(np, group, np->value);
 			break;
 		default:
-			InvalidTag(np, "Group");
+			InvalidTag(np, TOK_GROUP);
 			break;
 		}
 	}
@@ -1478,9 +1478,10 @@ char *ReadFile(FILE *fd) {
 
 /****************************************************************************
  ****************************************************************************/
-void InvalidTag(const TokenNode *tp, const char *parent) {
+void InvalidTag(const TokenNode *tp, TokenType parent) {
 
-	ParseError(tp, "invalid tag in %s: %s", parent, GetTokenName(tp));
+	ParseError(tp, "invalid tag in %s: %s",
+		GetTokenTypeName(parent), GetTokenName(tp));
 
 }
 

@@ -508,6 +508,7 @@ void PlaceMaximizedClient(ClientNode *np) {
 	BoundingBox box;
 	const ScreenType *sp;
 	int north, south, east, west;
+	float ratio, minr, maxr;
 
 	np->oldx = np->x;
 	np->oldy = np->y;
@@ -534,14 +535,19 @@ void PlaceMaximizedClient(ClientNode *np) {
 	}
 
 	if(np->sizeFlags & PAspect) {
-		if((float)box.width / box.height
-			< (float)np->aspect.minx / np->aspect.miny) {
-			box.height = box.width * np->aspect.miny / np->aspect.minx;
+
+		ratio = (float)box.width / box.height;
+
+		minr = (float)np->aspect.minx / np->aspect.miny;
+		if(ratio < minr) {
+			box.height = (int)((float)box.width / minr);
 		}
-		if((float)box.width / box.height
-			> (float)np->aspect.maxx / np->aspect.maxy) {
-			box.width = box.height * np->aspect.maxx / np->aspect.maxy;
+
+		maxr = (float)np->aspect.maxx / np->aspect.maxy;
+		if(ratio > maxr) {
+			box.width = (int)((float)box.height * maxr);
 		}
+
 	}
 
 	np->x = box.x;

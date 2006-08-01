@@ -20,8 +20,7 @@ void PlaceClient(struct ClientNode *np, int alreadyMapped);
 void PlaceMaximizedClient(struct ClientNode *np);
 void GravitateClient(struct ClientNode *np, int negate);
 
-void GetGravityDelta(int gravity, int north, int south, int east, int west,
-	int *x, int *y);
+void GetGravityDelta(const struct ClientNode *np, int *x, int *y);
 
 void ConstrainSize(struct ClientNode *np);
 

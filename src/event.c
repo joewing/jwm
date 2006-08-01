@@ -754,7 +754,7 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np) {
 	}
 
 	GetBorderSize(np, &north, &south, &east, &west);
-	GetGravityDelta(gravity, north, south, east, west, &deltax, &deltay);
+	GetGravityDelta(np, &deltax, &deltay);
 
 	x -= deltax;
 	y -= deltay;

@@ -455,6 +455,7 @@ void ConstrainSize(ClientNode *np) {
 	BoundingBox box;
 	const ScreenType *sp;
 	int north, south, east, west;
+	float ratio, minr, maxr;
 
 	Assert(np);
 
@@ -484,14 +485,19 @@ void ConstrainSize(ClientNode *np) {
 	}
 
 	if(np->sizeFlags & PAspect) {
-		if((float)box.width / box.height
-			< (float)np->aspect.minx / np->aspect.miny) {
-			box.height = box.width * np->aspect.miny / np->aspect.minx;
+
+		ratio = (float)box.width / box.height;
+
+		minr = (float)np->aspect.minx / np->aspect.miny;
+		if(ratio < minr) {
+			box.height = (int)((float)box.width / minr);
 		}
-		if((float)box.width / box.height
-			> (float)np->aspect.maxx / np->aspect.maxy) {
-			box.width = box.height * np->aspect.maxx / np->aspect.maxy;
+
+		maxr = (float)np->aspect.maxx / np->aspect.maxy;
+		if(ratio > maxr) {
+			box.width = (int)((float)box.height * maxr);
 		}
+
 	}
 
 	np->x = box.x;
@@ -561,15 +567,17 @@ void PlaceMaximizedClient(ClientNode *np) {
 
 /****************************************************************************
  ****************************************************************************/
-void GetGravityDelta(int gravity, int north, int south, int east, int west,
-	int *x, int  *y) {
+void GetGravityDelta(const ClientNode *np, int *x, int  *y) {
 
+	int north, south, east, west;
+
+	Assert(np);
 	Assert(x);
 	Assert(y);
 
-	*y = 0;
-	*x = 0;
-	switch(gravity) {
+	GetBorderSize(np, &north, &south, &east, &west);
+
+	switch(np->gravity) {
 	case NorthWestGravity:
 		*y = -north;
 		*x = -west;
@@ -603,6 +611,8 @@ void GetGravityDelta(int gravity, int north, int south, int east, int west,
 		*x = west;
 		break;
 	default: /* Static */
+		*x = 0;
+		*y = 0;
 		break;
 	}
 
@@ -613,13 +623,11 @@ void GetGravityDelta(int gravity, int north, int south, int east, int west,
  ****************************************************************************/
 void GravitateClient(ClientNode *np, int negate) {
 
-	int north, south, east, west;
 	int deltax, deltay;
 
 	Assert(np);
 
-	GetBorderSize(np, &north, &south, &east, &west);
-	GetGravityDelta(np->gravity, north, south, east, west, &deltax, &deltay);
+	GetGravityDelta(np, &deltax, &deltay);
 
 	if(negate) {
 		np->x += deltax;

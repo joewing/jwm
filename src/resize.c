@@ -20,7 +20,7 @@ static ResizeModeType resizeMode = RESIZE_OPAQUE;
 
 static int shouldStopResize;
 
-static void StopResize(ClientNode *np, int north, int west);
+static void StopResize(ClientNode *np);
 static void ResizeController(int wasDestroyed);
 static void FixWidth(ClientNode *np);
 static void FixHeight(ClientNode *np);
@@ -55,6 +55,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 	int lastgwidth, lastgheight;
 	int delta;
 	int north, south, east, west;
+	float ratio, minr, maxr;
 
 	Assert(np);
 
@@ -91,7 +92,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 	UpdateResizeWindow(np, gwidth, gheight);
 
 	if(!(GetMouseMask() & Button1Mask)) {
-		StopResize(np, north, west);
+		StopResize(np);
 		return;
 	}
 
@@ -107,7 +108,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 		switch(event.type) {
 		case ButtonRelease:
 			if(event.xbutton.button == Button1) {
-				StopResize(np, north, west);
+				StopResize(np);
 				return;
 			}
 			break;
@@ -165,20 +166,21 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 				if((action & (BA_RESIZE_N | BA_RESIZE_S)) &&
 					(action & (BA_RESIZE_E | BA_RESIZE_W))) {
 
-					if((float)np->width / np->height
-						< (float)np->aspect.minx / np->aspect.miny) {
+					ratio = (float)np->width / np->height;
+
+					minr = (float)np->aspect.minx / np->aspect.miny;
+					if(ratio < minr) {
 						delta = np->width;
-						np->width = np->height * np->aspect.minx
-							/ np->aspect.miny;
+						np->width = (int)((float)np->height * minr);
 						if(action & BA_RESIZE_W) {
 							np->x -= np->width - delta;
 						}
 					}
-					if((float)np->width / np->height
-						> (float)np->aspect.maxx / np->aspect.maxy) {
+
+					maxr = (float)np->aspect.maxx / np->aspect.maxy;
+					if(ratio > maxr) {
 						delta = np->height;
-						np->height = np->width * np->aspect.maxy
-							/ np->aspect.maxx;
+						np->height = (int)((float)np->width / maxr);
 						if(action & BA_RESIZE_N) {
 							np->y -= np->height - delta;
 						}
@@ -250,6 +252,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 	int lastgwidth, lastgheight;
 	int north, south, east, west;
 	int deltax, deltay;
+	float ratio, minr, maxr;
 
 	Assert(np);
 
@@ -308,7 +311,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 				deltax = Min(-np->xinc, -10);
 				break;
 			default:
-				StopResize(np, north, west);
+				StopResize(np);
 				return;
 			}
 
@@ -322,7 +325,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 
 		} else if(event.type == ButtonRelease) {
 
-			StopResize(np, north, west);
+			StopResize(np);
 			return;
 
 		}
@@ -341,14 +344,19 @@ void ResizeClientKeyboard(ClientNode *np) {
 		np->width = Min(np->width, np->maxWidth);
 
 		if(np->sizeFlags & PAspect) {
-			if((float)np->width / np->height
-				< (float)np->aspect.minx / np->aspect.miny) {
-				np->width = np->height * np->aspect.minx / np->aspect.miny;
+
+			ratio = (float)np->width / np->height;
+
+			minr = (float)np->aspect.minx / np->aspect.miny;
+			if(ratio < minr) {
+				np->width = (int)((float)np->height * minr);
 			}
-			if((float)np->width / np->height
-				> (float)np->aspect.maxx / np->aspect.maxy) {
-				np->height = np->width * np->aspect.maxy / np->aspect.maxx;
+
+			maxr = (float)np->aspect.maxx / np->aspect.maxy;
+			if(ratio > maxr) {
+				np->height = (int)((float)np->width / maxr);
 			}
+
 		}
 
 		lastgwidth = gwidth;
@@ -399,7 +407,9 @@ void ResizeClientKeyboard(ClientNode *np) {
 
 /****************************************************************************
  ****************************************************************************/
-void StopResize(ClientNode *np, int north, int west) {
+void StopResize(ClientNode *np) {
+
+	int north, south, east, west;
 
 	np->controller = NULL;
 
@@ -412,15 +422,17 @@ void StopResize(ClientNode *np, int north, int west) {
 
 	DestroyResizeWindow();
 
+	GetBorderSize(np, &north, &south, &east, &west);
+
 	if(np->state.status & STAT_SHADED) {
 		JXMoveResizeWindow(display, np->parent,
 			np->x - west, np->y - north,
-			np->width + west * 2, north + west);
+			np->width + east + west, north + south);
 	} else {
 		JXMoveResizeWindow(display, np->parent,
 			np->x - west, np->y - north,
-			np->width + west + west,
-			np->height + north + west);
+			np->width + east + west,
+			np->height + north + south);
 	}
 	JXMoveResizeWindow(display, np->window, west,
 		north, np->width, np->height);
@@ -432,35 +444,51 @@ void StopResize(ClientNode *np, int north, int west) {
  ****************************************************************************/
 void FixWidth(ClientNode *np) {
 
+	float ratio, minr, maxr;
+
 	Assert(np);
 
 	if((np->sizeFlags & PAspect) && np->height > 0) {
-		if((float)np->width / np->height
-			< (float)np->aspect.minx / np->aspect.miny) {
-			np->width = np->height * np->aspect.minx / np->aspect.miny;
+
+		ratio = (float)np->width / np->height;
+
+		minr = (float)np->aspect.minx / np->aspect.miny;
+		if(ratio < minr) {
+			np->width = (int)((float)np->height * minr);
 		}
-		if((float)np->width / np->height
-			> (float)np->aspect.maxx / np->aspect.maxy) {
-			np->width = np->height * np->aspect.maxx / np->aspect.maxy;
+
+		maxr = (float)np->aspect.maxx / np->aspect.maxy;
+		if(ratio > maxr) {
+			np->width = (int)((float)np->height * maxr);
 		}
+
 	}
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 void FixHeight(ClientNode *np) {
 
+	float ratio, minr, maxr;
+
 	Assert(np);
 
 	if((np->sizeFlags & PAspect) && np->height > 0) {
-		if((float)np->width / np->height
-			< (float)np->aspect.minx / np->aspect.miny) {
-			np->height = np->width * np->aspect.miny / np->aspect.minx;
+
+		ratio = (float)np->width / np->height;
+
+		minr = (float)np->aspect.minx / np->aspect.miny;
+		if(ratio < minr) {
+			np->height = (int)((float)np->width / minr);
 		}
-		if((float)np->width / np->height
-			> (float)np->aspect.maxx / np->aspect.maxy) {
-			np->height = np->width * np->aspect.maxy / np->aspect.maxx;
+
+		maxr = (float)np->aspect.maxx / np->aspect.maxy;
+		if(ratio > maxr) {
+			np->height = (int)((float)np->width / maxr);
 		}
+
 	}
+
 }
 

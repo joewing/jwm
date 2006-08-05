@@ -501,32 +501,10 @@ void ComputeTraySize(TrayType *tp) {
  ***************************************************************************/
 void ShowTray(TrayType *tp) {
 
-	int x, y;
-	int moveMouse;
-
 	if(tp->hidden) {
 
-		JXMoveWindow(display, tp->window, tp->x, tp->y);
-
-		GetMousePosition(&x, &y);
-
-		moveMouse = 0;
-
-		if(x < tp->x || x >= tp->x + tp->width) {
-			x = tp->x + tp->width / 2;
-			moveMouse = 1;
-		}
-
-		if(y < tp->y || y >= tp->y + tp->height) {
-			y = tp->y + tp->height / 2;
-			moveMouse = 1;
-		}
-
-		if(moveMouse) {
-			MoveMouse(rootWindow, x, y);
-		}
-
 		tp->hidden = 0;
+		JXMoveWindow(display, tp->window, tp->x, tp->y);
 
 	}
 

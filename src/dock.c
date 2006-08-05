@@ -368,7 +368,7 @@ void DockWindow(Window win) {
 			  SubstructureNotifyMask
 			| StructureNotifyMask
 			| ResizeRedirectMask
-			| PointerMotionMask);
+			| PointerMotionMask | PointerMotionHintMask);
 		JXReparentWindow(display, win, dock->cp->window, 0, 0);
 		JXMapRaised(display, win);
 

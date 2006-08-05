@@ -91,13 +91,16 @@ void SetDefaultSnapDistance() {
 /****************************************************************************
  ****************************************************************************/
 void MoveController(int wasDestroyed) {
+
 	if(moveMode == MOVE_OUTLINE) {
 		ClearOutline();
 	}
-	JXUngrabPointer(display, CurrentTime);
+
 	JXUngrabKeyboard(display, CurrentTime);
+
 	DestroyMoveWindow();
 	shouldStopMove = 1;
+
 }
 
 /****************************************************************************
@@ -116,10 +119,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 		return 0;
 	}
 
-	if(!GrabMouseForMove()) {
-		Debug("MoveClient: could not grab mouse");
-		return 0;
-	}
+	SetMoveCursor(np->parent);
 
 	np->controller = MoveController;
 	shouldStopMove = 0;
@@ -144,6 +144,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 
 		if(shouldStopMove) {
 			np->controller = NULL;
+			SetDefaultCursor(np->parent);
 			return doMove;
 		}
 
@@ -230,7 +231,7 @@ int MoveClientKeyboard(ClientNode *np) {
 		Debug("could not grab keyboard for client move");
 		return 0;
 	}
-	GrabMouseForMove();
+	SetMoveCursor(np->parent);
 
 	GetBorderSize(np, &north, &south, &east, &west);
 
@@ -258,6 +259,7 @@ int MoveClientKeyboard(ClientNode *np) {
 
 		if(shouldStopMove) {
 			np->controller = NULL;
+			SetDefaultCursor(np->parent);
 			return 1;
 		}
 
@@ -347,6 +349,8 @@ void StopMove(ClientNode *np, int doMove, int oldx, int oldy) {
 	(np->controller)(0);
 
 	np->controller = NULL;
+
+	SetDefaultCursor(np->parent);
 
 	if(!doMove) {
 		np->x = oldx;

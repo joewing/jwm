@@ -1149,6 +1149,8 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	attrMask |= CWOverrideRedirect;
 	attr.override_redirect = True;
 
+	/* We can't use PointerMotionHint mask here since the exact location
+	 * of the mouse on the frame is important. */
 	attrMask |= CWEventMask;
 	attr.event_mask
 		= ButtonPressMask

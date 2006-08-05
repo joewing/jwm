@@ -230,9 +230,14 @@ void StartupConnection() {
 	clientContext = XUniqueContext();
 	frameContext = XUniqueContext();
 
-	attr.event_mask = SubstructureRedirectMask | SubstructureNotifyMask
-		| PropertyChangeMask | ColormapChangeMask | ButtonPressMask
-		| ButtonReleaseMask | PointerMotionMask;
+	attr.event_mask
+		= SubstructureRedirectMask
+		| SubstructureNotifyMask
+		| PropertyChangeMask
+		| ColormapChangeMask
+		| ButtonPressMask
+		| ButtonReleaseMask
+		| PointerMotionMask | PointerMotionHintMask;
 	JXChangeWindowAttributes(display, rootWindow, CWEventMask, &attr);
 
 	signal(SIGTERM, HandleExit);

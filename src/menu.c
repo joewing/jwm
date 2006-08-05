@@ -54,6 +54,7 @@ int menuShown = 0;
 /***************************************************************************
  ***************************************************************************/
 void InitializeMenu(MenuType *menu) {
+
 	MenuItemType *np;
 	int index, temp;
 	int hasSubmenu;
@@ -138,14 +139,14 @@ void ShowMenu(MenuType *menu, RunMenuCommandType runner, int x, int y) {
 	mouseStatus = GrabMouseForMenu();
 	keyboardStatus = JXGrabKeyboard(display, rootWindow, False,
 		GrabModeAsync, GrabModeAsync, CurrentTime);
-	if(!mouseStatus && keyboardStatus != GrabSuccess) {
+	if(!mouseStatus || keyboardStatus != GrabSuccess) {
 		return;
 	}
 
 	ShowSubmenu(menu, NULL, x, y);
 
-	JXUngrabPointer(display, CurrentTime);
 	JXUngrabKeyboard(display, CurrentTime);
+	JXUngrabPointer(display, CurrentTime);
 	RefocusClient();
 
 	if(runCommand) {
@@ -287,6 +288,9 @@ int MenuLoop(MenuType *menu) {
 /***************************************************************************
  ***************************************************************************/
 void CreateMenu(MenuType *menu, int x, int y) {
+
+	XSetWindowAttributes attr;
+	unsigned long attrMask;
 	int temp;
 
 	menu->lastIndex = -1;
@@ -310,25 +314,34 @@ void CreateMenu(MenuType *menu, int x, int y) {
 	menu->y = y;
 	menu->parentOffset = temp - y;
 
-	menu->window = JXCreateSimpleWindow(display, rootWindow, x, y,
-		menu->width, menu->height, 0, 0, colors[COLOR_MENU_BG]);
+	attrMask = 0;
+
+	attrMask |= CWEventMask;
+	attr.event_mask = ExposureMask;
+
+	attrMask |= CWBackPixel;
+	attr.background_pixel = colors[COLOR_MENU_BG];
+
+	attrMask |= CWSaveUnder;
+	attr.save_under = True;
+
+	menu->window = JXCreateWindow(display, rootWindow, x, y,
+		menu->width, menu->height, 0, CopyFromParent, InputOutput,
+		CopyFromParent, attrMask, &attr);
+
 	JXMapRaised(display, menu->window);
-	JXSelectInput(display, menu->window, ExposureMask);
 
-	JXFlush(display);
-
-	JXSetInputFocus(display, menu->window, RevertToPointerRoot, CurrentTime);
 	menu->gc = JXCreateGC(display, menu->window, 0, NULL);
-
-	DrawMenu(menu);
 
 }
 
 /***************************************************************************
  ***************************************************************************/
 void HideMenu(MenuType *menu) {
+
 	JXFreeGC(display, menu->gc);
 	JXDestroyWindow(display, menu->window);
+
 }
 
 /***************************************************************************
@@ -347,6 +360,7 @@ void RedrawMenuTree(MenuType *menu) {
 /***************************************************************************
  ***************************************************************************/
 void DrawMenu(MenuType *menu) {
+
 	MenuItemType *np;
 	int x;
 
@@ -398,8 +412,8 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 		SetMousePosition(event->xmotion.x_root, event->xmotion.y_root);
 		DiscardMotionEvents(event, menu->window);
 
-		x = event->xmotion.x - menu->x;
-		y = event->xmotion.y - menu->y;
+		x = event->xmotion.x_root - menu->x;
+		y = event->xmotion.y_root - menu->y;
 		subwindow = event->xmotion.subwindow;
 
 	} else if(event->type == ButtonPress) {
@@ -721,6 +735,7 @@ int GetMenuIndex(MenuType *menu, int y) {
 /***************************************************************************
  ***************************************************************************/
 MenuItemType *GetMenuItem(MenuType *menu, int index) {
+
 	MenuItemType *ip;
 
 	if(index >= 0) {
@@ -735,6 +750,7 @@ MenuItemType *GetMenuItem(MenuType *menu, int index) {
 	}
 
 	return ip;
+
 }
 
 /***************************************************************************

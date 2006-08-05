@@ -78,6 +78,8 @@ void DestroyPopup() {
  ****************************************************************************/
 void ShowPopup(int x, int y, const char *text) {
 
+	unsigned long attrMask;
+	XSetWindowAttributes attr;
 	const ScreenType *sp;
 
 	Assert(text);
@@ -120,17 +122,36 @@ void ShowPopup(int x, int y, const char *text) {
 	}
 
 	if(popup.window == None) {
-		popup.window = JXCreateSimpleWindow(display, rootWindow, popup.x,
-			popup.y, popup.width, popup.height, 1, colors[COLOR_POPUP_OUTLINE],
-			colors[COLOR_POPUP_BG]);
+
+		attrMask = 0;
+
+		attrMask |= CWEventMask;
+		attr.event_mask
+			= ExposureMask
+			| PointerMotionMask | PointerMotionHintMask;
+
+		attrMask |= CWSaveUnder;
+		attr.save_under = True;
+
+		attrMask |= CWBackPixel;
+		attr.background_pixel = colors[COLOR_POPUP_BG];
+
+		attrMask |= CWBorderPixel;
+		attr.border_pixel = colors[COLOR_POPUP_OUTLINE];
+
+		popup.window = JXCreateWindow(display, rootWindow, popup.x, popup.y,
+			popup.width, popup.height, 1, CopyFromParent,
+			InputOutput, CopyFromParent, attrMask, &attr);
+
 		popup.gc = JXCreateGC(display, popup.window, 0, NULL);
-		JXSelectInput(display, popup.window, ExposureMask | PointerMotionMask);
+
 	} else {
 		JXMoveResizeWindow(display, popup.window, popup.x, popup.y,
 			popup.width, popup.height);
 	}
 
-	GetMousePosition(&popup.mx, &popup.my);
+	popup.mx = x;
+	popup.my = y;
 
 	if(!popup.isActive) {
 		JXMapRaised(display, popup.window);

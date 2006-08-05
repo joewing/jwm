@@ -63,6 +63,7 @@ Cursor CreateCursor(unsigned int shape) {
 /****************************************************************************
  ****************************************************************************/
 void ShutdownCursors() {
+
 	JXFreeCursor(display, defaultCursor);
 	JXFreeCursor(display, moveCursor);
 	JXFreeCursor(display, northCursor);
@@ -73,28 +74,12 @@ void ShutdownCursors() {
 	JXFreeCursor(display, northWestCursor);
 	JXFreeCursor(display, southEastCursor);
 	JXFreeCursor(display, southWestCursor);
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 void DestroyCursors() {
-}
-
-/****************************************************************************
- ****************************************************************************/
-int GrabMouseForMove() {
-	int result;
-
-	result = JXGrabPointer(display, rootWindow, False, ButtonPressMask
-		| ButtonReleaseMask | PointerMotionMask, GrabModeAsync,
-		GrabModeAsync, None, moveCursor, CurrentTime);
-
-	if(result == GrabSuccess) {
-		return 1;
-	} else {
-		return 0;
-	}
-
 }
 
 /****************************************************************************
@@ -168,24 +153,35 @@ int GrabMouseForResize(BorderActionType action) {
 /****************************************************************************
  ****************************************************************************/
 int GrabMouseForMenu() {
+
 	int result;
 
-	result = JXGrabPointer(display, rootWindow, False, ButtonPressMask
-		| ButtonReleaseMask | PointerMotionMask, GrabModeAsync,
-		GrabModeAsync, None, defaultCursor, CurrentTime);
+	result = JXGrabPointer(display, rootWindow, False,
+		ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
+		GrabModeAsync, GrabModeAsync, None, defaultCursor, CurrentTime);
 
 	if(result == GrabSuccess) {
 		return 1;
 	} else {
 		return 0;
 	}
-		
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void SetMoveCursor(Window w) {
+
+	JXDefineCursor(display, w, moveCursor);
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 void SetDefaultCursor(Window w) {
+
 	JXDefineCursor(display, w, defaultCursor);
+
 }
 
 /****************************************************************************

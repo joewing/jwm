@@ -22,7 +22,6 @@ static Window supportingWindow;
 
 static void HandleTrayExpose(TrayType *tp, const XExposeEvent *event);
 static void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event);
-static void HandleTrayLeaveNotify(TrayType *tp, const XCrossingEvent *event);
 
 static void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event);
 static void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event);
@@ -66,12 +65,13 @@ void StartupTray() {
 		attrMask = CWOverrideRedirect;
 		attr.override_redirect = True;
 
+		/* We can't use PointerMotionHintMask since the exact position
+		 * of the mouse on the tray is important for popups. */
 		attrMask |= CWEventMask;
 		attr.event_mask
 			= ButtonPressMask
 			| ExposureMask
 			| KeyPressMask
-			| LeaveWindowMask
 			| EnterWindowMask
 			| PointerMotionMask;
 
@@ -142,7 +142,6 @@ void StartupTray() {
 
 	UpdatePager();
 	UpdateTaskBar();
-	DrawTray();
 
 }
 
@@ -504,7 +503,6 @@ void ShowTray(TrayType *tp) {
 
 	int x, y;
 	int moveMouse;
-	XEvent event;
 
 	if(tp->hidden) {
 
@@ -526,7 +524,6 @@ void ShowTray(TrayType *tp) {
 
 		if(moveMouse) {
 			MoveMouse(rootWindow, x, y);
-			JXCheckMaskEvent(display, LeaveWindowMask, &event);
 		}
 
 		tp->hidden = 0;
@@ -541,35 +538,33 @@ void HideTray(TrayType *tp) {
 
 	int x, y;
 
-	if(tp->autoHide && !tp->hidden && !menuShown) {
-		tp->hidden = 1;
+	tp->hidden = 1;
 
-		/* Determine where to move the tray. */
-		if(tp->layout == LAYOUT_HORIZONTAL) {
+	/* Determine where to move the tray. */
+	if(tp->layout == LAYOUT_HORIZONTAL) {
 
-			x = tp->x;
+		x = tp->x;
 
-			if(tp->y >= rootHeight / 2) {
-				y = rootHeight - 1;
-			} else {
-				y = 1 - tp->height;
-			}
-
+		if(tp->y >= rootHeight / 2) {
+			y = rootHeight - 1;
 		} else {
-
-			y = tp->y;
-
-			if(tp->x >= rootWidth / 2) {
-				x = rootWidth - 1;
-			} else {
-				x = 1 - tp->width;
-			}
-
+			y = 1 - tp->height;
 		}
 
-		/* Move it. */
-		JXMoveWindow(display, tp->window, x, y);
+	} else {
+
+		y = tp->y;
+
+		if(tp->x >= rootWidth / 2) {
+			x = rootWidth - 1;
+		} else {
+			x = 1 - tp->width;
+		}
+
 	}
+
+	/* Move it. */
+	JXMoveWindow(display, tp->window, x, y);
 
 }
 
@@ -587,9 +582,6 @@ int ProcessTrayEvent(const XEvent *event) {
 				break;
 			case EnterNotify:
 				HandleTrayEnterNotify(tp, &event->xcrossing);
-				break;
-			case LeaveNotify:
-				HandleTrayLeaveNotify(tp, &event->xcrossing);
 				break;
 			case ButtonPress:
 				HandleTrayButtonPress(tp, &event->xbutton);
@@ -615,7 +607,7 @@ void SignalTray(const TimeType *now, int x, int y) {
 	TrayType *tp;
 
 	for(tp = trays; tp; tp = tp->next) {
-		if(tp->autoHide && !tp->hidden) {
+		if(tp->autoHide && !tp->hidden && !menuShown) {
 			if(x < tp->x || x >= tp->x + tp->width
 				|| y < tp->y || y >= tp->y + tp->height) {
 				HideTray(tp);
@@ -638,20 +630,6 @@ void HandleTrayExpose(TrayType *tp, const XExposeEvent *event) {
 void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event) {
 
 	ShowTray(tp);
-
-}
-
-/***************************************************************************
- ***************************************************************************/
-void HandleTrayLeaveNotify(TrayType *tp, const XCrossingEvent *event) {
-
-	TimeType now;
-	int x, y;
-
-	GetCurrentTime(&now);
-	GetMousePosition(&x, &y);
-
-	SignalTray(&now, x, y);
 
 }
 
@@ -930,6 +908,10 @@ void ResizeTray(TrayType *tp) {
 
 	UpdateTaskBar();
 	DrawSpecificTray(tp);
+
+	if(tp->hidden) {
+		HideTray(tp);
+	}
 
 }
 

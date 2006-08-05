@@ -13,9 +13,9 @@ void StartupCursors();
 void ShutdownCursors();
 void DestroyCursors();
 
-int GrabMouseForMove();
-int GrabMouseForMenu();
 int GrabMouseForResize(BorderActionType action);
+
+int GrabMouseForMenu();
 
 Cursor GetFrameCursor(BorderActionType action);
 
@@ -26,6 +26,7 @@ void GetMousePosition(int *x, int *y);
 
 unsigned int GetMouseMask();
 
+void SetMoveCursor(Window w);
 void SetDefaultCursor(Window w);
 
 void SetDoubleClickSpeed(const char *str);

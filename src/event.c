@@ -158,8 +158,9 @@ void WaitForEvent(XEvent *event) {
 		if(!handled) {
 			handled = ProcessSwallowEvent(event);
 		}
-
-		handled |= ProcessPopupEvent(event);
+		if(!handled) {
+			handled = ProcessPopupEvent(event);
+		}
 
 	} while(handled && !shouldExit);
 
@@ -477,8 +478,11 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 /****************************************************************************
  ****************************************************************************/
 void HandleEnterNotify(const XCrossingEvent *event) {
+
 	ClientNode *np;
 	Cursor cur;
+
+	SetMousePosition(event->x_root, event->y_root);
 
 	np = FindClientByWindow(event->window);
 	if(np) {
@@ -494,17 +498,22 @@ void HandleEnterNotify(const XCrossingEvent *event) {
 			np->borderAction = BA_NONE;
 		}
 	}
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 void HandleLeaveNotify(const XCrossingEvent *event) {
+
 	ClientNode *np;
+
+	SetMousePosition(event->x_root, event->y_root);
 
 	np = FindClientByParent(event->window);
 	if(np) {
 		SetDefaultCursor(np->parent);
 	}
+
 }
 
 /****************************************************************************

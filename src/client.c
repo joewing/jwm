@@ -1190,7 +1190,12 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	np->parentGC = JXCreateGC(display, np->parent, 0, NULL);
 
 	attrMask = CWDontPropagate;
-	attr.do_not_propagate_mask = ButtonPressMask | ButtonReleaseMask;
+	attr.do_not_propagate_mask
+		= ButtonPressMask
+		| ButtonReleaseMask
+		| PointerMotionMask
+		| ButtonMotionMask
+		| KeyPressMask;
 
 	JXChangeWindowAttributes(display, np->window, attrMask, &attr);
 

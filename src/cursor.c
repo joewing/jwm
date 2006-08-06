@@ -152,18 +152,16 @@ int GrabMouseForResize(BorderActionType action) {
 
 /****************************************************************************
  ****************************************************************************/
-int GrabMouseForMove(Window w) {
+int GrabMouseForMove() {
 
 	int result;
 
 	result = JXGrabPointer(display, rootWindow, False,
 		ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
-		GrabModeAsync, GrabModeAsync, None, defaultCursor, CurrentTime);
-
+		GrabModeAsync, GrabModeAsync, None, moveCursor, CurrentTime);
 
 	if(result == GrabSuccess) {
 
-		JXDefineCursor(display, w, moveCursor);
 		return 1;
 
 	} else {

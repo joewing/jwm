@@ -120,7 +120,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 		return 0;
 	}
 
-	GrabMouseForMove(np->parent);
+	GrabMouseForMove();
 
 	np->controller = MoveController;
 	shouldStopMove = 0;
@@ -227,7 +227,7 @@ int MoveClientKeyboard(ClientNode *np) {
 		MaximizeClient(np);
 	}
 
-	GrabMouseForMove(np->parent);
+	GrabMouseForMove();
 	if(JXGrabKeyboard(display, np->window, True, GrabModeAsync,
 		GrabModeAsync, CurrentTime) != GrabSuccess) {
 		Debug("could not grab keyboard for client move");

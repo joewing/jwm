@@ -14,7 +14,7 @@ void ShutdownCursors();
 void DestroyCursors();
 
 int GrabMouseForResize(BorderActionType action);
-int GrabMouseForMove(Window w);
+int GrabMouseForMove();
 
 int GrabMouseForMenu();
 

@@ -308,9 +308,7 @@ void HandleButtonEvent(const XButtonEvent *event) {
 					FocusClient(np);
 				}
 				if(event->state & Mod1Mask) {
-Debug("A");
 					MoveClient(np, event->x, event->y);
-Debug("B");
 				}
 				break;
 			default:

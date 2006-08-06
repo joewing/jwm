@@ -139,6 +139,12 @@ void ShowPopup(int x, int y, const char *text) {
 		attrMask |= CWBorderPixel;
 		attr.border_pixel = colors[COLOR_POPUP_OUTLINE];
 
+		attrMask |= CWDontPropagate;
+		attr.do_not_propagate_mask
+			= PointerMotionMask
+			| ButtonPressMask
+			| ButtonReleaseMask;
+
 		popup.window = JXCreateWindow(display, rootWindow, popup.x, popup.y,
 			popup.width, popup.height, 1, CopyFromParent,
 			InputOutput, CopyFromParent, attrMask, &attr);

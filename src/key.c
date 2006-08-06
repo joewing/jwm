@@ -166,10 +166,10 @@ void GrabKey(KeyNode *np) {
 
 		mask |= np->state;
 		JXGrabKey(display, np->code, mask,
-			rootWindow, True, GrabModeSync, GrabModeAsync);
+			rootWindow, True, GrabModeAsync, GrabModeAsync);
 		for(tp = GetTrays(); tp; tp = tp->next) {
 			JXGrabKey(display, np->code, mask,
-				tp->window, True, GrabModeSync, GrabModeAsync);
+				tp->window, True, GrabModeAsync, GrabModeAsync);
 		}
 
 	}
@@ -239,7 +239,7 @@ void GrabKeys(ClientNode *np) {
 	for(kp = bindings; kp; kp = kp->next) {
 		if(ShouldGrab(kp->key)) {
 			JXGrabKey(display, kp->code, kp->state,
-				np->window, True, GrabModeSync, GrabModeAsync);
+				np->window, True, GrabModeAsync, GrabModeAsync);
 		}
 	}
 

@@ -96,6 +96,7 @@ void MoveController(int wasDestroyed) {
 		ClearOutline();
 	}
 
+	JXUngrabPointer(display, CurrentTime);
 	JXUngrabKeyboard(display, CurrentTime);
 
 	DestroyMoveWindow();
@@ -119,7 +120,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 		return 0;
 	}
 
-	SetMoveCursor(np->parent);
+	GrabMouseForMove(np->parent);
 
 	np->controller = MoveController;
 	shouldStopMove = 0;
@@ -226,12 +227,12 @@ int MoveClientKeyboard(ClientNode *np) {
 		MaximizeClient(np);
 	}
 
+	GrabMouseForMove(np->parent);
 	if(JXGrabKeyboard(display, np->window, True, GrabModeAsync,
 		GrabModeAsync, CurrentTime) != GrabSuccess) {
 		Debug("could not grab keyboard for client move");
 		return 0;
 	}
-	SetMoveCursor(np->parent);
 
 	GetBorderSize(np, &north, &south, &east, &west);
 

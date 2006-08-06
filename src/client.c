@@ -1141,7 +1141,7 @@ void ReparentClient(ClientNode *np, int notOwner) {
 
 	}
 	JXGrabButton(display, AnyButton, AnyModifier, np->window,
-		True, ButtonPressMask, GrabModeSync, GrabModeAsync, None, None);
+		True, ButtonPressMask, GrabModeAsync, GrabModeAsync, None, None);
 	GrabKeys(np);
 
 	attrMask = 0;

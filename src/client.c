@@ -697,10 +697,6 @@ void FocusClient(ClientNode *np) {
 
 		if(!(np->state.status & STAT_SHADED)) {
 			UpdateClientColormap(np);
-			if(np->protocols & PROT_TAKE_FOCUS) {
-				SendClientMessage(np->window, ATOM_WM_PROTOCOLS,
-					ATOM_WM_TAKE_FOCUS);
-			}
 			SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, np->window);
 		}
 
@@ -759,10 +755,12 @@ void RefocusClient() {
  ****************************************************************************/
 void DeleteClient(ClientNode *np) {
 
+	ClientProtocolType protocols;
+
 	Assert(np);
 
-	ReadWMProtocols(np);
-	if(np->protocols & PROT_DELETE) {
+	protocols = ReadWMProtocols(np->window);
+	if(protocols & PROT_DELETE) {
 		SendClientMessage(np->window, ATOM_WM_PROTOCOLS,
 			ATOM_WM_DELETE_WINDOW);
 	} else {

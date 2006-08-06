@@ -176,9 +176,12 @@ void Resize(TrayComponentType *cp) {
 	SwallowNode *np = (SwallowNode*)cp->object;
 
 	if(cp->window != None) {
+
 		width = cp->width - np->border * 2;
 		height = cp->height - np->border * 2;
+
 		JXResizeWindow(display, cp->window, width, height);
+
 	}
 
 }
@@ -187,10 +190,21 @@ void Resize(TrayComponentType *cp) {
  ****************************************************************************/
 void Destroy(TrayComponentType *cp) {
 
+	ClientProtocolType protocols;
+
 	if(cp->window) {
+
 		JXReparentWindow(display, cp->window, rootWindow, 0, 0);
 		JXRemoveFromSaveSet(display, cp->window);
-		SendClientMessage(cp->window, ATOM_WM_PROTOCOLS, ATOM_WM_DELETE_WINDOW);
+
+		protocols = ReadWMProtocols(cp->window);
+		if(protocols & PROT_DELETE) {
+			SendClientMessage(cp->window, ATOM_WM_PROTOCOLS,
+				ATOM_WM_DELETE_WINDOW);
+		} else {
+			JXKillClient(display, cp->window);
+		}
+
 	}
 
 }

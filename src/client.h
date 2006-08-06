@@ -10,12 +10,6 @@
 #include "hint.h"
 
 typedef enum {
-	PROT_NONE       = 0,
-	PROT_DELETE     = 1,
-	PROT_TAKE_FOCUS = 2
-} ClientProtocolType;
-
-typedef enum {
 	BORDER_NONE    = 0,
 	BORDER_OUTLINE = 1,
 	BORDER_TITLE   = 2,
@@ -90,8 +84,6 @@ typedef struct ClientNode {
 	ClientState state;
 
 	BorderActionType borderAction;
-
-	ClientProtocolType protocols;
 
 	struct IconNode *icon;
 

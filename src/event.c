@@ -130,9 +130,9 @@ void WaitForEvent(XEvent *event) {
 		case ConfigureNotify:
 		case CreateNotify:
 		case MapNotify:
-		case NoExpose:
 		case ReparentNotify:
 		case GraphicsExpose:
+		case NoExpose:
 			handled = 1;
 			break;
 		default:

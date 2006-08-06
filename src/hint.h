@@ -129,6 +129,12 @@ typedef struct ClientState {
 	unsigned int desktop;
 } ClientState;
 
+typedef enum {
+	PROT_NONE       = 0,
+	PROT_DELETE     = 1,
+	PROT_TAKE_FOCUS = 2
+} ClientProtocolType;
+
 extern Atom atoms[ATOM_COUNT];
 
 void InitializeHints();
@@ -143,7 +149,7 @@ void ReadClientProtocols(struct ClientNode *np);
 void ReadWMName(struct ClientNode *np);
 void ReadWMClass(struct ClientNode *np);
 void ReadWMNormalHints(struct ClientNode *np);
-void ReadWMProtocols(struct ClientNode *np);
+ClientProtocolType ReadWMProtocols(Window w);
 void ReadWMColormaps(struct ClientNode *np);
 
 void ReadWinLayer(struct ClientNode *np);

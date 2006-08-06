@@ -616,7 +616,9 @@ void ReadWMClass(ClientNode *np) {
 
 /****************************************************************************
  ****************************************************************************/
-void ReadWMProtocols(ClientNode *np) {
+ClientProtocolType ReadWMProtocols(Window w) {
+
+	ClientProtocolType result;
 	unsigned long count, x;
 	int status;
 	unsigned long extra;
@@ -625,27 +627,27 @@ void ReadWMProtocols(ClientNode *np) {
 	unsigned char *temp;
 	Atom *p;
 
-	Assert(np);
-
-	status = JXGetWindowProperty(display, np->window, atoms[ATOM_WM_PROTOCOLS],
+	result = PROT_NONE;
+	status = JXGetWindowProperty(display, w, atoms[ATOM_WM_PROTOCOLS],
 		0, 32, False, XA_ATOM, &realType, &realFormat, &count, &extra, &temp);
 	p = (Atom*)temp;
 
 	if(status != Success || !p) {
-		return;
+		return result;
 	}
 
-	np->protocols = PROT_NONE;
 	for(x = 0; x < count; x++) {
 		if(p[x] == atoms[ATOM_WM_DELETE_WINDOW]) {
-			np->protocols |= PROT_DELETE;
+			result |= PROT_DELETE;
 		} else if(p[x] == atoms[ATOM_WM_TAKE_FOCUS]) {
-			np->protocols |= PROT_TAKE_FOCUS;
+			result |= PROT_TAKE_FOCUS;
 		}
 	}
 
 	JXFree(p);
 
+	return result;
+	
 }
 
 /****************************************************************************

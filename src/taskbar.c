@@ -186,6 +186,8 @@ void SetSize(TrayComponentType *cp, int width, int height) {
  ***************************************************************************/
 void Create(TrayComponentType *cp) {
 
+	XGCValues gcValues;
+	unsigned long gcMask;
 	TaskBarType *tp;
 
 	Assert(cp);
@@ -205,10 +207,13 @@ void Create(TrayComponentType *cp) {
 
 	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
 		rootDepth);
-	tp->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
 	tp->buffer = cp->pixmap;
 
-	JXSetForeground(display, tp->bufferGC, colors[COLOR_TASK_BG]);
+	gcMask = GCGraphicsExposures | GCForeground;
+	gcValues.graphics_exposures = False;
+	gcValues.foreground = colors[COLOR_TASK_BG];
+	tp->bufferGC = JXCreateGC(display, cp->pixmap, gcMask, &gcValues);
+
 	JXFillRectangle(display, cp->pixmap, tp->bufferGC,
 		0, 0, cp->width, cp->height);
 
@@ -218,6 +223,8 @@ void Create(TrayComponentType *cp) {
  ***************************************************************************/
 void Resize(TrayComponentType *cp) {
 
+	XGCValues gcValues;
+	unsigned long gcMask;
 	TaskBarType *tp;
 
 	Assert(cp);
@@ -244,10 +251,13 @@ void Resize(TrayComponentType *cp) {
 
 	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
 		rootDepth);
-	tp->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
 	tp->buffer = cp->pixmap;
 
-	JXSetForeground(display, tp->bufferGC, colors[COLOR_TASK_BG]);
+	gcMask = GCGraphicsExposures | GCForeground;
+	gcValues.graphics_exposures = False;
+	gcValues.foreground = colors[COLOR_TASK_BG];
+	tp->bufferGC = JXCreateGC(display, cp->pixmap, gcMask, &gcValues);
+
 	JXFillRectangle(display, cp->pixmap, tp->bufferGC,
 		0, 0, cp->width, cp->height);
 }

@@ -48,7 +48,9 @@ void InitializeTray() {
 void StartupTray() {
 
 	XSetWindowAttributes attr;
-	long attrMask;
+	unsigned long attrMask;
+	XGCValues gcValues;
+	unsigned long gcMask;
 	TrayType *tp;
 	TrayComponentType *cp;
 	int variableSize;
@@ -84,7 +86,9 @@ void StartupTray() {
 
 		SetDefaultCursor(tp->window);
 
-		tp->gc = JXCreateGC(display, tp->window, 0, NULL);
+		gcMask = GCGraphicsExposures;
+		gcValues.graphics_exposures = False;
+		tp->gc = JXCreateGC(display, tp->window, gcMask, &gcValues);
 
 		/* Create and layout items on the tray. */
 		xoffset = tp->border;

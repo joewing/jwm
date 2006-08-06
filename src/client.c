@@ -1126,6 +1126,8 @@ void ReparentClient(ClientNode *np, int notOwner) {
 
 	XSetWindowAttributes attr;
 	int attrMask;
+	XGCValues gcValues;
+	int gcMask;
 	int x, y, width, height;
 
 	Assert(np);
@@ -1184,11 +1186,17 @@ void ReparentClient(ClientNode *np, int notOwner) {
 		height += titleHeight;
 	}
 
+	/* Create the frame window. */
 	np->parent = JXCreateWindow(display, rootWindow,
 		x, y, width, height, 0, rootDepth, InputOutput,
 		rootVisual, attrMask, &attr);
-	np->parentGC = JXCreateGC(display, np->parent, 0, NULL);
 
+	/* Create a graphics context for drawing borders. */
+	gcMask = GCGraphicsExposures;
+	gcValues.graphics_exposures = False;
+	np->parentGC = JXCreateGC(display, np->parent, gcMask, &gcValues);
+
+	/* Update the window to get only the events we want. */
 	attrMask = CWDontPropagate;
 	attr.do_not_propagate_mask
 		= ButtonPressMask
@@ -1196,10 +1204,10 @@ void ReparentClient(ClientNode *np, int notOwner) {
 		| PointerMotionMask
 		| ButtonMotionMask
 		| KeyPressMask;
-
 	JXChangeWindowAttributes(display, np->window, attrMask, &attr);
-
 	JXSetWindowBorderWidth(display, np->window, 0);
+
+	/* Reparent the client window. */
 	if((np->state.border & BORDER_OUTLINE)
 		&& (np->state.border & BORDER_TITLE)) {
 		JXReparentWindow(display, np->window, np->parent,

@@ -291,6 +291,8 @@ void CreateMenu(MenuType *menu, int x, int y) {
 
 	XSetWindowAttributes attr;
 	unsigned long attrMask;
+	XGCValues gcValues;
+	unsigned long gcMask;
 	int temp;
 
 	menu->lastIndex = -1;
@@ -331,7 +333,9 @@ void CreateMenu(MenuType *menu, int x, int y) {
 
 	JXMapRaised(display, menu->window);
 
-	menu->gc = JXCreateGC(display, menu->window, 0, NULL);
+	gcMask = GCGraphicsExposures;
+	gcValues.graphics_exposures = False;
+	menu->gc = JXCreateGC(display, menu->window, gcMask, &gcValues);
 
 }
 

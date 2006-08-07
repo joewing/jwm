@@ -179,7 +179,7 @@ void SetFont(FontType type, const char *value) {
 /****************************************************************************
  ****************************************************************************/
 void RenderString(Drawable d, GC g, FontType font, ColorType color,
-	int x, int y, int width, const char *str) {
+	int x, int y, int width, Region region, const char *str) {
 
 	XRectangle rect;
 	int len, h, w;
@@ -236,7 +236,11 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 	xd = JXftDrawCreate(display, d, rootVisual, rootColormap);
 	Assert(xd);
 
-	JXftDrawSetClipRectangles(xd, 0, 0, &rect, 1);
+	if(region) {
+		XftDrawSetClip(xd, region);
+	} else {
+		JXftDrawSetClipRectangles(xd, 0, 0, &rect, 1);
+	}
 	JXftDrawStringUtf8(xd, GetXftColor(color), fonts[font],
 		x, y + fonts[font]->ascent, (const unsigned char*)output, len);
 	JXftDrawDestroy(xd);
@@ -244,10 +248,16 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 #else
 
 	JXSetForeground(display, g, colors[color]);
-	JXSetClipRectangles(display, g, 0, 0, &rect, 1, Unsorted);
+	if(region) {
+		XSetRegion(display, g, region);
+	} else {
+		JXSetClipRectangles(display, g, 0, 0, &rect, 1, Unsorted);
+	}
 	JXSetFont(display, g, fonts[font]->fid);
 	JXDrawString(display, d, g, x, y + fonts[font]->ascent, output, len);
-	JXSetClipMask(display, g, None);
+	if(width > 0 || region) {
+		JXSetClipMask(display, g, None);
+	}
 
 #endif
 

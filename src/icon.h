@@ -46,7 +46,7 @@ void StartupIcons();
 void ShutdownIcons();
 void DestroyIcons();
 
-void AddIconPath(const char *path);
+void AddIconPath(char *path);
 
 void PutIcon(IconNode *icon, Drawable d, GC g, int x, int y,
 	int width, int height);

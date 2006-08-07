@@ -316,7 +316,7 @@ void DrawClock(ClockType *clk, const TimeType *now, int x, int y) {
 			COLOR_CLOCK_FG,
 			cp->width / 2 - width / 2,
 			cp->height / 2 - GetStringHeight(FONT_CLOCK) / 2,
-			cp->width, shortTime);
+			cp->width, NULL, shortTime);
 
 		UpdateSpecificTray(clk->cp->tray, clk->cp);
 

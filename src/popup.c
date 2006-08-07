@@ -230,7 +230,7 @@ void DrawPopup() {
 
 	JXClearWindow(display, popup.window);
 	RenderString(popup.window, popup.gc, FONT_POPUP, COLOR_POPUP_FG, 4, 1,
-		popup.width, popup.text);
+		popup.width, NULL, popup.text);
 
 }
 

@@ -289,7 +289,7 @@ void Create(TrayComponentType *cp) {
 	if(bp->label) {
 		RenderString(cp->pixmap, gc, FONT_TRAYBUTTON, COLOR_TRAYBUTTON_FG,
 			labelx + 2, cp->height / 2 - GetStringHeight(FONT_TRAYBUTTON) / 2,
-			cp->width - labelx, bp->label);
+			cp->width - labelx, NULL, bp->label);
 	}
 
 	JXFreeGC(display, gc);

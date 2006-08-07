@@ -28,7 +28,7 @@ void ShutdownBorders();
 void DestroyBorders();
 
 BorderActionType GetBorderActionType(const struct ClientNode *np, int x, int y);
-void DrawBorder(const struct ClientNode *np);
+void DrawBorder(const struct ClientNode *np, const XExposeEvent *expose);
 
 int GetBorderIconSize();
 

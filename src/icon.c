@@ -129,13 +129,17 @@ void SetIconSize() {
 
 /****************************************************************************
  ****************************************************************************/
-void AddIconPath(const char *path) {
+void AddIconPath(char *path) {
 
 	IconPathNode *ip;
 	int length;
 	int addSep;
 
-	Assert(path);
+	if(!path) {
+		return;
+	}
+
+	Trim(path);
 
 	length = strlen(path);
 	if(path[length - 1] != '/') {

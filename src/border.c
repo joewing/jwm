@@ -52,6 +52,8 @@ static BorderPixmapDataType bitmaps[BP_COUNT >> 1] = {
 
 static Pixmap pixmaps[BP_COUNT];
 
+static Region borderRegion = NULL;
+
 static void DrawBorderHelper(const ClientNode *np,
 	unsigned int width, unsigned int height);
 static void DrawButtonBorder(const ClientNode *np, int offset,
@@ -217,11 +219,12 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 
 /****************************************************************************
  ****************************************************************************/
-void DrawBorder(const ClientNode *np) {
+void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
 
 	unsigned int width;
 	unsigned int height;
 	int bsize;
+	XRectangle rect;
 
 	if(shouldExit) {
 		return;
@@ -244,6 +247,30 @@ void DrawBorder(const ClientNode *np) {
 		return;
 	}
 
+	if(expose) {
+
+		if(!borderRegion) {
+			borderRegion = XCreateRegion();
+		}
+
+		rect.x = (short)expose->x;
+		rect.y = (short)expose->y;
+		rect.width = (unsigned short)expose->width;
+		rect.height = (unsigned short)expose->height;
+		XUnionRectWithRegion(&rect, borderRegion, borderRegion);
+
+		if(expose->count) {
+			return;
+		}
+
+		XSetRegion(display, np->parentGC, borderRegion);
+
+	} else {
+
+		XSetClipMask(display, np->parentGC, None);
+
+	}
+
 	if(np->state.status & STAT_SHADED) {
 		height = titleHeight + bsize * 2;
 	} else if(np->state.border & BORDER_TITLE) {
@@ -254,6 +281,11 @@ void DrawBorder(const ClientNode *np) {
 	width = np->width + bsize * 2;
 
 	DrawBorderHelper(np, width, height);
+
+	if(expose) {
+		XDestroyRegion(borderRegion);
+		borderRegion = NULL;
+	}
 
 }
 
@@ -296,8 +328,8 @@ void DrawBorderHelper(const ClientNode *np,
 	canvas = np->parent;
 	gc = np->parentGC;
 
-	JXSetWindowBackground(display, np->parent, borderPixel);
-	JXClearWindow(display, np->parent);
+	JXSetForeground(display, gc, borderPixel);
+	JXFillRectangle(display, canvas, gc, 0, 0, width + 1, height + 1);
 
 	buttonCount = DrawBorderButtons(np, canvas, gc);
 	titleWidth = width - (titleHeight + 2) * buttonCount - bsize
@@ -316,7 +348,7 @@ void DrawBorderHelper(const ClientNode *np,
 			RenderString(canvas, gc, FONT_BORDER, borderTextColor,
 				titleHeight + bsize + 4, bsize + titleHeight / 2
 				- GetStringHeight(FONT_BORDER) / 2,
-				titleWidth, np->name);
+				titleWidth, borderRegion, np->name);
 		}
 
 	}
@@ -583,7 +615,7 @@ void ExposeCurrentDesktop() {
 	for(layer = 0; layer < LAYER_COUNT; layer++) {
 		for(np = nodes[layer]; np; np = np->next) {
 			if(!(np->state.status & (STAT_HIDDEN | STAT_MINIMIZED))) {
-				DrawBorder(np);
+				DrawBorder(np, NULL);
 			}
 		}
 	}

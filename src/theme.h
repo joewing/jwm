@@ -11,7 +11,7 @@ void StartupThemes();
 void ShutdownThemes();
 void DestroyThemes();
 
-void AddThemePath(const char *path);
+void AddThemePath(char *path);
 
 void SetTheme(const char *name);
 

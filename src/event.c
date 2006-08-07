@@ -519,16 +519,13 @@ void HandleLeaveNotify(const XCrossingEvent *event) {
 /****************************************************************************
  ****************************************************************************/
 int HandleExpose(const XExposeEvent *event) {
-	ClientNode *np;
 
-	if(event->count) {
-		return 1;
-	}
+	ClientNode *np;
 
 	np = FindClientByWindow(event->window);
 	if(np) {
 		if(event->window == np->parent) {
-			DrawBorder(np);
+			DrawBorder(np, event);
 			return 1;
 		} else if(event->window == np->window
 			&& np->state.status & STAT_WMDIALOG) {
@@ -537,8 +534,9 @@ int HandleExpose(const XExposeEvent *event) {
 			return 1;
 		}
 	} else {
-		return 0;
+		return event->count ? 1 : 0;
 	}
+
 }
 
 /****************************************************************************
@@ -583,7 +581,7 @@ int HandlePropertyNotify(const XPropertyEvent *event) {
 		}
 
 		if(changed) {
-			DrawBorder(np);
+			DrawBorder(np, NULL);
 			UpdateTaskBar();
 			UpdatePager();
 		}

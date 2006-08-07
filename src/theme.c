@@ -56,13 +56,15 @@ void DestroyThemes() {
 
 /****************************************************************************
  ****************************************************************************/
-void AddThemePath(const char *path) {
+void AddThemePath(char *path) {
 
 	ThemePathNode *tp;
 
 	if(!path) {
 		return;
 	}
+
+	Trim(path);
 
 	tp = Allocate(sizeof(ThemePathNode));
 	tp->path = CopyString(path);
@@ -81,6 +83,7 @@ void SetTheme(const char *name) {
 	}
 
 	themeName = CopyString(name);
+	Trim(themeName);
 
 }
 

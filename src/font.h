@@ -30,7 +30,7 @@ void DestroyFonts();
 void SetFont(FontType type, const char *value);
 
 void RenderString(Drawable d, GC gc, FontType font, ColorType color,
-	int x, int y, int width, const char *str);
+	int x, int y, int width, Region region, const char *str);
 
 int GetStringWidth(FontType type, const char *str);
 int GetStringHeight(FontType type);

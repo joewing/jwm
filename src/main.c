@@ -45,6 +45,7 @@ int rootDepth;
 int rootScreen;
 Colormap rootColormap;
 Visual *rootVisual;
+GC rootGC;
 int colormapCount;
 
 int shouldExit = 0;
@@ -193,6 +194,7 @@ void EventLoop() {
 /****************************************************************************
  ****************************************************************************/
 void OpenConnection() {
+
 	display = JXOpenDisplay(displayString);
 	if(!display) {
 		if(displayString) {
@@ -202,6 +204,7 @@ void OpenConnection() {
 		}
 		DoExit(1);
 	}
+
 	rootScreen = DefaultScreen(display);
 	rootWindow = RootWindow(display, rootScreen);
 	rootWidth = DisplayWidth(display, rootScreen);
@@ -209,7 +212,11 @@ void OpenConnection() {
 	rootDepth = DefaultDepth(display, rootScreen);
 	rootColormap = DefaultColormap(display, rootScreen);
 	rootVisual = DefaultVisual(display, rootScreen);
+	rootGC = DefaultGC(display, rootScreen);
 	colormapCount = MaxCmapsOfScreen(ScreenOfDisplay(display, rootScreen));
+
+	XSetGraphicsExposures(display, rootGC, False);
+
 }
 
 /****************************************************************************

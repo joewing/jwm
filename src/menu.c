@@ -296,8 +296,6 @@ void CreateMenu(MenuType *menu, int x, int y) {
 
 	XSetWindowAttributes attr;
 	unsigned long attrMask;
-	XGCValues gcValues;
-	unsigned long gcMask;
 	int temp;
 
 	menu->lastIndex = -1;
@@ -338,17 +336,12 @@ void CreateMenu(MenuType *menu, int x, int y) {
 
 	JXMapRaised(display, menu->window);
 
-	gcMask = GCGraphicsExposures;
-	gcValues.graphics_exposures = False;
-	menu->gc = JXCreateGC(display, menu->window, gcMask, &gcValues);
-
 }
 
 /***************************************************************************
  ***************************************************************************/
 void HideMenu(MenuType *menu) {
 
-	JXFreeGC(display, menu->gc);
 	JXDestroyWindow(display, menu->window);
 
 }
@@ -385,24 +378,24 @@ void DrawMenu(MenuType *menu) {
 		++x;
 	}
 
-	JXSetForeground(display, menu->gc, colors[COLOR_MENU_UP]);
-	JXDrawLine(display, menu->window, menu->gc,
+	JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
+	JXDrawLine(display, menu->window, rootGC,
 		0, 0, menu->width - 1, 0);
-	JXDrawLine(display, menu->window, menu->gc,
+	JXDrawLine(display, menu->window, rootGC,
 		0, 1, menu->width - 2, 1);
-	JXDrawLine(display, menu->window, menu->gc,
+	JXDrawLine(display, menu->window, rootGC,
 		0, 2, 0, menu->height - 1);
-	JXDrawLine(display, menu->window, menu->gc,
+	JXDrawLine(display, menu->window, rootGC,
 		1, 2, 1, menu->height - 2);
 
-	JXSetForeground(display, menu->gc, colors[COLOR_MENU_DOWN]);
-	JXDrawLine(display, menu->window, menu->gc,
+	JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
+	JXDrawLine(display, menu->window, rootGC,
 		1, menu->height - 1, menu->width - 1, menu->height - 1);
-	JXDrawLine(display, menu->window, menu->gc,
+	JXDrawLine(display, menu->window, rootGC,
 		2, menu->height - 2, menu->width - 1, menu->height - 2);
-	JXDrawLine(display, menu->window, menu->gc,
+	JXDrawLine(display, menu->window, rootGC,
 		menu->width - 1, 1, menu->width - 1, menu->height - 3);
-	JXDrawLine(display, menu->window, menu->gc,
+	JXDrawLine(display, menu->window, rootGC,
 		menu->width - 2, 2, menu->width - 2, menu->height - 3);
 
 }
@@ -602,7 +595,7 @@ void UpdateMenu(MenuType *menu) {
 			return;
 		}
 
-		ResetButton(&button, menu->window, menu->gc);
+		ResetButton(&button, menu->window, rootGC);
 		button.type = BUTTON_MENU_ACTIVE;
 		button.font = FONT_MENU;
 		button.width = menu->width - 5;
@@ -617,7 +610,7 @@ void UpdateMenu(MenuType *menu) {
 			pixmap = JXCreatePixmapFromBitmapData(display, menu->window,
 				menu_bitmap, 4, 7, colors[COLOR_MENU_ACTIVE_FG],
 				colors[COLOR_MENU_ACTIVE_BG], rootDepth);
-			JXCopyArea(display, pixmap, menu->window, menu->gc, 0, 0, 4, 7,
+			JXCopyArea(display, pixmap, menu->window, rootGC, 0, 0, 4, 7,
 				menu->width - 9,
 				menu->offsets[menu->currentIndex] + menu->itemHeight / 2 - 4);
 			JXFreePixmap(display, pixmap);
@@ -637,7 +630,7 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 
 	if(!item) {
 		if(index == -1 && menu->label) {
-			ResetButton(&button, menu->window, menu->gc);
+			ResetButton(&button, menu->window, rootGC);
 			button.x = 2;
 			button.y = 2;
 			button.width = menu->width - 5;
@@ -653,7 +646,7 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 
 	if(item->name) {
 
-		ResetButton(&button, menu->window, menu->gc);
+		ResetButton(&button, menu->window, rootGC);
 		button.x = 2;
 		button.y = 1 + menu->offsets[index];
 		button.font = FONT_MENU;
@@ -665,12 +658,12 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 		DrawButton(&button);
 
 	} else if(!item->command && !item->submenu) {
-		JXSetForeground(display, menu->gc, colors[COLOR_MENU_DOWN]);
-		JXDrawLine(display, menu->window, menu->gc, 4,
+		JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
+		JXDrawLine(display, menu->window, rootGC, 4,
 			menu->offsets[index] + 2, menu->width - 6,
 			menu->offsets[index] + 2);
-		JXSetForeground(display, menu->gc, colors[COLOR_MENU_UP]);
-		JXDrawLine(display, menu->window, menu->gc, 4,
+		JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
+		JXDrawLine(display, menu->window, rootGC, 4,
 			menu->offsets[index] + 3, menu->width - 6,
 			menu->offsets[index] + 3);
 	}
@@ -679,7 +672,7 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 		pixmap = JXCreatePixmapFromBitmapData(display, menu->window,
 			menu_bitmap, 4, 7, colors[COLOR_MENU_FG],
 			colors[COLOR_MENU_BG], rootDepth);
-		JXCopyArea(display, pixmap, menu->window, menu->gc, 0, 0, 4, 7,
+		JXCopyArea(display, pixmap, menu->window, rootGC, 0, 0, 4, 7,
 			menu->width - 9, menu->offsets[index] + menu->itemHeight / 2 - 4);
 		JXFreePixmap(display, pixmap);
 

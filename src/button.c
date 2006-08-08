@@ -151,7 +151,7 @@ void DrawButton(ButtonNode *bp) {
 
 	if(bp->text) {
 		yoffset = height / 2 - textHeight / 2;
-		RenderString(drawable, gc, bp->font, fg, x + xoffset, y + yoffset,
+		RenderString(drawable, bp->font, fg, x + xoffset, y + yoffset,
 			textWidth - 2, NULL, bp->text);
 	}
 

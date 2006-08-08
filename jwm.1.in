@@ -780,8 +780,7 @@ If no match is found, a blank area will appear where the icon should appear.
 If an icon is not specified for any menu item in a menu, no space will be
 allocated for icons.
 .P
-Icon properties are contained within the \fBIcons\fP tag. Within this tag,
-zero or more \fBIconPath\fP tags may be specified. The text of this tag is
+Zero or more \fBIconPath\fP tags may be specified. The text of this tag is
 assumed to be an absolute directory path to a directory containing XPM 
 and/or PNG icons.
 When searching for icons, if multiple paths are provided, they will be
@@ -997,7 +996,9 @@ Center the status window on the screen.
 .B SnapMode
 .RS
 The snap mode. The default is "border". Valid values are
-"none", "screen", and "border". An optional attribute, \fBdistance\fP,
+"none" (for no snapping), "screen" (for snapping to the edge of the screen),
+and "border" (for snapping to the borders of windows and the screen).
+An optional attribute, \fBdistance\fP,
 specifies the distance for snapping. The default is 5. Valid values
 are between 1 and 32 inclusive.
 .RE

@@ -23,8 +23,6 @@ typedef struct ClockType {
 	char *command;
 	char shortTime[80];
 
-	GC bufferGC;
-
 	int mousex;
 	int mousey;
 	TimeType mouseTime;
@@ -163,11 +161,9 @@ void Create(TrayComponentType *cp) {
 
 	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
 		rootDepth);
-	clk->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
 
-	JXSetForeground(display, clk->bufferGC, colors[COLOR_CLOCK_BG]);
-	JXFillRectangle(display, cp->pixmap, clk->bufferGC, 0, 0,
-		cp->width, cp->height);
+	JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG]);
+	JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
 
 }
 
@@ -186,13 +182,11 @@ void Resize(TrayComponentType *cp) {
 	Assert(clk);
 
 	if(cp->pixmap != None) {
-		JXFreeGC(display, clk->bufferGC);
 		JXFreePixmap(display, cp->pixmap);
 	}
 
 	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
 		rootDepth);
-	clk->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
 
 	clk->shortTime[0] = 0;
 
@@ -215,7 +209,6 @@ void Destroy(TrayComponentType *cp) {
 	Assert(clk);
 
 	if(cp->pixmap != None) {
-		JXFreeGC(display, clk->bufferGC);
 		JXFreePixmap(display, cp->pixmap);
 	}
 }
@@ -304,16 +297,15 @@ void DrawClock(ClockType *clk, const TimeType *now, int x, int y) {
 
 	cp = clk->cp;
 
-	JXSetForeground(display, clk->bufferGC, colors[COLOR_CLOCK_BG]);
-	JXFillRectangle(display, cp->pixmap, clk->bufferGC, 0, 0,
+	JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG]);
+	JXFillRectangle(display, cp->pixmap, rootGC, 0, 0,
 		cp->width, cp->height);
 
 	width = GetStringWidth(FONT_CLOCK, shortTime);
 	rwidth = width + 4;
 	if(rwidth == clk->cp->requestedWidth || clk->userWidth) {
 
-		RenderString(cp->pixmap, clk->bufferGC, FONT_CLOCK,
-			COLOR_CLOCK_FG,
+		RenderString(cp->pixmap, FONT_CLOCK, COLOR_CLOCK_FG,
 			cp->width / 2 - width / 2,
 			cp->height / 2 - GetStringHeight(FONT_CLOCK) / 2,
 			cp->width, NULL, shortTime);

@@ -1055,7 +1055,6 @@ void RemoveClient(ClientNode *np) {
 
 	/* Destroy the parent */
 	if(np->parent) {
-		JXFreeGC(display, np->parentGC);
 		JXDestroyWindow(display, np->parent);
 	}
 
@@ -1124,8 +1123,6 @@ void ReparentClient(ClientNode *np, int notOwner) {
 
 	XSetWindowAttributes attr;
 	int attrMask;
-	XGCValues gcValues;
-	int gcMask;
 	int x, y, width, height;
 
 	Assert(np);
@@ -1188,11 +1185,6 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	np->parent = JXCreateWindow(display, rootWindow,
 		x, y, width, height, 0, rootDepth, InputOutput,
 		rootVisual, attrMask, &attr);
-
-	/* Create a graphics context for drawing borders. */
-	gcMask = GCGraphicsExposures;
-	gcValues.graphics_exposures = False;
-	np->parentGC = JXCreateGC(display, np->parent, gcMask, &gcValues);
 
 	/* Update the window to get only the events we want. */
 	attrMask = CWDontPropagate;

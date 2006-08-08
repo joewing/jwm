@@ -16,8 +16,10 @@ static char *fontNames[FONT_COUNT];
 
 #ifdef USE_XFT
 static XftFont *fonts[FONT_COUNT];
+static XftDraw *xd;
 #else
 static XFontStruct *fonts[FONT_COUNT];
+static GC fontGC;
 #endif
 
 /****************************************************************************
@@ -37,6 +39,10 @@ void InitializeFonts() {
  ****************************************************************************/
 void StartupFonts() {
 
+#ifndef USE_XFT
+	XGCValues gcValues;
+	unsigned long gcMask;
+#endif
 	int x;
 
 	/* Inherit unset fonts from the tray for tray items. */
@@ -70,6 +76,8 @@ void StartupFonts() {
 		}
 	}
 
+	xd = XftDrawCreate(display, rootWindow, rootVisual, rootColormap);
+
 #else
 
 	for(x = 0; x < FONT_COUNT; x++) {
@@ -87,6 +95,10 @@ void StartupFonts() {
 		}
 	}
 
+	gcMask = GCGraphicsExposures;
+	gcValues.graphics_exposures = False;
+	fontGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
+
 #endif
 
 }
@@ -94,6 +106,7 @@ void StartupFonts() {
 /****************************************************************************
  ****************************************************************************/
 void ShutdownFonts() {
+
 	int x;
 
 	for(x = 0; x < FONT_COUNT; x++) {
@@ -106,6 +119,17 @@ void ShutdownFonts() {
 			fonts[x] = NULL;
 		}
 	}
+
+#ifdef USE_XFT
+
+	XftDrawDestroy(xd);
+
+#else
+
+	JXFreeGC(display, fontGC);
+
+#endif
+
 
 }
 
@@ -178,7 +202,7 @@ void SetFont(FontType type, const char *value) {
 
 /****************************************************************************
  ****************************************************************************/
-void RenderString(Drawable d, GC g, FontType font, ColorType color,
+void RenderString(Drawable d, FontType font, ColorType color,
 	int x, int y, int width, Region region, const char *str) {
 
 	XRectangle rect;
@@ -192,10 +216,6 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 	FriBidiCharType type = FRIBIDI_TYPE_ON;
 	int unicodeLength;
 
-#endif
-
-#ifdef USE_XFT
-	XftDraw *xd;
 #endif
 
 	Assert(str);
@@ -233,9 +253,7 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 
 #ifdef USE_XFT
 
-	xd = JXftDrawCreate(display, d, rootVisual, rootColormap);
-	Assert(xd);
-
+	XftDrawChange(xd, d);
 	if(region) {
 		XftDrawSetClip(xd, region);
 	} else {
@@ -243,21 +261,17 @@ void RenderString(Drawable d, GC g, FontType font, ColorType color,
 	}
 	JXftDrawStringUtf8(xd, GetXftColor(color), fonts[font],
 		x, y + fonts[font]->ascent, (const unsigned char*)output, len);
-	JXftDrawDestroy(xd);
 
 #else
 
-	JXSetForeground(display, g, colors[color]);
+	JXSetForeground(display, fontGC, colors[color]);
 	if(region) {
-		XSetRegion(display, g, region);
+		XSetRegion(display, fontGC, region);
 	} else {
-		JXSetClipRectangles(display, g, 0, 0, &rect, 1, Unsorted);
+		JXSetClipRectangles(display, fontGC, 0, 0, &rect, 1, Unsorted);
 	}
-	JXSetFont(display, g, fonts[font]->fid);
-	JXDrawString(display, d, g, x, y + fonts[font]->ascent, output, len);
-	if(width > 0 || region) {
-		JXSetClipMask(display, g, None);
-	}
+	JXSetFont(display, fontGC, fonts[font]->fid);
+	JXDrawString(display, d, fontGC, x, y + fonts[font]->ascent, output, len);
 
 #endif
 

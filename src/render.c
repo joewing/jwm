@@ -110,7 +110,6 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 	XRenderPictFormat picFormat;
 	XRenderPictFormat *fp;
 	XColor color;
-	GC imageGC;
 	GC maskGC;
 	XImage *destImage;
 	XImage *destMask;
@@ -148,7 +147,6 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 	maskGC = JXCreateGC(display, result->mask, 0, NULL);
 	result->image = JXCreatePixmap(display, rootWindow,
 		width, height, rootDepth);
-	imageGC = JXCreateGC(display, result->image, 0, NULL);
 
 	destImage = JXCreateImage(display, rootVisual, rootDepth, ZPixmap, 0,
 		NULL, width, height, 8, 0);
@@ -184,12 +182,11 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 	}
 
 	/* Render the image data to the image pixmap. */
-	JXPutImage(display, result->image, imageGC, destImage, 0, 0, 0, 0,
+	JXPutImage(display, result->image, rootGC, destImage, 0, 0, 0, 0,
 		width, height);
 	Release(destImage->data);
 	destImage->data = NULL;
 	JXDestroyImage(destImage);
-	JXFreeGC(display, imageGC);
 
 	/* Render the alpha data to the mask pixmap. */
 	JXPutImage(display, result->mask, maskGC, destMask, 0, 0, 0, 0,

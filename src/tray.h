@@ -110,7 +110,6 @@ typedef struct TrayType {
 	int hidden;
 
 	Window window;
-	GC gc;
 
 	struct TrayComponentType *components;
 	struct TrayComponentType *componentsTail;

@@ -21,7 +21,6 @@ typedef struct PagerType {
 	LayoutType layout;
 
 	Pixmap buffer;
-	GC bufferGC;
 
 	struct PagerType *next;
 
@@ -57,7 +56,6 @@ void ShutdownPager() {
 	PagerType *pp;
 
 	for(pp = pagers; pp; pp = pp->next) {
-		JXFreeGC(display, pp->bufferGC);
 		JXFreePixmap(display, pp->buffer);
 	}
 
@@ -116,7 +114,6 @@ void Create(TrayComponentType *cp) {
 
 	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width,
 		cp->height, rootDepth);
-	pp->bufferGC = JXCreateGC(display, cp->pixmap, 0, NULL);
 	pp->buffer = cp->pixmap;
 
 }
@@ -201,7 +198,6 @@ void UpdatePager() {
 	PagerType *pp;
 	ClientNode *np;
 	Pixmap buffer;
-	GC gc;
 	int width, height;
 	int deskWidth, deskHeight;
 	unsigned int x;
@@ -213,24 +209,23 @@ void UpdatePager() {
 	for(pp = pagers; pp; pp = pp->next) {
 
 		buffer = pp->cp->pixmap;
-		gc = pp->bufferGC;
 		width = pp->cp->width;
 		height = pp->cp->height;
 		deskWidth = pp->deskWidth;
 		deskHeight = pp->deskHeight;
 
 		/* Draw the background. */
-		JXSetForeground(display, gc, colors[COLOR_PAGER_BG]);
-		JXFillRectangle(display, buffer, gc, 0, 0, width, height);
+		JXSetForeground(display, rootGC, colors[COLOR_PAGER_BG]);
+		JXFillRectangle(display, buffer, rootGC, 0, 0, width, height);
 
 		/* Highlight the current desktop. */
-		JXSetForeground(display, gc, colors[COLOR_PAGER_ACTIVE_BG]);
+		JXSetForeground(display, rootGC, colors[COLOR_PAGER_ACTIVE_BG]);
 		if(pp->layout == LAYOUT_HORIZONTAL) {
-			JXFillRectangle(display, buffer, gc,
+			JXFillRectangle(display, buffer, rootGC,
 				currentDesktop * (deskWidth + 1), 0,
 				deskWidth, height);
 		} else {
-			JXFillRectangle(display, buffer, gc,
+			JXFillRectangle(display, buffer, rootGC,
 				0, currentDesktop * (deskHeight + 1),
 				width, deskHeight);
 		}
@@ -243,14 +238,14 @@ void UpdatePager() {
 		}
 
 		/* Draw the desktop dividers. */
-		JXSetForeground(display, gc, colors[COLOR_PAGER_FG]);
+		JXSetForeground(display, rootGC, colors[COLOR_PAGER_FG]);
 		for(x = 1; x < desktopCount; x++) {
 			if(pp->layout == LAYOUT_HORIZONTAL) {
-				JXDrawLine(display, buffer, gc,
+				JXDrawLine(display, buffer, rootGC,
 					(deskWidth + 1) * x - 1, 0,
 					(deskWidth + 1) * x - 1, height);
 			} else {
-				JXDrawLine(display, buffer, gc,
+				JXDrawLine(display, buffer, rootGC,
 					0, (deskHeight + 1) * x - 1,
 					width, (deskHeight + 1) * x - 1);
 			}
@@ -316,9 +311,8 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
 		y += deskOffset;
 	}
 
-	JXSetForeground(display, pp->bufferGC, colors[COLOR_PAGER_OUTLINE]);
-	JXDrawRectangle(display, pp->cp->pixmap, pp->bufferGC,
-		x, y, width, height);
+	JXSetForeground(display, rootGC, colors[COLOR_PAGER_OUTLINE]);
+	JXDrawRectangle(display, pp->cp->pixmap, rootGC, x, y, width, height);
 
 	if(width > 1 && height > 1) {
 		if((np->state.status & STAT_ACTIVE)
@@ -328,8 +322,8 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
 		} else {
 			fillColor = COLOR_PAGER_FG;
 		}
-		JXSetForeground(display, pp->bufferGC, colors[fillColor]);
-		JXFillRectangle(display, pp->cp->pixmap, pp->bufferGC, x + 1, y + 1,
+		JXSetForeground(display, rootGC, colors[fillColor]);
+		JXFillRectangle(display, pp->cp->pixmap, rootGC, x + 1, y + 1,
 			width - 1, height - 1);
 	}
 

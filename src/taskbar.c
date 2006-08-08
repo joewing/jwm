@@ -30,7 +30,6 @@ typedef struct TaskBarType {
 	LayoutType layout;
 
 	Pixmap buffer;
-	GC bufferGC;
 
 	TimeType mouseTime;
 	int mousex, mousey;
@@ -104,7 +103,6 @@ void ShutdownTaskBar() {
 	TaskBarType *bp;
 
 	for(bp = bars; bp; bp = bp->next) {
-		JXFreeGC(display, bp->bufferGC);
 		JXFreePixmap(display, bp->buffer);
 	}
 
@@ -186,8 +184,6 @@ void SetSize(TrayComponentType *cp, int width, int height) {
  ***************************************************************************/
 void Create(TrayComponentType *cp) {
 
-	XGCValues gcValues;
-	unsigned long gcMask;
 	TaskBarType *tp;
 
 	Assert(cp);
@@ -209,13 +205,8 @@ void Create(TrayComponentType *cp) {
 		rootDepth);
 	tp->buffer = cp->pixmap;
 
-	gcMask = GCGraphicsExposures | GCForeground;
-	gcValues.graphics_exposures = False;
-	gcValues.foreground = colors[COLOR_TASK_BG];
-	tp->bufferGC = JXCreateGC(display, cp->pixmap, gcMask, &gcValues);
-
-	JXFillRectangle(display, cp->pixmap, tp->bufferGC,
-		0, 0, cp->width, cp->height);
+	JXSetForeground(display, rootGC, colors[COLOR_TASK_BG]);
+	JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
 
 }
 
@@ -223,8 +214,6 @@ void Create(TrayComponentType *cp) {
  ***************************************************************************/
 void Resize(TrayComponentType *cp) {
 
-	XGCValues gcValues;
-	unsigned long gcMask;
 	TaskBarType *tp;
 
 	Assert(cp);
@@ -233,9 +222,6 @@ void Resize(TrayComponentType *cp) {
 
 	Assert(tp);
 
-	if(tp->bufferGC != None) {
-		JXFreeGC(display, tp->bufferGC);
-	}
 	if(tp->buffer != None) {
 		JXFreePixmap(display, tp->buffer);
 	}
@@ -253,12 +239,8 @@ void Resize(TrayComponentType *cp) {
 		rootDepth);
 	tp->buffer = cp->pixmap;
 
-	gcMask = GCGraphicsExposures | GCForeground;
-	gcValues.graphics_exposures = False;
-	gcValues.foreground = colors[COLOR_TASK_BG];
-	tp->bufferGC = JXCreateGC(display, cp->pixmap, gcMask, &gcValues);
-
-	JXFillRectangle(display, cp->pixmap, tp->bufferGC,
+	JXSetForeground(display, rootGC, colors[COLOR_TASK_BG]);
+	JXFillRectangle(display, cp->pixmap, rootGC,
 		0, 0, cp->width, cp->height);
 }
 
@@ -504,10 +486,7 @@ void Render(const TaskBarType *bp) {
 	width = bp->cp->width;
 	height = bp->cp->height;
 	buffer = bp->cp->pixmap;
-	gc = bp->bufferGC;
-
-	Assert(buffer != None);
-	Assert(gc != None);
+	gc = rootGC;
 
 	x = TASK_SPACER;
 	width -= x;

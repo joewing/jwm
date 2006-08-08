@@ -49,8 +49,6 @@ void StartupTray() {
 
 	XSetWindowAttributes attr;
 	unsigned long attrMask;
-	XGCValues gcValues;
-	unsigned long gcMask;
 	TrayType *tp;
 	TrayComponentType *cp;
 	int variableSize;
@@ -85,10 +83,6 @@ void StartupTray() {
 			0, rootDepth, InputOutput, rootVisual, attrMask, &attr);
 
 		SetDefaultCursor(tp->window);
-
-		gcMask = GCGraphicsExposures;
-		gcValues.graphics_exposures = False;
-		tp->gc = JXCreateGC(display, tp->window, gcMask, &gcValues);
 
 		/* Create and layout items on the tray. */
 		xoffset = tp->border;
@@ -162,7 +156,6 @@ void ShutdownTray() {
 				(cp->Destroy)(cp);
 			}
 		}
-		JXFreeGC(display, tp->gc);
 		JXDestroyWindow(display, tp->window);
 	}
 
@@ -220,7 +213,6 @@ TrayType *CreateTray() {
 	tp->hidden = 0;
 
 	tp->window = None;
-	tp->gc = None;
 
 	tp->components = NULL;
 	tp->componentsTail = NULL;
@@ -717,26 +709,26 @@ void DrawSpecificTray(const TrayType *tp) {
 	for(x = 0; x < tp->border; x++) {
 
 		/* Top */
-		JXSetForeground(display, tp->gc, colors[COLOR_TRAY_UP]);
-		JXDrawLine(display, tp->window, tp->gc,
+		JXSetForeground(display, rootGC, colors[COLOR_TRAY_UP]);
+		JXDrawLine(display, tp->window, rootGC,
 			0, x,
 			tp->width - x - 1, x);
 
 		/* Bottom */
-		JXSetForeground(display, tp->gc, colors[COLOR_TRAY_DOWN]);
-		JXDrawLine(display, tp->window, tp->gc,
+		JXSetForeground(display, rootGC, colors[COLOR_TRAY_DOWN]);
+		JXDrawLine(display, tp->window, rootGC,
 			x + 1, tp->height - x - 1,
 			tp->width - x - 2, tp->height - x - 1);
 
 		/* Left */
-		JXSetForeground(display, tp->gc, colors[COLOR_TRAY_UP]);
-		JXDrawLine(display, tp->window, tp->gc,
+		JXSetForeground(display, rootGC, colors[COLOR_TRAY_UP]);
+		JXDrawLine(display, tp->window, rootGC,
 			x, x,
 			x, tp->height - x - 1);
 
 		/* Right */
-		JXSetForeground(display, tp->gc, colors[COLOR_TRAY_DOWN]);
-		JXDrawLine(display, tp->window, tp->gc, 
+		JXSetForeground(display, rootGC, colors[COLOR_TRAY_DOWN]);
+		JXDrawLine(display, tp->window, rootGC, 
 			tp->width - x - 1, x + 1,
 			tp->width - x - 1, tp->height - x - 1);
 
@@ -747,10 +739,12 @@ void DrawSpecificTray(const TrayType *tp) {
 /***************************************************************************
  ***************************************************************************/
 void UpdateSpecificTray(const TrayType *tp, const TrayComponentType *cp) {
+
 	if(cp->pixmap != None && !shouldExit) {
-		JXCopyArea(display, cp->pixmap, tp->window, tp->gc, 0, 0,
+		JXCopyArea(display, cp->pixmap, tp->window, rootGC, 0, 0,
 			cp->width, cp->height, cp->x, cp->y);
 	}
+
 }
 
 /***************************************************************************

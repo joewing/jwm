@@ -23,7 +23,6 @@ typedef struct PopupType {
 	int width, height;
 	char *text;
 	Window window;
-	GC gc;
 } PopupType;
 
 static PopupType popup;
@@ -45,7 +44,6 @@ void StartupPopup() {
 	popup.isActive = 0;
 	popup.text = NULL;
 	popup.window = None;
-	popup.gc = None;
 }
 
 /****************************************************************************
@@ -54,10 +52,6 @@ void ShutdownPopup() {
 	if(popup.text) {
 		Release(popup.text);
 		popup.text = NULL;
-	}
-	if(popup.gc != None) {
-		JXFreeGC(display, popup.gc);
-		popup.gc = None;
 	}
 	if(popup.window != None) {
 		JXDestroyWindow(display, popup.window);
@@ -149,8 +143,6 @@ void ShowPopup(int x, int y, const char *text) {
 			popup.width, popup.height, 1, CopyFromParent,
 			InputOutput, CopyFromParent, attrMask, &attr);
 
-		popup.gc = JXCreateGC(display, popup.window, 0, NULL);
-
 	} else {
 		JXMoveResizeWindow(display, popup.window, popup.x, popup.y,
 			popup.width, popup.height);
@@ -229,7 +221,7 @@ void DrawPopup() {
 	Assert(popup.isActive);
 
 	JXClearWindow(display, popup.window);
-	RenderString(popup.window, popup.gc, FONT_POPUP, COLOR_POPUP_FG, 4, 1,
+	RenderString(popup.window, FONT_POPUP, COLOR_POPUP_FG, 4, 1,
 		popup.width, NULL, popup.text);
 
 }

@@ -53,6 +53,7 @@ static BorderPixmapDataType bitmaps[BP_COUNT >> 1] = {
 static Pixmap pixmaps[BP_COUNT];
 
 static Region borderRegion = NULL;
+static GC borderGC;
 
 static void DrawBorderHelper(const ClientNode *np,
 	unsigned int width, unsigned int height);
@@ -69,6 +70,8 @@ void InitializeBorders() {
  ****************************************************************************/
 void StartupBorders() {
 
+	XGCValues gcValues;
+	unsigned long gcMask;
 	long fg, bg;
 	int x;
 
@@ -87,6 +90,10 @@ void StartupBorders() {
 
 	}
 
+	gcMask = GCGraphicsExposures;
+	gcValues.graphics_exposures = False;
+	borderGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
+
 }
 
 /****************************************************************************
@@ -94,6 +101,8 @@ void StartupBorders() {
 void ShutdownBorders() {
 
 	int x;
+
+	JXFreeGC(display, borderGC);
 
 	for(x = 0; x < BP_COUNT; x++) {
 		JXFreePixmap(display, pixmaps[x]);
@@ -263,11 +272,11 @@ void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
 			return;
 		}
 
-		XSetRegion(display, np->parentGC, borderRegion);
+		XSetRegion(display, borderGC, borderRegion);
 
 	} else {
 
-		XSetClipMask(display, np->parentGC, None);
+		XSetClipMask(display, borderGC, None);
 
 	}
 
@@ -326,7 +335,7 @@ void DrawBorderHelper(const ClientNode *np,
 	}
 
 	canvas = np->parent;
-	gc = np->parentGC;
+	gc = borderGC;
 
 	JXSetForeground(display, gc, borderPixel);
 	JXFillRectangle(display, canvas, gc, 0, 0, width + 1, height + 1);
@@ -345,7 +354,7 @@ void DrawBorderHelper(const ClientNode *np,
 		}
 
 		if(np->name && np->name[0] && titleWidth > 0) {
-			RenderString(canvas, gc, FONT_BORDER, borderTextColor,
+			RenderString(canvas, FONT_BORDER, borderTextColor,
 				titleHeight + bsize + 4, bsize + titleHeight / 2
 				- GetStringHeight(FONT_BORDER) / 2,
 				titleWidth, borderRegion, np->name);

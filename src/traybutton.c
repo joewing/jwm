@@ -91,6 +91,7 @@ void StartupTrayButtons() {
 /***************************************************************************
  ***************************************************************************/
 void ShutdownTrayButtons() {
+
 }
 
 /***************************************************************************
@@ -247,19 +248,17 @@ void Create(TrayComponentType *cp) {
 
 	ButtonNode button;
 	TrayButtonType *bp;
-	GC gc;
 	int labelx;
 
 	bp = (TrayButtonType*)cp->object;
 
 	cp->pixmap = JXCreatePixmap(display, rootWindow,
 		cp->width, cp->height, rootDepth);
-	gc = JXCreateGC(display, cp->pixmap, 0, NULL);
 
-	JXSetForeground(display, gc, colors[COLOR_TRAYBUTTON_BG]);
-	JXFillRectangle(display, cp->pixmap, gc, 0, 0, cp->width, cp->height);
+	JXSetForeground(display, rootGC, colors[COLOR_TRAYBUTTON_BG]);
+	JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
 
-	ResetButton(&button, cp->pixmap, gc);
+	ResetButton(&button, cp->pixmap, rootGC);
 	button.type = BUTTON_TASK;
 	button.width = cp->width - 3;
 	button.height = cp->height - 3;
@@ -282,17 +281,15 @@ void Create(TrayComponentType *cp) {
 	labelx -= BUTTON_SIZE;
 
 	if(bp->icon) {
-		PutIcon(bp->icon, cp->pixmap, gc, BUTTON_SIZE, BUTTON_SIZE,
+		PutIcon(bp->icon, cp->pixmap, rootGC, BUTTON_SIZE, BUTTON_SIZE,
 			labelx - BUTTON_SIZE, cp->height - BUTTON_SIZE * 2);
 	}
 
 	if(bp->label) {
-		RenderString(cp->pixmap, gc, FONT_TRAYBUTTON, COLOR_TRAYBUTTON_FG,
+		RenderString(cp->pixmap, FONT_TRAYBUTTON, COLOR_TRAYBUTTON_FG,
 			labelx + 2, cp->height / 2 - GetStringHeight(FONT_TRAYBUTTON) / 2,
 			cp->width - labelx, NULL, bp->label);
 	}
-
-	JXFreeGC(display, gc);
 
 }
 

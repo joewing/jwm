@@ -21,7 +21,6 @@ typedef enum {
 } StatusWindowType;
 
 static Window statusWindow;
-static GC statusGC;
 static unsigned int statusWindowHeight;
 static unsigned int statusWindowWidth;
 static int statusWindowX, statusWindowY;
@@ -91,8 +90,6 @@ void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
 		&attrs);
 
 	JXMapRaised(display, statusWindow);
-	statusGC = JXCreateGC(display, statusWindow, 0, NULL);
-	JXSetBackground(display, statusGC, colors[COLOR_MENU_BG]);
 
 }
 
@@ -110,31 +107,31 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
 			statusWindowWidth, statusWindowHeight);
 	}
 
-	JXSetForeground(display, statusGC, colors[COLOR_MENU_BG]);
-	JXFillRectangle(display, statusWindow, statusGC, 2, 2,
+	JXSetForeground(display, rootGC, colors[COLOR_MENU_BG]);
+	JXFillRectangle(display, statusWindow, rootGC, 2, 2,
 		statusWindowWidth - 3, statusWindowHeight - 3);
 
-	JXSetForeground(display, statusGC, colors[COLOR_MENU_UP]);
-	JXDrawLine(display, statusWindow, statusGC,
+	JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
+	JXDrawLine(display, statusWindow, rootGC,
 		0, 0, statusWindowWidth - 1, 0);
-	JXDrawLine(display, statusWindow, statusGC,
+	JXDrawLine(display, statusWindow, rootGC,
 		0, 1, statusWindowWidth - 2, 1);
-	JXDrawLine(display, statusWindow, statusGC,
+	JXDrawLine(display, statusWindow, rootGC,
 		0, 2, 0, statusWindowHeight - 1);
-	JXDrawLine(display, statusWindow, statusGC,
+	JXDrawLine(display, statusWindow, rootGC,
 		1, 2, 1, statusWindowHeight - 2);
 
-	JXSetForeground(display, statusGC, colors[COLOR_MENU_DOWN]);
-	JXDrawLine(display, statusWindow, statusGC,
+	JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
+	JXDrawLine(display, statusWindow, rootGC,
 		1, statusWindowHeight - 1, statusWindowWidth - 1,
 		statusWindowHeight - 1);
-	JXDrawLine(display, statusWindow, statusGC,
+	JXDrawLine(display, statusWindow, rootGC,
 		2, statusWindowHeight - 2, statusWindowWidth - 1,
 		statusWindowHeight - 2);
-	JXDrawLine(display, statusWindow, statusGC,
+	JXDrawLine(display, statusWindow, rootGC,
 		statusWindowWidth - 1, 1, statusWindowWidth - 1,
 		statusWindowHeight - 3);
-	JXDrawLine(display, statusWindow, statusGC,
+	JXDrawLine(display, statusWindow, rootGC,
 		statusWindowWidth - 2, 2, statusWindowWidth - 2,
 		statusWindowHeight - 3);
 
@@ -145,7 +142,6 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
 void DestroyMoveResizeWindow() {
 
 	if(statusWindow != None) {
-		JXFreeGC(display, statusGC);
 		JXDestroyWindow(display, statusWindow);
 		statusWindow = None;
 	}
@@ -175,7 +171,7 @@ void UpdateMoveWindow(ClientNode *np) {
 
 	snprintf(str, sizeof(str), "(%d, %d)", np->x, np->y);
 	width = GetStringWidth(FONT_MENU, str);
-	RenderString(statusWindow, statusGC, FONT_MENU, COLOR_MENU_FG,
+	RenderString(statusWindow, FONT_MENU, COLOR_MENU_FG,
 		statusWindowWidth / 2 - width / 2, 4, rootWidth, NULL, str);
 
 }
@@ -211,7 +207,7 @@ void UpdateResizeWindow(ClientNode *np, int gwidth, int gheight) {
 
 	snprintf(str, sizeof(str), "%d x %d", gwidth, gheight);
 	fontWidth = GetStringWidth(FONT_MENU, str);
-	RenderString(statusWindow, statusGC, FONT_MENU, COLOR_MENU_FG,
+	RenderString(statusWindow, FONT_MENU, COLOR_MENU_FG,
 		statusWindowWidth / 2 - fontWidth / 2, 4, rootWidth, NULL, str);
 
 }

@@ -18,6 +18,7 @@ extern int rootDepth;
 extern int rootScreen;
 extern Colormap rootColormap;
 extern Visual *rootVisual;
+extern GC rootGC;
 extern int colormapCount;
 
 extern char *exitCommand;

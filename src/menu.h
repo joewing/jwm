@@ -32,7 +32,6 @@ typedef struct MenuType {
 
 	/* These fields are handled by menu.c */
 	Window window;
-	GC gc;
 	int x, y;
 	int width, height;
 	int currentIndex, lastIndex;

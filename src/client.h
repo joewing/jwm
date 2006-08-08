@@ -59,7 +59,6 @@ typedef struct ClientNode {
 
 	Window window;
 	Window parent;
-	GC parentGC;
 
 	Window owner;
 

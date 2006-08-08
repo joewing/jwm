@@ -30,7 +30,6 @@ typedef struct DialogType {
 	char **message;
 
 	ClientNode *node;
-	GC gc;
 
 	void (*action)(ClientNode*);
 	ClientNode *client;
@@ -225,8 +224,6 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 	dp->node->state.status |= STAT_WMDIALOG;
 	FocusClient(dp->node);
 
-	dp->gc = JXCreateGC(display, window, 0, NULL);
-
 	DrawConfirmDialog(dp);
 
 	JXGrabButton(display, AnyButton, AnyModifier, window,
@@ -247,8 +244,6 @@ void DrawConfirmDialog(DialogType *dp) {
  ***************************************************************************/
 void DestroyConfirmDialog(DialogType *dp) {
 	int x;
-
-	JXFreeGC(display, dp->gc);
 
 	/* This will take care of destroying the dialog window since
 	 * its parent will be destroyed. */
@@ -337,7 +332,7 @@ void DrawMessage(DialogType *dp) {
 
 	yoffset = 4;
 	for(x = 0; x < dp->lineCount; x++) {
-		RenderString(dp->node->window, dp->gc, FONT_MENU, COLOR_MENU_FG,
+		RenderString(dp->node->window, FONT_MENU, COLOR_MENU_FG,
 			4, yoffset, dp->width, NULL, dp->message[x]);
 		yoffset += dp->lineHeight;
 	}
@@ -359,7 +354,7 @@ void DrawButtons(DialogType *dp) {
 	dp->buttonWidth += 8;
 	dp->buttonHeight = dp->lineHeight + 4;
 
-	ResetButton(&button, dp->node->window, dp->gc);
+	ResetButton(&button, dp->node->window, rootGC);
 	button.font = FONT_MENU;
 	button.width = dp->buttonWidth;
 	button.height = dp->buttonHeight;

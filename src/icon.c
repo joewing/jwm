@@ -425,7 +425,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 
 	XColor color;
 	ScaledIconNode *np;
-	GC imageGC, maskGC;
+	GC maskGC;
 	int x, y;
 	int index;
 	int alpha;
@@ -482,7 +482,6 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 	np->mask = JXCreatePixmap(display, rootWindow, nwidth, nheight, 1);
 	maskGC = JXCreateGC(display, np->mask, 0, NULL);
 	np->image = JXCreatePixmap(display, rootWindow, nwidth, nheight, rootDepth);
-	imageGC = JXCreateGC(display, np->image, 0, NULL);
 
 	scalex = (double)icon->image->width / nwidth;
 	scaley = (double)icon->image->height / nheight;
@@ -502,8 +501,8 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 				color.blue = (icon->image->data[index] & 0xFFUL) * 257;
 				GetColor(&color);
 
-				JXSetForeground(display, imageGC, color.pixel);
-				JXDrawPoint(display, np->image, imageGC, x, y);
+				JXSetForeground(display, rootGC, color.pixel);
+				JXDrawPoint(display, np->image, rootGC, x, y);
 
 				JXSetForeground(display, maskGC, 1);
 
@@ -520,7 +519,6 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 	}
 
 	JXFreeGC(display, maskGC);
-	JXFreeGC(display, imageGC);
 
 	return np;
 

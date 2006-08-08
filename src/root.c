@@ -13,7 +13,10 @@
 #include "desktop.h"
 #include "misc.h"
 
-static MenuType *rootMenu = NULL;
+/* Allow for menus 0 to 9. */
+#define ROOT_MENU_COUNT 10
+
+static MenuType *rootMenu[ROOT_MENU_COUNT];
 static int showExitConfirmation = 1;
 
 static void ExitHandler(ClientNode *np);
@@ -23,14 +26,37 @@ static void UnpatchRootMenu(MenuType *menu);
 /***************************************************************************
  ***************************************************************************/
 void InitializeRootMenu() {
+
+	int x;
+
+	for(x = 0; x < ROOT_MENU_COUNT; x++) {
+		rootMenu[x] = NULL;
+	}
+
 }
 
 /***************************************************************************
  ***************************************************************************/
 void StartupRootMenu() {
-	if(rootMenu) {
-		InitializeMenu(rootMenu);
+
+	int x, y;
+	int found;
+
+	for(x = 0; x < ROOT_MENU_COUNT; x++) {
+		if(rootMenu[x]) {
+			found = 0;
+			for(y = 0; y < x; y++) {
+				if(rootMenu[y] == rootMenu[x]) {
+					found = 1;
+					break;
+				}
+			}
+			if(!found) {
+				InitializeMenu(rootMenu[x]);
+			}
+		}
 	}
+
 }
 
 /***************************************************************************
@@ -41,19 +67,63 @@ void ShutdownRootMenu() {
 /***************************************************************************
  ***************************************************************************/
 void DestroyRootMenu() {
-	if(rootMenu) {
-		DestroyMenu(rootMenu);
-		rootMenu = NULL;
+
+	int x, y;
+
+	for(x = 0; x < ROOT_MENU_COUNT; x++) {
+		if(rootMenu[x]) {
+			DestroyMenu(rootMenu[x]);
+			for(y = x + 1; y < ROOT_MENU_COUNT; y++) {
+				if(rootMenu[x] == rootMenu[y]) {
+					rootMenu[y] = NULL;
+				}
+			}
+			rootMenu[x] = NULL;
+		}
 	}
+
 }
 
 /***************************************************************************
  ***************************************************************************/
-void SetRootMenu(MenuType *m) {
-	if(rootMenu) {
-		DestroyRootMenu();
+void SetRootMenu(const char *indexes, MenuType *m) {
+
+	int x, y;
+	int index;
+	int found;
+
+	/* Loop over each index to consider. */
+	for(x = 0; indexes[x]; x++) {
+
+		/* Get the index and make sure it's in range. */
+		index = indexes[x] - '0';
+		if(index < 0 || index >= ROOT_MENU_COUNT) {
+			Warning("invalid root menu specified: \"%c\"", indexes[x]);
+			continue;
+		}
+
+		if(rootMenu[index] && rootMenu[index] != m) {
+
+			/* See if replacing this value will cause an orphan. */
+			found = 0;
+			for(y = 0; y < ROOT_MENU_COUNT; y++) {
+				if(x != y && rootMenu[y] == rootMenu[x]) {
+					found = 1;
+					break;
+				}
+			}
+
+			/* If we have an orphan, destroy it. */
+			if(!found) {
+				DestroyMenu(rootMenu[index]);
+			}
+
+		}
+
+		rootMenu[index] = m;
+
 	}
-	rootMenu = m;
+
 }
 
 /***************************************************************************
@@ -64,31 +134,33 @@ void SetShowExitConfirmation(int v) {
 
 /***************************************************************************
  ***************************************************************************/
-void GetRootMenuSize(int *width, int *height) {
+void GetRootMenuSize(int index, int *width, int *height) {
 
-	if(!rootMenu) {
+	if(!rootMenu[index]) {
 		*width = 0;
 		*height = 0;
 	}
 
-	PatchRootMenu(rootMenu);
-	*width = rootMenu->width;
-	*height = rootMenu->height;
-	UnpatchRootMenu(rootMenu);
+	PatchRootMenu(rootMenu[index]);
+	*width = rootMenu[index]->width;
+	*height = rootMenu[index]->height;
+	UnpatchRootMenu(rootMenu[index]);
 
 }
 
 /***************************************************************************
  ***************************************************************************/
-void ShowRootMenu(int x, int y) {
+int ShowRootMenu(int index, int x, int y) {
 
-	if(!rootMenu) {
-		return;
+	if(!rootMenu[index]) {
+		return 0;
 	}
 
-	PatchRootMenu(rootMenu);
-	ShowMenu(rootMenu, RunCommand, x, y);
-	UnpatchRootMenu(rootMenu);
+	PatchRootMenu(rootMenu[index]);
+	ShowMenu(rootMenu[index], RunCommand, x, y);
+	UnpatchRootMenu(rootMenu[index]);
+
+	return 1;
 
 }
 

@@ -289,12 +289,12 @@ void HandleButtonEvent(const XButtonEvent *event) {
 			break;
 		}
 	} else if(event->window == rootWindow && event->type == ButtonPress) {
-		if((1 << event->button) & onRootMask) {
-			ShowRootMenu(event->x, event->y);
-		} else if(event->button == 4) {
-			PreviousDesktop();
-		} else if(event->button == 5) {
-			NextDesktop();
+		if(!ShowRootMenu(event->button, event->x, event->y)) {
+			if(event->button == 4) {
+				PreviousDesktop();
+			} else if(event->button == 5) {
+				NextDesktop();
+			}
 		}
 	} else {
 		np = FindClientByWindow(event->window);
@@ -383,7 +383,7 @@ void HandleKeyPress(const XKeyEvent *event) {
 		}
 		break;
 	case KEY_ROOT:
-		ShowRootMenu(0, 0);
+		ShowRootMenu(1, 0, 0);
 		break;
 	case KEY_WIN:
 		if(np) {

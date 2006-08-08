@@ -103,6 +103,11 @@ void InitializeMenu(MenuType *menu) {
 		menu->height += menu->itemHeight;
 	}
 
+	/* Nothing else to do if there is nothing in the menu. */
+	if(menu->itemCount == 0) {
+		return;
+	}
+
 	menu->offsets = Allocate(sizeof(int) * menu->itemCount);
 
 	hasSubmenu = 0;

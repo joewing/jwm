@@ -441,13 +441,6 @@ void ParseRootMenu(const TokenNode *start) {
 	const char *value;
 	MenuType *menu;
 
-	value = FindAttribute(start->attributes, ONROOT_ATTRIBUTE);
-	if(value) {
-		SetShowMenuOnRoot(value);
-	} else {
-		SetShowMenuOnRoot("123");
-	}
-
 	menu = Allocate(sizeof(MenuType));
 
 	value = FindAttribute(start->attributes, HEIGHT_ATTRIBUTE);
@@ -470,7 +463,13 @@ void ParseRootMenu(const TokenNode *start) {
 
 	menu->items = NULL;
 	ParseMenuItem(start->subnodeHead, menu, NULL);
-	SetRootMenu(menu);
+
+	value = FindAttribute(start->attributes, ONROOT_ATTRIBUTE);
+	if(!value) {
+		value = "123";
+	}
+
+	SetRootMenu(value, menu);
 
 }
 

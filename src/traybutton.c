@@ -332,7 +332,7 @@ void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 		}
 	} else {
 
-		GetRootMenuSize(&mwidth, &mheight);
+		GetRootMenuSize(1, &mwidth, &mheight);
 
 		sp = GetCurrentScreen(cp->screenx, cp->screeny);
 
@@ -352,7 +352,7 @@ void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 			}
 		}
 
-		ShowRootMenu(x, y);
+		ShowRootMenu(1, x, y);
 
 	}
 

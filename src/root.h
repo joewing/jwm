@@ -13,11 +13,11 @@ void StartupRootMenu();
 void ShutdownRootMenu();
 void DestroyRootMenu();
 
-void SetRootMenu(struct MenuType *m);
+void SetRootMenu(const char *indexes, struct MenuType *m);
 void SetShowExitConfirmation(int v);
 
-void GetRootMenuSize(int *width, int *height);
-void ShowRootMenu(int x, int y);
+void GetRootMenuSize(int index, int *width, int *height);
+int ShowRootMenu(int index, int x, int y);
 
 void RunCommand(const char *command);
 

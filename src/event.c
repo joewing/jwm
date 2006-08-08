@@ -30,8 +30,6 @@
 
 #define MIN_TIME_DELTA 50
 
-static unsigned int onRootMask = ~0;
-
 static void Signal();
 static void DispatchBorderButtonEvent(const XButtonEvent *event,
 	ClientNode *np);
@@ -1099,20 +1097,4 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
 	}
 
 }
-
-/****************************************************************************
- ****************************************************************************/
-void SetShowMenuOnRoot(const char *mask) {
-
-	int x;
-
-	Assert(mask);
-
-	onRootMask = 0;
-	for(x = 0; mask[x]; x++) {
-		onRootMask |= 1 << (mask[x] - '0');
-	}
-
-}
-
 

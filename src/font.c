@@ -16,7 +16,6 @@ static char *fontNames[FONT_COUNT];
 
 #ifdef USE_XFT
 static XftFont *fonts[FONT_COUNT];
-static XftDraw *xd;
 #else
 static XFontStruct *fonts[FONT_COUNT];
 static GC fontGC;
@@ -76,8 +75,6 @@ void StartupFonts() {
 		}
 	}
 
-	xd = XftDrawCreate(display, rootWindow, rootVisual, rootColormap);
-
 #else
 
 	for(x = 0; x < FONT_COUNT; x++) {
@@ -120,11 +117,7 @@ void ShutdownFonts() {
 		}
 	}
 
-#ifdef USE_XFT
-
-	XftDrawDestroy(xd);
-
-#else
+#ifndef USE_XFT
 
 	JXFreeGC(display, fontGC);
 
@@ -205,6 +198,10 @@ void SetFont(FontType type, const char *value) {
 void RenderString(Drawable d, FontType font, ColorType color,
 	int x, int y, int width, Region region, const char *str) {
 
+#ifdef USE_XFT
+	XftDraw *xd;
+#endif
+
 	XRectangle rect;
 	int len, h, w;
 
@@ -253,7 +250,7 @@ void RenderString(Drawable d, FontType font, ColorType color,
 
 #ifdef USE_XFT
 
-	XftDrawChange(xd, d);
+	xd = XftDrawCreate(display, d, rootVisual, rootColormap);
 	if(region) {
 		XftDrawSetClip(xd, region);
 	} else {
@@ -261,6 +258,7 @@ void RenderString(Drawable d, FontType font, ColorType color,
 	}
 	JXftDrawStringUtf8(xd, GetXftColor(color), fonts[font],
 		x, y + fonts[font]->ascent, (const unsigned char*)output, len);
+	XftDrawDestroy(xd);
 
 #else
 

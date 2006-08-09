@@ -103,9 +103,9 @@ void DrawButton(ButtonNode *bp) {
 	if(bp->icon) {
 
 		if(width < height) {
-			GetScaledIconSize(bp->icon, width - 2, &iconWidth, &iconHeight);
+			GetScaledIconSize(bp->icon, width - 4, &iconWidth, &iconHeight);
 		} else {
-			GetScaledIconSize(bp->icon, height - 2, &iconWidth, &iconHeight);
+			GetScaledIconSize(bp->icon, height - 4, &iconWidth, &iconHeight);
 		}
 
 	}
@@ -115,8 +115,8 @@ void DrawButton(ButtonNode *bp) {
 	if(bp->text) {
 		textWidth = GetStringWidth(bp->font, bp->text);
 		textHeight = GetStringHeight(bp->font);
-		if(textWidth + iconWidth + 8 > width) {
-			textWidth = width - iconWidth - 8;
+		if(textWidth + iconWidth + 10 > width) {
+			textWidth = width - iconWidth - 10;
 			if(textWidth < 0) {
 				textWidth = 0;
 			}
@@ -152,7 +152,7 @@ void DrawButton(ButtonNode *bp) {
 	if(bp->text) {
 		yoffset = height / 2 - textHeight / 2;
 		RenderString(drawable, bp->font, fg, x + xoffset, y + yoffset,
-			textWidth - 2, NULL, bp->text);
+			textWidth, NULL, bp->text);
 	}
 
 }

@@ -45,5 +45,7 @@ void InsertBinding(KeyType key, const char *modifiers,
 
 void RunKeyCommand(const XKeyEvent *event);
 
+void ShowKeyMenu(const XKeyEvent *event);
+
 #endif
 

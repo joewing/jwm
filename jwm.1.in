@@ -73,6 +73,9 @@ supported:
 .RS
 Determine which buttons on the root window activate the menu.
 This is a list of integers specifying buttons. The default is "123".
+Note that multiple root menus may be specified by using different
+buttons for different menus. The range of possible button values is
+\fB0\fP to \fB9\fP inclusive.
 .RE
 .P
 \fBheight\fP \fIint\fP
@@ -366,9 +369,10 @@ The default is 0.
 Add a button to the tray. The text of this tag determines what action to
 take when the button is clicked. The following actions are supported:
 .P
-\fBroot\fP
+\fBroot:\fP\fIn\fP
 .RS
-Show the root menu. This is the default.
+Show root menu \fIn\fP.
+Note that the default TrayButton action is \fBroot:1\fP.
 .RE
 .P
 \fBexec:\fP \fIstring\fP
@@ -847,8 +851,8 @@ Shade the active window. Grabbed.
 Move the active window. Grabbed.
 .IP \fBresize\fP
 Resize the active window. Grabbed.
-.IP \fBroot\fP
-Show the root menu. Grabbed.
+.IP \fBroot:\fP\fIn\fP
+Show root menu \fIn\fP. Grabbed.
 .IP \fBwindow\fP
 Show the window menu for the active window. Grabbed.
 .IP \fBdesktop\fP

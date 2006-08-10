@@ -123,29 +123,28 @@ void ChangeDesktop(unsigned int desktop) {
 
 /***************************************************************************
  ***************************************************************************/
-MenuType *CreateDesktopMenu(unsigned int mask) {
+Menu *CreateDesktopMenu(unsigned int mask) {
 
-	MenuType *menu;
-	MenuItemType *item;
+	Menu *menu;
+	MenuItem *item;
 	int x;
 
-	menu = Allocate(sizeof(MenuType));
+	menu = Allocate(sizeof(Menu));
 	menu->itemHeight = 0;
 	menu->items = NULL;
 	menu->label = NULL;
 
 	for(x = desktopCount - 1; x >= 0; x--) {
 
-		item = Allocate(sizeof(MenuItemType));
+		item = Allocate(sizeof(MenuItem));
+		item->type = MENU_ITEM_NORMAL;
 		item->iconName = NULL;
 		item->submenu = NULL;
-		item->flags = MENU_ITEM_NORMAL;
 		item->next = menu->items;
 		menu->items = item;
 
-		item->command = Allocate(8 * sizeof(char));
-		strcpy(item->command, "#desk ");
-		item->command[5] = '0' + x;
+		item->action.type = MA_DESKTOP;
+		item->action.data.i = x;
 
 		item->name = Allocate(strlen(desktopNames[x]) + 3);
 		if(mask & (1 << x)) {

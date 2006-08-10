@@ -6,14 +6,14 @@
 #ifndef ROOT_H
 #define ROOT_H
 
-struct MenuType;
+struct Menu;
 
 void InitializeRootMenu();
 void StartupRootMenu();
 void ShutdownRootMenu();
 void DestroyRootMenu();
 
-void SetRootMenu(const char *indexes, struct MenuType *m);
+void SetRootMenu(const char *indexes, struct Menu *m);
 void SetShowExitConfirmation(int v);
 
 void GetRootMenuSize(int index, int *width, int *height);

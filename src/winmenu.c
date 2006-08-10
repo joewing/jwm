@@ -11,17 +11,20 @@
 #include "desktop.h"
 #include "move.h"
 #include "resize.h"
+#include "event.h"
+#include "cursor.h"
+#include "misc.h"
 
 static const char *SENDTO_TEXT = "Send To";
 static const char *LAYER_TEXT = "Layer";
 
-static MenuType *CreateWindowMenu();
-static void RunWindowCommand(const char *command);
+static Menu *CreateWindowMenu();
+static void RunWindowCommand(const MenuAction *action);
 
-static void CreateWindowLayerMenu(MenuType *menu);
-static void CreateWindowSendToMenu(MenuType *menu);
-static void AddWindowMenuItem(MenuType *menu, const char *name,
-	const char *command);
+static void CreateWindowLayerMenu(Menu *menu);
+static void CreateWindowSendToMenu(Menu *menu);
+static void AddWindowMenuItem(Menu *menu, const char *name,
+	MenuActionType type, int value);
 
 static ClientNode *client = NULL;
 
@@ -29,7 +32,7 @@ static ClientNode *client = NULL;
  ****************************************************************************/
 void GetWindowMenuSize(ClientNode *np, int *width, int *height) {
 
-	MenuType *menu;
+	Menu *menu;
 
 	client = np;
 	menu = CreateWindowMenu();
@@ -44,7 +47,7 @@ void GetWindowMenuSize(ClientNode *np, int *width, int *height) {
  ****************************************************************************/
 void ShowWindowMenu(ClientNode *np, int x, int y) {
 
-	MenuType *menu;
+	Menu *menu;
 
 	client = np;
 	menu = CreateWindowMenu();
@@ -59,9 +62,11 @@ void ShowWindowMenu(ClientNode *np, int x, int y) {
 
 /****************************************************************************
  ****************************************************************************/
-MenuType *CreateWindowMenu() {
+Menu *CreateWindowMenu() {
 
-	MenuType *menu = Allocate(sizeof(MenuType));
+	Menu *menu;
+
+	menu = Allocate(sizeof(Menu));
 	menu->itemHeight = 0;
 	menu->items = NULL;
 	menu->label = NULL;
@@ -69,31 +74,31 @@ MenuType *CreateWindowMenu() {
 	/* Note that items are added in reverse order of display. */
 
 	if(!(client->state.status & STAT_WMDIALOG)) {
-		AddWindowMenuItem(menu, "Close", "close");
-		AddWindowMenuItem(menu, "Kill", "kill");
-		AddWindowMenuItem(menu, NULL, NULL);
+		AddWindowMenuItem(menu, "Close", MA_CLOSE, 0);
+		AddWindowMenuItem(menu, "Kill", MA_KILL, 0);
+		AddWindowMenuItem(menu, NULL, MA_NONE, 0);
 	}
 
 	if(client->state.status & (STAT_MAPPED | STAT_SHADED)) {
 		if(client->state.border & BORDER_RESIZE) {
-			AddWindowMenuItem(menu, "Resize", "resize");
+			AddWindowMenuItem(menu, "Resize", MA_RESIZE, 0);
 		}
 		if(client->state.border & BORDER_MOVE) {
-			AddWindowMenuItem(menu, "Move", "move");
+			AddWindowMenuItem(menu, "Move", MA_MOVE, 0);
 		}
 	}
 
 	if(client->state.border & BORDER_MIN) {
 
 		if(client->state.status & STAT_MINIMIZED) {
-			AddWindowMenuItem(menu, "Restore", "restore");
+			AddWindowMenuItem(menu, "Restore", MA_RESTORE, 0);
 		} else {
 			if(client->state.status & STAT_SHADED) {
-				AddWindowMenuItem(menu, "Unshade", "unshade");
+				AddWindowMenuItem(menu, "Unshade", MA_SHADE, 0);
 			} else {
-				AddWindowMenuItem(menu, "Shade", "shade");
+				AddWindowMenuItem(menu, "Shade", MA_SHADE, 0);
 			}
-			AddWindowMenuItem(menu, "Minimize", "minimize");
+			AddWindowMenuItem(menu, "Minimize", MA_MINIMIZE, 0);
 		}
 
 	}
@@ -101,15 +106,15 @@ MenuType *CreateWindowMenu() {
 	if((client->state.border & BORDER_MAX)
 		&& (client->state.status & STAT_MAPPED)) {
 
-		AddWindowMenuItem(menu, "Maximize", "maximize");
+		AddWindowMenuItem(menu, "Maximize", MA_MAXIMIZE, 0);
 	}
 
 	if(!(client->state.status & STAT_WMDIALOG)) {
 
 		if(client->state.status & STAT_STICKY) {
-			AddWindowMenuItem(menu, "Unstick", "unstick");
+			AddWindowMenuItem(menu, "Unstick", MA_STICK, 0);
 		} else {
-			AddWindowMenuItem(menu, "Stick", "stick");
+			AddWindowMenuItem(menu, "Stick", MA_STICK, 0);
 		}
 
 		CreateWindowLayerMenu(menu);
@@ -125,48 +130,42 @@ MenuType *CreateWindowMenu() {
 
 /****************************************************************************
  ****************************************************************************/
-void CreateWindowLayerMenu(MenuType *menu) {
-	MenuType *submenu;
-	MenuItemType *item;
+void CreateWindowLayerMenu(Menu *menu) {
+
+	Menu *submenu;
+	MenuItem *item;
 	char str[10];
-	char command[10];
 	unsigned int x;
 
-	item = Allocate(sizeof(MenuItemType));
-	item->flags = MENU_ITEM_NORMAL;
+	item = Allocate(sizeof(MenuItem));
+	item->type = MENU_ITEM_SUBMENU;
+	item->name = CopyString(LAYER_TEXT);
+	item->action.type = MA_NONE;
+	item->action.data.str = NULL;
 	item->iconName = NULL;
+
 	item->next = menu->items;
 	menu->items = item;
 
-	item->name = Allocate(strlen(LAYER_TEXT) + 1);
-	strcpy(item->name, LAYER_TEXT);
-	item->command = NULL;
-
-	submenu = Allocate(sizeof(MenuType));
+	submenu = Allocate(sizeof(Menu));
 	item->submenu = submenu;
 	submenu->itemHeight = 0;
 	submenu->items = NULL;
 	submenu->label = NULL;
 
-	strcpy(command, "layer  ");
-	command[5] = (LAYER_TOP / 10) + '0';
-	command[6] = (LAYER_TOP % 10) + '0';
-
 	if(client->state.layer == LAYER_TOP) {
-		AddWindowMenuItem(submenu, "[Top]", command);
+		AddWindowMenuItem(submenu, "[Top]", MA_LAYER, LAYER_TOP);
 	} else {
-		AddWindowMenuItem(submenu, "Top", command);
+		AddWindowMenuItem(submenu, "Top", MA_LAYER, LAYER_TOP);
 	}
 
 	str[4] = 0;
 	for(x = LAYER_TOP - 1; x > LAYER_BOTTOM; x--) {
-		command[5] = (x / 10) + '0';
-		command[6] = (x % 10) + '0';
 		if(x == LAYER_NORMAL) {
 			if(client->state.layer == x) {
-				AddWindowMenuItem(submenu, "[Normal]", command);
+				AddWindowMenuItem(submenu, "[Normal]", MA_LAYER, x);
 			} else {
-				AddWindowMenuItem(submenu, "Normal", command);
+				AddWindowMenuItem(submenu, "Normal", MA_LAYER, x);
 			}
 		} else {
 			if(client->state.layer == x) {
@@ -182,23 +181,21 @@ void CreateWindowLayerMenu(MenuType *menu) {
 				str[1] = (x / 10) + '0';
 			}
 			str[2] = (x % 10) + '0';
-			AddWindowMenuItem(submenu, str, command);
+			AddWindowMenuItem(submenu, str, MA_LAYER, x);
 		}
 	}
 
-	command[5] = (LAYER_BOTTOM / 10) + '0';
-	command[6] = (LAYER_BOTTOM % 10) + '0';
 	if(client->state.layer == LAYER_BOTTOM) {
-		AddWindowMenuItem(submenu, "[Bottom]", command);
+		AddWindowMenuItem(submenu, "[Bottom]", MA_LAYER, LAYER_BOTTOM);
 	} else {
-		AddWindowMenuItem(submenu, "Bottom", command);
+		AddWindowMenuItem(submenu, "Bottom", MA_LAYER, LAYER_BOTTOM);
 	}
 
 }
 
 /****************************************************************************
  ****************************************************************************/
-void CreateWindowSendToMenu(MenuType *menu) {
+void CreateWindowSendToMenu(Menu *menu) {
 
 	unsigned int mask;
 	unsigned int x;
@@ -211,7 +208,7 @@ void CreateWindowSendToMenu(MenuType *menu) {
 		}
 	}
 
-	AddWindowMenuItem(menu, SENDTO_TEXT, NULL);
+	AddWindowMenuItem(menu, SENDTO_TEXT, MA_NONE, 0);
 
 	/* Now the first item in the menu is for the desktop list. */
 	menu->items->submenu = CreateDesktopMenu(mask);
@@ -220,72 +217,110 @@ void CreateWindowSendToMenu(MenuType *menu) {
 
 /****************************************************************************
  ****************************************************************************/
-void AddWindowMenuItem(MenuType *menu, const char *name,
-	const char *command) {
+void AddWindowMenuItem(Menu *menu, const char *name,
+	MenuActionType type, int value) {
 
-	MenuItemType *item;
+	MenuItem *item;
 
-	item = Allocate(sizeof(MenuItemType));
-	item->flags = MENU_ITEM_NORMAL;
+	item = Allocate(sizeof(MenuItem));
+	if(name) {
+		item->type = MENU_ITEM_NORMAL;
+	} else {
+		item->type = MENU_ITEM_SEPARATOR;
+	}
+	item->name = CopyString(name);
+	item->action.type = type;
+	item->action.data.i = value;
 	item->iconName = NULL;
 	item->submenu = NULL;
+
 	item->next = menu->items;
 	menu->items = item;
-	if(name) {
-		item->name = Allocate(strlen(name) + 1);
-		strcpy(item->name, name);
-	} else {
-		item->name = NULL;
-	}
-	if(command) {
-		item->command = Allocate(strlen(command) + 1);
-		strcpy(item->command, command);
-	} else {
-		item->command = NULL;
-	}
 
 }
 
 /****************************************************************************
  ****************************************************************************/
-void RunWindowCommand(const char *command) {
-	int x;
+void ChooseWindow(const MenuAction *action) {
 
-	if(!command) {
-		return;
+	XEvent event;
+	ClientNode *np;
+
+	GrabMouseForChoose();
+
+	for(;;) {
+
+		WaitForEvent(&event);
+
+		if(event.type == ButtonPress) {
+			if(event.xbutton.button == Button1) {
+				np = FindClientByWindow(event.xbutton.subwindow);
+				if(np) {
+					client = np;
+					RunWindowCommand(action);
+				}
+			}
+			break;
+		} else if(event.type == KeyPress) {
+			break;
+		}
+
 	}
 
-	if(!strcmp(command, "stick")) {
-		SetClientSticky(client, 1);
-	} else if(!strcmp(command, "unstick")) {
-		SetClientSticky(client, 0);
-	} else if(!strcmp(command, "maximize")) {
+	JXUngrabPointer(display, CurrentTime);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void RunWindowCommand(const MenuAction *action) {
+
+	switch(action->type) {
+	case MA_STICK:
+		if(client->state.status & STAT_STICKY) {
+			SetClientSticky(client, 0);
+		} else {
+			SetClientSticky(client, 1);
+		}
+		break;
+	case MA_MAXIMIZE:
 		MaximizeClient(client);
-	} else if(!strcmp(command, "minimize")) {
+		break;
+	case MA_MINIMIZE:
 		MinimizeClient(client);
-	} else if(!strcmp(command, "restore")) {
+		break;
+	case MA_RESTORE:
 		RestoreClient(client, 1);
-	} else if(!strcmp(command, "close")) {
+		break;
+	case MA_CLOSE:
 		DeleteClient(client);
-	} else if(!strncmp(command, "#desk", 5)) {
-		x = command[5] - '0';
-		SetClientDesktop(client, x);
-	} else if(!strcmp(command, "shade")) {
-		ShadeClient(client);
-	} else if(!strcmp(command, "unshade")) {
-		UnshadeClient(client);
-	} else if(!strcmp(command, "move")) {
+		break;
+	case MA_SENDTO:
+	case MA_DESKTOP:
+		SetClientDesktop(client, action->data.i);
+		break;
+	case MA_SHADE:
+		if(client->state.status & STAT_SHADED) {
+			UnshadeClient(client);
+		} else {
+			ShadeClient(client);
+		}
+		break;
+	case MA_MOVE:
 		MoveClientKeyboard(client);
-	} else if(!strcmp(command, "resize")) {
+		break;
+	case MA_RESIZE:
 		ResizeClientKeyboard(client);
-	} else if(!strcmp(command, "kill")) {
+		break;
+	case MA_KILL:
 		KillClient(client);
-	} else if(!strncmp(command, "layer", 5)) {
-		x = (command[5] - '0') * 10;
-		x += command[6] - '0';
-		SetClientLayer(client, x);
-	} else {
-		Debug("Uknown window command \"%s\"", command);
+		break;
+	case MA_LAYER:
+		SetClientLayer(client, action->data.i);
+		break;
+	default:
+		Debug("unknown window command: %d", action->type);
+		break;
 	}
 
 }

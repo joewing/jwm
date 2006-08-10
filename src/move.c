@@ -159,7 +159,6 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 			break;
 		case MotionNotify:
 
-			SetMousePosition(event.xmotion.x_root, event.xmotion.y_root);
 			DiscardMotionEvents(&event, np->window);
 
 			np->x = event.xmotion.x_root - startx;

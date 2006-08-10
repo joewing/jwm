@@ -12,16 +12,19 @@
 #include "confirm.h"
 #include "desktop.h"
 #include "misc.h"
+#include "winmenu.h"
 
 /* Allow for menus 0 to 9. */
 #define ROOT_MENU_COUNT 10
 
-static MenuType *rootMenu[ROOT_MENU_COUNT];
+static Menu *rootMenu[ROOT_MENU_COUNT];
 static int showExitConfirmation = 1;
 
 static void ExitHandler(ClientNode *np);
-static void PatchRootMenu(MenuType *menu);
-static void UnpatchRootMenu(MenuType *menu);
+static void PatchRootMenu(Menu *menu);
+static void UnpatchRootMenu(Menu *menu);
+
+static void RunRootCommand(const MenuAction *action);
 
 /***************************************************************************
  ***************************************************************************/
@@ -86,7 +89,7 @@ void DestroyRootMenu() {
 
 /***************************************************************************
  ***************************************************************************/
-void SetRootMenu(const char *indexes, MenuType *m) {
+void SetRootMenu(const char *indexes, Menu *m) {
 
 	int x, y;
 	int index;
@@ -157,7 +160,7 @@ int ShowRootMenu(int index, int x, int y) {
 	}
 
 	PatchRootMenu(rootMenu[index]);
-	ShowMenu(rootMenu[index], RunCommand, x, y);
+	ShowMenu(rootMenu[index], RunRootCommand, x, y);
 	UnpatchRootMenu(rootMenu[index]);
 
 	return 1;
@@ -166,15 +169,15 @@ int ShowRootMenu(int index, int x, int y) {
 
 /***************************************************************************
  ***************************************************************************/
-void PatchRootMenu(MenuType *menu) {
+void PatchRootMenu(Menu *menu) {
 
-	MenuItemType *item;
+	MenuItem *item;
 
 	for(item = menu->items; item; item = item->next) {
 		if(item->submenu) {
 			PatchRootMenu(item->submenu);
 		}
-		if(item->flags & MENU_ITEM_DESKTOPS) {
+		if(item->action.type == MA_DESKTOP) {
 			item->submenu = CreateDesktopMenu(1 << currentDesktop);
 			InitializeMenu(item->submenu);
 		}
@@ -184,12 +187,12 @@ void PatchRootMenu(MenuType *menu) {
 
 /***************************************************************************
  ***************************************************************************/
-void UnpatchRootMenu(MenuType *menu) {
+void UnpatchRootMenu(Menu *menu) {
 
-	MenuItemType *item;
+	MenuItem *item;
 
 	for(item = menu->items; item; item = item->next) {
-		if(item->flags & MENU_ITEM_DESKTOPS) {
+		if(item->action.type == MA_DESKTOP) {
 			DestroyMenu(item->submenu);
 			item->submenu = NULL;
 		} else if(item->submenu) {
@@ -227,29 +230,54 @@ void Exit() {
 
 /***************************************************************************
  ***************************************************************************/
+void RunRootCommand(const MenuAction *action) {
+
+	switch(action->type) {
+
+	case MA_EXECUTE:
+		RunCommand(action->data.str);
+		break;
+	case MA_RESTART:
+		Restart();
+		break;
+	case MA_EXIT:
+		if(exitCommand) {
+			Release(exitCommand);
+		}
+		exitCommand = CopyString(action->data.str);
+		Exit();
+		break;
+	case MA_DESKTOP:
+		ChangeDesktop(action->data.i);
+		break;
+
+	case MA_SENDTO:
+	case MA_LAYER:
+	case MA_MAXIMIZE:
+	case MA_MINIMIZE:
+	case MA_RESTORE:
+	case MA_SHADE:
+	case MA_MOVE:
+	case MA_RESIZE:
+	case MA_KILL:
+	case MA_CLOSE:
+		ChooseWindow(action);
+		break;
+
+	default:
+		Debug("invalid RunRootCommand action: %d", action->type);
+		break;
+	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
 void RunCommand(const char *command) {
 	char *displayString;
 	char *str;
 
 	if(!command) {
-		return;
-	}
-
-	if(!strncmp(command, "#exit", 5)) {
-		if(exitCommand) {
-			Release(exitCommand);
-			exitCommand = NULL;
-		}
-		if(strlen(command) > 6) {
-			exitCommand = CopyString(command + 6);
-		}
-		Exit();
-		return;
-	} else if(!strcmp(command, "#restart")) {
-		Restart();
-		return;
-	} else if(!strncmp(command, "#desk", 5)) {
-		ChangeDesktop(command[5] - '0');
 		return;
 	}
 

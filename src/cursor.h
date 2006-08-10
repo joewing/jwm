@@ -17,6 +17,7 @@ int GrabMouseForResize(BorderActionType action);
 int GrabMouseForMove();
 
 int GrabMouseForMenu();
+int GrabMouseForChoose();
 
 Cursor GetFrameCursor(BorderActionType action);
 

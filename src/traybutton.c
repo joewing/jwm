@@ -314,44 +314,55 @@ void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 	const ScreenType *sp;
 	int mwidth, mheight;
+	int button;
 
 	TrayButtonType *bp = (TrayButtonType*)cp->object;
 
 	Assert(bp);
 
-	if(bp->action && strlen(bp->action) > 0 && strcmp(bp->action, "root")) {
+	if(bp->action && strlen(bp->action) > 0) {
 		if(!strncmp(bp->action, "exec:", 5)) {
 			RunCommand(bp->action + 5);
+			return;
+		} else if(!strncmp(bp->action, "root:", 5)) {
+			button = atoi(bp->action + 5);
 		} else if(!strcmp(bp->action, "showdesktop")) {
 			ShowDesktop();
+			return;
 		} else {
 			Warning("invalid TrayButton action: \"%s\"", bp->action);
+			return;
 		}
 	} else {
-
-		GetRootMenuSize(1, &mwidth, &mheight);
-
-		sp = GetCurrentScreen(cp->screenx, cp->screeny);
-
-		if(cp->tray->layout == LAYOUT_HORIZONTAL) {
-			x = cp->screenx;
-			if(cp->screeny + cp->height / 2 < sp->y + sp->height / 2) {
-				y = cp->screeny + cp->height;
-			} else {
-				y = cp->screeny - mheight;
-			}
-		} else {
-			y = cp->screeny;
-			if(cp->screenx + cp->width / 2 < sp->x + sp->width / 2) {
-				x = cp->screenx + cp->width;
-			} else {
-				x = cp->screenx - mwidth;
-			}
-		}
-
-		ShowRootMenu(1, x, y);
-
+		button = 1;
 	}
+
+	if(button < 0 || button > 9) {
+		Warning("invalid button specified for root: %d", button);
+		return;
+	}
+
+	GetRootMenuSize(button, &mwidth, &mheight);
+
+	sp = GetCurrentScreen(cp->screenx, cp->screeny);
+
+	if(cp->tray->layout == LAYOUT_HORIZONTAL) {
+		x = cp->screenx;
+		if(cp->screeny + cp->height / 2 < sp->y + sp->height / 2) {
+			y = cp->screeny + cp->height;
+		} else {
+			y = cp->screeny - mheight;
+		}
+	} else {
+		y = cp->screeny;
+		if(cp->screenx + cp->width / 2 < sp->x + sp->width / 2) {
+			x = cp->screenx + cp->width;
+		} else {
+			x = cp->screenx - mwidth;
+		}
+	}
+
+	ShowRootMenu(button, x, y);
 
 }
 

@@ -197,6 +197,7 @@ KeyType GetKey(const XKeyEvent *event) {
 /***************************************************************************
  ***************************************************************************/
 void RunKeyCommand(const XKeyEvent *event) {
+
 	KeyNode *np;
 
 	for(np = bindings; np; np = np->next) {
@@ -205,6 +206,26 @@ void RunKeyCommand(const XKeyEvent *event) {
 			return;
 		}
 	}
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
+void ShowKeyMenu(const XKeyEvent *event) {
+
+	KeyNode *np;
+	int button;
+
+	for(np = bindings; np; np = np->next) {
+		if(np->state == event->state && np->code == event->keycode) {
+			button = atoi(np->command);
+			if(button >= 0 && button <= 9) {
+				ShowRootMenu(button, 0, 0);
+			}
+			return;
+		}
+	}
+
 }
 
 /***************************************************************************

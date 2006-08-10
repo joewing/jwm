@@ -381,7 +381,7 @@ void HandleKeyPress(const XKeyEvent *event) {
 		}
 		break;
 	case KEY_ROOT:
-		ShowRootMenu(1, 0, 0);
+		ShowKeyMenu(event);
 		break;
 	case KEY_WIN:
 		if(np) {

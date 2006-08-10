@@ -7,26 +7,56 @@
 #define MENU_H
 
 typedef enum {
-	MENU_ITEM_NORMAL   = 0,
-	MENU_ITEM_DESKTOPS = 1
-} MenuItemFlags;
+	MA_NONE,
+	MA_EXECUTE,
+	MA_DESKTOP,
+	MA_SENDTO,
+	MA_LAYER,
+	MA_STICK,
+	MA_MAXIMIZE,
+	MA_MINIMIZE,
+	MA_RESTORE,
+	MA_SHADE,
+	MA_MOVE,
+	MA_RESIZE,
+	MA_KILL,
+	MA_CLOSE,
+	MA_EXIT,
+	MA_RESTART
+} MenuActionType;
 
-typedef struct MenuItemType {
+typedef struct MenuAction {
+	MenuActionType type;
+	union {
+		int i;
+		char *str;
+	} data;
+} MenuAction;
 
-	char *name;
-	char *command;
-	char *iconName;
-	struct IconNode *icon;  /* This field is handled by menu.c */
-	struct MenuItemType *next;
-	struct MenuType *submenu;
-	MenuItemFlags flags;
-
+typedef enum {
+	MENU_ITEM_NORMAL,
+	MENU_ITEM_SUBMENU,
+	MENU_ITEM_SEPARATOR
 } MenuItemType;
 
-typedef struct MenuType {
+typedef struct MenuItem {
+
+	MenuItemType type;
+	char *name;
+	MenuAction action;
+	char *iconName;
+	struct Menu *submenu;
+	struct MenuItem *next;
+
+	/* This field is handled by menu.c */
+	struct IconNode *icon;
+
+} MenuItem;
+
+typedef struct Menu {
 
 	/* These fields must be set before calling ShowMenu */
-	struct MenuItemType *items;
+	struct MenuItem *items;
 	char *label;
 	int itemHeight;
 
@@ -40,15 +70,15 @@ typedef struct MenuType {
 	int wasCovered;
 	int textOffset;
 	int *offsets;
-	struct MenuType *parent;
+	struct Menu *parent;
 
-} MenuType;
+} Menu;
 
-typedef void (*RunMenuCommandType)(const char *command);
+typedef void (*RunMenuCommandType)(const MenuAction *action);
 
-void InitializeMenu(MenuType *menu);
-void ShowMenu(MenuType *menu, RunMenuCommandType runner, int x, int y);
-void DestroyMenu(MenuType *menu);
+void InitializeMenu(Menu *menu);
+void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y);
+void DestroyMenu(Menu *menu);
 
 extern int menuShown;
 

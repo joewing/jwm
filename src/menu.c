@@ -29,33 +29,33 @@ static char menu_bitmap[] = {
 	0x01, 0x03, 0x07, 0x0F, 0x07, 0x03, 0x01
 };
 
-static int ShowSubmenu(MenuType *menu, MenuType *parent, int x, int y);
+static int ShowSubmenu(Menu *menu, Menu *parent, int x, int y);
 
-static void CreateMenu(MenuType *menu, int x, int y);
-static void HideMenu(MenuType *menu);
-static void DrawMenu(MenuType *menu);
-static void RedrawMenuTree(MenuType *menu);
+static void CreateMenu(Menu *menu, int x, int y);
+static void HideMenu(Menu *menu);
+static void DrawMenu(Menu *menu);
+static void RedrawMenuTree(Menu *menu);
 
-static int MenuLoop(MenuType *menu);
-static MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event);
+static int MenuLoop(Menu *menu);
+static MenuSelectionType UpdateMotion(Menu *menu, XEvent *event);
 
-static void UpdateMenu(MenuType *menu);
-static void DrawMenuItem(MenuType *menu, MenuItemType *item, int index);
-static MenuItemType *GetMenuItem(MenuType *menu, int index);
-static int GetNextMenuIndex(MenuType *menu);
-static int GetPreviousMenuIndex(MenuType *menu);
-static int GetMenuIndex(MenuType *menu, int index);
-static void SetPosition(MenuType *tp, int index);
+static void UpdateMenu(Menu *menu);
+static void DrawMenuItem(Menu *menu, MenuItem *item, int index);
+static MenuItem *GetMenuItem(Menu *menu, int index);
+static int GetNextMenuIndex(Menu *menu);
+static int GetPreviousMenuIndex(Menu *menu);
+static int GetMenuIndex(Menu *menu, int index);
+static void SetPosition(Menu *tp, int index);
 
-static char *runCommand = NULL;
+static MenuAction *menuAction = NULL;
 
 int menuShown = 0;
 
 /***************************************************************************
  ***************************************************************************/
-void InitializeMenu(MenuType *menu) {
+void InitializeMenu(Menu *menu) {
 
-	MenuItemType *np;
+	MenuItem *np;
 	int index, temp;
 	int hasSubmenu;
 	int userHeight;
@@ -114,10 +114,10 @@ void InitializeMenu(MenuType *menu) {
 	index = 0;
 	for(np = menu->items; np; np = np->next) {
 		menu->offsets[index++] = menu->height;
-		if(np->name || np->command || np->submenu) {
-			menu->height += menu->itemHeight;
-		} else {
+		if(np->type == MENU_ITEM_SEPARATOR) {
 			menu->height += 5;
+		} else {
+			menu->height += menu->itemHeight;
 		}
 		if(np->name) {
 			temp = GetStringWidth(FONT_MENU, np->name);
@@ -137,7 +137,7 @@ void InitializeMenu(MenuType *menu) {
 
 /***************************************************************************
  ***************************************************************************/
-void ShowMenu(MenuType *menu, RunMenuCommandType runner, int x, int y) {
+void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y) {
 
 	int mouseStatus, keyboardStatus;
 
@@ -154,17 +154,17 @@ void ShowMenu(MenuType *menu, RunMenuCommandType runner, int x, int y) {
 	JXUngrabPointer(display, CurrentTime);
 	RefocusClient();
 
-	if(runCommand) {
-		(runner)(runCommand);
-		runCommand = NULL;
+	if(menuAction) {
+		(runner)(menuAction);
+		menuAction = NULL;
 	}
 
 }
 
 /***************************************************************************
  ***************************************************************************/
-void DestroyMenu(MenuType *menu) {
-	MenuItemType *np;
+void DestroyMenu(Menu *menu) {
+	MenuItem *np;
 
 	if(menu) {
 		while(menu->items) {
@@ -172,8 +172,15 @@ void DestroyMenu(MenuType *menu) {
 			if(menu->items->name) {
 				Release(menu->items->name);
 			}
-			if(menu->items->command) {
-				Release(menu->items->command);
+			switch(menu->items->action.type) {
+			case MA_EXECUTE:
+			case MA_EXIT:
+				if(menu->items->action.data.str) {
+					Release(menu->items->action.data.str);
+				}
+				break;
+			default:
+				break;
 			}
 			if(menu->items->iconName) {
 				Release(menu->items->iconName);
@@ -197,7 +204,7 @@ void DestroyMenu(MenuType *menu) {
 
 /***************************************************************************
  ***************************************************************************/
-int ShowSubmenu(MenuType *menu, MenuType *parent, int x, int y) {
+int ShowSubmenu(Menu *menu, Menu *parent, int x, int y) {
 	int status;
 
 	CreateMenu(menu, x, y);
@@ -215,10 +222,10 @@ int ShowSubmenu(MenuType *menu, MenuType *parent, int x, int y) {
 /***************************************************************************
  * Returns 0 if no selection was made or 1 if a selection was made.
  ***************************************************************************/
-int MenuLoop(MenuType *menu) {
+int MenuLoop(Menu *menu) {
 
 	XEvent event;
-	MenuItemType *ip;
+	MenuItem *ip;
 	int count;
 	int hadMotion;
 	int pressx, pressy;
@@ -275,8 +282,8 @@ int MenuLoop(MenuType *menu) {
 			if(menu->currentIndex >= 0) {
 				count = 0;
 				for(ip = menu->items; ip; ip = ip->next) {
-					if(count == menu->currentIndex && ip->command) {
-						runCommand = ip->command;
+					if(count == menu->currentIndex) {
+						menuAction = &ip->action;
 						break;
 					}
 					++count;
@@ -292,7 +299,7 @@ int MenuLoop(MenuType *menu) {
 
 /***************************************************************************
  ***************************************************************************/
-void CreateMenu(MenuType *menu, int x, int y) {
+void CreateMenu(Menu *menu, int x, int y) {
 
 	XSetWindowAttributes attr;
 	unsigned long attrMask;
@@ -340,7 +347,7 @@ void CreateMenu(MenuType *menu, int x, int y) {
 
 /***************************************************************************
  ***************************************************************************/
-void HideMenu(MenuType *menu) {
+void HideMenu(Menu *menu) {
 
 	JXDestroyWindow(display, menu->window);
 
@@ -348,7 +355,7 @@ void HideMenu(MenuType *menu) {
 
 /***************************************************************************
  ***************************************************************************/
-void RedrawMenuTree(MenuType *menu) {
+void RedrawMenuTree(Menu *menu) {
 
 	if(menu->parent) {
 		RedrawMenuTree(menu->parent);
@@ -361,9 +368,9 @@ void RedrawMenuTree(MenuType *menu) {
 
 /***************************************************************************
  ***************************************************************************/
-void DrawMenu(MenuType *menu) {
+void DrawMenu(Menu *menu) {
 
-	MenuItemType *np;
+	MenuItem *np;
 	int x;
 
 	menu->wasCovered = 0;
@@ -402,10 +409,10 @@ void DrawMenu(MenuType *menu) {
 
 /***************************************************************************
  ***************************************************************************/
-MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
+MenuSelectionType UpdateMotion(Menu *menu, XEvent *event) {
 
-	MenuItemType *ip;
-	MenuType *tp;
+	MenuItem *ip;
+	Menu *tp;
 	Window subwindow;
 	int x, y;
 
@@ -475,8 +482,8 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 			if(tp->currentIndex >= 0) {
 				x = 0;
 				for(ip = tp->items; ip; ip = ip->next) {
-					if(x == tp->currentIndex && ip->command) {
-						runCommand = ip->command;
+					if(x == tp->currentIndex) {
+						menuAction = &ip->action;
 						break;
 					}
 					++x;
@@ -578,11 +585,11 @@ MenuSelectionType UpdateMotion(MenuType *menu, XEvent *event) {
 
 /***************************************************************************
  ***************************************************************************/
-void UpdateMenu(MenuType *menu) {
+void UpdateMenu(Menu *menu) {
 
 	ButtonNode button;
 	Pixmap pixmap;
-	MenuItemType *ip;
+	MenuItem *ip;
 
 	/* Clear the old selection. */
 	ip = GetMenuItem(menu, menu->lastIndex);
@@ -591,7 +598,8 @@ void UpdateMenu(MenuType *menu) {
 	/* Highlight the new selection. */
 	ip = GetMenuItem(menu, menu->currentIndex);
 	if(ip) {
-		if(!ip->name && !ip->submenu && !ip->command) {
+
+		if(ip->type == MENU_ITEM_SEPARATOR) {
 			return;
 		}
 
@@ -621,7 +629,7 @@ void UpdateMenu(MenuType *menu) {
 
 /***************************************************************************
  ***************************************************************************/
-void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
+void DrawMenuItem(Menu *menu, MenuItem *item, int index) {
 
 	ButtonNode button;
 	Pixmap pixmap;
@@ -657,7 +665,8 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 		button.icon = item->icon;
 		DrawButton(&button);
 
-	} else if(!item->command && !item->submenu) {
+	} else if(item->type == MENU_ITEM_SEPARATOR) {
+
 		JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
 		JXDrawLine(display, menu->window, rootGC, 4,
 			menu->offsets[index] + 2, menu->width - 6,
@@ -666,9 +675,11 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 		JXDrawLine(display, menu->window, rootGC, 4,
 			menu->offsets[index] + 3, menu->width - 6,
 			menu->offsets[index] + 3);
+
 	}
 
 	if(item->submenu) {
+
 		pixmap = JXCreatePixmapFromBitmapData(display, menu->window,
 			menu_bitmap, 4, 7, colors[COLOR_MENU_FG],
 			colors[COLOR_MENU_BG], rootDepth);
@@ -682,14 +693,14 @@ void DrawMenuItem(MenuType *menu, MenuItemType *item, int index) {
 
 /***************************************************************************
  ***************************************************************************/
-int GetNextMenuIndex(MenuType *menu) {
+int GetNextMenuIndex(Menu *menu) {
 
-	MenuItemType *item;
+	MenuItem *item;
 	int x;
 
 	for(x = menu->currentIndex + 1; x < menu->itemCount; x++) {
 		item = GetMenuItem(menu, x);
-		if(item->name || item->command || item->submenu) {
+		if(item->type != MENU_ITEM_SEPARATOR) {
 			return x;
 		}
 	}
@@ -700,14 +711,14 @@ int GetNextMenuIndex(MenuType *menu) {
 
 /***************************************************************************
  ***************************************************************************/
-int GetPreviousMenuIndex(MenuType *menu) {
+int GetPreviousMenuIndex(Menu *menu) {
 
-	MenuItemType *item;
+	MenuItem *item;
 	int x;
 
 	for(x = menu->currentIndex - 1; x >= 0; x--) {
 		item = GetMenuItem(menu, x);
-		if(item->name || item->command || item->submenu) {
+		if(item->type != MENU_ITEM_SEPARATOR) {
 			return x;
 		}
 	}
@@ -718,7 +729,7 @@ int GetPreviousMenuIndex(MenuType *menu) {
 
 /***************************************************************************
  ***************************************************************************/
-int GetMenuIndex(MenuType *menu, int y) {
+int GetMenuIndex(Menu *menu, int y) {
 
 	int x;
 
@@ -736,9 +747,9 @@ int GetMenuIndex(MenuType *menu, int y) {
 
 /***************************************************************************
  ***************************************************************************/
-MenuItemType *GetMenuItem(MenuType *menu, int index) {
+MenuItem *GetMenuItem(Menu *menu, int index) {
 
-	MenuItemType *ip;
+	MenuItem *ip;
 
 	if(index >= 0) {
 		for(ip = menu->items; ip; ip = ip->next) {
@@ -757,7 +768,7 @@ MenuItemType *GetMenuItem(MenuType *menu, int index) {
 
 /***************************************************************************
  ***************************************************************************/
-void SetPosition(MenuType *tp, int index) {
+void SetPosition(Menu *tp, int index) {
 
 	int y;
 	int updated;

@@ -18,6 +18,7 @@ static Cursor northEastCursor;
 static Cursor northWestCursor;
 static Cursor southEastCursor;
 static Cursor southWestCursor;
+static Cursor chooseCursor;
 
 static Cursor GetResizeCursor(BorderActionType action);
 static Cursor CreateCursor(unsigned int shape);
@@ -48,6 +49,7 @@ void StartupCursors() {
 	northWestCursor = CreateCursor(XC_ul_angle);
 	southEastCursor = CreateCursor(XC_lr_angle);
 	southWestCursor = CreateCursor(XC_ll_angle);
+	chooseCursor = CreateCursor(XC_tcross);
 
 	JXQueryPointer(display, rootWindow, &win1, &win2,
 		&mousex, &mousey, &winx, &winy, &mask);
@@ -74,6 +76,7 @@ void ShutdownCursors() {
 	JXFreeCursor(display, northWestCursor);
 	JXFreeCursor(display, southEastCursor);
 	JXFreeCursor(display, southWestCursor);
+	JXFreeCursor(display, chooseCursor);
 
 }
 
@@ -181,6 +184,24 @@ int GrabMouseForMenu() {
 	result = JXGrabPointer(display, rootWindow, False,
 		ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
 		GrabModeAsync, GrabModeAsync, None, defaultCursor, CurrentTime);
+
+	if(result == GrabSuccess) {
+		return 1;
+	} else {
+		return 0;
+	}
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
+int GrabMouseForChoose() {
+
+	int result;
+
+	result = JXGrabPointer(display, rootWindow, False,
+		ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
+		GrabModeAsync, GrabModeAsync, None, chooseCursor, CurrentTime);
 
 	if(result == GrabSuccess) {
 		return 1;

@@ -55,7 +55,6 @@ static const KeyMapType KEY_MAP[] = {
 	{ "shade",       KEY_SHADE        },
 	{ "move",        KEY_MOVE         },
 	{ "resize",      KEY_RESIZE       },
-	{ "root",        KEY_ROOT         },
 	{ "window",      KEY_WIN          },
 	{ "restart",     KEY_RESTART      },
 	{ "exit",        KEY_EXIT         },
@@ -63,12 +62,6 @@ static const KeyMapType KEY_MAP[] = {
 	{ "desktop#",    KEY_DESKTOP      },
 	{ NULL,          KEY_NONE         }
 };
-
-static const char *RESTART_COMMAND = "#restart";
-static const char *RESTART_NAME = "Restart";
-static const char *EXIT_COMMAND = "#exit";
-static const char *EXIT_NAME = "Exit";
-static const char *DESKTOPS_NAME = "Desktops";
 
 static const char *DEFAULT_TITLE = "JWM";
 static const char *LABEL_ATTRIBUTE = "label";
@@ -112,11 +105,11 @@ static void ParseDesktops(const TokenNode *tp);
 
 /* Menus. */
 static void ParseRootMenu(const TokenNode *start);
-static MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
-	MenuItemType *last);
-static MenuItemType *ParseMenuInclude(const TokenNode *tp, MenuType *menu,
-	MenuItemType *last);
-static MenuItemType *InsertMenuItem(MenuItemType *last);
+static MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
+	MenuItem *last);
+static MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
+	MenuItem *last);
+static MenuItem *InsertMenuItem(MenuItem *last);
 
 /* Tray. */
 static void ParseTray(const TokenNode *tp);
@@ -439,9 +432,9 @@ void ParseResizeMode(const TokenNode *tp) {
 void ParseRootMenu(const TokenNode *start) {
 
 	const char *value;
-	MenuType *menu;
+	Menu *menu;
 
-	menu = Allocate(sizeof(MenuType));
+	menu = Allocate(sizeof(Menu));
 
 	value = FindAttribute(start->attributes, HEIGHT_ATTRIBUTE);
 	if(value) {
@@ -475,15 +468,16 @@ void ParseRootMenu(const TokenNode *start) {
 
 /****************************************************************************
  ****************************************************************************/
-MenuItemType *InsertMenuItem(MenuItemType *last) {
+MenuItem *InsertMenuItem(MenuItem *last) {
 
-	MenuItemType *item;
+	MenuItem *item;
 
-	item = Allocate(sizeof(MenuItemType));
+	item = Allocate(sizeof(MenuItem));
 	item->name = NULL;
-	item->flags = MENU_ITEM_NORMAL;
+	item->type = MENU_ITEM_NORMAL;
 	item->iconName = NULL;
-	item->command = NULL;
+	item->action.type = MA_NONE;
+	item->action.data.str = NULL;
 	item->submenu = NULL;
 
 	item->next = NULL;
@@ -497,10 +491,10 @@ MenuItemType *InsertMenuItem(MenuItemType *last) {
 
 /****************************************************************************
  ****************************************************************************/
-MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
-	MenuItemType *last) {
+MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
+	MenuItem *last) {
 
-	MenuType *child;
+	Menu *child;
 	const char *value;
 
 	Assert(menu);
@@ -516,6 +510,7 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 		case TOK_MENU:
 
 			last = InsertMenuItem(last);
+			last->type = MENU_ITEM_SUBMENU;
 			if(!menu->items) {
 				menu->items = last;
 			}
@@ -526,7 +521,7 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 			value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
 			last->iconName = CopyString(value);
 
-			last->submenu = Allocate(sizeof(MenuType));
+			last->submenu = Allocate(sizeof(Menu));
 			child = last->submenu;
 
 			value = FindAttribute(start->attributes, HEIGHT_ATTRIBUTE);
@@ -568,33 +563,74 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 			value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
 			last->iconName = CopyString(value);
 
-			last->command = CopyString(start->value);
+			last->action.type = MA_EXECUTE;
+			last->action.data.str = CopyString(start->value);
 
 			break;
 		case TOK_SEPARATOR:
 
 			last = InsertMenuItem(last);
+			last->type = MENU_ITEM_SEPARATOR;
 			if(!menu->items) {
 				menu->items = last;
 			}
 
 			break;
 		case TOK_DESKTOPS:
+		case TOK_STICK:
+		case TOK_MAXIMIZE:
+		case TOK_MINIMIZE:
+		case TOK_SHADE:
+		case TOK_MOVE:
+		case TOK_RESIZE:
+		case TOK_KILL:
+		case TOK_CLOSE:
 
 			last = InsertMenuItem(last);
-			last->flags |= MENU_ITEM_DESKTOPS;
 			if(!menu->items) {
 				menu->items = last;
 			}
 
 			value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
 			if(!value) {
-				value = DESKTOPS_NAME;
+				value = GetTokenName(start);
 			}
 			last->name = CopyString(value);
 
 			value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
 			last->iconName = CopyString(value);
+
+			switch(start->type) {
+			case TOK_DESKTOPS:
+				last->action.type = MA_DESKTOP;
+				break;
+			case TOK_STICK:
+				last->action.type = MA_STICK;
+				break;
+			case TOK_MAXIMIZE:
+				last->action.type = MA_MAXIMIZE;
+				break;
+			case TOK_MINIMIZE:
+				last->action.type = MA_MINIMIZE;
+				break;
+			case TOK_SHADE:
+				last->action.type = MA_SHADE;
+				break;
+			case TOK_MOVE:
+				last->action.type = MA_MOVE;
+				break;
+			case TOK_RESIZE:
+				last->action.type = MA_RESIZE;
+				break;
+			case TOK_KILL:
+				last->action.type = MA_KILL;
+				break;
+			case TOK_CLOSE:
+				last->action.type = MA_CLOSE;
+				break;
+			default:
+				break;
+			}
 
 			break;
 		case TOK_EXIT:
@@ -613,22 +649,15 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 
 			value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
 			if(!value) {
-				value = EXIT_NAME;
+				value = GetTokenName(start);
 			}
 			last->name = CopyString(value);
 
-			if(start->value) {
-				last->command = Allocate(strlen(EXIT_COMMAND)
-					+ strlen(start->value) + 2);
-				strcpy(last->command, EXIT_COMMAND);
-				strcat(last->command, ":");
-				strcat(last->command, start->value);
-			} else {
-				last->command = CopyString(EXIT_COMMAND);
-			}
-
 			value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
 			last->iconName = CopyString(value);
+
+			last->action.type = MA_EXIT;
+			last->action.data.str = CopyString(start->value);
 
 			break;
 		case TOK_RESTART:
@@ -640,14 +669,14 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 
 			value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
 			if(!value) {
-				value = RESTART_NAME;
+				value = GetTokenName(start);
 			}
 			last->name = CopyString(value);
 
 			value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
 			last->iconName = CopyString(value);
 
-			last->command = CopyString(RESTART_COMMAND);
+			last->action.type = MA_RESTART;
 
 			break;
 		default:
@@ -663,8 +692,8 @@ MenuItemType *ParseMenuItem(const TokenNode *start, MenuType *menu,
 
 /****************************************************************************
  ****************************************************************************/
-MenuItemType *ParseMenuInclude(const TokenNode *tp, MenuType *menu,
-	MenuItemType *last) {
+MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
+	MenuItem *last) {
 
 	FILE *fd;
 	char *path;
@@ -753,6 +782,9 @@ void ParseKey(const TokenNode *tp) {
 	k = KEY_NONE;
 	if(!strncmp(action, "exec:", 5)) {
 		k = KEY_EXEC;
+		command = action + 5;
+	} else if(!strncmp(action, "root:", 5)) {
+		k = KEY_ROOT;
 		command = action + 5;
 	} else {
 		for(x = 0; KEY_MAP[x].name; x++) {

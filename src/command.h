@@ -13,6 +13,7 @@ void DestroyCommands();
 
 void AddStartupCommand(const char *command);
 void AddShutdownCommand(const char *command);
+void AddRestartCommand(const char *command);
 
 #endif
 

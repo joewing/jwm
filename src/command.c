@@ -7,6 +7,7 @@
 #include "command.h"
 #include "root.h"
 #include "misc.h"
+#include "main.h"
 
 typedef struct CommandNode {
 	char *command;
@@ -15,6 +16,7 @@ typedef struct CommandNode {
 
 static CommandNode *startupCommands;
 static CommandNode *shutdownCommands;
+static CommandNode *restartCommands;
 
 static void RunCommands(CommandNode *commands);
 static void ReleaseCommands(CommandNode **commands);
@@ -25,13 +27,18 @@ static void AddCommand(CommandNode **commands, const char *command);
 void InitializeCommands() {
 	startupCommands = NULL;
 	shutdownCommands = NULL;
+	restartCommands = NULL;
 }
 
 /****************************************************************************
  ****************************************************************************/
 void StartupCommands() {
 
-	RunCommands(startupCommands);
+	if(isRestarting) {
+		RunCommands(restartCommands);
+	} else {
+		RunCommands(startupCommands);
+	}
 
 }
 
@@ -39,7 +46,9 @@ void StartupCommands() {
  ****************************************************************************/
 void ShutdownCommands() {
 
-	RunCommands(shutdownCommands);
+	if(!shouldRestart) {
+		RunCommands(shutdownCommands);
+	}
 
 }
 
@@ -48,6 +57,7 @@ void ShutdownCommands() {
 void DestroyCommands() {
 	ReleaseCommands(&startupCommands);
 	ReleaseCommands(&shutdownCommands);
+	ReleaseCommands(&restartCommands);
 }
 
 /****************************************************************************
@@ -105,5 +115,11 @@ void AddStartupCommand(const char *command) {
  ****************************************************************************/
 void AddShutdownCommand(const char *command) {
 	AddCommand(&shutdownCommands, command);
+}
+
+/****************************************************************************
+ ****************************************************************************/
+void AddRestartCommand(const char *command) {
+	AddCommand(&restartCommands, command);
 }
 

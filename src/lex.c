@@ -55,6 +55,7 @@ static const char *TOKEN_MAP[] = {
 	"Resize",
 	"ResizeMode",
 	"Restart",
+	"RestartCommand",
 	"RootMenu",
 	"SendTo",
 	"Separator",

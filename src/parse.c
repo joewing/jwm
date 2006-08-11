@@ -99,8 +99,6 @@ static char *ReadFile(FILE *fd);
 /* Misc. */
 static void Parse(const TokenNode *start, int depth);
 static void ParseInclude(const TokenNode *tp, int depth);
-static void ParseShutdownCommand(const TokenNode *tp);
-static void ParseStartupCommand(const TokenNode *tp);
 static void ParseDesktops(const TokenNode *tp);
 
 /* Menus. */
@@ -293,17 +291,20 @@ void Parse(const TokenNode *start, int depth) {
 			case TOK_RESIZEMODE:
 				ParseResizeMode(tp);
 				break;
+			case TOK_RESTARTCOMMAND:
+				AddRestartCommand(tp->value);
+				break;
 			case TOK_ROOTMENU:
 				ParseRootMenu(tp);
 				break;
 			case TOK_SHUTDOWNCOMMAND:
-				ParseShutdownCommand(tp);
+				AddShutdownCommand(tp->value);
 				break;
 			case TOK_SNAPMODE:
 				ParseSnapMode(tp);
 				break;
 			case TOK_STARTUPCOMMAND:
-				ParseStartupCommand(tp);
+				AddStartupCommand(tp->value);
 				break;
 			case TOK_TASKLISTSTYLE:
 				ParseTaskListStyle(tp);
@@ -1449,18 +1450,6 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
 		ParseError(tp, "invalid Group Option: %s", option);
 	}
 
-}
-
-/****************************************************************************
- ****************************************************************************/
-void ParseShutdownCommand(const TokenNode *tp) {
-	AddShutdownCommand(tp->value);
-}
-
-/****************************************************************************
- ****************************************************************************/
-void ParseStartupCommand(const TokenNode *tp) {
-	AddStartupCommand(tp->value);
 }
 
 /***************************************************************************

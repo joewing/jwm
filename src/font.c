@@ -203,8 +203,8 @@ void RenderString(Drawable d, FontType font, ColorType color,
 #endif
 
 	XRectangle rect;
-	int len, h, w;
-
+	Region renderRegion;
+	int len;
 	char *output;
 
 #ifdef USE_FRIBIDI
@@ -215,19 +215,25 @@ void RenderString(Drawable d, FontType font, ColorType color,
 
 #endif
 
-	Assert(str);
-	Assert(fonts[font]);
-
 	len = strlen(str);
 
-	h = Min(GetStringHeight(font), rootHeight) + 2;
-	w = Min(GetStringWidth(font, str), width) + 2;
-
+	/* Get the bounds for the string based on the specified width. */
 	rect.x = x;
 	rect.y = y;
-	rect.width = w;
-	rect.height = h;
+	rect.width = Min(GetStringWidth(font, str), width) + 2;
+	rect.height = GetStringHeight(font);
 
+	/* Create a region to use. */
+	renderRegion = XCreateRegion();
+
+	/* Combine the width bounds with the region to use. */
+	XUnionRectWithRegion(&rect, renderRegion, renderRegion);
+
+	/* Combine the provided region with the region to use. */
+	if(region) {
+		XIntersectRegion(region, renderRegion, renderRegion);
+	}
+	
 	/* Apply the bidi algorithm if requested. */
 
 #ifdef USE_FRIBIDI
@@ -251,11 +257,7 @@ void RenderString(Drawable d, FontType font, ColorType color,
 #ifdef USE_XFT
 
 	xd = XftDrawCreate(display, d, rootVisual, rootColormap);
-	if(region) {
-		XftDrawSetClip(xd, region);
-	} else {
-		JXftDrawSetClipRectangles(xd, 0, 0, &rect, 1);
-	}
+	XftDrawSetClip(xd, renderRegion);
 	JXftDrawStringUtf8(xd, GetXftColor(color), fonts[font],
 		x, y + fonts[font]->ascent, (const unsigned char*)output, len);
 	XftDrawDestroy(xd);
@@ -263,11 +265,7 @@ void RenderString(Drawable d, FontType font, ColorType color,
 #else
 
 	JXSetForeground(display, fontGC, colors[color]);
-	if(region) {
-		XSetRegion(display, fontGC, region);
-	} else {
-		JXSetClipRectangles(display, fontGC, 0, 0, &rect, 1, Unsorted);
-	}
+	XSetRegion(display, fontGC, renderRegion);
 	JXSetFont(display, fontGC, fonts[font]->fid);
 	JXDrawString(display, d, fontGC, x, y + fonts[font]->ascent, output, len);
 
@@ -280,6 +278,8 @@ void RenderString(Drawable d, FontType font, ColorType color,
 	ReleaseStack(output);
 
 #endif
+
+	XDestroyRegion(renderRegion);
 
 }
 

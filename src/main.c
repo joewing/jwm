@@ -50,6 +50,7 @@ int colormapCount;
 
 int shouldExit = 0;
 int shouldRestart = 0;
+int isRestarting = 0;
 int initializing = 0;
 
 unsigned int desktopCount = 4;
@@ -138,14 +139,23 @@ int main(int argc, char *argv[]) {
 
 	StartupConnection();
 	do {
+
+		isRestarting = shouldRestart;
 		shouldExit = 0;
 		shouldRestart = 0;
+
 		Initialize();
+
 		ParseConfig(configPath);
+
 		Startup();
+
 		EventLoop();
+
 		Shutdown();
+
 		Destroy();
+
 	} while(shouldRestart);
 	ShutdownConnection();
 

@@ -28,6 +28,7 @@ extern unsigned int currentDesktop;
 
 extern int shouldExit;
 extern int shouldRestart;
+extern int isRestarting;
 
 extern int initializing;
 

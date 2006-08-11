@@ -412,10 +412,6 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 	np = FindClientByWindow(event->window);
 	if(np && np->window == event->window) {
 
-		if(np->controller) {
-			(np->controller)(0);
-		}
-
 		changed = 0;
 		if((event->value_mask & CWWidth) && (event->width != np->width)) {
 			np->width = event->width;
@@ -436,6 +432,10 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 
 		if(!changed) {
 			return;
+		}
+
+		if(np->controller) {
+			(np->controller)(0);
 		}
 
 		GetBorderSize(np, &north, &south, &east, &west);

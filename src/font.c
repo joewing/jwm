@@ -215,7 +215,14 @@ void RenderString(Drawable d, FontType font, ColorType color,
 
 #endif
 
+	if(!str) {
+		return;
+	}
+
 	len = strlen(str);
+	if(len == 0) {
+		return;
+	}
 
 	/* Get the bounds for the string based on the specified width. */
 	rect.x = x;

@@ -29,6 +29,8 @@ static IconNode **iconHash;
 static IconPathNode *iconPaths;
 static IconPathNode *iconPathsTail;
 
+static GC iconGC;
+
 static void SetIconSize();
 
 static void DoDestroyIcon(int index, IconNode *icon);
@@ -69,18 +71,32 @@ void InitializeIcons() {
 /****************************************************************************
  ****************************************************************************/
 void StartupIcons() {
+
+	XGCValues gcValues;
+	unsigned long gcMask;
+
+	gcMask = GCGraphicsExposures;
+	gcValues.graphics_exposures = False;
+	iconGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
+
 	QueryRenderExtension();
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 void ShutdownIcons() {
+
 	int x;
+
 	for(x = 0; x < HASH_SIZE; x++) {
 		while(iconHash[x]) {
 			DoDestroyIcon(x, iconHash[x]);
 		}
 	}
+
+	JXFreeGC(display, iconGC);
+
 }
 
 /****************************************************************************
@@ -169,7 +185,7 @@ void AddIconPath(char *path) {
 
 /****************************************************************************
  ****************************************************************************/
-void PutIcon(IconNode *icon, Drawable d, GC g, int x, int y,
+void PutIcon(IconNode *icon, Drawable d, int x, int y,
 	int width, int height) {
 
 	ScaledIconNode *node;
@@ -187,16 +203,16 @@ void PutIcon(IconNode *icon, Drawable d, GC g, int x, int y,
 		if(node->image != None) {
 
 			if(node->mask != None) {
-				JXSetClipOrigin(display, g, x, y);
-				JXSetClipMask(display, g, node->mask);
+				JXSetClipOrigin(display, iconGC, x, y);
+				JXSetClipMask(display, iconGC, node->mask);
 			}
 
-			JXCopyArea(display, node->image, d, g, 0, 0,
+			JXCopyArea(display, node->image, d, iconGC, 0, 0,
 				node->width, node->height, x, y);
 
 			if(node->mask != None) {
-				JXSetClipMask(display, g, None);
-				JXSetClipOrigin(display, g, 0, 0);
+				JXSetClipMask(display, iconGC, None);
+				JXSetClipOrigin(display, iconGC, 0, 0);
 			}
 
 		}

@@ -281,7 +281,7 @@ void Create(TrayComponentType *cp) {
 	labelx -= BUTTON_SIZE;
 
 	if(bp->icon) {
-		PutIcon(bp->icon, cp->pixmap, rootGC, BUTTON_SIZE, BUTTON_SIZE,
+		PutIcon(bp->icon, cp->pixmap, BUTTON_SIZE, BUTTON_SIZE,
 			labelx - BUTTON_SIZE, cp->height - BUTTON_SIZE * 2);
 	}
 

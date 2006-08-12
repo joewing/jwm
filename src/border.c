@@ -347,8 +347,7 @@ void DrawBorderHelper(const ClientNode *np,
 	if(np->state.border & BORDER_TITLE) {
 
 		if(np->icon && np->width >= titleHeight) {
-			PutIcon(np->icon, canvas, gc,
-				bsize + 2,
+			PutIcon(np->icon, canvas, bsize + 2,
 				bsize + titleHeight / 2 - iconSize / 2,
 				iconSize, iconSize);
 		}

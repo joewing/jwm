@@ -48,7 +48,7 @@ void DestroyIcons();
 
 void AddIconPath(char *path);
 
-void PutIcon(IconNode *icon, Drawable d, GC g, int x, int y,
+void PutIcon(IconNode *icon, Drawable d, int x, int y,
 	int width, int height);
 
 void LoadIcon(struct ClientNode *np);

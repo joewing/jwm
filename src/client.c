@@ -335,9 +335,11 @@ void ShadeClient(ClientNode *np) {
 
 	WriteState(np);
 
+#ifdef USE_SHAPE
 	if(np->state.status & STAT_SHAPE) {
 		SetShape(np);
 	}
+#endif
 
 }
 
@@ -370,9 +372,11 @@ void UnshadeClient(ClientNode *np) {
 
 	WriteState(np);
 
+#ifdef USE_SHAPE
 	if(np->state.status & STAT_SHAPE) {
 		SetShape(np);
 	}
+#endif
 
 	RefocusClient();
 	RestackClients();

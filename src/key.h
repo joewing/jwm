@@ -1,7 +1,11 @@
-/****************************************************************************
- * Header for key binding functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file key.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header for the key binding functions.
+ *
+ */
 
 #ifndef KEY_H
 #define KEY_H

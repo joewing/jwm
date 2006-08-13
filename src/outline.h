@@ -1,15 +1,21 @@
-/****************************************************************************
- * Outlines for moving and resizing.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file outline.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Outlines for moving and resizing client windows.
+ *
+ */
 
 #ifndef OUTLINE_H
 #define OUTLINE_H
 
+/*@{*/
 void InitializeOutline();
 void StartupOutline();
 void ShutdownOutline();
 void DestroyOutline();
+/*@}*/
 
 /** Draw an outline.
  * @param x The x-coordinate.

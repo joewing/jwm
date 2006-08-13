@@ -1,5 +1,11 @@
-/***************************************************************************
- ***************************************************************************/
+/**
+ * @file taskbar.h
+ * @author Joe Wingbermuehle
+ * @date 2005-2006
+ *
+ * @brief Task list tray component.
+ *
+ */
 
 #ifndef TASKBAR_H
 #define TASKBAR_H
@@ -7,10 +13,12 @@
 struct ClientNode;
 struct TimeType;
 
+/*@{*/
 void InitializeTaskBar();
 void StartupTaskBar();
 void ShutdownTaskBar();
 void DestroyTaskBar();
+/*@}*/
 
 struct TrayComponentType *CreateTaskBar();
 

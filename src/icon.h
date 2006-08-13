@@ -1,4 +1,4 @@
-/*
+/**
  * @file icon.h
  * @author Joe Wingbermuehle
  * @date 2004-2006
@@ -43,12 +43,12 @@ typedef struct IconNode {
 
 #ifdef USE_ICONS
 
-/* @{ */
+/*@{*/
 void InitializeIcons();
 void StartupIcons();
 void ShutdownIcons();
 void DestroyIcons();
-/* @} */
+/*@}*/
 
 /** Add an icon path.
  * This adds a path to the list of icon search paths.

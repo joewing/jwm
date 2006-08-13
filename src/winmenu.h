@@ -1,7 +1,11 @@
-/****************************************************************************
- * Header for the window menu functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file tray.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header for the window menu functions.
+ *
+ */
 
 #ifndef WINMENU_H
 #define WINMENU_H

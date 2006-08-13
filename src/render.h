@@ -1,7 +1,11 @@
-/****************************************************************************
- * Functions to render icons using the XRender extension.
- * Copyright (C) 2005 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file render.h
+ * @author Joe Wingbermuehle
+ * @date 2005-2006
+ *
+ * @brief Functions to render icons using the XRender extension.
+ *
+ */
 
 #ifndef RENDER_H
 #define RENDER_H

@@ -1,15 +1,19 @@
-/*****************************************************************************
- * XML lexer header file.
- * Copyright (C) 2004 Joe Wingbermuehle
- *****************************************************************************/
+/**
+ * @file lex.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief XML lexer header file.
+ *
+ */
 
 #ifndef LEX_H
 #define LEX_H
 
-/****************************************************************************
- * Note: Any change made to this typedef must be reflected in
+/** Tokens.
+ * Note that any change made to this typedef must be reflected in
  * TOKEN_MAP in lex.c.
- ****************************************************************************/
+ */
 typedef enum {
 
 	TOK_INVALID,

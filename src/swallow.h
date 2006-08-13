@@ -1,5 +1,11 @@
-/****************************************************************************
- ****************************************************************************/
+/**
+ * @file swallow.h
+ * @author Joe Wingbermuehle
+ * @date 2005-2006
+ *
+ * @brief Swallow tray component.
+ *
+ */
 
 #ifndef SWALLOW_H
 #define SWALLOW_H
@@ -9,10 +15,12 @@ typedef enum {
 	SWALLOW_RIGHT
 } SwallowLocationType;
 
+/*@{*/
 void InitializeSwallow();
 void StartupSwallow();
 void ShutdownSwallow();
 void DestroySwallow();
+/*@}*/
 
 struct TrayComponentType *CreateSwallow(
 	const char *name, const char *command,

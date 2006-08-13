@@ -1,7 +1,11 @@
-/****************************************************************************
- * Header for client window resize functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file resize.h
+ * @author Joe Wingbermuehle
+ * @date 2005-2006
+ *
+ * @brief Header for client window resize functions.
+ *
+ */
 
 #ifndef RESIZE_H
 #define RESIZE_H

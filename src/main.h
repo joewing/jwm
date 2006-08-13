@@ -1,7 +1,11 @@
-/****************************************************************************
- * Header for the main functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file main.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header for the main functions.
+ *
+ */
 
 #ifndef MAIN_H
 #define MAIN_H

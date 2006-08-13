@@ -1,5 +1,11 @@
-/***************************************************************************
- ***************************************************************************/
+/**
+ * @file desktop.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header for the desktop management functions.
+ *
+ */
 
 #ifndef DESKTOP_H
 #define DESKTOP_H
@@ -8,10 +14,12 @@ struct MenuType;
 
 extern char **desktopNames;
 
+/*@{*/
 void InitializeDesktops();
 void StartupDesktops();
 void ShutdownDesktops();
 void DestroyDesktops();
+/*@}*/
 
 /** Switch to the next desktop. */
 void NextDesktop();

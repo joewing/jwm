@@ -1,17 +1,23 @@
-/****************************************************************************
- * Header for client placement functions.
- * Copyright (C) 2005 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file place.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header for client placement functions.
+ *
+ */
 
 #ifndef PLACE_H
 #define PLACE_H
 
 struct ClientNode;
 
+/*@{*/
 void InitializePlacement();
 void StartupPlacement();
 void ShutdownPlacement();
 void DestroyPlacement();
+/*@}*/
 
 void RemoveClientStrut(struct ClientNode *np);
 void ReadClientStrut(struct ClientNode *np);

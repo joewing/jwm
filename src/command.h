@@ -1,15 +1,21 @@
-/****************************************************************************
- * Handle running startup/shutdown/restart commands.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file command.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Handle running startup, shutdown, and restart commands.
+ *
+ */
 
 #ifndef COMMAND_H
 #define COMMAND_H
 
+/*@{*/
 void InitializeCommands();
 void StartupCommands();
 void ShutdownCommands();
 void DestroyCommands();
+/*@}*/
 
 /** Add a command to be executed at startup.
  * @param command The command to execute.

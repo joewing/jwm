@@ -1,7 +1,11 @@
-/****************************************************************************
- * Misc. macros.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file misc.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Miscellaneous functions and macros.
+ *
+ */
 
 #ifndef MISC_H
 #define MISC_H

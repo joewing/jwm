@@ -1,7 +1,11 @@
-/****************************************************************************
- * Clock tray component.
- * Copyright (C) 2005 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file clock.h
+ * @author Joe Wingbermuehle
+ * @date 2005-2006
+ *
+ * @brief Clock tray component.
+ *
+ */
 
 #ifndef CLOCK_H
 #define CLOCK_H
@@ -9,10 +13,12 @@
 struct TrayComponentType;
 struct TimeType;
 
+/*@{*/
 void InitializeClock();
 void StartupClock();
 void ShutdownClock();
 void DestroyClock();
+/*@}*/
 
 /** Create a clock component for the tray.
  * @param format The format of the clock.

@@ -35,10 +35,6 @@ void DisplayCompileOptions() {
 	printf("icons ");
 #endif
 
-#ifdef SHOW_LOAD
-	printf("load ");
-#endif
-
 #ifdef USE_PNG
 	printf("png ");
 #endif

@@ -1,7 +1,11 @@
-/****************************************************************************
- * The main JWM header file.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file jwm.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief The main JWM header file.
+ *
+ */
 
 #ifndef JWM_H
 #define JWM_H

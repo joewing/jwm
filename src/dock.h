@@ -1,17 +1,23 @@
-/***************************************************************************
- * Header for the dock functions.
- * Copyright (C) 2006 Joe Wingbermuehle
- ***************************************************************************/
+/**
+ * @file dock.h
+ * @author Joe Wingbermuehle
+ * @date 2006
+ *
+ * @brief Header for the dock functions.
+ *
+ */
 
 #ifndef DOCK_H
 #define DOCK_H
 
 struct TrayComponentType;
 
+/*@{*/
 void InitializeDock();
 void StartupDock();
 void ShutdownDock();
 void DestroyDock();
+/*@}*/
 
 /** Create a dock to be used for notifications.
  * Note that only one dock can be created.

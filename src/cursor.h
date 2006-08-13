@@ -1,17 +1,23 @@
-/****************************************************************************
- * Header for the cursor functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file confirm.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header for the cursor functions.
+ *
+ */
 
 #ifndef CURSOR_H
 #define CURSOR_H
 
 #include "border.h"
 
+/*@{*/
 void InitializeCursors();
 void StartupCursors();
 void ShutdownCursors();
 void DestroyCursors();
+/*@}*/
 
 int GrabMouseForResize(BorderActionType action);
 int GrabMouseForMove();

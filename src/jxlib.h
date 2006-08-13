@@ -1,3 +1,11 @@
+/**
+ * @file jxlib.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Macros to wrap X calls for debugging.
+ *
+ */
 
 #ifndef JXLIB_H
 #define JXLIB_H

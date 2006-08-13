@@ -39,6 +39,7 @@ clean:
 	for x in package/* ; do \
 		(cd $$x && $(MAKE) clean ) ; \
 	done
+	rm -rf doc
 
 distclean: clean
 	rm -f *~ config.cache config.log config.status config.h ;

@@ -1,19 +1,25 @@
-/****************************************************************************
- * Header for client window move functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file move.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header for client window move functions.
+ *
+ */
 
 #ifndef MOVE_H
 #define MOVE_H
 
 struct ClientNode;
 
+/** Window snap modes. */
 typedef enum {
 	SNAP_NONE                 = 0,  /**< Don't snap. */
 	SNAP_SCREEN               = 1,  /**< Snap to the edges of the screen. */
 	SNAP_BORDER               = 2   /**< Snap to all borders. */
 } SnapModeType;
 
+/** Window move modes. */
 typedef enum {
 	MOVE_OPAQUE,   /**< Show window contents while moving. */
 	MOVE_OUTLINE   /**< Show an outline while moving. */

@@ -1,4 +1,4 @@
-/*
+/**
  * @file client.h
  * @author Joe Wingbermuehle
  * @date 2004-2006

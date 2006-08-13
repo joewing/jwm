@@ -1,13 +1,16 @@
-/****************************************************************************
- * Functions to load images.
- * Copyright (C) 2005 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file image.h
+ * @author Joe Wingbermuehle
+ * @date 2005-2006
+ *
+ * @brief Functions to load images.
+ *
+ */
 
 #ifndef IMAGE_H
 #define IMAGE_H
 
-/****************************************************************************
- ****************************************************************************/
+/** Structure to represent an image. */
 typedef struct ImageNode {
 
 #ifdef USE_PNG

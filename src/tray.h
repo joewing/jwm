@@ -1,7 +1,11 @@
-/***************************************************************************
- * Header for the tray functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ***************************************************************************/
+/**
+ * @file tray.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header for the tray functions.
+ *
+ */
 
 #ifndef TRAY_H
 #define TRAY_H

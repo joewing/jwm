@@ -1,7 +1,11 @@
-/****************************************************************************
- * Header for popup functions.
- * Copyright (C) 2006 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file popup.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header for popup functions.
+ *
+ */
 
 #ifndef POPUP_H
 #define POPUP_H
@@ -10,10 +14,12 @@
 
 struct TimeType;
 
+/*@{*/
 void InitializePopup();
 void StartupPopup();
 void ShutdownPopup();
 void DestroyPopup();
+/*@}*/
 
 void ShowPopup(int x, int y, const char *text);
 

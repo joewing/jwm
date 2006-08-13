@@ -1,7 +1,11 @@
-/****************************************************************************
- * Header for the color functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file color.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header for the color functions.
+ *
+ */
 
 #ifndef COLOR_H
 #define COLOR_H
@@ -66,10 +70,12 @@ typedef enum {
 
 extern unsigned long colors[COLOR_COUNT];
 
+/*@{*/
 void InitializeColors();
 void StartupColors();
 void ShutdownColors();
 void DestroyColors();
+/*@}*/
 
 void SetColor(ColorType c, const char *value);
 

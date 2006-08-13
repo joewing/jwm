@@ -1,7 +1,11 @@
-/****************************************************************************
- * Header for screen functions.
- * Copyright (C) 2005 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file screen.h
+ * @author Joe Wingbermuehle
+ * @date 2005-2006
+ *
+ * @brief Header for screen functions.
+ *
+ */
 
 #ifndef SCREEN_H
 #define SCREEN_H

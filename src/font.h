@@ -1,7 +1,11 @@
-/****************************************************************************
- * Header for the font functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file font.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header for the font functions.
+ *
+ */
 
 #ifndef FONT_H
 #define FONT_H

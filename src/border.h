@@ -1,7 +1,11 @@
-/****************************************************************************
- * Header for border functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/*
+ * @file border.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header file for border functions.
+ *
+ */
 
 #ifndef BORDER_H
 #define BORDER_H

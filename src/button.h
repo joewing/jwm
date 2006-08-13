@@ -1,7 +1,11 @@
-/***************************************************************************
- * Header for the button functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ***************************************************************************/
+/*
+ * @file button.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header file for button functions.
+ *
+ */
 
 #ifndef BUTTON_H
 #define BUTTON_H

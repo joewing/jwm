@@ -1,7 +1,11 @@
-/****************************************************************************
- * Header for client window functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/*
+ * @file client.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header file client window functions.
+ *
+ */
 
 #ifndef CLIENT_H
 #define CLIENT_H

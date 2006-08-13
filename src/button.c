@@ -31,6 +31,8 @@ void DrawButton(ButtonNode *bp) {
 	int iconWidth, iconHeight;
 	int textWidth, textHeight;
 
+	Assert(bp);
+
 	drawable = bp->drawable;
 	gc = bp->gc;
 	x = bp->x;
@@ -161,6 +163,8 @@ void DrawButton(ButtonNode *bp) {
  ***************************************************************************/
 void ResetButton(ButtonNode *bp, Drawable d, GC g) {
 
+	Assert(bp);
+
 	bp->type = BUTTON_MENU;
 	bp->drawable = d;
 	bp->gc = g;
@@ -182,6 +186,7 @@ void GetScaledIconSize(IconNode *ip, int maxsize,
 
 	double ratio;
 
+	Assert(ip);
 	Assert(width);
 	Assert(height);
 

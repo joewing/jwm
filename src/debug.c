@@ -27,6 +27,8 @@ void Debug(const char *str, ...) {
 	va_list ap;
 	va_start(ap, str);
 
+	Assert(str);
+
 	fprintf(stderr, "DEBUG: ");
 	vfprintf(stderr, str, ap);
 	fprintf(stderr, "\n");

@@ -255,6 +255,9 @@ void ComputeShiftMask(unsigned long maskIn,
 
 	int shift;
 
+	Assert(shiftOut);
+	Assert(maskOut);
+
 	/* Components are stored in 16 bits.
 	 * When computing pixels, we'll first shift left 16 bits
 	 * so to the shift will be an offset from that 32 bit entity.
@@ -274,8 +277,11 @@ void ComputeShiftMask(unsigned long maskIn,
 /****************************************************************************
  ****************************************************************************/
 unsigned long GetRGBFromXColor(const XColor *c) {
+
 	float red, green, blue;
 	unsigned long rgb;
+
+	Assert(c);
 
 	red = (float)c->red / 65535.0;
 	green = (float)c->green / 65535.0;
@@ -286,6 +292,7 @@ unsigned long GetRGBFromXColor(const XColor *c) {
 	rgb |= (unsigned long)(blue * 255.0);
 
 	return rgb;
+
 }
 
 /****************************************************************************
@@ -325,6 +332,7 @@ void SetColor(ColorType c, const char *value) {
 /****************************************************************************
  ****************************************************************************/
 int ParseColor(ColorType type, const char *value) {
+
 	XColor temp;
 	unsigned long rgb;
 
@@ -349,11 +357,13 @@ int ParseColor(ColorType type, const char *value) {
 	rgbColors[type] = GetRGBFromXColor(&temp);
 
 	return 1;
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 void SetDefaultColor(ColorType type) {
+
 	int x;
 
 	for(x = 0; DEFAULT_COLORS[x].value; x++) {
@@ -368,6 +378,7 @@ void SetDefaultColor(ColorType type) {
 /****************************************************************************
  ****************************************************************************/
 void InitializeNames() {
+
 	int x;
 
 	if(names == NULL) {
@@ -376,13 +387,17 @@ void InitializeNames() {
 			names[x] = NULL;
 		}
 	}
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 unsigned long ReadHex(const char *hex) {
+
 	unsigned long value = 0;
 	int x;
+
+	Assert(hex);
 
 	for(x = 0; hex[x]; x++) {
 		value *= 16;
@@ -396,6 +411,7 @@ unsigned long ReadHex(const char *hex) {
 	}
 
 	return value;
+
 }
 
 /****************************************************************************
@@ -476,11 +492,11 @@ int GetColorByName(const char *str, XColor *c) {
  ***************************************************************************/
 void GetColorFromIndex(XColor *c) {
 
-	Assert(c);
-
 	unsigned long red;
 	unsigned long green;
 	unsigned long blue;
+
+	Assert(c);
 
 	red = (c->pixel & redMask) << redShift;
 	green = (c->pixel & greenMask) << greenShift;
@@ -501,6 +517,8 @@ void GetDirectPixel(XColor *c) {
 	unsigned long green;
 	unsigned long blue;
 
+	Assert(c);
+
 	/* Normalize. */
 	red = c->red << 16;
 	green = c->green << 16;
@@ -520,6 +538,8 @@ void GetDirectPixel(XColor *c) {
  * Compute the pixel value from RGB components.
  ***************************************************************************/
 void GetMappedPixel(XColor *c) {
+
+	Assert(c);
 
 	GetDirectPixel(c);
 	c->pixel = map[c->pixel];

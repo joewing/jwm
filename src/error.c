@@ -10,8 +10,11 @@
 /****************************************************************************
  ****************************************************************************/
 void FatalError(const char *str, ...) {
+
 	va_list ap;
 	va_start(ap, str);
+
+	Assert(str);
 
 	fprintf(stderr, "JWM: error: ");
 	vfprintf(stderr, str, ap);
@@ -26,29 +29,46 @@ void FatalError(const char *str, ...) {
 /****************************************************************************
  ****************************************************************************/
 void Warning(const char *str, ...) {
+
 	va_list ap;
 	va_start(ap, str);
+
+	Assert(str);
+
 	WarningVA(NULL, str, ap);
+
 	va_end(ap);
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 void WarningVA(const char *part, const char *str, va_list ap) {
+
+	Assert(str);
+
 	fprintf(stderr, "JWM: warning: ");
 	if(part) {
 		fprintf(stderr, "%s: ", part);
 	}
 	vfprintf(stderr, str, ap);
 	fprintf(stderr, "\n");
+
 }
 
 /****************************************************************************
+ * Handle errors from Xlib.
+ * Note that if debug output is directed to an X terminal, emitting too
+ * much output can cause a dead lock (this happens on HP-UX). Therefore
+ * ShowCheckpoint isn't used by default.
  ****************************************************************************/
 int ErrorHandler(Display *d, XErrorEvent *e) {
 
 #ifdef DEBUG
-	char message[80], code[10], request[80];
+
+	char buffer[64];
+	char code[32];
+
 #endif
 
 	if(initializing) {
@@ -59,23 +79,30 @@ int ErrorHandler(Display *d, XErrorEvent *e) {
 	}
 
 #ifdef DEBUG
-	snprintf(code, sizeof(code), "%d", e->request_code);
-	XGetErrorDatabaseText(display, "XRequest", code, "", request,
-		sizeof(request));
-	if(!request[0]) {
-		snprintf(request, sizeof(request), "[request_code=%d]",
-			e->request_code);
-	}
-	if(XGetErrorText(display, e->error_code, message, sizeof(message))
-		!= Success) {
-		snprintf(message, sizeof(message), "[error_code=%d]",
-			e->error_code);
+
+	if(!e) {
+		fprintf(stderr, "XError: [no information]\n");
+		return 0;
 	}
 
+	XGetErrorText(display, e->error_code, buffer, sizeof(buffer));
+	Debug("XError: %s", buffer);
+
+	snprintf(code, sizeof(code), "%d", e->request_code);
+	XGetErrorDatabaseText(display, "XRequest", code, "?",
+		buffer, sizeof(buffer));
+	Debug("   Request Code: %d (%s)", e->request_code, buffer);
+	Debug("   Minor Code: %d", e->minor_code);
+	Debug("   Resource ID: 0x%lx", (unsigned long)e->resourceid);
+	Debug("   Error Serial: %lu", (unsigned long)e->serial);
+
+#if 0
 	ShowCheckpoint();
-	Warning("XError: %s[%d]: %s", request, e->minor_code, message);
+#endif
+
 #endif
 
 	return 0;
+
 }
 

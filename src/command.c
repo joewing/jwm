@@ -78,6 +78,8 @@ void ReleaseCommands(CommandNode **commands) {
 
 	CommandNode *cp;
 
+	Assert(commands);
+
 	while(*commands) {
 		cp = (*commands)->next;
 		Release((*commands)->command);
@@ -92,6 +94,8 @@ void ReleaseCommands(CommandNode **commands) {
 void AddCommand(CommandNode **commands, const char *command) {
 
 	CommandNode *cp;
+
+	Assert(commands);
 
 	if(!command) {
 		return;

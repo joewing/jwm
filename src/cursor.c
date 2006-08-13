@@ -88,6 +88,7 @@ void DestroyCursors() {
 /****************************************************************************
  ****************************************************************************/
 Cursor GetFrameCursor(BorderActionType action) {
+
 	switch(action & 0x0F) {
 	case BA_RESIZE:
 		return GetResizeCursor(action);
@@ -103,11 +104,13 @@ Cursor GetFrameCursor(BorderActionType action) {
 		break;
 	}
 	return defaultCursor;
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 Cursor GetResizeCursor(BorderActionType action) {
+
 	if(action & BA_RESIZE_N) {
 		if(action & BA_RESIZE_E) {
 			return northEastCursor;
@@ -131,11 +134,13 @@ Cursor GetResizeCursor(BorderActionType action) {
 			return westCursor;
 		}
 	}
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 int GrabMouseForResize(BorderActionType action) {
+
 	Cursor cur;
 	int result;
 
@@ -247,6 +252,9 @@ void SetMousePosition(int x, int y) {
  ****************************************************************************/
 void GetMousePosition(int *x, int *y) {
 
+	Assert(x);
+	Assert(y);
+
 	*x = mousex;
 	*y = mousey;
 
@@ -270,7 +278,10 @@ unsigned int GetMouseMask() {
 /****************************************************************************
  ****************************************************************************/
 void SetDoubleClickSpeed(const char *str) {
+
 	int speed;
+
+	Assert(str);
 
 	speed = atoi(str);
 	if(speed < MIN_DOUBLE_CLICK_SPEED || speed > MAX_DOUBLE_CLICK_SPEED) {
@@ -279,12 +290,16 @@ void SetDoubleClickSpeed(const char *str) {
 	} else {
 		doubleClickSpeed = speed;
 	}
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 void SetDoubleClickDelta(const char *str) {
+
 	int delta;
+
+	Assert(str);
 
 	delta = atoi(str);
 	if(delta < MIN_DOUBLE_CLICK_DELTA || delta > MAX_DOUBLE_CLICK_DELTA) {

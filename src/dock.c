@@ -179,6 +179,9 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 	int count;
 	DockNode *np;
 
+	Assert(cp);
+	Assert(dock);
+
 	count = 0;
 	for(np = dock->nodes; np; np = np->next) {
 		++count;
@@ -255,6 +258,8 @@ void Create(TrayComponentType *cp) {
  ***************************************************************************/
 void Resize(TrayComponentType *cp) {
 
+	Assert(cp);
+
 	JXResizeWindow(display, cp->window, cp->width, cp->height);
 	UpdateDock();
 
@@ -292,6 +297,8 @@ int HandleDockResizeRequest(const XResizeRequestEvent *event) {
 
 	DockNode *np;
 
+	Assert(event);
+
 	if(!dock) {
 		return 0;
 	}
@@ -312,11 +319,13 @@ int HandleDockResizeRequest(const XResizeRequestEvent *event) {
 /***************************************************************************
  ***************************************************************************/
 int HandleDockDestroy(Window win) {
+
 	if(dock) {
 		return UndockWindow(win);
 	} else {
 		return 0;
 	}
+
 }
 
 /***************************************************************************

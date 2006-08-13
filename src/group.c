@@ -124,30 +124,38 @@ GroupType *CreateGroup() {
 /****************************************************************************
  ****************************************************************************/
 void AddGroupClass(GroupType *gp, const char *pattern) {
+
+	Assert(gp);
+
 	if(pattern) {
 		AddPattern(&gp->patterns, pattern, MATCH_CLASS);
 	} else {
 		Warning("invalid group class");
 	}
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 void AddGroupName(GroupType *gp, const char *pattern) {
+
+	Assert(gp);
+
 	if(pattern) {
 		AddPattern(&gp->patterns, pattern, MATCH_NAME);
 	} else {
 		Warning("invalid group name");
 	}
+
 }
 
 /****************************************************************************
  ****************************************************************************/
-void AddPattern(PatternListType **lp, const char *pattern,
-	MatchType match) {
+void AddPattern(PatternListType **lp, const char *pattern, MatchType match) {
 
 	PatternListType *tp;
 
+	Assert(lp);
 	Assert(pattern);
 
 	tp = Allocate(sizeof(PatternListType));

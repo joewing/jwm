@@ -115,6 +115,7 @@ void DestroyClients() {
  * Set the focus to the window currently under the mouse pointer.
  ****************************************************************************/
 void LoadFocus() {
+
 	ClientNode *np;
 	Window rootReturn, childReturn;
 	int rootx, rooty;
@@ -275,6 +276,7 @@ void MinimizeClient(ClientNode *np) {
  * Minimize all transients as well as the specified client.
  ****************************************************************************/
 void MinimizeTransients(ClientNode *np) {
+
 	ClientNode *tp;
 	int x;
 
@@ -302,6 +304,7 @@ void MinimizeTransients(ClientNode *np) {
 			}
 		}
 	}
+
 }
 
 /****************************************************************************
@@ -531,6 +534,7 @@ void SetClientLayer(ClientNode *np, unsigned int layer) {
  * Set a client's sticky status. This will update transients.
  ****************************************************************************/
 void SetClientSticky(ClientNode *np, int isSticky) {
+
 	ClientNode *tp;
 	int old;
 	int x;
@@ -571,6 +575,7 @@ void SetClientSticky(ClientNode *np, int isSticky) {
  * Set a client's desktop. This will update transients.
  ****************************************************************************/
 void SetClientDesktop(ClientNode *np, unsigned int desktop) {
+
 	ClientNode *tp;
 	int x;
 
@@ -618,6 +623,7 @@ void HideClient(ClientNode *np) {
 	if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
 		JXUnmapWindow(display, np->parent);
 	}
+
 }
 
 /****************************************************************************
@@ -636,6 +642,7 @@ void ShowClient(ClientNode *np) {
 			}
 		}
 	}
+
 }
 
 /****************************************************************************
@@ -746,9 +753,11 @@ void FocusNextStacked(ClientNode *np) {
  * Refocus the active client, if existent.
  ****************************************************************************/
 void RefocusClient() {
+
 	if(activeClient) {
 		FocusClient(activeClient);
 	}
+
 }
 
 /****************************************************************************
@@ -808,6 +817,7 @@ void KillClient(ClientNode *np) {
  * Raise the client. This will affect transients.
  ****************************************************************************/
 void RaiseClient(ClientNode *np) {
+
 	ClientNode *tp, *next;
 	int x;
 
@@ -860,6 +870,7 @@ void RaiseClient(ClientNode *np) {
 
 		RestackClients();
 	}
+
 }
 
 /****************************************************************************
@@ -933,6 +944,7 @@ void SendClientMessage(Window w, AtomType type, AtomType message) {
 	if(status == False) {
 		Debug("SendClientMessage failed");
 	}
+
 }
 
 /****************************************************************************
@@ -995,6 +1007,7 @@ void SetShape(ClientNode *np) {
 			0, 0, rect, 4, ShapeUnion, Unsorted);
 
 	}
+
 }
 #endif /* USE_SHAPE */
 
@@ -1089,12 +1102,15 @@ void RemoveClient(ClientNode *np) {
 /****************************************************************************
  ****************************************************************************/
 ClientNode *GetActiveClient() {
+
 	return activeClient;
+
 }
 
 /****************************************************************************
  ****************************************************************************/
 ClientNode *FindClientByWindow(Window w) {
+
 	ClientNode *np;
 
 	if(!XFindContext(display, w, clientContext, (void*)&np)) {
@@ -1108,6 +1124,7 @@ ClientNode *FindClientByWindow(Window w) {
 /****************************************************************************
  ****************************************************************************/
 ClientNode *FindClientByParent(Window p) {
+
 	ClientNode *np;
 
 	if(!XFindContext(display, p, frameContext, (void*)&np)) {
@@ -1115,6 +1132,7 @@ ClientNode *FindClientByParent(Window p) {
 	} else {
 		return NULL;
 	}
+
 }
 
 /****************************************************************************
@@ -1245,6 +1263,7 @@ void CheckShape(ClientNode *np) {
 /****************************************************************************
  ****************************************************************************/
 void SendConfigureEvent(ClientNode *np) {
+
 	XConfigureEvent event;
 
 	Assert(np);
@@ -1262,6 +1281,7 @@ void SendConfigureEvent(ClientNode *np) {
 
 	JXSendEvent(display, np->window, False, StructureNotifyMask,
 		(XEvent*)&event);
+
 }
 
 /****************************************************************************

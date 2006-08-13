@@ -56,7 +56,7 @@ static Region borderRegion = NULL;
 static GC borderGC;
 
 static void DrawBorderHelper(const ClientNode *np,
-	unsigned int width, unsigned int height);
+	unsigned int width, unsigned int height, int drawIcon);
 static void DrawButtonBorder(const ClientNode *np, int offset,
 	Pixmap canvas, GC gc);
 static int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc);
@@ -129,6 +129,8 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 	int offset;
 	int height, width;
 	int bsize;
+
+	Assert(np);
 
 	if(np->state.border & BORDER_OUTLINE) {
 		bsize = borderWidth;
@@ -230,10 +232,14 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
  ****************************************************************************/
 void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
 
+	XRectangle rect;
 	unsigned int width;
 	unsigned int height;
 	int bsize;
-	XRectangle rect;
+	int drawIcon;
+	int temp;
+
+	Assert(np);
 
 	if(shouldExit) {
 		return;
@@ -272,10 +278,36 @@ void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
 			return;
 		}
 
+		/* Determine if the icon should be redrawn. This is needed
+		 * since icons need a separate GC for applying shape masks.
+		 * Note that if the icon were naively redrawn, icons with
+		 * alpha channels would acquire artifacts since the area under
+		 * them would not be cleared. So if any part of the icon needs
+		 * to be redrawn, we clear the area and redraw the whole icon.
+		 */
+		drawIcon = 0;
+		temp = GetBorderIconSize();
+		rect.x = (short)bsize + 2;
+		rect.y = (short)(bsize + titleHeight / 2 - temp / 2);
+		rect.width = (unsigned short)temp;
+		rect.height = (unsigned short)temp;
+		if(XRectInRegion(borderRegion, rect.x, rect.y, rect.width, rect.height)
+			!= RectangleOut) {
+
+			drawIcon = 1;
+			XUnionRectWithRegion(&rect, borderRegion, borderRegion);
+
+		} else {
+
+			drawIcon = 0;
+
+		}
+
 		XSetRegion(display, borderGC, borderRegion);
 
 	} else {
 
+		drawIcon = 1;
 		XSetClipMask(display, borderGC, None);
 
 	}
@@ -289,7 +321,7 @@ void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
 	}
 	width = np->width + bsize * 2;
 
-	DrawBorderHelper(np, width, height);
+	DrawBorderHelper(np, width, height, drawIcon);
 
 	if(expose) {
 		XDestroyRegion(borderRegion);
@@ -301,7 +333,7 @@ void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
 /****************************************************************************
  ****************************************************************************/
 void DrawBorderHelper(const ClientNode *np,
-	unsigned int width, unsigned int height) {
+	unsigned int width, unsigned int height, int drawIcon) {
 
 	ColorType borderTextColor;
 	long borderPixel, borderTextPixel;
@@ -311,6 +343,8 @@ void DrawBorderHelper(const ClientNode *np,
 	GC gc;
 	int iconSize;
 	int bsize;
+
+	Assert(np);
 
 	iconSize = GetBorderIconSize();
 
@@ -337,6 +371,10 @@ void DrawBorderHelper(const ClientNode *np,
 	canvas = np->parent;
 	gc = borderGC;
 
+	/* Set the window background to reduce perceived flicker on the
+	 * parts of the window that will need to be redrawn. */
+	JXSetWindowBackground(display, canvas, borderPixel);
+
 	JXSetForeground(display, gc, borderPixel);
 	JXFillRectangle(display, canvas, gc, 0, 0, width + 1, height + 1);
 
@@ -346,7 +384,7 @@ void DrawBorderHelper(const ClientNode *np,
 
 	if(np->state.border & BORDER_TITLE) {
 
-		if(np->icon && np->width >= titleHeight) {
+		if(np->icon && np->width >= titleHeight && drawIcon) {
 			PutIcon(np->icon, canvas, bsize + 2,
 				bsize + titleHeight / 2 - iconSize / 2,
 				iconSize, iconSize);
@@ -635,6 +673,12 @@ void ExposeCurrentDesktop() {
 void GetBorderSize(const ClientNode *np,
 	int *north, int *south, int *east, int *west) {
 
+	Assert(np);
+	Assert(north);
+	Assert(south);
+	Assert(east);
+	Assert(west);
+
 	if(np->state.border & BORDER_OUTLINE) {
 
 		*north = borderWidth;
@@ -660,6 +704,7 @@ void GetBorderSize(const ClientNode *np,
 /****************************************************************************
  ****************************************************************************/
 void SetBorderWidth(const char *str) {
+
 	int width;
 
 	Assert(str);
@@ -677,6 +722,7 @@ void SetBorderWidth(const char *str) {
 /****************************************************************************
  ****************************************************************************/
 void SetTitleHeight(const char *str) {
+
 	int height;
 
 	Assert(str);

@@ -1511,9 +1511,10 @@ void ParseError(const TokenNode *tp, const char *str, ...) {
 
 	va_list ap;
 
-	char *msg;
 	static const char *NULL_MESSAGE = "configuration error";
 	static const char *FILE_MESSAGE = "%s[%d]";
+
+	char *msg;
 
 	va_start(ap, str);
 

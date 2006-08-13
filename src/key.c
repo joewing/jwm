@@ -27,17 +27,20 @@ typedef struct KeyNode {
 	/* These are filled in when the configuration file is parsed */
 	int key;
 	unsigned int mask;
-	unsigned int code;
+	KeySym symbol;
 	char *command;
 	struct KeyNode *next;
 
-	/* These are filled in by InitializeKeys */
+	/* This is filled in by StartupKeys if it isn't already set. */
+	KeyCode code;
+
+	/* This is filled in by StartupKeys. */
 	unsigned int state;
 
 } KeyNode;
 
 typedef struct LockNode {
-	unsigned int key;
+	KeySym symbol;
 	unsigned int mask;
 } LockNode;
 
@@ -76,11 +79,12 @@ void StartupKeys() {
 	modmap = JXGetModifierMapping(display);
 
 	for(x = 0; x < sizeof(mods) / sizeof(mods[0]); x++) {
-		mods[x].mask = GetModifierMask(mods[x].key);
+		mods[x].mask = GetModifierMask(mods[x].symbol);
 		modifierMask |= mods[x].mask;
 	}
 
 	for(np = bindings; np; np = np->next) {
+
 		np->state = 0;
 		if(np->mask & MASK_ALT) {
 			np->state |= GetModifierMask(XK_Alt_L);
@@ -100,7 +104,10 @@ void StartupKeys() {
 		if(np->mask & MASK_SUPER) {
 			np->state |= GetModifierMask(XK_Super_L);
 		}
-		np->code = JXKeysymToKeycode(display, np->code);
+
+		if(!np->code) {
+			np->code = JXKeysymToKeycode(display, np->symbol);
+		}
 
 		if(ShouldGrab(np->key)) {
 			GrabKey(np);
@@ -132,6 +139,7 @@ void ShutdownKeys() {
 /***************************************************************************
  ***************************************************************************/
 void DestroyKeys() {
+
 	KeyNode *np;
 
 	while(bindings) {
@@ -255,6 +263,7 @@ int ShouldGrab(KeyType key) {
 /***************************************************************************
  ***************************************************************************/
 void GrabKeys(ClientNode *np) {
+
 	KeyNode *kp;
 
 	for(kp = bindings; kp; kp = kp->next) {
@@ -269,6 +278,7 @@ void GrabKeys(ClientNode *np) {
 /***************************************************************************
  ***************************************************************************/
 unsigned int GetModifierMask(KeySym key) {
+
 	KeyCode temp;
 	int x;
 
@@ -329,11 +339,12 @@ unsigned int ParseModifierString(const char *str) {
 /***************************************************************************
  ***************************************************************************/
 KeySym ParseKeyString(const char *str) {
+
 	KeySym symbol;
 
 	symbol = JXStringToKeysym(str);
 	if(symbol == NoSymbol) {
-		Warning("invalid key: \"%s\"", str);
+		Warning("invalid key symbol: \"%s\"", str);
 	}
 
 	return symbol;
@@ -361,6 +372,7 @@ void InsertBinding(KeyType key, const char *modifiers,
 				temp = CopyString(stroke);
 
 				for(temp[offset] = '1'; temp[offset] <= '9'; temp[offset]++) {
+
 					sym = ParseKeyString(temp);
 					if(sym == NoSymbol) {
 						Release(temp);
@@ -373,8 +385,9 @@ void InsertBinding(KeyType key, const char *modifiers,
 
 					np->key = key | ((temp[offset] - '1' + 1) << 8);
 					np->mask = mask;
-					np->code = sym;
+					np->symbol = sym;
 					np->command = NULL;
+					np->code = 0;
 
 				}
 
@@ -386,39 +399,30 @@ void InsertBinding(KeyType key, const char *modifiers,
 
 		sym = ParseKeyString(stroke);
 		if(sym == NoSymbol) {
-			Warning("keysym not found for symbol: %s", stroke);
 			return;
 		}
+
 		np = Allocate(sizeof(KeyNode));
 		np->next = bindings;
 		bindings = np;
 
 		np->key = key;
 		np->mask = mask;
-		np->code = sym;
+		np->symbol = sym;
 		np->command = CopyString(command);
+		np->code = 0;
 
 	} else if(code && strlen(code) > 0) {
 
-		sym = JXKeycodeToKeysym(display, atoi(code), 0);
-		if(sym == NoSymbol) {
-			Warning("keysym not found for keycode: %s", code);
-			return;
-		}
-
 		np = Allocate(sizeof(KeyNode));
 		np->next = bindings;
 		bindings = np;
 
 		np->key = key;
 		np->mask = mask;
-		np->code = sym;
-		if(command) {
-			np->command = Allocate(strlen(command) + 1);
-			strcpy(np->command, command);
-		} else {
-			np->command = NULL;
-		}
+		np->symbol = NoSymbol;
+		np->command = CopyString(command);
+		np->code = atoi(code);
 
 	} else {
 

@@ -215,8 +215,7 @@ void Destroy(TrayComponentType *cp) {
 
 /***************************************************************************
  ***************************************************************************/
-static void ProcessClockButtonEvent(TrayComponentType *cp,
-	int x, int y, int mask) {
+void ProcessClockButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 	ClockType *clk;
 
@@ -234,8 +233,10 @@ static void ProcessClockButtonEvent(TrayComponentType *cp,
 
 /***************************************************************************
  ***************************************************************************/
-static void ProcessClockMotionEvent(TrayComponentType *cp,
+void ProcessClockMotionEvent(TrayComponentType *cp,
 	int x, int y, int mask) {
+
+	Assert(cp);
 
 	ClockType *clk = (ClockType*)cp->object;
 	clk->mousex = cp->screenx + x;
@@ -252,6 +253,8 @@ void SignalClock(const TimeType *now, int x, int y) {
 	int shouldDraw;
 	char *longTime;
 	time_t t;
+
+	Assert(now);
 
 	if(GetTimeDifference(&lastUpdate, now) > 900) {
 		shouldDraw = 1;
@@ -288,6 +291,9 @@ void DrawClock(ClockType *clk, const TimeType *now, int x, int y) {
 	const char *shortTime;
 	int width;
 	int rwidth;
+
+	Assert(clk);
+	Assert(now);
 
 	shortTime = GetTimeString(clk->format);
 	if(!strcmp(clk->shortTime, shortTime)) {

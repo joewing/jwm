@@ -172,8 +172,11 @@ int GetStringWidth(FontType type, const char *str) {
 /****************************************************************************
  ****************************************************************************/
 int GetStringHeight(FontType type) {
+
 	Assert(fonts[type]);
+
 	return fonts[type]->ascent + fonts[type]->descent;
+
 }
 
 /****************************************************************************

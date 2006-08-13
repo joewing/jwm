@@ -86,6 +86,8 @@ int ProcessDialogEvent(const XEvent *event) {
 
 	int handled = 0;
 
+	Assert(event);
+
 	switch(event->type) {
 	case Expose:
 		return HandleDialogExpose(&event->xexpose);
@@ -104,6 +106,8 @@ int HandleDialogExpose(const XExposeEvent *event) {
 
 	DialogType *dp;
 
+	Assert(event);
+
 	dp = FindDialogByWindow(event->window);
 	if(dp) {
 		DrawConfirmDialog(dp);
@@ -120,6 +124,8 @@ int HandleDialogButtonRelease(const XButtonEvent *event) {
 	DialogType *dp;
 	int x, y;
 	int cancelPressed, okPressed;
+
+	Assert(event);
 
 	dp = FindDialogByWindow(event->window);
 	if(dp) {
@@ -147,11 +153,13 @@ int HandleDialogButtonRelease(const XButtonEvent *event) {
 	} else {
 		return 0;
 	}
+
 }
 
 /***************************************************************************
  ***************************************************************************/
 DialogType *FindDialogByWindow(Window w) {
+
 	DialogType *dp;
 
 	for(dp = dialogList; dp; dp = dp->next) {
@@ -167,6 +175,7 @@ DialogType *FindDialogByWindow(Window w) {
 /***************************************************************************
  ***************************************************************************/
 void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
+
 	va_list ap;
 	DialogType *dp;
 	XSetWindowAttributes attrs;
@@ -174,6 +183,8 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 	Window window;
 	char *str;
 	int x;
+
+	Assert(action);
 
 	dp = Allocate(sizeof(DialogType));
 	dp->client = np;
@@ -235,6 +246,8 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
  ***************************************************************************/
 void DrawConfirmDialog(DialogType *dp) {
 
+	Assert(dp);
+
 	DrawMessage(dp);
 	DrawButtons(dp);
 
@@ -243,7 +256,10 @@ void DrawConfirmDialog(DialogType *dp) {
 /***************************************************************************
  ***************************************************************************/
 void DestroyConfirmDialog(DialogType *dp) {
+
 	int x;
+
+	Assert(dp);
 
 	/* This will take care of destroying the dialog window since
 	 * its parent will be destroyed. */
@@ -273,6 +289,8 @@ void ComputeDimensions(DialogType *dp) {
 	const ScreenType *sp;
 	int width;
 	int x;
+
+	Assert(dp);
 
 	if(!minWidth) {
 		minWidth = GetStringWidth(FONT_MENU, CANCEL_STRING) * 3;
@@ -330,6 +348,8 @@ void DrawMessage(DialogType *dp) {
 	int yoffset;
 	int x;
 
+	Assert(dp);
+
 	yoffset = 4;
 	for(x = 0; x < dp->lineCount; x++) {
 		RenderString(dp->node->window, FONT_MENU, COLOR_MENU_FG,
@@ -345,6 +365,8 @@ void DrawButtons(DialogType *dp) {
 
 	ButtonNode button;
 	int temp;
+
+	Assert(dp);
 
 	dp->buttonWidth = GetStringWidth(FONT_MENU, CANCEL_STRING);
 	temp = GetStringWidth(FONT_MENU, OK_STRING);
@@ -388,7 +410,11 @@ int ProcessDialogEvent(const XEvent *event) {
 /***************************************************************************
  ***************************************************************************/
 void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
+
+	Assert(action);
+
 	(action)(np);
+
 }
 
 #endif /* DISABLE_CONFIRM */

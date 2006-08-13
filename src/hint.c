@@ -266,6 +266,8 @@ void ReadClientProtocols(ClientNode *np) {
 
 	Status status;
 
+	Assert(np);
+
 	ReadWMName(np);
 	ReadWMClass(np);
 	ReadWMNormalHints(np);
@@ -454,6 +456,8 @@ ClientState ReadWindowState(Window win) {
 	unsigned long card;
 	int maxVert, maxHorz;
 
+	Assert(win != None);
+
 	result.status = STAT_NONE;
 	result.border = BORDER_DEFAULT;
 	result.layer = LAYER_NORMAL;
@@ -603,6 +607,7 @@ void ReadWMName(ClientNode *np) {
 /****************************************************************************
  ****************************************************************************/
 void ReadWMClass(ClientNode *np) {
+
 	XClassHint hint;
 
 	Assert(np);
@@ -626,6 +631,8 @@ ClientProtocolType ReadWMProtocols(Window w) {
 	int realFormat;
 	unsigned char *temp;
 	Atom *p;
+
+	Assert(w != None);
 
 	result = PROT_NONE;
 	status = JXGetWindowProperty(display, w, atoms[ATOM_WM_PROTOCOLS],
@@ -742,6 +749,8 @@ void ReadWMColormaps(ClientNode *np) {
 	int count;
 	int x;
 
+	Assert(np);
+
 	if(JXGetWMColormapWindows(display, np->window, &windows, &count)) {
 		if(count > 0) {
 
@@ -778,6 +787,9 @@ void ReadWMHints(Window win, ClientState *state) {
 
 	XWMHints *wmhints;
 
+	Assert(win != None);
+	Assert(state);
+
 	wmhints = JXGetWMHints(display, win);
 	if(wmhints) {
 		switch(wmhints->flags & StateHint) {
@@ -807,6 +819,9 @@ void ReadMotifHints(Window win, ClientState *state) {
 	unsigned long itemCount, bytesLeft;
 	unsigned char *data;
 	int format;
+
+	Assert(win != None);
+	Assert(state);
 
 	if(JXGetWindowProperty(display, win, atoms[ATOM_MOTIF_WM_HINTS],
 		0L, 20L, False, atoms[ATOM_MOTIF_WM_HINTS], &type, &format,
@@ -870,6 +885,7 @@ int GetCardinalAtom(Window window, AtomType atom, unsigned long *value) {
 	unsigned char *data;
 	int ret;
 
+	Assert(window != None);
 	Assert(value);
 
 	status = JXGetWindowProperty(display, window, atoms[atom], 0, 1, False,
@@ -899,6 +915,7 @@ int GetWindowAtom(Window window, AtomType atom, Window *value) {
 	unsigned char *data;
 	int ret;
 
+	Assert(window != None);
 	Assert(value);
 
 	status = JXGetWindowProperty(display, window, atoms[atom], 0, 1, False,
@@ -921,6 +938,8 @@ int GetWindowAtom(Window window, AtomType atom, Window *value) {
  ****************************************************************************/
 void SetCardinalAtom(Window window, AtomType atom, unsigned long value) {
 
+	Assert(window != None);
+
 	JXChangeProperty(display, window, atoms[atom], XA_CARDINAL, 32,
 		PropModeReplace, (unsigned char*)&value, 1);
 
@@ -929,6 +948,8 @@ void SetCardinalAtom(Window window, AtomType atom, unsigned long value) {
 /****************************************************************************
  ****************************************************************************/
 void SetWindowAtom(Window window, AtomType atom, unsigned long value) {
+
+	Assert(window != None);
 
 	JXChangeProperty(display, window, atoms[atom], XA_WINDOW, 32,
 		PropModeReplace, (unsigned char*)&value, 1);

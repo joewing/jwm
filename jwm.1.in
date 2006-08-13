@@ -171,6 +171,159 @@ The icon to use for this item. No default.
 .RE
 .RE
 .P
+.B SendTo
+.RS
+Add a "send to" menu to the menu. After selecting an item from this menu,
+a window may be selected to send that window to the selected desktop.
+The following attributes are supported
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to use. The default is "SendTo".
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use for this item. No default.
+.RE
+.RE
+.P
+.B Stick
+.RS
+Add a stick/unstick window operation to the menu. After selecting this
+item a window may be selected to toggle the sticky state of that window.
+The following attributes are supported
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to use. The default is "Stick".
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use for this item. No default.
+.RE
+.RE
+.P
+.B Maximize
+.RS
+Add a maximize window operation to the menu. After selecting this
+item a window may be selected to toggle the maximized state of that window.
+The following attributes are supported
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to use. The default is "Maximize".
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use for this item. No default.
+.RE
+.RE
+.P
+.B Minimize
+.RS
+Add a minimize window operation to the menu. After selecting this
+item a window may be selected to minimize that window.
+The following attributes are supported
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to use. The default is "Minimize".
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use for this item. No default.
+.RE
+.RE
+.P
+.B Shade
+.RS
+Add a shade/unshade window operation to the menu. After selecting this
+item a window may be selected to toggle the shaded status of that window.
+The following attributes are supported
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to use. The default is "Shade".
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use for this item. No default.
+.RE
+.RE
+.P
+.B Move
+.RS
+Add a move window operation to the menu. After selecting this
+item a window may be selected to move that window.
+The following attributes are supported
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to use. The default is "Move".
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use for this item. No default.
+.RE
+.RE
+.P
+.B Resize
+.RS
+Add a resize window operation to the menu. After selecting this
+item a window may be selected to resize that window.
+The following attributes are supported
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to use. The default is "Resize".
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use for this item. No default.
+.RE
+.RE
+.P
+.B Kill
+.RS
+Add a kill window operation to the menu. After selecting this
+item a window may be selected to kill that window.
+The following attributes are supported
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to use. The default is "Kill".
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use for this item. No default.
+.RE
+.RE
+.P
+.B Close
+.RS
+Add a close window operation to the menu. After selecting this
+item a window may be selected to close that window.
+The following attributes are supported
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to use. The default is "Close".
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use for this item. No default.
+.RE
+.RE
+.P
 .B Restart
 .RS
 This tag adds a menu item to restart the window manager.
@@ -1015,6 +1168,11 @@ A command to run when JWM starts.
 .B ShutdownCommand
 .RS
 A command to run when JWM exits.
+.RE
+.P
+.B RestartCommand
+.RS
+A command to run when JWM restarts.
 .RE
 .RE
 .P

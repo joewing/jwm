@@ -124,25 +124,75 @@ void StartupTray();
 void ShutdownTray();
 void DestroyTray();
 
+/** Create a new tray.
+ * @return A new, empty tray.
+ */
 TrayType *CreateTray();
+
+/** Create a tray component.
+ * @return A new tray component structure.
+ */
 TrayComponentType *CreateTrayComponent();
+
+/** Add a tray component to a tray.
+ * @param tp The tray to update.
+ * @param cp The tray component to add.
+ */
 void AddTrayComponent(TrayType *tp, TrayComponentType *cp);
 
+/** Show a tray.
+ * @param tp The tray to show.
+ */
 void ShowTray(TrayType *tp);
+
+/** Hide a tray.
+ * @param tp The tray to hide.
+ */
 void HideTray(TrayType *tp);
 
+/** Draw all trays. */
 void DrawTray();
+
+/** Draw a specific tray.
+ * @param tp The tray to draw.
+ */
 void DrawSpecificTray(const TrayType *tp);
+
+/** Update a component on a tray.
+ * @param tp The tray containing the component.
+ * @param cp The component that needs updating.
+ */
 void UpdateSpecificTray(const TrayType *tp, const TrayComponentType *cp);
 
+/** Resize a tray.
+ * @param tp The tray to resize containing the new requested size information.
+ */
 void ResizeTray(TrayType *tp);
 
+/** Get a linked list of trays.
+ * @return The trays.
+ */
 TrayType *GetTrays();
 
+/** Get a window to use as the supporting window.
+ * This is used by clients to validate that compliant window manager is
+ * running.
+ * @return The supporting window.
+ */
 Window GetSupportingWindow();
 
+/** Process an event that may be for a tray.
+ * @param event The event to process.
+ * @return 1 if this event was for a tray, 0 otherwise.
+ */
 int ProcessTrayEvent(const XEvent *event);
 
+/** Signal the trays.
+ * This function is called regularly so that autohide, etc. can take place.
+ * @param now The current time.
+ * @param x The mouse x-coordinate (root relative).
+ * @param y The mouse y-coordinate (root relative).
+ */
 void SignalTray(const struct TimeType *now, int x, int y);
 
 void SetAutoHideTray(TrayType *tp, int v);

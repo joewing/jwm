@@ -41,6 +41,7 @@ typedef struct TrayButtonType {
 
 static TrayButtonType *buttons;
 
+static void CheckedCreate(TrayComponentType *cp);
 static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
 static void SetSize(TrayComponentType *cp, int width, int height);
@@ -180,7 +181,7 @@ TrayComponentType *CreateTrayButton(const char *iconName,
 	cp->requestedWidth = width;
 	cp->requestedHeight = height;
 
-	cp->Create = Create;
+	cp->Create = CheckedCreate;
 	cp->Destroy = Destroy;
 	cp->SetSize = SetSize;
 	cp->Resize = Resize;
@@ -244,11 +245,45 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 
 /***************************************************************************
  ***************************************************************************/
+void CheckedCreate(TrayComponentType *cp) {
+
+	int bindex;
+	TrayButtonType *bp;
+
+	bp = (TrayButtonType*)cp->object;
+
+	/* Validate the action for this tray button. */
+	if(bp->action && strlen(bp->action) > 0) {
+		if(!strncmp(bp->action, "exec:", 5)) {
+			/* Valid. */
+		} else if(!strncmp(bp->action, "root:", 5)) {
+			bindex = atoi(bp->action + 5);
+			if(!IsRootMenuDefined(bindex)) {
+				Warning("root menu %d not defined", bindex);
+			}
+		} else if(!strcmp(bp->action, "showdesktop")) {
+			/* Valid. */
+		} else {
+			Warning("invalid TrayButton action: \"%s\"", bp->action);
+		}
+	} else {
+		if(!IsRootMenuDefined(1)) {
+			Warning("root menu 1 not defined");
+		}
+	}
+
+	Create(cp);
+
+}
+
+/***************************************************************************
+ ***************************************************************************/
 void Create(TrayComponentType *cp) {
 
 	ButtonNode button;
 	TrayButtonType *bp;
 	int labelx;
+	int bindex;
 
 	bp = (TrayButtonType*)cp->object;
 
@@ -296,8 +331,10 @@ void Create(TrayComponentType *cp) {
 /***************************************************************************
  ***************************************************************************/
 void Resize(TrayComponentType *cp) {
+
 	Destroy(cp);
 	Create(cp);
+
 }
 
 /***************************************************************************
@@ -330,16 +367,10 @@ void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 			ShowDesktop();
 			return;
 		} else {
-			Warning("invalid TrayButton action: \"%s\"", bp->action);
 			return;
 		}
 	} else {
 		button = 1;
-	}
-
-	if(button < 0 || button > 9) {
-		Warning("invalid button specified for root: %d", button);
-		return;
 	}
 
 	GetRootMenuSize(button, &mwidth, &mheight);

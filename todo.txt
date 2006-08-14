@@ -8,8 +8,11 @@ Todo:
 	- Add the ability to change desktops with the mouse pointer.
 	- Add the ability to drag windows to different desktops.
 
+
 20060813:
 	- Fix key bindings to keycodes.
+	- Released v1.8rc1.
+	- Fix seg fault caused by tray buttons pointing to invalid root menus.
 
 20060810:
 	- Add RestartCommand.
@@ -37,6 +40,9 @@ Todo:
 	- Add stack allocations.
 	- Use mouseClickDelta for checking menu selection mode.
 	- Support multiple startup/shutdown commands.
+
+20060427:
+	- Released v1.7.
 
 20060425:
 	- Fixed clock redrawing issue.

@@ -137,11 +137,22 @@ void SetShowExitConfirmation(int v) {
 
 /***************************************************************************
  ***************************************************************************/
+int IsRootMenuDefined(int index) {
+	if(index >= 0 && index < ROOT_MENU_COUNT && rootMenu[index]) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+/***************************************************************************
+ ***************************************************************************/
 void GetRootMenuSize(int index, int *width, int *height) {
 
 	if(!rootMenu[index]) {
 		*width = 0;
 		*height = 0;
+		return;
 	}
 
 	PatchRootMenu(rootMenu[index]);

@@ -283,7 +283,6 @@ void Create(TrayComponentType *cp) {
 	ButtonNode button;
 	TrayButtonType *bp;
 	int labelx;
-	int bindex;
 
 	bp = (TrayButtonType*)cp->object;
 

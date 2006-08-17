@@ -203,9 +203,13 @@ void SignalPopup(const TimeType *now, int x, int y) {
  ****************************************************************************/
 int ProcessPopupEvent(const XEvent *event) {
 
-	if(popup.isActive && event->type == Expose) {
-		if(event->xexpose.window == popup.window) {
+	if(popup.isActive && event->xany.window == popup.window) {
+		if(event->type == Expose) {
 			DrawPopup();
+			return 1;
+		} else if(event->type == MotionNotify) {
+			JXUnmapWindow(display, popup.window);
+			popup.isActive = 0;
 			return 1;
 		}
 	}

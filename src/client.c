@@ -827,7 +827,7 @@ void RaiseClient(ClientNode *np) {
 
 	Assert(np);
 
-	if(np->state.layer > LAYER_BOTTOM && nodes[np->state.layer] != np) {
+	if(nodes[np->state.layer] != np) {
 
 		/* Raise the window */
 		Assert(np->prev);
@@ -873,6 +873,41 @@ void RaiseClient(ClientNode *np) {
 		}
 
 		RestackClients();
+	}
+
+}
+
+/****************************************************************************
+ * Lower the client. This will not affect transients.
+ ****************************************************************************/
+void LowerClient(ClientNode *np) {
+
+	ClientNode *tp, *next;
+	int x;
+
+	Assert(np);
+
+	if(nodeTail[np->state.layer] != np) {
+
+		Assert(np->next);
+
+		/* Take the client out of the list. */
+		if(np->prev) {
+			np->prev->next = np->next;
+		} else {
+			nodes[np->state.layer] = np->next;
+		}
+		np->next->prev = np->prev;
+
+		/* Place the client at the end of the list. */
+		tp = nodeTail[np->state.layer];
+		nodeTail[np->state.layer] = np;
+		tp->next = np;
+		np->prev = tp;
+		np->next = NULL;
+
+		RestackClients();
+
 	}
 
 }

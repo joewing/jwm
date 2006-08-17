@@ -253,6 +253,7 @@ void HandleButtonEvent(const XButtonEvent *event) {
 	int x, y;
 	ClientNode *np;
 	int north, south, east, west;
+	int allowMode;
 
 	np = FindClientByParent(event->window);
 	if(np) {
@@ -293,10 +294,10 @@ void HandleButtonEvent(const XButtonEvent *event) {
 	} else {
 		np = FindClientByWindow(event->window);
 		if(np) {
+			allowMode = ReplayPointer;
 			switch(event->button) {
 			case Button1:
 			case Button2:
-			case Button3:
 				RaiseClient(np);
 				if(focusModel == FOCUS_CLICK) {
 					FocusClient(np);
@@ -306,10 +307,21 @@ void HandleButtonEvent(const XButtonEvent *event) {
 					MoveClient(np, event->x + west, event->y + north);
 				}
 				break;
+			case Button3:
+				if(event->state & Mod1Mask) {
+					LowerClient(np);
+					allowMode = SyncPointer;
+				} else {
+					RaiseClient(np);
+					if(focusModel == FOCUS_CLICK) {
+						FocusClient(np);
+					}
+				}
+				break;
 			default:
 				break;
 			}
-			JXAllowEvents(display, ReplayPointer, CurrentTime);
+			JXAllowEvents(display, allowMode, CurrentTime);
 		}
 	}
 

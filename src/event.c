@@ -249,8 +249,10 @@ int HandleSelectionClear(const XSelectionClearEvent *event) {
 /****************************************************************************
  ****************************************************************************/
 void HandleButtonEvent(const XButtonEvent *event) {
+
 	int x, y;
 	ClientNode *np;
+	int north, south, east, west;
 
 	np = FindClientByParent(event->window);
 	if(np) {
@@ -266,15 +268,9 @@ void HandleButtonEvent(const XButtonEvent *event) {
 			MoveClient(np, event->x, event->y);
 			break;
 		case Button3:
-			x = event->x + np->x;
-			y = event->y + np->y;
-			if(np->state.border & BORDER_OUTLINE) {
-				x -= borderWidth;
-				y -= borderWidth;
-			}
-			if(np->state.border & BORDER_TITLE) {
-				y -= titleHeight;
-			}
+			GetBorderSize(np, &north, &south, &east, &west);
+			x = event->x + np->x - west;
+			y = event->y + np->y - north;
 			ShowWindowMenu(np, x, y);
 			break;
 		case Button4:
@@ -306,7 +302,8 @@ void HandleButtonEvent(const XButtonEvent *event) {
 					FocusClient(np);
 				}
 				if(event->state & Mod1Mask) {
-					MoveClient(np, event->x, event->y);
+					GetBorderSize(np, &north, &south, &east, &west);
+					MoveClient(np, event->x + west, event->y + north);
 				}
 				break;
 			default:

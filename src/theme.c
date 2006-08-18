@@ -64,10 +64,9 @@ void AddThemePath(const char *path) {
 		return;
 	}
 
-	Trim(path);
-
 	tp = Allocate(sizeof(ThemePathNode));
 	tp->path = CopyString(path);
+	Trim(tp->path);
 
 	tp->next = themePaths;
 	themePaths = tp;

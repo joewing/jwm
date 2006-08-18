@@ -523,7 +523,9 @@ void PlaceMaximizedClient(ClientNode *np) {
 
 	GetBorderSize(np, &north, &south, &east, &west);
 
-	sp = GetCurrentScreen(np->x, np->y);
+	sp = GetCurrentScreen(
+		np->x + (east + west + np->width) / 2,
+		np->y + (north + south + np->height) / 2);
 	GetScreenBounds(sp, &box);
 	UpdateTrayBounds(&box, np->state.layer);
 	UpdateStrutBounds(&box);

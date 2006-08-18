@@ -12,6 +12,7 @@ Todo:
 	- Hide popups if the mouse moves over them.
 	- Fix alt+left click window moving so windows don't jump.
 	- Allow windows to be lowered with alt+right click.
+	- When maximizing, place the window on the screen of its center point.
 
 20060813:
 	- Fix key bindings to keycodes.

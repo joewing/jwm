@@ -882,8 +882,7 @@ void RaiseClient(ClientNode *np) {
  ****************************************************************************/
 void LowerClient(ClientNode *np) {
 
-	ClientNode *tp, *next;
-	int x;
+	ClientNode *tp;
 
 	Assert(np);
 

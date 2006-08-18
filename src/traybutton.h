@@ -20,10 +20,24 @@ void ShutdownTrayButtons();
 void DestroyTrayButtons();
 /*@}*/
 
+/** Create a tray button component.
+ * @param iconName The name of the icon to use for the button.
+ * @param label The label to use for the button.
+ * @param action The action to take when the button is clicked.
+ * @param popup Text to display in a popup window.
+ * @param width The width to use for the button (0 for default).
+ * @param height The height to use for the button (0 for default).
+ * @return A new tray button component.
+ */
 struct TrayComponentType *CreateTrayButton(
 	const char *iconName, const char *label, const char *action,
 	const char *popup, int width, int height);
 
+/** Signal a tray button.
+ * @param now The current time.
+ * @param x The x-coordinate of the mouse (root relative).
+ * @param y The y-coordinate of the mouse (root relative).
+ */
 void SignalTrayButton(const struct TimeType *now, int x, int y);
 
 #endif

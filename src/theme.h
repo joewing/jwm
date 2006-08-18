@@ -17,8 +17,14 @@ void ShutdownThemes();
 void DestroyThemes();
 /*@}*/
 
-void AddThemePath(char *path);
+/** Add a theme path.
+ * @param path The path to add.
+ */
+void AddThemePath(const char *path);
 
+/** Set the theme to use.
+ * @param name The name of the theme.
+ */
 void SetTheme(const char *name);
 
 #endif

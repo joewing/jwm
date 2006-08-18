@@ -56,7 +56,7 @@ void DestroyThemes() {
 
 /****************************************************************************
  ****************************************************************************/
-void AddThemePath(char *path) {
+void AddThemePath(const char *path) {
 
 	ThemePathNode *tp;
 

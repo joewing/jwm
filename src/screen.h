@@ -5,15 +5,20 @@
  *
  * @brief Header for screen functions.
  *
+ * Note that screen here refers to physical monitors. Screens are
+ * determined using the xinerama extension (if available). There will
+ * always be at least one screen.
+ *
  */
 
 #ifndef SCREEN_H
 #define SCREEN_H
 
+/** Structure to contain information about a screen. */
 typedef struct ScreenType {
-	int index;
-	int x, y;
-	int width, height;
+	int index;           /**< The index of this screen. */
+	int x, y;            /**< The location of this screen. */
+	int width, height;   /**< The size of this screen. */
 } ScreenType;
 
 void InitializeScreens();
@@ -21,10 +26,27 @@ void StartupScreens();
 void ShutdownScreens();
 void DestroyScreens();
 
+/** Get the screen of the specified coordinates.
+ * @param x The x-coordinate.
+ * @param y The y-coordinate.
+ * @return The screen.
+ */
 const ScreenType *GetCurrentScreen(int x, int y);
+
+/** Get the screen containing the mouse.
+ * @return The screen containing the mouse.
+ */
 const ScreenType *GetMouseScreen();
+
+/** Get the screen of the specified index.
+ * @param index The screen index (0 based).
+ * @return The screen.
+ */
 const ScreenType *GetScreen(int index);
 
+/** Get the number of screens.
+ * @return The number of screens.
+ */
 int GetScreenCount();
 
 #endif

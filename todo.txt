@@ -8,6 +8,9 @@ Todo:
 	- Add the ability to change desktops with the mouse pointer.
 	- Add the ability to drag windows to different desktops.
 
+20060819:
+	- Unmaximize maximized windows that resize themselves.
+
 20060817:
 	- Hide popups if the mouse moves over them.
 	- Fix alt+left click window moving so windows don't jump.

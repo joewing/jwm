@@ -455,6 +455,10 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 
 		ConstrainSize(np);
 
+		if(np->state.status & STAT_MAXIMIZED) {
+			np->state.status &= ~STAT_MAXIMIZED;
+		}
+
 		wc.x = np->x;
 		wc.y = np->y;
 		wc.width = np->width + east + west;

@@ -389,6 +389,9 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 		overflow = 0;
 	}
 
+	sp = GetMouseScreen();
+	GetScreenBounds(sp, &box);
+
 	if(!overflow && (alreadyMapped
 		|| (!(np->state.status & STAT_PIGNORE)
 		&& (np->sizeFlags & (PPosition | USPosition))))) {
@@ -396,9 +399,6 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 		GravitateClient(np, 0);
 
 	} else {
-
-		sp = GetMouseScreen();
-		GetScreenBounds(sp, &box);
 
 		UpdateTrayBounds(&box, np->state.layer);
 		UpdateStrutBounds(&box);
@@ -444,7 +444,11 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 
 	}
 
-	JXMoveWindow(display, np->parent, np->x - west, np->y - north);
+	if(np->state.status & STAT_FULLSCREEN) {
+		JXMoveWindow(display, np->parent, sp->x, sp->y);
+	} else {
+		JXMoveWindow(display, np->parent, np->x - west, np->y - north);
+	}
 
 }
 

@@ -802,12 +802,14 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
 	int actionMaximize;
 	int actionStick;
 	int actionShade;
+	int actionFullScreen;
 	int x;
 
 	/* Up to two actions to be applied together, figure it out. */
 	actionMaximize = 0;
 	actionStick = 0;
 	actionShade = 0;
+	actionFullScreen = 0;
 
 	for(x = 1; x <= 2; x++) {
 		if(event->data.l[x]
@@ -822,6 +824,9 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
 		} else if(event->data.l[x]
 			== (long)atoms[ATOM_NET_WM_STATE_SHADED]) {
 			actionShade = 1;
+		} else if(event->data.l[x]
+			== (long)atoms[ATOM_NET_WM_STATE_FULLSCREEN]) {
+			actionFullScreen = 1;
 		}
 	}
 
@@ -836,6 +841,9 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
 		if(actionShade) {
 			UnshadeClient(np);
 		}
+		if(actionFullScreen) {
+			SetClientFullScreen(np, 0);
+		}
 		break;
 	case 1: /* Add */
 		if(actionStick) {
@@ -846,6 +854,9 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
 		}
 		if(actionShade) {
 			ShadeClient(np);
+		}
+		if(actionFullScreen) {
+			SetClientFullScreen(np, 1);
 		}
 		break;
 	case 2: /* Toggle */
@@ -864,6 +875,13 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
 				UnshadeClient(np);
 			} else {
 				ShadeClient(np);
+			}
+		}
+		if(actionFullScreen) {
+			if(np->state.status & STAT_FULLSCREEN) {
+				SetClientFullScreen(np, 0);
+			} else {
+				SetClientFullScreen(np, 1);
 			}
 		}
 		break;

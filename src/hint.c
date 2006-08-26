@@ -90,6 +90,7 @@ static const AtomNode atomList[] = {
 	{ &atoms[ATOM_NET_WM_STATE_MAXIMIZED_VERT], "_NET_WM_STATE_MAXIMIZED_VERT"},
 	{ &atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ], "_NET_WM_STATE_MAXIMIZED_HORZ"},
 	{ &atoms[ATOM_NET_WM_STATE_SHADED],       "_NET_WM_STATE_SHADED"        },
+	{ &atoms[ATOM_NET_WM_STATE_FULLSCREEN],   "_NET_WM_STATE_FULLSCREEN"    },
 	{ &atoms[ATOM_NET_WM_ALLOWED_ACTIONS],    "_NET_WM_ALLOWED_ACTIONS"     },
 	{ &atoms[ATOM_NET_WM_ACTION_MOVE],        "_NET_WM_ACTION_MOVE"         },
 	{ &atoms[ATOM_NET_WM_ACTION_RESIZE],      "_NET_WM_ACTION_RESIZE"       },
@@ -316,9 +317,8 @@ void WriteState(ClientNode *np) {
  ****************************************************************************/
 void WriteNetState(ClientNode *np) {
 
-	unsigned long values[4];
-	unsigned long sideSize;
-	unsigned long topSize;
+	unsigned long values[5];
+	int north, south, east, west;
 	int index;
 
 	Assert(np);
@@ -338,25 +338,20 @@ void WriteNetState(ClientNode *np) {
 		values[index++] = atoms[ATOM_NET_WM_STATE_STICKY];
 	}
 
+	if(np->state.status & STAT_FULLSCREEN) {
+		values[index++] = atoms[ATOM_NET_WM_STATE_FULLSCREEN];
+	}
+
 	JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_STATE],
 		XA_ATOM, 32, PropModeReplace, (unsigned char*)values, index);
 
-	if(np->state.border & BORDER_OUTLINE) {
-		sideSize = borderWidth;
-	} else {
-		sideSize = 0;
-	}
-
-	topSize = sideSize;
-	if(np->state.border & BORDER_TITLE) {
-		topSize += titleHeight;
-	}
+	GetBorderSize(np, &north, &south, &east, &west);
 
 	/* left, right, top, bottom */
-	values[0] = sideSize;
-	values[1] = sideSize;
-	values[2] = topSize;
-	values[3] = sideSize;
+	values[0] = west;
+	values[1] = east;
+	values[2] = north;
+	values[3] = south;
 
 	JXChangeProperty(display, np->window, atoms[ATOM_NET_FRAME_EXTENTS],
 		XA_CARDINAL, 32, PropModeReplace, (unsigned char*)values, 4);
@@ -455,6 +450,7 @@ ClientState ReadWindowState(Window win) {
 	Atom *state;
 	unsigned long card;
 	int maxVert, maxHorz;
+	int fullScreen;
 
 	Assert(win != None);
 
@@ -485,6 +481,7 @@ ClientState ReadWindowState(Window win) {
 		if(count > 0) {
 			maxVert = 0;
 			maxHorz = 0;
+			fullScreen = 0;
 			state = (unsigned long*)temp;
 			for(x = 0; x < count; x++) {
 				if(state[x] == atoms[ATOM_NET_WM_STATE_STICKY]) {
@@ -495,10 +492,15 @@ ClientState ReadWindowState(Window win) {
 					maxVert = 1;
 				} else if(state[x] == atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ]) {
 					maxHorz = 1;
+				} else if(state[x] == atoms[ATOM_NET_WM_STATE_FULLSCREEN]) {
+					fullScreen = 1;
 				}
 			}
 			if(maxVert && maxHorz) {
 				result.status |= STAT_MAXIMIZED;
+			}
+			if(fullScreen) {
+				result.status |= STAT_FULLSCREEN;
 			}
 		}
 		if(temp) {

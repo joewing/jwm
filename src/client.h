@@ -37,19 +37,20 @@ typedef enum {
 
 /** Window status flags. */
 typedef enum {
-	STAT_NONE      = 0,
-	STAT_ACTIVE    = 1 << 0,  /**< This client has focus. */
-	STAT_MAPPED    = 1 << 1,  /**< This client is shown (on some desktop). */
-	STAT_MAXIMIZED = 1 << 2,  /**< This client is maximized. */
-	STAT_HIDDEN    = 1 << 3,  /**< This client is not on the current desktop. */
-	STAT_STICKY    = 1 << 4,  /**< This client is on all desktops. */
-	STAT_NOLIST    = 1 << 5,  /**< Skip this client in the task list. */
-	STAT_MINIMIZED = 1 << 6,  /**< This client is minimized. */
-	STAT_SHADED    = 1 << 7,  /**< This client is shaded. */
-	STAT_WMDIALOG  = 1 << 8,  /**< This is a JWM dialog window. */
-	STAT_PIGNORE   = 1 << 9,  /**< Ignore the program-specified position. */
-	STAT_SHAPE     = 1 << 10, /**< This client uses the shape extension. */
-	STAT_SDESKTOP  = 1 << 11  /**< This client was minimized to show desktop. */
+	STAT_NONE       = 0,
+	STAT_ACTIVE     = 1 << 0,  /**< This client has focus. */
+	STAT_MAPPED     = 1 << 1,  /**< This client is shown (on some desktop). */
+	STAT_MAXIMIZED  = 1 << 2,  /**< This client is maximized. */
+	STAT_HIDDEN     = 1 << 3,  /**< This client is not on the current desktop. */
+	STAT_STICKY     = 1 << 4,  /**< This client is on all desktops. */
+	STAT_NOLIST     = 1 << 5,  /**< Skip this client in the task list. */
+	STAT_MINIMIZED  = 1 << 6,  /**< This client is minimized. */
+	STAT_SHADED     = 1 << 7,  /**< This client is shaded. */
+	STAT_WMDIALOG   = 1 << 8,  /**< This is a JWM dialog window. */
+	STAT_PIGNORE    = 1 << 9,  /**< Ignore the program-specified position. */
+	STAT_SHAPE      = 1 << 10, /**< This client uses the shape extension. */
+	STAT_SDESKTOP   = 1 << 11, /**< This client was minimized to show desktop. */
+	STAT_FULLSCREEN = 1 << 12  /**< This client wants to be full screen. */
 } StatusFlags;
 
 /** Colormap window linked list. */
@@ -179,6 +180,12 @@ void RestoreClient(ClientNode *np, int raise);
  * @param np The client to maximize.
  */
 void MaximizeClient(ClientNode *np);
+
+/** Set the full screen status of a client.
+ * @param np The client.
+ * @param fullScreen 1 to make full screen, 0 to make not full screen.
+ */
+void SetClientFullScreen(ClientNode *np, int fullScreen);
 
 /** Set the keyboard focus to a client.
  * @param np The client to focus.

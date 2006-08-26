@@ -687,6 +687,57 @@ void MaximizeClient(ClientNode *np) {
 
 /****************************************************************************
  ****************************************************************************/
+void SetClientFullScreen(ClientNode *np, int fullScreen) {
+
+	int north, south, east, west;
+	const ScreenType *sp;
+
+	Assert(np);
+
+	/* Make sure there's something to do. */
+	if(fullScreen && (np->state.status & STAT_FULLSCREEN)) {
+		return;
+	} else if (!fullScreen && !(np->state.status & STAT_FULLSCREEN)) {
+		return;
+	}
+
+	if(np->state.status & STAT_SHADED) {
+		UnshadeClient(np);
+	}
+
+	if(fullScreen) {
+
+		np->state.status |= STAT_FULLSCREEN;
+
+		sp = GetCurrentScreen(np->x, np->y);
+
+		JXMoveResizeWindow(display, np->parent, sp->x, sp->y,
+			sp->width, sp->height);
+		JXMoveResizeWindow(display, np->window, sp->x, sp->y,
+			sp->width, sp->height);
+
+	} else {
+
+		np->state.status &= ~STAT_FULLSCREEN;
+
+		GetBorderSize(np, &north, &south, &east, &west);
+
+		JXMoveResizeWindow(display, np->parent,
+			np->x - west, np->y - north,
+			np->width + east + west,
+			np->height + north + south);
+		JXMoveResizeWindow(display, np->window, west,
+			north, np->width, np->height);
+
+	}
+
+	WriteState(np);
+	SendConfigureEvent(np);
+
+}
+
+/****************************************************************************
+ ****************************************************************************/
 void FocusClient(ClientNode *np) {
 
 	Assert(np);

@@ -248,7 +248,7 @@ void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
 	if(!(np->state.status & (STAT_MAPPED | STAT_SHADED))) {
 		return;
 	}
-	if(np->state.status & STAT_HIDDEN) {
+	if(np->state.status & (STAT_HIDDEN | STAT_FULLSCREEN)) {
 		return;
 	}
 
@@ -678,6 +678,15 @@ void GetBorderSize(const ClientNode *np,
 	Assert(south);
 	Assert(east);
 	Assert(west);
+
+	/* Full screen is a special case. */
+	if(np->state.status & STAT_FULLSCREEN) {
+		*north = 0;
+		*south = 0;
+		*east = 0;
+		*west = 0;
+		return;
+	}
 
 	if(np->state.border & BORDER_OUTLINE) {
 

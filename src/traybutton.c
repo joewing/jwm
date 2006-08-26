@@ -112,6 +112,9 @@ void DestroyTrayButtons() {
 		if(buttons->action) {
 			Release(buttons->action);
 		}
+		if(buttons->popup) {
+			Release(buttons->popup);
+		}
 		Release(buttons);
 		buttons = bp;
 	}

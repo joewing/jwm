@@ -440,7 +440,7 @@ void ValidateKeys() {
 	int bindex;
 
 	for(kp = bindings; kp; kp = kp->next) {
-		if((kp->key & 0xFF) == KEY_ROOT) {
+		if((kp->key & 0xFF) == KEY_ROOT && kp->command) {
 			bindex = atoi(kp->command);
 			if(!IsRootMenuDefined(bindex)) {
 				Warning("key binding: root menu %d not defined", bindex);

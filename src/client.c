@@ -657,6 +657,11 @@ void MaximizeClient(ClientNode *np) {
 
 	Assert(np);
 
+	/* We don't want to message with full screen clients. */
+	if(np->state.status & STAT_FULLSCREEN) {
+		SetClientFullScreen(np, 0);
+	}
+
 	if(np->state.status & STAT_SHADED) {
 		UnshadeClient(np);
 	}
@@ -705,16 +710,21 @@ void SetClientFullScreen(ClientNode *np, int fullScreen) {
 		UnshadeClient(np);
 	}
 
+Debug("SET CLIENT FULLSCREEN: %d", fullScreen);
+
 	if(fullScreen) {
 
 		np->state.status |= STAT_FULLSCREEN;
+
+		SetClientLayer(np, LAYER_TOP);
 
 		sp = GetCurrentScreen(np->x, np->y);
 
 		JXMoveResizeWindow(display, np->parent, sp->x, sp->y,
 			sp->width, sp->height);
-		JXMoveResizeWindow(display, np->window, sp->x, sp->y,
+		JXMoveResizeWindow(display, np->window, 0, 0,
 			sp->width, sp->height);
+
 
 	} else {
 
@@ -729,10 +739,14 @@ void SetClientFullScreen(ClientNode *np, int fullScreen) {
 		JXMoveResizeWindow(display, np->window, west,
 			north, np->width, np->height);
 
+		SetClientLayer(np, LAYER_NORMAL);
+
 	}
 
+/*
 	WriteState(np);
 	SendConfigureEvent(np);
+*/
 
 }
 
@@ -1354,16 +1368,27 @@ void CheckShape(ClientNode *np) {
 void SendConfigureEvent(ClientNode *np) {
 
 	XConfigureEvent event;
+	const ScreenType *sp;
 
 	Assert(np);
 
 	event.type = ConfigureNotify;
 	event.event = np->window;
 	event.window = np->window;
-	event.x = np->x;
-	event.y = np->y;
-	event.width = np->width;
-	event.height = np->height;
+
+	if(np->state.status & STAT_FULLSCREEN) {
+		sp = GetCurrentScreen(np->x, np->y);
+		event.x = sp->x;
+		event.y = sp->y;
+		event.width = sp->width;
+		event.height = sp->height;
+	} else {
+		event.x = np->x;
+		event.y = np->y;
+		event.width = np->width;
+		event.height = np->height;
+	}
+
 	event.border_width = 0;
 	event.above = None;
 	event.override_redirect = False;

@@ -250,7 +250,6 @@ void SetSize(TrayComponentType *cp, int width, int height) {
  ***************************************************************************/
 void CheckedCreate(TrayComponentType *cp) {
 
-	int bindex;
 	TrayButtonType *bp;
 
 	bp = (TrayButtonType*)cp->object;
@@ -443,7 +442,7 @@ void ValidateTrayButtons() {
 	int bindex;
 
 	for(bp = buttons; bp; bp = bp->next) {
-		if(!strncmp(bp->action, "root:", 5)) {
+		if(bp->action && !strncmp(bp->action, "root:", 5)) {
 			bindex = atoi(bp->action + 5);
 			if(!IsRootMenuDefined(bindex)) {
 				Warning("tray button: root menu %d not defined", bindex);

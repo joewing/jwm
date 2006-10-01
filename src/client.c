@@ -710,8 +710,6 @@ void SetClientFullScreen(ClientNode *np, int fullScreen) {
 		UnshadeClient(np);
 	}
 
-Debug("SET CLIENT FULLSCREEN: %d", fullScreen);
-
 	if(fullScreen) {
 
 		np->state.status |= STAT_FULLSCREEN;
@@ -742,11 +740,6 @@ Debug("SET CLIENT FULLSCREEN: %d", fullScreen);
 		SetClientLayer(np, LAYER_NORMAL);
 
 	}
-
-/*
-	WriteState(np);
-	SendConfigureEvent(np);
-*/
 
 }
 

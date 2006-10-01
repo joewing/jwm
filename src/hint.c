@@ -266,6 +266,7 @@ void ReadCurrentDesktop() {
 void ReadClientProtocols(ClientNode *np) {
 
 	Status status;
+	ClientNode *pp;
 
 	Assert(np);
 
@@ -282,6 +283,14 @@ void ReadClientProtocols(ClientNode *np) {
 	np->state = ReadWindowState(np->window);
 	if(np->minWidth == np->maxWidth && np->minHeight == np->maxHeight) {
 		np->state.border &= ~BORDER_RESIZE;
+	}
+
+	/* Set the client to the same layer as its owner. */
+	if(np->owner != None) {
+		pp = FindClientByWindow(np->owner);
+		if(pp) {
+			np->state.layer = pp->state.layer;
+		}
 	}
 
 }

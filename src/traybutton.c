@@ -260,19 +260,18 @@ void CheckedCreate(TrayComponentType *cp) {
 		if(!strncmp(bp->action, "exec:", 5)) {
 			/* Valid. */
 		} else if(!strncmp(bp->action, "root:", 5)) {
-			bindex = atoi(bp->action + 5);
-			if(!IsRootMenuDefined(bindex)) {
-				Warning("root menu %d not defined", bindex);
-			}
+			/* Valid. However, the specified root menu may not exist.
+			 * This case is handled in ValidateTrayButtons.
+			 */
 		} else if(!strcmp(bp->action, "showdesktop")) {
 			/* Valid. */
 		} else {
 			Warning("invalid TrayButton action: \"%s\"", bp->action);
 		}
 	} else {
-		if(!IsRootMenuDefined(1)) {
-			Warning("root menu 1 not defined");
-		}
+		/* Valid. However, root menu 1 may not exist.
+		 * This case is handled in ValidateTrayButtons.
+		 */
 	}
 
 	Create(cp);
@@ -436,4 +435,21 @@ void SignalTrayButton(const TimeType *now, int x, int y) {
 
 }
 
+/***************************************************************************
+ ***************************************************************************/
+void ValidateTrayButtons() {
+
+	TrayButtonType *bp;
+	int bindex;
+
+	for(bp = buttons; bp; bp = bp->next) {
+		if(!strncmp(bp->action, "root:", 5)) {
+			bindex = atoi(bp->action + 5);
+			if(!IsRootMenuDefined(bindex)) {
+				Warning("tray button: root menu %d not defined", bindex);
+			}
+		}
+	}
+
+}
 

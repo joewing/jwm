@@ -154,6 +154,8 @@ void ParseConfig(const char *fileName) {
 			ParseError(NULL, "could not open %s or %s", fileName, SYSTEM_CONFIG);
 		}
 	}
+	ValidateTrayButtons();
+	ValidateKeys();
 }
 
 /****************************************************************************

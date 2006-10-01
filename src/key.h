@@ -51,5 +51,7 @@ void RunKeyCommand(const XKeyEvent *event);
 
 void ShowKeyMenu(const XKeyEvent *event);
 
+void ValidateKeys();
+
 #endif
 

@@ -432,3 +432,21 @@ void InsertBinding(KeyType key, const char *modifiers,
 
 }
 
+/***************************************************************************
+ ***************************************************************************/
+void ValidateKeys() {
+
+	KeyNode *kp;
+	int bindex;
+
+	for(kp = bindings; kp; kp = kp->next) {
+		if((kp->key & 0xFF) == KEY_ROOT) {
+			bindex = atoi(kp->command);
+			if(!IsRootMenuDefined(bindex)) {
+				Warning("key binding: root menu %d not defined", bindex);
+			}
+		}
+	}
+
+}
+

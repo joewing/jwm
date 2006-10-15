@@ -30,7 +30,7 @@ depend:
 $(EXE): $(OBJECTS)
 	$(CC) -o $(EXE) $(OBJECTS) $(LDFLAGS)
 
-.c.o: $<
+.c.o:
 	$(CC) -c $(CFLAGS) $<
 
 clean:

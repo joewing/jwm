@@ -858,7 +858,6 @@ void KillClientHandler(ClientNode *np) {
 	JXSync(display, True);
 	JXUngrabServer(display);
 
-	np->window = None;
 	RemoveClient(np);
 
 }
@@ -1114,6 +1113,8 @@ void RemoveClient(ClientNode *np) {
 	ColormapNode *cp;
 
 	Assert(np);
+	Assert(np->window != None);
+	Assert(np->parent != None);
 
 	JXGrabServer(display);
 

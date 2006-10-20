@@ -54,9 +54,6 @@ void StartupClients() {
 	unsigned int childrenCount;
 	unsigned int x;
 
-	JXSync(display, False);
-	JXGrabServer(display);
-
 	clientCount = 0;
 	activeClient = NULL;
 	currentDesktop = 0;
@@ -80,12 +77,7 @@ void StartupClients() {
 
 	JXFree(childrenReturn);
 
-	JXSync(display, True);
-	JXUngrabServer(display);
-
 	LoadFocus();
-
-	ExposeCurrentDesktop();
 
 	UpdateTaskBar();
 	UpdatePager();

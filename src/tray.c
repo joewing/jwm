@@ -497,10 +497,19 @@ void ComputeTraySize(TrayType *tp) {
  ***************************************************************************/
 void ShowTray(TrayType *tp) {
 
+	Window win1, win2;
+	int winx, winy;
+	unsigned int mask;
+	int mousex, mousey;
+
 	if(tp->hidden) {
 
 		tp->hidden = 0;
 		JXMoveWindow(display, tp->window, tp->x, tp->y);
+
+		JXQueryPointer(display, rootWindow, &win1, &win2,
+			&mousex, &mousey, &winx, &winy, &mask);
+		SetMousePosition(mousex, mousey);
 
 	}
 

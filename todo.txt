@@ -8,6 +8,9 @@ Todo:
 	- Add the ability to change desktops with the mouse pointer.
 	- Add the ability to drag windows to different desktops.
 
+20061022:
+	- Fix an issue with auto-hide trays hidding when they shouldn't.
+
 20061019:
 	- Fix a bug that caused windows to be mapped incorrectly when started
 	  at the same time as JWM.

@@ -858,14 +858,23 @@ void ParseInclude(const TokenNode *tp, int depth) {
 
 	Assert(tp);
 
-	temp = CopyString(tp->value);
+	if(!tp->value) {
 
-	ExpandPath(&temp);
+		ParseError(tp, "no include file specified", temp);
 
-	if(!ParseFile(temp, depth)) {
-		ParseError(tp, "could not open included file %s", temp);
+	} else {
+
+		temp = CopyString(tp->value);
+
+		ExpandPath(&temp);
+
+		if(!ParseFile(temp, depth)) {
+			ParseError(tp, "could not open included file %s", temp);
+		}
+
+		Release(temp);
+
 	}
-	Release(temp);
 
 }
 
@@ -1421,6 +1430,10 @@ void ParseGroup(const TokenNode *tp) {
  ***************************************************************************/
 void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
 	const char *option) {
+
+	if(!option) {
+		return;
+	}
 
 	if(!strcmp(option, "sticky")) {
 		AddGroupOption(group, OPTION_STICKY);

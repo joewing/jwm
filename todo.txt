@@ -8,6 +8,9 @@ Todo:
 	- Add the ability to change desktops with the mouse pointer.
 	- Add the ability to drag windows to different desktops.
 
+20061023:
+	- Fix some seg faults with invalid configuration files.
+
 20061022:
 	- Fix an issue with auto-hide trays hidding when they shouldn't.
 
@@ -17,6 +20,9 @@ Todo:
 
 20061018:
 	- Fix a bug that caused a seg fault after a client was killed.
+
+20061008:
+	- Released v1.8rc2.
 
 20061001:
 	- More warning messages about incorrectly configured tray buttons and

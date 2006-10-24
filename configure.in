@@ -2,7 +2,7 @@
 # JWM autoconf.
 ############################################################################
 
-AC_INIT(jwm, 1.8rc2, joewing@joewing.net)
+AC_INIT(jwm, 1.8rc3, joewing@joewing.net)
 AC_PREREQ(2.57)
 AC_CONFIG_SRCDIR([src])
 AC_CONFIG_HEADER([config.h])

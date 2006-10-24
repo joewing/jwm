@@ -716,14 +716,16 @@ void SetBorderWidth(const char *str) {
 
 	int width;
 
-	Assert(str);
+	if(str) {
 
-	width = atoi(str);
-	if(width < MIN_BORDER_WIDTH || width > MAX_BORDER_WIDTH) {
-		borderWidth = DEFAULT_BORDER_WIDTH;
-		Warning("invalid border width specified: %d", width);
-	} else {
-		borderWidth = width;
+		width = atoi(str);
+		if(width < MIN_BORDER_WIDTH || width > MAX_BORDER_WIDTH) {
+			borderWidth = DEFAULT_BORDER_WIDTH;
+			Warning("invalid border width specified: %d", width);
+		} else {
+			borderWidth = width;
+		}
+
 	}
 
 }
@@ -734,14 +736,16 @@ void SetTitleHeight(const char *str) {
 
 	int height;
 
-	Assert(str);
+	if(str) {
 
-	height = atoi(str);
-	if(height < MIN_TITLE_HEIGHT || height > MAX_TITLE_HEIGHT) {
-		titleHeight = DEFAULT_TITLE_HEIGHT;
-		Warning("invalid title height specified: %d", height);
-	} else {
-		titleHeight = height;
+		height = atoi(str);
+		if(height < MIN_TITLE_HEIGHT || height > MAX_TITLE_HEIGHT) {
+			titleHeight = DEFAULT_TITLE_HEIGHT;
+			Warning("invalid title height specified: %d", height);
+		} else {
+			titleHeight = height;
+		}
+
 	}
 
 }

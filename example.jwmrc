@@ -154,7 +154,7 @@
 	<Key mask="A" key="Tab">next</Key>
 	<Key mask="A" key="F4">close</Key>
 	<Key mask="A" key="#">desktop#</Key>
-	<Key mask="A" key="F1">root</Key>
+	<Key mask="A" key="F1">root:1</Key>
 	<Key mask="A" key="F2">window</Key>
 
 </JWM>

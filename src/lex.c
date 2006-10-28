@@ -430,6 +430,7 @@ char *ReadElementValue(const char *line, const char *file, int *lineNumber) {
 		}
 	}
 	buffer[len] = 0;
+	Trim(buffer);
 
 	return buffer;
 }

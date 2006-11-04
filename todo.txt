@@ -10,6 +10,7 @@ Todo:
 
 20061104:
 	- Improved _NET_WM_STATE_FULLSCREEN support.
+	- Fixed StartupCommands and Swallow items.
 
 20061027:
 	- Trim leading and trailing space from configuration options.

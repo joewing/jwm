@@ -336,11 +336,11 @@ void Startup() {
 
 	/* This order is important. */
 
+	StartupCommands();
+
 	/* First we grab the server to prevent clients from changing things
 	 * while we're still loading. */
 	JXGrabServer(display);
-
-	StartupCommands();
 
 	StartupScreens();
 
@@ -379,11 +379,11 @@ void Startup() {
 
 	RestackClients();
 
-	StartupSwallow();
-
 	/* Allow clients to do their thing. */
 	XSync(display, True);
 	JXUngrabServer(display);
+
+	StartupSwallow();
 
 	/* Send expose events. */
 	ExposeCurrentDesktop();

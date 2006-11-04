@@ -649,7 +649,7 @@ void MaximizeClient(ClientNode *np) {
 
 	Assert(np);
 
-	/* We don't want to message with full screen clients. */
+	/* We don't want to mess with full screen clients. */
 	if(np->state.status & STAT_FULLSCREEN) {
 		SetClientFullScreen(np, 0);
 	}
@@ -686,6 +686,7 @@ void MaximizeClient(ClientNode *np) {
  ****************************************************************************/
 void SetClientFullScreen(ClientNode *np, int fullScreen) {
 
+	XEvent event;
 	int north, south, east, west;
 	const ScreenType *sp;
 
@@ -706,15 +707,13 @@ void SetClientFullScreen(ClientNode *np, int fullScreen) {
 
 		np->state.status |= STAT_FULLSCREEN;
 
-		SetClientLayer(np, LAYER_TOP);
-
 		sp = GetCurrentScreen(np->x, np->y);
 
-		JXMoveResizeWindow(display, np->parent, sp->x, sp->y,
-			sp->width, sp->height);
+		JXReparentWindow(display, np->window, rootWindow, 0, 0);
 		JXMoveResizeWindow(display, np->window, 0, 0,
 			sp->width, sp->height);
 
+		SetClientLayer(np, LAYER_TOP);
 
 	} else {
 
@@ -722,16 +721,24 @@ void SetClientFullScreen(ClientNode *np, int fullScreen) {
 
 		GetBorderSize(np, &north, &south, &east, &west);
 
-		JXMoveResizeWindow(display, np->parent,
-			np->x - west, np->y - north,
-			np->width + east + west,
-			np->height + north + south);
+		JXReparentWindow(display, np->window, np->parent, west, north);
 		JXMoveResizeWindow(display, np->window, west,
 			north, np->width, np->height);
+
+		event.type = MapRequest;
+		event.xmaprequest.send_event = True;
+		event.xmaprequest.display = display;
+		event.xmaprequest.parent = np->parent;
+		event.xmaprequest.window = np->window;
+		JXSendEvent(display, rootWindow, False,
+			SubstructureRedirectMask, &event);
 
 		SetClientLayer(np, LAYER_NORMAL);
 
 	}
+
+	WriteState(np);
+	SendConfigureEvent(np);
 
 }
 

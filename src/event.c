@@ -125,10 +125,13 @@ void WaitForEvent(XEvent *event) {
 			SetMousePosition(event->xmotion.x_root, event->xmotion.y_root);
 			handled = 0;
 			break;
+		case ReparentNotify:
+			HandleDockReparentNotify(&event->xreparent);
+			handled = 1;
+			break;
 		case ConfigureNotify:
 		case CreateNotify:
 		case MapNotify:
-		case ReparentNotify:
 		case GraphicsExpose:
 		case NoExpose:
 			handled = 1;
@@ -417,6 +420,12 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 	ClientNode *np;
 	int north, south, east, west;
 	int changed;
+	int handled;
+
+	handled = HandleDockConfigureRequest(event);
+	if(handled) {
+		return;
+	}
 
 	np = FindClientByWindow(event->window);
 	if(np && np->window == event->window) {
@@ -1022,10 +1031,6 @@ void HandleUnmapNotify(const XUnmapEvent *event) {
 			UpdatePager();
 
 		}
-
-	} else if(!np) {
-
-		HandleDockDestroy(event->window);
 
 	}
 

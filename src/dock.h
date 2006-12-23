@@ -35,5 +35,9 @@ int HandleDockSelectionClear(const XSelectionClearEvent *event);
 
 int HandleDockResizeRequest(const XResizeRequestEvent *event);
 
+int HandleDockConfigureRequest(const XConfigureRequestEvent *event);
+
+int HandleDockReparentNotify(const XReparentEvent *event);
+
 #endif
 

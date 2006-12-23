@@ -25,6 +25,7 @@
 typedef struct DockNode {
 
 	Window window;
+	int needs_reparent;
 
 	struct DockNode *next;
 
@@ -45,7 +46,7 @@ static const char *BASE_SELECTION_NAME = "_NET_SYSTEM_TRAY_S%d";
 static const char *ORIENTATION_ATOM = "_NET_SYSTEM_TRAY_ORIENTATION";
 
 static DockType *dock = NULL;
-static int owner;
+static int owner = 0;
 static Atom dockAtom;
 static unsigned long orientation;
 
@@ -80,17 +81,26 @@ void StartupDock() {
 		return;
 	}
 
-	selectionName = AllocateStack(strlen(BASE_SELECTION_NAME) + 1);
-	sprintf(selectionName, BASE_SELECTION_NAME, rootScreen);
-	dockAtom = JXInternAtom(display, selectionName, False);
-	ReleaseStack(selectionName);
-
-	/* The location and size of the window doesn't matter here. */
 	if(dock->window == None) {
+
+		/* No dock yet. */
+
+		/* Get the selection atom. */
+		selectionName = AllocateStack(strlen(BASE_SELECTION_NAME) + 1);
+		sprintf(selectionName, BASE_SELECTION_NAME, rootScreen);
+		dockAtom = JXInternAtom(display, selectionName, False);
+		ReleaseStack(selectionName);
+
+		/* The location and size of the window doesn't matter here. */
 		dock->window = JXCreateSimpleWindow(display, rootWindow,
 			/* x, y, width, height */ 0, 0, 1, 1,
 			/* border_size, border_color */ 0, 0,
 			/* background */ colors[COLOR_TRAY_BG]);
+		JXSelectInput(display, dock->window,
+			  SubstructureNotifyMask
+			| SubstructureRedirectMask
+			| PointerMotionMask | PointerMotionHintMask);
+
 	}
 	dock->cp->window = dock->window;
 
@@ -105,11 +115,18 @@ void ShutdownDock() {
 
 		if(shouldRestart) {
 
+			/* If restarting we just reparent the dock window to the root
+			 * window. We need to keep the dock around and visible so that
+			 * we don't cause problems with the docked windows.
+			 * It seems every application handles docking differently...
+			 */
 			JXReparentWindow(display, dock->window, rootWindow, 0, 0);
-			JXUnmapWindow(display, dock->window);
 
 		} else {
 
+			/* JWM is exiting. */
+
+			/* Release memory used by the dock list. */
 			while(dock->nodes) {
 				np = dock->nodes->next;
 				JXReparentWindow(display, dock->nodes->window, rootWindow, 0, 0);
@@ -117,10 +134,12 @@ void ShutdownDock() {
 				dock->nodes = np;
 			}
 
+			/* Release the selection. */
 			if(owner) {
 				JXSetSelectionOwner(display, dockAtom, None, CurrentTime);
 			}
 
+			/* Destroy the dock window. */
 			JXDestroyWindow(display, dock->window);
 
 		}
@@ -213,11 +232,13 @@ void Create(TrayComponentType *cp) {
 
 	Assert(cp);
 
+	/* Map the dock window. */
 	if(cp->window != None) {
 		JXResizeWindow(display, cp->window, cp->width, cp->height);
 		JXMapRaised(display, cp->window);
 	}
 
+	/* Set the orientation. */
 	orientationAtom = JXInternAtom(display, ORIENTATION_ATOM, False);
 	if(cp->height == 1) {
 		orientation = SYSTEM_TRAY_ORIENTATION_VERT;
@@ -227,25 +248,35 @@ void Create(TrayComponentType *cp) {
 	JXChangeProperty(display, dock->cp->window, orientationAtom,
 		XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&orientation, 1);
 
-	owner = 1;
-	JXSetSelectionOwner(display, dockAtom, dock->cp->window, CurrentTime);
-	if(JXGetSelectionOwner(display, dockAtom) != dock->cp->window) {
+	/* Get the selection if we don't already own it.
+	 * If we did already own it, getting it again would cause problems
+	 * with some clients due to the way restarts are handled.
+	 */
+	if(!owner) {
 
-		owner = 0;
-		Warning("could not acquire system tray selection");
+		owner = 1;
+		JXSetSelectionOwner(display, dockAtom, dock->cp->window, CurrentTime);
+		if(JXGetSelectionOwner(display, dockAtom) != dock->cp->window) {
 
-	} else {
+			owner = 0;
+			Warning("could not acquire system tray selection");
 
-		memset(&event, 0, sizeof(event));
-		event.xclient.type = ClientMessage;
-		event.xclient.window = rootWindow;
-		event.xclient.message_type = JXInternAtom(display, "MANAGER", False);
-		event.xclient.format = 32;
-		event.xclient.data.l[0] = CurrentTime;
-		event.xclient.data.l[1] = dockAtom;
-		event.xclient.data.l[2] = dock->cp->window;
+		} else {
 
-		JXSendEvent(display, rootWindow, False, StructureNotifyMask, &event);
+			memset(&event, 0, sizeof(event));
+			event.xclient.type = ClientMessage;
+			event.xclient.window = rootWindow;
+			event.xclient.message_type = JXInternAtom(display, "MANAGER", False);
+			event.xclient.format = 32;
+			event.xclient.data.l[0] = CurrentTime;
+			event.xclient.data.l[1] = dockAtom;
+			event.xclient.data.l[2] = dock->cp->window;
+			event.xclient.data.l[3] = 0;
+			event.xclient.data.l[4] = 0;
+
+			JXSendEvent(display, rootWindow, False, StructureNotifyMask, &event);
+
+		}
 
 	}
 
@@ -305,6 +336,75 @@ int HandleDockResizeRequest(const XResizeRequestEvent *event) {
 	return 0;
 }
 
+/** Handle a configure request event. */
+int HandleDockConfigureRequest(const XConfigureRequestEvent *event) {
+
+	XWindowChanges wc;
+	DockNode *np;
+
+	Assert(event);
+
+	if(!dock) {
+		return 0;
+	}
+
+	for(np = dock->nodes; np; np = np->next) {
+		if(np->window == event->window) {
+			wc.stack_mode = event->detail;
+			wc.sibling = event->above;
+			wc.border_width = event->border_width;
+			wc.x = event->x;
+			wc.y = event->y;
+			wc.width = event->width;
+			wc.height = event->height;
+			JXConfigureWindow(display, np->window, event->value_mask, &wc);
+			UpdateDock();
+			return 1;
+		}
+	}
+
+	return 0;
+
+}
+
+/** Handle a reparent notify event. */
+int HandleDockReparentNotify(const XReparentEvent *event) {
+
+	DockNode *np;
+	int handled;
+
+	Assert(event);
+
+	/* Just return if there is no dock. */
+	if(!dock) {
+		return 0;
+	}
+
+	/* Check each docked window. */
+	handled = 0;
+	for(np = dock->nodes; np; np = np->next) {
+		if(np->window == event->window) {
+			if(event->parent != dock->cp->window) {
+				/* For some reason the application reparented the window.
+				 * We make note of this condition and reparent every time
+				 * the dock is updated. Unfortunately we can't do this for
+				 * all applications because some won't deal with it.
+				 */
+				np->needs_reparent = 1;
+				handled = 1;
+			}
+		}
+	}
+
+	/* Layout the stuff on the dock again if something happened. */
+	if(handled) {
+		UpdateDock();
+	}
+
+	return handled;
+
+}
+
 /** Handle a destroy event. */
 int HandleDockDestroy(Window win) {
 
@@ -335,43 +435,52 @@ void DockWindow(Window win) {
 
 	Assert(dock);
 
-	UndockWindow(win);
-
-	if(win != None) {
-
-		np = Allocate(sizeof(DockNode));
-		np->window = win;
-		np->next = dock->nodes;
-		dock->nodes = np;
-
-		if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-			if(dock->cp->requestedWidth > 1) {
-				dock->cp->requestedWidth += dock->cp->height;
-			} else {
-				dock->cp->requestedWidth = dock->cp->height;
-			}
-		} else {
-			if(dock->cp->requestedHeight > 1) {
-				dock->cp->requestedHeight += dock->cp->width;
-			} else {
-				dock->cp->requestedHeight = dock->cp->width;
-			}
-		}
-
-		/* It's safe to reparent at (0, 0) since we call
-		 * ResizeTray which will invoke the Resize callback.
-		 */
-		JXAddToSaveSet(display, win);
-		JXSelectInput(display, win,
-			  SubstructureNotifyMask
-			| StructureNotifyMask
-			| ResizeRedirectMask
-			| PointerMotionMask | PointerMotionHintMask);
-		JXReparentWindow(display, win, dock->cp->window, 0, 0);
-		JXMapRaised(display, win);
-
+	/* Make sure we have a valid window to add. */
+	if(win == None) {
+		return;
 	}
 
+	/* If this window is already docked ignore it. */
+	for(np = dock->nodes; np; np = np->next) {
+		if(np->window == win) {
+			return;
+		}
+	}
+
+	/* Add the window to our list. */
+	np = Allocate(sizeof(DockNode));
+	np->window = win;
+	np->needs_reparent = 0;
+	np->next = dock->nodes;
+	dock->nodes = np;
+
+	/* Update the requested size. */
+	if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
+		if(dock->cp->requestedWidth > 1) {
+			dock->cp->requestedWidth += dock->cp->height;
+		} else {
+			dock->cp->requestedWidth = dock->cp->height;
+		}
+	} else {
+		if(dock->cp->requestedHeight > 1) {
+			dock->cp->requestedHeight += dock->cp->width;
+		} else {
+			dock->cp->requestedHeight = dock->cp->width;
+		}
+	}
+
+	/* It's safe to reparent at (0, 0) since we call
+	 * ResizeTray which will invoke the Resize callback.
+	 */
+	JXAddToSaveSet(display, win);
+	JXSelectInput(display, win,
+		  StructureNotifyMask
+		| ResizeRedirectMask
+		| PointerMotionMask | PointerMotionHintMask);
+	JXReparentWindow(display, win, dock->cp->window, 0, 0);
+	JXMapRaised(display, win);
+
+	/* Resize the tray containing the dock. */
 	ResizeTray(dock->cp->tray);
 
 }
@@ -387,14 +496,16 @@ int UndockWindow(Window win) {
 	last = NULL;
 	for(np = dock->nodes; np; np = np->next) {
 		if(np->window == win) {
+
+			/* Remove the window from our list. */
 			if(last) {
 				last->next = np->next;
 			} else {
 				dock->nodes = np->next;
 			}
-
 			Release(np);
 
+			/* Update the requested size. */
 			if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
 				dock->cp->requestedWidth -= dock->cp->height;
 				if(dock->cp->requestedWidth <= 0) {
@@ -407,6 +518,7 @@ int UndockWindow(Window win) {
 				}
 			}
 
+			/* Resize the tray. */
 			ResizeTray(dock->cp->tray);
 
 			return 1;
@@ -431,6 +543,7 @@ void UpdateDock() {
 
 	Assert(dock);
 
+	/* Determine the size of items in the dock. */
 	if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
 		itemWidth = dock->cp->height;
 		itemHeight = dock->cp->height;
@@ -471,6 +584,12 @@ void UpdateDock() {
 
 		JXMoveResizeWindow(display, np->window, x + xoffset, y + yoffset,
 			width, height);
+
+		/* Reparent if this window likes to go other places. */
+		if(np->needs_reparent) {
+			JXReparentWindow(display, np->window, dock->cp->window,
+			x + xoffset, y + yoffset);
+		}
 
 		if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
 			x += itemWidth;

@@ -207,8 +207,8 @@ void DestroyMenu(Menu *menu) {
 int ShowSubmenu(Menu *menu, Menu *parent, int x, int y) {
 	int status;
 
-	CreateMenu(menu, x, y);
 	menu->parent = parent;
+	CreateMenu(menu, x, y);
 
 	++menuShown;
 	status = MenuLoop(menu);
@@ -309,9 +309,10 @@ void CreateMenu(Menu *menu, int x, int y) {
 	menu->currentIndex = -1;
 
 	if(x + menu->width > rootWidth) {
-		x = rootWidth - menu->width;
 		if(menu->parent) {
-			menu->parent->wasCovered = 1;
+			x = menu->parent->x - menu->width;
+		} else {
+			x = rootWidth - menu->width;
 		}
 	}
 	temp = y;
@@ -372,8 +373,6 @@ void DrawMenu(Menu *menu) {
 
 	MenuItem *np;
 	int x;
-
-	menu->wasCovered = 0;
 
 	if(menu->label) {
 		DrawMenuItem(menu, NULL, -1);
@@ -570,10 +569,7 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event) {
 
 		} else {
 
-			/* No selection made; redraw. */
-			if(menu->wasCovered) {
-				DrawMenu(menu);
-			}
+			/* No selection made. */
 			UpdateMenu(menu);
 
 		}

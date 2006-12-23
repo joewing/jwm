@@ -71,7 +71,6 @@ typedef struct Menu {
 	int currentIndex, lastIndex;
 	unsigned int itemCount;
 	int parentOffset;
-	int wasCovered;
 	int textOffset;
 	int *offsets;
 	struct Menu *parent;

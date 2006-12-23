@@ -14,6 +14,8 @@ Todo:
 	- Fix Dock when restarting.
 	- Fix a Swallow on startup.
 	- Focus transients of active windows when they appear.
+	- Make submenus appear on the left if there isn't enough room on
+	  the right (mdsama).
 
 20061104:
 	- Improved _NET_WM_STATE_FULLSCREEN support.

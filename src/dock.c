@@ -1,7 +1,11 @@
-/***************************************************************************
- * Dock functions.
- * Copyright (C) 2006 Joe Wingbermuehle
- ***************************************************************************/
+/**
+ * @file dock.c
+ * @author Joe Wingbermuehle
+ * @date 2006
+ *
+ * @brief Dock functions.
+ *
+ */
 
 #include "jwm.h"
 #include "dock.h"
@@ -17,6 +21,7 @@
 #define SYSTEM_TRAY_ORIENTATION_HORZ 0
 #define SYSTEM_TRAY_ORIENTATION_VERT 1
 
+/** Structure to represent a docked window. */
 typedef struct DockNode {
 
 	Window window;
@@ -25,6 +30,7 @@ typedef struct DockNode {
 
 } DockNode;
 
+/** Structure to represent a dock tray component. */
 typedef struct DockType {
 
 	TrayComponentType *cp;
@@ -45,7 +51,6 @@ static unsigned long orientation;
 
 static void SetSize(TrayComponentType *cp, int width, int height);
 static void Create(TrayComponentType *cp);
-static void Destroy(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 
 static void DockWindow(Window win);
@@ -53,13 +58,11 @@ static int UndockWindow(Window win);
 
 static void UpdateDock();
 
-/***************************************************************************
- ***************************************************************************/
+/** Initialize dock data. */
 void InitializeDock() {
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Startup the dock. */
 void StartupDock() {
 
 	char *selectionName;
@@ -93,8 +96,7 @@ void StartupDock() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Shutdown the dock. */
 void ShutdownDock() {
 
 	DockNode *np;
@@ -127,8 +129,7 @@ void ShutdownDock() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Destroy dock data. */
 void DestroyDock() {
 
 	if(dock) {
@@ -142,8 +143,7 @@ void DestroyDock() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Create a dock component. */
 TrayComponentType *CreateDock() {
 
 	TrayComponentType *cp;
@@ -165,15 +165,13 @@ TrayComponentType *CreateDock() {
 
 	cp->SetSize = SetSize;
 	cp->Create = Create;
-	cp->Destroy = Destroy;
 	cp->Resize = Resize;
 
 	return cp;
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Set the size of a dock component. */
 void SetSize(TrayComponentType *cp, int width, int height) {
 
 	int count;
@@ -207,8 +205,7 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Initialize a dock component. */
 void Create(TrayComponentType *cp) {
 
 	XEvent event;
@@ -254,8 +251,7 @@ void Create(TrayComponentType *cp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Resize a dock component. */
 void Resize(TrayComponentType *cp) {
 
 	Assert(cp);
@@ -265,13 +261,7 @@ void Resize(TrayComponentType *cp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
-void Destroy(TrayComponentType *cp) {
-}
-
-/***************************************************************************
- ***************************************************************************/
+/** Handle a dock event. */
 void HandleDockEvent(const XClientMessageEvent *event) {
 
 	Assert(event);
@@ -291,8 +281,7 @@ void HandleDockEvent(const XClientMessageEvent *event) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Handle a resize request event. */
 int HandleDockResizeRequest(const XResizeRequestEvent *event) {
 
 	DockNode *np;
@@ -316,8 +305,7 @@ int HandleDockResizeRequest(const XResizeRequestEvent *event) {
 	return 0;
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Handle a destroy event. */
 int HandleDockDestroy(Window win) {
 
 	if(dock) {
@@ -328,8 +316,7 @@ int HandleDockDestroy(Window win) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Handle a selection clear event. */
 int HandleDockSelectionClear(const XSelectionClearEvent *event) {
 
 	if(event->selection == dockAtom) {
@@ -341,8 +328,7 @@ int HandleDockSelectionClear(const XSelectionClearEvent *event) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Add a window to the dock. */
 void DockWindow(Window win) {
 
 	DockNode *np;
@@ -372,6 +358,9 @@ void DockWindow(Window win) {
 			}
 		}
 
+		/* It's safe to reparent at (0, 0) since we call
+		 * ResizeTray which will invoke the Resize callback.
+		 */
 		JXAddToSaveSet(display, win);
 		JXSelectInput(display, win,
 			  SubstructureNotifyMask
@@ -387,8 +376,7 @@ void DockWindow(Window win) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Remove a window from the dock. */
 int UndockWindow(Window win) {
 
 	DockNode *np;
@@ -430,8 +418,7 @@ int UndockWindow(Window win) {
 	return 0;
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Layout items on the dock. */
 void UpdateDock() {
 
 	XWindowAttributes attr;

@@ -10,14 +10,27 @@
 #ifndef MISC_H
 #define MISC_H
 
+/** Return the minimum of two values. */
 #define Min( x, y ) ( (x) > (y) ? (y) : (x) )
-#define Max( x, y ) ( (x) > (y) ? (x) : (y) )
-#define Ceiling( x ) ( (x) > (double)(long)(x) ? (long)((x) + 1) : (long)(x) )
-#define Floor( x ) ( (long)(x) )
-#define Round( x ) ( (long)((x) + 0.5) )
 
+/** Return the maximum of two values. */
+#define Max( x, y ) ( (x) > (y) ? (x) : (y) )
+
+/** Perform shell-like macro path expansion.
+ * @param path The path to expand (possibly reallocated).
+ */
 void ExpandPath(char **path);
+
+/** Trim leading and trailing whitespace from a string.
+ * @param str The string to trim.
+ */
 void Trim(char *str);
+
+/** Copy a string.
+ * Note that NULL is accepted. When provided NULL, NULL will be returned.
+ * @param str The string to copy.
+ * @return A copy of the string.
+ */
 char *CopyString(const char *str);
 
 #endif

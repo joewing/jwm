@@ -129,7 +129,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 	oldy = np->y;
 
 	if(!(GetMouseMask() & (Button1Mask | Button2Mask))) {
-		StopMove(np, 0, 0, 0);
+		StopMove(np, 0, oldx, oldy);
 		return 0;
 	}
 

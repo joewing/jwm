@@ -8,6 +8,10 @@ Todo:
 	- Add the ability to change desktops with the mouse pointer.
 	- Add the ability to drag windows to different desktops.
 
+20061222:
+	- Fix a bug where moving windows could cause the window to jump
+	  to the upper left corner of the screen.
+
 20061104:
 	- Improved _NET_WM_STATE_FULLSCREEN support.
 	- Fixed StartupCommands and Swallow items.

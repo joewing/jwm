@@ -1,20 +1,22 @@
-/****************************************************************************
- * Functions for displaying information about JWM.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file help.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Functions for displaying information about JWM.
+ *
+ */
 
 #include "jwm.h"
 #include "help.h"
 
-/****************************************************************************
- ****************************************************************************/
+/** Display program name, version, and compiled options . */
 void DisplayAbout() {
 	printf("JWM v%s by Joe Wingbermuehle\n", PACKAGE_VERSION);
 	DisplayCompileOptions();
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Display compiled options. */
 void DisplayCompileOptions() {
 
 	printf("compiled options: ");
@@ -63,8 +65,7 @@ void DisplayCompileOptions() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Display all help. */
 void DisplayHelp() {
 	DisplayUsage();
 	printf("  -display X  Set the X display to use\n");
@@ -75,8 +76,7 @@ void DisplayHelp() {
 	printf("  -v          Display version information\n");
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Display program usage information. */
 void DisplayUsage() {
 	DisplayAbout();
 	printf("usage: jwm [ options ]\n");

@@ -19,8 +19,16 @@ void ShutdownDialogs();
 void DestroyDialogs();
 /*@}*/
 
+/** Handle an event on a dialog window.
+ * @param event The event.
+ * @return 1 if handled, 0 if not handled.
+ */
 int ProcessDialogEvent(const XEvent *event);
 
+/** Show a confirm dialog.
+ * @param np A client window associated with the dialog.
+ * @param action A callback to run if "OK" is clicked.
+ */
 void ShowConfirmDialog(struct ClientNode *np,
 	void (*action)(struct ClientNode*), ...);
 

@@ -1,14 +1,17 @@
-/****************************************************************************
- * Functions to handle error events in JWM.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file error.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Error handling functions.
+ *
+ */
 
 #include "jwm.h"
 #include "error.h"
 #include "main.h"
 
-/****************************************************************************
- ****************************************************************************/
+/** Log a fatal error and exit. */
 void FatalError(const char *str, ...) {
 
 	va_list ap;
@@ -26,8 +29,7 @@ void FatalError(const char *str, ...) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Log a warning. */
 void Warning(const char *str, ...) {
 
 	va_list ap;
@@ -41,8 +43,7 @@ void Warning(const char *str, ...) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Log a warning. */
 void WarningVA(const char *part, const char *str, va_list ap) {
 
 	Assert(str);
@@ -56,12 +57,11 @@ void WarningVA(const char *part, const char *str, va_list ap) {
 
 }
 
-/****************************************************************************
- * Handle errors from Xlib.
+/** Callback to handle errors from Xlib.
  * Note that if debug output is directed to an X terminal, emitting too
  * much output can cause a dead lock (this happens on HP-UX). Therefore
  * ShowCheckpoint isn't used by default.
- ****************************************************************************/
+ */
 int ErrorHandler(Display *d, XErrorEvent *e) {
 
 #ifdef DEBUG

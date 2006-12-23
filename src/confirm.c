@@ -1,7 +1,11 @@
-/***************************************************************************
- * The confirm dialog functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ***************************************************************************/
+/**
+ * @file confirm.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Confirm dialog functions.
+ *
+ */
 
 #include "jwm.h"
 #include "confirm.h"
@@ -55,18 +59,15 @@ static DialogType *FindDialogByWindow(Window w);
 static int HandleDialogExpose(const XExposeEvent *event); 
 static int HandleDialogButtonRelease(const XButtonEvent *event);
 
-/***************************************************************************
- ***************************************************************************/
+/** Initialize the dialog processing data. */
 void InitializeDialogs() {
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Startup dialog processing. */
 void StartupDialogs() {
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Stop dialog processing. */
 void ShutdownDialogs() {
 
 	while(dialogList) {
@@ -75,13 +76,11 @@ void ShutdownDialogs() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Destroy dialog processing data. */
 void DestroyDialogs() {
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Handle an event on a dialog window. */
 int ProcessDialogEvent(const XEvent *event) {
 
 	int handled = 0;
@@ -98,10 +97,10 @@ int ProcessDialogEvent(const XEvent *event) {
 	}
 
 	return handled;
+
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Handle an expose event. */
 int HandleDialogExpose(const XExposeEvent *event) {
 
 	DialogType *dp;
@@ -117,8 +116,7 @@ int HandleDialogExpose(const XExposeEvent *event) {
 	}
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Handle a mouse button release event. */
 int HandleDialogButtonRelease(const XButtonEvent *event) {
 
 	DialogType *dp;
@@ -156,8 +154,7 @@ int HandleDialogButtonRelease(const XButtonEvent *event) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Find a dialog by window or frame. */
 DialogType *FindDialogByWindow(Window w) {
 
 	DialogType *dp;
@@ -172,8 +169,7 @@ DialogType *FindDialogByWindow(Window w) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Show a confirm dialog. */
 void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 
 	va_list ap;
@@ -242,8 +238,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Draw a confirm dialog. */
 void DrawConfirmDialog(DialogType *dp) {
 
 	Assert(dp);
@@ -253,8 +248,7 @@ void DrawConfirmDialog(DialogType *dp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Destroy a confirm dialog. */
 void DestroyConfirmDialog(DialogType *dp) {
 
 	int x;
@@ -282,8 +276,7 @@ void DestroyConfirmDialog(DialogType *dp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Compute the size of a dialog window. */
 void ComputeDimensions(DialogType *dp) {
 
 	const ScreenType *sp;
@@ -341,8 +334,7 @@ void ComputeDimensions(DialogType *dp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Display the message on the dialog window. */
 void DrawMessage(DialogType *dp) {
 
 	int yoffset;
@@ -359,8 +351,7 @@ void DrawMessage(DialogType *dp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Draw the buttons on the dialog window. */
 void DrawButtons(DialogType *dp) {
 
 	ButtonNode button;
@@ -401,14 +392,12 @@ void DrawButtons(DialogType *dp) {
 
 #else /* DISABLE_CONFIRM */
 
-/***************************************************************************
- ***************************************************************************/
+/** Process an event on a dialog window. */
 int ProcessDialogEvent(const XEvent *event) {
 	return 0;
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Show a confirm dialog. */
 void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 
 	Assert(action);

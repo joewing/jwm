@@ -82,18 +82,16 @@ typedef enum {
 
 } TokenType;
 
-/****************************************************************************
- ****************************************************************************/
+/** Structure to represent an XML attribute. */
 typedef struct AttributeNode {
 
-	char *name;
-	char *value;
-	struct AttributeNode *next;
+	char *name;                  /**< The name of the attribute. */
+	char *value;                 /**< The value for the attribute. */
+	struct AttributeNode *next;  /**< The next attribute in the list. */
 
 } AttributeNode;
 
-/****************************************************************************
- ****************************************************************************/
+/** Structure to represent an XML tag. */
 typedef struct TokenNode {
 
 	TokenType type;

@@ -1,7 +1,11 @@
-/****************************************************************************
- * Functions to handle client windows.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file client.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Functions to handle client windows.
+ *
+ */
 
 #include "jwm.h"
 #include "client.h"
@@ -39,14 +43,11 @@ static void RestoreTransients(ClientNode *np, int raise);
 
 static void KillClientHandler(ClientNode *np);
 
-/****************************************************************************
- ****************************************************************************/
+/** Initialize client data. */
 void InitializeClients() {
 }
 
-/****************************************************************************
- * Load windows that are already mapped.
- ****************************************************************************/
+/** Load windows that are already mapped. */
 void StartupClients() {
 
 	XWindowAttributes attr;
@@ -58,14 +59,17 @@ void StartupClients() {
 	activeClient = NULL;
 	currentDesktop = 0;
 
+	/* Clear out the client lists. */
 	for(x = 0; x < LAYER_COUNT; x++) {
 		nodes[x] = NULL;
 		nodeTail[x] = NULL;
 	}
 
+	/* Query client windows. */
 	JXQueryTree(display, rootWindow, &rootReturn, &parentReturn,
 		&childrenReturn, &childrenCount);
 
+	/* Add each client. */
 	for(x = 0; x < childrenCount; x++) {
 		if(JXGetWindowAttributes(display, childrenReturn[x], &attr)) {
 			if(attr.override_redirect == False
@@ -84,8 +88,7 @@ void StartupClients() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Release client windows. */
 void ShutdownClients() {
 
 	int x;
@@ -98,14 +101,11 @@ void ShutdownClients() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Destroy client data. */
 void DestroyClients() {
 }
 
-/****************************************************************************
- * Set the focus to the window currently under the mouse pointer.
- ****************************************************************************/
+/** Set the focus to the window currently under the mouse pointer. */
 void LoadFocus() {
 
 	ClientNode *np;
@@ -124,9 +124,7 @@ void LoadFocus() {
 
 }
 
-/****************************************************************************
- * Add a window to management.
- ****************************************************************************/
+/** Add a window to management. */
 ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 
 	XWindowAttributes attr;
@@ -134,10 +132,12 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 
 	Assert(w != None);
 
+	/* Get window attributes. */
 	if(JXGetWindowAttributes(display, w, &attr) == 0) {
 		return NULL;
 	}
 
+	/* Determine if we should care about this window. */
 	if(attr.override_redirect == True) {
 		return NULL;
 	}
@@ -145,6 +145,7 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 		return NULL;
 	}
 
+	/* Prepare a client node for this window. */
 	np = Allocate(sizeof(ClientNode));
 	memset(np, 0, sizeof(ClientNode));
 
@@ -217,15 +218,18 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 		SetCardinalAtom(np->window, ATOM_NET_WM_DESKTOP, np->state.desktop);
 	}
 
+	/* Shade the client if requested. */
 	if(np->state.status & STAT_SHADED) {
 		ShadeClient(np);
 	}
 
+	/* Minimize the client if requested. */
 	if(np->state.status & STAT_MINIMIZED) {
 		np->state.status &= ~STAT_MINIMIZED;
 		MinimizeClient(np);
 	}
 
+	/* Maximize the client if requested. */
 	if(np->state.status & STAT_MAXIMIZED) {
 		np->state.status &= ~STAT_MAXIMIZED;
 		MaximizeClient(np);
@@ -235,6 +239,7 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 	WriteState(np);
 	SendConfigureEvent(np);
 
+	/* Hide the client if we're not on the right desktop. */
 	if(np->state.desktop != currentDesktop
 		&& !(np->state.status & STAT_STICKY)) {
 		HideClient(np);
@@ -246,9 +251,7 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 
 }
 
-/****************************************************************************
- * Minimize a client window and all of its transients.
- ****************************************************************************/
+/** Minimize a client window and all of its transients. */
 void MinimizeClient(ClientNode *np) {
 
 	Assert(np);
@@ -264,9 +267,7 @@ void MinimizeClient(ClientNode *np) {
 
 }
 
-/****************************************************************************
- * Minimize all transients as well as the specified client.
- ****************************************************************************/
+/** Minimize all transients as well as the specified client. */
 void MinimizeTransients(ClientNode *np) {
 
 	ClientNode *tp;
@@ -274,11 +275,13 @@ void MinimizeTransients(ClientNode *np) {
 
 	Assert(np);
 
+	/* A minimized client can't be active. */
 	if(activeClient == np) {
 		activeClient = NULL;
 		np->state.status &= ~STAT_ACTIVE;
 	}
 
+	/* Unmap the window and update its state. */
 	if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
 		JXUnmapWindow(display, np->window);
 		JXUnmapWindow(display, np->parent);
@@ -287,6 +290,7 @@ void MinimizeTransients(ClientNode *np) {
 	np->state.status &= ~STAT_MAPPED;
 	WriteState(np);
 
+	/* Minimize transient windows. */
 	for(x = 0; x < LAYER_COUNT; x++) {
 		for(tp = nodes[x]; tp; tp = tp->next) {
 			if(tp->owner == np->window
@@ -299,9 +303,7 @@ void MinimizeTransients(ClientNode *np) {
 
 }
 
-/****************************************************************************
- * Shade a client.
- ****************************************************************************/
+/** Shade a client. */
 void ShadeClient(ClientNode *np) {
 
 	int north, south, east, west;
@@ -335,9 +337,7 @@ void ShadeClient(ClientNode *np) {
 
 }
 
-/****************************************************************************
- * Unshade a client.
- ****************************************************************************/
+/** Unshade a client. */
 void UnshadeClient(ClientNode *np) {
 
 	int bsize;
@@ -375,9 +375,7 @@ void UnshadeClient(ClientNode *np) {
 
 }
 
-/****************************************************************************
- * Set a client's state to withdrawn.
- ****************************************************************************/
+/** Set a client's state to withdrawn. */
 void SetClientWithdrawn(ClientNode *np) {
 
 	Assert(np);
@@ -407,8 +405,7 @@ void SetClientWithdrawn(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Restore a window with its transients (helper method). */
 void RestoreTransients(ClientNode *np, int raise) {
 
 	ClientNode *tp;
@@ -416,6 +413,7 @@ void RestoreTransients(ClientNode *np, int raise) {
 
 	Assert(np);
 
+	/* Restore this window. */
 	if(!(np->state.status & STAT_MAPPED)) {
 		if(np->state.status & STAT_SHADED) {
 			JXMapWindow(display, np->parent);
@@ -430,6 +428,7 @@ void RestoreTransients(ClientNode *np, int raise) {
 
 	WriteState(np);
 
+	/* Restore transient windows. */
 	for(x = 0; x < LAYER_COUNT; x++) {
 		for(tp = nodes[x]; tp; tp = tp->next) {
 			if(tp->owner == np->window
@@ -446,8 +445,7 @@ void RestoreTransients(ClientNode *np, int raise) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Restore a client window and its transients. */
 void RestoreClient(ClientNode *np, int raise) {
 
 	Assert(np);
@@ -460,9 +458,7 @@ void RestoreClient(ClientNode *np, int raise) {
 
 }
 
-/****************************************************************************
- * Set the client layer. This will affect transients.
- ****************************************************************************/
+/** Set the client layer. This will affect transients. */
 void SetClientLayer(ClientNode *np, unsigned int layer) {
 
 	ClientNode *tp, *next;
@@ -526,9 +522,7 @@ void SetClientLayer(ClientNode *np, unsigned int layer) {
 
 }
 
-/****************************************************************************
- * Set a client's sticky status. This will update transients.
- ****************************************************************************/
+/** Set a client's sticky status. This will update transients. */
 void SetClientSticky(ClientNode *np, int isSticky) {
 
 	ClientNode *tp;
@@ -537,6 +531,7 @@ void SetClientSticky(ClientNode *np, int isSticky) {
 
 	Assert(np);
 
+	/* Get the old sticky status. */
 	if(np->state.status & STAT_STICKY) {
 		old = 1;
 	} else {
@@ -544,6 +539,9 @@ void SetClientSticky(ClientNode *np, int isSticky) {
 	}
 
 	if(isSticky && !old) {
+
+		/* Change from non-sticky to sticky. */
+
 		for(x = 0; x < LAYER_COUNT; x++) {
 			for(tp = nodes[x]; tp; tp = tp->next) {
 				if(tp == np || tp->owner == np->window) {
@@ -553,7 +551,11 @@ void SetClientSticky(ClientNode *np, int isSticky) {
 				}
 			}
 		}
+
 	} else if(!isSticky && old) {
+
+		/* Change from sticky to non-sticky. */
+
 		for(x = 0; x < LAYER_COUNT; x++) {
 			for(tp = nodes[x]; tp; tp = tp->next) {
 				if(tp == np || tp->owner == np->window) {
@@ -562,14 +564,18 @@ void SetClientSticky(ClientNode *np, int isSticky) {
 				}
 			}
 		}
+
+		/* Since this client is no longer sticky, we need to assign
+		 * a desktop. Here we use the current desktop.
+		 * Note that SetClientDesktop updates transients (which is good).
+		 */
 		SetClientDesktop(np, currentDesktop);
+
 	}
 
 }
 
-/****************************************************************************
- * Set a client's desktop. This will update transients.
- ****************************************************************************/
+/** Set a client's desktop. This will update transients. */
 void SetClientDesktop(ClientNode *np, unsigned int desktop) {
 
 	ClientNode *tp;
@@ -605,9 +611,7 @@ void SetClientDesktop(ClientNode *np, unsigned int desktop) {
 
 }
 
-/****************************************************************************
- * Hide a client without unmapping. This will NOT update transients.
- ****************************************************************************/
+/** Hide a client without unmapping. This will NOT update transients. */
 void HideClient(ClientNode *np) {
 
 	Assert(np);
@@ -622,9 +626,7 @@ void HideClient(ClientNode *np) {
 
 }
 
-/****************************************************************************
- * Show a hidden client. This will NOT update transients.
- ****************************************************************************/
+/** Show a hidden client. This will NOT update transients. */
 void ShowClient(ClientNode *np) {
 
 	Assert(np);
@@ -641,8 +643,7 @@ void ShowClient(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Maximize a client window. */
 void MaximizeClient(ClientNode *np) {
 
 	int north, south, east, west;
@@ -682,8 +683,7 @@ void MaximizeClient(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set a client's full screen state. */
 void SetClientFullScreen(ClientNode *np, int fullScreen) {
 
 	XEvent event;
@@ -742,8 +742,7 @@ void SetClientFullScreen(ClientNode *np, int fullScreen) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set the active client. */
 void FocusClient(ClientNode *np) {
 
 	Assert(np);
@@ -782,8 +781,7 @@ void FocusClient(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Focus the next client in the stacking order. */
 void FocusNextStacked(ClientNode *np) {
 
 	int x;
@@ -810,9 +808,7 @@ void FocusNextStacked(ClientNode *np) {
 
 }
 
-/****************************************************************************
- * Refocus the active client, if existent.
- ****************************************************************************/
+/** Refocus the active client (if there is one). */
 void RefocusClient() {
 
 	if(activeClient) {
@@ -821,8 +817,7 @@ void RefocusClient() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Send a delete message to a client. */
 void DeleteClient(ClientNode *np) {
 
 	ClientProtocolType protocols;
@@ -839,8 +834,7 @@ void DeleteClient(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Callback to kill a client after a confirm dialog. */
 void KillClientHandler(ClientNode *np) {
 
 	Assert(np);
@@ -861,8 +855,7 @@ void KillClientHandler(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Kill a client window. */
 void KillClient(ClientNode *np) {
 
 	Assert(np);
@@ -873,9 +866,7 @@ void KillClient(ClientNode *np) {
 		NULL);
 }
 
-/****************************************************************************
- * Raise the client. This will affect transients.
- ****************************************************************************/
+/** Raise the client. This will affect transients. */
 void RaiseClient(ClientNode *np) {
 
 	ClientNode *tp, *next;
@@ -933,9 +924,7 @@ void RaiseClient(ClientNode *np) {
 
 }
 
-/****************************************************************************
- * Lower the client. This will not affect transients.
- ****************************************************************************/
+/** Lower the client. This will not affect transients. */
 void LowerClient(ClientNode *np) {
 
 	ClientNode *tp;
@@ -967,8 +956,7 @@ void LowerClient(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Restack the clients according the way we want them. */
 void RestackClients() {
 
 	TrayType *tp;
@@ -1019,8 +1007,7 @@ void RestackClients() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Send a client message to a window. */
 void SendClientMessage(Window w, AtomType type, AtomType message) {
 
 	XEvent event;
@@ -1041,8 +1028,7 @@ void SendClientMessage(Window w, AtomType type, AtomType message) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set the border shape for windows using the shape extension. */
 #ifdef USE_SHAPE
 void SetShape(ClientNode *np) {
 
@@ -1055,6 +1041,7 @@ void SetShape(ClientNode *np) {
 
 	GetBorderSize(np, &north, &south, &east, &west);
 
+	/* Shaded windows are a special case. */
 	if(np->state.status & STAT_SHADED) {
 
 		rect[0].x = 0;
@@ -1068,9 +1055,11 @@ void SetShape(ClientNode *np) {
 		return;
 	}
 
+	/* Add the shape of window. */
 	JXShapeCombineShape(display, np->parent, ShapeBounding, west, north,
 		np->window, ShapeBounding, ShapeSet);
 
+	/* Add the shape of the border. */
 	if(north > 0) {
 
 		/* Top */
@@ -1105,8 +1094,7 @@ void SetShape(ClientNode *np) {
 }
 #endif /* USE_SHAPE */
 
-/****************************************************************************
- ****************************************************************************/
+/** Remove a client window from management. */
 void RemoveClient(ClientNode *np) {
 
 	ColormapNode *cp;
@@ -1195,16 +1183,14 @@ void RemoveClient(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Get the active client (possibly NULL). */
 ClientNode *GetActiveClient() {
 
 	return activeClient;
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Find a client given a window (searches frame windows too). */
 ClientNode *FindClientByWindow(Window w) {
 
 	ClientNode *np;
@@ -1217,8 +1203,7 @@ ClientNode *FindClientByWindow(Window w) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Find a client by its frame window. */
 ClientNode *FindClientByParent(Window p) {
 
 	ClientNode *np;
@@ -1231,8 +1216,7 @@ ClientNode *FindClientByParent(Window p) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Reparent a client window. */
 void ReparentClient(ClientNode *np, int notOwner) {
 
 	XSetWindowAttributes attr;
@@ -1335,8 +1319,7 @@ void ReparentClient(ClientNode *np, int notOwner) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Determine if a window uses the shape extension. */
 #ifdef USE_SHAPE
 void CheckShape(ClientNode *np) {
 
@@ -1356,8 +1339,7 @@ void CheckShape(ClientNode *np) {
 }
 #endif
 
-/****************************************************************************
- ****************************************************************************/
+/** Send a configure event to a client window. */
 void SendConfigureEvent(ClientNode *np) {
 
 	XConfigureEvent event;
@@ -1391,11 +1373,11 @@ void SendConfigureEvent(ClientNode *np) {
 
 }
 
-/****************************************************************************
+/** Update a window's colormap.
  * A call to this function indicates that the colormap(s) for the given
  * client changed. This will change the active colormap(s) if the given
  * client is active.
- ****************************************************************************/
+ */
 void UpdateClientColormap(ClientNode *np) {
 
 	XWindowAttributes attr;

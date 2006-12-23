@@ -1,5 +1,11 @@
-/****************************************************************************
- ****************************************************************************/
+/**
+ * @file misc.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Miscellaneous functions and macros.
+ *
+ */
 
 #include "jwm.h"
 #include "misc.h"
@@ -9,8 +15,7 @@ static int IsSymbolic(char ch);
 static char *GetSymbolName(const char *str);
 static void ReplaceSymbol(char **str, const char *name, const char *value);
 
-/****************************************************************************
- ****************************************************************************/
+/** Determine if a character is a space character. */
 int IsSpace(char ch) {
 	switch(ch) {
 	case ' ':
@@ -23,8 +28,7 @@ int IsSpace(char ch) {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Determine if a character is a valid for a shell variable. */
 int IsSymbolic(char ch) {
 
 	if(ch >= 'A' && ch <= 'Z') {
@@ -41,9 +45,7 @@ int IsSymbolic(char ch) {
 
 }
 
-
-/****************************************************************************
- ****************************************************************************/
+/** Get the name of a shell variable (returns a copy). */
 char *GetSymbolName(const char *str) {
 
 	char *temp;
@@ -64,8 +66,7 @@ char *GetSymbolName(const char *str) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Replace "name" with "value" in str (reallocates if needed). */
 void ReplaceSymbol(char **str, const char *name, const char *value) {
 
 	char *temp;
@@ -120,9 +121,7 @@ void ReplaceSymbol(char **str, const char *name, const char *value) {
 
 }
 
-
-/****************************************************************************
- ****************************************************************************/
+/** Perform shell-like macro path expansion. */
 void ExpandPath(char **path) {
 
 	char *name;
@@ -147,8 +146,7 @@ void ExpandPath(char **path) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Trim leading and trailing whitespace from a string. */
 void Trim(char *str) {
 
 	int length;
@@ -159,8 +157,10 @@ void Trim(char *str) {
 
 	length = strlen(str);
 
+	/* Determine how much to cut off of the left. */
 	for(start = 0; IsSpace(str[start]); start++);
 
+	/* Trim the left. */
 	if(start > 0) {
 		length -= start;
 		for(x = 0; x < length + 1; x++) {
@@ -168,6 +168,7 @@ void Trim(char *str) {
 		}
 	}
 
+	/* Trim the right. */
 	while(IsSpace(str[length - 1])) {
 		--length;
 		str[length] = 0;
@@ -175,8 +176,7 @@ void Trim(char *str) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Copy a string. */
 char *CopyString(const char *str) {
 
 	char *temp;
@@ -193,5 +193,4 @@ char *CopyString(const char *str) {
 	return temp;
 
 }
-
 

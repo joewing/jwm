@@ -1,7 +1,11 @@
-/****************************************************************************
- * Functions to handle resizing client windows.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file resize.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Functions to handle resizing client windows.
+ *
+ */
 
 #include "jwm.h"
 #include "resize.h"
@@ -25,14 +29,12 @@ static void ResizeController(int wasDestroyed);
 static void FixWidth(ClientNode *np);
 static void FixHeight(ClientNode *np);
 
-/****************************************************************************
- ****************************************************************************/
+/** Set the resize mode to use. */
 void SetResizeMode(ResizeModeType mode) {
 	resizeMode = mode;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Callback to stop a resize. */
 void ResizeController(int wasDestroyed) {
 	if(resizeMode == RESIZE_OUTLINE) {
 		ClearOutline();
@@ -43,8 +45,7 @@ void ResizeController(int wasDestroyed) {
 	shouldStopResize = 1;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Resize a client window (mouse initiated). */
 void ResizeClient(ClientNode *np, BorderActionType action,
 	int startx, int starty) {
 
@@ -243,8 +244,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Resize a client window (keyboard or menu initiated). */
 void ResizeClientKeyboard(ClientNode *np) {
 
 	XEvent event;
@@ -405,8 +405,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Stop a resize action. */
 void StopResize(ClientNode *np) {
 
 	int north, south, east, west;
@@ -440,8 +439,7 @@ void StopResize(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Fix the width to match the aspect ratio. */
 void FixWidth(ClientNode *np) {
 
 	float ratio, minr, maxr;
@@ -466,8 +464,7 @@ void FixWidth(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Fix the height to match the aspect ratio. */
 void FixHeight(ClientNode *np) {
 
 	float ratio, minr, maxr;

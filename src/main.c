@@ -380,7 +380,7 @@ void Startup() {
 	RestackClients();
 
 	/* Allow clients to do their thing. */
-	XSync(display, True);
+	JXSync(display, True);
 	JXUngrabServer(display);
 
 	StartupSwallow();

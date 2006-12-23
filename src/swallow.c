@@ -1,6 +1,11 @@
-/****************************************************************************
- * Functions to handle swallowing client windows in the tray.
- ****************************************************************************/
+/**
+ * @file swallow.c
+ * @author Joe Wingbermuehle
+ * @date 2005-2006
+ *
+ * @brief Swallow tray component.
+ *
+ */
 
 #include "jwm.h"
 #include "swallow.h"
@@ -32,14 +37,12 @@ static SwallowNode *swallowNodes;
 static void Destroy(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 
-/****************************************************************************
- ****************************************************************************/
+/** Initialize swallow data. */
 void InitializeSwallow() {
 	swallowNodes = NULL;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Start swallow processing. */
 void StartupSwallow() {
 
 	SwallowNode *np;
@@ -52,13 +55,11 @@ void StartupSwallow() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Stop swallow processing. */
 void ShutdownSwallow() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Destroy swallow data. */
 void DestroySwallow() {
 
 	SwallowNode *np;
@@ -81,8 +82,7 @@ void DestroySwallow() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Create a swallowed application tray component. */
 TrayComponentType *CreateSwallow(const char *name, const char *command,
 	int width, int height) {
 
@@ -134,11 +134,11 @@ TrayComponentType *CreateSwallow(const char *name, const char *command,
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Process an event on a swallowed window. */
 int ProcessSwallowEvent(const XEvent *event) {
 
 	SwallowNode *np;
+	int width, height;
 
 	for(np = swallowNodes; np; np = np->next) {
 		if(event->xany.window == np->cp->window) {
@@ -156,6 +156,18 @@ int ProcessSwallowEvent(const XEvent *event) {
 					= event->xresizerequest.height + np->border * 2;
 				ResizeTray(np->cp->tray);
 				break;
+			case ConfigureNotify:
+				/* I don't think this should be necessary, but somehow
+				 * resize requests slip by sometimes... */
+				width = event->xconfigure.width + np->border * 2;
+				height = event->xconfigure.height + np->border * 2;
+				if(   width != np->cp->requestedWidth
+					&& height != np->cp->requestedHeight) {
+					np->cp->requestedWidth = width;
+					np->cp->requestedHeight = height;
+					ResizeTray(np->cp->tray);
+				}
+				break;
 			default:
 				break;
 			}
@@ -167,8 +179,7 @@ int ProcessSwallowEvent(const XEvent *event) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Handle a tray resize. */
 void Resize(TrayComponentType *cp) {
 
 	int width, height;
@@ -186,8 +197,7 @@ void Resize(TrayComponentType *cp) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Destroy a swallow tray component. */
 void Destroy(TrayComponentType *cp) {
 
 	ClientProtocolType protocols;
@@ -209,9 +219,7 @@ void Destroy(TrayComponentType *cp) {
 
 }
 
-/****************************************************************************
- * Determine if this is a window to be swallowed, if it is, swallow it.
- ****************************************************************************/
+/** Determine if this is a window to be swallowed, if it is, swallow it. */
 int CheckSwallowMap(const XMapEvent *event) {
 
 	SwallowNode *np;
@@ -230,9 +238,9 @@ int CheckSwallowMap(const XMapEvent *event) {
 			if(!strcmp(hint.res_name, np->name)) {
 
 				/* Swallow the window. */
-				JXAddToSaveSet(display, event->window);
 				JXSelectInput(display, event->window,
-					StructureNotifyMask | ResizeRedirectMask);
+					  StructureNotifyMask | ResizeRedirectMask);
+				JXAddToSaveSet(display, event->window);
 				JXSetWindowBorder(display, event->window, colors[COLOR_TRAY_BG]);
 				JXReparentWindow(display, event->window,
 					np->cp->tray->window, 0, 0);

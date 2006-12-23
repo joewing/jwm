@@ -70,6 +70,7 @@ void StartupTray() {
 		attrMask |= CWEventMask;
 		attr.event_mask
 			= ButtonPressMask
+			| SubstructureNotifyMask
 			| ExposureMask
 			| KeyPressMask
 			| EnterWindowMask
@@ -562,20 +563,19 @@ int ProcessTrayEvent(const XEvent *event) {
 			switch(event->type) {
 			case Expose:
 				HandleTrayExpose(tp, &event->xexpose);
-				break;
+				return 1;
 			case EnterNotify:
 				HandleTrayEnterNotify(tp, &event->xcrossing);
-				break;
+				return 1;
 			case ButtonPress:
 				HandleTrayButtonPress(tp, &event->xbutton);
-				break;
+				return 1;
 			case MotionNotify:
 				HandleTrayMotionNotify(tp, &event->xmotion);
-				break;
+				return 1;
 			default:
-				break;
+				return 0;
 			}
-			return 1;
 		}
 	}
 

@@ -12,6 +12,7 @@ Todo:
 	- Fix a bug where moving windows could cause the window to jump
 	  to the upper left corner of the screen.
 	- Fix Dock when restarting.
+	- Fix a Swallow on startup.
 
 20061104:
 	- Improved _NET_WM_STATE_FULLSCREEN support.

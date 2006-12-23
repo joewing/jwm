@@ -13,6 +13,7 @@ Todo:
 	  to the upper left corner of the screen.
 	- Fix Dock when restarting.
 	- Fix a Swallow on startup.
+	- Focus transients of active windows when they appear.
 
 20061104:
 	- Improved _NET_WM_STATE_FULLSCREEN support.

@@ -247,6 +247,15 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 
 	ReadClientStrut(np);
 
+	/* Focus transients if their parent has focus. */
+	if(np->owner != None) {
+
+		if(activeClient && np->owner == activeClient->window) {
+			FocusClient(np);
+		}
+
+	}
+
 	return np;
 
 }

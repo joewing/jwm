@@ -8,6 +8,9 @@ Todo:
 	- Add the ability to change desktops with the mouse pointer.
 	- Add the ability to drag windows to different desktops.
 
+20061223:
+	- Released JWM v1.8.
+
 20061222:
 	- Fix a bug where moving windows could cause the window to jump
 	  to the upper left corner of the screen.

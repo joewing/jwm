@@ -120,6 +120,7 @@ typedef enum {
 #define WIN_HINT_GROUP_TRANSIENT (1UL << 3)
 #define WIN_HINT_FOCUS_ON_CLICK  (1UL << 4)
 
+/** Enumeration of window layers. */
 typedef enum {
    LAYER_BOTTOM              = 0,
    LAYER_NORMAL              = 4,
@@ -128,13 +129,15 @@ typedef enum {
    LAYER_COUNT               = 13
 } WinLayerType;
 
+/** Client state information. */
 typedef struct ClientState {
-   unsigned int status;
-   unsigned int border;
-   unsigned int layer;
-   unsigned int desktop;
+   unsigned int status;    /**< Status bit mask. */
+   unsigned int border;    /**< Border bit mask. */
+   unsigned int layer;     /**< Window layer. */
+   unsigned int desktop;   /**< Desktop. */
 } ClientState;
 
+/** Client protocols (to be used as a bit mask). */
 typedef enum {
    PROT_NONE       = 0,
    PROT_DELETE     = 1,

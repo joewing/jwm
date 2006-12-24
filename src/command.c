@@ -11,6 +11,7 @@
 #include "command.h"
 #include "misc.h"
 #include "main.h"
+#include "error.h"
 
 /** Structure to represent a list of commands. */
 typedef struct CommandNode {

@@ -516,11 +516,16 @@ void Render(const TaskBarType *bp) {
          button.icon = tp->client->icon;
 
          if(tp->client->state.status & STAT_MINIMIZED) {
-            minimizedName = AllocateStack(strlen(tp->client->name) + 3);
-            sprintf(minimizedName, "[%s]", tp->client->name);
-            button.text = minimizedName;
-            DrawButton(&button);
-            ReleaseStack(minimizedName);
+            if(tp->client->name) {
+               minimizedName = AllocateStack(strlen(tp->client->name) + 3);
+               sprintf(minimizedName, "[%s]", tp->client->name);
+               button.text = minimizedName;
+               DrawButton(&button);
+               ReleaseStack(minimizedName);
+            } else {
+               button.text = "[]";
+               DrawButton(&button);
+            }
          } else {
             button.text = tp->client->name;
             DrawButton(&button);

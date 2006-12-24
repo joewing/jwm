@@ -19,7 +19,7 @@
 #include "winmenu.h"
 #include "command.h"
 
-/* Allow for menus 0 to 9. */
+/** Number of root menus to support. */
 #define ROOT_MENU_COUNT 10
 
 static Menu *rootMenu[ROOT_MENU_COUNT];

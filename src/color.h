@@ -10,20 +10,32 @@
 #ifndef COLOR_H
 #define COLOR_H
 
+/** Enumeration of colors used for various JWM components. */
 typedef enum {
 
-	COLOR_BORDER_BG,
-	COLOR_BORDER_FG,
-	COLOR_BORDER_ACTIVE_BG,
-	COLOR_BORDER_ACTIVE_FG,
+	COLOR_TITLE_FG,
+	COLOR_TITLE_ACTIVE_FG,
+
+	COLOR_TITLE_BG1,
+	COLOR_TITLE_BG2,
+	COLOR_TITLE_ACTIVE_BG1,
+	COLOR_TITLE_ACTIVE_BG2,
+
+	COLOR_CORNER_BG,
+	COLOR_CORNER_ACTIVE_BG,
+
+	COLOR_BORDER_LINE,
+	COLOR_BORDER_ACTIVE_LINE,
 
 	COLOR_TRAY_BG,
 	COLOR_TRAY_FG,
 
-	COLOR_TASK_BG,
 	COLOR_TASK_FG,
-	COLOR_TASK_ACTIVE_BG,
+	COLOR_TASK_BG1,
+	COLOR_TASK_BG2,
 	COLOR_TASK_ACTIVE_FG,
+	COLOR_TASK_ACTIVE_BG1,
+	COLOR_TASK_ACTIVE_BG2,
 
 	COLOR_PAGER_BG,
 	COLOR_PAGER_FG,
@@ -33,13 +45,11 @@ typedef enum {
 
 	COLOR_MENU_BG,
 	COLOR_MENU_FG,
-	COLOR_MENU_ACTIVE_BG,
+	COLOR_MENU_ACTIVE_BG1,
+	COLOR_MENU_ACTIVE_BG2,
 	COLOR_MENU_ACTIVE_FG,
 
-	COLOR_BORDER_UP,
-	COLOR_BORDER_DOWN,
-	COLOR_BORDER_ACTIVE_UP,
-	COLOR_BORDER_ACTIVE_DOWN,
+	/* Colors below this point are calculated from the above values. */
 
 	COLOR_TRAY_UP,
 	COLOR_TRAY_DOWN,
@@ -77,10 +87,30 @@ void ShutdownColors();
 void DestroyColors();
 /*@}*/
 
+/** Set the color to use for a component.
+ * @param c The component whose color to set.
+ * @param value The color to use.
+ */
 void SetColor(ColorType c, const char *value);
 
+/** Get the color pixel from red, green, and blue values.
+ * @param c The structure containing the rgb values and the pixel value.
+ */
 void GetColor(XColor *c);
+
+/** Get an RGB pixel value from RGB components.
+ * This is used when loading images from external sources. When doing
+ * this we need to know the color components even if we are using a
+ * color map so we just pretend to have a linear RGB colormap.
+ * This prevents calls to XQueryColor.
+ * @param c The structure containing the rgb values and pixel value.
+ */
 void GetColorIndex(XColor *c);
+
+/** Extract the RGB components from a RGB linear pixel value.
+ * This does the reverse of GetColorIndex.
+ * @param c The structure containing the rgb values and pixel value.
+ */
 void GetColorFromIndex(XColor *c);
 
 #ifdef USE_XFT

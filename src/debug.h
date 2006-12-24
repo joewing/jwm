@@ -27,13 +27,15 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#ifdef HAVE_ALLOCA_H
-#	include <alloca.h>
-#endif
+#ifndef MAKE_DEPEND
+#	include <stdarg.h>
+#	include <stdio.h>
+#	include <stdlib.h>
+#	include <string.h>
+#	ifdef HAVE_ALLOCA_H
+#		include <alloca.h>
+#	endif
+#endif /* MAKE_DEPEND */
 
 void Debug(const char *str, ...);
 
@@ -84,7 +86,7 @@ void Debug(const char *str, ...);
 	void *DEBUG_Reallocate(void*, size_t, const char*, unsigned int);
 	void DEBUG_Release(void**, const char*, unsigned int);
 
-#else
+#else /* DEBUG */
 
 #	define Assert( x )           ((void)0)
 
@@ -98,7 +100,7 @@ void Debug(const char *str, ...);
 #	define Reallocate( x, y )    realloc( (x), (y) )
 #	define Release( x )          free( (x) )
 
-#endif
+#endif /* DEBUG */
 
-#endif
+#endif /* DEBUG_H */
 

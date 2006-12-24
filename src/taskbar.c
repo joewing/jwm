@@ -1,5 +1,11 @@
-/***************************************************************************
- ***************************************************************************/
+/**
+ * @file taskbar.c
+ * @author Joe Wingbermuehle
+ * @date 2005-2006
+ *
+ * @brief Task list tray component.
+ *
+ */
 
 #include "jwm.h"
 #include "taskbar.h"
@@ -72,15 +78,13 @@ static void ShowTaskWindowMenu(TaskBarType *bar, Node *np);
 
 static void SetSize(TrayComponentType *cp, int width, int height);
 static void Create(TrayComponentType *cp);
-static void Destroy(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 static void ProcessTaskButtonEvent(TrayComponentType *cp,
 	int x, int y, int mask);
 static void ProcessTaskMotionEvent(TrayComponentType *cp,
 	int x, int y, int mask);
 
-/***************************************************************************
- ***************************************************************************/
+/** Initialize task bar data. */
 void InitializeTaskBar() {
 	bars = NULL;
 	taskBarNodes = NULL;
@@ -88,16 +92,13 @@ void InitializeTaskBar() {
 	insertMode = INSERT_RIGHT;
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Startup the task bar. */
 void StartupTaskBar() {
-	minimizedPixmap = JXCreatePixmapFromBitmapData(display, rootWindow,
-		minimized_bitmap, 4, 4, colors[COLOR_TASK_FG],
-		colors[COLOR_TASK_BG], rootDepth);
+	minimizedPixmap = XCreateBitmapFromData(display, rootWindow,
+		minimized_bitmap, 4, 4);
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Shutdown the task bar. */
 void ShutdownTaskBar() {
 
 	TaskBarType *bp;
@@ -109,8 +110,7 @@ void ShutdownTaskBar() {
 	JXFreePixmap(display, minimizedPixmap);
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Destroy task bar data. */
 void DestroyTaskBar() {
 
 	TaskBarType *bp;
@@ -123,8 +123,7 @@ void DestroyTaskBar() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Create a new task bar tray component. */
 TrayComponentType *CreateTaskBar() {
 
 	TrayComponentType *cp;
@@ -147,7 +146,6 @@ TrayComponentType *CreateTaskBar() {
 
 	cp->SetSize = SetSize;
 	cp->Create = Create;
-	cp->Destroy = Destroy;
 	cp->Resize = Resize;
 	cp->ProcessButtonEvent = ProcessTaskButtonEvent;
 	cp->ProcessMotionEvent = ProcessTaskMotionEvent;
@@ -156,8 +154,7 @@ TrayComponentType *CreateTaskBar() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Set the size of a task bar tray component. */
 void SetSize(TrayComponentType *cp, int width, int height) {
 
 	TaskBarType *tp;
@@ -180,8 +177,7 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Initialize a task bar tray component. */
 void Create(TrayComponentType *cp) {
 
 	TaskBarType *tp;
@@ -205,13 +201,12 @@ void Create(TrayComponentType *cp) {
 		rootDepth);
 	tp->buffer = cp->pixmap;
 
-	JXSetForeground(display, rootGC, colors[COLOR_TASK_BG]);
+	JXSetForeground(display, rootGC, colors[COLOR_TRAY_BG]);
 	JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Resize a task bar tray component. */
 void Resize(TrayComponentType *cp) {
 
 	TaskBarType *tp;
@@ -239,15 +234,9 @@ void Resize(TrayComponentType *cp) {
 		rootDepth);
 	tp->buffer = cp->pixmap;
 
-	JXSetForeground(display, rootGC, colors[COLOR_TASK_BG]);
+	JXSetForeground(display, rootGC, colors[COLOR_TRAY_BG]);
 	JXFillRectangle(display, cp->pixmap, rootGC,
 		0, 0, cp->width, cp->height);
-}
-
-/***************************************************************************
- ***************************************************************************/
-void Destroy(TrayComponentType *cp) {
-
 }
 
 /***************************************************************************
@@ -492,7 +481,7 @@ void Render(const TaskBarType *bp) {
 	width -= x;
 	y = 1;
 
-	JXSetForeground(display, gc, colors[COLOR_TASK_BG]);
+	JXSetForeground(display, gc, colors[COLOR_TRAY_BG]);
 	JXFillRectangle(display, buffer, gc, 0, 0, width, height);
 
 	itemCount = GetItemCount();
@@ -546,8 +535,12 @@ void Render(const TaskBarType *bp) {
 			}
 
 			if(tp->client->state.status & STAT_MINIMIZED) {
-				JXCopyArea(display, minimizedPixmap, buffer, gc,
-					0, 0, 4, 4, x + 3, y + bp->itemHeight - 7);
+				JXSetForeground(display, gc, colors[COLOR_TASK_FG]);
+				JXSetClipMask(display, gc, minimizedPixmap);
+				JXSetClipOrigin(display, gc, x + 3, y + bp->itemHeight - 7);
+				JXFillRectangle(display, buffer, gc,
+					x + 3, y + bp->itemHeight - 7, 4, 4);
+				JXSetClipMask(display, gc, None);
 			}
 
 			if(bp->layout == LAYOUT_HORIZONTAL) {

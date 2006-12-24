@@ -147,20 +147,50 @@ void StartupHints();
 void ShutdownHints();
 void DestroyHints();
 
+/** Determine the current desktop. */
 void ReadCurrentDesktop();
 
+/** Read client protocols
+ * @param np The client.
+ */
 void ReadClientProtocols(struct ClientNode *np);
 
+/** Read a client's name.
+ * @param np The client.
+ */
 void ReadWMName(struct ClientNode *np);
+
+/** Read a client's class.
+ * @param np The client.
+ */
 void ReadWMClass(struct ClientNode *np);
+
+/** Read normal hints for a client.
+ * @param np The client.
+ */
 void ReadWMNormalHints(struct ClientNode *np);
+
 ClientProtocolType ReadWMProtocols(Window w);
+
+/** Read colormap information for a client.
+ * @param np The client.
+ */
 void ReadWMColormaps(struct ClientNode *np);
 
+/** Determine the layer of a client.
+ * @param np The client.
+ */
 void ReadWinLayer(struct ClientNode *np);
 
+/** Read the current state of a window.
+ * @param win The window.
+ * @return The window state.
+ */
 ClientState ReadWindowState(Window win);
 
+/** Set the state of a client window.
+ * @param np The client.
+ */
 void WriteState(struct ClientNode *np);
 
 int GetCardinalAtom(Window window, AtomType atom, unsigned long *value);

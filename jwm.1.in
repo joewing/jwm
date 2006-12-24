@@ -657,50 +657,78 @@ Causes windows in this group to have a title bar.
 .RE
 .RE
 
-.B "BORDER STYLE"
+.B "WINDOW STYLE"
 .RS
-The \fBBorderStyle\fP tag controls the look of window borders.
+The \fBWindowStyle\fP tag controls the look of window borders.
 Within this tag, the following tags are supported:
 .P
 .B Font
 .RS
-The font used for title bars. See Fonts section for more information
+The font used for title bars. See the \fBFONTS\fP section for more information.
 .RE
 .P
 .B Width
 .RS
-The width of window borders in pixels. The default is 5, the minimum is 3,
+The width of window borders in pixels. The default is 4, the minimum is 1,
 and the maximum is 32.
 .RE
 .P
 .B Height
 .RS
-The height of window title bars in pixels. The default is 21, the minimum
+The height of window title bars in pixels. The default is 20, the minimum
 is 2, and the maximum is 64.
 .RE
 .P
-.B Foreground
+.B Active
 .RS
-The color of text on inactive title bars. See the \fBCOLORS\fP section for
-more information.
+The colors used for the active window. See the \fBCOLORS\fP section for
+more information on colors. The following tags are supported:
+.P
+.B Text
+.RS
+The color of text on the title bar.
 .RE
 .P
-.B Background
+.B Title
 .RS
-The border background color for inactive borders. See the \fBCOLORS\fP
-section for more information.
+The color of the title bar (gradients are supported).
 .RE
 .P
-.B ActiveForeground
+.B Corner
 .RS
-The color of text on active title bars. See the \fBCOLORS\fP section for
-more information.
+The color of the corner handles.
 .RE
 .P
-.B ActiveBackground
+.B Outline
 .RS
-The border background color for active borders. See the \fBCOLORS\fP
-section for more information.
+The color of the window outline.
+.RE
+.RE
+.P
+.B Inactive
+.RS
+The colors used for inactive windows. See the \fBCOLORS\fP section for
+more information on colors. The following tags are supported:
+.P
+.B Text
+.RS
+The color of text on the title bar.
+.RE
+.P
+.B Title
+.RS
+The color of the title bar (gradients are supported).
+.RE
+.P
+.B Corner
+.RS
+The color of the corner handles.
+.RE
+.P
+.B Outline
+.RS
+The color of the window outline.
+.RE
 .RE
 .RE
 
@@ -749,14 +777,14 @@ information.
 .P
 .B Foreground
 .RS
-The foreground color of the task list. See the \fBCOLORS\fP section for
-more information.
+The foreground color of the task list items.
+See the \fBCOLORS\fP section for more information.
 .RE
 .P
 .B Background
 .RS
-The background color of the task list. See the \fBCOLORS\fP section for
-more information.
+The background color of the task list items (gradients are supported).
+See the \fBCOLORS\fP section for more information.
 .RE
 .P
 .B ActiveForeground
@@ -767,8 +795,8 @@ section for more information.
 .P
 .B ActiveBackground
 .RS
-The background color of an active item on the task list. See the \fBCOLORS\fP
-section for more information.
+The background color of an active item on the task list
+(gradients are supported). See the \fBCOLORS\fP section for more information.
 .RE
 .RE
 
@@ -854,14 +882,14 @@ more information.
 .P
 .B ActiveForeground
 .RS
-The text color of active menu items. See the \fBCOLORS\fP section for more
-information.
+The text color of active menu items.
+See the \fBCOLORS\fP section for more information.
 .RE
 .P
 .B ActiveBackground
 .RS
-Text background color of active menu items. See the \fBCOLORS\fP section
-for more information.
+Text background color of active menu items (gradients are supported).
+See the \fBCOLORS\fP section for more information.
 .RE
 .RE
 
@@ -919,6 +947,8 @@ support, an XFT font string.
 Colors for various parts of JWM are specified within specific tags
 (discribed above). Colors may either be hex triplets in RGB format
 (for example, #FF0000 is red) or by a name recognized by the X server.
+For components that support gradients, two colors may be specified
+separated by a colon.
 .RE
 
 .B ICONS

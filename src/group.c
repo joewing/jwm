@@ -1,7 +1,11 @@
-/****************************************************************************
- * Functions for handling window groups.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file group.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Functions for handling window groups.
+ *
+ */
 
 #include "jwm.h"
 #include "group.h"
@@ -13,23 +17,27 @@
 #include "main.h"
 #include "misc.h"
 
+/** What part of the window to match. */
 typedef enum {
-	MATCH_NAME,
-	MATCH_CLASS
+	MATCH_NAME,  /**< Match the window name. */
+	MATCH_CLASS  /**< Match the window class. */
 } MatchType;
 
+/** List of match patterns for a group. */
 typedef struct PatternListType {
 	char *pattern;
 	MatchType match;
 	struct PatternListType *next;
 } PatternListType;
 
+/** List of options for a group. */
 typedef struct OptionListType {
 	OptionType option;
 	char *value;
 	struct OptionListType *next;
 } OptionListType;
 
+/** List of groups. */
 typedef struct GroupType {
 	PatternListType *patterns;
 	OptionListType *options;
@@ -44,23 +52,19 @@ static void AddPattern(PatternListType **lp, const char *pattern,
 	MatchType match);
 static void ApplyGroup(const GroupType *gp, ClientNode *np);
 
-/****************************************************************************
- ****************************************************************************/
+/** Initialize group data. */
 void InitializeGroups() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Startup group support. */
 void StartupGroups() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Shutdown group support. */
 void ShutdownGroups() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Destroy group data. */
 void DestroyGroups() {
 
 	GroupType *gp;
@@ -75,8 +79,7 @@ void DestroyGroups() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Release a group pattern list. */
 void ReleasePatternList(PatternListType *lp) {
 
 	PatternListType *tp;
@@ -90,8 +93,7 @@ void ReleasePatternList(PatternListType *lp) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Release a group option list. */
 void ReleaseOptionList(OptionListType *lp) {
 
 	OptionListType *tp;
@@ -107,8 +109,7 @@ void ReleaseOptionList(OptionListType *lp) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Create an empty group. */
 GroupType *CreateGroup() {
 	GroupType *tp;
 
@@ -121,8 +122,7 @@ GroupType *CreateGroup() {
 	return tp;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Add a window class to a group. */
 void AddGroupClass(GroupType *gp, const char *pattern) {
 
 	Assert(gp);
@@ -135,8 +135,7 @@ void AddGroupClass(GroupType *gp, const char *pattern) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Add a window name to a group. */
 void AddGroupName(GroupType *gp, const char *pattern) {
 
 	Assert(gp);
@@ -149,8 +148,7 @@ void AddGroupName(GroupType *gp, const char *pattern) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Add a pattern to a pattern list. */
 void AddPattern(PatternListType **lp, const char *pattern, MatchType match) {
 
 	PatternListType *tp;
@@ -167,8 +165,7 @@ void AddPattern(PatternListType **lp, const char *pattern, MatchType match) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Add an option to a group. */
 void AddGroupOption(GroupType *gp, OptionType option) {
 
 	OptionListType *lp;
@@ -181,8 +178,7 @@ void AddGroupOption(GroupType *gp, OptionType option) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Add an option (with value) to a group. */
 void AddGroupOptionValue(GroupType *gp, OptionType option,
 	const char *value) {
 
@@ -198,8 +194,7 @@ void AddGroupOptionValue(GroupType *gp, OptionType option,
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Apply groups to a client. */
 void ApplyGroups(ClientNode *np) {
 
 	PatternListType *lp;
@@ -227,8 +222,7 @@ void ApplyGroups(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Apply a group to a client. */
 void ApplyGroup(const GroupType *gp, ClientNode *np) {
 
 	OptionListType *lp;

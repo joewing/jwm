@@ -35,7 +35,6 @@
 #include "place.h"
 #include "clock.h"
 #include "dock.h"
-#include "theme.h"
 #include "misc.h"
 
 Display *display = NULL;
@@ -324,7 +323,6 @@ void Initialize() {
 	InitializeScreens();
 	InitializeSwallow();
 	InitializeTaskBar();
-	InitializeThemes();
 	InitializeTray();
 	InitializeTrayButtons();
 }
@@ -350,8 +348,6 @@ void Startup() {
 	StartupFonts();
 	StartupCursors();
 	StartupOutline();
-
-	StartupThemes();
 
 	StartupPager();
 	StartupClock();
@@ -414,7 +410,6 @@ void Shutdown() {
 	ShutdownClock();
 	ShutdownBorders();
 	ShutdownClients();
-	ShutdownThemes();
 	ShutdownIcons();
 	ShutdownCursors();
 	ShutdownFonts();
@@ -459,7 +454,6 @@ void Destroy() {
 	DestroyScreens();
 	DestroySwallow();
 	DestroyTaskBar();
-	DestroyThemes();
 	DestroyTray();
 	DestroyTrayButtons();
 }

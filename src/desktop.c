@@ -1,5 +1,11 @@
-/***************************************************************************
- ***************************************************************************/
+/**
+ * @file desktop.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Header for the desktop management functions.
+ *
+ */
 
 #include "jwm.h"
 #include "desktop.h"
@@ -16,13 +22,11 @@ char **desktopNames = NULL;
 
 static int showingDesktop;
 
-/***************************************************************************
- ***************************************************************************/
+/** Initialize desktop data. */
 void InitializeDesktops() {
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Startup desktop support. */
 void StartupDesktops() {
 
 	unsigned int x;
@@ -44,13 +48,11 @@ void StartupDesktops() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Shutdown desktop support. */
 void ShutdownDesktops() {
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Release desktop data. */
 void DestroyDesktops() {
 
 	unsigned int x;
@@ -65,14 +67,12 @@ void DestroyDesktops() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Change to the next desktop. */
 void NextDesktop() {
 	ChangeDesktop((currentDesktop + 1) % desktopCount);
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Change to the previous desktop. */
 void PreviousDesktop() {
 	if(currentDesktop > 0) {
 		ChangeDesktop(currentDesktop - 1);
@@ -81,8 +81,7 @@ void PreviousDesktop() {
 	}
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Change to the specified desktop. */
 void ChangeDesktop(unsigned int desktop) {
 
 	ClientNode *np;
@@ -121,8 +120,7 @@ void ChangeDesktop(unsigned int desktop) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Create a desktop menu. */
 Menu *CreateDesktopMenu(unsigned int mask) {
 
 	Menu *menu;
@@ -163,8 +161,7 @@ Menu *CreateDesktopMenu(unsigned int mask) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Toggle the "show desktop" state. */
 void ShowDesktop() {
 
 	ClientNode *np;
@@ -192,8 +189,7 @@ void ShowDesktop() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Set the number of desktops to use. */
 void SetDesktopCount(const char *str) {
 
 	if(!str) {
@@ -209,8 +205,7 @@ void SetDesktopCount(const char *str) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Set the name for a desktop. */
 void SetDesktopName(unsigned int desktop, const char *str) {
 
 	unsigned int x;
@@ -235,5 +230,4 @@ void SetDesktopName(unsigned int desktop, const char *str) {
 	desktopNames[desktop] = CopyString(str);
 
 }
-
 

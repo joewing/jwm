@@ -611,9 +611,10 @@ void UpdateMenu(Menu *menu) {
 		DrawButton(&button);
 
 		if(ip->submenu) {
+			/* TODO */
 			pixmap = JXCreatePixmapFromBitmapData(display, menu->window,
 				menu_bitmap, 4, 7, colors[COLOR_MENU_ACTIVE_FG],
-				colors[COLOR_MENU_ACTIVE_BG], rootDepth);
+				colors[COLOR_MENU_ACTIVE_BG1], rootDepth);
 			JXCopyArea(display, pixmap, menu->window, rootGC, 0, 0, 4, 7,
 				menu->width - 9,
 				menu->offsets[menu->currentIndex] + menu->itemHeight / 2 - 4);

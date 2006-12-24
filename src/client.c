@@ -333,8 +333,7 @@ void ShadeClient(ClientNode *np) {
 	np->state.status &= ~STAT_SDESKTOP;
 	np->state.status &= ~STAT_MAPPED;
 
-	JXResizeWindow(display, np->parent, np->width + east + west,
-		north + south);
+	JXResizeWindow(display, np->parent, np->width + east + west, north);
 
 	WriteState(np);
 
@@ -349,17 +348,12 @@ void ShadeClient(ClientNode *np) {
 /** Unshade a client. */
 void UnshadeClient(ClientNode *np) {
 
-	int bsize;
+	int north, south, east, west;
 
 	Assert(np);
 
 	if(!(np->state.border & BORDER_TITLE)) {
 		return;
-	}
-	if(np->state.border & BORDER_OUTLINE) {
-		bsize = borderWidth;
-	} else {
-		bsize = 0;
 	}
 
 	if(np->state.status & STAT_SHADED) {
@@ -368,8 +362,9 @@ void UnshadeClient(ClientNode *np) {
 		np->state.status &= ~STAT_SHADED;
 	}
 
-	JXResizeWindow(display, np->parent, np->width + 2 * bsize,
-		np->height + titleHeight + 2 * bsize);
+	GetBorderSize(np, &north, &south, &east, &west);
+	JXResizeWindow(display, np->parent,
+		np->width + west + east, np->height + north + south);
 
 	WriteState(np);
 
@@ -1231,6 +1226,7 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	XSetWindowAttributes attr;
 	int attrMask;
 	int x, y, width, height;
+	int north, south, east, west;
 
 	Assert(np);
 
@@ -1271,22 +1267,17 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	attr.do_not_propagate_mask = ButtonPressMask | ButtonReleaseMask;
 
 	attrMask |= CWBackPixel;
-	attr.background_pixel = colors[COLOR_BORDER_BG];
+	attr.background_pixel = colors[COLOR_TITLE_BG2];
 
 	x = np->x;
 	y = np->y;
 	width = np->width;
 	height = np->height;
-	if(np->state.border & BORDER_OUTLINE) {
-		x -= borderWidth;
-		y -= borderWidth;
-		width += borderWidth * 2;
-		height += borderWidth * 2;
-	}
-	if(np->state.border & BORDER_TITLE) {
-		y -= titleHeight;
-		height += titleHeight;
-	}
+	GetBorderSize(np, &north, &south, &east, &west);
+	x -= west;
+	y -= north;
+	width += east + west;
+	height += north + south;
 
 	/* Create the frame window. */
 	np->parent = JXCreateWindow(display, rootWindow,
@@ -1305,19 +1296,7 @@ void ReparentClient(ClientNode *np, int notOwner) {
 	JXSetWindowBorderWidth(display, np->window, 0);
 
 	/* Reparent the client window. */
-	if((np->state.border & BORDER_OUTLINE)
-		&& (np->state.border & BORDER_TITLE)) {
-		JXReparentWindow(display, np->window, np->parent,
-			borderWidth, borderWidth + titleHeight);
-	} else if(np->state.border & BORDER_OUTLINE) {
-		JXReparentWindow(display, np->window, np->parent,
-			borderWidth, borderWidth);
-	} else if(np->state.border & BORDER_TITLE) {
-		JXReparentWindow(display, np->window, np->parent,
-			0, titleHeight);
-	} else {
-		JXReparentWindow(display, np->window, np->parent, 0, 0);
-	}
+	JXReparentWindow(display, np->window, np->parent, west, north);
 
 #ifdef USE_SHAPE
 	if(haveShape) {

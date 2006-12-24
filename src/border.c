@@ -1,7 +1,7 @@
-/****************************************************************************
+/**
  * Functions for dealing with window borders.
  * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+ */
 
 #include "jwm.h"
 #include "border.h"
@@ -14,19 +14,15 @@
 
 typedef enum {
 	BP_CLOSE,
-	BP_ACTIVE_CLOSE,
 	BP_MINIMIZE,
-	BP_ACTIVE_MINIMIZE,
 	BP_MAXIMIZE,
-	BP_ACTIVE_MAXIMIZE,
 	BP_MAXIMIZE_ACTIVE,
-	BP_ACTIVE_MAXIMIZE_ACTIVE,
 	BP_COUNT
 } BorderPixmapType;
 
 typedef unsigned char BorderPixmapDataType[32];
 
-static BorderPixmapDataType bitmaps[BP_COUNT >> 1] = {
+static BorderPixmapDataType bitmaps[BP_COUNT] = {
 
 	/* Close */
 	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x10, 0x38, 0x38, 0x70, 0x1C,
@@ -55,38 +51,25 @@ static Pixmap pixmaps[BP_COUNT];
 static Region borderRegion = NULL;
 static GC borderGC;
 
-static void DrawBorderHelper(const ClientNode *np,
-	unsigned int width, unsigned int height, int drawIcon);
-static void DrawButtonBorder(const ClientNode *np, int offset,
-	Pixmap canvas, GC gc);
-static int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc);
+static void DrawBorderHelper(const ClientNode *np, int drawIcon);
+static void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc);
+static int GetButtonCount(const ClientNode *np);
 
-/****************************************************************************
- ****************************************************************************/
+/** Initialize non-server resources. */
 void InitializeBorders() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Initialize server resources. */
 void StartupBorders() {
 
 	XGCValues gcValues;
 	unsigned long gcMask;
-	long fg, bg;
 	int x;
 
 	for(x = 0; x < BP_COUNT; x++) {
 
-		if(x & 1) {
-			fg = colors[COLOR_BORDER_ACTIVE_FG];
-			bg = colors[COLOR_BORDER_ACTIVE_BG];
-		} else {
-			fg = colors[COLOR_BORDER_FG];
-			bg = colors[COLOR_BORDER_BG];
-		}
-
-		pixmaps[x] = JXCreatePixmapFromBitmapData(display, rootWindow,
-			(char*)bitmaps[x >> 1], 16, 16, fg, bg, rootDepth);
+		pixmaps[x] = XCreateBitmapFromData(display, rootWindow,
+			(char*)bitmaps[x], 16, 16);
 
 	}
 
@@ -96,8 +79,7 @@ void StartupBorders() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Release server resources. */
 void ShutdownBorders() {
 
 	int x;
@@ -110,66 +92,67 @@ void ShutdownBorders() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Release non-server resources. */
 void DestroyBorders() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Get the size of the icon to display on a window. */
 int GetBorderIconSize() {
-	return titleHeight - 4;
+	return titleHeight - 6;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Determine the border action to take given coordinates. */
 BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 
-	int north;
+	int north, south, east, west;
 	int offset;
-	int height, width;
-	int bsize;
 
 	Assert(np);
 
-	if(np->state.border & BORDER_OUTLINE) {
-		bsize = borderWidth;
-	} else {
-		bsize = 0;
-	}
+	GetBorderSize(np, &north, &south, &east, &west);
 
+	/* Check title bar actions. */
 	if(np->state.border & BORDER_TITLE) {
 
-		if(y > bsize && y <= bsize + titleHeight) {
+		/* Check buttons on the title bar. */
+		if(y > 0 && y <= titleHeight) {
+
+			/* Menu button. */
 			if(np->icon && np->width >= titleHeight) {
-				if(x > bsize && x < bsize + titleHeight) {
+				if(x > 0 && x <= titleHeight) {
 					return BA_MENU;
 				}
 			}
-			offset = np->width + bsize - titleHeight;
-			if((np->state.border & BORDER_CLOSE)
-				&& offset > bsize + titleHeight) {
+
+			/* Close button. */
+			offset = np->width + west + east - titleHeight;
+			if((np->state.border & BORDER_CLOSE) && offset > titleHeight) {
 				if(x > offset && x < offset + titleHeight) {
 					return BA_CLOSE;
 				}
 				offset -= titleHeight;
 			}
-			if((np->state.border & BORDER_MAX)
-				&& offset > bsize + titleHeight) {
+
+			/* Maximize button. */
+			if((np->state.border & BORDER_MAX) && offset > titleHeight) {
 				if(x > offset && x < offset + titleHeight) {
 					return BA_MAXIMIZE;
 				}
 				offset -= titleHeight;
 			}
-			if((np->state.border & BORDER_MIN) && offset > bsize + titleHeight) {
+
+			/* Minimize button. */
+			if((np->state.border & BORDER_MIN) && offset > titleHeight) {
 				if(x > offset && x < offset + titleHeight) {
 					return BA_MINIMIZE;
 				}
 			}
+
 		}
 
-		if(y >= bsize && y <= bsize + titleHeight) {
-			if(x >= bsize && x <= np->width + bsize) {
+		/* Check for move. */
+		if(y > 0 && y <= titleHeight) {
+			if(x > 0 && x < np->width + east + west) {
 				if(np->state.border & BORDER_MOVE) {
 					return BA_MOVE;
 				} else {
@@ -178,102 +161,86 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 			}
 		}
 
-		north = bsize + titleHeight;
-	} else {
-		north = bsize;
 	}
 
+	/* Now we check resize actions.
+	 * There is no need to go further if resizing isn't allowed. */
 	if(!(np->state.border & BORDER_RESIZE)) {
 		return BA_NONE;
 	}
 
-	width = np->width;
-
-	if(np->state.status & STAT_SHADED) {
-		if(x < bsize) {
-			return BA_RESIZE_W | BA_RESIZE;
-		} else if(x >= width + bsize) {
-			return BA_RESIZE_E | BA_RESIZE;
-		} else {
-			return BA_NONE;
+	/* Check south east/west resizing. */
+	if(np->width >= titleHeight * 2 && np->height >= titleHeight * 2) {
+		if(y > np->height + north - titleHeight) {
+			if(x < titleHeight) {
+				return BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE;
+			} else if(x > np->width + west - titleHeight) {
+				return BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE;
+			}
 		}
 	}
 
-	height = np->height;
-
-	if(width >= titleHeight * 2 && height >= titleHeight * 2) {
-		if(x < bsize + titleHeight && y < titleHeight + bsize) {
-			return  BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE;
-		} else if(x < titleHeight + bsize
-			&& y - north >= height - titleHeight) {
-			return BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE;
-		} else if(x - bsize >= width - titleHeight
-			&& y < titleHeight + bsize) {
-			return BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE;
-		} else if(x - bsize >= width - titleHeight
-			&& y - north >= height - titleHeight) {
-			return BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE;
-		}
-	}
-	if(x < bsize) {
+	/* Check east, west, and south resizing. */
+	if(x <= west) {
 		return BA_RESIZE_W | BA_RESIZE;
-	} else if(x >= width + bsize) {
+	} else if(x >= np->width + west) {
 		return BA_RESIZE_E | BA_RESIZE;
-	} else if(y < bsize) {
-		return BA_RESIZE_N | BA_RESIZE;
-	} else if(y >= height) {
+	} else if(y >= np->height + north) {
 		return BA_RESIZE_S | BA_RESIZE;
 	} else {
 		return BA_NONE;
 	}
+
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Draw a client border. */
 void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
 
 	XRectangle rect;
-	unsigned int width;
-	unsigned int height;
-	int bsize;
 	int drawIcon;
 	int temp;
 
 	Assert(np);
 
+	/* Don't draw any more if we are shutting down. */
 	if(shouldExit) {
 		return;
 	}
 
+	/* Must be either mapped or shaded to have a border. */
 	if(!(np->state.status & (STAT_MAPPED | STAT_SHADED))) {
 		return;
 	}
+
+	/* Hidden and fullscreen windows don't get borders. */
 	if(np->state.status & (STAT_HIDDEN | STAT_FULLSCREEN)) {
 		return;
 	}
 
-	if(np->state.border & BORDER_OUTLINE) {
-		bsize = borderWidth;
-	} else {
-		bsize = 0;
-	}
-
-	if(bsize == 0 && !(np->state.border & BORDER_TITLE)) {
+	/* Return if there is no border. */
+	if(!(np->state.border & (BORDER_TITLE | BORDER_OUTLINE))) {
 		return;
 	}
 
 	if(expose) {
 
+		/* An expose event caused this draw.
+		 * Only draw what needs to be drawn to reduce flicker.
+		 */
+
+		/* Create the region to use if needed. */
 		if(!borderRegion) {
 			borderRegion = XCreateRegion();
 		}
 
+		/* Add the exposed area to the region. */
 		rect.x = (short)expose->x;
 		rect.y = (short)expose->y;
 		rect.width = (unsigned short)expose->width;
 		rect.height = (unsigned short)expose->height;
 		XUnionRectWithRegion(&rect, borderRegion, borderRegion);
 
+		/* We return now if there are more expose events coming. */
 		if(expose->count) {
 			return;
 		}
@@ -286,43 +253,36 @@ void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
 		 * to be redrawn, we clear the area and redraw the whole icon.
 		 */
 		drawIcon = 0;
-		temp = GetBorderIconSize();
-		rect.x = (short)bsize + 2;
-		rect.y = (short)(bsize + titleHeight / 2 - temp / 2);
-		rect.width = (unsigned short)temp;
-		rect.height = (unsigned short)temp;
-		if(XRectInRegion(borderRegion, rect.x, rect.y, rect.width, rect.height)
-			!= RectangleOut) {
+		if(np->icon && (np->state.border & BORDER_TITLE)) {
+			temp = GetBorderIconSize();
+			rect.x = 3;
+			rect.y = (short)(titleHeight / 2 - temp / 2);
+			rect.width = (unsigned short)temp;
+			rect.height = (unsigned short)temp;
+			if(XRectInRegion(borderRegion,
+				rect.x, rect.y, rect.width, rect.height) != RectangleOut) {
 
-			drawIcon = 1;
-			XUnionRectWithRegion(&rect, borderRegion, borderRegion);
+				drawIcon = 1;
+				XUnionRectWithRegion(&rect, borderRegion, borderRegion);
 
-		} else {
-
-			drawIcon = 0;
-
+			}
 		}
 
+		/* Time to redraw the border. Set the clip mask. */
 		XSetRegion(display, borderGC, borderRegion);
 
 	} else {
 
+		/* An expose event did not occur. Redraw everything. */
 		drawIcon = 1;
 		XSetClipMask(display, borderGC, None);
 
 	}
 
-	if(np->state.status & STAT_SHADED) {
-		height = titleHeight + bsize * 2;
-	} else if(np->state.border & BORDER_TITLE) {
-		height = np->height + titleHeight + bsize * 2;
-	} else {
-		height = np->height + 2 * bsize;
-	}
-	width = np->width + bsize * 2;
+	/* Do the actual drawing. */
+	DrawBorderHelper(np, drawIcon);
 
-	DrawBorderHelper(np, width, height, drawIcon);
-
+	/* We no longer need the region, release it. */
 	if(expose) {
 		XDestroyRegion(borderRegion);
 		borderRegion = NULL;
@@ -330,329 +290,282 @@ void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
-void DrawBorderHelper(const ClientNode *np,
-	unsigned int width, unsigned int height, int drawIcon) {
+/** Helper method for drawing borders. */
+void DrawBorderHelper(const ClientNode *np, int drawIcon) {
 
 	ColorType borderTextColor;
-	long borderPixel, borderTextPixel;
-	long pixelUp, pixelDown;
+	long borderTextPixel;
+
+	long titleColor1, titleColor2;
+	long cornerColor;
+	long outlineColor;
+
+	int north, south, east, west;
+	unsigned int width, height;
+	int iconSize;
+
 	int buttonCount, titleWidth;
 	Pixmap canvas;
 	GC gc;
-	int iconSize;
-	int bsize;
 
 	Assert(np);
 
 	iconSize = GetBorderIconSize();
+	GetBorderSize(np, &north, &south, &east, &west);
+	width = np->width + east + west;
+	height = np->height + north + south;
 
+	/* Determine the colors and gradients to use. */
 	if(np->state.status & STAT_ACTIVE) {
-		borderTextColor = COLOR_BORDER_ACTIVE_FG;
-		borderPixel = colors[COLOR_BORDER_ACTIVE_BG];
-		borderTextPixel = colors[COLOR_BORDER_ACTIVE_FG];
-		pixelUp = colors[COLOR_BORDER_ACTIVE_UP];
-		pixelDown = colors[COLOR_BORDER_ACTIVE_DOWN];
-	} else {
-		borderTextColor = COLOR_BORDER_FG;
-		borderPixel = colors[COLOR_BORDER_BG];
-		borderTextPixel = colors[COLOR_BORDER_FG];
-		pixelUp = colors[COLOR_BORDER_UP];
-		pixelDown = colors[COLOR_BORDER_DOWN];
-	}
 
-	if(np->state.border & BORDER_OUTLINE) {
-		bsize = borderWidth;
+		borderTextColor = COLOR_TITLE_ACTIVE_FG;
+		borderTextPixel = colors[COLOR_TITLE_ACTIVE_FG];
+		cornerColor = colors[COLOR_CORNER_ACTIVE_BG];
+		titleColor1 = colors[COLOR_TITLE_ACTIVE_BG1];
+		titleColor2 = colors[COLOR_TITLE_ACTIVE_BG2];
+		outlineColor = colors[COLOR_BORDER_ACTIVE_LINE];
+
 	} else {
-		bsize = 0;
+
+		borderTextColor = COLOR_TITLE_FG;
+		borderTextPixel = colors[COLOR_TITLE_FG];
+		cornerColor = colors[COLOR_CORNER_BG];
+		titleColor1 = colors[COLOR_TITLE_BG1];
+		titleColor2 = colors[COLOR_TITLE_BG2];
+		outlineColor = colors[COLOR_BORDER_LINE];
+
 	}
 
 	canvas = np->parent;
 	gc = borderGC;
 
-	/* Set the window background to reduce perceived flicker on the
-	 * parts of the window that will need to be redrawn. */
-	JXSetWindowBackground(display, canvas, borderPixel);
+	/* Set the window background color (to reduce flickering). */
+	JXSetWindowBackground(display, canvas, titleColor2);
 
-	JXSetForeground(display, gc, borderPixel);
-	JXFillRectangle(display, canvas, gc, 0, 0, width + 1, height + 1);
+	/* Draw the outside border (clear the window with the right color). */
+	JXSetForeground(display, gc, titleColor2);
+	JXFillRectangle(display, canvas, gc, 0, 0, width, height);
 
-	buttonCount = DrawBorderButtons(np, canvas, gc);
-	titleWidth = width - (titleHeight + 2) * buttonCount - bsize
-		- (titleHeight + bsize + 4) - 2;
+	/* Determine how many pixels may be used for the title. */
+	buttonCount = GetButtonCount(np);
+	titleWidth = width;
+	titleWidth -= titleHeight * buttonCount;
+	titleWidth -= iconSize + 4 + 4;
 
+	/* Draw the top part (either a title or north border. */
 	if(np->state.border & BORDER_TITLE) {
 
+		/* Draw a title bar. */
+		DrawHorizontalGradient(canvas, gc, titleColor1, titleColor2,
+			1, 1, width - 2, titleHeight - 2);
+
+		/* Draw the icon. */
 		if(np->icon && np->width >= titleHeight && drawIcon) {
-			PutIcon(np->icon, canvas, bsize + 2,
-				bsize + titleHeight / 2 - iconSize / 2,
+			PutIcon(np->icon, canvas, 3, titleHeight / 2 - iconSize / 2,
 				iconSize, iconSize);
 		}
 
 		if(np->name && np->name[0] && titleWidth > 0) {
 			RenderString(canvas, FONT_BORDER, borderTextColor,
-				titleHeight + bsize + 4, bsize + titleHeight / 2
-				- GetStringHeight(FONT_BORDER) / 2,
+				iconSize + 3 + 2,
+				titleHeight / 2 - GetStringHeight(FONT_BORDER) / 2,
 				titleWidth, borderRegion, np->name);
 		}
 
 	}
 
-	if(np->state.border & BORDER_OUTLINE) {
+	/* Draw the east, west, and south borders. */
+	if((np->state.border & BORDER_OUTLINE)
+		&& !(np->state.status & STAT_SHADED)) {
 
-		/* Draw title outline */
-		JXSetForeground(display, gc, pixelUp);
-		JXDrawLine(display, canvas, gc, borderWidth, borderWidth,
-			width - borderWidth - 1, borderWidth);
-		JXDrawLine(display, canvas, gc, borderWidth, borderWidth + 1,
-			borderWidth, titleHeight + borderWidth - 1);
-
-		JXSetForeground(display, gc, pixelDown);
-		JXDrawLine(display, canvas, gc, borderWidth + 1,
-			titleHeight + borderWidth - 1, width - borderWidth,
-			titleHeight + borderWidth - 1);
-		JXDrawLine(display, canvas, gc, width - borderWidth - 1,
-			borderWidth + 1, width - borderWidth - 1, titleHeight + borderWidth);
-
-		/* Draw outline */
-		JXSetForeground(display, gc, pixelUp);
-		JXDrawLine(display, canvas, gc, width - borderWidth,
-			borderWidth, width - borderWidth, height - borderWidth);
-		JXDrawLine(display, canvas, gc, borderWidth,
-			height - borderWidth, width - borderWidth, height - borderWidth);
-
-		JXSetForeground(display, gc, pixelDown);
-		JXDrawLine(display, canvas, gc, borderWidth - 1,
-			borderWidth - 1, width - borderWidth, borderWidth - 1);
-		JXDrawLine(display, canvas, gc, borderWidth - 1, borderWidth,
-			borderWidth - 1, height - borderWidth);
-
-		JXFillRectangle(display, canvas, gc, width - 2, 0, 2, height);
-		JXFillRectangle(display, canvas, gc, 0, height - 2, width, 2);
-		JXSetForeground(display, gc, pixelUp);
-		JXDrawLine(display, canvas, gc, 0, 0, 0, height - 1);
-		JXDrawLine(display, canvas, gc, 1, 1, 1, height - 2);
-		JXDrawLine(display, canvas, gc, 1, 0, width - 1, 0);
-		JXDrawLine(display, canvas, gc, 1, 1, width - 2, 1);
-
+		/* Draw corners if there's room. */
 		if((np->state.border & BORDER_RESIZE)
 			&& !(np->state.status & STAT_SHADED)
-			&& np->width >= 2 * titleHeight * 2
+			&& np->width >= titleHeight * 2
 			&& np->height >= titleHeight * 2) {
 
-			/* Draw marks */
-			JXSetForeground(display, gc, pixelDown);
+			JXSetForeground(display, gc, cornerColor);
 
-			/* Upper left */
-			JXDrawLine(display, canvas, gc,
-				titleHeight + borderWidth - 1, 2, titleHeight + borderWidth - 1,
-				borderWidth - 2);
-			JXDrawLine(display, canvas, gc, 2,
-				titleHeight + borderWidth - 1, borderWidth - 2,
-				titleHeight + borderWidth - 1);
+			/* South west. */
+			JXFillRectangle(display, canvas, gc,
+				0, height - titleHeight, titleHeight, titleHeight);
 
-			/* Upper right */
-			JXDrawLine(display, canvas, gc,
-				width - titleHeight - borderWidth - 1,
-				2, width - titleHeight - borderWidth - 1, borderWidth - 2);
-			JXDrawLine(display, canvas, gc, width - 3,
-				titleHeight + borderWidth - 1, width - borderWidth + 1,
-				titleHeight + borderWidth - 1);
+			/* South east. */
+			JXFillRectangle(display, canvas, gc,
+				width - titleHeight, height - titleHeight,
+				titleHeight, titleHeight);
 
-			/* Lower left */
-			JXDrawLine(display, canvas, gc, 2,
-				height - titleHeight - borderWidth - 1, borderWidth - 2,
-				height - titleHeight - borderWidth - 1);
-			JXDrawLine(display, canvas, gc,
-				titleHeight + borderWidth - 1, height - 3,
-				titleHeight + borderWidth - 1, height - borderWidth + 1);
-
-			/* Lower right */
-			JXDrawLine(display, canvas, gc, width - 3,
-				height - titleHeight - borderWidth - 1, width - borderWidth + 1,
-				height - titleHeight - borderWidth - 1);
-			JXDrawLine(display, canvas, gc,
-				width - titleHeight - borderWidth - 1,
-				height - 3, width - titleHeight - borderWidth - 1,
-				height - borderWidth + 1);
-
-			JXSetForeground(display, gc, pixelUp);
-
-			/* Upper left */
-			JXDrawLine(display, canvas, gc, titleHeight + borderWidth,
-				2, titleHeight + borderWidth, borderWidth - 2);
-			JXDrawLine(display, canvas, gc, 2,
-				titleHeight + borderWidth, borderWidth - 2,
-				titleHeight + borderWidth);
-
-			/* Upper right */
-			JXDrawLine(display, canvas, gc,
-				width - titleHeight - borderWidth, 2,
-				width - titleHeight - borderWidth, borderWidth - 2);
-			JXDrawLine(display, canvas, gc, width - 3,
-				titleHeight + borderWidth, width - borderWidth + 1,
-				titleHeight + borderWidth);
-
-			/* Lower left */
-			JXDrawLine(display, canvas, gc, 2,
-				height - titleHeight - borderWidth,
-				borderWidth - 2, height - titleHeight - borderWidth);
-			JXDrawLine(display, canvas, gc, titleHeight + borderWidth,
-				height - 3, titleHeight + borderWidth, height - borderWidth + 1);
-
-			/* Lower right */
-			JXDrawLine(display, canvas, gc, width - 3,
-				height - titleHeight - borderWidth, width - borderWidth + 1,
-				height - titleHeight - borderWidth);
-			JXDrawLine(display, canvas, gc,
-				width - titleHeight - borderWidth, height - 3,
-				width - titleHeight - borderWidth, height - borderWidth + 1);
+			/* Corner outline. */
+			JXSetForeground(display, gc, outlineColor);
+			JXDrawRectangle(display, canvas, gc,
+				0, height - titleHeight, titleHeight, titleHeight + 1);
+			JXDrawRectangle(display, canvas, gc,
+				width - titleHeight, height - titleHeight,
+				titleHeight - 1, titleHeight - 1);
 
 		}
 
 	}
 
-}
-
-/****************************************************************************
- ****************************************************************************/
-void DrawButtonBorder(const ClientNode *np, int offset,
-	Pixmap canvas, GC gc) {
-
-	long up, down;
-	long bsize;
-
-	Assert(np);
-
-	if(np->state.status & STAT_ACTIVE) {
-		up = colors[COLOR_BORDER_ACTIVE_UP];
-		down = colors[COLOR_BORDER_ACTIVE_DOWN];
+	/* Window outline. */
+	JXSetForeground(display, gc, outlineColor);
+	if(np->state.status & STAT_SHADED) {
+		XDrawRectangle(display, canvas, gc, 0, 0, width - 1, north - 1);
 	} else {
-		up = colors[COLOR_BORDER_UP];
-		down = colors[COLOR_BORDER_DOWN];
+		XDrawRectangle(display, canvas, gc, 0, 0, width - 1, height - 1);
+		XDrawRectangle(display, canvas, gc, west - 1, north - 1,
+			np->width + 1, np->height + 1);
 	}
 
-	if(np->state.border & BORDER_OUTLINE) {
-		bsize = borderWidth;
-	} else {
-		bsize = 0;
-	}
-
-	JXSetForeground(display, gc, up);
-	JXDrawLine(display, canvas, gc, offset, bsize + 1,
-		offset, titleHeight + bsize  - 2);
-
-	JXSetForeground(display, gc, down);
-	JXDrawLine(display, canvas, gc, offset - 1,
-		bsize + 1, offset - 1, titleHeight + bsize - 2);
+	DrawBorderButtons(np, canvas, gc);
 
 }
 
-/****************************************************************************
- ****************************************************************************/
-int DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
+/** Determine the number of buttons to be displayed for a client. */
+int GetButtonCount(const ClientNode *np) {
 
-	Pixmap pixmap;
-	int count = 0;
+	int north, south, east, west;
+	int count;
 	int offset;
-	int bsize;
-
-	Assert(np);
 
 	if(!(np->state.border & BORDER_TITLE)) {
-		return count;
-	}
-	if(np->state.border & BORDER_OUTLINE) {
-		bsize = borderWidth;
-	} else {
-		bsize = 0;
+		return 0;
 	}
 
-	offset = np->width + bsize - titleHeight;
+	GetBorderSize(np, &north, &south, &east, &west);
 
-	if(offset <= bsize + titleHeight) {
-		return count;
+	offset = np->width + east + west - titleHeight;
+	if(offset <= titleHeight) {
+		return 0;
 	}
 
+	count = 0;
 	if(np->state.border & BORDER_CLOSE) {
-
-		DrawButtonBorder(np, offset, canvas, gc);
-
-		if(np->state.status & STAT_ACTIVE) {
-			pixmap = pixmaps[BP_ACTIVE_CLOSE];
-		} else {
-			pixmap = pixmaps[BP_CLOSE];
-		}
-
-		JXCopyArea(display, pixmap, canvas, gc, 0, 0, 16, 16,
-			offset + titleHeight / 2 - 8, bsize + titleHeight / 2 - 8);
-
 		offset -= titleHeight;
 		++count;
-
-		if(offset <= bsize + titleHeight) {
+		if(offset <= titleHeight) {
 			return count;
 		}
-
 	}
 
 	if(np->state.border & BORDER_MAX) {
-
-		if(np->state.status & STAT_MAXIMIZED) {
-			if(np->state.status & STAT_ACTIVE) {
-				pixmap = pixmaps[BP_ACTIVE_MAXIMIZE_ACTIVE];
-			} else {
-				pixmap = pixmaps[BP_MAXIMIZE_ACTIVE];
-			}
-		} else {
-			if(np->state.status & STAT_ACTIVE) {
-				pixmap = pixmaps[BP_ACTIVE_MAXIMIZE];
-			} else {
-				pixmap = pixmaps[BP_MAXIMIZE];
-			}
-		}
-		JXCopyArea(display, pixmap, canvas, gc, 0, 0, 16, 16,
-			offset + titleHeight / 2 - 8, bsize + titleHeight / 2 - 8);
-
-		DrawButtonBorder(np, offset, canvas, gc);
-
 		offset -= titleHeight;
 		++count;
-
-		if(offset <= bsize + titleHeight) {
+		if(offset <= titleHeight) {
 			return count;
 		}
-
 	}
 
 	if(np->state.border & BORDER_MIN) {
-
-		DrawButtonBorder(np, offset, canvas, gc);
-
-		if(np->state.status & STAT_ACTIVE) {
-			pixmap = pixmaps[BP_ACTIVE_MINIMIZE];
-		} else {
-			pixmap = pixmaps[BP_MINIMIZE];
-		}
-
-		JXCopyArea(display, pixmap, canvas, gc, 0, 0, 16, 16,
-			offset + titleHeight / 2 - 8, bsize + titleHeight / 2 - 8);
-
 		++count;
-
 	}
 
 	return count;
 
 }
 
-/****************************************************************************
- * Redraw the borders on the current desktop.
+/** Draw the buttons on a client frame. */
+void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
+
+	Pixmap pixmap;
+	long color;
+	long outlineColor;
+	int offset;
+	int yoffset;
+	int north, south, east, west;
+
+	Assert(np);
+
+	if(!(np->state.border & BORDER_TITLE)) {
+		return;
+	}
+
+	GetBorderSize(np, &north, &south, &east, &west);
+	offset = np->width + east + west - titleHeight;
+	if(offset <= titleHeight) {
+		return;
+	}
+
+	yoffset = titleHeight / 2 - 16 / 2;
+
+	/* Determine the colors to use. */
+	if(np->state.status & STAT_ACTIVE) {
+		color = colors[COLOR_TITLE_ACTIVE_FG];
+		outlineColor = colors[COLOR_BORDER_ACTIVE_LINE];
+	} else {
+		color = colors[COLOR_TITLE_FG];
+		outlineColor = colors[COLOR_BORDER_LINE];
+	}
+
+	/* Close button. */
+	if(np->state.border & BORDER_CLOSE) {
+
+		JXSetForeground(display, gc, outlineColor);
+		JXDrawLine(display, canvas, gc, offset, 0, offset, titleHeight);
+
+		pixmap = pixmaps[BP_CLOSE];
+
+		JXSetForeground(display, gc, color);
+		JXSetClipMask(display, gc, pixmap);
+		JXSetClipOrigin(display, gc, offset + yoffset, yoffset);
+		JXFillRectangle(display, canvas, gc, offset + yoffset, yoffset, 16, 16);
+		JXSetClipMask(display, gc, None);
+
+		offset -= titleHeight;
+		if(offset <= titleHeight) {
+			return;
+		}
+
+	}
+
+	/* Maximize button. */
+	if(np->state.border & BORDER_MAX) {
+
+		JXSetForeground(display, gc, outlineColor);
+		JXDrawLine(display, canvas, gc, offset, 0, offset, titleHeight);
+
+		if(np->state.status & STAT_MAXIMIZED) {
+			pixmap = pixmaps[BP_MAXIMIZE_ACTIVE];
+		} else {
+			pixmap = pixmaps[BP_MAXIMIZE];
+		}
+
+		JXSetForeground(display, gc, color);
+		XSetClipMask(display, gc, pixmap);
+		XSetClipOrigin(display, gc, offset + yoffset, yoffset);
+		XFillRectangle(display, canvas, gc, offset + yoffset, yoffset, 16, 16);
+		XSetClipMask(display, gc, None);
+
+		offset -= titleHeight;
+		if(offset <= titleHeight) {
+			return;
+		}
+
+	}
+
+	/* Minimize button. */
+	if(np->state.border & BORDER_MIN) {
+
+		JXSetForeground(display, gc, outlineColor);
+		JXDrawLine(display, canvas, gc, offset, 0, offset, titleHeight);
+
+		pixmap = pixmaps[BP_MINIMIZE];
+
+		JXSetForeground(display, gc, color);
+		XSetClipMask(display, gc, pixmap);
+		XSetClipOrigin(display, gc, offset + yoffset, yoffset);
+		XFillRectangle(display, canvas, gc, offset + yoffset, yoffset, 16, 16);
+		XSetClipMask(display, gc, None);
+
+	}
+
+}
+
+/** Redraw the borders on the current desktop.
  * This should be done after loading clients since the stacking order
  * may cause borders on the current desktop to become visible after moving
  * clients to their assigned desktops.
- ****************************************************************************/
+ */
 void ExposeCurrentDesktop() {
 
 	ClientNode *np;
@@ -668,8 +581,7 @@ void ExposeCurrentDesktop() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Get the size of the borders for a client. */
 void GetBorderSize(const ClientNode *np,
 	int *north, int *south, int *east, int *west) {
 
@@ -705,13 +617,16 @@ void GetBorderSize(const ClientNode *np,
 	}
 
 	if(np->state.border & BORDER_TITLE) {
-		*north += titleHeight;
+		*north = titleHeight;
+	}
+
+	if(np->state.status & STAT_SHADED) {
+		*south = 0;
 	}
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set the size of window borders. */
 void SetBorderWidth(const char *str) {
 
 	int width;
@@ -730,8 +645,7 @@ void SetBorderWidth(const char *str) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set the height of the title bar. */
 void SetTitleHeight(const char *str) {
 
 	int height;
@@ -749,5 +663,4 @@ void SetTitleHeight(const char *str) {
 	}
 
 }
-
 

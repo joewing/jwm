@@ -13,14 +13,16 @@ static const int BLOCK_SIZE = 16;
 /* Order is important! The order must match the order in lex.h */
 static const char *TOKEN_MAP[] = {
 	"[invalid]",
+	"Active",
 	"ActiveBackground",
 	"ActiveForeground",
 	"Background",
-	"BorderStyle",
+	"Border",
 	"Class",
 	"Clock",
 	"ClockStyle",
 	"Close",
+	"Corner",
 	"Desktops",
 	"Dock",
 	"DoubleClickSpeed",
@@ -32,6 +34,7 @@ static const char *TOKEN_MAP[] = {
 	"Group",
 	"Height",
 	"IconPath",
+	"Inactive",
 	"Include",
 	"JWM",
 	"Key",
@@ -67,13 +70,14 @@ static const char *TOKEN_MAP[] = {
 	"Swallow",
 	"TaskListStyle",
 	"TaskList",
-	"Theme",
-	"ThemePath",
+	"Text",
+	"Title",
 	"Tray",
 	"TrayButton",
 	"TrayButtonStyle",
 	"TrayStyle",
-	"Width"
+	"Width",
+	"WindowStyle"
 };
 
 static TokenNode *head, *current;

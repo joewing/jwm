@@ -1,5 +1,11 @@
-/****************************************************************************
- ****************************************************************************/
+/**
+ * @file icon.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Icon functions.
+ *
+ */
 
 #include "jwm.h"
 #include "icon.h"
@@ -19,6 +25,7 @@ static int iconSize = 0;
 
 #define HASH_SIZE 64
 
+/** Linked list of icon paths. */
 typedef struct IconPathNode {
 	char *path;
 	struct IconPathNode *next;
@@ -51,9 +58,9 @@ static void InsertIcon(IconNode *icon);
 static IconNode *FindIcon(const char *name);
 static int GetHash(const char *str);
 
-/****************************************************************************
- * Must be initialized before parsing the configuration.
- ****************************************************************************/
+/** Initialize icon data.
+ * This must be initialized before parsing the configuration.
+ */
 void InitializeIcons() {
 
 	int x;
@@ -68,8 +75,7 @@ void InitializeIcons() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Startup icon support. */
 void StartupIcons() {
 
 	XGCValues gcValues;
@@ -83,8 +89,7 @@ void StartupIcons() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Shutdown icon support. */
 void ShutdownIcons() {
 
 	int x;
@@ -99,8 +104,7 @@ void ShutdownIcons() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Destroy icon data. */
 void DestroyIcons() {
 
 	IconPathNode *pn;
@@ -119,8 +123,7 @@ void DestroyIcons() {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set the preferred icon sizes on the root window. */
 void SetIconSize() {
 
 	XIconSize size;
@@ -143,8 +146,7 @@ void SetIconSize() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Add an icon search path. */
 void AddIconPath(char *path) {
 
 	IconPathNode *ip;
@@ -183,8 +185,7 @@ void AddIconPath(char *path) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Draw an icon. */
 void PutIcon(IconNode *icon, Drawable d, int x, int y,
 	int width, int height) {
 
@@ -192,24 +193,30 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
 
 	Assert(icon);
 
+	/* Scale the icon. */
 	node = GetScaledIcon(icon, width, height);
 
 	if(node) {
 
+		/* If we support xrender, use it. */
 		if(PutScaledRenderIcon(icon, node, d, x, y)) {
 			return;
 		}
 
+		/* Draw the icon the old way. */
 		if(node->image != None) {
 
+			/* Set the clip mask. */
 			if(node->mask != None) {
 				JXSetClipOrigin(display, iconGC, x, y);
 				JXSetClipMask(display, iconGC, node->mask);
 			}
 
+			/* Draw the icon. */
 			JXCopyArea(display, node->image, d, iconGC, 0, 0,
 				node->width, node->height, x, y);
 
+			/* Reset the clip mask. */
 			if(node->mask != None) {
 				JXSetClipMask(display, iconGC, None);
 				JXSetClipOrigin(display, iconGC, 0, 0);
@@ -221,8 +228,7 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Load the icon for a client. */
 void LoadIcon(ClientNode *np) {
 
 	IconPathNode *ip;
@@ -231,6 +237,7 @@ void LoadIcon(ClientNode *np) {
 
 	SetIconSize();
 
+	/* If client already has an icon, destroy it first. */
 	DestroyIcon(np->icon);
 	np->icon = NULL;
 
@@ -266,8 +273,7 @@ void LoadIcon(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Load an icon given a name, path, and suffix. */
 IconNode *LoadSuffixedIcon(const char *path, const char *name,
 	const char *suffix) {
 
@@ -305,8 +311,7 @@ IconNode *LoadSuffixedIcon(const char *path, const char *name,
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Load an icon from a file. */
 IconNode *LoadNamedIcon(const char *name) {
 
 	IconPathNode *ip;
@@ -330,8 +335,7 @@ IconNode *LoadNamedIcon(const char *name) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Helper for loading icons by name. */
 IconNode *LoadNamedIconHelper(const char *name, const char *path) {
 
 	IconNode *result;
@@ -347,8 +351,7 @@ IconNode *LoadNamedIconHelper(const char *name, const char *path) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Read the icon property from a client. */
 void ReadNetWMIcon(ClientNode *np) {
 
 	unsigned long count;
@@ -370,14 +373,12 @@ void ReadNetWMIcon(ClientNode *np) {
 }
 
 
-/****************************************************************************
- ****************************************************************************/
+/** Create the default icon. */
 IconNode *GetDefaultIcon() {
 	return CreateIconFromData("default", x_xpm);
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Create an icon from XPM image data. */
 IconNode *CreateIconFromData(const char *name, char **data) {
 
 	ImageNode *image;
@@ -405,8 +406,7 @@ IconNode *CreateIconFromData(const char *name, char **data) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Create an icon from the specified file. */
 IconNode *CreateIconFromFile(const char *fileName) {
 
 	ImageNode *image;
@@ -435,8 +435,7 @@ IconNode *CreateIconFromFile(const char *fileName) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Get a scaled icon. */
 ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 
 	XColor color;
@@ -540,8 +539,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Create an icon from binary data (as specified via window properties). */
 IconNode *CreateIconFromBinary(const unsigned long *input,
 	unsigned int length) {
 
@@ -585,8 +583,7 @@ IconNode *CreateIconFromBinary(const unsigned long *input,
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Create an empty icon node. */
 IconNode *CreateIcon() {
 
 	IconNode *icon;
@@ -602,8 +599,7 @@ IconNode *CreateIcon() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Helper method for destroy icons. */
 void DoDestroyIcon(int index, IconNode *icon) {
 
 	ScaledIconNode *np;
@@ -649,8 +645,7 @@ void DoDestroyIcon(int index, IconNode *icon) {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Destroy an icon. */
 void DestroyIcon(IconNode *icon) {
 
 	int index;
@@ -662,8 +657,7 @@ void DestroyIcon(IconNode *icon) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Insert an icon to the icon hash table. */
 void InsertIcon(IconNode *icon) {
 
 	int index;
@@ -682,8 +676,7 @@ void InsertIcon(IconNode *icon) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Find a icon in the icon hash table. */
 IconNode *FindIcon(const char *name) {
 
 	IconNode *icon;
@@ -703,8 +696,7 @@ IconNode *FindIcon(const char *name) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Get the hash for a string. */
 int GetHash(const char *str) {
 
 	int x;

@@ -1,7 +1,11 @@
-/***************************************************************************
- * Key input functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ***************************************************************************/
+/**
+ * @file key.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Key binding functions.
+ *
+ */
 
 #include "jwm.h"
 #include "key.h"
@@ -60,8 +64,7 @@ static KeySym ParseKeyString(const char *str);
 static int ShouldGrab(KeyType key);
 static void GrabKey(KeyNode *np);
 
-/***************************************************************************
- ***************************************************************************/
+/** Initialize key data. */
 void InitializeKeys() {
 
 	bindings = NULL;
@@ -69,8 +72,7 @@ void InitializeKeys() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Startup key bindings. */
 void StartupKeys() {
 
 	KeyNode *np;
@@ -119,8 +121,7 @@ void StartupKeys() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Shutdown key bindings. */
 void ShutdownKeys() {
 
 	ClientNode *np;
@@ -136,8 +137,7 @@ void ShutdownKeys() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Destroy key data. */
 void DestroyKeys() {
 
 	KeyNode *np;
@@ -153,8 +153,7 @@ void DestroyKeys() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Grab a key. */
 void GrabKey(KeyNode *np) {
 
 	TrayType *tp;
@@ -184,8 +183,7 @@ void GrabKey(KeyNode *np) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Get the key action from an event. */
 KeyType GetKey(const XKeyEvent *event) {
 
 	KeyNode *np;
@@ -202,8 +200,7 @@ KeyType GetKey(const XKeyEvent *event) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Run a command invoked from a key binding. */
 void RunKeyCommand(const XKeyEvent *event) {
 
 	KeyNode *np;
@@ -217,8 +214,7 @@ void RunKeyCommand(const XKeyEvent *event) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Show a root menu caused by a key binding. */
 void ShowKeyMenu(const XKeyEvent *event) {
 
 	KeyNode *np;
@@ -236,8 +232,7 @@ void ShowKeyMenu(const XKeyEvent *event) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Determine if a key should be grabbed on client windows. */
 int ShouldGrab(KeyType key) {
 	switch(key & 0xFF) {
 	case KEY_NEXT:
@@ -260,8 +255,7 @@ int ShouldGrab(KeyType key) {
 	}
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Grab keys on a client window. */
 void GrabKeys(ClientNode *np) {
 
 	KeyNode *kp;
@@ -275,8 +269,7 @@ void GrabKeys(ClientNode *np) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Get the modifier mask for a key. */
 unsigned int GetModifierMask(KeySym key) {
 
 	KeyCode temp;
@@ -295,8 +288,7 @@ unsigned int GetModifierMask(KeySym key) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse a modifier mask string. */
 unsigned int ParseModifierString(const char *str) {
 	unsigned int mask;
 	int x;
@@ -336,8 +328,7 @@ unsigned int ParseModifierString(const char *str) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse a key string. */
 KeySym ParseKeyString(const char *str) {
 
 	KeySym symbol;
@@ -351,8 +342,7 @@ KeySym ParseKeyString(const char *str) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Insert a key binding. */
 void InsertBinding(KeyType key, const char *modifiers,
 	const char *stroke, const char *code, const char *command) {
 
@@ -432,8 +422,7 @@ void InsertBinding(KeyType key, const char *modifiers,
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Validate key bindings. */
 void ValidateKeys() {
 
 	KeyNode *kp;

@@ -10,6 +10,8 @@
 #ifndef BORDER_H
 #define BORDER_H
 
+#include "gradient.h"
+
 struct ClientNode;
 
 /** Flags to determine what action to take on the border. */

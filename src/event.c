@@ -1,7 +1,11 @@
-/****************************************************************************
- * Functions to handle XServer events.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file event.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Functions to handle X11 events.
+ *
+ */
 
 #include "jwm.h"
 #include "event.h"
@@ -58,8 +62,7 @@ static void HandleNetWMState(const XClientMessageEvent *event,
 static void HandleShapeEvent(const XShapeEvent *event);
 #endif
 
-/****************************************************************************
- ****************************************************************************/
+/** Wait for an event and process it. */
 void WaitForEvent(XEvent *event) {
 
 	struct timeval timeout;
@@ -169,8 +172,7 @@ void WaitForEvent(XEvent *event) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Wake up components that need to run at certain times. */
 void Signal() {
 
 	static TimeType last = ZERO_TIME;
@@ -195,8 +197,7 @@ void Signal() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Process an event. */
 void ProcessEvent(XEvent *event) {
 
 	switch(event->type) {
@@ -228,8 +229,7 @@ void ProcessEvent(XEvent *event) {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Discard motion events for the specified window. */
 void DiscardMotionEvents(XEvent *event, Window w) {
 
 	XEvent temp;
@@ -243,16 +243,14 @@ void DiscardMotionEvents(XEvent *event, Window w) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Process a selection clear event. */
 int HandleSelectionClear(const XSelectionClearEvent *event) {
 
 	return HandleDockSelectionClear(event);
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Process a button event. */
 void HandleButtonEvent(const XButtonEvent *event) {
 
 	int x, y;
@@ -333,8 +331,7 @@ void HandleButtonEvent(const XButtonEvent *event) {
 	UpdatePager();
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Process a key press event. */
 void HandleKeyPress(const XKeyEvent *event) {
 	ClientNode *np;
 	KeyType key;
@@ -414,8 +411,7 @@ void HandleKeyPress(const XKeyEvent *event) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Process a configure request. */
 void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 
 	XWindowChanges wc;
@@ -431,6 +427,8 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 
 	np = FindClientByWindow(event->window);
 	if(np && np->window == event->window) {
+
+		/* We own this window, make sure it's not trying to do something bad. */
 
 		changed = 0;
 		if((event->value_mask & CWWidth) && (event->width != np->width)) {
@@ -484,6 +482,8 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 
 	} else {
 
+		/* We don't know about this window, just let the configure through. */
+
 		wc.stack_mode = event->detail;
 		wc.sibling = event->above;
 		wc.border_width = event->border_width;
@@ -497,8 +497,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Process an enter notify event. */
 void HandleEnterNotify(const XCrossingEvent *event) {
 
 	ClientNode *np;
@@ -523,8 +522,7 @@ void HandleEnterNotify(const XCrossingEvent *event) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Process a leave notify event. */
 void HandleLeaveNotify(const XCrossingEvent *event) {
 
 	ClientNode *np;
@@ -538,8 +536,7 @@ void HandleLeaveNotify(const XCrossingEvent *event) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Handle an expose event. */
 int HandleExpose(const XExposeEvent *event) {
 
 	ClientNode *np;
@@ -551,9 +548,15 @@ int HandleExpose(const XExposeEvent *event) {
 			return 1;
 		} else if(event->window == np->window
 			&& np->state.status & STAT_WMDIALOG) {
+
+			/* Dialog expose events are handled elsewhere. */
 			return 0;
+
 		} else {
+
+			/* Ignore other expose events. */
 			return 1;
+
 		}
 	} else {
 		return event->count ? 1 : 0;
@@ -561,8 +564,7 @@ int HandleExpose(const XExposeEvent *event) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Handle a property notify event. */
 int HandlePropertyNotify(const XPropertyEvent *event) {
 
 	ClientNode *np;
@@ -617,8 +619,7 @@ int HandlePropertyNotify(const XPropertyEvent *event) {
 	return 1;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Handle a client message. */
 void HandleClientMessage(const XClientMessageEvent *event) {
 
 	ClientNode *np;
@@ -743,9 +744,7 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 
 }
 
-/****************************************************************************
- * Handle a _NET_MOVERESIZE_WINDOW request.
- ****************************************************************************/
+/** Handle a _NET_MOVERESIZE_WINDOW request. */
 void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np) {
 
 	long flags, gravity;
@@ -805,9 +804,7 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np) {
 
 }
 
-/****************************************************************************
- * Handle a _NET_WM_STATE request.
- ****************************************************************************/
+/** Handle a _NET_WM_STATE request. */
 void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
 
 	int actionMaximize;
@@ -902,8 +899,7 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Handle a motion notify event. */
 void HandleMotionNotify(const XMotionEvent *event) {
 
 	ClientNode *np;
@@ -928,8 +924,7 @@ void HandleMotionNotify(const XMotionEvent *event) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Handle a shape event. */
 #ifdef USE_SHAPE
 void HandleShapeEvent(const XShapeEvent *event) {
 
@@ -943,8 +938,7 @@ void HandleShapeEvent(const XShapeEvent *event) {
 }
 #endif /* USE_SHAPE */
 
-/****************************************************************************
- ****************************************************************************/
+/** Handle a colormap event. */
 void HandleColormapChange(const XColormapEvent *event) {
 	ClientNode *np;
 
@@ -958,8 +952,7 @@ void HandleColormapChange(const XColormapEvent *event) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Handle a map request. */
 void HandleMapRequest(const XMapEvent *event) {
 
 	ClientNode *np;
@@ -1002,8 +995,7 @@ void HandleMapRequest(const XMapEvent *event) {
 	RestackClients();
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Handle an unmap notify event. */
 void HandleUnmapNotify(const XUnmapEvent *event) {
 
 	ClientNode *np;
@@ -1038,8 +1030,7 @@ void HandleUnmapNotify(const XUnmapEvent *event) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Handle a destroy notify event. */
 int HandleDestroyNotify(const XDestroyWindowEvent *event) {
 
 	ClientNode *np;
@@ -1065,8 +1056,7 @@ int HandleDestroyNotify(const XDestroyWindowEvent *event) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Take the appropriate action for a click on a client border. */
 void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
 
 	static Time lastClickTime = 0;

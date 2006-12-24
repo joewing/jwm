@@ -1,7 +1,11 @@
-/****************************************************************************
- * Functions to load images.
- * Copyright (C) 2005 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file image.c
+ * @author Joe Wingbermuehle
+ * @date 2005-2006
+ *
+ * @brief Functions to load images.
+ *
+ */
 
 #include "jwm.h"
 #include "image.h"
@@ -20,8 +24,7 @@ static int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
 	void *closure);
 #endif
 
-/****************************************************************************
- ****************************************************************************/
+/** Load an image from the specified file. */
 ImageNode *LoadImage(const char *fileName) {
 
 	ImageNode *result;
@@ -46,8 +49,7 @@ ImageNode *LoadImage(const char *fileName) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Load an image from the specified XPM data. */
 ImageNode *LoadImageFromData(char **data) {
 
 	ImageNode *result = NULL;
@@ -80,11 +82,10 @@ ImageNode *LoadImageFromData(char **data) {
 
 }
 
-/****************************************************************************
- * Load a PNG image from the given file name. Returns NULL on error.
+/** Load a PNG image from the given file name.
  * Since libpng uses longjmp, this function is not reentrant to simplify
  * the issues surrounding longjmp and local variables.
- ****************************************************************************/
+ */
 ImageNode *LoadPNGImage(const char *fileName) {
 
 #ifdef USE_PNG
@@ -238,8 +239,7 @@ ImageNode *LoadPNGImage(const char *fileName) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Load an XPM image from the specified file. */
 ImageNode *LoadXPMImage(const char *fileName) {
 
 	ImageNode *result = NULL;
@@ -273,8 +273,7 @@ ImageNode *LoadXPMImage(const char *fileName) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Create an image from XImages giving color and shape information. */
 ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
 
 	ImageNode *result;
@@ -318,8 +317,7 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Destroy an image node. */
 void DestroyImage(ImageNode *image) {
 	if(image) {
 		Release(image->data);
@@ -327,9 +325,7 @@ void DestroyImage(ImageNode *image) {
 	}
 }
 
-/****************************************************************************
- * Function to allocate a color for libxpm.
- ****************************************************************************/
+/** Callback to allocate a color for libxpm. */
 #ifdef USE_XPM
 int AllocateColor(Display *d, Colormap cmap, char *name,
 	XColor *c, void *closure)
@@ -347,10 +343,9 @@ int AllocateColor(Display *d, Colormap cmap, char *name,
 }
 #endif
 
-/****************************************************************************
- * Function to free colors allocated by libxpm.
- * We don't need to do anything here as color.c takes care of this.
- ****************************************************************************/
+/** Callback to free colors allocated by libxpm.
+ * We don't need to do anything here since color.c takes care of this.
+ */
 #ifdef USE_XPM
 int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
 	void *closure) {

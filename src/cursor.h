@@ -1,5 +1,5 @@
 /**
- * @file confirm.h
+ * @file cursor.h
  * @author Joe Wingbermuehle
  * @date 2004-2006
  *

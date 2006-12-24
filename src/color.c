@@ -1,7 +1,11 @@
-/****************************************************************************
- * Functions to handle loading colors.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file color.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Functions to handle loading colors.
+ *
+ */
 
 #include "jwm.h"
 #include "main.h"
@@ -26,33 +30,54 @@ static XftColor *xftColors[COLOR_COUNT] = { NULL };
 #endif
 
 static DefaultColorNode DEFAULT_COLORS[] = {
-	{ COLOR_BORDER_BG,          "gray"    },
-	{ COLOR_BORDER_FG,          "black"   },
-	{ COLOR_BORDER_ACTIVE_BG,   "red"     },
-	{ COLOR_BORDER_ACTIVE_FG,   "white"   },
+
+	{ COLOR_TITLE_FG,           "black"   },
+	{ COLOR_TITLE_ACTIVE_FG,    "black"   },
+
+	{ COLOR_TITLE_BG1,          "gray"    },
+	{ COLOR_TITLE_BG2,          "gray"    },
+	{ COLOR_TITLE_ACTIVE_BG1,   "red"     },
+	{ COLOR_TITLE_ACTIVE_BG2,   "red"     },
+
+	{ COLOR_CORNER_BG,          "gray"    },
+	{ COLOR_CORNER_ACTIVE_BG,   "red"     },
+
+	{ COLOR_BORDER_LINE,        "black"   },
+	{ COLOR_BORDER_ACTIVE_LINE, "black"   },
+
 	{ COLOR_TRAY_BG,            "gray"    },
 	{ COLOR_TRAY_FG,            "black"   },
-	{ COLOR_TASK_BG,            "gray"    },
+
 	{ COLOR_TASK_FG,            "black"   },
-	{ COLOR_TASK_ACTIVE_BG,     "red"     },
+	{ COLOR_TASK_BG1,           "gray"    },
+	{ COLOR_TASK_BG2,           "gray"    },
 	{ COLOR_TASK_ACTIVE_FG,     "white"   },
+	{ COLOR_TASK_ACTIVE_BG1,    "red"     },
+	{ COLOR_TASK_ACTIVE_BG2,    "red"     },
+
 	{ COLOR_PAGER_BG,           "black"   },
 	{ COLOR_PAGER_FG,           "gray"    },
 	{ COLOR_PAGER_ACTIVE_BG,    "red"     },
 	{ COLOR_PAGER_ACTIVE_FG,    "red"     },
 	{ COLOR_PAGER_OUTLINE,      "black"   },
+
 	{ COLOR_MENU_BG,            "gray"    },
 	{ COLOR_MENU_FG,            "black"   },
-	{ COLOR_MENU_ACTIVE_BG,     "red"     },
+	{ COLOR_MENU_ACTIVE_BG1,    "red"     },
+	{ COLOR_MENU_ACTIVE_BG2,    "red"     },
 	{ COLOR_MENU_ACTIVE_FG,     "white"   },
+
 	{ COLOR_POPUP_BG,           "yellow"  },
 	{ COLOR_POPUP_FG,           "black"   },
 	{ COLOR_POPUP_OUTLINE,      "black"   },
+
 	{ COLOR_TRAYBUTTON_FG,      "black"   },
 	{ COLOR_TRAYBUTTON_BG,      "gray"    },
+
 	{ COLOR_CLOCK_FG,           "black"   },
 	{ COLOR_CLOCK_BG,           "gray"    },
 	{ COLOR_COUNT,              NULL      }
+
 };
 
 static char **names = NULL;
@@ -84,14 +109,12 @@ static void InitializeNames();
 static void LightenColor(ColorType oldColor, ColorType newColor);
 static void DarkenColor(ColorType oldColor, ColorType newColor);
 
-/****************************************************************************
- ****************************************************************************/
+/** Initialize color data. */
 void InitializeColors() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Startup color support. */
 void StartupColors() {
 
 	int x;
@@ -140,9 +163,14 @@ void StartupColors() {
 
 	/* Inherit unset colors from the tray for tray items. */
 	if(names) {
-		if(!names[COLOR_TASK_BG]) {
-			names[COLOR_TASK_BG] = CopyString(names[COLOR_TRAY_BG]);
+
+		if(!names[COLOR_TASK_BG1]) {
+			names[COLOR_TASK_BG1] = CopyString(names[COLOR_TRAY_BG]);
 		}
+		if(!names[COLOR_TASK_BG2]) {
+			names[COLOR_TASK_BG2] = CopyString(names[COLOR_TRAY_BG]);
+		}
+
 		if(!names[COLOR_TRAYBUTTON_BG]) {
 			names[COLOR_TRAYBUTTON_BG] = CopyString(names[COLOR_TRAY_BG]);
 		}
@@ -181,31 +209,24 @@ void StartupColors() {
 		names = NULL;
 	}
 
-	LightenColor(COLOR_BORDER_BG, COLOR_BORDER_UP);
-	DarkenColor(COLOR_BORDER_BG, COLOR_BORDER_DOWN);
-
-	LightenColor(COLOR_BORDER_ACTIVE_BG, COLOR_BORDER_ACTIVE_UP);
-	DarkenColor(COLOR_BORDER_ACTIVE_BG, COLOR_BORDER_ACTIVE_DOWN);
-
 	LightenColor(COLOR_TRAY_BG, COLOR_TRAY_UP);
 	DarkenColor(COLOR_TRAY_BG, COLOR_TRAY_DOWN);
 
-	LightenColor(COLOR_TASK_BG, COLOR_TASK_UP);
-	DarkenColor(COLOR_TASK_BG, COLOR_TASK_DOWN);
+	LightenColor(COLOR_TASK_BG1, COLOR_TASK_UP);
+	DarkenColor(COLOR_TASK_BG1, COLOR_TASK_DOWN);
 
-	LightenColor(COLOR_TASK_ACTIVE_BG, COLOR_TASK_ACTIVE_UP);
-	DarkenColor(COLOR_TASK_ACTIVE_BG, COLOR_TASK_ACTIVE_DOWN);
+	LightenColor(COLOR_TASK_ACTIVE_BG1, COLOR_TASK_ACTIVE_UP);
+	DarkenColor(COLOR_TASK_ACTIVE_BG1, COLOR_TASK_ACTIVE_DOWN);
 
 	LightenColor(COLOR_MENU_BG, COLOR_MENU_UP);
 	DarkenColor(COLOR_MENU_BG, COLOR_MENU_DOWN);
 
-	LightenColor(COLOR_MENU_ACTIVE_BG, COLOR_MENU_ACTIVE_UP);
-	DarkenColor(COLOR_MENU_ACTIVE_BG, COLOR_MENU_ACTIVE_DOWN);
+	LightenColor(COLOR_MENU_ACTIVE_BG1, COLOR_MENU_ACTIVE_UP);
+	DarkenColor(COLOR_MENU_ACTIVE_BG1, COLOR_MENU_ACTIVE_DOWN);
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Shutdown color support. */
 void ShutdownColors() {
 
 #ifdef USE_XFT
@@ -230,8 +251,7 @@ void ShutdownColors() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Release color data. */
 void DestroyColors() {
 
 	int x;
@@ -248,8 +268,7 @@ void DestroyColors() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Compute the mask for computing colors in a linear RGB colormap. */
 void ComputeShiftMask(unsigned long maskIn,
 	unsigned long *shiftOut, unsigned long *maskOut) {
 
@@ -274,8 +293,7 @@ void ComputeShiftMask(unsigned long maskIn,
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Get an RGB value from an XColor. */
 unsigned long GetRGBFromXColor(const XColor *c) {
 
 	float red, green, blue;
@@ -295,8 +313,7 @@ unsigned long GetRGBFromXColor(const XColor *c) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Convert an RGB value to an XColor. */
 XColor GetXColorFromRGB(unsigned long rgb) {
 
 	XColor ret = { 0 };
@@ -310,8 +327,7 @@ XColor GetXColorFromRGB(unsigned long rgb) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set the color to use for a component. */
 void SetColor(ColorType c, const char *value) {
 
 	if(!value) {
@@ -329,8 +345,7 @@ void SetColor(ColorType c, const char *value) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Parse a color for a component. */
 int ParseColor(ColorType type, const char *value) {
 
 	XColor temp;
@@ -360,8 +375,7 @@ int ParseColor(ColorType type, const char *value) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set the specified color to its default. */
 void SetDefaultColor(ColorType type) {
 
 	int x;
@@ -375,8 +389,7 @@ void SetDefaultColor(ColorType type) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Initialize color names to NULL. */
 void InitializeNames() {
 
 	int x;
@@ -390,8 +403,7 @@ void InitializeNames() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Convert a hex value to an unsigned long. */
 unsigned long ReadHex(const char *hex) {
 
 	unsigned long value = 0;
@@ -414,8 +426,7 @@ unsigned long ReadHex(const char *hex) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Compute a color lighter than the input. */
 void LightenColor(ColorType oldColor, ColorType newColor) {
 
 	XColor temp;
@@ -442,8 +453,7 @@ void LightenColor(ColorType oldColor, ColorType newColor) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Compute a color darker than the input. */
 void DarkenColor(ColorType oldColor, ColorType newColor) {
 
 	XColor temp;
@@ -470,8 +480,7 @@ void DarkenColor(ColorType oldColor, ColorType newColor) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Look up a color by name. */
 int GetColorByName(const char *str, XColor *c) {
 
 	Assert(str);
@@ -487,9 +496,7 @@ int GetColorByName(const char *str, XColor *c) {
 
 }
 
-/***************************************************************************
- * Compute the RGB components from an index into our RGB colormap.
- ***************************************************************************/
+/** Compute the RGB components from an index into our RGB colormap. */
 void GetColorFromIndex(XColor *c) {
 
 	unsigned long red;
@@ -566,12 +573,7 @@ void GetColor(XColor *c) {
 
 }
 
-/***************************************************************************
- * When loading images from external sources, we need to know the color
- * components even if running with a colormap. So here we pretend
- * we have a linear RGB colormap even if we don't.
- * This prevents calls to XQueryColor later.
- ***************************************************************************/
+/** Get an RGB pixel value from RGB components. */
 void GetColorIndex(XColor *c) {
 
 	Assert(c);
@@ -580,8 +582,7 @@ void GetColorIndex(XColor *c) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Get an XFT color for the specified component. */
 #ifdef USE_XFT
 XftColor *GetXftColor(ColorType type) {
 

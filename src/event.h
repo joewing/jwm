@@ -24,5 +24,5 @@ void ProcessEvent(XEvent *event);
  */
 void DiscardMotionEvents(XEvent *event, Window w);
 
-#endif
+#endif /* EVENT_H */
 

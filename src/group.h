@@ -1,5 +1,5 @@
 /**
- * @file font.h
+ * @file group.h
  * @author Joe Wingbermuehle
  * @date 2004-2006
  *
@@ -13,21 +13,22 @@
 struct ClientNode;
 struct GroupType;
 
+/** Enumeration of group options. */
 typedef enum {
 	OPTION_INVALID   = 0,
-	OPTION_STICKY    = 1,
-	OPTION_LAYER     = 2,
-	OPTION_DESKTOP   = 3,
-	OPTION_ICON      = 4,
-	OPTION_NOLIST    = 5,
-	OPTION_BORDER    = 6,
-	OPTION_NOBORDER  = 7,
-	OPTION_TITLE     = 8,
-	OPTION_NOTITLE   = 9,
-	OPTION_PIGNORE   = 10,
-	OPTION_MAXIMIZED = 11,
-	OPTION_MINIMIZED = 12,
-	OPTION_SHADED    = 13
+	OPTION_STICKY    = 1,  /**< Start in the sticky state. */
+	OPTION_LAYER     = 2,  /**< Start on a specific layer. */
+	OPTION_DESKTOP   = 3,  /**< Start on a specific desktop. */
+	OPTION_ICON      = 4,  /**< Set the icon to use. */
+	OPTION_NOLIST    = 5,  /**< Don't display in the task list. */
+	OPTION_BORDER    = 6,  /**< Force a window border. */
+	OPTION_NOBORDER  = 7,  /**< Don't draw a window border. */
+	OPTION_TITLE     = 8,  /**< Force a window title bar. */
+	OPTION_NOTITLE   = 9,  /**< Don't draw a window title bar. */
+	OPTION_PIGNORE   = 10, /**< Ignore program-specified location. */
+	OPTION_MAXIMIZED = 11, /**< Start maximized. */
+	OPTION_MINIMIZED = 12, /**< Start minimized. */
+	OPTION_SHADED    = 13  /**< Start shaded. */
 } OptionType;
 
 void InitializeGroups();
@@ -35,14 +36,41 @@ void StartupGroups();
 void ShutdownGroups();
 void DestroyGroups();
 
+/** Create an empty group.
+ * @return An empty group.
+ */
 struct GroupType *CreateGroup();
+
+/** Add a window class to a group.
+ * @param gp The group.
+ * @param pattern A pattern to match with the window class.
+ */
 void AddGroupClass(struct GroupType *gp, const char *pattern);
+
+/** Add a window name to a group.
+ * @param gp The group.
+ * @param pattern A pattern to match with the window name.
+ */
 void AddGroupName(struct GroupType *gp, const char *pattern);
+
+/** Add a group option that doesn't take a value.
+ * @param gp The group.
+ * @param option The option.
+ */
 void AddGroupOption(struct GroupType *gp, OptionType option);
+
+/** Add a group option that takes a value.
+ * @param gp The group.
+ * @param option The option.
+ * @param value The option value.
+ */
 void AddGroupOptionValue(struct GroupType *gp, OptionType option,
 	const char *value);
 
+/** Apply any matching groups to a client.
+ * @param np The client.
+ */
 void ApplyGroups(struct ClientNode *np);
 
-#endif
+#endif /* GROUP_H */
 

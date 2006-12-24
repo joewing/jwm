@@ -9,6 +9,9 @@ Todo:
 	- Add the ability to drag windows to different desktops.
 
 20061223:
+	- Changed the look.
+
+20061223:
 	- Released JWM v1.8.
 
 20061222:

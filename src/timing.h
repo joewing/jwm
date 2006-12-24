@@ -10,12 +10,14 @@
 #ifndef TIMING_H
 #define TIMING_H
 
+/** Initializer for TimeType to indicate that it is not set. */
 #define ZERO_TIME { 0, 0 }
 
+/** Structure to represent time since January 1, 1970 GMT. */
 typedef struct TimeType {
 
-   unsigned long seconds;
-   int ms;
+   unsigned long seconds;  /**< Seconds. */
+   int ms;                 /**< Milliseconds. */
 
 } TimeType;
 
@@ -28,6 +30,7 @@ void GetCurrentTime(TimeType *t);
  * Note that the times must be normalized.
  * @param t1 The first time.
  * @param t2 The second time.
+ * @return The difference in milliseconds (maximum of 60000 ms).
  */
 unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2);
 
@@ -39,5 +42,5 @@ unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2);
  */
 const char *GetTimeString(const char *format);
 
-#endif
+#endif /* TIMING_H */
 

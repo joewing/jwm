@@ -47,5 +47,5 @@ void SignalTrayButton(const struct TimeType *now, int x, int y);
  */
 void ValidateTrayButtons();
 
-#endif
+#endif /* TRAY_BUTTON_H */
 

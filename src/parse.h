@@ -15,5 +15,5 @@
  */
 void ParseConfig(const char *fileName);
 
-#endif
+#endif /* PARSE_H */
 

@@ -17,5 +17,5 @@
  */
 int Match(const char *pattern, const char *expression);
 
-#endif
+#endif /* MATCH_H */
 

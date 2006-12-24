@@ -14,6 +14,7 @@
 
 struct ClientNode;
 
+/** Enumeration of possible resize modes. */
 typedef enum {
    RESIZE_OPAQUE,   /**< Show window contents while resizing. */
    RESIZE_OUTLINE   /**< Show an outline while resizing. */
@@ -38,5 +39,5 @@ void ResizeClientKeyboard(struct ClientNode *np);
  */
 void SetResizeMode(ResizeModeType mode);
 
-#endif
+#endif /* RESIZE_H */
 

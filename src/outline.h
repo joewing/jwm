@@ -28,5 +28,5 @@ void DrawOutline(int x, int y, int width, int height);
 /** Clear an outline. */
 void ClearOutline();
 
-#endif
+#endif /* OUTLINE_H */
 

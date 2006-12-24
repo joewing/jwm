@@ -12,7 +12,7 @@
 #include "main.h"
 #include "tray.h"
 #include "error.h"
-#include "root.h"
+#include "command.h"
 #include "color.h"
 #include "client.h"
 #include "event.h"

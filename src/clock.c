@@ -14,7 +14,7 @@
 #include "font.h"
 #include "timing.h"
 #include "main.h"
-#include "root.h"
+#include "command.h"
 #include "cursor.h"
 #include "popup.h"
 #include "misc.h"

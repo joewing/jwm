@@ -64,5 +64,5 @@ int GetStringWidth(FontType type, const char *str);
  */
 int GetStringHeight(FontType type);
 
-#endif
+#endif /* FONT_H */
 

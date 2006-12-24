@@ -97,22 +97,38 @@ typedef struct AttributeNode {
 /** Structure to represent an XML tag. */
 typedef struct TokenNode {
 
-   TokenType type;
-   char *invalidName;
-   char *value;
-   char *fileName;
-   int line;
-   struct AttributeNode *attributes;
-   struct TokenNode *parent;
-   struct TokenNode *subnodeHead, *subnodeTail;
-   struct TokenNode *next;
+   TokenType type;            /**< Tag type. */
+   char *invalidName;         /**< Name of the tag if invalid. */
+   char *value;               /**< Body of the tag. */
+   char *fileName;            /**< Name of the file containing this tag. */
+   int line;                  /**< Line number of the start of this tag. */
+   struct AttributeNode *attributes;   /**< Linked list of attributes. */
+   struct TokenNode *parent;           /**< Parent tag. */
+   struct TokenNode *subnodeHead;      /**< Start of children. */
+   struct TokenNode *subnodeTail;      /**< End of children. */
+   struct TokenNode *next;             /**< Next tag at the current level. */
 
 } TokenNode;
 
+/** Tokenize a buffer.
+ * @param line The buffer to tokenize.
+ * @param fileName The name of the file for error reporting.
+ * @return A linked list of tokens from the buffer.
+ */
 TokenNode *Tokenize(const char *line, const char *fileName);
 
+/** Get a string represention of a token.
+ * This is identical to GetTokenTypeName if tp is a valid token.
+ * @param tp The token node.
+ * @return The name (never NULL).
+ */
 const char *GetTokenName(const TokenNode *tp);
+
+/** Get a string represention of a token.
+ * @param type The token.
+ * @return The name (never NULL).
+ */
 const char *GetTokenTypeName(TokenType type);
 
-#endif
+#endif /* LEX_H */
 

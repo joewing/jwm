@@ -33,5 +33,5 @@ void Trim(char *str);
  */
 char *CopyString(const char *str);
 
-#endif
+#endif /* MISC_H */
 

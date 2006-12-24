@@ -10,6 +10,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+/** Enumeration of focus models. */
 typedef enum {
    FOCUS_SLOPPY              = 0,
    FOCUS_CLICK               = 1
@@ -52,5 +53,5 @@ extern int haveShape;
 extern int shapeEvent;
 #endif
 
-#endif
+#endif /* MAIN_H */
 

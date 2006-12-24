@@ -39,5 +39,5 @@ int CheckSwallowMap(const XMapEvent *event);
  */
 int ProcessSwallowEvent(const XEvent *event);
 
-#endif
+#endif /* SWALLOW_H */
 

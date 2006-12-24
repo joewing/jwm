@@ -23,6 +23,7 @@
 #include "desktop.h"
 #include "popup.h"
 #include "timing.h"
+#include "command.h"
 
 #define BUTTON_SIZE 4
 

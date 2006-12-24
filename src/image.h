@@ -43,5 +43,5 @@ ImageNode *LoadImageFromData(char **data);
  */
 void DestroyImage(ImageNode *image);
 
-#endif
+#endif /* IMAGE_H */
 

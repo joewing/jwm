@@ -57,5 +57,5 @@ void SetDefaultSnapDistance();
  */
 void SetMoveMode(MoveModeType mode);
 
-#endif
+#endif /* MOVE_H */
 

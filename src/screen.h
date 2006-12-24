@@ -49,5 +49,5 @@ const ScreenType *GetScreen(int index);
  */
 int GetScreenCount();
 
-#endif
+#endif /* SCREEN_H */
 

@@ -114,8 +114,12 @@ void GetColorIndex(XColor *c);
 void GetColorFromIndex(XColor *c);
 
 #ifdef USE_XFT
+/** Get an XFT color.
+ * @param type The color whose XFT color to get.
+ * @return The XFT color.
+ */
 XftColor *GetXftColor(ColorType type);
 #endif
 
-#endif
+#endif /* COLOR_H */
 

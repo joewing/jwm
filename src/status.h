@@ -50,6 +50,5 @@ void SetMoveStatusType(const char *str);
  */
 void SetResizeStatusType(const char *str);
 
-#endif
-
+#endif /* STATUS_H */
 

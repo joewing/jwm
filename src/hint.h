@@ -12,6 +12,7 @@
 
 struct ClientNode;
 
+/** Enumeration of atoms. */
 typedef enum {
 
    /* Misc */
@@ -227,5 +228,5 @@ void SetCardinalAtom(Window window, AtomType atom, unsigned long value);
  */
 void SetWindowAtom(Window window, AtomType atom, unsigned long value);
 
-#endif
+#endif /* HINT_H */
 

@@ -37,5 +37,5 @@ struct TrayComponentType *CreateClock(const char *format,
  */
 void SignalClock(const struct TimeType *now, int x, int y);
 
-#endif
+#endif /* CLOCK_H */
 

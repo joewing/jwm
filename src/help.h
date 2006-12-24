@@ -22,5 +22,5 @@ void DisplayHelp();
 /** Display program usage information. */
 void DisplayUsage();
 
-#endif
+#endif /* HELP_H */
 

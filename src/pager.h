@@ -19,9 +19,13 @@ void ShutdownPager();
 void DestroyPager();
 /*@}*/
 
+/** Create a pager tray component.
+ * @return A new pager tray component.
+ */
 struct TrayComponentType *CreatePager();
 
+/** Update pagers. */
 void UpdatePager();
 
-#endif
+#endif /* PAGER_H */
 

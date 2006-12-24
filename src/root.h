@@ -50,16 +50,11 @@ void GetRootMenuSize(int index, int *width, int *height);
  */
 int ShowRootMenu(int index, int x, int y);
 
-/** Run a command.
- * @param command The command to run (run in sh).
- */
-void RunCommand(const char *command);
-
 /** Restart the window manager. */
 void Restart();
 
 /** Exit the window manager. */
 void Exit();
 
-#endif
+#endif /* ROOT_H */
 

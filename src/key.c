@@ -12,6 +12,7 @@
 #include "main.h"
 #include "client.h"
 #include "root.h"
+#include "command.h"
 #include "error.h"
 #include "tray.h"
 #include "misc.h"

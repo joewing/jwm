@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2006
  *
- * @brief Dock functions.
+ * @brief Dock tray component.
  *
  */
 

@@ -61,48 +61,58 @@ typedef struct ColormapNode {
 
 /** The aspect ratio of a window. */
 typedef struct AspectRatio {
-   int minx, miny;  /**< The minimum aspect ratio. */
-   int maxx, maxy;  /**< The maximum aspect ratio. */
+   int minx;   /**< The x component of the minimum aspect ratio. */
+   int miny;   /**< The y component of the minimum aspect ratio. */
+   int maxx;   /**< The x component of the maximum aspect ratio. */
+   int maxy;   /**< The y component of the maximum aspect ratio. */
 } AspectRatio;
 
 /** Struture to store information about a client window. */
 typedef struct ClientNode {
 
-   Window window;           /**< The client window. */
-   Window parent;           /**< The frame window. */
+   Window window;             /**< The client window. */
+   Window parent;             /**< The frame window. */
 
-   Window owner;            /**< The owner window (for transients). */
+   Window owner;              /**< The owner window (for transients). */
 
-   int x, y;                /**< The location of the window. */
-   int width, height;       /**< The size of the window. */
-   int oldx, oldy;          /**< The old location (for maximize). */
-   int oldWidth, oldHeight; /**< The old size (for maximize). */
+   int x, y;                  /**< The location of the window. */
+   int width;                 /**< The width of the window. */
+   int height;                /**< The height of the window. */
+   int oldx;                  /**< The old x coordinate (for maximize). */
+   int oldy;                  /**< The old y coordinate (for maximize). */
+   int oldWidth;              /**< The old width (for maximize). */
+   int oldHeight;             /**< The old height (for maximize). */
 
-   long sizeFlags;
-   int baseWidth, baseHeight;
-   int minWidth, minHeight;
-   int maxWidth, maxHeight;
-   int xinc, yinc;
-   AspectRatio aspect;
-   int gravity;
+   long sizeFlags;            /**< Size flags from XGetWMNormalHints. */
+   int baseWidth;             /**< Base width for resizing. */
+   int baseHeight;            /**< Base height for resizing. */
+   int minWidth;              /**< Minimum width of this window. */
+   int minHeight;             /**< Minimum height of this window. */
+   int maxWidth;              /**< Maximum width of this window. */
+   int maxHeight;             /**< Maximum height of this window. */
+   int xinc;                  /**< Resize x increment. */
+   int yinc;                  /**< Resize y increment. */
+   AspectRatio aspect;        /**< Aspect ratio. */
+   int gravity;               /**< Gravity for reparenting. */
 
-   Colormap cmap;
-   ColormapNode *colormaps;
+   Colormap cmap;             /**< This window's colormap. */
+   ColormapNode *colormaps;   /**< Colormaps assigned to this window. */
 
-   char *name;
-   char *instanceName;
-   char *className;
+   char *name;                /**< Name of this window for display. */
+   char *instanceName;        /**< Name of this window for properties. */
+   char *className;           /**< Name of the window class. */
 
-   ClientState state;
+   ClientState state;         /**< Window state. */
 
    BorderActionType borderAction;
 
-   struct IconNode *icon;
+   struct IconNode *icon;     /**< Icon assigned to this window. */
 
+   /** Callback to stop move/resize. */
    void (*controller)(int wasDestroyed);
 
-   struct ClientNode *prev;  /**< The previous client in this layer. */
-   struct ClientNode *next;  /**< The next client in this layer. */
+   struct ClientNode *prev;   /**< The previous client in this layer. */
+   struct ClientNode *next;   /**< The next client in this layer. */
 
 } ClientNode;
 
@@ -281,5 +291,5 @@ void SendConfigureEvent(ClientNode *np);
  */
 void SendClientMessage(Window w, AtomType type, AtomType message);
 
-#endif
+#endif /* CLIENT_H */
 

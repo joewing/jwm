@@ -33,5 +33,5 @@ void ShowWindowMenu(struct ClientNode *np, int x, int y);
  */
 void ChooseWindow(const MenuAction *action); 
 
-#endif
+#endif /* WINMENU_H */
 

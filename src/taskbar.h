@@ -60,5 +60,5 @@ void SetTaskBarInsertMode(const char *mode);
 /** Update the _NET_CLIENT_LIST property. */
 void UpdateNetClientList();
 
-#endif
+#endif /* TASKBAR_H */
 

@@ -32,5 +32,10 @@ void AddShutdownCommand(const char *command);
  */
 void AddRestartCommand(const char *command);
 
-#endif
+/** Run a command.
+ * @param command The command to run (run in sh).
+ */
+void RunCommand(const char *command);
+
+#endif /* COMMAND_H */
 

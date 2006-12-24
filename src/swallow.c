@@ -263,6 +263,11 @@ int CheckSwallowMap(const XMapEvent *event) {
 
 				return 1;
 
+			} else {
+
+				JXFree(hint.res_name);
+				JXFree(hint.res_class);
+
 			}
 		}
 

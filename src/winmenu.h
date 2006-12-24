@@ -17,7 +17,7 @@ struct ClientNode;
 /** Get the size of a window menu.
  * @param np The client for the window menu.
  * @param width The width return.
- * @param heigth The height return.
+ * @param height The height return.
  */
 void GetWindowMenuSize(struct ClientNode *np, int *width, int *height);
 

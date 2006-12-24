@@ -245,7 +245,7 @@ void SetClientLayer(ClientNode *np, unsigned int layer);
 
 /** Set the desktop for a client.
  * @param np The client.
- * @parma desktop The desktop to be assigned to the client.
+ * @param desktop The desktop to be assigned to the client.
  */
 void SetClientDesktop(ClientNode *np, unsigned int desktop);
 

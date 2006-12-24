@@ -169,7 +169,7 @@ void Trim(char *str) {
 	}
 
 	/* Trim the right. */
-	while(IsSpace(str[length - 1])) {
+	while(length > 0 && IsSpace(str[length - 1])) {
 		--length;
 		str[length] = 0;
 	}

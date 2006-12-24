@@ -1,7 +1,11 @@
-/*************************************************************************
- * Functions for displaying window move/resize status.
- * Copyright (C) 2004 Joe Wingbermuehle
- *************************************************************************/
+/**
+ * @file status.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Functions for display window move/resize status.
+ *
+ */
 
 #include "jwm.h"
 #include "status.h"
@@ -35,8 +39,7 @@ static void GetMoveResizeCoordinates(const ClientNode *np,
 	StatusWindowType type, int *x, int *y);
 static StatusWindowType ParseType(const char *str);
 
-/*************************************************************************
- *************************************************************************/
+/** Get the location to place the status window. */
 void GetMoveResizeCoordinates(const ClientNode *np, StatusWindowType type,
 	int *x, int *y) {
 
@@ -63,8 +66,7 @@ void GetMoveResizeCoordinates(const ClientNode *np, StatusWindowType type,
 
 }
 
-/*************************************************************************
- *************************************************************************/
+/** Create the status window. */
 void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
 
 	XSetWindowAttributes attrs;
@@ -93,8 +95,7 @@ void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
 
 }
 
-/*************************************************************************
- *************************************************************************/
+/** Draw the status window. */
 void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
 
 	int x, y;
@@ -137,8 +138,7 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
 
 }
 
-/*************************************************************************
- *************************************************************************/
+/** Destroy the status window. */
 void DestroyMoveResizeWindow() {
 
 	if(statusWindow != None) {
@@ -148,16 +148,14 @@ void DestroyMoveResizeWindow() {
 
 }
 
-/*************************************************************************
- *************************************************************************/
+/** Create a move status window. */
 void CreateMoveWindow(ClientNode *np) {
 
 	CreateMoveResizeWindow(np, moveStatusType);
 
 }
 
-/*************************************************************************
- *************************************************************************/
+/** Update the move status window. */
 void UpdateMoveWindow(ClientNode *np) {
 
 	char str[80];
@@ -176,24 +174,21 @@ void UpdateMoveWindow(ClientNode *np) {
 
 }
 
-/*************************************************************************
- *************************************************************************/
+/** Destroy the move status window. */
 void DestroyMoveWindow() {
 
 	DestroyMoveResizeWindow();
 
 }
 
-/*************************************************************************
- *************************************************************************/
+/** Create a resize status window. */
 void CreateResizeWindow(ClientNode *np) {
 
 	CreateMoveResizeWindow(np, resizeStatusType);
 
 }
 
-/*************************************************************************
- *************************************************************************/
+/** Update the resize status window. */
 void UpdateResizeWindow(ClientNode *np, int gwidth, int gheight) {
 
 	char str[80];
@@ -212,16 +207,14 @@ void UpdateResizeWindow(ClientNode *np, int gwidth, int gheight) {
 
 }
 
-/*************************************************************************
- *************************************************************************/
+/** Destroy the resize status window. */
 void DestroyResizeWindow() {
 
 	DestroyMoveResizeWindow();
 
 }
 
-/*************************************************************************
- *************************************************************************/
+/** Parse a status window type string. */
 StatusWindowType ParseType(const char *str) {
 
 	if(!str) {
@@ -240,8 +233,7 @@ StatusWindowType ParseType(const char *str) {
 
 }
 
-/*************************************************************************
- *************************************************************************/
+/** Set the move status window type. */
 void SetMoveStatusType(const char *str) {
 
 	StatusWindowType type;
@@ -256,8 +248,7 @@ void SetMoveStatusType(const char *str) {
 
 }
 
-/*************************************************************************
- *************************************************************************/
+/** Set the resize status window type. */
 void SetResizeStatusType(const char *str) {
 
 	StatusWindowType type;

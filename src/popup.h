@@ -21,6 +21,11 @@ void ShutdownPopup();
 void DestroyPopup();
 /*@}*/
 
+/** Show a popup window.
+ * @param x The x coordinate of the popup window.
+ * @param y The y coordinate of the popup window.
+ * @param text The text to display in the popup.
+ */
 void ShowPopup(int x, int y, const char *text);
 
 void SetPopupEnabled(int e);

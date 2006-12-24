@@ -1,7 +1,11 @@
-/****************************************************************************
- * Functions for displaying popup windows.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file popup.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Functions for displaying popup windows.
+ *
+ */
 
 #include "jwm.h"
 #include "popup.h"
@@ -31,23 +35,20 @@ int popupDelay;
 
 static void DrawPopup();
 
-/****************************************************************************
- ****************************************************************************/
+/** Initialize popup data. */
 void InitializePopup() {
 	popupDelay = DEFAULT_POPUP_DELAY;
 	popupEnabled = 1;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Startup popups. */
 void StartupPopup() {
 	popup.isActive = 0;
 	popup.text = NULL;
 	popup.window = None;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Shutdown popups. */
 void ShutdownPopup() {
 	if(popup.text) {
 		Release(popup.text);
@@ -59,17 +60,11 @@ void ShutdownPopup() {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Destroy popup data. */
 void DestroyPopup() {
 }
 
-/****************************************************************************
- * Show a popup window.
- * x - The x coordinate of the popup window.
- * y - The y coordinate of the popup window.
- * text - The text to display in the popup.
- ****************************************************************************/
+/** Show a popup window. */
 void ShowPopup(int x, int y, const char *text) {
 
 	unsigned long attrMask;
@@ -160,14 +155,12 @@ void ShowPopup(int x, int y, const char *text) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set whether popups show be shown. */
 void SetPopupEnabled(int e) {
 	popupEnabled = e;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set the popup delay. */
 void SetPopupDelay(const char *str) {
 
 	int temp;
@@ -186,8 +179,7 @@ void SetPopupDelay(const char *str) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Signal popup (this is used to hide popups after awhile). */
 void SignalPopup(const TimeType *now, int x, int y) {
 
 	if(popup.isActive) {
@@ -199,8 +191,7 @@ void SignalPopup(const TimeType *now, int x, int y) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Process an event on a popup window. */
 int ProcessPopupEvent(const XEvent *event) {
 
 	if(popup.isActive && event->xany.window == popup.window) {
@@ -218,8 +209,7 @@ int ProcessPopupEvent(const XEvent *event) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Draw the popup window. */
 void DrawPopup() {
 
 	Assert(popup.isActive);

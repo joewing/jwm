@@ -1,7 +1,11 @@
-/****************************************************************************
- * Functions to render icons using the XRender extension.
- * Copyright (C) 2005 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file render.c
+ * @author Joe Wingbermuehle
+ * @date 2005-2006
+ *
+ * @brief Functions to render icons using the XRender extension.
+ *
+ */
 
 #include "jwm.h"
 #include "render.h"
@@ -15,8 +19,7 @@
 static int haveRender = 0;
 #endif
 
-/****************************************************************************
- ****************************************************************************/
+/** Determine if the render extension is available. */
 void QueryRenderExtension()
 {
 
@@ -42,8 +45,7 @@ void QueryRenderExtension()
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Draw a scaled icon. */
 int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
 	int x, int y)
 {
@@ -97,8 +99,7 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Create a scaled icon. */
 ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 	int width, int height) {
 

@@ -68,7 +68,7 @@ void StartupBorders() {
 
 	for(x = 0; x < BP_COUNT; x++) {
 
-		pixmaps[x] = XCreateBitmapFromData(display, rootWindow,
+		pixmaps[x] = JXCreateBitmapFromData(display, rootWindow,
 			(char*)bitmaps[x], 16, 16);
 
 	}

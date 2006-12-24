@@ -1,7 +1,11 @@
-/****************************************************************************
- * Functions for handling window menus.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file winmenu.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Functions for handling window menus.
+ *
+ */
 
 #include "jwm.h"
 #include "winmenu.h"
@@ -28,8 +32,7 @@ static void AddWindowMenuItem(Menu *menu, const char *name,
 
 static ClientNode *client = NULL;
 
-/****************************************************************************
- ****************************************************************************/
+/** Get the size of a window menu. */
 void GetWindowMenuSize(ClientNode *np, int *width, int *height) {
 
 	Menu *menu;
@@ -43,8 +46,7 @@ void GetWindowMenuSize(ClientNode *np, int *width, int *height) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Show a window menu. */
 void ShowWindowMenu(ClientNode *np, int x, int y) {
 
 	Menu *menu;
@@ -60,8 +62,7 @@ void ShowWindowMenu(ClientNode *np, int x, int y) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Create a new window menu. */
 Menu *CreateWindowMenu() {
 
 	Menu *menu;
@@ -128,8 +129,7 @@ Menu *CreateWindowMenu() {
 	return menu;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Create a window layer submenu. */
 void CreateWindowLayerMenu(Menu *menu) {
 
 	Menu *submenu;
@@ -193,8 +193,7 @@ void CreateWindowLayerMenu(Menu *menu) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Create a send to submenu. */
 void CreateWindowSendToMenu(Menu *menu) {
 
 	unsigned int mask;
@@ -215,8 +214,7 @@ void CreateWindowSendToMenu(Menu *menu) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Add an item to the current window menu. */
 void AddWindowMenuItem(Menu *menu, const char *name,
 	MenuActionType type, int value) {
 
@@ -239,8 +237,7 @@ void AddWindowMenuItem(Menu *menu, const char *name,
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Select a window for performing an action. */
 void ChooseWindow(const MenuAction *action) {
 
 	XEvent event;
@@ -271,8 +268,7 @@ void ChooseWindow(const MenuAction *action) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Window menu action callback. */
 void RunWindowCommand(const MenuAction *action) {
 
 	switch(action->type) {

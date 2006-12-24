@@ -1,7 +1,11 @@
-/****************************************************************************
- * The main entry point and related JWM functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file main.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief The main entry point and related JWM functions.
+ *
+ */
 
 #include "jwm.h"
 #include "main.h"
@@ -94,8 +98,7 @@ static void SendExit();
 static char *configPath = NULL;
 static char *displayString = NULL;
 
-/****************************************************************************
- ****************************************************************************/
+/** The main entry point. */
 int main(int argc, char *argv[]) {
 	char *temp;
 	int x;
@@ -171,9 +174,9 @@ int main(int argc, char *argv[]) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Exit with the specified status code. */
 void DoExit(int code) {
+
 	Destroy();
 
 	if(configPath) {
@@ -189,19 +192,19 @@ void DoExit(int code) {
 	exit(code);
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Main JWM event loop. */
 void EventLoop() {
+
 	XEvent event;
 
 	while(!shouldExit) {
 		WaitForEvent(&event);
 		ProcessEvent(&event);
 	}
+
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Open a connection to the X server. */
 void OpenConnection() {
 
 	display = JXOpenDisplay(displayString);
@@ -228,8 +231,7 @@ void OpenConnection() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Prepare the connection. */
 void StartupConnection() {
 	XSetWindowAttributes attr;
 	int temp;
@@ -273,21 +275,18 @@ void StartupConnection() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Close the X server connection. */
 void CloseConnection() {
 	JXFlush(display);
 	JXCloseDisplay(display);
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Close the X server connection. */
 void ShutdownConnection() {
 	CloseConnection();
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Signal handler. */
 void HandleExit() {
 	signal(SIGTERM, HandleExit);
 	signal(SIGINT, HandleExit);
@@ -295,9 +294,9 @@ void HandleExit() {
 	shouldExit = 1;
 }
 
-/****************************************************************************
+/** Initialize data structures.
  * This is called before the X connection is opened.
- ****************************************************************************/
+ */
 void Initialize() {
 	InitializeBorders();
 	InitializeClients();
@@ -306,9 +305,9 @@ void Initialize() {
 	InitializeCommands();
 	InitializeCursors();
 	InitializeDesktops();
-	#ifndef DISABLE_CONFIRM
-		InitializeDialogs();
-	#endif
+#ifndef DISABLE_CONFIRM
+	InitializeDialogs();
+#endif
 	InitializeDock();
 	InitializeFonts();
 	InitializeGroups();
@@ -327,9 +326,9 @@ void Initialize() {
 	InitializeTrayButtons();
 }
 
-/****************************************************************************
+/** Startup the various JWM components.
  * This is called after the X connection is opened.
- ****************************************************************************/
+ */
 void Startup() {
 
 	/* This order is important. */
@@ -386,9 +385,9 @@ void Startup() {
 
 }
 
-/****************************************************************************
+/** Shutdown the various JWM components.
  * This is called before the X connection is closed.
- ****************************************************************************/
+ */
 void Shutdown() {
 
 	/* This order is important. */
@@ -425,10 +424,10 @@ void Shutdown() {
 
 }
 
-/****************************************************************************
+/** Clean up memory.
  * This is called after the X connection is closed.
  * Note that it is possible for this to be called more than once.
- ****************************************************************************/
+ */
 void Destroy() {
 	DestroyBorders();
 	DestroyClients();
@@ -437,9 +436,9 @@ void Destroy() {
 	DestroyCommands();
 	DestroyCursors();
 	DestroyDesktops();
-	#ifndef DISABLE_CONFIRM
-		DestroyDialogs();
-	#endif
+#ifndef DISABLE_CONFIRM
+	DestroyDialogs();
+#endif
 	DestroyDock();
 	DestroyFonts();
 	DestroyGroups();
@@ -458,9 +457,7 @@ void Destroy() {
 	DestroyTrayButtons();
 }
 
-/****************************************************************************
- * Send _JWM_RESTART to the root window.
- ****************************************************************************/
+/** Send _JWM_RESTART to the root window. */
 void SendRestart() {
 
 	XEvent event;
@@ -479,9 +476,7 @@ void SendRestart() {
 
 }
 
-/****************************************************************************
- * Send _JWM_EXIT to the root window.
- ****************************************************************************/
+/** Send _JWM_EXIT to the root window. */
 void SendExit() {
 
 	XEvent event;

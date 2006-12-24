@@ -1,7 +1,11 @@
-/****************************************************************************
- * Functions to handle moving client windows.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file move.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Client window move functions.
+ *
+ */
 
 #include "jwm.h"
 #include "move.h"
@@ -53,20 +57,17 @@ static int CheckTopValid(const RectangleType *client,
 static int CheckBottomValid(const RectangleType *client,
 	const RectangleType *other, const RectangleType *bottom);
 
-/****************************************************************************
- ****************************************************************************/
+/** Set the snap mode to use. */
 void SetSnapMode(SnapModeType mode) {
 	snapMode = mode;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set the move mode to use. */
 void SetMoveMode(MoveModeType mode) {
 	moveMode = mode;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set the snap distance. */
 void SetSnapDistance(const char *value) {
 	int temp;
 
@@ -82,14 +83,12 @@ void SetSnapDistance(const char *value) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Restore the default snap distance. */
 void SetDefaultSnapDistance() {
 	snapDistance = DEFAULT_SNAP_DISTANCE;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Callback for stopping moves. */
 void MoveController(int wasDestroyed) {
 
 	if(moveMode == MOVE_OUTLINE) {
@@ -104,8 +103,7 @@ void MoveController(int wasDestroyed) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Move a client window. */
 int MoveClient(ClientNode *np, int startx, int starty) {
 
 	XEvent event;
@@ -206,8 +204,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Move a client window (keyboard or menu initiated). */
 int MoveClientKeyboard(ClientNode *np) {
 
 	XEvent event;
@@ -337,8 +334,7 @@ int MoveClientKeyboard(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Stop move. */
 void StopMove(ClientNode *np, int doMove, int oldx, int oldy) {
 
 	int north, south, east, west;
@@ -365,8 +361,7 @@ void StopMove(ClientNode *np, int doMove, int oldx, int oldy) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Snap to the screen and/or neighboring windows. */
 void DoSnap(ClientNode *np) {
 	switch(snapMode) {
 	case SNAP_BORDER:
@@ -381,8 +376,7 @@ void DoSnap(ClientNode *np) {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Snap to the screen. */
 void DoSnapScreen(ClientNode *np) {
 
 	RectangleType client;
@@ -533,8 +527,7 @@ void DoSnapBorder(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Determine if we should snap to the specified client. */
 int ShouldSnap(const ClientNode *np) {
 	if(np->state.status & STAT_HIDDEN) {
 		return 0;
@@ -545,8 +538,7 @@ int ShouldSnap(const ClientNode *np) {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Get a rectangle to represent a client window. */
 void GetClientRectangle(const ClientNode *np, RectangleType *r) {
 
 	int north, south, east, west;
@@ -566,8 +558,7 @@ void GetClientRectangle(const ClientNode *np, RectangleType *r) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Check for top/bottom overlap. */
 int CheckOverlapTopBottom(const RectangleType *a, const RectangleType *b) {
 	if(a->top >= b->bottom) {
 		return 0;
@@ -578,8 +569,7 @@ int CheckOverlapTopBottom(const RectangleType *a, const RectangleType *b) {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Check for left/right overlap. */
 int CheckOverlapLeftRight(const RectangleType *a, const RectangleType *b) {
 	if(a->left >= b->right) {
 		return 0;
@@ -590,13 +580,13 @@ int CheckOverlapLeftRight(const RectangleType *a, const RectangleType *b) {
 	}
 }
 
-/****************************************************************************
- * Check if the current left snap position is valid.
- * client - The window being moved.
- * other  - A window higher in stacking order than previously check windows.
- * left   - The top/bottom of the current left snap window.
- * Returns 1 if the current left snap position is still valid, otherwise 0.
- ****************************************************************************/
+/** Check if the current left snap position is valid.
+ * @param client The window being moved.
+ * @param other A window higher in stacking order than
+ * previously check windows.
+ * @param left The top/bottom of the current left snap window.
+ * @return 1 if the current left snap position is still valid, otherwise 0.
+ */
 int CheckLeftValid(const RectangleType *client,
 	const RectangleType *other, const RectangleType *left) {
 
@@ -626,8 +616,7 @@ int CheckLeftValid(const RectangleType *client,
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Check if the current right snap position is valid. */
 int CheckRightValid(const RectangleType *client,
 	const RectangleType *other, const RectangleType *right) {
 
@@ -657,8 +646,7 @@ int CheckRightValid(const RectangleType *client,
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Check if the current top snap position is valid. */
 int CheckTopValid(const RectangleType *client,
 	const RectangleType *other, const RectangleType *top) {
 
@@ -688,8 +676,7 @@ int CheckTopValid(const RectangleType *client,
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Check if the current bottom snap position is valid. */
 int CheckBottomValid(const RectangleType *client,
 	const RectangleType *other, const RectangleType *bottom) {
 

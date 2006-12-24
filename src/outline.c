@@ -1,7 +1,11 @@
-/****************************************************************************
- * Outlines for moving and resizing.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file outline.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Outlines for moving and resizing client windows.
+ *
+ */
 
 #include "jwm.h"
 #include "outline.h"
@@ -13,13 +17,11 @@ static int lastX, lastY;
 static int lastWidth, lastHeight;
 static int outlineDrawn;
 
-/****************************************************************************
- ****************************************************************************/
+/** Initialize outline data. */
 void InitializeOutline() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Startup outlines. */
 void StartupOutline() {
 
 	XGCValues gcValues;
@@ -33,19 +35,16 @@ void StartupOutline() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Shutdown outlines. */
 void ShutdownOutline() {
 	JXFreeGC(display, outlineGC);
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Release outline data. */
 void DestroyOutline() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Draw an outline. */
 void DrawOutline(int x, int y, int width, int height) {
 	if(!outlineDrawn) {
 		JXSync(display, False);
@@ -59,8 +58,7 @@ void DrawOutline(int x, int y, int width, int height) {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Clear the last outline. */
 void ClearOutline() {
 	if(outlineDrawn) {
 		JXDrawRectangle(display, rootWindow, outlineGC,

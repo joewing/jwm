@@ -1,7 +1,11 @@
-/****************************************************************************
- * Functions for displaying the pager.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file pager.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Pager tray component.
+ *
+ */
 
 #include "jwm.h"
 #include "pager.h"
@@ -29,7 +33,6 @@ typedef struct PagerType {
 static PagerType *pagers;
 
 static void Create(TrayComponentType *cp);
-static void Destroy(TrayComponentType *cp);
 
 static void SetSize(TrayComponentType *cp, int width, int height);
 
@@ -38,19 +41,16 @@ static void ProcessPagerButtonEvent(TrayComponentType *cp,
 
 static void DrawPagerClient(const PagerType *pp, const ClientNode *np);
 
-/****************************************************************************
- ****************************************************************************/
+/** Initialize pager data. */
 void InitializePager() {
 	pagers = NULL;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Startup the pager. */
 void StartupPager() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Shutdown the pager. */
 void ShutdownPager() {
 
 	PagerType *pp;
@@ -61,8 +61,7 @@ void ShutdownPager() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Release pager data. */
 void DestroyPager() {
 
 	PagerType *pp;
@@ -75,8 +74,7 @@ void DestroyPager() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Create a new pager tray component. */
 TrayComponentType *CreatePager() {
 
 	TrayComponentType *cp;
@@ -90,15 +88,13 @@ TrayComponentType *CreatePager() {
 	cp->object = pp;
 	pp->cp = cp;
 	cp->Create = Create;
-	cp->Destroy = Destroy;
 	cp->SetSize = SetSize;
 	cp->ProcessButtonEvent = ProcessPagerButtonEvent;
 
 	return cp;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Initialize a pager tray component. */
 void Create(TrayComponentType *cp) {
 
 	PagerType *pp;
@@ -118,14 +114,7 @@ void Create(TrayComponentType *cp) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
-void Destroy(TrayComponentType *cp) {
-
-}
-
-/****************************************************************************
- ****************************************************************************/
+/** Set the size of a pager tray component. */
 void SetSize(TrayComponentType *cp, int width, int height) {
 
 	PagerType *pp;
@@ -163,8 +152,7 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Process a button event on a tray component. */
 void ProcessPagerButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 	PagerType *pp;
@@ -191,8 +179,7 @@ void ProcessPagerButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Update the pager. */
 void UpdatePager() {
 
 	PagerType *pp;
@@ -258,8 +245,7 @@ void UpdatePager() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Draw a client on the pager. */
 void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
 
 	int x, y;

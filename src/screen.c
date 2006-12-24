@@ -1,7 +1,15 @@
-/****************************************************************************
- * Screen functions.
- * Copyright (C) 2005 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file screen.c
+ * @author Joe Wingbermuehle
+ * @date 2005-2006
+ *
+ * @brief Screen functions.
+ *
+ * Note that screen here refers to physical monitors. Screens are
+ * determined using the xinerama extension (if available). There will
+ * always be at least one screen.
+ *
+ */
 
 #include "jwm.h"
 #include "screen.h"
@@ -11,14 +19,12 @@
 static ScreenType *screens;
 static int screenCount;
 
-/****************************************************************************
- ****************************************************************************/
+/** Initialize screen data. */
 void InitializeScreens() {
 	screens = NULL;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Startup screens. */
 void StartupScreens() {
 #ifdef USE_XINERAMA
 
@@ -65,8 +71,7 @@ void StartupScreens() {
 #endif /* USE_XINERAMA */
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Shutdown screens. */
 void ShutdownScreens() {
 	if(screens) {
 		Release(screens);
@@ -74,13 +79,11 @@ void ShutdownScreens() {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Destroy screen data. */
 void DestroyScreens() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Get the screen given global screen coordinates. */
 const ScreenType *GetCurrentScreen(int x, int y) {
 
 	ScreenType *sp;
@@ -99,8 +102,7 @@ const ScreenType *GetCurrentScreen(int x, int y) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Get the screen the mouse is currently on. */
 const ScreenType *GetMouseScreen() {
 #ifdef USE_XINERAMA
 
@@ -116,8 +118,7 @@ const ScreenType *GetMouseScreen() {
 #endif
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Get data for a screen. */
 const ScreenType *GetScreen(int index) {
 
 	Assert(index >= 0);
@@ -127,8 +128,7 @@ const ScreenType *GetScreen(int index) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Get the number of screens. */
 int GetScreenCount() {
 
 	return screenCount;

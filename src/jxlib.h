@@ -76,6 +76,9 @@
 		XCreatePixmapFromBitmapData( a, b, c, d, e, f, g, h ) \
 	)
 
+#define JXCreateBitmapFromData( a, b, c, d, e ) \
+	( SetCheckpoint(), XCreateBitmapFromData( a, b, c, d, e ) )
+
 #define JXCreateSimpleWindow( a, b, c, d, e, f, g, h, i ) \
 	( \
 		SetCheckpoint(), \

@@ -1,16 +1,18 @@
-/****************************************************************************
- * Timing functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file timing.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Timing functions.
+ *
+ */
 
 #include "jwm.h"
 #include "timing.h"
 
 static const unsigned long MAX_TIME_SECONDS = 60;
 
-/****************************************************************************
- * Get the current time in milliseconds since midnight 1970-01-01 UTC.
- ****************************************************************************/
+/** Get the current time in milliseconds since midnight 1970-01-01 UTC. */
 void GetCurrentTime(TimeType *t) {
 	struct timeval val;
 	gettimeofday(&val, NULL);
@@ -18,12 +20,11 @@ void GetCurrentTime(TimeType *t) {
 	t->ms = val.tv_usec / 1000;
 }
 
-/****************************************************************************
- * Get the absolute difference between two times in milliseconds.
+/** Get the absolute difference between two times in milliseconds.
  * If the difference is larger than a MAX_TIME_SECONDS, then
  * MAX_TIME_SECONDS will be returned.
  * Note that the times must be normalized.
- ****************************************************************************/
+ */
 unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2) {
 	unsigned long deltaSeconds;
 	int deltaMs;
@@ -50,10 +51,7 @@ unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2) {
 
 }
 
-/****************************************************************************
- * Get the current time.
- * Not reenterent.
- ****************************************************************************/
+/** Get the current time. */
 const char *GetTimeString(const char *format) {
 
 	static char str[80];

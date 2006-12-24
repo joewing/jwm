@@ -1,7 +1,11 @@
-/***************************************************************************
- * Functions to handle the root menu.
- * Copyright (C) 2004 Joe Wingbermuehle
- ***************************************************************************/
+/**
+ * @file root.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Functions to handle root menus.
+ *
+ */
 
 #include "jwm.h"
 #include "root.h"
@@ -26,8 +30,7 @@ static void UnpatchRootMenu(Menu *menu);
 
 static void RunRootCommand(const MenuAction *action);
 
-/***************************************************************************
- ***************************************************************************/
+/** Initialize root menu data. */
 void InitializeRootMenu() {
 
 	int x;
@@ -38,8 +41,7 @@ void InitializeRootMenu() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Startup root menus. */
 void StartupRootMenu() {
 
 	int x, y;
@@ -62,13 +64,11 @@ void StartupRootMenu() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Shutdown root menus. */
 void ShutdownRootMenu() {
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Destroy root menu data. */
 void DestroyRootMenu() {
 
 	int x, y;
@@ -87,8 +87,7 @@ void DestroyRootMenu() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Set a root menu. */
 void SetRootMenu(const char *indexes, Menu *m) {
 
 	int x, y;
@@ -129,14 +128,12 @@ void SetRootMenu(const char *indexes, Menu *m) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Set whether a dialog should be shown before exiting. */
 void SetShowExitConfirmation(int v) {
 	showExitConfirmation = v;
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Determine if the specified root menu is defined. */
 int IsRootMenuDefined(int index) {
 	if(index >= 0 && index < ROOT_MENU_COUNT && rootMenu[index]) {
 		return 1;
@@ -145,8 +142,7 @@ int IsRootMenuDefined(int index) {
 	}
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Determine the size of a root menu. */
 void GetRootMenuSize(int index, int *width, int *height) {
 
 	if(!rootMenu[index]) {
@@ -162,8 +158,7 @@ void GetRootMenuSize(int index, int *width, int *height) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Show a root menu. */
 int ShowRootMenu(int index, int x, int y) {
 
 	if(!rootMenu[index]) {
@@ -178,8 +173,7 @@ int ShowRootMenu(int index, int x, int y) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Prepare a root menu to be shown. */
 void PatchRootMenu(Menu *menu) {
 
 	MenuItem *item;
@@ -196,8 +190,7 @@ void PatchRootMenu(Menu *menu) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Remove temporary items from a root menu. */
 void UnpatchRootMenu(Menu *menu) {
 
 	MenuItem *item;
@@ -213,21 +206,18 @@ void UnpatchRootMenu(Menu *menu) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Exit callback for the exit menu item. */
 void ExitHandler(ClientNode *np) {
 	shouldExit = 1;
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Restart callback for the restart menu item. */
 void Restart() {
 	shouldRestart = 1;
 	shouldExit = 1;
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Exit with optional confirmation. */
 void Exit() {
 	if(showExitConfirmation) {
 		ShowConfirmDialog(NULL, ExitHandler,
@@ -239,8 +229,7 @@ void Exit() {
 	}
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Root menu callback. */
 void RunRootCommand(const MenuAction *action) {
 
 	switch(action->type) {
@@ -282,8 +271,7 @@ void RunRootCommand(const MenuAction *action) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Execute an external program. */
 void RunCommand(const char *command) {
 	char *displayString;
 	char *str;

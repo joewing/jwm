@@ -1,7 +1,11 @@
-/****************************************************************************
- * Client placement functions.
- * Copyright (C) 2005 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file place.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Client placement functions.
+ *
+ */
 
 #include "jwm.h"
 #include "place.h"
@@ -35,13 +39,11 @@ static void UpdateTrayBounds(BoundingBox *box, unsigned int layer);
 static void UpdateStrutBounds(BoundingBox *box);
 static void SubtractBounds(const BoundingBox *src, BoundingBox *dest);
 
-/****************************************************************************
- ****************************************************************************/
+/** Initialize placement data. */
 void InitializePlacement() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Startup placement. */
 void StartupPlacement() {
 
 	int count;
@@ -56,8 +58,7 @@ void StartupPlacement() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Shutdown placement. */
 void ShutdownPlacement() {
 
 	Strut *sp;
@@ -73,13 +74,11 @@ void ShutdownPlacement() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Destroy placement data. */
 void DestroyPlacement() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Remove struts associated with a client. */
 void RemoveClientStrut(ClientNode *np) {
 
 	Strut *sp;
@@ -102,8 +101,7 @@ void RemoveClientStrut(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Add client specified struts to our list. */
 void ReadClientStrut(ClientNode *np) {
 
 	BoundingBox box;
@@ -240,8 +238,7 @@ void ReadClientStrut(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Get the screen bounds. */
 void GetScreenBounds(const ScreenType *sp, BoundingBox *box) {
 
 	box->x = sp->x;
@@ -251,9 +248,7 @@ void GetScreenBounds(const ScreenType *sp, BoundingBox *box) {
 
 }
 
-/****************************************************************************
- * Shrink dest such that it does not intersect with src.
- ****************************************************************************/
+/** Shrink dest such that it does not intersect with src. */
 void SubtractBounds(const BoundingBox *src, BoundingBox *dest) {
 
 	BoundingBox boxes[4];
@@ -317,8 +312,7 @@ void SubtractBounds(const BoundingBox *src, BoundingBox *dest) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Subtract tray area from the bounding box. */
 void UpdateTrayBounds(BoundingBox *box, unsigned int layer) {
 
 	TrayType *tp;
@@ -347,8 +341,7 @@ void UpdateTrayBounds(BoundingBox *box, unsigned int layer) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Remove struts from the bounding box. */
 void UpdateStrutBounds(BoundingBox *box) {
 
 	Strut *sp;
@@ -369,8 +362,7 @@ void UpdateStrutBounds(BoundingBox *box) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Place a client on the screen. */
 void PlaceClient(ClientNode *np, int alreadyMapped) {
 
 	BoundingBox box;
@@ -452,8 +444,7 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Constrain the size of the client so it fits. */
 void ConstrainSize(ClientNode *np) {
 
 	BoundingBox box;
@@ -511,8 +502,7 @@ void ConstrainSize(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Place a maximized client on the screen. */
 void PlaceMaximizedClient(ClientNode *np) {
 
 	BoundingBox box;
@@ -571,8 +561,7 @@ void PlaceMaximizedClient(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Determine which way to move the client for the border. */
 void GetGravityDelta(const ClientNode *np, int *x, int  *y) {
 
 	int north, south, east, west;
@@ -624,9 +613,7 @@ void GetGravityDelta(const ClientNode *np, int *x, int  *y) {
 
 }
 
-/****************************************************************************
- * Move the window in the specified direction for reparenting.
- ****************************************************************************/
+/** Move the window in the specified direction for reparenting. */
 void GravitateClient(ClientNode *np, int negate) {
 
 	int deltax, deltay;

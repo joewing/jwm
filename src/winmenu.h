@@ -1,5 +1,5 @@
 /**
- * @file tray.h
+ * @file winmenu.h
  * @author Joe Wingbermuehle
  * @date 2004-2006
  *

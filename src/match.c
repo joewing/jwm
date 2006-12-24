@@ -1,11 +1,16 @@
-/****************************************************************************
- * Expression matching.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file match.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Expression matching.
+ *
+ */
 
 #include "jwm.h"
 #include "match.h"
 
+/** State data for pattern matching. */
 typedef struct MatchStateType {
 	const char *pattern;
 	const char *expression;
@@ -16,8 +21,7 @@ typedef struct MatchStateType {
 
 static int DoMatch(MatchStateType state);
 
-/****************************************************************************
- ****************************************************************************/
+/** Determine if expression matches pattern. */
 int Match(const char *pattern, const char *expression) {
 
 	MatchStateType state;
@@ -38,8 +42,7 @@ int Match(const char *pattern, const char *expression) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Match helper function. */
 int DoMatch(MatchStateType state) {
 
 	char p, e;

@@ -1,7 +1,11 @@
-/***************************************************************************
- * Menu functions display and handling functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- ***************************************************************************/
+/**
+ * @file menu.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Menu display and handling functions.
+ *
+ */
 
 #include "jwm.h"
 #include "menu.h"
@@ -24,7 +28,7 @@ typedef enum {
 	MENU_SUBSELECT   = 2
 } MenuSelectionType;
 
-/* Submenu arrow, 4 x 7 pixels */
+/** Submenu arrow, 4 x 7 pixels */
 static char menu_bitmap[] = {
 	0x01, 0x03, 0x07, 0x0F, 0x07, 0x03, 0x01
 };
@@ -51,8 +55,7 @@ static MenuAction *menuAction = NULL;
 
 int menuShown = 0;
 
-/***************************************************************************
- ***************************************************************************/
+/** Initialize a menu. */
 void InitializeMenu(Menu *menu) {
 
 	MenuItem *np;
@@ -135,8 +138,7 @@ void InitializeMenu(Menu *menu) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Show a menu. */
 void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y) {
 
 	int mouseStatus, keyboardStatus;
@@ -161,8 +163,7 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Destroy a menu. */
 void DestroyMenu(Menu *menu) {
 	MenuItem *np;
 
@@ -202,8 +203,7 @@ void DestroyMenu(Menu *menu) {
 	}
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Show a submenu. */
 int ShowSubmenu(Menu *menu, Menu *parent, int x, int y) {
 	int status;
 
@@ -219,9 +219,9 @@ int ShowSubmenu(Menu *menu, Menu *parent, int x, int y) {
 	return status;
 }
 
-/***************************************************************************
+/** Menu process loop.
  * Returns 0 if no selection was made or 1 if a selection was made.
- ***************************************************************************/
+ */
 int MenuLoop(Menu *menu) {
 
 	XEvent event;
@@ -297,8 +297,7 @@ int MenuLoop(Menu *menu) {
 	}
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Create and map a menu. */
 void CreateMenu(Menu *menu, int x, int y) {
 
 	XSetWindowAttributes attr;
@@ -346,16 +345,14 @@ void CreateMenu(Menu *menu, int x, int y) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Hide a menu. */
 void HideMenu(Menu *menu) {
 
 	JXDestroyWindow(display, menu->window);
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Redraw a menu and its submenus. */
 void RedrawMenuTree(Menu *menu) {
 
 	if(menu->parent) {
@@ -367,8 +364,7 @@ void RedrawMenuTree(Menu *menu) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Draw a menu. */
 void DrawMenu(Menu *menu) {
 
 	MenuItem *np;
@@ -406,8 +402,7 @@ void DrawMenu(Menu *menu) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Determine the action to take given an event. */
 MenuSelectionType UpdateMotion(Menu *menu, XEvent *event) {
 
 	MenuItem *ip;
@@ -579,8 +574,7 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Update the menu selection. */
 void UpdateMenu(Menu *menu) {
 
 	ButtonNode button;
@@ -611,21 +605,25 @@ void UpdateMenu(Menu *menu) {
 		DrawButton(&button);
 
 		if(ip->submenu) {
-			/* TODO */
-			pixmap = JXCreatePixmapFromBitmapData(display, menu->window,
-				menu_bitmap, 4, 7, colors[COLOR_MENU_ACTIVE_FG],
-				colors[COLOR_MENU_ACTIVE_BG1], rootDepth);
-			JXCopyArea(display, pixmap, menu->window, rootGC, 0, 0, 4, 7,
+			pixmap = JXCreateBitmapFromData(display, menu->window,
+				menu_bitmap, 4, 7);
+			JXSetForeground(display, rootGC, colors[COLOR_MENU_ACTIVE_FG]);
+			JXSetClipMask(display, rootGC, pixmap);
+			JXSetClipOrigin(display, rootGC,
 				menu->width - 9,
 				menu->offsets[menu->currentIndex] + menu->itemHeight / 2 - 4);
+			JXFillRectangle(display, menu->window, rootGC,
+				menu->width - 9,
+				menu->offsets[menu->currentIndex] + menu->itemHeight / 2 - 4,
+				4, 7);
+			JXSetClipMask(display, rootGC, None);
 			JXFreePixmap(display, pixmap);
 		}
 	}
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Draw a menu item. */
 void DrawMenuItem(Menu *menu, MenuItem *item, int index) {
 
 	ButtonNode button;
@@ -688,8 +686,7 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Get the next item in the menu. */
 int GetNextMenuIndex(Menu *menu) {
 
 	MenuItem *item;
@@ -706,8 +703,7 @@ int GetNextMenuIndex(Menu *menu) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Get the previous item in the menu. */
 int GetPreviousMenuIndex(Menu *menu) {
 
 	MenuItem *item;
@@ -724,8 +720,7 @@ int GetPreviousMenuIndex(Menu *menu) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Get the item in the menu given a y-coordinate. */
 int GetMenuIndex(Menu *menu, int y) {
 
 	int x;
@@ -742,8 +737,7 @@ int GetMenuIndex(Menu *menu, int y) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Get the menu item associated with an index. */
 MenuItem *GetMenuItem(Menu *menu, int index) {
 
 	MenuItem *ip;
@@ -763,8 +757,7 @@ MenuItem *GetMenuItem(Menu *menu, int index) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Set the active menu item. */
 void SetPosition(Menu *tp, int index) {
 
 	int y;

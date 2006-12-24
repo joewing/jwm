@@ -515,9 +515,7 @@ void GetColorFromIndex(XColor *c) {
 
 }
 
-/***************************************************************************
- * Compute the pixel value from RGB components.
- ***************************************************************************/
+/** Compute the pixel value from RGB components. */
 void GetDirectPixel(XColor *c) {
 
 	unsigned long red;
@@ -541,9 +539,7 @@ void GetDirectPixel(XColor *c) {
 
 }
 
-/***************************************************************************
- * Compute the pixel value from RGB components.
- ***************************************************************************/
+/** Compute the pixel value from RGB components. */
 void GetMappedPixel(XColor *c) {
 
 	Assert(c);
@@ -553,9 +549,7 @@ void GetMappedPixel(XColor *c) {
 
 }
 
-/***************************************************************************
- * Compute the pixel value from RGB components.
- ***************************************************************************/
+/** Compute the pixel value from RGB components. */
 void GetColor(XColor *c) {
 
 	Assert(c);

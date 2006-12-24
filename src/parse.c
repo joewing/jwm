@@ -1,7 +1,11 @@
-/****************************************************************************
- * Parser for the JWM XML configuration file.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file parse.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief JWM configuration parser.
+ *
+ */
 
 #include "jwm.h"
 #include "parse.h"
@@ -136,7 +140,6 @@ static void ParseTrayButtonStyle(const TokenNode *start);
 
 /* Feel. */
 static void ParseKey(const TokenNode *tp);
-static void ParseMouse(const TokenNode *tp);
 static void ParseSnapMode(const TokenNode *tp);
 static void ParseMoveMode(const TokenNode *tp);
 static void ParseResizeMode(const TokenNode *tp);
@@ -148,8 +151,7 @@ static void ReleaseTokens(TokenNode *np);
 static void InvalidTag(const TokenNode *tp, TokenType parent);
 static void ParseError(const TokenNode *tp, const char *str, ...);
 
-/****************************************************************************
- ****************************************************************************/
+/** Parse the JWM configuration. */
 void ParseConfig(const char *fileName) {
 	if(!ParseFile(fileName, 0)) {
 		if(!ParseFile(SYSTEM_CONFIG, 0)) {
@@ -160,10 +162,10 @@ void ParseConfig(const char *fileName) {
 	ValidateKeys();
 }
 
-/****************************************************************************
+/**
  * Parse a specific file.
- * Returns 1 on success and 0 on failure.
- ****************************************************************************/
+ * @return 1 on success and 0 on failure.
+ */
 int ParseFile(const char *fileName, int depth) {
 
 	TokenNode *tokens;
@@ -193,8 +195,7 @@ int ParseFile(const char *fileName, int depth) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Release a token list. */
 void ReleaseTokens(TokenNode *np) {
 
 	AttributeNode *ap;
@@ -237,8 +238,7 @@ void ReleaseTokens(TokenNode *np) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse a token list. */
 void Parse(const TokenNode *start, int depth) {
 
 	TokenNode *tp;
@@ -276,9 +276,6 @@ void Parse(const TokenNode *start, int depth) {
 				break;
 			case TOK_MENUSTYLE:
 				ParseMenuStyle(tp);
-				break;
-			case TOK_MOUSE:
-				ParseMouse(tp);
 				break;
 			case TOK_MOVEMODE:
 				ParseMoveMode(tp);
@@ -336,8 +333,7 @@ void Parse(const TokenNode *start, int depth) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Parse focus model. */
 void ParseFocusModel(const TokenNode *tp) {
 	if(tp->value) {
 		if(!strcmp(tp->value, "sloppy")) {
@@ -352,8 +348,7 @@ void ParseFocusModel(const TokenNode *tp) {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Parse snap mode for moving windows. */
 void ParseSnapMode(const TokenNode *tp) {
 
 	const char *distance;
@@ -380,8 +375,7 @@ void ParseSnapMode(const TokenNode *tp) {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Parse move mode. */
 void ParseMoveMode(const TokenNode *tp) {
 
 	const char *str;
@@ -403,8 +397,7 @@ void ParseMoveMode(const TokenNode *tp) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Parse resize mode. */
 void ParseResizeMode(const TokenNode *tp) {
 
 	const char *str;
@@ -426,8 +419,7 @@ void ParseResizeMode(const TokenNode *tp) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Parse a root menu. */
 void ParseRootMenu(const TokenNode *start) {
 
 	const char *value;
@@ -465,8 +457,7 @@ void ParseRootMenu(const TokenNode *start) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Insert a new menu item into a menu. */
 MenuItem *InsertMenuItem(MenuItem *last) {
 
 	MenuItem *item;
@@ -488,8 +479,7 @@ MenuItem *InsertMenuItem(MenuItem *last) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Parse a menu item. */
 MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
 	MenuItem *last) {
 
@@ -689,8 +679,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Parse a menu include. */
 MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
 	MenuItem *last) {
 
@@ -753,8 +742,7 @@ MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Parse a key binding. */
 void ParseKey(const TokenNode *tp) {
 
 	const char *key;
@@ -802,13 +790,7 @@ void ParseKey(const TokenNode *tp) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
-void ParseMouse(const TokenNode *tp) {
-}
-
-/***************************************************************************
- ***************************************************************************/
+/** Parse window style. */
 void ParseWindowStyle(const TokenNode *tp) {
 
 	const TokenNode *np;
@@ -897,8 +879,7 @@ void ParseInactiveWindowStyle(const TokenNode *tp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse an include. */
 void ParseInclude(const TokenNode *tp, int depth) {
 
 	char *temp;
@@ -925,8 +906,7 @@ void ParseInclude(const TokenNode *tp, int depth) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Parse desktop configuration. */
 void ParseDesktops(const TokenNode *tp) {
 
 	TokenNode *np;
@@ -959,8 +939,7 @@ void ParseDesktops(const TokenNode *tp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse task list style. */
 void ParseTaskListStyle(const TokenNode *tp) {
 
 	const char *temp;
@@ -996,8 +975,7 @@ void ParseTaskListStyle(const TokenNode *tp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse tray style. */
 void ParseTrayStyle(const TokenNode *tp) {
 
 	const TokenNode *np;
@@ -1021,8 +999,7 @@ void ParseTrayStyle(const TokenNode *tp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse tray. */
 void ParseTray(const TokenNode *tp) {
 
 	const TokenNode *np;
@@ -1107,8 +1084,7 @@ void ParseTray(const TokenNode *tp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse a pager tray component. */
 void ParsePager(const TokenNode *tp, TrayType *tray) {
 
 	TrayComponentType *cp;
@@ -1121,8 +1097,7 @@ void ParsePager(const TokenNode *tp, TrayType *tray) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse a task list tray component. */
 void ParseTaskList(const TokenNode *tp, TrayType *tray) {
 
 	TrayComponentType *cp;
@@ -1141,8 +1116,7 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse a swallow tray component. */
 void ParseSwallow(const TokenNode *tp, TrayType *tray) {
 
 	TrayComponentType *cp;
@@ -1179,8 +1153,7 @@ void ParseSwallow(const TokenNode *tp, TrayType *tray) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse a button tray component. */
 void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
 
 	TrayComponentType *cp;
@@ -1218,8 +1191,7 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse a clock tray component. */
 void ParseClock(const TokenNode *tp, TrayType *tray) {
 
 	TrayComponentType *cp;
@@ -1260,8 +1232,7 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse a dock tray component. */
 void ParseDock(const TokenNode *tp, TrayType *tray) {
 
 	TrayComponentType *cp;
@@ -1276,8 +1247,7 @@ void ParseDock(const TokenNode *tp, TrayType *tray) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse pager style. */
 void ParsePagerStyle(const TokenNode *tp) {
 
 	const TokenNode *np;
@@ -1309,8 +1279,7 @@ void ParsePagerStyle(const TokenNode *tp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse popup style. */
 void ParsePopupStyle(const TokenNode *tp) {
 
 	const TokenNode *np;
@@ -1356,8 +1325,7 @@ void ParsePopupStyle(const TokenNode *tp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse menu style. */
 void ParseMenuStyle(const TokenNode *tp) {
 
 	const TokenNode *np;
@@ -1389,8 +1357,7 @@ void ParseMenuStyle(const TokenNode *tp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse clock style. */
 void ParseClockStyle(const TokenNode *tp) {
 
 	const TokenNode *np;
@@ -1416,8 +1383,7 @@ void ParseClockStyle(const TokenNode *tp) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Parse tray button style. */
 void ParseTrayButtonStyle(const TokenNode *tp) {
 
 	const TokenNode *np;
@@ -1443,8 +1409,7 @@ void ParseTrayButtonStyle(const TokenNode *tp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse an option group. */
 void ParseGroup(const TokenNode *tp) {
 
 	const TokenNode *np;
@@ -1473,8 +1438,7 @@ void ParseGroup(const TokenNode *tp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Parse a option group option. */
 void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
 	const char *option) {
 
@@ -1554,8 +1518,7 @@ void ParseColor(const char *value, ColorType a, ColorType b) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Find an attribute in a list of attributes. */
 char *FindAttribute(AttributeNode *ap, const char *name) {
 
 	while(ap) {
@@ -1568,8 +1531,7 @@ char *FindAttribute(AttributeNode *ap, const char *name) {
 	return NULL;
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Read a file. */
 char *ReadFile(FILE *fd) {
 
 	const int BLOCK_SIZE = 1024;
@@ -1598,8 +1560,7 @@ char *ReadFile(FILE *fd) {
 	return buffer;
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Display an invalid tag error message. */
 void InvalidTag(const TokenNode *tp, TokenType parent) {
 
 	ParseError(tp, "invalid tag in %s: %s",
@@ -1607,8 +1568,7 @@ void InvalidTag(const TokenNode *tp, TokenType parent) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Display a parser error. */
 void ParseError(const TokenNode *tp, const char *str, ...) {
 
 	va_list ap;
@@ -1634,5 +1594,4 @@ void ParseError(const TokenNode *tp, const char *str, ...) {
 	va_end(ap);
 
 }
-
 

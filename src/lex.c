@@ -1,16 +1,24 @@
-/*****************************************************************************
- * XML lexer functions.
- * Copyright (C) 2004 Joe Wingbermuehle
- *****************************************************************************/
+/**
+ * @file lex.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief XML lexer functions.
+ *
+ */
 
 #include "jwm.h"
 #include "lex.h"
 #include "error.h"
 #include "misc.h"
 
+/** Amount to increase allocations by when reading text. */
 static const int BLOCK_SIZE = 16;
 
-/* Order is important! The order must match the order in lex.h */
+/** Literal names for tokens.
+ * This order is important. It must match the order of the enumeration
+ * in lex.h.
+ */
 static const char *TOKEN_MAP[] = {
 	"[invalid]",
 	"Active",
@@ -44,7 +52,6 @@ static const char *TOKEN_MAP[] = {
 	"Menu",
 	"MenuStyle",
 	"Minimize",
-	"Mouse",
 	"Move",
 	"MoveMode",
 	"Name",
@@ -98,8 +105,7 @@ static int ParseEntity(const char *entity, char *ch,
 	const char *file, int line);
 static TokenType LookupType(const char *name, TokenNode *np);
 
-/*****************************************************************************
- *****************************************************************************/
+/** Tokenize a data. */
 TokenNode *Tokenize(const char *line, const char *fileName) {
 
 	TokenNode *np;
@@ -278,11 +284,10 @@ ReadDefault:
 	return head;
 }
 
-/*****************************************************************************
- * Parse an entity reference.
+/** Parse an entity reference.
  * The entity value is returned in ch and the length of the entity
  * is returned as the value of the function.
- *****************************************************************************/
+ */
 int ParseEntity(const char *entity, char *ch, const char *file, int line) {
 	char *temp;
 	int x;
@@ -318,8 +323,7 @@ int ParseEntity(const char *entity, char *ch, const char *file, int line) {
 	}
 }
 
-/*****************************************************************************
- *****************************************************************************/
+/** Determine if ch is the end of a tag/attribute name. */
 int IsElementEnd(char ch) {
 	switch(ch) {
 	case ' ':
@@ -338,8 +342,7 @@ int IsElementEnd(char ch) {
 	}
 }
 
-/*****************************************************************************
- *****************************************************************************/
+/** Determine if ch is the end of an attribute value. */
 int IsAttributeEnd(char ch) {
 	switch(ch) {
 	case 0:
@@ -350,8 +353,7 @@ int IsAttributeEnd(char ch) {
 	}
 }
 
-/*****************************************************************************
- *****************************************************************************/
+/** Determine if ch is the end of tag data. */
 int IsValueEnd(char ch) {
 	switch(ch) {
 	case 0:
@@ -362,8 +364,7 @@ int IsValueEnd(char ch) {
 	}
 }
 
-/*****************************************************************************
- *****************************************************************************/
+/** Determine if ch is a space character. */
 int IsSpace(char ch, int *lineNumber) {
 	switch(ch) {
 	case ' ':
@@ -378,8 +379,7 @@ int IsSpace(char ch, int *lineNumber) {
 	}
 }
 
-/*****************************************************************************
- *****************************************************************************/
+/** Get the name of the next element. */
 char *ReadElementName(const char *line) {
 	char *buffer;
 	int len, max;
@@ -401,8 +401,7 @@ char *ReadElementName(const char *line) {
 	return buffer;
 }
 
-/*****************************************************************************
- *****************************************************************************/
+/** Get the value of the current element. */
 char *ReadElementValue(const char *line, const char *file, int *lineNumber) {
 	char *buffer;
 	char ch;
@@ -439,8 +438,7 @@ char *ReadElementValue(const char *line, const char *file, int *lineNumber) {
 	return buffer;
 }
 
-/*****************************************************************************
- *****************************************************************************/
+/** Get the value of the current attribute. */
 char *ReadAttributeValue(const char *line, const char *file,
 	int *lineNumber) {
 
@@ -478,8 +476,7 @@ char *ReadAttributeValue(const char *line, const char *file,
 	return buffer;
 }
 
-/*****************************************************************************
- *****************************************************************************/
+/** Get the token for a tag name. */
 TokenType LookupType(const char *name, TokenNode *np) {
 	unsigned int x;
 
@@ -503,8 +500,7 @@ TokenType LookupType(const char *name, TokenNode *np) {
 
 }
 
-/*****************************************************************************
- *****************************************************************************/
+/** Get a string representation of a token. */
 const char *GetTokenName(const TokenNode *tp) {
 	if(tp->invalidName) {
 		return tp->invalidName;
@@ -515,14 +511,12 @@ const char *GetTokenName(const TokenNode *tp) {
 	}
 }
 
-/*****************************************************************************
- *****************************************************************************/
+/** Get the string representation of a token. */
 const char *GetTokenTypeName(TokenType type) {
 	return TOKEN_MAP[type];
 }
 
-/*****************************************************************************
- *****************************************************************************/
+/** Create an empty XML tag node. */
 TokenNode *CreateNode(TokenNode *parent, const char *file, int line) {
 	TokenNode *np;
 
@@ -558,8 +552,7 @@ TokenNode *CreateNode(TokenNode *parent, const char *file, int line) {
 	return np;
 }
 
-/*****************************************************************************
- *****************************************************************************/
+/** Create an empty XML attribute node. */
 AttributeNode *CreateAttribute(TokenNode *np) {
 	AttributeNode *ap;
 

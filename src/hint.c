@@ -1,7 +1,11 @@
-/****************************************************************************
- * Functions to handle hints.
- * Copyright (C) 2004 Joe Wingbermuehle
- ****************************************************************************/
+/**
+ * @file hint.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Functions for reading and writing X properties.
+ *
+ */
 
 #include "jwm.h"
 #include "hint.h"
@@ -135,13 +139,11 @@ static void WriteWinState(ClientNode *np);
 static void ReadWMHints(Window win, ClientState *state);
 static void ReadMotifHints(Window win, ClientState *state);
 
-/****************************************************************************
- ****************************************************************************/
+/** Initialize hints data. */
 void InitializeHints() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set root hints and intern atoms. */
 void StartupHints() {
 
 	unsigned long array[128];
@@ -231,18 +233,15 @@ void StartupHints() {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Shutdown hints. */
 void ShutdownHints() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Destroy hints data. */
 void DestroyHints() {
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Determine the current desktop. */
 void ReadCurrentDesktop() {
 
 	unsigned long temp;
@@ -259,10 +258,9 @@ void ReadCurrentDesktop() {
 
 }
 
-/****************************************************************************
- * Read client protocls/hints.
+/** Read client protocls/hints.
  * This is called while the client is being added to management.
- ****************************************************************************/
+ */
 void ReadClientProtocols(ClientNode *np) {
 
 	Status status;
@@ -295,8 +293,7 @@ void ReadClientProtocols(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Write the window state hint for a client. */
 void WriteState(ClientNode *np) {
 
 	unsigned long data[2];
@@ -322,8 +319,7 @@ void WriteState(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Write the net state hint for a client. */
 void WriteNetState(ClientNode *np) {
 
 	unsigned long values[5];
@@ -367,8 +363,7 @@ void WriteNetState(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Write the allowed action property. */
 void WriteNetAllowed(ClientNode *np) {
 
 	unsigned long values[10];
@@ -414,8 +409,7 @@ void WriteNetAllowed(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Write the win state hint for a client (GNOME). */
 void WriteWinState(ClientNode *np) {
 
 	unsigned long flags;
@@ -444,9 +438,7 @@ void WriteWinState(ClientNode *np) {
 
 }
 
-/****************************************************************************
- * Read all hints needed to determine the current window state.
- ****************************************************************************/
+/** Read all hints needed to determine the current window state. */
 ClientState ReadWindowState(Window win) {
 
 	ClientState result;
@@ -570,8 +562,7 @@ ClientState ReadWindowState(Window win) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Determine the title to display for a client. */
 void ReadWMName(ClientNode *np) {
 
 	unsigned long count;
@@ -615,8 +606,7 @@ void ReadWMName(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Read the window class for a client. */
 void ReadWMClass(ClientNode *np) {
 
 	XClassHint hint;
@@ -630,8 +620,7 @@ void ReadWMClass(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Read the protocols hint for a window. */
 ClientProtocolType ReadWMProtocols(Window w) {
 
 	ClientProtocolType result;
@@ -668,8 +657,7 @@ ClientProtocolType ReadWMProtocols(Window w) {
 	
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Read the "normal hints" for a client. */
 void ReadWMNormalHints(ClientNode *np) {
 
 	XSizeHints hints;
@@ -751,8 +739,7 @@ void ReadWMNormalHints(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Read colormap information for a client. */
 void ReadWMColormaps(ClientNode *np) {
 
 	Window *windows;
@@ -792,8 +779,7 @@ void ReadWMColormaps(ClientNode *np) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Read the WM hints for a window. */
 void ReadWMHints(Window win, ClientState *state) {
 
 	XWMHints *wmhints;
@@ -820,9 +806,7 @@ void ReadWMHints(Window win, ClientState *state) {
 
 }
 
-/****************************************************************************
- * Read _MOTIF_WM_HINTS
- ****************************************************************************/
+/** Read _MOTIF_WM_HINTS */
 void ReadMotifHints(Window win, ClientState *state) {
 
 	PropMwmHints *mhints;
@@ -884,8 +868,7 @@ void ReadMotifHints(Window win, ClientState *state) {
 	}
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Read a cardinal atom. */
 int GetCardinalAtom(Window window, AtomType atom, unsigned long *value) {
 
 	unsigned long count;
@@ -915,8 +898,7 @@ int GetCardinalAtom(Window window, AtomType atom, unsigned long *value) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Read a window atom. */
 int GetWindowAtom(Window window, AtomType atom, Window *value) {
 	unsigned long count;
 	int status;
@@ -945,8 +927,7 @@ int GetWindowAtom(Window window, AtomType atom, Window *value) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set a cardinal atom. */
 void SetCardinalAtom(Window window, AtomType atom, unsigned long value) {
 
 	Assert(window != None);
@@ -956,8 +937,7 @@ void SetCardinalAtom(Window window, AtomType atom, unsigned long value) {
 
 }
 
-/****************************************************************************
- ****************************************************************************/
+/** Set a window atom. */
 void SetWindowAtom(Window window, AtomType atom, unsigned long value) {
 
 	Assert(window != None);

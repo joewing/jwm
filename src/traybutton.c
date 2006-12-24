@@ -1,5 +1,11 @@
-/***************************************************************************
- ***************************************************************************/
+/**
+ * @file traybutton.h
+ * @author Joe Wingbermuehle
+ * @date 2004-2006
+ *
+ * @brief Button tray component.
+ *
+ */
 
 #include "jwm.h"
 #include "traybutton.h"
@@ -52,14 +58,12 @@ static void ProcessButtonEvent(TrayComponentType *cp,
 static void ProcessMotionEvent(TrayComponentType *cp,
 	int x, int y, int mask);
 
-/***************************************************************************
- ***************************************************************************/
+/** Initialize tray button data. */
 void InitializeTrayButtons() {
 	buttons = NULL;
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Startup tray buttons. */
 void StartupTrayButtons() {
 
 	TrayButtonType *bp;
@@ -89,14 +93,12 @@ void StartupTrayButtons() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Shutdown tray buttons. */
 void ShutdownTrayButtons() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Release tray button data. */
 void DestroyTrayButtons() {
 
 	TrayButtonType *bp;
@@ -121,8 +123,7 @@ void DestroyTrayButtons() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Create a button tray component. */
 TrayComponentType *CreateTrayButton(const char *iconName,
 	const char *label, const char *action,
 	const char *popup, int width, int height) {
@@ -198,8 +199,7 @@ TrayComponentType *CreateTrayButton(const char *iconName,
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Set the size of a button tray component. */
 void SetSize(TrayComponentType *cp, int width, int height) {
 
 	TrayButtonType *bp;
@@ -246,8 +246,7 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Initialize a button tray component (display errors). */
 void CheckedCreate(TrayComponentType *cp) {
 
 	TrayButtonType *bp;
@@ -277,8 +276,7 @@ void CheckedCreate(TrayComponentType *cp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Initialize a button tray component. */
 void Create(TrayComponentType *cp) {
 
 	ButtonNode button;
@@ -328,8 +326,7 @@ void Create(TrayComponentType *cp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Resize a button tray component. */
 void Resize(TrayComponentType *cp) {
 
 	Destroy(cp);
@@ -337,16 +334,14 @@ void Resize(TrayComponentType *cp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Destroy a button tray component. */
 void Destroy(TrayComponentType *cp) {
 	if(cp->pixmap != None) {
 		JXFreePixmap(display, cp->pixmap);
 	}
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Process a button tray component event. */
 void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 	const ScreenType *sp;
@@ -397,8 +392,7 @@ void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Process a motion event. */
 void ProcessMotionEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 	TrayButtonType *bp = (TrayButtonType*)cp->object;
@@ -409,8 +403,7 @@ void ProcessMotionEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Signal (needed for popups). */
 void SignalTrayButton(const TimeType *now, int x, int y) {
 
 	TrayButtonType *bp;
@@ -434,8 +427,7 @@ void SignalTrayButton(const TimeType *now, int x, int y) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Validate tray buttons. */
 void ValidateTrayButtons() {
 
 	TrayButtonType *bp;

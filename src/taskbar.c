@@ -94,7 +94,7 @@ void InitializeTaskBar() {
 
 /** Startup the task bar. */
 void StartupTaskBar() {
-	minimizedPixmap = XCreateBitmapFromData(display, rootWindow,
+	minimizedPixmap = JXCreateBitmapFromData(display, rootWindow,
 		minimized_bitmap, 4, 4);
 }
 
@@ -239,8 +239,7 @@ void Resize(TrayComponentType *cp) {
 		0, 0, cp->width, cp->height);
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Process a task list button event. */
 void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 	TaskBarType *bar = (TaskBarType*)cp->object;
@@ -281,8 +280,7 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Process a task list motion event. */
 void ProcessTaskMotionEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 	TaskBarType *bp = (TaskBarType*)cp->object;
@@ -293,8 +291,7 @@ void ProcessTaskMotionEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Show the menu associated with a task list item. */
 void ShowTaskWindowMenu(TaskBarType *bar, Node *np) {
 
 	int x, y;
@@ -326,8 +323,7 @@ void ShowTaskWindowMenu(TaskBarType *bar, Node *np) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Add a client to the task bar. */
 void AddClientToTaskBar(ClientNode *np) {
 
 	Node *tp;
@@ -364,8 +360,7 @@ void AddClientToTaskBar(ClientNode *np) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Remove a client from the task bar. */
 void RemoveClientFromTaskBar(ClientNode *np) {
 
 	Node *tp;
@@ -395,8 +390,7 @@ void RemoveClientFromTaskBar(ClientNode *np) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Update all task bars. */
 void UpdateTaskBar() {
 
 	TaskBarType *bp;
@@ -425,8 +419,7 @@ void UpdateTaskBar() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Signal task bar (for popups). */
 void SignalTaskbar(const TimeType *now, int x, int y) {
 
 	TaskBarType *bp;
@@ -450,8 +443,7 @@ void SignalTaskbar(const TimeType *now, int x, int y) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Draw a specific task bar. */
 void Render(const TaskBarType *bp) {
 
 	Node *tp;
@@ -564,8 +556,7 @@ void Render(const TaskBarType *bp) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Focus the next client in the task bar. */
 void FocusNext() {
 
 	Node *tp;
@@ -601,8 +592,7 @@ void FocusNext() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Focus the previous client in the task bar. */
 void FocusPrevious() {
 
 	Node *tp;
@@ -638,8 +628,7 @@ void FocusPrevious() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Focus the next client in the stacking order. */
 void FocusNextStackedCircular() {
 
 	ClientNode *ac;
@@ -692,8 +681,7 @@ void FocusNextStackedCircular() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Get the item associated with an x-coordinate on the task bar. */
 Node *GetNode(TaskBarType *bar, int x) {
 
 	Node *tp;
@@ -746,8 +734,7 @@ Node *GetNode(TaskBarType *bar, int x) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Get the number of items on the task bar. */
 unsigned int GetItemCount() {
 
 	Node *tp;
@@ -764,8 +751,7 @@ unsigned int GetItemCount() {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Determine if a client should be shown on the task bar. */
 int ShouldShowItem(const ClientNode *np) {
 
 	if(np->state.desktop != currentDesktop
@@ -790,8 +776,7 @@ int ShouldShowItem(const ClientNode *np) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Determine if a client is allowed focus. */
 int ShouldFocusItem(const ClientNode *np) {
 
 	if(np->state.desktop != currentDesktop
@@ -815,8 +800,7 @@ int ShouldFocusItem(const ClientNode *np) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Get the width of an item in the task bar. */
 unsigned int GetItemWidth(const TaskBarType *bp, unsigned int itemCount) {
 
 	unsigned int itemWidth;
@@ -840,8 +824,7 @@ unsigned int GetItemWidth(const TaskBarType *bp, unsigned int itemCount) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Set the maximum width of an item in the task bar. */
 void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value) {
 
 	int temp;
@@ -861,8 +844,7 @@ void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value) {
 
 }
 
-/***************************************************************************
- ***************************************************************************/
+/** Set the way items are inserted into the task bar. */
 void SetTaskBarInsertMode(const char *mode) {
 
 	if(!mode) {
@@ -881,9 +863,7 @@ void SetTaskBarInsertMode(const char *mode) {
 
 }
 
-/***************************************************************************
- * Maintain the _NET_CLIENT_LIST[_STACKING] properties on the root window.
- ***************************************************************************/
+/** Maintain the _NET_CLIENT_LIST[_STACKING] properties on the root. */
 void UpdateNetClientList() {
 
 	Node *np;

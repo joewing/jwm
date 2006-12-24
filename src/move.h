@@ -14,15 +14,15 @@ struct ClientNode;
 
 /** Window snap modes. */
 typedef enum {
-	SNAP_NONE                 = 0,  /**< Don't snap. */
-	SNAP_SCREEN               = 1,  /**< Snap to the edges of the screen. */
-	SNAP_BORDER               = 2   /**< Snap to all borders. */
+   SNAP_NONE                 = 0,  /**< Don't snap. */
+   SNAP_SCREEN               = 1,  /**< Snap to the edges of the screen. */
+   SNAP_BORDER               = 2   /**< Snap to all borders. */
 } SnapModeType;
 
 /** Window move modes. */
 typedef enum {
-	MOVE_OPAQUE,   /**< Show window contents while moving. */
-	MOVE_OUTLINE   /**< Show an outline while moving. */
+   MOVE_OPAQUE,   /**< Show window contents while moving. */
+   MOVE_OUTLINE   /**< Show an outline while moving. */
 } MoveModeType;
 
 /** Move a client window.

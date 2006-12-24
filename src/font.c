@@ -28,12 +28,12 @@ static GC fontGC;
 /** Initialize font data. */
 void InitializeFonts() {
 
-	int x;
+   int x;
 
-	for(x = 0; x < FONT_COUNT; x++) {
-		fonts[x] = NULL;
-		fontNames[x] = NULL;
-	}
+   for(x = 0; x < FONT_COUNT; x++) {
+      fonts[x] = NULL;
+      fontNames[x] = NULL;
+   }
 
 }
 
@@ -41,62 +41,62 @@ void InitializeFonts() {
 void StartupFonts() {
 
 #ifndef USE_XFT
-	XGCValues gcValues;
-	unsigned long gcMask;
+   XGCValues gcValues;
+   unsigned long gcMask;
 #endif
-	int x;
+   int x;
 
-	/* Inherit unset fonts from the tray for tray items. */
-	if(!fontNames[FONT_TASK]) {
-		fontNames[FONT_TASK] = CopyString(fontNames[FONT_TRAY]);
-	}
-	if(!fontNames[FONT_TRAYBUTTON]) {
-		fontNames[FONT_TRAYBUTTON] = CopyString(fontNames[FONT_TRAY]);
-	}
-	if(!fontNames[FONT_CLOCK]) {
-		fontNames[FONT_CLOCK] = CopyString(fontNames[FONT_TRAY]);
-	}
+   /* Inherit unset fonts from the tray for tray items. */
+   if(!fontNames[FONT_TASK]) {
+      fontNames[FONT_TASK] = CopyString(fontNames[FONT_TRAY]);
+   }
+   if(!fontNames[FONT_TRAYBUTTON]) {
+      fontNames[FONT_TRAYBUTTON] = CopyString(fontNames[FONT_TRAY]);
+   }
+   if(!fontNames[FONT_CLOCK]) {
+      fontNames[FONT_CLOCK] = CopyString(fontNames[FONT_TRAY]);
+   }
 
 #ifdef USE_XFT
 
-	for(x = 0; x < FONT_COUNT; x++) {
-		if(fontNames[x]) {
-			fonts[x] = JXftFontOpenName(display, rootScreen, fontNames[x]);
-			if(!fonts[x]) {
-				fonts[x] = JXftFontOpenXlfd(display, rootScreen, fontNames[x]);
-			}
-			if(!fonts[x]) {
-				Warning("could not load font: %s", fontNames[x]);
-			}
-		}
-		if(!fonts[x]) {
-			fonts[x] = JXftFontOpenXlfd(display, rootScreen, DEFAULT_FONT);
-		}
-		if(!fonts[x]) {
-			FatalError("could not load the default font: %s", DEFAULT_FONT);
-		}
-	}
+   for(x = 0; x < FONT_COUNT; x++) {
+      if(fontNames[x]) {
+         fonts[x] = JXftFontOpenName(display, rootScreen, fontNames[x]);
+         if(!fonts[x]) {
+            fonts[x] = JXftFontOpenXlfd(display, rootScreen, fontNames[x]);
+         }
+         if(!fonts[x]) {
+            Warning("could not load font: %s", fontNames[x]);
+         }
+      }
+      if(!fonts[x]) {
+         fonts[x] = JXftFontOpenXlfd(display, rootScreen, DEFAULT_FONT);
+      }
+      if(!fonts[x]) {
+         FatalError("could not load the default font: %s", DEFAULT_FONT);
+      }
+   }
 
 #else /* USE_XFT */
 
-	for(x = 0; x < FONT_COUNT; x++) {
-		if(fontNames[x]) {
-			fonts[x] = JXLoadQueryFont(display, fontNames[x]);
-			if(!fonts[x] && fontNames[x]) {
-				Warning("could not load font: %s", fontNames[x]);
-			}
-		}
-		if(!fonts[x]) {
-			fonts[x] = JXLoadQueryFont(display, DEFAULT_FONT);
-		}
-		if(!fonts[x]) {
-			FatalError("could not load the default font: %s", DEFAULT_FONT);
-		}
-	}
+   for(x = 0; x < FONT_COUNT; x++) {
+      if(fontNames[x]) {
+         fonts[x] = JXLoadQueryFont(display, fontNames[x]);
+         if(!fonts[x] && fontNames[x]) {
+            Warning("could not load font: %s", fontNames[x]);
+         }
+      }
+      if(!fonts[x]) {
+         fonts[x] = JXLoadQueryFont(display, DEFAULT_FONT);
+      }
+      if(!fonts[x]) {
+         FatalError("could not load the default font: %s", DEFAULT_FONT);
+      }
+   }
 
-	gcMask = GCGraphicsExposures;
-	gcValues.graphics_exposures = False;
-	fontGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
+   gcMask = GCGraphicsExposures;
+   gcValues.graphics_exposures = False;
+   fontGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
 
 #endif /* USE_XFT */
 
@@ -105,22 +105,22 @@ void StartupFonts() {
 /** Shutdown font support. */
 void ShutdownFonts() {
 
-	int x;
+   int x;
 
-	for(x = 0; x < FONT_COUNT; x++) {
-		if(fonts[x]) {
+   for(x = 0; x < FONT_COUNT; x++) {
+      if(fonts[x]) {
 #ifdef USE_XFT
-			JXftFontClose(display, fonts[x]);
+         JXftFontClose(display, fonts[x]);
 #else
-			JXFreeFont(display, fonts[x]);
+         JXFreeFont(display, fonts[x]);
 #endif
-			fonts[x] = NULL;
-		}
-	}
+         fonts[x] = NULL;
+      }
+   }
 
 #ifndef USE_XFT
 
-	JXFreeGC(display, fontGC);
+   JXFreeGC(display, fontGC);
 
 #endif
 
@@ -130,14 +130,14 @@ void ShutdownFonts() {
 /** Destroy font data. */
 void DestroyFonts() {
 
-	int x;
+   int x;
 
-	for(x = 0; x < FONT_COUNT; x++) {
-		if(fontNames[x]) {
-			Release(fontNames[x]);
-			fontNames[x] = NULL;
-		}
-	}
+   for(x = 0; x < FONT_COUNT; x++) {
+      if(fontNames[x]) {
+         Release(fontNames[x]);
+         fontNames[x] = NULL;
+      }
+   }
 
 }
 
@@ -145,25 +145,25 @@ void DestroyFonts() {
 int GetStringWidth(FontType type, const char *str) {
 #ifdef USE_XFT
 
-	XGlyphInfo extents;
-	unsigned int length;
+   XGlyphInfo extents;
+   unsigned int length;
 
-	Assert(str);
-	Assert(fonts[type]);
+   Assert(str);
+   Assert(fonts[type]);
 
-	length = strlen(str);
+   length = strlen(str);
 
-	JXftTextExtentsUtf8(display, fonts[type], (const unsigned char*)str,
-		length, &extents);
+   JXftTextExtentsUtf8(display, fonts[type], (const unsigned char*)str,
+      length, &extents);
 
-	return extents.width;
+   return extents.width;
 
 #else
 
-	Assert(str);
-	Assert(fonts[type]);
+   Assert(str);
+   Assert(fonts[type]);
 
-	return XTextWidth(fonts[type], str, strlen(str));
+   return XTextWidth(fonts[type], str, strlen(str));
 
 #endif
 }
@@ -171,121 +171,121 @@ int GetStringWidth(FontType type, const char *str) {
 /** Get the height of a string. */
 int GetStringHeight(FontType type) {
 
-	Assert(fonts[type]);
+   Assert(fonts[type]);
 
-	return fonts[type]->ascent + fonts[type]->descent;
+   return fonts[type]->ascent + fonts[type]->descent;
 
 }
 
 /** Set the font to use for a component. */
 void SetFont(FontType type, const char *value) {
 
-	if(!value) {
-		Warning("empty Font tag");
-		return;
-	}
+   if(!value) {
+      Warning("empty Font tag");
+      return;
+   }
 
-	if(fontNames[type]) {
-		Release(fontNames[type]);
-	}
+   if(fontNames[type]) {
+      Release(fontNames[type]);
+   }
 
-	fontNames[type] = CopyString(value);
+   fontNames[type] = CopyString(value);
 
 }
 
 /** Display a string. */
 void RenderString(Drawable d, FontType font, ColorType color,
-	int x, int y, int width, Region region, const char *str) {
+   int x, int y, int width, Region region, const char *str) {
 
 #ifdef USE_XFT
-	XftDraw *xd;
+   XftDraw *xd;
 #endif
 
-	XRectangle rect;
-	Region renderRegion;
-	int len;
-	char *output;
+   XRectangle rect;
+   Region renderRegion;
+   int len;
+   char *output;
 
 #ifdef USE_FRIBIDI
 
-	FriBidiChar *temp;
-	FriBidiCharType type = FRIBIDI_TYPE_ON;
-	int unicodeLength;
+   FriBidiChar *temp;
+   FriBidiCharType type = FRIBIDI_TYPE_ON;
+   int unicodeLength;
 
 #endif
 
-	if(!str) {
-		return;
-	}
+   if(!str) {
+      return;
+   }
 
-	len = strlen(str);
-	if(len == 0) {
-		return;
-	}
+   len = strlen(str);
+   if(len == 0) {
+      return;
+   }
 
-	/* Get the bounds for the string based on the specified width. */
-	rect.x = x;
-	rect.y = y;
-	rect.width = Min(GetStringWidth(font, str), width) + 2;
-	rect.height = GetStringHeight(font);
+   /* Get the bounds for the string based on the specified width. */
+   rect.x = x;
+   rect.y = y;
+   rect.width = Min(GetStringWidth(font, str), width) + 2;
+   rect.height = GetStringHeight(font);
 
-	/* Create a region to use. */
-	renderRegion = XCreateRegion();
+   /* Create a region to use. */
+   renderRegion = XCreateRegion();
 
-	/* Combine the width bounds with the region to use. */
-	XUnionRectWithRegion(&rect, renderRegion, renderRegion);
+   /* Combine the width bounds with the region to use. */
+   XUnionRectWithRegion(&rect, renderRegion, renderRegion);
 
-	/* Combine the provided region with the region to use. */
-	if(region) {
-		XIntersectRegion(region, renderRegion, renderRegion);
-	}
-	
-	/* Apply the bidi algorithm if requested. */
+   /* Combine the provided region with the region to use. */
+   if(region) {
+      XIntersectRegion(region, renderRegion, renderRegion);
+   }
+   
+   /* Apply the bidi algorithm if requested. */
 
 #ifdef USE_FRIBIDI
 
-	temp = AllocateStack((len + 1) * sizeof(FriBidiChar));
-	unicodeLength = fribidi_utf8_to_unicode((char*)str, len, temp);
+   temp = AllocateStack((len + 1) * sizeof(FriBidiChar));
+   unicodeLength = fribidi_utf8_to_unicode((char*)str, len, temp);
 
-	fribidi_log2vis(temp, unicodeLength, &type, temp, NULL, NULL, NULL);
+   fribidi_log2vis(temp, unicodeLength, &type, temp, NULL, NULL, NULL);
 
-	fribidi_unicode_to_utf8(temp, len, (char*)temp);
-	output = (char*)temp;
+   fribidi_unicode_to_utf8(temp, len, (char*)temp);
+   output = (char*)temp;
 
 #else
 
-	output = (char*)str;
+   output = (char*)str;
 
 #endif
 
-	/* Display the string. */
+   /* Display the string. */
 
 #ifdef USE_XFT
 
-	xd = XftDrawCreate(display, d, rootVisual, rootColormap);
-	XftDrawSetClip(xd, renderRegion);
-	JXftDrawStringUtf8(xd, GetXftColor(color), fonts[font],
-		x, y + fonts[font]->ascent, (const unsigned char*)output, len);
-	XftDrawDestroy(xd);
+   xd = XftDrawCreate(display, d, rootVisual, rootColormap);
+   XftDrawSetClip(xd, renderRegion);
+   JXftDrawStringUtf8(xd, GetXftColor(color), fonts[font],
+      x, y + fonts[font]->ascent, (const unsigned char*)output, len);
+   XftDrawDestroy(xd);
 
 #else
 
-	JXSetForeground(display, fontGC, colors[color]);
-	XSetRegion(display, fontGC, renderRegion);
-	JXSetFont(display, fontGC, fonts[font]->fid);
-	JXDrawString(display, d, fontGC, x, y + fonts[font]->ascent, output, len);
+   JXSetForeground(display, fontGC, colors[color]);
+   XSetRegion(display, fontGC, renderRegion);
+   JXSetFont(display, fontGC, fonts[font]->fid);
+   JXDrawString(display, d, fontGC, x, y + fonts[font]->ascent, output, len);
 
 #endif
 
-	/* Free any memory used for UTF conversion. */
+   /* Free any memory used for UTF conversion. */
 
 #ifdef USE_FRIBIDI
 
-	ReleaseStack(output);
+   ReleaseStack(output);
 
 #endif
 
-	XDestroyRegion(renderRegion);
+   XDestroyRegion(renderRegion);
 
 }
 

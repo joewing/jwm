@@ -22,20 +22,20 @@
 /** Structure to respresent a clock tray component. */
 typedef struct ClockType {
 
-	TrayComponentType *cp;   /**< Common component data. */
+   TrayComponentType *cp;   /**< Common component data. */
 
-	char *format;            /**< The time format to use. */
-	char *command;           /**< A command to run when clicked. */
-	char shortTime[80];      /**< Currently displayed time. */
+   char *format;            /**< The time format to use. */
+   char *command;           /**< A command to run when clicked. */
+   char shortTime[80];      /**< Currently displayed time. */
 
-	/* The following are used to control popups. */
-	int mousex;              /**< Last mouse x-coordinate. */
-	int mousey;              /**< Last mouse y-coordinate. */
-	TimeType mouseTime;      /**< Time of the last mouse motion. */
+   /* The following are used to control popups. */
+   int mousex;              /**< Last mouse x-coordinate. */
+   int mousey;              /**< Last mouse y-coordinate. */
+   TimeType mouseTime;      /**< Time of the last mouse motion. */
 
-	int userWidth;           /**< User-specified clock width (or 0). */
+   int userWidth;           /**< User-specified clock width (or 0). */
 
-	struct ClockType *next;  /**< Next clock in the list. */
+   struct ClockType *next;  /**< Next clock in the list. */
 
 } ClockType;
 
@@ -49,30 +49,30 @@ static void Create(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
 static void ProcessClockButtonEvent(TrayComponentType *cp,
-	int x, int y, int mask);
+   int x, int y, int mask);
 static void ProcessClockMotionEvent(TrayComponentType *cp,
-	int x, int y, int mask);
+   int x, int y, int mask);
 
 static void DrawClock(ClockType *clk, const TimeType *now, int x, int y);
 
 /** Initialize clocks. */
 void InitializeClock() {
-	clocks = NULL;
+   clocks = NULL;
 }
 
 /** Start clock(s). */
 void StartupClock() {
 
-	ClockType *clk;
+   ClockType *clk;
 
-	for(clk = clocks; clk; clk = clk->next) {
-		if(clk->cp->requestedWidth == 0) {
-			clk->cp->requestedWidth = GetStringWidth(FONT_CLOCK, clk->format) + 4;
-		}
-		if(clk->cp->requestedHeight == 0) {
-			clk->cp->requestedHeight = GetStringHeight(FONT_CLOCK) + 4;
-		}
-	}
+   for(clk = clocks; clk; clk = clk->next) {
+      if(clk->cp->requestedWidth == 0) {
+         clk->cp->requestedWidth = GetStringWidth(FONT_CLOCK, clk->format) + 4;
+      }
+      if(clk->cp->requestedHeight == 0) {
+         clk->cp->requestedHeight = GetStringHeight(FONT_CLOCK) + 4;
+      }
+   }
 
 }
 
@@ -83,249 +83,249 @@ void ShutdownClock() {
 /** Destroy clock(s). */
 void DestroyClock() {
 
-	ClockType *cp;
+   ClockType *cp;
 
-	while(clocks) {
-		cp = clocks->next;
+   while(clocks) {
+      cp = clocks->next;
 
-		if(clocks->format) {
-			Release(clocks->format);
-		}
-		if(clocks->command) {
-			Release(clocks->command);
-		}
+      if(clocks->format) {
+         Release(clocks->format);
+      }
+      if(clocks->command) {
+         Release(clocks->command);
+      }
 
-		Release(clocks);
-		clocks = cp;
-	}
+      Release(clocks);
+      clocks = cp;
+   }
 
 }
 
 /** Create a clock tray component. */
 TrayComponentType *CreateClock(const char *format, const char *command,
-	int width, int height) {
+   int width, int height) {
 
-	TrayComponentType *cp;
-	ClockType *clk;
+   TrayComponentType *cp;
+   ClockType *clk;
 
-	clk = Allocate(sizeof(ClockType));
-	clk->next = clocks;
-	clocks = clk;
+   clk = Allocate(sizeof(ClockType));
+   clk->next = clocks;
+   clocks = clk;
 
-	clk->mousex = 0;
-	clk->mousey = 0;
-	clk->mouseTime.seconds = 0;
-	clk->mouseTime.ms = 0;
-	clk->userWidth = 0;
+   clk->mousex = 0;
+   clk->mousey = 0;
+   clk->mouseTime.seconds = 0;
+   clk->mouseTime.ms = 0;
+   clk->userWidth = 0;
 
-	if(!format) {
-		format = DEFAULT_FORMAT;
-	}
-	clk->format = CopyString(format);
+   if(!format) {
+      format = DEFAULT_FORMAT;
+   }
+   clk->format = CopyString(format);
 
-	clk->command = CopyString(command);
+   clk->command = CopyString(command);
 
-	clk->shortTime[0] = 0;
+   clk->shortTime[0] = 0;
 
-	cp = CreateTrayComponent();
-	cp->object = clk;
-	clk->cp = cp;
-	if(width > 0) {
-		cp->requestedWidth = width;
-		clk->userWidth = 1;
-	} else {
-		cp->requestedWidth = 0;
-		clk->userWidth = 0;
-	}
-	cp->requestedHeight = height;
+   cp = CreateTrayComponent();
+   cp->object = clk;
+   clk->cp = cp;
+   if(width > 0) {
+      cp->requestedWidth = width;
+      clk->userWidth = 1;
+   } else {
+      cp->requestedWidth = 0;
+      clk->userWidth = 0;
+   }
+   cp->requestedHeight = height;
 
-	cp->Create = Create;
-	cp->Resize = Resize;
-	cp->Destroy = Destroy;
-	cp->ProcessButtonEvent = ProcessClockButtonEvent;
-	cp->ProcessMotionEvent = ProcessClockMotionEvent;
+   cp->Create = Create;
+   cp->Resize = Resize;
+   cp->Destroy = Destroy;
+   cp->ProcessButtonEvent = ProcessClockButtonEvent;
+   cp->ProcessMotionEvent = ProcessClockMotionEvent;
 
-	return cp;
+   return cp;
 
 }
 
 /** Initialize a clock tray component. */
 void Create(TrayComponentType *cp) {
 
-	ClockType *clk;
+   ClockType *clk;
 
-	Assert(cp);
+   Assert(cp);
 
-	clk = (ClockType*)cp->object;
+   clk = (ClockType*)cp->object;
 
-	Assert(clk);
+   Assert(clk);
 
-	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
-		rootDepth);
+   cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
+      rootDepth);
 
-	JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG]);
-	JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
+   JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG]);
+   JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
 
 }
 
 /** Resize a clock tray component. */
 void Resize(TrayComponentType *cp) {
 
-	ClockType *clk;
-	TimeType now;
-	int x, y;
+   ClockType *clk;
+   TimeType now;
+   int x, y;
 
-	Assert(cp);
+   Assert(cp);
 
-	clk = (ClockType*)cp->object;
+   clk = (ClockType*)cp->object;
 
-	Assert(clk);
+   Assert(clk);
 
-	if(cp->pixmap != None) {
-		JXFreePixmap(display, cp->pixmap);
-	}
+   if(cp->pixmap != None) {
+      JXFreePixmap(display, cp->pixmap);
+   }
 
-	cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
-		rootDepth);
+   cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
+      rootDepth);
 
-	clk->shortTime[0] = 0;
+   clk->shortTime[0] = 0;
 
-	GetCurrentTime(&now);
-	GetMousePosition(&x, &y);
-	DrawClock(clk, &now, x, y);
+   GetCurrentTime(&now);
+   GetMousePosition(&x, &y);
+   DrawClock(clk, &now, x, y);
 
 }
 
 /** Destroy a clock tray component. */
 void Destroy(TrayComponentType *cp) {
 
-	ClockType *clk;
+   ClockType *clk;
 
-	Assert(cp);
+   Assert(cp);
 
-	clk = (ClockType*)cp->object;
+   clk = (ClockType*)cp->object;
 
-	Assert(clk);
+   Assert(clk);
 
-	if(cp->pixmap != None) {
-		JXFreePixmap(display, cp->pixmap);
-	}
+   if(cp->pixmap != None) {
+      JXFreePixmap(display, cp->pixmap);
+   }
 }
 
 /** Process a click event on a clock tray component. */
 void ProcessClockButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
-	ClockType *clk;
+   ClockType *clk;
 
-	Assert(cp);
+   Assert(cp);
 
-	clk = (ClockType*)cp->object;
+   clk = (ClockType*)cp->object;
 
-	Assert(clk);
+   Assert(clk);
 
-	if(clk->command) {
-		RunCommand(clk->command);
-	}
+   if(clk->command) {
+      RunCommand(clk->command);
+   }
 
 }
 
 /** Process a motion event on a clock tray component. */
 void ProcessClockMotionEvent(TrayComponentType *cp,
-	int x, int y, int mask) {
+   int x, int y, int mask) {
 
-	Assert(cp);
+   Assert(cp);
 
-	ClockType *clk = (ClockType*)cp->object;
-	clk->mousex = cp->screenx + x;
-	clk->mousey = cp->screeny + y;
-	GetCurrentTime(&clk->mouseTime);
+   ClockType *clk = (ClockType*)cp->object;
+   clk->mousex = cp->screenx + x;
+   clk->mousey = cp->screeny + y;
+   GetCurrentTime(&clk->mouseTime);
 
 }
 
 /** Update a clock tray component. */
 void SignalClock(const TimeType *now, int x, int y) {
 
-	ClockType *cp;
-	int shouldDraw;
-	char *longTime;
-	time_t t;
+   ClockType *cp;
+   int shouldDraw;
+   char *longTime;
+   time_t t;
 
-	Assert(now);
+   Assert(now);
 
-	/* Determine if we should update the clock(s). */
-	if(GetTimeDifference(&lastUpdate, now) > 900) {
-		shouldDraw = 1;
-		lastUpdate = *now;
-	} else {
-		shouldDraw = 0;
-	}
+   /* Determine if we should update the clock(s). */
+   if(GetTimeDifference(&lastUpdate, now) > 900) {
+      shouldDraw = 1;
+      lastUpdate = *now;
+   } else {
+      shouldDraw = 0;
+   }
 
-	/* Update each clock. */
-	for(cp = clocks; cp; cp = cp->next) {
+   /* Update each clock. */
+   for(cp = clocks; cp; cp = cp->next) {
 
-		if(shouldDraw) {
-			DrawClock(cp, now, x, y);
-		}
+      if(shouldDraw) {
+         DrawClock(cp, now, x, y);
+      }
 
-		if(abs(cp->mousex - x) < POPUP_DELTA
-			&& abs(cp->mousey - y) < POPUP_DELTA) {
-			if(GetTimeDifference(now, &cp->mouseTime) >= popupDelay) {
-				time(&t);
-				longTime = asctime(localtime(&t));
-				Trim(longTime);
-				ShowPopup(x, y, longTime);
-			}
-		}
+      if(abs(cp->mousex - x) < POPUP_DELTA
+         && abs(cp->mousey - y) < POPUP_DELTA) {
+         if(GetTimeDifference(now, &cp->mouseTime) >= popupDelay) {
+            time(&t);
+            longTime = asctime(localtime(&t));
+            Trim(longTime);
+            ShowPopup(x, y, longTime);
+         }
+      }
 
-	}
+   }
 
 }
 
 /** Draw a clock tray component. */
 void DrawClock(ClockType *clk, const TimeType *now, int x, int y) {
 
-	TrayComponentType *cp;
-	const char *shortTime;
-	int width;
-	int rwidth;
+   TrayComponentType *cp;
+   const char *shortTime;
+   int width;
+   int rwidth;
 
-	Assert(clk);
-	Assert(now);
+   Assert(clk);
+   Assert(now);
 
-	/* Only draw if the label changed. */
-	shortTime = GetTimeString(clk->format);
-	if(!strcmp(clk->shortTime, shortTime)) {
-		return;
-	}
-	strcpy(clk->shortTime, shortTime);
+   /* Only draw if the label changed. */
+   shortTime = GetTimeString(clk->format);
+   if(!strcmp(clk->shortTime, shortTime)) {
+      return;
+   }
+   strcpy(clk->shortTime, shortTime);
 
-	cp = clk->cp;
+   cp = clk->cp;
 
-	/* Clear the area. */
-	JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG]);
-	JXFillRectangle(display, cp->pixmap, rootGC, 0, 0,
-		cp->width, cp->height);
+   /* Clear the area. */
+   JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG]);
+   JXFillRectangle(display, cp->pixmap, rootGC, 0, 0,
+      cp->width, cp->height);
 
-	/* Determine if the clock is the right size. */
-	width = GetStringWidth(FONT_CLOCK, shortTime);
-	rwidth = width + 4;
-	if(rwidth == clk->cp->requestedWidth || clk->userWidth) {
+   /* Determine if the clock is the right size. */
+   width = GetStringWidth(FONT_CLOCK, shortTime);
+   rwidth = width + 4;
+   if(rwidth == clk->cp->requestedWidth || clk->userWidth) {
 
-		/* Draw the clock. */
-		RenderString(cp->pixmap, FONT_CLOCK, COLOR_CLOCK_FG,
-			cp->width / 2 - width / 2,
-			cp->height / 2 - GetStringHeight(FONT_CLOCK) / 2,
-			cp->width, NULL, shortTime);
+      /* Draw the clock. */
+      RenderString(cp->pixmap, FONT_CLOCK, COLOR_CLOCK_FG,
+         cp->width / 2 - width / 2,
+         cp->height / 2 - GetStringHeight(FONT_CLOCK) / 2,
+         cp->width, NULL, shortTime);
 
-		UpdateSpecificTray(clk->cp->tray, clk->cp);
+      UpdateSpecificTray(clk->cp->tray, clk->cp);
 
-	} else {
+   } else {
 
-		/* Wrong size. Resize. */
-		clk->cp->requestedWidth = rwidth;
-		ResizeTray(clk->cp->tray);
+      /* Wrong size. Resize. */
+      clk->cp->requestedWidth = rwidth;
+      ResizeTray(clk->cp->tray);
 
-	}
+   }
 
 }
 

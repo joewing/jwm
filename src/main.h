@@ -11,8 +11,8 @@
 #define MAIN_H
 
 typedef enum {
-	FOCUS_SLOPPY              = 0,
-	FOCUS_CLICK               = 1
+   FOCUS_SLOPPY              = 0,
+   FOCUS_CLICK               = 1
 } FocusModelType;
 
 extern Display *display;

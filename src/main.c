@@ -100,230 +100,230 @@ static char *displayString = NULL;
 
 /** The main entry point. */
 int main(int argc, char *argv[]) {
-	char *temp;
-	int x;
+   char *temp;
+   int x;
 
-	StartDebug();
+   StartDebug();
 
-	temp = getenv("HOME");
-	if(temp) {
-		configPath = Allocate(strlen(temp) + strlen(CONFIG_FILE) + 1);
-		strcpy(configPath, temp);
-		strcat(configPath, CONFIG_FILE);
-	} else {
-		configPath = CopyString(CONFIG_FILE);
-	}
+   temp = getenv("HOME");
+   if(temp) {
+      configPath = Allocate(strlen(temp) + strlen(CONFIG_FILE) + 1);
+      strcpy(configPath, temp);
+      strcat(configPath, CONFIG_FILE);
+   } else {
+      configPath = CopyString(CONFIG_FILE);
+   }
 
-	for(x = 1; x < argc; x++) {
-		if(!strcmp(argv[x], "-v")) {
-			DisplayAbout();
-			DoExit(0);
-		} else if(!strcmp(argv[x], "-h")) {
-			DisplayHelp();
-			DoExit(0);
-		} else if(!strcmp(argv[x], "-p")) {
-			Initialize();
-			ParseConfig(configPath);
-			DoExit(0);
-		} else if(!strcmp(argv[x], "-restart")) {
-			SendRestart();
-			DoExit(0);
-		} else if(!strcmp(argv[x], "-exit")) {
-			SendExit();
-			DoExit(0);
-		} else if(!strcmp(argv[x], "-display") && x + 1 < argc) {
-			displayString = argv[++x];
-		} else {
-			DisplayUsage();
-			DoExit(1);
-		}
-	}
+   for(x = 1; x < argc; x++) {
+      if(!strcmp(argv[x], "-v")) {
+         DisplayAbout();
+         DoExit(0);
+      } else if(!strcmp(argv[x], "-h")) {
+         DisplayHelp();
+         DoExit(0);
+      } else if(!strcmp(argv[x], "-p")) {
+         Initialize();
+         ParseConfig(configPath);
+         DoExit(0);
+      } else if(!strcmp(argv[x], "-restart")) {
+         SendRestart();
+         DoExit(0);
+      } else if(!strcmp(argv[x], "-exit")) {
+         SendExit();
+         DoExit(0);
+      } else if(!strcmp(argv[x], "-display") && x + 1 < argc) {
+         displayString = argv[++x];
+      } else {
+         DisplayUsage();
+         DoExit(1);
+      }
+   }
 
-	StartupConnection();
-	do {
+   StartupConnection();
+   do {
 
-		isRestarting = shouldRestart;
-		shouldExit = 0;
-		shouldRestart = 0;
+      isRestarting = shouldRestart;
+      shouldExit = 0;
+      shouldRestart = 0;
 
-		Initialize();
+      Initialize();
 
-		ParseConfig(configPath);
+      ParseConfig(configPath);
 
-		Startup();
+      Startup();
 
-		EventLoop();
+      EventLoop();
 
-		Shutdown();
+      Shutdown();
 
-		Destroy();
+      Destroy();
 
-	} while(shouldRestart);
-	ShutdownConnection();
+   } while(shouldRestart);
+   ShutdownConnection();
 
-	if(exitCommand) {
-		execl(SHELL_NAME, SHELL_NAME, "-c", exitCommand, NULL);
-		Warning("exec failed: (%s) %s", SHELL_NAME, exitCommand);
-		DoExit(1);
-	} else {
-		DoExit(0);
-	}
+   if(exitCommand) {
+      execl(SHELL_NAME, SHELL_NAME, "-c", exitCommand, NULL);
+      Warning("exec failed: (%s) %s", SHELL_NAME, exitCommand);
+      DoExit(1);
+   } else {
+      DoExit(0);
+   }
 
-	/* Control shoud never get here. */
-	return -1;
+   /* Control shoud never get here. */
+   return -1;
 
 }
 
 /** Exit with the specified status code. */
 void DoExit(int code) {
 
-	Destroy();
+   Destroy();
 
-	if(configPath) {
-		Release(configPath);
-		configPath = NULL;
-	}
-	if(exitCommand) {
-		Release(exitCommand);
-		exitCommand = NULL;
-	}
+   if(configPath) {
+      Release(configPath);
+      configPath = NULL;
+   }
+   if(exitCommand) {
+      Release(exitCommand);
+      exitCommand = NULL;
+   }
 
-	StopDebug();
-	exit(code);
+   StopDebug();
+   exit(code);
 }
 
 /** Main JWM event loop. */
 void EventLoop() {
 
-	XEvent event;
+   XEvent event;
 
-	while(!shouldExit) {
-		WaitForEvent(&event);
-		ProcessEvent(&event);
-	}
+   while(!shouldExit) {
+      WaitForEvent(&event);
+      ProcessEvent(&event);
+   }
 
 }
 
 /** Open a connection to the X server. */
 void OpenConnection() {
 
-	display = JXOpenDisplay(displayString);
-	if(!display) {
-		if(displayString) {
-			printf("error: could not open display %s\n", displayString);
-		} else {
-			printf("error: could not open display\n");
-		}
-		DoExit(1);
-	}
+   display = JXOpenDisplay(displayString);
+   if(!display) {
+      if(displayString) {
+         printf("error: could not open display %s\n", displayString);
+      } else {
+         printf("error: could not open display\n");
+      }
+      DoExit(1);
+   }
 
-	rootScreen = DefaultScreen(display);
-	rootWindow = RootWindow(display, rootScreen);
-	rootWidth = DisplayWidth(display, rootScreen);
-	rootHeight = DisplayHeight(display, rootScreen);
-	rootDepth = DefaultDepth(display, rootScreen);
-	rootColormap = DefaultColormap(display, rootScreen);
-	rootVisual = DefaultVisual(display, rootScreen);
-	rootGC = DefaultGC(display, rootScreen);
-	colormapCount = MaxCmapsOfScreen(ScreenOfDisplay(display, rootScreen));
+   rootScreen = DefaultScreen(display);
+   rootWindow = RootWindow(display, rootScreen);
+   rootWidth = DisplayWidth(display, rootScreen);
+   rootHeight = DisplayHeight(display, rootScreen);
+   rootDepth = DefaultDepth(display, rootScreen);
+   rootColormap = DefaultColormap(display, rootScreen);
+   rootVisual = DefaultVisual(display, rootScreen);
+   rootGC = DefaultGC(display, rootScreen);
+   colormapCount = MaxCmapsOfScreen(ScreenOfDisplay(display, rootScreen));
 
-	XSetGraphicsExposures(display, rootGC, False);
+   XSetGraphicsExposures(display, rootGC, False);
 
 }
 
 /** Prepare the connection. */
 void StartupConnection() {
-	XSetWindowAttributes attr;
-	int temp;
+   XSetWindowAttributes attr;
+   int temp;
 
-	initializing = 1;
-	OpenConnection();
+   initializing = 1;
+   OpenConnection();
 
 #if 0
-	XSynchronize(display, True);
+   XSynchronize(display, True);
 #endif
 
-	JXSetErrorHandler(ErrorHandler);
+   JXSetErrorHandler(ErrorHandler);
 
-	clientContext = XUniqueContext();
-	frameContext = XUniqueContext();
+   clientContext = XUniqueContext();
+   frameContext = XUniqueContext();
 
-	attr.event_mask
-		= SubstructureRedirectMask
-		| SubstructureNotifyMask
-		| PropertyChangeMask
-		| ColormapChangeMask
-		| ButtonPressMask
-		| ButtonReleaseMask
-		| PointerMotionMask | PointerMotionHintMask;
-	JXChangeWindowAttributes(display, rootWindow, CWEventMask, &attr);
+   attr.event_mask
+      = SubstructureRedirectMask
+      | SubstructureNotifyMask
+      | PropertyChangeMask
+      | ColormapChangeMask
+      | ButtonPressMask
+      | ButtonReleaseMask
+      | PointerMotionMask | PointerMotionHintMask;
+   JXChangeWindowAttributes(display, rootWindow, CWEventMask, &attr);
 
-	signal(SIGTERM, HandleExit);
-	signal(SIGINT, HandleExit);
-	signal(SIGHUP, HandleExit);
+   signal(SIGTERM, HandleExit);
+   signal(SIGINT, HandleExit);
+   signal(SIGHUP, HandleExit);
 
 #ifdef USE_SHAPE
-	haveShape = JXShapeQueryExtension(display, &shapeEvent, &temp);
-	if (haveShape) {
-		Debug("shape extension enabled");
-	} else {
-		Debug("shape extension disabled");
-	}
+   haveShape = JXShapeQueryExtension(display, &shapeEvent, &temp);
+   if (haveShape) {
+      Debug("shape extension enabled");
+   } else {
+      Debug("shape extension disabled");
+   }
 #endif
 
-	initializing = 0;
+   initializing = 0;
 
 }
 
 /** Close the X server connection. */
 void CloseConnection() {
-	JXFlush(display);
-	JXCloseDisplay(display);
+   JXFlush(display);
+   JXCloseDisplay(display);
 }
 
 /** Close the X server connection. */
 void ShutdownConnection() {
-	CloseConnection();
+   CloseConnection();
 }
 
 /** Signal handler. */
 void HandleExit() {
-	signal(SIGTERM, HandleExit);
-	signal(SIGINT, HandleExit);
-	signal(SIGHUP, HandleExit);
-	shouldExit = 1;
+   signal(SIGTERM, HandleExit);
+   signal(SIGINT, HandleExit);
+   signal(SIGHUP, HandleExit);
+   shouldExit = 1;
 }
 
 /** Initialize data structures.
  * This is called before the X connection is opened.
  */
 void Initialize() {
-	InitializeBorders();
-	InitializeClients();
-	InitializeClock();
-	InitializeColors();
-	InitializeCommands();
-	InitializeCursors();
-	InitializeDesktops();
+   InitializeBorders();
+   InitializeClients();
+   InitializeClock();
+   InitializeColors();
+   InitializeCommands();
+   InitializeCursors();
+   InitializeDesktops();
 #ifndef DISABLE_CONFIRM
-	InitializeDialogs();
+   InitializeDialogs();
 #endif
-	InitializeDock();
-	InitializeFonts();
-	InitializeGroups();
-	InitializeHints();
-	InitializeIcons();
-	InitializeKeys();
-	InitializeOutline();
-	InitializePager();
-	InitializePlacement();
-	InitializePopup();
-	InitializeRootMenu();
-	InitializeScreens();
-	InitializeSwallow();
-	InitializeTaskBar();
-	InitializeTray();
-	InitializeTrayButtons();
+   InitializeDock();
+   InitializeFonts();
+   InitializeGroups();
+   InitializeHints();
+   InitializeIcons();
+   InitializeKeys();
+   InitializeOutline();
+   InitializePager();
+   InitializePlacement();
+   InitializePopup();
+   InitializeRootMenu();
+   InitializeScreens();
+   InitializeSwallow();
+   InitializeTaskBar();
+   InitializeTray();
+   InitializeTrayButtons();
 }
 
 /** Startup the various JWM components.
@@ -331,57 +331,57 @@ void Initialize() {
  */
 void Startup() {
 
-	/* This order is important. */
+   /* This order is important. */
 
-	StartupCommands();
+   StartupCommands();
 
-	/* First we grab the server to prevent clients from changing things
-	 * while we're still loading. */
-	JXGrabServer(display);
+   /* First we grab the server to prevent clients from changing things
+    * while we're still loading. */
+   JXGrabServer(display);
 
-	StartupScreens();
+   StartupScreens();
 
-	StartupGroups();
-	StartupColors();
-	StartupIcons();
-	StartupFonts();
-	StartupCursors();
-	StartupOutline();
+   StartupGroups();
+   StartupColors();
+   StartupIcons();
+   StartupFonts();
+   StartupCursors();
+   StartupOutline();
 
-	StartupPager();
-	StartupClock();
-	StartupTaskBar();
-	StartupTrayButtons();
-	StartupDock();
-	StartupTray();
-	StartupKeys();
-	StartupDesktops();
-	StartupHints();
-	StartupBorders();
-	StartupPlacement();
-	StartupClients();
+   StartupPager();
+   StartupClock();
+   StartupTaskBar();
+   StartupTrayButtons();
+   StartupDock();
+   StartupTray();
+   StartupKeys();
+   StartupDesktops();
+   StartupHints();
+   StartupBorders();
+   StartupPlacement();
+   StartupClients();
 
-	#ifndef DISABLE_CONFIRM
-		StartupDialogs();
-	#endif
-	StartupPopup();
+   #ifndef DISABLE_CONFIRM
+      StartupDialogs();
+   #endif
+   StartupPopup();
 
-	StartupRootMenu();
+   StartupRootMenu();
 
-	SetDefaultCursor(rootWindow);
-	ReadCurrentDesktop();
-	JXFlush(display);
+   SetDefaultCursor(rootWindow);
+   ReadCurrentDesktop();
+   JXFlush(display);
 
-	RestackClients();
+   RestackClients();
 
-	/* Allow clients to do their thing. */
-	JXSync(display, True);
-	JXUngrabServer(display);
+   /* Allow clients to do their thing. */
+   JXSync(display, True);
+   JXUngrabServer(display);
 
-	StartupSwallow();
+   StartupSwallow();
 
-	/* Send expose events. */
-	ExposeCurrentDesktop();
+   /* Send expose events. */
+   ExposeCurrentDesktop();
 
 }
 
@@ -390,37 +390,37 @@ void Startup() {
  */
 void Shutdown() {
 
-	/* This order is important. */
+   /* This order is important. */
 
-	ShutdownSwallow();
+   ShutdownSwallow();
 
-	ShutdownOutline();
-	#ifndef DISABLE_CONFIRM
-		ShutdownDialogs();
-	#endif
-	ShutdownPopup();
-	ShutdownKeys();
-	ShutdownPager();
-	ShutdownRootMenu();
-	ShutdownDock();
-	ShutdownTray();
-	ShutdownTrayButtons();
-	ShutdownTaskBar();
-	ShutdownClock();
-	ShutdownBorders();
-	ShutdownClients();
-	ShutdownIcons();
-	ShutdownCursors();
-	ShutdownFonts();
-	ShutdownColors();
-	ShutdownGroups();
-	ShutdownDesktops();
+   ShutdownOutline();
+   #ifndef DISABLE_CONFIRM
+      ShutdownDialogs();
+   #endif
+   ShutdownPopup();
+   ShutdownKeys();
+   ShutdownPager();
+   ShutdownRootMenu();
+   ShutdownDock();
+   ShutdownTray();
+   ShutdownTrayButtons();
+   ShutdownTaskBar();
+   ShutdownClock();
+   ShutdownBorders();
+   ShutdownClients();
+   ShutdownIcons();
+   ShutdownCursors();
+   ShutdownFonts();
+   ShutdownColors();
+   ShutdownGroups();
+   ShutdownDesktops();
 
-	ShutdownPlacement();
-	ShutdownHints();
-	ShutdownScreens();
+   ShutdownPlacement();
+   ShutdownHints();
+   ShutdownScreens();
 
-	ShutdownCommands();
+   ShutdownCommands();
 
 }
 
@@ -429,68 +429,68 @@ void Shutdown() {
  * Note that it is possible for this to be called more than once.
  */
 void Destroy() {
-	DestroyBorders();
-	DestroyClients();
-	DestroyClock();
-	DestroyColors();
-	DestroyCommands();
-	DestroyCursors();
-	DestroyDesktops();
+   DestroyBorders();
+   DestroyClients();
+   DestroyClock();
+   DestroyColors();
+   DestroyCommands();
+   DestroyCursors();
+   DestroyDesktops();
 #ifndef DISABLE_CONFIRM
-	DestroyDialogs();
+   DestroyDialogs();
 #endif
-	DestroyDock();
-	DestroyFonts();
-	DestroyGroups();
-	DestroyHints();
-	DestroyIcons();
-	DestroyKeys();
-	DestroyOutline();
-	DestroyPager();
-	DestroyPlacement();
-	DestroyPopup();
-	DestroyRootMenu();
-	DestroyScreens();
-	DestroySwallow();
-	DestroyTaskBar();
-	DestroyTray();
-	DestroyTrayButtons();
+   DestroyDock();
+   DestroyFonts();
+   DestroyGroups();
+   DestroyHints();
+   DestroyIcons();
+   DestroyKeys();
+   DestroyOutline();
+   DestroyPager();
+   DestroyPlacement();
+   DestroyPopup();
+   DestroyRootMenu();
+   DestroyScreens();
+   DestroySwallow();
+   DestroyTaskBar();
+   DestroyTray();
+   DestroyTrayButtons();
 }
 
 /** Send _JWM_RESTART to the root window. */
 void SendRestart() {
 
-	XEvent event;
+   XEvent event;
 
-	OpenConnection();
+   OpenConnection();
 
-	memset(&event, 0, sizeof(event));
-	event.xclient.type = ClientMessage;
-	event.xclient.window = rootWindow;
-	event.xclient.message_type = JXInternAtom(display, "_JWM_RESTART", False);
-	event.xclient.format = 32;
+   memset(&event, 0, sizeof(event));
+   event.xclient.type = ClientMessage;
+   event.xclient.window = rootWindow;
+   event.xclient.message_type = JXInternAtom(display, "_JWM_RESTART", False);
+   event.xclient.format = 32;
 
-	JXSendEvent(display, rootWindow, False, SubstructureRedirectMask, &event);
+   JXSendEvent(display, rootWindow, False, SubstructureRedirectMask, &event);
 
-	CloseConnection();
+   CloseConnection();
 
 }
 
 /** Send _JWM_EXIT to the root window. */
 void SendExit() {
 
-	XEvent event;
+   XEvent event;
 
-	OpenConnection();
+   OpenConnection();
 
-	memset(&event, 0, sizeof(event));
-	event.xclient.type = ClientMessage;
-	event.xclient.window = rootWindow;
-	event.xclient.message_type = JXInternAtom(display, "_JWM_EXIT", False);
-	event.xclient.format = 32;
+   memset(&event, 0, sizeof(event));
+   event.xclient.type = ClientMessage;
+   event.xclient.window = rootWindow;
+   event.xclient.message_type = JXInternAtom(display, "_JWM_EXIT", False);
+   event.xclient.format = 32;
 
-	JXSendEvent(display, rootWindow, False, SubstructureRedirectMask, &event);
+   JXSendEvent(display, rootWindow, False, SubstructureRedirectMask, &event);
 
-	CloseConnection();
+   CloseConnection();
 }
 

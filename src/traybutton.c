@@ -28,20 +28,20 @@
 
 typedef struct TrayButtonType {
 
-	TrayComponentType *cp;
+   TrayComponentType *cp;
 
-	char *label;
-	char *popup;
-	char *iconName;
-	IconNode *icon;
+   char *label;
+   char *popup;
+   char *iconName;
+   IconNode *icon;
 
-	char *action;
+   char *action;
 
-	int mousex;
-	int mousey;
-	TimeType mouseTime;
+   int mousex;
+   int mousey;
+   TimeType mouseTime;
 
-	struct TrayButtonType *next;
+   struct TrayButtonType *next;
 
 } TrayButtonType;
 
@@ -54,42 +54,42 @@ static void SetSize(TrayComponentType *cp, int width, int height);
 static void Resize(TrayComponentType *cp);
 
 static void ProcessButtonEvent(TrayComponentType *cp,
-	int x, int y, int mask);
+   int x, int y, int mask);
 static void ProcessMotionEvent(TrayComponentType *cp,
-	int x, int y, int mask);
+   int x, int y, int mask);
 
 /** Initialize tray button data. */
 void InitializeTrayButtons() {
-	buttons = NULL;
+   buttons = NULL;
 }
 
 /** Startup tray buttons. */
 void StartupTrayButtons() {
 
-	TrayButtonType *bp;
+   TrayButtonType *bp;
 
-	for(bp = buttons; bp; bp = bp->next) {
-		if(bp->label) {
-			bp->cp->requestedWidth
-				= GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
-			bp->cp->requestedHeight
-				= GetStringHeight(FONT_TRAYBUTTON);
-		} else {
-			bp->cp->requestedWidth = 0;
-			bp->cp->requestedHeight = 0;
-		}
-		if(bp->iconName) {
-			bp->icon = LoadNamedIcon(bp->iconName);
-			if(bp->icon) {
-				bp->cp->requestedWidth += bp->icon->image->width;
-				bp->cp->requestedHeight += bp->icon->image->height;
-			} else {
-				Warning("could not load tray icon: \"%s\"", bp->iconName);
-			}
-		}
-		bp->cp->requestedWidth += 2 * BUTTON_SIZE;
-		bp->cp->requestedHeight += 2 * BUTTON_SIZE;
-	}
+   for(bp = buttons; bp; bp = bp->next) {
+      if(bp->label) {
+         bp->cp->requestedWidth
+            = GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
+         bp->cp->requestedHeight
+            = GetStringHeight(FONT_TRAYBUTTON);
+      } else {
+         bp->cp->requestedWidth = 0;
+         bp->cp->requestedHeight = 0;
+      }
+      if(bp->iconName) {
+         bp->icon = LoadNamedIcon(bp->iconName);
+         if(bp->icon) {
+            bp->cp->requestedWidth += bp->icon->image->width;
+            bp->cp->requestedHeight += bp->icon->image->height;
+         } else {
+            Warning("could not load tray icon: \"%s\"", bp->iconName);
+         }
+      }
+      bp->cp->requestedWidth += 2 * BUTTON_SIZE;
+      bp->cp->requestedHeight += 2 * BUTTON_SIZE;
+   }
 
 }
 
@@ -101,346 +101,346 @@ void ShutdownTrayButtons() {
 /** Release tray button data. */
 void DestroyTrayButtons() {
 
-	TrayButtonType *bp;
+   TrayButtonType *bp;
 
-	while(buttons) {
-		bp = buttons->next;
-		if(buttons->label) {
-			Release(buttons->label);
-		}
-		if(buttons->iconName) {
-			Release(buttons->iconName);
-		}
-		if(buttons->action) {
-			Release(buttons->action);
-		}
-		if(buttons->popup) {
-			Release(buttons->popup);
-		}
-		Release(buttons);
-		buttons = bp;
-	}
+   while(buttons) {
+      bp = buttons->next;
+      if(buttons->label) {
+         Release(buttons->label);
+      }
+      if(buttons->iconName) {
+         Release(buttons->iconName);
+      }
+      if(buttons->action) {
+         Release(buttons->action);
+      }
+      if(buttons->popup) {
+         Release(buttons->popup);
+      }
+      Release(buttons);
+      buttons = bp;
+   }
 
 }
 
 /** Create a button tray component. */
 TrayComponentType *CreateTrayButton(const char *iconName,
-	const char *label, const char *action,
-	const char *popup, int width, int height) {
+   const char *label, const char *action,
+   const char *popup, int width, int height) {
 
-	TrayButtonType *bp;
-	TrayComponentType *cp;
+   TrayButtonType *bp;
+   TrayComponentType *cp;
 
-	if((label == NULL || strlen(label) == 0)
-		&& (iconName == NULL || strlen(iconName) == 0)) {
-		Warning("no icon or label for TrayButton");
-		return NULL;
-	}
+   if((label == NULL || strlen(label) == 0)
+      && (iconName == NULL || strlen(iconName) == 0)) {
+      Warning("no icon or label for TrayButton");
+      return NULL;
+   }
 
-	if(width < 0) {
-		Warning("invalid TrayButton width: %d", width);
-		width = 0;
-	}
-	if(height < 0) {
-		Warning("invalid TrayButton height: %d", height);
-		height = 0;
-	}
+   if(width < 0) {
+      Warning("invalid TrayButton width: %d", width);
+      width = 0;
+   }
+   if(height < 0) {
+      Warning("invalid TrayButton height: %d", height);
+      height = 0;
+   }
 
-	bp = Allocate(sizeof(TrayButtonType));
-	bp->next = buttons;
-	buttons = bp;
+   bp = Allocate(sizeof(TrayButtonType));
+   bp->next = buttons;
+   buttons = bp;
 
-	bp->icon = NULL;
-	if(iconName) {
-		bp->iconName = Allocate(strlen(iconName) + 1);
-		strcpy(bp->iconName, iconName);
-	} else {
-		bp->iconName = NULL;
-	}
+   bp->icon = NULL;
+   if(iconName) {
+      bp->iconName = Allocate(strlen(iconName) + 1);
+      strcpy(bp->iconName, iconName);
+   } else {
+      bp->iconName = NULL;
+   }
 
-	if(label) {
-		bp->label = Allocate(strlen(label) + 1);
-		strcpy(bp->label, label);
-	} else {
-		bp->label = NULL;
-	}
+   if(label) {
+      bp->label = Allocate(strlen(label) + 1);
+      strcpy(bp->label, label);
+   } else {
+      bp->label = NULL;
+   }
 
-	if(action) {
-		bp->action = Allocate(strlen(action) + 1);
-		strcpy(bp->action, action);
-	} else {
-		bp->action = NULL;
-	}
+   if(action) {
+      bp->action = Allocate(strlen(action) + 1);
+      strcpy(bp->action, action);
+   } else {
+      bp->action = NULL;
+   }
 
-	if(popup) {
-		bp->popup = Allocate(strlen(popup) + 1);
-		strcpy(bp->popup, popup);
-	} else {
-		bp->popup = NULL;
-	}
+   if(popup) {
+      bp->popup = Allocate(strlen(popup) + 1);
+      strcpy(bp->popup, popup);
+   } else {
+      bp->popup = NULL;
+   }
 
-	cp = CreateTrayComponent();
-	cp->object = bp;
-	bp->cp = cp;
-	cp->requestedWidth = width;
-	cp->requestedHeight = height;
+   cp = CreateTrayComponent();
+   cp->object = bp;
+   bp->cp = cp;
+   cp->requestedWidth = width;
+   cp->requestedHeight = height;
 
-	cp->Create = CheckedCreate;
-	cp->Destroy = Destroy;
-	cp->SetSize = SetSize;
-	cp->Resize = Resize;
+   cp->Create = CheckedCreate;
+   cp->Destroy = Destroy;
+   cp->SetSize = SetSize;
+   cp->Resize = Resize;
 
-	cp->ProcessButtonEvent = ProcessButtonEvent;
-	if(popup || label) {
-		cp->ProcessMotionEvent = ProcessMotionEvent;
-	}
+   cp->ProcessButtonEvent = ProcessButtonEvent;
+   if(popup || label) {
+      cp->ProcessMotionEvent = ProcessMotionEvent;
+   }
 
-	return cp;
+   return cp;
 
 }
 
 /** Set the size of a button tray component. */
 void SetSize(TrayComponentType *cp, int width, int height) {
 
-	TrayButtonType *bp;
-	int labelWidth, labelHeight;
-	int iconWidth, iconHeight;
-	double ratio;
+   TrayButtonType *bp;
+   int labelWidth, labelHeight;
+   int iconWidth, iconHeight;
+   double ratio;
 
-	bp = (TrayButtonType*)cp->object;
+   bp = (TrayButtonType*)cp->object;
 
-	if(bp->icon) {
+   if(bp->icon) {
 
-		if(bp->label) {
-			labelWidth = GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
-			labelHeight = GetStringHeight(FONT_TRAYBUTTON);
-		} else {
-			labelWidth = 0;
-			labelHeight = 0;
-		}
+      if(bp->label) {
+         labelWidth = GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
+         labelHeight = GetStringHeight(FONT_TRAYBUTTON);
+      } else {
+         labelWidth = 0;
+         labelHeight = 0;
+      }
 
-		iconWidth = bp->icon->image->width;
-		iconHeight = bp->icon->image->height;
-		ratio = (double)iconWidth / iconHeight;
+      iconWidth = bp->icon->image->width;
+      iconHeight = bp->icon->image->height;
+      ratio = (double)iconWidth / iconHeight;
 
-		if(width > 0) {
+      if(width > 0) {
 
-			/* Compute height from width. */
-			iconWidth = width - labelWidth - 2 * BUTTON_SIZE;
-			iconHeight = iconWidth / ratio;
-			height = Max(iconHeight, labelHeight) + 2 * BUTTON_SIZE;
+         /* Compute height from width. */
+         iconWidth = width - labelWidth - 2 * BUTTON_SIZE;
+         iconHeight = iconWidth / ratio;
+         height = Max(iconHeight, labelHeight) + 2 * BUTTON_SIZE;
 
-		} else if(height > 0) {
+      } else if(height > 0) {
 
-			/* Compute width from height. */
-			iconHeight = height - 2 * BUTTON_SIZE;
-			iconWidth = iconHeight * ratio;
-			width = iconWidth + labelWidth + 2 * BUTTON_SIZE;
+         /* Compute width from height. */
+         iconHeight = height - 2 * BUTTON_SIZE;
+         iconWidth = iconHeight * ratio;
+         width = iconWidth + labelWidth + 2 * BUTTON_SIZE;
 
-		}
+      }
 
-		cp->width = width;
-		cp->height = height;
+      cp->width = width;
+      cp->height = height;
 
-	}
+   }
 
 }
 
 /** Initialize a button tray component (display errors). */
 void CheckedCreate(TrayComponentType *cp) {
 
-	TrayButtonType *bp;
+   TrayButtonType *bp;
 
-	bp = (TrayButtonType*)cp->object;
+   bp = (TrayButtonType*)cp->object;
 
-	/* Validate the action for this tray button. */
-	if(bp->action && strlen(bp->action) > 0) {
-		if(!strncmp(bp->action, "exec:", 5)) {
-			/* Valid. */
-		} else if(!strncmp(bp->action, "root:", 5)) {
-			/* Valid. However, the specified root menu may not exist.
-			 * This case is handled in ValidateTrayButtons.
-			 */
-		} else if(!strcmp(bp->action, "showdesktop")) {
-			/* Valid. */
-		} else {
-			Warning("invalid TrayButton action: \"%s\"", bp->action);
-		}
-	} else {
-		/* Valid. However, root menu 1 may not exist.
-		 * This case is handled in ValidateTrayButtons.
-		 */
-	}
+   /* Validate the action for this tray button. */
+   if(bp->action && strlen(bp->action) > 0) {
+      if(!strncmp(bp->action, "exec:", 5)) {
+         /* Valid. */
+      } else if(!strncmp(bp->action, "root:", 5)) {
+         /* Valid. However, the specified root menu may not exist.
+          * This case is handled in ValidateTrayButtons.
+          */
+      } else if(!strcmp(bp->action, "showdesktop")) {
+         /* Valid. */
+      } else {
+         Warning("invalid TrayButton action: \"%s\"", bp->action);
+      }
+   } else {
+      /* Valid. However, root menu 1 may not exist.
+       * This case is handled in ValidateTrayButtons.
+       */
+   }
 
-	Create(cp);
+   Create(cp);
 
 }
 
 /** Initialize a button tray component. */
 void Create(TrayComponentType *cp) {
 
-	ButtonNode button;
-	TrayButtonType *bp;
-	int labelx;
+   ButtonNode button;
+   TrayButtonType *bp;
+   int labelx;
 
-	bp = (TrayButtonType*)cp->object;
+   bp = (TrayButtonType*)cp->object;
 
-	cp->pixmap = JXCreatePixmap(display, rootWindow,
-		cp->width, cp->height, rootDepth);
+   cp->pixmap = JXCreatePixmap(display, rootWindow,
+      cp->width, cp->height, rootDepth);
 
-	JXSetForeground(display, rootGC, colors[COLOR_TRAYBUTTON_BG]);
-	JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
+   JXSetForeground(display, rootGC, colors[COLOR_TRAYBUTTON_BG]);
+   JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
 
-	ResetButton(&button, cp->pixmap, rootGC);
-	button.type = BUTTON_TASK;
-	button.width = cp->width - 3;
-	button.height = cp->height - 3;
-	button.x = 1;
-	button.y = 1;
-	DrawButton(&button);
+   ResetButton(&button, cp->pixmap, rootGC);
+   button.type = BUTTON_TASK;
+   button.width = cp->width - 3;
+   button.height = cp->height - 3;
+   button.x = 1;
+   button.y = 1;
+   DrawButton(&button);
 
-	/* Compute the offset of the text. */
-	if(bp->label) {
-		if(!bp->icon) {
-			labelx = 2 + cp->width / 2;
-			labelx -= GetStringWidth(FONT_TRAYBUTTON, bp->label) / 2;
-		} else {
-			labelx = cp->width;
-			labelx -= GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
-		}
-	} else {
-		labelx = cp->width;
-	}
-	labelx -= BUTTON_SIZE;
+   /* Compute the offset of the text. */
+   if(bp->label) {
+      if(!bp->icon) {
+         labelx = 2 + cp->width / 2;
+         labelx -= GetStringWidth(FONT_TRAYBUTTON, bp->label) / 2;
+      } else {
+         labelx = cp->width;
+         labelx -= GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
+      }
+   } else {
+      labelx = cp->width;
+   }
+   labelx -= BUTTON_SIZE;
 
-	if(bp->icon) {
-		PutIcon(bp->icon, cp->pixmap, BUTTON_SIZE, BUTTON_SIZE,
-			labelx - BUTTON_SIZE, cp->height - BUTTON_SIZE * 2);
-	}
+   if(bp->icon) {
+      PutIcon(bp->icon, cp->pixmap, BUTTON_SIZE, BUTTON_SIZE,
+         labelx - BUTTON_SIZE, cp->height - BUTTON_SIZE * 2);
+   }
 
-	if(bp->label) {
-		RenderString(cp->pixmap, FONT_TRAYBUTTON, COLOR_TRAYBUTTON_FG,
-			labelx + 2, cp->height / 2 - GetStringHeight(FONT_TRAYBUTTON) / 2,
-			cp->width - labelx, NULL, bp->label);
-	}
+   if(bp->label) {
+      RenderString(cp->pixmap, FONT_TRAYBUTTON, COLOR_TRAYBUTTON_FG,
+         labelx + 2, cp->height / 2 - GetStringHeight(FONT_TRAYBUTTON) / 2,
+         cp->width - labelx, NULL, bp->label);
+   }
 
 }
 
 /** Resize a button tray component. */
 void Resize(TrayComponentType *cp) {
 
-	Destroy(cp);
-	Create(cp);
+   Destroy(cp);
+   Create(cp);
 
 }
 
 /** Destroy a button tray component. */
 void Destroy(TrayComponentType *cp) {
-	if(cp->pixmap != None) {
-		JXFreePixmap(display, cp->pixmap);
-	}
+   if(cp->pixmap != None) {
+      JXFreePixmap(display, cp->pixmap);
+   }
 }
 
 /** Process a button tray component event. */
 void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
-	const ScreenType *sp;
-	int mwidth, mheight;
-	int button;
+   const ScreenType *sp;
+   int mwidth, mheight;
+   int button;
 
-	TrayButtonType *bp = (TrayButtonType*)cp->object;
+   TrayButtonType *bp = (TrayButtonType*)cp->object;
 
-	Assert(bp);
+   Assert(bp);
 
-	if(bp->action && strlen(bp->action) > 0) {
-		if(!strncmp(bp->action, "exec:", 5)) {
-			RunCommand(bp->action + 5);
-			return;
-		} else if(!strncmp(bp->action, "root:", 5)) {
-			button = atoi(bp->action + 5);
-		} else if(!strcmp(bp->action, "showdesktop")) {
-			ShowDesktop();
-			return;
-		} else {
-			return;
-		}
-	} else {
-		button = 1;
-	}
+   if(bp->action && strlen(bp->action) > 0) {
+      if(!strncmp(bp->action, "exec:", 5)) {
+         RunCommand(bp->action + 5);
+         return;
+      } else if(!strncmp(bp->action, "root:", 5)) {
+         button = atoi(bp->action + 5);
+      } else if(!strcmp(bp->action, "showdesktop")) {
+         ShowDesktop();
+         return;
+      } else {
+         return;
+      }
+   } else {
+      button = 1;
+   }
 
-	GetRootMenuSize(button, &mwidth, &mheight);
+   GetRootMenuSize(button, &mwidth, &mheight);
 
-	sp = GetCurrentScreen(cp->screenx, cp->screeny);
+   sp = GetCurrentScreen(cp->screenx, cp->screeny);
 
-	if(cp->tray->layout == LAYOUT_HORIZONTAL) {
-		x = cp->screenx;
-		if(cp->screeny + cp->height / 2 < sp->y + sp->height / 2) {
-			y = cp->screeny + cp->height;
-		} else {
-			y = cp->screeny - mheight;
-		}
-	} else {
-		y = cp->screeny;
-		if(cp->screenx + cp->width / 2 < sp->x + sp->width / 2) {
-			x = cp->screenx + cp->width;
-		} else {
-			x = cp->screenx - mwidth;
-		}
-	}
+   if(cp->tray->layout == LAYOUT_HORIZONTAL) {
+      x = cp->screenx;
+      if(cp->screeny + cp->height / 2 < sp->y + sp->height / 2) {
+         y = cp->screeny + cp->height;
+      } else {
+         y = cp->screeny - mheight;
+      }
+   } else {
+      y = cp->screeny;
+      if(cp->screenx + cp->width / 2 < sp->x + sp->width / 2) {
+         x = cp->screenx + cp->width;
+      } else {
+         x = cp->screenx - mwidth;
+      }
+   }
 
-	ShowRootMenu(button, x, y);
+   ShowRootMenu(button, x, y);
 
 }
 
 /** Process a motion event. */
 void ProcessMotionEvent(TrayComponentType *cp, int x, int y, int mask) {
 
-	TrayButtonType *bp = (TrayButtonType*)cp->object;
+   TrayButtonType *bp = (TrayButtonType*)cp->object;
 
-	bp->mousex = cp->screenx + x;
-	bp->mousey = cp->screeny + y;
-	GetCurrentTime(&bp->mouseTime);
+   bp->mousex = cp->screenx + x;
+   bp->mousey = cp->screeny + y;
+   GetCurrentTime(&bp->mouseTime);
 
 }
 
 /** Signal (needed for popups). */
 void SignalTrayButton(const TimeType *now, int x, int y) {
 
-	TrayButtonType *bp;
-	const char *popup;
+   TrayButtonType *bp;
+   const char *popup;
 
-	for(bp = buttons; bp; bp = bp->next) {
-		if(bp->popup) {
-			popup = bp->popup;
-		} else if(bp->label) {
-			popup = bp->label;
-		} else {
-			continue;
-		}
-		if(abs(bp->mousex - x) < POPUP_DELTA
-			&& abs(bp->mousey - y) < POPUP_DELTA) {
-			if(GetTimeDifference(now, &bp->mouseTime) >= popupDelay) {
-				ShowPopup(x, y, popup);
-			}
-		}
-	}
+   for(bp = buttons; bp; bp = bp->next) {
+      if(bp->popup) {
+         popup = bp->popup;
+      } else if(bp->label) {
+         popup = bp->label;
+      } else {
+         continue;
+      }
+      if(abs(bp->mousex - x) < POPUP_DELTA
+         && abs(bp->mousey - y) < POPUP_DELTA) {
+         if(GetTimeDifference(now, &bp->mouseTime) >= popupDelay) {
+            ShowPopup(x, y, popup);
+         }
+      }
+   }
 
 }
 
 /** Validate tray buttons. */
 void ValidateTrayButtons() {
 
-	TrayButtonType *bp;
-	int bindex;
+   TrayButtonType *bp;
+   int bindex;
 
-	for(bp = buttons; bp; bp = bp->next) {
-		if(bp->action && !strncmp(bp->action, "root:", 5)) {
-			bindex = atoi(bp->action + 5);
-			if(!IsRootMenuDefined(bindex)) {
-				Warning("tray button: root menu %d not defined", bindex);
-			}
-		}
-	}
+   for(bp = buttons; bp; bp = bp->next) {
+      if(bp->action && !strncmp(bp->action, "root:", 5)) {
+         bindex = atoi(bp->action + 5);
+         if(!IsRootMenuDefined(bindex)) {
+            Warning("tray button: root menu %d not defined", bindex);
+         }
+      }
+   }
 
 }
 

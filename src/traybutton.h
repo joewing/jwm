@@ -30,8 +30,8 @@ void DestroyTrayButtons();
  * @return A new tray button component.
  */
 struct TrayComponentType *CreateTrayButton(
-	const char *iconName, const char *label, const char *action,
-	const char *popup, int width, int height);
+   const char *iconName, const char *label, const char *action,
+   const char *popup, int width, int height);
 
 /** Signal a tray button.
  * @param now The current time.

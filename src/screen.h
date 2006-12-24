@@ -16,9 +16,9 @@
 
 /** Structure to contain information about a screen. */
 typedef struct ScreenType {
-	int index;           /**< The index of this screen. */
-	int x, y;            /**< The location of this screen. */
-	int width, height;   /**< The size of this screen. */
+   int index;           /**< The index of this screen. */
+   int x, y;            /**< The location of this screen. */
+   int width, height;   /**< The size of this screen. */
 } ScreenType;
 
 void InitializeScreens();

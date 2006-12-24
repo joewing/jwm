@@ -15,15 +15,15 @@
 /** Enumeration of different components that use fonts. */
 typedef enum {
 
-	FONT_BORDER,
-	FONT_MENU,
-	FONT_TASK,
-	FONT_POPUP,
-	FONT_CLOCK,
-	FONT_TRAY,
-	FONT_TRAYBUTTON,
+   FONT_BORDER,
+   FONT_MENU,
+   FONT_TASK,
+   FONT_POPUP,
+   FONT_CLOCK,
+   FONT_TRAY,
+   FONT_TRAYBUTTON,
 
-	FONT_COUNT
+   FONT_COUNT
 
 } FontType;
 
@@ -49,7 +49,7 @@ void SetFont(FontType type, const char *value);
  * @param str The string to render.
  */
 void RenderString(Drawable d, FontType font, ColorType color,
-	int x, int y, int width, Region region, const char *str);
+   int x, int y, int width, Region region, const char *str);
 
 /** Get the width of a string.
  * @param type The font used to determine the width.

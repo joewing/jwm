@@ -15,110 +15,110 @@
 struct TimeType;
 
 typedef enum {
-	LAYOUT_HORIZONTAL,
-	LAYOUT_VERTICAL
+   LAYOUT_HORIZONTAL,
+   LAYOUT_VERTICAL
 } LayoutType;
 
 typedef enum {
-	TALIGN_FIXED,
-	TALIGN_LEFT,
-	TALIGN_TOP,
-	TALIGN_CENTER,
-	TALIGN_RIGHT,
-	TALIGN_BOTTOM
+   TALIGN_FIXED,
+   TALIGN_LEFT,
+   TALIGN_TOP,
+   TALIGN_CENTER,
+   TALIGN_RIGHT,
+   TALIGN_BOTTOM
 } TrayAlignmentType;
 
 typedef struct TrayComponentType {
 
-	/* The tray containing the component.
-	 * UpdateSpecificTray(TrayType*, TrayComponentType*) should be called
-	 * when content changes.
-	 */
-	struct TrayType *tray;
+   /* The tray containing the component.
+    * UpdateSpecificTray(TrayType*, TrayComponentType*) should be called
+    * when content changes.
+    */
+   struct TrayType *tray;
 
-	/* Additional information needed for the component. */
-	void *object;
+   /* Additional information needed for the component. */
+   void *object;
 
-	/* Coordinates on the tray (valid only after Create). */
-	int x, y;
+   /* Coordinates on the tray (valid only after Create). */
+   int x, y;
 
-	/* Coordinates on the screen (valid only after Create). */
-	int screenx, screeny;
+   /* Coordinates on the screen (valid only after Create). */
+   int screenx, screeny;
 
-	/* Sizing is handled as follows:
-	 *  - The component is created via a factory method. It sets its
-	 *    requested size (0 for no preference).
-	 *  - The SetSize callback is issued with size constraints
-	 *    (0 for no constraint). The component should update
-	 *    width and height in SetSize.
-	 *  - The Create callback is issued with finalized size information.
-	 * Resizing is handled as follows:
-	 *  - A component determines that it needs to change size. It updates
-	 *    its requested size (0 for no preference).
-	 *  - The component calls ResizeTray.
-	 *  - The SetSize callback is issued with size constraints
-	 *    (0 for no constraint). The component should update
-	 *    width and height in SetSize.
-	 *  - The Resize callback is issued with finalized size information.
-	 */
+   /* Sizing is handled as follows:
+    *  - The component is created via a factory method. It sets its
+    *    requested size (0 for no preference).
+    *  - The SetSize callback is issued with size constraints
+    *    (0 for no constraint). The component should update
+    *    width and height in SetSize.
+    *  - The Create callback is issued with finalized size information.
+    * Resizing is handled as follows:
+    *  - A component determines that it needs to change size. It updates
+    *    its requested size (0 for no preference).
+    *  - The component calls ResizeTray.
+    *  - The SetSize callback is issued with size constraints
+    *    (0 for no constraint). The component should update
+    *    width and height in SetSize.
+    *  - The Resize callback is issued with finalized size information.
+    */
 
-	/* Requested component size. */
-	int requestedWidth, requestedHeight;
+   /* Requested component size. */
+   int requestedWidth, requestedHeight;
 
-	/* Actual component size. */
-	int width, height;
+   /* Actual component size. */
+   int width, height;
 
-	/* Content. */
-	Window window;
-	Pixmap pixmap;
+   /* Content. */
+   Window window;
+   Pixmap pixmap;
 
-	/* Create the component. */
-	void (*Create)(struct TrayComponentType *cp);
+   /* Create the component. */
+   void (*Create)(struct TrayComponentType *cp);
 
-	/* Destroy the component. */
-	void (*Destroy)(struct TrayComponentType *cp);
+   /* Destroy the component. */
+   void (*Destroy)(struct TrayComponentType *cp);
 
-	/* Set the size known so far for items that need width/height ratios.
-	 * Either width or height may be zero.
-	 * This is called before Create.
-	 */
-	void (*SetSize)(struct TrayComponentType *cp, int width, int height);
+   /* Set the size known so far for items that need width/height ratios.
+    * Either width or height may be zero.
+    * This is called before Create.
+    */
+   void (*SetSize)(struct TrayComponentType *cp, int width, int height);
 
-	/* Resize the component. */
-	void (*Resize)(struct TrayComponentType *cp);
+   /* Resize the component. */
+   void (*Resize)(struct TrayComponentType *cp);
 
-	/* Callback for mouse clicks. */
-	void (*ProcessButtonEvent)(struct TrayComponentType *cp,
-		int x, int y, int mask);
+   /* Callback for mouse clicks. */
+   void (*ProcessButtonEvent)(struct TrayComponentType *cp,
+      int x, int y, int mask);
 
-	/* Callback for mouse motion. */
-	void (*ProcessMotionEvent)(struct TrayComponentType *cp,
-		int x, int y, int mask);
+   /* Callback for mouse motion. */
+   void (*ProcessMotionEvent)(struct TrayComponentType *cp,
+      int x, int y, int mask);
 
-	/* The next component in the tray. */
-	struct TrayComponentType *next;
+   /* The next component in the tray. */
+   struct TrayComponentType *next;
 
 } TrayComponentType;
 
 typedef struct TrayType {
 
-	int x, y;
-	int requestedWidth, requestedHeight;
-	int width, height;
-	int border;
-	WinLayerType layer;
-	LayoutType layout;
-	TrayAlignmentType valign, halign;
+   int x, y;
+   int requestedWidth, requestedHeight;
+   int width, height;
+   int border;
+   WinLayerType layer;
+   LayoutType layout;
+   TrayAlignmentType valign, halign;
 
-	int autoHide;
-	int hidden;
+   int autoHide;
+   int hidden;
 
-	Window window;
+   Window window;
 
-	struct TrayComponentType *components;
-	struct TrayComponentType *componentsTail;
+   struct TrayComponentType *components;
+   struct TrayComponentType *componentsTail;
 
-	struct TrayType *next;
+   struct TrayType *next;
 
 } TrayType;
 

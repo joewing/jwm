@@ -15,20 +15,20 @@ struct GroupType;
 
 /** Enumeration of group options. */
 typedef enum {
-	OPTION_INVALID   = 0,
-	OPTION_STICKY    = 1,  /**< Start in the sticky state. */
-	OPTION_LAYER     = 2,  /**< Start on a specific layer. */
-	OPTION_DESKTOP   = 3,  /**< Start on a specific desktop. */
-	OPTION_ICON      = 4,  /**< Set the icon to use. */
-	OPTION_NOLIST    = 5,  /**< Don't display in the task list. */
-	OPTION_BORDER    = 6,  /**< Force a window border. */
-	OPTION_NOBORDER  = 7,  /**< Don't draw a window border. */
-	OPTION_TITLE     = 8,  /**< Force a window title bar. */
-	OPTION_NOTITLE   = 9,  /**< Don't draw a window title bar. */
-	OPTION_PIGNORE   = 10, /**< Ignore program-specified location. */
-	OPTION_MAXIMIZED = 11, /**< Start maximized. */
-	OPTION_MINIMIZED = 12, /**< Start minimized. */
-	OPTION_SHADED    = 13  /**< Start shaded. */
+   OPTION_INVALID   = 0,
+   OPTION_STICKY    = 1,  /**< Start in the sticky state. */
+   OPTION_LAYER     = 2,  /**< Start on a specific layer. */
+   OPTION_DESKTOP   = 3,  /**< Start on a specific desktop. */
+   OPTION_ICON      = 4,  /**< Set the icon to use. */
+   OPTION_NOLIST    = 5,  /**< Don't display in the task list. */
+   OPTION_BORDER    = 6,  /**< Force a window border. */
+   OPTION_NOBORDER  = 7,  /**< Don't draw a window border. */
+   OPTION_TITLE     = 8,  /**< Force a window title bar. */
+   OPTION_NOTITLE   = 9,  /**< Don't draw a window title bar. */
+   OPTION_PIGNORE   = 10, /**< Ignore program-specified location. */
+   OPTION_MAXIMIZED = 11, /**< Start maximized. */
+   OPTION_MINIMIZED = 12, /**< Start minimized. */
+   OPTION_SHADED    = 13  /**< Start shaded. */
 } OptionType;
 
 void InitializeGroups();
@@ -65,7 +65,7 @@ void AddGroupOption(struct GroupType *gp, OptionType option);
  * @param value The option value.
  */
 void AddGroupOptionValue(struct GroupType *gp, OptionType option,
-	const char *value);
+   const char *value);
 
 /** Apply any matching groups to a client.
  * @param np The client.

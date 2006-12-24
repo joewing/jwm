@@ -19,29 +19,29 @@
 
 /** What part of the window to match. */
 typedef enum {
-	MATCH_NAME,  /**< Match the window name. */
-	MATCH_CLASS  /**< Match the window class. */
+   MATCH_NAME,  /**< Match the window name. */
+   MATCH_CLASS  /**< Match the window class. */
 } MatchType;
 
 /** List of match patterns for a group. */
 typedef struct PatternListType {
-	char *pattern;
-	MatchType match;
-	struct PatternListType *next;
+   char *pattern;
+   MatchType match;
+   struct PatternListType *next;
 } PatternListType;
 
 /** List of options for a group. */
 typedef struct OptionListType {
-	OptionType option;
-	char *value;
-	struct OptionListType *next;
+   OptionType option;
+   char *value;
+   struct OptionListType *next;
 } OptionListType;
 
 /** List of groups. */
 typedef struct GroupType {
-	PatternListType *patterns;
-	OptionListType *options;
-	struct GroupType *next;
+   PatternListType *patterns;
+   OptionListType *options;
+   struct GroupType *next;
 } GroupType;
 
 static GroupType *groups = NULL;
@@ -49,7 +49,7 @@ static GroupType *groups = NULL;
 static void ReleasePatternList(PatternListType *lp);
 static void ReleaseOptionList(OptionListType *lp);
 static void AddPattern(PatternListType **lp, const char *pattern,
-	MatchType match);
+   MatchType match);
 static void ApplyGroup(const GroupType *gp, ClientNode *np);
 
 /** Initialize group data. */
@@ -67,227 +67,227 @@ void ShutdownGroups() {
 /** Destroy group data. */
 void DestroyGroups() {
 
-	GroupType *gp;
+   GroupType *gp;
 
-	while(groups) {
-		gp = groups->next;
-		ReleasePatternList(groups->patterns);
-		ReleaseOptionList(groups->options);
-		Release(groups);
-		groups = gp;
-	}
+   while(groups) {
+      gp = groups->next;
+      ReleasePatternList(groups->patterns);
+      ReleaseOptionList(groups->options);
+      Release(groups);
+      groups = gp;
+   }
 
 }
 
 /** Release a group pattern list. */
 void ReleasePatternList(PatternListType *lp) {
 
-	PatternListType *tp;
+   PatternListType *tp;
 
-	while(lp) {
-		tp = lp->next;
-		Release(lp->pattern);
-		Release(lp);
-		lp = tp;
-	}
+   while(lp) {
+      tp = lp->next;
+      Release(lp->pattern);
+      Release(lp);
+      lp = tp;
+   }
 
 }
 
 /** Release a group option list. */
 void ReleaseOptionList(OptionListType *lp) {
 
-	OptionListType *tp;
+   OptionListType *tp;
 
-	while(lp) {
-		tp = lp->next;
-		if(lp->value) {
-			Release(lp->value);
-		}
-		Release(lp);
-		lp = tp;
-	}
+   while(lp) {
+      tp = lp->next;
+      if(lp->value) {
+         Release(lp->value);
+      }
+      Release(lp);
+      lp = tp;
+   }
 
 }
 
 /** Create an empty group. */
 GroupType *CreateGroup() {
-	GroupType *tp;
+   GroupType *tp;
 
-	tp = Allocate(sizeof(GroupType));
-	tp->patterns = NULL;
-	tp->options = NULL;
-	tp->next = groups;
-	groups = tp;
+   tp = Allocate(sizeof(GroupType));
+   tp->patterns = NULL;
+   tp->options = NULL;
+   tp->next = groups;
+   groups = tp;
 
-	return tp;
+   return tp;
 }
 
 /** Add a window class to a group. */
 void AddGroupClass(GroupType *gp, const char *pattern) {
 
-	Assert(gp);
+   Assert(gp);
 
-	if(pattern) {
-		AddPattern(&gp->patterns, pattern, MATCH_CLASS);
-	} else {
-		Warning("invalid group class");
-	}
+   if(pattern) {
+      AddPattern(&gp->patterns, pattern, MATCH_CLASS);
+   } else {
+      Warning("invalid group class");
+   }
 
 }
 
 /** Add a window name to a group. */
 void AddGroupName(GroupType *gp, const char *pattern) {
 
-	Assert(gp);
+   Assert(gp);
 
-	if(pattern) {
-		AddPattern(&gp->patterns, pattern, MATCH_NAME);
-	} else {
-		Warning("invalid group name");
-	}
+   if(pattern) {
+      AddPattern(&gp->patterns, pattern, MATCH_NAME);
+   } else {
+      Warning("invalid group name");
+   }
 
 }
 
 /** Add a pattern to a pattern list. */
 void AddPattern(PatternListType **lp, const char *pattern, MatchType match) {
 
-	PatternListType *tp;
+   PatternListType *tp;
 
-	Assert(lp);
-	Assert(pattern);
+   Assert(lp);
+   Assert(pattern);
 
-	tp = Allocate(sizeof(PatternListType));
-	tp->next = *lp;
-	*lp = tp;
+   tp = Allocate(sizeof(PatternListType));
+   tp->next = *lp;
+   *lp = tp;
 
-	tp->pattern = CopyString(pattern);
-	tp->match = match;
+   tp->pattern = CopyString(pattern);
+   tp->match = match;
 
 }
 
 /** Add an option to a group. */
 void AddGroupOption(GroupType *gp, OptionType option) {
 
-	OptionListType *lp;
+   OptionListType *lp;
 
-	lp = Allocate(sizeof(OptionListType));
-	lp->option = option;
-	lp->value = NULL;
-	lp->next = gp->options;
-	gp->options = lp;
+   lp = Allocate(sizeof(OptionListType));
+   lp->option = option;
+   lp->value = NULL;
+   lp->next = gp->options;
+   gp->options = lp;
 
 }
 
 /** Add an option (with value) to a group. */
 void AddGroupOptionValue(GroupType *gp, OptionType option,
-	const char *value) {
+   const char *value) {
 
-	OptionListType *lp;
+   OptionListType *lp;
 
-	Assert(value);
+   Assert(value);
 
-	lp = Allocate(sizeof(OptionListType));
-	lp->option = option;
-	lp->value = CopyString(value);
-	lp->next = gp->options;
-	gp->options = lp;
+   lp = Allocate(sizeof(OptionListType));
+   lp->option = option;
+   lp->value = CopyString(value);
+   lp->next = gp->options;
+   gp->options = lp;
 
 }
 
 /** Apply groups to a client. */
 void ApplyGroups(ClientNode *np) {
 
-	PatternListType *lp;
-	GroupType *gp;
+   PatternListType *lp;
+   GroupType *gp;
 
-	Assert(np);
+   Assert(np);
 
-	for(gp = groups; gp; gp = gp->next) {
-		for(lp = gp->patterns; lp; lp = lp->next) {
-			if(lp->match == MATCH_CLASS) {
-				if(Match(lp->pattern, np->className)) {
-					ApplyGroup(gp, np);
-					break;
-				}
-			} else if(lp->match == MATCH_NAME) {
-				if(Match(lp->pattern, np->name)) {
-					ApplyGroup(gp, np);
-					break;
-				}
-			} else {
-				Debug("invalid match in ApplyGroups: %d", lp->match);
-			}
-		}
-	}
+   for(gp = groups; gp; gp = gp->next) {
+      for(lp = gp->patterns; lp; lp = lp->next) {
+         if(lp->match == MATCH_CLASS) {
+            if(Match(lp->pattern, np->className)) {
+               ApplyGroup(gp, np);
+               break;
+            }
+         } else if(lp->match == MATCH_NAME) {
+            if(Match(lp->pattern, np->name)) {
+               ApplyGroup(gp, np);
+               break;
+            }
+         } else {
+            Debug("invalid match in ApplyGroups: %d", lp->match);
+         }
+      }
+   }
 
 }
 
 /** Apply a group to a client. */
 void ApplyGroup(const GroupType *gp, ClientNode *np) {
 
-	OptionListType *lp;
-	unsigned int temp;
+   OptionListType *lp;
+   unsigned int temp;
 
-	Assert(gp);
-	Assert(np);
+   Assert(gp);
+   Assert(np);
 
-	for(lp = gp->options; lp; lp = lp->next) {
-		switch(lp->option) {
-		case OPTION_STICKY:
-			np->state.status |= STAT_STICKY;
-			break;
-		case OPTION_NOLIST:
-			np->state.status |= STAT_NOLIST;
-			break;
-		case OPTION_BORDER:
-			np->state.border |= BORDER_OUTLINE;
-			break;
-		case OPTION_NOBORDER:
-			np->state.border &= ~BORDER_OUTLINE;
-			break;
-		case OPTION_TITLE:
-			np->state.border |= BORDER_TITLE;
-			break;
-		case OPTION_NOTITLE:
-			np->state.border &= ~BORDER_TITLE;
-			break;
-		case OPTION_LAYER:
-			temp = atoi(lp->value);
-			if(temp <= LAYER_COUNT) {
-				SetClientLayer(np, temp);
-			} else {
-				Warning("invalid group layer: %s", lp->value);
-			}
-			break;
-		case OPTION_DESKTOP:
-			temp = atoi(lp->value);
-			if(temp >= 1 && temp <= desktopCount) {
-				np->state.desktop = temp - 1;
-			} else {
-				Warning("invalid group desktop: %s", lp->value);
-			}
-			break;
-		case OPTION_ICON:
-			DestroyIcon(np->icon);
-			np->icon = LoadNamedIcon(lp->value);
-			break;
-		case OPTION_PIGNORE:
-			np->state.status |= STAT_PIGNORE;
-			break;
-		case OPTION_MAXIMIZED:
-			np->state.status |= STAT_MAXIMIZED;
-			break;
-		case OPTION_MINIMIZED:
-			np->state.status |= STAT_MINIMIZED;
-			break;
-		case OPTION_SHADED:
-			np->state.status |= STAT_SHADED;
-			break;
-		default:
-			Debug("invalid option: %d", lp->option);
-			break;
-		}
-	}
+   for(lp = gp->options; lp; lp = lp->next) {
+      switch(lp->option) {
+      case OPTION_STICKY:
+         np->state.status |= STAT_STICKY;
+         break;
+      case OPTION_NOLIST:
+         np->state.status |= STAT_NOLIST;
+         break;
+      case OPTION_BORDER:
+         np->state.border |= BORDER_OUTLINE;
+         break;
+      case OPTION_NOBORDER:
+         np->state.border &= ~BORDER_OUTLINE;
+         break;
+      case OPTION_TITLE:
+         np->state.border |= BORDER_TITLE;
+         break;
+      case OPTION_NOTITLE:
+         np->state.border &= ~BORDER_TITLE;
+         break;
+      case OPTION_LAYER:
+         temp = atoi(lp->value);
+         if(temp <= LAYER_COUNT) {
+            SetClientLayer(np, temp);
+         } else {
+            Warning("invalid group layer: %s", lp->value);
+         }
+         break;
+      case OPTION_DESKTOP:
+         temp = atoi(lp->value);
+         if(temp >= 1 && temp <= desktopCount) {
+            np->state.desktop = temp - 1;
+         } else {
+            Warning("invalid group desktop: %s", lp->value);
+         }
+         break;
+      case OPTION_ICON:
+         DestroyIcon(np->icon);
+         np->icon = LoadNamedIcon(lp->value);
+         break;
+      case OPTION_PIGNORE:
+         np->state.status |= STAT_PIGNORE;
+         break;
+      case OPTION_MAXIMIZED:
+         np->state.status |= STAT_MAXIMIZED;
+         break;
+      case OPTION_MINIMIZED:
+         np->state.status |= STAT_MINIMIZED;
+         break;
+      case OPTION_SHADED:
+         np->state.status |= STAT_SHADED;
+         break;
+      default:
+         Debug("invalid option: %d", lp->option);
+         break;
+      }
+   }
 
 }
 

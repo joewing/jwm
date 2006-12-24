@@ -15,29 +15,29 @@ struct ClientNode;
 /** Structure to hold a scaled icon. */
 typedef struct ScaledIconNode {
 
-	int width;   /**< The scaled width of the icon. */
-	int height;  /**< The scaled height of the icon. */
+   int width;   /**< The scaled width of the icon. */
+   int height;  /**< The scaled height of the icon. */
 
-	Pixmap image;
-	Pixmap mask;
+   Pixmap image;
+   Pixmap mask;
 #ifdef USE_XRENDER
-	Picture imagePicture;
-	Picture maskPicture;
+   Picture imagePicture;
+   Picture maskPicture;
 #endif
 
-	struct ScaledIconNode *next;
+   struct ScaledIconNode *next;
 
 } ScaledIconNode;
 
 /** Structure to hold an icon. */
 typedef struct IconNode {
 
-	char *name;                    /**< The name of the icon. */
-	struct ImageNode *image;       /**< The image data. */
-	struct ScaledIconNode *nodes;  /**< Scaled versions of the icon. */
-	
-	struct IconNode *next;         /**< The next icon in the list. */
-	struct IconNode *prev;         /**< The previous icon in the list. */
+   char *name;                    /**< The name of the icon. */
+   struct ImageNode *image;       /**< The image data. */
+   struct ScaledIconNode *nodes;  /**< Scaled versions of the icon. */
+   
+   struct IconNode *next;         /**< The next icon in the list. */
+   struct IconNode *prev;         /**< The previous icon in the list. */
 
 } IconNode;
 
@@ -67,7 +67,7 @@ void AddIconPath(char *path);
  * @param height The height of the icon to display.
  */
 void PutIcon(IconNode *icon, Drawable d, int x, int y,
-	int width, int height);
+   int width, int height);
 
 /** Load an icon for a client.
  * @param np The client.

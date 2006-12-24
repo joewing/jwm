@@ -24,8 +24,8 @@ void DestroySwallow();
  * @param height the height to use (0 for default).
  */
 struct TrayComponentType *CreateSwallow(
-	const char *name, const char *command,
-	int width, int height);
+   const char *name, const char *command,
+   int width, int height);
 
 /** Determine if a map event was for a window that should be swallowed.
  * @param event The map event.

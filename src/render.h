@@ -16,10 +16,10 @@ struct ScaledIconNode;
 void QueryRenderExtension();
 
 int PutScaledRenderIcon(struct IconNode *icon, struct ScaledIconNode *node,
-	Drawable d, int x, int y);
+   Drawable d, int x, int y);
 
 struct ScaledIconNode *CreateScaledRenderIcon(struct IconNode *icon,
-	int width, int height);
+   int width, int height);
 
 #endif
 

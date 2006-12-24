@@ -28,77 +28,77 @@
 #define DEBUG_H
 
 #ifndef MAKE_DEPEND
-#	include <stdarg.h>
-#	include <stdio.h>
-#	include <stdlib.h>
-#	include <string.h>
-#	ifdef HAVE_ALLOCA_H
-#		include <alloca.h>
-#	endif
+#   include <stdarg.h>
+#   include <stdio.h>
+#   include <stdlib.h>
+#   include <string.h>
+#   ifdef HAVE_ALLOCA_H
+#      include <alloca.h>
+#   endif
 #endif /* MAKE_DEPEND */
 
 void Debug(const char *str, ...);
 
 #ifdef HAVE_ALLOCA_H
 
-#	define AllocateStack( x ) alloca( x )
-#	define ReleaseStack( x ) ((void)0)
+#   define AllocateStack( x ) alloca( x )
+#   define ReleaseStack( x ) ((void)0)
 
 #else
 
-#	define AllocateStack( x ) Allocate( x )
-#	define ReleaseStack( x ) Release( x )
+#   define AllocateStack( x ) Allocate( x )
+#   define ReleaseStack( x ) Release( x )
 
 #endif
 
 #ifdef DEBUG
 
-#	define Assert( x ) \
-		if(!( x )) {     \
-			Debug("ASSERT FAILED: %s[%u]", __FILE__, __LINE__ ); \
-			abort(); \
-		}
+#   define Assert( x ) \
+      if(!( x )) {     \
+         Debug("ASSERT FAILED: %s[%u]", __FILE__, __LINE__ ); \
+         abort(); \
+      }
 
-#	define SetCheckpoint() \
-		DEBUG_SetCheckpoint( __FILE__, __LINE__ )
-#	define ShowCheckpoint() \
-		DEBUG_ShowCheckpoint()
+#   define SetCheckpoint() \
+      DEBUG_SetCheckpoint( __FILE__, __LINE__ )
+#   define ShowCheckpoint() \
+      DEBUG_ShowCheckpoint()
 
-#	define StartDebug() \
-		DEBUG_StartDebug( __FILE__, __LINE__ )
-#	define StopDebug() \
-		DEBUG_StopDebug( __FILE__, __LINE__ )
+#   define StartDebug() \
+      DEBUG_StartDebug( __FILE__, __LINE__ )
+#   define StopDebug() \
+      DEBUG_StopDebug( __FILE__, __LINE__ )
 
-#	define Allocate( x ) \
-		DEBUG_Allocate( (x), __FILE__, __LINE__ )
-#	define Reallocate( x, y ) \
-		DEBUG_Reallocate( (x), (y), __FILE__, __LINE__ )
-#	define Release( x ) \
-		DEBUG_Release( (void*)(& x), __FILE__, __LINE__ )
+#   define Allocate( x ) \
+      DEBUG_Allocate( (x), __FILE__, __LINE__ )
+#   define Reallocate( x, y ) \
+      DEBUG_Reallocate( (x), (y), __FILE__, __LINE__ )
+#   define Release( x ) \
+      DEBUG_Release( (void*)(& x), __FILE__, __LINE__ )
 
-	void DEBUG_SetCheckpoint(const char*, unsigned int);
-	void DEBUG_ShowCheckpoint();
+   void DEBUG_SetCheckpoint(const char*, unsigned int);
+   void DEBUG_ShowCheckpoint();
 
-	void DEBUG_StartDebug(const char*, unsigned int);
-	void DEBUG_StopDebug(const char*, unsigned int);
+   void DEBUG_StartDebug(const char*, unsigned int);
+   void DEBUG_StopDebug(const char*, unsigned int);
 
-	void *DEBUG_Allocate(size_t, const char*, unsigned int);
-	void *DEBUG_Reallocate(void*, size_t, const char*, unsigned int);
-	void DEBUG_Release(void**, const char*, unsigned int);
+   void *DEBUG_Allocate(size_t, const char*, unsigned int);
+   void *DEBUG_Reallocate(void*, size_t, const char*, unsigned int);
+   void DEBUG_Release(void**, const char*, unsigned int);
 
 #else /* DEBUG */
 
-#	define Assert( x )           ((void)0)
+#   define Assert( x )           ((void)0)
 
-#	define SetCheckpoint()       ((void)0)
-#	define ShowCheckpoint()      ((void)0)
+#   define SetCheckpoint()       ((void)0)
+#   define ShowCheckpoint()      ((void)0)
 
-#	define StartDebug()          ((void)0)
-#	define StopDebug()           ((void)0)
+#   define StartDebug()          ((void)0)
+#   define StopDebug()           ((void)0)
 
-#	define Allocate( x )         malloc( (x) )
-#	define Reallocate( x, y )    realloc( (x), (y) )
-#	define Release( x )          free( (x) )
+#   define Allocate( x )         malloc( (x) )
+#   define Reallocate( x, y )    realloc( (x), (y) )
+#   define Release( x )          free( (x) )
 
 #endif /* DEBUG */
 

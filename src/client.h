@@ -15,94 +15,94 @@
 
 /** Window border flags. */
 typedef enum {
-	BORDER_NONE    = 0,
-	BORDER_OUTLINE = 1,  /**< Window has a border. */
-	BORDER_TITLE   = 2,  /**< Window has a title bar. */
-	BORDER_MIN     = 4,  /**< Window supports minimize. */
-	BORDER_MAX     = 8,  /**< Window supports maximize. */
-	BORDER_CLOSE   = 16, /**< Window supports close. */
-	BORDER_RESIZE  = 32, /**< Window supports resizing. */
-	BORDER_MOVE    = 64  /**< Window supports moving. */
+   BORDER_NONE    = 0,
+   BORDER_OUTLINE = 1,  /**< Window has a border. */
+   BORDER_TITLE   = 2,  /**< Window has a title bar. */
+   BORDER_MIN     = 4,  /**< Window supports minimize. */
+   BORDER_MAX     = 8,  /**< Window supports maximize. */
+   BORDER_CLOSE   = 16, /**< Window supports close. */
+   BORDER_RESIZE  = 32, /**< Window supports resizing. */
+   BORDER_MOVE    = 64  /**< Window supports moving. */
 } BorderFlags;
 
 /** The default border flags. */
 #define BORDER_DEFAULT ( \
-		  BORDER_OUTLINE \
-		| BORDER_TITLE   \
-		| BORDER_MIN     \
-		| BORDER_MAX     \
-		| BORDER_CLOSE   \
-		| BORDER_RESIZE  \
-		| BORDER_MOVE    )
+        BORDER_OUTLINE \
+      | BORDER_TITLE   \
+      | BORDER_MIN     \
+      | BORDER_MAX     \
+      | BORDER_CLOSE   \
+      | BORDER_RESIZE  \
+      | BORDER_MOVE    )
 
 /** Window status flags. */
 typedef enum {
-	STAT_NONE       = 0,
-	STAT_ACTIVE     = 1 << 0,  /**< This client has focus. */
-	STAT_MAPPED     = 1 << 1,  /**< This client is shown (on some desktop). */
-	STAT_MAXIMIZED  = 1 << 2,  /**< This client is maximized. */
-	STAT_HIDDEN     = 1 << 3,  /**< This client is not on the current desktop. */
-	STAT_STICKY     = 1 << 4,  /**< This client is on all desktops. */
-	STAT_NOLIST     = 1 << 5,  /**< Skip this client in the task list. */
-	STAT_MINIMIZED  = 1 << 6,  /**< This client is minimized. */
-	STAT_SHADED     = 1 << 7,  /**< This client is shaded. */
-	STAT_WMDIALOG   = 1 << 8,  /**< This is a JWM dialog window. */
-	STAT_PIGNORE    = 1 << 9,  /**< Ignore the program-specified position. */
-	STAT_SHAPE      = 1 << 10, /**< This client uses the shape extension. */
-	STAT_SDESKTOP   = 1 << 11, /**< This client was minimized to show desktop. */
-	STAT_FULLSCREEN = 1 << 12  /**< This client wants to be full screen. */
+   STAT_NONE       = 0,
+   STAT_ACTIVE     = 1 << 0,  /**< This client has focus. */
+   STAT_MAPPED     = 1 << 1,  /**< This client is shown (on some desktop). */
+   STAT_MAXIMIZED  = 1 << 2,  /**< This client is maximized. */
+   STAT_HIDDEN     = 1 << 3,  /**< This client is not on the current desktop. */
+   STAT_STICKY     = 1 << 4,  /**< This client is on all desktops. */
+   STAT_NOLIST     = 1 << 5,  /**< Skip this client in the task list. */
+   STAT_MINIMIZED  = 1 << 6,  /**< This client is minimized. */
+   STAT_SHADED     = 1 << 7,  /**< This client is shaded. */
+   STAT_WMDIALOG   = 1 << 8,  /**< This is a JWM dialog window. */
+   STAT_PIGNORE    = 1 << 9,  /**< Ignore the program-specified position. */
+   STAT_SHAPE      = 1 << 10, /**< This client uses the shape extension. */
+   STAT_SDESKTOP   = 1 << 11, /**< This client was minimized to show desktop. */
+   STAT_FULLSCREEN = 1 << 12  /**< This client wants to be full screen. */
 } StatusFlags;
 
 /** Colormap window linked list. */
 typedef struct ColormapNode {
-	Window window;             /**< A window containing a colormap. */
-	struct ColormapNode *next; /**< Next value in the linked list. */
+   Window window;             /**< A window containing a colormap. */
+   struct ColormapNode *next; /**< Next value in the linked list. */
 } ColormapNode;
 
 /** The aspect ratio of a window. */
 typedef struct AspectRatio {
-	int minx, miny;  /**< The minimum aspect ratio. */
-	int maxx, maxy;  /**< The maximum aspect ratio. */
+   int minx, miny;  /**< The minimum aspect ratio. */
+   int maxx, maxy;  /**< The maximum aspect ratio. */
 } AspectRatio;
 
 /** Struture to store information about a client window. */
 typedef struct ClientNode {
 
-	Window window;           /**< The client window. */
-	Window parent;           /**< The frame window. */
+   Window window;           /**< The client window. */
+   Window parent;           /**< The frame window. */
 
-	Window owner;            /**< The owner window (for transients). */
+   Window owner;            /**< The owner window (for transients). */
 
-	int x, y;                /**< The location of the window. */
-	int width, height;       /**< The size of the window. */
-	int oldx, oldy;          /**< The old location (for maximize). */
-	int oldWidth, oldHeight; /**< The old size (for maximize). */
+   int x, y;                /**< The location of the window. */
+   int width, height;       /**< The size of the window. */
+   int oldx, oldy;          /**< The old location (for maximize). */
+   int oldWidth, oldHeight; /**< The old size (for maximize). */
 
-	long sizeFlags;
-	int baseWidth, baseHeight;
-	int minWidth, minHeight;
-	int maxWidth, maxHeight;
-	int xinc, yinc;
-	AspectRatio aspect;
-	int gravity;
+   long sizeFlags;
+   int baseWidth, baseHeight;
+   int minWidth, minHeight;
+   int maxWidth, maxHeight;
+   int xinc, yinc;
+   AspectRatio aspect;
+   int gravity;
 
-	Colormap cmap;
-	ColormapNode *colormaps;
+   Colormap cmap;
+   ColormapNode *colormaps;
 
-	char *name;
-	char *instanceName;
-	char *className;
+   char *name;
+   char *instanceName;
+   char *className;
 
-	ClientState state;
+   ClientState state;
 
-	BorderActionType borderAction;
+   BorderActionType borderAction;
 
-	struct IconNode *icon;
+   struct IconNode *icon;
 
-	void (*controller)(int wasDestroyed);
+   void (*controller)(int wasDestroyed);
 
-	struct ClientNode *prev;  /**< The previous client in this layer. */
-	struct ClientNode *next;  /**< The next client in this layer. */
+   struct ClientNode *prev;  /**< The previous client in this layer. */
+   struct ClientNode *next;  /**< The next client in this layer. */
 
 } ClientNode;
 

@@ -15,8 +15,8 @@
 struct ClientNode;
 
 typedef enum {
-	RESIZE_OPAQUE,   /**< Show window contents while resizing. */
-	RESIZE_OUTLINE   /**< Show an outline while resizing. */
+   RESIZE_OPAQUE,   /**< Show window contents while resizing. */
+   RESIZE_OUTLINE   /**< Show an outline while resizing. */
 } ResizeModeType;
 
 /** Resize a client window.
@@ -26,7 +26,7 @@ typedef enum {
  * @param starty The starting mouse y-coordinate (window relative).
  */
 void ResizeClient(struct ClientNode *np, BorderActionType action,
-	int startx, int starty);
+   int startx, int starty);
 
 /** Resize a client window using the keyboard (mouse optional).
  * @param np The client to resize.

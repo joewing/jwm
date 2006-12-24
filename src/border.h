@@ -16,17 +16,17 @@ struct ClientNode;
 
 /** Flags to determine what action to take on the border. */
 typedef enum {
-	BA_NONE      = 0,      /**< Do nothing. */
-	BA_RESIZE    = 1,      /**< Resize the window. */
-	BA_MOVE      = 2,      /**< Move the window. */
-	BA_CLOSE     = 3,      /**< Close the window. */
-	BA_MAXIMIZE  = 4,      /**< Maximize the window. */
-	BA_MINIMIZE  = 5,      /**< Minimize the window. */
-	BA_MENU      = 6,      /**< Show the window menu. */
-	BA_RESIZE_N  = 0x10,   /**< Resize north. */
-	BA_RESIZE_S  = 0x20,   /**< Resize south. */
-	BA_RESIZE_E  = 0x40,   /**< Resize east. */
-	BA_RESIZE_W  = 0x80    /**< Resize west. */
+   BA_NONE      = 0,      /**< Do nothing. */
+   BA_RESIZE    = 1,      /**< Resize the window. */
+   BA_MOVE      = 2,      /**< Move the window. */
+   BA_CLOSE     = 3,      /**< Close the window. */
+   BA_MAXIMIZE  = 4,      /**< Maximize the window. */
+   BA_MINIMIZE  = 5,      /**< Minimize the window. */
+   BA_MENU      = 6,      /**< Show the window menu. */
+   BA_RESIZE_N  = 0x10,   /**< Resize north. */
+   BA_RESIZE_S  = 0x20,   /**< Resize south. */
+   BA_RESIZE_E  = 0x40,   /**< Resize east. */
+   BA_RESIZE_W  = 0x80    /**< Resize west. */
 } BorderActionType;
 
 /*@{*/
@@ -63,7 +63,7 @@ int GetBorderIconSize();
  * @param west Pointer to the value to contain the west border size.
  */
 void GetBorderSize(const struct ClientNode *np,
-	int *north, int *south, int *east, int *west);
+   int *north, int *south, int *east, int *west);
 
 /** Set the size of window borders.
  * @param str The size to use in string form.

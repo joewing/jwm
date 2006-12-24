@@ -15,8 +15,8 @@
 
 /** Structure to represent a list of commands. */
 typedef struct CommandNode {
-	char *command;             /**< The command. */
-	struct CommandNode *next;  /**< The next command in the list. */
+   char *command;             /**< The command. */
+   struct CommandNode *next;  /**< The next command in the list. */
 } CommandNode;
 
 static CommandNode *startupCommands;
@@ -29,96 +29,96 @@ static void AddCommand(CommandNode **commands, const char *command);
 
 /** Initialize the command lists. */
 void InitializeCommands() {
-	startupCommands = NULL;
-	shutdownCommands = NULL;
-	restartCommands = NULL;
+   startupCommands = NULL;
+   shutdownCommands = NULL;
+   restartCommands = NULL;
 }
 
 /** Process startup/restart commands. */
 void StartupCommands() {
 
-	if(isRestarting) {
-		RunCommands(restartCommands);
-	} else {
-		RunCommands(startupCommands);
-	}
+   if(isRestarting) {
+      RunCommands(restartCommands);
+   } else {
+      RunCommands(startupCommands);
+   }
 
 }
 
 /** Process shutdown commands. */
 void ShutdownCommands() {
 
-	if(!shouldRestart) {
-		RunCommands(shutdownCommands);
-	}
+   if(!shouldRestart) {
+      RunCommands(shutdownCommands);
+   }
 
 }
 
 /** Destroy the command lists. */
 void DestroyCommands() {
-	ReleaseCommands(&startupCommands);
-	ReleaseCommands(&shutdownCommands);
-	ReleaseCommands(&restartCommands);
+   ReleaseCommands(&startupCommands);
+   ReleaseCommands(&shutdownCommands);
+   ReleaseCommands(&restartCommands);
 }
 
 /** Run the commands in a command list. */
 void RunCommands(CommandNode *commands) {
 
-	CommandNode *cp;
+   CommandNode *cp;
 
-	for(cp = commands; cp; cp = cp->next) {
-		RunCommand(cp->command);
-	}
+   for(cp = commands; cp; cp = cp->next) {
+      RunCommand(cp->command);
+   }
 
 }
 
 /** Release a command list. */
 void ReleaseCommands(CommandNode **commands) {
 
-	CommandNode *cp;
+   CommandNode *cp;
 
-	Assert(commands);
+   Assert(commands);
 
-	while(*commands) {
-		cp = (*commands)->next;
-		Release((*commands)->command);
-		Release(*commands);
-		*commands = cp;
-	}
+   while(*commands) {
+      cp = (*commands)->next;
+      Release((*commands)->command);
+      Release(*commands);
+      *commands = cp;
+   }
 
 }
 
 /** Add a command to a command list. */
 void AddCommand(CommandNode **commands, const char *command) {
 
-	CommandNode *cp;
+   CommandNode *cp;
 
-	Assert(commands);
+   Assert(commands);
 
-	if(!command) {
-		return;
-	}
+   if(!command) {
+      return;
+   }
 
-	cp = Allocate(sizeof(CommandNode));
-	cp->next = *commands;
-	*commands = cp;
+   cp = Allocate(sizeof(CommandNode));
+   cp->next = *commands;
+   *commands = cp;
 
-	cp->command = CopyString(command);
+   cp->command = CopyString(command);
 
 }
 
 /** Add a startup command. */
 void AddStartupCommand(const char *command) {
-	AddCommand(&startupCommands, command);
+   AddCommand(&startupCommands, command);
 }
 
 /** Add a shutdown command. */
 void AddShutdownCommand(const char *command) {
-	AddCommand(&shutdownCommands, command);
+   AddCommand(&shutdownCommands, command);
 }
 
 /** Add a restart command. */
 void AddRestartCommand(const char *command) {
-	AddCommand(&restartCommands, command);
+   AddCommand(&restartCommands, command);
 }
 

@@ -14,8 +14,8 @@
 
 typedef struct TimeType {
 
-	unsigned long seconds;
-	int ms;
+   unsigned long seconds;
+   int ms;
 
 } TimeType;
 

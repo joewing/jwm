@@ -14,6 +14,8 @@
 #include "desktop.h"
 #include "client.h"
 #include "color.h"
+#include "cursor.h"
+#include "event.h"
 
 /** Structure to represent a pager tray component. */
 typedef struct PagerType {

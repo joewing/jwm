@@ -4,9 +4,10 @@ Todo:
 	- Add window list root menu item.
 	- Make the window menu configurable (other languages, order, etc.).
 	- Add mouse bindings.
-	- Add the ability to move windows via the pager.
-	- Add the ability to change desktops with the mouse pointer.
 	- Add the ability to drag windows to different desktops.
+
+20061226:
+   - Added the ability to move windows with the pager.
 
 20061223:
 	- Changed the look.

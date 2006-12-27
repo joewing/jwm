@@ -152,33 +152,10 @@ TrayComponentType *CreateTrayButton(const char *iconName,
    buttons = bp;
 
    bp->icon = NULL;
-   if(iconName) {
-      bp->iconName = Allocate(strlen(iconName) + 1);
-      strcpy(bp->iconName, iconName);
-   } else {
-      bp->iconName = NULL;
-   }
-
-   if(label) {
-      bp->label = Allocate(strlen(label) + 1);
-      strcpy(bp->label, label);
-   } else {
-      bp->label = NULL;
-   }
-
-   if(action) {
-      bp->action = Allocate(strlen(action) + 1);
-      strcpy(bp->action, action);
-   } else {
-      bp->action = NULL;
-   }
-
-   if(popup) {
-      bp->popup = Allocate(strlen(popup) + 1);
-      strcpy(bp->popup, popup);
-   } else {
-      bp->popup = NULL;
-   }
+   bp->iconName = CopyString(iconName);
+   bp->label = CopyString(label);
+   bp->action = CopyString(action);
+   bp->popup = CopyString(popup);
 
    cp = CreateTrayComponent();
    cp->object = bp;

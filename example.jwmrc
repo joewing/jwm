@@ -4,228 +4,177 @@
 
 
 
-	<!-- The root menu, if this is undefined you will not get a menu. -->
-	<!-- Additional RootMenu attributes: onroot, labeled, label -->
-	<RootMenu height="32" onroot="1">
-		<Program icon="rxvt.png" label="Terminal">xterm</Program>
+   <!-- The root menu, if this is undefined you will not get a menu. -->
+   <!-- Additional RootMenu attributes: onroot, labeled, label -->
+   <RootMenu height="32" onroot="1">
+      <Program icon="rxvt.png" label="Terminal">xterm</Program>
 
-		<Menu icon="folder.png" label="Applications">
-			<Program icon="dia.png" label="Dia">dia</Program>
-			<Program icon="firefox.png" label="Firefox">
-				/opt/firefox/firefox
-			</Program>
-			<Program icon="gaim.png" label="Gaim">/opt/gaim/bin/gaim</Program>
-			<Program icon="gftp.png" label="gFTP">gftp</Program>
-			<Program icon="gimp.png" label="Gimp">gimp</Program>
-			<Program icon="gtk-gnutella.png" label="gtk-gnutella">
-				gtk-gnutella
-			</Program>
-			<Program icon="gxine.png" label="gxine">gxine</Program>
-			<Program icon="xmms.xpm" label="XMMS">xmms</Program>
-		</Menu>
-		<Menu icon="folder.png" label="Utilities">
-			<Program icon="xcalc.png">xcalc</Program>
-			<Program icon="xfontsel.png">xfontsel</Program>
-			<Program icon="xmag.png">xmag</Program>
-			<Program icon="xprop.png" label="xprop">
-				xprop | xmessage -file -
-			</Program>
-		</Menu>
-		<Separator/>
-		<Restart label="Restart" icon="restart.png"/>
-		<Exit label="Exit" confirm="true" icon="exit.png"/>
-	</RootMenu>
+      <Menu icon="folder.png" label="Applications">
+         <Program icon="dia.png" label="Dia">dia</Program>
+         <Program icon="firefox.png" label="Firefox">firefox</Program>
+         <Program icon="gaim.png" label="Gaim">gaim</Program>
+         <Program icon="gftp.png" label="gFTP">gftp</Program>
+         <Program icon="gimp.png" label="Gimp">gimp</Program>
+         <Program icon="gtk-gnutella.png" label="gtk-gnutella">
+            gtk-gnutella
+         </Program>
+         <Program icon="gxine.png" label="gxine">gxine</Program>
+         <Program icon="xmms.xpm" label="XMMS">xmms</Program>
+      </Menu>
+      <Menu icon="folder.png" label="Utilities">
+         <Program icon="xcalc.png">xcalc</Program>
+         <Program icon="xfontsel.png">xfontsel</Program>
+         <Program icon="xmag.png">xmag</Program>
+         <Program icon="xprop.png" label="xprop">
+            xprop | xmessage -file -
+         </Program>
+      </Menu>
+      <Separator/>
+      <Restart label="Restart" icon="restart.png"/>
+      <Exit label="Exit" confirm="true" icon="exit.png"/>
+   </RootMenu>
 
-	<Group>
-		<Class>Gaim</Class>
-		<Option>sticky</Option>
-	</Group>
+   <Group>
+      <Class>Gaim</Class>
+      <Option>sticky</Option>
+   </Group>
 
-	<Group>
-		<Class>xmms</Class>
-		<Option>icon:xmms.xpm</Option>
-	</Group>
+   <Group>
+      <Class>xmms</Class>
+      <Option>icon:xmms.xpm</Option>
+   </Group>
 
-	<!-- Additional tray attributes: autohide, width, border, layer, layout -->
-	<Tray  x="0" y="-1" height="32">
+   <!-- Additional tray attributes: autohide, width, border, layer, layout -->
+   <Tray  x="0" y="-1" height="32">
 
-		<!-- Additional TrayButton attribute: label -->
-		<TrayButton label="JWM">root:1</TrayButton>
+      <!-- Additional TrayButton attribute: label -->
+      <TrayButton label="JWM">root:1</TrayButton>
 
-		<!-- Additional Pager attributes; width, height -->
-		<Pager/>
+      <!-- Additional Pager attributes; width, height -->
+      <Pager/>
 
-		<!-- Additional TaskList attribute: maxwidth -->
-		<TaskList/>
+      <!-- Additional TaskList attribute: maxwidth -->
+      <TaskList/>
 
-		<!-- Additional Swallow attribute: height -->
-		<Swallow name="xload" width="64">
-			xload -nolabel -bg black -fg red -hl white
-		</Swallow>
-		<Clock>xclock</Clock>
-	</Tray>
+      <!-- Additional Swallow attribute: height -->
+      <Swallow name="xload" width="64">
+         xload -nolabel -bg black -fg red -hl white
+      </Swallow>
+      <Clock>xclock</Clock>
+   </Tray>
 
-	<!-- Visual Styles -->
+   <!-- Visual Styles -->
 
-	<WindowStyle>
+   <WindowStyle>
 
-		<Font>FreeSans-9:bold</Font>
-		<Width>4</Width>
-		<Height>20</Height>
+      <Font>FreeSans-9:bold</Font>
+      <Width>4</Width>
+      <Height>20</Height>
 
-<!--
-		<Active>
-			<Text>white</Text>
-			<Title>#f9b08d:#a8491d</Title>
-			<Corner>#826871</Corner>
-			<Outline>black</Outline>
-		</Active>
+      <Active>
+         <Text>white</Text>
+         <Title>#444499:#222266</Title>
+         <Corner>#e5e5e5</Corner>
+         <Outline>black</Outline>
+      </Active>
 
-		<Inactive>
-			<Text>gray80</Text>
-			<Title>#768b84:#9caba6</Title>
-			<Corner>#7c7175</Corner>
-			<Outline>black</Outline>
-		</Inactive>
--->
+      <Inactive>
+         <Text>white</Text>
+         <Title>#666666:#969696</Title>
+         <Corner>#aaaaaa</Corner>
+         <Outline>black</Outline>
+      </Inactive>
 
-		<Active>
-			<Text>white</Text>
-			<Title>#444499:#222266</Title>
-			<Corner>#e5e5e5</Corner>
-			<Outline>black</Outline>
-		</Active>
+   </WindowStyle>
 
-		<Inactive>
-			<Text>white</Text>
-			<Title>#666666:#969696</Title>
-			<Corner>#aaaaaa</Corner>
-			<Outline>black</Outline>
-		</Inactive>
+   <TaskListStyle>
+      <Font>FreeSans-12:bold</Font>
+      <ActiveForeground>black</ActiveForeground>
+      <ActiveBackground>gray90:gray70</ActiveBackground>
+      <Foreground>black</Foreground>
+      <Background>gray70:gray90</Background>
+   </TaskListStyle>
 
-<!--
-		<Active>
-			<Text>white</Text>
-			<Title>#006666:#004444</Title>
-			<Corner>#e5e5e5</Corner>
-			<Outline>black</Outline>
-		</Active>
+   <!-- Additional TrayStyle attribute: insert -->
+   <TrayStyle>
+      <Font>FreeSans-12:bold</Font>
+      <Background>gray90</Background>
+      <Foreground>black</Foreground>
+   </TrayStyle>
 
-		<Inactive>
-			<Text>white</Text>
-			<Title>#666666:#969696</Title>
-			<Corner>#aaaaaa</Corner>
-			<Outline>black</Outline>
-		</Inactive>
--->
+   <PagerStyle>
+      <Outline>black</Outline>
+      <Foreground>gray90</Foreground>
+      <Background>#969696</Background>
+      <ActiveForeground>#222277</ActiveForeground>
+      <ActiveBackground>#444499</ActiveBackground>
+   </PagerStyle>
 
-<!--
-		<Active>
-			<Text>white</Text>
-			<Title>#747d8c:black</Title>
+   <MenuStyle>
+      <Font>FreeSans-12:bold</Font>
+      <Foreground>black</Foreground>
+      <Background>gray90</Background>
+      <ActiveForeground>white</ActiveForeground>
+      <ActiveBackground>#444499:#222277</ActiveBackground>
+   </MenuStyle>
 
-			<Corner>#e5e5e5</Corner>
-			<Outline>black</Outline>
-		</Active>
+   <PopupStyle>
+      <Font>FreeSans-10</Font>
+      <Outline>black</Outline>
+      <Foreground>black</Foreground>
+      <Background>yellow</Background>
+   </PopupStyle>
 
-		<Inactive>
-			<Text>white</Text>
-			<Title>#666666:#969696</Title>
-			<Corner>#aaaaaa</Corner>
-			<Outline>black</Outline>
-		</Inactive>
--->
+   <IconPath>
+      $HOME/.icons
+   </IconPath>
+   <IconPath>
+      $HOME/.icons/bah
+   </IconPath>
 
-	</WindowStyle>
+   <StartupCommand>
+      xli -fillscreen -onroot /export0/images/formulae.jpg
+   </StartupCommand>
 
-	<TaskListStyle>
-		<Font>FreeSans-12:bold</Font>
-		<ActiveForeground>black</ActiveForeground>
-		<ActiveBackground>gray90:gray70</ActiveBackground>
-		<Foreground>black</Foreground>
-		<Background>gray70:gray90</Background>
-	</TaskListStyle>
+   <!-- Virtual Desktops -->
+   <!-- Name tags can be contained within Desktops for desktop names. -->
+   <Desktops count="4"/>
 
-	<!-- Additional TrayStyle attribute: insert -->
-	<TrayStyle>
-		<Font>FreeSans-12:bold</Font>
-		<Background>gray90</Background>
-		<Foreground>black</Foreground>
-	</TrayStyle>
+   <!-- Double click speed (in milliseconds) -->
+   <DoubleClickSpeed>400</DoubleClickSpeed>
 
-	<PagerStyle>
-		<Outline>black</Outline>
-		<Foreground>gray90</Foreground>
-		<Background>#969696</Background>
-		<ActiveForeground>#222277</ActiveForeground>
-		<ActiveBackground>#444499</ActiveBackground>
-	</PagerStyle>
+   <!-- Double click delta (in pixels) -->
+   <DoubleClickDelta>2</DoubleClickDelta>
 
-	<MenuStyle>
-		<Font>FreeSans-12:bold</Font>
-		<Foreground>black</Foreground>
-		<Background>gray90</Background>
-		<ActiveForeground>white</ActiveForeground>
-		<ActiveBackground>#444499:#222277</ActiveBackground>
-	</MenuStyle>
+   <!-- The focus model (sloppy or click) -->
+   <FocusModel>sloppy</FocusModel>
 
-	<PopupStyle>
-		<Font>FreeSans-10</Font>
-		<Outline>black</Outline>
-		<Foreground>black</Foreground>
-		<Background>yellow</Background>
-	</PopupStyle>
+   <!-- The snap mode (none, screen, or border) -->
+   <SnapMode distance="10">border</SnapMode>
 
-	<IconPath>
-		$HOME/.icons
-	</IconPath>
-	<IconPath>
-		$HOME/.icons/bah
-	</IconPath>
+   <!-- The move mode (outline or opaque) -->
+   <MoveMode>opaque</MoveMode>
 
-	<StartupCommand>
-		xli -fillscreen -onroot /export0/images/formulae.jpg
-	</StartupCommand>
+   <!-- The resize mode (outline or opaque) -->
+   <ResizeMode>opaque</ResizeMode>
 
-	<!-- Virtual Desktops -->
-	<!-- Name tags can be contained within Desktops for desktop names. -->
-	<Desktops count="4"/>
+   <!-- Key bindings -->
+   <Key key="Up">up</Key>
+   <Key key="Down">down</Key>
+   <Key key="Right">right</Key>
+   <Key key="Left">left</Key>
+   <Key key="h">left</Key>
+   <Key key="j">down</Key>
+   <Key key="k">up</Key>
+   <Key key="l">right</Key>
+   <Key key="Return">select</Key>
+   <Key key="Escape">escape</Key>
 
-	<!-- Double click speed (in milliseconds) -->
-	<DoubleClickSpeed>400</DoubleClickSpeed>
-
-	<!-- Double click delta (in pixels) -->
-	<DoubleClickDelta>2</DoubleClickDelta>
-
-	<!-- The focus model (sloppy or click) -->
-	<FocusModel>sloppy</FocusModel>
-
-	<!-- The snap mode (none, screen, or border) -->
-	<SnapMode distance="10">border</SnapMode>
-
-	<!-- The move mode (outline or opaque) -->
-	<MoveMode>opaque</MoveMode>
-
-	<!-- The resize mode (outline or opaque) -->
-	<ResizeMode>opaque</ResizeMode>
-
-	<!-- Key bindings -->
-	<Key key="Up">up</Key>
-	<Key key="Down">down</Key>
-	<Key key="Right">right</Key>
-	<Key key="Left">left</Key>
-	<Key key="h">left</Key>
-	<Key key="j">down</Key>
-	<Key key="k">up</Key>
-	<Key key="l">right</Key>
-	<Key key="Return">select</Key>
-	<Key key="Escape">escape</Key>
-
-	<Key mask="A" key="Tab">next</Key>
-	<Key mask="A" key="F4">close</Key>
-	<Key mask="A" key="#">desktop#</Key>
-	<Key mask="A" key="F1">root:3</Key>
-	<Key mask="A" key="F2">window</Key>
+   <Key mask="A" key="Tab">next</Key>
+   <Key mask="A" key="F4">close</Key>
+   <Key mask="A" key="#">desktop#</Key>
+   <Key mask="A" key="F1">root:1</Key>
+   <Key mask="A" key="F2">window</Key>
 
 </JWM>
 

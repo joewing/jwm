@@ -315,6 +315,11 @@ ClientFound:
       return;
    }
 
+   /* If the client is maximized, unmaximize it. */
+   if(np->state.status & STAT_MAXIMIZED) {
+      MaximizeClient(np);
+   }
+
    GetBorderSize(np, &north, &south, &east, &west);
 
    /* Start the move. */

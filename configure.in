@@ -356,12 +356,6 @@ AC_OUTPUT(
 
 	Makefile src/Makefile jwm.1
 
-	package/irix/jwm.spec package/irix/jwm.idb package/irix/Makefile
-
-	package/solaris/Makefile package/solaris/pkginfo package/solaris/prototype
-
-	package/slackware/Makefile package/slackware/slack-desc
-
 )
 
 ############################################################################

@@ -25,20 +25,8 @@ tarball:
 	rm -fr ../jwm-$(VERSION) ;
 	(cd .. && bzip2 jwm-$(VERSION).tar)
 
-irix-package: all
-	(cd package/irix && $(MAKE))
-
-slackware-package: all
-	(cd package/slackware && $(MAKE))
-
-solaris-package: all
-	(cd package/solaris && $(MAKE))
-
 clean:
 	(cd src && $(MAKE) clean)
-	for x in package/* ; do \
-		(cd $$x && $(MAKE) clean ) ; \
-	done
 	rm -rf doc
 
 distclean: clean
@@ -47,7 +35,4 @@ distclean: clean
 	rm -f Makefile.bak src/Makefile.bak ;
 	rm -fr autom4te.cache ;
 	rm -fr `find . \( -name .svn -o -name .gdb_history \) -print` ;
-	for x in package/* ; do \
-		(cd $$x && $(MAKE) distclean ) ; \
-	done
 

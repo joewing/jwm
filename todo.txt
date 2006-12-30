@@ -6,6 +6,9 @@ Todo:
 	- Add mouse bindings.
 	- Add the ability to drag windows to different desktops.
 
+20061230:
+   - Fixed a bug that caused trays to not be drawn sometimes.
+
 20061226:
    - Added the ability to move windows with the pager.
 

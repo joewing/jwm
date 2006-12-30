@@ -15,11 +15,6 @@
 #include "tray.h"
 #include "main.h"
 
-typedef struct BoundingBox {
-   int x, y;
-   int width, height;
-} BoundingBox;
-
 typedef struct Strut {
    ClientNode *client;
    BoundingBox box;
@@ -34,9 +29,7 @@ static Strut *strutsTail = NULL;
 /* Note that we assume x and y are 0 based for all screens here. */
 static int *cascadeOffsets = NULL;
 
-static void GetScreenBounds(const ScreenType *sp, BoundingBox *box);
-static void UpdateTrayBounds(BoundingBox *box, unsigned int layer);
-static void UpdateStrutBounds(BoundingBox *box);
+static void SubtractStrutBounds(BoundingBox *box);
 static void SubtractBounds(const BoundingBox *src, BoundingBox *dest);
 
 /** Initialize placement data. */
@@ -313,18 +306,24 @@ void SubtractBounds(const BoundingBox *src, BoundingBox *dest) {
 }
 
 /** Subtract tray area from the bounding box. */
-void UpdateTrayBounds(BoundingBox *box, unsigned int layer) {
+void SubtractTrayBounds(const TrayType *tp, BoundingBox *box,
+   unsigned int layer) {
 
-   TrayType *tp;
    BoundingBox src;
    BoundingBox last;
 
-   for(tp = GetTrays(); tp; tp = tp->next) {
+   for(; tp; tp = tp->next) {
 
       if(tp->layer > layer && !tp->autoHide) {
 
          src.x = tp->x;
+         if(src.x < 0) {
+            src.x = rootWidth - src.x;
+         }
          src.y = tp->y;
+         if(src.y < 0) {
+            src.y = rootHeight - src.y;
+         }
          src.width = tp->width;
          src.height = tp->height;
 
@@ -342,7 +341,7 @@ void UpdateTrayBounds(BoundingBox *box, unsigned int layer) {
 }
 
 /** Remove struts from the bounding box. */
-void UpdateStrutBounds(BoundingBox *box) {
+void SubtractStrutBounds(BoundingBox *box) {
 
    Strut *sp;
    BoundingBox last;
@@ -392,8 +391,8 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 
    } else {
 
-      UpdateTrayBounds(&box, np->state.layer);
-      UpdateStrutBounds(&box);
+      SubtractTrayBounds(GetTrays(), &box, np->state.layer);
+      SubtractStrutBounds(&box);
 
       cascadeIndex = sp->index * desktopCount + currentDesktop;
 
@@ -464,8 +463,8 @@ void ConstrainSize(ClientNode *np) {
    GetBorderSize(np, &north, &south, &east, &west);
 
    GetScreenBounds(sp, &box);
-   UpdateTrayBounds(&box, np->state.layer);
-   UpdateStrutBounds(&box);
+   SubtractTrayBounds(GetTrays(), &box, np->state.layer);
+   SubtractStrutBounds(&box);
 
    box.x += west;
    box.y += north;
@@ -521,8 +520,8 @@ void PlaceMaximizedClient(ClientNode *np) {
       np->x + (east + west + np->width) / 2,
       np->y + (north + south + np->height) / 2);
    GetScreenBounds(sp, &box);
-   UpdateTrayBounds(&box, np->state.layer);
-   UpdateStrutBounds(&box);
+   SubtractTrayBounds(GetTrays(), &box, np->state.layer);
+   SubtractStrutBounds(&box);
 
    box.x += west;
    box.y += north;

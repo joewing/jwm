@@ -380,6 +380,8 @@ void Startup() {
 
    StartupSwallow();
 
+   DrawTray();
+
    /* Send expose events. */
    ExposeCurrentDesktop();
 

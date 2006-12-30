@@ -11,6 +11,16 @@
 #define PLACE_H
 
 struct ClientNode;
+struct ScreenType;
+struct TrayType;
+
+/** Bounding box. */
+typedef struct BoundingBox {
+   int x;         /**< x-coordinate of the bounding box. */
+   int y;         /**< y-coordinate of the bounding box. */
+   int width;     /**< Width of the bounding box. */
+   int height;    /**< Height of the bounding box. */
+} BoundingBox;
 
 /*@{*/
 void InitializePlacement();
@@ -57,6 +67,20 @@ void GetGravityDelta(const struct ClientNode *np, int *x, int *y);
  * @param np The client.
  */
 void ConstrainSize(struct ClientNode *np);
+
+/** Get the bounding box for the screen.
+ * @param sp A pointer to the screen whose bounds to get.
+ * @param box The bounding box for the screen.
+ */
+void GetScreenBounds(const struct ScreenType *sp, BoundingBox *box);
+
+/** Subtract bounds for the configured trays.
+ * @param tp The first tray to consider.
+ * @param box The bounding box.
+ * @param layer The maximum layer of the tray bounds.
+ */
+void SubtractTrayBounds(const struct TrayType *tp, BoundingBox *box,
+   unsigned int layer);
 
 #endif /* PLACE_H */
 

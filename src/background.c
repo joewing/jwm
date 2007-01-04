@@ -15,6 +15,7 @@
 #include "color.h"
 #include "main.h"
 #include "icon.h"
+#include "gradient.h"
 
 /** Enumeration of background types. */
 typedef enum {
@@ -228,7 +229,6 @@ void LoadGradientBackground(BackgroundNode *bp) {
    XColor color2;
    char *temp;
    char *sep;
-   long attrValues;
    int len;
 
    sep = strchr(bp->value, ':');

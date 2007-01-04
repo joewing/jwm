@@ -95,7 +95,6 @@ static void ComputeShiftMask(unsigned long maskIn,
 static void GetDirectPixel(XColor *c);
 static void GetMappedPixel(XColor *c);
 
-static int ParseColor(ColorType type, const char *value);
 static void SetDefaultColor(ColorType type); 
 
 static unsigned long ReadHex(const char *hex);
@@ -191,7 +190,10 @@ void StartupColors() {
    /* Get color information used for JWM stuff. */
    for(x = 0; x < COLOR_COUNT; x++) {
       if(names && names[x]) {
-         if(!ParseColor(x, names[x])) {
+         if(ParseColor(names[x], &c)) {
+            colors[x] = c.pixel;
+            rgbColors[x] = GetRGBFromXColor(&c);
+         } else {
             SetDefaultColor(x);
          }
       } else {
@@ -346,9 +348,8 @@ void SetColor(ColorType c, const char *value) {
 }
 
 /** Parse a color for a component. */
-int ParseColor(ColorType type, const char *value) {
+int ParseColor(const char *value, XColor *c) {
 
-   XColor temp;
    unsigned long rgb;
 
    if(!value) {
@@ -357,19 +358,17 @@ int ParseColor(ColorType type, const char *value) {
 
    if(value[0] == '#' && strlen(value) == 7) {
       rgb = ReadHex(value + 1);
-      temp.red = ((rgb >> 16) & 0xFF) * 257;
-      temp.green = ((rgb >> 8) & 0xFF) * 257;
-      temp.blue = (rgb & 0xFF) * 257;
-      temp.flags = DoRed | DoGreen | DoBlue;
-      GetColor(&temp);
+      c->red = ((rgb >> 16) & 0xFF) * 257;
+      c->green = ((rgb >> 8) & 0xFF) * 257;
+      c->blue = (rgb & 0xFF) * 257;
+      c->flags = DoRed | DoGreen | DoBlue;
+      GetColor(c);
    } else {
-      if(!GetColorByName(value, &temp)) {
+      if(!GetColorByName(value, c)) {
          Warning("bad color: \"%s\"", value);
          return 0;
       }
    }
-   colors[type] = temp.pixel;
-   rgbColors[type] = GetRGBFromXColor(&temp);
 
    return 1;
 
@@ -378,11 +377,14 @@ int ParseColor(ColorType type, const char *value) {
 /** Set the specified color to its default. */
 void SetDefaultColor(ColorType type) {
 
+   XColor c;
    int x;
 
    for(x = 0; DEFAULT_COLORS[x].value; x++) {
       if(DEFAULT_COLORS[x].type == type) {
-         ParseColor(type, DEFAULT_COLORS[x].value);
+         ParseColor(DEFAULT_COLORS[x].value, &c);
+         colors[type] = c.pixel;
+         rgbColors[type] = GetRGBFromXColor(&c);
          return;
       }
    }

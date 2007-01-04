@@ -40,6 +40,7 @@
 #include "clock.h"
 #include "dock.h"
 #include "misc.h"
+#include "background.h"
 
 Display *display = NULL;
 Window rootWindow;
@@ -344,6 +345,7 @@ void Startup() {
    StartupGroups();
    StartupColors();
    StartupIcons();
+   StartupBackgrounds();
    StartupFonts();
    StartupCursors();
    StartupOutline();
@@ -385,6 +387,9 @@ void Startup() {
    /* Send expose events. */
    ExposeCurrentDesktop();
 
+   /* Draw the background (if backgrounds are used). */
+   LoadBackground(currentDesktop);
+
 }
 
 /** Shutdown the various JWM components.
@@ -411,6 +416,7 @@ void Shutdown() {
    ShutdownClock();
    ShutdownBorders();
    ShutdownClients();
+   ShutdownBackgrounds();
    ShutdownIcons();
    ShutdownCursors();
    ShutdownFonts();
@@ -431,6 +437,7 @@ void Shutdown() {
  * Note that it is possible for this to be called more than once.
  */
 void Destroy() {
+   DestroyBackgrounds();
    DestroyBorders();
    DestroyClients();
    DestroyClock();

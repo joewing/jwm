@@ -37,6 +37,7 @@
 #include "dock.h"
 #include "popup.h"
 #include "status.h"
+#include "background.h"
 
 typedef struct KeyMapType {
    char *name;
@@ -92,6 +93,7 @@ static const char *POPUP_ATTRIBUTE = "popup";
 static const char *DELAY_ATTRIBUTE = "delay";
 static const char *ENABLED_ATTRIBUTE = "enabled";
 static const char *COORDINATES_ATTRIBUTE = "coordinates";
+static const char *TYPE_ATTRIBUTE = "type";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -103,6 +105,8 @@ static char *ReadFile(FILE *fd);
 static void Parse(const TokenNode *start, int depth);
 static void ParseInclude(const TokenNode *tp, int depth);
 static void ParseDesktops(const TokenNode *tp);
+static void ParseDesktop(int desktop, const TokenNode *tp);
+static void ParseDesktopBackground(int desktop, const TokenNode *tp);
 
 /* Menus. */
 static void ParseRootMenu(const TokenNode *start);
@@ -145,7 +149,7 @@ static void ParseMoveMode(const TokenNode *tp);
 static void ParseResizeMode(const TokenNode *tp);
 static void ParseFocusModel(const TokenNode *tp);
 
-static void ParseColor(const char *value, ColorType a, ColorType b);
+static void ParseGradient(const char *value, ColorType a, ColorType b);
 static char *FindAttribute(AttributeNode *ap, const char *name);
 static void ReleaseTokens(TokenNode *np);
 static void InvalidTag(const TokenNode *tp, TokenType parent);
@@ -835,7 +839,7 @@ void ParseActiveWindowStyle(const TokenNode *tp) {
          SetColor(COLOR_TITLE_ACTIVE_FG, np->value);
          break;
       case TOK_TITLE:
-         ParseColor(np->value,
+         ParseGradient(np->value,
             COLOR_TITLE_ACTIVE_BG1, COLOR_TITLE_ACTIVE_BG2);
          break;
       case TOK_CORNER:
@@ -864,7 +868,7 @@ void ParseInactiveWindowStyle(const TokenNode *tp) {
          SetColor(COLOR_TITLE_FG, np->value);
          break;
       case TOK_TITLE:
-         ParseColor(np->value, COLOR_TITLE_BG1, COLOR_TITLE_BG2);
+         ParseGradient(np->value, COLOR_TITLE_BG1, COLOR_TITLE_BG2);
          break;
       case TOK_CORNER:
          SetColor(COLOR_CORNER_BG, np->value);
@@ -911,7 +915,7 @@ void ParseDesktops(const TokenNode *tp) {
 
    TokenNode *np;
    char *attr;
-   unsigned int x;
+   int x;
 
    Assert(tp);
 
@@ -928,14 +932,51 @@ void ParseDesktops(const TokenNode *tp) {
          break;
       }
       switch(np->type) {
-      case TOK_NAME:
-         SetDesktopName(x, np->value);
+      case TOK_BACKGROUND:
+         ParseDesktopBackground(-1, np);
+         break;
+      case TOK_DESKTOP:
+         ParseDesktop(x, np);
          break;
       default:
          InvalidTag(np, TOK_DESKTOPS);
          break;
       }
    }
+
+}
+
+/** Parse a configuration for a specific desktop. */
+void ParseDesktop(int desktop, const TokenNode *tp) {
+
+   TokenNode *np;
+   const char *attr;
+
+   attr = FindAttribute(tp->attributes, NAME_ATTRIBUTE);
+   if(attr) {
+      SetDesktopName(desktop, attr);
+   }
+
+   for(np = tp->subnodeHead; np; np = np->next) {
+      switch(np->type) {
+      case TOK_BACKGROUND:
+         ParseDesktopBackground(desktop, np);
+         break;
+      default:
+         InvalidTag(np, TOK_DESKTOP);
+         break;
+      }
+   }
+
+}
+
+/** Parse a background for a desktop. */
+void ParseDesktopBackground(int desktop, const TokenNode *tp) {
+
+   const char *type;
+
+   type = FindAttribute(tp->attributes, TYPE_ATTRIBUTE);
+   SetBackground(desktop, type, tp->value);
 
 }
 
@@ -959,13 +1000,13 @@ void ParseTaskListStyle(const TokenNode *tp) {
          SetColor(COLOR_TASK_FG, np->value);
          break;
       case TOK_BACKGROUND:
-         ParseColor(np->value, COLOR_TASK_BG1, COLOR_TASK_BG2);
+         ParseGradient(np->value, COLOR_TASK_BG1, COLOR_TASK_BG2);
          break;
       case TOK_ACTIVEFOREGROUND:
          SetColor(COLOR_TASK_ACTIVE_FG, np->value);
          break;
       case TOK_ACTIVEBACKGROUND:
-         ParseColor(np->value, COLOR_TASK_ACTIVE_BG1, COLOR_TASK_ACTIVE_BG2);
+         ParseGradient(np->value, COLOR_TASK_ACTIVE_BG1, COLOR_TASK_ACTIVE_BG2);
          break;
       default:
          InvalidTag(np, TOK_TASKLISTSTYLE);
@@ -1347,7 +1388,7 @@ void ParseMenuStyle(const TokenNode *tp) {
          SetColor(COLOR_MENU_ACTIVE_FG, np->value);
          break;
       case TOK_ACTIVEBACKGROUND:
-         ParseColor(np->value, COLOR_MENU_ACTIVE_BG1, COLOR_MENU_ACTIVE_BG2);
+         ParseGradient(np->value, COLOR_MENU_ACTIVE_BG1, COLOR_MENU_ACTIVE_BG2);
          break;
       default:
          InvalidTag(np, TOK_MENUSTYLE);
@@ -1479,7 +1520,7 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
 }
 
 /** Parse a color which may be a gradient. */
-void ParseColor(const char *value, ColorType a, ColorType b) {
+void ParseGradient(const char *value, ColorType a, ColorType b) {
 
    const char *sep;
    char *temp;

@@ -17,6 +17,7 @@
 #include "error.h"
 #include "menu.h"
 #include "misc.h"
+#include "background.h"
 
 char **desktopNames = NULL;
 
@@ -117,6 +118,8 @@ void ChangeDesktop(unsigned int desktop) {
 
    UpdatePager();
    UpdateTaskBar();
+
+   LoadBackground(desktop);
 
 }
 

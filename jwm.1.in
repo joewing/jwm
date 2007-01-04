@@ -1095,8 +1095,41 @@ The number of virtual desktops. The default is 4. Valid values are between
 1 and 8 inclusive.
 .RE
 .P
-Desktop names may be assigned via the \fBName\fP tag within the
-\fBDesktops\fP tag.
+Within the \fBDesktops\fP tag the following tags are supported:
+.P
+.B Background
+.RS
+The default background for desktops. The \fBtype\fP attribute determines
+the type of background and the text contained within this tag is the
+value. Valid types are:
+.P
+.B solid
+.RS
+A solid color. See the \fBCOLORS\fP section for more information.
+This is the default.
+.RE
+.B gradient
+.RS
+A gradient color. See the \fBCOLORS\fP section for more information.
+.RE
+.B image
+.RS
+An image. This may be either an XPM or PNG image. Note that support
+for XPM and/or PNG images must be compiled in and icon support is required.
+.RE
+.B command
+.RS
+A command to run for setting the background.
+.RE
+.RE
+.P
+.B Desktop
+.RS
+Desktop-specific data. The \fBname\fP attribute may be specified to name
+the desktop (the default is the desktop number). Within this tag a
+\fBBackground\fP tag may be specified for a desktop-specific background.
+See \fBBackground\fP above for more information.
+.RE
 .RE
 
 .B "OTHER SETTINGS"

@@ -32,6 +32,7 @@ static const char *TOKEN_MAP[] = {
    "Close",
    "Corner",
    "Desktops",
+   "Desktop",
    "Dock",
    "DoubleClickSpeed",
    "DoubleClickDelta",

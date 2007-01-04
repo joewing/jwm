@@ -6,6 +6,9 @@ Todo:
 	- Add mouse bindings.
 	- Add the ability to drag windows to different desktops.
 
+20070103:
+   - Background setting ability based on the current desktop.
+
 20061230:
    - Fixed a bug that caused trays to not be drawn sometimes.
 

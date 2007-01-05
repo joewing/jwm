@@ -34,7 +34,8 @@ static int snapDistance = DEFAULT_SNAP_DISTANCE;
 
 static MoveModeType moveMode = MOVE_OPAQUE;
 
-static void StopMove(ClientNode *np, int doMove, int oldx, int oldy);
+static void StopMove(ClientNode *np,
+   int doMove, int oldx, int oldy, int wasMaximized);
 static void MoveController(int wasDestroyed);
 
 static void DoSnap(ClientNode *np);
@@ -111,6 +112,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
    int doMove;
    int north, south, east, west;
    int height;
+   int wasMaximized;
 
    Assert(np);
 
@@ -125,9 +127,10 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 
    oldx = np->x;
    oldy = np->y;
+   wasMaximized = 0;
 
    if(!(GetMouseMask() & (Button1Mask | Button2Mask))) {
-      StopMove(np, 0, oldx, oldy);
+      StopMove(np, 0, oldx, oldy, 0);
       return 0;
    }
 
@@ -151,7 +154,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
       case ButtonRelease:
          if(event.xbutton.button == Button1
             || event.xbutton.button == Button2) {
-            StopMove(np, doMove, oldx, oldy);
+            StopMove(np, doMove, oldx, oldy, wasMaximized);
             return doMove;
          }
          break;
@@ -169,6 +172,7 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 
             if(np->state.status & STAT_MAXIMIZED) {
                MaximizeClient(np);
+               wasMaximized = 1;
                startx = west + np->width / 2;
                starty = north / 2;
                MoveMouse(np->parent, startx, starty);
@@ -212,6 +216,7 @@ int MoveClientKeyboard(ClientNode *np) {
    int moved;
    int height;
    int north, south, east, west;
+   int wasMaximized;
 
    Assert(np);
 
@@ -219,8 +224,10 @@ int MoveClientKeyboard(ClientNode *np) {
       return 0;
    }
 
+   wasMaximized = 0;
    if(np->state.status & STAT_MAXIMIZED) {
       MaximizeClient(np);
+      wasMaximized = 1;
    }
 
    GrabMouseForMove();
@@ -288,7 +295,7 @@ int MoveClientKeyboard(ClientNode *np) {
             }
             break;
          default:
-            StopMove(np, 1, oldx, oldy);
+            StopMove(np, 1, oldx, oldy, wasMaximized);
             return 1;
          }
 
@@ -309,7 +316,7 @@ int MoveClientKeyboard(ClientNode *np) {
 
       } else if(event.type == ButtonRelease) {
 
-         StopMove(np, 1, oldx, oldy);
+         StopMove(np, 1, oldx, oldy, wasMaximized);
          return 1;
 
       }
@@ -335,7 +342,8 @@ int MoveClientKeyboard(ClientNode *np) {
 }
 
 /** Stop move. */
-void StopMove(ClientNode *np, int doMove, int oldx, int oldy) {
+void StopMove(ClientNode *np,
+   int doMove, int oldx, int oldy, int wasMaximized) {
 
    int north, south, east, west;
 
@@ -349,15 +357,28 @@ void StopMove(ClientNode *np, int doMove, int oldx, int oldy) {
    SetDefaultCursor(np->parent);
 
    if(!doMove) {
+
       np->x = oldx;
       np->y = oldy;
+
+      /* Restore maximized status. */
+      if(wasMaximized) {
+         MaximizeClient(np);
+      }
+
       return;
+
    }
 
    GetBorderSize(np, &north, &south, &east, &west);
 
    JXMoveWindow(display, np->parent, np->x - west, np->y - north);
    SendConfigureEvent(np);
+
+   /* Restore maximized status. */
+   if(wasMaximized) {
+      MaximizeClient(np);
+   }
 
 }
 

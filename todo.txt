@@ -6,6 +6,9 @@ Todo:
 	- Add mouse bindings.
 	- Add the ability to drag windows to different desktops.
 
+20070104:
+   - Retain maximized status when moving windows.
+
 20070103:
    - Background setting ability based on the current desktop.
 

@@ -49,7 +49,8 @@ static void ProcessPagerButtonEvent(TrayComponentType *cp,
 
 static void StartPagerMove(TrayComponentType *cp, int x, int y);
 
-static void StopPagerMove(ClientNode *np, int x, int y, int desktop);
+static void StopPagerMove(ClientNode *np,
+   int x, int y, int desktop, int wasMaximized);
 
 static void PagerMoveController(int wasDestroyed);
 
@@ -229,6 +230,7 @@ void StartPagerMove(TrayComponentType *cp, int x, int y) {
    int oldx, oldy;
    int oldDesk;
    int startx, starty;
+   int wasMaximized;
 
    pp = (PagerType*)cp->object;
 
@@ -316,8 +318,10 @@ ClientFound:
    }
 
    /* If the client is maximized, unmaximize it. */
+   wasMaximized = 0;
    if(np->state.status & STAT_MAXIMIZED) {
       MaximizeClient(np);
+      wasMaximized = 1;
    }
 
    GetBorderSize(np, &north, &south, &east, &west);
@@ -336,7 +340,7 @@ ClientFound:
    starty = y;
 
    if(!(GetMouseMask() & Button3Mask)) {
-      StopPagerMove(np, oldx, oldy, oldDesk);
+      StopPagerMove(np, oldx, oldy, oldDesk, wasMaximized);
    }
 
    for(;;) {
@@ -353,7 +357,7 @@ ClientFound:
 
          /* Done when the 3rd mouse button is released. */
          if(event.xbutton.button == Button3) {
-            StopPagerMove(np, oldx, oldy, oldDesk);
+            StopPagerMove(np, oldx, oldy, oldDesk, wasMaximized);
             return;
          }
          break;
@@ -417,7 +421,8 @@ ClientFound:
 }
 
 /** Stop an active pager move. */
-void StopPagerMove(ClientNode *np, int x, int y, int desktop) {
+void StopPagerMove(ClientNode *np,
+   int x, int y, int desktop, int wasMaximized) {
 
    int north, south, east, west;
 
@@ -433,6 +438,14 @@ void StopPagerMove(ClientNode *np, int x, int y, int desktop) {
    GetBorderSize(np, &north, &south, &east, & west);
    JXMoveWindow(display, np->parent, np->x - west, np->y - north);
    SendConfigureEvent(np);
+
+   /* Restore the maximized state of the client. */
+   if(wasMaximized) {
+      MaximizeClient(np);
+   }
+
+   /* Redraw the pager. */
+   UpdatePager();
 
 }
 

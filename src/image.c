@@ -96,14 +96,11 @@ ImageNode *LoadPNGImage(const char *fileName) {
    static png_structp pngData;
    static png_infop pngInfo;
    static png_infop pngEndInfo;
-   static unsigned char *data;
 
    unsigned char header[8];
    unsigned long rowBytes;
    int bitDepth, colorType;
    unsigned int x, y;
-   unsigned long temp;
-   unsigned int offset;
    unsigned char *row;
 
    Assert(fileName);
@@ -114,7 +111,6 @@ ImageNode *LoadPNGImage(const char *fileName) {
    pngData = NULL;
    pngInfo = NULL;
    pngEndInfo = NULL;
-   data = NULL;
 
    fd = fopen(fileName, "rb");
    if(!fd) {
@@ -196,15 +192,14 @@ ImageNode *LoadPNGImage(const char *fileName) {
    png_read_update_info(pngData, pngInfo);
 
    rowBytes = png_get_rowbytes(pngData, pngInfo);
-   data = Allocate(rowBytes * result->height);
+   result->data = Allocate(rowBytes * result->height);
 
    rows = AllocateStack(result->height * sizeof(result->data));
 
    y = 0;
-   offset = result->width * 4;
    for(x = 0; x < result->height; x++) {
-      rows[x] = &data[y];
-      y += offset;
+      rows[x] = &result->data[y];
+      y += rowBytes;
    }
 
    png_read_image(pngData, rows);
@@ -214,26 +209,7 @@ ImageNode *LoadPNGImage(const char *fileName) {
 
    fclose(fd);
 
-   /* Convert the row data to ARGB format. */
-   /* Source is stored ARGB bytes. */
-   /* Destination is stored in unsigned longs with A most significant. */
-   result->data = Allocate(sizeof(unsigned long)
-      * result->width * result->height);
-   offset = 0;
-   for(y = 0; y < result->height; y++) {
-      row = rows[y];
-      for(x = 0; x < result->width; x++) {
-         temp  = (unsigned long)*row << 24; ++row;
-         temp |= (unsigned long)*row << 16; ++row;
-         temp |= (unsigned long)*row << 8; ++row;
-         temp |= (unsigned long)*row; ++row;
-         result->data[offset] = temp;
-         ++offset;
-      }
-   }
-
    ReleaseStack(rows);
-   Release(data);
 
    return result;
 
@@ -284,13 +260,12 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
 
    ImageNode *result;
    XColor color;
-   unsigned long red, green, blue, alpha;
+   unsigned char red, green, blue, alpha;
    int index;
    int x, y;
 
    result = Allocate(sizeof(ImageNode));
-   result->data = Allocate(sizeof(unsigned long)
-      * image->width * image->height);
+   result->data = Allocate(4 * image->width * image->height);
    result->width = image->width;
    result->height = image->height;
 
@@ -301,20 +276,19 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
          color.pixel = XGetPixel(image, x, y);
          GetColorFromIndex(&color);
 
-         red = color.red >> 8;
-         green = color.green >> 8;
-         blue = color.blue >> 8;
+         red = (unsigned char)(color.red >> 8);
+         green = (unsigned char)(color.green >> 8);
+         blue = (unsigned char)(color.blue >> 8);
 
          alpha = 0;
          if(!shape || XGetPixel(shape, x, y)) {
             alpha = 255;
          }
 
-         result->data[index] = alpha << 24;
-         result->data[index] |= red << 16;
-         result->data[index] |= green << 8;
-         result->data[index] |= blue;
-         ++index;
+         result->data[index++] = alpha;
+         result->data[index++] = red;
+         result->data[index++] = green;
+         result->data[index++] = blue;
 
       }
    }

@@ -443,7 +443,6 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
    GC maskGC;
    int x, y;
    int index, yindex;
-   int alpha;
    double scalex, scaley;
    double srcx, srcy;
    double ratio;
@@ -497,9 +496,9 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 
    /* Determine if we need a mask. */
    usesMask = 0;
-   for(index = 0; index < icon->image->height * icon->image->width; index++) {
-      alpha = (icon->image->data[index] >> 24) & 0xFFUL;
-      if(alpha >= 128) {
+   x = 4 * icon->image->height * icon->image->width;
+   for(index = 0; index < x; index++) {
+      if(icon->image->data[index] >= 128) {
          usesMask = 1;
          break;
       }
@@ -525,15 +524,14 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
       srcx = 0.0;
       yindex = (int)srcy * icon->image->width;
       for(x = 0; x < nwidth; x++) {
-         index = yindex + (int)srcx;
+         index = 4 * (yindex + (int)srcx);
          if(usesMask) {
 
-            alpha = (icon->image->data[index] >> 24) & 0xFFUL;
-            if(alpha >= 128) {
+            if(icon->image->data[index] >= 128) {
 
-               color.red = ((icon->image->data[index] >> 16) & 0xFFUL) * 257;
-               color.green = ((icon->image->data[index] >> 8) & 0xFFUL) * 257;
-               color.blue = (icon->image->data[index] & 0xFFUL) * 257;
+               color.red = (unsigned short)icon->image->data[index + 1] * 257;
+               color.green = (unsigned short)icon->image->data[index + 2] * 257;
+               color.blue = (unsigned short)icon->image->data[index + 3] * 257;
                GetColor(&color);
 
                JXSetForeground(display, rootGC, color.pixel);
@@ -544,9 +542,9 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 
          } else {
 
-            color.red = ((icon->image->data[index] >> 16) & 0xFFUL) * 257;
-            color.green = ((icon->image->data[index] >> 8) & 0xFFUL) * 257;
-            color.blue = (icon->image->data[index] & 0xFFUL) * 257;
+            color.red = (unsigned short)icon->image->data[index + 1] * 257;
+            color.green = (unsigned short)icon->image->data[index + 2] * 257;
+            color.blue = (unsigned short)icon->image->data[index + 3] * 257;
             GetColor(&color);
 
             JXSetForeground(display, rootGC, color.pixel);

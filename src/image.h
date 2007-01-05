@@ -21,7 +21,7 @@ typedef struct ImageNode {
    int height;              /**< Height of the image. */
 #endif
 
-   unsigned long *data;     /**< Image data. */
+   unsigned char *data;     /**< Image data. */
 
 } ImageNode;
 

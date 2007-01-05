@@ -512,6 +512,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
       JXFillRectangle(display, np->mask, maskGC, 0, 0, nwidth, nheight);
       JXSetForeground(display, maskGC, 1);
    } else {
+		maskGC = None;
       np->mask = None;
    }
    np->image = JXCreatePixmap(display, rootWindow, nwidth, nheight, rootDepth);

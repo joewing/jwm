@@ -103,6 +103,8 @@ ImageNode *LoadPNGImage(const char *fileName) {
    int bitDepth, colorType;
    unsigned int x, y;
    unsigned long temp;
+   unsigned int offset;
+   unsigned char *row;
 
    Assert(fileName);
 
@@ -199,9 +201,10 @@ ImageNode *LoadPNGImage(const char *fileName) {
    rows = AllocateStack(result->height * sizeof(result->data));
 
    y = 0;
+   offset = result->width * 4;
    for(x = 0; x < result->height; x++) {
       rows[x] = &data[y];
-      y += result->width * 4;
+      y += offset;
    }
 
    png_read_image(pngData, rows);
@@ -216,13 +219,16 @@ ImageNode *LoadPNGImage(const char *fileName) {
    /* Destination is stored in unsigned longs with A most significant. */
    result->data = Allocate(sizeof(unsigned long)
       * result->width * result->height);
+   offset = 0;
    for(y = 0; y < result->height; y++) {
+      row = rows[y];
       for(x = 0; x < result->width; x++) {
-         temp  = (unsigned long)rows[y][4 * x + 0] << 24;
-         temp |= (unsigned long)rows[y][4 * x + 1] << 16;
-         temp |= (unsigned long)rows[y][4 * x + 2] << 8;
-         temp |= (unsigned long)rows[y][4 * x + 3] << 0;
-         result->data[y * result->width + x] = temp;
+         temp  = (unsigned long)*row << 24; ++row;
+         temp |= (unsigned long)*row << 16; ++row;
+         temp |= (unsigned long)*row << 8; ++row;
+         temp |= (unsigned long)*row; ++row;
+         result->data[offset] = temp;
+         ++offset;
       }
    }
 

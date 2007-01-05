@@ -59,7 +59,7 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
 
    Assert(icon);
 
-   if(!haveRender) {
+   if(!haveRender || !icon->useRender) {
       return 0;
    }
 
@@ -124,7 +124,7 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 
    Assert(icon);
 
-   if(!haveRender) {
+   if(!haveRender || !icon->useRender) {
       return NULL;
    }
 

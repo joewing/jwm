@@ -101,7 +101,6 @@ ImageNode *LoadPNGImage(const char *fileName) {
    unsigned long rowBytes;
    int bitDepth, colorType;
    unsigned int x, y;
-   unsigned char *row;
 
    Assert(fileName);
 

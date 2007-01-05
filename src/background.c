@@ -280,6 +280,9 @@ void LoadImageBackground(BackgroundNode *bp) {
       return;
    }
 
+	/* We can't use render on these. */
+	ip->useRender = 0;
+
    /* Create the pixmap. */
    bp->pixmap = JXCreatePixmap(display, rootWindow,
       rootWidth, rootHeight, rootDepth);

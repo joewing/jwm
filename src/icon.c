@@ -574,8 +574,8 @@ IconNode *CreateIconFromBinary(const unsigned long *input,
 
    unsigned long height, width;
    IconNode *result;
-   unsigned long *data;
-   unsigned int x;
+   unsigned char *data;
+   unsigned int x, index;
 
    if(!input) {
       return NULL;
@@ -598,12 +598,16 @@ IconNode *CreateIconFromBinary(const unsigned long *input,
    result->image->width = width;
    result->image->height = height;
 
-   result->image->data = Allocate(width * height * sizeof(unsigned long));
-   data = (unsigned long*)result->image->data;
+   result->image->data = Allocate(4 * width * height);
+   data = result->image->data;
 
    /* Note: the data types here might be of different sizes. */
+   index = 0;
    for(x = 0; x < width * height; x++) {
-      data[x] = input[x + 2];
+      data[index++] = input[x + 2] >> 24;
+      data[index++] = (input[x + 2] >> 16) & 0xFF;
+      data[index++] = (input[x + 2] >> 8) & 0xFF;
+      data[index++] = input[x + 2] & 0xFF;
    }
 
    /* Don't insert this icon since it is transient. */

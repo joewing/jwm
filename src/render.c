@@ -167,13 +167,16 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 
          index = 4 * (yindex + (int)srcx);
          alpha = icon->image->data[index];
-         color.red = (unsigned short)icon->image->data[index + 1] * 257;
-         color.green = (unsigned short)icon->image->data[index + 2] * 257;
-         color.blue = (unsigned short)icon->image->data[index + 3] * 257;
+         color.red = icon->image->data[index + 1];
+         color.red |= color.red << 8;
+         color.green = icon->image->data[index + 2];
+         color.green |= color.green << 8;
+         color.blue = icon->image->data[index + 3];
+         color.blue |= color.blue << 8;
 
          GetColor(&color);
          XPutPixel(destImage, x, y, color.pixel);
-         destMask->data[maskLine + x] = alpha * 257;
+         destMask->data[maskLine + x] = alpha | (alpha << 8);
 
          srcx += scalex;
 

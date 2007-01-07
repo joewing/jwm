@@ -16,6 +16,7 @@
 #include "main.h"
 #include "icon.h"
 #include "gradient.h"
+#include "hint.h"
 
 /** Enumeration of background types. */
 typedef enum {
@@ -209,6 +210,8 @@ void LoadBackground(int desktop) {
 
    JXChangeWindowAttributes(display, rootWindow, attrValues, &attr);
    JXClearWindow(display, rootWindow);
+
+   SetPixmapAtom(rootWindow, ATOM_XSETROOT_ID, attr.background_pixmap);
 
 }
 

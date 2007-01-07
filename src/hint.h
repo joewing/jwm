@@ -18,6 +18,7 @@ typedef enum {
    /* Misc */
    ATOM_COMPOUND_TEXT,
    ATOM_UTF8_STRING,
+   ATOM_XSETROOT_ID,
 
    /* Standard atoms */
    ATOM_WM_STATE,
@@ -230,6 +231,13 @@ void SetCardinalAtom(Window window, AtomType atom, unsigned long value);
  * @param value The value.
  */
 void SetWindowAtom(Window window, AtomType atom, unsigned long value);
+
+/** Set a pixmap atom.
+ * @param window The window.
+ * @param atom The atom to set.
+ * @param value The value.
+ */
+void SetPixmapAtom(Window window, AtomType atom, Pixmap value);
 
 #endif /* HINT_H */
 

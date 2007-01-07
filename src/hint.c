@@ -69,6 +69,7 @@ static const AtomNode atomList[] = {
 
    { &atoms[ATOM_COMPOUND_TEXT],             "COMPOUND_TEXT"               },
    { &atoms[ATOM_UTF8_STRING],               "UTF8_STRING"                 },
+   { &atoms[ATOM_XSETROOT_ID],               "_XSETROOT_ID"                },
 
    { &atoms[ATOM_WM_STATE],                  "WM_STATE"                    },
    { &atoms[ATOM_WM_PROTOCOLS],              "WM_PROTOCOLS"                },
@@ -947,4 +948,13 @@ void SetWindowAtom(Window window, AtomType atom, unsigned long value) {
 
 }
 
+/** Set a pixmap atom. */
+void SetPixmapAtom(Window window, AtomType atom, Pixmap value) {
+
+   Assert(window != None);
+
+   JXChangeProperty(display, window, atoms[atom], XA_PIXMAP, 32,
+      PropModeReplace, (unsigned char*)&value, 1);
+
+}
 

@@ -173,8 +173,8 @@ int MoveClient(ClientNode *np, int startx, int starty) {
             if(np->state.status & STAT_MAXIMIZED) {
                MaximizeClient(np);
                wasMaximized = 1;
-               startx = west + np->width / 2;
-               starty = north / 2;
+               startx = np->width / 2;
+               starty = -north / 2;
                MoveMouse(np->parent, startx, starty);
             }
 

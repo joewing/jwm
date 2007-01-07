@@ -190,6 +190,7 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
    int width, int height) {
 
    ScaledIconNode *node;
+	int ix, iy;
 
    Assert(icon);
 
@@ -198,8 +199,11 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
 
    if(node) {
 
+		ix = x + width / 2 - node->width / 2;
+		iy = y + height / 2 - node->height / 2;
+
       /* If we support xrender, use it. */
-      if(PutScaledRenderIcon(icon, node, d, x, y)) {
+      if(PutScaledRenderIcon(icon, node, d, ix, iy)) {
          return;
       }
 
@@ -208,13 +212,13 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
 
          /* Set the clip mask. */
          if(node->mask != None) {
-            JXSetClipOrigin(display, iconGC, x, y);
+            JXSetClipOrigin(display, iconGC, ix, iy);
             JXSetClipMask(display, iconGC, node->mask);
          }
 
          /* Draw the icon. */
          JXCopyArea(display, node->image, d, iconGC, 0, 0,
-            node->width, node->height, x, y);
+            node->width, node->height, ix, iy);
 
          /* Reset the clip mask. */
          if(node->mask != None) {

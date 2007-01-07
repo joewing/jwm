@@ -982,6 +982,7 @@ void HandleMapRequest(const XMapEvent *event) {
          np->state.status |= STAT_MAPPED;
          np->state.status &= ~STAT_MINIMIZED;
          np->state.status &= ~STAT_SDESKTOP;
+         np->state.status &= ~STAT_HIDDEN;
          if(!(np->state.status & STAT_STICKY)) {
             np->state.desktop = currentDesktop;
          }

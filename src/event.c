@@ -983,15 +983,14 @@ void HandleMapRequest(const XMapEvent *event) {
          np->state.status &= ~STAT_MINIMIZED;
          np->state.status &= ~STAT_SDESKTOP;
          np->state.status &= ~STAT_HIDDEN;
+         np->state.status &= ~STAT_SHADED;
          if(!(np->state.status & STAT_STICKY)) {
             np->state.desktop = currentDesktop;
          }
          JXMapWindow(display, np->window);
          JXMapWindow(display, np->parent);
          RaiseClient(np);
-         if(focusModel == FOCUS_CLICK) {
-            FocusClient(np);
-         }
+         FocusClient(np);
          UpdateTaskBar();
          UpdatePager();
       }

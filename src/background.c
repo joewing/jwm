@@ -179,7 +179,7 @@ void LoadBackground(int desktop) {
    }
 
    /* If there is no background specified for this desktop, just return. */
-   if(!bp) {
+   if(!bp || !bp->value) {
       return;
    }
 

@@ -8,6 +8,7 @@ Todo:
 
 20070112:
 	- No longer shows empty menus.
+	- Fix handling of empty menu items.
 
 20070104:
    - Retain maximized status when moving windows.

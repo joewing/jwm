@@ -655,7 +655,7 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index) {
       return;
    }
 
-   if(item->name) {
+   if(item->type != MENU_ITEM_SEPARATOR) {
 
       ResetButton(&button, menu->window, rootGC);
       button.x = 2;
@@ -668,7 +668,7 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index) {
       button.icon = item->icon;
       DrawButton(&button);
 
-   } else if(item->type == MENU_ITEM_SEPARATOR) {
+   } else {
 
       JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
       JXDrawLine(display, menu->window, rootGC, 4,

@@ -6,6 +6,9 @@ Todo:
 	- Add mouse bindings.
 	- Add the ability to drag windows to different desktops.
 
+20070112:
+	- No longer shows empty menus.
+
 20070104:
    - Retain maximized status when moving windows.
 

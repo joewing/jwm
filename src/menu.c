@@ -50,6 +50,7 @@ static int GetNextMenuIndex(Menu *menu);
 static int GetPreviousMenuIndex(Menu *menu);
 static int GetMenuIndex(Menu *menu, int index);
 static void SetPosition(Menu *tp, int index);
+static int IsMenuValid(const Menu *menu);
 
 static MenuAction *menuAction = NULL;
 
@@ -143,6 +144,11 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y) {
 
    int mouseStatus, keyboardStatus;
 
+	/* Don't show the menu if there isn't anything to show. */
+	if(!IsMenuValid(menu)) {
+		return;
+	}
+
    mouseStatus = GrabMouseForMenu();
    keyboardStatus = JXGrabKeyboard(display, rootWindow, False,
       GrabModeAsync, GrabModeAsync, CurrentTime);
@@ -205,18 +211,20 @@ void DestroyMenu(Menu *menu) {
 
 /** Show a submenu. */
 int ShowSubmenu(Menu *menu, Menu *parent, int x, int y) {
+
    int status;
 
-   menu->parent = parent;
-   CreateMenu(menu, x, y);
+	menu->parent = parent;
+	CreateMenu(menu, x, y);
 
-   ++menuShown;
-   status = MenuLoop(menu);
-   --menuShown;
+	++menuShown;
+	status = MenuLoop(menu);
+	--menuShown;
 
-   HideMenu(menu);
+	HideMenu(menu);
 
    return status;
+
 }
 
 /** Menu process loop.
@@ -555,7 +563,7 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event) {
 
    /* If the selected item is a submenu, show it. */
    ip = GetMenuItem(menu, menu->currentIndex);
-   if(ip && ip->submenu) {
+   if(ip && IsMenuValid(ip->submenu)) {
       if(ShowSubmenu(ip->submenu, menu, menu->x + menu->width,
          menu->y + menu->offsets[menu->currentIndex])) {
 
@@ -790,4 +798,20 @@ void SetPosition(Menu *tp, int index) {
 
 }
 
+/** Determine if a menu is valid (and can be shown). */
+int IsMenuValid(const Menu *menu) {
+
+	MenuItem *ip;
+
+	if(menu) {
+		for(ip = menu->items; ip; ip = ip->next) {
+			if(ip->type != MENU_ITEM_SEPARATOR) {
+				return 1;
+			}
+		}
+	}
+
+	return 0;
+
+}
 

@@ -31,7 +31,6 @@ typedef struct BackgroundNode {
    int desktop;                  /**< The desktop. */
    BackgroundType type;          /**< The type of background. */
    char *value;
-   long pixel;
    Pixmap pixmap;
    struct BackgroundNode *next;  /**< Next background in the list. */
 } BackgroundNode;
@@ -96,15 +95,10 @@ void ShutdownBackgrounds() {
    BackgroundNode *bp;
 
    for(bp = backgrounds; bp; bp = bp->next) {
-      switch(bp->type) {
-      case BACKGROUND_SOLID:
-      case BACKGROUND_COMMAND:
-         /* Nothing to do. */
-         break;
-      default:
-         JXFreePixmap(display, bp->pixmap);
-         break;
-      }
+		if(bp->pixmap != None) {
+			JXFreePixmap(display, bp->pixmap);
+			bp->pixmap = None;
+		}
    }
 
 }
@@ -193,12 +187,6 @@ void LoadBackground(int desktop) {
 
    /* Load the background based on type. */
    switch(bp->type) {
-   case BACKGROUND_SOLID:
-      attrValues = CWBackPixmap | CWBackPixel | CWBorderPixel;
-      attr.background_pixmap = None;
-      attr.background_pixel = bp->pixel;
-      attr.border_pixmap = bp->pixmap;
-      break;
    case BACKGROUND_COMMAND:
       RunCommand(bp->value);
       return;
@@ -221,7 +209,12 @@ void LoadSolidBackground(BackgroundNode *bp) {
    XColor c;
 
    ParseColor(bp->value, &c);
-   bp->pixel = c.pixel;
+
+   /* Create the pixmap. */
+   bp->pixmap = JXCreatePixmap(display, rootWindow, 1, 1, rootDepth);
+
+   JXSetForeground(display, rootGC, c.pixel);
+	JXDrawPoint(display, bp->pixmap, rootGC, 0, 0);
 
 }
 

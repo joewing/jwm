@@ -433,7 +433,10 @@ void DockWindow(Window win) {
 
    DockNode *np;
 
-   Assert(dock);
+	/* If no dock is running, just return. */
+	if(!dock) {
+		return;
+	}
 
    /* Make sure we have a valid window to add. */
    if(win == None) {
@@ -491,7 +494,10 @@ int UndockWindow(Window win) {
    DockNode *np;
    DockNode *last;
 
-   Assert(dock);
+	/* If no dock is running, just return. */
+	if(!dock) {
+		return 0;
+	}
 
    last = NULL;
    for(np = dock->nodes; np; np = np->next) {

@@ -681,6 +681,7 @@ void FocusNextStackedCircular() {
    }
 
    if(np) {
+		RaiseClient(np);
       FocusClient(np);
    }
 

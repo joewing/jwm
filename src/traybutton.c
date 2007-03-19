@@ -53,6 +53,7 @@ static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
 static void SetSize(TrayComponentType *cp, int width, int height);
 static void Resize(TrayComponentType *cp);
+static void Draw(TrayComponentType *cp, int active);
 
 static void ProcessButtonEvent(TrayComponentType *cp,
    int x, int y, int mask);
@@ -257,20 +258,46 @@ void CheckedCreate(TrayComponentType *cp) {
 /** Initialize a button tray component. */
 void Create(TrayComponentType *cp) {
 
+   cp->pixmap = JXCreatePixmap(display, rootWindow,
+      cp->width, cp->height, rootDepth);
+
+   Draw(cp, 0);
+
+}
+
+/** Resize a button tray component. */
+void Resize(TrayComponentType *cp) {
+
+   Destroy(cp);
+   Create(cp);
+
+}
+
+/** Destroy a button tray component. */
+void Destroy(TrayComponentType *cp) {
+   if(cp->pixmap != None) {
+      JXFreePixmap(display, cp->pixmap);
+   }
+}
+
+/** Draw a tray button. */
+void Draw(TrayComponentType *cp, int active) {
+
    ButtonNode button;
    TrayButtonType *bp;
    int labelx;
 
    bp = (TrayButtonType*)cp->object;
 
-   cp->pixmap = JXCreatePixmap(display, rootWindow,
-      cp->width, cp->height, rootDepth);
-
    JXSetForeground(display, rootGC, colors[COLOR_TRAYBUTTON_BG]);
    JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
 
    ResetButton(&button, cp->pixmap, rootGC);
-   button.type = BUTTON_TASK;
+   if(active) {
+      button.type = BUTTON_TASK_ACTIVE;
+   } else {
+      button.type = BUTTON_TASK;
+   }
    button.width = cp->width - 3;
    button.height = cp->height - 3;
    button.x = 1;
@@ -302,21 +329,6 @@ void Create(TrayComponentType *cp) {
          cp->width - labelx, NULL, bp->label);
    }
 
-}
-
-/** Resize a button tray component. */
-void Resize(TrayComponentType *cp) {
-
-   Destroy(cp);
-   Create(cp);
-
-}
-
-/** Destroy a button tray component. */
-void Destroy(TrayComponentType *cp) {
-   if(cp->pixmap != None) {
-      JXFreePixmap(display, cp->pixmap);
-   }
 }
 
 /** Process a button tray component event. */
@@ -366,7 +378,11 @@ void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
       }
    }
 
+   Draw(cp, 1);
+   UpdateSpecificTray(cp->tray, cp);
    ShowRootMenu(button, x, y);
+   Draw(cp, 0);
+   UpdateSpecificTray(cp->tray, cp);
 
 }
 

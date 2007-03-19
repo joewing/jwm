@@ -75,6 +75,7 @@ void StartupTray() {
          | SubstructureNotifyMask
          | ExposureMask
          | KeyPressMask
+         | KeyReleaseMask
          | EnterWindowMask
          | PointerMotionMask;
 

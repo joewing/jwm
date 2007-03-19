@@ -1,7 +1,7 @@
 /**
  * @file pager.c
  * @author Joe Wingbermuehle
- * @date 2004-2006
+ * @date 2004-2007
  *
  * @brief Pager tray component.
  *
@@ -9,13 +9,15 @@
 
 #include "jwm.h"
 #include "pager.h"
-#include "tray.h"
-#include "main.h"
-#include "desktop.h"
+
 #include "client.h"
+#include "clientlist.h"
 #include "color.h"
 #include "cursor.h"
+#include "desktop.h"
 #include "event.h"
+#include "main.h"
+#include "tray.h"
 
 /** Structure to represent a pager tray component. */
 typedef struct PagerType {

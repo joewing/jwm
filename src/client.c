@@ -9,6 +9,7 @@
 
 #include "jwm.h"
 #include "client.h"
+#include "clientlist.h"
 #include "main.h"
 #include "icon.h"
 #include "hint.h"
@@ -25,9 +26,6 @@
 #include "place.h"
 
 static const int STACK_BLOCK_SIZE = 8;
-
-ClientNode *nodes[LAYER_COUNT];
-ClientNode *nodeTail[LAYER_COUNT];
 
 static ClientNode *activeClient;
 
@@ -785,32 +783,6 @@ void FocusClient(ClientNode *np) {
 
 }
 
-/** Focus the next client in the stacking order. */
-void FocusNextStacked(ClientNode *np) {
-
-   int x;
-   ClientNode *tp;
-
-   Assert(np);
-
-   for(tp = np->next; tp; tp = tp->next) {
-      if((tp->state.status & (STAT_MAPPED | STAT_SHADED))
-         && !(tp->state.status & STAT_HIDDEN)) {
-         FocusClient(tp);
-         return;
-      }
-   }
-   for(x = np->state.layer - 1; x >= LAYER_BOTTOM; x--) {
-      for(tp = nodes[x]; tp; tp = tp->next) {
-         if((tp->state.status & (STAT_MAPPED | STAT_SHADED))
-            && !(tp->state.status & STAT_HIDDEN)) {
-            FocusClient(tp);
-            return;
-         }
-      }
-   }
-
-}
 
 /** Refocus the active client (if there is one). */
 void RefocusClient() {
@@ -1261,7 +1233,8 @@ void ReparentClient(ClientNode *np, int notOwner) {
       | SubstructureNotifyMask
       | EnterWindowMask
       | LeaveWindowMask
-      | KeyPressMask;
+      | KeyPressMask
+      | KeyReleaseMask;
 
    attrMask |= CWDontPropagate;
    attr.do_not_propagate_mask = ButtonPressMask | ButtonReleaseMask;
@@ -1291,7 +1264,8 @@ void ReparentClient(ClientNode *np, int notOwner) {
       | ButtonReleaseMask
       | PointerMotionMask
       | ButtonMotionMask
-      | KeyPressMask;
+      | KeyPressMask
+      | KeyReleaseMask;
    JXChangeWindowAttributes(display, np->window, attrMask, &attr);
    JXSetWindowBorderWidth(display, np->window, 0);
 

@@ -52,7 +52,7 @@ static const KeyMapType KEY_MAP[] = {
    { "escape",      KEY_ESC          },
    { "select",      KEY_ENTER        },
    { "next",        KEY_NEXT         },
-   { "nextstacked", KEY_NEXT_STACKED },
+   { "nextstacked", KEY_NEXTSTACK    },
    { "close",       KEY_CLOSE        },
    { "minimize",    KEY_MIN          },
    { "maximize",    KEY_MAX          },
@@ -786,10 +786,15 @@ void ParseKey(const TokenNode *tp) {
       }
    }
 
+   /* Insert the binding if it's valid. */
    if(k == KEY_NONE) {
+
       ParseError(tp, "invalid Key action: \"%s\"", action);
+
    } else {
+
       InsertBinding(k, mask, key, code, command);
+
    }
 
 }

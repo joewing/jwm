@@ -9,18 +9,20 @@
 
 #include "jwm.h"
 #include "move.h"
-#include "client.h"
+
 #include "border.h"
-#include "outline.h"
-#include "error.h"
-#include "screen.h"
-#include "main.h"
+#include "client.h"
+#include "clientlist.h"
 #include "cursor.h"
+#include "error.h"
 #include "event.h"
-#include "pager.h"
 #include "key.h"
-#include "tray.h"
+#include "main.h"
+#include "outline.h"
+#include "pager.h"
+#include "screen.h"
 #include "status.h"
+#include "tray.h"
 
 typedef struct {
    int valid;

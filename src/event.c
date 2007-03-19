@@ -9,28 +9,30 @@
 
 #include "jwm.h"
 #include "event.h"
+
 #include "client.h"
-#include "main.h"
-#include "hint.h"
-#include "tray.h"
-#include "pager.h"
-#include "desktop.h"
-#include "cursor.h"
-#include "icon.h"
-#include "taskbar.h"
-#include "confirm.h"
-#include "swallow.h"
-#include "popup.h"
-#include "winmenu.h"
-#include "root.h"
-#include "move.h"
-#include "resize.h"
-#include "key.h"
+#include "clientlist.h"
 #include "clock.h"
-#include "place.h"
+#include "confirm.h"
+#include "cursor.h"
+#include "desktop.h"
 #include "dock.h"
+#include "hint.h"
+#include "icon.h"
+#include "key.h"
+#include "main.h"
+#include "move.h"
+#include "pager.h"
+#include "place.h"
+#include "popup.h"
+#include "resize.h"
+#include "root.h"
+#include "swallow.h"
+#include "taskbar.h"
 #include "timing.h"
+#include "tray.h"
 #include "traybutton.h"
+#include "winmenu.h"
 
 #define MIN_TIME_DELTA 50
 
@@ -48,6 +50,7 @@ static void HandleMapRequest(const XMapEvent *event);
 static void HandleUnmapNotify(const XUnmapEvent *event);
 static void HandleButtonEvent(const XButtonEvent *event);
 static void HandleKeyPress(const XKeyEvent *event);
+static void HandleKeyRelease(const XKeyEvent *event);
 static void HandleEnterNotify(const XCrossingEvent *event);
 static void HandleLeaveNotify(const XCrossingEvent *event);
 static void HandleMotionNotify(const XMotionEvent *event);
@@ -208,6 +211,9 @@ void ProcessEvent(XEvent *event) {
    case KeyPress:
       HandleKeyPress(&event->xkey);
       break;
+   case KeyRelease:
+      HandleKeyRelease(&event->xkey);
+      break;
    case EnterNotify:
       HandleEnterNotify(&event->xcrossing);
       break;
@@ -220,7 +226,6 @@ void ProcessEvent(XEvent *event) {
       break;
    case DestroyNotify:
    case Expose:
-   case KeyRelease:
    case ConfigureNotify:
       break;
    default:
@@ -333,6 +338,7 @@ void HandleButtonEvent(const XButtonEvent *event) {
 
 /** Process a key press event. */
 void HandleKeyPress(const XKeyEvent *event) {
+
    ClientNode *np;
    KeyType key;
 
@@ -354,8 +360,9 @@ void HandleKeyPress(const XKeyEvent *event) {
    case KEY_NEXT:
       FocusNext();
       break;
-   case KEY_NEXT_STACKED:
-      FocusNextStackedCircular();
+   case KEY_NEXTSTACK:
+      StartWindowStackWalk();
+      WalkWindowStack();
       break;
    case KEY_CLOSE:
       if(np) {
@@ -404,6 +411,23 @@ void HandleKeyPress(const XKeyEvent *event) {
       break;
    case KEY_EXIT:
       Exit();
+      break;
+   default:
+      break;
+   }
+
+}
+
+/** Handle a key release event. */
+void HandleKeyRelease(const XKeyEvent *event) {
+
+   KeyType key;
+
+   key = GetKey(event);
+
+   switch(key & 0xFF) {
+   case KEY_NEXTSTACK_END:
+      StopWindowStackWalk();
       break;
    default:
       break;

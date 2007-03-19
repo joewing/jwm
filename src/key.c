@@ -9,13 +9,15 @@
 
 #include "jwm.h"
 #include "key.h"
-#include "main.h"
+
 #include "client.h"
-#include "root.h"
+#include "clientlist.h"
 #include "command.h"
 #include "error.h"
-#include "tray.h"
+#include "main.h"
 #include "misc.h"
+#include "root.h"
+#include "tray.h"
 
 typedef enum {
    MASK_NONE  = 0,
@@ -26,6 +28,24 @@ typedef enum {
    MASK_META  = 16,
    MASK_SUPER = 32
 } MaskType;
+
+typedef struct ModifierNode {
+   char name;
+   MaskType mask;
+   KeySym symbol;
+} ModifierNode;
+
+static ModifierNode modifiers[] = {
+
+   { 'A',   MASK_ALT,   XK_Alt_L       },
+   { 'C',   MASK_CTRL,  XK_Control_L   },
+   { 'S',   MASK_SHIFT, XK_Shift_L     },
+   { 'H',   MASK_HYPER, XK_Hyper_L     },
+   { 'M',   MASK_META,  XK_Meta_L      },
+   { 'P',   MASK_SUPER, XK_Super_L     },
+   { 0,     MASK_NONE,  XK_Shift_L     }
+
+};
 
 typedef struct KeyNode {
 
@@ -61,6 +81,7 @@ static unsigned int modifierMask;
 
 static unsigned int GetModifierMask(KeySym key);
 static unsigned int ParseModifierString(const char *str);
+static KeySym GetKeyFromModifier(const char *str);
 static KeySym ParseKeyString(const char *str);
 static int ShouldGrab(KeyType key);
 static void GrabKey(KeyNode *np);
@@ -190,11 +211,25 @@ KeyType GetKey(const XKeyEvent *event) {
    KeyNode *np;
    unsigned int state;
 
+   /* Remove modifiers we don't care about from the state. */
    state = event->state & ~modifierMask;
+
+   /* Loop looking for a matching key binding. */
    for(np = bindings; np; np = np->next) {
-      if(np->state == state && np->code == event->keycode) {
-         return np->key;
+
+      /* We need to treat KeyRelease events on modifiers with a
+       * special case since the state and keycode members will have
+       * the key set despite the fact we grabbed with no state. */
+      if(np->key == KEY_NEXTSTACK_END) {
+         if(np->code == event->keycode) {
+            return np->key;
+         }
+      } else {
+         if(np->state == state && np->code == event->keycode) {
+            return np->key;
+         }
       }
+
    }
 
    return KEY_NONE;
@@ -237,7 +272,8 @@ void ShowKeyMenu(const XKeyEvent *event) {
 int ShouldGrab(KeyType key) {
    switch(key & 0xFF) {
    case KEY_NEXT:
-   case KEY_NEXT_STACKED:
+   case KEY_NEXTSTACK:
+   case KEY_NEXTSTACK_END:
    case KEY_CLOSE:
    case KEY_MIN:
    case KEY_MAX:
@@ -291,8 +327,10 @@ unsigned int GetModifierMask(KeySym key) {
 
 /** Parse a modifier mask string. */
 unsigned int ParseModifierString(const char *str) {
+
    unsigned int mask;
-   int x;
+   int x, y;
+   int found;
 
    if(!str) {
       return MASK_NONE;
@@ -300,32 +338,46 @@ unsigned int ParseModifierString(const char *str) {
 
    mask = MASK_NONE;
    for(x = 0; str[x]; x++) {
-      switch(str[x]) {
-      case 'A':
-         mask |= MASK_ALT;
-         break;
-      case 'C':
-         mask |= MASK_CTRL;
-         break;
-      case 'S':
-         mask |= MASK_SHIFT;
-         break;
-      case 'H':
-         mask |= MASK_HYPER;
-         break;
-      case 'M':
-         mask |= MASK_META;
-         break;
-      case 'P':
-         mask |= MASK_SUPER;
-         break;
-      default:
-         Warning("invalid modifier: \"%c\"", str[x]);
-         break;
+
+      found = 0;
+      for(y = 0; modifiers[y].name; y++) {
+         if(modifiers[y].name == str[x]) {
+            mask |= modifiers[y].mask;
+            found = 1;
+            break;
+         }
       }
+
+      if(!found) {
+         Warning("invalid modifier: \"%c\"", str[x]);
+      }
+
    }
 
    return mask;
+
+}
+
+/** Get the key from a modifier character. */
+KeySym GetKeyFromModifier(const char *str) {
+
+   int x, y;
+
+   if(str == NULL) {
+      return 0;
+   }
+
+   for(x = 0; str[x]; x++) {
+
+      for(y = 0; modifiers[y].name; y++) {
+         if(modifiers[y].name == str[x]) {
+            return modifiers[y].symbol;
+         }
+      }
+
+   }
+
+   return 0;
 
 }
 
@@ -418,6 +470,36 @@ void InsertBinding(KeyType key, const char *modifiers,
    } else {
 
       Warning("neither key nor keycode specified for Key");
+      np = NULL;
+
+   }
+
+   /* KEY_NEXTSTACK is special in that we need to know when the user
+    * is finished walking the window stack. To do this we watch for
+    * the release of a modifier key used with the KEY_NEXTSTACK binding
+    * and report it as KEY_NEXTSTACK_END. If no modifier is specified
+    * for KEY_NEXTSTACK we use KEY_NEXT instead and warn the user.
+    */
+   if(np != NULL && key == KEY_NEXTSTACK) {
+
+      if(GetKeyFromModifier(modifiers) == 0) {
+
+         Warning("no valid modifier specified for \"nextstacked\"");
+         np->key = KEY_NEXT;
+
+      } else {
+
+         np = Allocate(sizeof(KeyNode));
+         np->next = bindings;
+         bindings = np;
+
+         np->key = KEY_NEXTSTACK_END;
+         np->mask = 0;
+         np->symbol = GetKeyFromModifier(modifiers);
+         np->command = NULL;
+         np->code = 0;
+
+      }
 
    }
 

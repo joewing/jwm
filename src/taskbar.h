@@ -43,9 +43,6 @@ void FocusNext();
 /** Focus the previous client in the task bar. */
 void FocusPrevious();
 
-/** Focus the next stacked client. */
-void FocusNextStackedCircular();
-
 /** Set the maximum width of task bar items.
  * @param cp The task bar component.
  * @param value The maximum width.

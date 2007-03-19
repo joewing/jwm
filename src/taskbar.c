@@ -13,6 +13,7 @@
 #include "timing.h"
 #include "main.h"
 #include "client.h"
+#include "clientlist.h"
 #include "color.h"
 #include "popup.h"
 #include "button.h"
@@ -70,7 +71,6 @@ static Node *taskBarNodesTail;
 static Node *GetNode(TaskBarType *bar, int x);
 static unsigned int GetItemCount();
 static int ShouldShowItem(const ClientNode *np);
-static int ShouldFocusItem(const ClientNode *np);
 static unsigned int GetItemWidth(const TaskBarType *bp,
    unsigned int itemCount);
 static void Render(const TaskBarType *bp);
@@ -567,7 +567,7 @@ void FocusNext() {
    Node *tp;
 
    for(tp = taskBarNodes; tp; tp = tp->next) {
-      if(ShouldFocusItem(tp->client)) {
+      if(ShouldFocus(tp->client)) {
          if(tp->client->state.status & STAT_ACTIVE) {
             tp = tp->next;
             break;
@@ -579,13 +579,13 @@ void FocusNext() {
       tp = taskBarNodes;
    }
 
-   while(tp && !ShouldFocusItem(tp->client)) {
+   while(tp && !ShouldFocus(tp->client)) {
       tp = tp->next;
    }
 
    if(!tp) {
       tp = taskBarNodes;
-      while(tp && !ShouldFocusItem(tp->client)) {
+      while(tp && !ShouldFocus(tp->client)) {
          tp = tp->next;
       }
    }
@@ -603,7 +603,7 @@ void FocusPrevious() {
    Node *tp;
 
    for(tp = taskBarNodesTail; tp; tp = tp->prev) {
-      if(ShouldFocusItem(tp->client)) {
+      if(ShouldFocus(tp->client)) {
          if(tp->client->state.status & STAT_ACTIVE) {
             tp = tp->prev;
             break;
@@ -615,13 +615,13 @@ void FocusPrevious() {
       tp = taskBarNodesTail;
    }
 
-   while(tp && !ShouldFocusItem(tp->client)) {
+   while(tp && !ShouldFocus(tp->client)) {
       tp = tp->prev;
    }
 
    if(!tp) {
       tp = taskBarNodesTail;
-      while(tp && !ShouldFocusItem(tp->client)) {
+      while(tp && !ShouldFocus(tp->client)) {
          tp = tp->prev;
       }
    }
@@ -629,60 +629,6 @@ void FocusPrevious() {
    if(tp) {
       RestoreClient(tp->client, 1);
       FocusClient(tp->client);
-   }
-
-}
-
-/** Focus the next client in the stacking order. */
-void FocusNextStackedCircular() {
-
-   ClientNode *ac;
-   ClientNode *np;
-   int x;
-
-   ac = GetActiveClient();
-   np = NULL;
-
-   /* Check for a valid client below this client in the same layer. */
-   if(ac) {
-      for(np = ac->next; np; np = np->next) {
-         if(ShouldFocusItem(np)) {
-            break;
-         }
-      }
-   }
-
-   /* Check for a valid client in lower layers. */
-   if(ac && !np) {
-      for(x = ac->state.layer - 1; x >= LAYER_BOTTOM; x--) {
-         for(np = nodes[x]; np; np = np->next) {
-            if(ShouldFocusItem(np)) {
-               break;
-            }
-         }
-         if(np) {
-            break;
-         }
-      }
-   }
-
-   /* Revert to the top-most valid client. */
-   if(!np) {
-      for(x = LAYER_TOP; x >= LAYER_BOTTOM; x--) {
-         for(np = nodes[x]; np; np = np->next) {
-            if(ShouldFocusItem(np)) {
-               break;
-            }
-         }
-         if(np) {
-            break;
-         }
-      }
-   }
-
-   if(np) {
-		RaiseClient(np);
-      FocusClient(np);
    }
 
 }
@@ -775,30 +721,6 @@ int ShouldShowItem(const ClientNode *np) {
 
    if(!(np->state.status & STAT_MAPPED)
       && !(np->state.status & (STAT_MINIMIZED | STAT_SHADED))) {
-      return 0;
-   }
-
-   return 1;
-
-}
-
-/** Determine if a client is allowed focus. */
-int ShouldFocusItem(const ClientNode *np) {
-
-   if(np->state.desktop != currentDesktop
-      && !(np->state.status & STAT_STICKY)) {
-      return 0;
-   }
-
-   if(np->state.status & STAT_NOLIST) {
-      return 0;
-   }
-
-   if(!(np->state.status & STAT_MAPPED)) {
-      return 0;
-   }
-
-   if(np->owner != None) {
       return 0;
    }
 

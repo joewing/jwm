@@ -1,7 +1,7 @@
 /**
  * @file client.h
  * @author Joe Wingbermuehle
- * @date 2004-2006
+ * @date 2004-2007
  *
  * @brief Header file client window functions.
  *
@@ -116,12 +116,6 @@ typedef struct ClientNode {
 
 } ClientNode;
 
-/** Client windows in linked lists for each layer. */
-extern ClientNode *nodes[LAYER_COUNT];
-
-/** Client windows in linked lists for each layer (pointer to the tail). */
-extern ClientNode *nodeTail[LAYER_COUNT];
-
 /** Find a client by window or parent window.
  * @param w The window.
  * @return The client (NULL if not found).
@@ -201,12 +195,6 @@ void SetClientFullScreen(ClientNode *np, int fullScreen);
  * @param np The client to focus.
  */
 void FocusClient(ClientNode *np);
-
-/** Set the keyboard focus to the next client.
- * This is used to focus the next client in the stacking order.
- * @param np The client before the client to focus.
- */
-void FocusNextStacked(ClientNode *np);
 
 /** Set the keyboard focus back to the active client. */
 void RefocusClient();

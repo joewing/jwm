@@ -6,6 +6,7 @@
 #include "jwm.h"
 #include "border.h"
 #include "client.h"
+#include "clientlist.h"
 #include "color.h"
 #include "main.h"
 #include "icon.h"

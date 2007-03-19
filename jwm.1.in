@@ -1082,6 +1082,7 @@ of the window. Scrolling up over the title bar will shade the window and
 scrolling down will unshade the window.
 When a menu is open, the scroll wheel will move through menus.
 When over the pager, the scroll wheel will switch desktops.
+When over a task list, the scroll wheel will switch windows.
 .RE
 
 .B DESKTOPS

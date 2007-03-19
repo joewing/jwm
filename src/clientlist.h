@@ -41,8 +41,5 @@ void StopWindowStackWalk();
  */
 void FocusNextStacked(struct ClientNode *np);
 
-/** Focus the next stacked client. */
-void FocusNextStackedCircular();
-
 #endif /* CLIENTLIST_H */
 

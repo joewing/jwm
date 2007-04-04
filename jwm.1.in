@@ -1,7 +1,6 @@
 ./"
 ./" groff -man -Tascii jwm.1
 ./"
-
 .TH jwm 1 "@DATE@" "v@VERSION@"
 .SH NAME
 JWM - Joe's Window Manager

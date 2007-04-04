@@ -738,7 +738,7 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 
 #ifdef DEBUG
          atomName = JXGetAtomName(display, event->message_type);
-         Debug("Uknown ClientMessage to client: %s", atomName);
+         Debug("Unknown ClientMessage to client: %s", atomName);
          JXFree(atomName);
 #endif
 
@@ -755,7 +755,7 @@ void HandleClientMessage(const XClientMessageEvent *event) {
       } else {
 #ifdef DEBUG
          atomName = JXGetAtomName(display, event->message_type);
-         Debug("Uknown ClientMessage to root: %s", atomName);
+         Debug("Unknown ClientMessage to root: %s", atomName);
          JXFree(atomName);
 #endif
       }

@@ -23,7 +23,11 @@ static const float COLOR_DELTA = 0.45;
 unsigned long colors[COLOR_COUNT];
 static unsigned long rgbColors[COLOR_COUNT];
 
+/* Map a linear 8-bit RGB space to pixel values. */
 static unsigned long *map;
+
+/* Map 8-bit pixel values to a 24-bit linear RGB space. */
+static unsigned long *rmap;
 
 #ifdef USE_XFT
 static XftColor *xftColors[COLOR_COUNT] = { NULL };
@@ -146,15 +150,24 @@ void StartupColors() {
       for(red = 0; red < 8; red++) {
          for(green = 0; green < 8; green++) {
             for(blue = 0; blue < 4; blue++) {
-               c.red = 74898 * red / 8;
-               c.green = 74898 * green / 8;
-               c.blue = 87381 * blue / 4;
+               c.red = (unsigned short)(74898 * red / 8);
+               c.green = (unsigned short)(74898 * green / 8);
+               c.blue = (unsigned short)(87381 * blue / 4);
                c.flags = DoRed | DoGreen | DoBlue;
                JXAllocColor(display, rootColormap, &c);
                map[x] = c.pixel;
                ++x;
             }
          }
+      }
+
+      /* Compute the reverse pixel mapping (pixel -> 24-bit RGB). */
+      rmap = Allocate(sizeof(unsigned long) * 256);
+      for(x = 0; x < 256; x++) {
+         c.pixel = x;
+         JXQueryColor(display, rootColormap, &c);
+         GetDirectPixel(&c);
+         rmap[x] = c.pixel;
       }
 
       break;
@@ -249,6 +262,8 @@ void ShutdownColors() {
       JXFreeColors(display, rootColormap, map, 256, 0);
       Release(map);
       map = NULL;
+      Release(rmap);
+      rmap = NULL;
    }
 
 }
@@ -568,6 +583,20 @@ void GetColor(XColor *c) {
    }
 
 }
+
+/** Get the RGB components from a pixel value. */
+void GetColorFromPixel(XColor *c) {
+
+   Assert(c);
+
+   /* Convert from a pixel value to a linear RGB space. */
+   c->pixel = rmap[c->pixel & 255];
+
+   /* Extract the RGB components from the linear RGB pixel value. */
+   GetColorFromIndex(c);
+
+}
+
 
 /** Get an RGB pixel value from RGB components. */
 void GetColorIndex(XColor *c) {

@@ -37,14 +37,14 @@ void DrawHorizontalGradient(Drawable d, GC g,
 
    /* Load the "from" color. */
    temp.pixel = fromColor;
-   GetColorFromIndex(&temp);
+   GetColorFromPixel(&temp);
    ared = (float)temp.red / 65535.0;
    agreen = (float)temp.green / 65535.0;
    ablue = (float)temp.blue / 65535.0;
 
    /** Load the "to" color. */
    temp.pixel = toColor;
-   GetColorFromIndex(&temp);
+   GetColorFromPixel(&temp);
    bred = (float)temp.red / 65535.0;
    bgreen = (float)temp.green / 65535.0;
    bblue = (float)temp.blue / 65535.0;
@@ -62,9 +62,9 @@ void DrawHorizontalGradient(Drawable d, GC g,
       green = agreen * amult + bgreen * bmult;
       blue = ablue * amult + bblue * bmult;
 
-      temp.red = (unsigned short)(red * 65535.0);
-      temp.green = (unsigned short)(green * 65535.0);
-      temp.blue = (unsigned short)(blue * 65535.0);
+      temp.red = (unsigned short)(red * 65535.9);
+      temp.green = (unsigned short)(green * 65535.9);
+      temp.blue = (unsigned short)(blue * 65535.9);
 
       GetColor(&temp);
 

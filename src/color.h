@@ -105,6 +105,12 @@ int ParseColor(const char *value, XColor *color);
  */
 void GetColor(XColor *c);
 
+/** Get the RGB components from a color pixel.
+ * This does the reverse of GetColor.
+ * @param c The structure containing the rgb values and pixel value.
+ */
+void GetColorFromPixel(XColor *c);
+
 /** Get an RGB pixel value from RGB components.
  * This is used when loading images from external sources. When doing
  * this we need to know the color components even if we are using a

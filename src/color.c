@@ -589,8 +589,16 @@ void GetColorFromPixel(XColor *c) {
 
    Assert(c);
 
-   /* Convert from a pixel value to a linear RGB space. */
-   c->pixel = rmap[c->pixel & 255];
+	switch(rootVisual->class) {
+	case DirectColor:
+	case TrueColor:
+		/* Nothing to do. */
+		break;
+	default:
+   	/* Convert from a pixel value to a linear RGB space. */
+   	c->pixel = rmap[c->pixel & 255];
+		break;
+	}
 
    /* Extract the RGB components from the linear RGB pixel value. */
    GetColorFromIndex(c);

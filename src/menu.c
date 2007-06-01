@@ -144,10 +144,10 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y) {
 
    int mouseStatus, keyboardStatus;
 
-	/* Don't show the menu if there isn't anything to show. */
-	if(!IsMenuValid(menu)) {
-		return;
-	}
+   /* Don't show the menu if there isn't anything to show. */
+   if(!IsMenuValid(menu)) {
+      return;
+   }
 
    mouseStatus = GrabMouse(rootWindow);
    keyboardStatus = JXGrabKeyboard(display, rootWindow, False,
@@ -214,14 +214,14 @@ int ShowSubmenu(Menu *menu, Menu *parent, int x, int y) {
 
    int status;
 
-	menu->parent = parent;
-	CreateMenu(menu, x, y);
+   menu->parent = parent;
+   CreateMenu(menu, x, y);
 
-	++menuShown;
-	status = MenuLoop(menu);
-	--menuShown;
+   ++menuShown;
+   status = MenuLoop(menu);
+   --menuShown;
 
-	HideMenu(menu);
+   HideMenu(menu);
 
    return status;
 
@@ -801,17 +801,17 @@ void SetPosition(Menu *tp, int index) {
 /** Determine if a menu is valid (and can be shown). */
 int IsMenuValid(const Menu *menu) {
 
-	MenuItem *ip;
+   MenuItem *ip;
 
-	if(menu) {
-		for(ip = menu->items; ip; ip = ip->next) {
-			if(ip->type != MENU_ITEM_SEPARATOR) {
-				return 1;
-			}
-		}
-	}
+   if(menu) {
+      for(ip = menu->items; ip; ip = ip->next) {
+         if(ip->type != MENU_ITEM_SEPARATOR) {
+            return 1;
+         }
+      }
+   }
 
-	return 0;
+   return 0;
 
 }
 

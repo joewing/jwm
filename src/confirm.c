@@ -20,9 +20,9 @@
 #ifndef DISABLE_CONFIRM
 
 typedef enum {
-	DBS_NORMAL	= 0,
-	DBS_OK		= 1,
-	DBS_CANCEL	= 2
+   DBS_NORMAL   = 0,
+   DBS_OK      = 1,
+   DBS_CANCEL   = 2
 } DialogButtonState;
 
 typedef struct DialogType {
@@ -35,7 +35,7 @@ typedef struct DialogType {
    int cancelx;
    int buttony;
    int buttonWidth, buttonHeight;
-	DialogButtonState buttonState;
+   DialogButtonState buttonState;
 
    int lineCount;
    char **message;
@@ -98,8 +98,8 @@ int ProcessDialogEvent(const XEvent *event) {
    switch(event->type) {
    case Expose:
       return HandleDialogExpose(&event->xexpose);
-	case ButtonPress:
-		return HandleDialogButtonPress(&event->xbutton);
+   case ButtonPress:
+      return HandleDialogButtonPress(&event->xbutton);
    case ButtonRelease:
       return HandleDialogButtonRelease(&event->xbutton);
    default:
@@ -156,19 +156,19 @@ int HandleDialogButtonRelease(const XButtonEvent *event) {
       if(cancelPressed || okPressed) {
          DestroyConfirmDialog(dp);
       } else {
-			dp->buttonState = DBS_NORMAL;
-			DrawButtons(dp);
-		}
+         dp->buttonState = DBS_NORMAL;
+         DrawButtons(dp);
+      }
 
       return 1;
    } else {
 
-		for(dp = dialogList; dp; dp = dp->next) {
-			if(dp->buttonState != DBS_NORMAL) {
-				dp->buttonState = DBS_NORMAL;
-				DrawButtons(dp);
-			}
-		}
+      for(dp = dialogList; dp; dp = dp->next) {
+         if(dp->buttonState != DBS_NORMAL) {
+            dp->buttonState = DBS_NORMAL;
+            DrawButtons(dp);
+         }
+      }
 
       return 0;
 
@@ -179,20 +179,20 @@ int HandleDialogButtonRelease(const XButtonEvent *event) {
 /** Handle a mouse button release event. */
 int HandleDialogButtonPress(const XButtonEvent *event) {
 
-	DialogType *dp;
-	int cancelPressed;
-	int okPressed;
-	int x, y;
+   DialogType *dp;
+   int cancelPressed;
+   int okPressed;
+   int x, y;
 
-	Assert(event);
+   Assert(event);
 
-	/* Find the dialog on which the press occured (if any). */
-	dp = FindDialogByWindow(event->window);
-	if(dp) {
+   /* Find the dialog on which the press occured (if any). */
+   dp = FindDialogByWindow(event->window);
+   if(dp) {
 
-		/* Determine which button was pressed (if any). */
-		cancelPressed = 0;
-		okPressed = 0;
+      /* Determine which button was pressed (if any). */
+      cancelPressed = 0;
+      okPressed = 0;
       y = event->y;
       if(y >= dp->buttony && y < dp->buttony + dp->buttonHeight) {
          x = event->x;
@@ -203,26 +203,26 @@ int HandleDialogButtonPress(const XButtonEvent *event) {
          }
       }
 
-		dp->buttonState = DBS_NORMAL;
-		if(cancelPressed) {
-			dp->buttonState = DBS_CANCEL;
-		}
+      dp->buttonState = DBS_NORMAL;
+      if(cancelPressed) {
+         dp->buttonState = DBS_CANCEL;
+      }
 
-		if(okPressed) {
-			dp->buttonState = DBS_OK;
-		}
+      if(okPressed) {
+         dp->buttonState = DBS_OK;
+      }
 
-		/* Draw the buttons. */
-		DrawButtons(dp);
+      /* Draw the buttons. */
+      DrawButtons(dp);
 
-		return 1;
+      return 1;
 
-	} else {
+   } else {
 
-		/* This event doesn't affect us. */
-		return 0;
+      /* This event doesn't affect us. */
+      return 0;
 
-	}
+   }
 
 }
 
@@ -257,7 +257,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
    dp = Allocate(sizeof(DialogType));
    dp->client = np;
    dp->action = action;
-	dp->buttonState = DBS_NORMAL;
+   dp->buttonState = DBS_NORMAL;
 
    dp->prev = NULL;
    dp->next = dialogList;
@@ -450,21 +450,21 @@ void DrawButtons(DialogType *dp) {
    dp->cancelx = 2 * dp->width / 3 - dp->buttonWidth / 2;
    dp->buttony = dp->height - dp->lineHeight - dp->lineHeight / 2;
 
-	if(dp->buttonState == DBS_OK) {
-   	button.type = BUTTON_TASK_ACTIVE;
-	} else {
-   	button.type = BUTTON_TASK;
-	}
+   if(dp->buttonState == DBS_OK) {
+      button.type = BUTTON_TASK_ACTIVE;
+   } else {
+      button.type = BUTTON_TASK;
+   }
    button.text = OK_STRING;
    button.x = dp->okx;
    button.y = dp->buttony;
    DrawButton(&button);
 
-	if(dp->buttonState == DBS_CANCEL) {
-   	button.type = BUTTON_TASK_ACTIVE;
-	} else {
-   	button.type = BUTTON_TASK;
-	}
+   if(dp->buttonState == DBS_CANCEL) {
+      button.type = BUTTON_TASK_ACTIVE;
+   } else {
+      button.type = BUTTON_TASK;
+   }
    button.text = CANCEL_STRING;
    button.x = dp->cancelx;
    button.y = dp->buttony;

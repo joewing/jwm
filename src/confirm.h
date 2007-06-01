@@ -32,5 +32,5 @@ int ProcessDialogEvent(const XEvent *event);
 void ShowConfirmDialog(struct ClientNode *np,
    void (*action)(struct ClientNode*), ...);
 
-#endif
+#endif /* CONFIRM_H */
 

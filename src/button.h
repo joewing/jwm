@@ -59,5 +59,5 @@ void DrawButton(ButtonNode *bp);
  */
 void ResetButton(ButtonNode *bp, Drawable d, GC g);
 
-#endif
+#endif /* BUTTON_H */
 

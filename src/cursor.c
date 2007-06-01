@@ -175,12 +175,12 @@ int GrabMouseForMove() {
 
 }
 
-/** Grab the mouse for showing a menu. */
-int GrabMouseForMenu() {
+/** Grab the mouse. */
+int GrabMouse(Window w) {
 
    int result;
 
-   result = JXGrabPointer(display, rootWindow, False,
+   result = JXGrabPointer(display, w, False,
       ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, defaultCursor, CurrentTime);
 

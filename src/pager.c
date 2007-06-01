@@ -106,7 +106,7 @@ TrayComponentType *CreatePager() {
    pp->cp = cp;
    cp->Create = Create;
    cp->SetSize = SetSize;
-   cp->ProcessButtonEvent = ProcessPagerButtonEvent;
+   cp->ProcessButtonPress = ProcessPagerButtonEvent;
 
    return cp;
 }

@@ -142,7 +142,7 @@ TrayComponentType *CreateClock(const char *format, const char *command,
    cp->Create = Create;
    cp->Resize = Resize;
    cp->Destroy = Destroy;
-   cp->ProcessButtonEvent = ProcessClockButtonEvent;
+   cp->ProcessButtonPress = ProcessClockButtonEvent;
    cp->ProcessMotionEvent = ProcessClockMotionEvent;
 
    return cp;

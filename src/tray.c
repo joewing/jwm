@@ -27,7 +27,9 @@ static Window supportingWindow;
 static void HandleTrayExpose(TrayType *tp, const XExposeEvent *event);
 static void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event);
 
+static TrayComponentType *GetTrayComponent(TrayType *tp, int x, int y);
 static void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event);
+static void HandleTrayButtonRelease(TrayType *tp, const XButtonEvent *event);
 static void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event);
 
 static void ComputeTraySize(TrayType *tp);
@@ -72,6 +74,7 @@ void StartupTray() {
       attrMask |= CWEventMask;
       attr.event_mask
          = ButtonPressMask
+			| ButtonReleaseMask
          | SubstructureNotifyMask
          | ExposureMask
          | KeyPressMask
@@ -240,6 +243,7 @@ TrayComponentType *CreateTrayComponent() {
    cp->requestedHeight = 0;
    cp->width = 0;
    cp->height = 0;
+   cp->grabbed = 0;
 
    cp->window = None;
    cp->pixmap = None;
@@ -250,7 +254,8 @@ TrayComponentType *CreateTrayComponent() {
    cp->SetSize = NULL;
    cp->Resize = NULL;
 
-   cp->ProcessButtonEvent = NULL;
+   cp->ProcessButtonPress = NULL;
+   cp->ProcessButtonRelease = NULL;
    cp->ProcessMotionEvent = NULL;
 
    cp->next = NULL;
@@ -555,6 +560,9 @@ int ProcessTrayEvent(const XEvent *event) {
          case ButtonPress:
             HandleTrayButtonPress(tp, &event->xbutton);
             return 1;
+			case ButtonRelease:
+				HandleTrayButtonRelease(tp, &event->xbutton);
+				return 1;
          case MotionNotify:
             HandleTrayMotionNotify(tp, &event->xmotion);
             return 1;
@@ -598,29 +606,21 @@ void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event) {
 
 }
 
-/** Handle a button press on a tray. */
-void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event) {
+/** Get the tray component under the given coordinates. */
+TrayComponentType *GetTrayComponent(TrayType *tp, int x, int y) {
 
    TrayComponentType *cp;
    int xoffset, yoffset;
    int width, height;
-   int x, y;
-   int mask;
 
    xoffset = tp->border;
    yoffset = tp->border;
    for(cp = tp->components; cp; cp = cp->next) {
       width = cp->width;
       height = cp->height;
-      if(event->x >= xoffset && event->x < xoffset + width) {
-         if(event->y >= yoffset && event->y < yoffset + height) {
-            if(cp->ProcessButtonEvent) {
-               x = event->x - xoffset;
-               y = event->y - yoffset;
-               mask = event->button;
-               (cp->ProcessButtonEvent)(cp, x, y, mask);
-            }
-            break;
+      if(x >= xoffset && x < xoffset + width) {
+         if(y >= yoffset && y < yoffset + height) {
+				return cp;
          }
       }
       if(tp->layout == LAYOUT_HORIZONTAL) {
@@ -629,39 +629,73 @@ void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event) {
          yoffset += height;
       }
    }
+
+	return NULL;
+
+}
+
+/** Handle a button press on a tray. */
+void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event) {
+
+   TrayComponentType *cp;
+   int x, y;
+   int mask;
+
+	cp = GetTrayComponent(tp, event->x, event->y);
+	if(cp && cp->ProcessButtonPress) {
+		x = event->x - cp->x;
+		y = event->y - cp->y;
+		mask = event->button;
+		(cp->ProcessButtonPress)(cp, x, y, mask);
+	}
+
+}
+
+/** Handle a button release on a tray. */
+void HandleTrayButtonRelease(TrayType *tp, const XButtonEvent *event) {
+
+   TrayComponentType *cp;
+   int x, y;
+   int mask;
+
+   // First inform any components that have a grab.
+   for(cp = tp->components; cp; cp = cp->next) {
+      if(cp->grabbed) {
+   		x = event->x - cp->x;
+   		y = event->y - cp->y;
+   		mask = event->button;
+   		(cp->ProcessButtonRelease)(cp, x, y, mask);
+         JXUngrabPointer(display, CurrentTime);
+         cp->grabbed = 0;
+         return;
+      }
+   }
+
+	cp = GetTrayComponent(tp, event->x, event->y);
+	if(cp && cp->ProcessButtonRelease) {
+		x = event->x - cp->x;
+		y = event->y - cp->y;
+		mask = event->button;
+		(cp->ProcessButtonRelease)(cp, x, y, mask);
+	}
+
 }
 
 /** Handle a motion notify event. */
 void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event) {
 
    TrayComponentType *cp;
-   int xoffset, yoffset;
-   int width, height;
    int x, y;
    int mask;
 
-   xoffset = tp->border;
-   yoffset = tp->border;
-   for(cp = tp->components; cp; cp = cp->next) {
-      width = cp->width;
-      height = cp->height;
-      if(event->x >= xoffset && event->x < xoffset + width) {
-         if(event->y >= yoffset && event->y < yoffset + height) {
-            if(cp->ProcessMotionEvent) {
-               x = event->x - xoffset;
-               y = event->y - yoffset;
-               mask = event->state;
-               (cp->ProcessMotionEvent)(cp, x, y, mask);
-            }
-            break;
-         }
-      }
-      if(tp->layout == LAYOUT_HORIZONTAL) {
-         xoffset += width;
-      } else {
-         yoffset += height;
-      }
-   }
+	cp = GetTrayComponent(tp, event->x, event->y);
+	if(cp && cp->ProcessMotionEvent) {
+		x = event->x - cp->x;
+		y = event->y - cp->y;
+		mask = event->state;
+		(cp->ProcessMotionEvent)(cp, x, y, mask);
+	}
+
 }
 
 /** Draw all trays. */

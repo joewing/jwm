@@ -71,6 +71,8 @@ typedef struct TrayComponentType {
    int width;     /**< Actual width. */
    int height;    /**< Actual height. */
 
+   int grabbed;   /**< 1 if the mouse was grabbed by this component. */
+
    Window window;    /**< Content (if a window, otherwise None). */
    Pixmap pixmap;    /**< Content (if a pixmap, otherwise None). */
 
@@ -90,8 +92,12 @@ typedef struct TrayComponentType {
    /** Callback to resize the component. */
    void (*Resize)(struct TrayComponentType *cp);
 
-   /** Callback for mouse clicks. */
-   void (*ProcessButtonEvent)(struct TrayComponentType *cp,
+   /** Callback for mouse presses. */
+   void (*ProcessButtonPress)(struct TrayComponentType *cp,
+      int x, int y, int mask);
+
+   /** Callback for mouse releases. */
+   void (*ProcessButtonRelease)(struct TrayComponentType *cp,
       int x, int y, int mask);
 
    /** Callback for mouse motion. */

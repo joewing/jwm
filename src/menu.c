@@ -149,7 +149,7 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y) {
 		return;
 	}
 
-   mouseStatus = GrabMouseForMenu();
+   mouseStatus = GrabMouse(rootWindow);
    keyboardStatus = JXGrabKeyboard(display, rootWindow, False,
       GrabModeAsync, GrabModeAsync, CurrentTime);
    if(!mouseStatus || keyboardStatus != GrabSuccess) {

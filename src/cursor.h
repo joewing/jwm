@@ -30,10 +30,10 @@ int GrabMouseForResize(BorderActionType action);
  */
 int GrabMouseForMove();
 
-/** Grab the mouse for a menu.
+/** Grab the mouse.
  * @return 1 on success, 0 on failure.
  */
-int GrabMouseForMenu();
+int GrabMouse(Window w);
 
 /** Grab the mouse to select a window.
  * @return 1 on success, 0 on failure.

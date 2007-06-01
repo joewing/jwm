@@ -147,7 +147,7 @@ TrayComponentType *CreateTaskBar() {
    cp->SetSize = SetSize;
    cp->Create = Create;
    cp->Resize = Resize;
-   cp->ProcessButtonEvent = ProcessTaskButtonEvent;
+   cp->ProcessButtonPress = ProcessTaskButtonEvent;
    cp->ProcessMotionEvent = ProcessTaskMotionEvent;
 
    return cp;

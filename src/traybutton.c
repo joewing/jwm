@@ -24,6 +24,7 @@
 #include "popup.h"
 #include "timing.h"
 #include "command.h"
+#include "cursor.h"
 
 #define BUTTON_SIZE 4
 
@@ -55,7 +56,9 @@ static void SetSize(TrayComponentType *cp, int width, int height);
 static void Resize(TrayComponentType *cp);
 static void Draw(TrayComponentType *cp, int active);
 
-static void ProcessButtonEvent(TrayComponentType *cp,
+static void ProcessButtonPress(TrayComponentType *cp,
+   int x, int y, int mask);
+static void ProcessButtonRelease(TrayComponentType *cp,
    int x, int y, int mask);
 static void ProcessMotionEvent(TrayComponentType *cp,
    int x, int y, int mask);
@@ -169,7 +172,8 @@ TrayComponentType *CreateTrayButton(const char *iconName,
    cp->SetSize = SetSize;
    cp->Resize = Resize;
 
-   cp->ProcessButtonEvent = ProcessButtonEvent;
+   cp->ProcessButtonPress = ProcessButtonPress;
+   cp->ProcessButtonRelease = ProcessButtonRelease;
    if(popup || label) {
       cp->ProcessMotionEvent = ProcessMotionEvent;
    }
@@ -331,8 +335,8 @@ void Draw(TrayComponentType *cp, int active) {
 
 }
 
-/** Process a button tray component event. */
-void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
+/** Process a button press. */
+void ProcessButtonPress(TrayComponentType *cp, int x, int y, int mask) {
 
    const ScreenType *sp;
    int mwidth, mheight;
@@ -343,16 +347,14 @@ void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
    Assert(bp);
 
    if(bp->action && strlen(bp->action) > 0) {
-      if(!strncmp(bp->action, "exec:", 5)) {
-         RunCommand(bp->action + 5);
-         return;
-      } else if(!strncmp(bp->action, "root:", 5)) {
-         button = atoi(bp->action + 5);
-      } else if(!strcmp(bp->action, "showdesktop")) {
-         ShowDesktop();
+      if(strncmp(bp->action, "root:", 5)) {
+         GrabMouse(cp->tray->window);
+         cp->grabbed = 1;
+         Draw(cp, 1);
+         UpdateSpecificTray(cp->tray, cp);
          return;
       } else {
-         return;
+         button = atoi(bp->action + 5);
       }
    } else {
       button = 1;
@@ -383,6 +385,38 @@ void ProcessButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
    ShowRootMenu(button, x, y);
    Draw(cp, 0);
    UpdateSpecificTray(cp->tray, cp);
+
+}
+
+/** Process a button release. */
+void ProcessButtonRelease(TrayComponentType *cp, int x, int y, int mask) {
+
+   TrayButtonType *bp = (TrayButtonType*)cp->object;
+
+   Assert(bp);
+
+   Draw(cp, 0);
+   UpdateSpecificTray(cp->tray, cp);
+
+   // Since we grab the mouse, make sure the mouse is actually
+   // over the button.
+   if(x < 0 || x >= cp->width) {
+      return;
+   }
+   if(y < 0 || y >= cp->height) {
+      return;
+   }
+
+   // Run the tray button action (if any).
+   if(bp->action && strlen(bp->action) > 0) {
+      if(!strncmp(bp->action, "exec:", 5)) {
+         RunCommand(bp->action + 5);
+         return;
+      } else if(!strcmp(bp->action, "showdesktop")) {
+         ShowDesktop();
+         return;
+      }
+   }
 
 }
 

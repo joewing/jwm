@@ -363,9 +363,9 @@ void Startup() {
    StartupPlacement();
    StartupClients();
 
-   #ifndef DISABLE_CONFIRM
+#  ifndef DISABLE_CONFIRM
       StartupDialogs();
-   #endif
+#  endif
    StartupPopup();
 
    StartupRootMenu();
@@ -402,9 +402,9 @@ void Shutdown() {
    ShutdownSwallow();
 
    ShutdownOutline();
-   #ifndef DISABLE_CONFIRM
+#  ifndef DISABLE_CONFIRM
       ShutdownDialogs();
-   #endif
+#  endif
    ShutdownPopup();
    ShutdownKeys();
    ShutdownPager();

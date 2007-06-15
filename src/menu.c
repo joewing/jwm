@@ -102,6 +102,14 @@ void InitializeMenu(Menu *menu) {
    menu->parent = NULL;
    menu->parentOffset = 0;
 
+   /* Make sure the menu is wide enough for a label if it is labeled. */
+   if(menu->label) {
+      temp = GetStringWidth(FONT_MENU, menu->label);
+      if(temp > menu->width) {
+         menu->width = temp;
+      }
+   }
+
    menu->height = 1;
    if(menu->label) {
       menu->height += menu->itemHeight;

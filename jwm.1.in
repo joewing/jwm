@@ -126,7 +126,7 @@ Determines if a label appears at the top of the menu. Default is false.
 .B Include
 .RS
 Include the contents of a file into the menu structure. The file must
-start with a "Menu" tag. The file is specified by the text of the tag.
+start with a "JWM" tag. The file is specified by the text of the tag.
 If the text starts with "exec:" then the output of a program is used.
 .RE
 .P

@@ -15,6 +15,7 @@
 #include "color.h"
 #include "main.h"
 #include "icon.h"
+#include "image.h"
 #include "gradient.h"
 #include "hint.h"
 
@@ -23,7 +24,8 @@ typedef enum {
    BACKGROUND_SOLID,    /**< Solid color background. */
    BACKGROUND_GRADIENT, /**< Gradient background. */
    BACKGROUND_COMMAND,  /**< Command to run for setting the background. */
-   BACKGROUND_IMAGE     /**< Stretched image. */
+   BACKGROUND_STRETCH,  /**< Stretched image. */
+   BACKGROUND_TILE      /**< Tiled image. */
 } BackgroundType;
 
 /** Structure to represent a background for one or more desktops. */
@@ -73,7 +75,8 @@ void StartupBackgrounds() {
       case BACKGROUND_COMMAND:
          /* Nothing to do. */
          break;
-      case BACKGROUND_IMAGE:
+      case BACKGROUND_STRETCH:
+      case BACKGROUND_TILE:
          LoadImageBackground(bp);
          break;
       default:
@@ -95,10 +98,10 @@ void ShutdownBackgrounds() {
    BackgroundNode *bp;
 
    for(bp = backgrounds; bp; bp = bp->next) {
-		if(bp->pixmap != None) {
-			JXFreePixmap(display, bp->pixmap);
-			bp->pixmap = None;
-		}
+      if(bp->pixmap != None) {
+         JXFreePixmap(display, bp->pixmap);
+         bp->pixmap = None;
+      }
    }
 
 }
@@ -137,7 +140,9 @@ void SetBackground(int desktop, const char *type, const char *value) {
    } else if(!strcmp(type, "command")) {
       bgType = BACKGROUND_COMMAND;
    } else if(!strcmp(type, "image")) {
-      bgType = BACKGROUND_IMAGE;
+      bgType = BACKGROUND_STRETCH;
+   } else if(!strcmp(type, "tile")) {
+      bgType = BACKGROUND_TILE;
    } else {
       Warning("invalid background type: \"%s\"", type);
       return;
@@ -214,7 +219,7 @@ void LoadSolidBackground(BackgroundNode *bp) {
    bp->pixmap = JXCreatePixmap(display, rootWindow, 1, 1, rootDepth);
 
    JXSetForeground(display, rootGC, c.pixel);
-	JXDrawPoint(display, bp->pixmap, rootGC, 0, 0);
+   JXDrawPoint(display, bp->pixmap, rootGC, 0, 0);
 
 }
 
@@ -267,6 +272,7 @@ void LoadGradientBackground(BackgroundNode *bp) {
 void LoadImageBackground(BackgroundNode *bp) {
 
    IconNode *ip;
+   int x, y;
 
    /* Load the icon. */
    ip = LoadNamedIcon(bp->value);
@@ -276,8 +282,8 @@ void LoadImageBackground(BackgroundNode *bp) {
       return;
    }
 
-	/* We can't use render on these. */
-	ip->useRender = 0;
+   /* We can't use render on these. */
+   ip->useRender = 0;
 
    /* Create the pixmap. */
    bp->pixmap = JXCreatePixmap(display, rootWindow,
@@ -288,7 +294,15 @@ void LoadImageBackground(BackgroundNode *bp) {
    JXFillRectangle(display, bp->pixmap, rootGC, 0, 0, rootWidth, rootHeight);
 
    /* Draw the icon on the background pixmap. */
-   PutIcon(ip, bp->pixmap, 0, 0, rootWidth, rootHeight);
+   if(bp->type == BACKGROUND_TILE) {
+      for(y = 0; y < rootHeight; y += ip->image->height) {
+         for(x = 0; x < rootWidth; x += ip->image->width) {
+            PutIcon(ip, bp->pixmap, x, y, ip->image->width, ip->image->height);
+         }
+      }
+   } else {
+      PutIcon(ip, bp->pixmap, 0, 0, rootWidth, rootHeight);
+   }
 
    /* We don't need the icon anymore. */
    DestroyIcon(ip);

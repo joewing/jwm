@@ -190,7 +190,7 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
    int width, int height) {
 
    ScaledIconNode *node;
-	int ix, iy;
+   int ix, iy;
 
    Assert(icon);
 
@@ -199,8 +199,8 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
 
    if(node) {
 
-		ix = x + width / 2 - node->width / 2;
-		iy = y + height / 2 - node->height / 2;
+      ix = x + width / 2 - node->width / 2;
+      iy = y + height / 2 - node->height / 2;
 
       /* If we support xrender, use it. */
       if(PutScaledRenderIcon(icon, node, d, ix, iy)) {
@@ -636,7 +636,7 @@ IconNode *CreateIcon() {
    icon->name = NULL;
    icon->image = NULL;
    icon->nodes = NULL;
-	icon->useRender = 1;
+   icon->useRender = 1;
    icon->next = NULL;
    icon->prev = NULL;
 

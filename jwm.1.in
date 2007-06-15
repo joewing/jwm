@@ -1114,8 +1114,12 @@ A gradient color. See the \fBCOLORS\fP section for more information.
 .RE
 .B image
 .RS
-An image. This may be either an XPM or PNG image. Note that support
+A stretched image. This may be either an XPM or PNG image. Note that support
 for XPM and/or PNG images must be compiled in and icon support is required.
+.RE
+.B tile
+.RS
+A tiled image. Like \fIimage\fP, but the image is tiled instead of stretched.
 .RE
 .B command
 .RS

@@ -567,4 +567,3 @@ AttributeNode *CreateAttribute(TokenNode *np) {
    return ap;
 }
 
-

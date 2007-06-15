@@ -240,13 +240,14 @@ ImageNode *LoadXPMImage(const char *fileName) {
    attr.color_closure = NULL;
    rc = XpmReadFileToImage(display, (char*)fileName, &image, &shape, &attr);
    if(rc == XpmSuccess) {
+Debug("SUCCESS FOR %s\n", fileName);
       result = CreateImageFromXImages(image, shape);
-
       JXDestroyImage(image);
       if(shape) {
          JXDestroyImage(shape);
       }
    }
+Debug("LOAD XPM: %s -> %p", fileName, result);
 
 #endif
 

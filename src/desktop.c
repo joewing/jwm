@@ -173,6 +173,12 @@ void ShowDesktop() {
 
    for(layer = 0; layer < LAYER_COUNT; layer++) {
       for(np = nodes[layer]; np; np = np->next) {
+
+         /* Skip "nolist" items. */
+         if(np->state.status & STAT_NOLIST) {
+            continue;
+         }
+
          if(showingDesktop) {
             if(np->state.status & STAT_SDESKTOP) {
                RestoreClient(np, 0);

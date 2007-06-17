@@ -101,11 +101,13 @@ static char *displayString = NULL;
 
 /** The main entry point. */
 int main(int argc, char *argv[]) {
+
    char *temp;
    int x;
 
    StartDebug();
 
+   /* Get the name of the user's local configuration file. */
    temp = getenv("HOME");
    if(temp) {
       configPath = Allocate(strlen(temp) + strlen(CONFIG_FILE) + 1);
@@ -115,6 +117,7 @@ int main(int argc, char *argv[]) {
       configPath = CopyString(CONFIG_FILE);
    }
 
+   /* Parse command line options. */
    for(x = 1; x < argc; x++) {
       if(!strcmp(argv[x], "-v")) {
          DisplayAbout();
@@ -140,6 +143,7 @@ int main(int argc, char *argv[]) {
       }
    }
 
+   /* The main loop. */
    StartupConnection();
    do {
 
@@ -147,21 +151,28 @@ int main(int argc, char *argv[]) {
       shouldExit = 0;
       shouldRestart = 0;
 
+      /* Prepare JWM components. */
       Initialize();
 
+      /* Parse the configuration file. */
       ParseConfig(configPath);
 
+      /* Start up the JWM components. */
       Startup();
 
+      /* The main event loop. */
       EventLoop();
 
+      /* Shutdown JWM components. */
       Shutdown();
 
+      /* Perform any extra cleanup. */
       Destroy();
 
    } while(shouldRestart);
    ShutdownConnection();
 
+   /* If we have a command to execute on shutdown, run it now. */
    if(exitCommand) {
       execl(SHELL_NAME, SHELL_NAME, "-c", exitCommand, NULL);
       Warning("exec failed: (%s) %s", SHELL_NAME, exitCommand);
@@ -234,6 +245,7 @@ void OpenConnection() {
 
 /** Prepare the connection. */
 void StartupConnection() {
+
    XSetWindowAttributes attr;
    int temp;
 
@@ -249,6 +261,10 @@ void StartupConnection() {
    clientContext = XUniqueContext();
    frameContext = XUniqueContext();
 
+   /* Set the events we want for the root window.
+    * Note that asking for SubstructureRedirect will fail
+    * if another window manager is already running.
+    */
    attr.event_mask
       = SubstructureRedirectMask
       | SubstructureNotifyMask

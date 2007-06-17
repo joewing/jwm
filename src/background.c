@@ -272,7 +272,7 @@ void LoadGradientBackground(BackgroundNode *bp) {
 void LoadImageBackground(BackgroundNode *bp) {
 
    IconNode *ip;
-   int x, y;
+   int width, height;
 
    /* Load the icon. */
    ip = LoadNamedIcon(bp->value);
@@ -285,24 +285,25 @@ void LoadImageBackground(BackgroundNode *bp) {
    /* We can't use render on these. */
    ip->useRender = 0;
 
+   /* Determine the size of the background pixmap. */
+   if(bp->type == BACKGROUND_TILE) {
+      width = ip->image->width;
+      height = ip->image->height;
+   } else {
+      width = rootWidth;
+      height = rootHeight;
+   }
+
    /* Create the pixmap. */
    bp->pixmap = JXCreatePixmap(display, rootWindow,
-      rootWidth, rootHeight, rootDepth);
+      width, height, rootDepth);
 
    /* Clear the pixmap in case it is too small. */
    JXSetForeground(display, rootGC, 0);
-   JXFillRectangle(display, bp->pixmap, rootGC, 0, 0, rootWidth, rootHeight);
+   JXFillRectangle(display, bp->pixmap, rootGC, 0, 0, width, height);
 
    /* Draw the icon on the background pixmap. */
-   if(bp->type == BACKGROUND_TILE) {
-      for(y = 0; y < rootHeight; y += ip->image->height) {
-         for(x = 0; x < rootWidth; x += ip->image->width) {
-            PutIcon(ip, bp->pixmap, x, y, ip->image->width, ip->image->height);
-         }
-      }
-   } else {
-      PutIcon(ip, bp->pixmap, 0, 0, rootWidth, rootHeight);
-   }
+      PutIcon(ip, bp->pixmap, 0, 0, width, height);
 
    /* We don't need the icon anymore. */
    DestroyIcon(ip);

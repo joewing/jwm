@@ -13,14 +13,8 @@
 /** Structure to represent an image. */
 typedef struct ImageNode {
 
-#ifdef USE_PNG
-   png_uint_32 width;       /**< Width of the image. */
-   png_uint_32 height;      /**< Height of the image. */
-#else
    int width;               /**< Width of the image. */
    int height;              /**< Height of the image. */
-#endif
-
    unsigned char *data;     /**< Image data. */
 
 } ImageNode;

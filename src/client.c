@@ -228,9 +228,15 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
    }
 
    /* Maximize the client if requested. */
-   if(np->state.status & STAT_MAXIMIZED) {
-      np->state.status &= ~STAT_MAXIMIZED;
-      MaximizeClient(np);
+   if(   (np->state.status & STAT_HMAX) && (np->state.status & STAT_VMAX)) {
+      np->state.status &= ~(STAT_HMAX | STAT_VMAX);
+      MaximizeClient(np, 1, 1);
+   } else if(np->state.status & STAT_HMAX) {
+      np->state.status &= ~STAT_HMAX;
+      MaximizeClient(np, 1, 0);
+   } else if(np->state.status & STAT_VMAX) {
+      np->state.status &= ~STAT_VMAX;
+      MaximizeClient(np, 0, 1);
    }
 
    /* Make sure we're still in sync */
@@ -646,7 +652,7 @@ void ShowClient(ClientNode *np) {
 }
 
 /** Maximize a client window. */
-void MaximizeClient(ClientNode *np) {
+void MaximizeClient(ClientNode *np, int horiz, int vert) {
 
    int north, south, east, west;
 
@@ -663,14 +669,14 @@ void MaximizeClient(ClientNode *np) {
 
    GetBorderSize(np, &north, &south, &east, &west);
 
-   if(np->state.status & STAT_MAXIMIZED) {
+   if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
       np->x = np->oldx;
       np->y = np->oldy;
       np->width = np->oldWidth;
       np->height = np->oldHeight;
-      np->state.status &= ~STAT_MAXIMIZED;
+      np->state.status &= ~(STAT_HMAX | STAT_VMAX);
    } else {
-      PlaceMaximizedClient(np);
+      PlaceMaximizedClient(np, horiz, vert);
    }
 
    JXMoveResizeWindow(display, np->parent,
@@ -1108,7 +1114,7 @@ void RemoveClient(ClientNode *np) {
    /* If the window manager is exiting (ie, not the client), then
     * reparent etc. */
    if(shouldExit && !(np->state.status & STAT_WMDIALOG)) {
-      if(np->state.status & STAT_MAXIMIZED) {
+      if(np->state.status & (STAT_VMAX | STAT_HMAX)) {
          np->x = np->oldx;
          np->y = np->oldy;
          np->width = np->oldWidth;

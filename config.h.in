@@ -117,6 +117,9 @@
 /* Define to enable icon support */
 #undef USE_ICONS
 
+/* Define to use libjpeg */
+#undef USE_JPEG
+
 /* Define to use libpng */
 #undef USE_PNG
 

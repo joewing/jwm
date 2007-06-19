@@ -19,6 +19,8 @@ typedef enum {
    MA_LAYER,
    MA_STICK,
    MA_MAXIMIZE,
+   MA_MAXIMIZE_H,
+   MA_MAXIMIZE_V,
    MA_MINIMIZE,
    MA_RESTORE,
    MA_SHADE,

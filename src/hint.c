@@ -331,9 +331,11 @@ void WriteNetState(ClientNode *np) {
 
    index = 0;
 
-   if(np->state.status & STAT_MAXIMIZED) {
-      values[index++] = atoms[ATOM_NET_WM_STATE_MAXIMIZED_VERT];
+   if(np->state.status & STAT_HMAX) {
       values[index++] = atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ];
+   }
+   if(np->state.status & STAT_VMAX) {
+      values[index++] = atoms[ATOM_NET_WM_STATE_MAXIMIZED_VERT];
    }
 
    if(np->state.status & STAT_SHADED) {
@@ -424,9 +426,11 @@ void WriteWinState(ClientNode *np) {
    if(np->state.status & STAT_MINIMIZED) {
       flags |= WIN_STATE_MINIMIZED;
    }
-   if(np->state.status & STAT_MAXIMIZED) {
-      flags |= WIN_STATE_MAXIMIZED_VERT;
+   if(np->state.status & STAT_HMAX) {
       flags |= WIN_STATE_MAXIMIZED_HORIZ;
+   }
+   if(np->state.status & STAT_VMAX) {
+      flags |= WIN_STATE_MAXIMIZED_VERT;
    }
    if(np->state.status & STAT_NOLIST) {
       flags |= WIN_STATE_HIDDEN;
@@ -498,8 +502,11 @@ ClientState ReadWindowState(Window win) {
                fullScreen = 1;
             }
          }
-         if(maxVert && maxHorz) {
-            result.status |= STAT_MAXIMIZED;
+         if(maxHorz) {
+            result.status |= STAT_HMAX;
+         }
+         if(maxVert) {
+            result.status |= STAT_VMAX;
          }
          if(fullScreen) {
             result.status |= STAT_FULLSCREEN;
@@ -548,9 +555,11 @@ ClientState ReadWindowState(Window win) {
       if(card & WIN_STATE_SHADED) {
          result.status |= STAT_SHADED;
       }
-      if((card & WIN_STATE_MAXIMIZED_VERT)
-         && (card & WIN_STATE_MAXIMIZED_HORIZ)) {
-         result.status |= STAT_MAXIMIZED;
+      if(card & WIN_STATE_MAXIMIZED_HORIZ) {
+         result.status |= STAT_HMAX;
+      }
+      if(card & WIN_STATE_MAXIMIZED_VERT) {
+         result.status |= STAT_VMAX;
       }
    }
 

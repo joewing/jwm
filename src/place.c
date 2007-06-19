@@ -502,7 +502,7 @@ void ConstrainSize(ClientNode *np) {
 }
 
 /** Place a maximized client on the screen. */
-void PlaceMaximizedClient(ClientNode *np) {
+void PlaceMaximizedClient(ClientNode *np, int horiz, int vert) {
 
    BoundingBox box;
    const ScreenType *sp;
@@ -551,12 +551,19 @@ void PlaceMaximizedClient(ClientNode *np) {
 
    }
 
-   np->x = box.x;
-   np->y = box.y;
-   np->width = box.width - (box.width % np->xinc);
-   np->height = box.height - (box.height % np->yinc);
+   /* If maximizing horizontally, update width. */
+   if(horiz) {
+      np->x = box.x;
+      np->width = box.width - (box.width % np->xinc);
+      np->state.status |= STAT_HMAX;
+   }
 
-   np->state.status |= STAT_MAXIMIZED;
+   /* If maximizing vertically, update height. */
+   if(vert) {
+      np->y = box.y;
+      np->height = box.height - (box.height % np->yinc);
+      np->state.status |= STAT_VMAX;
+   }
 
 }
 

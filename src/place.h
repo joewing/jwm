@@ -47,8 +47,10 @@ void PlaceClient(struct ClientNode *np, int alreadyMapped);
 
 /** Place a maximized client on the screen.
  * @param np The client to place.
+ * @param horiz Set if maximizing horizontally.
+ * @param vert Set if maximizing vertically.
  */
-void PlaceMaximizedClient(struct ClientNode *np);
+void PlaceMaximizedClient(struct ClientNode *np, int horiz, int vert);
 
 /** Move a client window for a border.
  * @param np The client.

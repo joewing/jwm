@@ -102,6 +102,7 @@ AC_DEFUN([JWM_PKGCONFIG],
 ])
 
 JWM_PKGCONFIG([use_pkgconfig_png], [libpng])
+JWM_PKGCONFIG([use_pkgconfig_jpeg], [libjpeg])
 JWM_PKGCONFIG([use_pkgconfig_xft], [xft])
 JWM_PKGCONFIG([use_pkgconfig_xrender], [xrender])
 JWM_PKGCONFIG([use_pkgconfig_fribidi], [fribidi])
@@ -154,6 +155,30 @@ if test "$enable_png" != "no" ; then
 		[ enable_png="no"
 		  AC_MSG_WARN([unable to use libpng, PNG support disabled]) ],
 		[ $PNG_LDFLAGS ])
+fi
+
+############################################################################
+# Check if JPEG support was requested and available.
+############################################################################
+AC_ARG_ENABLE(jpeg,
+   AC_HELP_STRING([--disable-jpeg], [don't support JPEG images]) )
+if test "$enable_jpeg" != "no" ; then
+   if test "$use_pkgconfig_jpeg" = "yes" ; then
+      JPEG_CFLAGS=`$PKGCONFIG --cflags libjpeg`
+      JPEG_LDFLAGS=`$PKGCONFIG --libs libjpeg`
+   else
+      JPEG_LDFLAGS="-ljpeg"
+   fi
+fi
+if test "$enable_jpeg" != "no" ; then
+   AC_CHECK_LIB(jpeg, jpeg_start_decompress,
+      [ LDFLAGS="$LDFLAGS $JPEG_LDFLAGS"
+        CFLAGS="$CFLAGS $JPEG_CFLAGS"
+        enable_jpeg="yes"
+        AC_DEFINE(USE_JPEG, 1, [Define to use libjpeg]) ],
+      [ enable_jpeg="no"
+        AC_MSG_WARN([unable to use libjpeg, JPEG support disabled]) ],
+      [ $JPEG_LDFLAGS ])
 fi
 
 ############################################################################
@@ -371,6 +396,7 @@ echo
 echo "    Confirm:  $enable_confirm"
 echo "    Icon:     $enable_icons"
 echo "    PNG:      $enable_png"
+echo "    JPEG:     $enable_jpeg"
 echo "    XPM:      $enable_xpm"
 echo "    XFT:      $enable_xft"
 echo "    XRender:  $enable_xrender"

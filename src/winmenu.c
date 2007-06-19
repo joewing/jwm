@@ -107,7 +107,16 @@ Menu *CreateWindowMenu() {
    if((client->state.border & BORDER_MAX)
       && (client->state.status & STAT_MAPPED)) {
 
+      if(!(client->state.status & (STAT_HMAX | STAT_VMAX))) {
+         AddWindowMenuItem(menu, "Maximize-y", MA_MAXIMIZE_V, 0);
+      }
+
+      if(!(client->state.status & (STAT_HMAX | STAT_VMAX))) {
+         AddWindowMenuItem(menu, "Maximize-x", MA_MAXIMIZE_H, 0);
+      }
+
       AddWindowMenuItem(menu, "Maximize", MA_MAXIMIZE, 0);
+
    }
 
    if(!(client->state.status & STAT_WMDIALOG)) {
@@ -280,7 +289,13 @@ void RunWindowCommand(const MenuAction *action) {
       }
       break;
    case MA_MAXIMIZE:
-      MaximizeClient(client);
+      MaximizeClient(client, 1, 1);
+      break;
+   case MA_MAXIMIZE_H:
+      MaximizeClient(client, 1, 0);
+      break;
+   case MA_MAXIMIZE_V:
+      MaximizeClient(client, 0, 1);
       break;
    case MA_MINIMIZE:
       MinimizeClient(client);

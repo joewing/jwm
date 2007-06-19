@@ -198,8 +198,8 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 
          if(lastgheight != gheight || lastgwidth != gwidth) {
 
-            if(np->state.status & STAT_MAXIMIZED) {
-               np->state.status &= ~STAT_MAXIMIZED;
+            if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
+               np->state.status &= ~(STAT_HMAX | STAT_VMAX);
                WriteState(np);
                SendConfigureEvent(np);
             }
@@ -366,8 +366,8 @@ void ResizeClientKeyboard(ClientNode *np) {
 
       if(lastgwidth != gwidth || lastgheight != gheight) {
 
-         if(np->state.status & STAT_MAXIMIZED) {
-            np->state.status &= ~STAT_MAXIMIZED;
+         if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
+            np->state.status &= ~(STAT_HMAX | STAT_VMAX);
             WriteState(np);
             SendConfigureEvent(np);
          }

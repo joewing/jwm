@@ -61,12 +61,6 @@
 #      include <X11/keysym.h>
 #   endif
 
-#   ifdef USE_XPM
-#      include <X11/xpm.h>
-#   endif
-#   ifdef USE_PNG
-#      include <png.h>
-#   endif
 #   ifdef USE_SHAPE
 #      include <X11/extensions/shape.h>
 #   endif
@@ -90,6 +84,8 @@
 #endif /* MAKE_DEPEND */
 
 #define MAX_DESKTOP_COUNT 8
+#define MIN_DESKTOP_COUNT 1
+#define DEFAULT_DESKTOP_COUNT 4
 
 #define MAX_INCLUDE_DEPTH 16
 
@@ -122,8 +118,6 @@
 #define SHELL_NAME "/bin/sh"
 
 #define DEFAULT_MENU_TITLE "JWM"
-
-#define DEFAULT_DESKTOP_COUNT 4
 
 #include "debug.h"
 #include "jxlib.h"

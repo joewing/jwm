@@ -52,7 +52,7 @@ static void ProcessPagerButtonEvent(TrayComponentType *cp,
 static void StartPagerMove(TrayComponentType *cp, int x, int y);
 
 static void StopPagerMove(ClientNode *np,
-   int x, int y, int desktop, int wasMaximized);
+   int x, int y, int desktop, int hmax, int vmax);
 
 static void PagerMoveController(int wasDestroyed);
 
@@ -232,7 +232,7 @@ void StartPagerMove(TrayComponentType *cp, int x, int y) {
    int oldx, oldy;
    int oldDesk;
    int startx, starty;
-   int wasMaximized;
+   int hmax, vmax;
 
    pp = (PagerType*)cp->object;
 
@@ -320,10 +320,16 @@ ClientFound:
    }
 
    /* If the client is maximized, unmaximize it. */
-   wasMaximized = 0;
-   if(np->state.status & STAT_MAXIMIZED) {
-      MaximizeClient(np);
-      wasMaximized = 1;
+   hmax = 0;
+   if(np->state.status & STAT_HMAX) {
+      hmax = 1;
+   }
+   vmax = 0;
+   if(np->state.status & STAT_VMAX) {
+      vmax = 1;
+   }
+   if(hmax || vmax) {
+      MaximizeClient(np, 0, 0);
    }
 
    GetBorderSize(np, &north, &south, &east, &west);
@@ -342,7 +348,7 @@ ClientFound:
    starty = y;
 
    if(!(GetMouseMask() & Button3Mask)) {
-      StopPagerMove(np, oldx, oldy, oldDesk, wasMaximized);
+      StopPagerMove(np, oldx, oldy, oldDesk, hmax, vmax);
    }
 
    for(;;) {
@@ -359,7 +365,7 @@ ClientFound:
 
          /* Done when the 3rd mouse button is released. */
          if(event.xbutton.button == Button3) {
-            StopPagerMove(np, oldx, oldy, oldDesk, wasMaximized);
+            StopPagerMove(np, oldx, oldy, oldDesk, hmax, vmax);
             return;
          }
          break;
@@ -424,7 +430,7 @@ ClientFound:
 
 /** Stop an active pager move. */
 void StopPagerMove(ClientNode *np,
-   int x, int y, int desktop, int wasMaximized) {
+   int x, int y, int desktop, int hmax, int vmax) {
 
    int north, south, east, west;
 
@@ -442,8 +448,8 @@ void StopPagerMove(ClientNode *np,
    SendConfigureEvent(np);
 
    /* Restore the maximized state of the client. */
-   if(wasMaximized) {
-      MaximizeClient(np);
+   if(hmax || vmax) {
+      MaximizeClient(np, hmax, vmax);
    }
 
    /* Redraw the pager. */

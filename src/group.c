@@ -275,7 +275,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
          np->state.status |= STAT_PIGNORE;
          break;
       case OPTION_MAXIMIZED:
-         np->state.status |= STAT_MAXIMIZED;
+         np->state.status |= STAT_HMAX | STAT_VMAX;
          break;
       case OPTION_MINIMIZED:
          np->state.status |= STAT_MINIMIZED;

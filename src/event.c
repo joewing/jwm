@@ -395,7 +395,7 @@ void HandleKeyPress(const XKeyEvent *event) {
       break;
    case KEY_MAX:
       if(np) {
-         MaximizeClient(np);
+         MaximizeClient(np, 1, 1);
       }
       break;
    case KEY_ROOT:
@@ -488,9 +488,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
 
       ConstrainSize(np);
 
-      if(np->state.status & STAT_MAXIMIZED) {
-         np->state.status &= ~STAT_MAXIMIZED;
-      }
+      np->state.status &= ~(STAT_HMAX | STAT_VMAX);
 
       wc.x = np->x;
       wc.y = np->y;
@@ -831,14 +829,16 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np) {
 /** Handle a _NET_WM_STATE request. */
 void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
 
-   int actionMaximize;
+   int actionMaxH;
+   int actionMaxV;
    int actionStick;
    int actionShade;
    int actionFullScreen;
    int x;
 
    /* Up to two actions to be applied together, figure it out. */
-   actionMaximize = 0;
+   actionMaxH = 0;
+   actionMaxV = 0;
    actionStick = 0;
    actionShade = 0;
    actionFullScreen = 0;
@@ -849,10 +849,10 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
          actionStick = 1;
       } else if(event->data.l[x]
          == (long)atoms[ATOM_NET_WM_STATE_MAXIMIZED_VERT]) {
-         actionMaximize = 1;
+         actionMaxV = 1;
       } else if(event->data.l[x]
          == (long)atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ]) {
-         actionMaximize = 1;
+         actionMaxH = 1;
       } else if(event->data.l[x]
          == (long)atoms[ATOM_NET_WM_STATE_SHADED]) {
          actionShade = 1;
@@ -867,8 +867,10 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
       if(actionStick) {
          SetClientSticky(np, 0);
       }
-      if(actionMaximize && (np->state.status & STAT_MAXIMIZED)) {
-         MaximizeClient(np);
+      if(actionMaxH || actionMaxV) {
+         if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
+            MaximizeClient(np, 0, 0);
+         }
       }
       if(actionShade) {
          UnshadeClient(np);
@@ -881,8 +883,8 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
       if(actionStick) {
          SetClientSticky(np, 1);
       }
-      if(actionMaximize && !(np->state.status & STAT_MAXIMIZED)) {
-         MaximizeClient(np);
+      if(!(np->state.status & (STAT_HMAX | STAT_VMAX))) {
+         MaximizeClient(np, actionMaxH, actionMaxV);
       }
       if(actionShade) {
          ShadeClient(np);
@@ -899,8 +901,8 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
             SetClientSticky(np, 1);
          }
       }
-      if(actionMaximize) {
-         MaximizeClient(np);
+      if(actionMaxH || actionMaxV) {
+         MaximizeClient(np, actionMaxH, actionMaxV);
       }
       if(actionShade) {
          if(np->state.status & STAT_SHADED) {
@@ -1107,7 +1109,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
             && abs(event->time - lastClickTime) <= doubleClickSpeed
             && abs(event->x - lastX) <= doubleClickDelta
             && abs(event->y - lastY) <= doubleClickDelta) {
-            MaximizeClient(np);
+            MaximizeClient(np, 1, 1);
             doubleClickActive = 0;
          } else {
             if(MoveClient(np, event->x, event->y)) {
@@ -1139,7 +1141,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
       break;
    case BA_MAXIMIZE:
       if(event->type == ButtonRelease) {
-         MaximizeClient(np);
+         MaximizeClient(np, 1, 1);
       }
       break;
    case BA_MINIMIZE:

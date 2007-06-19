@@ -208,9 +208,12 @@ void SetDesktopCount(const char *str) {
    }
 
    desktopCount = atoi(str);
-   if(desktopCount <= 0 || desktopCount > MAX_DESKTOP_COUNT) {
+   if(   desktopCount < MIN_DESKTOP_COUNT
+      || desktopCount > MAX_DESKTOP_COUNT) {
+
       Warning("invalid desktop count: \"%s\"", str);
       desktopCount = DEFAULT_DESKTOP_COUNT;
+
    }
 
 }

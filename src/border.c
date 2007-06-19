@@ -525,7 +525,7 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
       JXSetForeground(display, gc, outlineColor);
       JXDrawLine(display, canvas, gc, offset, 0, offset, titleHeight);
 
-      if(np->state.status & STAT_MAXIMIZED) {
+      if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
          pixmap = pixmaps[BP_MAXIMIZE_ACTIVE];
       } else {
          pixmap = pixmaps[BP_MAXIMIZE];

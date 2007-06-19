@@ -1,7 +1,7 @@
 /**
  * @file image.c
  * @author Joe Wingbermuehle
- * @date 2005-2006
+ * @date 2005-2007
  *
  * @brief Functions to load images.
  *
@@ -10,9 +10,9 @@
 #include "jwm.h"
 
 #ifndef MAKE_DEPEND
-#  ifdef USE_PNG
-#     include <png.h>
-#  endif
+
+   /* We should include png.h here. See jwm.h for an explanation. */
+
 #  ifdef USE_XPM
 #     include <X11/xpm.h>
 #  endif

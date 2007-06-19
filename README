@@ -6,13 +6,14 @@ To build JWM you will need a C compiler (gcc works), X11, and the
 "development headers" for X11 and Xlib.
 If available and not disabled at compile time, JWM will also use
 the following libraries:
-	libfribidi for bi-directional text support.
-	libXext for the shape extension.
-	libXext for the render extension.
-	libXinerama for multiple head support.
-	libXpm for XPM icons.
-	libpng for PNG icons.
-	libxft for antialiased and true type fonts.
+   libfribidi for bi-directional text support.
+   libjpeg for JPEG icons and backgrounds.
+   libpng for PNG icons and backgrounds.
+   libXext for the shape extension.
+   libXext for the render extension.
+   libxft for antialiased and true type fonts.
+   libXinerama for multiple head support.
+   libXpm for XPM icons and backgrounds.
 
 > Installation
 Run "./configure --help" for configuration options.

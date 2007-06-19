@@ -19,6 +19,16 @@
 #   include <ctype.h>
 #   include <limits.h>
 
+   /* Ideally png.h would be included in image.c, which is the only
+    * file that references it. Unfortunately, if setjmp.h is included
+    * before png.h, png.h will complain about only including setjmp.h
+    * once. The X headers apparently include setjmp.h, so I don't have
+    * any control over the situation. Fortunately png.h can't complain
+    * if it was included first. */
+#  ifdef USE_PNG
+#     include <png.h>
+#  endif
+
 #   ifdef HAVE_STDARG_H
 #      include <stdarg.h>
 #   endif

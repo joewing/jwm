@@ -32,18 +32,19 @@ typedef enum {
 typedef struct ModifierNode {
    char name;
    MaskType mask;
-   KeySym symbol;
+   KeySym symbol1;
+   KeySym symbol2;
 } ModifierNode;
 
 static ModifierNode modifiers[] = {
 
-   { 'A',   MASK_ALT,   XK_Alt_L       },
-   { 'C',   MASK_CTRL,  XK_Control_L   },
-   { 'S',   MASK_SHIFT, XK_Shift_L     },
-   { 'H',   MASK_HYPER, XK_Hyper_L     },
-   { 'M',   MASK_META,  XK_Meta_L      },
-   { 'P',   MASK_SUPER, XK_Super_L     },
-   { 0,     MASK_NONE,  XK_Shift_L     }
+   { 'A',   MASK_ALT,   XK_Alt_L,      XK_Alt_R       },
+   { 'C',   MASK_CTRL,  XK_Control_L,  XK_Control_R   },
+   { 'S',   MASK_SHIFT, XK_Shift_L,    XK_Shift_R     },
+   { 'H',   MASK_HYPER, XK_Hyper_L,    XK_Hyper_R     },
+   { 'M',   MASK_META,  XK_Meta_L,     XK_Meta_R      },
+   { 'P',   MASK_SUPER, XK_Super_L,    XK_Super_R     },
+   { 0,     MASK_NONE,  XK_Shift_L,    XK_Shift_R     }
 
 };
 
@@ -81,7 +82,7 @@ static unsigned int modifierMask;
 
 static unsigned int GetModifierMask(KeySym key);
 static unsigned int ParseModifierString(const char *str);
-static KeySym GetKeyFromModifier(const char *str);
+static ModifierNode *GetKeyFromModifier(const char *str);
 static KeySym ParseKeyString(const char *str);
 static int ShouldGrab(KeyType key);
 static void GrabKey(KeyNode *np);
@@ -359,25 +360,25 @@ unsigned int ParseModifierString(const char *str) {
 }
 
 /** Get the key from a modifier character. */
-KeySym GetKeyFromModifier(const char *str) {
+ModifierNode *GetKeyFromModifier(const char *str) {
 
    int x, y;
 
    if(str == NULL) {
-      return 0;
+      return NULL;
    }
 
    for(x = 0; str[x]; x++) {
 
       for(y = 0; modifiers[y].name; y++) {
          if(modifiers[y].name == str[x]) {
-            return modifiers[y].symbol;
+            return &modifiers[y];
          }
       }
 
    }
 
-   return 0;
+   return NULL;
 
 }
 
@@ -400,6 +401,7 @@ void InsertBinding(KeyType key, const char *modifiers,
    const char *stroke, const char *code, const char *command) {
 
    KeyNode *np;
+   ModifierNode *mp;
    unsigned int mask;
    char *temp;
    int offset;
@@ -482,22 +484,36 @@ void InsertBinding(KeyType key, const char *modifiers,
     */
    if(np != NULL && key == KEY_NEXTSTACK) {
 
-      if(GetKeyFromModifier(modifiers) == 0) {
+      mp = GetKeyFromModifier(modifiers);
+      if(!mp) {
 
          Warning("no valid modifier specified for \"nextstacked\"");
          np->key = KEY_NEXT;
 
       } else {
 
+         /* Create a node for the first modifier. */
          np = Allocate(sizeof(KeyNode));
          np->next = bindings;
          bindings = np;
 
          np->key = KEY_NEXTSTACK_END;
          np->mask = 0;
-         np->symbol = GetKeyFromModifier(modifiers);
+         np->symbol = mp->symbol1;
          np->command = NULL;
          np->code = 0;
+
+         /* Create a node for the second modifier. */
+         np = Allocate(sizeof(KeyNode));
+         np->next = bindings;
+         bindings = np;
+
+         np->key = KEY_NEXTSTACK_END;
+         np->mask = 0;
+         np->symbol = mp->symbol2;
+         np->command = NULL;
+         np->code = 0;
+
 
       }
 

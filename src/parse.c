@@ -39,11 +39,13 @@
 #include "status.h"
 #include "background.h"
 
+/** Structure to map key names to key types. */
 typedef struct KeyMapType {
-   char *name;
+   const char *name;
    KeyType key;
 } KeyMapType;
 
+/** Mapping of key names to key types. */
 static const KeyMapType KEY_MAP[] = {
    { "up",          KEY_UP           },
    { "down",        KEY_DOWN         },
@@ -65,6 +67,28 @@ static const KeyMapType KEY_MAP[] = {
    { "desktop",     KEY_DESKTOP      },
    { "desktop#",    KEY_DESKTOP      },
    { NULL,          KEY_NONE         }
+};
+
+/** Structure to map names to group options. */
+typedef struct OptionMapType {
+   const char *name;
+   OptionType option;
+} OptionMapType;
+
+/** Mapping of names to group options. */
+static const OptionMapType OPTION_MAP[] = {
+   { "sticky",       OPTION_STICKY     },
+   { "nolist",       OPTION_NOLIST     },
+   { "border",       OPTION_BORDER     },
+   { "noborder",     OPTION_NOBORDER   },
+   { "title",        OPTION_TITLE      },
+   { "notitle",      OPTION_NOTITLE    },
+   { "pignore",      OPTION_PIGNORE    },
+   { "maximized",    OPTION_MAXIMIZED  },
+   { "minimized",    OPTION_MINIMIZED  },
+   { "hmax",         OPTION_MAX_H      },
+   { "vmax",         OPTION_MAX_V      },
+   { NULL,           OPTION_INVALID    }
 };
 
 static const char *DEFAULT_TITLE = "JWM";
@@ -1491,35 +1515,21 @@ void ParseGroup(const TokenNode *tp) {
 void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
    const char *option) {
 
+   int x;
+
    if(!option) {
       return;
    }
 
-   if(!strcmp(option, "sticky")) {
-      AddGroupOption(group, OPTION_STICKY);
-   } else if(!strcmp(option, "nolist")) {
-      AddGroupOption(group, OPTION_NOLIST);
-   } else if(!strcmp(option, "border")) {
-      AddGroupOption(group, OPTION_BORDER);
-   } else if(!strcmp(option, "noborder")) {
-      AddGroupOption(group, OPTION_NOBORDER);
-   } else if(!strcmp(option, "title")) {
-      AddGroupOption(group, OPTION_TITLE);
-   } else if(!strcmp(option, "notitle")) {
-      AddGroupOption(group, OPTION_NOTITLE);
-   } else if(!strcmp(option, "pignore")) {
-      AddGroupOption(group, OPTION_PIGNORE);
-   } else if(!strcmp(option, "maximized")) {
-      AddGroupOption(group, OPTION_MAXIMIZED);
-   } else if(!strcmp(option, "minimized")) {
-      AddGroupOption(group, OPTION_MINIMIZED);
-   } else if(!strcmp(option, "shaded")) {
-      AddGroupOption(group, OPTION_SHADED);
-   } else if(!strcmp(option, "hmax")) {
-      AddGroupOption(group, OPTION_MAX_H);
-   } else if(!strcmp(option, "vmax")) {
-      AddGroupOption(group, OPTION_MAX_V);
-   } else if(!strncmp(option, "layer:", 6)) {
+   for(x = 0; OPTION_MAP[x].name; x++) {
+      if(!strcmp(option, OPTION_MAP[x].name)) {
+         AddGroupOption(group, OPTION_MAP[x].option);
+         return;
+      }
+   }
+
+   /* These options have arguments and so we handled them separately. */
+   if(!strncmp(option, "layer:", 6)) {
       AddGroupOptionValue(group, OPTION_LAYER, option + 6);
    } else if(!strncmp(option, "desktop:", 8)) {
       AddGroupOptionValue(group, OPTION_DESKTOP, option + 8);

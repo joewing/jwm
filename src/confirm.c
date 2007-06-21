@@ -358,6 +358,7 @@ void ComputeDimensions(DialogType *dp) {
 
    Assert(dp);
 
+   /* Get the min width from the size of the buttons. */
    if(!minWidth) {
       minWidth = GetStringWidth(FONT_MENU, CANCEL_STRING) * 3;
       width = GetStringWidth(FONT_MENU, OK_STRING) * 3;
@@ -368,6 +369,7 @@ void ComputeDimensions(DialogType *dp) {
    }
    dp->width = minWidth;
 
+   /* Take into account the size of the message. */
    for(x = 0; x < dp->lineCount; x++) {
       width = GetStringWidth(FONT_MENU, dp->message[x]);
       if(width > dp->width) {
@@ -437,7 +439,7 @@ void DrawButtons(DialogType *dp) {
    if(temp > dp->buttonWidth) {
       dp->buttonWidth = temp;
    }
-   dp->buttonWidth += 8;
+   dp->buttonWidth += 10;
    dp->buttonHeight = dp->lineHeight + 4;
 
    ResetButton(&button, dp->node->window, rootGC);

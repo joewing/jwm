@@ -210,7 +210,7 @@ void ApplyGroups(ClientNode *np) {
                break;
             }
          } else if(lp->match == MATCH_NAME) {
-            if(Match(lp->pattern, np->name)) {
+            if(Match(lp->pattern, np->instanceName)) {
                ApplyGroup(gp, np);
                break;
             }

@@ -283,6 +283,12 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
       case OPTION_SHADED:
          np->state.status |= STAT_SHADED;
          break;
+      case OPTION_MAX_V:
+         np->state.border &= ~BORDER_MAX_H;
+         break;
+      case OPTION_MAX_H:
+         np->state.border &= ~BORDER_MAX_V;
+         break;
       default:
          Debug("invalid option: %d", lp->option);
          break;

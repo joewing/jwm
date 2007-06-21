@@ -614,6 +614,16 @@ The layer on which windows in this group will be started.
 Make windows in this group initially maximized.
 .RE
 .P
+.B hmax
+.RS
+Make windows in this group maximize horizontally.
+.RE
+.P
+.B vmax
+.RS
+Make windows in this group maximize vertically.
+.RE
+.P
 .B minimized
 .RS
 Make windows in this group initially minimized.

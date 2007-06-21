@@ -1515,6 +1515,10 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
       AddGroupOption(group, OPTION_MINIMIZED);
    } else if(!strcmp(option, "shaded")) {
       AddGroupOption(group, OPTION_SHADED);
+   } else if(!strcmp(option, "hmax")) {
+      AddGroupOption(group, OPTION_MAX_H);
+   } else if(!strcmp(option, "vmax")) {
+      AddGroupOption(group, OPTION_MAX_V);
    } else if(!strncmp(option, "layer:", 6)) {
       AddGroupOptionValue(group, OPTION_LAYER, option + 6);
    } else if(!strncmp(option, "desktop:", 8)) {

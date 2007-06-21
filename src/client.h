@@ -16,24 +16,28 @@
 /** Window border flags. */
 typedef enum {
    BORDER_NONE    = 0,
-   BORDER_OUTLINE = 1,  /**< Window has a border. */
-   BORDER_TITLE   = 2,  /**< Window has a title bar. */
-   BORDER_MIN     = 4,  /**< Window supports minimize. */
-   BORDER_MAX     = 8,  /**< Window supports maximize. */
-   BORDER_CLOSE   = 16, /**< Window supports close. */
-   BORDER_RESIZE  = 32, /**< Window supports resizing. */
-   BORDER_MOVE    = 64  /**< Window supports moving. */
+   BORDER_OUTLINE = 1 << 0,   /**< Window has a border. */
+   BORDER_TITLE   = 1 << 1,   /**< Window has a title bar. */
+   BORDER_MIN     = 1 << 2,   /**< Window supports minimize. */
+   BORDER_MAX     = 1 << 3,   /**< Window supports maximize. */
+   BORDER_CLOSE   = 1 << 4,   /**< Window supports close. */
+   BORDER_RESIZE  = 1 << 5,   /**< Window supports resizing. */
+   BORDER_MOVE    = 1 << 6,   /**< Window supports moving. */
+   BORDER_MAX_V   = 1 << 7,   /**< Maximize vertically. */
+   BORDER_MAX_H   = 1 << 8    /**< Maximize horizontally. */
 } BorderFlags;
 
 /** The default border flags. */
 #define BORDER_DEFAULT ( \
-        BORDER_OUTLINE \
-      | BORDER_TITLE   \
-      | BORDER_MIN     \
-      | BORDER_MAX     \
-      | BORDER_CLOSE   \
-      | BORDER_RESIZE  \
-      | BORDER_MOVE    )
+        BORDER_OUTLINE  \
+      | BORDER_TITLE    \
+      | BORDER_MIN      \
+      | BORDER_MAX      \
+      | BORDER_CLOSE    \
+      | BORDER_RESIZE   \
+      | BORDER_MOVE     \
+      | BORDER_MAX_V    \
+      | BORDER_MAX_H    )
 
 /** Window status flags. */
 typedef enum {

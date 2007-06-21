@@ -1093,6 +1093,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
    static int doubleClickActive = 0;
    BorderActionType action;
    int bsize;
+   int vmax, hmax;
 
    action = GetBorderActionType(np, event->x, event->y);
 
@@ -1141,7 +1142,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
       break;
    case BA_MAXIMIZE:
       if(event->type == ButtonRelease) {
-         MaximizeClient(np, 1, 1);
+         hmax = (np->state.border & BORDER_MAX_H) ? 1 : 0;
+         vmax = (np->state.border & BORDER_MAX_V) ? 1 : 0;
+         MaximizeClient(np, hmax, vmax);
       }
       break;
    case BA_MINIMIZE:

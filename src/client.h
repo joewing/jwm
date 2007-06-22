@@ -192,6 +192,11 @@ void RestoreClient(ClientNode *np, int raise);
  */
 void MaximizeClient(ClientNode *np, int horiz, int vert);
 
+/** Maximize a client using the default maximize settings.
+ * @param np The client to maximize.
+ */
+void MaximizeClientDefault(ClientNode *np);
+
 /** Set the full screen status of a client.
  * @param np The client.
  * @param fullScreen 1 to make full screen, 0 to make not full screen.

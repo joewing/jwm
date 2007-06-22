@@ -228,15 +228,9 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
    }
 
    /* Maximize the client if requested. */
-   if(   (np->state.status & STAT_HMAX) && (np->state.status & STAT_VMAX)) {
+   if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
       np->state.status &= ~(STAT_HMAX | STAT_VMAX);
-      MaximizeClient(np, 1, 1);
-   } else if(np->state.status & STAT_HMAX) {
-      np->state.status &= ~STAT_HMAX;
-      MaximizeClient(np, 1, 0);
-   } else if(np->state.status & STAT_VMAX) {
-      np->state.status &= ~STAT_VMAX;
-      MaximizeClient(np, 0, 1);
+      MaximizeClientDefault(np);
    }
 
    /* Make sure we're still in sync */
@@ -688,6 +682,20 @@ void MaximizeClient(ClientNode *np, int horiz, int vert) {
 
    WriteState(np);
    SendConfigureEvent(np);
+
+}
+
+/** Maximize a client using its default maximize settings. */
+void MaximizeClientDefault(ClientNode *np) {
+
+   int hmax, vmax;
+
+   Assert(np);
+
+   hmax = (np->state.border & BORDER_MAX_H) ? 1 : 0;
+   vmax = (np->state.border & BORDER_MAX_V) ? 1 : 0;
+
+   MaximizeClient(np, hmax, vmax);
 
 }
 

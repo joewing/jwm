@@ -2,11 +2,10 @@
 
 <JWM>
 
-
-
    <!-- The root menu, if this is undefined you will not get a menu. -->
    <!-- Additional RootMenu attributes: onroot, labeled, label -->
    <RootMenu height="32" onroot="1">
+
       <Program icon="rxvt.png" label="Terminal">xterm</Program>
 
       <Menu icon="folder.png" label="Applications">
@@ -47,10 +46,9 @@
    <!-- Additional tray attributes: autohide, width, border, layer, layout -->
    <Tray  x="0" y="-1" height="32">
 
-      <!-- Additional TrayButton attribute: label -->
       <TrayButton label="JWM">root:1</TrayButton>
 
-      <!-- Additional Pager attributes; width, height -->
+      <!-- Additional Pager attributes: width, height -->
       <Pager/>
 
       <!-- Additional TaskList attribute: maxwidth -->
@@ -60,7 +58,9 @@
       <Swallow name="xload" width="64">
          xload -nolabel -bg black -fg red -hl white
       </Swallow>
+
       <Clock>xclock</Clock>
+
    </Tray>
 
    <!-- Visual Styles -->
@@ -125,20 +125,28 @@
       <Background>yellow</Background>
    </PopupStyle>
 
+   <!-- Path to icons. This tag can be repeated as many times as needed. -->
    <IconPath>
       $HOME/.icons
    </IconPath>
-   <IconPath>
-      $HOME/.icons/bah
-   </IconPath>
-
-   <StartupCommand>
-      xli -fillscreen -onroot /export0/images/formulae.jpg
-   </StartupCommand>
 
    <!-- Virtual Desktops -->
-   <!-- Name tags can be contained within Desktops for desktop names. -->
-   <Desktops count="4"/>
+   <!-- Desktop tags can be contained within Desktops for desktop names. -->
+   <Desktops count="4">
+
+      <!-- Default background. -->
+      <Background type="image">/export0/images/formulae.jpg</Background>
+
+      <!-- Named desktop with a specific background. -->
+      <Desktop name="One">
+         <Background type="image">/export0/images/formulae.jpg</Background>
+      </Desktop>
+
+      <Desktop name="Two"/>
+      <Desktop name="Three"/>
+      <Desktop name="Four"/>
+
+   </Desktops>
 
    <!-- Double click speed (in milliseconds) -->
    <DoubleClickSpeed>400</DoubleClickSpeed>
@@ -170,7 +178,7 @@
    <Key key="Return">select</Key>
    <Key key="Escape">escape</Key>
 
-   <Key mask="A" key="Tab">next</Key>
+   <Key mask="A" key="Tab">nextstacked</Key>
    <Key mask="A" key="F4">close</Key>
    <Key mask="A" key="#">desktop#</Key>
    <Key mask="A" key="F1">root:1</Key>

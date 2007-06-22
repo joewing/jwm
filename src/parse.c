@@ -948,6 +948,7 @@ void ParseDesktops(const TokenNode *tp) {
    TokenNode *np;
    char *attr;
    int x;
+   int desktop;
 
    Assert(tp);
 
@@ -958,9 +959,9 @@ void ParseDesktops(const TokenNode *tp) {
       desktopCount = DEFAULT_DESKTOP_COUNT;
    }
 
-   x = 0;
+   desktop = 0;
    for(x = 0, np = tp->subnodeHead; np; np = np->next, x++) {
-      if(x >= desktopCount) {
+      if(desktop >= desktopCount) {
          break;
       }
       switch(np->type) {
@@ -968,7 +969,8 @@ void ParseDesktops(const TokenNode *tp) {
          ParseDesktopBackground(-1, np);
          break;
       case TOK_DESKTOP:
-         ParseDesktop(x, np);
+         ParseDesktop(desktop, np);
+         ++desktop;
          break;
       default:
          InvalidTag(np, TOK_DESKTOPS);

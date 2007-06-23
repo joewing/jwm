@@ -269,6 +269,13 @@ void LoadIcon(ClientNode *np) {
          }
 #endif
 
+#ifdef USE_JPEG
+         np->icon = LoadSuffixedIcon(ip->path, np->instanceName, ".jpg");
+         if(np->icon) {
+            return;
+         }
+#endif
+
       }
    }
 

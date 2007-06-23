@@ -599,7 +599,7 @@ Causes windows in this group to have a border.
 The desktop on which windows in this group will be started.
 .RE
 .P
-\fBicon:\fP\fIimage.xpm\fP
+\fBicon:\fP\fIstring\fP
 .RS
 The icon to be used for windows in this group.
 .RE
@@ -977,11 +977,11 @@ If an icon is not specified for any menu item in a menu, no space will be
 allocated for icons.
 .P
 Zero or more \fBIconPath\fP tags may be specified. The text of this tag is
-assumed to be an absolute directory path to a directory containing XPM 
-and/or PNG icons.
+assumed to be an absolute directory path to a directory containing XPM,
+PNG, and/or JPEG icons.
 When searching for icons, if multiple paths are provided, they will be
 searched in order until a match is made.
-Note that icon, PNG, and XPM support are compile-time options.
+Note that icon, PNG, JPEG, and XPM support are compile-time options.
 .RE
 
 .B "KEY BINDINGS"
@@ -1124,8 +1124,8 @@ A gradient color. See the \fBCOLORS\fP section for more information.
 .RE
 .B image
 .RS
-A stretched image. This may be either an XPM or PNG image. Note that support
-for XPM and/or PNG images must be compiled in and icon support is required.
+A stretched image. This may be an XPM, PNG, or JPEG image. Note that support
+for XPM, PNG, and JPEG images must be compiled in and icon support is required.
 .RE
 .B tile
 .RS

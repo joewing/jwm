@@ -4,10 +4,7 @@
 
    <!-- The root menu, if this is undefined you will not get a menu. -->
    <!-- Additional RootMenu attributes: onroot, labeled, label -->
-   <RootMenu onroot="3">
-      <Menu label="bah"><Include>exec:jmg/jmg</Include></Menu>
-   </RootMenu>
-   <RootMenu height="32" onroot="1">
+   <RootMenu height="32" onroot="123">
       <Program icon="rxvt.png" label="Terminal">rxvt</Program>
 
       <Menu icon="folder.png" label="Applications">

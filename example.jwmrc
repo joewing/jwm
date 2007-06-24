@@ -4,21 +4,23 @@
 
    <!-- The root menu, if this is undefined you will not get a menu. -->
    <!-- Additional RootMenu attributes: onroot, labeled, label -->
+   <RootMenu onroot="3">
+      <Menu label="bah"><Include>exec:jmg/jmg</Include></Menu>
+   </RootMenu>
    <RootMenu height="32" onroot="1">
-
-      <Program icon="rxvt.png" label="Terminal">xterm</Program>
+      <Program icon="rxvt.png" label="Terminal">rxvt</Program>
 
       <Menu icon="folder.png" label="Applications">
+         <Program icon="audacious.png" label="Audacious">audacious</Program>
          <Program icon="dia.png" label="Dia">dia</Program>
          <Program icon="firefox.png" label="Firefox">firefox</Program>
-         <Program icon="gaim.png" label="Gaim">gaim</Program>
-         <Program icon="gftp.png" label="gFTP">gftp</Program>
+         <Program icon="pidgin.png" label="Pidgin">pidgin</Program>
          <Program icon="gimp.png" label="Gimp">gimp</Program>
          <Program icon="gtk-gnutella.png" label="gtk-gnutella">
             gtk-gnutella
          </Program>
          <Program icon="gxine.png" label="gxine">gxine</Program>
-         <Program icon="xmms.xpm" label="XMMS">xmms</Program>
+         <Program icon="ooffice.png" label="Open Office">ooffice</Program>
       </Menu>
       <Menu icon="folder.png" label="Utilities">
          <Program icon="xcalc.png">xcalc</Program>
@@ -34,25 +36,35 @@
    </RootMenu>
 
    <Group>
-      <Class>Gaim</Class>
+      <Class>Pidgin</Class>
       <Option>sticky</Option>
    </Group>
 
    <Group>
-      <Class>xmms</Class>
-      <Option>icon:xmms.xpm</Option>
+      <Name>gkrellm2</Name>
+      <Option>nolist</Option>
+   </Group>
+
+   <Group>
+      <Name>rxvt</Name>
+      <Option>vmax</Option>
    </Group>
 
    <!-- Additional tray attributes: autohide, width, border, layer, layout -->
    <Tray  x="0" y="-1" height="32">
 
+      <!-- Additional TrayButton attribute: label -->
       <TrayButton label="JWM">root:1</TrayButton>
 
-      <!-- Additional Pager attributes: width, height -->
+      <TrayButton label="_">showdesktop</TrayButton>
+
+      <!-- Additional Pager attributes; width, height -->
       <Pager/>
 
       <!-- Additional TaskList attribute: maxwidth -->
       <TaskList/>
+
+      <Dock/>
 
       <!-- Additional Swallow attribute: height -->
       <Swallow name="xload" width="64">
@@ -73,14 +85,14 @@
 
       <Active>
          <Text>white</Text>
-         <Title>#444499:#222266</Title>
-         <Corner>#e5e5e5</Corner>
+         <Title>#70849d:#2e3a67</Title>
+         <Corner>white</Corner>
          <Outline>black</Outline>
       </Active>
 
       <Inactive>
-         <Text>white</Text>
-         <Title>#666666:#969696</Title>
+         <Text>#aaaaaa</Text>
+         <Title>#808488:#303438</Title>
          <Corner>#aaaaaa</Corner>
          <Outline>black</Outline>
       </Inactive>
@@ -105,9 +117,9 @@
    <PagerStyle>
       <Outline>black</Outline>
       <Foreground>gray90</Foreground>
-      <Background>#969696</Background>
-      <ActiveForeground>#222277</ActiveForeground>
-      <ActiveBackground>#444499</ActiveBackground>
+      <Background>#808488</Background>
+      <ActiveForeground>#70849d</ActiveForeground>
+      <ActiveBackground>#2e3a67</ActiveBackground>
    </PagerStyle>
 
    <MenuStyle>
@@ -115,7 +127,7 @@
       <Foreground>black</Foreground>
       <Background>gray90</Background>
       <ActiveForeground>white</ActiveForeground>
-      <ActiveBackground>#444499:#222277</ActiveBackground>
+      <ActiveBackground>#70849d:#2e3a67</ActiveBackground>
    </MenuStyle>
 
    <PopupStyle>
@@ -125,7 +137,6 @@
       <Background>yellow</Background>
    </PopupStyle>
 
-   <!-- Path to icons. This tag can be repeated as many times as needed. -->
    <IconPath>
       $HOME/.icons
    </IconPath>
@@ -134,17 +145,11 @@
    <!-- Desktop tags can be contained within Desktops for desktop names. -->
    <Desktops count="4">
 
-      <!-- Default background. -->
-      <Background type="image">/export0/images/formulae.jpg</Background>
-
-      <!-- Named desktop with a specific background. -->
-      <Desktop name="One">
-         <Background type="image">/export0/images/formulae.jpg</Background>
-      </Desktop>
-
-      <Desktop name="Two"/>
-      <Desktop name="Three"/>
-      <Desktop name="Four"/>
+      <!-- Default background. Note that a Background tag can be
+           contained within a Desktop tag to give a specific background
+           for that desktop.
+       -->
+      <Background type="tile">$HOME/bg.xpm</Background>
 
    </Desktops>
 

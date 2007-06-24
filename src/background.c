@@ -18,7 +18,6 @@
 #include "image.h"
 #include "gradient.h"
 #include "hint.h"
-#include "misc.h"
 
 /** Enumeration of background types. */
 typedef enum {

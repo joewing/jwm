@@ -261,7 +261,6 @@ void HandleButtonEvent(const XButtonEvent *event) {
    int x, y;
    ClientNode *np;
    int north, south, east, west;
-   int allowMode;
 
    np = FindClientByParent(event->window);
    if(np) {
@@ -302,7 +301,6 @@ void HandleButtonEvent(const XButtonEvent *event) {
    } else {
       np = FindClientByWindow(event->window);
       if(np) {
-         allowMode = ReplayPointer;
          switch(event->button) {
          case Button1:
          case Button2:
@@ -317,8 +315,9 @@ void HandleButtonEvent(const XButtonEvent *event) {
             break;
          case Button3:
             if(event->state & Mod1Mask) {
-               LowerClient(np);
-               allowMode = SyncPointer;
+               GetBorderSize(np, &north, &south, &east, &west);
+               ResizeClient(np, BA_RESIZE | BA_RESIZE_E | BA_RESIZE_S,
+                  event->x + west, event->y + north);
             } else {
                RaiseClient(np);
                if(focusModel == FOCUS_CLICK) {
@@ -329,7 +328,7 @@ void HandleButtonEvent(const XButtonEvent *event) {
          default:
             break;
          }
-         JXAllowEvents(display, allowMode, CurrentTime);
+         JXAllowEvents(display, ReplayPointer, CurrentTime);
       }
    }
 

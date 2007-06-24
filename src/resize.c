@@ -92,7 +92,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
    CreateResizeWindow(np);
    UpdateResizeWindow(np, gwidth, gheight);
 
-   if(!(GetMouseMask() & Button1Mask)) {
+   if(!(GetMouseMask() & (Button1Mask | Button3Mask))) {
       StopResize(np);
       return;
    }
@@ -108,7 +108,8 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 
       switch(event.type) {
       case ButtonRelease:
-         if(event.xbutton.button == Button1) {
+         if(   event.xbutton.button == Button1
+            || event.xbutton.button == Button3) {
             StopResize(np);
             return;
          }

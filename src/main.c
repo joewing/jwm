@@ -315,6 +315,7 @@ void HandleExit() {
  * This is called before the X connection is opened.
  */
 void Initialize() {
+   InitializeBackgrounds();
    InitializeBorders();
    InitializeClients();
    InitializeClock();

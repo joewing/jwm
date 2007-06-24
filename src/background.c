@@ -18,6 +18,7 @@
 #include "image.h"
 #include "gradient.h"
 #include "hint.h"
+#include "misc.h"
 
 /** Enumeration of background types. */
 typedef enum {
@@ -275,6 +276,7 @@ void LoadImageBackground(BackgroundNode *bp) {
    int width, height;
 
    /* Load the icon. */
+   ExpandPath(&bp->value);
    ip = LoadNamedIcon(bp->value);
    if(!ip) {
       bp->pixmap = None;

@@ -361,6 +361,10 @@ if test "$sysconfdir" = "" ; then
 	sysconfdir="$ac_default_sysconfdir"
 fi
 
+if test "$mandir" = "" ; then
+	mandir="$ac_default_mandir"
+fi
+
 BINDIR=`eval echo \""$bindir"\"`
 SYSCONF=`eval echo \"$sysconfdir\"`
 MANDIR=`eval echo \"$mandir\"`

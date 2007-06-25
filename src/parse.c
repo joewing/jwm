@@ -714,7 +714,6 @@ MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
    FILE *fd;
    char *path;
    char *buffer = NULL;
-   TokenNode *mp;
    TokenNode *start;
 
    Assert(tp);
@@ -760,9 +759,7 @@ MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
    if(!start || start->type != TOK_JWM) {
       ParseError(tp, "invalid included menu: %s", tp->value);
    } else {
-      for(mp = start->subnodeHead; mp; mp = mp->next) {
-         last = ParseMenuItem(mp, menu, last);
-      }
+      last = ParseMenuItem(start->subnodeHead, menu, last);
    }
 
    if(start) {

@@ -184,6 +184,11 @@ void GrabKey(KeyNode *np) {
    int index, maxIndex;
    unsigned int mask;
 
+   /* Don't attempt to grab if there is nothing to grab. */
+   if(!np->code) {
+      return;
+   }
+
    maxIndex = 1 << (sizeof(mods) / sizeof(mods[0]));
    for(index = 0; index < maxIndex; index++) {
 
@@ -299,7 +304,7 @@ void GrabKeys(ClientNode *np) {
    KeyNode *kp;
 
    for(kp = bindings; kp; kp = kp->next) {
-      if(ShouldGrab(kp->key)) {
+      if(ShouldGrab(kp->key) && kp->code) {
          JXGrabKey(display, kp->code, kp->state,
             np->window, True, GrabModeAsync, GrabModeAsync);
       }

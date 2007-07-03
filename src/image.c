@@ -297,6 +297,7 @@ ImageNode *LoadJPEGImage(const char *fileName) {
       }
 
       jpeg_destroy_decompress(&cinfo);
+      fclose(fd);
 
       return NULL;
 

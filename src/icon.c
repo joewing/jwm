@@ -23,7 +23,8 @@ static int iconSize = 0;
 
 #include "x.xpm"
 
-#define HASH_SIZE 64
+/* Prime numbers work best here. */
+#define HASH_SIZE 67
 
 /** Linked list of icon paths. */
 typedef struct IconPathNode {
@@ -752,14 +753,13 @@ IconNode *FindIcon(const char *name) {
 int GetHash(const char *str) {
 
    int x;
-   int hash = 0;
+   unsigned int hash = 0;
 
-   if(!str || !str[0]) {
-      return hash % HASH_SIZE;
-   }
-
-   for(x = 0; str[x]; x++) {
-      hash = (hash + str[x]) % HASH_SIZE;
+   if(str) {
+      for(x = 0; str[x]; x++) {
+         hash = (hash * 33) + (unsigned int)str[x];
+      }
+      hash %= HASH_SIZE;
    }
 
    return hash;

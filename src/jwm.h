@@ -125,6 +125,8 @@
 
 #define MOVE_DELTA 3
 
+#define RESTART_DELAY 50000
+
 #define SHELL_NAME "/bin/sh"
 
 #define DEFAULT_MENU_TITLE "JWM"

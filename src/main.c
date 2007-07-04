@@ -209,7 +209,17 @@ void EventLoop() {
 
    XEvent event;
 
+   /* Loop processing events until it's time to exit. */
    while(!shouldExit) {
+      WaitForEvent(&event);
+      ProcessEvent(&event);
+   }
+
+   /* Give windows (swallow windows especially) time to map. */
+   usleep(RESTART_DELAY);
+
+   /* Process events one last time. */
+   while(JXPending(display) > 0) {
       WaitForEvent(&event);
       ProcessEvent(&event);
    }

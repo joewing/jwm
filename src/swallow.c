@@ -202,6 +202,7 @@ void Destroy(TrayComponentType *cp) {
 
    ClientProtocolType protocols;
 
+   /* Destroy the window if there is one. */
    if(cp->window) {
 
       JXReparentWindow(display, cp->window, rootWindow, 0, 0);

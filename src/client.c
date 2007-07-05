@@ -228,9 +228,15 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
    }
 
    /* Maximize the client if requested. */
-   if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
+   if((np->state.status & STAT_HMAX) && (np->state.status & STAT_VMAX)) {
       np->state.status &= ~(STAT_HMAX | STAT_VMAX);
-      MaximizeClientDefault(np);
+      MaximizeClient(np, 1, 1);
+   } else if(np->state.status & STAT_HMAX) {
+      np->state.status &= ~(STAT_HMAX | STAT_VMAX);
+      MaximizeClient(np, 1, 0);
+   } else if(np->state.status & STAT_VMAX) {
+      np->state.status &= ~(STAT_HMAX | STAT_VMAX);
+      MaximizeClient(np, 0, 1);
    }
 
    /* Make sure we're still in sync */

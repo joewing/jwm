@@ -33,9 +33,10 @@ typedef enum {
    KEY_ROOT          = 16,
    KEY_WIN           = 17,
    KEY_DESKTOP       = 18,
-   KEY_EXEC          = 19,
-   KEY_RESTART       = 20,
-   KEY_EXIT          = 21
+   KEY_PDESKTOP      = 19,
+   KEY_EXEC          = 20,
+   KEY_RESTART       = 21,
+   KEY_EXIT          = 22
 } KeyType;
 
 void InitializeKeys();

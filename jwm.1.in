@@ -1053,6 +1053,8 @@ Switch to the next desktop. Grabbed.
 Switch to a specific desktop. To use this, "#" must be specified in
 the key section. The number 1 to the number of desktops configured
 are then substituted for "#". Grabbed.
+.IP \fBpdesktop\fP
+Switch to the previous desktop. Grabbed.
 .IP \fBexec:\fP\fIcommand\fP
 Execute \fIcommand\fP. Grabbed.
 .IP \fBrestart\fP

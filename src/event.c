@@ -356,6 +356,9 @@ void HandleKeyPress(const XKeyEvent *event) {
          NextDesktop();
       }
       break;
+   case KEY_PDESKTOP:
+      PreviousDesktop();
+      break;
    case KEY_NEXT:
       FocusNext();
       break;

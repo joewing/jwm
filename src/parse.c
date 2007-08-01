@@ -66,6 +66,7 @@ static const KeyMapType KEY_MAP[] = {
    { "exit",        KEY_EXIT         },
    { "desktop",     KEY_DESKTOP      },
    { "desktop#",    KEY_DESKTOP      },
+   { "pdesktop",    KEY_PDESKTOP     },
    { NULL,          KEY_NONE         }
 };
 

@@ -1039,6 +1039,8 @@ Minimize the active window. Grabbed.
 Maximize the active window. Grabbed.
 .IP \fBshade\fP
 Shade the active window. Grabbed.
+.IP \fBstick\fP
+Stick/unstick the active window. Grabbed.
 .IP \fBmove\fP
 Move the active window. Grabbed.
 .IP \fBresize\fP

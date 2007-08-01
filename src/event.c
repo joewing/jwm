@@ -380,6 +380,15 @@ void HandleKeyPress(const XKeyEvent *event) {
          }
       }
       break;
+   case KEY_STICK:
+      if(np) {
+         if(np->state.status & STAT_STICKY) {
+            SetClientSticky(np, 0);
+         } else {
+            SetClientSticky(np, 1);
+         }
+      }
+      break;
    case KEY_MOVE:
       if(np) {
          MoveClientKeyboard(np);

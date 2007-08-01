@@ -28,15 +28,16 @@ typedef enum {
    KEY_MIN           = 11,
    KEY_MAX           = 12,
    KEY_SHADE         = 13,
-   KEY_MOVE          = 14,
-   KEY_RESIZE        = 15,
-   KEY_ROOT          = 16,
-   KEY_WIN           = 17,
-   KEY_DESKTOP       = 18,
-   KEY_PDESKTOP      = 19,
-   KEY_EXEC          = 20,
-   KEY_RESTART       = 21,
-   KEY_EXIT          = 22
+   KEY_STICK         = 14,
+   KEY_MOVE          = 15,
+   KEY_RESIZE        = 16,
+   KEY_ROOT          = 17,
+   KEY_WIN           = 18,
+   KEY_DESKTOP       = 19,
+   KEY_PDESKTOP      = 20,
+   KEY_EXEC          = 21,
+   KEY_RESTART       = 22,
+   KEY_EXIT          = 23
 } KeyType;
 
 void InitializeKeys();

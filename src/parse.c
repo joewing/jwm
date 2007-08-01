@@ -59,6 +59,7 @@ static const KeyMapType KEY_MAP[] = {
    { "minimize",    KEY_MIN          },
    { "maximize",    KEY_MAX          },
    { "shade",       KEY_SHADE        },
+   { "stick",       KEY_STICK        },
    { "move",        KEY_MOVE         },
    { "resize",      KEY_RESIZE       },
    { "window",      KEY_WIN          },

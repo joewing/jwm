@@ -312,6 +312,7 @@ int ShouldGrab(KeyType key) {
    case KEY_MIN:
    case KEY_MAX:
    case KEY_SHADE:
+   case KEY_STICK:
    case KEY_MOVE:
    case KEY_RESIZE:
    case KEY_ROOT:

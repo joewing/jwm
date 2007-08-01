@@ -72,26 +72,26 @@ typedef struct LockNode {
 
 static XModifierKeymap *modmap;
 
-static LockNode mods[] = {
+static LockNode lockMods[] = {
    { XK_Caps_Lock,   0 },
    { XK_Num_Lock,    0 }
 };
 
 static KeyNode *bindings;
-static unsigned int modifierMask;
+static unsigned int lockMask;
 
 static unsigned int GetModifierMask(KeySym key);
 static unsigned int ParseModifierString(const char *str);
 static ModifierNode *GetKeyFromModifier(const char *str);
 static KeySym ParseKeyString(const char *str);
 static int ShouldGrab(KeyType key);
-static void GrabKey(KeyNode *np);
+static void GrabKey(KeyNode *np, Window win);
 
 /** Initialize key data. */
 void InitializeKeys() {
 
    bindings = NULL;
-   modifierMask = 0;
+   lockMask = 0;
 
 }
 
@@ -99,17 +99,21 @@ void InitializeKeys() {
 void StartupKeys() {
 
    KeyNode *np;
+   TrayType *tp;
    int x;
 
    modmap = JXGetModifierMapping(display);
 
-   for(x = 0; x < sizeof(mods) / sizeof(mods[0]); x++) {
-      mods[x].mask = GetModifierMask(mods[x].symbol);
-      modifierMask |= mods[x].mask;
+   /* Get the keys that we don't care about (num lock, etc). */
+   for(x = 0; x < sizeof(lockMods) / sizeof(lockMods[0]); x++) {
+      lockMods[x].mask = GetModifierMask(lockMods[x].symbol);
+      lockMask |= lockMods[x].mask;
    }
 
+   /* Look up and grab the keys. */
    for(np = bindings; np; np = np->next) {
 
+      /* Determine the modifier mask. */
       np->state = 0;
       if(np->mask & MASK_ALT) {
          np->state |= GetModifierMask(XK_Alt_L);
@@ -130,12 +134,22 @@ void StartupKeys() {
          np->state |= GetModifierMask(XK_Super_L);
       }
 
+      /* Determine the key code. */
       if(!np->code) {
          np->code = JXKeysymToKeycode(display, np->symbol);
       }
 
+      /* Grab the key if needed. */
       if(ShouldGrab(np->key)) {
-         GrabKey(np);
+
+         /* Grab on the root. */
+         GrabKey(np, rootWindow);
+
+         /* Grab on the trays. */
+         for(tp = GetTrays(); tp; tp = tp->next) {
+            GrabKey(np, tp->window);
+         }
+
       }
 
    }
@@ -148,14 +162,22 @@ void StartupKeys() {
 void ShutdownKeys() {
 
    ClientNode *np;
+   TrayType *tp;
    int layer;
 
+   /* Ungrab keys on client windows. */
    for(layer = 0; layer < LAYER_COUNT; layer++) {
       for(np = nodes[layer]; np; np = np->next) {
          JXUngrabKey(display, AnyKey, AnyModifier, np->window);
       }
    }
 
+   /* Ungrab keys on trays, only really needed if we are restarting. */
+   for(tp = GetTrays(); tp; tp = tp->next) {
+      JXUngrabKey(display, AnyKey, AnyModifier, tp->window);
+   }
+
+   /* Ungrab keys on the root. */
    JXUngrabKey(display, AnyKey, AnyModifier, rootWindow);
 
 }
@@ -177,9 +199,8 @@ void DestroyKeys() {
 }
 
 /** Grab a key. */
-void GrabKey(KeyNode *np) {
+void GrabKey(KeyNode *np, Window win) {
 
-   TrayType *tp;
    int x;
    int index, maxIndex;
    unsigned int mask;
@@ -189,23 +210,22 @@ void GrabKey(KeyNode *np) {
       return;
    }
 
-   maxIndex = 1 << (sizeof(mods) / sizeof(mods[0]));
+   /* Grab for each lock modifier. */
+   maxIndex = 1 << (sizeof(lockMods) / sizeof(lockMods[0]));
    for(index = 0; index < maxIndex; index++) {
 
+      /* Compute the modifier mask. */
       mask = 0;
-      for(x = 0; x < sizeof(mods) / sizeof(mods[0]); x++) {
+      for(x = 0; x < sizeof(lockMods) / sizeof(lockMods[0]); x++) {
          if(index & (1 << x)) {
-            mask |= mods[x].mask;
+            mask |= lockMods[x].mask;
          }
       }
-
       mask |= np->state;
-      JXGrabKey(display, np->code, mask,
-         rootWindow, True, GrabModeAsync, GrabModeAsync);
-      for(tp = GetTrays(); tp; tp = tp->next) {
-         JXGrabKey(display, np->code, mask,
-            tp->window, True, GrabModeAsync, GrabModeAsync);
-      }
+
+      /* Grab the key. */
+      JXGrabKey(display, np->code, mask, win,
+         True, GrabModeAsync, GrabModeAsync);
 
    }
 
@@ -218,7 +238,7 @@ KeyType GetKey(const XKeyEvent *event) {
    unsigned int state;
 
    /* Remove modifiers we don't care about from the state. */
-   state = event->state & ~modifierMask;
+   state = event->state & ~lockMask;
 
    /* Loop looking for a matching key binding. */
    for(np = bindings; np; np = np->next) {
@@ -246,9 +266,13 @@ KeyType GetKey(const XKeyEvent *event) {
 void RunKeyCommand(const XKeyEvent *event) {
 
    KeyNode *np;
+   unsigned int state;
+
+   /* Remove the lock key modifiers. */
+   state = event->state & ~lockMask;
 
    for(np = bindings; np; np = np->next) {
-      if(np->state == event->state && np->code == event->keycode) {
+      if(np->state == state && np->code == event->keycode) {
          RunCommand(np->command);
          return;
       }
@@ -261,9 +285,13 @@ void ShowKeyMenu(const XKeyEvent *event) {
 
    KeyNode *np;
    int button;
+   unsigned int state;
+
+   /* Remove the lock key modifiers. */
+   state = event->state & ~lockMask;
 
    for(np = bindings; np; np = np->next) {
-      if(np->state == event->state && np->code == event->keycode) {
+      if(np->state == state && np->code == event->keycode) {
          button = atoi(np->command);
          if(button >= 0 && button <= 9) {
             ShowRootMenu(button, 0, 0);
@@ -304,9 +332,8 @@ void GrabKeys(ClientNode *np) {
    KeyNode *kp;
 
    for(kp = bindings; kp; kp = kp->next) {
-      if(ShouldGrab(kp->key) && kp->code) {
-         JXGrabKey(display, kp->code, kp->state,
-            np->window, True, GrabModeAsync, GrabModeAsync);
+      if(ShouldGrab(kp->key)) {
+         GrabKey(kp, np->window);
       }
    }
 

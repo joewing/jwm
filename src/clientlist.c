@@ -118,8 +118,8 @@ void WalkWindowStack() {
             continue;
          }
 
-         /* Raise and focus the window. */
-         RaiseClient(np);
+         /* Focus the window. We only raise the client when the
+          * stack walk completes. */
          FocusClient(np);
          break;
 
@@ -132,9 +132,16 @@ void WalkWindowStack() {
 /** Stop walking the window stack. */
 void StopWindowStackWalk() {
 
-   /* All we have to do here is free the window stack array. */
+   ClientNode *np;
 
+   /* Raise the selected window and free the window array. */
    if(windowStack != NULL) {
+
+      /* Look up the current window. */
+      np = FindClientByWindow(windowStack[windowStackCurrent]);
+      if(np) {
+         RaiseClient(np);
+      }
 
       Release(windowStack);
       windowStack = NULL;

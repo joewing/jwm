@@ -25,8 +25,6 @@
 #include "error.h"
 #include "place.h"
 
-static const int STACK_BLOCK_SIZE = 8;
-
 static ClientNode *activeClient;
 
 static int clientCount;
@@ -961,13 +959,8 @@ void RestackClients() {
    int trayCount;
    Window *stack;
 
-   /* Determine how many tray windows exist. */
-   trayCount = 0;
-   for(tp = GetTrays(); tp; tp = tp->next) {
-      ++trayCount;
-   }
-
    /** Allocate memory for restacking. */
+   trayCount = GetTrayCount();
    stack = AllocateStack((clientCount + trayCount) * sizeof(Window));
 
    /* Prepare the stacking array. */

@@ -23,6 +23,7 @@
 
 static TrayType *trays;
 static Window supportingWindow;
+static int trayCount;
 
 static void HandleTrayExpose(TrayType *tp, const XExposeEvent *event);
 static void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event);
@@ -45,6 +46,7 @@ static void LayoutTray(TrayType *tp, int *variableSize,
 /** Initialize tray data. */
 void InitializeTray() {
    trays = NULL;
+   trayCount = 0;
    supportingWindow = None;
 }
 
@@ -142,6 +144,8 @@ void StartupTray() {
 
       /* Show the tray. */
       JXMapWindow(display, tp->window);
+
+      ++trayCount;
 
    }
 
@@ -912,6 +916,11 @@ void ResizeTray(TrayType *tp) {
 /** Get a linked list of trays. */
 TrayType *GetTrays() {
    return trays;
+}
+
+/** Get the number of trays. */
+int GetTrayCount() {
+   return trayCount;
 }
 
 /** Get a supporting window to use. */

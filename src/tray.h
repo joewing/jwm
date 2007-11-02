@@ -197,6 +197,11 @@ void ResizeTray(TrayType *tp);
  */
 TrayType *GetTrays();
 
+/** Get the number of trays.
+ * @return The number of trays.
+ */
+int GetTrayCount();
+
 /** Get a window to use as the supporting window.
  * This is used by clients to validate that compliant window manager is
  * running.

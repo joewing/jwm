@@ -1598,7 +1598,7 @@ char *FindAttribute(AttributeNode *ap, const char *name) {
 /** Read a file. */
 char *ReadFile(FILE *fd) {
 
-   const int BLOCK_SIZE = 1024;
+   const int BLOCK_SIZE = 8192;
 
    char *buffer;
    int len, max;
@@ -1622,6 +1622,7 @@ char *ReadFile(FILE *fd) {
    buffer[len] = 0;
 
    return buffer;
+
 }
 
 /** Display an invalid tag error message. */

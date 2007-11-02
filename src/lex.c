@@ -382,24 +382,20 @@ int IsSpace(char ch, int *lineNumber) {
 
 /** Get the name of the next element. */
 char *ReadElementName(const char *line) {
+
    char *buffer;
-   int len, max;
-   int x;
+   int len;
 
-   len = 0;
-   max = BLOCK_SIZE;
-   buffer = Allocate(max + 1);
+   /* Get the length of the element. */
+   for (len = 0; !IsElementEnd(line[len]); len++);
 
-   for(x = 0; !IsElementEnd(line[x]); x++) {
-      buffer[len++] = line[x];
-      if(len >= max) {
-         max += BLOCK_SIZE;
-         buffer = Reallocate(buffer, max + 1);
-      }
-   }
+   /* Allocate space for the element. */
+   buffer = Allocate(len + 1);
+   memcpy(buffer, line, len);
    buffer[len] = 0;
 
    return buffer;
+
 }
 
 /** Get the value of the current element. */

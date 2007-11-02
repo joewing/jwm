@@ -24,7 +24,7 @@ static int iconSize = 0;
 #include "x.xpm"
 
 /* Prime numbers work best here. */
-#define HASH_SIZE 67
+#define HASH_SIZE 128
 
 /** Linked list of icon paths. */
 typedef struct IconPathNode {
@@ -757,9 +757,9 @@ int GetHash(const char *str) {
 
    if(str) {
       for(x = 0; str[x]; x++) {
-         hash = (hash * 33) + (unsigned int)str[x];
+         hash = (hash + (hash << 5)) ^ (unsigned int)str[x];
       }
-      hash %= HASH_SIZE;
+      hash &= (HASH_SIZE - 1);
    }
 
    return hash;

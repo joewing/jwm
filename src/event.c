@@ -33,6 +33,7 @@
 #include "tray.h"
 #include "traybutton.h"
 #include "winmenu.h"
+#include "error.h"
 
 #define MIN_TIME_DELTA 50
 

@@ -19,6 +19,7 @@
 #include "key.h"
 #include "button.h"
 #include "event.h"
+#include "error.h"
 
 #define BASE_ICON_OFFSET 3
 

@@ -340,8 +340,8 @@ void ShadeClient(ClientNode *np) {
 
    /** xcompmgr current workaround **/
    if(!(np->state.status & STAT_OPAQUE)) {
-     np->state.status |= STAT_SHADEHACK;
-     TransparencySwitch(np);
+      np->state.status |= STAT_SHADEHACK;
+      TransparencySwitch(np);
    }
 
    GetBorderSize(np, &north, &south, &east, &west);

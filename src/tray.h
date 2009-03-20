@@ -283,5 +283,10 @@ void SetTrayHorizontalAlignment(TrayType *tp, const char *str);
  */
 void SetTrayVerticalAlignment(TrayType *tp, const char *str);
 
+/** Set the tray transparency level.
+ * @param str The value (ASCII).
+ */
+void SetTrayOpacity(const char *str);
+
 #endif /* TRAY_H */
 

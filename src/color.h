@@ -48,6 +48,7 @@ typedef enum {
    COLOR_MENU_ACTIVE_BG1,
    COLOR_MENU_ACTIVE_BG2,
    COLOR_MENU_ACTIVE_FG,
+   COLOR_MENU_ACTIVE_OL,
 
    /* Colors below this point are calculated from the above values. */
 

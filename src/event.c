@@ -359,6 +359,9 @@ void HandleKeyPress(const XKeyEvent *event) {
    case KEY_PDESKTOP:
       PreviousDesktop();
       break;
+   case KEY_SHOWDESK:
+      ShowDesktop();
+      break;
    case KEY_NEXT:
       FocusNext();
       break;
@@ -387,6 +390,11 @@ void HandleKeyPress(const XKeyEvent *event) {
          } else {
             SetClientSticky(np, 1);
          }
+      }
+      break;
+   case KEY_OPAQUE:
+      if(np) {
+         TransparencySwitch(np);
       }
       break;
    case KEY_MOVE:
@@ -492,6 +500,8 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
       }
 
       GetBorderSize(np, &north, &south, &east, &west);
+
+      ResetRoundRectWindow(np->parent);
 
       wc.stack_mode = Above;
       wc.sibling = np->parent;
@@ -825,6 +835,15 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np) {
    np->width = width;
    np->height = height;
 
+   if(np->state.status & STAT_FULLSCREEN) {
+      Warning("Fullscreen state will be shaped!");
+   }
+
+   /** Reset shaped bound */
+   ResetRoundRectWindow(np->parent);
+   ShapeRoundedRectWindow(np->parent, 
+      np->width + east + west,
+      np->height + north + south);
    JXMoveResizeWindow(display, np->parent,
       np->x - west, np->y - north,
       np->width + east + west,

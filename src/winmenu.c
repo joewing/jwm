@@ -5,7 +5,7 @@
  *
  * @brief Functions for handling window menus.
  *
- */
+*/
 
 #include "jwm.h"
 #include "winmenu.h"
@@ -18,6 +18,7 @@
 #include "event.h"
 #include "cursor.h"
 #include "misc.h"
+#include "root.h"
 
 static const char *SENDTO_TEXT = "Send To";
 static const char *LAYER_TEXT = "Layer";
@@ -80,6 +81,15 @@ Menu *CreateWindowMenu() {
       AddWindowMenuItem(menu, NULL, MA_NONE, 0);
    }
 
+   if(composite_enabled) {
+      if(client->state.status & STAT_OPAQUE) {
+         AddWindowMenuItem(menu, "Opaque", MA_TRANSPARENT, 0);
+      } else {
+         AddWindowMenuItem(menu, "Translucent", MA_TRANSPARENT, 0);
+      }
+      AddWindowMenuItem(menu, NULL, MA_NONE, 0);
+   }
+
    if(client->state.status & (STAT_MAPPED | STAT_SHADED)) {
       if(client->state.border & BORDER_RESIZE) {
          AddWindowMenuItem(menu, "Resize", MA_RESIZE, 0);
@@ -115,7 +125,11 @@ Menu *CreateWindowMenu() {
          AddWindowMenuItem(menu, "Maximize-x", MA_MAXIMIZE_H, 0);
       }
 
-      AddWindowMenuItem(menu, "Maximize", MA_MAXIMIZE, 0);
+      if((client->state.status & (STAT_HMAX | STAT_VMAX))) {
+         AddWindowMenuItem(menu, "Restore", MA_MAXIMIZE, 0);
+      } else {
+         AddWindowMenuItem(menu, "Maximize", MA_MAXIMIZE, 0);
+      }
 
    }
 
@@ -322,6 +336,9 @@ void RunWindowCommand(const MenuAction *action) {
       break;
    case MA_RESIZE:
       ResizeClientKeyboard(client);
+      break;
+   case MA_TRANSPARENT:
+      TransparencySwitch(client);
       break;
    case MA_KILL:
       KillClient(client);

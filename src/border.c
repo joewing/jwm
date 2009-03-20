@@ -1,6 +1,7 @@
 /**
  * Functions for dealing with window borders.
  * Copyright (C) 2004 Joe Wingbermuehle
+ * 
  */
 
 #include "jwm.h"
@@ -26,28 +27,34 @@ typedef unsigned char BorderPixmapDataType[32];
 static BorderPixmapDataType bitmaps[BP_COUNT] = {
 
    /* Close */
-   { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x10, 0x38, 0x38, 0x70, 0x1C,
-     0xE0, 0x0E, 0xC0, 0x07, 0x80, 0x03, 0xC0, 0x07, 0xE0, 0x0E, 0x70, 0x1C,
-     0x38, 0x38, 0x10, 0x10, 0x00, 0x00, 0x00, 0x00 },
+   { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+     0x30, 0x06, 0x70, 0x07, 0xE0, 0x03, 0xC0, 0x01, 0xE0, 0x03, 0x70, 0x07,
+     0x30, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 
    /* Minimize */
    { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF8, 0x07,
+     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
      0xF8, 0x07, 0xF8, 0x07, 0x00, 0x00, 0x00, 0x00 },
-
+ 
    /* Maximize */
-   { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF8, 0x3F, 0xF8, 0x3F, 0xF8, 0x3F,
-     0x08, 0x20, 0x08, 0x20, 0x08, 0x20, 0x08, 0x20, 0x08, 0x20, 0x08, 0x20,
-     0x08, 0x20, 0xF8, 0x3F, 0x00, 0x00, 0x00, 0x00 },
+   { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF8, 0x1F,
+     0xF8, 0x1F, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10,
+     0xF8, 0x1F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 
    /* Maximize Active */
-   { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC0, 0x1F, 0xC0, 0x1F,
-     0x00, 0x10, 0xF8, 0x13, 0xF8, 0x13, 0x08, 0x12, 0x08, 0x1A, 0x08, 0x02,
-     0x08, 0x02, 0xF8, 0x03, 0x00, 0x00, 0x00, 0x00 }
+   { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC0, 0x0F,
+     0xC0, 0x0F, 0x00, 0x08, 0xF0, 0x0B, 0xF0, 0x0B, 0x10, 0x0A, 0x10, 0x0A,
+     0x10, 0x02, 0xF0, 0x03, 0x00, 0x00, 0x00, 0x00 }
 
 };
 
 static Pixmap pixmaps[BP_COUNT];
+
+static const char *bmp_files[BP_COUNT] = { 
+   "/.jwm-bClose.xbm",
+   "/.jwm-bMinim.xbm",
+   "/.jwm-bMaxim.xbm",
+   "/.jwm-bMaximAct.xbm" };
 
 static Region borderRegion = NULL;
 static GC borderGC;
@@ -65,15 +72,40 @@ void StartupBorders() {
 
    XGCValues gcValues;
    unsigned long gcMask;
-   int x;
+   int x, hotx, hoty;
+   unsigned int bmpHeight, bmpWidth;
+   char *temp = NULL;
+   char *bmpPath = NULL;
+   size_t len;
+
+   temp = getenv("HOME");
+   len = 0;
+   if(temp) {
+      len = strlen(temp);
+   }
+   len += strlen(bmp_files[BP_COUNT - 1]) + 1;
+   bmpPath = AllocateStack(len);
 
    for(x = 0; x < BP_COUNT; x++) {
 
-      pixmaps[x] = JXCreateBitmapFromData(display, rootWindow,
-         (char*)bitmaps[x], 16, 16);
+      if(temp) {
+         strcpy(bmpPath, temp);
+         strcat(bmpPath, bmp_files[x]);
+      } else {
+         strcpy(bmpPath, bmp_files[x]);
+      }
+
+      /** if user bitmask not available, we use the built-ins */
+      if(XReadBitmapFile(display, rootWindow, bmpPath, &bmpWidth, &bmpHeight, 
+         &pixmaps[x], &hotx, &hoty)) {
+         pixmaps[x] = JXCreateBitmapFromData(display, rootWindow,
+            (char*)bitmaps[x], 16, 16);
+      }
 
    }
 
+   ReleaseStack(bmpPath);
+   
    gcMask = GCGraphicsExposures;
    gcValues.graphics_exposures = False;
    borderGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
@@ -256,7 +288,7 @@ void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
       drawIcon = 0;
       if(np->icon && (np->state.border & BORDER_TITLE)) {
          temp = GetBorderIconSize();
-         rect.x = 3;
+         rect.x = 6;
          rect.y = (short)(titleHeight / 2 - temp / 2);
          rect.width = (unsigned short)temp;
          rect.height = (unsigned short)temp;
@@ -340,18 +372,24 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
    canvas = np->parent;
    gc = borderGC;
 
+#ifdef USE_SHAPE
+   /* Shape window corners */
+   ShapeRoundedRectWindow(np->parent, width, height);
+#endif
    /* Set the window background color (to reduce flickering). */
    JXSetWindowBackground(display, canvas, titleColor2);
 
    /* Draw the outside border (clear the window with the right color). */
    JXSetForeground(display, gc, titleColor2);
-   JXFillRectangle(display, canvas, gc, 0, 0, width, height);
-
+#ifdef USE_SHAPE
+   XmuFillRoundedRectangle(display, canvas, gc, 0, 0, 
+      (int) width, (int) height, CORNER_RADIUS, CORNER_RADIUS);
+#endif
    /* Determine how many pixels may be used for the title. */
    buttonCount = GetButtonCount(np);
    titleWidth = width;
    titleWidth -= titleHeight * buttonCount;
-   titleWidth -= iconSize + 4 + 4;
+   titleWidth -= iconSize + 7 + 6;
 
    /* Draw the top part (either a title or north border. */
    if(np->state.border & BORDER_TITLE) {
@@ -362,19 +400,20 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
 
       /* Draw the icon. */
       if(np->icon && np->width >= titleHeight && drawIcon) {
-         PutIcon(np->icon, canvas, 3, titleHeight / 2 - iconSize / 2,
+         PutIcon(np->icon, canvas, 6, titleHeight / 2 - iconSize / 2,
             iconSize, iconSize);
       }
 
       if(np->name && np->name[0] && titleWidth > 0) {
          RenderString(canvas, FONT_BORDER, borderTextColor,
-            iconSize + 3 + 2,
+            iconSize + 6 + 4,
             titleHeight / 2 - GetStringHeight(FONT_BORDER) / 2,
             titleWidth, borderRegion, np->name);
       }
 
    }
 
+#ifndef USE_SHAPE
    /* Draw the east, west, and south borders. */
    if((np->state.border & BORDER_OUTLINE)
       && !(np->state.status & STAT_SHADED)) {
@@ -407,15 +446,31 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
       }
 
    }
+#endif
 
    /* Window outline. */
    JXSetForeground(display, gc, outlineColor);
+   
    if(np->state.status & STAT_SHADED) {
-      XDrawRectangle(display, canvas, gc, 0, 0, width - 1, north - 1);
+   	
+#ifdef USE_SHAPE
+   XmuDrawRoundedRectangle(display, canvas, gc, 0, 0, 
+      (int)width - 1, (int)north - 1, CORNER_RADIUS, CORNER_RADIUS);
+#else
+   XDrawRectangle(display, canvas, gc, 0, 0, width - 1, north - 1);
+#endif
+
    } else {
+   	
+#ifdef USE_SHAPE
+      XmuDrawRoundedRectangle(display, canvas, gc, 0, 0, 
+         (int) width - 1, (int) height - 1, CORNER_RADIUS, CORNER_RADIUS);
+#else
       XDrawRectangle(display, canvas, gc, 0, 0, width - 1, height - 1);
       XDrawRectangle(display, canvas, gc, west - 1, north - 1,
          np->width + 1, np->height + 1);
+#endif
+
    }
 
    DrawBorderButtons(np, canvas, gc);
@@ -501,8 +556,8 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
    /* Close button. */
    if(np->state.border & BORDER_CLOSE) {
 
-      JXSetForeground(display, gc, outlineColor);
-      JXDrawLine(display, canvas, gc, offset, 0, offset, titleHeight);
+      //JXSetForeground(display, gc, outlineColor);
+      //JXDrawLine(display, canvas, gc, offset, 0, offset, titleHeight);
 
       pixmap = pixmaps[BP_CLOSE];
 
@@ -522,8 +577,8 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
    /* Maximize button. */
    if(np->state.border & BORDER_MAX) {
 
-      JXSetForeground(display, gc, outlineColor);
-      JXDrawLine(display, canvas, gc, offset, 0, offset, titleHeight);
+      //JXSetForeground(display, gc, outlineColor);
+      //JXDrawLine(display, canvas, gc, offset, 0, offset, titleHeight);
 
       if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
          pixmap = pixmaps[BP_MAXIMIZE_ACTIVE];
@@ -547,8 +602,8 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
    /* Minimize button. */
    if(np->state.border & BORDER_MIN) {
 
-      JXSetForeground(display, gc, outlineColor);
-      JXDrawLine(display, canvas, gc, offset, 0, offset, titleHeight);
+      //JXSetForeground(display, gc, outlineColor);
+      //JXDrawLine(display, canvas, gc, offset, 0, offset, titleHeight);
 
       pixmap = pixmaps[BP_MINIMIZE];
 
@@ -664,4 +719,40 @@ void SetTitleHeight(const char *str) {
    }
 
 }
+
+#ifdef USE_SHAPE
+
+/** Clear the shape mask of a window. */
+void ResetRoundRectWindow(const Window srrw) {
+   Assert(srrw);	
+   XShapeCombineMask(display, srrw, ShapeBounding, 0, 0, None, ShapeSet);
+}
+ 
+/** Set the shape mask on a window to give a rounded boarder. */
+void ShapeRoundedRectWindow(const Window srrw, int width, int height) {
+
+   Pixmap pm;
+   GC tgc;
+
+   Assert(srrw);
+
+   pm = XCreatePixmap(display, srrw, width, height, 1);
+   tgc = XCreateGC(display, pm, 0, NULL);
+
+   XSetForeground(display, tgc, 0);
+   XFillRectangle(display, pm, tgc, 0, 0, width, height);
+
+   XSetForeground(display, tgc, 1);
+   /** Corner bound radius -1 to allow slightly better outline drawing */
+   XmuFillRoundedRectangle(display, pm, tgc, 0, 0, 
+      (int)width, (int)height, CORNER_RADIUS - 1, CORNER_RADIUS - 1);
+   
+   XShapeCombineMask(display, srrw, ShapeBounding, 0, 0, pm, ShapeSet);
+
+   XFreePixmap(display, pm);
+   XFreeGC(display, tgc);
+
+}
+
+#endif
 

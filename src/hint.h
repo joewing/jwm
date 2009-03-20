@@ -77,6 +77,8 @@ typedef enum {
 
    ATOM_NET_SYSTEM_TRAY_OPCODE,
 
+   ATOM_NET_WM_WINDOW_OPACITY,
+
    /* GNOME atoms */
    ATOM_WIN_LAYER,
    ATOM_WIN_STATE,

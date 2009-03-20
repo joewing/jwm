@@ -29,8 +29,9 @@ typedef enum {
    OPTION_MAXIMIZED  = 11, /**< Start maximized. */
    OPTION_MINIMIZED  = 12, /**< Start minimized. */
    OPTION_SHADED     = 13, /**< Start shaded. */
-   OPTION_MAX_H      = 14, /**< Use horizontal maximization. */
-   OPTION_MAX_V      = 15  /**< Use vertical maximization. */
+   OPTION_OPAQUE     = 14, /**< Start transparent. */
+   OPTION_MAX_H      = 15, /**< Use horizontal maximization. */
+   OPTION_MAX_V      = 16  /**< Use vertical maximization. */
 } OptionType;
 
 void InitializeGroups();

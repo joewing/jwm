@@ -29,7 +29,8 @@ typedef enum {
    MA_KILL,
    MA_CLOSE,
    MA_EXIT,
-   MA_RESTART
+   MA_RESTART,
+   MA_TRANSPARENT
 } MenuActionType;
 
 /** Structure to represent a menu action for callbacks. */
@@ -114,6 +115,11 @@ void DestroyMenu(Menu *menu);
 
 /** The number of open menus. */
 extern int menuShown;
+
+/** Set the Menu opacity level.
+ * @param str The value (ASCII).
+ */
+void SetMenuOpacity(const char *str);
 
 #endif /* MENU_H */
 

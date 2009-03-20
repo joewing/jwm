@@ -35,7 +35,7 @@ void DrawButton(ButtonNode *bp) {
 
    int iconWidth, iconHeight;
    int textWidth, textHeight;
-
+   
    Assert(bp);
 
    drawable = bp->drawable;
@@ -59,7 +59,11 @@ void DrawButton(ButtonNode *bp) {
       fg = COLOR_MENU_ACTIVE_FG;
       bg1 = colors[COLOR_MENU_ACTIVE_BG1];
       bg2 = colors[COLOR_MENU_ACTIVE_BG2];
-      outlinePixel = colors[COLOR_MENU_ACTIVE_DOWN];
+      if(bg1 == bg2) {
+         outlinePixel = colors[COLOR_MENU_ACTIVE_OL];
+      } else {
+         outlinePixel = colors[COLOR_MENU_ACTIVE_DOWN];
+      }
       topPixel = colors[COLOR_MENU_ACTIVE_UP];
       bottomPixel = colors[COLOR_MENU_ACTIVE_DOWN];
       break;
@@ -91,42 +95,79 @@ void DrawButton(ButtonNode *bp) {
    }
 
    /* Draw the background. */
-   if(bg1 == bg2) {
+   switch(bp->type) {
+   case BUTTON_TASK:
+      /* Flat taskbuttons (only icon) for widths < 48 */
+      if(width < 48) {
+         break;
+      }
+      /* conditional fallthrough is intended */  
+   case BUTTON_TASK_ACTIVE:
+      /* Draw the button color & outline. */
       JXSetForeground(display, gc, bg1);
-      JXFillRectangle(display, drawable, gc,
-         x + 2, y + 2, width - 3, height - 3);
-   } else {
-      DrawHorizontalGradient(drawable, gc, bg1, bg2,
-         x + 2, y + 2, width - 3, height - 3);
+      if(bg1 == bg2) {
+         /* single color */
+         JXFillRectangle(display, drawable, gc,
+            x + 1, y + 1, width - 1, height - 1);
+      } else {
+         /* gradient */
+         DrawHorizontalGradient(drawable, gc, bg1, bg2,
+            x + 1, y + 1, width - 2, height - 1);
+      }
+      if(bp->type == BUTTON_TASK) {
+         /* switch outline color for normal/active task */
+         JXSetForeground(display, gc, topPixel);
+      } else {
+         JXSetForeground(display, gc, bottomPixel);
+      }
+
+      /* Simple rounded outline : not bounded */
+#ifdef USE_SHAPE
+      XmuDrawRoundedRectangle(display, drawable, gc, x, y, 
+         width, height, 3, 3);
+#endif
+      break;
+   default:
+      if(bg1 == bg2) {
+         JXSetForeground(display, gc, bg1);
+         JXFillRectangle(display, drawable, gc,
+            x + 1, y + 1, width - 1, height - 1);
+      } else {
+         DrawHorizontalGradient(drawable, gc, bg1, bg2,
+            x + 2, y + 2, width - 3, height - 3);
+      }
+
+      /* Draw the button outline. */
+      JXSetForeground(display, gc, outlinePixel);
+      JXDrawRectangle(display, drawable, gc, x, y, width, height);
+
+      /* If gradient, then draw 3D border */
+      if (bg1 != bg2) {
+
+         /* Draw the top and left sides. */
+         JXSetForeground(display, gc, topPixel);
+         JXDrawLine(display, drawable, gc, x + 1, y + 1, x + width - 2, y + 1);
+         JXDrawLine(display, drawable, gc, x + 1, y + 2, x + 1, y + height - 2);
+
+         /* Draw the bottom and right sides. */
+         JXSetForeground(display, gc, bottomPixel);
+         JXDrawLine(display, drawable, gc, x + 1, y + height - 1, x + width - 1,
+            y + height - 1);
+         JXDrawLine(display, drawable, gc, x + width - 1, y + 1, x + width - 1,
+            y + height - 2);
+      }
+      break;
    }
-
-   /* Draw the button outline. */
-   JXSetForeground(display, gc, outlinePixel);
-   JXDrawRectangle(display, drawable, gc, x, y, width, height);
-
-   /* Draw the top and left sides. */
-   JXSetForeground(display, gc, topPixel);
-   JXDrawLine(display, drawable, gc, x + 1, y + 1, x + width - 2, y + 1);
-   JXDrawLine(display, drawable, gc, x + 1, y + 2, x + 1, y + height - 2);
-
-   /* Draw the bottom and right sides. */
-   JXSetForeground(display, gc, bottomPixel);
-   JXDrawLine(display, drawable, gc, x + 1, y + height - 1, x + width - 1,
-      y + height - 1);
-   JXDrawLine(display, drawable, gc, x + width - 1, y + 1, x + width - 1,
-      y + height - 2);
 
    /* Determine the size of the icon (if any) to display. */
    iconWidth = 0;
    iconHeight = 0;
-   if(bp->icon) {
-
+   if (bp->icon) {
       if(width < height) {
          GetScaledIconSize(bp->icon, width - 5, &iconWidth, &iconHeight);
       } else {
          GetScaledIconSize(bp->icon, height - 5, &iconWidth, &iconHeight);
       }
-
    }
 
    /* Determine how much room is left for text. */
@@ -135,8 +176,8 @@ void DrawButton(ButtonNode *bp) {
    if(bp->text) {
       textWidth = GetStringWidth(bp->font, bp->text);
       textHeight = GetStringHeight(bp->font);
-      if(textWidth + iconWidth + 10 > width) {
-         textWidth = width - iconWidth - 10;
+      if(textWidth + iconWidth + 13 > width) {
+         textWidth = width - iconWidth - 13;
          if(textWidth < 0) {
             textWidth = 0;
          }
@@ -172,7 +213,7 @@ void DrawButton(ButtonNode *bp) {
    }
 
    /* Display the label. */
-   if(bp->text) {
+   if(bp->text && textWidth) {
       yoffset = height / 2 - textHeight / 2;
       RenderString(drawable, bp->font, fg, x + xoffset, y + yoffset,
          textWidth, NULL, bp->text);

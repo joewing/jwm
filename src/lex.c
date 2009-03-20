@@ -56,6 +56,7 @@ static const char *TOKEN_MAP[] = {
    "Move",
    "MoveMode",
    "Name",
+   "Opacity",
    "Option",
    "Outline",
    "Pager",

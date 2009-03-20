@@ -23,7 +23,7 @@ static int iconSize = 0;
 
 #include "x.xpm"
 
-/* Prime numbers work best here. */
+/* Must be a power of two. */
 #define HASH_SIZE 128
 
 /** Linked list of icon paths. */

@@ -43,6 +43,9 @@ static int CheckVerticalFill(TrayType *tp);
 static void LayoutTray(TrayType *tp, int *variableSize,
    int *variableRemainder);
 
+/** Default opacity for Tray **/
+static double tray_opacity = 1.0;
+
 /** Initialize tray data. */
 void InitializeTray() {
    trays = NULL;
@@ -55,6 +58,7 @@ void StartupTray() {
 
    XSetWindowAttributes attr;
    unsigned long attrMask;
+   unsigned int winopac;
    TrayType *tp;
    TrayComponentType *cp;
    int variableSize;
@@ -90,6 +94,14 @@ void StartupTray() {
       tp->window = JXCreateWindow(display, rootWindow,
          tp->x, tp->y, tp->width, tp->height,
          0, rootDepth, InputOutput, rootVisual, attrMask, &attr);
+
+      if(tray_opacity < 1) {
+         winopac = (unsigned int)(tray_opacity * OPAQUE);
+         JXChangeProperty(display, tp->window,
+            atoms[ATOM_NET_WM_WINDOW_OPACITY], XA_CARDINAL, 32,
+            PropModeReplace, (unsigned char *) &winopac, 1L);
+         JXSync(display, False);
+      }
 
       SetDefaultCursor(tp->window);
 
@@ -1103,6 +1115,19 @@ void SetTrayVerticalAlignment(TrayType *tp, const char *str) {
    } else {
       Warning("invalid tray vertical alignment: \"%s\"", str);
       tp->valign = TALIGN_FIXED;
+   }
+
+}
+
+/** Set the tray transparency level. */
+void SetTrayOpacity(const char *str) {
+
+   Assert(str);
+
+   tray_opacity = atof(str);
+   if(tray_opacity < 0.0 || tray_opacity > 1.0) {
+      Warning("invalid tray opacity: %s", str);
+      tray_opacity = 1.0;
    }
 
 }

@@ -53,6 +53,7 @@ typedef enum {
    TOK_MOVE,
    TOK_MOVEMODE,
    TOK_NAME,
+   TOK_OPACITY,
    TOK_OPTION,
    TOK_OUTLINE,
    TOK_PAGER,

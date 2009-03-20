@@ -25,6 +25,8 @@
 #include "error.h"
 #include "place.h"
 
+static const int STACK_BLOCK_SIZE = 8;
+
 static ClientNode *activeClient;
 
 static int clientCount;
@@ -38,6 +40,20 @@ static void CheckShape(ClientNode *np);
 static void RestoreTransients(ClientNode *np, int raise);
 
 static void KillClientHandler(ClientNode *np);
+
+static double client_opacity = 0.8;
+
+static const long clientWinMask
+   = KeyPressMask | KeyReleaseMask
+   | ButtonPressMask | ButtonReleaseMask
+   | KeymapStateMask
+   | ButtonMotionMask
+   | PointerMotionMask
+   | EnterWindowMask | LeaveWindowMask
+   | FocusChangeMask
+   | ExposureMask
+   | StructureNotifyMask
+   | SubstructureRedirectMask;
 
 /** Initialize client data. */
 void InitializeClients() {
@@ -219,6 +235,11 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
       ShadeClient(np);
    }
 
+   /* Make the client transparent if requested. */
+   if(np->state.status & STAT_OPAQUE) {
+      TransparencySwitch(np);
+   }
+
    /* Minimize the client if requested. */
    if(np->state.status & STAT_MINIMIZED) {
       np->state.status &= ~STAT_MINIMIZED;
@@ -226,15 +247,9 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
    }
 
    /* Maximize the client if requested. */
-   if((np->state.status & STAT_HMAX) && (np->state.status & STAT_VMAX)) {
+   if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
       np->state.status &= ~(STAT_HMAX | STAT_VMAX);
-      MaximizeClient(np, 1, 1);
-   } else if(np->state.status & STAT_HMAX) {
-      np->state.status &= ~(STAT_HMAX | STAT_VMAX);
-      MaximizeClient(np, 1, 0);
-   } else if(np->state.status & STAT_VMAX) {
-      np->state.status &= ~(STAT_HMAX | STAT_VMAX);
-      MaximizeClient(np, 0, 1);
+      MaximizeClientDefault(np);
    }
 
    /* Make sure we're still in sync */
@@ -251,11 +266,9 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
 
    /* Focus transients if their parent has focus. */
    if(np->owner != None) {
-
       if(activeClient && np->owner == activeClient->window) {
          FocusClient(np);
       }
-
    }
 
    return np;
@@ -325,8 +338,18 @@ void ShadeClient(ClientNode *np) {
       return;
    }
 
+   /** xcompmgr current workaround **/
+   if(!(np->state.status & STAT_OPAQUE)) {
+     np->state.status |= STAT_SHADEHACK;
+     TransparencySwitch(np);
+   }
+
    GetBorderSize(np, &north, &south, &east, &west);
 
+#ifdef USE_SHAPE
+   ResetRoundRectWindow(np->parent);
+#endif
+	
    if(np->state.status & STAT_MAPPED) {
       JXUnmapWindow(display, np->window);
    }
@@ -335,6 +358,9 @@ void ShadeClient(ClientNode *np) {
    np->state.status &= ~STAT_SDESKTOP;
    np->state.status &= ~STAT_MAPPED;
 
+#ifdef USE_SHAPE
+   ShapeRoundedRectWindow(np->parent, np->width + west + east, north);
+#endif
    JXResizeWindow(display, np->parent, np->width + east + west, north);
 
    WriteState(np);
@@ -364,7 +390,20 @@ void UnshadeClient(ClientNode *np) {
       np->state.status &= ~STAT_SHADED;
    }
 
+   /** xcompmgr current workaround **/
+   if (np->state.status & STAT_SHADEHACK) {
+   	  np->state.status &= ~STAT_SHADEHACK;
+      TransparencySwitch(np);
+   }
+
    GetBorderSize(np, &north, &south, &east, &west);
+
+#ifdef USE_SHAPE
+   ResetRoundRectWindow(np->parent);
+   ShapeRoundedRectWindow(np->parent, 
+      np->width + west + east, np->height + north + south);
+#endif
+
    JXResizeWindow(display, np->parent,
       np->width + west + east, np->height + north + south);
 
@@ -658,12 +697,16 @@ void MaximizeClient(ClientNode *np, int horiz, int vert) {
 
    /* We don't want to mess with full screen clients. */
    if(np->state.status & STAT_FULLSCREEN) {
-      SetClientFullScreen(np, 0);
+      return; 
    }
 
    if(np->state.status & STAT_SHADED) {
       UnshadeClient(np);
    }
+
+#ifdef USE_SHAPE
+   ResetRoundRectWindow(np->parent);
+#endif
 
    GetBorderSize(np, &north, &south, &east, &west);
 
@@ -676,6 +719,12 @@ void MaximizeClient(ClientNode *np, int horiz, int vert) {
    } else {
       PlaceMaximizedClient(np, horiz, vert);
    }
+
+#ifdef USE_SHAPE
+   ShapeRoundedRectWindow(np->parent, 
+      np->width + east + west,
+      np->height + north + south);
+#endif
 
    JXMoveResizeWindow(display, np->parent,
       np->x - west, np->y - north,
@@ -723,6 +772,10 @@ void SetClientFullScreen(ClientNode *np, int fullScreen) {
       UnshadeClient(np);
    }
 
+#ifdef USE_SHAPE
+   ResetRoundRectWindow(np->parent);
+#endif
+
    if(fullScreen) {
 
       np->state.status |= STAT_FULLSCREEN;
@@ -730,20 +783,27 @@ void SetClientFullScreen(ClientNode *np, int fullScreen) {
       sp = GetCurrentScreen(np->x, np->y);
 
       JXReparentWindow(display, np->window, rootWindow, 0, 0);
-      JXMoveResizeWindow(display, np->window, 0, 0,
-         sp->width, sp->height);
-
+      JXMoveResizeWindow(display, np->window, 0, 0, sp->width, sp->height);
       SetClientLayer(np, LAYER_TOP);
 
    } else {
 
       np->state.status &= ~STAT_FULLSCREEN;
 
+      /* Reparent window */
       GetBorderSize(np, &north, &south, &east, &west);
-
       JXReparentWindow(display, np->window, np->parent, west, north);
       JXMoveResizeWindow(display, np->window, west,
          north, np->width, np->height);
+
+      /* Restore parent position */
+      GetBorderSize(np, &north, &south, &east, &west);
+#ifdef USE_SHAPE
+      ShapeRoundedRectWindow(np->parent, np->width + east + west,
+         np->height + north + south);
+#endif
+      JXMoveResizeWindow(display, np->parent, np->oldx - west,
+         np->oldy - north, np->width + east + west, np->height + north + south);
 
       event.type = MapRequest;
       event.xmaprequest.send_event = True;
@@ -1234,8 +1294,8 @@ void ReparentClient(ClientNode *np, int notOwner) {
    attrMask |= CWOverrideRedirect;
    attr.override_redirect = True;
 
-	attrMask |= CWBackPixmap;
-	attr.background_pixmap = ParentRelative;
+   attrMask |= CWBackPixmap;
+   attr.background_pixmap = ParentRelative;
 
    /* We can't use PointerMotionHint mask here since the exact location
     * of the mouse on the frame is important. */
@@ -1272,7 +1332,7 @@ void ReparentClient(ClientNode *np, int notOwner) {
    np->parent = JXCreateWindow(display, rootWindow,
       x, y, width, height, 0, rootDepth, InputOutput,
       rootVisual, attrMask, &attr);
-
+ 
    /* Update the window to get only the events we want. */
    attrMask = CWDontPropagate;
    attr.do_not_propagate_mask
@@ -1386,6 +1446,62 @@ void UpdateClientColormap(ClientNode *np) {
          JXInstallColormap(display, np->cmap);
       }
 
+   }
+
+}
+
+/** Switch between transparent and opaque window. */
+void TransparencySwitch(ClientNode *np) {
+
+   unsigned char *data;
+   Atom actual;
+   int format;
+   unsigned long n, left;
+   unsigned int winopac, current_opacity;
+
+   Assert(np);
+
+   if(np->state.status & STAT_SHADED) {
+      return;
+   }
+
+   /** Get window opacity state */
+   JXGetWindowProperty(display, np->parent, atoms[ATOM_NET_WM_WINDOW_OPACITY],
+      0L, 1L, False, XA_CARDINAL, &actual, &format, &n, &left, 
+      (unsigned char **) &data);
+  
+   if(data != None) {
+      memcpy(&current_opacity, data, sizeof(unsigned int));
+      XFree(data);
+   } else {
+      current_opacity = OPAQUE;
+   }
+
+   /** Switch between opaque and translucent */
+   if(current_opacity != OPAQUE) {
+      JXDeleteProperty(display, np->parent, atoms[ATOM_NET_WM_WINDOW_OPACITY]);
+      np->state.status &= ~STAT_OPAQUE;
+   } else {
+      winopac = (unsigned int)(client_opacity * OPAQUE);
+      JXChangeProperty(display, np->parent, atoms[ATOM_NET_WM_WINDOW_OPACITY],
+         XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &winopac, 1L);
+      np->state.status |= STAT_OPAQUE;
+   }
+   JXSync(display, False);
+
+   WriteState(np);
+
+}
+
+/** Set the client opacity. */
+void SetClientOpacity(const char *str) {
+
+   Assert(str);
+
+   client_opacity = atof(str);
+   if(client_opacity < 0.0 || client_opacity > 1.0) {
+      Warning("invalid client opacity: %s", str);
+      client_opacity = 1.0;
    }
 
 }

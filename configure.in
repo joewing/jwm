@@ -2,7 +2,7 @@
 # JWM autoconf.
 ############################################################################
 
-AC_INIT(jwm, 2.1, joewing@joewing.net)
+AC_INIT(jwm, 2.1.0, joewing@joewing.net)
 AC_PREREQ(2.57)
 AC_CONFIG_SRCDIR([src])
 AC_CONFIG_HEADER([config.h])
@@ -39,38 +39,38 @@ fi
 AC_PATH_X
 
 if test ! "$no_x" = "yes" ; then
-	if test ! x"$x_libraries" = x ; then
-		LDFLAGS="$LDFLAGS -L$x_libraries"
-	fi
-	if test ! x"$x_includes" = x ; then
-		CFLAGS="$CFLAGS -I$x_includes"
-	fi
+   if test ! x"$x_libraries" = x ; then
+      LDFLAGS="$LDFLAGS -L$x_libraries"
+   fi
+   if test ! x"$x_includes" = x ; then
+      CFLAGS="$CFLAGS -I$x_includes"
+   fi
 else
-	AC_MSG_ERROR([Could not find X11])
+   AC_MSG_ERROR([Could not find X11])
 fi
 
 AC_CHECK_LIB([X11], XOpenDisplay,
-	[ LDFLAGS="$LDFLAGS -lX11" ],
-	[ AC_MSG_ERROR([libX11 not found]) ])
+   [ LDFLAGS="$LDFLAGS -lX11" ],
+   [ AC_MSG_ERROR([libX11 not found]) ])
 
 ############################################################################
 # Check for necessary include files.
 ############################################################################
 AC_CHECK_HEADERS([stdarg.h stdio.h stdlib.h ctype.h], [],
-	[ AC_MSG_ERROR([one or more necessary header files not found]) ])
+   [ AC_MSG_ERROR([one or more necessary header files not found]) ])
 
 AC_CHECK_HEADERS([sys/select.h signal.h unistd.h time.h sys/wait.h sys/time.h])
 
 AC_CHECK_HEADERS([alloca.h])
 
 AC_CHECK_HEADERS([X11/Xlib.h], [],
-	[ AC_MSG_ERROR([Xlib.h could not be found]) ])
+   [ AC_MSG_ERROR([Xlib.h could not be found]) ])
 
 AC_CHECK_HEADERS([X11/Xutil.h X11/cursorfont.h X11/Xproto.h \
-	X11/Xatom.h X11/keysym.h X11/Xresource.h], [], [],
-	[
+   X11/Xatom.h X11/keysym.h X11/Xresource.h], [], [],
+   [
 #include <X11/Xlib.h>
-	])
+   ])
 
 ############################################################################
 # Check for pkg-config.
@@ -78,27 +78,27 @@ AC_CHECK_HEADERS([X11/Xutil.h X11/cursorfont.h X11/Xproto.h \
 
 AC_DEFUN([JWM_PKGCONFIG_EXISTS],
 [
-	AC_MSG_CHECKING([for pkg-config])
-	if test -x `which pkg-config` ; then
-		PKGCONFIG="pkg-config"
-	fi
-	AC_MSG_RESULT($PKGCONFIG)
+   AC_MSG_CHECKING([for pkg-config])
+   if test -x `which pkg-config` ; then
+      PKGCONFIG="pkg-config"
+   fi
+   AC_MSG_RESULT($PKGCONFIG)
 ])
 
 AC_DEFUN([JWM_PKGCONFIG],
 [
-	AC_REQUIRE([JWM_PKGCONFIG_EXISTS])
-	if test "x$PKGCONFIG" != "x" ; then
-		AC_MSG_CHECKING([if pkg-config knows about $2])
-		if test `$PKGCONFIG $2 ; echo $?` -eq 0 ; then
-			$1="yes"
-		else
-			$1="no"
-		fi
-		AC_MSG_RESULT($$1)
-	else
-		$1="no"
-	fi
+   AC_REQUIRE([JWM_PKGCONFIG_EXISTS])
+   if test "x$PKGCONFIG" != "x" ; then
+      AC_MSG_CHECKING([if pkg-config knows about $2])
+      if test `$PKGCONFIG $2 ; echo $?` -eq 0 ; then
+         $1="yes"
+      else
+         $1="no"
+      fi
+      AC_MSG_RESULT($$1)
+   else
+      $1="no"
+   fi
 ])
 
 JWM_PKGCONFIG([use_pkgconfig_png], [libpng])
@@ -111,50 +111,50 @@ JWM_PKGCONFIG([use_pkgconfig_fribidi], [fribidi])
 # Check if confirm dialogs should be used.
 ############################################################################
 AC_ARG_ENABLE(confirm,
-	AC_HELP_STRING([--disable-confirm], [don't enable confirm dialogs]) )
+   AC_HELP_STRING([--disable-confirm], [don't enable confirm dialogs]) )
 if test "$enable_confirm" = "no" ; then
-	AC_DEFINE(DISABLE_CONFIRM, 1, [Define to disable confirm dialogs])
+   AC_DEFINE(DISABLE_CONFIRM, 1, [Define to disable confirm dialogs])
 else
-	enable_confirm="yes"
+   enable_confirm="yes"
 fi
 
 ############################################################################
 # Check if icon support was requested.
 ############################################################################
 AC_ARG_ENABLE(icons,
-	AC_HELP_STRING([--disable-icons], [don't enable icon support]) )
+   AC_HELP_STRING([--disable-icons], [don't enable icon support]) )
 if test "$enable_icons" != "no" ; then
-	enable_icons="yes"
-	AC_DEFINE(USE_ICONS, 1, [Define to enable icon support] )
+   enable_icons="yes"
+   AC_DEFINE(USE_ICONS, 1, [Define to enable icon support] )
 fi
 
 ############################################################################
 # Check if PNG support was requested and available.
 ############################################################################
 AC_ARG_ENABLE(png,
-	AC_HELP_STRING([--disable-png], [don't support PNG images]) )
+   AC_HELP_STRING([--disable-png], [don't support PNG images]) )
 if test "$enable_png" != "no" ; then
 
-	if test "$use_pkgconfig_png" = "yes" ; then
-		PNG_CFLAGS=`$PKGCONFIG --cflags libpng`
-		PNG_LDFLAGS=`$PKGCONFIG --libs libpng`
-	elif test -x `which libpng-config` ; then
-		PNG_CFLAGS=`libpng-config --cflags`
-		PNG_LDFLAGS=`libpng-config --libs`
-	else
-		PNG_LDFLAGS="-lpng -lz -lm"
-	fi
+   if test "$use_pkgconfig_png" = "yes" ; then
+      PNG_CFLAGS=`$PKGCONFIG --cflags libpng`
+      PNG_LDFLAGS=`$PKGCONFIG --libs libpng`
+   elif test -x `which libpng-config` ; then
+      PNG_CFLAGS=`libpng-config --cflags`
+      PNG_LDFLAGS=`libpng-config --libs`
+   else
+      PNG_LDFLAGS="-lpng -lz -lm"
+   fi
 
 fi
 if test "$enable_png" != "no" ; then
-	AC_CHECK_LIB(png, png_read_image,
-		[ LDFLAGS="$LDFLAGS $PNG_LDFLAGS"
-		  CFLAGS="$CFLAGS $PNG_CFLAGS"
-		  enable_png="yes"
-		  AC_DEFINE(USE_PNG, 1, [Define to use libpng]) ],
-		[ enable_png="no"
-		  AC_MSG_WARN([unable to use libpng, PNG support disabled]) ],
-		[ $PNG_LDFLAGS ])
+   AC_CHECK_LIB(png, png_read_image,
+      [ LDFLAGS="$LDFLAGS $PNG_LDFLAGS"
+        CFLAGS="$CFLAGS $PNG_CFLAGS"
+        enable_png="yes"
+        AC_DEFINE(USE_PNG, 1, [Define to use libpng]) ],
+      [ enable_png="no"
+        AC_MSG_WARN([unable to use libpng, PNG support disabled]) ],
+      [ $PNG_LDFLAGS ])
 fi
 
 ############################################################################
@@ -185,184 +185,184 @@ fi
 # Check if XFT support was requested and available.
 ############################################################################
 AC_ARG_ENABLE(xft,
-	AC_HELP_STRING([--disable-xft], [don't use Xft]) )
+   AC_HELP_STRING([--disable-xft], [don't use Xft]) )
 if test "$enable_xft" != "no"; then
 
-	if test "$use_pkgconfig_xft" = "yes" ; then
-		XFT_CFLAGS=`$PKGCONFIG --cflags xft`
-		XFT_LDFLAGS=`$PKGCONFIG --libs xft`
-	elif test -x `which xft-config` ; then
-		XFT_CFLAGS=`xft-config --cflags`
-		XFT_LDFLAGS=`xft-config --libs`
-	else
-		XFT_LDFLAGS="-lXft"
-	fi
+   if test "$use_pkgconfig_xft" = "yes" ; then
+      XFT_CFLAGS=`$PKGCONFIG --cflags xft`
+      XFT_LDFLAGS=`$PKGCONFIG --libs xft`
+   elif test -x `which xft-config` ; then
+      XFT_CFLAGS=`xft-config --cflags`
+      XFT_LDFLAGS=`xft-config --libs`
+   else
+      XFT_LDFLAGS="-lXft"
+   fi
 
 fi
 if test "$enable_xft" != "no" ; then
-	AC_CHECK_LIB(Xft, XftFontOpenName,
-		[ LDFLAGS="$LDFLAGS $XFT_LDFLAGS"
-		  CFLAGS="$CFLAGS $XFT_CFLAGS"
-		  enable_xft="yes"
-		  AC_DEFINE(USE_XFT, 1, [Define to enable Xft]) ],
-		[ enable_xft="no"
-		  AC_MSG_WARN([unable to use Xft]) ],
-		[ $XFT_LDFLAGS ])
+   AC_CHECK_LIB(Xft, XftFontOpenName,
+      [ LDFLAGS="$LDFLAGS $XFT_LDFLAGS"
+        CFLAGS="$CFLAGS $XFT_CFLAGS"
+        enable_xft="yes"
+        AC_DEFINE(USE_XFT, 1, [Define to enable Xft]) ],
+      [ enable_xft="no"
+        AC_MSG_WARN([unable to use Xft]) ],
+      [ $XFT_LDFLAGS ])
 fi
 if test "$enable_xft" != "no" ; then
-	AC_CHECK_HEADERS([ft2build.h])
+   AC_CHECK_HEADERS([ft2build.h])
 fi
 
 ############################################################################
 # Check if support for the XRENDER extension was requested and available.
 ############################################################################
 AC_ARG_ENABLE(xrender,
-	AC_HELP_STRING([--disable-xrender], [don't use the XRender extension]) )
+   AC_HELP_STRING([--disable-xrender], [don't use the XRender extension]) )
 if test "$enable_xrender" != "no"; then
 
-	if test "$use_pkgconfig_xrender" = "yes" ; then
-		XRENDER_CFLAGS=`$PKGCONFIG --cflags xrender`
-		XRENDER_LDFLAGS=`$PKGCONFIG --libs xrender`
-	else
-		XRENDER_LDFLAGS="-lXrender"
-	fi
+   if test "$use_pkgconfig_xrender" = "yes" ; then
+      XRENDER_CFLAGS=`$PKGCONFIG --cflags xrender`
+      XRENDER_LDFLAGS=`$PKGCONFIG --libs xrender`
+   else
+      XRENDER_LDFLAGS="-lXrender"
+   fi
 
-	AC_CHECK_HEADERS([X11/extensions/Xrender.h], [],
-		[
-			enable_xrender="no";
-			AC_MSG_WARN([unable to use X11/extensions/XRender.h])
-		])
+   AC_CHECK_HEADERS([X11/extensions/Xrender.h], [],
+      [
+         enable_xrender="no";
+         AC_MSG_WARN([unable to use X11/extensions/XRender.h])
+      ])
 
 fi
 if test "$enable_xrender" != "no" ; then
-	AC_CHECK_LIB(Xrender, XRenderComposite,
-		[ LDFLAGS="$LDFLAGS $XRENDER_LDFLAGS"
-		  CFLAGS="$CFLAGS $XRENDER_CFLAGS"
-		  enable_xrender="yes"
-		  AC_DEFINE(USE_XRENDER, 1, [Define to enable the XRender extension]) ],
-		[ enable_xrender="no"
-		  AC_MSG_WARN([unable to use the XRender extension]) ],
-		[ $XRENDER_LDFLAGS ])
+   AC_CHECK_LIB(Xrender, XRenderComposite,
+      [ LDFLAGS="$LDFLAGS $XRENDER_LDFLAGS"
+        CFLAGS="$CFLAGS $XRENDER_CFLAGS"
+        enable_xrender="yes"
+        AC_DEFINE(USE_XRENDER, 1, [Define to enable the XRender extension]) ],
+      [ enable_xrender="no"
+        AC_MSG_WARN([unable to use the XRender extension]) ],
+      [ $XRENDER_LDFLAGS ])
 fi
 
 ############################################################################
 # Check if FriBidi support was requested and available.
 ############################################################################
 AC_ARG_ENABLE(fribidi,
-	AC_HELP_STRING([--disable-fribidi],
-		[disable bi-directional unicode support]) )
+   AC_HELP_STRING([--disable-fribidi],
+      [disable bi-directional unicode support]) )
 if test "$enable_fribidi" != "no" ; then
 
-	if test "$use_pkgconfig_fribidi" = "yes" ; then
-		FRIBIDI_CFLAGS=`$PKGCONFIG --cflags fribidi`
-		FRIBIDI_LDFLAGS=`$PKGCONFIG --libs fribidi`
-	elif test -x `which fribidi-config` ; then
-		FRIBIDI_CFLAGS=`fribidi-config --cflags`
-		FRIBIDI_LDFLAGS=`fribidi-config --libs`
-	else
-		FRIBIDI_LDFLAGS="-lfribidi"
-	fi
+   if test "$use_pkgconfig_fribidi" = "yes" ; then
+      FRIBIDI_CFLAGS=`$PKGCONFIG --cflags fribidi`
+      FRIBIDI_LDFLAGS=`$PKGCONFIG --libs fribidi`
+   elif test -x `which fribidi-config` ; then
+      FRIBIDI_CFLAGS=`fribidi-config --cflags`
+      FRIBIDI_LDFLAGS=`fribidi-config --libs`
+   else
+      FRIBIDI_LDFLAGS="-lfribidi"
+   fi
 
 fi
 if test "$enable_fribidi" != "no" ; then
-	AC_CHECK_LIB(fribidi, fribidi_log2vis,
-		[ LDFLAGS="$LDFLAGS $FRIBIDI_LDFLAGS"
-		  CFLAGS="$CFLAGS $FRIBIDI_CFLAGS"
-		  enable_fribidi="yes"
-		  AC_DEFINE(USE_FRIBIDI, 1, [Define to use FriBidi]) ],
-		[ enable_fribidi="no"
-		  AC_MSG_WARN([unable to use FriBidi]) ],
-		[ $FRIBIDI_LDFLAGS ])
+   AC_CHECK_LIB(fribidi, fribidi_log2vis,
+      [ LDFLAGS="$LDFLAGS $FRIBIDI_LDFLAGS"
+        CFLAGS="$CFLAGS $FRIBIDI_CFLAGS"
+        enable_fribidi="yes"
+        AC_DEFINE(USE_FRIBIDI, 1, [Define to use FriBidi]) ],
+      [ enable_fribidi="no"
+        AC_MSG_WARN([unable to use FriBidi]) ],
+      [ $FRIBIDI_LDFLAGS ])
 fi
 
 ############################################################################
 # Check if XPM support was requested and available.
 ############################################################################
 AC_ARG_ENABLE(xpm,
-	AC_HELP_STRING([--disable-xpm], [don't support XPM images]) )
+   AC_HELP_STRING([--disable-xpm], [don't support XPM images]) )
 if test "$enable_xpm" != "no"; then
-	AC_CHECK_HEADERS([X11/xpm.h], [],
-		[ enable_xpm="no";
-		  AC_MSG_WARN([unable to use X11/xpm.h]) ])
+   AC_CHECK_HEADERS([X11/xpm.h], [],
+      [ enable_xpm="no";
+        AC_MSG_WARN([unable to use X11/xpm.h]) ])
 fi
 if test "$enable_xpm" != "no"; then
-	AC_CHECK_DECL(XpmAllocColor, [],
-		[ enable_xpm="no"
-		  AC_MSG_WARN([XPM library too old]) ],
-		[
+   AC_CHECK_DECL(XpmAllocColor, [],
+      [ enable_xpm="no"
+        AC_MSG_WARN([XPM library too old]) ],
+      [
 #include <X11/xpm.h>
 ])
 fi
 if test "$enable_xpm" != "no"; then
-	AC_CHECK_LIB(Xpm, XpmReadFileToImage,
-		[ LDFLAGS="$LDFLAGS -lXpm";
-		  enable_xpm="yes"
-		  AC_DEFINE(USE_XPM, 1, [Define to enable XPM support]) ],
-		[ enable_xpm="no"
-		  AC_MSG_WARN([unable to use libXpm]) ])
+   AC_CHECK_LIB(Xpm, XpmReadFileToImage,
+      [ LDFLAGS="$LDFLAGS -lXpm";
+        enable_xpm="yes"
+        AC_DEFINE(USE_XPM, 1, [Define to enable XPM support]) ],
+      [ enable_xpm="no"
+        AC_MSG_WARN([unable to use libXpm]) ])
 fi
 
 ############################################################################
 # Check if support for the shape extension was requested and available.
 ############################################################################
 AC_ARG_ENABLE(shape,
-	AC_HELP_STRING([--disable-shape], [don't use the X shape extension]) )
+   AC_HELP_STRING([--disable-shape], [don't use the X shape extension]) )
 if test "$enable_shape" != "no"; then
-	AC_CHECK_LIB(Xext, XShapeCombineRectangles,
-		[ LDFLAGS="$LDFLAGS -lXext"
-		  enable_shape="yes"
-		  AC_DEFINE(USE_SHAPE, 1, [Define to enable the X shape extension]) ],
-		[ enable_shape="no"
-		  AC_MSG_WARN([unable to use the X shape extension]) ])
+   AC_CHECK_LIB(Xext, XShapeCombineRectangles,
+      [ LDFLAGS="$LDFLAGS -lXext"
+        enable_shape="yes"
+        AC_DEFINE(USE_SHAPE, 1, [Define to enable the X shape extension]) ],
+      [ enable_shape="no"
+        AC_MSG_WARN([unable to use the X shape extension]) ])
 fi
 
 ############################################################################
 # Check if support for Xinerama was requested and available.
 ############################################################################
 AC_ARG_ENABLE(xinerama,
-	AC_HELP_STRING([--disable-xinerama], [don't use Xinerama]) )
+   AC_HELP_STRING([--disable-xinerama], [don't use Xinerama]) )
 if test "$enable_xinerama" != "no"; then
-	AC_CHECK_LIB(Xinerama, XineramaQueryExtension,
-		[ LDFLAGS="$LDFLAGS -lXinerama"
-		  enable_xinerama="yes"
-		  AC_DEFINE(USE_XINERAMA, 1, [Define to enable Xinerama]) ],
-		[ enable_xinerama="no"
-		  AC_MSG_WARN([unable to use Xinerama]) ])
+   AC_CHECK_LIB(Xinerama, XineramaQueryExtension,
+      [ LDFLAGS="$LDFLAGS -lXinerama"
+        enable_xinerama="yes"
+        AC_DEFINE(USE_XINERAMA, 1, [Define to enable Xinerama]) ],
+      [ enable_xinerama="no"
+        AC_MSG_WARN([unable to use Xinerama]) ])
 fi
 
 ############################################################################
 # Check if debug mode was requested.
 ############################################################################
 AC_ARG_ENABLE(debug,
-	AC_HELP_STRING([--enable-debug], [use this to debug JWM]) )
+   AC_HELP_STRING([--enable-debug], [use this to debug JWM]) )
 if test "$enable_debug" = "yes"; then
-	AC_DEFINE(DEBUG, 1, [Define to debug JWM])
-	CFLAGS="$CFLAGS -Wall -g -DDEBUG"
-	LDFLAGS="$LDFLAGS -g"
+   AC_DEFINE(DEBUG, 1, [Define to debug JWM])
+   CFLAGS="$CFLAGS -Wall -g -DDEBUG"
+   LDFLAGS="$LDFLAGS -g"
 else
-	enable_debug="no"
+   enable_debug="no"
 fi
 
 ############################################################################
 # Create the output files.
 ############################################################################
 if test "$prefix" = "NONE" ; then
-	PREFIX="$ac_default_prefix"
-	prefix="$ac_default_prefix"
+   PREFIX="$ac_default_prefix"
+   prefix="$ac_default_prefix"
 else
-	PREFIX="$prefix"
+   PREFIX="$prefix"
 fi
 
 if test "$exec_prefix" = "NONE" ; then
-	exec_prefix="$PREFIX"
+   exec_prefix="$PREFIX"
 fi
 
 if test "$sysconfdir" = "" ; then
-	sysconfdir="$ac_default_sysconfdir"
+   sysconfdir="$ac_default_sysconfdir"
 fi
 
 if test "$mandir" = "" ; then
-	mandir="$ac_default_mandir"
+   mandir="$ac_default_mandir"
 fi
 
 BINDIR=`eval echo \""$bindir"\"`
@@ -371,7 +371,7 @@ MANDIR=`eval echo \""$mandir"\"`
 MANDIR=`eval echo \""$MANDIR"\"`
 
 AC_DEFINE_UNQUOTED(SYSTEM_CONFIG, "$SYSCONF/system.jwmrc",
-	[default system configuration path])
+   [default system configuration path])
 
 AC_SUBST(CFLAGS)
 AC_SUBST(LDFLAGS)
@@ -384,7 +384,7 @@ AC_SUBST(SYSCONF, "$SYSCONF")
 
 AC_OUTPUT(
 
-	Makefile src/Makefile jwm.1
+   Makefile src/Makefile jwm.1
 
 )
 

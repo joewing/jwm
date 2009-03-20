@@ -31,13 +31,23 @@ static void UnpatchRootMenu(Menu *menu);
 
 static void RunRootCommand(const MenuAction *action);
 
+Bool composite_enabled = False;
+
 /** Initialize root menu data. */
 void InitializeRootMenu() {
 
    int x;
+   int composite_event, composite_error, composite_opcode;
 
    for(x = 0; x < ROOT_MENU_COUNT; x++) {
       rootMenu[x] = NULL;
+   }
+
+   if(!XQueryExtension(display, "Composite", &composite_opcode,
+         &composite_event, &composite_error)) {
+      composite_enabled = False;
+   } else {
+      composite_enabled = True;
    }
 
 }
@@ -260,6 +270,7 @@ void RunRootCommand(const MenuAction *action) {
    case MA_SHADE:
    case MA_MOVE:
    case MA_RESIZE:
+   case MA_TRANSPARENT:
    case MA_KILL:
    case MA_CLOSE:
       ChooseWindow(action);

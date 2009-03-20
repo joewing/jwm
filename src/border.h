@@ -78,5 +78,11 @@ void SetTitleHeight(const char *str);
 /** Redraw all borders on the current desktop. */
 void ExposeCurrentDesktop();
 
+/** Reset rounded rectangle windows **/
+void ResetRoundRectWindow(const Window srrw);
+
+/** Draw rounded rectangle windows **/
+void ShapeRoundedRectWindow(const Window srrw, int width, int height);
+
 #endif
 

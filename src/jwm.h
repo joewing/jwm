@@ -73,7 +73,9 @@
 
 #   ifdef USE_SHAPE
 #      include <X11/extensions/shape.h>
+#      include <X11/Xmu/Xmu.h>
 #   endif
+
 #   ifdef USE_XINERAMA
 #      include <X11/extensions/Xinerama.h>
 #   endif
@@ -130,6 +132,13 @@
 #define SHELL_NAME "/bin/sh"
 
 #define DEFAULT_MENU_TITLE "JWM"
+
+/** Fixed radius of 4x4 */
+#ifdef USE_SHAPE
+#  define CORNER_RADIUS 4
+#endif
+
+#define OPAQUE    0xFFFFFFFF
 
 #include "debug.h"
 #include "jxlib.h"

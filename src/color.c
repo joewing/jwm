@@ -70,6 +70,7 @@ static DefaultColorNode DEFAULT_COLORS[] = {
    { COLOR_MENU_ACTIVE_BG1,    "red"     },
    { COLOR_MENU_ACTIVE_BG2,    "red"     },
    { COLOR_MENU_ACTIVE_FG,     "white"   },
+   { COLOR_MENU_ACTIVE_OL,     "black"   },
 
    { COLOR_POPUP_BG,           "yellow"  },
    { COLOR_POPUP_FG,           "black"   },

@@ -313,12 +313,14 @@ int ShouldGrab(KeyType key) {
    case KEY_MAX:
    case KEY_SHADE:
    case KEY_STICK:
+   case KEY_OPAQUE:
    case KEY_MOVE:
    case KEY_RESIZE:
    case KEY_ROOT:
    case KEY_WIN:
    case KEY_DESKTOP:
    case KEY_PDESKTOP:
+   case KEY_SHOWDESK:
    case KEY_EXEC:
    case KEY_RESTART:
    case KEY_EXIT:

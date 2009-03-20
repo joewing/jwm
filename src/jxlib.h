@@ -28,6 +28,9 @@
 #define JXChangeProperty( a, b, c, d, e, f, g, h ) \
    ( SetCheckpoint(), XChangeProperty( a, b, c, d, e, f, g, h ) )
 
+#define JXDeleteProperty( a, b, c ) \
+   ( SetCheckpoint(), XDeleteProperty( a, b, c ) )
+
 #define JXChangeWindowAttributes( a, b, c, d ) \
    ( SetCheckpoint(), XChangeWindowAttributes( a, b, c, d ) )
 

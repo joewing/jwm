@@ -60,6 +60,7 @@ static const KeyMapType KEY_MAP[] = {
    { "maximize",    KEY_MAX          },
    { "shade",       KEY_SHADE        },
    { "stick",       KEY_STICK        },
+   { "opaque",      KEY_OPAQUE       },
    { "move",        KEY_MOVE         },
    { "resize",      KEY_RESIZE       },
    { "window",      KEY_WIN          },
@@ -68,6 +69,7 @@ static const KeyMapType KEY_MAP[] = {
    { "desktop",     KEY_DESKTOP      },
    { "desktop#",    KEY_DESKTOP      },
    { "pdesktop",    KEY_PDESKTOP     },
+   { "showdesktop", KEY_SHOWDESK     },
    { NULL,          KEY_NONE         }
 };
 
@@ -80,6 +82,7 @@ typedef struct OptionMapType {
 /** Mapping of names to group options. */
 static const OptionMapType OPTION_MAP[] = {
    { "sticky",       OPTION_STICKY     },
+   { "transparent",  OPTION_OPAQUE     },
    { "nolist",       OPTION_NOLIST     },
    { "border",       OPTION_BORDER     },
    { "noborder",     OPTION_NOBORDER   },
@@ -849,6 +852,9 @@ void ParseWindowStyle(const TokenNode *tp) {
       case TOK_INACTIVE:
          ParseInactiveWindowStyle(np);
          break;
+      case TOK_OPACITY:
+         SetClientOpacity(np->value);
+         break;
       default:
          InvalidTag(np, TOK_WINDOWSTYLE);
          break;
@@ -1064,6 +1070,9 @@ void ParseTrayStyle(const TokenNode *tp) {
          break;
       case TOK_FOREGROUND:
          SetColor(COLOR_TRAY_FG, np->value);
+         break;
+      case TOK_OPACITY:
+         SetTrayOpacity(np->value);
          break;
       default:
          InvalidTag(np, TOK_TRAYSTYLE);
@@ -1422,6 +1431,12 @@ void ParseMenuStyle(const TokenNode *tp) {
          break;
       case TOK_ACTIVEBACKGROUND:
          ParseGradient(np->value, COLOR_MENU_ACTIVE_BG1, COLOR_MENU_ACTIVE_BG2);
+         break;
+      case TOK_OUTLINE:
+         SetColor(COLOR_MENU_ACTIVE_OL, np->value);
+         break;
+      case TOK_OPACITY:
+         SetMenuOpacity(np->value);
          break;
       default:
          InvalidTag(np, TOK_MENUSTYLE);

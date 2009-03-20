@@ -56,6 +56,9 @@ static MenuAction *menuAction = NULL;
 
 int menuShown = 0;
 
+/** Default opacity for Menu **/
+static double menu_opacity = 1.0;
+
 /** Initialize a menu. */
 void InitializeMenu(Menu *menu) {
 
@@ -319,6 +322,7 @@ void CreateMenu(Menu *menu, int x, int y) {
    XSetWindowAttributes attr;
    unsigned long attrMask;
    int temp;
+   unsigned int winopac;
 
    menu->lastIndex = -1;
    menu->currentIndex = -1;
@@ -357,7 +361,15 @@ void CreateMenu(Menu *menu, int x, int y) {
       menu->width, menu->height, 0, CopyFromParent, InputOutput,
       CopyFromParent, attrMask, &attr);
 
-   JXMapRaised(display, menu->window);
+   if(menu_opacity < 1) {
+      winopac = (unsigned int) (menu_opacity * OPAQUE);
+      JXChangeProperty(display, menu->window,
+         atoms[ATOM_NET_WM_WINDOW_OPACITY],
+         XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&winopac, 1L);
+     JXSync(display, False);
+   }
+
+   JXMapRaised(display, menu->window); 
 
 }
 
@@ -820,6 +832,19 @@ int IsMenuValid(const Menu *menu) {
    }
 
    return 0;
+
+}
+
+/** Set the Menu transparency level. */
+void SetMenuOpacity(const char *str) {
+
+   Assert(str);
+
+   menu_opacity = atof(str);
+   if(menu_opacity < 0.0 || menu_opacity > 1.0) {
+      Warning("invalid menu opacity: %s", str);
+      menu_opacity = 1.0;
+   }
 
 }
 

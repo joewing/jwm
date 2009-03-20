@@ -204,6 +204,23 @@ The icon to use for this item. No default.
 .RE
 .RE
 .P
+.B Opaque
+.RS
+Add a transparent/opaque window operation to the menu. After selecting this
+item a window may be selected to toggle the transparency state of that window.
+The following attributes are supported
+.P
+\fBlabel\fP \fIstring\fP
+.RS
+The label to use. The default is "Opaque".
+.RE
+.P
+\fBicon\fP \fIstring\fP
+.RS
+The icon to use for this item. No default.
+.RE
+.RE
+.P
 .B Maximize
 .RS
 Add a maximize window operation to the menu. After selecting this
@@ -659,6 +676,11 @@ Make windows in this group initially shaded.
 Make windows in this group sticky.
 .RE
 .P
+.B transparent
+.RS
+Make windows in this group transparent.
+.RE
+.P
 .B title
 .RS
 Causes windows in this group to have a title bar.
@@ -1041,6 +1063,8 @@ Maximize the active window. Grabbed.
 Shade the active window. Grabbed.
 .IP \fBstick\fP
 Stick/unstick the active window. Grabbed.
+.IP \fBopaque\fP
+Toggle active window between transparent and opaque. Grabbed.
 .IP \fBmove\fP
 Move the active window. Grabbed.
 .IP \fBresize\fP
@@ -1057,6 +1081,8 @@ the key section. The number 1 to the number of desktops configured
 are then substituted for "#". Grabbed.
 .IP \fBpdesktop\fP
 Switch to the previous desktop. Grabbed.
+.IP \fBshowdesktop\fP
+Show/hide the desktop (maximize/minimize all windows). Grabbed.
 .IP \fBexec:\fP\fIcommand\fP
 Execute \fIcommand\fP. Grabbed.
 .IP \fBrestart\fP

@@ -119,6 +119,7 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_STRUT_PARTIAL],      "_NET_WM_STRUT_PARTIAL"       },
    { &atoms[ATOM_NET_WM_STRUT],              "_NET_WM_STRUT"               },
    { &atoms[ATOM_NET_SYSTEM_TRAY_OPCODE],    "_NET_SYSTEM_TRAY_OPCODE"     },
+   { &atoms[ATOM_NET_WM_WINDOW_OPACITY],     "_NET_WM_WINDOW_OPACITY"      },
 
    { &atoms[ATOM_WIN_LAYER],                 "_WIN_LAYER"                  },
    { &atoms[ATOM_WIN_STATE],                 "_WIN_STATE"                  },

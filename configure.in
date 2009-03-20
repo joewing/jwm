@@ -309,7 +309,7 @@ AC_ARG_ENABLE(shape,
    AC_HELP_STRING([--disable-shape], [don't use the X shape extension]) )
 if test "$enable_shape" != "no"; then
    AC_CHECK_LIB(Xext, XShapeCombineRectangles,
-      [ LDFLAGS="$LDFLAGS -lXext"
+      [ LDFLAGS="$LDFLAGS -lXext -lXmu"
         enable_shape="yes"
         AC_DEFINE(USE_SHAPE, 1, [Define to enable the X shape extension]) ],
       [ enable_shape="no"

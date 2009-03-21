@@ -320,6 +320,9 @@
 #define JXShapeCombineShape( a, b, c, d, e, f, g, h ) \
    ( SetCheckpoint(), XShapeCombineShape( a, b, c, d, e, f, g, h ) )
 
+#define JXShapeCombineMask( a, b, c, d, e, f, g ) \
+   ( SetCheckpoint(), XShapeCombineMask( a, b, c, d, e, f, g ) )
+
 #define JXShapeQueryExtension( a, b, c ) \
    ( SetCheckpoint(), XShapeQueryExtension( a, b, c ) )
 

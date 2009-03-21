@@ -374,17 +374,24 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
 
 #ifdef USE_SHAPE
    /* Shape window corners */
-   ShapeRoundedRectWindow(np->parent, width, height);
+   if(np->state.status & STAT_SHADED) {
+      ShapeRoundedRectWindow(np->parent, width, north);
+   } else {
+      ShapeRoundedRectWindow(np->parent, width, height);
+   }
 #endif
+
    /* Set the window background color (to reduce flickering). */
    JXSetWindowBackground(display, canvas, titleColor2);
 
    /* Draw the outside border (clear the window with the right color). */
    JXSetForeground(display, gc, titleColor2);
+
 #ifdef USE_SHAPE
    XmuFillRoundedRectangle(display, canvas, gc, 0, 0, 
-      (int) width, (int) height, CORNER_RADIUS, CORNER_RADIUS);
+      (int)width, (int)height, CORNER_RADIUS, CORNER_RADIUS);
 #endif
+
    /* Determine how many pixels may be used for the title. */
    buttonCount = GetButtonCount(np);
    titleWidth = width;
@@ -454,20 +461,20 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
    if(np->state.status & STAT_SHADED) {
    	
 #ifdef USE_SHAPE
-   XmuDrawRoundedRectangle(display, canvas, gc, 0, 0, 
-      (int)width - 1, (int)north - 1, CORNER_RADIUS, CORNER_RADIUS);
+      XmuDrawRoundedRectangle(display, canvas, gc, 0, 0, 
+         (int)width - 1, (int)north - 1, CORNER_RADIUS, CORNER_RADIUS);
 #else
-   XDrawRectangle(display, canvas, gc, 0, 0, width - 1, north - 1);
+      JXDrawRectangle(display, canvas, gc, 0, 0, width - 1, north - 1);
 #endif
 
    } else {
    	
 #ifdef USE_SHAPE
       XmuDrawRoundedRectangle(display, canvas, gc, 0, 0, 
-         (int) width - 1, (int) height - 1, CORNER_RADIUS, CORNER_RADIUS);
+         (int)width - 1, (int)height - 1, CORNER_RADIUS, CORNER_RADIUS);
 #else
-      XDrawRectangle(display, canvas, gc, 0, 0, width - 1, height - 1);
-      XDrawRectangle(display, canvas, gc, west - 1, north - 1,
+      JXDrawRectangle(display, canvas, gc, 0, 0, width - 1, height - 1);
+      JXDrawRectangle(display, canvas, gc, west - 1, north - 1,
          np->width + 1, np->height + 1);
 #endif
 
@@ -556,9 +563,6 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
    /* Close button. */
    if(np->state.border & BORDER_CLOSE) {
 
-      //JXSetForeground(display, gc, outlineColor);
-      //JXDrawLine(display, canvas, gc, offset, 0, offset, titleHeight);
-
       pixmap = pixmaps[BP_CLOSE];
 
       JXSetForeground(display, gc, color);
@@ -577,9 +581,6 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
    /* Maximize button. */
    if(np->state.border & BORDER_MAX) {
 
-      //JXSetForeground(display, gc, outlineColor);
-      //JXDrawLine(display, canvas, gc, offset, 0, offset, titleHeight);
-
       if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
          pixmap = pixmaps[BP_MAXIMIZE_ACTIVE];
       } else {
@@ -587,10 +588,10 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
       }
 
       JXSetForeground(display, gc, color);
-      XSetClipMask(display, gc, pixmap);
-      XSetClipOrigin(display, gc, offset + yoffset, yoffset);
-      XFillRectangle(display, canvas, gc, offset + yoffset, yoffset, 16, 16);
-      XSetClipMask(display, gc, None);
+      JXSetClipMask(display, gc, pixmap);
+      JXSetClipOrigin(display, gc, offset + yoffset, yoffset);
+      JXFillRectangle(display, canvas, gc, offset + yoffset, yoffset, 16, 16);
+      JXSetClipMask(display, gc, None);
 
       offset -= titleHeight;
       if(offset <= titleHeight) {
@@ -602,16 +603,13 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
    /* Minimize button. */
    if(np->state.border & BORDER_MIN) {
 
-      //JXSetForeground(display, gc, outlineColor);
-      //JXDrawLine(display, canvas, gc, offset, 0, offset, titleHeight);
-
       pixmap = pixmaps[BP_MINIMIZE];
 
       JXSetForeground(display, gc, color);
-      XSetClipMask(display, gc, pixmap);
-      XSetClipOrigin(display, gc, offset + yoffset, yoffset);
-      XFillRectangle(display, canvas, gc, offset + yoffset, yoffset, 16, 16);
-      XSetClipMask(display, gc, None);
+      JXSetClipMask(display, gc, pixmap);
+      JXSetClipOrigin(display, gc, offset + yoffset, yoffset);
+      JXFillRectangle(display, canvas, gc, offset + yoffset, yoffset, 16, 16);
+      JXSetClipMask(display, gc, None);
 
    }
 
@@ -725,7 +723,7 @@ void SetTitleHeight(const char *str) {
 /** Clear the shape mask of a window. */
 void ResetRoundRectWindow(const Window srrw) {
    Assert(srrw);	
-   XShapeCombineMask(display, srrw, ShapeBounding, 0, 0, None, ShapeSet);
+   JXShapeCombineMask(display, srrw, ShapeBounding, 0, 0, None, ShapeSet);
 }
  
 /** Set the shape mask on a window to give a rounded boarder. */
@@ -736,21 +734,21 @@ void ShapeRoundedRectWindow(const Window srrw, int width, int height) {
 
    Assert(srrw);
 
-   pm = XCreatePixmap(display, srrw, width, height, 1);
-   tgc = XCreateGC(display, pm, 0, NULL);
+   pm = JXCreatePixmap(display, srrw, width, height, 1);
+   tgc = JXCreateGC(display, pm, 0, NULL);
 
-   XSetForeground(display, tgc, 0);
-   XFillRectangle(display, pm, tgc, 0, 0, width, height);
+   JXSetForeground(display, tgc, 0);
+   JXFillRectangle(display, pm, tgc, 0, 0, width, height);
 
-   XSetForeground(display, tgc, 1);
    /** Corner bound radius -1 to allow slightly better outline drawing */
+   JXSetForeground(display, tgc, 1);
    XmuFillRoundedRectangle(display, pm, tgc, 0, 0, 
       (int)width, (int)height, CORNER_RADIUS - 1, CORNER_RADIUS - 1);
    
    XShapeCombineMask(display, srrw, ShapeBounding, 0, 0, pm, ShapeSet);
 
-   XFreePixmap(display, pm);
-   XFreeGC(display, tgc);
+   JXFreePixmap(display, pm);
+   JXFreeGC(display, tgc);
 
 }
 

@@ -78,7 +78,6 @@ int haveShape;
 int shapeEvent;
 #endif
 
-
 static const char *CONFIG_FILE = "/.jwmrc";
 
 static void Initialize();

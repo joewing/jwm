@@ -43,11 +43,13 @@ void InitializeRootMenu() {
       rootMenu[x] = NULL;
    }
 
-   if(!XQueryExtension(display, "Composite", &composite_opcode,
+   if(!JXQueryExtension(display, "Composite", &composite_opcode,
          &composite_event, &composite_error)) {
       composite_enabled = False;
+      Debug("composite extension disabled");
    } else {
       composite_enabled = True;
+      Debug("composite extension enabled");
    }
 
 }

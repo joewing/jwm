@@ -326,6 +326,9 @@
 #define JXShapeQueryExtension( a, b, c ) \
    ( SetCheckpoint(), XShapeQueryExtension( a, b, c ) )
 
+#define JXQueryExtension( a, b, c, d, e ) \
+   ( SetCheckpoint(), XQueryExtension( a, b, c, d, e ) )
+
 #define JXShapeQueryExtents( a, b, c, d, e, f, g, h, i, j, k, l ) \
    ( SetCheckpoint(), \
    XShapeQueryExtents( a, b, c, d, e, f, g, h, i, j, k, l ) )

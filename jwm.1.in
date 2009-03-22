@@ -480,18 +480,11 @@ Only one Dock is allowed per instance of JWM.
 .P
 .B Pager
 .RS
-Add a pager to the tray. This tag supports the following attributes:
+Add a pager to the tray. This tag supports the following attribute:
 .P
-\fBwidth\fP \fIint\fP
+\fBlabeled\fP \fIbool\fP
 .RS
-The width of the pager. 0 indicates that the width should be determined
-from the tray. 0 is the default.
-.RE
-.P
-\fBheight\fP \fIint\fP
-.RS
-The height of the pager. 0 indicates that the height should be determined
-from the tray. 0 is the default.
+Determines if the pager has text labels. Default is false.
 .RE
 .RE
 .P
@@ -876,6 +869,18 @@ for more information.
 .RS
 The color of active desktops shown in the pager. See the \fBCOLORS\fP
 section for more information.
+.RE
+.P
+.B Text
+.RS
+The color to use for pager labels. See the \fBCOLORS\fP
+section for more information.
+.RE
+.P
+.B Font
+.RS
+The font to use for pager labels. See the \fBCOLORS\fP section
+for more information.
 .RE
 .RE
 

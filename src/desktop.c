@@ -244,3 +244,12 @@ void SetDesktopName(unsigned int desktop, const char *str) {
 
 }
 
+/** Get the name of a desktop. */
+const char *GetDesktopName(unsigned int desktop) {
+   if(desktopNames && desktopNames[desktop]) {
+      return desktopNames[desktop];
+   } else {
+      return "";
+   }
+}
+

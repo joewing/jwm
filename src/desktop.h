@@ -56,5 +56,11 @@ void SetDesktopCount(const char *str);
  */
 void SetDesktopName(unsigned int desktop, const char *str);
 
+/** Get the name of a desktop.
+ * @param desktop The desktop (0 based).
+ * @return The name of the desktop.
+ */
+const char *GetDesktopName(unsigned int desktop);
+
 #endif
 

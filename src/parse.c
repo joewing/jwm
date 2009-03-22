@@ -1177,11 +1177,18 @@ void ParseTray(const TokenNode *tp) {
 void ParsePager(const TokenNode *tp, TrayType *tray) {
 
    TrayComponentType *cp;
+   const char *temp;
+   int labeled;
 
    Assert(tp);
    Assert(tray);
 
-   cp = CreatePager();
+   labeled = 0;
+   temp = FindAttribute(tp->attributes, LABELED_ATTRIBUTE);
+   if(temp && !strcmp(temp, TRUE_VALUE)) {
+      labeled = 1;
+   }
+   cp = CreatePager(labeled);
    AddTrayComponent(tray, cp);
 
 }
@@ -1359,6 +1366,12 @@ void ParsePagerStyle(const TokenNode *tp) {
          break;
       case TOK_ACTIVEBACKGROUND:
          SetColor(COLOR_PAGER_ACTIVE_BG, np->value);
+         break;
+      case TOK_FONT:
+         SetFont(FONT_PAGER, np->value);
+         break;
+      case TOK_TEXT:
+         SetColor(COLOR_PAGER_TEXT, np->value);
          break;
       default:
          InvalidTag(np, TOK_PAGERSTYLE);

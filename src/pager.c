@@ -18,12 +18,14 @@
 #include "event.h"
 #include "main.h"
 #include "tray.h"
+#include "font.h"
 
 /** Structure to represent a pager tray component. */
 typedef struct PagerType {
 
    TrayComponentType *cp;  /**< Common tray component data. */
 
+   int labeled;            /**< Set to label the pager. */
    int deskWidth;          /**< Width of a desktop. */
    int deskHeight;         /**< Height of a desktop. */
    double scalex;          /**< Horizontal scale factor. */
@@ -92,7 +94,7 @@ void DestroyPager() {
 }
 
 /** Create a new pager tray component. */
-TrayComponentType *CreatePager() {
+TrayComponentType *CreatePager(int labeled) {
 
    TrayComponentType *cp;
    PagerType *pp;
@@ -100,6 +102,7 @@ TrayComponentType *CreatePager() {
    pp = Allocate(sizeof(PagerType));
    pp->next = pagers;
    pagers = pp;
+   pp->labeled = labeled;
 
    cp = CreateTrayComponent();
    cp->object = pp;
@@ -475,6 +478,8 @@ void UpdatePager() {
    int width, height;
    int deskWidth, deskHeight;
    unsigned int x;
+   const char *name;
+   int xc, yc;
 
    if(shouldExit) {
       return;
@@ -502,6 +507,24 @@ void UpdatePager() {
          JXFillRectangle(display, buffer, rootGC,
             0, currentDesktop * (deskHeight + 1),
             width, deskHeight);
+      }
+
+      /* Draw the labels. */
+      if(pp->labeled) {
+         for(x = 0; x < desktopCount; x++) {
+            name = GetDesktopName(x);
+            if(pp->layout == LAYOUT_HORIZONTAL) {
+               xc = x * (deskWidth + 1) + deskWidth / 2
+                  - GetStringWidth(FONT_PAGER, name) / 2;
+               yc = height / 2 - GetStringHeight(FONT_PAGER) / 2;
+            } else {
+               xc = width / 2 - GetStringWidth(FONT_PAGER, name) / 2;
+               yc = x * (deskHeight + 1) + deskHeight / 2
+                  - GetStringHeight(FONT_PAGER) / 2;
+            }
+            RenderString(buffer, FONT_PAGER, COLOR_PAGER_TEXT, xc, yc,
+               deskWidth, None, name);
+         }
       }
 
       /* Draw the clients. */

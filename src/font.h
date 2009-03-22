@@ -22,6 +22,7 @@ typedef enum {
    FONT_CLOCK,
    FONT_TRAY,
    FONT_TRAYBUTTON,
+   FONT_PAGER,
 
    FONT_COUNT
 

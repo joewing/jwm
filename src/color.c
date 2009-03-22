@@ -61,6 +61,7 @@ static DefaultColorNode DEFAULT_COLORS[] = {
    { COLOR_PAGER_ACTIVE_BG,    "red"     },
    { COLOR_PAGER_ACTIVE_FG,    "red"     },
    { COLOR_PAGER_OUTLINE,      "black"   },
+   { COLOR_PAGER_TEXT,         "black"   },
 
    { COLOR_MENU_BG,            "gray"    },
    { COLOR_MENU_FG,            "black"   },

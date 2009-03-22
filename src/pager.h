@@ -20,9 +20,10 @@ void DestroyPager();
 /*@}*/
 
 /** Create a pager tray component.
+ * @param labeled Set to label the pager.
  * @return A new pager tray component.
  */
-struct TrayComponentType *CreatePager();
+struct TrayComponentType *CreatePager(int labeled);
 
 /** Update pagers. */
 void UpdatePager();

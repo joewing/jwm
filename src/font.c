@@ -56,6 +56,9 @@ void StartupFonts() {
    if(!fontNames[FONT_CLOCK]) {
       fontNames[FONT_CLOCK] = CopyString(fontNames[FONT_TRAY]);
    }
+   if(!fontNames[FONT_PAGER]) {
+      fontNames[FONT_PAGER] = CopyString(fontNames[FONT_TRAY]);
+   }
 
 #ifdef USE_XFT
 

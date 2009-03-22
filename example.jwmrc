@@ -83,14 +83,12 @@
       <Active>
          <Text>white</Text>
          <Title>#70849d:#2e3a67</Title>
-         <Corner>white</Corner>
          <Outline>black</Outline>
       </Active>
 
       <Inactive>
          <Text>#aaaaaa</Text>
          <Title>#808488:#303438</Title>
-         <Corner>#aaaaaa</Corner>
          <Outline>black</Outline>
       </Inactive>
 
@@ -99,9 +97,9 @@
    <TaskListStyle>
       <Font>FreeSans-12:bold</Font>
       <ActiveForeground>black</ActiveForeground>
-      <ActiveBackground>gray90:gray70</ActiveBackground>
+      <ActiveBackground>gray40:gray90</ActiveBackground>
       <Foreground>black</Foreground>
-      <Background>gray70:gray90</Background>
+      <Background>gray90:gray40</Background>
    </TaskListStyle>
 
    <!-- Additional TrayStyle attribute: insert -->

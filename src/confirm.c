@@ -365,7 +365,7 @@ void ComputeDimensions(DialogType *dp) {
       if(width > minWidth) {
          minWidth = width;
       }
-      minWidth += 30;
+      minWidth += 16 * 3;
    }
    dp->width = minWidth;
 
@@ -439,7 +439,7 @@ void DrawButtons(DialogType *dp) {
    if(temp > dp->buttonWidth) {
       dp->buttonWidth = temp;
    }
-   dp->buttonWidth += 10;
+   dp->buttonWidth += 16;
    dp->buttonHeight = dp->lineHeight + 4;
 
    ResetButton(&button, dp->node->window, rootGC);

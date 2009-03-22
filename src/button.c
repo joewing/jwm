@@ -71,17 +71,17 @@ void DrawButton(ButtonNode *bp) {
       fg = COLOR_TASK_FG;
       bg1 = colors[COLOR_TASK_BG1];
       bg2 = colors[COLOR_TASK_BG2];
-      outlinePixel = colors[COLOR_TASK_DOWN];
       topPixel = colors[COLOR_TASK_UP];
       bottomPixel = colors[COLOR_TASK_DOWN];
+      outlinePixel = bottomPixel;
       break;
    case BUTTON_TASK_ACTIVE:
       fg = COLOR_TASK_ACTIVE_FG;
       bg1 = colors[COLOR_TASK_ACTIVE_BG1];
       bg2 = colors[COLOR_TASK_ACTIVE_BG2];
-      outlinePixel = colors[COLOR_TASK_ACTIVE_DOWN];
       topPixel = colors[COLOR_TASK_ACTIVE_DOWN];
       bottomPixel = colors[COLOR_TASK_ACTIVE_UP];
+      outlinePixel = bottomPixel;
       break;
    case BUTTON_MENU:
    default:
@@ -102,8 +102,9 @@ void DrawButton(ButtonNode *bp) {
          break;
       }
       /* conditional fallthrough is intended */  
-   case BUTTON_TASK_ACTIVE:
-      /* Draw the button color & outline. */
+   default:
+
+      /* Draw the button background. */
       JXSetForeground(display, gc, bg1);
       if(bg1 == bg2) {
          /* single color */
@@ -114,48 +115,16 @@ void DrawButton(ButtonNode *bp) {
          DrawHorizontalGradient(drawable, gc, bg1, bg2,
             x + 1, y + 1, width - 2, height - 1);
       }
-      if(bp->type == BUTTON_TASK) {
-         /* switch outline color for normal/active task */
-         JXSetForeground(display, gc, topPixel);
-      } else {
-         JXSetForeground(display, gc, bottomPixel);
-      }
 
-      /* Simple rounded outline : not bounded */
+      /* Draw the outline. */
+      JXSetForeground(display, gc, outlinePixel);
 #ifdef USE_SHAPE
       XmuDrawRoundedRectangle(display, drawable, gc, x, y, 
          width, height, 3, 3);
-#endif
-      break;
-   default:
-      if(bg1 == bg2) {
-         JXSetForeground(display, gc, bg1);
-         JXFillRectangle(display, drawable, gc,
-            x + 1, y + 1, width - 1, height - 1);
-      } else {
-         DrawHorizontalGradient(drawable, gc, bg1, bg2,
-            x + 2, y + 2, width - 3, height - 3);
-      }
-
-      /* Draw the button outline. */
-      JXSetForeground(display, gc, outlinePixel);
+#else
       JXDrawRectangle(display, drawable, gc, x, y, width, height);
+#endif
 
-      /* If gradient, then draw 3D border */
-      if (bg1 != bg2) {
-
-         /* Draw the top and left sides. */
-         JXSetForeground(display, gc, topPixel);
-         JXDrawLine(display, drawable, gc, x + 1, y + 1, x + width - 2, y + 1);
-         JXDrawLine(display, drawable, gc, x + 1, y + 2, x + 1, y + height - 2);
-
-         /* Draw the bottom and right sides. */
-         JXSetForeground(display, gc, bottomPixel);
-         JXDrawLine(display, drawable, gc, x + 1, y + height - 1, x + width - 1,
-            y + height - 1);
-         JXDrawLine(display, drawable, gc, x + width - 1, y + 1, x + width - 1,
-            y + height - 2);
-      }
       break;
    }
 

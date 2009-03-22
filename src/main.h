@@ -53,5 +53,7 @@ extern int haveShape;
 extern int shapeEvent;
 #endif
 
+extern int haveComposite;
+
 #endif /* MAIN_H */
 

@@ -31,25 +31,12 @@ static void UnpatchRootMenu(Menu *menu);
 
 static void RunRootCommand(const MenuAction *action);
 
-Bool composite_enabled = False;
-
 /** Initialize root menu data. */
 void InitializeRootMenu() {
 
    int x;
-   int composite_event, composite_error, composite_opcode;
-
    for(x = 0; x < ROOT_MENU_COUNT; x++) {
       rootMenu[x] = NULL;
-   }
-
-   if(!JXQueryExtension(display, "Composite", &composite_opcode,
-         &composite_event, &composite_error)) {
-      composite_enabled = False;
-      Debug("composite extension disabled");
-   } else {
-      composite_enabled = True;
-      Debug("composite extension enabled");
    }
 
 }

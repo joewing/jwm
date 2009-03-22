@@ -81,7 +81,7 @@ Menu *CreateWindowMenu() {
       AddWindowMenuItem(menu, NULL, MA_NONE, 0);
    }
 
-   if(composite_enabled) {
+   if(haveComposite) {
       if(client->state.status & STAT_OPAQUE) {
          AddWindowMenuItem(menu, "Opaque", MA_TRANSPARENT, 0);
       } else {

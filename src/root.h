@@ -19,8 +19,6 @@ void ShutdownRootMenu();
 void DestroyRootMenu();
 /*@}*/
 
-extern Bool composite_enabled;
-
 /** Set the root menu to be used for the specified indexes.
  * @param indexes The indexes (ASCII string of '0' to '9').
  * @param m The menu to use for the specified indexes.

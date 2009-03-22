@@ -78,6 +78,8 @@ int haveShape;
 int shapeEvent;
 #endif
 
+int haveComposite;
+
 static const char *CONFIG_FILE = "/.jwmrc";
 
 static void Initialize();
@@ -257,6 +259,9 @@ void StartupConnection() {
 
    XSetWindowAttributes attr;
    int temp;
+   int compositeOpcode;
+   int compositeEvent;
+   int compositeError;
 
    initializing = 1;
    OpenConnection();
@@ -296,6 +301,14 @@ void StartupConnection() {
       Debug("shape extension disabled");
    }
 #endif
+
+   haveComposite = JXQueryExtension(display, "Composite", &compositeOpcode,
+      &compositeEvent, &compositeError);
+   if(haveComposite) {
+      Debug("composite extension enabled");
+   } else {
+      Debug("composite extension disabled");
+   }
 
    initializing = 0;
 

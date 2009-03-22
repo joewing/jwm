@@ -59,7 +59,7 @@ static const char *bmp_files[BP_COUNT] = {
 static Region borderRegion = NULL;
 static GC borderGC;
 
-#ifdef USE_SHAPE
+#if defined(USE_SHAPE) && defined(USE_XMU)
 static Pixmap shapePixmap;
 static int shapePixmapWidth;
 static int shapePixmapHeight;
@@ -117,10 +117,12 @@ void StartupBorders() {
    gcValues.graphics_exposures = False;
    borderGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
 
+#if defined(USE_SHAPE) && defined(USE_XMU)
    shapePixmap = None;
    shapeGC = None;
    shapePixmapWidth = 0;
    shapePixmapHeight = 0;
+#endif
 
 }
 
@@ -135,6 +137,7 @@ void ShutdownBorders() {
       JXFreePixmap(display, pixmaps[x]);
    }
 
+#if defined(USE_SHAPE) && defined(USE_XMU)
    if(shapePixmap != None) {
       JXFreePixmap(display, shapePixmap);
       shapePixmap = None;
@@ -143,6 +146,7 @@ void ShutdownBorders() {
       JXFreeGC(display, shapeGC);
       shapeGC = None;
    }
+#endif
 
 }
 

@@ -75,7 +75,7 @@
 #     include <X11/extensions/shape.h>
 #  endif
 
-#  ifdef USE_XMU_H
+#  ifdef USE_XMU
 #     include <X11/Xmu/Xmu.h>
 #  endif
 

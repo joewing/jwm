@@ -1,7 +1,7 @@
 
 SYSCONF = @SYSCONF@
 MANDIR = @MANDIR@
-VERSION = @VERSION@
+VERSION ?= @VERSION@
 
 all:
 	cd src ; $(MAKE) all

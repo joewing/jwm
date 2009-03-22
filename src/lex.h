@@ -27,7 +27,6 @@ typedef enum {
    TOK_CLOCK,
    TOK_CLOCKSTYLE,
    TOK_CLOSE,
-   TOK_CORNER,
    TOK_DESKTOPS,
    TOK_DESKTOP,
    TOK_DOCK,

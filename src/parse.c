@@ -879,9 +879,6 @@ void ParseActiveWindowStyle(const TokenNode *tp) {
          ParseGradient(np->value,
             COLOR_TITLE_ACTIVE_BG1, COLOR_TITLE_ACTIVE_BG2);
          break;
-      case TOK_CORNER:
-         SetColor(COLOR_CORNER_ACTIVE_BG, np->value);
-         break;
       case TOK_OUTLINE:
          SetColor(COLOR_BORDER_ACTIVE_LINE, np->value);
          break;
@@ -906,9 +903,6 @@ void ParseInactiveWindowStyle(const TokenNode *tp) {
          break;
       case TOK_TITLE:
          ParseGradient(np->value, COLOR_TITLE_BG1, COLOR_TITLE_BG2);
-         break;
-      case TOK_CORNER:
-         SetColor(COLOR_CORNER_BG, np->value);
          break;
       case TOK_OUTLINE:
          SetColor(COLOR_BORDER_LINE, np->value);

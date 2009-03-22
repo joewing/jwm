@@ -725,10 +725,6 @@ The color of text on the title bar.
 The color of the title bar (gradients are supported).
 .RE
 .P
-.B Corner
-.RS
-The color of the corner handles.
-.RE
 .P
 .B Outline
 .RS
@@ -749,11 +745,6 @@ The color of text on the title bar.
 .B Title
 .RS
 The color of the title bar (gradients are supported).
-.RE
-.P
-.B Corner
-.RS
-The color of the corner handles.
 .RE
 .P
 .B Outline

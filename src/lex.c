@@ -30,7 +30,6 @@ static const char *TOKEN_MAP[] = {
    "Clock",
    "ClockStyle",
    "Close",
-   "Corner",
    "Desktops",
    "Desktop",
    "Dock",

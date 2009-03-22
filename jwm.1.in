@@ -1272,6 +1272,26 @@ A command to run when JWM exits.
 .RS
 A command to run when JWM restarts.
 .RE
+.P
+.B ButtonClose
+.RS
+Path to a bitmask for the close button on windows.
+.RE
+.P
+.B ButtonMax
+.RS
+Path to a bitmask for the maximize button on inactive windows.
+.RE
+.P
+.B ButtonMaxActive
+.RS
+Path to a bitmask for the maximize button on active windows.
+.RE
+.P
+.B ButtonMin
+.RS
+Path to a bitmask for the minimize button on windows.
+.RE
 .RE
 .P
 

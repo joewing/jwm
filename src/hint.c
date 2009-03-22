@@ -501,6 +501,7 @@ ClientState ReadWindowState(Window win) {
                maxHorz = 1;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_FULLSCREEN]) {
                fullScreen = 1;
+               result.layer = LAYER_TOP;
             }
          }
          if(maxHorz) {

@@ -97,6 +97,22 @@ void ChangeDesktop(unsigned int desktop) {
       return;
    }
 
+   /* Hide clients from the old desktop.
+    * Note that we show clients in a separate loop to prevent an issue
+    * with clients loosing focus.
+    */
+   for(x = 0; x < LAYER_COUNT; x++) {
+      for(np = nodes[x]; np; np = np->next) {
+         if(np->state.status & STAT_STICKY) {
+            continue;
+         }
+         if(np->state.desktop == currentDesktop) {
+            HideClient(np);
+         }
+      }
+   }
+
+   /* Show clients on the new desktop. */
    for(x = 0; x < LAYER_COUNT; x++) {
       for(np = nodes[x]; np; np = np->next) {
          if(np->state.status & STAT_STICKY) {
@@ -104,8 +120,6 @@ void ChangeDesktop(unsigned int desktop) {
          }
          if(np->state.desktop == desktop) {
             ShowClient(np);
-         } else if(np->state.desktop == currentDesktop) {
-            HideClient(np);
          }
       }
    }

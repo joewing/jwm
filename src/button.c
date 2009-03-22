@@ -118,7 +118,7 @@ void DrawButton(ButtonNode *bp) {
 
       /* Draw the outline. */
       JXSetForeground(display, gc, outlinePixel);
-#ifdef USE_SHAPE
+#ifdef USE_XMU
       XmuDrawRoundedRectangle(display, drawable, gc, x, y, 
          width, height, 3, 3);
 #else

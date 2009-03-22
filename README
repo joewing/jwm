@@ -11,6 +11,7 @@ the following libraries:
    libpng for PNG icons and backgrounds.
    libXext for the shape extension.
    libXext for the render extension.
+   libXmu for rounded corners.
    libxft for antialiased and true type fonts.
    libXinerama for multiple head support.
    libXpm for XPM icons and backgrounds.

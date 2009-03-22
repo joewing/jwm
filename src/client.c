@@ -346,10 +346,7 @@ void ShadeClient(ClientNode *np) {
 
    GetBorderSize(np, &north, &south, &east, &west);
 
-#ifdef USE_SHAPE
-   ResetRoundRectWindow(np->parent);
-#endif
-	
+   ResetRoundedRectWindow(np->parent);
    if(np->state.status & STAT_MAPPED) {
       JXUnmapWindow(display, np->window);
    }
@@ -358,9 +355,7 @@ void ShadeClient(ClientNode *np) {
    np->state.status &= ~STAT_SDESKTOP;
    np->state.status &= ~STAT_MAPPED;
 
-#ifdef USE_SHAPE
    ShapeRoundedRectWindow(np->parent, np->width + west + east, north);
-#endif
    JXResizeWindow(display, np->parent, np->width + east + west, north);
 
    WriteState(np);
@@ -398,11 +393,9 @@ void UnshadeClient(ClientNode *np) {
 
    GetBorderSize(np, &north, &south, &east, &west);
 
-#ifdef USE_SHAPE
-   ResetRoundRectWindow(np->parent);
+   ResetRoundedRectWindow(np->parent);
    ShapeRoundedRectWindow(np->parent, 
       np->width + west + east, np->height + north + south);
-#endif
 
    JXResizeWindow(display, np->parent,
       np->width + west + east, np->height + north + south);
@@ -704,9 +697,7 @@ void MaximizeClient(ClientNode *np, int horiz, int vert) {
       UnshadeClient(np);
    }
 
-#ifdef USE_SHAPE
-   ResetRoundRectWindow(np->parent);
-#endif
+   ResetRoundedRectWindow(np->parent);
 
    GetBorderSize(np, &north, &south, &east, &west);
 
@@ -720,11 +711,9 @@ void MaximizeClient(ClientNode *np, int horiz, int vert) {
       PlaceMaximizedClient(np, horiz, vert);
    }
 
-#ifdef USE_SHAPE
    ShapeRoundedRectWindow(np->parent, 
       np->width + east + west,
       np->height + north + south);
-#endif
 
    JXMoveResizeWindow(display, np->parent,
       np->x - west, np->y - north,
@@ -772,9 +761,7 @@ void SetClientFullScreen(ClientNode *np, int fullScreen) {
       UnshadeClient(np);
    }
 
-#ifdef USE_SHAPE
-   ResetRoundRectWindow(np->parent);
-#endif
+   ResetRoundedRectWindow(np->parent);
 
    if(fullScreen) {
 
@@ -798,10 +785,8 @@ void SetClientFullScreen(ClientNode *np, int fullScreen) {
 
       /* Restore parent position */
       GetBorderSize(np, &north, &south, &east, &west);
-#ifdef USE_SHAPE
       ShapeRoundedRectWindow(np->parent, np->width + east + west,
          np->height + north + south);
-#endif
       JXMoveResizeWindow(display, np->parent, np->oldx - west,
          np->oldy - north, np->width + east + west, np->height + north + south);
 

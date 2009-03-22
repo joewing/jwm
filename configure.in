@@ -309,11 +309,25 @@ AC_ARG_ENABLE(shape,
    AC_HELP_STRING([--disable-shape], [don't use the X shape extension]) )
 if test "$enable_shape" != "no"; then
    AC_CHECK_LIB(Xext, XShapeCombineRectangles,
-      [ LDFLAGS="$LDFLAGS -lXext -lXmu"
+      [ LDFLAGS="$LDFLAGS -lXext"
         enable_shape="yes"
         AC_DEFINE(USE_SHAPE, 1, [Define to enable the X shape extension]) ],
       [ enable_shape="no"
         AC_MSG_WARN([unable to use the X shape extension]) ])
+fi
+
+############################################################################
+# Check if support for Xmu was requested and available.
+############################################################################
+AC_ARG_ENABLE(xmu,
+   AC_HELP_STRING([--disable-xmu], [don't use Xmu]) )
+if test "$enable_xmu" != "no"; then
+   AC_CHECK_LIB(Xmu, XmuDrawRoundedRectangle,
+      [ LDFLAGS="$LDFLAGS -lXmu"
+        enable_xmu="yes"
+        AC_DEFINE(USE_XMU, 1, [Define to use Xmu]) ],
+      [ enable_xmu="no"
+        AC_MSG_WARN([unable to use Xmu]) ])
 fi
 
 ############################################################################
@@ -407,6 +421,7 @@ echo "    XFT:      $enable_xft"
 echo "    XRender:  $enable_xrender"
 echo "    FriBidi:  $enable_fribidi"
 echo "    Shape:    $enable_shape"
+echo "    Xmu:      $enable_xmu"
 echo "    Xinerama: $enable_xinerama"
 echo "    Debug:    $enable_debug"
 echo

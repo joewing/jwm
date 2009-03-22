@@ -79,7 +79,7 @@ void SetTitleHeight(const char *str);
 void ExposeCurrentDesktop();
 
 /** Reset rounded rectangle windows **/
-void ResetRoundRectWindow(const Window srrw);
+void ResetRoundedRectWindow(const Window srrw);
 
 /** Draw rounded rectangle windows **/
 void ShapeRoundedRectWindow(const Window srrw, int width, int height);

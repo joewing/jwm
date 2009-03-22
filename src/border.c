@@ -393,14 +393,12 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
    canvas = np->parent;
    gc = borderGC;
 
-#ifdef USE_SHAPE
    /* Shape window corners */
    if(np->state.status & STAT_SHADED) {
       ShapeRoundedRectWindow(np->parent, width, north);
    } else {
       ShapeRoundedRectWindow(np->parent, width, height);
    }
-#endif
 
    /* Set the window background color (to reduce flickering). */
    JXSetWindowBackground(display, canvas, titleColor2);
@@ -440,25 +438,21 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
    /* Window outline. */
    JXSetForeground(display, gc, outlineColor);
    
+#if defined(USE_SHAPE) && defined(USE_XMU)
    if(np->state.status & STAT_SHADED) {
-   	
-#ifdef USE_SHAPE
       XmuDrawRoundedRectangle(display, canvas, gc, 0, 0, 
          (int)width - 1, (int)north - 1, CORNER_RADIUS, CORNER_RADIUS);
-#else
-      JXDrawRectangle(display, canvas, gc, 0, 0, width - 1, north - 1);
-#endif
-
    } else {
-   	
-#ifdef USE_SHAPE
       XmuDrawRoundedRectangle(display, canvas, gc, 0, 0, 
          (int)width - 1, (int)height - 1, CORNER_RADIUS, CORNER_RADIUS);
-#else
-      JXDrawRectangle(display, canvas, gc, 0, 0, width - 1, height - 1);
-#endif
-
    }
+#else
+   if(np->state.status & STAT_SHADED) {
+      JXDrawRectangle(display, canvas, gc, 0, 0, width - 1, north - 1);
+   } else {
+      JXDrawRectangle(display, canvas, gc, 0, 0, width - 1, height - 1);
+   }
+#endif
 
    DrawBorderButtons(np, canvas, gc);
 
@@ -698,10 +692,10 @@ void SetTitleHeight(const char *str) {
 
 }
 
-#ifdef USE_SHAPE
+#if defined(USE_SHAPE) && defined(USE_XMU)
 
 /** Clear the shape mask of a window. */
-void ResetRoundRectWindow(const Window srrw) {
+void ResetRoundedRectWindow(const Window srrw) {
    Assert(srrw);	
    JXShapeCombineMask(display, srrw, ShapeBounding, 0, 0, None, ShapeSet);
 }
@@ -732,6 +726,16 @@ void ShapeRoundedRectWindow(const Window srrw, int width, int height) {
    JXShapeCombineMask(display, srrw, ShapeBounding, 0, 0, shapePixmap,
       ShapeSet);
 
+}
+
+#else
+
+/** Clear the shape mask of a window. */
+void ResetRoundedRectWindow(const Window srrw) {
+}
+
+/** Set the shape mask on a window to give a rounded boarder. */
+void ShapeRoundedRectWindow(const Window srrw, int width, int height) {
 }
 
 #endif

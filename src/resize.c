@@ -218,24 +218,18 @@ void ResizeClient(ClientNode *np, BorderActionType action,
                      np->height + north + south);
                }
             } else {
-#              ifdef USE_SHAPE
-                  ResetRoundRectWindow(np->parent);
-#              endif
+               ResetRoundedRectWindow(np->parent);
                if(np->state.status & STAT_SHADED) {
-#                 ifdef USE_SHAPE
-                     ShapeRoundedRectWindow(np->parent, 
-                        np->width + east + west,
-                        north + south);
-#                 endif
+                  ShapeRoundedRectWindow(np->parent, 
+                     np->width + east + west,
+                     north + south);
                   JXMoveResizeWindow(display, np->parent,
                      np->x - west, np->y - north,
                      np->width + west + east, north + south);
                } else {
-#                 ifdef USE_SHAPE
-                     ShapeRoundedRectWindow(np->parent, 
-                        np->width + east + west,
-                        np->height + north + south);
-#                 endif
+                  ShapeRoundedRectWindow(np->parent, 
+                     np->width + east + west,
+                     np->height + north + south);
                   JXMoveResizeWindow(display, np->parent,
                      np->x - west, np->y - north,
                      np->width + west + east,
@@ -400,23 +394,17 @@ void ResizeClientKeyboard(ClientNode *np) {
                   np->height + north + south);
             }
          } else {
-#           ifdef USE_SHAPE
-               ResetRoundRectWindow(np->parent);
-#           endif
+            ResetRoundedRectWindow(np->parent);
             if(np->state.status & STAT_SHADED) {
-#              ifdef USE_SHAPE
-                  ShapeRoundedRectWindow(np->parent, 
-                     np->width + east + west,
-                     north + south);
-#              endif
+               ShapeRoundedRectWindow(np->parent, 
+                  np->width + east + west,
+                  north + south);
               JXResizeWindow(display, np->parent,
                   np->width + west + east, north + south);
             } else {
-#              ifdef USE_SHAPE
-                  ShapeRoundedRectWindow(np->parent, 
-                     np->width + east + west,
-                     np->height + north + south);
-#              endif
+               ShapeRoundedRectWindow(np->parent, 
+                  np->width + east + west,
+                  np->height + north + south);
                JXResizeWindow(display, np->parent,
                   np->width + west + east, np->height + north + south);
             }
@@ -451,24 +439,18 @@ void StopResize(ClientNode *np) {
    GetBorderSize(np, &north, &south, &east, &west);
 
    /* Reset shaped bound */
-#  ifdef USE_SHAPE
-      ResetRoundRectWindow(np->parent);
-#  endif
+   ResetRoundedRectWindow(np->parent);
 	  
    if(np->state.status & STAT_SHADED) {
-#     ifdef USE_SHAPE
-         ShapeRoundedRectWindow(np->parent, 
-            np->width + east + west, north + south);
-#     endif
+      ShapeRoundedRectWindow(np->parent, 
+         np->width + east + west, north + south);
       JXMoveResizeWindow(display, np->parent,
          np->x - west, np->y - north,
          np->width + east + west, north + south);
    } else {
-#     ifdef USE_SHAPE
-         ShapeRoundedRectWindow(np->parent, 
-            np->width + east + west, 
-            np->height + north + south);
-#     endif
+      ShapeRoundedRectWindow(np->parent, 
+         np->width + east + west, 
+         np->height + north + south);
       JXMoveResizeWindow(display, np->parent,
          np->x - west, np->y - north,
          np->width + east + west,

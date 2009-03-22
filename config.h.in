@@ -132,6 +132,9 @@
 /* Define to enable Xinerama */
 #undef USE_XINERAMA
 
+/* Define to use Xmu */
+#undef USE_XMU
+
 /* Define to enable XPM support */
 #undef USE_XPM
 

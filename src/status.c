@@ -108,8 +108,6 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
          statusWindowWidth, statusWindowHeight);
    }
 
-#ifdef USE_SHAPE
-
    /* Shape window corners. */
    ShapeRoundedRectWindow(statusWindow, statusWindowWidth, statusWindowHeight);
 
@@ -120,22 +118,14 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
 
    /* Draw a border. */
    JXSetForeground(display, rootGC, colors[COLOR_MENU_FG]);
+
+#ifdef USE_XMU
    XmuDrawRoundedRectangle(display, statusWindow, rootGC, 0, 0,
       (int)statusWindowWidth - 1, (int)statusWindowHeight - 1,
       CORNER_RADIUS, CORNER_RADIUS);
-
 #else
-
-   /* Clear the background. */
-   JXSetForeground(display, rootGC, colors[COLOR_MENU_BG]);
-   JXFillRectangle(display, statusWindow, rootGC, 0, 0,
-      statusWindowWidth, statusWindowHeight);
-
-   /* Draw a border. */
-   JXSetForeground(display, rootGC, colors[COLOR_MENU_FG]);
    JXDrawRectangle(display, statusWindow, rootGC, 0, 0,
       statusWindowWidth - 1, statusWindowHeight - 1);
-
 #endif
 
 }

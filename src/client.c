@@ -649,7 +649,7 @@ void SetClientDesktop(ClientNode *np, unsigned int desktop) {
 
 }
 
-/** Hide a client without unmapping. This will NOT update transients. */
+/** Hide a client without unmapping. This will not update transients. */
 void HideClient(ClientNode *np) {
 
    Assert(np);
@@ -664,7 +664,7 @@ void HideClient(ClientNode *np) {
 
 }
 
-/** Show a hidden client. This will NOT update transients. */
+/** Show a hidden client. This will not update transients. */
 void ShowClient(ClientNode *np) {
 
    Assert(np);
@@ -812,14 +812,12 @@ void FocusClient(ClientNode *np) {
 
    Assert(np);
 
-   if(!(np->state.status & (STAT_MAPPED | STAT_SHADED))) {
-      return;
-   }
    if(np->state.status & STAT_HIDDEN) {
       return;
    }
 
    if(activeClient != np) {
+
       if(activeClient) {
          activeClient->state.status &= ~STAT_ACTIVE;
          DrawBorder(activeClient, NULL);
@@ -838,7 +836,7 @@ void FocusClient(ClientNode *np) {
 
    }
 
-   if(np->state.status & STAT_MAPPED && !(np->state.status & STAT_HIDDEN)) {
+   if(np->state.status & STAT_MAPPED) {
       JXSetInputFocus(display, np->window, RevertToPointerRoot, CurrentTime);
    } else {
       JXSetInputFocus(display, rootWindow, RevertToPointerRoot, CurrentTime);

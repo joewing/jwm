@@ -31,10 +31,6 @@ int ShouldFocus(const ClientNode *np) {
       return 0;
    }
 
-   if(!(np->state.status & STAT_MAPPED)) {
-      return 0;
-   }
-
    if(np->owner != None) {
       return 0;
    }
@@ -140,7 +136,11 @@ void StopWindowStackWalk() {
       /* Look up the current window. */
       np = FindClientByWindow(windowStack[windowStackCurrent]);
       if(np) {
-         RaiseClient(np);
+         if(np->state.status & STAT_MINIMIZED) {
+            RestoreClient(np, 1);
+         } else {
+            RaiseClient(np);
+         }
       }
 
       Release(windowStack);

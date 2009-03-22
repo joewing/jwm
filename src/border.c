@@ -157,7 +157,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
    if(np->state.border & BORDER_TITLE) {
 
       /* Check buttons on the title bar. */
-      if(y > 0 && y <= titleHeight) {
+      if(y >= south && y <= titleHeight) {
 
          /* Menu button. */
          if(np->icon && np->width >= titleHeight) {
@@ -193,7 +193,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
       }
 
       /* Check for move. */
-      if(y > 0 && y <= titleHeight) {
+      if(y >= south && y <= titleHeight) {
          if(x > 0 && x < np->width + east + west) {
             if(np->state.border & BORDER_MOVE) {
                return BA_MOVE;
@@ -211,7 +211,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
       return BA_NONE;
    }
 
-   /* Check south east/west resizing. */
+   /* Check south east/west and north east/west resizing. */
    if(np->width >= titleHeight * 2 && np->height >= titleHeight * 2) {
       if(y > np->height + north - titleHeight) {
          if(x < titleHeight) {
@@ -219,16 +219,24 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
          } else if(x > np->width + west - titleHeight) {
             return BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE;
          }
+      } else if(y < titleHeight) {
+         if(x < titleHeight) {
+            return BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE;
+         } else if(x > np->width + west - titleHeight) {
+            return BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE;
+         }
       }
    }
 
-   /* Check east, west, and south resizing. */
+   /* Check east, west, north, and south resizing. */
    if(x <= west) {
       return BA_RESIZE_W | BA_RESIZE;
    } else if(x >= np->width + west) {
       return BA_RESIZE_E | BA_RESIZE;
    } else if(y >= np->height + north) {
       return BA_RESIZE_S | BA_RESIZE;
+   } else if(y <= south) {
+      return BA_RESIZE_N | BA_RESIZE;
    } else {
       return BA_NONE;
    }

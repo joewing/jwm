@@ -108,33 +108,35 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
          statusWindowWidth, statusWindowHeight);
    }
 
+#ifdef USE_SHAPE
+
+   /* Shape window corners. */
+   ShapeRoundedRectWindow(statusWindow, statusWindowWidth, statusWindowHeight);
+
+   /* Clear the background. */
    JXSetForeground(display, rootGC, colors[COLOR_MENU_BG]);
-   JXFillRectangle(display, statusWindow, rootGC, 2, 2,
-      statusWindowWidth - 3, statusWindowHeight - 3);
+   JXFillRectangle(display, statusWindow, rootGC, 0, 0,
+      statusWindowWidth, statusWindowHeight);
 
-   JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
-   JXDrawLine(display, statusWindow, rootGC,
-      0, 0, statusWindowWidth - 1, 0);
-   JXDrawLine(display, statusWindow, rootGC,
-      0, 1, statusWindowWidth - 2, 1);
-   JXDrawLine(display, statusWindow, rootGC,
-      0, 2, 0, statusWindowHeight - 1);
-   JXDrawLine(display, statusWindow, rootGC,
-      1, 2, 1, statusWindowHeight - 2);
+   /* Draw a border. */
+   JXSetForeground(display, rootGC, colors[COLOR_MENU_FG]);
+   XmuDrawRoundedRectangle(display, statusWindow, rootGC, 0, 0,
+      (int)statusWindowWidth - 1, (int)statusWindowHeight - 1,
+      CORNER_RADIUS, CORNER_RADIUS);
 
-   JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
-   JXDrawLine(display, statusWindow, rootGC,
-      1, statusWindowHeight - 1, statusWindowWidth - 1,
-      statusWindowHeight - 1);
-   JXDrawLine(display, statusWindow, rootGC,
-      2, statusWindowHeight - 2, statusWindowWidth - 1,
-      statusWindowHeight - 2);
-   JXDrawLine(display, statusWindow, rootGC,
-      statusWindowWidth - 1, 1, statusWindowWidth - 1,
-      statusWindowHeight - 3);
-   JXDrawLine(display, statusWindow, rootGC,
-      statusWindowWidth - 2, 2, statusWindowWidth - 2,
-      statusWindowHeight - 3);
+#else
+
+   /* Clear the background. */
+   JXSetForeground(display, rootGC, colors[COLOR_MENU_BG]);
+   JXFillRectangle(display, statusWindow, rootGC, 0, 0,
+      statusWindowWidth, statusWindowHeight);
+
+   /* Draw a border. */
+   JXSetForeground(display, rootGC, colors[COLOR_MENU_FG]);
+   JXDrawRectangle(display, statusWindow, rootGC, 0, 0,
+      statusWindowWidth - 1, statusWindowHeight - 1);
+
+#endif
 
 }
 

@@ -136,7 +136,7 @@ void InitializeMenu(Menu *menu) {
          menu->height += menu->itemHeight;
       }
       if(np->name) {
-         temp = GetStringWidth(FONT_MENU, np->name);
+         temp = GetStringWidth(FONT_MENU, np->name) + 2;
          if(temp > menu->width) {
             menu->width = temp;
          }

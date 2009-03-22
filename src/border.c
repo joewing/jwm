@@ -127,6 +127,15 @@ void ShutdownBorders() {
 
 /** Release non-server resources. */
 void DestroyBorders() {
+
+   int x;
+
+   for(x = 0; x < BP_COUNT; x++) {
+      if(bmpFiles[x]) {
+         Release(bmpFiles[x]);
+         bmpFiles[x] = NULL;
+      }
+   }
 }
 
 /** Get the size of the icon to display on a window. */

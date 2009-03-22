@@ -13,14 +13,7 @@
 #include "icon.h"
 #include "font.h"
 #include "error.h"
-
-typedef enum {
-   BP_CLOSE,
-   BP_MINIMIZE,
-   BP_MAXIMIZE,
-   BP_MAXIMIZE_ACTIVE,
-   BP_COUNT
-} BorderPixmapType;
+#include "misc.h"
 
 typedef unsigned char BorderPixmapDataType[32];
 
@@ -49,12 +42,7 @@ static BorderPixmapDataType bitmaps[BP_COUNT] = {
 };
 
 static Pixmap pixmaps[BP_COUNT];
-
-static const char *bmp_files[BP_COUNT] = { 
-   "/.jwm-bClose.xbm",
-   "/.jwm-bMinim.xbm",
-   "/.jwm-bMaxim.xbm",
-   "/.jwm-bMaximAct.xbm" };
+static char *bmpFiles[BP_COUNT];
 
 static Region borderRegion = NULL;
 static GC borderGC;
@@ -72,6 +60,7 @@ static int GetButtonCount(const ClientNode *np);
 
 /** Initialize non-server resources. */
 void InitializeBorders() {
+   memset(bmpFiles, 0, sizeof(bmpFiles));
 }
 
 /** Initialize server resources. */
@@ -81,38 +70,24 @@ void StartupBorders() {
    unsigned long gcMask;
    int x, hotx, hoty;
    unsigned int bmpHeight, bmpWidth;
-   char *temp = NULL;
-   char *bmpPath = NULL;
-   size_t len;
-
-   temp = getenv("HOME");
-   len = 0;
-   if(temp) {
-      len = strlen(temp);
-   }
-   len += strlen(bmp_files[BP_COUNT - 1]) + 1;
-   bmpPath = AllocateStack(len);
+   int found;
 
    for(x = 0; x < BP_COUNT; x++) {
-
-      if(temp) {
-         strcpy(bmpPath, temp);
-         strcat(bmpPath, bmp_files[x]);
-      } else {
-         strcpy(bmpPath, bmp_files[x]);
+      found = bmpFiles[x] ? 1 : 0;
+      if(found) {
+         found = XReadBitmapFile(display, rootWindow, bmpFiles[x],
+            &bmpWidth, &bmpHeight, &pixmaps[x], &hotx, &hoty) == BitmapSuccess ?
+            1 : 0;
+         if(!found) {
+            Warning("bitmap could not be loaded: %s", bmpFiles[x]);
+         }
       }
-
-      /** if user bitmask not available, we use the built-ins */
-      if(XReadBitmapFile(display, rootWindow, bmpPath, &bmpWidth, &bmpHeight, 
-         &pixmaps[x], &hotx, &hoty)) {
+      if(!found) {
          pixmaps[x] = JXCreateBitmapFromData(display, rootWindow,
             (char*)bitmaps[x], 16, 16);
       }
-
    }
 
-   ReleaseStack(bmpPath);
-   
    gcMask = GCGraphicsExposures;
    gcValues.graphics_exposures = False;
    borderGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
@@ -355,7 +330,6 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
    long borderTextPixel;
 
    long titleColor1, titleColor2;
-   long cornerColor;
    long outlineColor;
 
    int north, south, east, west;
@@ -378,7 +352,6 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
 
       borderTextColor = COLOR_TITLE_ACTIVE_FG;
       borderTextPixel = colors[COLOR_TITLE_ACTIVE_FG];
-      cornerColor = colors[COLOR_CORNER_ACTIVE_BG];
       titleColor1 = colors[COLOR_TITLE_ACTIVE_BG1];
       titleColor2 = colors[COLOR_TITLE_ACTIVE_BG2];
       outlineColor = colors[COLOR_BORDER_ACTIVE_LINE];
@@ -387,7 +360,6 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
 
       borderTextColor = COLOR_TITLE_FG;
       borderTextPixel = colors[COLOR_TITLE_FG];
-      cornerColor = colors[COLOR_CORNER_BG];
       titleColor1 = colors[COLOR_TITLE_BG1];
       titleColor2 = colors[COLOR_TITLE_BG2];
       outlineColor = colors[COLOR_BORDER_LINE];
@@ -692,6 +664,21 @@ void SetTitleHeight(const char *str) {
          titleHeight = height;
       }
 
+   }
+
+}
+
+/** Set the bitmask to use for a button. */
+void SetButtonMask(BorderPixmapType pt, const char *filename) {
+
+   if(bmpFiles[pt]) {
+      Release(bmpFiles[pt]);
+      bmpFiles[pt] = NULL;
+   }
+
+   if(filename) {
+      bmpFiles[pt] = CopyString(filename);
+      ExpandPath(&bmpFiles[pt]);
    }
 
 }

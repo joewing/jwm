@@ -355,6 +355,18 @@ void Parse(const TokenNode *start, int depth) {
          case TOK_WINDOWSTYLE:
             ParseWindowStyle(tp);
             break;
+         case TOK_BUTTONCLOSE:
+            SetButtonMask(BP_CLOSE, tp->value);
+            break;
+         case TOK_BUTTONMIN:
+            SetButtonMask(BP_MINIMIZE, tp->value);
+            break;
+         case TOK_BUTTONMAX:
+            SetButtonMask(BP_MAXIMIZE, tp->value);
+            break;
+         case TOK_BUTTONMAXACTIVE:
+            SetButtonMask(BP_MAXIMIZE_ACTIVE, tp->value);
+            break;
          default:
             InvalidTag(tp, TOK_JWM);
             break;

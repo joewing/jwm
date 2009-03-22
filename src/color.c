@@ -43,9 +43,6 @@ static DefaultColorNode DEFAULT_COLORS[] = {
    { COLOR_TITLE_ACTIVE_BG1,   "red"     },
    { COLOR_TITLE_ACTIVE_BG2,   "red"     },
 
-   { COLOR_CORNER_BG,          "gray"    },
-   { COLOR_CORNER_ACTIVE_BG,   "red"     },
-
    { COLOR_BORDER_LINE,        "black"   },
    { COLOR_BORDER_ACTIVE_LINE, "black"   },
 

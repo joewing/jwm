@@ -480,6 +480,7 @@ void UpdatePager() {
    unsigned int x;
    const char *name;
    int xc, yc;
+   int textWidth, textHeight;
 
    if(shouldExit) {
       return;
@@ -511,19 +512,24 @@ void UpdatePager() {
 
       /* Draw the labels. */
       if(pp->labeled) {
-         for(x = 0; x < desktopCount; x++) {
-            name = GetDesktopName(x);
-            if(pp->layout == LAYOUT_HORIZONTAL) {
-               xc = x * (deskWidth + 1) + deskWidth / 2
-                  - GetStringWidth(FONT_PAGER, name) / 2;
-               yc = height / 2 - GetStringHeight(FONT_PAGER) / 2;
-            } else {
-               xc = width / 2 - GetStringWidth(FONT_PAGER, name) / 2;
-               yc = x * (deskHeight + 1) + deskHeight / 2
-                  - GetStringHeight(FONT_PAGER) / 2;
+         textHeight = GetStringHeight(FONT_PAGER);
+         if(textHeight < deskHeight) {
+            for(x = 0; x < desktopCount; x++) {
+               name = GetDesktopName(x);
+               textWidth = GetStringWidth(FONT_PAGER, name);
+               if(textWidth < deskWidth) {
+                  if(pp->layout == LAYOUT_HORIZONTAL) {
+                     xc = x * (deskWidth + 1) + deskWidth / 2 - textWidth / 2;
+                     yc = height / 2 - textHeight / 2;
+                  } else {
+                     xc = width / 2 - textWidth / 2;
+                     yc = x * (deskHeight + 1) + deskHeight / 2
+                        - textHeight / 2;
+                  }
+                  RenderString(buffer, FONT_PAGER, COLOR_PAGER_TEXT, xc, yc,
+                     deskWidth, None, name);
+               }
             }
-            RenderString(buffer, FONT_PAGER, COLOR_PAGER_TEXT, xc, yc,
-               deskWidth, None, name);
          }
       }
 

@@ -210,7 +210,10 @@ if test "$enable_xft" != "no" ; then
       [ $XFT_LDFLAGS ])
 fi
 if test "$enable_xft" != "no" ; then
-   AC_CHECK_HEADERS([ft2build.h])
+   AC_CHECK_HEADERS([ft2build.h], [], [],
+[
+#include <X11/Xlib.h>
+])
 fi
 
 ############################################################################
@@ -231,6 +234,8 @@ if test "$enable_xrender" != "no"; then
       [
          enable_xrender="no";
          AC_MSG_WARN([unable to use X11/extensions/XRender.h])
+      ], [
+#include <X11/Xlib.h>
       ])
 
 fi

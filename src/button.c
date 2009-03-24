@@ -145,8 +145,8 @@ void DrawButton(ButtonNode *bp) {
    if(bp->text) {
       textWidth = GetStringWidth(bp->font, bp->text);
       textHeight = GetStringHeight(bp->font);
-      if(textWidth + iconWidth + 13 > width) {
-         textWidth = width - iconWidth - 13;
+      if(textWidth + iconWidth + 8 > width) {
+         textWidth = width - iconWidth - 8;
          if(textWidth < 0) {
             textWidth = 0;
          }
@@ -155,12 +155,6 @@ void DrawButton(ButtonNode *bp) {
 
    /* Determine the offset of the text in the button. */
    switch(bp->alignment) {
-   case ALIGN_RIGHT:
-      xoffset = width - iconWidth - textWidth + 4;
-      if(xoffset < 4) {
-         xoffset = 4;
-      }
-      break;
    case ALIGN_CENTER:
       xoffset = width / 2 - (iconWidth + textWidth) / 2;
       if(xoffset < 0) {

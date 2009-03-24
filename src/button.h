@@ -26,8 +26,7 @@ typedef enum {
 /** Alignment of content in a button. */
 typedef enum {
    ALIGN_LEFT,   /**< Left align. */
-   ALIGN_CENTER, /**< Center align. */
-   ALIGN_RIGHT   /**< Right align. */
+   ALIGN_CENTER  /**< Center align. */
 } AlignmentType;
 
 /** Data used for drawing a button. */

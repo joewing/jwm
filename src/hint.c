@@ -319,6 +319,18 @@ void WriteState(ClientNode *np) {
    WriteNetAllowed(np);
    WriteWinState(np);
 
+   /* Write the opacity. */
+   if(np->state.opacity == UINT_MAX) {
+      JXDeleteProperty(display, np->parent,
+         atoms[ATOM_NET_WM_WINDOW_OPACITY]);
+   } else {
+      SetCardinalAtom(np->parent, ATOM_NET_WM_WINDOW_OPACITY,
+         np->state.opacity);
+   }
+
+   /* Flush to the server. */
+   JXSync(display, False);
+
 }
 
 /** Write the net state hint for a client. */
@@ -465,6 +477,7 @@ ClientState ReadWindowState(Window win) {
    result.border = BORDER_DEFAULT;
    result.layer = LAYER_NORMAL;
    result.desktop = currentDesktop;
+   result.opacity = 0xFFFFFFFF;
 
    ReadWMHints(win, &result);
    ReadMotifHints(win, &result);
@@ -520,23 +533,17 @@ ClientState ReadWindowState(Window win) {
    }
 
    /* _NET_WM_WINDOW_TYPE */
+   if(GetCardinalAtom(win, ATOM_NET_WM_DESKTOP, &card)) {
+      result.opacity = card;
+   }
+
+   /* _NET_WM_WINDOW_OPACITY */
    status = JXGetWindowProperty(display, win,
-      atoms[ATOM_NET_WM_WINDOW_TYPE], 0, 32, False, XA_ATOM, &realType,
+      atoms[ATOM_NET_WM_WINDOW_OPACITY], 0, 32, False, XA_ATOM, &realType,
       &realFormat, &count, &extra, &temp);
    if(status == Success) {
       if(count > 0) {
-         state = (unsigned long*)temp;
-         for(x = 0; x < count; x++) {
-            if(state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DESKTOP]) {
-               result.status |= STAT_STICKY | STAT_NOLIST;
-               result.layer = 0;
-               result.border = BORDER_NONE;
-            } else if(state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DOCK]) {
-               result.status |= STAT_STICKY | STAT_NOLIST;
-               result.layer = 0;
-               result.border = BORDER_NONE;
-            }
-         }
+         
       }
       if(temp) {
          JXFree(temp);

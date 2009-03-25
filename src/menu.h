@@ -29,8 +29,7 @@ typedef enum {
    MA_KILL,
    MA_CLOSE,
    MA_EXIT,
-   MA_RESTART,
-   MA_TRANSPARENT
+   MA_RESTART
 } MenuActionType;
 
 /** Structure to represent a menu action for callbacks. */

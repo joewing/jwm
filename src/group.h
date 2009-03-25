@@ -29,7 +29,7 @@ typedef enum {
    OPTION_MAXIMIZED  = 11, /**< Start maximized. */
    OPTION_MINIMIZED  = 12, /**< Start minimized. */
    OPTION_SHADED     = 13, /**< Start shaded. */
-   OPTION_OPAQUE     = 14, /**< Start transparent. */
+   OPTION_OPACITY    = 14, /**< Set the opacity. */
    OPTION_MAX_H      = 15, /**< Use horizontal maximization. */
    OPTION_MAX_V      = 16  /**< Use vertical maximization. */
 } OptionType;

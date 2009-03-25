@@ -138,6 +138,7 @@ typedef struct ClientState {
    unsigned int border;    /**< Border bit mask. */
    unsigned int layer;     /**< Window layer. */
    unsigned int desktop;   /**< Desktop. */
+   unsigned int opacity;   /**< Opacity (0 - 0xFFFFFFFF). */
 } ClientState;
 
 /** Client protocols (to be used as a bit mask). */

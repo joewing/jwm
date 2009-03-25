@@ -60,7 +60,6 @@ static const KeyMapType KEY_MAP[] = {
    { "maximize",    KEY_MAX          },
    { "shade",       KEY_SHADE        },
    { "stick",       KEY_STICK        },
-   { "opaque",      KEY_OPAQUE       },
    { "move",        KEY_MOVE         },
    { "resize",      KEY_RESIZE       },
    { "window",      KEY_WIN          },
@@ -81,19 +80,18 @@ typedef struct OptionMapType {
 
 /** Mapping of names to group options. */
 static const OptionMapType OPTION_MAP[] = {
-   { "sticky",       OPTION_STICKY     },
-   { "transparent",  OPTION_OPAQUE     },
-   { "nolist",       OPTION_NOLIST     },
-   { "border",       OPTION_BORDER     },
-   { "noborder",     OPTION_NOBORDER   },
-   { "title",        OPTION_TITLE      },
-   { "notitle",      OPTION_NOTITLE    },
-   { "pignore",      OPTION_PIGNORE    },
-   { "maximized",    OPTION_MAXIMIZED  },
-   { "minimized",    OPTION_MINIMIZED  },
-   { "hmax",         OPTION_MAX_H      },
-   { "vmax",         OPTION_MAX_V      },
-   { NULL,           OPTION_INVALID    }
+   { "sticky",       OPTION_STICKY        },
+   { "nolist",       OPTION_NOLIST        },
+   { "border",       OPTION_BORDER        },
+   { "noborder",     OPTION_NOBORDER      },
+   { "title",        OPTION_TITLE         },
+   { "notitle",      OPTION_NOTITLE       },
+   { "pignore",      OPTION_PIGNORE       },
+   { "maximized",    OPTION_MAXIMIZED     },
+   { "minimized",    OPTION_MINIMIZED     },
+   { "hmax",         OPTION_MAX_H         },
+   { "vmax",         OPTION_MAX_V         },
+   { NULL,           OPTION_INVALID       }
 };
 
 static const char *DEFAULT_TITLE = "JWM";
@@ -864,9 +862,6 @@ void ParseWindowStyle(const TokenNode *tp) {
       case TOK_INACTIVE:
          ParseInactiveWindowStyle(np);
          break;
-      case TOK_OPACITY:
-         SetClientOpacity(np->value);
-         break;
       default:
          InvalidTag(np, TOK_WINDOWSTYLE);
          break;
@@ -894,6 +889,9 @@ void ParseActiveWindowStyle(const TokenNode *tp) {
       case TOK_OUTLINE:
          SetColor(COLOR_BORDER_ACTIVE_LINE, np->value);
          break;
+      case TOK_OPACITY:
+         SetActiveClientOpacity(np->value);
+         break;
       default:
          InvalidTag(np, TOK_ACTIVE);
       }
@@ -918,6 +916,9 @@ void ParseInactiveWindowStyle(const TokenNode *tp) {
          break;
       case TOK_OUTLINE:
          SetColor(COLOR_BORDER_LINE, np->value);
+         break;
+      case TOK_OPACITY:
+         SetInactiveClientOpacity(np->value);
          break;
       default:
          InvalidTag(np, TOK_INACTIVE);
@@ -1570,6 +1571,7 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
       AddGroupOptionValue(group, OPTION_DESKTOP, option + 8);
    } else if(!strncmp(option, "icon:", 5)) {
       AddGroupOptionValue(group, OPTION_ICON, option + 5);
+   } else if(!strncmp(option, "opacity:", 8)) {
    } else {
       ParseError(tp, "invalid Group Option: %s", option);
    }

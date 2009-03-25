@@ -81,15 +81,6 @@ Menu *CreateWindowMenu() {
       AddWindowMenuItem(menu, NULL, MA_NONE, 0);
    }
 
-   if(haveComposite) {
-      if(client->state.status & STAT_OPAQUE) {
-         AddWindowMenuItem(menu, "Opaque", MA_TRANSPARENT, 0);
-      } else {
-         AddWindowMenuItem(menu, "Translucent", MA_TRANSPARENT, 0);
-      }
-      AddWindowMenuItem(menu, NULL, MA_NONE, 0);
-   }
-
    if(client->state.status & (STAT_MAPPED | STAT_SHADED)) {
       if(client->state.border & BORDER_RESIZE) {
          AddWindowMenuItem(menu, "Resize", MA_RESIZE, 0);
@@ -336,9 +327,6 @@ void RunWindowCommand(const MenuAction *action) {
       break;
    case MA_RESIZE:
       ResizeClientKeyboard(client);
-      break;
-   case MA_TRANSPARENT:
-      TransparencySwitch(client);
       break;
    case MA_KILL:
       KillClient(client);

@@ -13,9 +13,6 @@
 struct IconNode;
 struct ScaledIconNode;
 
-/** Determine if the render extension is available. */
-void QueryRenderExtension();
-
 /** Put a scaled icon.
  * @param icon The icon.
  * @param node The scaled icon data.

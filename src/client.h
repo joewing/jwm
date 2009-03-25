@@ -56,8 +56,7 @@ typedef enum {
    STAT_SHAPE      = 1 << 11, /**< This client uses the shape extension. */
    STAT_SDESKTOP   = 1 << 12, /**< This client was minimized to show desktop. */
    STAT_FULLSCREEN = 1 << 13, /**< This client wants to be full screen. */
-   STAT_SHADEHACK  = 1 << 14, /**< This client needs shade hack. */
-   STAT_OPAQUE	   = 1 << 15  /**< This client is opaqued. */
+   STAT_OPACITY    = 1 << 14  /**< This client has a fixed opacity. */
 } StatusFlags;
 
 /** Colormap window linked list. */
@@ -298,10 +297,15 @@ void SendClientMessage(Window w, AtomType type, AtomType message);
  */
 void TransparencySwitch(ClientNode *np);
 
-/** Set the client opacity.
+/** Set the opacity for active clients.
  * @param str The opacity to use.
  */
-void SetClientOpacity(const char *str);
+void SetActiveClientOpacity(const char *str);
+
+/** Set the opacity range for inactive clients.
+ * @param str The opacity range to use.
+ */
+void SetInactiveClientOpacity(const char *str);
 
 #endif /* CLIENT_H */
 

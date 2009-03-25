@@ -96,7 +96,7 @@ int ErrorHandler(Display *d, XErrorEvent *e) {
    Debug("   Resource ID: 0x%lx", (unsigned long)e->resourceid);
    Debug("   Error Serial: %lu", (unsigned long)e->serial);
 
-#if 0
+#if 1
    ShowCheckpoint();
 #endif
 

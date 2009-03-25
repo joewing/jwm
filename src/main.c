@@ -77,8 +77,9 @@ XContext frameContext;
 int haveShape;
 int shapeEvent;
 #endif
-
-int haveComposite;
+#ifdef USE_XRENDER
+int haveRender;
+#endif
 
 static const char *CONFIG_FILE = "/.jwmrc";
 
@@ -258,10 +259,13 @@ void OpenConnection() {
 void StartupConnection() {
 
    XSetWindowAttributes attr;
-   int temp;
-   int compositeOpcode;
-   int compositeEvent;
-   int compositeError;
+#ifdef USE_SHAPE
+   int shapeError;
+#endif
+#ifdef USE_XRENDER
+   int renderEvent;
+   int renderError;
+#endif
 
    initializing = 1;
    OpenConnection();
@@ -294,7 +298,7 @@ void StartupConnection() {
    signal(SIGHUP, HandleExit);
 
 #ifdef USE_SHAPE
-   haveShape = JXShapeQueryExtension(display, &shapeEvent, &temp);
+   haveShape = JXShapeQueryExtension(display, &shapeEvent, &shapeError);
    if (haveShape) {
       Debug("shape extension enabled");
    } else {
@@ -302,13 +306,17 @@ void StartupConnection() {
    }
 #endif
 
-   haveComposite = JXQueryExtension(display, "Composite", &compositeOpcode,
-      &compositeEvent, &compositeError);
-   if(haveComposite) {
-      Debug("composite extension enabled");
+#ifdef USE_XRENDER
+   haveRender = JXRenderQueryExtension(display, &renderEvent, &renderError);
+   if(haveRender) {
+      Debug("render extension enabled");
    } else {
-      Debug("composite extension disabled");
+      Debug("render extension disabled");
    }
+   if(haveRender && rootDepth < 24) {
+      Warning("root depth is %d, icon alpha channel disabled", rootDepth);
+   }
+#endif
 
    initializing = 0;
 

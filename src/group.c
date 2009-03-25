@@ -227,6 +227,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
 
    OptionListType *lp;
    unsigned int temp;
+   float tempf;
 
    Assert(gp);
    Assert(np);
@@ -283,8 +284,14 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
       case OPTION_SHADED:
          np->state.status |= STAT_SHADED;
          break;
-      case OPTION_OPAQUE:
-         np->state.status |= STAT_OPAQUE;
+      case OPTION_OPACITY:
+         tempf = atof(lp->value);
+         if(tempf > 0.0 && tempf <= 1.0) {
+            np->state.opacity = (unsigned int)(tempf * UINT_MAX);
+            np->state.status |= STAT_OPACITY;
+         } else {
+            Warning("invalid group opacity: %s", lp->value);
+         }
          break;
       case OPTION_MAX_V:
          np->state.border &= ~BORDER_MAX_H;

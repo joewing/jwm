@@ -259,7 +259,6 @@ void RunRootCommand(const MenuAction *action) {
    case MA_SHADE:
    case MA_MOVE:
    case MA_RESIZE:
-   case MA_TRANSPARENT:
    case MA_KILL:
    case MA_CLOSE:
       ChooseWindow(action);

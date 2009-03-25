@@ -141,8 +141,6 @@
 #  define CORNER_RADIUS 4
 #endif
 
-#define OPAQUE    0xFFFFFFFF
-
 #include "debug.h"
 #include "jxlib.h"
 

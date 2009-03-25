@@ -393,11 +393,6 @@ void HandleKeyPress(const XKeyEvent *event) {
          }
       }
       break;
-   case KEY_OPAQUE:
-      if(np) {
-         TransparencySwitch(np);
-      }
-      break;
    case KEY_MOVE:
       if(np) {
          MoveClientKeyboard(np);

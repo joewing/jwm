@@ -41,7 +41,10 @@ static void RestoreTransients(ClientNode *np, int raise);
 
 static void KillClientHandler(ClientNode *np);
 
-static double client_opacity = 0.8;
+static unsigned int activeOpacity;
+static unsigned int maxInactiveOpacity;
+static unsigned int minInactiveOpacity;
+static unsigned int deltaInactiveOpacity;
 
 static const long clientWinMask
    = KeyPressMask | KeyReleaseMask
@@ -57,6 +60,10 @@ static const long clientWinMask
 
 /** Initialize client data. */
 void InitializeClients() {
+   activeOpacity = (unsigned int)(1.0 * UINT_MAX);
+   maxInactiveOpacity = (unsigned int)(0.9 * UINT_MAX);
+   minInactiveOpacity = (unsigned int)(0.5 * UINT_MAX);
+   deltaInactiveOpacity = (unsigned int)(0.1 * UINT_MAX);
 }
 
 /** Load windows that are already mapped. */
@@ -235,11 +242,6 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
       ShadeClient(np);
    }
 
-   /* Make the client transparent if requested. */
-   if(np->state.status & STAT_OPAQUE) {
-      TransparencySwitch(np);
-   }
-
    /* Minimize the client if requested. */
    if(np->state.status & STAT_MINIMIZED) {
       np->state.status &= ~STAT_MINIMIZED;
@@ -338,12 +340,6 @@ void ShadeClient(ClientNode *np) {
       return;
    }
 
-   /** xcompmgr current workaround **/
-   if(!(np->state.status & STAT_OPAQUE)) {
-      np->state.status |= STAT_SHADEHACK;
-      TransparencySwitch(np);
-   }
-
    GetBorderSize(np, &north, &south, &east, &west);
 
    ResetRoundedRectWindow(np->parent);
@@ -383,12 +379,6 @@ void UnshadeClient(ClientNode *np) {
       JXMapWindow(display, np->window);
       np->state.status |= STAT_MAPPED;
       np->state.status &= ~STAT_SHADED;
-   }
-
-   /** xcompmgr current workaround **/
-   if (np->state.status & STAT_SHADEHACK) {
-   	  np->state.status &= ~STAT_SHADEHACK;
-      TransparencySwitch(np);
    }
 
    GetBorderSize(np, &north, &south, &east, &west);
@@ -957,6 +947,7 @@ void RaiseClient(ClientNode *np) {
       }
 
       RestackClients();
+
    }
 
 }
@@ -1001,6 +992,9 @@ void RestackClients() {
    unsigned int layer, index;
    int trayCount;
    Window *stack;
+   unsigned int opacity;
+   unsigned int temp;
+   int isFirst;
 
    /** Allocate memory for restacking. */
    trayCount = GetTrayCount();
@@ -1009,12 +1003,33 @@ void RestackClients() {
    /* Prepare the stacking array. */
    index = 0;
    layer = LAYER_TOP;
+   isFirst = 1;
+   opacity = maxInactiveOpacity;
    for(;;) {
 
       for(np = nodes[layer]; np; np = np->next) {
          if((np->state.status & (STAT_MAPPED | STAT_SHADED))
             && !(np->state.status & STAT_HIDDEN)) {
             stack[index++] = np->parent;
+            if(isFirst) {
+               if(   !(np->state.status & STAT_OPACITY)
+                  && np->state.opacity != activeOpacity) {
+                  np->state.opacity = activeOpacity;
+                  WriteState(np);
+               }
+               isFirst = 0;
+            } else if(!(np->state.status & STAT_OPACITY)) {
+               if(np->state.opacity != opacity) {
+                  np->state.opacity = opacity;
+                  WriteState(np);
+               }
+               temp = opacity - deltaInactiveOpacity;
+               if(temp < minInactiveOpacity || temp > opacity) {
+                  opacity = minInactiveOpacity;
+               } else {
+                  opacity = temp;
+               }
+            }
          }
       }
 
@@ -1212,6 +1227,8 @@ void RemoveClient(ClientNode *np) {
    Release(np);
 
    JXUngrabServer(display);
+
+   RestackClients();
 
 }
 
@@ -1433,58 +1450,80 @@ void UpdateClientColormap(ClientNode *np) {
 
 }
 
-/** Switch between transparent and opaque window. */
-void TransparencySwitch(ClientNode *np) {
+/** Set the opacity for active clients. */
+void SetActiveClientOpacity(const char *str) {
 
-   unsigned char *data;
-   Atom actual;
-   int format;
-   unsigned long n, left;
-   unsigned int winopac, current_opacity;
-
-   Assert(np);
-
-   if(np->state.status & STAT_SHADED) {
-      return;
-   }
-
-   /** Get window opacity state */
-   JXGetWindowProperty(display, np->parent, atoms[ATOM_NET_WM_WINDOW_OPACITY],
-      0L, 1L, False, XA_CARDINAL, &actual, &format, &n, &left, 
-      (unsigned char **) &data);
-  
-   if(data != None) {
-      memcpy(&current_opacity, data, sizeof(unsigned int));
-      XFree(data);
-   } else {
-      current_opacity = OPAQUE;
-   }
-
-   /** Switch between opaque and translucent */
-   if(current_opacity != OPAQUE) {
-      JXDeleteProperty(display, np->parent, atoms[ATOM_NET_WM_WINDOW_OPACITY]);
-      np->state.status &= ~STAT_OPAQUE;
-   } else {
-      winopac = (unsigned int)(client_opacity * OPAQUE);
-      JXChangeProperty(display, np->parent, atoms[ATOM_NET_WM_WINDOW_OPACITY],
-         XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &winopac, 1L);
-      np->state.status |= STAT_OPAQUE;
-   }
-   JXSync(display, False);
-
-   WriteState(np);
-
-}
-
-/** Set the client opacity. */
-void SetClientOpacity(const char *str) {
+   double temp;
 
    Assert(str);
 
-   client_opacity = atof(str);
-   if(client_opacity < 0.0 || client_opacity > 1.0) {
-      Warning("invalid client opacity: %s", str);
-      client_opacity = 1.0;
+   temp = atof(str);
+   if(temp <= 0.0 || temp > 1.0) {
+      Warning("invalid active client opacity: %s", str);
+      activeOpacity = UINT_MAX;
+   } else {
+      activeOpacity = (unsigned int)(1.0 * UINT_MAX);
+   }
+
+}
+
+/** Set the opacity range for inactive clients. */
+void SetInactiveClientOpacity(const char *str) {
+
+   double temp;
+   const char *str_u;
+   const char *str_d;
+   unsigned int first;
+   unsigned int second;
+
+   Assert(str);
+
+   /* Reset in case there's a problem. */
+   maxInactiveOpacity = (unsigned int)(0.9 * UINT_MAX);
+   minInactiveOpacity = (unsigned int)(0.5 * UINT_MAX);
+   deltaInactiveOpacity = (unsigned int)(0.1 * UINT_MAX);
+
+   /* Read the first (or only) bound of the range. */
+   temp = atof(str);
+   if(temp < 0.0 || temp > 1.0) {
+      Warning("invalid inactive client opacity: %s", str);
+      return;
+   }
+   first = (unsigned int)(temp * UINT_MAX);
+   second = first;
+
+   /* Check for a range. */
+   str_u = strchr(str, ':');
+   if(str_u) {
+
+      /* A range was specified. */
+      temp = atof(str_u + 1);
+      if(temp < 0.0 || temp > 1.0) {
+         Warning("invalid inactive client opacity: %s", str);
+         return;
+      }
+      second = (unsigned int)(temp * UINT_MAX);
+
+      /* Check for a delta. */
+      str_d = strchr(str_u + 1, ':');
+      if(str_d) {
+         temp = atof(str_d + 1);
+         if(temp <= 0.0 || temp > 1.0) {
+            Warning("invalid inactive client opacity delta: %s", str);
+            return;
+         }
+         deltaInactiveOpacity = (unsigned int)(temp * UINT_MAX);
+      }
+
+   }
+
+   /* Set the min/max opacities. */
+   if(first > second) {
+      minInactiveOpacity = second;
+      maxInactiveOpacity = first;
+   } else {
+      minInactiveOpacity = first;
+      maxInactiveOpacity = second;
    }
 
 }

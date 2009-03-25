@@ -15,36 +15,6 @@
 #include "color.h"
 #include "error.h"
 
-#ifdef USE_XRENDER
-static int haveRender = 0;
-#endif
-
-/** Determine if the render extension is available. */
-void QueryRenderExtension()
-{
-
-#ifdef USE_XRENDER
-   int event, error;
-   Bool rc;
-
-   rc = JXRenderQueryExtension(display, &event, &error);
-   if(rc == True) {
-      haveRender = 1;
-      Debug("render extension enabled");
-   } else {
-      haveRender = 0;
-      Debug("render extension disabled");
-   }
-
-   if(haveRender && rootDepth < 24) {
-      Warning("color depth is %d, disabling icon alpha channel", rootDepth);
-      haveRender = 0;
-   }
-
-#endif
-
-}
-
 /** Draw a scaled icon. */
 int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
    int x, int y)
@@ -59,7 +29,7 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
 
    Assert(icon);
 
-   if(!haveRender || !icon->useRender) {
+   if(!haveRender || !icon->useRender || rootDepth < 24) {
       return 0;
    }
 
@@ -124,7 +94,7 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 
    Assert(icon);
 
-   if(!haveRender || !icon->useRender) {
+   if(!haveRender || !icon->useRender || rootDepth < 24) {
       return NULL;
    }
 

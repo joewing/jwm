@@ -52,8 +52,9 @@ extern XContext frameContext;
 extern int haveShape;
 extern int shapeEvent;
 #endif
-
-extern int haveComposite;
+#ifdef USE_XRENDER
+extern int haveRender;
+#endif
 
 #endif /* MAIN_H */
 

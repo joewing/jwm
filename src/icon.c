@@ -86,8 +86,6 @@ void StartupIcons() {
    gcValues.graphics_exposures = False;
    iconGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
 
-   QueryRenderExtension();
-
 }
 
 /** Shutdown icon support. */

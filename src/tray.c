@@ -24,6 +24,7 @@
 static TrayType *trays;
 static Window supportingWindow;
 static int trayCount;
+static unsigned int trayOpacity;
 
 static void HandleTrayExpose(TrayType *tp, const XExposeEvent *event);
 static void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event);
@@ -43,22 +44,20 @@ static int CheckVerticalFill(TrayType *tp);
 static void LayoutTray(TrayType *tp, int *variableSize,
    int *variableRemainder);
 
-/** Default opacity for Tray **/
-static double tray_opacity = 1.0;
-
 /** Initialize tray data. */
 void InitializeTray() {
    trays = NULL;
    trayCount = 0;
    supportingWindow = None;
+   trayOpacity = UINT_MAX;
 }
 
 /** Startup trays. */
 void StartupTray() {
 
    XSetWindowAttributes attr;
+   Atom opacityAtom;
    unsigned long attrMask;
-   unsigned int winopac;
    TrayType *tp;
    TrayComponentType *cp;
    int variableSize;
@@ -95,11 +94,11 @@ void StartupTray() {
          tp->x, tp->y, tp->width, tp->height,
          0, rootDepth, InputOutput, rootVisual, attrMask, &attr);
 
-      if(tray_opacity < 1) {
-         winopac = (unsigned int)(tray_opacity * OPAQUE);
-         JXChangeProperty(display, tp->window,
-            atoms[ATOM_NET_WM_WINDOW_OPACITY], XA_CARDINAL, 32,
-            PropModeReplace, (unsigned char *) &winopac, 1L);
+      if(trayOpacity < UINT_MAX) {
+         /* Can't use atoms yet as it hasn't been initialized. */
+         opacityAtom = JXInternAtom(display, "_NET_WM_WINDOW_OPACITY", False);
+         JXChangeProperty(display, tp->window, opacityAtom, XA_CARDINAL, 32,
+            PropModeReplace, (unsigned char*)&trayOpacity, 1);
          JXSync(display, False);
       }
 
@@ -1122,13 +1121,16 @@ void SetTrayVerticalAlignment(TrayType *tp, const char *str) {
 /** Set the tray transparency level. */
 void SetTrayOpacity(const char *str) {
 
+   double temp;
+
    Assert(str);
 
-   tray_opacity = atof(str);
-   if(tray_opacity < 0.0 || tray_opacity > 1.0) {
+   temp = atof(str);
+   if(temp <= 0.0 || temp > 1.0) {
       Warning("invalid tray opacity: %s", str);
-      tray_opacity = 1.0;
+      temp = 1.0;
    }
+   trayOpacity = (unsigned int)(temp * UINT_MAX);
 
 }
 

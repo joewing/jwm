@@ -375,8 +375,8 @@ void StopMove(ClientNode *np, int doMove,
       np->x = oldx;
       np->y = oldy;
 
-      /* Restore maximized status. */
-      if(hmax || vmax) {
+      /* Restore maximized status if only maximized in one direction. */
+      if((hmax || vmax) && !(hmax && vmax)) {
          MaximizeClient(np, hmax, vmax);
       }
 
@@ -390,7 +390,7 @@ void StopMove(ClientNode *np, int doMove,
    SendConfigureEvent(np);
 
    /* Restore maximized status. */
-   if(hmax || vmax) {
+   if((hmax || vmax) && !(hmax && vmax)) {
       MaximizeClient(np, hmax, vmax);
    }
 

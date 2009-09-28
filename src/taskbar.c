@@ -434,7 +434,7 @@ void SignalTaskbar(const TimeType *now, int x, int y) {
             } else {
                np = GetNode(bp, y - bp->cp->screeny);
             }
-            if(np) {
+            if(np && np->client->name) {
                ShowPopup(x, y, np->client->name);
             }
          }

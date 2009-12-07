@@ -7,6 +7,7 @@
  *
  */
 
+#include <X11/Xlibint.h>
 #include "jwm.h"
 #include "hint.h"
 #include "client.h"
@@ -590,6 +591,9 @@ void ReadWMName(ClientNode *np) {
    Atom realType;
    int realFormat;
    unsigned char *name;
+   XTextProperty tprop;
+   char **text_list;
+   int tcount;
 
    Assert(np);
 
@@ -607,19 +611,29 @@ void ReadWMName(ClientNode *np) {
    }
 
    if(!np->name) {
-      if(JXFetchName(display, np->window, &np->name) == 0) {
-         np->name = NULL;
+      status = JXGetWindowProperty(display, np->window,
+            XA_WM_NAME, 0, 1024, False, atoms[ATOM_COMPOUND_TEXT],
+            &realType, &realFormat, &count, &extra, &name);
+      if(status == Success && realFormat == 8) {
+         tprop.value = name;
+         tprop.encoding = atoms[ATOM_COMPOUND_TEXT];
+         tprop.format = realFormat;
+         tprop.nitems = strlen((char *)name);
+         if(Xutf8TextPropertyToTextList(display, &tprop, &text_list, &tcount)
+            == Success && tcount > 0) {
+            np->name = Xmalloc(strlen(text_list[0]) + 1);
+            if(np->name) {
+               strcpy(np->name, text_list[0]);
+            }
+            XFreeStringList(text_list);
+         }
+         JXFree(name);
       }
    }
 
    if(!np->name) {
-      status = JXGetWindowProperty(display, np->window, XA_WM_NAME,
-         0, 1024, False, atoms[ATOM_COMPOUND_TEXT], &realType,
-         &realFormat, &count, &extra, &name);
-      if(status != Success) {
+      if(JXFetchName(display, np->window, &np->name) == 0) {
          np->name = NULL;
-      } else {
-         np->name = (char*)name;
       }
    }
 

@@ -1,6 +1,6 @@
-./"
-./" groff -man -Tascii jwm.1
-./"
+.\"
+.\" groff -man -Tascii jwm.1
+.\"
 .TH jwm 1 "@DATE@" "v@VERSION@"
 .SH NAME
 JWM - Joe's Window Manager
@@ -56,7 +56,7 @@ location to make user-specific changes.
 Configuration of JWM is done by editing ".jwmrc".  This file is XML
 making it easy to edit, either by hand or programmatically. The
 example.jwmrc gives an example configuration file.
-Before restarting JWM, it is a good idea to run "jwm -p" to make
+Before restarting JWM, it is a good idea to run "jwm \-p" to make
 sure the configuration file is free of errors.  Otherwise you may end up
 without a root menu.
 .RE
@@ -614,7 +614,8 @@ The desktop on which windows in this group will be started.
 The icon to be used for windows in this group.
 .RE
 .P
-.\fBlayer:\fP\fI#\fP
+.B layer:
+.I #
 .RS
 The layer on which windows in this group will be started.
 .RE

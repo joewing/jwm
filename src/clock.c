@@ -233,9 +233,11 @@ void ProcessClockButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 void ProcessClockMotionEvent(TrayComponentType *cp,
    int x, int y, int mask) {
 
+   ClockType *clk;
+
    Assert(cp);
 
-   ClockType *clk = (ClockType*)cp->object;
+   clk = (ClockType*)cp->object;
    clk->mousex = cp->screenx + x;
    clk->mousey = cp->screeny + y;
    GetCurrentTime(&clk->mouseTime);

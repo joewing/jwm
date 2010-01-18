@@ -78,6 +78,7 @@ static LockNode lockMods[] = {
 };
 
 static KeyNode *bindings;
+static KeyNode *nextstack_end;
 static unsigned int lockMask;
 
 static unsigned int GetModifierMask(KeySym key);
@@ -180,6 +181,23 @@ void ShutdownKeys() {
    /* Ungrab keys on the root. */
    JXUngrabKey(display, AnyKey, AnyModifier, rootWindow);
 
+}
+
+/** Grab the next stacked keys.
+ * This is done once the full "nextstacked" key combination is
+ * pressed so that we can detect when the last modifier of the
+ * nextstack combination is released.
+ */
+void GrabKeyNextStackedEnd() {
+   Assert(nextstack_end != NULL);
+   GrabKey(nextstack_end, rootWindow);
+}
+
+/** Ungrab the next stacked keys.
+ * This is done once the stack walk ends.
+ */
+void UngrabKeyNextStacked() {
+   JXUngrabKey(display, nextstack_end->code, nextstack_end->mask, rootWindow);
 }
 
 /** Destroy key data. */
@@ -307,7 +325,6 @@ int ShouldGrab(KeyType key) {
    switch(key & 0xFF) {
    case KEY_NEXT:
    case KEY_NEXTSTACK:
-   case KEY_NEXTSTACK_END:
    case KEY_CLOSE:
    case KEY_MIN:
    case KEY_MAX:
@@ -349,6 +366,9 @@ unsigned int GetModifierMask(KeySym key) {
    int x;
 
    temp = JXKeysymToKeycode(display, key);
+   if(temp == 0) {
+      Warning("Specified KeySym is not defined for any KeyCode");
+   }
    for(x = 0; x < 8 * modmap->max_keypermod; x++) {
       if(modmap->modifiermap[x] == temp) {
          return 1 << (x / modmap->max_keypermod);
@@ -527,28 +547,22 @@ void InsertBinding(KeyType key, const char *modifiers,
 
       } else {
 
-         /* Create a node for the first modifier. */
+         /* Create a node for the first modifier.
+          * Note that we won't grab this key until the stack walk starts.
+          */
          np = Allocate(sizeof(KeyNode));
          np->next = bindings;
          bindings = np;
 
          np->key = KEY_NEXTSTACK_END;
-         np->mask = 0;
+         np->mask = mask;
          np->symbol = mp->symbol1;
          np->command = NULL;
          np->code = 0;
+         nextstack_end = np;
 
-         /* Create a node for the second modifier. */
-         np = Allocate(sizeof(KeyNode));
-         np->next = bindings;
-         bindings = np;
-
-         np->key = KEY_NEXTSTACK_END;
-         np->mask = 0;
-         np->symbol = mp->symbol2;
-         np->command = NULL;
-         np->code = 0;
-
+         /* Note that the node for the full key sequence will already
+          * have been inserted for KEY_NEXTSTACK. */
 
       }
 

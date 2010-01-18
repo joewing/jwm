@@ -437,15 +437,9 @@ void HandleKeyPress(const XKeyEvent *event) {
 void HandleKeyRelease(const XKeyEvent *event) {
 
    KeyType key;
-
    key = GetKey(event);
-
-   switch(key & 0xFF) {
-   case KEY_NEXTSTACK_END:
+   if((key & 0xFF) != KEY_NEXTSTACK) {
       StopWindowStackWalk();
-      break;
-   default:
-      break;
    }
 
 }

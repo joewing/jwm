@@ -11,6 +11,7 @@
 #include "clientlist.h"
 #include "client.h"
 #include "main.h"
+#include "key.h"
 
 ClientNode *nodes[LAYER_COUNT];
 ClientNode *nodeTail[LAYER_COUNT];
@@ -55,6 +56,9 @@ void StartWindowStackWalk() {
    if(windowStack != NULL) {
       return;
    }
+
+   /* Grab the end key so we can stop. */
+   GrabKeyNextStackedEnd();
 
    /* First determine how much space to allocate for windows. */
    count = 0;
@@ -132,6 +136,9 @@ void StopWindowStackWalk() {
 
    /* Raise the selected window and free the window array. */
    if(windowStack != NULL) {
+
+      /* Ungrab the key that triggered this. */
+      UngrabKeyNextStacked();
 
       /* Look up the current window. */
       np = FindClientByWindow(windowStack[windowStackCurrent]);

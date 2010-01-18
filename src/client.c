@@ -46,18 +46,6 @@ static unsigned int maxInactiveOpacity;
 static unsigned int minInactiveOpacity;
 static unsigned int deltaInactiveOpacity;
 
-static const long clientWinMask
-   = KeyPressMask | KeyReleaseMask
-   | ButtonPressMask | ButtonReleaseMask
-   | KeymapStateMask
-   | ButtonMotionMask
-   | PointerMotionMask
-   | EnterWindowMask | LeaveWindowMask
-   | FocusChangeMask
-   | ExposureMask
-   | StructureNotifyMask
-   | SubstructureRedirectMask;
-
 /** Initialize client data. */
 void InitializeClients() {
    activeOpacity = (unsigned int)(1.0 * UINT_MAX);
@@ -1278,8 +1266,12 @@ void ReparentClient(ClientNode *np, int notOwner) {
    if(notOwner) {
       JXAddToSaveSet(display, np->window);
 
-      attr.event_mask = EnterWindowMask | ColormapChangeMask
-         | PropertyChangeMask | StructureNotifyMask;
+      attr.event_mask
+         = EnterWindowMask
+         | ColormapChangeMask
+         | PropertyChangeMask
+         | KeyReleaseMask
+         | StructureNotifyMask;
       attr.do_not_propagate_mask = NoEventMask;
       XChangeWindowAttributes(display, np->window,
          CWEventMask | CWDontPropagate, &attr);

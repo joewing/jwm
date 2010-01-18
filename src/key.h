@@ -56,6 +56,12 @@ KeyType GetKey(const XKeyEvent *event);
  */
 void GrabKeys(struct ClientNode *np);
 
+/** Grab keys for walking the window stack. */
+void GrabKeyNextStackedEnd();
+
+/** Ungrab keys for walking the window stack. */
+void UngrabKeyNextStacked();
+
 /** Insert a key binding.
  * @param key The key binding type.
  * @param modifiers The modifier mask.

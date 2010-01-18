@@ -374,7 +374,7 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 
    GetBorderSize(np, &north, &south, &east, &west);
 
-   if(np->x + np->width > rootWidth || np->y + np->height > rootWidth) {
+   if(np->x + np->width > rootWidth || np->y + np->height > rootHeight) {
       overflow = 1;
    } else {
       overflow = 0;

@@ -27,6 +27,8 @@
     * if it was included first. */
 #  ifdef USE_PNG
 #     include <png.h>
+#  else
+#     include <setjmp.h>
 #  endif
 
 #  ifdef HAVE_STDARG_H

@@ -679,9 +679,10 @@ Make windows in this group initially shaded.
 Make windows in this group sticky.
 .RE
 .P
-.B transparent
+\fBopacity:\fP\fI#\fP
 .RS
-Make windows in this group transparent.
+Set the opacity for windows in this group.
+The value is a number between 0.0 and 1.0 inclusive.
 .RE
 .P
 .B title

@@ -133,7 +133,7 @@ If the text starts with "exec:" then the output of a program is used.
 .B Program
 .RS
 The \fBProgram\fP tag provides a way to start an external program. The text
-in this tag is the command used to start he program.
+in this tag is the command used to start the program.
 The following attributes are supported:
 .P
 \fBlabel\fP \fIstring\fP
@@ -174,7 +174,7 @@ The icon to use for this item. No default.
 .RS
 Add a "send to" menu to the menu. After selecting an item from this menu,
 a window may be selected to send that window to the selected desktop.
-The following attributes are supported
+The following attributes are supported:
 .P
 \fBlabel\fP \fIstring\fP
 .RS
@@ -191,7 +191,7 @@ The icon to use for this item. No default.
 .RS
 Add a stick/unstick window operation to the menu. After selecting this
 item a window may be selected to toggle the sticky state of that window.
-The following attributes are supported
+The following attributes are supported:
 .P
 \fBlabel\fP \fIstring\fP
 .RS
@@ -225,7 +225,7 @@ The icon to use for this item. No default.
 .RS
 Add a maximize window operation to the menu. After selecting this
 item a window may be selected to toggle the maximized state of that window.
-The following attributes are supported
+The following attributes are supported:
 .P
 \fBlabel\fP \fIstring\fP
 .RS
@@ -242,7 +242,7 @@ The icon to use for this item. No default.
 .RS
 Add a minimize window operation to the menu. After selecting this
 item a window may be selected to minimize that window.
-The following attributes are supported
+The following attributes are supported:
 .P
 \fBlabel\fP \fIstring\fP
 .RS
@@ -259,7 +259,7 @@ The icon to use for this item. No default.
 .RS
 Add a shade/unshade window operation to the menu. After selecting this
 item a window may be selected to toggle the shaded status of that window.
-The following attributes are supported
+The following attributes are supported:
 .P
 \fBlabel\fP \fIstring\fP
 .RS
@@ -276,7 +276,7 @@ The icon to use for this item. No default.
 .RS
 Add a move window operation to the menu. After selecting this
 item a window may be selected to move that window.
-The following attributes are supported
+The following attributes are supported:
 .P
 \fBlabel\fP \fIstring\fP
 .RS
@@ -293,7 +293,7 @@ The icon to use for this item. No default.
 .RS
 Add a resize window operation to the menu. After selecting this
 item a window may be selected to resize that window.
-The following attributes are supported
+The following attributes are supported:
 .P
 \fBlabel\fP \fIstring\fP
 .RS
@@ -310,7 +310,7 @@ The icon to use for this item. No default.
 .RS
 Add a kill window operation to the menu. After selecting this
 item a window may be selected to kill that window.
-The following attributes are supported
+The following attributes are supported:
 .P
 \fBlabel\fP \fIstring\fP
 .RS
@@ -327,7 +327,7 @@ The icon to use for this item. No default.
 .RS
 Add a close window operation to the menu. After selecting this
 item a window may be selected to close that window.
-The following attributes are supported
+The following attributes are supported:
 .P
 \fBlabel\fP \fIstring\fP
 .RS
@@ -480,12 +480,21 @@ Only one Dock is allowed per instance of JWM.
 .P
 .B Pager
 .RS
-Add a pager to the tray. This tag supports the following attribute:
+Add a pager to the tray.
+A pager shows a miniature representation of a desktop.
+When over the pager, the scroll wheel will switch desktops.
+Holding down the right mouse button allows you 
+to drag a window around in the pager which changes its position on the 
+real desktop.
+You can also drag a window in the pager from one desktop to another.
+This tag supports the following attributes:
 .P
 \fBlabeled\fP \fIbool\fP
 .RS
 Determines if the pager has text labels. Default is false.
 .RE
+.P
+Also see the \fBPAGER STYLE\fP section for more information.
 .RE
 .P
 .B Swallow
@@ -719,16 +728,19 @@ more information on colors. The following tags are supported:
 .B Text
 .RS
 The color of text on the title bar.
+The default is black.
 .RE
 .P
 .B Title
 .RS
 The color of the title bar (gradients are supported).
+The default is red:red.
 .RE
 .P
 .B Outline
 .RS
 The color of the window outline.
+The default is black.
 .RE
 .RE
 .P
@@ -740,16 +752,19 @@ more information on colors. The following tags are supported:
 .B Text
 .RS
 The color of text on the title bar.
+The default is black.
 .RE
 .P
 .B Title
 .RS
 The color of the title bar (gradients are supported).
+The default is gray:gray.
 .RE
 .P
 .B Outline
 .RS
 The color of the window outline.
+The default is black.
 .RE
 .RE
 .RE
@@ -880,7 +895,7 @@ for more information.
 .P
 .B ActiveBackground
 .RS
-The color of active desktops shown in the pager. See the \fBCOLORS\fP
+The background color of active desktops shown in the pager. See the \fBCOLORS\fP
 section for more information.
 .RE
 .P

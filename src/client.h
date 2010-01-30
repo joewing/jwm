@@ -292,11 +292,6 @@ void SendConfigureEvent(ClientNode *np);
  */
 void SendClientMessage(Window w, AtomType type, AtomType message);
 
-/** One-click transparency switcher.
- * @param w The client.
- */
-void TransparencySwitch(ClientNode *np);
-
 /** Set the opacity for active clients.
  * @param str The opacity to use.
  */

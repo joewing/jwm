@@ -1572,6 +1572,7 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
    } else if(!strncmp(option, "icon:", 5)) {
       AddGroupOptionValue(group, OPTION_ICON, option + 5);
    } else if(!strncmp(option, "opacity:", 8)) {
+      AddGroupOptionValue(group, OPTION_OPACITY, option + 8);
    } else {
       ParseError(tp, "invalid Group Option: %s", option);
    }

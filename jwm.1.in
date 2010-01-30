@@ -1078,8 +1078,6 @@ Maximize the active window. Grabbed.
 Shade the active window. Grabbed.
 .IP \fBstick\fP
 Stick/unstick the active window. Grabbed.
-.IP \fBopaque\fP
-Toggle active window between transparent and opaque. Grabbed.
 .IP \fBmove\fP
 Move the active window. Grabbed.
 .IP \fBresize\fP

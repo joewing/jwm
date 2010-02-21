@@ -69,6 +69,7 @@ static const KeyMapType KEY_MAP[] = {
    { "desktop#",    KEY_DESKTOP      },
    { "pdesktop",    KEY_PDESKTOP     },
    { "showdesktop", KEY_SHOWDESK     },
+   { "showtray",    KEY_SHOWTRAY     },
    { NULL,          KEY_NONE         }
 };
 

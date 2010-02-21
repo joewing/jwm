@@ -1112,6 +1112,8 @@ are then substituted for "#". Grabbed.
 Switch to the previous desktop. Grabbed.
 .IP \fBshowdesktop\fP
 Show/hide the desktop (maximize/minimize all windows). Grabbed.
+.IP \fBshowtray\fP
+Unhide the tray (when using autohide). Grabbed.
 .IP \fBexec:\fP\fIcommand\fP
 Execute \fIcommand\fP. Grabbed.
 .IP \fBrestart\fP

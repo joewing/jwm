@@ -36,9 +36,10 @@ typedef enum {
    KEY_DESKTOP       = 19,
    KEY_PDESKTOP      = 20,
    KEY_SHOWDESK      = 21,
-   KEY_EXEC          = 22,
-   KEY_RESTART       = 23,
-   KEY_EXIT          = 24
+   KEY_SHOWTRAY      = 22,
+   KEY_EXEC          = 23,
+   KEY_RESTART       = 24,
+   KEY_EXIT          = 25
 } KeyType;
 
 void InitializeKeys();

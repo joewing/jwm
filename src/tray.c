@@ -523,6 +523,21 @@ void ShowTray(TrayType *tp) {
 
 }
 
+/** Show all trays. */
+void ShowAllTrays() {
+
+   TrayType *tp;
+
+   if(shouldExit) {
+      return;
+   }
+
+   for(tp = trays; tp; tp = tp->next) {
+      ShowTray(tp);
+   }
+
+}
+
 /** Hide a tray (for autohide). */
 void HideTray(TrayType *tp) {
 

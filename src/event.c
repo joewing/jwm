@@ -363,6 +363,9 @@ void HandleKeyPress(const XKeyEvent *event) {
    case KEY_SHOWDESK:
       ShowDesktop();
       break;
+   case KEY_SHOWTRAY:
+      ShowAllTrays();
+      break;
    case KEY_NEXT:
       FocusNext();
       break;

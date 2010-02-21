@@ -168,6 +168,9 @@ void AddTrayComponent(TrayType *tp, TrayComponentType *cp);
  */
 void ShowTray(TrayType *tp);
 
+/** Show all trays. */
+void ShowAllTrays();
+
 /** Hide a tray.
  * @param tp The tray to hide.
  */

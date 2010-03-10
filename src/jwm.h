@@ -95,7 +95,7 @@
 #  endif
 #  ifdef USE_FRIBIDI
 #     include <fribidi/fribidi.h>
-#     include <fribidi/fribidi_char_sets_utf8.h>
+#     include <fribidi/fribidi_char_sets.h>
 #  endif
 
 #endif /* MAKE_DEPEND */

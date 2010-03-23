@@ -23,6 +23,7 @@
 #include "screen.h"
 #include "status.h"
 #include "tray.h"
+#include "desktop.h"
 
 typedef struct {
    int valid;
@@ -167,6 +168,22 @@ int MoveClient(ClientNode *np, int startx, int starty) {
 
          np->x = event.xmotion.x_root - startx;
          np->y = event.xmotion.y_root - starty;
+
+         if(event.xmotion.x_root == 0) {
+            PreviousDesktop();
+            SetClientDesktop(np, currentDesktop);
+            RestackClients();
+            MoveMouse(rootWindow, rootWidth - 2, event.xmotion.y_root);
+            doMove = 1;
+            DiscardMotionEvents(&event, np->window);
+         } else if(event.xmotion.x_root == rootWidth - 1) {
+            NextDesktop();
+            SetClientDesktop(np, currentDesktop);
+            RestackClients();
+            MoveMouse(rootWindow, 1, event.xmotion.y_root);
+            doMove = 1;
+            DiscardMotionEvents(&event, np->window);
+         }
 
          DoSnap(np);
 

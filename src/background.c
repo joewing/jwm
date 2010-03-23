@@ -193,6 +193,9 @@ void LoadBackground(int desktop) {
       && !strcmp(bp->value, lastBackground->value)) {
       return;
    }
+   if(lastBackground && lastBackground->window) {
+      JXUnmapWindow(display, lastBackground->window);
+   }
    lastBackground = bp;
 
    /* Load the background based on type. */

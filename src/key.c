@@ -19,32 +19,32 @@
 #include "root.h"
 #include "tray.h"
 
-typedef enum {
-   MASK_NONE  = 0,
-   MASK_ALT   = 1,
-   MASK_CTRL  = 2,
-   MASK_SHIFT = 4,
-   MASK_HYPER = 8,
-   MASK_META  = 16,
-   MASK_SUPER = 32
-} MaskType;
+#define MASK_NONE    0
+#define MASK_SHIFT   (1 << ShiftMapIndex)
+#define MASK_LOCK    (1 << LockMapIndex)
+#define MASK_CTRL    (1 << ControlMapIndex)
+#define MASK_MOD1    (1 << Mod1MapIndex)
+#define MASK_MOD2    (1 << Mod2MapIndex)
+#define MASK_MOD3    (1 << Mod3MapIndex)
+#define MASK_MOD4    (1 << Mod4MapIndex)
+#define MASK_MOD5    (1 << Mod5MapIndex)
 
 typedef struct ModifierNode {
-   char name;
-   MaskType mask;
-   KeySym symbol1;
-   KeySym symbol2;
+   char           name;
+   unsigned int   mask;
 } ModifierNode;
 
 static ModifierNode modifiers[] = {
 
-   { 'A',   MASK_ALT,   XK_Alt_L,      XK_Alt_R       },
-   { 'C',   MASK_CTRL,  XK_Control_L,  XK_Control_R   },
-   { 'S',   MASK_SHIFT, XK_Shift_L,    XK_Shift_R     },
-   { 'H',   MASK_HYPER, XK_Hyper_L,    XK_Hyper_R     },
-   { 'M',   MASK_META,  XK_Meta_L,     XK_Meta_R      },
-   { 'P',   MASK_SUPER, XK_Super_L,    XK_Super_R     },
-   { 0,     MASK_NONE,  XK_Shift_L,    XK_Shift_R     }
+   { 'C',   MASK_CTRL      },
+   { 'S',   MASK_SHIFT     },
+   { 'A',   MASK_MOD1      },
+   { '1',   MASK_MOD1      },
+   { '2',   MASK_MOD2      },
+   { '3',   MASK_MOD3      },
+   { '4',   MASK_MOD4      },
+   { '5',   MASK_MOD5      },
+   { 0,     MASK_NONE      }
 
 };
 
@@ -52,16 +52,13 @@ typedef struct KeyNode {
 
    /* These are filled in when the configuration file is parsed */
    int key;
-   unsigned int mask;
+   unsigned int state;
    KeySym symbol;
    char *command;
    struct KeyNode *next;
 
    /* This is filled in by StartupKeys if it isn't already set. */
    KeyCode code;
-
-   /* This is filled in by StartupKeys. */
-   unsigned int state;
 
 } KeyNode;
 
@@ -70,20 +67,16 @@ typedef struct LockNode {
    unsigned int mask;
 } LockNode;
 
-static XModifierKeymap *modmap;
-
 static LockNode lockMods[] = {
    { XK_Caps_Lock,   0 },
    { XK_Num_Lock,    0 }
 };
 
 static KeyNode *bindings;
-static KeyNode *nextstack_end;
 static unsigned int lockMask;
 
-static unsigned int GetModifierMask(KeySym key);
+static unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key);
 static unsigned int ParseModifierString(const char *str);
-static ModifierNode *GetKeyFromModifier(const char *str);
 static KeySym ParseKeyString(const char *str);
 static int ShouldGrab(KeyType key);
 static void GrabKey(KeyNode *np, Window win);
@@ -99,41 +92,22 @@ void InitializeKeys() {
 /** Startup key bindings. */
 void StartupKeys() {
 
+   XModifierKeymap *modmap;
    KeyNode *np;
    TrayType *tp;
    int x;
 
-   modmap = JXGetModifierMapping(display);
 
    /* Get the keys that we don't care about (num lock, etc). */
+   modmap = JXGetModifierMapping(display);
    for(x = 0; x < sizeof(lockMods) / sizeof(lockMods[0]); x++) {
-      lockMods[x].mask = GetModifierMask(lockMods[x].symbol);
+      lockMods[x].mask = GetModifierMask(modmap, lockMods[x].symbol);
       lockMask |= lockMods[x].mask;
    }
+   JXFreeModifiermap(modmap);
 
    /* Look up and grab the keys. */
    for(np = bindings; np; np = np->next) {
-
-      /* Determine the modifier mask. */
-      np->state = 0;
-      if(np->mask & MASK_ALT) {
-         np->state |= GetModifierMask(XK_Alt_L);
-      }
-      if(np->mask & MASK_CTRL) {
-         np->state |= GetModifierMask(XK_Control_L);
-      }
-      if(np->mask & MASK_SHIFT) {
-         np->state |= GetModifierMask(XK_Shift_L);
-      }
-      if(np->mask & MASK_HYPER) {
-         np->state |= GetModifierMask(XK_Hyper_L);
-      }
-      if(np->mask & MASK_META) {
-         np->state |= GetModifierMask(XK_Meta_L);
-      }
-      if(np->mask & MASK_SUPER) {
-         np->state |= GetModifierMask(XK_Super_L);
-      }
 
       /* Determine the key code. */
       if(!np->code) {
@@ -155,7 +129,6 @@ void StartupKeys() {
 
    }
 
-   JXFreeModifiermap(modmap);
 
 }
 
@@ -181,23 +154,6 @@ void ShutdownKeys() {
    /* Ungrab keys on the root. */
    JXUngrabKey(display, AnyKey, AnyModifier, rootWindow);
 
-}
-
-/** Grab the next stacked keys.
- * This is done once the full "nextstacked" key combination is
- * pressed so that we can detect when the last modifier of the
- * nextstack combination is released.
- */
-void GrabKeyNextStackedEnd() {
-   Assert(nextstack_end != NULL);
-   GrabKey(nextstack_end, rootWindow);
-}
-
-/** Ungrab the next stacked keys.
- * This is done once the stack walk ends.
- */
-void UngrabKeyNextStacked() {
-   JXUngrabKey(display, nextstack_end->code, nextstack_end->mask, rootWindow);
 }
 
 /** Destroy key data. */
@@ -260,20 +216,9 @@ KeyType GetKey(const XKeyEvent *event) {
 
    /* Loop looking for a matching key binding. */
    for(np = bindings; np; np = np->next) {
-
-      /* We need to treat KeyRelease events on modifiers with a
-       * special case since the state and keycode members will have
-       * the key set despite the fact we grabbed with no state. */
-      if(np->key == KEY_NEXTSTACK_END) {
-         if(np->code == event->keycode) {
-            return np->key;
-         }
-      } else {
-         if(np->state == state && np->code == event->keycode) {
-            return np->key;
-         }
+      if(np->state == state && np->code == event->keycode) {
+         return np->key;
       }
-
    }
 
    return KEY_NONE;
@@ -361,7 +306,7 @@ void GrabKeys(ClientNode *np) {
 }
 
 /** Get the modifier mask for a key. */
-unsigned int GetModifierMask(KeySym key) {
+unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key) {
 
    KeyCode temp;
    int x;
@@ -415,29 +360,6 @@ unsigned int ParseModifierString(const char *str) {
 
 }
 
-/** Get the key from a modifier character. */
-ModifierNode *GetKeyFromModifier(const char *str) {
-
-   int x, y;
-
-   if(str == NULL) {
-      return NULL;
-   }
-
-   for(x = 0; str[x]; x++) {
-
-      for(y = 0; modifiers[y].name; y++) {
-         if(modifiers[y].name == str[x]) {
-            return &modifiers[y];
-         }
-      }
-
-   }
-
-   return NULL;
-
-}
-
 /** Parse a key string. */
 KeySym ParseKeyString(const char *str) {
 
@@ -457,7 +379,6 @@ void InsertBinding(KeyType key, const char *modifiers,
    const char *stroke, const char *code, const char *command) {
 
    KeyNode *np;
-   ModifierNode *mp;
    unsigned int mask;
    char *temp;
    int offset;
@@ -485,7 +406,7 @@ void InsertBinding(KeyType key, const char *modifiers,
                bindings = np;
 
                np->key = key | ((temp[offset] - '1' + 1) << 8);
-               np->mask = mask;
+               np->state = mask;
                np->symbol = sym;
                np->command = NULL;
                np->code = 0;
@@ -508,7 +429,7 @@ void InsertBinding(KeyType key, const char *modifiers,
       bindings = np;
 
       np->key = key;
-      np->mask = mask;
+      np->state = mask;
       np->symbol = sym;
       np->command = CopyString(command);
       np->code = 0;
@@ -520,7 +441,7 @@ void InsertBinding(KeyType key, const char *modifiers,
       bindings = np;
 
       np->key = key;
-      np->mask = mask;
+      np->state = mask;
       np->symbol = NoSymbol;
       np->command = CopyString(command);
       np->code = atoi(code);
@@ -529,43 +450,6 @@ void InsertBinding(KeyType key, const char *modifiers,
 
       Warning("neither key nor keycode specified for Key");
       np = NULL;
-
-   }
-
-   /* KEY_NEXTSTACK is special in that we need to know when the user
-    * is finished walking the window stack. To do this we watch for
-    * the release of a modifier key used with the KEY_NEXTSTACK binding
-    * and report it as KEY_NEXTSTACK_END. If no modifier is specified
-    * for KEY_NEXTSTACK we use KEY_NEXT instead and warn the user.
-    */
-   if(np != NULL && key == KEY_NEXTSTACK) {
-
-      mp = GetKeyFromModifier(modifiers);
-      if(!mp) {
-
-         Warning("no valid modifier specified for \"nextstacked\"");
-         np->key = KEY_NEXT;
-
-      } else {
-
-         /* Create a node for the first modifier.
-          * Note that we won't grab this key until the stack walk starts.
-          */
-         np = Allocate(sizeof(KeyNode));
-         np->next = bindings;
-         bindings = np;
-
-         np->key = KEY_NEXTSTACK_END;
-         np->mask = mask;
-         np->symbol = mp->symbol1;
-         np->command = NULL;
-         np->code = 0;
-         nextstack_end = np;
-
-         /* Note that the node for the full key sequence will already
-          * have been inserted for KEY_NEXTSTACK. */
-
-      }
 
    }
 

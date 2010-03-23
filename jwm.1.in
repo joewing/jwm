@@ -1046,20 +1046,25 @@ attribute, \fBmask\fP, specifies what key mask, if any, must be in effect
 for the binding to match. Finally, the text of the \fBKey\fP tag is the
 action to perform.
 .P
-One or more of the following key masks may be specified for \fBmask\fP:
+One or more of the following key masks may be specified for \fBmask\fP
+(see \fBxmodmap\fP(1)):
 .RS
 .IP \fBA\fP
-The "Alt" key.
+The "Alt" key (mod1).
 .IP \fBC\fP
 Control
 .IP \fBS\fP
 Shift
-.IP \fBH\fP
-Hyper
-.IP \fBM\fP
-Meta
-.IP \fBP\fP
-Super
+.IP \fB1\fP
+mod1
+.IP \fB2\fP
+mod2
+.IP \fB3\fP
+mod3
+.IP \fB4\fP
+mod4
+.IP \fB5\fP
+mod5
 .RE
 .P
 The key specified in the \fBkey\fP attribute must contain a valid key

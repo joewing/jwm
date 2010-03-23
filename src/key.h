@@ -23,23 +23,22 @@ typedef enum {
    KEY_ENTER         = 6,
    KEY_NEXT          = 7,
    KEY_NEXTSTACK     = 8,
-   KEY_NEXTSTACK_END = 9,
-   KEY_CLOSE         = 10,
-   KEY_MIN           = 11,
-   KEY_MAX           = 12,
-   KEY_SHADE         = 13,
-   KEY_STICK         = 14,
-   KEY_MOVE          = 15,
-   KEY_RESIZE        = 16,
-   KEY_ROOT          = 17,
-   KEY_WIN           = 18,
-   KEY_DESKTOP       = 19,
-   KEY_PDESKTOP      = 20,
-   KEY_SHOWDESK      = 21,
-   KEY_SHOWTRAY      = 22,
-   KEY_EXEC          = 23,
-   KEY_RESTART       = 24,
-   KEY_EXIT          = 25
+   KEY_CLOSE         = 9,
+   KEY_MIN           = 10,
+   KEY_MAX           = 11,
+   KEY_SHADE         = 12,
+   KEY_STICK         = 13,
+   KEY_MOVE          = 14,
+   KEY_RESIZE        = 15,
+   KEY_ROOT          = 16,
+   KEY_WIN           = 17,
+   KEY_DESKTOP       = 18,
+   KEY_PDESKTOP      = 19,
+   KEY_SHOWDESK      = 20,
+   KEY_SHOWTRAY      = 21,
+   KEY_EXEC          = 22,
+   KEY_RESTART       = 23,
+   KEY_EXIT          = 24
 } KeyType;
 
 void InitializeKeys();
@@ -56,12 +55,6 @@ KeyType GetKey(const XKeyEvent *event);
  * @param np The client.
  */
 void GrabKeys(struct ClientNode *np);
-
-/** Grab keys for walking the window stack. */
-void GrabKeyNextStackedEnd();
-
-/** Ungrab keys for walking the window stack. */
-void UngrabKeyNextStacked();
 
 /** Insert a key binding.
  * @param key The key binding type.

@@ -937,7 +937,7 @@ void ParseInclude(const TokenNode *tp, int depth) {
 
    if(!tp->value) {
 
-      ParseError(tp, "no include file specified", temp);
+      ParseError(tp, "no include file specified");
 
    } else {
 

@@ -25,6 +25,7 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
    Picture dest;
    Picture source;
    XRenderPictFormat *fp;
+   XRenderPictureAttributes pa;
    int width, height;
 
    Assert(icon);
@@ -39,7 +40,8 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
       fp = JXRenderFindVisualFormat(display, rootVisual);
       Assert(fp);
 
-      dest = JXRenderCreatePicture(display, d, fp, 0, NULL);
+      pa.subwindow_mode = IncludeInferiors;
+      dest = JXRenderCreatePicture(display, d, fp, CPSubwindowMode, &pa);
 
       if(node->width == 0) {
          width = icon->image->width;

@@ -418,6 +418,9 @@
 #define JXRenderFindFormat( a, b, c, d ) \
    ( SetCheckpoint(), XRenderFindFormat( a, b, c, d ) )
 
+#define JXRenderFindStandardFormat( a, b ) \
+   ( SetCheckpoint(), XRenderFindStandardFormat( a, b ) )
+
 #define JXRenderCreatePicture( a, b, c, d, e ) \
    ( SetCheckpoint(), XRenderCreatePicture( a, b, c, d, e ) )
 

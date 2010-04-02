@@ -313,9 +313,6 @@ void StartupConnection() {
    } else {
       Debug("render extension disabled");
    }
-   if(haveRender && rootDepth < 24) {
-      Warning("root depth is %d, icon alpha channel disabled", rootDepth);
-   }
 #endif
 
    initializing = 0;

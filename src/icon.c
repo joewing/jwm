@@ -186,7 +186,7 @@ void AddIconPath(char *path) {
 
 /** Draw an icon. */
 void PutIcon(IconNode *icon, Drawable d, int x, int y,
-   int width, int height) {
+             int width, int height) {
 
    ScaledIconNode *node;
    int ix, iy;

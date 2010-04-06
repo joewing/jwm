@@ -54,7 +54,7 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
          height = node->height;
       }
 
-      JXRenderComposite(display, PictOpOver, source, None, dest,
+      JXRenderComposite(display, PictOpOver, source, node->maskPicture, dest,
                         0, 0, 0, 0, x, y, width, height);
 
       JXRenderFreePicture(display, dest);

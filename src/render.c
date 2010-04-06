@@ -73,7 +73,7 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
 
 /** Create a scaled icon. */
 ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
-   int width, int height) {
+                                       int width, int height) {
 
    ScaledIconNode *result = NULL;
 

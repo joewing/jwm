@@ -823,11 +823,14 @@ void ReadWMHints(Window win, ClientState *state) {
    wmhints = JXGetWMHints(display, win);
    if(wmhints) {
       switch(wmhints->flags & StateHint) {
+      case WithdrawnState:
+         state->status |= STAT_NOLIST;
+         break;
       case IconicState:
          state->status |= STAT_MINIMIZED;
          break;
       default:
-         if(!(state->status & STAT_MINIMIZED)) {
+         if(!(state->status & (STAT_MINIMIZED | STAT_NOLIST))) {
             state->status |= STAT_MAPPED;
          }
          break;

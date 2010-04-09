@@ -82,7 +82,7 @@ typedef struct TrayComponentType {
    /** Callback to destroy the component. */
    void (*Destroy)(struct TrayComponentType *cp);
 
-   /** Callback to set the size known so fari.
+   /** Callback to set the size known so far.
     * This is needed for items that maintain width/height ratios.
     * Either width or height may be zero.
     * This is called before Create.

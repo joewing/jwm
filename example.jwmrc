@@ -4,32 +4,44 @@
 
    <!-- The root menu, if this is undefined you will not get a menu. -->
    <!-- Additional RootMenu attributes: onroot, labeled, label -->
-   <RootMenu height="32" onroot="123">
-      <Program icon="rxvt.png" label="Terminal">rxvt</Program>
+   <RootMenu height="32" onroot="12">
+      <Program icon="terminal.png" label="Terminal">xterm</Program>
 
       <Menu icon="folder.png" label="Applications">
-         <Program icon="audacious.png" label="Audacious">audacious</Program>
-         <Program icon="dia.png" label="Dia">dia</Program>
-         <Program icon="firefox.png" label="Firefox">firefox</Program>
-         <Program icon="pidgin.png" label="Pidgin">pidgin</Program>
+         <Program icon="editor.png" label="Dia">dia</Program>
+         <Program icon="www.png" label="Firefox">firefox</Program>
          <Program icon="gimp.png" label="Gimp">gimp</Program>
-         <Program icon="gtk-gnutella.png" label="gtk-gnutella">
-            gtk-gnutella
+         <Program icon="mail.png" label="Mutt">
+            xterm -e mutt
          </Program>
-         <Program icon="gxine.png" label="gxine">gxine</Program>
-         <Program icon="ooffice.png" label="Open Office">ooffice</Program>
+         <Program icon="word-processor.png" label="Open Office">  
+            ooffice
+         </Program>
+         <Program icon="chat.png" label="Pidgin">pidgin</Program>
+         <Program icon="music.png" label="Rhythmbox">rhythmbox</Program>
+         <Program icon="development.png" label="Xilinx ISE">
+            /usr/local/xilinx/bin/ise
+         </Program>
+         <Program icon="video.png" label="Xine">gxine</Program>
       </Menu>
       <Menu icon="folder.png" label="Utilities">
-         <Program icon="xcalc.png">xcalc</Program>
-         <Program icon="xfontsel.png">xfontsel</Program>
-         <Program icon="xmag.png">xmag</Program>
-         <Program icon="xprop.png" label="xprop">
+         <Program icon="calculator.png" label="Calculator">xcalc</Program>
+         <Program icon="font.png" label="Fonts">xfontsel</Program>
+         <Program icon="viewer.png" label="Magnify">xmag</Program>
+         <Program icon="programs.png" label="Synaptic">
+            gksudo synaptic
+         </Program>
+         <Program icon="window.png" label="Window Properties">
             xprop | xmessage -file -
          </Program>
       </Menu>
       <Separator/>
+      <Program icon="lock.png" label="Lock">
+         xscreensaver-command -activate
+      </Program>
+      <Separator/>
       <Restart label="Restart" icon="restart.png"/>
-      <Exit label="Exit" confirm="true" icon="exit.png"/>
+      <Exit label="Exit" confirm="true" icon="quit.png"/>
    </RootMenu>
 
    <Group>
@@ -38,25 +50,27 @@
    </Group>
 
    <Group>
-      <Name>gkrellm2</Name>
+      <Name>gkrellm</Name>
       <Option>nolist</Option>
+      <Option>sticky</Option>
    </Group>
 
    <Group>
-      <Name>rxvt</Name>
+      <Name>xterm</Name>
       <Option>vmax</Option>
+      <Option>icon:terminal.png</Option>
    </Group>
 
    <!-- Additional tray attributes: autohide, width, border, layer, layout -->
-   <Tray  x="0" y="-1" height="32">
+   <Tray  x="0" y="-1" height="32" autohide="false">
 
       <!-- Additional TrayButton attribute: label -->
       <TrayButton label="JWM">root:1</TrayButton>
 
       <TrayButton label="_">showdesktop</TrayButton>
 
-      <!-- Additional Pager attributes; width, height -->
-      <Pager/>
+      <!-- Additional Pager attribute: labeled -->
+      <Pager labeled="true"/>
 
       <!-- Additional TaskList attribute: maxwidth -->
       <TaskList/>
@@ -84,12 +98,14 @@
          <Text>white</Text>
          <Title>#70849d:#2e3a67</Title>
          <Outline>black</Outline>
+         <Opacity>1.0</Opacity>
       </Active>
 
       <Inactive>
          <Text>#aaaaaa</Text>
          <Title>#808488:#303438</Title>
          <Outline>black</Outline>
+         <Opacity>0.5:0.9:0.1</Opacity>
       </Inactive>
 
    </WindowStyle>
@@ -97,9 +113,9 @@
    <TaskListStyle>
       <Font>FreeSans-12:bold</Font>
       <ActiveForeground>black</ActiveForeground>
-      <ActiveBackground>gray40:gray90</ActiveBackground>
+      <ActiveBackground>gray80:gray90</ActiveBackground>
       <Foreground>black</Foreground>
-      <Background>gray90:gray40</Background>
+      <Background>gray90:gray80</Background>
    </TaskListStyle>
 
    <!-- Additional TrayStyle attribute: insert -->
@@ -107,6 +123,7 @@
       <Font>FreeSans-12:bold</Font>
       <Background>gray90</Background>
       <Foreground>black</Foreground>
+      <Opacity>0.75</Opacity>
    </TrayStyle>
 
    <PagerStyle>
@@ -123,6 +140,7 @@
       <Background>gray90</Background>
       <ActiveForeground>white</ActiveForeground>
       <ActiveBackground>#70849d:#2e3a67</ActiveBackground>
+      <Opacity>0.85</Opacity>
    </MenuStyle>
 
    <PopupStyle>
@@ -133,19 +151,17 @@
    </PopupStyle>
 
    <IconPath>
-      $HOME/.icons
+      /usr/share/icons/wm-icons/32x32-gant
    </IconPath>
 
    <!-- Virtual Desktops -->
    <!-- Desktop tags can be contained within Desktops for desktop names. -->
    <Desktops count="4">
-
       <!-- Default background. Note that a Background tag can be
            contained within a Desktop tag to give a specific background
            for that desktop.
        -->
-      <Background type="tile">$HOME/bg.xpm</Background>
-
+      <Background type="image">/export0/images/formulae.jpg</Background>
    </Desktops>
 
    <!-- Double click speed (in milliseconds) -->
@@ -166,6 +182,8 @@
    <!-- The resize mode (outline or opaque) -->
    <ResizeMode>opaque</ResizeMode>
 
+   <StartupCommand>gkrellm</StartupCommand>
+
    <!-- Key bindings -->
    <Key key="Up">up</Key>
    <Key key="Down">down</Key>
@@ -183,6 +201,8 @@
    <Key mask="A" key="#">desktop#</Key>
    <Key mask="A" key="F1">root:1</Key>
    <Key mask="A" key="F2">window</Key>
+   <Key mask="A" key="Right">desktop</Key>
+   <Key mask="A" key="Left">pdesktop</Key>
 
 </JWM>
 

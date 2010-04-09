@@ -862,6 +862,8 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
    int actionStick;
    int actionShade;
    int actionFullScreen;
+   int actionMinimize;
+   int actionNolist;
    int x;
 
    /* Up to two actions to be applied together, figure it out. */
@@ -870,6 +872,8 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
    actionStick = 0;
    actionShade = 0;
    actionFullScreen = 0;
+   actionMinimize = 0;
+   actionNolist = 0;
 
    for(x = 1; x <= 2; x++) {
       if(event->data.l[x]
@@ -887,6 +891,12 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
       } else if(event->data.l[x]
          == (long)atoms[ATOM_NET_WM_STATE_FULLSCREEN]) {
          actionFullScreen = 1;
+      } else if(event->data.l[x]
+         == (long)atoms[ATOM_NET_WM_STATE_HIDDEN]) {
+         actionMinimize = 1;
+      } else if(event->data.l[x]
+         == (long)atoms[ATOM_NET_WM_STATE_SKIP_TASKBAR]) {
+         actionNolist = 1;
       }
    }
 
@@ -906,6 +916,13 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
       if(actionFullScreen) {
          SetClientFullScreen(np, 0);
       }
+      if(actionMinimize) {
+         RestoreClient(np, 0);
+      }
+      if(actionNolist) {
+         np->state.status &= ~STAT_NOLIST;
+         UpdateTaskBar();
+      }
       break;
    case 1: /* Add */
       if(actionStick) {
@@ -919,6 +936,13 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
       }
       if(actionFullScreen) {
          SetClientFullScreen(np, 1);
+      }
+      if(actionMinimize) {
+         MinimizeClient(np);
+      }
+      if(actionNolist) {
+         np->state.status |= STAT_NOLIST;
+         UpdateTaskBar();
       }
       break;
    case 2: /* Toggle */
@@ -945,6 +969,12 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
          } else {
             SetClientFullScreen(np, 1);
          }
+      }
+      /* Note that we don't handle toggling of hidden per EWMH
+       * recommendations. */
+      if(actionNolist) {
+         np->state.status ^= STAT_NOLIST;
+         UpdateTaskBar();
       }
       break;
    default:

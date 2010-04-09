@@ -97,6 +97,8 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ], "_NET_WM_STATE_MAXIMIZED_HORZ"},
    { &atoms[ATOM_NET_WM_STATE_SHADED],       "_NET_WM_STATE_SHADED"        },
    { &atoms[ATOM_NET_WM_STATE_FULLSCREEN],   "_NET_WM_STATE_FULLSCREEN"    },
+   { &atoms[ATOM_NET_WM_STATE_HIDDEN],       "_NET_WM_STATE_HIDDEN"        },
+   { &atoms[ATOM_NET_WM_STATE_SKIP_TASKBAR], "_NET_WM_STATE_SKIP_TASKBAR"  },
    { &atoms[ATOM_NET_WM_ALLOWED_ACTIONS],    "_NET_WM_ALLOWED_ACTIONS"     },
    { &atoms[ATOM_NET_WM_ACTION_MOVE],        "_NET_WM_ACTION_MOVE"         },
    { &atoms[ATOM_NET_WM_ACTION_RESIZE],      "_NET_WM_ACTION_RESIZE"       },
@@ -337,7 +339,7 @@ void WriteState(ClientNode *np) {
 /** Write the net state hint for a client. */
 void WriteNetState(ClientNode *np) {
 
-   unsigned long values[5];
+   unsigned long values[6];
    int north, south, east, west;
    int index;
 
@@ -362,6 +364,10 @@ void WriteNetState(ClientNode *np) {
 
    if(np->state.status & STAT_FULLSCREEN) {
       values[index++] = atoms[ATOM_NET_WM_STATE_FULLSCREEN];
+   }
+
+   if(np->state.status & STAT_NOLIST) {
+      values[index++] = atoms[ATOM_NET_WM_STATE_SKIP_TASKBAR];
    }
 
    JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_STATE],
@@ -516,6 +522,10 @@ ClientState ReadWindowState(Window win) {
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_FULLSCREEN]) {
                fullScreen = 1;
                result.layer = LAYER_TOP;
+            } else if(state[x] == atoms[ATOM_NET_WM_STATE_HIDDEN]) {
+               result.status |= STAT_MINIMIZED;
+            } else if(state[x] == atoms[ATOM_NET_WM_STATE_SKIP_TASKBAR]) {
+               result.status |= STAT_NOLIST;
             }
          }
          if(maxHorz) {

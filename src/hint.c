@@ -327,8 +327,7 @@ void WriteState(ClientNode *np) {
 
    /* Write the opacity. */
    if(np->state.opacity == UINT_MAX) {
-      JXDeleteProperty(display, np->parent,
-         atoms[ATOM_NET_WM_WINDOW_OPACITY]);
+      JXDeleteProperty(display, np->parent, atoms[ATOM_NET_WM_WINDOW_OPACITY]);
    } else {
       SetCardinalAtom(np->parent, ATOM_NET_WM_WINDOW_OPACITY,
          np->state.opacity);
@@ -349,8 +348,7 @@ void WriteNetState(ClientNode *np) {
    Assert(np);
 
    /* We remove the _NET_WM_STATE for withdrawn windows. */
-   if(   !(np->state.status & STAT_MAPPED)
-      && !(np->state.status & STAT_MINIMIZED)) {
+   if(np->state.status & STAT_MAPPED) {
       JXDeleteProperty(display, np->window, atoms[ATOM_NET_WM_STATE]);
       return;
    } 
@@ -447,6 +445,11 @@ void WriteWinState(ClientNode *np) {
    unsigned long flags;
 
    Assert(np);
+
+   if(!(np->state.status & STAT_MAPPED)) {
+      JXDeleteProperty(display, np->window, atoms[ATOM_WIN_STATE]);
+      return;
+   }
 
    flags = 0;
    if(np->state.status & STAT_STICKY) {

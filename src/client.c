@@ -1021,11 +1021,15 @@ void RestackClients() {
             }
             if(topWindow == None) {
                topWindow = np->window;
-               JXUngrabButton(display, AnyButton, AnyModifier, np->window);
-            } else {
+               if(np->grabbed) {
+                  JXUngrabButton(display, AnyButton, AnyModifier, np->window);
+                  np->grabbed = 0;
+               }
+            } else if(!np->grabbed) {
                JXGrabButton(display, AnyButton, AnyModifier, np->window,
                             True, ButtonPressMask, GrabModeSync, GrabModeAsync,
                             None, None);
+               np->grabbed = 1;
             }
          }
       }
@@ -1286,8 +1290,6 @@ void ReparentClient(ClientNode *np, int notOwner) {
          CWEventMask | CWDontPropagate, &attr);
 
    }
-   JXGrabButton(display, AnyButton, AnyModifier, np->window,
-      True, ButtonPressMask, GrabModeSync, GrabModeAsync, None, None);
    GrabKeys(np);
 
    attrMask = 0;

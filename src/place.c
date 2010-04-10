@@ -166,6 +166,13 @@ void ReadClientStrut(ClientNode *np) {
             box.y = bottomStart;
          }
 
+         if(box.width == 0 && box.height > 0) {
+            box.width = rootWidth;
+         }
+         if(box.height == 0 && box.width > 0) {
+            box.height = rootHeight;
+         }
+
          sp = Allocate(sizeof(Strut));
          sp->client = np;
          sp->box = box;
@@ -353,13 +360,12 @@ void SubtractStrutBounds(BoundingBox *box) {
    for(sp = struts; sp; sp = sp->next) {
       if(sp->client->state.desktop == currentDesktop
          || (sp->client->state.status & STAT_STICKY)) {
-         continue;
-      }
-      last = *box;
-      SubtractBounds(&sp->box, box);
-      if(box->width * box->height <= 0) {
-         *box = last;
-         break;
+         last = *box;
+         SubtractBounds(&sp->box, box);
+         if(box->width * box->height <= 0) {
+            *box = last;
+            break;
+         }
       }
    }
 

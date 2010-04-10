@@ -1063,11 +1063,8 @@ void HandleMapRequest(const XMapEvent *event) {
       JXUngrabServer(display);
    } else {
       if(!(np->state.status & STAT_MAPPED)) {
+         np->state = ReadWindowState(np->window);
          np->state.status |= STAT_MAPPED;
-         np->state.status &= ~STAT_MINIMIZED;
-         np->state.status &= ~STAT_SDESKTOP;
-         np->state.status &= ~STAT_HIDDEN;
-         np->state.status &= ~STAT_SHADED;
          if(!(np->state.status & STAT_STICKY)) {
             np->state.desktop = currentDesktop;
          }

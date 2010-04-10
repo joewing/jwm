@@ -405,10 +405,8 @@ void SetClientWithdrawn(ClientNode *np) {
    if(np->state.status & STAT_MAPPED) {
       JXUnmapWindow(display, np->window);
       JXUnmapWindow(display, np->parent);
-      WriteState(np);
    } else if(np->state.status & STAT_SHADED) {
       JXUnmapWindow(display, np->parent);
-      WriteState(np);
    }
 
    np->state.status &= ~STAT_SHADED;
@@ -416,6 +414,7 @@ void SetClientWithdrawn(ClientNode *np) {
    np->state.status &= ~STAT_MINIMIZED;
    np->state.status &= ~STAT_SDESKTOP;
 
+   WriteState(np);
    UpdateTaskBar();
    UpdatePager();
 

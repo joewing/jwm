@@ -117,6 +117,9 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_WINDOW_TYPE],        "_NET_WM_WINDOW_TYPE"         },
    { &atoms[ATOM_NET_WM_WINDOW_TYPE_DESKTOP],"_NET_WM_WINDOW_TYPE_DESKTOP" },
    { &atoms[ATOM_NET_WM_WINDOW_TYPE_DOCK],   "_NET_WM_WINDOW_TYPE_DOCK"    },
+   { &atoms[ATOM_NET_WM_WINDOW_TYPE_SPLASH], "_NET_WM_WINDOW_TYPE_SPLASH"  },
+   { &atoms[ATOM_NET_WM_WINDOW_TYPE_DIALOG], "_NET_WM_WINDOW_TYPE_DIALOG"  },
+   { &atoms[ATOM_NET_WM_WINDOW_TYPE_NORMAL], "_NET_WM_WINDOW_TYPE_NORMAL"  },
    { &atoms[ATOM_NET_CLIENT_LIST],           "_NET_CLIENT_LIST"            },
    { &atoms[ATOM_NET_CLIENT_LIST_STACKING],  "_NET_CLIENT_LIST_STACKING"   },
    { &atoms[ATOM_NET_WM_STRUT_PARTIAL],      "_NET_WM_STRUT_PARTIAL"       },
@@ -345,8 +348,14 @@ void WriteNetState(ClientNode *np) {
 
    Assert(np);
 
-   index = 0;
+   /* We remove the _NET_WM_STATE for withdrawn windows. */
+   if(   !(np->state.status & STAT_MAPPED)
+      && !(np->state.status & STAT_MINIMIZED)) {
+      JXDeleteProperty(display, np->window, atoms[ATOM_NET_WM_STATE]);
+      return;
+   } 
 
+   index = 0;
    if(np->state.status & STAT_HMAX) {
       values[index++] = atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ];
    }
@@ -509,7 +518,7 @@ ClientState ReadWindowState(Window win) {
          maxVert = 0;
          maxHorz = 0;
          fullScreen = 0;
-         state = (unsigned long*)temp;
+         state = (Atom*)temp;
          for(x = 0; x < count; x++) {
             if(state[x] == atoms[ATOM_NET_WM_STATE_STICKY]) {
                result.status |= STAT_STICKY;
@@ -544,21 +553,40 @@ ClientState ReadWindowState(Window win) {
    }
 
    /* _NET_WM_WINDOW_TYPE */
-   if(GetCardinalAtom(win, ATOM_NET_WM_DESKTOP, &card)) {
-      result.opacity = card;
-   }
-
-   /* _NET_WM_WINDOW_OPACITY */
-   status = JXGetWindowProperty(display, win,
-      atoms[ATOM_NET_WM_WINDOW_OPACITY], 0, 32, False, XA_ATOM, &realType,
-      &realFormat, &count, &extra, &temp);
+   status = JXGetWindowProperty(display, win, atoms[ATOM_NET_WM_WINDOW_TYPE],
+                                0, 32, False, XA_ATOM, &realType, &realFormat,
+                                &count, &extra, &temp);
    if(status == Success) {
-      if(count > 0) {
-         
+      /* Loop until we hit a window type we recognize. */
+      state = (Atom*)temp;
+      for(x = 0; x < count; x++) {
+         if(         state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_NORMAL]) {
+            break;
+         } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DESKTOP]) {
+            result.layer = LAYER_BOTTOM;
+            result.border = BORDER_NONE;
+            break;
+         } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DOCK]) {
+            result.border = BORDER_NONE;
+            result.layer = LAYER_TOP;
+            break;
+         } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_SPLASH]) {
+            result.border = BORDER_NONE;
+            break;
+         } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DIALOG]) {
+            result.border &= ~BORDER_MIN;
+            result.status |= STAT_NOLIST;
+            break;
+         }
       }
       if(temp) {
          JXFree(temp);
       }
+   }
+
+   /* _NET_WM_WINDOW_OPACITY */
+   if(GetCardinalAtom(win, ATOM_NET_WM_WINDOW_OPACITY, &card)) {
+      result.opacity = card;
    }
 
    /* _WIN_STATE */

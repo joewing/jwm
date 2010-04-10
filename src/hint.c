@@ -582,6 +582,8 @@ ClientState ReadWindowState(Window win) {
             result.border &= ~BORDER_MIN;
             result.status |= STAT_NOLIST;
             break;
+         } else {
+            Debug("Unknown _NET_WM_WINDOW_TYPE: %lu", state[x]);
          }
       }
       if(temp) {

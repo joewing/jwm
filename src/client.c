@@ -982,12 +982,14 @@ void RestackClients() {
    unsigned int opacity;
    unsigned int temp;
    int isFirst;
+   Window topWindow;
 
    /** Allocate memory for restacking. */
    trayCount = GetTrayCount();
    stack = AllocateStack((clientCount + trayCount) * sizeof(Window));
 
    /* Prepare the stacking array. */
+   topWindow = None;
    index = 0;
    layer = LAYER_TOP;
    isFirst = 1;
@@ -1016,6 +1018,14 @@ void RestackClients() {
                } else {
                   opacity = temp;
                }
+            }
+            if(topWindow == None) {
+               topWindow = np->window;
+               JXUngrabButton(display, AnyButton, AnyModifier, np->window);
+            } else {
+               JXGrabButton(display, AnyButton, AnyModifier, np->window,
+                            True, ButtonPressMask, GrabModeSync, GrabModeAsync,
+                            None, None);
             }
          }
       }

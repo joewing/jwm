@@ -76,7 +76,8 @@ void RemoveClientStrut(ClientNode *np) {
 
    Strut *sp;
 
-   for(sp = struts; sp; sp = sp->next) {
+   sp = struts;
+   while(sp) {
       if(sp->client == np) {
          if(sp->prev) {
             sp->prev->next = sp->next;
@@ -89,6 +90,9 @@ void RemoveClientStrut(ClientNode *np) {
             strutsTail = sp->prev;
          }
          Release(sp);
+         sp = struts;
+      } else {
+         sp = sp->next;
       }
    }
 

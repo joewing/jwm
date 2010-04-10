@@ -566,8 +566,10 @@ ClientState ReadWindowState(Window win) {
          if(         state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_NORMAL]) {
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DESKTOP]) {
-            result.layer = LAYER_BOTTOM;
-            result.border = BORDER_NONE;
+            result.layer   = LAYER_BOTTOM;
+            result.border  = BORDER_NONE;
+            result.status |= STAT_STICKY;
+            result.status |= STAT_NOLIST;
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DOCK]) {
             result.border = BORDER_NONE;

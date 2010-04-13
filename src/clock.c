@@ -249,8 +249,10 @@ void SignalClock(const TimeType *now, int x, int y) {
 
    ClockType *cp;
    int shouldDraw;
-   char *longTime;
+   char longTime[80];
    time_t t;
+   struct tm *timeinfo;
+   size_t len;
 
    Assert(now);
 
@@ -273,9 +275,11 @@ void SignalClock(const TimeType *now, int x, int y) {
          && abs(cp->mousey - y) < POPUP_DELTA) {
          if(GetTimeDifference(now, &cp->mouseTime) >= popupDelay) {
             time(&t);
-            longTime = asctime(localtime(&t));
-            Trim(longTime);
-            ShowPopup(x, y, longTime);
+            timeinfo = localtime(&t);
+            len = strftime(longTime, sizeof(longTime), "%c", timeinfo);
+            if(len > 0) {
+               ShowPopup(x, y, longTime);
+            }
          }
       }
 

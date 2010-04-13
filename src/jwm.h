@@ -31,6 +31,9 @@
 #     include <setjmp.h>
 #  endif
 
+#  ifdef HAVE_LOCALE_H
+#     include <locale.h>
+#  endif
 #  ifdef HAVE_STDARG_H
 #     include <stdarg.h>
 #  endif

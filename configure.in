@@ -61,7 +61,7 @@ AC_CHECK_HEADERS([stdarg.h stdio.h stdlib.h ctype.h], [],
 
 AC_CHECK_HEADERS([sys/select.h signal.h unistd.h time.h sys/wait.h sys/time.h])
 
-AC_CHECK_HEADERS([alloca.h])
+AC_CHECK_HEADERS([alloca.h locale.h])
 
 AC_CHECK_HEADERS([X11/Xlib.h], [],
    [ AC_MSG_ERROR([Xlib.h could not be found]) ])

@@ -145,6 +145,10 @@ int main(int argc, char *argv[]) {
       }
    }
 
+#ifdef HAVE_LOCALE_H
+   setlocale(LC_ALL, "");
+#endif
+
    /* The main loop. */
    StartupConnection();
    do {

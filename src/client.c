@@ -793,7 +793,7 @@ void FocusClient(ClientNode *np) {
       return;
    }
 
-   if(activeClient != np) {
+   if(activeClient != np || !(np->state.status & STAT_ACTIVE)) {
 
       if(activeClient) {
          activeClient->state.status &= ~STAT_ACTIVE;

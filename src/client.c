@@ -982,14 +982,12 @@ void RestackClients() {
    unsigned int opacity;
    unsigned int temp;
    int isFirst;
-   Window topWindow;
 
    /** Allocate memory for restacking. */
    trayCount = GetTrayCount();
    stack = AllocateStack((clientCount + trayCount) * sizeof(Window));
 
    /* Prepare the stacking array. */
-   topWindow = None;
    index = 0;
    layer = LAYER_TOP;
    isFirst = 1;
@@ -1018,18 +1016,6 @@ void RestackClients() {
                } else {
                   opacity = temp;
                }
-            }
-            if(topWindow == None) {
-               topWindow = np->window;
-               if(np->grabbed) {
-                  JXUngrabButton(display, AnyButton, AnyModifier, np->window);
-                  np->grabbed = 0;
-               }
-            } else if(!np->grabbed) {
-               JXGrabButton(display, AnyButton, AnyModifier, np->window,
-                            True, ButtonPressMask, GrabModeSync, GrabModeAsync,
-                            None, None);
-               np->grabbed = 1;
             }
          }
       }
@@ -1290,6 +1276,8 @@ void ReparentClient(ClientNode *np, int notOwner) {
          CWEventMask | CWDontPropagate, &attr);
 
    }
+  JXGrabButton(display, AnyButton, AnyModifier, np->window,
+     True, ButtonPressMask, GrabModeSync, GrabModeAsync, None, None);
    GrabKeys(np);
 
    attrMask = 0;

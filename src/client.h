@@ -100,7 +100,6 @@ typedef struct ClientNode {
    int yinc;                  /**< Resize y increment. */
    AspectRatio aspect;        /**< Aspect ratio. */
    int gravity;               /**< Gravity for reparenting. */
-   int grabbed;               /**< Set if the mouse is grabbed. */
 
    Colormap cmap;             /**< This window's colormap. */
    ColormapNode *colormaps;   /**< Colormaps assigned to this window. */

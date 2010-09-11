@@ -1053,7 +1053,7 @@ void HandleMapRequest(const XMapEvent *event) {
       JXGrabServer(display);
       np = AddClientWindow(event->window, 0, 1);
       if(np) {
-         if(focusModel == FOCUS_CLICK) {
+         if(focusModel == FOCUS_CLICK && !(np->state.status & STAT_NOFOCUS)) {
             FocusClient(np);
          }
       } else {
@@ -1070,8 +1070,10 @@ void HandleMapRequest(const XMapEvent *event) {
          }
          JXMapWindow(display, np->window);
          JXMapWindow(display, np->parent);
-         RaiseClient(np);
-         FocusClient(np);
+         if(!(np->state.status & STAT_NOFOCUS)) {
+            RaiseClient(np);
+            FocusClient(np);
+         }
          UpdateTaskBar();
          UpdatePager();
       }

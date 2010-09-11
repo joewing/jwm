@@ -299,6 +299,9 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
       case OPTION_MAX_H:
          np->state.border &= ~BORDER_MAX_V;
          break;
+      case OPTION_NOFOCUS:
+         np->state.status |= STAT_NOFOCUS;
+         break;
       default:
          Debug("invalid option: %d", lp->option);
          break;

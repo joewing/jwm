@@ -56,7 +56,8 @@ typedef enum {
    STAT_SHAPE      = 1 << 11, /**< This client uses the shape extension. */
    STAT_SDESKTOP   = 1 << 12, /**< This client was minimized to show desktop. */
    STAT_FULLSCREEN = 1 << 13, /**< This client wants to be full screen. */
-   STAT_OPACITY    = 1 << 14  /**< This client has a fixed opacity. */
+   STAT_OPACITY    = 1 << 14, /**< This client has a fixed opacity. */
+   STAT_NOFOCUS    = 1 << 15  /**< Don't focus on map. */
 } StatusFlags;
 
 /** Colormap window linked list. */

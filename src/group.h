@@ -31,7 +31,8 @@ typedef enum {
    OPTION_SHADED     = 13, /**< Start shaded. */
    OPTION_OPACITY    = 14, /**< Set the opacity. */
    OPTION_MAX_H      = 15, /**< Use horizontal maximization. */
-   OPTION_MAX_V      = 16  /**< Use vertical maximization. */
+   OPTION_MAX_V      = 16, /**< Use vertical maximization. */
+   OPTION_NOFOCUS    = 17  /**< Don't focus on map. */
 } OptionType;
 
 void InitializeGroups();

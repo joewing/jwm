@@ -38,9 +38,10 @@ unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2);
  * Note that the string returned is a static value and should not be
  * deleted. Therefore, this function is not thread safe.
  * @param format The format to use for the string.
+ * @param zone The timezone in tzset() format to use (defaults to local)
  * @return The time string.
  */
-const char *GetTimeString(const char *format);
+const char *GetTimeString(const char *format, const char *zone);
 
 #endif /* TIMING_H */
 

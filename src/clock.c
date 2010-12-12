@@ -25,6 +25,7 @@ typedef struct ClockType {
    TrayComponentType *cp;   /**< Common component data. */
 
    char *format;            /**< The time format to use. */
+   char *zone;              /**< The time zone to use (NULL = local). */
    char *command;           /**< A command to run when clicked. */
    char shortTime[80];      /**< Currently displayed time. */
 
@@ -91,6 +92,9 @@ void DestroyClock() {
       if(clocks->format) {
          Release(clocks->format);
       }
+      if(clocks->zone) {
+         Release(clocks->zone);
+      }
       if(clocks->command) {
          Release(clocks->command);
       }
@@ -102,8 +106,8 @@ void DestroyClock() {
 }
 
 /** Create a clock tray component. */
-TrayComponentType *CreateClock(const char *format, const char *command,
-   int width, int height) {
+TrayComponentType *CreateClock(const char *format, const char *zone,
+   const char *command, int width, int height) {
 
    TrayComponentType *cp;
    ClockType *clk;
@@ -122,6 +126,8 @@ TrayComponentType *CreateClock(const char *format, const char *command,
       format = DEFAULT_FORMAT;
    }
    clk->format = CopyString(format);
+
+   clk->zone = CopyString(zone);
 
    clk->command = CopyString(command);
 
@@ -299,7 +305,7 @@ void DrawClock(ClockType *clk, const TimeType *now, int x, int y) {
    Assert(now);
 
    /* Only draw if the label changed. */
-   shortTime = GetTimeString(clk->format);
+   shortTime = GetTimeString(clk->format, clk->zone);
    if(!strcmp(clk->shortTime, shortTime)) {
       return;
    }

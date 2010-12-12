@@ -116,6 +116,7 @@ static const char *DISTANCE_ATTRIBUTE = "distance";
 static const char *INSERT_ATTRIBUTE = "insert";
 static const char *MAX_WIDTH_ATTRIBUTE = "maxwidth";
 static const char *FORMAT_ATTRIBUTE = "format";
+static const char *ZONE_ATTRIBUTE = "zone";
 static const char *VALIGN_ATTRIBUTE = "valign";
 static const char *HALIGN_ATTRIBUTE = "halign";
 static const char *POPUP_ATTRIBUTE = "popup";
@@ -1295,6 +1296,7 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
 
    TrayComponentType *cp;
    const char *format;
+   const char *zone;
    const char *command;
    const char *temp;
    int width, height;
@@ -1303,6 +1305,8 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
    Assert(tray);
 
    format = FindAttribute(tp->attributes, FORMAT_ATTRIBUTE);
+
+   zone = FindAttribute(tp->attributes, ZONE_ATTRIBUTE);
 
    if(tp->value && strlen(tp->value) > 0) {
       command = tp->value;
@@ -1324,7 +1328,7 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
       height = 0;
    }
 
-   cp = CreateClock(format, command, width, height);
+   cp = CreateClock(format, zone, command, width, height);
    if(cp) {
       AddTrayComponent(tray, cp);
    }

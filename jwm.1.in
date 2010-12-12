@@ -457,6 +457,11 @@ when the clock is clicked. This tag supports the following attributes:
 The format of the clock. See \fBstrftime\fP(3).
 .RE
 .P
+\fBzone\fP \fIstring\fP
+.RS
+The time zone of the clock.  See \fBtzset\fP(3).
+.RE
+.P
 \fBwidth\fP \fIint\fP
 .RS
 The width of the clock. 0 indicates that the width should be determined

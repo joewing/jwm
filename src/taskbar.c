@@ -800,12 +800,22 @@ void UpdateNetClientList() {
    Node *np;
    ClientNode *client;
    Window *windows;
-   int count;
+   int count, temp;
    int layer;
 
+   /* Determine how much we need to allocate. */
    count = 0;
    for(np = taskBarNodes; np; np = np->next) {
       ++count;
+   }
+   temp = 0;
+   for(layer = LAYER_BOTTOM; layer <= LAYER_TOP; layer++) {
+      for(client = nodes[layer]; client; client = client->next) {
+         ++temp;
+      }
+   }
+   if(temp > count) {
+      count = temp;
    }
 
    if(count == 0) {

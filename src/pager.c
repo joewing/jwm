@@ -30,7 +30,6 @@ typedef struct PagerType {
    int deskHeight;         /**< Height of a desktop. */
    double scalex;          /**< Horizontal scale factor. */
    double scaley;          /**< Vertical scale factor. */
-   LayoutType layout;      /**< Layout of the desktops. */
 
    Pixmap buffer;          /**< Buffer for rendering the pager. */
 
@@ -147,21 +146,23 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 
    if(width) {
 
-      /* Vertical pager, compute height from width. */
+      /* Vertical pager. */
       cp->width = width;
-      pp->deskWidth = width;
-      pp->deskHeight = (cp->width * rootHeight) / rootWidth;
-      cp->height = (pp->deskHeight + 1) * desktopCount;
-      pp->layout = LAYOUT_VERTICAL;
+
+      pp->deskWidth = width / desktopWidth;
+      pp->deskHeight = (pp->deskWidth * rootHeight) / rootWidth;
+
+      cp->height = (pp->deskHeight + 1) * desktopHeight;
 
    } else if(height) {
 
-      /* Horizontal pager, compute width from height. */
+      /* Horizontal pager. */
       cp->height = height;
-      pp->deskHeight = height;
-      pp->deskWidth = (cp->height * rootWidth) / rootHeight;
-      cp->width = (pp->deskWidth + 1) * desktopCount;
-      pp->layout = LAYOUT_HORIZONTAL;
+
+      pp->deskHeight = height / desktopHeight;
+      pp->deskWidth = (pp->deskHeight * rootWidth) / rootHeight;
+
+      cp->width = (pp->deskWidth + 1) * desktopWidth;
 
    } else {
       Assert(0);
@@ -175,11 +176,12 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 /** Get the desktop for a pager given a set of coordinates. */
 int GetPagerDesktop(PagerType *pp, int x, int y) {
 
-   if(pp->layout == LAYOUT_HORIZONTAL) {
-      return x / (pp->deskWidth + 1);
-   } else {
-      return y / (pp->deskHeight + 1);
-   }
+   int pagerx, pagery;
+
+   pagerx = x / (pp->deskWidth + 1);
+   pagery = y / (pp->deskHeight + 1);
+
+   return pagery * desktopWidth + pagerx;
 
 }
 
@@ -206,13 +208,13 @@ void ProcessPagerButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
    case Button4:
 
       /* Change to the previous desktop. */
-      PreviousDesktop();
+      LeftDesktop();
       break;
 
    case Button5:
 
       /* Change to the next desktop. */
-      NextDesktop();
+      RightDesktop();
       break;
 
    default:
@@ -241,11 +243,8 @@ void StartPagerMove(TrayComponentType *cp, int x, int y) {
 
    /* Determine the selected desktop. */
    desktop = GetPagerDesktop(pp, x, y);
-   if(pp->layout == LAYOUT_HORIZONTAL) {
-      x -= desktop * (pp->deskWidth + 1);
-   } else {
-      y -= desktop * (pp->deskHeight + 1);
-   }
+   x -= (desktop % desktopWidth) * (pp->deskWidth + 1);
+   y -= (desktop / desktopWidth) * (pp->deskHeight + 1);
 
    /* Find the client under the specified coordinates. */
    for(layer = LAYER_TOP; layer >= LAYER_BOTTOM; layer--) {
@@ -391,11 +390,8 @@ ClientFound:
 
          /* Determine the new client desktop. */
          desktop = GetPagerDesktop(pp, x, y);
-         if(pp->layout == LAYOUT_HORIZONTAL) {
-            x -= pp->deskWidth * desktop;
-         } else {
-            y -= pp->deskHeight * desktop;
-         }
+         x -= pp->deskWidth * (desktop % desktopWidth);
+         y -= pp->deskHeight * (desktop / desktopWidth);
 
          /* If this client isn't sticky and now on a different desktop
           * change the client's desktop. */
@@ -481,6 +477,7 @@ void UpdatePager() {
    const char *name;
    int xc, yc;
    int textWidth, textHeight;
+   int dx, dy;
 
    if(shouldExit) {
       return;
@@ -500,32 +497,24 @@ void UpdatePager() {
 
       /* Highlight the current desktop. */
       JXSetForeground(display, rootGC, colors[COLOR_PAGER_ACTIVE_BG]);
-      if(pp->layout == LAYOUT_HORIZONTAL) {
-         JXFillRectangle(display, buffer, rootGC,
-            currentDesktop * (deskWidth + 1), 0,
-            deskWidth, height);
-      } else {
-         JXFillRectangle(display, buffer, rootGC,
-            0, currentDesktop * (deskHeight + 1),
-            width, deskHeight);
-      }
+      dx = currentDesktop % desktopWidth;
+      dy = currentDesktop / desktopWidth;
+      JXFillRectangle(display, buffer, rootGC,
+                      dx * (deskWidth + 1), dy * (deskHeight + 1),
+                      deskWidth, deskHeight);
 
       /* Draw the labels. */
       if(pp->labeled) {
          textHeight = GetStringHeight(FONT_PAGER);
          if(textHeight < deskHeight) {
             for(x = 0; x < desktopCount; x++) {
+               dx = x % desktopWidth;
+               dy = x / desktopWidth;
                name = GetDesktopName(x);
                textWidth = GetStringWidth(FONT_PAGER, name);
                if(textWidth < deskWidth) {
-                  if(pp->layout == LAYOUT_HORIZONTAL) {
-                     xc = x * (deskWidth + 1) + deskWidth / 2 - textWidth / 2;
-                     yc = height / 2 - textHeight / 2;
-                  } else {
-                     xc = width / 2 - textWidth / 2;
-                     yc = x * (deskHeight + 1) + deskHeight / 2
-                        - textHeight / 2;
-                  }
+                  xc = dx * (deskWidth + 1) + deskWidth / 2 - textWidth / 2;
+                  yc = dy * (deskHeight + 1) + deskHeight / 2 - textHeight / 2;
                   RenderString(buffer, FONT_PAGER, COLOR_PAGER_TEXT, xc, yc,
                      deskWidth, None, name);
                }
@@ -542,16 +531,15 @@ void UpdatePager() {
 
       /* Draw the desktop dividers. */
       JXSetForeground(display, rootGC, colors[COLOR_PAGER_FG]);
-      for(x = 1; x < desktopCount; x++) {
-         if(pp->layout == LAYOUT_HORIZONTAL) {
-            JXDrawLine(display, buffer, rootGC,
-               (deskWidth + 1) * x - 1, 0,
-               (deskWidth + 1) * x - 1, height);
-         } else {
-            JXDrawLine(display, buffer, rootGC,
-               0, (deskHeight + 1) * x - 1,
-               width, (deskHeight + 1) * x - 1);
-         }
+      for(x = 1; x < desktopHeight; x++) {
+         JXDrawLine(display, buffer, rootGC,
+            0, (deskHeight + 1) * x - 1,
+            width, (deskHeight + 1) * x - 1);
+      }
+      for(x = 1; x < desktopWidth; x++) {
+         JXDrawLine(display, buffer, rootGC,
+            (deskWidth + 1) * x - 1, 0,
+            (deskWidth + 1) * x - 1, height);
       }
 
       /* Tell the tray to redraw. */
@@ -566,7 +554,7 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
 
    int x, y;
    int width, height;
-   int deskOffset;
+   int offx, offy;
    ColorType fillColor;
 
    /* Don't draw the client if it isn't mapped. */
@@ -576,15 +564,14 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
 
    /* Determine the desktop for the client. */
    if(np->state.status & STAT_STICKY) {
-      deskOffset = currentDesktop;
+      offx = currentDesktop % desktopWidth;
+      offy = currentDesktop / desktopWidth;
    } else {
-      deskOffset = np->state.desktop;
+      offx = np->state.desktop % desktopWidth;
+      offy = np->state.desktop / desktopWidth;
    }
-   if(pp->layout == LAYOUT_HORIZONTAL) {
-      deskOffset *= pp->deskWidth + 1;
-   } else {
-      deskOffset *= pp->deskHeight + 1;
-   }
+   offx *= pp->deskWidth + 1;
+   offy *= pp->deskHeight + 1;
 
    /* Determine the location and size of the client on the pager. */
    x = (int)((double)np->x * pp->scalex + 1.0);
@@ -614,11 +601,8 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
    }
 
    /* Move to the correct desktop on the pager. */
-   if(pp->layout == LAYOUT_HORIZONTAL) {
-      x += deskOffset;
-   } else {
-      y += deskOffset;
-   }
+   x += offx;
+   y += offy;
 
    /* Draw the client outline. */
    JXSetForeground(display, rootGC, colors[COLOR_PAGER_OUTLINE]);

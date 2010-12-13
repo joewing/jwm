@@ -28,6 +28,8 @@ extern int colormapCount;
 
 extern char *exitCommand;
 
+extern unsigned int desktopWidth;
+extern unsigned int desktopHeight;
 extern unsigned int desktopCount;
 extern unsigned int currentDesktop;
 

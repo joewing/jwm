@@ -294,9 +294,9 @@ void HandleButtonEvent(const XButtonEvent *event) {
    } else if(event->window == rootWindow && event->type == ButtonPress) {
       if(!ShowRootMenu(event->button, event->x, event->y)) {
          if(event->button == 4) {
-            PreviousDesktop();
+            LeftDesktop();
          } else if(event->button == 5) {
-            NextDesktop();
+            RightDesktop();
          }
       }
    } else {
@@ -351,14 +351,19 @@ void HandleKeyPress(const XKeyEvent *event) {
       RunKeyCommand(event);
       break;
    case KEY_DESKTOP:
-      if(key >> 8) {
-         ChangeDesktop((key >> 8) - 1);
-      } else {
-         NextDesktop();
-      }
+      ChangeDesktop((key >> 8) - 1);
       break;
-   case KEY_PDESKTOP:
-      PreviousDesktop();
+   case KEY_RDESKTOP:
+      RightDesktop();
+      break;
+   case KEY_LDESKTOP:
+      LeftDesktop();
+      break;
+   case KEY_UDESKTOP:
+      AboveDesktop();
+      break;
+   case KEY_DDESKTOP:
+      BelowDesktop();
       break;
    case KEY_SHOWDESK:
       ShowDesktop();

@@ -1100,14 +1100,18 @@ Resize the active window. Grabbed.
 Show root menu \fIn\fP. Grabbed.
 .IP \fBwindow\fP
 Show the window menu for the active window. Grabbed.
-.IP \fBdesktop\fP
-Switch to the next desktop. Grabbed.
 .IP \fBdesktop#\fP
 Switch to a specific desktop. To use this, "#" must be specified in
 the key section. The number 1 to the number of desktops configured
 are then substituted for "#". Grabbed.
-.IP \fBpdesktop\fP
-Switch to the previous desktop. Grabbed.
+.IP \fBrdesktop\fP
+Move one desktop to the right. Grabbed.
+.IP \fBldesktop\fP
+Move one desktop to the left. Grabbed.
+.IP \fBudesktop\fP
+Move up one desktop. Grabbed.
+.IP \fBddesktop\fP
+Move down one desktop. Grabbed.
 .IP \fBshowdesktop\fP
 Show/hide the desktop (maximize/minimize all windows). Grabbed.
 .IP \fBshowtray\fP
@@ -1158,10 +1162,16 @@ When over a task list, the scroll wheel will switch windows.
 Virtual desktops are controlled with the \fBDesktops\fP tag.
 Within this tag the following attribute is supported:
 .P
-\fBcount\fP \fIint\fP
+\fBwidth\fP \fIint\fP
 .RS
-The number of virtual desktops. The default is 4. Valid values are between
-1 and 8 inclusive.
+The number of virtual desktops in the horizontal direction.
+The default is 4.
+.RE
+.P
+\fBheight\fP \fIint\fP
+.RS
+The number of virtual desktops in the vertical direction. 
+The default is 1.
 .RE
 .P
 Within the \fBDesktops\fP tag the following tags are supported:

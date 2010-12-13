@@ -598,7 +598,7 @@ void SetClientDesktop(ClientNode *np, unsigned int desktop) {
 
    Assert(np);
 
-   if(desktop >= desktopCount) {
+   if(desktop >= desktopWidth * desktopHeight) {
       return;
    }
 

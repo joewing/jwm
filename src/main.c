@@ -57,6 +57,8 @@ int shouldRestart = 0;
 int isRestarting = 0;
 int initializing = 0;
 
+unsigned int desktopWidth = 4;
+unsigned int desktopHeight = 1;
 unsigned int desktopCount = 4;
 unsigned int currentDesktop = 0;
 

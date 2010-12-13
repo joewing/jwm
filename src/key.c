@@ -279,8 +279,10 @@ int ShouldGrab(KeyType key) {
    case KEY_RESIZE:
    case KEY_ROOT:
    case KEY_WIN:
-   case KEY_DESKTOP:
-   case KEY_PDESKTOP:
+   case KEY_RDESKTOP:
+   case KEY_LDESKTOP:
+   case KEY_DDESKTOP:
+   case KEY_UDESKTOP:
    case KEY_SHOWDESK:
    case KEY_SHOWTRAY:
    case KEY_EXEC:

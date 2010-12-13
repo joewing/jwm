@@ -65,9 +65,11 @@ static const KeyMapType KEY_MAP[] = {
    { "window",      KEY_WIN          },
    { "restart",     KEY_RESTART      },
    { "exit",        KEY_EXIT         },
-   { "desktop",     KEY_DESKTOP      },
    { "desktop#",    KEY_DESKTOP      },
-   { "pdesktop",    KEY_PDESKTOP     },
+   { "rdesktop",    KEY_RDESKTOP     },
+   { "ldesktop",    KEY_LDESKTOP     },
+   { "udesktop",    KEY_UDESKTOP     },
+   { "ddesktop",    KEY_DDESKTOP     },
    { "showdesktop", KEY_SHOWDESK     },
    { "showtray",    KEY_SHOWTRAY     },
    { NULL,          KEY_NONE         }
@@ -111,7 +113,6 @@ static const char *WIDTH_ATTRIBUTE = "width";
 static const char *HEIGHT_ATTRIBUTE = "height";
 static const char *NAME_ATTRIBUTE = "name";
 static const char *BORDER_ATTRIBUTE = "border";
-static const char *COUNT_ATTRIBUTE = "count";
 static const char *DISTANCE_ATTRIBUTE = "distance";
 static const char *INSERT_ATTRIBUTE = "insert";
 static const char *MAX_WIDTH_ATTRIBUTE = "maxwidth";
@@ -961,18 +962,16 @@ void ParseInclude(const TokenNode *tp, int depth) {
 void ParseDesktops(const TokenNode *tp) {
 
    TokenNode *np;
-   char *attr;
+   const char *width;
+   const char *height;
    int x;
    int desktop;
 
    Assert(tp);
 
-   attr = FindAttribute(tp->attributes, COUNT_ATTRIBUTE);
-   if(attr) {
-      SetDesktopCount(attr);
-   }   else {
-      desktopCount = DEFAULT_DESKTOP_COUNT;
-   }
+   width = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
+   height = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
+   SetDesktopCount(width, height);
 
    desktop = 0;
    for(x = 0, np = tp->subnodeHead; np; np = np->next, x++) {

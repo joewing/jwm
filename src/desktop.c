@@ -69,18 +69,32 @@ void DestroyDesktops() {
 
 }
 
-/** Change to the next desktop. */
-void NextDesktop() {
+/** Change to the desktop to the right. */
+void RightDesktop() {
    ChangeDesktop((currentDesktop + 1) % desktopCount);
 }
 
-/** Change to the previous desktop. */
-void PreviousDesktop() {
+/** Change to the desktop to the left. */
+void LeftDesktop() {
    if(currentDesktop > 0) {
       ChangeDesktop(currentDesktop - 1);
    } else {
       ChangeDesktop(desktopCount - 1);
    }
+}
+
+/** Change to the desktop above. */
+void AboveDesktop() {
+   if(currentDesktop >= desktopWidth) {
+      ChangeDesktop(currentDesktop - desktopWidth);
+   } else {
+      ChangeDesktop(currentDesktop + (desktopHeight - 1) * desktopWidth);
+   }
+}
+
+/** Change to the desktop below. */
+void BelowDesktop() {
+   ChangeDesktop((currentDesktop + desktopWidth) % desktopCount);
 }
 
 /** Change to the specified desktop. */
@@ -214,20 +228,25 @@ void ShowDesktop() {
 }
 
 /** Set the number of desktops to use. */
-void SetDesktopCount(const char *str) {
+void SetDesktopCount(const char *width, const char *height) {
 
-   if(!str) {
-      Warning("invalid desktop count");
-      return;
+   if(width) {
+      desktopWidth = atoi(width);
+   } else {
+      desktopWidth = DEFAULT_DESKTOP_WIDTH;
+   }
+   if(height) {
+      desktopHeight = atoi(height);
+   } else {
+      desktopHeight = DEFAULT_DESKTOP_HEIGHT;
    }
 
-   desktopCount = atoi(str);
-   if(   desktopCount < MIN_DESKTOP_COUNT
-      || desktopCount > MAX_DESKTOP_COUNT) {
-
-      Warning("invalid desktop count: \"%s\"", str);
-      desktopCount = DEFAULT_DESKTOP_COUNT;
-
+   desktopCount = desktopWidth * desktopHeight;
+   if(desktopCount == 0) {
+      Warning("invalid desktop count");
+      desktopWidth = DEFAULT_DESKTOP_WIDTH;
+      desktopHeight = DEFAULT_DESKTOP_HEIGHT;
+      desktopCount = desktopWidth * desktopHeight;
    }
 
 }

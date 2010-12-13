@@ -170,17 +170,31 @@ int MoveClient(ClientNode *np, int startx, int starty) {
          np->y = event.xmotion.y_root - starty;
 
          if(event.xmotion.x_root == 0) {
-            PreviousDesktop();
+            LeftDesktop();
             SetClientDesktop(np, currentDesktop);
             RestackClients();
             MoveMouse(rootWindow, rootWidth - 2, event.xmotion.y_root);
             doMove = 1;
             DiscardMotionEvents(&event, np->window);
          } else if(event.xmotion.x_root == rootWidth - 1) {
-            NextDesktop();
+            RightDesktop();
             SetClientDesktop(np, currentDesktop);
             RestackClients();
             MoveMouse(rootWindow, 1, event.xmotion.y_root);
+            doMove = 1;
+            DiscardMotionEvents(&event, np->window);
+         } else if(event.xmotion.y_root == 0) {
+            AboveDesktop();
+            SetClientDesktop(np, currentDesktop);
+            RestackClients();
+            MoveMouse(rootWindow, event.xmotion.x_root, rootHeight - 2);
+            doMove = 1;
+            DiscardMotionEvents(&event, np->window);
+         } else if(event.xmotion.y_root == rootHeight - 1) {
+            BelowDesktop();
+            SetClientDesktop(np, currentDesktop);
+            RestackClients();
+            MoveMouse(rootWindow, event.xmotion.x_root, 1);
             doMove = 1;
             DiscardMotionEvents(&event, np->window);
          }

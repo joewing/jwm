@@ -154,12 +154,30 @@ void InitializeHints() {
 /** Set root hints and intern atoms. */
 void StartupHints() {
 
-   unsigned long array[128];
-   Atom supported[ATOM_COUNT];
-   Window win;
+   unsigned long *array;
    char *data;
+   Atom *supported;
+   Window win;
    unsigned int x;
    unsigned int count;
+
+   /* Determine how much space we will need on the stack and allocate it. */
+   count = 0;
+   for(x = 0; x < desktopCount; x++) {
+      count += strlen(GetDesktopName(x)) + 1;
+   }
+   if(count < 4 * desktopCount * sizeof(unsigned long)) {
+      count = 4 * desktopCount * sizeof(unsigned long);
+   }
+   if(count < 2 * sizeof(unsigned long)) {
+      count = 2 * sizeof(unsigned long);
+   }
+   if(count < ATOM_COUNT * sizeof(Atom)) {
+      count = ATOM_COUNT * sizeof(Atom);
+   }
+   data = AllocateStack(count);
+   array = (unsigned long*)data;
+   supported = (Atom*)data;
 
    /* Intern the atoms */
    for(x = 0; x < ATOM_COUNT; x++) {
@@ -188,18 +206,23 @@ void StartupHints() {
    /* _NET_DESKTOP_NAMES */
    count = 0;
    for(x = 0; x < desktopCount; x++) {
-      count += strlen(desktopNames[x]) + 1;
-   }
-   data = AllocateStack(count);
-   count = 0;
-   for(x = 0; x < desktopCount; x++) {
-      strcpy(data + count, desktopNames[x]);
-      count += strlen(desktopNames[x]) + 1;
+      strcpy(data + count, GetDesktopName(x));
+      count += strlen(GetDesktopName(x)) + 1;
    }
    JXChangeProperty(display, rootWindow, atoms[ATOM_NET_DESKTOP_NAMES],
       atoms[ATOM_UTF8_STRING], 8, PropModeReplace,
       (unsigned char*)data, count);
-   ReleaseStack(data);
+
+   /* _NET_WORKAREA */
+   for(x = 0; x < desktopCount; x++) {
+      array[x * 4 + 0] = 0;
+      array[x * 4 + 1] = 0;
+      array[x * 4 + 2] = rootWidth;
+      array[x * 4 + 3] = rootHeight;
+   }
+   JXChangeProperty(display, rootWindow, atoms[ATOM_NET_WORKAREA],
+      XA_CARDINAL, 32, PropModeReplace,
+      (unsigned char*)array, desktopCount * 4);
 
    /* _NET_DESKTOP_GEOMETRY */
    array[0] = rootWidth;
@@ -215,17 +238,6 @@ void StartupHints() {
       XA_CARDINAL, 32, PropModeReplace,
       (unsigned char*)array, 2);
 
-   /* _NET_WORKAREA */
-   for(x = 0; x < desktopCount; x++) {
-      array[x * 4 + 0] = 0;
-      array[x * 4 + 1] = 0;
-      array[x * 4 + 2] = rootWidth;
-      array[x * 4 + 3] = rootHeight;
-   }
-   JXChangeProperty(display, rootWindow, atoms[ATOM_NET_WORKAREA],
-      XA_CARDINAL, 32, PropModeReplace,
-      (unsigned char*)array, desktopCount * 4);
-
    win = GetSupportingWindow();
    JXChangeProperty(display, win, atoms[ATOM_NET_WM_NAME],
       atoms[ATOM_UTF8_STRING], 8, PropModeReplace,
@@ -238,6 +250,8 @@ void StartupHints() {
    SetWindowAtom(win, ATOM_WIN_SUPPORTING_WM_CHECK, win);
 
    SetCardinalAtom(rootWindow, ATOM_WIN_WORKSPACE_COUNT, desktopCount);
+
+   ReleaseStack(data);
 
 }
 

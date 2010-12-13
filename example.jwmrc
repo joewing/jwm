@@ -72,8 +72,7 @@
       <!-- Additional Pager attribute: labeled -->
       <Pager labeled="true"/>
 
-      <!-- Additional TaskList attribute: maxwidth -->
-      <TaskList/>
+      <TaskList maxwidth="256"/>
 
       <Dock/>
 
@@ -156,7 +155,7 @@
 
    <!-- Virtual Desktops -->
    <!-- Desktop tags can be contained within Desktops for desktop names. -->
-   <Desktops count="4">
+   <Desktops width="4" height="2">
       <!-- Default background. Note that a Background tag can be
            contained within a Desktop tag to give a specific background
            for that desktop.
@@ -201,8 +200,11 @@
    <Key mask="A" key="#">desktop#</Key>
    <Key mask="A" key="F1">root:1</Key>
    <Key mask="A" key="F2">window</Key>
-   <Key mask="A" key="Right">desktop</Key>
-   <Key mask="A" key="Left">pdesktop</Key>
+   <Key mask="A" key="F10">maximize</Key>
+   <Key mask="A" key="Right">rdesktop</Key>
+   <Key mask="A" key="Left">ldesktop</Key>
+   <Key mask="A" key="Up">udesktop</Key>
+   <Key mask="A" key="Down">ddesktop</Key>
 
 </JWM>
 

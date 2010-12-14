@@ -1082,6 +1082,10 @@ Make a menu selection. Not grabbed.
 Move to the next window in the task list. Grabbed.
 .IP \fBnextstacked\fP
 Move to the next window in the stacking order. Grabbed.
+.IP \fBprev\fP
+Move to the previous window in the task list. Grabbed.
+.IP \fBprevstacked\fP
+Move to the previous window in the stacking order. Grabbed.
 .IP \fBclose\fP
 Close the active window. Grabbed.
 .IP \fBminimize\fP

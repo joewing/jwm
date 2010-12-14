@@ -23,6 +23,8 @@ typedef enum {
    KEY_ENTER,
    KEY_NEXT,
    KEY_NEXTSTACK,
+   KEY_PREV,
+   KEY_PREVSTACK,
    KEY_CLOSE,
    KEY_MIN,
    KEY_MAX,

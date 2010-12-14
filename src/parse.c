@@ -55,6 +55,8 @@ static const KeyMapType KEY_MAP[] = {
    { "select",      KEY_ENTER        },
    { "next",        KEY_NEXT         },
    { "nextstacked", KEY_NEXTSTACK    },
+   { "prev",        KEY_PREV         },
+   { "prevstacked", KEY_PREVSTACK    },
    { "close",       KEY_CLOSE        },
    { "minimize",    KEY_MIN          },
    { "maximize",    KEY_MAX          },

@@ -113,7 +113,7 @@ void ChangeDesktop(unsigned int desktop) {
 
    /* Hide clients from the old desktop.
     * Note that we show clients in a separate loop to prevent an issue
-    * with clients loosing focus.
+    * with clients losing focus.
     */
    for(x = 0; x < LAYER_COUNT; x++) {
       for(np = nodes[x]; np; np = np->next) {

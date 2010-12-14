@@ -270,6 +270,8 @@ int ShouldGrab(KeyType key) {
    switch(key & 0xFF) {
    case KEY_NEXT:
    case KEY_NEXTSTACK:
+   case KEY_PREV:
+   case KEY_PREVSTACK:
    case KEY_CLOSE:
    case KEY_MIN:
    case KEY_MAX:
@@ -279,6 +281,7 @@ int ShouldGrab(KeyType key) {
    case KEY_RESIZE:
    case KEY_ROOT:
    case KEY_WIN:
+   case KEY_DESKTOP:
    case KEY_RDESKTOP:
    case KEY_LDESKTOP:
    case KEY_DDESKTOP:

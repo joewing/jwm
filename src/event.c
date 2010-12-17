@@ -197,6 +197,7 @@ void Signal() {
    SignalTrayButton(&now, x, y);
    SignalClock(&now, x, y);
    SignalTray(&now, x, y);
+   SignalPager(&now, x, y);
    SignalPopup(&now, x, y);
 
 }

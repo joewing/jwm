@@ -18,6 +18,8 @@
 #include "event.h"
 #include "main.h"
 #include "tray.h"
+#include "timing.h"
+#include "popup.h"
 #include "font.h"
 
 /** Structure to represent a pager tray component. */
@@ -32,6 +34,9 @@ typedef struct PagerType {
    double scaley;          /**< Vertical scale factor. */
 
    Pixmap buffer;          /**< Buffer for rendering the pager. */
+
+   TimeType mouseTime;     /**< Timestamp of last mouse movement. */
+   int mousex, mousey;     /**< Coordinates of last mouse location. */
 
    struct PagerType *next; /**< Next pager in the list. */
 
@@ -48,6 +53,9 @@ static void SetSize(TrayComponentType *cp, int width, int height);
 static int GetPagerDesktop(PagerType *pp, int x, int y);
 
 static void ProcessPagerButtonEvent(TrayComponentType *cp,
+   int x, int y, int mask);
+
+static void ProcessPagerMotionEvent(TrayComponentType *cp,
    int x, int y, int mask);
 
 static void StartPagerMove(TrayComponentType *cp, int x, int y);
@@ -102,6 +110,10 @@ TrayComponentType *CreatePager(int labeled) {
    pp->next = pagers;
    pagers = pp;
    pp->labeled = labeled;
+   pp->mousex = -1;
+   pp->mousey = -1;
+   pp->mouseTime.seconds = 0;
+   pp->mouseTime.ms = 0;
 
    cp = CreateTrayComponent();
    cp->object = pp;
@@ -109,6 +121,7 @@ TrayComponentType *CreatePager(int labeled) {
    cp->Create = Create;
    cp->SetSize = SetSize;
    cp->ProcessButtonPress = ProcessPagerButtonEvent;
+   cp->ProcessMotionEvent = ProcessPagerMotionEvent;
 
    return cp;
 }
@@ -220,6 +233,16 @@ void ProcessPagerButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
    default:
       break;
    }
+}
+
+/** Process a motion event on a pager tray component. */
+void ProcessPagerMotionEvent(TrayComponentType *cp, int x, int y, int mask) {
+
+   PagerType *pp = (PagerType*)cp->object;
+
+   pp->mousex = cp->screenx + x;
+   pp->mousey = cp->screeny + y;
+   GetCurrentTime(&pp->mouseTime);
 }
 
 /** Start a pager move operation. */
@@ -547,6 +570,31 @@ void UpdatePager() {
 
    }
 
+}
+
+/** Signal pagers (for popups). */
+void SignalPager(const struct TimeType *now, int x, int y) {
+
+   PagerType *pp;
+
+   for(pp = pagers; pp; pp = pp->next) {
+      if(abs(pp->mousex - x) < POPUP_DELTA
+         && abs(pp->mousey - y) < POPUP_DELTA) {
+         if(GetTimeDifference(now, &pp->mouseTime) >= popupDelay) {
+            int desktop;
+            desktop = GetPagerDesktop(pp, x - pp->cp->screenx,
+                                      y - pp->cp->screeny);
+            if(desktop >= 0) {
+               const char *desktopName;
+               desktopName = GetDesktopName(desktop);
+               if(desktopName) {
+                  ShowPopup(x, y, desktopName);
+               }
+            }
+
+         }
+      }
+   }
 }
 
 /** Draw a client on the pager. */

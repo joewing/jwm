@@ -65,6 +65,12 @@ void ShutdownPopup() {
 void DestroyPopup() {
 }
 
+/** Calculate dimensions of a popup window given the popup text. */
+void MeasurePopupText(const char *text, int *width, int *height) {
+   *height = GetStringHeight(FONT_POPUP) + 2;
+   *width = GetStringWidth(FONT_POPUP, text) + 9;
+}
+
 /** Show a popup window. */
 void ShowPopup(int x, int y, const char *text) {
 
@@ -83,17 +89,12 @@ void ShowPopup(int x, int y, const char *text) {
       popup.text = NULL;
    }
 
-   if(!strlen(text)) {
+   if(text[0] == 0) {
       return;
    }
 
    popup.text = CopyString(text);
-
-   popup.height = GetStringHeight(FONT_POPUP);
-   popup.width = GetStringWidth(FONT_POPUP, popup.text);
-
-   popup.height += 2;
-   popup.width += 9;
+   MeasurePopupText(text, &popup.width, &popup.height);
 
    sp = GetCurrentScreen(x, y);
 
@@ -109,6 +110,12 @@ void ShowPopup(int x, int y, const char *text) {
    }
    if(popup.height + popup.y >= sp->height) {
       popup.y = sp->height - popup.height - 2;
+   }
+   if (popup.x < 2) {
+      popup.x = 2;
+   }
+   if (popup.y < 2) {
+      popup.y = 2;
    }
 
    if(popup.window == None) {

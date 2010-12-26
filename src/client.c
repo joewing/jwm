@@ -261,6 +261,12 @@ ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
       }
    }
 
+   /* Make the client fullscreen if requested. */
+   if(np->state.status & STAT_FULLSCREEN) {
+      np->state.status &= ~STAT_FULLSCREEN;
+      SetClientFullScreen(np, 1);
+   }
+
    return np;
 
 }

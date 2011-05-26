@@ -20,16 +20,16 @@ void DestroyDesktops();
 /*@}*/
 
 /** Switch to the desktop to the right. */
-void RightDesktop();
+int RightDesktop();
 
 /** Switch to the desktop to the left. */
-void LeftDesktop();
+int LeftDesktop();
 
 /** Switch to the desktop above. */
-void AboveDesktop();
+int AboveDesktop();
 
 /** Switch to the desktop below. */
-void BelowDesktop();
+int BelowDesktop();
 
 /** Switch to a specific desktop.
  * @param desktop The desktop to show (0 based).

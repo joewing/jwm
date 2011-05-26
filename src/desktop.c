@@ -70,31 +70,51 @@ void DestroyDesktops() {
 }
 
 /** Change to the desktop to the right. */
-void RightDesktop() {
-   ChangeDesktop((currentDesktop + 1) % desktopCount);
+int RightDesktop() {
+   if(desktopCount > 1) {
+      ChangeDesktop((currentDesktop + 1) % desktopCount);
+      return 1;
+   } else {
+      return 0;
+   }
 }
 
 /** Change to the desktop to the left. */
-void LeftDesktop() {
-   if(currentDesktop > 0) {
-      ChangeDesktop(currentDesktop - 1);
+int LeftDesktop() {
+   if(desktopCount > 1) {
+      if(currentDesktop > 0) {
+         ChangeDesktop(currentDesktop - 1);
+      } else {
+         ChangeDesktop(desktopCount - 1);
+      }
+      return 1;
    } else {
-      ChangeDesktop(desktopCount - 1);
+      return 0;
    }
 }
 
 /** Change to the desktop above. */
-void AboveDesktop() {
-   if(currentDesktop >= desktopWidth) {
-      ChangeDesktop(currentDesktop - desktopWidth);
+int AboveDesktop() {
+   if(desktopWidth > 1) {
+      if(currentDesktop >= desktopWidth) {
+         ChangeDesktop(currentDesktop - desktopWidth);
+      } else {
+         ChangeDesktop(currentDesktop + (desktopHeight - 1) * desktopWidth);
+      }
+      return 1;
    } else {
-      ChangeDesktop(currentDesktop + (desktopHeight - 1) * desktopWidth);
+      return 0;
    }
 }
 
 /** Change to the desktop below. */
-void BelowDesktop() {
-   ChangeDesktop((currentDesktop + desktopWidth) % desktopCount);
+int BelowDesktop() {
+   if(desktopWidth > 1) {
+      ChangeDesktop((currentDesktop + desktopWidth) % desktopCount);
+      return 1;
+   } else {
+      return 0;
+   }
 }
 
 /** Change to the specified desktop. */

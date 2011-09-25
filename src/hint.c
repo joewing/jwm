@@ -362,7 +362,7 @@ void WriteNetState(ClientNode *np) {
    Assert(np);
 
    /* We remove the _NET_WM_STATE for withdrawn windows. */
-   if(np->state.status & STAT_MAPPED) {
+   if(!(np->state.status & STAT_MAPPED)) {
       JXDeleteProperty(display, np->window, atoms[ATOM_NET_WM_STATE]);
       return;
    } 

@@ -173,33 +173,37 @@ int MoveClient(ClientNode *np, int startx, int starty) {
             if(LeftDesktop()) {
                SetClientDesktop(np, currentDesktop);
                RestackClients();
-               MoveMouse(rootWindow, rootWidth - 2, event.xmotion.y_root);
-               doMove = 1;
                DiscardMotionEvents(&event, np->window);
+               np->x = rootWidth - 2 - startx;
+               np->y = event.xmotion.y_root - starty;
+               MoveMouse(rootWindow, np->x + startx, np->y + starty);
             }
          } else if(event.xmotion.x_root == rootWidth - 1) {
             if(RightDesktop()) {
                SetClientDesktop(np, currentDesktop);
                RestackClients();
-               MoveMouse(rootWindow, 1, event.xmotion.y_root);
-               doMove = 1;
                DiscardMotionEvents(&event, np->window);
+               np->x = 1 - startx;
+               np->y = event.xmotion.y_root - starty;
+               MoveMouse(rootWindow, np->x + startx, np->y + starty);
             }
          } else if(event.xmotion.y_root == 0) {
             if(AboveDesktop()) {
                SetClientDesktop(np, currentDesktop);
                RestackClients();
-               MoveMouse(rootWindow, event.xmotion.x_root, rootHeight - 2);
-               doMove = 1;
                DiscardMotionEvents(&event, np->window);
+               np->x = event.xmotion.x_root - startx;
+               np->y = rootHeight - 2 - starty;
+               MoveMouse(rootWindow, np->x + startx, np->y + starty);
             }
          } else if(event.xmotion.y_root == rootHeight - 1) {
             if(BelowDesktop()) {
                SetClientDesktop(np, currentDesktop);
                RestackClients();
-               MoveMouse(rootWindow, event.xmotion.x_root, 1);
-               doMove = 1;
                DiscardMotionEvents(&event, np->window);
+               np->x = event.xmotion.x_root - startx;
+               np->y = 1 - starty;
+               MoveMouse(rootWindow, np->x + startx, np->y + starty);
             }
          }
 

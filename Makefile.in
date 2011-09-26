@@ -1,6 +1,6 @@
-
-SYSCONF = @SYSCONF@
-MANDIR = @MANDIR@
+PACKAGE = jwm
+SYSCONF = $(DESTDIR)@SYSCONF@
+MANDIR = $(DESTDIR)@MANDIR@
 VERSION ?= @VERSION@
 
 all:
@@ -8,9 +8,9 @@ all:
 
 install: all
 	cd src ; $(MAKE) install ; cd ..
-	install -d $(SYSCONF)
+	install -d -m 0755 $(SYSCONF)
 	install -m 644 example.jwmrc $(SYSCONF)/system.jwmrc
-	install -d $(MANDIR)/man1
+	install -d -m 0755 $(MANDIR)/man1
 	install -m 644 jwm.1 $(MANDIR)/man1/jwm.1
 
 depend:
@@ -30,9 +30,9 @@ clean:
 	rm -rf doc
 
 distclean: clean
-	rm -f *~ config.cache config.log config.status config.h ;
-	rm -f Makefile src/Makefile jwm.tardist jwm.1 ;
-	rm -f Makefile.bak src/Makefile.bak ;
-	rm -fr autom4te.cache ;
+	rm -f *[~#] config.cache config.log config.status config.h
+	rm -f Makefile src/Makefile jwm.tardist jwm.1
+	rm -fr autom4te.cache
+	rm -f Makefile.bak src/Makefile.bak
 	rm -fr `find . \( -name .svn -o -name .gdb_history \) -print` ;
 

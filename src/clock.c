@@ -158,13 +158,7 @@ TrayComponentType *CreateClock(const char *format, const char *zone,
 /** Initialize a clock tray component. */
 void Create(TrayComponentType *cp) {
 
-   ClockType *clk;
-
    Assert(cp);
-
-   clk = (ClockType*)cp->object;
-
-   Assert(clk);
 
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
       rootDepth);
@@ -205,13 +199,7 @@ void Resize(TrayComponentType *cp) {
 /** Destroy a clock tray component. */
 void Destroy(TrayComponentType *cp) {
 
-   ClockType *clk;
-
    Assert(cp);
-
-   clk = (ClockType*)cp->object;
-
-   Assert(clk);
 
    if(cp->pixmap != None) {
       JXFreePixmap(display, cp->pixmap);

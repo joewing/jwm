@@ -111,8 +111,8 @@ void ReadClientStrut(ClientNode *np) {
    unsigned char *value;
    long *lvalue;
    long leftWidth, rightWidth, topHeight, bottomHeight;
-   long leftStart, leftEnd, rightStart, rightEnd;
-   long topStart, topEnd, bottomStart, bottomEnd;
+   long leftStart, rightStart;
+   long topStart, bottomStart;
 
    RemoveClientStrut(np);
 
@@ -138,13 +138,9 @@ void ReadClientStrut(ClientNode *np) {
          topHeight = lvalue[2];
          bottomHeight = lvalue[3];
          leftStart = lvalue[4];
-         leftEnd = lvalue[5];
          rightStart = lvalue[6];
-         rightEnd = lvalue[7];
          topStart = lvalue[8];
-         topEnd = lvalue[9];
          bottomStart = lvalue[10];
-         bottomEnd = lvalue[11];
 
          if(leftWidth > 0) {
             box.width = leftWidth;

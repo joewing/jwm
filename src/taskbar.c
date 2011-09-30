@@ -300,7 +300,7 @@ void ShowTaskWindowMenu(TaskBarType *bar, Node *np) {
 
    GetWindowMenuSize(np->client, &mwidth, &mheight);
 
-   sp = GetCurrentScreen(x, y);
+   sp = GetCurrentScreen(bar->cp->screenx, bar->cp->screeny);
 
    if(bar->layout == LAYOUT_HORIZONTAL) {
       GetMousePosition(&x, &y);
@@ -452,7 +452,6 @@ void Render(const TaskBarType *bp) {
    int remainder;
    int itemWidth, itemCount;
    int width, height;
-   int iconSize;
    Pixmap buffer;
    GC gc;
    char *minimizedName;
@@ -488,8 +487,6 @@ void Render(const TaskBarType *bp) {
       itemWidth = width;
       remainder = 0;
    }
-
-   iconSize = bp->itemHeight - 2 * TASK_SPACER - 4;
 
    ResetButton(&button, buffer, gc);
    button.font = FONT_TASK;

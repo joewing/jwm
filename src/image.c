@@ -244,6 +244,7 @@ ImageNode *LoadPNGImage(const char *fileName) {
    fclose(fd);
 
    ReleaseStack(rows);
+   rows = NULL;
 
    return result;
 

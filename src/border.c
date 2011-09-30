@@ -344,7 +344,6 @@ void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
 void DrawBorderHelper(const ClientNode *np, int drawIcon) {
 
    ColorType borderTextColor;
-   long borderTextPixel;
 
    long titleColor1, titleColor2;
    long outlineColor;
@@ -368,7 +367,6 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
    if(np->state.status & STAT_ACTIVE) {
 
       borderTextColor = COLOR_TITLE_ACTIVE_FG;
-      borderTextPixel = colors[COLOR_TITLE_ACTIVE_FG];
       titleColor1 = colors[COLOR_TITLE_ACTIVE_BG1];
       titleColor2 = colors[COLOR_TITLE_ACTIVE_BG2];
       outlineColor = colors[COLOR_BORDER_ACTIVE_LINE];
@@ -376,7 +374,6 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
    } else {
 
       borderTextColor = COLOR_TITLE_FG;
-      borderTextPixel = colors[COLOR_TITLE_FG];
       titleColor1 = colors[COLOR_TITLE_BG1];
       titleColor2 = colors[COLOR_TITLE_BG2];
       outlineColor = colors[COLOR_BORDER_LINE];
@@ -499,7 +496,6 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
 
    Pixmap pixmap;
    long color;
-   long outlineColor;
    int offset;
    int yoffset;
    int north, south, east, west;
@@ -521,10 +517,8 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
    /* Determine the colors to use. */
    if(np->state.status & STAT_ACTIVE) {
       color = colors[COLOR_TITLE_ACTIVE_FG];
-      outlineColor = colors[COLOR_BORDER_ACTIVE_LINE];
    } else {
       color = colors[COLOR_TITLE_FG];
-      outlineColor = colors[COLOR_BORDER_LINE];
    }
 
    /* Close button. */

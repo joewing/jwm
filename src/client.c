@@ -1421,8 +1421,6 @@ void UpdateClientColormap(ClientNode *np) {
 
    Assert(np);
 
-   cp = np->colormaps;
-
    if(np == activeClient) {
 
       wasInstalled = 0;

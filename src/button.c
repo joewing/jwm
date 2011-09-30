@@ -23,7 +23,6 @@ static void GetScaledIconSize(IconNode *ip, int maxsize,
 void DrawButton(ButtonNode *bp) {
 
    long outlinePixel;
-   long topPixel, bottomPixel;
    ColorType fg;
    long bg1, bg2;
 
@@ -52,8 +51,6 @@ void DrawButton(ButtonNode *bp) {
       bg1 = colors[COLOR_MENU_BG];
       bg2 = colors[COLOR_MENU_BG];
       outlinePixel = colors[COLOR_MENU_BG];
-      topPixel = colors[COLOR_MENU_BG];
-      bottomPixel = colors[COLOR_MENU_BG];
       break;
    case BUTTON_MENU_ACTIVE:
       fg = COLOR_MENU_ACTIVE_FG;
@@ -64,24 +61,18 @@ void DrawButton(ButtonNode *bp) {
       } else {
          outlinePixel = colors[COLOR_MENU_ACTIVE_DOWN];
       }
-      topPixel = colors[COLOR_MENU_ACTIVE_UP];
-      bottomPixel = colors[COLOR_MENU_ACTIVE_DOWN];
       break;
    case BUTTON_TASK:
       fg = COLOR_TASK_FG;
       bg1 = colors[COLOR_TASK_BG1];
       bg2 = colors[COLOR_TASK_BG2];
-      topPixel = colors[COLOR_TASK_UP];
-      bottomPixel = colors[COLOR_TASK_DOWN];
-      outlinePixel = bottomPixel;
+      outlinePixel = colors[COLOR_TASK_DOWN];
       break;
    case BUTTON_TASK_ACTIVE:
       fg = COLOR_TASK_ACTIVE_FG;
       bg1 = colors[COLOR_TASK_ACTIVE_BG1];
       bg2 = colors[COLOR_TASK_ACTIVE_BG2];
-      topPixel = colors[COLOR_TASK_ACTIVE_DOWN];
-      bottomPixel = colors[COLOR_TASK_ACTIVE_UP];
-      outlinePixel = bottomPixel;
+      outlinePixel = colors[COLOR_TASK_ACTIVE_UP];
       break;
    case BUTTON_MENU:
    default:
@@ -89,8 +80,6 @@ void DrawButton(ButtonNode *bp) {
       bg1 = colors[COLOR_MENU_BG];
       bg2 = colors[COLOR_MENU_BG];
       outlinePixel = colors[COLOR_MENU_DOWN];
-      topPixel = colors[COLOR_MENU_UP];
-      bottomPixel = colors[COLOR_MENU_DOWN];
       break;
    }
 

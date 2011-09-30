@@ -802,7 +802,7 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 /** Handle a _NET_MOVERESIZE_WINDOW request. */
 void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np) {
 
-   long flags, gravity;
+   long flags;
    long x, y;
    long width, height;
    int deltax, deltay;
@@ -811,7 +811,6 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np) {
    Assert(event);
    Assert(np);
 
-   gravity = event->data.l[0] & 0xFF;
    flags = event->data.l[0] >> 8;
 
    x = np->x;
@@ -830,10 +829,6 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np) {
    }
    if(flags & (1 << 3)) {
       height = event->data.l[4];
-   }
-
-   if(gravity == 0) {
-      gravity = np->gravity;
    }
 
    GetBorderSize(np, &north, &south, &east, &west);

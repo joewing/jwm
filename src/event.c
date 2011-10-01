@@ -478,31 +478,22 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
    np = FindClientByWindow(event->window);
    if(np && np->window == event->window) {
 
-      /* We own this window, make sure it's not trying to do something bad. */
       changed = 0;
       if((event->value_mask & CWWidth) && (event->width != np->width)) {
-         if(!(np->state.status & STAT_HMAX)) {
-            np->width = event->width;
-            changed = 1;
-         }
+         np->width = event->width;
+         changed = 1;
       }
       if((event->value_mask & CWHeight) && (event->height != np->height)) {
-         if(!(np->state.status & STAT_VMAX)) {
-            np->height = event->height;
-            changed = 1;
-         }
+         np->height = event->height;
+         changed = 1;
       }
       if((event->value_mask & CWX) && (event->x != np->x)) {
-         if(!(np->state.status & STAT_HMAX)) {
-            np->x = event->x;
-            changed = 1;
-         }
+         np->x = event->x;
+         changed = 1;
       }
       if((event->value_mask & CWY) && (event->y != np->y)) {
-         if(!(np->state.status & STAT_VMAX)) {
-            np->y = event->y;
-            changed = 1;
-         }
+         np->y = event->y;
+         changed = 1;
       }
 
       if(!changed) {

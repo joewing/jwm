@@ -22,7 +22,7 @@
 
 char **desktopNames = NULL;
 
-static int showingDesktop;
+int showingDesktop;
 
 /** Initialize desktop data. */
 void InitializeDesktops() {
@@ -242,6 +242,7 @@ void ShowDesktop() {
    }
 
    showingDesktop = !showingDesktop;
+   SetCardinalAtom(rootWindow, ATOM_NET_SHOWING_DESKTOP, showingDesktop);
 
    RestackClients();
 

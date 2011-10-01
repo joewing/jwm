@@ -12,6 +12,8 @@
 
 struct MenuType;
 
+extern int showingDesktop;
+
 /*@{*/
 void InitializeDesktops();
 void StartupDesktops();

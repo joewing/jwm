@@ -89,6 +89,7 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_ACTIVE_WINDOW],         "_NET_ACTIVE_WINDOW"          },
    { &atoms[ATOM_NET_WORKAREA],              "_NET_WORKAREA"               },
    { &atoms[ATOM_NET_SUPPORTING_WM_CHECK],   "_NET_SUPPORTING_WM_CHECK"    },
+   { &atoms[ATOM_NET_SHOWING_DESKTOP],       "_NET_SHOWING_DESKTOP"        },
    { &atoms[ATOM_NET_FRAME_EXTENTS],         "_NET_FRAME_EXTENTS"          },
    { &atoms[ATOM_NET_WM_DESKTOP],            "_NET_WM_DESKTOP"             },
    { &atoms[ATOM_NET_WM_STATE],              "_NET_WM_STATE"               },

@@ -85,14 +85,6 @@ typedef enum {
 
    ATOM_NET_WM_WINDOW_OPACITY,
 
-   /* GNOME atoms */
-   ATOM_WIN_LAYER,
-   ATOM_WIN_STATE,
-   ATOM_WIN_WORKSPACE_COUNT,
-   ATOM_WIN_WORKSPACE,
-   ATOM_WIN_SUPPORTING_WM_CHECK,
-   ATOM_WIN_PROTOCOLS,
-
    /* MWM atoms */
    ATOM_MOTIF_WM_HINTS,
 
@@ -106,33 +98,15 @@ typedef enum {
 #define FIRST_NET_ATOM ATOM_NET_SUPPORTED
 #define LAST_NET_ATOM  ATOM_NET_SYSTEM_TRAY_OPCODE
 
-#define FIRST_WIN_ATOM ATOM_WIN_LAYER
-#define LAST_WIN_ATOM  ATOM_WIN_PROTOCOLS
-
 #define FIRST_MWM_ATOM ATOM_MOTIF_WM_HINTS
 #define LAST_MWM_ATOM  ATOM_MOTIF_WM_HINTS
-
-#define WIN_STATE_STICKY          (1UL << 0)
-#define WIN_STATE_MINIMIZED       (1UL << 1)
-#define WIN_STATE_MAXIMIZED_VERT  (1UL << 2)
-#define WIN_STATE_MAXIMIZED_HORIZ (1UL << 3)
-#define WIN_STATE_HIDDEN          (1UL << 4)
-#define WIN_STATE_SHADED          (1UL << 5)
-#define WIN_STATE_HIDE_WORKSPACE  (1UL << 6)
-#define WIN_STATE_HIDE_TRANSIENT  (1UL << 7)
-#define WIN_STATE_FIXED_POSITION  (1UL << 8)
-#define WIN_STATE_ARRANGE_IGNORE  (1UL << 9)
-
-#define WIN_HINT_SKIP_FOCUS      (1UL << 0)
-#define WIN_HINT_SKIP_WINLIST    (1UL << 1)
-#define WIN_HINT_SKIP_TASKBAR    (1UL << 2)
-#define WIN_HINT_GROUP_TRANSIENT (1UL << 3)
-#define WIN_HINT_FOCUS_ON_CLICK  (1UL << 4)
 
 /** Enumeration of window layers. */
 typedef enum {
    LAYER_BOTTOM              = 0,
+   LAYER_BELOW               = 2,
    LAYER_NORMAL              = 4,
+   LAYER_ABOVE               = 6,
    DEFAULT_TRAY_LAYER        = 8,
    LAYER_TOP                 = 12,
    LAYER_COUNT               = 13

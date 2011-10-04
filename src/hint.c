@@ -128,13 +128,6 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_SYSTEM_TRAY_OPCODE],    "_NET_SYSTEM_TRAY_OPCODE"     },
    { &atoms[ATOM_NET_WM_WINDOW_OPACITY],     "_NET_WM_WINDOW_OPACITY"      },
 
-   { &atoms[ATOM_WIN_LAYER],                 "_WIN_LAYER"                  },
-   { &atoms[ATOM_WIN_STATE],                 "_WIN_STATE"                  },
-   { &atoms[ATOM_WIN_WORKSPACE],             "_WIN_WORKSPACE"              },
-   { &atoms[ATOM_WIN_WORKSPACE_COUNT],       "_WIN_WORKSPACE_COUNT"        },
-   { &atoms[ATOM_WIN_SUPPORTING_WM_CHECK],   "_WIN_SUPPORTING_WM_CHECK"    },
-   { &atoms[ATOM_WIN_PROTOCOLS],             "_WIN_PROTOCOLS"              },
-
    { &atoms[ATOM_MOTIF_WM_HINTS],            "_MOTIF_WM_HINTS"             },
 
    { &atoms[ATOM_JWM_RESTART],               "_JWM_RESTART"                },
@@ -144,7 +137,6 @@ static const AtomNode atomList[] = {
 
 static void WriteNetState(ClientNode *np);
 static void WriteNetAllowed(ClientNode *np);
-static void WriteWinState(ClientNode *np);
 static void ReadWMHints(Window win, ClientState *state);
 static void ReadMotifHints(Window win, ClientState *state);
 
@@ -193,14 +185,6 @@ void StartupHints() {
       XA_ATOM, 32, PropModeReplace, (unsigned char*)supported,
       LAST_NET_ATOM - FIRST_NET_ATOM + 1);
 
-   /* _WIN_PROTOCOLS */
-   for(x = FIRST_WIN_ATOM; x <= LAST_WIN_ATOM; x++) {
-      supported[x - FIRST_WIN_ATOM] = atoms[x];
-   }
-   JXChangeProperty(display, rootWindow, atoms[ATOM_WIN_PROTOCOLS],
-      XA_ATOM, 32, PropModeReplace, (unsigned char*)supported,
-      LAST_WIN_ATOM - FIRST_WIN_ATOM + 1);
-
    /* _NET_NUMBER_OF_DESKTOPS */
    SetCardinalAtom(rootWindow, ATOM_NET_NUMBER_OF_DESKTOPS, desktopCount);
 
@@ -247,11 +231,6 @@ void StartupHints() {
    SetWindowAtom(rootWindow, ATOM_NET_SUPPORTING_WM_CHECK, win);
    SetWindowAtom(win, ATOM_NET_SUPPORTING_WM_CHECK, win);
 
-   SetWindowAtom(rootWindow, ATOM_WIN_SUPPORTING_WM_CHECK, win);
-   SetWindowAtom(win, ATOM_WIN_SUPPORTING_WM_CHECK, win);
-
-   SetCardinalAtom(rootWindow, ATOM_WIN_WORKSPACE_COUNT, desktopCount);
-
    ReleaseStack(data);
 
 }
@@ -272,8 +251,6 @@ void ReadCurrentDesktop() {
    currentDesktop = 0;
 
    if(GetCardinalAtom(rootWindow, ATOM_NET_CURRENT_DESKTOP, &temp)) {
-      ChangeDesktop(temp);
-   } else if(GetCardinalAtom(rootWindow, ATOM_WIN_WORKSPACE, &temp)) {
       ChangeDesktop(temp);
    } else {
       ChangeDesktop(0);
@@ -338,7 +315,6 @@ void WriteState(ClientNode *np) {
 
    WriteNetState(np);
    WriteNetAllowed(np);
-   WriteWinState(np);
 
    /* Write the opacity. */
    if(np->state.opacity == UINT_MAX) {
@@ -454,42 +430,6 @@ void WriteNetAllowed(ClientNode *np) {
 
 }
 
-/** Write the win state hint for a client (GNOME). */
-void WriteWinState(ClientNode *np) {
-
-   unsigned long flags;
-
-   Assert(np);
-
-   if(!(np->state.status & STAT_MAPPED)) {
-      JXDeleteProperty(display, np->window, atoms[ATOM_WIN_STATE]);
-      return;
-   }
-
-   flags = 0;
-   if(np->state.status & STAT_STICKY) {
-      flags |= WIN_STATE_STICKY;
-   }
-   if(np->state.status & STAT_MINIMIZED) {
-      flags |= WIN_STATE_MINIMIZED;
-   }
-   if(np->state.status & STAT_HMAX) {
-      flags |= WIN_STATE_MAXIMIZED_HORIZ;
-   }
-   if(np->state.status & STAT_VMAX) {
-      flags |= WIN_STATE_MAXIMIZED_VERT;
-   }
-   if(np->state.status & STAT_NOLIST) {
-      flags |= WIN_STATE_HIDDEN;
-   }
-   if(np->state.status & STAT_SHADED) {
-      flags |= WIN_STATE_SHADED;
-   }
-
-   SetCardinalAtom(np->window, ATOM_WIN_STATE, flags);
-
-}
-
 /** Read all hints needed to determine the current window state. */
 ClientState ReadWindowState(Window win) {
 
@@ -588,7 +528,7 @@ ClientState ReadWindowState(Window win) {
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DOCK]) {
             result.border = BORDER_NONE;
-            result.layer = LAYER_TOP;
+            result.layer = LAYER_ABOVE;
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_SPLASH]) {
             result.border = BORDER_NONE;
@@ -609,33 +549,6 @@ ClientState ReadWindowState(Window win) {
    /* _NET_WM_WINDOW_OPACITY */
    if(GetCardinalAtom(win, ATOM_NET_WM_WINDOW_OPACITY, &card)) {
       result.opacity = card;
-   }
-
-   /* _WIN_STATE */
-   if(GetCardinalAtom(win, ATOM_WIN_STATE, &card)) {
-      if(card & WIN_STATE_STICKY) {
-         result.status |= STAT_STICKY;
-      }
-      if(card & WIN_STATE_MINIMIZED) {
-         result.status |= STAT_MINIMIZED;
-      }
-      if(card & WIN_STATE_HIDDEN) {
-         result.status |= STAT_NOLIST;
-      }
-      if(card & WIN_STATE_SHADED) {
-         result.status |= STAT_SHADED;
-      }
-      if(card & WIN_STATE_MAXIMIZED_HORIZ) {
-         result.status |= STAT_HMAX;
-      }
-      if(card & WIN_STATE_MAXIMIZED_VERT) {
-         result.status |= STAT_VMAX;
-      }
-   }
-
-   /* _WIN_LAYER */
-   if(GetCardinalAtom(win, ATOM_WIN_LAYER, &card)) {
-      result.layer = card;
    }
 
    return result;

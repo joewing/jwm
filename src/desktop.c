@@ -161,7 +161,6 @@ void ChangeDesktop(unsigned int desktop) {
    currentDesktop = desktop;
 
    SetCardinalAtom(rootWindow, ATOM_NET_CURRENT_DESKTOP, currentDesktop);
-   SetCardinalAtom(rootWindow, ATOM_WIN_WORKSPACE, currentDesktop);
 
    RestackClients();
 

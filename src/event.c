@@ -676,34 +676,7 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 
    np = FindClientByWindow(event->window);
    if(np) {
-      if(event->message_type == atoms[ATOM_WIN_STATE]) {
-
-         mask = event->data.l[0];
-         flags = event->data.l[1];
-
-         if(mask & WIN_STATE_STICKY) {
-            if(flags & WIN_STATE_STICKY) {
-               SetClientSticky(np, 1);
-            } else {
-               SetClientSticky(np, 0);
-            }
-         }
-
-         if(mask & WIN_STATE_HIDDEN) {
-            if(flags & WIN_STATE_HIDDEN) {
-               np->state.status |= STAT_NOLIST;
-            } else {
-               np->state.status &= ~STAT_NOLIST;
-            }
-            UpdateTaskBar();
-            UpdatePager();
-         }
-
-      } else if(event->message_type == atoms[ATOM_WIN_LAYER]) {
-
-         SetClientLayer(np, event->data.l[0]);
-
-      } else if(event->message_type == atoms[ATOM_WM_CHANGE_STATE]) {
+      if(event->message_type == atoms[ATOM_WM_CHANGE_STATE]) {
 
          if(np->controller) {
             (np->controller)(0);

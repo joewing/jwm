@@ -526,7 +526,6 @@ void SetClientLayer(ClientNode *np, unsigned int layer) {
 
                /* Set the new layer */
                tp->state.layer = layer;
-               SetCardinalAtom(tp->window, ATOM_WIN_LAYER, layer);
 
                /* Make sure we continue on the correct layer list. */
                tp = next;

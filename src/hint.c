@@ -100,6 +100,8 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_STATE_FULLSCREEN],   "_NET_WM_STATE_FULLSCREEN"    },
    { &atoms[ATOM_NET_WM_STATE_HIDDEN],       "_NET_WM_STATE_HIDDEN"        },
    { &atoms[ATOM_NET_WM_STATE_SKIP_TASKBAR], "_NET_WM_STATE_SKIP_TASKBAR"  },
+   { &atoms[ATOM_NET_WM_STATE_BELOW],        "_NET_WM_STATE_BELOW"         },
+   { &atoms[ATOM_NET_WM_STATE_ABOVE],        "_NET_WM_STATE_ABOVE"         },
    { &atoms[ATOM_NET_WM_ALLOWED_ACTIONS],    "_NET_WM_ALLOWED_ACTIONS"     },
    { &atoms[ATOM_NET_WM_ACTION_MOVE],        "_NET_WM_ACTION_MOVE"         },
    { &atoms[ATOM_NET_WM_ACTION_RESIZE],      "_NET_WM_ACTION_RESIZE"       },
@@ -111,6 +113,8 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_ACTION_CHANGE_DESKTOP],
       "_NET_WM_ACTION_CHANGE_DESKTOP"},
    { &atoms[ATOM_NET_WM_ACTION_CLOSE],       "_NET_WM_ACTION_CLOSE"        },
+   { &atoms[ATOM_NET_WM_ACTION_BELOW],       "_NET_WM_ACTION_BELOW"        },
+   { &atoms[ATOM_NET_WM_ACTION_ABOVE],       "_NET_WM_ACTION_ABOVE"        },
    { &atoms[ATOM_NET_CLOSE_WINDOW],          "_NET_CLOSE_WINDOW"           },
    { &atoms[ATOM_NET_MOVERESIZE_WINDOW],     "_NET_MOVERESIZE_WINDOW"      },
    { &atoms[ATOM_NET_WM_NAME],               "_NET_WM_NAME"                },
@@ -332,7 +336,7 @@ void WriteState(ClientNode *np) {
 /** Write the net state hint for a client. */
 void WriteNetState(ClientNode *np) {
 
-   unsigned long values[6];
+   unsigned long values[8];
    int north, south, east, west;
    int index;
 
@@ -368,6 +372,12 @@ void WriteNetState(ClientNode *np) {
       values[index++] = atoms[ATOM_NET_WM_STATE_SKIP_TASKBAR];
    }
 
+   if(np->state.layer == LAYER_BELOW) {
+      values[index++] = atoms[ATOM_NET_WM_STATE_BELOW];
+   } else if(np->state.layer == LAYER_ABOVE) {
+      values[index++] = atoms[ATOM_NET_WM_STATE_ABOVE];
+   }
+
    JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_STATE],
       XA_ATOM, 32, PropModeReplace, (unsigned char*)values, index);
 
@@ -387,7 +397,7 @@ void WriteNetState(ClientNode *np) {
 /** Write the allowed action property. */
 void WriteNetAllowed(ClientNode *np) {
 
-   unsigned long values[10];
+   unsigned long values[12];
    int index;
 
    Assert(np);
@@ -424,6 +434,8 @@ void WriteNetAllowed(ClientNode *np) {
    }
 
    values[index++] = atoms[ATOM_NET_WM_ACTION_STICK];
+   values[index++] = atoms[ATOM_NET_WM_ACTION_BELOW];
+   values[index++] = atoms[ATOM_NET_WM_ACTION_ABOVE];
 
    JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_ALLOWED_ACTIONS],
       XA_ATOM, 32, PropModeReplace, (unsigned char*)values, index);

@@ -843,9 +843,11 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
    int actionFullScreen;
    int actionMinimize;
    int actionNolist;
+   int actionBelow;
+   int actionAbove;
    int x;
 
-   /* Up to two actions to be applied together, figure it out. */
+   /* Up to two actions to be applied together. */
    actionMaxH = 0;
    actionMaxV = 0;
    actionStick = 0;
@@ -853,6 +855,8 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
    actionFullScreen = 0;
    actionMinimize = 0;
    actionNolist = 0;
+   actionBelow = 0;
+   actionAbove = 0;
 
    for(x = 1; x <= 2; x++) {
       if(event->data.l[x]
@@ -876,6 +880,12 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
       } else if(event->data.l[x]
          == (long)atoms[ATOM_NET_WM_STATE_SKIP_TASKBAR]) {
          actionNolist = 1;
+      } else if(event->data.l[x]
+         == (long)atoms[ATOM_NET_WM_STATE_BELOW]) {
+         actionBelow = 1;
+      } else if(event->data.l[x]
+         == (long)atoms[ATOM_NET_WM_STATE_ABOVE]) {
+         actionAbove = 1;
       }
    }
 
@@ -902,6 +912,12 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
          np->state.status &= ~STAT_NOLIST;
          UpdateTaskBar();
       }
+      if(actionBelow && np->state.layer == LAYER_BELOW) {
+         SetClientLayer(np, LAYER_NORMAL);
+      }
+      if(actionAbove && np->state.layer == LAYER_ABOVE) {
+         SetClientLayer(np, LAYER_NORMAL);
+      }
       break;
    case 1: /* Add */
       if(actionStick) {
@@ -922,6 +938,12 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
       if(actionNolist) {
          np->state.status |= STAT_NOLIST;
          UpdateTaskBar();
+      }
+      if(actionBelow && np->state.layer == LAYER_NORMAL) {
+         SetClientLayer(np, LAYER_BELOW);
+      }
+      if(actionAbove && np->state.layer == LAYER_NORMAL) {
+         SetClientLayer(np, LAYER_ABOVE);
       }
       break;
    case 2: /* Toggle */
@@ -947,6 +969,20 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
             SetClientFullScreen(np, 0);
          } else {
             SetClientFullScreen(np, 1);
+         }
+      }
+      if(actionBelow) {
+         if(np->state.layer == LAYER_NORMAL) {
+            SetClientLayer(np, LAYER_BELOW);
+         } else if(np->state.layer == LAYER_BELOW) {
+            SetClientLayer(np, LAYER_NORMAL);
+         }
+      }
+      if(actionAbove) {
+         if(np->state.layer == LAYER_NORMAL) {
+            SetClientLayer(np, LAYER_ABOVE);
+         } else if(np->state.layer == LAYER_ABOVE) {
+            SetClientLayer(np, LAYER_NORMAL);
          }
       }
       /* Note that we don't handle toggling of hidden per EWMH

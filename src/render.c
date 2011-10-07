@@ -46,26 +46,26 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
 
       if(node->width == 0) {
          width = icon->image->width;
-	 xscale = 1.0;
+         xscale = 1.0;
       } else {
          width = node->width;
-	 xscale = (double)width / (double)icon->image->width;
+         xscale = (double)width / (double)icon->image->width;
       }
       if(node->height == 0) {
          height = icon->image->height;
-	 yscale = 1.0;
+         yscale = 1.0;
       } else {
          height = node->height;
-	 yscale = (double)height / (double)icon->image->height;
+         yscale = (double)height / (double)icon->image->height;
       }
 
       if(xscale != 1.0 || yscale != 1.0) {
-	 XTransform xf = { {
-	    { XDoubleToFixed(xscale), 0, 0 },
-	    { 0, XDoubleToFixed(yscale), 0 },
-	    { 0, 0, XDoubleToFixed(xscale * yscale) },
-	 } };
-	 XRenderSetPictureTransform(display, source, &xf);
+         XTransform xf = { {
+            { XDoubleToFixed(xscale), 0, 0 },
+            { 0, XDoubleToFixed(yscale), 0 },
+            { 0, 0, XDoubleToFixed(xscale * yscale) },
+         } };
+         XRenderSetPictureTransform(display, source, &xf);
       }
       JXRenderComposite(display, PictOpOver, source, None, dest,
                         0, 0, 0, 0, x, y, width, height);
@@ -114,10 +114,10 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
    result->next = icon->nodes;
    icon->nodes = result;
 
-   width = icon->image->width;
-   height = icon->image->height;
    result->width = width;
    result->height = height;
+   width = icon->image->width;
+   height = icon->image->height;
 
    result->mask = JXCreatePixmap(display, rootWindow, width, height, 8);
    maskGC = JXCreateGC(display, result->mask, 0, NULL);
@@ -148,8 +148,8 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
          color.blue |= color.blue << 8;
 
          color.red = (color.red * alpha) >> 8;
-	 color.green = (color.green * alpha) >> 8;
-	 color.blue = (color.blue * alpha) >> 8;
+         color.green = (color.green * alpha) >> 8;
+         color.blue = (color.blue * alpha) >> 8;
 
          GetColor(&color);
          XPutPixel(destImage, x, y, color.pixel);

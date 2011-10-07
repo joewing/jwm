@@ -669,7 +669,6 @@ int HandlePropertyNotify(const XPropertyEvent *event) {
 void HandleClientMessage(const XClientMessageEvent *event) {
 
    ClientNode *np;
-   long mask, flags;
 #ifdef DEBUG
    char *atomName;
 #endif

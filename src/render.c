@@ -49,14 +49,14 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
          xscale = 1.0;
       } else {
          width = node->width;
-         xscale = (double)width / (double)icon->image->width;
+         xscale = (double)icon->image->width / (double)width;
       }
       if(node->height == 0) {
          height = icon->image->height;
          yscale = 1.0;
       } else {
          height = node->height;
-         yscale = (double)height / (double)icon->image->height;
+         yscale = (double)icon->image->height / (double)height;
       }
 
       if(xscale != 1.0 || yscale != 1.0) {

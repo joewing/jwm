@@ -63,9 +63,10 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
          XTransform xf = { {
             { XDoubleToFixed(xscale), 0, 0 },
             { 0, XDoubleToFixed(yscale), 0 },
-            { 0, 0, XDoubleToFixed(xscale * yscale) },
+            { 0, 0, XDoubleToFixed(1.0) },
          } };
          XRenderSetPictureTransform(display, source, &xf);
+         XRenderSetPictureFilter(display, source, FilterBest, NULL, 0);
       }
       JXRenderComposite(display, PictOpOver, source, None, dest,
                         0, 0, 0, 0, x, y, width, height);

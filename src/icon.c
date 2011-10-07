@@ -482,8 +482,17 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
       nheight = 1;
    }
 
-   /* Check if this size already exists. */
+   /* Check if this size already exists.
+    * Note that XRender scales on the fly.
+    */
    for(np = icon->nodes; np; np = np->next) {
+#ifdef USE_XRENDER
+      if(np->imagePicture != None) {
+         np->width = nwidth;
+         np->height = nheight;
+         return np;
+      }
+#endif
       if(np->width == nwidth && np->height == nheight) {
          return np;
       }

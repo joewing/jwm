@@ -145,7 +145,7 @@ void DrawButton(ButtonNode *bp) {
    /* Determine the offset of the text in the button. */
    switch(bp->alignment) {
    case ALIGN_CENTER:
-      xoffset = width / 2 - (iconWidth + textWidth) / 2;
+      xoffset = (width - iconWidth - textWidth + 1) / 2;
       if(xoffset < 0) {
          xoffset = 0;
       }
@@ -158,15 +158,15 @@ void DrawButton(ButtonNode *bp) {
 
    /* Display the icon. */
    if(bp->icon) {
-      yoffset = height / 2 - iconHeight / 2;
+      yoffset = (height - iconHeight + 1) / 2;
       PutIcon(bp->icon, drawable, x + xoffset, y + yoffset,
-         iconWidth, iconHeight);
+              iconWidth, iconHeight);
       xoffset += iconWidth + 2;
    }
 
    /* Display the label. */
    if(bp->text && textWidth) {
-      yoffset = height / 2 - textHeight / 2;
+      yoffset = (height - textHeight + 1) / 2;
       RenderString(drawable, bp->font, fg, x + xoffset, y + yoffset,
          textWidth, NULL, bp->text);
    }

@@ -63,17 +63,32 @@ const char *GetTimeString(const char *format, const char *zone) {
 
    if(zone) {
       char saveTZ[256] = "";
+#ifndef HAVE_SETENV
+      static char newTZ[256];
+#endif
       char *oldTZ = getenv("TZ");
       if(oldTZ) {
          strncpy(saveTZ, oldTZ, sizeof(saveTZ));
       }
+#ifdef HAVE_SETENV
       setenv("TZ", zone, 1);
+#else
+      snprintf(newTZ, sizeof(newTZ), "TZ=%s", zone);
+      putenv(newTZ);
+#endif
       tzset();
       strftime(str, sizeof(str), format, localtime(&t));
       if(oldTZ) {
+#ifdef HAVE_SETENV
          setenv("TZ", saveTZ, 1);
+#else
+         snprintf(newTZ, sizeof(newTZ), "TZ=%s", zone);
+         putenv(newTZ);
+#endif
       } else {
+#ifdef HAVE_UNSETENV
          unsetenv("TZ");
+#endif
       }
    } else {
       strftime(str, sizeof(str), format, localtime(&t));

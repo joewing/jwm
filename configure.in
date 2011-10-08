@@ -53,6 +53,10 @@ AC_CHECK_LIB([X11], XOpenDisplay,
    [ LDFLAGS="$LDFLAGS -lX11" ],
    [ AC_MSG_ERROR([libX11 not found]) ])
 
+AC_CHECK_LIB([X11], Xutf8TextPropertyToTextList,
+   [ AC_DEFINE(USE_XUTF8, 1, [Define to use Xutf8TextPropertyToTextList]) ],
+   [ AC_MSG_WARN([Xutf8TextPropertyToTextList not found in libX11]) ])
+
 ############################################################################
 # Check for necessary include files.
 ############################################################################
@@ -71,6 +75,8 @@ AC_CHECK_HEADERS([X11/Xutil.h X11/cursorfont.h X11/Xproto.h \
    [
 #include <X11/Xlib.h>
    ])
+
+AC_CHECK_FUNCS([setenv putenv unsetenv])
 
 ############################################################################
 # Check for pkg-config.

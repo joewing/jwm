@@ -576,9 +576,11 @@ void ReadWMName(ClientNode *np) {
    Atom realType;
    int realFormat;
    unsigned char *name;
+#ifdef USE_XUTF8
    XTextProperty tprop;
    char **text_list;
    int tcount;
+#endif
 
    Assert(np);
 
@@ -595,6 +597,7 @@ void ReadWMName(ClientNode *np) {
       np->name = (char*)name;
    }
 
+#ifdef USE_XUTF8
    if(!np->name) {
       status = JXGetWindowProperty(display, np->window,
             XA_WM_NAME, 0, 1024, False, atoms[ATOM_COMPOUND_TEXT],
@@ -615,6 +618,7 @@ void ReadWMName(ClientNode *np) {
          JXFree(name);
       }
    }
+#endif
 
    if(!np->name) {
       if(JXFetchName(display, np->window, &np->name) == 0) {

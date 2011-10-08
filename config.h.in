@@ -24,6 +24,12 @@
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 
+/* Define to 1 if you have the `putenv' function. */
+#undef HAVE_PUTENV
+
+/* Define to 1 if you have the `setenv' function. */
+#undef HAVE_SETENV
+
 /* Define to 1 if you have the <signal.h> header file. */
 #undef HAVE_SIGNAL_H
 
@@ -66,6 +72,9 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
+/* Define to 1 if you have the `unsetenv' function. */
+#undef HAVE_UNSETENV
+
 /* Define to 1 if you have the <X11/cursorfont.h> header file. */
 #undef HAVE_X11_CURSORFONT_H
 
@@ -105,9 +114,6 @@
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
-/* Define to the home page for this package. */
-#undef PACKAGE_URL
-
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
@@ -146,6 +152,9 @@
 
 /* Define to enable the XRender extension */
 #undef USE_XRENDER
+
+/* Define to use Xutf8TextPropertyToTextList */
+#undef USE_XUTF8
 
 /* Define for single UNIX conformance */
 #undef _XOPEN_SOURCE

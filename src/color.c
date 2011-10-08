@@ -312,18 +312,18 @@ void ComputeShiftMask(unsigned long maskIn,
 /** Get an RGB value from an XColor. */
 unsigned long GetRGBFromXColor(const XColor *c) {
 
-   float red, green, blue;
+   unsigned int red, green, blue;
    unsigned long rgb;
 
    Assert(c);
 
-   red = (float)c->red / 65535.0;
-   green = (float)c->green / 65535.0;
-   blue = (float)c->blue / 65535.0;
+   red = Min((c->red + 0x80) >> 8, 0xFF);
+   green = Min((c->green + 0x80) >> 8, 0xFF);
+   blue = Min((c->blue + 0x80) >> 8, 0xFF);
 
-   rgb = (unsigned long)(red * 255.0) << 16;
-   rgb |= (unsigned long)(green * 255.0) << 8;
-   rgb |= (unsigned long)(blue * 255.0);
+   rgb = (unsigned long)red << 16;
+   rgb |= (unsigned long)green << 8;
+   rgb |= (unsigned long)blue;
 
    return rgb;
 
@@ -346,7 +346,7 @@ XColor GetXColorFromRGB(unsigned long rgb) {
 /** Set the color to use for a component. */
 void SetColor(ColorType c, const char *value) {
 
-   if(!value) {
+   if(JUNLIKELY(!value)) {
       Warning("empty color tag");
       return;
    }
@@ -378,7 +378,7 @@ int ParseColor(const char *value, XColor *c) {
       c->flags = DoRed | DoGreen | DoBlue;
       GetColor(c);
    } else {
-      if(!GetColorByName(value, c)) {
+      if(JUNLIKELY(!GetColorByName(value, c))) {
          Warning("bad color: \"%s\"", value);
          return 0;
       }

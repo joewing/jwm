@@ -382,8 +382,8 @@ void ComputeDimensions(DialogType *dp) {
 
    if(dp->client) {
 
-      dp->x = dp->client->x + dp->client->width / 2 - dp->width / 2;
-      dp->y = dp->client->y + dp->client->height / 2 - dp->height / 2;
+      dp->x = dp->client->x + (dp->client->width - dp->width) / 2;
+      dp->y = dp->client->y + (dp->client->height - dp->height) / 2;
 
       if(dp->x < 0) {
          dp->x = 0;
@@ -402,8 +402,8 @@ void ComputeDimensions(DialogType *dp) {
 
       sp = GetMouseScreen();
 
-      dp->x = sp->width / 2 - dp->width / 2 + sp->x;
-      dp->y = sp->height / 2 - dp->height / 2 + sp->y;
+      dp->x = (sp->width - dp->width) / 2 + sp->x;
+      dp->y = (sp->height - dp->height) / 2 + sp->y;
 
    }
 

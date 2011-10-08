@@ -46,8 +46,8 @@ void GetMoveResizeCoordinates(const ClientNode *np, StatusWindowType type,
    const ScreenType *sp;
 
    if(type == SW_WINDOW) {
-      *x = np->x + np->width / 2 - statusWindowWidth / 2;
-      *y = np->y + np->height / 2 - statusWindowHeight / 2;
+      *x = np->x + (np->width - statusWindowWidth) / 2;
+      *y = np->y + (np->height - statusWindowHeight) / 2;
       return;
    }
 
@@ -61,8 +61,8 @@ void GetMoveResizeCoordinates(const ClientNode *np, StatusWindowType type,
 
    /* SW_SCREEN */
 
-   *x = sp->x + sp->width / 2 - statusWindowWidth / 2;
-   *y = sp->y + sp->height / 2 - statusWindowHeight / 2;
+   *x = sp->x + (sp->width - statusWindowWidth) / 2;
+   *y = sp->y + (sp->height - statusWindowHeight) / 2;
 
 }
 
@@ -162,7 +162,7 @@ void UpdateMoveWindow(ClientNode *np) {
    snprintf(str, sizeof(str), "(%d, %d)", np->x, np->y);
    width = GetStringWidth(FONT_MENU, str);
    RenderString(statusWindow, FONT_MENU, COLOR_MENU_FG,
-      statusWindowWidth / 2 - width / 2, 4, rootWidth, NULL, str);
+      (statusWindowWidth - width) / 2, 4, rootWidth, NULL, str);
 
 }
 
@@ -195,7 +195,7 @@ void UpdateResizeWindow(ClientNode *np, int gwidth, int gheight) {
    snprintf(str, sizeof(str), "%d x %d", gwidth, gheight);
    fontWidth = GetStringWidth(FONT_MENU, str);
    RenderString(statusWindow, FONT_MENU, COLOR_MENU_FG,
-      statusWindowWidth / 2 - fontWidth / 2, 4, rootWidth, NULL, str);
+                (statusWindowWidth - fontWidth) / 2, 4, rootWidth, NULL, str);
 
 }
 
@@ -231,7 +231,7 @@ void SetMoveStatusType(const char *str) {
    StatusWindowType type;
 
    type = ParseType(str);
-   if(type == SW_INVALID) {
+   if(JUNLIKELY(type == SW_INVALID)) {
       moveStatusType = SW_SCREEN;
       Warning("invalid MoveMode coordinates: \"%s\"", str);
    } else {
@@ -246,7 +246,7 @@ void SetResizeStatusType(const char *str) {
    StatusWindowType type;
 
    type = ParseType(str);
-   if(type == SW_INVALID) {
+   if(JUNLIKELY(type == SW_INVALID)) {
       resizeStatusType = SW_SCREEN;
       Warning("invalid ResizeMode coordinates: \"%s\"", str);
    } else {

@@ -99,7 +99,7 @@ void SetRootMenu(const char *indexes, Menu *m) {
 
       /* Get the index and make sure it's in range. */
       index = indexes[x] - '0';
-      if(index < 0 || index >= ROOT_MENU_COUNT) {
+      if(JUNLIKELY(index < 0 || index >= ROOT_MENU_COUNT)) {
          Warning("invalid root menu specified: \"%c\"", indexes[x]);
          continue;
       }

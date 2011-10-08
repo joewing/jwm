@@ -85,7 +85,7 @@ void StartupTrayButtons() {
       }
       if(bp->iconName) {
          bp->icon = LoadNamedIcon(bp->iconName);
-         if(bp->icon) {
+         if(JLIKELY(bp->icon)) {
             bp->cp->requestedWidth += bp->icon->image->width;
             bp->cp->requestedHeight += bp->icon->image->height;
          } else {
@@ -136,17 +136,17 @@ TrayComponentType *CreateTrayButton(const char *iconName,
    TrayButtonType *bp;
    TrayComponentType *cp;
 
-   if((label == NULL || strlen(label) == 0)
-      && (iconName == NULL || strlen(iconName) == 0)) {
+   if(JUNLIKELY((label == NULL || strlen(label) == 0)
+      && (iconName == NULL || strlen(iconName) == 0))) {
       Warning("no icon or label for TrayButton");
       return NULL;
    }
 
-   if(width < 0) {
+   if(JUNLIKELY(width < 0)) {
       Warning("invalid TrayButton width: %d", width);
       width = 0;
    }
-   if(height < 0) {
+   if(JUNLIKELY(height < 0)) {
       Warning("invalid TrayButton height: %d", height);
       height = 0;
    }
@@ -467,7 +467,7 @@ void ValidateTrayButtons() {
    for(bp = buttons; bp; bp = bp->next) {
       if(bp->action && !strncmp(bp->action, "root:", 5)) {
          bindex = atoi(bp->action + 5);
-         if(!IsRootMenuDefined(bindex)) {
+         if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
             Warning("tray button: root menu %d not defined", bindex);
          }
       }

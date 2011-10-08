@@ -74,7 +74,7 @@ void StartupClients() {
 
    /* Query client windows. */
    JXQueryTree(display, rootWindow, &rootReturn, &parentReturn,
-      &childrenReturn, &childrenCount);
+               &childrenReturn, &childrenCount);
 
    /* Add each client. */
    for(x = 0; x < childrenCount; x++) {
@@ -122,7 +122,7 @@ void LoadFocus() {
    unsigned int mask;
 
    JXQueryPointer(display, rootWindow, &rootReturn, &childReturn,
-      &rootx, &rooty, &winx, &winy, &mask);
+                  &rootx, &rooty, &winx, &winy, &mask);
 
    np = FindClientByWindow(childReturn);
    if(np) {
@@ -382,7 +382,7 @@ void UnshadeClient(ClientNode *np) {
       np->width + west + east, np->height + north + south);
 
    JXResizeWindow(display, np->parent,
-      np->width + west + east, np->height + north + south);
+                  np->width + west + east, np->height + north + south);
 
    WriteState(np);
 
@@ -487,7 +487,7 @@ void SetClientLayer(ClientNode *np, unsigned int layer) {
 
    Assert(np);
 
-   if(layer > LAYER_TOP) {
+   if(JUNLIKELY(layer > LAYER_TOP)) {
       Warning("Client %s requested an invalid layer: %d", np->name, layer);
       return;
    }
@@ -603,7 +603,7 @@ void SetClientDesktop(ClientNode *np, unsigned int desktop) {
 
    Assert(np);
 
-   if(desktop >= desktopWidth * desktopHeight) {
+   if(JUNLIKELY(desktop >= desktopWidth * desktopHeight)) {
       return;
    }
 

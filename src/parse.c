@@ -191,7 +191,7 @@ static void ParseError(const TokenNode *tp, const char *str, ...);
 /** Parse the JWM configuration. */
 void ParseConfig(const char *fileName) {
    if(!ParseFile(fileName, 0)) {
-      if(!ParseFile(SYSTEM_CONFIG, 0)) {
+      if(JUNLIKELY(!ParseFile(SYSTEM_CONFIG, 0))) {
          ParseError(NULL, "could not open %s or %s", fileName, SYSTEM_CONFIG);
       }
    }
@@ -210,7 +210,7 @@ int ParseFile(const char *fileName, int depth) {
    char *buffer;
 
    ++depth;
-   if(depth > MAX_INCLUDE_DEPTH) {
+   if(JUNLIKELY(depth > MAX_INCLUDE_DEPTH)) {
       ParseError(NULL, "include depth (%d) exceeded", MAX_INCLUDE_DEPTH);
       return 0;
    }
@@ -284,7 +284,7 @@ void Parse(const TokenNode *start, int depth) {
       return;
    }
 
-   if(start->type == TOK_JWM) {
+   if(JLIKELY(start->type == TOK_JWM)) {
       for(tp = start->subnodeHead; tp; tp = tp->next) {
          switch(tp->type) {
          case TOK_DESKTOPS:
@@ -384,7 +384,7 @@ void Parse(const TokenNode *start, int depth) {
 
 /** Parse focus model. */
 void ParseFocusModel(const TokenNode *tp) {
-   if(tp->value) {
+   if(JLIKELY(tp->value)) {
       if(!strcmp(tp->value, "sloppy")) {
          focusModel = FOCUS_SLOPPY;
       } else if(!strcmp(tp->value, "click")) {
@@ -409,7 +409,7 @@ void ParseSnapMode(const TokenNode *tp) {
       SetDefaultSnapDistance();
    }
 
-   if(tp->value) {
+   if(JLIKELY(tp->value)) {
       if(!strcmp(tp->value, "none")) {
          SetSnapMode(SNAP_NONE);
       } else if(!strcmp(tp->value, "screen")) {
@@ -432,7 +432,7 @@ void ParseMoveMode(const TokenNode *tp) {
    str = FindAttribute(tp->attributes, COORDINATES_ATTRIBUTE);
    SetMoveStatusType(str);
 
-   if(tp->value) {
+   if(JLIKELY(tp->value)) {
       if(!strcmp(tp->value, "outline")) {
          SetMoveMode(MOVE_OUTLINE);
       } else if(!strcmp(tp->value, "opaque")) {
@@ -454,7 +454,7 @@ void ParseResizeMode(const TokenNode *tp) {
    str = FindAttribute(tp->attributes, COORDINATES_ATTRIBUTE);
    SetResizeStatusType(str);
 
-   if(tp->value) {
+   if(JLIKELY(tp->value)) {
       if(!strcmp(tp->value, "outline")) {
          SetResizeMode(RESIZE_OUTLINE);
       } else if(!strcmp(tp->value, "opaque")) {
@@ -746,7 +746,7 @@ MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
       ExpandPath(&path);
 
       fd = popen(path, "r");
-      if(fd) {
+      if(JLIKELY(fd)) {
          buffer = ReadFile(fd);
          pclose(fd);
       } else {
@@ -759,7 +759,7 @@ MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
       ExpandPath(&path);
 
       fd = fopen(path, "r");
-      if(fd) {
+      if(JLIKELY(fd)) {
          buffer = ReadFile(fd);
          fclose(fd);
       } else {
@@ -777,7 +777,7 @@ MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
    Release(buffer);
    Release(path);
 
-   if(!start || start->type != TOK_JWM) {
+   if(JUNLIKELY(!start || start->type != TOK_JWM)) {
       ParseError(tp, "invalid included menu: %s", tp->value);
    } else {
       last = ParseMenuItem(start->subnodeHead, menu, last);
@@ -809,7 +809,7 @@ void ParseKey(const TokenNode *tp) {
    code = FindAttribute(tp->attributes, "keycode");
 
    action = tp->value;
-   if(action == NULL) {
+   if(JUNLIKELY(action == NULL)) {
       ParseError(tp, "no action specified for Key");
       return;
    }
@@ -832,7 +832,7 @@ void ParseKey(const TokenNode *tp) {
    }
 
    /* Insert the binding if it's valid. */
-   if(k == KEY_NONE) {
+   if(JUNLIKELY(k == KEY_NONE)) {
 
       ParseError(tp, "invalid Key action: \"%s\"", action);
 
@@ -940,7 +940,7 @@ void ParseInclude(const TokenNode *tp, int depth) {
 
    Assert(tp);
 
-   if(!tp->value) {
+   if(JUNLIKELY(!tp->value)) {
 
       ParseError(tp, "no include file specified");
 
@@ -950,7 +950,7 @@ void ParseInclude(const TokenNode *tp, int depth) {
 
       ExpandPath(&temp);
 
-      if(!ParseFile(temp, depth)) {
+      if(JUNLIKELY(!ParseFile(temp, depth))) {
          ParseError(tp, "could not open included file %s", temp);
       }
 

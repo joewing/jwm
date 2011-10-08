@@ -198,8 +198,8 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
 
    if(node) {
 
-      ix = x + width / 2 - node->width / 2;
-      iy = y + height / 2 - node->height / 2;
+      ix = x + (width - node->width) / 2;
+      iy = y + (height - node->height) / 2;
 
       /* If we support xrender, use it. */
       if(PutScaledRenderIcon(icon, node, d, ix, iy)) {
@@ -458,7 +458,6 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
    double srcx, srcy;
    double ratio;
    int nwidth, nheight;
-   int usesMask;
    unsigned char *data;
 
    Assert(icon);
@@ -514,31 +513,16 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 #endif
    icon->nodes = np;
 
-   /* Determine if we need a mask. */
-   usesMask = 0;
-   x = 4 * icon->image->height * icon->image->width;
-   for(index = 0; index < x; index++) {
-      if(icon->image->data[index] >= 128) {
-         usesMask = 1;
-         break;
-      }
-   }
-
-   /* Create a mask if needed. */
-   if(usesMask) {
-      np->mask = JXCreatePixmap(display, rootWindow, nwidth, nheight, 1);
-      maskGC = JXCreateGC(display, np->mask, 0, NULL);
-      JXSetForeground(display, maskGC, 0);
-      JXFillRectangle(display, np->mask, maskGC, 0, 0, nwidth, nheight);
-      JXSetForeground(display, maskGC, 1);
-   } else {
-      np->mask = None;
-      maskGC = None;
-   }
+   /* Create a mask. */
+   np->mask = JXCreatePixmap(display, rootWindow, nwidth, nheight, 1);
+   maskGC = JXCreateGC(display, np->mask, 0, NULL);
+   JXSetForeground(display, maskGC, 0);
+   JXFillRectangle(display, np->mask, maskGC, 0, 0, nwidth, nheight);
+   JXSetForeground(display, maskGC, 1);
 
    /* Create a temporary XImage for scaling. */
    image = JXCreateImage(display, rootVisual, rootDepth, ZPixmap, 0,
-      NULL, nwidth, nheight, 8, 0);
+                         NULL, nwidth, nheight, 8, 0);
    image->data = Allocate(sizeof(unsigned long) * nwidth * nheight);
 
    /* Determine the scale factor. */
@@ -563,7 +547,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 
          XPutPixel(image, x, y, color.pixel);
 
-         if(usesMask && data[index] >= 128) {
+         if(data[index] >= 128) {
             JXDrawPoint(display, np->mask, maskGC, x, y);
          }
 
@@ -575,10 +559,8 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
    }
 
    /* Release the mask GC. */
-   if(usesMask) {
-      JXFreeGC(display, maskGC);
-   }
-
+   JXFreeGC(display, maskGC);
+ 
    /* Create the color data pixmap. */
    np->image = JXCreatePixmap(display, rootWindow, nwidth, nheight, rootDepth);
 
@@ -609,10 +591,10 @@ IconNode *CreateIconFromBinary(const unsigned long *input,
    width = input[0];
    height = input[1];
 
-   if(width * height + 2 > length) {
+   if(JUNLIKELY(width * height + 2 > length)) {
       Debug("invalid image size: %d x %d + 2 > %d", width, height, length);
       return NULL;
-   } else if(width == 0 || height == 0) {
+   } else if(JUNLIKELY(width == 0 || height == 0)) {
       Debug("invalid image size: %d x %d", width, height);
       return NULL;
    }

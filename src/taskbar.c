@@ -762,7 +762,7 @@ void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value) {
 
    if(value) {
       temp = atoi(value);
-      if(temp < 0) {
+      if(JUNLIKELY(temp < 0)) {
          Warning("invalid maxwidth for TaskList: %s", value);
          return;
       }

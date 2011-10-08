@@ -156,13 +156,13 @@ ImageNode *LoadPNGImage(const char *fileName) {
    }
 
    pngData = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-   if(!pngData) {
+   if(JUNLIKELY(!pngData)) {
       fclose(fd);
       Warning("could not create read struct for PNG image: %s", fileName);
       return NULL;
    }
 
-   if(setjmp(png_jmpbuf(pngData))) {
+   if(JUNLIKELY(setjmp(png_jmpbuf(pngData)))) {
       png_destroy_read_struct(&pngData, &pngInfo, &pngEndInfo);
       if(fd) {
          fclose(fd);
@@ -180,7 +180,7 @@ ImageNode *LoadPNGImage(const char *fileName) {
    }
 
    pngInfo = png_create_info_struct(pngData);
-   if(!pngInfo) {
+   if(JUNLIKELY(!pngInfo)) {
       png_destroy_read_struct(&pngData, NULL, NULL);
       fclose(fd);
       Warning("could not create info struct for PNG image: %s", fileName);
@@ -188,7 +188,7 @@ ImageNode *LoadPNGImage(const char *fileName) {
    }
 
    pngEndInfo = png_create_info_struct(pngData);
-   if(!pngEndInfo) {
+   if(JUNLIKELY(!pngEndInfo)) {
       png_destroy_read_struct(&pngData, &pngInfo, NULL);
       fclose(fd);
       Warning("could not create end info struct for PNG image: %s", fileName);

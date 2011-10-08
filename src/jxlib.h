@@ -109,6 +109,9 @@
 #define JXDrawLine( a, b, c, d, e, f, g ) \
    ( SetCheckpoint(), XDrawLine( a, b, c, d, e, f, g ) )
 
+#define JXDrawSegments( a, b, c, d, e ) \
+   ( SetCheckpoint(), XDrawSegments( a, b, c, d, e ) )
+
 #define JXDrawRectangle( a, b, c, d, e, f, g ) \
    ( SetCheckpoint(), XDrawRectangle( a, b, c, d, e, f, g ) )
 

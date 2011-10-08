@@ -98,18 +98,18 @@ void DrawButton(ButtonNode *bp) {
       if(bg1 == bg2) {
          /* single color */
          JXFillRectangle(display, drawable, gc,
-            x + 1, y + 1, width - 1, height - 1);
+                         x + 1, y + 1, width - 1, height - 1);
       } else {
          /* gradient */
          DrawHorizontalGradient(drawable, gc, bg1, bg2,
-            x + 1, y + 1, width - 2, height - 1);
+                                x + 1, y + 1, width - 2, height - 1);
       }
 
       /* Draw the outline. */
       JXSetForeground(display, gc, outlinePixel);
 #ifdef USE_XMU
       XmuDrawRoundedRectangle(display, drawable, gc, x, y, 
-         width, height, 3, 3);
+                              width, height, 3, 3);
 #else
       JXDrawRectangle(display, drawable, gc, x, y, width, height);
 #endif
@@ -168,7 +168,7 @@ void DrawButton(ButtonNode *bp) {
    if(bp->text && textWidth) {
       yoffset = (height - textHeight + 1) / 2;
       RenderString(drawable, bp->font, fg, x + xoffset, y + yoffset,
-         textWidth, NULL, bp->text);
+                   textWidth, NULL, bp->text);
    }
 
 }

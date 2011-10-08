@@ -502,7 +502,7 @@ void UpdatePager() {
    int textWidth, textHeight;
    int dx, dy;
 
-   if(shouldExit) {
+   if(JUNLIKELY(shouldExit)) {
       return;
    }
 
@@ -536,8 +536,8 @@ void UpdatePager() {
                name = GetDesktopName(x);
                textWidth = GetStringWidth(FONT_PAGER, name);
                if(textWidth < deskWidth) {
-                  xc = dx * (deskWidth + 1) + deskWidth / 2 - textWidth / 2;
-                  yc = dy * (deskHeight + 1) + deskHeight / 2 - textHeight / 2;
+                  xc = dx * (deskWidth + 1) + (deskWidth - textWidth) / 2;
+                  yc = dy * (deskHeight + 1) + (deskHeight - textHeight) / 2;
                   RenderString(buffer, FONT_PAGER, COLOR_PAGER_TEXT, xc, yc,
                      deskWidth, None, name);
                }

@@ -144,6 +144,21 @@
 #  define CORNER_RADIUS 4
 #endif
 
+#ifdef __GNUC__
+#  if __GNUC__ >= 3
+#     define JLIKELY(x)   __builtin_expect(!!(x), 1)
+#     define JUNLIKELY(x) __builtin_expect(!!(x), 0)
+#  else
+#     warning "JLIKELY/JUNLIKELY not available with this version of gcc"
+#     define JLIKELY(x) (x)
+#     define JUNLIKELY(x) (x)
+#  endif
+#else
+#  warning "JLIKELY/JUNLIKELY not available with this compiler"
+#  define JLIKELY(x) (x)
+#  define JUNLIKELY(x) (x)
+#endif
+
 #include "debug.h"
 #include "jxlib.h"
 

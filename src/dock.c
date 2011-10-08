@@ -167,7 +167,7 @@ TrayComponentType *CreateDock() {
 
    TrayComponentType *cp;
 
-   if(dock != NULL && dock->cp != NULL) {
+   if(JUNLIKELY(dock != NULL && dock->cp != NULL)) {
       Warning("only one Dock allowed");
       return NULL;
    } else if(dock == NULL) {
@@ -256,7 +256,8 @@ void Create(TrayComponentType *cp) {
 
       owner = 1;
       JXSetSelectionOwner(display, dockAtom, dock->cp->window, CurrentTime);
-      if(JXGetSelectionOwner(display, dockAtom) != dock->cp->window) {
+      if(JUNLIKELY(JXGetSelectionOwner(display, dockAtom)
+                   != dock->cp->window)) {
 
          owner = 0;
          Warning("could not acquire system tray selection");

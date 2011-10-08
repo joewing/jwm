@@ -75,16 +75,16 @@ void StartupBorders() {
    for(x = 0; x < BP_COUNT; x++) {
       found = bmpFiles[x] ? 1 : 0;
       if(found) {
-         found = XReadBitmapFile(display, rootWindow, bmpFiles[x],
-            &bmpWidth, &bmpHeight, &pixmaps[x], &hotx, &hoty) == BitmapSuccess ?
-            1 : 0;
-         if(!found) {
+         found = XReadBitmapFile(display, rootWindow, bmpFiles[x], &bmpWidth,
+                                 &bmpHeight, &pixmaps[x], &hotx, &hoty)
+                  == BitmapSuccess;
+         if(JUNLIKELY(!found)) {
             Warning("bitmap could not be loaded: %s", bmpFiles[x]);
          }
       }
       if(!found) {
          pixmaps[x] = JXCreateBitmapFromData(display, rootWindow,
-            (char*)bitmaps[x], 16, 16);
+                                             (char*)bitmaps[x], 16, 16);
       }
    }
 
@@ -253,7 +253,7 @@ void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
    Assert(np);
 
    /* Don't draw any more if we are shutting down. */
-   if(shouldExit) {
+   if(JUNLIKELY(shouldExit)) {
       return;
    }
 
@@ -306,7 +306,7 @@ void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
       if(np->icon && (np->state.border & BORDER_TITLE)) {
          temp = GetBorderIconSize();
          rect.x = 6;
-         rect.y = (short)(titleHeight / 2 - temp / 2);
+         rect.y = (short)((titleHeight - temp) / 2);
          rect.width = (unsigned short)temp;
          rect.height = (unsigned short)temp;
          if(XRectInRegion(borderRegion,
@@ -408,19 +408,19 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
 
       /* Draw a title bar. */
       DrawHorizontalGradient(canvas, gc, titleColor1, titleColor2,
-         1, 1, width - 2, titleHeight - 2);
+                             1, 1, width - 2, titleHeight - 2);
 
       /* Draw the icon. */
       if(np->icon && np->width >= titleHeight && drawIcon) {
-         PutIcon(np->icon, canvas, 6, titleHeight / 2 - iconSize / 2,
-            iconSize, iconSize);
+         PutIcon(np->icon, canvas, 6, (titleHeight - iconSize) / 2,
+                 iconSize, iconSize);
       }
 
       if(np->name && np->name[0] && titleWidth > 0) {
          RenderString(canvas, FONT_BORDER, borderTextColor,
-            iconSize + 6 + 4,
-            titleHeight / 2 - GetStringHeight(FONT_BORDER) / 2,
-            titleWidth, borderRegion, np->name);
+                      iconSize + 6 + 4,
+                      (titleHeight - GetStringHeight(FONT_BORDER)) / 2,
+                      titleWidth, borderRegion, np->name);
       }
 
    }
@@ -646,10 +646,10 @@ void SetBorderWidth(const char *str) {
 
    int width;
 
-   if(str) {
+   if(JLIKELY(str)) {
 
       width = atoi(str);
-      if(width < MIN_BORDER_WIDTH || width > MAX_BORDER_WIDTH) {
+      if(JUNLIKELY(width < MIN_BORDER_WIDTH || width > MAX_BORDER_WIDTH)) {
          borderWidth = DEFAULT_BORDER_WIDTH;
          Warning("invalid border width specified: %d", width);
       } else {
@@ -665,10 +665,10 @@ void SetTitleHeight(const char *str) {
 
    int height;
 
-   if(str) {
+   if(JLIKELY(str)) {
 
       height = atoi(str);
-      if(height < MIN_TITLE_HEIGHT || height > MAX_TITLE_HEIGHT) {
+      if(JUNLIKELY(height < MIN_TITLE_HEIGHT || height > MAX_TITLE_HEIGHT)) {
          titleHeight = DEFAULT_TITLE_HEIGHT;
          Warning("invalid title height specified: %d", height);
       } else {
@@ -687,7 +687,7 @@ void SetButtonMask(BorderPixmapType pt, const char *filename) {
       bmpFiles[pt] = NULL;
    }
 
-   if(filename) {
+   if(JLIKELY(filename)) {
       bmpFiles[pt] = CopyString(filename);
       ExpandPath(&bmpFiles[pt]);
    }

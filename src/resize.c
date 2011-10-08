@@ -64,7 +64,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
       return;
    }
 
-   if(!GrabMouseForResize(action)) {
+   if(JUNLIKELY(!GrabMouseForResize(action))) {
       Debug("ResizeClient: could not grab mouse");
       return;
    }
@@ -268,8 +268,8 @@ void ResizeClientKeyboard(ClientNode *np) {
       return;
    }
 
-   if(JXGrabKeyboard(display, np->window, True, GrabModeAsync,
-      GrabModeAsync, CurrentTime) != GrabSuccess) {
+   if(JUNLIKELY(JXGrabKeyboard(display, np->window, True, GrabModeAsync,
+      GrabModeAsync, CurrentTime) != GrabSuccess)) {
       Debug("ResizeClientKeyboard: could not grab keyboard");
       return;
    }

@@ -161,7 +161,7 @@ void Create(TrayComponentType *cp) {
    Assert(cp);
 
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
-      rootDepth);
+                               rootDepth);
 
    JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG]);
    JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
@@ -186,7 +186,7 @@ void Resize(TrayComponentType *cp) {
    }
 
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
-      rootDepth);
+                               rootDepth);
 
    clk->shortTime[0] = 0;
 
@@ -225,7 +225,7 @@ void ProcessClockButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 /** Process a motion event on a clock tray component. */
 void ProcessClockMotionEvent(TrayComponentType *cp,
-   int x, int y, int mask) {
+                             int x, int y, int mask) {
 
    ClockType *clk;
 
@@ -271,7 +271,7 @@ void SignalClock(const TimeType *now, int x, int y) {
             time(&t);
             timeinfo = localtime(&t);
             len = strftime(longTime, sizeof(longTime), "%c", timeinfo);
-            if(len > 0) {
+            if(JLIKELY(len > 0)) {
                ShowPopup(x, y, longTime);
             }
          }
@@ -304,7 +304,7 @@ void DrawClock(ClockType *clk, const TimeType *now, int x, int y) {
    /* Clear the area. */
    JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG]);
    JXFillRectangle(display, cp->pixmap, rootGC, 0, 0,
-      cp->width, cp->height);
+                   cp->width, cp->height);
 
    /* Determine if the clock is the right size. */
    width = GetStringWidth(FONT_CLOCK, shortTime);
@@ -313,9 +313,9 @@ void DrawClock(ClockType *clk, const TimeType *now, int x, int y) {
 
       /* Draw the clock. */
       RenderString(cp->pixmap, FONT_CLOCK, COLOR_CLOCK_FG,
-         cp->width / 2 - width / 2,
-         cp->height / 2 - GetStringHeight(FONT_CLOCK) / 2,
-         cp->width, NULL, shortTime);
+                   (cp->width - width) / 2,
+                   (cp->height - GetStringHeight(FONT_CLOCK)) / 2,
+                   cp->width, NULL, shortTime);
 
       UpdateSpecificTray(clk->cp->tray, clk->cp);
 

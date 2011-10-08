@@ -474,7 +474,7 @@ void ComputeTraySize(TrayType *tp) {
       tp->y = rootHeight - tp->height + 1;
       break;
    case TALIGN_CENTER:
-      tp->y = rootHeight / 2 - tp->height / 2;
+      tp->y = (rootHeight - tp->height) / 2;
       break;
    default:
       if(tp->y < 0) {
@@ -491,7 +491,7 @@ void ComputeTraySize(TrayType *tp) {
       tp->x = rootWidth - tp->width + 1;
       break;
    case TALIGN_CENTER:
-      tp->x = rootWidth / 2 - tp->width / 2;
+      tp->x = (rootWidth - tp->width) / 2;
       break;
    default:
       if(tp->x < 0) {
@@ -761,27 +761,23 @@ void DrawSpecificTray(const TrayType *tp) {
 
       /* Top */
       JXSetForeground(display, rootGC, colors[COLOR_TRAY_UP]);
-      JXDrawLine(display, tp->window, rootGC,
-         0, x,
-         tp->width - x - 1, x);
+      JXDrawLine(display, tp->window, rootGC, 0, x,
+                 tp->width - x - 1, x);
 
       /* Bottom */
       JXSetForeground(display, rootGC, colors[COLOR_TRAY_DOWN]);
-      JXDrawLine(display, tp->window, rootGC,
-         x + 1, tp->height - x - 1,
-         tp->width - x - 2, tp->height - x - 1);
+      JXDrawLine(display, tp->window, rootGC, x + 1, tp->height - x - 1,
+                 tp->width - x - 2, tp->height - x - 1);
 
       /* Left */
       JXSetForeground(display, rootGC, colors[COLOR_TRAY_UP]);
-      JXDrawLine(display, tp->window, rootGC,
-         x, x,
-         x, tp->height - x - 1);
+      JXDrawLine(display, tp->window, rootGC, x, x,
+                 x, tp->height - x - 1);
 
       /* Right */
       JXSetForeground(display, rootGC, colors[COLOR_TRAY_DOWN]);
-      JXDrawLine(display, tp->window, rootGC, 
-         tp->width - x - 1, x + 1,
-         tp->width - x - 1, tp->height - x - 1);
+      JXDrawLine(display, tp->window, rootGC, tp->width - x - 1, x + 1,
+                 tp->width - x - 1, tp->height - x - 1);
 
    }
 
@@ -994,7 +990,7 @@ void SetTrayWidth(TrayType *tp, const char *str) {
 
    width = atoi(str);
 
-   if(width < 0) {
+   if(JUNLIKELY(width < 0)) {
       Warning("invalid tray width: %d", width);
    } else {
       tp->requestedWidth = width;
@@ -1012,7 +1008,7 @@ void SetTrayHeight(TrayType *tp, const char *str) {
 
    height = atoi(str);
 
-   if(height < 0) {
+   if(JUNLIKELY(height < 0)) {
       Warning("invalid tray height: %d", height);
    } else {
       tp->requestedHeight = height;
@@ -1066,7 +1062,7 @@ void SetTrayLayer(TrayType *tp, const char *str) {
    Assert(str);
 
    temp = atoi(str);
-   if(temp < LAYER_BOTTOM || temp > LAYER_TOP) {
+   if(JUNLIKELY(temp < LAYER_BOTTOM || temp > LAYER_TOP)) {
       Warning("invalid tray layer: %d", temp);
       tp->layer = DEFAULT_TRAY_LAYER;
    } else {
@@ -1084,7 +1080,7 @@ void SetTrayBorder(TrayType *tp, const char *str) {
    Assert(str);
 
    temp = atoi(str);
-   if(temp < MIN_TRAY_BORDER || temp > MAX_TRAY_BORDER) {
+   if(JUNLIKELY(temp < MIN_TRAY_BORDER || temp > MAX_TRAY_BORDER)) {
       Warning("invalid tray border: %d", temp);
       tp->border = DEFAULT_TRAY_BORDER;
    } else {
@@ -1141,7 +1137,7 @@ void SetTrayOpacity(const char *str) {
    Assert(str);
 
    temp = atof(str);
-   if(temp <= 0.0 || temp > 1.0) {
+   if(JUNLIKELY(temp <= 0.0 || temp > 1.0)) {
       Warning("invalid tray opacity: %s", str);
       temp = 1.0;
    }

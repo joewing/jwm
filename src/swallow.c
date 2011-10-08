@@ -84,19 +84,19 @@ void DestroySwallow() {
 
 /** Create a swallowed application tray component. */
 TrayComponentType *CreateSwallow(const char *name, const char *command,
-   int width, int height) {
+                                 int width, int height) {
 
    TrayComponentType *cp;
    SwallowNode *np;
 
-   if(!name) {
+   if(JUNLIKELY(!name)) {
       Warning("cannot swallow a client with no name");
       return NULL;
    }
 
    /* Make sure this name isn't already used. */
    for(np = swallowNodes; np; np = np->next) {
-      if(!strcmp(np->name, name)) {
+      if(JUNLIKELY(!strcmp(np->name, name))) {
          Warning("cannot swallow the same client multiple times");
          return NULL;
       }

@@ -262,7 +262,7 @@ void SetDesktopCount(const char *width, const char *height) {
    }
 
    desktopCount = desktopWidth * desktopHeight;
-   if(desktopCount == 0) {
+   if(JUNLIKELY(desktopCount == 0)) {
       Warning("invalid desktop count");
       desktopWidth = DEFAULT_DESKTOP_WIDTH;
       desktopHeight = DEFAULT_DESKTOP_HEIGHT;
@@ -276,7 +276,7 @@ void SetDesktopName(unsigned int desktop, const char *str) {
 
    unsigned int x;
 
-   if(!str) {
+   if(JUNLIKELY(!str)) {
       Warning("empty Desktops Name tag");
       return;
    }

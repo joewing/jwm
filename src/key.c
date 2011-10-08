@@ -317,7 +317,7 @@ unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key) {
    int x;
 
    temp = JXKeysymToKeycode(display, key);
-   if(temp == 0) {
+   if(JUNLIKELY(temp == 0)) {
       Warning("Specified KeySym is not defined for any KeyCode");
    }
    for(x = 0; x < 8 * modmap->max_keypermod; x++) {
@@ -355,7 +355,7 @@ unsigned int ParseModifierString(const char *str) {
          }
       }
 
-      if(!found) {
+      if(JUNLIKELY(!found)) {
          Warning("invalid modifier: \"%c\"", str[x]);
       }
 
@@ -371,7 +371,7 @@ KeySym ParseKeyString(const char *str) {
    KeySym symbol;
 
    symbol = JXStringToKeysym(str);
-   if(symbol == NoSymbol) {
+   if(JUNLIKELY(symbol == NoSymbol)) {
       Warning("invalid key symbol: \"%s\"", str);
    }
 
@@ -469,7 +469,7 @@ void ValidateKeys() {
    for(kp = bindings; kp; kp = kp->next) {
       if((kp->key & 0xFF) == KEY_ROOT && kp->command) {
          bindex = atoi(kp->command);
-         if(!IsRootMenuDefined(bindex)) {
+         if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
             Warning("key binding: root menu %d not defined", bindex);
          }
       }

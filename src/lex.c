@@ -176,9 +176,9 @@ TokenNode *Tokenize(const char *line, const char *fileName) {
 
             if(current) {
 
-               if(temp) {
+               if(JLIKELY(temp)) {
 
-                  if(current->type != LookupType(temp, NULL)) {
+                  if(JUNLIKELY(current->type != LookupType(temp, NULL))) {
                      Warning("%s[%d]: close tag \"%s\" does not "
                         "match open tag \"%s\"",
                         fileName, lineNumber, temp,
@@ -210,7 +210,7 @@ TokenNode *Tokenize(const char *line, const char *fileName) {
             current = NULL;
             np = CreateNode(np, fileName, lineNumber);
             temp = ReadElementName(line + x);
-            if(temp) {
+            if(JLIKELY(temp)) {
                x += strlen(temp);
                LookupType(temp, np);
                Release(temp);
@@ -223,7 +223,7 @@ TokenNode *Tokenize(const char *line, const char *fileName) {
       case '/':
          if(inElement) {
             ++x;
-            if(line[x] == '>' && current) {
+            if(JLIKELY(line[x] == '>' && current)) {
                ++x;
                current = current->parent;
                inElement = 0;
@@ -274,7 +274,7 @@ ReadDefault:
                      current->value = temp;
                   }
                } else {
-                  if(temp[0]) {
+                  if(JUNLIKELY(temp[0])) {
                      Warning("%s[%d]: unexpected text: \"%s\"",
                         fileName, lineNumber, temp);
                   }
@@ -492,7 +492,7 @@ TokenType LookupType(const char *name, TokenNode *np) {
       }
    }
 
-   if(np) {
+   if(JUNLIKELY(np)) {
       np->type = TOK_INVALID;
       np->invalidName = CopyString(name);
    }

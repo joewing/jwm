@@ -127,7 +127,7 @@ void AddGroupClass(GroupType *gp, const char *pattern) {
 
    Assert(gp);
 
-   if(pattern) {
+   if(JLIKELY(pattern)) {
       AddPattern(&gp->patterns, pattern, MATCH_CLASS);
    } else {
       Warning("invalid group class");
@@ -140,7 +140,7 @@ void AddGroupName(GroupType *gp, const char *pattern) {
 
    Assert(gp);
 
-   if(pattern) {
+   if(JLIKELY(pattern)) {
       AddPattern(&gp->patterns, pattern, MATCH_NAME);
    } else {
       Warning("invalid group name");
@@ -254,7 +254,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
          break;
       case OPTION_LAYER:
          temp = atoi(lp->value);
-         if(temp <= LAYER_COUNT) {
+         if(JLIKELY(temp <= LAYER_COUNT)) {
             SetClientLayer(np, temp);
          } else {
             Warning("invalid group layer: %s", lp->value);
@@ -262,7 +262,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
          break;
       case OPTION_DESKTOP:
          temp = atoi(lp->value);
-         if(temp >= 1 && temp <= desktopCount) {
+         if(JLIKELY(temp >= 1 && temp <= desktopCount)) {
             np->state.desktop = temp - 1;
          } else {
             Warning("invalid group desktop: %s", lp->value);
@@ -286,7 +286,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
          break;
       case OPTION_OPACITY:
          tempf = atof(lp->value);
-         if(tempf > 0.0 && tempf <= 1.0) {
+         if(JLIKELY(tempf > 0.0 && tempf <= 1.0)) {
             np->state.opacity = (unsigned int)(tempf * UINT_MAX);
             np->state.status |= STAT_OPACITY;
          } else {

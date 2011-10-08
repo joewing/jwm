@@ -218,7 +218,7 @@ void EventLoop() {
    XEvent event;
 
    /* Loop processing events until it's time to exit. */
-   while(!shouldExit) {
+   while(JLIKELY(!shouldExit)) {
       WaitForEvent(&event);
       ProcessEvent(&event);
    }
@@ -238,7 +238,7 @@ void EventLoop() {
 void OpenConnection() {
 
    display = JXOpenDisplay(displayString);
-   if(!display) {
+   if(JUNLIKELY(!display)) {
       if(displayString) {
          printf("error: could not open display %s\n", displayString);
       } else {

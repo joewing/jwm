@@ -29,7 +29,7 @@ static void RunWindowCommand(const MenuAction *action);
 static void CreateWindowLayerMenu(Menu *menu);
 static void CreateWindowSendToMenu(Menu *menu);
 static void AddWindowMenuItem(Menu *menu, const char *name,
-   MenuActionType type, int value);
+                              MenuActionType type, int value);
 
 static ClientNode *client = NULL;
 

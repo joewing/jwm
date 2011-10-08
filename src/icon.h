@@ -22,7 +22,6 @@ typedef struct ScaledIconNode {
    Pixmap mask;
 #ifdef USE_XRENDER
    Picture imagePicture;
-   Picture maskPicture;
 #endif
 
    struct ScaledIconNode *next;

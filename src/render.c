@@ -95,6 +95,7 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 
    XRenderPictureAttributes picAttributes;
    XRenderPictFormat *fp;
+   Picture maskPicture;
    XColor color;
    GC maskGC;
    XImage *destImage;
@@ -179,17 +180,17 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
    /* Create the alpha picture. */
    fp = JXRenderFindStandardFormat(display, PictStandardA8);
    Assert(fp);
-   result->maskPicture = JXRenderCreatePicture(display, result->mask, fp, 
-                                               0, NULL);
+   maskPicture = JXRenderCreatePicture(display, result->mask, fp, 0, NULL);
    
    /* Create the render picture. */
    fp = JXRenderFindVisualFormat(display, rootVisual);
    Assert(fp);
-   picAttributes.alpha_map = result->maskPicture;
+   picAttributes.alpha_map = maskPicture;
    result->imagePicture = JXRenderCreatePicture(display, result->image, fp,
                                                 CPAlphaMap, &picAttributes);
 
    /* Free unneeded pixmaps. */
+   JXRenderFreePicture(display, maskPicture);
    JXFreePixmap(display, result->image);
    result->image = None;
    JXFreePixmap(display, result->mask);

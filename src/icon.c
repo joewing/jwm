@@ -511,7 +511,6 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
    np->next = icon->nodes;
 #ifdef USE_XRENDER
    np->imagePicture = None;
-   np->maskPicture = None;
 #endif
    icon->nodes = np;
 
@@ -671,9 +670,6 @@ void DoDestroyIcon(int index, IconNode *icon) {
 #ifdef USE_XRENDER
          if(icon->nodes->imagePicture != None) {
             JXRenderFreePicture(display, icon->nodes->imagePicture);
-         }
-         if(icon->nodes->maskPicture != None) {
-            JXRenderFreePicture(display, icon->nodes->maskPicture);
          }
 #endif
 

@@ -54,7 +54,7 @@ void Debug(const char *str, ...);
 #ifdef DEBUG
 
 #   define Assert( x ) \
-      if(JUNLIKELY(!( x ))) {     \
+      if(!( x )) {     \
          Debug("ASSERT FAILED: %s[%u]", __FILE__, __LINE__ ); \
          abort(); \
       }

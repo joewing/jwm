@@ -792,6 +792,8 @@ void SetClientFullScreen(ClientNode *np, int fullScreen) {
 /** Set the active client. */
 void FocusClient(ClientNode *np) {
 
+   ClientProtocolType protocols;
+
    Assert(np);
 
    if(np->state.status & STAT_HIDDEN) {
@@ -810,18 +812,25 @@ void FocusClient(ClientNode *np) {
       if(!(np->state.status & STAT_SHADED)) {
          UpdateClientColormap(np);
          SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, np->window);
+         protocols = ReadWMProtocols(np->window);
+         if(protocols & PROT_TAKE_FOCUS) {
+            SendClientMessage(np->window, ATOM_WM_PROTOCOLS,
+                              ATOM_WM_TAKE_FOCUS);
+         } else {
+            if(np->state.status & STAT_MAPPED) {
+               JXSetInputFocus(display, np->window, RevertToPointerRoot,
+                               CurrentTime);
+            } else {
+               JXSetInputFocus(display, rootWindow, RevertToPointerRoot,
+                               CurrentTime);
+            }
+         }
       }
 
       DrawBorder(np, NULL);
       UpdatePager();
       UpdateTaskBar();
 
-   }
-
-   if(np->state.status & STAT_MAPPED) {
-      JXSetInputFocus(display, np->window, RevertToPointerRoot, CurrentTime);
-   } else {
-      JXSetInputFocus(display, rootWindow, RevertToPointerRoot, CurrentTime);
    }
 
 }

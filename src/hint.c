@@ -672,7 +672,7 @@ ClientProtocolType ReadWMProtocols(Window w) {
    JXFree(p);
 
    return result;
-   
+
 }
 
 /** Read the "normal hints" for a client. */
@@ -807,16 +807,17 @@ void ReadWMHints(Window win, ClientState *state) {
 
    wmhints = JXGetWMHints(display, win);
    if(wmhints) {
-      switch(wmhints->flags & StateHint) {
-      case IconicState:
-         state->status |= STAT_MINIMIZED;
-         break;
-      case WithdrawnState:
-      default:
-         if(!(state->status & (STAT_MINIMIZED | STAT_NOLIST))) {
-            state->status |= STAT_MAPPED;
+      if(wmhints->flags & StateHint) {
+         switch(wmhints->initial_state == IconicState) {
+         case IconicState:
+            state->status |= STAT_MINIMIZED;
+            break;
+         case WithdrawnState:
+         default:
+            if(!(state->status & (STAT_MINIMIZED | STAT_NOLIST))) {
+               state->status |= STAT_MAPPED;
+            }
          }
-         break;
       }
       JXFree(wmhints);
    } else {

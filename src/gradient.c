@@ -17,13 +17,13 @@ void DrawHorizontalGradient(Drawable d, GC g,
    long fromColor, long toColor,
    int x, int y, unsigned int width, unsigned int height) {
 
+   const int shift = 15;
    unsigned int line;
    XColor temp;
-   float red, green, blue;
-   float ared, agreen, ablue;
-   float bred, bgreen, bblue;
-   float multiplier;
-   float amult, bmult;
+   int red, green, blue;
+   int ared, agreen, ablue;
+   int bred, bgreen, bblue;
+   int redStep, greenStep, blueStep;
 
    /* Return if there's nothing to do. */
    if(width == 0 || height == 0) {
@@ -38,33 +38,32 @@ void DrawHorizontalGradient(Drawable d, GC g,
    /* Load the "from" color. */
    temp.pixel = fromColor;
    GetColorFromPixel(&temp);
-   ared = (float)temp.red / 65535.0;
-   agreen = (float)temp.green / 65535.0;
-   ablue = (float)temp.blue / 65535.0;
+   ared = (unsigned int)temp.red << shift;
+   agreen = (unsigned int)temp.green << shift;
+   ablue = (unsigned int)temp.blue << shift;
 
-   /** Load the "to" color. */
+   /* Load the "to" color. */
    temp.pixel = toColor;
    GetColorFromPixel(&temp);
-   bred = (float)temp.red / 65535.0;
-   bgreen = (float)temp.green / 65535.0;
-   bblue = (float)temp.blue / 65535.0;
+   bred = (unsigned int)temp.red << shift;
+   bgreen = (unsigned int)temp.green << shift;
+   bblue = (unsigned int)temp.blue << shift;
 
-   multiplier = 1.0 / height;
+   /* Determine the step. */
+   redStep = (bred - ared) / (int)height;
+   greenStep = (bgreen - agreen) / (int)height;
+   blueStep = (bblue - ablue) / (int)height;
 
    /* Loop over each line. */
+   red = ared;
+   blue = ablue;
+   green = agreen;
    for(line = 0; line < height; line++) {
 
-      bmult = line * multiplier;
-      amult = 1.0 - bmult;
-
       /* Determine the color for this line. */
-      red = ared * amult + bred * bmult;
-      green = agreen * amult + bgreen * bmult;
-      blue = ablue * amult + bblue * bmult;
-
-      temp.red = (unsigned short)(red * 65535.9);
-      temp.green = (unsigned short)(green * 65535.9);
-      temp.blue = (unsigned short)(blue * 65535.9);
+      temp.red = (unsigned short)(red >> shift);
+      temp.green = (unsigned short)(green >> shift);
+      temp.blue = (unsigned short)(blue >> shift);
 
       GetColor(&temp);
 
@@ -72,8 +71,11 @@ void DrawHorizontalGradient(Drawable d, GC g,
       JXSetForeground(display, g, temp.pixel);
       JXDrawLine(display, d, g, x, y + line, x + width, y + line);
 
+      red += redStep;
+      green += greenStep;
+      blue += blueStep;
+
    }
 
 }
-
 

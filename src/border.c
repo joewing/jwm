@@ -715,6 +715,8 @@ void ShapeRoundedRectWindow(const Window srrw, int width, int height) {
       if(shapeGC == None) {
          shapeGC = JXCreateGC(display, shapePixmap, 0, NULL);
       }
+      shapePixmapWidth = width;
+      shapePixmapHeight = height;
    }
 
    JXSetForeground(display, shapeGC, 0);

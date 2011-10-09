@@ -71,8 +71,11 @@ void DestroyDesktops() {
 
 /** Change to the desktop to the right. */
 int RightDesktop() {
-   if(desktopCount > 1) {
-      ChangeDesktop((currentDesktop + 1) % desktopCount);
+   int x, y;
+   if(desktopWidth > 1) {
+      y = currentDesktop / desktopWidth;
+      x = (currentDesktop + 1) % desktopWidth;
+      ChangeDesktop(y * desktopWidth + x);
       return 1;
    } else {
       return 0;
@@ -81,12 +84,12 @@ int RightDesktop() {
 
 /** Change to the desktop to the left. */
 int LeftDesktop() {
-   if(desktopCount > 1) {
-      if(currentDesktop > 0) {
-         ChangeDesktop(currentDesktop - 1);
-      } else {
-         ChangeDesktop(desktopCount - 1);
-      }
+   int x, y;
+   if(desktopWidth > 1) {
+      y = currentDesktop / desktopWidth;
+      x = currentDesktop % desktopWidth;
+      x = x > 0 ? x - 1 : desktopWidth - 1;
+      ChangeDesktop(y * desktopWidth + x);
       return 1;
    } else {
       return 0;
@@ -95,7 +98,7 @@ int LeftDesktop() {
 
 /** Change to the desktop above. */
 int AboveDesktop() {
-   if(desktopWidth > 1) {
+   if(desktopHeight > 1) {
       if(currentDesktop >= desktopWidth) {
          ChangeDesktop(currentDesktop - desktopWidth);
       } else {
@@ -109,7 +112,7 @@ int AboveDesktop() {
 
 /** Change to the desktop below. */
 int BelowDesktop() {
-   if(desktopWidth > 1) {
+   if(desktopHeight > 1) {
       ChangeDesktop((currentDesktop + desktopWidth) % desktopCount);
       return 1;
    } else {

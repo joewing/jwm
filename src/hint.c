@@ -822,6 +822,8 @@ void ReadWMHints(Window win, ClientState *state) {
                state->status |= STAT_MAPPED;
             }
          }
+      } else {
+         state->status |= STAT_MAPPED;
       }
       JXFree(wmhints);
    } else {

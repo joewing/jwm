@@ -133,7 +133,7 @@ void SetBackground(int desktop, const char *type, const char *value) {
 
    /* Make sure we have a value. */
    if(JUNLIKELY(!value)) {
-      Warning("no value specified for background");
+      Warning(_("no value specified for background"));
       return;
    }
 
@@ -149,7 +149,7 @@ void SetBackground(int desktop, const char *type, const char *value) {
    } else if(!strcmp(type, "tile")) {
       bgType = BACKGROUND_TILE;
    } else {
-      Warning("invalid background type: \"%s\"", type);
+      Warning(_("invalid background type: \"%s\""), type);
       return;
    }
 
@@ -298,7 +298,7 @@ void LoadImageBackground(BackgroundNode *bp) {
    if(JUNLIKELY(!ip)) {
       bp->pixmap = None;
       bp->window = None;
-      Warning("background image not found: \"%s\"", bp->value);
+      Warning(_("background image not found: \"%s\""), bp->value);
       return;
    }
 

@@ -142,7 +142,7 @@ void RunCommand(const char *command) {
             putenv(str);
          }
          execl(SHELL_NAME, SHELL_NAME, "-c", command, NULL);
-         Warning("exec failed: (%s) %s", SHELL_NAME, command);
+         Warning(_("exec failed: (%s) %s"), SHELL_NAME, command);
          exit(1);
       }
       exit(0);

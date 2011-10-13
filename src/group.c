@@ -130,7 +130,7 @@ void AddGroupClass(GroupType *gp, const char *pattern) {
    if(JLIKELY(pattern)) {
       AddPattern(&gp->patterns, pattern, MATCH_CLASS);
    } else {
-      Warning("invalid group class");
+      Warning(_("invalid group class"));
    }
 
 }
@@ -143,7 +143,7 @@ void AddGroupName(GroupType *gp, const char *pattern) {
    if(JLIKELY(pattern)) {
       AddPattern(&gp->patterns, pattern, MATCH_NAME);
    } else {
-      Warning("invalid group name");
+      Warning(_("invalid group name"));
    }
 
 }
@@ -257,7 +257,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
          if(JLIKELY(temp <= LAYER_COUNT)) {
             SetClientLayer(np, temp);
          } else {
-            Warning("invalid group layer: %s", lp->value);
+            Warning(_("invalid group layer: %s"), lp->value);
          }
          break;
       case OPTION_DESKTOP:
@@ -265,7 +265,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
          if(JLIKELY(temp >= 1 && temp <= desktopCount)) {
             np->state.desktop = temp - 1;
          } else {
-            Warning("invalid group desktop: %s", lp->value);
+            Warning(_("invalid group desktop: %s"), lp->value);
          }
          break;
       case OPTION_ICON:
@@ -290,7 +290,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
             np->state.opacity = (unsigned int)(tempf * UINT_MAX);
             np->state.status |= STAT_OPACITY;
          } else {
-            Warning("invalid group opacity: %s", lp->value);
+            Warning(_("invalid group opacity: %s"), lp->value);
          }
          break;
       case OPTION_MAX_V:

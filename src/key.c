@@ -318,7 +318,7 @@ unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key) {
 
    temp = JXKeysymToKeycode(display, key);
    if(JUNLIKELY(temp == 0)) {
-      Warning("Specified KeySym is not defined for any KeyCode");
+      Warning(_("Specified KeySym is not defined for any KeyCode"));
    }
    for(x = 0; x < 8 * modmap->max_keypermod; x++) {
       if(modmap->modifiermap[x] == temp) {
@@ -326,7 +326,7 @@ unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key) {
       }
    }
 
-   Warning("modifier not found for keysym 0x%0x", key);
+   Warning(_("modifier not found for keysym 0x%0x"), key);
 
    return 0;
 
@@ -356,7 +356,7 @@ unsigned int ParseModifierString(const char *str) {
       }
 
       if(JUNLIKELY(!found)) {
-         Warning("invalid modifier: \"%c\"", str[x]);
+         Warning(_("invalid modifier: \"%c\""), str[x]);
       }
 
    }
@@ -372,7 +372,7 @@ KeySym ParseKeyString(const char *str) {
 
    symbol = JXStringToKeysym(str);
    if(JUNLIKELY(symbol == NoSymbol)) {
-      Warning("invalid key symbol: \"%s\"", str);
+      Warning(_("invalid key symbol: \"%s\""), str);
    }
 
    return symbol;
@@ -453,7 +453,7 @@ void InsertBinding(KeyType key, const char *modifiers,
 
    } else {
 
-      Warning("neither key nor keycode specified for Key");
+      Warning(_("neither key nor keycode specified for Key"));
       np = NULL;
 
    }
@@ -470,7 +470,7 @@ void ValidateKeys() {
       if((kp->key & 0xFF) == KEY_ROOT && kp->command) {
          bindex = atoi(kp->command);
          if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
-            Warning("key binding: root menu %d not defined", bindex);
+            Warning(_("key binding: root menu %d not defined"), bindex);
          }
       }
    }

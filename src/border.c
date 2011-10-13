@@ -79,7 +79,7 @@ void StartupBorders() {
                                  &bmpHeight, &pixmaps[x], &hotx, &hoty)
                   == BitmapSuccess;
          if(JUNLIKELY(!found)) {
-            Warning("bitmap could not be loaded: %s", bmpFiles[x]);
+            Warning(_("bitmap could not be loaded: %s"), bmpFiles[x]);
          }
       }
       if(!found) {
@@ -651,7 +651,7 @@ void SetBorderWidth(const char *str) {
       width = atoi(str);
       if(JUNLIKELY(width < MIN_BORDER_WIDTH || width > MAX_BORDER_WIDTH)) {
          borderWidth = DEFAULT_BORDER_WIDTH;
-         Warning("invalid border width specified: %d", width);
+         Warning(_("invalid border width specified: %d"), width);
       } else {
          borderWidth = width;
       }
@@ -670,7 +670,7 @@ void SetTitleHeight(const char *str) {
       height = atoi(str);
       if(JUNLIKELY(height < MIN_TITLE_HEIGHT || height > MAX_TITLE_HEIGHT)) {
          titleHeight = DEFAULT_TITLE_HEIGHT;
-         Warning("invalid title height specified: %d", height);
+         Warning(_("invalid title height specified: %d"), height);
       } else {
          titleHeight = height;
       }

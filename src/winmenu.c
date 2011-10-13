@@ -20,9 +20,6 @@
 #include "misc.h"
 #include "root.h"
 
-static const char *SENDTO_TEXT = "Send To";
-static const char *LAYER_TEXT = "Layer";
-
 static Menu *CreateWindowMenu();
 static void RunWindowCommand(const MenuAction *action);
 
@@ -76,31 +73,31 @@ Menu *CreateWindowMenu() {
    /* Note that items are added in reverse order of display. */
 
    if(!(client->state.status & STAT_WMDIALOG)) {
-      AddWindowMenuItem(menu, "Close", MA_CLOSE, 0);
-      AddWindowMenuItem(menu, "Kill", MA_KILL, 0);
+      AddWindowMenuItem(menu, _("Close"), MA_CLOSE, 0);
+      AddWindowMenuItem(menu, _("Kill"), MA_KILL, 0);
       AddWindowMenuItem(menu, NULL, MA_NONE, 0);
    }
 
    if(client->state.status & (STAT_MAPPED | STAT_SHADED)) {
       if(client->state.border & BORDER_RESIZE) {
-         AddWindowMenuItem(menu, "Resize", MA_RESIZE, 0);
+         AddWindowMenuItem(menu, _("Resize"), MA_RESIZE, 0);
       }
       if(client->state.border & BORDER_MOVE) {
-         AddWindowMenuItem(menu, "Move", MA_MOVE, 0);
+         AddWindowMenuItem(menu, _("Move"), MA_MOVE, 0);
       }
    }
 
    if(client->state.border & BORDER_MIN) {
 
       if(client->state.status & STAT_MINIMIZED) {
-         AddWindowMenuItem(menu, "Restore", MA_RESTORE, 0);
+         AddWindowMenuItem(menu, _("Restore"), MA_RESTORE, 0);
       } else {
          if(client->state.status & STAT_SHADED) {
-            AddWindowMenuItem(menu, "Unshade", MA_SHADE, 0);
+            AddWindowMenuItem(menu, _("Unshade"), MA_SHADE, 0);
          } else {
-            AddWindowMenuItem(menu, "Shade", MA_SHADE, 0);
+            AddWindowMenuItem(menu, _("Shade"), MA_SHADE, 0);
          }
-         AddWindowMenuItem(menu, "Minimize", MA_MINIMIZE, 0);
+         AddWindowMenuItem(menu, _("Minimize"), MA_MINIMIZE, 0);
       }
 
    }
@@ -109,17 +106,17 @@ Menu *CreateWindowMenu() {
       && (client->state.status & STAT_MAPPED)) {
 
       if(!(client->state.status & (STAT_HMAX | STAT_VMAX))) {
-         AddWindowMenuItem(menu, "Maximize-y", MA_MAXIMIZE_V, 0);
+         AddWindowMenuItem(menu, _("Maximize-y"), MA_MAXIMIZE_V, 0);
       }
 
       if(!(client->state.status & (STAT_HMAX | STAT_VMAX))) {
-         AddWindowMenuItem(menu, "Maximize-x", MA_MAXIMIZE_H, 0);
+         AddWindowMenuItem(menu, _("Maximize-x"), MA_MAXIMIZE_H, 0);
       }
 
       if((client->state.status & (STAT_HMAX | STAT_VMAX))) {
-         AddWindowMenuItem(menu, "Restore", MA_MAXIMIZE, 0);
+         AddWindowMenuItem(menu, _("Restore"), MA_MAXIMIZE, 0);
       } else {
-         AddWindowMenuItem(menu, "Maximize", MA_MAXIMIZE, 0);
+         AddWindowMenuItem(menu, _("Maximize"), MA_MAXIMIZE, 0);
       }
 
    }
@@ -127,9 +124,9 @@ Menu *CreateWindowMenu() {
    if(!(client->state.status & STAT_WMDIALOG)) {
 
       if(client->state.status & STAT_STICKY) {
-         AddWindowMenuItem(menu, "Unstick", MA_STICK, 0);
+         AddWindowMenuItem(menu, _("Unstick"), MA_STICK, 0);
       } else {
-         AddWindowMenuItem(menu, "Stick", MA_STICK, 0);
+         AddWindowMenuItem(menu, _("Stick"), MA_STICK, 0);
       }
 
       CreateWindowLayerMenu(menu);
@@ -153,7 +150,7 @@ void CreateWindowLayerMenu(Menu *menu) {
 
    item = Allocate(sizeof(MenuItem));
    item->type = MENU_ITEM_SUBMENU;
-   item->name = CopyString(LAYER_TEXT);
+   item->name = CopyString(_("Layer"));
    item->action.type = MA_NONE;
    item->action.data.str = NULL;
    item->iconName = NULL;
@@ -168,18 +165,18 @@ void CreateWindowLayerMenu(Menu *menu) {
    submenu->label = NULL;
 
    if(client->state.layer == LAYER_TOP) {
-      AddWindowMenuItem(submenu, "[Top]", MA_LAYER, LAYER_TOP);
+      AddWindowMenuItem(submenu, _("[Top]"), MA_LAYER, LAYER_TOP);
    } else {
-      AddWindowMenuItem(submenu, "Top", MA_LAYER, LAYER_TOP);
+      AddWindowMenuItem(submenu, _("Top"), MA_LAYER, LAYER_TOP);
    }
 
    str[4] = 0;
    for(x = LAYER_TOP - 1; x > LAYER_BOTTOM; x--) {
       if(x == LAYER_NORMAL) {
          if(client->state.layer == x) {
-            AddWindowMenuItem(submenu, "[Normal]", MA_LAYER, x);
+            AddWindowMenuItem(submenu, _("[Normal]"), MA_LAYER, x);
          } else {
-            AddWindowMenuItem(submenu, "Normal", MA_LAYER, x);
+            AddWindowMenuItem(submenu, _("Normal"), MA_LAYER, x);
          }
       } else {
          if(client->state.layer == x) {
@@ -200,9 +197,9 @@ void CreateWindowLayerMenu(Menu *menu) {
    }
 
    if(client->state.layer == LAYER_BOTTOM) {
-      AddWindowMenuItem(submenu, "[Bottom]", MA_LAYER, LAYER_BOTTOM);
+      AddWindowMenuItem(submenu, _("[Bottom]"), MA_LAYER, LAYER_BOTTOM);
    } else {
-      AddWindowMenuItem(submenu, "Bottom", MA_LAYER, LAYER_BOTTOM);
+      AddWindowMenuItem(submenu, _("Bottom"), MA_LAYER, LAYER_BOTTOM);
    }
 
 }
@@ -221,7 +218,7 @@ void CreateWindowSendToMenu(Menu *menu) {
       }
    }
 
-   AddWindowMenuItem(menu, SENDTO_TEXT, MA_NONE, 0);
+   AddWindowMenuItem(menu, _("Send To"), MA_NONE, 0);
 
    /* Now the first item in the menu is for the desktop list. */
    menu->items->submenu = CreateDesktopMenu(mask);

@@ -1,0 +1,448 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: jwm 2.1.1\n"
+"Report-Msgid-Bugs-To: joewing@joewing.net\n"
+"POT-Creation-Date: 2011-10-12 18:38-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/background.c:136
+msgid "no value specified for background"
+msgstr ""
+
+#: src/background.c:152
+#, c-format
+msgid "invalid background type: \"%s\""
+msgstr ""
+
+#: src/background.c:301
+#, c-format
+msgid "background image not found: \"%s\""
+msgstr ""
+
+#: src/border.c:82
+#, c-format
+msgid "bitmap could not be loaded: %s"
+msgstr ""
+
+#: src/border.c:654
+#, c-format
+msgid "invalid border width specified: %d"
+msgstr ""
+
+#: src/border.c:673
+#, c-format
+msgid "invalid title height specified: %d"
+msgstr ""
+
+#: src/client.c:491
+#, c-format
+msgid "Client %s requested an invalid layer: %d"
+msgstr ""
+
+#: src/client.c:891
+msgid "Kill this window?"
+msgstr ""
+
+#: src/client.c:892
+msgid "This may cause data to be lost!"
+msgstr ""
+
+#: src/client.c:1464
+#, c-format
+msgid "invalid active client opacity: %s"
+msgstr ""
+
+#: src/client.c:1491 src/client.c:1504
+#, c-format
+msgid "invalid inactive client opacity: %s"
+msgstr ""
+
+#: src/client.c:1514
+#, c-format
+msgid "invalid inactive client opacity delta: %s"
+msgstr ""
+
+#: src/command.c:145 src/main.c:190
+#, c-format
+msgid "exec failed: (%s) %s"
+msgstr ""
+
+#: src/cursor.c:271
+#, c-format
+msgid "invalid DoubleClickSpeed: %d"
+msgstr ""
+
+#: src/cursor.c:289
+#, c-format
+msgid "invalid DoubleClickDelta: %d"
+msgstr ""
+
+#: src/desktop.c:269
+msgid "invalid desktop count"
+msgstr ""
+
+#: src/desktop.c:283
+msgid "empty Desktops Name tag"
+msgstr ""
+
+#: src/dock.c:171
+msgid "only one Dock allowed"
+msgstr ""
+
+#: src/dock.c:263
+msgid "could not acquire system tray selection"
+msgstr ""
+
+#: src/event.c:815
+msgid "Fullscreen state will be shaped!"
+msgstr ""
+
+#: src/font.c:72 src/font.c:89
+#, c-format
+msgid "could not load font: %s"
+msgstr ""
+
+#: src/font.c:79 src/font.c:96
+#, c-format
+msgid "could not load the default font: %s"
+msgstr ""
+
+#: src/font.c:187
+msgid "empty Font tag"
+msgstr ""
+
+#: src/group.c:133
+msgid "invalid group class"
+msgstr ""
+
+#: src/group.c:146
+msgid "invalid group name"
+msgstr ""
+
+#: src/group.c:260
+#, c-format
+msgid "invalid group layer: %s"
+msgstr ""
+
+#: src/group.c:268
+#, c-format
+msgid "invalid group desktop: %s"
+msgstr ""
+
+#: src/group.c:293
+#, c-format
+msgid "invalid group opacity: %s"
+msgstr ""
+
+#: src/image.c:161
+#, c-format
+msgid "could not create read struct for PNG image: %s"
+msgstr ""
+
+#: src/image.c:179
+#, c-format
+msgid "error reading PNG image: %s"
+msgstr ""
+
+#: src/image.c:186
+#, c-format
+msgid "could not create info struct for PNG image: %s"
+msgstr ""
+
+#: src/key.c:321
+msgid "Specified KeySym is not defined for any KeyCode"
+msgstr ""
+
+#: src/key.c:329
+#, c-format
+msgid "modifier not found for keysym 0x%0x"
+msgstr ""
+
+#: src/key.c:359
+#, c-format
+msgid "invalid modifier: \"%c\""
+msgstr ""
+
+#: src/key.c:375
+#, c-format
+msgid "invalid key symbol: \"%s\""
+msgstr ""
+
+#: src/key.c:456
+msgid "neither key nor keycode specified for Key"
+msgstr ""
+
+#: src/key.c:473
+#, c-format
+msgid "key binding: root menu %d not defined"
+msgstr ""
+
+#: src/lex.c:182
+#, c-format
+msgid "%s[%d]: close tag \"%s\" does not match open tag \"%s\""
+msgstr ""
+
+#: src/lex.c:189
+#, c-format
+msgid "%s[%d]: unexpected and invalid close tag"
+msgstr ""
+
+#: src/lex.c:196
+#, c-format
+msgid "%s[%d]: close tag \"%s\" without open tag"
+msgstr ""
+
+#: src/lex.c:199
+#, c-format
+msgid "%s[%d]: invalid close tag"
+msgstr ""
+
+#: src/lex.c:218
+#, c-format
+msgid "%s[%d]: invalid open tag"
+msgstr ""
+
+#: src/lex.c:231
+#, c-format
+msgid "%s[%d]: invalid tag"
+msgstr ""
+
+#: src/lex.c:278
+#, c-format
+msgid "%s[%d]: unexpected text: \"%s\""
+msgstr ""
+
+#: src/lex.c:324
+#, c-format
+msgid "%s[%d]: invalid entity: \"%.8s\""
+msgstr ""
+
+#: src/menu.c:845
+#, c-format
+msgid "invalid menu opacity: %s"
+msgstr ""
+
+#: src/move.c:83
+#, c-format
+msgid "invalid snap distance specified: %d"
+msgstr ""
+
+#: src/parse.c:1675
+#, c-format
+msgid "invalid tag in %s: %s"
+msgstr ""
+
+#: src/parse.c:1695
+msgid "configuration error"
+msgstr ""
+
+#: src/popup.c:187
+#, c-format
+msgid "invalid popup delay specified: %s"
+msgstr ""
+
+#: src/root.c:103
+#, c-format
+msgid "invalid root menu specified: \"%c\""
+msgstr ""
+
+#: src/root.c:224
+msgid "Exit JWM"
+msgstr ""
+
+#: src/root.c:225
+msgid "Are you sure?"
+msgstr ""
+
+#: src/status.c:236
+#, c-format
+msgid "invalid MoveMode coordinates: \"%s\""
+msgstr ""
+
+#: src/status.c:251
+#, c-format
+msgid "invalid ResizeMode coordinates: \"%s\""
+msgstr ""
+
+#: src/swallow.c:93
+msgid "cannot swallow a client with no name"
+msgstr ""
+
+#: src/swallow.c:100
+msgid "cannot swallow the same client multiple times"
+msgstr ""
+
+#: src/taskbar.c:766
+#, c-format
+msgid "invalid maxwidth for TaskList: %s"
+msgstr ""
+
+#: src/taskbar.c:788
+#, c-format
+msgid "invalid insert mode: \"%s\""
+msgstr ""
+
+#: src/tray.c:994
+#, c-format
+msgid "invalid tray width: %d"
+msgstr ""
+
+#: src/tray.c:1012
+#, c-format
+msgid "invalid tray height: %d"
+msgstr ""
+
+#: src/tray.c:1040
+#, c-format
+msgid "invalid tray layout: \"%s\""
+msgstr ""
+
+#: src/tray.c:1066
+#, c-format
+msgid "invalid tray layer: %d"
+msgstr ""
+
+#: src/tray.c:1084
+#, c-format
+msgid "invalid tray border: %d"
+msgstr ""
+
+#: src/tray.c:1106
+#, c-format
+msgid "invalid tray horizontal alignment: \"%s\""
+msgstr ""
+
+#: src/tray.c:1126
+#, c-format
+msgid "invalid tray vertical alignment: \"%s\""
+msgstr ""
+
+#: src/tray.c:1141
+#, c-format
+msgid "invalid tray opacity: %s"
+msgstr ""
+
+#: src/traybutton.c:92
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr ""
+
+#: src/traybutton.c:141
+msgid "no icon or label for TrayButton"
+msgstr ""
+
+#: src/traybutton.c:146
+#, c-format
+msgid "invalid TrayButton width: %d"
+msgstr ""
+
+#: src/traybutton.c:150
+#, c-format
+msgid "invalid TrayButton height: %d"
+msgstr ""
+
+#: src/traybutton.c:253
+#, c-format
+msgid "invalid TrayButton action: \"%s\""
+msgstr ""
+
+#: src/traybutton.c:471
+#, c-format
+msgid "tray button: root menu %d not defined"
+msgstr ""
+
+#: src/winmenu.c:76
+msgid "Close"
+msgstr ""
+
+#: src/winmenu.c:77
+msgid "Kill"
+msgstr ""
+
+#: src/winmenu.c:83
+msgid "Resize"
+msgstr ""
+
+#: src/winmenu.c:86
+msgid "Move"
+msgstr ""
+
+#: src/winmenu.c:93 src/winmenu.c:117
+msgid "Restore"
+msgstr ""
+
+#: src/winmenu.c:96
+msgid "Unshade"
+msgstr ""
+
+#: src/winmenu.c:98
+msgid "Shade"
+msgstr ""
+
+#: src/winmenu.c:100
+msgid "Minimize"
+msgstr ""
+
+#: src/winmenu.c:109
+msgid "Maximize-y"
+msgstr ""
+
+#: src/winmenu.c:113
+msgid "Maximize-x"
+msgstr ""
+
+#: src/winmenu.c:119
+msgid "Maximize"
+msgstr ""
+
+#: src/winmenu.c:127
+msgid "Unstick"
+msgstr ""
+
+#: src/winmenu.c:129
+msgid "Stick"
+msgstr ""
+
+#: src/winmenu.c:153
+msgid "Layer"
+msgstr ""
+
+#: src/winmenu.c:168
+msgid "[Top]"
+msgstr ""
+
+#: src/winmenu.c:170
+msgid "Top"
+msgstr ""
+
+#: src/winmenu.c:177
+msgid "[Normal]"
+msgstr ""
+
+#: src/winmenu.c:179
+msgid "Normal"
+msgstr ""
+
+#: src/winmenu.c:200
+msgid "[Bottom]"
+msgstr ""
+
+#: src/winmenu.c:202
+msgid "Bottom"
+msgstr ""
+
+#: src/winmenu.c:221
+msgid "Send To"
+msgstr ""

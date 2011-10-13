@@ -126,7 +126,7 @@ void ChangeDesktop(unsigned int desktop) {
    ClientNode *np;
    unsigned int x;
 
-   if(desktop >= desktopCount) {
+   if(JUNLIKELY(desktop >= desktopCount)) {
       return;
    }
 
@@ -266,7 +266,7 @@ void SetDesktopCount(const char *width, const char *height) {
 
    desktopCount = desktopWidth * desktopHeight;
    if(JUNLIKELY(desktopCount == 0)) {
-      Warning("invalid desktop count");
+      Warning(_("invalid desktop count"));
       desktopWidth = DEFAULT_DESKTOP_WIDTH;
       desktopHeight = DEFAULT_DESKTOP_HEIGHT;
       desktopCount = desktopWidth * desktopHeight;
@@ -280,7 +280,7 @@ void SetDesktopName(unsigned int desktop, const char *str) {
    unsigned int x;
 
    if(JUNLIKELY(!str)) {
-      Warning("empty Desktops Name tag");
+      Warning(_("empty Desktops Name tag"));
       return;
    }
 

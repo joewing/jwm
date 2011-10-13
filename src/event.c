@@ -812,7 +812,7 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np) {
    np->height = height;
 
    if(JUNLIKELY(np->state.status & STAT_FULLSCREEN)) {
-      Warning("Fullscreen state will be shaped!");
+      Warning(_("Fullscreen state will be shaped!"));
    }
 
    /** Reset shaped bound */

@@ -168,7 +168,7 @@ TrayComponentType *CreateDock() {
    TrayComponentType *cp;
 
    if(JUNLIKELY(dock != NULL && dock->cp != NULL)) {
-      Warning("only one Dock allowed");
+      Warning(_("only one Dock allowed"));
       return NULL;
    } else if(dock == NULL) {
       dock = Allocate(sizeof(DockType));
@@ -260,7 +260,7 @@ void Create(TrayComponentType *cp) {
                    != dock->cp->window)) {
 
          owner = 0;
-         Warning("could not acquire system tray selection");
+         Warning(_("could not acquire system tray selection"));
 
       } else {
 

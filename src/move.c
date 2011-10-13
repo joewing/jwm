@@ -80,7 +80,7 @@ void SetSnapDistance(const char *value) {
    temp = atoi(value);
    if(JUNLIKELY(temp > MAX_SNAP_DISTANCE || temp < MIN_SNAP_DISTANCE)) {
       snapDistance = DEFAULT_SNAP_DISTANCE;
-      Warning("invalid snap distance specified: %d", temp);
+      Warning(_("invalid snap distance specified: %d"), temp);
    } else {
       snapDistance = temp;
    }

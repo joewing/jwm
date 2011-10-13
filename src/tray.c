@@ -991,7 +991,7 @@ void SetTrayWidth(TrayType *tp, const char *str) {
    width = atoi(str);
 
    if(JUNLIKELY(width < 0)) {
-      Warning("invalid tray width: %d", width);
+      Warning(_("invalid tray width: %d"), width);
    } else {
       tp->requestedWidth = width;
    }
@@ -1009,7 +1009,7 @@ void SetTrayHeight(TrayType *tp, const char *str) {
    height = atoi(str);
 
    if(JUNLIKELY(height < 0)) {
-      Warning("invalid tray height: %d", height);
+      Warning(_("invalid tray height: %d"), height);
    } else {
       tp->requestedHeight = height;
    }
@@ -1037,7 +1037,7 @@ void SetTrayLayout(TrayType *tp, const char *str) {
       return;
 
    } else {
-      Warning("invalid tray layout: \"%s\"", str);
+      Warning(_("invalid tray layout: \"%s\""), str);
    }
 
    /* Prefer horizontal layout, but use vertical if
@@ -1063,7 +1063,7 @@ void SetTrayLayer(TrayType *tp, const char *str) {
 
    temp = atoi(str);
    if(JUNLIKELY(temp < LAYER_BOTTOM || temp > LAYER_TOP)) {
-      Warning("invalid tray layer: %d", temp);
+      Warning(_("invalid tray layer: %d"), temp);
       tp->layer = DEFAULT_TRAY_LAYER;
    } else {
       tp->layer = temp;
@@ -1081,7 +1081,7 @@ void SetTrayBorder(TrayType *tp, const char *str) {
 
    temp = atoi(str);
    if(JUNLIKELY(temp < MIN_TRAY_BORDER || temp > MAX_TRAY_BORDER)) {
-      Warning("invalid tray border: %d", temp);
+      Warning(_("invalid tray border: %d"), temp);
       tp->border = DEFAULT_TRAY_BORDER;
    } else {
       tp->border = temp;
@@ -1103,7 +1103,7 @@ void SetTrayHorizontalAlignment(TrayType *tp, const char *str) {
    } else if(!strcmp(str, "center")) {
       tp->halign = TALIGN_CENTER;
    } else {
-      Warning("invalid tray horizontal alignment: \"%s\"", str);
+      Warning(_("invalid tray horizontal alignment: \"%s\""), str);
       tp->halign = TALIGN_FIXED;
    }
 
@@ -1123,7 +1123,7 @@ void SetTrayVerticalAlignment(TrayType *tp, const char *str) {
    } else if(!strcmp(str, "center")) {
       tp->valign = TALIGN_CENTER;
    } else {
-      Warning("invalid tray vertical alignment: \"%s\"", str);
+      Warning(_("invalid tray vertical alignment: \"%s\""), str);
       tp->valign = TALIGN_FIXED;
    }
 
@@ -1138,7 +1138,7 @@ void SetTrayOpacity(const char *str) {
 
    temp = atof(str);
    if(JUNLIKELY(temp <= 0.0 || temp > 1.0)) {
-      Warning("invalid tray opacity: %s", str);
+      Warning(_("invalid tray opacity: %s"), str);
       temp = 1.0;
    }
    trayOpacity = (unsigned int)(temp * UINT_MAX);

@@ -100,7 +100,7 @@ void SetRootMenu(const char *indexes, Menu *m) {
       /* Get the index and make sure it's in range. */
       index = indexes[x] - '0';
       if(JUNLIKELY(index < 0 || index >= ROOT_MENU_COUNT)) {
-         Warning("invalid root menu specified: \"%c\"", indexes[x]);
+         Warning(_("invalid root menu specified: \"%c\""), indexes[x]);
          continue;
       }
 
@@ -221,9 +221,9 @@ void Restart() {
 void Exit() {
    if(showExitConfirmation) {
       ShowConfirmDialog(NULL, ExitHandler,
-         "Exit JWM",
-         "Are you sure?",
-         NULL);
+                        _("Exit JWM"),
+                        _("Are you sure?"),
+                        NULL);
    } else {
       ExitHandler(NULL);
    }

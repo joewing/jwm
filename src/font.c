@@ -69,14 +69,14 @@ void StartupFonts() {
             fonts[x] = JXftFontOpenXlfd(display, rootScreen, fontNames[x]);
          }
          if(JUNLIKELY(!fonts[x])) {
-            Warning("could not load font: %s", fontNames[x]);
+            Warning(_("could not load font: %s"), fontNames[x]);
          }
       }
       if(!fonts[x]) {
          fonts[x] = JXftFontOpenXlfd(display, rootScreen, DEFAULT_FONT);
       }
       if(JUNLIKELY(!fonts[x])) {
-         FatalError("could not load the default font: %s", DEFAULT_FONT);
+         FatalError(_("could not load the default font: %s"), DEFAULT_FONT);
       }
    }
 
@@ -86,14 +86,14 @@ void StartupFonts() {
       if(fontNames[x]) {
          fonts[x] = JXLoadQueryFont(display, fontNames[x]);
          if(JUNLIKELY(!fonts[x] && fontNames[x])) {
-            Warning("could not load font: %s", fontNames[x]);
+            Warning(_("could not load font: %s"), fontNames[x]);
          }
       }
       if(!fonts[x]) {
          fonts[x] = JXLoadQueryFont(display, DEFAULT_FONT);
       }
       if(JUNLIKELY(!fonts[x])) {
-         FatalError("could not load the default font: %s", DEFAULT_FONT);
+         FatalError(_("could not load the default font: %s"), DEFAULT_FONT);
       }
    }
 
@@ -184,7 +184,7 @@ int GetStringHeight(FontType type) {
 void SetFont(FontType type, const char *value) {
 
    if(JUNLIKELY(!value)) {
-      Warning("empty Font tag");
+      Warning(_("empty Font tag"));
       return;
    }
 

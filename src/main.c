@@ -147,8 +147,12 @@ int main(int argc, char *argv[]) {
       }
    }
 
-#ifdef HAVE_LOCALE_H
+#ifdef HAVE_SETLOCALE
    setlocale(LC_ALL, "");
+#endif
+#ifdef HAVE_GETTEXT
+   bindtextdomain("jwm", LOCALEDIR);
+   textdomain("jwm");
 #endif
 
    /* The main loop. */
@@ -183,7 +187,7 @@ int main(int argc, char *argv[]) {
    /* If we have a command to execute on shutdown, run it now. */
    if(exitCommand) {
       execl(SHELL_NAME, SHELL_NAME, "-c", exitCommand, NULL);
-      Warning("exec failed: (%s) %s", SHELL_NAME, exitCommand);
+      Warning(_("exec failed: (%s) %s"), SHELL_NAME, exitCommand);
       DoExit(1);
    } else {
       DoExit(0);

@@ -90,14 +90,14 @@ TrayComponentType *CreateSwallow(const char *name, const char *command,
    SwallowNode *np;
 
    if(JUNLIKELY(!name)) {
-      Warning("cannot swallow a client with no name");
+      Warning(_("cannot swallow a client with no name"));
       return NULL;
    }
 
    /* Make sure this name isn't already used. */
    for(np = swallowNodes; np; np = np->next) {
       if(JUNLIKELY(!strcmp(np->name, name))) {
-         Warning("cannot swallow the same client multiple times");
+         Warning(_("cannot swallow the same client multiple times"));
          return NULL;
       }
    }

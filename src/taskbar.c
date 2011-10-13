@@ -763,7 +763,7 @@ void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value) {
    if(value) {
       temp = atoi(value);
       if(JUNLIKELY(temp < 0)) {
-         Warning("invalid maxwidth for TaskList: %s", value);
+         Warning(_("invalid maxwidth for TaskList: %s"), value);
          return;
       }
       bp = (TaskBarType*)cp->object;
@@ -785,7 +785,7 @@ void SetTaskBarInsertMode(const char *mode) {
    } else if(!strcmp(mode, "left")) {
       insertMode = INSERT_LEFT;
    } else {
-      Warning("invalid insert mode: \"%s\"", mode);
+      Warning(_("invalid insert mode: \"%s\""), mode);
       insertMode = INSERT_RIGHT;
    }
 

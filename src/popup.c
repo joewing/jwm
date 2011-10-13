@@ -184,7 +184,7 @@ void SetPopupDelay(const char *str) {
    temp = atoi(str);
 
    if(JUNLIKELY(temp < 0)) {
-      Warning("invalid popup delay specified: %s\n", str);
+      Warning(_("invalid popup delay specified: %s"), str);
    } else {
       popupDelay = temp;
    }

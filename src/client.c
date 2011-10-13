@@ -488,7 +488,7 @@ void SetClientLayer(ClientNode *np, unsigned int layer) {
    Assert(np);
 
    if(JUNLIKELY(layer > LAYER_TOP)) {
-      Warning("Client %s requested an invalid layer: %d", np->name, layer);
+      Warning(_("Client %s requested an invalid layer: %d"), np->name, layer);
       return;
    }
 
@@ -888,8 +888,8 @@ void KillClient(ClientNode *np) {
    Assert(np);
 
    ShowConfirmDialog(np, KillClientHandler,
-      "Kill this window?",
-      "This may cause data to be lost!",
+      _("Kill this window?"),
+      _("This may cause data to be lost!"),
       NULL);
 }
 
@@ -1069,7 +1069,7 @@ void SendClientMessage(Window w, AtomType type, AtomType message) {
    event.xclient.data.l[1] = CurrentTime;
 
    status = JXSendEvent(display, w, False, 0, &event);
-   if(status == False) {
+   if(JUNLIKELY(status == False)) {
       Debug("SendClientMessage failed");
    }
 
@@ -1460,8 +1460,8 @@ void SetActiveClientOpacity(const char *str) {
    Assert(str);
 
    temp = atof(str);
-   if(temp <= 0.0 || temp > 1.0) {
-      Warning("invalid active client opacity: %s", str);
+   if(JUNLIKELY(temp <= 0.0 || temp > 1.0)) {
+      Warning(_("invalid active client opacity: %s"), str);
       activeOpacity = UINT_MAX;
    } else {
       activeOpacity = (unsigned int)(1.0 * UINT_MAX);
@@ -1487,8 +1487,8 @@ void SetInactiveClientOpacity(const char *str) {
 
    /* Read the first (or only) bound of the range. */
    temp = atof(str);
-   if(temp < 0.0 || temp > 1.0) {
-      Warning("invalid inactive client opacity: %s", str);
+   if(JUNLIKELY(temp < 0.0 || temp > 1.0)) {
+      Warning(_("invalid inactive client opacity: %s"), str);
       return;
    }
    first = (unsigned int)(temp * UINT_MAX);
@@ -1500,8 +1500,8 @@ void SetInactiveClientOpacity(const char *str) {
 
       /* A range was specified. */
       temp = atof(str_u + 1);
-      if(temp < 0.0 || temp > 1.0) {
-         Warning("invalid inactive client opacity: %s", str);
+      if(JUNLIKELY(temp < 0.0 || temp > 1.0)) {
+         Warning(_("invalid inactive client opacity: %s"), str);
          return;
       }
       second = (unsigned int)(temp * UINT_MAX);
@@ -1510,8 +1510,8 @@ void SetInactiveClientOpacity(const char *str) {
       str_d = strchr(str_u + 1, ':');
       if(str_d) {
          temp = atof(str_d + 1);
-         if(temp <= 0.0 || temp > 1.0) {
-            Warning("invalid inactive client opacity delta: %s", str);
+         if(JUNLIKELY(temp <= 0.0 || temp > 1.0)) {
+            Warning(_("invalid inactive client opacity delta: %s"), str);
             return;
          }
          deltaInactiveOpacity = (unsigned int)(temp * UINT_MAX);

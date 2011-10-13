@@ -89,7 +89,7 @@ void StartupTrayButtons() {
             bp->cp->requestedWidth += bp->icon->image->width;
             bp->cp->requestedHeight += bp->icon->image->height;
          } else {
-            Warning("could not load tray icon: \"%s\"", bp->iconName);
+            Warning(_("could not load tray icon: \"%s\""), bp->iconName);
          }
       }
       bp->cp->requestedWidth += 2 * BUTTON_SIZE;
@@ -138,16 +138,16 @@ TrayComponentType *CreateTrayButton(const char *iconName,
 
    if(JUNLIKELY((label == NULL || strlen(label) == 0)
       && (iconName == NULL || strlen(iconName) == 0))) {
-      Warning("no icon or label for TrayButton");
+      Warning(_("no icon or label for TrayButton"));
       return NULL;
    }
 
    if(JUNLIKELY(width < 0)) {
-      Warning("invalid TrayButton width: %d", width);
+      Warning(_("invalid TrayButton width: %d"), width);
       width = 0;
    }
    if(JUNLIKELY(height < 0)) {
-      Warning("invalid TrayButton height: %d", height);
+      Warning(_("invalid TrayButton height: %d"), height);
       height = 0;
    }
 
@@ -250,7 +250,7 @@ void CheckedCreate(TrayComponentType *cp) {
       } else if(!strcmp(bp->action, "showdesktop")) {
          /* Valid. */
       } else {
-         Warning("invalid TrayButton action: \"%s\"", bp->action);
+         Warning(_("invalid TrayButton action: \"%s\""), bp->action);
       }
    } else {
       /* Valid. However, root menu 1 may not exist.
@@ -468,7 +468,7 @@ void ValidateTrayButtons() {
       if(bp->action && !strncmp(bp->action, "root:", 5)) {
          bindex = atoi(bp->action + 5);
          if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
-            Warning("tray button: root menu %d not defined", bindex);
+            Warning(_("tray button: root menu %d not defined"), bindex);
          }
       }
    }

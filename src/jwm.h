@@ -34,6 +34,9 @@
 #  ifdef HAVE_LOCALE_H
 #     include <locale.h>
 #  endif
+#  ifdef HAVE_LIBINTL_H
+#     include <libintl.h>
+#  endif
 #  ifdef HAVE_STDARG_H
 #     include <stdarg.h>
 #  endif
@@ -101,6 +104,14 @@
 #  endif
 
 #endif /* MAKE_DEPEND */
+
+#ifndef _
+#  ifdef HAVE_GETTEXT
+#     define _ gettext
+#  else
+#     define _
+#  endif
+#endif
 
 #define DEFAULT_DESKTOP_WIDTH 4
 #define DEFAULT_DESKTOP_HEIGHT 1

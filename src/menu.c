@@ -842,7 +842,7 @@ void SetMenuOpacity(const char *str) {
 
    temp = atof(str);
    if(JUNLIKELY(temp <= 0.0 || temp > 1.0)) {
-      Warning("invalid menu opacity: %s", str);
+      Warning(_("invalid menu opacity: %s"), str);
       temp = 1.0;
    }
    menuOpacity = (unsigned int)(temp * UINT_MAX);

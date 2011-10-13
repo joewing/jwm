@@ -1672,8 +1672,8 @@ char *ReadFile(FILE *fd) {
 /** Display an invalid tag error message. */
 void InvalidTag(const TokenNode *tp, TokenType parent) {
 
-   ParseError(tp, "invalid tag in %s: %s",
-      GetTokenTypeName(parent), GetTokenName(tp));
+   ParseError(tp, _("invalid tag in %s: %s"),
+              GetTokenTypeName(parent), GetTokenName(tp));
 
 }
 
@@ -1682,7 +1682,6 @@ void ParseError(const TokenNode *tp, const char *str, ...) {
 
    va_list ap;
 
-   static const char *NULL_MESSAGE = "configuration error";
    static const char *FILE_MESSAGE = "%s[%d]";
 
    char *msg;
@@ -1693,7 +1692,7 @@ void ParseError(const TokenNode *tp, const char *str, ...) {
       msg = Allocate(strlen(FILE_MESSAGE) + strlen(tp->fileName) + 1);
       sprintf(msg, FILE_MESSAGE, tp->fileName, tp->line);
    } else {
-      msg = CopyString(NULL_MESSAGE);
+      msg = CopyString(_("configuration error"));
    }
 
    WarningVA(msg, str, ap);

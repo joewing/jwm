@@ -233,7 +233,7 @@ void SetMoveStatusType(const char *str) {
    type = ParseType(str);
    if(JUNLIKELY(type == SW_INVALID)) {
       moveStatusType = SW_SCREEN;
-      Warning("invalid MoveMode coordinates: \"%s\"", str);
+      Warning(_("invalid MoveMode coordinates: \"%s\""), str);
    } else {
       moveStatusType = type;
    }
@@ -248,7 +248,7 @@ void SetResizeStatusType(const char *str) {
    type = ParseType(str);
    if(JUNLIKELY(type == SW_INVALID)) {
       resizeStatusType = SW_SCREEN;
-      Warning("invalid ResizeMode coordinates: \"%s\"", str);
+      Warning(_("invalid ResizeMode coordinates: \"%s\""), str);
    } else {
       resizeStatusType = type;
    }

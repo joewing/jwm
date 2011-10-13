@@ -54,7 +54,7 @@ void StartupCursors() {
    chooseCursor = CreateCursor(XC_tcross);
 
    JXQueryPointer(display, rootWindow, &win1, &win2,
-      &mousex, &mousey, &winx, &winy, &mask);
+                  &mousex, &mousey, &winx, &winy, &mask);
 
 }
 
@@ -268,7 +268,7 @@ void SetDoubleClickSpeed(const char *str) {
       speed = atoi(str);
       if(JUNLIKELY(speed < MIN_DOUBLE_CLICK_SPEED
                    || speed > MAX_DOUBLE_CLICK_SPEED)) {
-         Warning("invalid DoubleClickSpeed: %d", speed);
+         Warning(_("invalid DoubleClickSpeed: %d"), speed);
          doubleClickSpeed = DEFAULT_DOUBLE_CLICK_SPEED;
       } else {
          doubleClickSpeed = speed;
@@ -286,7 +286,7 @@ void SetDoubleClickDelta(const char *str) {
       delta = atoi(str);
       if(JUNLIKELY(delta < MIN_DOUBLE_CLICK_DELTA
                    || delta > MAX_DOUBLE_CLICK_DELTA)) {
-         Warning("invalid DoubleClickDelta: %d", delta);
+         Warning(_("invalid DoubleClickDelta: %d"), delta);
          doubleClickDelta = DEFAULT_DOUBLE_CLICK_DELTA;
       } else {
          doubleClickDelta = delta;

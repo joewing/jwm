@@ -84,14 +84,8 @@ void DrawButton(ButtonNode *bp) {
    }
 
    /* Draw the background. */
-   switch(bp->type) {
-   case BUTTON_TASK:
-      /* Flat taskbuttons (only icon) for widths < 48 */
-      if(width < 48) {
-         break;
-      }
-      /* conditional fallthrough is intended */  
-   default:
+   /* Flat taskbuttons for widths < 48 */
+   if(bp->type != BUTTON_TASK || width >= 48) {
 
       /* Draw the button background. */
       JXSetForeground(display, gc, bg1);
@@ -114,13 +108,12 @@ void DrawButton(ButtonNode *bp) {
       JXDrawRectangle(display, drawable, gc, x, y, width, height);
 #endif
 
-      break;
    }
 
    /* Determine the size of the icon (if any) to display. */
    iconWidth = 0;
    iconHeight = 0;
-   if (bp->icon) {
+   if(bp->icon) {
       if(width < height) {
          GetScaledIconSize(bp->icon, width - 5, &iconWidth, &iconHeight);
       } else {
@@ -143,17 +136,13 @@ void DrawButton(ButtonNode *bp) {
    }
 
    /* Determine the offset of the text in the button. */
-   switch(bp->alignment) {
-   case ALIGN_CENTER:
+   if(bp->alignment == ALIGN_CENTER) {
       xoffset = (width - iconWidth - textWidth + 1) / 2;
       if(xoffset < 0) {
          xoffset = 0;
       }
-      break;
-   case ALIGN_LEFT:
-   default:
+   } else {
       xoffset = 3;
-      break;
    }
 
    /* Display the icon. */

@@ -159,7 +159,7 @@ int GetStringWidth(FontType type, const char *str) {
    JXftTextExtentsUtf8(display, fonts[type], (const unsigned char*)str,
                        length, &extents);
 
-   return extents.width;
+   return extents.xOff;
 
 #else
 

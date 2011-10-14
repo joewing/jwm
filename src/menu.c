@@ -134,7 +134,7 @@ void InitializeMenu(Menu *menu) {
          menu->height += menu->itemHeight;
       }
       if(np->name) {
-         temp = GetStringWidth(FONT_MENU, np->name) + 2;
+         temp = GetStringWidth(FONT_MENU, np->name);
          if(temp > menu->width) {
             menu->width = temp;
          }
@@ -145,7 +145,7 @@ void InitializeMenu(Menu *menu) {
       }
    }
    menu->height += 2;
-   menu->width += 15 + hasSubmenu + menu->textOffset;
+   menu->width += 12 + hasSubmenu + menu->textOffset;
 
 }
 
@@ -162,7 +162,7 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y) {
    mouseStatus = GrabMouse(rootWindow);
    keyboardStatus = JXGrabKeyboard(display, rootWindow, False,
       GrabModeAsync, GrabModeAsync, CurrentTime);
-   if(!mouseStatus || keyboardStatus != GrabSuccess) {
+   if(JUNLIKELY(!mouseStatus || keyboardStatus != GrabSuccess)) {
       return;
    }
 

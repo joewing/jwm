@@ -4,4 +4,5 @@
 
 <h1><!--#echo var="TITLE"--></h1>
 <p/>
+<div>
 

@@ -32,16 +32,16 @@ static StatusWindowType moveStatusType;
 static StatusWindowType resizeStatusType;
 
 static void CreateMoveResizeWindow(const ClientNode *np,
-   StatusWindowType type);
+                                   StatusWindowType type);
 static void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type);
 static void DestroyMoveResizeWindow();
 static void GetMoveResizeCoordinates(const ClientNode *np,
-   StatusWindowType type, int *x, int *y);
+                                     StatusWindowType type, int *x, int *y);
 static StatusWindowType ParseType(const char *str);
 
 /** Get the location to place the status window. */
 void GetMoveResizeCoordinates(const ClientNode *np, StatusWindowType type,
-   int *x, int *y) {
+                              int *x, int *y) {
 
    const ScreenType *sp;
 
@@ -60,7 +60,6 @@ void GetMoveResizeCoordinates(const ClientNode *np, StatusWindowType type,
    }
 
    /* SW_SCREEN */
-
    *x = sp->x + (sp->width - statusWindowWidth) / 2;
    *y = sp->y + (sp->height - statusWindowHeight) / 2;
 
@@ -112,21 +111,13 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
    ShapeRoundedRectWindow(statusWindow, statusWindowWidth, statusWindowHeight);
 
    /* Clear the background. */
-   JXSetForeground(display, rootGC, colors[COLOR_MENU_BG]);
-   JXFillRectangle(display, statusWindow, rootGC, 0, 0,
-      statusWindowWidth, statusWindowHeight);
+   JXClearWindow(display, statusWindow);
 
    /* Draw a border. */
    JXSetForeground(display, rootGC, colors[COLOR_MENU_FG]);
-
-#ifdef USE_XMU
-   XmuDrawRoundedRectangle(display, statusWindow, rootGC, 0, 0,
-      (int)statusWindowWidth - 1, (int)statusWindowHeight - 1,
-      CORNER_RADIUS, CORNER_RADIUS);
-#else
-   JXDrawRectangle(display, statusWindow, rootGC, 0, 0,
-      statusWindowWidth - 1, statusWindowHeight - 1);
-#endif
+   DrawRoundedRectangle(statusWindow, rootGC, 0, 0,
+                        statusWindowWidth - 1, statusWindowHeight - 1,
+                        CORNER_RADIUS);
 
 }
 
@@ -162,7 +153,7 @@ void UpdateMoveWindow(ClientNode *np) {
    snprintf(str, sizeof(str), "(%d, %d)", np->x, np->y);
    width = GetStringWidth(FONT_MENU, str);
    RenderString(statusWindow, FONT_MENU, COLOR_MENU_FG,
-      (statusWindowWidth - width) / 2, 4, rootWidth, NULL, str);
+                (statusWindowWidth - width) / 2, 4, rootWidth, NULL, str);
 
 }
 

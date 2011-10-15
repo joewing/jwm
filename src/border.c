@@ -47,7 +47,7 @@ static char *bmpFiles[BP_COUNT];
 static Region borderRegion = NULL;
 static GC borderGC;
 
-#if defined(USE_SHAPE) && defined(USE_XMU)
+#ifdef USE_SHAPE
 static Pixmap shapePixmap;
 static int shapePixmapWidth;
 static int shapePixmapHeight;
@@ -427,14 +427,14 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
 
    /* Window outline. */
    JXSetForeground(display, gc, outlineColor);
-   
-#if defined(USE_SHAPE) && defined(USE_XMU)
+
+#ifdef USE_SHAPE
    if(np->state.status & STAT_SHADED) {
-      XmuDrawRoundedRectangle(display, canvas, gc, 0, 0, 
-         (int)width - 1, (int)north - 1, CORNER_RADIUS, CORNER_RADIUS);
+      DrawRoundedRectangle(canvas, gc, 0, 0, width - 1, north - 1,
+                           CORNER_RADIUS);
    } else {
-      XmuDrawRoundedRectangle(display, canvas, gc, 0, 0, 
-         (int)width - 1, (int)height - 1, CORNER_RADIUS, CORNER_RADIUS);
+      DrawRoundedRectangle(canvas, gc, 0, 0, width - 1, height - 1,
+                           CORNER_RADIUS);
    }
 #else
    if(np->state.status & STAT_SHADED) {
@@ -694,24 +694,135 @@ void SetButtonMask(BorderPixmapType pt, const char *filename) {
 
 }
 
-#if defined(USE_SHAPE) && defined(USE_XMU)
+/** Draw a rounded rectangle. */
+void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
+                          int width, int height, int radius) {
+
+#ifdef USE_XMU
+
+   XmuDrawRoundedRectangle(display, d, gc, x, y, width, height,
+                           radius, radius);
+
+#else
+
+   XSegment segments[4];
+   XArc     arcs[4];
+
+   segments[0].x1 = x + radius;           segments[0].y1 = y;
+   segments[0].x2 = x + width - radius;   segments[0].y2 = y;
+   segments[1].x1 = x + radius;           segments[1].y1 = y + height;
+   segments[1].x2 = x + width - radius;   segments[1].y2 = y + height;
+   segments[2].x1 = x;                    segments[2].y1 = y + radius;
+   segments[2].x2 = x;                    segments[2].y2 = y + height - radius;
+   segments[3].x1 = x + width;            segments[3].y1 = y + radius;
+   segments[3].x2 = x + width;            segments[3].y2 = y + height - radius;
+   JXDrawSegments(display, d, gc, segments, 4);
+
+   arcs[0].x = x;
+   arcs[0].y = y;
+   arcs[0].width = radius * 2;
+   arcs[0].height = radius * 2;
+   arcs[0].angle1 = 90 * 64;
+   arcs[0].angle2 = 90 * 64;
+   arcs[1].x = x + width - radius * 2;
+   arcs[1].y = y;
+   arcs[1].width  = radius * 2;
+   arcs[1].height = radius * 2;
+   arcs[1].angle1 = 0 * 64;
+   arcs[1].angle2 = 90 * 64;
+   arcs[2].x = x;
+   arcs[2].y = y + height - radius * 2;
+   arcs[2].width  = radius * 2;
+   arcs[2].height = radius * 2;
+   arcs[2].angle1 = 180 * 64;
+   arcs[2].angle2 = 90 * 64;
+   arcs[3].x = x + width - radius * 2;
+   arcs[3].y = y + height - radius * 2;
+   arcs[3].width  = radius * 2;
+   arcs[3].height = radius * 2;
+   arcs[3].angle1 = 270 * 64;
+   arcs[3].angle2 = 90 * 64;
+   JXDrawArcs(display, d, gc, arcs, 4);
+
+#endif
+
+}
+
+/** Fill a rounded rectangle. */
+void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
+                          int width, int height, int radius) {
+
+#ifdef USE_XMU
+
+   XmuFillRoundedRectangle(display, d, gc, x, y, width, height,
+                           radius, radius);
+
+#else
+
+   XRectangle  rects[3];
+   XArc        arcs[4];
+
+   rects[0].x = x + radius;
+   rects[0].y = y;
+   rects[0].width = width - radius * 2;
+   rects[0].height = radius;
+   rects[1].x = x;
+   rects[1].y = radius;
+   rects[1].width = width;
+   rects[1].height = height - radius * 2;
+   rects[2].x = x + radius;
+   rects[2].y = y + height - radius;
+   rects[2].width = width - radius * 2;
+   rects[2].height = radius;
+   JXFillRectangles(display, d, gc, rects, 3);
+
+   arcs[0].x = x;
+   arcs[0].y = y;
+   arcs[0].width = radius * 2;
+   arcs[0].height = radius * 2;
+   arcs[0].angle1 = 90 * 64;
+   arcs[0].angle2 = 90 * 64;
+   arcs[1].x = x + width - radius * 2 - 1;
+   arcs[1].y = y;
+   arcs[1].width  = radius * 2;
+   arcs[1].height = radius * 2;
+   arcs[1].angle1 = 0 * 64;
+   arcs[1].angle2 = 90 * 64;
+   arcs[2].x = x;
+   arcs[2].y = y + height - radius * 2 - 1;
+   arcs[2].width  = radius * 2;
+   arcs[2].height = radius * 2;
+   arcs[2].angle1 = 180 * 64;
+   arcs[2].angle2 = 90 * 64;
+   arcs[3].x = x + width - radius * 2 - 1;
+   arcs[3].y = y + height - radius * 2 -1;
+   arcs[3].width  = radius * 2;
+   arcs[3].height = radius * 2;
+   arcs[3].angle1 = 270 * 64;
+   arcs[3].angle2 = 90 * 64;
+   JXFillArcs(display, d, gc, arcs, 4);
+
+#endif
+
+}
+
 
 /** Clear the shape mask of a window. */
-void ResetRoundedRectWindow(const Window srrw) {
-   Assert(srrw);	
-   JXShapeCombineMask(display, srrw, ShapeBounding, 0, 0, None, ShapeSet);
+void ResetRoundedRectWindow(Window w) {
+#ifdef USE_SHAPE
+   JXShapeCombineMask(display, w, ShapeBounding, 0, 0, None, ShapeSet);
+#endif
 }
  
 /** Set the shape mask on a window to give a rounded boarder. */
-void ShapeRoundedRectWindow(const Window srrw, int width, int height) {
-
-   Assert(srrw);
+void ShapeRoundedRectWindow(Window w, int width, int height) {
+#ifdef USE_SHAPE
 
    if(width > shapePixmapWidth || height > shapePixmapHeight) {
       if(shapePixmap != None) {
          JXFreePixmap(display, shapePixmap);
       }
-      shapePixmap = JXCreatePixmap(display, srrw, width, height, 1);
+      shapePixmap = JXCreatePixmap(display, w, width, height, 1);
       if(shapeGC == None) {
          shapeGC = JXCreateGC(display, shapePixmap, 0, NULL);
       }
@@ -720,27 +831,16 @@ void ShapeRoundedRectWindow(const Window srrw, int width, int height) {
    }
 
    JXSetForeground(display, shapeGC, 0);
-   JXFillRectangle(display, shapePixmap, shapeGC, 0, 0, width, height);
+   JXFillRectangle(display, shapePixmap, shapeGC, 0, 0,
+                   width + 1, height + 1);
 
    /* Corner bound radius -1 to allow slightly better outline drawing */
    JXSetForeground(display, shapeGC, 1);
-   XmuFillRoundedRectangle(display, shapePixmap, shapeGC, 0, 0, 
-      (int)width, (int)height, CORNER_RADIUS - 1, CORNER_RADIUS - 1);
+   FillRoundedRectangle(shapePixmap, shapeGC, 0, 0, width, height,
+                        CORNER_RADIUS - 1);
    
-   JXShapeCombineMask(display, srrw, ShapeBounding, 0, 0, shapePixmap,
-      ShapeSet);
-
-}
-
-#else
-
-/** Clear the shape mask of a window. */
-void ResetRoundedRectWindow(const Window srrw) {
-}
-
-/** Set the shape mask on a window to give a rounded boarder. */
-void ShapeRoundedRectWindow(const Window srrw, int width, int height) {
-}
+   JXShapeCombineMask(display, w, ShapeBounding, 0, 0, shapePixmap, ShapeSet);
 
 #endif
+}
 

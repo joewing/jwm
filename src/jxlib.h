@@ -115,6 +115,15 @@
 #define JXDrawRectangle( a, b, c, d, e, f, g ) \
    ( SetCheckpoint(), XDrawRectangle( a, b, c, d, e, f, g ) )
 
+#define JXFillRectangles( a, b, c, d, e ) \
+   ( SetCheckpoint(), XFillRectangles( a, b, c, d, e ) )
+
+#define JXDrawArcs( a, b, c, d, e ) \
+   ( SetCheckpoint(), XDrawArcs( a, b, c, d, e ) )
+
+#define JXFillArcs( a, b, c, d, e ) \
+   ( SetCheckpoint(), XFillArcs( a, b, c, d, e ) )
+
 #define JXDrawString( a, b, c, d, e, f, g ) \
    ( SetCheckpoint(), XDrawString( a, b, c, d, e, f, g ) )
 

@@ -88,22 +88,30 @@ void SetTitleHeight(const char *str);
 void ExposeCurrentDesktop();
 
 /** Reset a rounded rectangle window.
- * @param srrw The window.
+ * @param w The window.
  */
-void ResetRoundedRectWindow(const Window srrw);
+void ResetRoundedRectWindow(Window w);
 
 /** Shape a rounded rectangle window.
- * @param srrw The window to shape.
+ * @param w The window to shape.
  * @param width The width of the window.
  * @param height The height of the window.
  */
-void ShapeRoundedRectWindow(const Window srrw, int width, int height);
+void ShapeRoundedRectWindow(Window w, int width, int height);
 
 /** Set the bitmask to use for a button.
  * @param pt The button bitmask to set.
  * @param filename The name of the file containing the bitmask.
  */
 void SetButtonMask(BorderPixmapType pt, const char *filename);
+
+/** Draw a rounded rectangle. */
+void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
+                          int width, int height, int radius);
+
+/** Fill a rounded rectangle. */
+void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
+                          int width, int height, int radius);
 
 #endif /* BORDER_H */
 

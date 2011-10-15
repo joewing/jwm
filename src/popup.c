@@ -146,14 +146,15 @@ void ShowPopup(int x, int y, const char *text) {
          popup.width, popup.height, 1, CopyFromParent,
          InputOutput, CopyFromParent, attrMask, &attr);
 
-      ShapeRoundedRectWindow(popup.window, popup.width, popup.height);
-
    } else {
-      ResetRoundedRectWindow(popup.window);
-      ShapeRoundedRectWindow(popup.window, popup.width, popup.height);
+
       JXMoveResizeWindow(display, popup.window, popup.x, popup.y,
-         popup.width, popup.height);
+                         popup.width, popup.height);
+
    }
+
+   ResetRoundedRectWindow(popup.window);
+   ShapeRoundedRectWindow(popup.window, popup.width, popup.height);
 
    popup.mx = x;
    popup.my = y;
@@ -228,15 +229,15 @@ void DrawPopup() {
 
    JXClearWindow(display, popup.window);
 
-#if defined(USE_SHAPE) && defined(USE_XMU)
+#ifdef USE_SHAPE
    JXSetForeground(display, rootGC, colors[COLOR_POPUP_OUTLINE]);
-   XmuDrawRoundedRectangle(display, popup.window, rootGC, 0, 0, 
-      popup.width - 1, popup.height - 1,
-      CORNER_RADIUS - 1, CORNER_RADIUS - 1);
+   DrawRoundedRectangle(popup.window, rootGC, 0, 0, 
+                        popup.width - 1, popup.height - 1,
+                        CORNER_RADIUS);
 #endif
 
    RenderString(popup.window, FONT_POPUP, COLOR_POPUP_FG, 4, 1,
-      popup.width, NULL, popup.text);
+                popup.width, NULL, popup.text);
 
 }
 

@@ -108,7 +108,7 @@ void MoveController(int wasDestroyed) {
 }
 
 /** Move a client window. */
-int MoveClient(ClientNode *np, int startx, int starty) {
+int MoveClient(ClientNode *np, int startx, int starty, int snap) {
 
    XEvent event;
    int oldx, oldy;
@@ -173,41 +173,43 @@ int MoveClient(ClientNode *np, int startx, int starty) {
             if(LeftDesktop()) {
                SetClientDesktop(np, currentDesktop);
                RestackClients();
-               DiscardMotionEvents(&event, np->window);
                np->x = rootWidth - 2 - startx;
                np->y = event.xmotion.y_root - starty;
                MoveMouse(rootWindow, np->x + startx, np->y + starty);
+               DiscardMotionEvents(&event, np->window);
             }
          } else if(event.xmotion.x_root == rootWidth - 1) {
             if(RightDesktop()) {
                SetClientDesktop(np, currentDesktop);
                RestackClients();
-               DiscardMotionEvents(&event, np->window);
                np->x = 1 - startx;
                np->y = event.xmotion.y_root - starty;
                MoveMouse(rootWindow, np->x + startx, np->y + starty);
+               DiscardMotionEvents(&event, np->window);
             }
          } else if(event.xmotion.y_root == 0) {
             if(AboveDesktop()) {
                SetClientDesktop(np, currentDesktop);
                RestackClients();
-               DiscardMotionEvents(&event, np->window);
                np->x = event.xmotion.x_root - startx;
                np->y = rootHeight - 2 - starty;
                MoveMouse(rootWindow, np->x + startx, np->y + starty);
+               DiscardMotionEvents(&event, np->window);
             }
          } else if(event.xmotion.y_root == rootHeight - 1) {
             if(BelowDesktop()) {
                SetClientDesktop(np, currentDesktop);
                RestackClients();
-               DiscardMotionEvents(&event, np->window);
                np->x = event.xmotion.x_root - startx;
                np->y = 1 - starty;
                MoveMouse(rootWindow, np->x + startx, np->y + starty);
+               DiscardMotionEvents(&event, np->window);
             }
          }
 
-         DoSnap(np);
+         if(snap) {
+            DoSnap(np);
+         }
 
          if(!doMove && (abs(np->x - oldx) > MOVE_DELTA
             || abs(np->y - oldy) > MOVE_DELTA)) {

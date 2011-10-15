@@ -275,7 +275,7 @@ void HandleButtonEvent(const XButtonEvent *event) {
          DispatchBorderButtonEvent(event, np);
          break;
       case Button2:
-         MoveClient(np, event->x, event->y);
+         MoveClient(np, event->x, event->y, (event->state & Mod1Mask) ? 0 : 1);
          break;
       case Button3:
          GetBorderSize(np, &north, &south, &east, &west);
@@ -312,7 +312,7 @@ void HandleButtonEvent(const XButtonEvent *event) {
             }
             if(event->state & Mod1Mask) {
                GetBorderSize(np, &north, &south, &east, &west);
-               MoveClient(np, event->x + west, event->y + north);
+               MoveClient(np, event->x + west, event->y + north, 0);
             }
             break;
          case Button3:
@@ -1183,7 +1183,8 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
             MaximizeClientDefault(np);
             doubleClickActive = 0;
          } else {
-            if(MoveClient(np, event->x, event->y)) {
+            if(MoveClient(np, event->x, event->y,
+                          (event->state & Mod1Mask) ? 0 : 1)) {
                doubleClickActive = 0;
             } else {
                doubleClickActive = 1;

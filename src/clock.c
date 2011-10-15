@@ -243,7 +243,7 @@ void SignalClock(const TimeType *now, int x, int y) {
 
    ClockType *cp;
    int shouldDraw;
-   char longTime[80];
+   char *longTime;
    time_t t;
    struct tm *timeinfo;
    size_t len;
@@ -268,12 +268,8 @@ void SignalClock(const TimeType *now, int x, int y) {
       if(abs(cp->mousex - x) < POPUP_DELTA
          && abs(cp->mousey - y) < POPUP_DELTA) {
          if(GetTimeDifference(now, &cp->mouseTime) >= popupDelay) {
-            time(&t);
-            timeinfo = localtime(&t);
-            len = strftime(longTime, sizeof(longTime), "%c", timeinfo);
-            if(JLIKELY(len > 0)) {
-               ShowPopup(x, y, longTime);
-            }
+            longTime = GetTimeString("%c", cp->zone);
+            ShowPopup(x, y, longTime);
          }
       }
 

@@ -42,7 +42,7 @@ static int ComputeTotalHeight(TrayType *tp);
 static int CheckHorizontalFill(TrayType *tp);
 static int CheckVerticalFill(TrayType *tp);
 static void LayoutTray(TrayType *tp, int *variableSize,
-   int *variableRemainder);
+                       int *variableRemainder);
 
 /** Initialize tray data. */
 void InitializeTray() {
@@ -788,7 +788,7 @@ void UpdateSpecificTray(const TrayType *tp, const TrayComponentType *cp) {
 
    if(cp->pixmap != None && !shouldExit) {
       JXCopyArea(display, cp->pixmap, tp->window, rootGC, 0, 0,
-         cp->width, cp->height, cp->x, cp->y);
+                 cp->width, cp->height, cp->x, cp->y);
    }
 
 }

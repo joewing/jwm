@@ -67,14 +67,24 @@ const char *GetTimeString(const char *format, const char *zone) {
       const char *oldTZ = getenv("TZ");
       if(oldTZ) {
          snprintf(saveTZ, sizeof(saveTZ), "TZ=%s", oldTZ);
+#ifndef HAVE_UNSETENV
       } else {
          strcpy(saveTZ, "TZ=");
+#endif
       }
       snprintf(newTZ, sizeof(newTZ), "TZ=%s", zone);
       putenv(newTZ);
       tzset();
       strftime(str, sizeof(str), format, localtime(&t));
+#ifdef HAVE_UNSETENV
+      if(oldTZ) {
+         putenv(saveTZ);
+      } else {
+         unsetenv("TZ");
+      }
+#else
       putenv(saveTZ);
+#endif
    } else {
       strftime(str, sizeof(str), format, localtime(&t));
    }

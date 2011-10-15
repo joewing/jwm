@@ -68,7 +68,7 @@ void StartupClock() {
 
    for(clk = clocks; clk; clk = clk->next) {
       if(clk->cp->requestedWidth == 0) {
-         clk->cp->requestedWidth = GetStringWidth(FONT_CLOCK, clk->format) + 4;
+         clk->cp->requestedWidth = 1;
       }
       if(clk->cp->requestedHeight == 0) {
          clk->cp->requestedHeight = GetStringHeight(FONT_CLOCK) + 4;
@@ -107,7 +107,7 @@ void DestroyClock() {
 
 /** Create a clock tray component. */
 TrayComponentType *CreateClock(const char *format, const char *zone,
-   const char *command, int width, int height) {
+                               const char *command, int width, int height) {
 
    TrayComponentType *cp;
    ClockType *clk;
@@ -243,7 +243,7 @@ void SignalClock(const TimeType *now, int x, int y) {
 
    ClockType *cp;
    int shouldDraw;
-   char *longTime;
+   const char *longTime;
    time_t t;
    struct tm *timeinfo;
    size_t len;
@@ -299,8 +299,7 @@ void DrawClock(ClockType *clk, const TimeType *now, int x, int y) {
 
    /* Clear the area. */
    JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG]);
-   JXFillRectangle(display, cp->pixmap, rootGC, 0, 0,
-                   cp->width, cp->height);
+   JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
 
    /* Determine if the clock is the right size. */
    width = GetStringWidth(FONT_CLOCK, shortTime);

@@ -95,7 +95,7 @@ void InitializeTaskBar() {
 /** Startup the task bar. */
 void StartupTaskBar() {
    minimizedPixmap = JXCreateBitmapFromData(display, rootWindow,
-      minimized_bitmap, 4, 4);
+                                            minimized_bitmap, 4, 4);
 }
 
 /** Shutdown the task bar. */

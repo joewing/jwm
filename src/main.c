@@ -95,7 +95,7 @@ static void CloseConnection();
 static void StartupConnection();
 static void ShutdownConnection();
 static void EventLoop();
-static void HandleExit();
+static void HandleExit(int sig);
 static void DoExit(int code);
 static void SendRestart();
 static void SendExit();
@@ -276,6 +276,7 @@ void StartupConnection() {
    int renderEvent;
    int renderError;
 #endif
+   struct sigaction sa;
 
    initializing = 1;
    OpenConnection();
@@ -303,9 +304,16 @@ void StartupConnection() {
       | PointerMotionMask | PointerMotionHintMask;
    JXChangeWindowAttributes(display, rootWindow, CWEventMask, &attr);
 
-   signal(SIGTERM, HandleExit);
-   signal(SIGINT, HandleExit);
-   signal(SIGHUP, HandleExit);
+   memset(&sa, 0, sizeof(sa));
+   sa.sa_flags = 0;
+   sa.sa_handler = HandleExit;
+   sigaction(SIGTERM, &sa, NULL);
+   sigaction(SIGINT, &sa, NULL);
+   sigaction(SIGHUP, &sa, NULL);
+
+   sa.sa_flags = SA_NOCLDWAIT;
+   sa.sa_handler = SIG_DFL;
+   sigaction(SIGCHLD, &sa, NULL);
 
 #ifdef USE_SHAPE
    haveShape = JXShapeQueryExtension(display, &shapeEvent, &shapeError);
@@ -341,10 +349,7 @@ void ShutdownConnection() {
 }
 
 /** Signal handler. */
-void HandleExit() {
-   signal(SIGTERM, HandleExit);
-   signal(SIGINT, HandleExit);
-   signal(SIGHUP, HandleExit);
+void HandleExit(int sig) {
    shouldExit = 1;
 }
 

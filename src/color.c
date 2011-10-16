@@ -366,7 +366,7 @@ int ParseColor(const char *value, XColor *c) {
 
    unsigned long rgb;
 
-   if(!value) {
+   if(JUNLIKELY(!value)) {
       return 0;
    }
 

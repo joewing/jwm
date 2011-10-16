@@ -124,31 +124,28 @@ void AddRestartCommand(const char *command) {
 
 /** Execute an external program. */
 void RunCommand(const char *command) {
-   char *displayString;
+
+   const char *displayString;
    char *str;
 
-   if(!command) {
+   if(JUNLIKELY(!command)) {
       return;
    }
 
    displayString = DisplayString(display);
 
    if(!fork()) {
-      if(!fork()) {
-         close(ConnectionNumber(display));
-         if(displayString && displayString[0]) {
-            str = malloc(strlen(displayString) + 9);
-            sprintf(str, "DISPLAY=%s", displayString);
-            putenv(str);
-         }
-         execl(SHELL_NAME, SHELL_NAME, "-c", command, NULL);
-         Warning(_("exec failed: (%s) %s"), SHELL_NAME, command);
-         exit(1);
+      close(ConnectionNumber(display));
+      if(displayString && displayString[0]) {
+         str = malloc(strlen(displayString) + 9);
+         sprintf(str, "DISPLAY=%s", displayString);
+         putenv(str);
       }
-      exit(0);
+      setsid();
+      execl(SHELL_NAME, SHELL_NAME, "-c", command, NULL);
+      Warning(_("exec failed: (%s) %s"), SHELL_NAME, command);
+      exit(EXIT_SUCCESS);
    }
-
-   wait(NULL);
 
 }
 

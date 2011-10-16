@@ -49,7 +49,7 @@ static GroupType *groups = NULL;
 static void ReleasePatternList(PatternListType *lp);
 static void ReleaseOptionList(OptionListType *lp);
 static void AddPattern(PatternListType **lp, const char *pattern,
-   MatchType match);
+                       MatchType match);
 static void ApplyGroup(const GroupType *gp, ClientNode *np);
 
 /** Initialize group data. */
@@ -199,24 +199,35 @@ void ApplyGroups(ClientNode *np) {
 
    PatternListType *lp;
    GroupType *gp;
+   char hasClass;
+   char hasName;
+   char matchesClass;
+   char matchesName;
 
    Assert(np);
 
    for(gp = groups; gp; gp = gp->next) {
+      hasClass = 0;
+      hasName = 0;
+      matchesClass = 0;
+      matchesName = 0;
       for(lp = gp->patterns; lp; lp = lp->next) {
          if(lp->match == MATCH_CLASS) {
             if(Match(lp->pattern, np->className)) {
-               ApplyGroup(gp, np);
-               break;
+               matchesClass = 1;
             }
+            hasClass = 1;
          } else if(lp->match == MATCH_NAME) {
             if(Match(lp->pattern, np->instanceName)) {
-               ApplyGroup(gp, np);
-               break;
+               matchesName = 1;
             }
+            hasName = 1;
          } else {
             Debug("invalid match in ApplyGroups: %d", lp->match);
          }
+      }
+      if(hasName == matchesName && hasClass == matchesClass) {
+         ApplyGroup(gp, np);
       }
    }
 

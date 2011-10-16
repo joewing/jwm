@@ -65,12 +65,6 @@ void ShutdownPopup() {
 void DestroyPopup() {
 }
 
-/** Calculate dimensions of a popup window given the popup text. */
-void MeasurePopupText(const char *text, int *width, int *height) {
-   *height = GetStringHeight(FONT_POPUP) + 2;
-   *width = GetStringWidth(FONT_POPUP, text) + 9;
-}
-
 /** Show a popup window. */
 void ShowPopup(int x, int y, const char *text) {
 
@@ -94,7 +88,8 @@ void ShowPopup(int x, int y, const char *text) {
    }
 
    popup.text = CopyString(text);
-   MeasurePopupText(text, &popup.width, &popup.height);
+   popup.height = GetStringHeight(FONT_POPUP) + 2;
+   popup.width = GetStringWidth(FONT_POPUP, popup.text) + 9;
 
    sp = GetCurrentScreen(x, y);
 
@@ -143,8 +138,9 @@ void ShowPopup(int x, int y, const char *text) {
          | ButtonReleaseMask;
 
       popup.window = JXCreateWindow(display, rootWindow, popup.x, popup.y,
-         popup.width, popup.height, 1, CopyFromParent,
-         InputOutput, CopyFromParent, attrMask, &attr);
+                                    popup.width, popup.height, 1,
+                                    CopyFromParent, InputOutput,
+                                    CopyFromParent, attrMask, &attr);
 
    } else {
 
@@ -178,12 +174,11 @@ void SetPopupDelay(const char *str) {
 
    int temp;
 
-   if(str == NULL) {
+   if(JUNLIKELY(str == NULL)) {
       return;
    }
 
    temp = atoi(str);
-
    if(JUNLIKELY(temp < 0)) {
       Warning(_("invalid popup delay specified: %s"), str);
    } else {

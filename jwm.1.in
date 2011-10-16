@@ -579,13 +579,15 @@ the main configuration file.
 .RS
 Program groups allow one to specify options which apply to a group of
 programs by name and/or class. A program group is created with the 
-\fBGroup\fP tag. As many program groups can be created as desired. Within the 
-\fBGroup\fP tag the following tags are supported:
+\fBGroup\fP tag. As many program groups can be created as desired.
+If one or more \fBName\fP tags is specified, a name must be matched.
+Likewise, if one or more \fBClass\fP tags is specified, a class must be
+matched.  Within the \fBGroup\fP tag the following tags are supported:
 .P
 .B Name
 .RS
 The title of a program to match to be in this group. This field is case
-sensitive. a wild card, \fB*\fP, may be used.
+sensitive. A wild card, \fB*\fP, may be used.
 .RE
 .B Class
 .RS

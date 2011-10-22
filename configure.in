@@ -339,7 +339,7 @@ fi
 AC_ARG_ENABLE(xmu,
    AC_HELP_STRING([--disable-xmu], [don't use Xmu]),
    [],
-   [  if test `uname` == "IRIX" ; then
+   [  if test `uname` == "IRIX" -o `uname` == "IRIX64" ; then
          AC_MSG_WARN([disabling Xmu (it is broken on IRIX)])
          enable_xmu="no"
       fi

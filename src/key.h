@@ -43,7 +43,8 @@ typedef enum {
    KEY_SHOWTRAY,
    KEY_EXEC,
    KEY_RESTART,
-   KEY_EXIT
+   KEY_EXIT,
+   KEY_FULLSCREEN
 } KeyType;
 
 void InitializeKeys();

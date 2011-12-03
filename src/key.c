@@ -291,6 +291,7 @@ int ShouldGrab(KeyType key) {
    case KEY_EXEC:
    case KEY_RESTART:
    case KEY_EXIT:
+   case KEY_FULLSCREEN:
       return 1;
    default:
       return 0;

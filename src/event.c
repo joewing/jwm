@@ -443,6 +443,15 @@ void HandleKeyPress(const XKeyEvent *event) {
    case KEY_EXIT:
       Exit();
       break;
+   case KEY_FULLSCREEN:
+      if(np) {
+         if(np->state.status & STAT_FULLSCREEN) {
+            SetClientFullScreen(np, 0);
+         } else {
+            SetClientFullScreen(np, 1);
+         }
+      }
+      break;
    default:
       break;
    }

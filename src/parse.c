@@ -74,6 +74,7 @@ static const KeyMapType KEY_MAP[] = {
    { "ddesktop",    KEY_DDESKTOP     },
    { "showdesktop", KEY_SHOWDESK     },
    { "showtray",    KEY_SHOWTRAY     },
+   { "fullscreen",  KEY_FULLSCREEN   },
    { NULL,          KEY_NONE         }
 };
 

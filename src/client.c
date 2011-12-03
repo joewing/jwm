@@ -728,6 +728,7 @@ void SetClientFullScreen(ClientNode *np, int fullScreen) {
 
    XEvent event;
    int north, south, east, west;
+   BoundingBox box;
    const ScreenType *sp;
 
    Assert(np);
@@ -748,29 +749,59 @@ void SetClientFullScreen(ClientNode *np, int fullScreen) {
    if(fullScreen) {
 
       np->state.status |= STAT_FULLSCREEN;
+      np->state.border &= ~BORDER_MOVE;
+      SetClientLayer(np, LAYER_TOP);
+
+      np->oldx = np->x;
+      np->oldy = np->y;
+      np->oldWidth = np->width;
+      np->oldHeight = np->height;
 
       sp = GetCurrentScreen(np->x, np->y);
+      GetScreenBounds(sp, &box);
 
-      JXReparentWindow(display, np->window, rootWindow, 0, 0);
-      JXMoveResizeWindow(display, np->window, 0, 0, sp->width, sp->height);
-      SetClientLayer(np, LAYER_TOP);
+      GetBorderSize(np, &north, &south, &east, &west);
+      box.x += west;
+      box.y += north;
+      box.width -= east + west;
+      box.height -= north + south;
+
+      np->x = box.x;
+      np->y = box.y;
+      np->width = box.width;
+      np->height = box.height;
+
+      ShapeRoundedRectWindow(np->parent,
+                             np->width + east + west,
+                             np->height + north + south);
+      JXMoveResizeWindow(display, np->parent,
+                         np->x - west, np->y - north,
+                         np->width + east + west,
+                         np->height + north + south);
+      JXMoveResizeWindow(display, np->window, west, north,
+                         np->width, np->height);
 
    } else {
 
       np->state.status &= ~STAT_FULLSCREEN;
+      np->state.border |= BORDER_MOVE;
+      np->x = np->oldx;
+      np->y = np->oldy;
+      np->width = np->oldWidth;   
+      np->height = np->oldHeight;
 
-      /* Reparent window */
       GetBorderSize(np, &north, &south, &east, &west);
-      JXReparentWindow(display, np->window, np->parent, west, north);
-      JXMoveResizeWindow(display, np->window, west,
-         north, np->width, np->height);
+      ShapeRoundedRectWindow(np->parent,
+                              np->width + east + west,
+                             np->height + north + south);
 
-      /* Restore parent position */
-      GetBorderSize(np, &north, &south, &east, &west);
-      ShapeRoundedRectWindow(np->parent, np->width + east + west,
-         np->height + north + south);
-      JXMoveResizeWindow(display, np->parent, np->oldx - west,
-         np->oldy - north, np->width + east + west, np->height + north + south);
+      JXMoveResizeWindow(display, np->parent,
+                         np->x - west,
+                         np->y - north,
+                         np->width + east + west,
+                         np->height + north + south);
+      JXMoveResizeWindow(display, np->window,
+                         west, north, np->width, np->height);
 
       event.type = MapRequest;
       event.xmaprequest.send_event = True;

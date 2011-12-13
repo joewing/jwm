@@ -56,5 +56,8 @@ void Restart();
 /** Exit the window manager. */
 void Exit();
 
+/** Reload the menu. */
+void ReloadMenu();
+
 #endif /* ROOT_H */
 

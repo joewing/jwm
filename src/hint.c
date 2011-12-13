@@ -135,7 +135,8 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_MOTIF_WM_HINTS],            "_MOTIF_WM_HINTS"             },
 
    { &atoms[ATOM_JWM_RESTART],               "_JWM_RESTART"                },
-   { &atoms[ATOM_JWM_EXIT],                  "_JWM_EXIT"                   }
+   { &atoms[ATOM_JWM_EXIT],                  "_JWM_EXIT"                   },
+   { &atoms[ATOM_JWM_RELOAD],                "_JWM_RELOAD"                 }
 
 };
 

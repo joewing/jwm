@@ -229,6 +229,17 @@ void Exit() {
    }
 }
 
+/** Reload the menu. */
+void ReloadMenu() {
+	shouldReload = 1;
+	ShutdownRootMenu();
+	DestroyRootMenu();
+	InitializeRootMenu();
+	ParseConfig(configPath);
+	StartupRootMenu();
+	shouldReload = 0;
+}
+
 /** Root menu callback. */
 void RunRootCommand(const MenuAction *action) {
 

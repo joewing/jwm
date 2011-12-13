@@ -95,6 +95,7 @@ typedef enum {
    /* JWM-specific atoms. */
    ATOM_JWM_RESTART,
    ATOM_JWM_EXIT,
+   ATOM_JWM_RELOAD,
 
    ATOM_COUNT
 } AtomType;

@@ -33,11 +33,11 @@ extern unsigned int desktopHeight;
 extern unsigned int desktopCount;
 extern unsigned int currentDesktop;
 
-extern int shouldExit;
-extern int shouldRestart;
-extern int isRestarting;
-
-extern int initializing;
+extern char shouldExit;
+extern char shouldRestart;
+extern char isRestarting;
+extern char shouldReload;
+extern char initializing;
 
 extern int borderWidth;
 extern int titleHeight;
@@ -57,6 +57,8 @@ extern int shapeEvent;
 #ifdef USE_XRENDER
 extern int haveRender;
 #endif
+
+extern char *configPath;
 
 #endif /* MAIN_H */
 

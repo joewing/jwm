@@ -287,94 +287,107 @@ void Parse(const TokenNode *start, int depth) {
 
    if(JLIKELY(start->type == TOK_JWM)) {
       for(tp = start->subnodeHead; tp; tp = tp->next) {
-         switch(tp->type) {
-         case TOK_DESKTOPS:
-            ParseDesktops(tp);
-            break;
-         case TOK_DOUBLECLICKSPEED:
-            SetDoubleClickSpeed(tp->value);
-            break;
-         case TOK_DOUBLECLICKDELTA:
-            SetDoubleClickDelta(tp->value);
-            break;
-         case TOK_FOCUSMODEL:
-            ParseFocusModel(tp);
-            break;
-         case TOK_GROUP:
-            ParseGroup(tp);
-            break;
-         case TOK_ICONPATH:
-            AddIconPath(tp->value);
-            break;
-         case TOK_INCLUDE:
-            ParseInclude(tp, depth);
-            break;
-         case TOK_KEY:
-            ParseKey(tp);
-            break;
-         case TOK_MENUSTYLE:
-            ParseMenuStyle(tp);
-            break;
-         case TOK_MOVEMODE:
-            ParseMoveMode(tp);
-            break;
-         case TOK_PAGERSTYLE:
-            ParsePagerStyle(tp);
-            break;
-         case TOK_POPUPSTYLE:
-            ParsePopupStyle(tp);
-            break;
-         case TOK_RESIZEMODE:
-            ParseResizeMode(tp);
-            break;
-         case TOK_RESTARTCOMMAND:
-            AddRestartCommand(tp->value);
-            break;
-         case TOK_ROOTMENU:
-            ParseRootMenu(tp);
-            break;
-         case TOK_SHUTDOWNCOMMAND:
-            AddShutdownCommand(tp->value);
-            break;
-         case TOK_SNAPMODE:
-            ParseSnapMode(tp);
-            break;
-         case TOK_STARTUPCOMMAND:
-            AddStartupCommand(tp->value);
-            break;
-         case TOK_TASKLISTSTYLE:
-            ParseTaskListStyle(tp);
-            break;
-         case TOK_TRAY:
-            ParseTray(tp);
-            break;
-         case TOK_TRAYSTYLE:
-            ParseTrayStyle(tp);
-            break;
-         case TOK_TRAYBUTTONSTYLE:
-            ParseTrayButtonStyle(tp);
-            break;
-         case TOK_CLOCKSTYLE:
-            ParseClockStyle(tp);
-            break;
-         case TOK_WINDOWSTYLE:
-            ParseWindowStyle(tp);
-            break;
-         case TOK_BUTTONCLOSE:
-            SetButtonMask(BP_CLOSE, tp->value);
-            break;
-         case TOK_BUTTONMIN:
-            SetButtonMask(BP_MINIMIZE, tp->value);
-            break;
-         case TOK_BUTTONMAX:
-            SetButtonMask(BP_MAXIMIZE, tp->value);
-            break;
-         case TOK_BUTTONMAXACTIVE:
-            SetButtonMask(BP_MAXIMIZE_ACTIVE, tp->value);
-            break;
-         default:
-            InvalidTag(tp, TOK_JWM);
-            break;
+         if(shouldReload) {
+            switch(tp->type) {
+            case TOK_ROOTMENU:
+               ParseRootMenu(tp);
+               break;
+            case TOK_INCLUDE:
+               ParseInclude(tp, depth);
+               break;
+            default:
+               break;
+            }
+         } else {
+            switch(tp->type) {
+            case TOK_DESKTOPS:
+               ParseDesktops(tp);
+               break;
+            case TOK_DOUBLECLICKSPEED:
+               SetDoubleClickSpeed(tp->value);
+               break;
+            case TOK_DOUBLECLICKDELTA:
+               SetDoubleClickDelta(tp->value);
+               break;
+            case TOK_FOCUSMODEL:
+               ParseFocusModel(tp);
+               break;
+            case TOK_GROUP:
+               ParseGroup(tp);
+               break;
+            case TOK_ICONPATH:
+               AddIconPath(tp->value);
+               break;
+            case TOK_INCLUDE:
+               ParseInclude(tp, depth);
+               break;
+            case TOK_KEY:
+               ParseKey(tp);
+               break;
+            case TOK_MENUSTYLE:
+               ParseMenuStyle(tp);
+               break;
+            case TOK_MOVEMODE:
+               ParseMoveMode(tp);
+               break;
+            case TOK_PAGERSTYLE:
+               ParsePagerStyle(tp);
+               break;
+            case TOK_POPUPSTYLE:
+               ParsePopupStyle(tp);
+               break;
+            case TOK_RESIZEMODE:
+               ParseResizeMode(tp);
+               break;
+            case TOK_RESTARTCOMMAND:
+               AddRestartCommand(tp->value);
+               break;
+            case TOK_ROOTMENU:
+               ParseRootMenu(tp);
+               break;
+            case TOK_SHUTDOWNCOMMAND:
+               AddShutdownCommand(tp->value);
+               break;
+            case TOK_SNAPMODE:
+               ParseSnapMode(tp);
+               break;
+            case TOK_STARTUPCOMMAND:
+               AddStartupCommand(tp->value);
+               break;
+            case TOK_TASKLISTSTYLE:
+               ParseTaskListStyle(tp);
+               break;
+            case TOK_TRAY:
+               ParseTray(tp);
+               break;
+            case TOK_TRAYSTYLE:
+               ParseTrayStyle(tp);
+               break;
+            case TOK_TRAYBUTTONSTYLE:
+               ParseTrayButtonStyle(tp);
+               break;
+            case TOK_CLOCKSTYLE:
+               ParseClockStyle(tp);
+               break;
+            case TOK_WINDOWSTYLE:
+               ParseWindowStyle(tp);
+               break;
+            case TOK_BUTTONCLOSE:
+               SetButtonMask(BP_CLOSE, tp->value);
+               break;
+            case TOK_BUTTONMIN:
+               SetButtonMask(BP_MINIMIZE, tp->value);
+               break;
+            case TOK_BUTTONMAX:
+               SetButtonMask(BP_MAXIMIZE, tp->value);
+               break;
+            case TOK_BUTTONMAXACTIVE:
+               SetButtonMask(BP_MAXIMIZE_ACTIVE, tp->value);
+               break;
+            default:
+               InvalidTag(tp, TOK_JWM);
+               break;
+            }
          }
       }
    } else {

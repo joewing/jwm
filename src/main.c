@@ -52,10 +52,11 @@ Visual *rootVisual;
 GC rootGC;
 int colormapCount;
 
-int shouldExit = 0;
-int shouldRestart = 0;
-int isRestarting = 0;
-int initializing = 0;
+char shouldExit = 0;
+char shouldRestart = 0;
+char isRestarting = 0;
+char initializing = 0;
+char shouldReload = 0;
 
 unsigned int desktopWidth = 4;
 unsigned int desktopHeight = 1;
@@ -99,9 +100,12 @@ static void HandleExit(int sig);
 static void DoExit(int code);
 static void SendRestart();
 static void SendExit();
+static void SendReload();
+static void SendJWMMessage(const char *message);
 
-static char *configPath = NULL;
 static char *displayString = NULL;
+
+char *configPath = NULL;
 
 /** The main entry point. */
 int main(int argc, char *argv[]) {
@@ -139,6 +143,9 @@ int main(int argc, char *argv[]) {
       } else if(!strcmp(argv[x], "-exit")) {
          SendExit();
          DoExit(0);
+		} else if(!strcmp(argv[x], "-reload")) {
+			SendReload();
+			DoExit(0);
       } else if(!strcmp(argv[x], "-display") && x + 1 < argc) {
          displayString = argv[++x];
       } else {
@@ -162,6 +169,7 @@ int main(int argc, char *argv[]) {
       isRestarting = shouldRestart;
       shouldExit = 0;
       shouldRestart = 0;
+		shouldReload = 0;
 
       /* Prepare JWM components. */
       Initialize();
@@ -527,25 +535,21 @@ void Destroy() {
 
 /** Send _JWM_RESTART to the root window. */
 void SendRestart() {
-
-   XEvent event;
-
-   OpenConnection();
-
-   memset(&event, 0, sizeof(event));
-   event.xclient.type = ClientMessage;
-   event.xclient.window = rootWindow;
-   event.xclient.message_type = JXInternAtom(display, "_JWM_RESTART", False);
-   event.xclient.format = 32;
-
-   JXSendEvent(display, rootWindow, False, SubstructureRedirectMask, &event);
-
-   CloseConnection();
-
+	SendJWMMessage("_JWM_RESTART");
 }
 
 /** Send _JWM_EXIT to the root window. */
 void SendExit() {
+	SendJWMMessage("_JWM_EXIT");
+}
+
+/** Send _JWM_RELOAD to the root window. */
+void SendReload() {
+	SendJWMMessage("_JWM_RELOAD");
+}
+
+/** Send a JWM message to the root window. */
+void SendJWMMessage(const char *message) {
 
    XEvent event;
 
@@ -554,11 +558,12 @@ void SendExit() {
    memset(&event, 0, sizeof(event));
    event.xclient.type = ClientMessage;
    event.xclient.window = rootWindow;
-   event.xclient.message_type = JXInternAtom(display, "_JWM_EXIT", False);
+   event.xclient.message_type = JXInternAtom(display, message, False);
    event.xclient.format = 32;
 
    JXSendEvent(display, rootWindow, False, SubstructureRedirectMask, &event);
 
    CloseConnection();
+
 }
 

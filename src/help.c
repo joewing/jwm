@@ -72,6 +72,7 @@ void DisplayHelp() {
    printf("  -exit       Exit JWM (send _JWM_EXIT to the root)\n");
    printf("  -h          Display this help message\n");
    printf("  -p          Parse the configuration file and exit\n");
+   printf("  -reload     Reload menu (send _JWM_RELOAD to the root)\n");
    printf("  -restart    Restart JWM (send _JWM_RESTART to the root)\n");
    printf("  -v          Display version information\n");
 }

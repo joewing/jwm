@@ -759,6 +759,8 @@ void HandleClientMessage(const XClientMessageEvent *event) {
          Restart();
       } else if(event->message_type == atoms[ATOM_JWM_EXIT]) {
          Exit();
+      } else if(event->message_type == atoms[ATOM_JWM_RELOAD]) {
+         ReloadMenu();
       } else if(event->message_type == atoms[ATOM_NET_CURRENT_DESKTOP]) {
          ChangeDesktop(event->data.l[0]);
       } else {

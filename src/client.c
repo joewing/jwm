@@ -841,27 +841,22 @@ void FocusClient(ClientNode *np) {
       np->state.status |= STAT_ACTIVE;
       activeClient = np;
 
-      if(!(np->state.status & STAT_SHADED)) {
-         UpdateClientColormap(np);
-         SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, np->window);
-         protocols = ReadWMProtocols(np->window);
-         if(np->state.status & STAT_MAPPED) {
-            JXSetInputFocus(display, np->window, RevertToPointerRoot,
-                            CurrentTime);
-         } else {
-            JXSetInputFocus(display, rootWindow, RevertToPointerRoot,
-                            CurrentTime);
-         }
-         if(protocols & PROT_TAKE_FOCUS) {
-            SendClientMessage(np->window, ATOM_WM_PROTOCOLS,
-                              ATOM_WM_TAKE_FOCUS);
-         }
-      }
-
       DrawBorder(np, NULL);
       UpdatePager();
       UpdateTaskBar();
 
+   }
+
+   if(np->state.status & STAT_MAPPED) {
+      UpdateClientColormap(np);
+      SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, np->window);
+      protocols = ReadWMProtocols(np->window);
+      JXSetInputFocus(display, np->window, RevertToPointerRoot, CurrentTime);
+      if(protocols & PROT_TAKE_FOCUS) {
+         SendClientMessage(np->window, ATOM_WM_PROTOCOLS, ATOM_WM_TAKE_FOCUS);
+      }
+   } else {
+      JXSetInputFocus(display, rootWindow, RevertToPointerRoot, CurrentTime);
    }
 
 }

@@ -10,6 +10,9 @@
 #ifndef EVENT_H
 #define EVENT_H
 
+/** Last event time. */
+extern Time eventTime;
+
 /** Wait for an event and process it. */
 void WaitForEvent();
 
@@ -23,6 +26,11 @@ void ProcessEvent(XEvent *event);
  * @param w The window whose events to discard.
  */
 void DiscardMotionEvents(XEvent *event, Window w);
+
+/** Update the last event time.
+ * @param event The event containing the time to use.
+ */
+void UpdateTime(const XEvent *event);
 
 #endif /* EVENT_H */
 

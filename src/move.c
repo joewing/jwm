@@ -327,6 +327,7 @@ int MoveClientKeyboard(ClientNode *np) {
       if(event.type == KeyPress) {
 
          while(JXCheckTypedWindowEvent(display, np->window, KeyPress, &event));
+         UpdateTime(&event);
 
          switch(GetKey(&event.xkey) & 0xFF) {
          case KEY_UP:
@@ -356,13 +357,15 @@ int MoveClientKeyboard(ClientNode *np) {
 
          MoveMouse(rootWindow, np->x, np->y);
          JXCheckTypedWindowEvent(display, np->window, MotionNotify, &event);
+         UpdateTime(&event);
 
          moved = 1;
 
       } else if(event.type == MotionNotify) {
 
          while(JXCheckTypedWindowEvent(display, np->window,
-            MotionNotify, &event));
+                                       MotionNotify, &event));
+         UpdateTime(&event);
 
          np->x = event.xmotion.x;
          np->y = event.xmotion.y;

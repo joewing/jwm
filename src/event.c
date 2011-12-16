@@ -37,6 +37,8 @@
 
 #define MIN_TIME_DELTA 50
 
+Time eventTime = CurrentTime;
+
 static void Signal();
 static void DispatchBorderButtonEvent(const XButtonEvent *event,
    ClientNode *np);
@@ -91,6 +93,7 @@ void WaitForEvent(XEvent *event) {
       Signal();
 
       JXNextEvent(display, event);
+      UpdateTime(event);
 
       switch(event->type) {
       case ConfigureRequest:
@@ -224,6 +227,7 @@ void ProcessEvent(XEvent *event) {
       break;
    case MotionNotify:
       while(JXCheckTypedEvent(display, MotionNotify, event));
+      UpdateTime(event);
       HandleMotionNotify(&event->xmotion);
       break;
    case DestroyNotify:
@@ -242,6 +246,7 @@ void DiscardMotionEvents(XEvent *event, Window w) {
    XEvent temp;
 
    while(JXCheckTypedEvent(display, MotionNotify, &temp)) {
+      UpdateTime(event);
       SetMousePosition(temp.xmotion.x_root, temp.xmotion.y_root);
       if(temp.xmotion.window == w) {
          *event = temp;
@@ -1118,6 +1123,7 @@ void HandleUnmapNotify(const XUnmapEvent *event) {
    if(np && np->window == event->window) {
 
       if(JXCheckTypedWindowEvent(display, np->window, DestroyNotify, &e)) {
+         UpdateTime(&e);
          HandleDestroyNotify(&e.xdestroywindow);
          return;
       }
@@ -1234,6 +1240,51 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
       break;
    default:
       break;
+   }
+
+}
+
+/** Update the last event time. */
+void UpdateTime(const XEvent *event) {
+
+   Time t = CurrentTime;
+
+   Assert(event);
+
+   switch(event->type) {
+   case KeyPress:
+   case KeyRelease:
+      t = event->xkey.time;
+      break;
+   case ButtonPress:
+   case ButtonRelease:
+      t = event->xkey.time;
+      break;
+   case MotionNotify:
+      t = event->xmotion.time;
+      break;
+   case EnterNotify:
+   case LeaveNotify:
+      t = event->xcrossing.time;
+      break;
+   case PropertyNotify:
+      t = event->xproperty.time;
+      break;
+   case SelectionClear:
+      t = event->xselectionclear.time;
+      break;
+   case SelectionRequest:
+      t = event->xselectionrequest.time;
+      break;
+   case SelectionNotify:
+      t = event->xselection.time;
+      break;
+   default:
+      break;
+   }
+
+   if(t) {
+      eventTime = t;
    }
 
 }

@@ -24,6 +24,7 @@
 #include "color.h"
 #include "error.h"
 #include "place.h"
+#include "event.h"
 
 static const int STACK_BLOCK_SIZE = 8;
 
@@ -1097,7 +1098,7 @@ void SendClientMessage(Window w, AtomType type, AtomType message) {
    event.xclient.message_type = atoms[type];
    event.xclient.format = 32;
    event.xclient.data.l[0] = atoms[message];
-   event.xclient.data.l[1] = CurrentTime;
+   event.xclient.data.l[1] = eventTime;
 
    status = JXSendEvent(display, w, False, 0, &event);
    if(JUNLIKELY(status == False)) {

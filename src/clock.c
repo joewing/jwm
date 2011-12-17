@@ -244,9 +244,6 @@ void SignalClock(const TimeType *now, int x, int y) {
    ClockType *cp;
    int shouldDraw;
    const char *longTime;
-   time_t t;
-   struct tm *timeinfo;
-   size_t len;
 
    Assert(now);
 

@@ -172,11 +172,6 @@ TrayComponentType *CreateDock(int width) {
 /** Set the size of a dock component. */
 void SetSize(TrayComponentType *cp, int width, int height) {
 
-   int count;
-   DockNode *np;
-   int itemSize;
-   int span;
-
    Assert(cp);
    Assert(dock);
 

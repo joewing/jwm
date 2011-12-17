@@ -21,8 +21,9 @@ void DestroyDock();
 
 /** Create a dock to be used for notifications.
  * Note that only one dock can be created.
+ * @param width The width of an item in the dock.
  */
-struct TrayComponentType *CreateDock();
+struct TrayComponentType *CreateDock(int width);
 
 /** Handle a client message sent to the dock window.
  * @param event The event.

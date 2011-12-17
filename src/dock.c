@@ -37,18 +37,20 @@ typedef struct DockType {
    TrayComponentType *cp;
 
    Window window;
+   int itemSize;
 
    DockNode *nodes;
 
 } DockType;
 
-static const char *BASE_SELECTION_NAME = "_NET_SYSTEM_TRAY_S%d";
-static const char *ORIENTATION_ATOM = "_NET_SYSTEM_TRAY_ORIENTATION";
+static const char BASE_SELECTION_NAME[] = "_NET_SYSTEM_TRAY_S%d";
+static const char ORIENTATION_ATOM[] = "_NET_SYSTEM_TRAY_ORIENTATION";
 
-static DockType *dock = NULL;
-static int owner = 0;
+static DockType *dock;
+static int owner;
 static Atom dockAtom;
 static unsigned long orientation;
+static int dockItemCount;
 
 static void SetSize(TrayComponentType *cp, int width, int height);
 static void Create(TrayComponentType *cp);
@@ -58,9 +60,13 @@ static void DockWindow(Window win);
 static int UndockWindow(Window win);
 
 static void UpdateDock();
+static void GetDockSize(int *width, int *height);
 
 /** Initialize dock data. */
 void InitializeDock() {
+   dock = NULL;
+   dockItemCount = 0;
+   owner = 0;
 }
 
 /** Startup the dock. */
@@ -73,20 +79,12 @@ void StartupDock() {
       return;
    }
 
-   if(!dock->cp) {
-      /* The Dock item has been removed from the configuration. */
-      JXDestroyWindow(display, dock->window);
-      Release(dock);
-      dock = NULL;
-      return;
-   }
-
    if(dock->window == None) {
 
       /* No dock yet. */
 
       /* Get the selection atom. */
-      selectionName = AllocateStack(strlen(BASE_SELECTION_NAME) + 1);
+      selectionName = AllocateStack(sizeof(BASE_SELECTION_NAME));
       sprintf(selectionName, BASE_SELECTION_NAME, rootScreen);
       dockAtom = JXInternAtom(display, selectionName, False);
       ReleaseStack(selectionName);
@@ -113,36 +111,21 @@ void ShutdownDock() {
 
    if(dock) {
 
-      if(shouldRestart) {
-
-         /* If restarting we just reparent the dock window to the root
-          * window. We need to keep the dock around and visible so that
-          * we don't cause problems with the docked windows.
-          * It seems every application handles docking differently...
-          */
-         JXReparentWindow(display, dock->window, rootWindow, 0, 0);
-
-      } else {
-
-         /* JWM is exiting. */
-
-         /* Release memory used by the dock list. */
-         while(dock->nodes) {
-            np = dock->nodes->next;
-            JXReparentWindow(display, dock->nodes->window, rootWindow, 0, 0);
-            Release(dock->nodes);
-            dock->nodes = np;
-         }
-
-         /* Release the selection. */
-         if(owner) {
-            JXSetSelectionOwner(display, dockAtom, None, CurrentTime);
-         }
-
-         /* Destroy the dock window. */
-         JXDestroyWindow(display, dock->window);
-
+      /* Release memory used by the dock list. */
+      while(dock->nodes) {
+         np = dock->nodes->next;
+         JXReparentWindow(display, dock->nodes->window, rootWindow, 0, 0);
+         Release(dock->nodes);
+         dock->nodes = np;
       }
+
+      /* Release the selection. */
+      if(owner) {
+         JXSetSelectionOwner(display, dockAtom, None, CurrentTime);
+      }
+
+      /* Destroy the dock window. */
+      JXDestroyWindow(display, dock->window);
 
    }
 
@@ -152,18 +135,13 @@ void ShutdownDock() {
 void DestroyDock() {
 
    if(dock) {
-      if(shouldRestart) {
-         dock->cp = NULL;
-      } else {
-         Release(dock);
-         dock = NULL;
-      }
+      Release(dock);
    }
 
 }
 
 /** Create a dock component. */
-TrayComponentType *CreateDock() {
+TrayComponentType *CreateDock(int width) {
 
    TrayComponentType *cp;
 
@@ -178,9 +156,10 @@ TrayComponentType *CreateDock() {
 
    cp = CreateTrayComponent();
    cp->object = dock;
-   dock->cp = cp;
    cp->requestedWidth = 1;
    cp->requestedHeight = 1;
+   dock->cp = cp;
+   dock->itemSize = width;
 
    cp->SetSize = SetSize;
    cp->Create = Create;
@@ -195,32 +174,25 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 
    int count;
    DockNode *np;
+   int itemSize;
+   int span;
 
    Assert(cp);
    Assert(dock);
 
-   count = 0;
-   for(np = dock->nodes; np; np = np->next) {
-      ++count;
+   /* Set the orientation. */
+   if(width == 0) {
+      orientation = SYSTEM_TRAY_ORIENTATION_HORZ;
+   } else if(height == 0) {
+      orientation = SYSTEM_TRAY_ORIENTATION_VERT;
    }
 
-   if(width == 0) {
-      if(count > 0) {
-         cp->width = count * height;
-         cp->requestedWidth = cp->width;
-      } else {
-         cp->width = 1;
-         cp->requestedWidth = 1;
-      }
-   } else if(height == 0) {
-      if(count > 0) {
-         cp->height = count * width;
-         cp->requestedHeight = cp->height;
-      } else {
-         cp->height = 1;
-         cp->requestedHeight = 1;
-      }
-   }
+   /* Get the size. */
+   cp->width = width;
+   cp->height = height;
+   GetDockSize(&cp->width, &cp->height);
+   cp->requestedWidth = cp->width;
+   cp->requestedHeight = cp->height;
 
 }
 
@@ -238,15 +210,11 @@ void Create(TrayComponentType *cp) {
       JXMapRaised(display, cp->window);
    }
 
-   /* Set the orientation. */
+   /* Set the orientation atom. */
    orientationAtom = JXInternAtom(display, ORIENTATION_ATOM, False);
-   if(cp->height == 1) {
-      orientation = SYSTEM_TRAY_ORIENTATION_VERT;
-   } else {
-      orientation = SYSTEM_TRAY_ORIENTATION_HORZ;
-   }
    JXChangeProperty(display, dock->cp->window, orientationAtom,
-      XA_CARDINAL, 32, PropModeReplace, (unsigned char*)&orientation, 1);
+                    XA_CARDINAL, 32, PropModeReplace,
+                    (unsigned char*)&orientation, 1);
 
    /* Get the selection if we don't already own it.
     * If we did already own it, getting it again would cause problems
@@ -440,7 +408,7 @@ void DockWindow(Window win) {
 	}
 
    /* Make sure we have a valid window to add. */
-   if(win == None) {
+   if(JUNLIKELY(win == None)) {
       return;
    }
 
@@ -457,21 +425,10 @@ void DockWindow(Window win) {
    np->needs_reparent = 0;
    np->next = dock->nodes;
    dock->nodes = np;
+   dockItemCount += 1;
 
    /* Update the requested size. */
-   if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-      if(dock->cp->requestedWidth > 1) {
-         dock->cp->requestedWidth += dock->cp->height;
-      } else {
-         dock->cp->requestedWidth = dock->cp->height;
-      }
-   } else {
-      if(dock->cp->requestedHeight > 1) {
-         dock->cp->requestedHeight += dock->cp->width;
-      } else {
-         dock->cp->requestedHeight = dock->cp->width;
-      }
-   }
+   GetDockSize(&dock->cp->requestedWidth, &dock->cp->requestedHeight);
 
    /* It's safe to reparent at (0, 0) since we call
     * ResizeTray which will invoke the Resize callback.
@@ -511,19 +468,10 @@ int UndockWindow(Window win) {
             dock->nodes = np->next;
          }
          Release(np);
+         dockItemCount -= 1;
 
          /* Update the requested size. */
-         if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-            dock->cp->requestedWidth -= dock->cp->height;
-            if(dock->cp->requestedWidth <= 0) {
-               dock->cp->requestedWidth = 1;
-            }
-         } else {
-            dock->cp->requestedHeight -= dock->cp->width;
-            if(dock->cp->requestedHeight <= 0) {
-               dock->cp->requestedHeight = 1;
-            }
-         }
+         GetDockSize(&dock->cp->requestedWidth, &dock->cp->requestedHeight);
 
          /* Resize the tray. */
          ResizeTray(dock->cp->tray);
@@ -545,28 +493,29 @@ void UpdateDock() {
    int x, y;
    int width, height;
    int xoffset, yoffset;
-   int itemWidth, itemHeight;
+   int itemSize;
    double ratio;
 
    Assert(dock);
 
    /* Determine the size of items in the dock. */
    if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-      itemWidth = dock->cp->height;
-      itemHeight = dock->cp->height;
+      itemSize = dock->cp->height - 2;
    } else {
-      itemHeight = dock->cp->width;
-      itemWidth = dock->cp->width;
+      itemSize = dock->cp->width - 2;
+   }
+   if(dock->itemSize > 0 && itemSize > dock->itemSize) {
+      itemSize = dock->itemSize;
    }
 
-   x = 0;
-   y = 0;
+   x = 1;
+   y = 1;
    for(np = dock->nodes; np; np = np->next) {
 
       xoffset = 0;
       yoffset = 0;
-      width = itemWidth;
-      height = itemHeight;
+      width = itemSize;
+      height = itemSize;
 
       if(JXGetWindowAttributes(display, np->window, &attr)) {
 
@@ -584,25 +533,83 @@ void UpdateDock() {
             width = height * ratio;
          }
 
-         xoffset = (itemWidth - width) / 2;
-         yoffset = (itemHeight - height) / 2;
+         xoffset = (itemSize - width) / 2;
+         yoffset = (itemSize - height) / 2;
 
       }
 
       JXMoveResizeWindow(display, np->window, x + xoffset, y + yoffset,
-         width, height);
+                         width, height);
 
       /* Reparent if this window likes to go other places. */
       if(np->needs_reparent) {
          JXReparentWindow(display, np->window, dock->cp->window,
-         x + xoffset, y + yoffset);
+                          x + xoffset, y + yoffset);
       }
 
       if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-         x += itemWidth;
+         x += itemSize;
+         if(x >= dock->cp->width) {
+            x = 0;
+            y += itemSize;
+         }
       } else {
-         y += itemHeight;
+         y += itemSize;
+         if(y >= dock->cp->height) {
+            y = 0;
+            x += itemSize;
+         }
       }
+
+   }
+
+}
+
+/** Get the size of the dock. */
+void GetDockSize(int *width, int *height) {
+
+   int itemSize;
+   int constraint;
+   int span;
+   int columns;
+
+   Assert(dock != NULL);
+
+   /* Determine the dimension that constrains the size of items. */
+   if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
+      constraint = dock->cp->height;
+   } else {
+      constraint = dock->cp->width;
+   }
+
+   /* Determine the size of each item on the dock. */
+   itemSize = constraint;
+   if(dock->itemSize > 0 && itemSize > dock->itemSize) {
+      itemSize = dock->itemSize;
+   }
+   span = constraint / itemSize;
+   columns = (dockItemCount + span - 1) / span;
+
+   if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
+
+      /* Horizontal tray.  Place top to bottom and then left to right. */
+      *height = constraint;
+      if(columns == 0) {
+         *width = 1;
+      } else {
+         *width = itemSize * columns + 2;
+      }
+
+   } else {
+
+      /* Vertical tray.  Place left to right and then top to bottom. */
+      *width = constraint;
+      if(columns == 0) {
+         *height = 1;
+      } else {
+         *height = itemSize * columns + 2;
+      }
+
    }
 
 }

@@ -46,7 +46,7 @@ typedef struct DockType {
 static const char BASE_SELECTION_NAME[] = "_NET_SYSTEM_TRAY_S%d";
 static const char ORIENTATION_ATOM[] = "_NET_SYSTEM_TRAY_ORIENTATION";
 
-static DockType *dock;
+static DockType *dock = NULL;
 static int owner;
 static Atom dockAtom;
 static unsigned long orientation;
@@ -64,7 +64,6 @@ static void GetDockSize(int *width, int *height);
 
 /** Initialize dock data. */
 void InitializeDock() {
-   dock = NULL;
    dockItemCount = 0;
    owner = 0;
 }
@@ -136,6 +135,7 @@ void DestroyDock() {
 
    if(dock) {
       Release(dock);
+      dock = NULL;
    }
 
 }

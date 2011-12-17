@@ -18,6 +18,7 @@
 #include "misc.h"
 #include "winmenu.h"
 #include "command.h"
+#include "parse.h"
 
 /** Number of root menus to support. */
 #define ROOT_MENU_COUNT 10

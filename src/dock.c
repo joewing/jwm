@@ -526,7 +526,7 @@ void UpdateDock() {
             if(height > attr.height) {
                height = attr.height;
             }
-            width = height * ratio;
+            width = (height * ratio) >> 16;
          }
 
          xoffset = (itemSize - width) / 2;

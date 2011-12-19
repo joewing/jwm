@@ -24,7 +24,7 @@
 #define ROOT_MENU_COUNT 10
 
 static Menu *rootMenu[ROOT_MENU_COUNT];
-static int showExitConfirmation = 1;
+static char showExitConfirmation = 1;
 
 static void ExitHandler(ClientNode *np);
 static void PatchRootMenu(Menu *menu);
@@ -130,7 +130,7 @@ void SetRootMenu(const char *indexes, Menu *m) {
 }
 
 /** Set whether a dialog should be shown before exiting. */
-void SetShowExitConfirmation(int v) {
+void SetShowExitConfirmation(char v) {
    showExitConfirmation = v;
 }
 

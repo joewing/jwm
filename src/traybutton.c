@@ -191,7 +191,7 @@ void SetSize(TrayComponentType *cp, int width, int height) {
    TrayButtonType *bp;
    int labelWidth, labelHeight;
    int iconWidth, iconHeight;
-   double ratio;
+   int ratio;
 
    bp = (TrayButtonType*)cp->object;
 
@@ -207,20 +207,22 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 
       iconWidth = bp->icon->image->width;
       iconHeight = bp->icon->image->height;
-      ratio = (double)iconWidth / iconHeight;
+
+      /* Fixed point with 16 bit fraction. */
+      ratio = (iconWidth << 16) / iconHeight;
 
       if(width > 0) {
 
          /* Compute height from width. */
          iconWidth = width - labelWidth - 2 * BUTTON_SIZE;
-         iconHeight = iconWidth / ratio;
+         iconHeight = (iconWidth << 16) / ratio;
          height = Max(iconHeight, labelHeight) + 2 * BUTTON_SIZE;
 
       } else if(height > 0) {
 
          /* Compute width from height. */
          iconHeight = height - 2 * BUTTON_SIZE;
-         iconWidth = iconHeight * ratio;
+         iconWidth = (iconHeight * ratio) >> 16;
          width = iconWidth + labelWidth + 2 * BUTTON_SIZE;
 
       }

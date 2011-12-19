@@ -18,8 +18,6 @@ typedef struct {
    const char *value;
 } DefaultColorNode;
 
-static const float COLOR_DELTA = 0.45;
-
 unsigned long colors[COLOR_COUNT];
 static unsigned long rgbColors[COLOR_COUNT];
 
@@ -285,8 +283,8 @@ void DestroyColors() {
 }
 
 /** Compute the mask for computing colors in a linear RGB colormap. */
-void ComputeShiftMask(unsigned long maskIn,
-   unsigned long *shiftOut, unsigned long *maskOut) {
+void ComputeShiftMask(unsigned long maskIn, unsigned long *shiftOut,
+                      unsigned long *maskOut) {
 
    int shift;
 
@@ -446,22 +444,33 @@ unsigned long ReadHex(const char *hex) {
 void LightenColor(ColorType oldColor, ColorType newColor) {
 
    XColor temp;
-   float red, green, blue;
-   float delta = 1.0 + COLOR_DELTA;
+   int red, green, blue;
 
    temp = GetXColorFromRGB(rgbColors[oldColor]);
 
-   red = (float)temp.red / 65535.0;
-   green = (float)temp.green / 65535.0;
-   blue = (float)temp.blue / 65535.0;
+   /* Convert to 0.0 to 1.0 in fixed point with 8 bits for the fraction. */
+   red   = temp.red   >> 8;
+   green = temp.green >> 8;
+   blue  = temp.blue  >> 8;
 
-   red = Min(delta * red, 1.0);
-   green = Min(delta * green, 1.0);
-   blue = Min(delta * blue, 1.0);
+   /* Multiply by 1.45 which is 371. */
+   red   = (red   * 371) >> 8;
+   green = (green * 371) >> 8;
+   blue  = (blue  * 371) >> 8;
 
-   temp.red = red * 65535.0;
-   temp.green = green * 65535.0;
-   temp.blue = blue * 65535.0;
+   /* Convert back to 0-65535. */
+   red   |= red << 8;
+   green |= green << 8;
+   blue  |= blue << 8;
+
+   /* Cap at 65535. */
+   red   = Min(65535, red);
+   green = Min(65535, green);
+   blue  = Min(65535, blue);
+
+   temp.red = red;
+   temp.green = green;
+   temp.blue = blue;
 
    GetColor(&temp);
    colors[newColor] = temp.pixel;
@@ -473,22 +482,28 @@ void LightenColor(ColorType oldColor, ColorType newColor) {
 void DarkenColor(ColorType oldColor, ColorType newColor) {
 
    XColor temp;
-   float red, green, blue;
-   float delta = 1.0 - COLOR_DELTA;
+   int red, green, blue;
 
    temp = GetXColorFromRGB(rgbColors[oldColor]);
 
-   red = (float)temp.red / 65535.0;
-   green = (float)temp.green / 65535.0;
-   blue = (float)temp.blue / 65535.0;
+   /* Convert to 0.0 to 1.0 in fixed point with 8 bits for the fraction. */
+   red   = temp.red   >> 8;
+   green = temp.green >> 8;
+   blue  = temp.blue  >> 8;
 
-   red = delta * red;
-   green = delta * green;
-   blue = delta * blue;
+   /* Multiply by 0.55 which is 141. */
+   red   = (red   * 141) >> 8;
+   green = (green * 141) >> 8;
+   blue  = (blue  * 141) >> 8;
 
-   temp.red = red * 65535.0;
-   temp.green = green * 65535.0;
-   temp.blue = blue * 65535.0;
+   /* Convert back to 0-65535. */
+   red   |= red << 8;
+   green |= green << 8;
+   blue  |= blue << 8;
+
+   temp.red = red;
+   temp.green = green;
+   temp.blue = blue;
 
    GetColor(&temp);
    colors[newColor] = temp.pixel;

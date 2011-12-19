@@ -30,8 +30,8 @@ typedef struct PagerType {
    int labeled;            /**< Set to label the pager. */
    int deskWidth;          /**< Width of a desktop. */
    int deskHeight;         /**< Height of a desktop. */
-   double scalex;          /**< Horizontal scale factor. */
-   double scaley;          /**< Vertical scale factor. */
+   int scalex;             /**< Horizontal scale factor (fixed point). */
+   int scaley;             /**< Vertical scale factor (fixed point). */
 
    Pixmap buffer;          /**< Buffer for rendering the pager. */
 
@@ -181,8 +181,8 @@ void SetSize(TrayComponentType *cp, int width, int height) {
       Assert(0);
    }
 
-   pp->scalex = (double)(pp->deskWidth - 2) / rootWidth;
-   pp->scaley = (double)(pp->deskHeight - 2) / rootHeight;
+   pp->scalex = ((pp->deskWidth - 2) << 16) / rootWidth;
+   pp->scaley = ((pp->deskHeight - 2) << 16) / rootHeight;
 
 }
 
@@ -290,10 +290,10 @@ void StartPagerMove(TrayComponentType *cp, int x, int y) {
          }
 
          /* Get the offset and size of the client on the pager. */
-         cx = (int)((double)np->x * pp->scalex + 1.0);
-         cy = (int)((double)np->y * pp->scaley + 1.0);
-         cwidth = (int)((double)np->width * pp->scalex);
-         cheight = (int)((double)np->height * pp->scaley);
+         cx = 1 + ((np->x * pp->scalex) >> 16);
+         cy = 1 + ((np->y * pp->scaley) >> 16);
+         cwidth = (np->width * pp->scalex) >> 16;
+         cheight = (np->height * pp->scaley) >> 16;
 
          /* Normalize the offset and size. */
          if(cx + cwidth > pp->deskWidth) {
@@ -427,10 +427,10 @@ ClientFound:
 
          /* Get new client coordinates. */
          oldx = startx + (x - startx);
-         oldx /= pp->scalex;
+         oldx = (oldx << 16) / pp->scalex;
          oldx -= (np->width + east + west) / 2;
          oldy = starty + (y - starty);
-         oldy /= pp->scaley;
+         oldy = (oldy << 16) / pp->scaley;
          oldy -= (np->height + north + south) / 2;
 
          /* Move the window. */
@@ -622,10 +622,10 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
    offy *= pp->deskHeight + 1;
 
    /* Determine the location and size of the client on the pager. */
-   x = (int)((double)np->x * pp->scalex + 1.0);
-   y = (int)((double)np->y * pp->scaley + 1.0);
-   width = (int)((double)np->width * pp->scalex);
-   height = (int)((double)np->height * pp->scaley);
+   x = 1 + ((np->x * pp->scalex) >> 16);
+   y = 1 + ((np->y * pp->scaley) >> 16);
+   width = (np->width * pp->scalex) >> 16;
+   height = (np->height * pp->scaley) >> 16;
 
    /* Normalize the size and offset. */
    if(x + width > pp->deskWidth) {

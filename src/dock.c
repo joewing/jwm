@@ -489,7 +489,7 @@ void UpdateDock() {
    int width, height;
    int xoffset, yoffset;
    int itemSize;
-   double ratio;
+   int ratio;
 
    Assert(dock);
 
@@ -514,13 +514,14 @@ void UpdateDock() {
 
       if(JXGetWindowAttributes(display, np->window, &attr)) {
 
-         ratio = (double)attr.width / attr.height;
+         /* Fixed point with 16 bit fraction. */
+         ratio = (attr.width << 16) / attr.height;
 
-         if(ratio > 1.0) {
+         if(ratio > 65536) {
             if(width > attr.width) {
                width = attr.width;
             }
-            height = width / ratio;
+            height = (width << 16) / ratio;
          } else {
             if(height > attr.height) {
                height = attr.height;

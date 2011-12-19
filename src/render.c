@@ -27,7 +27,7 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
    XRenderPictFormat *fp;
    XRenderPictureAttributes pa;
    int width, height;
-   double xscale, yscale;
+   int xscale, yscale;
 
    Assert(icon);
 
@@ -46,24 +46,24 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
 
       if(node->width == 0) {
          width = icon->image->width;
-         xscale = 1.0;
+         xscale = 65536;
       } else {
          width = node->width;
-         xscale = (double)icon->image->width / (double)width;
+         xscale = (icon->image->width << 16) / width;
       }
       if(node->height == 0) {
          height = icon->image->height;
-         yscale = 1.0;
+         yscale = 65536;
       } else {
          height = node->height;
-         yscale = (double)icon->image->height / (double)height;
+         yscale = (icon->image->height << 16) / height;
       }
 
-      if(xscale != 1.0 || yscale != 1.0) {
+      if(xscale != 65536 || yscale != 65536) {
          XTransform xf = { {
-            { XDoubleToFixed(xscale), 0, 0 },
-            { 0, XDoubleToFixed(yscale), 0 },
-            { 0, 0, XDoubleToFixed(1.0) },
+            { xscale, 0, 0 },
+            { 0, yscale, 0 },
+            { 0, 0, 65536  }
          } };
          XRenderSetPictureTransform(display, source, &xf);
          XRenderSetPictureFilter(display, source, FilterBest, NULL, 0);

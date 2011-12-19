@@ -15,7 +15,7 @@ static GC outlineGC;
 
 static int lastX, lastY;
 static int lastWidth, lastHeight;
-static int outlineDrawn;
+static char outlineDrawn;
 
 /** Initialize outline data. */
 void InitializeOutline() {

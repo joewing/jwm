@@ -22,7 +22,7 @@
 
 static ResizeModeType resizeMode = RESIZE_OPAQUE;
 
-static int shouldStopResize;
+static char shouldStopResize;
 
 static void StopResize(ClientNode *np);
 static void ResizeController(int wasDestroyed);
@@ -56,7 +56,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
    int lastgwidth, lastgheight;
    int delta;
    int north, south, east, west;
-   float ratio, minr, maxr;
+   int ratio, minr, maxr;
 
    Assert(np);
 
@@ -168,21 +168,22 @@ void ResizeClient(ClientNode *np, BorderActionType action,
             if((action & (BA_RESIZE_N | BA_RESIZE_S)) &&
                (action & (BA_RESIZE_E | BA_RESIZE_W))) {
 
-               ratio = (float)np->width / np->height;
+               /* Fixed point with a 16-bit fraction. */
+               ratio = (np->width << 16) / np->height;
 
-               minr = (float)np->aspect.minx / np->aspect.miny;
+               minr = (np->aspect.minx << 16) / np->aspect.miny;
                if(ratio < minr) {
                   delta = np->width;
-                  np->width = (int)((float)np->height * minr);
+                  np->width = (np->height * minr) >> 16;
                   if(action & BA_RESIZE_W) {
                      np->x -= np->width - delta;
                   }
                }
 
-               maxr = (float)np->aspect.maxx / np->aspect.maxy;
+               maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
                if(ratio > maxr) {
                   delta = np->height;
-                  np->height = (int)((float)np->width / maxr);
+                  np->height = (np->width << 16) / maxr;
                   if(action & BA_RESIZE_N) {
                      np->y -= np->height - delta;
                   }
@@ -260,7 +261,7 @@ void ResizeClientKeyboard(ClientNode *np) {
    int lastgwidth, lastgheight;
    int north, south, east, west;
    int deltax, deltay;
-   float ratio, minr, maxr;
+   int ratio, minr, maxr;
 
    Assert(np);
 
@@ -354,16 +355,16 @@ void ResizeClientKeyboard(ClientNode *np) {
 
       if(np->sizeFlags & PAspect) {
 
-         ratio = (float)np->width / np->height;
+         ratio = (np->width << 16) / np->height;
 
-         minr = (float)np->aspect.minx / np->aspect.miny;
+         minr = (np->aspect.minx << 16) / np->aspect.miny;
          if(ratio < minr) {
-            np->width = (int)((float)np->height * minr);
+            np->width = (np->height * minr) >> 16;
          }
 
-         maxr = (float)np->aspect.maxx / np->aspect.maxy;
+         maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
          if(ratio > maxr) {
-            np->height = (int)((float)np->width / maxr);
+            np->height = (np->width << 16) / maxr;
          }
 
       }
@@ -466,22 +467,23 @@ void StopResize(ClientNode *np) {
 /** Fix the width to match the aspect ratio. */
 void FixWidth(ClientNode *np) {
 
-   float ratio, minr, maxr;
+   int ratio, minr, maxr;
 
    Assert(np);
 
    if((np->sizeFlags & PAspect) && np->height > 0) {
 
-      ratio = (float)np->width / np->height;
+      /* Fixed point with a 16-bit fraction. */
+      ratio = (np->width << 16) / np->height;
 
-      minr = (float)np->aspect.minx / np->aspect.miny;
+      minr = (np->aspect.minx << 16) / np->aspect.miny;
       if(ratio < minr) {
-         np->width = (int)((float)np->height * minr);
+         np->width = (np->height * minr) >> 16;
       }
 
-      maxr = (float)np->aspect.maxx / np->aspect.maxy;
+      maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
       if(ratio > maxr) {
-         np->width = (int)((float)np->height * maxr);
+         np->width = (np->height * maxr) >> 16;
       }
 
    }
@@ -491,22 +493,22 @@ void FixWidth(ClientNode *np) {
 /** Fix the height to match the aspect ratio. */
 void FixHeight(ClientNode *np) {
 
-   float ratio, minr, maxr;
+   int ratio, minr, maxr;
 
    Assert(np);
 
    if((np->sizeFlags & PAspect) && np->height > 0) {
 
-      ratio = (float)np->width / np->height;
+      ratio = (np->width << 16) / np->height;
 
-      minr = (float)np->aspect.minx / np->aspect.miny;
+      minr = (np->aspect.minx << 16) / np->aspect.miny;
       if(ratio < minr) {
-         np->height = (int)((float)np->width / minr);
+         np->height = (np->width << 16) / minr;
       }
 
-      maxr = (float)np->aspect.maxx / np->aspect.maxy;
+      maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
       if(ratio > maxr) {
-         np->height = (int)((float)np->width / maxr);
+         np->height = (np->width << 16) / maxr;
       }
 
    }

@@ -238,7 +238,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
 
    OptionListType *lp;
    unsigned int temp;
-   float tempf;
+   double tempf;
 
    Assert(gp);
    Assert(np);

@@ -26,19 +26,17 @@
 #include "place.h"
 #include "event.h"
 
-static const int STACK_BLOCK_SIZE = 8;
-
 static ClientNode *activeClient;
 
 static int clientCount;
 
 static void LoadFocus();
-static void ReparentClient(ClientNode *np, int notOwner);
+static void ReparentClient(ClientNode *np, char notOwner);
  
 static void MinimizeTransients(ClientNode *np);
 static void CheckShape(ClientNode *np);
 
-static void RestoreTransients(ClientNode *np, int raise);
+static void RestoreTransients(ClientNode *np, char raise);
 
 static void KillClientHandler(ClientNode *np);
 
@@ -133,7 +131,7 @@ void LoadFocus() {
 }
 
 /** Add a window to management. */
-ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner) {
+ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner) {
 
    XWindowAttributes attr;
    ClientNode *np;
@@ -428,7 +426,7 @@ void SetClientWithdrawn(ClientNode *np) {
 }
 
 /** Restore a window with its transients (helper method). */
-void RestoreTransients(ClientNode *np, int raise) {
+void RestoreTransients(ClientNode *np, char raise) {
 
    ClientNode *tp;
    int x;
@@ -468,7 +466,7 @@ void RestoreTransients(ClientNode *np, int raise) {
 }
 
 /** Restore a client window and its transients. */
-void RestoreClient(ClientNode *np, int raise) {
+void RestoreClient(ClientNode *np, char raise) {
 
    Assert(np);
 
@@ -544,11 +542,11 @@ void SetClientLayer(ClientNode *np, unsigned int layer) {
 }
 
 /** Set a client's sticky status. This will update transients. */
-void SetClientSticky(ClientNode *np, int isSticky) {
+void SetClientSticky(ClientNode *np, char isSticky) {
 
    ClientNode *tp;
-   int old;
    int x;
+   char old;
 
    Assert(np);
 
@@ -665,7 +663,7 @@ void ShowClient(ClientNode *np) {
 }
 
 /** Maximize a client window. */
-void MaximizeClient(ClientNode *np, int horiz, int vert) {
+void MaximizeClient(ClientNode *np, char horiz, char vert) {
 
    int north, south, east, west;
 
@@ -725,7 +723,7 @@ void MaximizeClientDefault(ClientNode *np) {
 }
 
 /** Set a client's full screen state. */
-void SetClientFullScreen(ClientNode *np, int fullScreen) {
+void SetClientFullScreen(ClientNode *np, char fullScreen) {
 
    XEvent event;
    int north, south, east, west;
@@ -735,9 +733,7 @@ void SetClientFullScreen(ClientNode *np, int fullScreen) {
    Assert(np);
 
    /* Make sure there's something to do. */
-   if(fullScreen && (np->state.status & STAT_FULLSCREEN)) {
-      return;
-   } else if (!fullScreen && !(np->state.status & STAT_FULLSCREEN)) {
+   if(!fullScreen == !(np->state.status & STAT_FULLSCREEN)) {
       return;
    }
 
@@ -1293,7 +1289,7 @@ ClientNode *FindClientByParent(Window p) {
 }
 
 /** Reparent a client window. */
-void ReparentClient(ClientNode *np, int notOwner) {
+void ReparentClient(ClientNode *np, char notOwner) {
 
    XSetWindowAttributes attr;
    int attrMask;

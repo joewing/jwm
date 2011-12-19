@@ -41,7 +41,7 @@ Time eventTime = CurrentTime;
 
 static void Signal();
 static void DispatchBorderButtonEvent(const XButtonEvent *event,
-   ClientNode *np);
+                                      ClientNode *np);
 
 static void HandleConfigureRequest(const XConfigureRequestEvent *event);
 static int HandleExpose(const XExposeEvent *event);
@@ -60,9 +60,9 @@ static void HandleMotionNotify(const XMotionEvent *event);
 static int HandleSelectionClear(const XSelectionClearEvent *event);
 
 static void HandleNetMoveResize(const XClientMessageEvent *event,
-   ClientNode *np);
+                                ClientNode *np);
 static void HandleNetWMState(const XClientMessageEvent *event,
-   ClientNode *np);
+                             ClientNode *np);
 
 #ifdef USE_SHAPE
 static void HandleShapeEvent(const XShapeEvent *event);
@@ -1178,7 +1178,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
 
    static Time lastClickTime = 0;
    static int lastX = 0, lastY = 0;
-   static int doubleClickActive = 0;
+   static char doubleClickActive = 0;
    BorderActionType action;
    int bsize;
 

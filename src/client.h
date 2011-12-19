@@ -151,7 +151,7 @@ void DestroyClients();
  * @param notOwner 1 if JWM doesn't own this window, 0 if JWM is the owner.
  * @return The client window data.
  */
-ClientNode *AddClientWindow(Window w, int alreadyMapped, int notOwner);
+ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner);
 
 /** Remove a client from management.
  * @param np The client to remove.
@@ -185,14 +185,14 @@ void SetClientWithdrawn(ClientNode *np);
  * @param np The client to restore.
  * @param raise 1 to raise the client, 0 to leave stacking unchanged.
  */
-void RestoreClient(ClientNode *np, int raise);
+void RestoreClient(ClientNode *np, char raise);
 
 /** Maximize a client.
  * @param np The client to maximize.
  * @param horiz Set to maximize the client horizontally.
  * @param vert Set to maximize the client vertically.
  */
-void MaximizeClient(ClientNode *np, int horiz, int vert);
+void MaximizeClient(ClientNode *np, char horiz, char vert);
 
 /** Maximize a client using the default maximize settings.
  * @param np The client to maximize.
@@ -203,7 +203,7 @@ void MaximizeClientDefault(ClientNode *np);
  * @param np The client.
  * @param fullScreen 1 to make full screen, 0 to make not full screen.
  */
-void SetClientFullScreen(ClientNode *np, int fullScreen);
+void SetClientFullScreen(ClientNode *np, char fullScreen);
 
 /** Set the keyboard focus to a client.
  * @param np The client to focus.
@@ -256,7 +256,7 @@ void SetClientDesktop(ClientNode *np, unsigned int desktop);
  * @param np The client.
  * @param isSticky 1 to make the client sticky, 0 to make it not sticky.
  */
-void SetClientSticky(ClientNode *np, int isSticky);
+void SetClientSticky(ClientNode *np, char isSticky);
 
 /** Hide a client.
  * This is used for changing desktops.

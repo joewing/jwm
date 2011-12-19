@@ -455,7 +455,7 @@ void ConstrainSize(ClientNode *np) {
    BoundingBox box;
    const ScreenType *sp;
    int north, south, east, west;
-   float ratio, minr, maxr;
+   int ratio, minr, maxr;
 
    Assert(np);
 
@@ -486,16 +486,17 @@ void ConstrainSize(ClientNode *np) {
 
    if(np->sizeFlags & PAspect) {
 
-      ratio = (float)box.width / box.height;
+      /* Fixed point with a 16-bit fraction. */
+      ratio = (box.width << 16) / box.height;
 
-      minr = (float)np->aspect.minx / np->aspect.miny;
+      minr = (np->aspect.minx << 16) / np->aspect.miny;
       if(ratio < minr) {
-         box.height = (int)((float)box.width / minr);
+         box.height = (box.width << 16) / minr;
       }
 
-      maxr = (float)np->aspect.maxx / np->aspect.maxy;
+      maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
       if(ratio > maxr) {
-         box.width = (int)((float)box.height * maxr);
+         box.width = (box.height * maxr) >> 16;
       }
 
    }
@@ -513,7 +514,7 @@ void PlaceMaximizedClient(ClientNode *np, int horiz, int vert) {
    BoundingBox box;
    const ScreenType *sp;
    int north, south, east, west;
-   float ratio, minr, maxr;
+   int ratio, minr, maxr;
 
    np->oldx = np->x;
    np->oldy = np->y;
@@ -543,16 +544,17 @@ void PlaceMaximizedClient(ClientNode *np, int horiz, int vert) {
 
    if(np->sizeFlags & PAspect) {
 
-      ratio = (float)box.width / box.height;
+      /* Fixed point with a 16-bit fraction. */
+      ratio = (box.width << 16) / box.height;
 
-      minr = (float)np->aspect.minx / np->aspect.miny;
+      minr = (np->aspect.minx << 16) / np->aspect.miny;
       if(ratio < minr) {
-         box.height = (int)((float)box.width / minr);
+         box.height = (box.width << 16) / minr;
       }
 
-      maxr = (float)np->aspect.maxx / np->aspect.maxy;
+      maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
       if(ratio > maxr) {
-         box.width = (int)((float)box.height * maxr);
+         box.width = (box.height * maxr) >> 16;
       }
 
    }

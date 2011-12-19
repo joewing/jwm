@@ -18,7 +18,7 @@
 #include "gradient.h"
 
 static void GetScaledIconSize(IconNode *ip, int maxsize,
-   int *width, int *height);
+                              int *width, int *height);
 
 /** Draw a button. */
 void DrawButton(ButtonNode *bp) {
@@ -179,29 +179,30 @@ void ResetButton(ButtonNode *bp, Drawable d, GC g) {
 
 /** Get the scaled size of an icon for a button. */
 void GetScaledIconSize(IconNode *ip, int maxsize,
-   int *width, int *height) {
+                       int *width, int *height) {
 
-   double ratio;
+   int ratio;
 
    Assert(ip);
    Assert(width);
    Assert(height);
 
-   /* width to height */
    Assert(ip->image->height > 0);
-   ratio = (double)ip->image->width / ip->image->height;
+
+   /* Fixed point with 16-bit fraction. */
+   ratio = (ip->image->width << 16) / ip->image->height;
 
    if(ip->image->width > ip->image->height) {
 
       /* Compute size wrt width */
-      *width = maxsize * ratio;
-      *height = *width / ratio;
+      *width = (maxsize * ratio) >> 16;
+      *height = (*width << 16) / ratio;
 
    } else {
 
       /* Compute size wrt height */
-      *height = maxsize / ratio;
-      *width = *height * ratio;
+      *height = (maxsize << 16) / ratio;
+      *width = (*height * ratio) >> 16;
 
    }
 

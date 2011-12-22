@@ -17,6 +17,7 @@
 #include "taskbar.h"
 #include "menu.h"
 #include "timing.h"
+#include "screen.h"
 
 #define DEFAULT_TRAY_WIDTH 32
 #define DEFAULT_TRAY_HEIGHT 32
@@ -405,6 +406,8 @@ int CheckVerticalFill(TrayType *tp) {
 void ComputeTraySize(TrayType *tp) {
 
    TrayComponentType *cp;
+   const ScreenType *sp;
+   int x, y;
 
    /* Determine the first dimension. */
    if(tp->layout == LAYOUT_HORIZONTAL) {
@@ -440,11 +443,50 @@ void ComputeTraySize(TrayType *tp) {
       }
    }
 
+   /* Determine on which screen the tray will reside. */
+   switch(tp->valign) {
+   case TALIGN_TOP:
+      y = 0;
+      break;
+   case TALIGN_BOTTOM:
+      y = rootHeight - 1;
+      break;
+   case TALIGN_CENTER:
+      y = 1 + rootHeight / 2;
+      break;
+   default:
+      if(tp->y < 0) {
+         y = rootHeight + tp->y;
+      } else {
+         y = tp->y;
+      }
+      break;
+   }
+   switch(tp->halign) {
+   case TALIGN_LEFT:
+      x = 0;
+      break;
+   case TALIGN_RIGHT:
+      x = rootWidth - 1;
+      break;
+   case TALIGN_CENTER:
+      x = 1 + rootWidth / 2;
+      break;
+   default:
+      if(tp->x < 0) {
+         x = rootWidth + tp->x;
+      } else {
+         x = tp->x;
+      }
+      break;
+   }
+   sp = GetCurrentScreen(x, y);
+
    /* Determine the missing dimension. */
    if(tp->layout == LAYOUT_HORIZONTAL) {
       if(tp->width == 0) {
          if(CheckHorizontalFill(tp)) {
-            tp->width = rootWidth;
+            tp->width = sp->width;
          } else {
             tp->width = ComputeTotalWidth(tp);
          }
@@ -455,7 +497,7 @@ void ComputeTraySize(TrayType *tp) {
    } else {
       if(tp->height == 0) {
          if(CheckVerticalFill(tp)) {
-            tp->height = rootHeight;
+            tp->height = sp->height;
          } else {
             tp->height = ComputeTotalHeight(tp);
          }
@@ -471,14 +513,14 @@ void ComputeTraySize(TrayType *tp) {
       tp->y = 0;
       break;
    case TALIGN_BOTTOM:
-      tp->y = rootHeight - tp->height + 1;
+      tp->y = sp->height - tp->height + 1;
       break;
    case TALIGN_CENTER:
-      tp->y = (rootHeight - tp->height) / 2;
+      tp->y = (sp->height - tp->height) / 2;
       break;
    default:
       if(tp->y < 0) {
-         tp->y = rootHeight + tp->y - tp->height + 1;
+         tp->y = sp->height + tp->y - tp->height + 1;
       }
       break;
    }
@@ -488,14 +530,14 @@ void ComputeTraySize(TrayType *tp) {
       tp->x = 0;
       break;
    case TALIGN_RIGHT:
-      tp->x = rootWidth - tp->width + 1;
+      tp->x = sp->width - tp->width + 1;
       break;
    case TALIGN_CENTER:
-      tp->x = (rootWidth - tp->width) / 2;
+      tp->x = (sp->width - tp->width) / 2;
       break;
    default:
       if(tp->x < 0) {
-         tp->x = rootWidth + tp->x - tp->width + 1;
+         tp->x = sp->width + tp->x - tp->width + 1;
       }
       break;
    }

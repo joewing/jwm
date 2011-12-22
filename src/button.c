@@ -187,6 +187,12 @@ void GetScaledIconSize(IconNode *ip, int maxsize,
    Assert(width);
    Assert(height);
 
+   if(ip == &emptyIcon) {
+      *width = maxsize;
+      *height = maxsize;
+      return;
+   }
+
    Assert(ip->image->height > 0);
 
    /* Fixed point with 16-bit fraction. */

@@ -63,13 +63,15 @@ void InitializeMenu(Menu *menu) {
 
    MenuItem *np;
    int index, temp;
-   int hasSubmenu;
    int userHeight;
+   int hasSubmenu;
+   char hasIcon;
 
    menu->textOffset = 0;
    menu->itemCount = 0;
 
    /* Compute the max size needed */
+   hasIcon = 0;
    userHeight = menu->itemHeight;
    if(userHeight < 0) {
       userHeight = 0;
@@ -87,11 +89,12 @@ void InitializeMenu(Menu *menu) {
                   menu->textOffset = np->icon->image->width + 4;
                }
             }
+            hasIcon = 1;
          }
       } else {
          np->icon = NULL;
       }
-      ++menu->itemCount;
+      menu->itemCount += 1;
    }
    menu->itemHeight += BASE_ICON_OFFSET * 2;
 
@@ -138,6 +141,9 @@ void InitializeMenu(Menu *menu) {
          if(temp > menu->width) {
             menu->width = temp;
          }
+      }
+      if(hasIcon && !np->icon) {
+         np->icon = &emptyIcon;
       }
       if(np->submenu) {
          hasSubmenu = 7;

@@ -33,25 +33,24 @@ typedef struct IconPathNode {
 } IconPathNode;
 
 static IconNode **iconHash;
-
 static IconPathNode *iconPaths;
 static IconPathNode *iconPathsTail;
-
 static GC iconGC;
 
-static void SetIconSize();
+IconNode emptyIcon;
 
+static void SetIconSize();
 static void DoDestroyIcon(int index, IconNode *icon);
 static void ReadNetWMIcon(ClientNode *np);
 static IconNode *GetDefaultIcon();
 static IconNode *CreateIconFromData(const char *name, char **data);
 static IconNode *CreateIconFromFile(const char *fileName);
 static IconNode *CreateIconFromBinary(const unsigned long *data,
-   unsigned int length);
+                                      unsigned int length);
 static IconNode *LoadNamedIconHelper(const char *name, const char *path);
 
 static IconNode *LoadSuffixedIcon(const char *path, const char *name,
-   const char *suffix);
+                                  const char *suffix);
 
 static ScaledIconNode *GetScaledIcon(IconNode *icon, int width, int height);
 
@@ -73,6 +72,8 @@ void InitializeIcons() {
    for(x = 0; x < HASH_SIZE; x++) {
       iconHash[x] = NULL;
    }
+
+   memset(&emptyIcon, 0, sizeof(emptyIcon));
 
 }
 
@@ -192,6 +193,10 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
    int ix, iy;
 
    Assert(icon);
+
+   if(icon == &emptyIcon) {
+      return;
+   }
 
    /* Scale the icon. */
    node = GetScaledIcon(icon, width, height);

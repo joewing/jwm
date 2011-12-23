@@ -38,6 +38,7 @@
 #include "popup.h"
 #include "status.h"
 #include "background.h"
+#include "spacer.h"
 
 /** Structure to map key names to key types. */
 typedef struct KeyMapType {
@@ -158,6 +159,7 @@ static void ParseSwallow(const TokenNode *tp, TrayType *tray);
 static void ParseTrayButton(const TokenNode *tp, TrayType *tray);
 static void ParseClock(const TokenNode *tp, TrayType *tray);
 static void ParseDock(const TokenNode *tp, TrayType *tray);
+static void ParseSpacer(const TokenNode *tp, TrayType *tray);
 
 /* Groups. */
 static void ParseGroup(const TokenNode *tp);
@@ -1184,6 +1186,9 @@ void ParseTray(const TokenNode *tp) {
       case TOK_DOCK:
          ParseDock(np, tray);
          break;
+      case TOK_SPACER:
+         ParseSpacer(np, tray);
+         break;
       default:
          InvalidTag(np, TOK_TRAY);
          break;
@@ -1368,6 +1373,41 @@ void ParseDock(const TokenNode *tp, TrayType *tray) {
    }
 
    cp = CreateDock(width);
+   if(JLIKELY(cp)) {
+      AddTrayComponent(tray, cp);
+   }
+
+}
+
+/** Parse a spacer tray component. */
+void ParseSpacer(const TokenNode *tp, TrayType *tray) {
+
+   TrayComponentType *cp;
+   int width;
+   int height;
+   char *str;
+
+   Assert(tp);
+   Assert(tray);
+
+   /* Get the width. */
+   str = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
+   if(str) {
+      width = atoi(str);
+   } else {
+      width = 0;
+   }
+
+   /* Get the height. */
+   str = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
+   if(str) {
+      height = atoi(str);
+   } else {
+      height = 0;
+   }
+
+   /* Create the spacer. */
+   cp = CreateSpacer(width, height);
    if(JLIKELY(cp)) {
       AddTrayComponent(tray, cp);
    }

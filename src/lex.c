@@ -77,6 +77,7 @@ static const char *TOKEN_MAP[] = {
    "Shade",
    "ShutdownCommand",
    "SnapMode",
+   "Spacer",
    "StartupCommand",
    "Stick",
    "Swallow",
@@ -102,12 +103,12 @@ static int IsValueEnd(char ch);
 static int IsAttributeEnd(char ch);
 static int IsSpace(char ch, int *lineNumber);
 static char *ReadElementName(const char *line);
-static char *ReadElementValue(const char *line,
-   const char *file, int *lineNumber);
+static char *ReadElementValue(const char *line, const char *file,
+                              int *lineNumber);
 static char *ReadAttributeValue(const char *line, const char *file,
-   int *lineNumber);
+                                int *lineNumber);
 static int ParseEntity(const char *entity, char *ch,
-   const char *file, int line);
+                       const char *file, int line);
 static TokenType LookupType(const char *name, TokenNode *np);
 
 /** Tokenize a data. */

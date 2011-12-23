@@ -49,7 +49,6 @@ typedef struct TrayButtonType {
 
 static TrayButtonType *buttons;
 
-static void CheckedCreate(TrayComponentType *cp);
 static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
 static void SetSize(TrayComponentType *cp, int width, int height);
@@ -57,11 +56,11 @@ static void Resize(TrayComponentType *cp);
 static void Draw(TrayComponentType *cp, int active);
 
 static void ProcessButtonPress(TrayComponentType *cp,
-   int x, int y, int mask);
+                               int x, int y, int mask);
 static void ProcessButtonRelease(TrayComponentType *cp,
-   int x, int y, int mask);
+                                 int x, int y, int mask);
 static void ProcessMotionEvent(TrayComponentType *cp,
-   int x, int y, int mask);
+                               int x, int y, int mask);
 
 /** Initialize tray button data. */
 void InitializeTrayButtons() {
@@ -170,7 +169,7 @@ TrayComponentType *CreateTrayButton(const char *iconName,
    bp->mousex = 0;
    bp->mousey = 0;
 
-   cp->Create = CheckedCreate;
+   cp->Create = Create;
    cp->Destroy = Destroy;
    cp->SetSize = SetSize;
    cp->Resize = Resize;
@@ -234,8 +233,8 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 
 }
 
-/** Initialize a button tray component (display errors). */
-void CheckedCreate(TrayComponentType *cp) {
+/** Initialize a button tray component. */
+void Create(TrayComponentType *cp) {
 
    TrayButtonType *bp;
 
@@ -260,15 +259,8 @@ void CheckedCreate(TrayComponentType *cp) {
        */
    }
 
-   Create(cp);
-
-}
-
-/** Initialize a button tray component. */
-void Create(TrayComponentType *cp) {
-
    cp->pixmap = JXCreatePixmap(display, rootWindow,
-      cp->width, cp->height, rootDepth);
+                               cp->width, cp->height, rootDepth);
 
    Draw(cp, 0);
 

@@ -227,7 +227,7 @@ void CreateWindowSendToMenu(Menu *menu) {
 
 /** Add an item to the current window menu. */
 void AddWindowMenuItem(Menu *menu, const char *name,
-   MenuActionType type, int value) {
+                       MenuActionType type, int value) {
 
    MenuItem *item;
 

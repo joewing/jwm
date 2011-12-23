@@ -36,10 +36,11 @@ src/render.c
 src/resize.c
 src/root.c
 src/screen.c
+src/spacer.c
 src/status.c
 src/swallow.c
 src/taskbar.c
 src/timing.c
-src/tray.c
 src/traybutton.c
+src/tray.c
 src/winmenu.c

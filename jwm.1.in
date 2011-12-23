@@ -492,6 +492,22 @@ Determines if the pager has text labels. Default is false.
 Also see the \fBPAGER STYLE\fP section for more information.
 .RE
 .P
+.B Spacer
+.RS
+Add empty space to the tray.
+This tag supports the following attributes:
+.P
+\fBwidth\fP \fIint\fP
+.RS
+The width of the spacer (0 to fill all available space).  0 is the default.
+.RE
+.P
+\fBheight\fP \fIint\fP
+.RS
+The height of the spacer (0 to fill all available space).  0 is the default.
+.RE
+.RE
+.P
 .B Swallow
 .RS
 Swallow a program into the tray. The text of this tag gives the

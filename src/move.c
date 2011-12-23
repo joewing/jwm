@@ -31,7 +31,7 @@ typedef struct {
    int top, bottom;
 } RectangleType;
 
-static int shouldStopMove;
+static char shouldStopMove;
 static SnapModeType snapMode = SNAP_BORDER;
 static int snapDistance = DEFAULT_SNAP_DISTANCE;
 
@@ -401,7 +401,7 @@ int MoveClientKeyboard(ClientNode *np) {
 
 /** Stop move. */
 void StopMove(ClientNode *np, int doMove,
-   int oldx, int oldy, int hmax, int vmax) {
+              int oldx, int oldy, int hmax, int vmax) {
 
    int north, south, east, west;
 

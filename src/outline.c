@@ -12,7 +12,6 @@
 #include "main.h"
 
 static GC outlineGC;
-
 static int lastX, lastY;
 static int lastWidth, lastHeight;
 static char outlineDrawn;
@@ -62,7 +61,7 @@ void DrawOutline(int x, int y, int width, int height) {
 void ClearOutline() {
    if(outlineDrawn) {
       JXDrawRectangle(display, rootWindow, outlineGC,
-         lastX, lastY, lastWidth, lastHeight);
+                      lastX, lastY, lastWidth, lastHeight);
       outlineDrawn = 0;
       JXUngrabServer(display);
       JXSync(display, False);

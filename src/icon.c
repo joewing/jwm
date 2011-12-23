@@ -459,9 +459,9 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
    GC maskGC;
    int x, y;
    int index, yindex;
-   double scalex, scaley;
-   double srcx, srcy;
-   double ratio;
+   int scalex, scaley;     /* Fixed point. */
+   int srcx, srcy;         /* Fixed point. */
+   int ratio;              /* Fixed point. */
    int nwidth, nheight;
    unsigned char *data;
 
@@ -475,10 +475,10 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
       rheight = icon->image->height;
    }
 
-   ratio = (double)icon->image->width / icon->image->height;
-   nwidth = Min(rwidth, rheight * ratio);
-   nheight = Min(rheight, nwidth / ratio);
-   nwidth = nheight * ratio;
+   ratio = (icon->image->width << 16) / icon->image->height;
+   nwidth = Min(rwidth, (rheight * ratio) >> 16);
+   nheight = Min(rheight, (nwidth << 16) / ratio);
+   nwidth = (nheight * ratio) >> 16;
    if(nwidth < 1) {
       nwidth = 1;
    }
@@ -531,16 +531,16 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
    image->data = Allocate(sizeof(unsigned long) * nwidth * nheight);
 
    /* Determine the scale factor. */
-   scalex = (double)icon->image->width / nwidth;
-   scaley = (double)icon->image->height / nheight;
+   scalex = (icon->image->width << 16) / nwidth;
+   scaley = (icon->image->height << 16) / nheight;
 
    data = icon->image->data;
-   srcy = 0.0;
+   srcy = 0;
    for(y = 0; y < nheight; y++) {
-      srcx = 0.0;
-      yindex = (int)srcy * icon->image->width;
+      srcx = 0;
+      yindex = (srcy >> 16) * icon->image->width;
       for(x = 0; x < nwidth; x++) {
-         index = 4 * (yindex + (int)srcx);
+         index = 4 * (yindex + (srcx >> 16));
 
          color.red = data[index + 1];
          color.red |= color.red << 8;
@@ -557,7 +557,6 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
          }
 
          srcx += scalex;
-
       }
 
       srcy += scaley;

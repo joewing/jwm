@@ -47,7 +47,7 @@ void ResizeController(int wasDestroyed) {
 
 /** Resize a client window (mouse initiated). */
 void ResizeClient(ClientNode *np, BorderActionType action,
-   int startx, int starty) {
+                  int startx, int starty) {
 
    XEvent event;
    int oldx, oldy;

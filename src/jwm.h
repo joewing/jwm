@@ -142,6 +142,9 @@
 #define MIN_TRAY_BORDER 0
 #define DEFAULT_TRAY_BORDER 1
 
+#define MAX_WINDOW_WIDTH (1 << 15)
+#define MAX_WINDOW_HEIGHT (1 << 15)
+
 #define MOVE_DELTA 3
 
 #define RESTART_DELAY 50000

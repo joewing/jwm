@@ -728,8 +728,8 @@ void ReadWMNormalHints(ClientNode *np) {
          np->maxHeight = rootHeight;
       }
    } else {
-      np->maxWidth = rootWidth;
-      np->maxHeight = rootHeight;
+      np->maxWidth = MAX_WINDOW_WIDTH;
+      np->maxHeight = MAX_WINDOW_HEIGHT;
    }
 
    if(np->sizeFlags & PBaseSize) {

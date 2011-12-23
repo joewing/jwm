@@ -17,7 +17,7 @@
 #include "hint.h"
 #include "color.h"
 
-static int iconSize = 0;
+IconNode emptyIcon;
 
 #ifdef USE_ICONS
 
@@ -32,12 +32,11 @@ typedef struct IconPathNode {
    struct IconPathNode *next;
 } IconPathNode;
 
+static int iconSize = 0;
 static IconNode **iconHash;
 static IconPathNode *iconPaths;
 static IconPathNode *iconPathsTail;
 static GC iconGC;
-
-IconNode emptyIcon;
 
 static void SetIconSize();
 static void DoDestroyIcon(int index, IconNode *icon);

@@ -154,7 +154,9 @@
 #define DEFAULT_MENU_TITLE "JWM"
 
 /** Fixed radius of 4x4 */
-#define CORNER_RADIUS 4
+#ifdef USE_SHAPE
+#  define CORNER_RADIUS 4
+#endif
 
 #ifdef __GNUC__
 #  if __GNUC__ >= 3

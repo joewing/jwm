@@ -115,9 +115,14 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
 
    /* Draw a border. */
    JXSetForeground(display, rootGC, colors[COLOR_MENU_FG]);
+#ifdef USE_SHAPE
    DrawRoundedRectangle(statusWindow, rootGC, 0, 0,
                         statusWindowWidth - 1, statusWindowHeight - 1,
                         CORNER_RADIUS);
+#else
+   JXDrawRectangle(display, statusWindow, rootGC, 0, 0,
+                   statusWindowWidth - 1, statusWindowHeight - 1);
+#endif
 
 }
 

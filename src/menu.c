@@ -20,6 +20,7 @@
 #include "button.h"
 #include "event.h"
 #include "error.h"
+#include "root.h"
 
 #define BASE_ICON_OFFSET 3
 
@@ -167,7 +168,7 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y) {
 
    mouseStatus = GrabMouse(rootWindow);
    keyboardStatus = JXGrabKeyboard(display, rootWindow, False,
-      GrabModeAsync, GrabModeAsync, CurrentTime);
+                                   GrabModeAsync, GrabModeAsync, CurrentTime);
    if(JUNLIKELY(!mouseStatus || keyboardStatus != GrabSuccess)) {
       return;
    }
@@ -181,6 +182,10 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y) {
    if(menuAction) {
       (runner)(menuAction);
       menuAction = NULL;
+   }
+
+   if(shouldReload) {
+      ReloadMenu();
    }
 
 }
@@ -233,9 +238,9 @@ int ShowSubmenu(Menu *menu, Menu *parent, int x, int y) {
    menu->parent = parent;
    CreateMenu(menu, x, y);
 
-   ++menuShown;
+   menuShown += 1;
    status = MenuLoop(menu);
-   --menuShown;
+   menuShown -= 1;
 
    HideMenu(menu);
 

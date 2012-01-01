@@ -233,12 +233,14 @@ void Exit() {
 /** Reload the menu. */
 void ReloadMenu() {
 	shouldReload = 1;
-	ShutdownRootMenu();
-	DestroyRootMenu();
-	InitializeRootMenu();
-	ParseConfig(configPath);
-	StartupRootMenu();
-	shouldReload = 0;
+   if(!menuShown) {
+      ShutdownRootMenu();
+      DestroyRootMenu();
+      InitializeRootMenu();
+      ParseConfig(configPath);
+      StartupRootMenu();
+	   shouldReload = 0;
+   }
 }
 
 /** Root menu callback. */

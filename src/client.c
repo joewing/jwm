@@ -1318,9 +1318,6 @@ void ReparentClient(ClientNode *np, char notOwner) {
 
    attrMask = 0;
 
-   attrMask |= CWOverrideRedirect;
-   attr.override_redirect = True;
-
    attrMask |= CWBackPixmap;
    attr.background_pixmap = ParentRelative;
 

@@ -271,9 +271,11 @@ void HandleButtonEvent(const XButtonEvent *event) {
 
    np = FindClientByParent(event->window);
    if(np) {
-      RaiseClient(np);
-      if(focusModel == FOCUS_CLICK) {
-         FocusClient(np);
+      if(event->type == ButtonPress) {
+         RaiseClient(np);
+         if(focusModel == FOCUS_CLICK) {
+            FocusClient(np);
+         }
       }
       switch(event->button) {
       case Button1:
@@ -324,7 +326,7 @@ void HandleButtonEvent(const XButtonEvent *event) {
             if(event->state & Mod1Mask) {
                GetBorderSize(np, &north, &south, &east, &west);
                ResizeClient(np, BA_RESIZE | BA_RESIZE_E | BA_RESIZE_S,
-                  event->x + west, event->y + north);
+                            event->x + west, event->y + north);
             } else {
                RaiseClient(np);
                if(focusModel == FOCUS_CLICK) {
@@ -335,11 +337,11 @@ void HandleButtonEvent(const XButtonEvent *event) {
          default:
             break;
          }
-         JXAllowEvents(display, ReplayPointer, CurrentTime);
+         JXAllowEvents(display, ReplayPointer, eventTime);
       }
+
    }
 
-   UpdatePager();
 }
 
 /** Process a key press event. */
@@ -549,8 +551,8 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
       wc.border_width = event->border_width;
       wc.x = event->x;
       wc.y = event->y;
-      wc.width = event->width > rootWidth ? rootWidth : event->width;
-      wc.height = event->height > rootHeight ? rootHeight : event->height;
+      wc.width = event->width;
+      wc.height = event->height;
       JXConfigureWindow(display, event->window, event->value_mask, &wc);
 
    }
@@ -585,14 +587,7 @@ void HandleEnterNotify(const XCrossingEvent *event) {
 /** Process a leave notify event. */
 void HandleLeaveNotify(const XCrossingEvent *event) {
 
-   ClientNode *np;
-
    SetMousePosition(event->x_root, event->y_root);
-
-   np = FindClientByParent(event->window);
-   if(np) {
-      SetDefaultCursor(np->parent);
-   }
 
 }
 
@@ -780,6 +775,13 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 
       HandleDockEvent(event);
 
+   } else {
+#ifdef DEBUG
+         atomName = JXGetAtomName(display, event->message_type);
+         Debug("ClientMessage to unknown window (0x%x): %s",
+               event->window, atomName);
+         JXFree(atomName);
+#endif
    }
 
 }
@@ -1283,8 +1285,10 @@ void UpdateTime(const XEvent *event) {
       break;
    }
 
-   if(t) {
-      eventTime = t;
+   if(t != CurrentTime) {
+      if(t > eventTime || t < eventTime - 60000) {
+         eventTime = t;
+      }
    }
 
 }

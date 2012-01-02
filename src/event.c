@@ -282,7 +282,8 @@ void HandleButtonEvent(const XButtonEvent *event) {
          DispatchBorderButtonEvent(event, np);
          break;
       case Button2:
-         MoveClient(np, event->x, event->y, (event->state & Mod1Mask) ? 0 : 1);
+         MoveClient(np, event->x, event->y,
+                    (event->state & Mod1Mask) ? 0 : 1);
          break;
       case Button3:
          GetBorderSize(np, &north, &south, &east, &west);

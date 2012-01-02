@@ -847,12 +847,12 @@ void FocusClient(ClientNode *np) {
       UpdateClientColormap(np);
       SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, np->window);
       protocols = ReadWMProtocols(np->window);
-      JXSetInputFocus(display, np->window, RevertToPointerRoot, CurrentTime);
+      JXSetInputFocus(display, np->window, RevertToPointerRoot, eventTime);
       if(protocols & PROT_TAKE_FOCUS) {
          SendClientMessage(np->window, ATOM_WM_PROTOCOLS, ATOM_WM_TAKE_FOCUS);
       }
    } else {
-      JXSetInputFocus(display, rootWindow, RevertToPointerRoot, CurrentTime);
+      JXSetInputFocus(display, rootWindow, RevertToPointerRoot, eventTime);
    }
 
 }

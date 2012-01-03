@@ -166,8 +166,8 @@ TrayComponentType *CreateTrayButton(const char *iconName,
    cp->requestedWidth = width;
    cp->requestedHeight = height;
 
-   bp->mousex = 0;
-   bp->mousey = 0;
+   bp->mousex = -POPUP_DELTA;
+   bp->mousey = -POPUP_DELTA;
 
    cp->Create = Create;
    cp->Destroy = Destroy;

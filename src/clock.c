@@ -116,8 +116,8 @@ TrayComponentType *CreateClock(const char *format, const char *zone,
    clk->next = clocks;
    clocks = clk;
 
-   clk->mousex = 0;
-   clk->mousey = 0;
+   clk->mousex = -POPUP_DELTA;
+   clk->mousey = -POPUP_DELTA;
    clk->mouseTime.seconds = 0;
    clk->mouseTime.ms = 0;
    clk->userWidth = 0;

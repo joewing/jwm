@@ -134,8 +134,8 @@ TrayComponentType *CreateTaskBar() {
    bars = tp;
    tp->itemHeight = 0;
    tp->layout = LAYOUT_HORIZONTAL;
-   tp->mousex = -1;
-   tp->mousey = -1;
+   tp->mousex = -POPUP_DELTA;
+   tp->mousey = -POPUP_DELTA;
    tp->mouseTime.seconds = 0;
    tp->mouseTime.ms = 0;
    tp->maxItemWidth = 0;

@@ -110,8 +110,8 @@ TrayComponentType *CreatePager(int labeled) {
    pp->next = pagers;
    pagers = pp;
    pp->labeled = labeled;
-   pp->mousex = -1;
-   pp->mousey = -1;
+   pp->mousex = -POPUP_DELTA;
+   pp->mousey = -POPUP_DELTA;
    pp->mouseTime.seconds = 0;
    pp->mouseTime.ms = 0;
 

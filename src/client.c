@@ -1195,8 +1195,14 @@ void RemoveClient(ClientNode *np) {
       FocusNextStacked(np);
    }
    if(activeClient == np) {
+
+      /* Must be the last client. */
+
       SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, None);
       activeClient = NULL;
+
+      JXSetInputFocus(display, rootWindow, RevertToPointerRoot, eventTime);
+
    }
 
    /* If the window manager is exiting (ie, not the client), then

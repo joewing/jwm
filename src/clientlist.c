@@ -89,6 +89,9 @@ void StartWindowStackWalk() {
 
    windowStackCurrent = 0;
 
+   JXGrabKeyboard(display, rootWindow, False, GrabModeAsync,
+                  GrabModeAsync, CurrentTime);
+
 }
 
 /** Move to the next window in the window stack. */
@@ -156,6 +159,8 @@ void StopWindowStackWalk() {
 
       windowStackSize = 0;
       windowStackCurrent = 0;
+
+      JXUngrabKeyboard(display, CurrentTime);
 
    }
 

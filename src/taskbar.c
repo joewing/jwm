@@ -70,7 +70,6 @@ static Node *taskBarNodesTail;
 
 static Node *GetNode(TaskBarType *bar, int x);
 static unsigned int GetItemCount();
-static int ShouldShowItem(const ClientNode *np);
 static unsigned int GetItemWidth(const TaskBarType *bp,
    unsigned int itemCount);
 static void Render(const TaskBarType *bp);
@@ -492,7 +491,7 @@ void Render(const TaskBarType *bp) {
    button.font = FONT_TASK;
 
    for(tp = taskBarNodes; tp; tp = tp->next) {
-      if(ShouldShowItem(tp->client)) {
+      if(ShouldFocus(tp->client)) {
 
          tp->y = y;
 
@@ -651,7 +650,7 @@ Node *GetNode(TaskBarType *bar, int x) {
       remainder = width - itemWidth * itemCount;
 
       for(tp = taskBarNodes; tp; tp = tp->next) {
-         if(ShouldShowItem(tp->client)) {
+         if(ShouldFocus(tp->client)) {
             if(remainder) {
                stop = index + itemWidth + 1;
                --remainder;
@@ -668,7 +667,7 @@ Node *GetNode(TaskBarType *bar, int x) {
    } else {
 
       for(tp = taskBarNodes; tp; tp = tp->next) {
-         if(ShouldShowItem(tp->client)) {
+         if(ShouldFocus(tp->client)) {
             stop = index + bar->itemHeight;
             if(x >= index && x < stop) {
                return tp;
@@ -691,40 +690,12 @@ unsigned int GetItemCount() {
 
    count = 0;
    for(tp = taskBarNodes; tp; tp = tp->next) {
-      if(ShouldShowItem(tp->client)) {
+      if(ShouldFocus(tp->client)) {
          ++count;
       }
    }
 
    return count;
-
-}
-
-/** Determine if a client should be shown on the task bar. */
-int ShouldShowItem(const ClientNode *np) {
-
-   /* Only display clients on the current desktop or clients that are sticky. */
-   if(np->state.desktop != currentDesktop
-      && !(np->state.status & STAT_STICKY)) {
-      return 0;
-   }
-
-   /* Don't display a client if it doesn't want to be displayed. */
-   if(np->state.status & STAT_NOLIST) {
-      return 0;
-   }
-
-   /* Don't display a client on the tray if it has an owner. */
-   if(np->owner != None) {
-      return 0;
-   }
-
-   if(   !(np->state.status & STAT_MAPPED)
-      && !(np->state.status & (STAT_MINIMIZED | STAT_SHADED))) {
-      return 0;
-   }
-
-   return 1;
 
 }
 

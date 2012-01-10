@@ -23,16 +23,24 @@ static int windowStackCurrent = 0;  /**< Current location in the image. */
 /** Determine if a client is allowed focus. */
 int ShouldFocus(const ClientNode *np) {
 
+   /* Only display clients on the current desktop or clients that are sticky. */
    if(np->state.desktop != currentDesktop
       && !(np->state.status & STAT_STICKY)) {
       return 0;
    }
 
+   /* Don't display a client if it doesn't want to be displayed. */
    if(np->state.status & STAT_NOLIST) {
       return 0;
    }
 
+   /* Don't display a client on the tray if it has an owner. */
    if(np->owner != None) {
+      return 0;
+   }
+
+   if(   !(np->state.status & STAT_MAPPED)
+      && !(np->state.status & (STAT_MINIMIZED | STAT_SHADED))) {
       return 0;
    }
 

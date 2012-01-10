@@ -821,7 +821,7 @@ void ReadWMHints(Window win, ClientState *state) {
    wmhints = JXGetWMHints(display, win);
    if(wmhints) {
       if(wmhints->flags & StateHint) {
-         switch(wmhints->initial_state == IconicState) {
+         switch(wmhints->initial_state) {
          case IconicState:
             state->status |= STAT_MINIMIZED;
             break;

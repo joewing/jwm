@@ -1144,6 +1144,10 @@ void HandleUnmapNotify(const XUnmapEvent *event) {
          UpdateTaskBar();
          UpdatePager();
 
+         if(np->state.status & STAT_ACTIVE) {
+            FocusNextStacked(np);
+         }
+
       }
 
    }

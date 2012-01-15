@@ -83,6 +83,10 @@ int shapeEvent;
 #ifdef USE_XRENDER
 int haveRender;
 #endif
+#ifdef USE_XRANDR
+int haveRandr;
+int randrEvent;
+#endif
 
 static const char *CONFIG_FILE = "/.jwmrc";
 
@@ -284,6 +288,9 @@ void StartupConnection() {
    int renderEvent;
    int renderError;
 #endif
+#ifdef USE_XRANDR
+   int randrError;
+#endif
    struct sigaction sa;
 
    initializing = 1;
@@ -338,6 +345,19 @@ void StartupConnection() {
       Debug("render extension enabled");
    } else {
       Debug("render extension disabled");
+   }
+#endif
+
+#ifdef USE_XRANDR
+   haveRandr = JXRRQueryExtension(display, &randrEvent, &randrError);
+   if(haveRandr) {
+
+      Debug("randr extension enabled");
+
+      JXRRSelectInput(display, rootWindow, RRScreenChangeNotifyMask);
+
+   } else {
+      Debug("randr extension disabled");
    }
 #endif
 

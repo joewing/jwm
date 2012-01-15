@@ -68,6 +68,10 @@ static void HandleNetWMState(const XClientMessageEvent *event,
 static void HandleShapeEvent(const XShapeEvent *event);
 #endif
 
+#ifdef USE_XRANDR
+static void HandleRandrEvent(const XRRScreenChangeNotifyEvent *event);
+#endif
+
 /** Wait for an event and process it. */
 void WaitForEvent(XEvent *event) {
 
@@ -149,16 +153,20 @@ void WaitForEvent(XEvent *event) {
          handled = 1;
          break;
       default:
+         if(0) {
 #ifdef USE_SHAPE
-         if(haveShape && event->type == shapeEvent) {
+         } else if(haveShape && event->type == shapeEvent) {
             HandleShapeEvent((XShapeEvent*)event);
             handled = 1;
+#endif
+#ifdef USE_XRANDR
+         } else if(haveRandr && event->type == randrEvent) {
+            HandleRandrEvent((XRRScreenChangeNotifyEvent*)event);
+            handled = 1;
+#endif
          } else {
             handled = 0;
          }
-#else
-         handled = 0;
-#endif
          break;
       }
 
@@ -1054,6 +1062,17 @@ void HandleShapeEvent(const XShapeEvent *event) {
 
 }
 #endif /* USE_SHAPE */
+
+/** Handle a screen change notify event. */
+#ifdef USE_XRANDR
+void HandleRandrEvent(const XRRScreenChangeNotifyEvent *event) {
+
+   /* Restart when the screen changes. */
+   shouldRestart = 1;
+   shouldExit = 1;
+
+}
+#endif
 
 /** Handle a colormap event. */
 void HandleColormapChange(const XColormapEvent *event) {

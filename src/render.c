@@ -96,9 +96,7 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 
 #ifdef USE_XRENDER
 
-   XRenderPictureAttributes picAttributes;
    XRenderPictFormat *fp;
-   Picture maskPicture;
    XColor color;
    GC maskGC;
    XImage *destImage;

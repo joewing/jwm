@@ -1071,6 +1071,12 @@ void HandleRandrEvent(const XRRScreenChangeNotifyEvent *event) {
    shouldRestart = 1;
    shouldExit = 1;
 
+   /* Update screen size etc. */
+   if(event->root == rootWindow) {
+      rootWidth = event->width;
+      rootHeight = event->height;
+   }
+
 }
 #endif
 

@@ -265,15 +265,6 @@ void OpenConnection() {
 
    rootScreen = DefaultScreen(display);
    rootWindow = RootWindow(display, rootScreen);
-   rootWidth = DisplayWidth(display, rootScreen);
-   rootHeight = DisplayHeight(display, rootScreen);
-   rootDepth = DefaultDepth(display, rootScreen);
-   rootColormap = DefaultColormap(display, rootScreen);
-   rootVisual = DefaultVisual(display, rootScreen);
-   rootGC = DefaultGC(display, rootScreen);
-   colormapCount = MaxCmapsOfScreen(ScreenOfDisplay(display, rootScreen));
-
-   XSetGraphicsExposures(display, rootGC, False);
 
 }
 
@@ -385,6 +376,17 @@ void HandleExit(int sig) {
  * This is called before the X connection is opened.
  */
 void Initialize() {
+
+   rootWidth = DisplayWidth(display, rootScreen);
+   rootHeight = DisplayHeight(display, rootScreen);
+   rootDepth = DefaultDepth(display, rootScreen);
+   rootColormap = DefaultColormap(display, rootScreen);
+   rootVisual = DefaultVisual(display, rootScreen);
+   rootGC = DefaultGC(display, rootScreen);
+   colormapCount = MaxCmapsOfScreen(ScreenOfDisplay(display, rootScreen));
+
+   XSetGraphicsExposures(display, rootGC, False);
+
    InitializeBackgrounds();
    InitializeBorders();
    InitializeClients();

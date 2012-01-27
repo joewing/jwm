@@ -44,6 +44,7 @@ static void DispatchBorderButtonEvent(const XButtonEvent *event,
                                       ClientNode *np);
 
 static void HandleConfigureRequest(const XConfigureRequestEvent *event);
+static int HandleConfigureNotify(const XConfigureEvent *event);
 static int HandleExpose(const XExposeEvent *event);
 static int HandlePropertyNotify(const XPropertyEvent *event);
 static void HandleClientMessage(const XClientMessageEvent *event);
@@ -66,10 +67,6 @@ static void HandleNetWMState(const XClientMessageEvent *event,
 
 #ifdef USE_SHAPE
 static void HandleShapeEvent(const XShapeEvent *event);
-#endif
-
-#ifdef USE_XRANDR
-static void HandleRandrEvent(const XRRScreenChangeNotifyEvent *event);
 #endif
 
 /** Wait for an event and process it. */
@@ -144,7 +141,7 @@ void WaitForEvent(XEvent *event) {
          handled = 1;
          break;
       case ConfigureNotify:
-         handled = 0;
+         handled = HandleConfigureNotify(&event->xconfigure);
          break;
       case CreateNotify:
       case MapNotify:
@@ -157,11 +154,6 @@ void WaitForEvent(XEvent *event) {
 #ifdef USE_SHAPE
          } else if(haveShape && event->type == shapeEvent) {
             HandleShapeEvent((XShapeEvent*)event);
-            handled = 1;
-#endif
-#ifdef USE_XRANDR
-         } else if(haveRandr && event->type == randrEvent) {
-            HandleRandrEvent((XRRScreenChangeNotifyEvent*)event);
             handled = 1;
 #endif
          } else {
@@ -565,6 +557,24 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
       JXConfigureWindow(display, event->window, event->value_mask, &wc);
 
    }
+
+}
+
+/** Process a configure notify event. */
+int HandleConfigureNotify(const XConfigureEvent *event) {
+
+   if(event->window != rootWindow) {
+      return 0;
+   }
+
+   if(rootWidth != event->width || rootHeight != event->height) {
+      rootWidth = event->width;
+      rootHeight = event->height;
+      shouldRestart = 1;
+      shouldExit = 1;
+   }
+
+   return 1;
 
 }
 
@@ -1062,23 +1072,6 @@ void HandleShapeEvent(const XShapeEvent *event) {
 
 }
 #endif /* USE_SHAPE */
-
-/** Handle a screen change notify event. */
-#ifdef USE_XRANDR
-void HandleRandrEvent(const XRRScreenChangeNotifyEvent *event) {
-
-   /* Restart when the screen changes. */
-   shouldRestart = 1;
-   shouldExit = 1;
-
-   /* Update screen size etc. */
-   if(event->root == rootWindow) {
-      rootWidth = event->width;
-      rootHeight = event->height;
-   }
-
-}
-#endif
 
 /** Handle a colormap event. */
 void HandleColormapChange(const XColormapEvent *event) {

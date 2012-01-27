@@ -95,9 +95,6 @@
 /* Define to 1 if you have the <X11/cursorfont.h> header file. */
 #undef HAVE_X11_CURSORFONT_H
 
-/* Define to 1 if you have the <X11/extensions/Xrandr.h> header file. */
-#undef HAVE_X11_EXTENSIONS_XRANDR_H
-
 /* Define to 1 if you have the <X11/extensions/Xrender.h> header file. */
 #undef HAVE_X11_EXTENSIONS_XRENDER_H
 
@@ -169,9 +166,6 @@
 
 /* Define to enable XPM support */
 #undef USE_XPM
-
-/* Define to enable the XRandR extension */
-#undef USE_XRANDR
 
 /* Define to enable the XRender extension */
 #undef USE_XRENDER

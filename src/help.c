@@ -61,10 +61,6 @@ void DisplayCompileOptions() {
    printf("xrender ");
 #endif
 
-#ifdef USE_XRANDR
-   printf("xrandr ");
-#endif
-
    printf("\nsystem configuration: %s\n", SYSTEM_CONFIG);
 
 }

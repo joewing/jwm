@@ -115,7 +115,6 @@ JWM_PKGCONFIG([use_pkgconfig_png], [libpng])
 JWM_PKGCONFIG([use_pkgconfig_jpeg], [libjpeg])
 JWM_PKGCONFIG([use_pkgconfig_xft], [xft])
 JWM_PKGCONFIG([use_pkgconfig_xrender], [xrender])
-JWM_PKGCONFIG([use_pkgconfig_xrandr], [xrandr])
 JWM_PKGCONFIG([use_pkgconfig_fribidi], [fribidi])
 
 ############################################################################
@@ -259,40 +258,6 @@ if test "$enable_xrender" != "no" ; then
       [ enable_xrender="no"
         AC_MSG_WARN([unable to use the XRender extension]) ],
       [ $XRENDER_LDFLAGS ])
-fi
-
-############################################################################
-# Check if support for the XRandR extension was requested and available.
-############################################################################
-AC_ARG_ENABLE(xrandr,
-   AC_HELP_STRING([--disable-xrandr], [don't use the XRandR extension]) )
-if test "$enable_xrandr" != "no"; then
-
-   if test "$use_pkgconfig_xrandr" = "yes" ; then
-      XRANDR_CFLAGS=`$PKGCONFIG --cflags xrandr`
-      XRANDR_LDFLAGS=`$PKGCONFIG --libs xrandr`
-   else
-      XRANDR_LDFLAGS="-lXrandr"
-   fi
-
-   AC_CHECK_HEADERS([X11/extensions/Xrandr.h], [],
-      [
-         enable_xrandr="no";
-         AC_MSG_WARN([unable to use X11/extensions/Xrandr.h])
-      ], [
-#include <X11/Xlib.h>
-      ])
-
-fi
-if test "$enable_xrandr" != "no" ; then
-   AC_CHECK_LIB(Xrandr, XRRSelectInput,
-      [ LDFLAGS="$LDFLAGS $XRANDR_LDFLAGS"
-        CFLAGS="$CFLAGS $XRANDR_CFLAGS"
-        enable_xrandr="yes"
-        AC_DEFINE(USE_XRANDR, 1, [Define to enable the XRandR extension]) ],
-      [ enable_xrandr="no"
-        AC_MSG_WARN([unable to use the XRandR extension]) ],
-      [ $XRANDR_LDFLAGS ])
 fi
 
 ############################################################################
@@ -491,7 +456,6 @@ echo "    JPEG:     $enable_jpeg"
 echo "    XPM:      $enable_xpm"
 echo "    XFT:      $enable_xft"
 echo "    XRender:  $enable_xrender"
-echo "    XRandR:   $enable_xrandr"
 echo "    FriBidi:  $enable_fribidi"
 echo "    Shape:    $enable_shape"
 echo "    Xmu:      $enable_xmu"

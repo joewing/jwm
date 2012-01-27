@@ -57,10 +57,6 @@ extern int shapeEvent;
 #ifdef USE_XRENDER
 extern int haveRender;
 #endif
-#ifdef USE_XRANDR
-extern int haveRandr;
-extern int randrEvent;
-#endif
 
 extern char *configPath;
 

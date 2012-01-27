@@ -443,13 +443,5 @@
    ( SetCheckpoint(), \
      XRenderComposite( a, b, c, d, e, f, g, h, i, j, k, l, m) )
 
-/* XRandR */
-
-#define JXRRQueryExtension( a, b, c ) \
-   ( SetCheckpoint(), XRRQueryExtension( a, b, c ) )
-
-#define JXRRSelectInput( a, b, c ) \
-   ( SetCheckpoint(), XRRSelectInput( a, b, c ) )
-
 #endif /* JXLIB_H */
 

@@ -1,6 +1,7 @@
 
 CC = @CC@
 CFLAGS = @CFLAGS@
+CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 BINDIR = $(DESTDIR)@BINDIR@
 
@@ -31,7 +32,7 @@ $(EXE): $(OBJECTS)
 	$(CC) -o $(EXE) $(OBJECTS) $(LDFLAGS)
 
 .c.o:
-	$(CC) -c $(CFLAGS) $<
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) $<
 
 clean:
 	rm -f $(OBJECTS) $(EXE) core

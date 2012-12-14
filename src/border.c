@@ -47,13 +47,6 @@ static char *bmpFiles[BP_COUNT];
 static Region borderRegion = NULL;
 static GC borderGC;
 
-#ifdef USE_SHAPE
-static Pixmap shapePixmap;
-static int shapePixmapWidth;
-static int shapePixmapHeight;
-static GC shapeGC;
-#endif
-
 static void DrawBorderHelper(const ClientNode *np, int drawIcon);
 static void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc);
 static int GetButtonCount(const ClientNode *np);
@@ -92,13 +85,6 @@ void StartupBorders() {
    gcValues.graphics_exposures = False;
    borderGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
 
-#if defined(USE_SHAPE) && defined(USE_XMU)
-   shapePixmap = None;
-   shapeGC = None;
-   shapePixmapWidth = 0;
-   shapePixmapHeight = 0;
-#endif
-
 }
 
 /** Release server resources. */
@@ -111,17 +97,6 @@ void ShutdownBorders() {
    for(x = 0; x < BP_COUNT; x++) {
       JXFreePixmap(display, pixmaps[x]);
    }
-
-#if defined(USE_SHAPE) && defined(USE_XMU)
-   if(shapePixmap != None) {
-      JXFreePixmap(display, shapePixmap);
-      shapePixmap = None;
-   }
-   if(shapeGC != None) {
-      JXFreeGC(display, shapeGC);
-      shapeGC = None;
-   }
-#endif
 
 }
 
@@ -818,17 +793,11 @@ void ResetRoundedRectWindow(Window w) {
 void ShapeRoundedRectWindow(Window w, int width, int height) {
 #ifdef USE_SHAPE
 
-   if(width > shapePixmapWidth || height > shapePixmapHeight) {
-      if(shapePixmap != None) {
-         JXFreePixmap(display, shapePixmap);
-      }
-      shapePixmap = JXCreatePixmap(display, w, width, height, 1);
-      if(shapeGC == None) {
-         shapeGC = JXCreateGC(display, shapePixmap, 0, NULL);
-      }
-      shapePixmapWidth = width;
-      shapePixmapHeight = height;
-   }
+   Pixmap shapePixmap;
+   GC shapeGC;
+
+   shapePixmap = JXCreatePixmap(display, w, width, height, 1);
+   shapeGC = JXCreateGC(display, shapePixmap, 0, NULL);
 
    JXSetForeground(display, shapeGC, 0);
    JXFillRectangle(display, shapePixmap, shapeGC, 0, 0,
@@ -840,6 +809,9 @@ void ShapeRoundedRectWindow(Window w, int width, int height) {
                         CORNER_RADIUS - 1);
    
    JXShapeCombineMask(display, w, ShapeBounding, 0, 0, shapePixmap, ShapeSet);
+
+   JXFreeGC(display, shapeGC);
+   JXFreePixmap(display, shapePixmap);
 
 #endif
 }

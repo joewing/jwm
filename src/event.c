@@ -1114,6 +1114,28 @@ void HandleMapRequest(const XMapEvent *event) {
       JXUngrabServer(display);
    } else {
       if(!(np->state.status & STAT_MAPPED)) {
+
+         if(np->prev != NULL) {
+            np->prev->next = np->next;
+         } else {
+            nodes[np->state.layer] = np->next;
+         }
+         if(np->next != NULL) {
+            np->next->prev = np->prev;
+         } else {
+            nodeTail[np->state.layer] = np->prev;
+         }
+
+         np->state = ReadWindowState(np->window);
+         np->state.status |= STAT_MAPPED;
+
+         np->prev = NULL;
+         np->next = nodes[np->state.layer];
+         if(np->next == NULL) {
+            nodeTail[np->state.layer] = np;
+         }
+         nodes[np->state.layer] = np;
+
          np->state = ReadWindowState(np->window);
          np->state.status |= STAT_MAPPED;
          if(!(np->state.status & STAT_STICKY)) {

@@ -39,6 +39,7 @@ distclean: clean
 	rm -fr autom4te.cache
 	rm -f Makefile.bak src/Makefile.bak
 	rm -fr `find . \( -name .svn -o -name .gdb_history \) -print` ;
+	rm -fr .git .gitignore
 
 check-gettext:
 	@if test x$(USE_NLS) != "xyes" ; then \

@@ -1,0 +1,15 @@
+*.o
+Makefile
+autom4te.cache
+config.h
+config.log
+config.status
+configure
+jwm.1
+po/Makefile
+po/Makefile.in
+po/POTFILES
+po/*.gmo
+po/stamp-*
+src/Makefile
+src/jwm

@@ -196,7 +196,7 @@ void WriteState(struct ClientNode *np);
  * @param value A pointer to the location to save the atom.
  * @return 1 on success, 0 on failure.
  */
-int GetCardinalAtom(Window window, AtomType atom, unsigned long *value);
+char GetCardinalAtom(Window window, AtomType atom, unsigned long *value);
 
 /** Read a window atom.
  * @param window The window.
@@ -204,7 +204,7 @@ int GetCardinalAtom(Window window, AtomType atom, unsigned long *value);
  * @param value A pointer to the location to save the atom.
  * @return 1 on success, 0 on failure.
  */
-int GetWindowAtom(Window window, AtomType atom, Window *value);
+char GetWindowAtom(Window window, AtomType atom, Window *value);
 
 /** Set a cardinal atom.
  * @param window The window.

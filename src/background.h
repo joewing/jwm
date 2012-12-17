@@ -10,17 +10,12 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 
-/** Initialize any data needed for background support. */
+/*@{*/
 void InitializeBackgrounds();
-
-/** Startup background support. */
 void StartupBackgrounds();
-
-/** Shutdown background support. */
 void ShutdownBackgrounds();
-
-/** Release any data needed for background support. */
 void DestroyBackgrounds();
+/*@}*/
 
 /** Set the background to use for the specified desktops.
  * @param desktop The desktop whose background to set (-1 for the default).

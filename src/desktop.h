@@ -12,7 +12,7 @@
 
 struct MenuType;
 
-extern int showingDesktop;
+extern char showingDesktop;
 
 /*@{*/
 void InitializeDesktops();
@@ -22,16 +22,16 @@ void DestroyDesktops();
 /*@}*/
 
 /** Switch to the desktop to the right. */
-int RightDesktop();
+char RightDesktop();
 
 /** Switch to the desktop to the left. */
-int LeftDesktop();
+char LeftDesktop();
 
 /** Switch to the desktop above. */
-int AboveDesktop();
+char AboveDesktop();
 
 /** Switch to the desktop below. */
-int BelowDesktop();
+char BelowDesktop();
 
 /** Switch to a specific desktop.
  * @param desktop The desktop to show (0 based).
@@ -48,13 +48,6 @@ void ShowDesktop();
  * @return A menu containing all the desktops.
  */
 struct Menu *CreateDesktopMenu(unsigned int mask);
-
-/** Set the number of desktops.
- * This is called before startup.
- * @param width ASCII representation of number of horizontal desktops.
- * @param height ASCII representation of the number of vertical desktops.
- */
-void SetDesktopCount(const char *width, const char *height);
 
 /** Set the name of a desktop.
  * This is called before startup.

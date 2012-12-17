@@ -19,27 +19,30 @@
 #include "menu.h"
 #include "misc.h"
 #include "background.h"
+#include "settings.h"
 
 char **desktopNames = NULL;
 
-int showingDesktop;
+char showingDesktop;
 
 /** Initialize desktop data. */
-void InitializeDesktops() {
+void InitializeDesktops()
+{
 }
 
 /** Startup desktop support. */
-void StartupDesktops() {
+void StartupDesktops()
+{
 
    unsigned int x;
 
    if(desktopNames == NULL) {
-      desktopNames = Allocate(desktopCount * sizeof(char*));
-      for(x = 0; x < desktopCount; x++) {
+      desktopNames = Allocate(settings.desktopCount * sizeof(char*));
+      for(x = 0; x < settings.desktopCount; x++) {
          desktopNames[x] = NULL;
       }
    }
-   for(x = 0; x < desktopCount; x++) {
+   for(x = 0; x < settings.desktopCount; x++) {
       if(desktopNames[x] == NULL) {
          desktopNames[x] = Allocate(4 * sizeof(char));
          snprintf(desktopNames[x], 4, "%d", x + 1);
@@ -60,7 +63,7 @@ void DestroyDesktops() {
    unsigned int x;
 
    if(desktopNames) {
-      for(x = 0; x < desktopCount; x++) {
+      for(x = 0; x < settings.desktopCount; x++) {
          Release(desktopNames[x]);
       }
       Release(desktopNames);
@@ -70,12 +73,13 @@ void DestroyDesktops() {
 }
 
 /** Change to the desktop to the right. */
-int RightDesktop() {
+char RightDesktop()
+{
    int x, y;
-   if(desktopWidth > 1) {
-      y = currentDesktop / desktopWidth;
-      x = (currentDesktop + 1) % desktopWidth;
-      ChangeDesktop(y * desktopWidth + x);
+   if(settings.desktopWidth > 1) {
+      y = currentDesktop / settings.desktopWidth;
+      x = (currentDesktop + 1) % settings.desktopWidth;
+      ChangeDesktop(y * settings.desktopWidth + x);
       return 1;
    } else {
       return 0;
@@ -83,13 +87,14 @@ int RightDesktop() {
 }
 
 /** Change to the desktop to the left. */
-int LeftDesktop() {
+char LeftDesktop()
+{
    int x, y;
-   if(desktopWidth > 1) {
-      y = currentDesktop / desktopWidth;
-      x = currentDesktop % desktopWidth;
-      x = x > 0 ? x - 1 : desktopWidth - 1;
-      ChangeDesktop(y * desktopWidth + x);
+   if(settings.desktopWidth > 1) {
+      y = currentDesktop / settings.desktopWidth;
+      x = currentDesktop % settings.desktopWidth;
+      x = x > 0 ? x - 1 : settings.desktopWidth - 1;
+      ChangeDesktop(y * settings.desktopWidth + x);
       return 1;
    } else {
       return 0;
@@ -97,13 +102,17 @@ int LeftDesktop() {
 }
 
 /** Change to the desktop above. */
-int AboveDesktop() {
-   if(desktopHeight > 1) {
-      if(currentDesktop >= desktopWidth) {
-         ChangeDesktop(currentDesktop - desktopWidth);
+char AboveDesktop()
+{
+   unsigned int next;
+   if(settings.desktopHeight > 1) {
+      if(currentDesktop >= settings.desktopWidth) {
+         next = currentDesktop - settings.desktopWidth;
       } else {
-         ChangeDesktop(currentDesktop + (desktopHeight - 1) * desktopWidth);
+         next = currentDesktop
+              + (settings.desktopHeight - 1) * settings.desktopWidth;
       }
+      ChangeDesktop(next);
       return 1;
    } else {
       return 0;
@@ -111,9 +120,12 @@ int AboveDesktop() {
 }
 
 /** Change to the desktop below. */
-int BelowDesktop() {
-   if(desktopHeight > 1) {
-      ChangeDesktop((currentDesktop + desktopWidth) % desktopCount);
+char BelowDesktop()
+{
+   unsigned int next;
+   if(settings.desktopHeight > 1) {
+      next = (currentDesktop + settings.desktopWidth) % settings.desktopCount;
+      ChangeDesktop(next);
       return 1;
    } else {
       return 0;
@@ -121,12 +133,13 @@ int BelowDesktop() {
 }
 
 /** Change to the specified desktop. */
-void ChangeDesktop(unsigned int desktop) {
+void ChangeDesktop(unsigned int desktop)
+{
 
    ClientNode *np;
    unsigned int x;
 
-   if(JUNLIKELY(desktop >= desktopCount)) {
+   if(JUNLIKELY(desktop >= settings.desktopCount)) {
       return;
    }
 
@@ -175,7 +188,8 @@ void ChangeDesktop(unsigned int desktop) {
 }
 
 /** Create a desktop menu. */
-Menu *CreateDesktopMenu(unsigned int mask) {
+Menu *CreateDesktopMenu(unsigned int mask)
+{
 
    Menu *menu;
    MenuItem *item;
@@ -186,7 +200,7 @@ Menu *CreateDesktopMenu(unsigned int mask) {
    menu->items = NULL;
    menu->label = NULL;
 
-   for(x = desktopCount - 1; x >= 0; x--) {
+   for(x = settings.desktopCount - 1; x >= 0; x--) {
 
       item = Allocate(sizeof(MenuItem));
       item->type = MENU_ITEM_NORMAL;
@@ -216,7 +230,8 @@ Menu *CreateDesktopMenu(unsigned int mask) {
 }
 
 /** Toggle the "show desktop" state. */
-void ShowDesktop() {
+void ShowDesktop()
+{
 
    ClientNode *np;
    int layer;
@@ -250,32 +265,9 @@ void ShowDesktop() {
 
 }
 
-/** Set the number of desktops to use. */
-void SetDesktopCount(const char *width, const char *height) {
-
-   if(width) {
-      desktopWidth = atoi(width);
-   } else {
-      desktopWidth = DEFAULT_DESKTOP_WIDTH;
-   }
-   if(height) {
-      desktopHeight = atoi(height);
-   } else {
-      desktopHeight = DEFAULT_DESKTOP_HEIGHT;
-   }
-
-   desktopCount = desktopWidth * desktopHeight;
-   if(JUNLIKELY(desktopCount == 0)) {
-      Warning(_("invalid desktop count"));
-      desktopWidth = DEFAULT_DESKTOP_WIDTH;
-      desktopHeight = DEFAULT_DESKTOP_HEIGHT;
-      desktopCount = desktopWidth * desktopHeight;
-   }
-
-}
-
 /** Set the name for a desktop. */
-void SetDesktopName(unsigned int desktop, const char *str) {
+void SetDesktopName(unsigned int desktop, const char *str)
+{
 
    unsigned int x;
 
@@ -285,11 +277,11 @@ void SetDesktopName(unsigned int desktop, const char *str) {
    }
 
    Assert(desktop >= 0);
-   Assert(desktop < desktopCount);
+   Assert(desktop < settings.desktopWidth * settings.desktopHeight);
 
    if(!desktopNames) {
-      desktopNames = Allocate(desktopCount * sizeof(char*));
-      for(x = 0; x < desktopCount; x++) {
+      desktopNames = Allocate(settings.desktopCount * sizeof(char*));
+      for(x = 0; x < settings.desktopCount; x++) {
          desktopNames[x] = NULL;
       }
    }
@@ -301,7 +293,8 @@ void SetDesktopName(unsigned int desktop, const char *str) {
 }
 
 /** Get the name of a desktop. */
-const char *GetDesktopName(unsigned int desktop) {
+const char *GetDesktopName(unsigned int desktop)
+{
    if(desktopNames && desktopNames[desktop]) {
       return desktopNames[desktop];
    } else {

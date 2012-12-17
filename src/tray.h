@@ -268,28 +268,17 @@ void SetTrayLayout(TrayType *tp, const char *str);
  */
 void SetTrayLayer(TrayType *tp, const char *str);
 
-/** Set the tray border size.
- * @param tp The tray.
- * @param str The border size (ASCII, pixels).
- */
-void SetTrayBorder(TrayType *tp, const char *str);
-
 /** Set the tray horizontal alignment.
  * @param tp The tray.
- * @param str The alignment(ASCII).
+ * @param str The alignment (ASCII).
  */
 void SetTrayHorizontalAlignment(TrayType *tp, const char *str);
 
 /** Set the tray vertical alignment.
  * @param tp The tray.
- * @param str The alignment(ASCII).
+ * @param str The alignment (ASCII).
  */
 void SetTrayVerticalAlignment(TrayType *tp, const char *str);
-
-/** Set the tray transparency level.
- * @param str The value (ASCII).
- */
-void SetTrayOpacity(const char *str);
 
 #endif /* TRAY_H */
 

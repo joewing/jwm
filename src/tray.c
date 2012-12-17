@@ -18,6 +18,7 @@
 #include "menu.h"
 #include "timing.h"
 #include "screen.h"
+#include "settings.h"
 
 #define DEFAULT_TRAY_WIDTH 32
 #define DEFAULT_TRAY_HEIGHT 32
@@ -25,7 +26,6 @@
 static TrayType *trays;
 static Window supportingWindow;
 static int trayCount;
-static unsigned int trayOpacity;
 
 static void HandleTrayExpose(TrayType *tp, const XExposeEvent *event);
 static void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event);
@@ -50,7 +50,6 @@ void InitializeTray() {
    trays = NULL;
    trayCount = 0;
    supportingWindow = None;
-   trayOpacity = UINT_MAX;
 }
 
 /** Startup trays. */
@@ -95,11 +94,11 @@ void StartupTray() {
          tp->x, tp->y, tp->width, tp->height,
          0, rootDepth, InputOutput, rootVisual, attrMask, &attr);
 
-      if(trayOpacity < UINT_MAX) {
+      if(settings.trayOpacity < UINT_MAX) {
          /* Can't use atoms yet as it hasn't been initialized. */
          opacityAtom = JXInternAtom(display, "_NET_WM_WINDOW_OPACITY", False);
          JXChangeProperty(display, tp->window, opacityAtom, XA_CARDINAL, 32,
-            PropModeReplace, (unsigned char*)&trayOpacity, 1);
+            PropModeReplace, (unsigned char*)&settings.trayOpacity, 1);
          JXSync(display, False);
       }
 
@@ -1113,24 +1112,6 @@ void SetTrayLayer(TrayType *tp, const char *str) {
 
 }
 
-/** Set the border width for a tray. */
-void SetTrayBorder(TrayType *tp, const char *str) {
-
-   int temp;
-
-   Assert(tp);
-   Assert(str);
-
-   temp = atoi(str);
-   if(JUNLIKELY(temp < MIN_TRAY_BORDER || temp > MAX_TRAY_BORDER)) {
-      Warning(_("invalid tray border: %d"), temp);
-      tp->border = DEFAULT_TRAY_BORDER;
-   } else {
-      tp->border = temp;
-   }
-
-}
-
 /** Set the horizontal tray alignment. */
 void SetTrayHorizontalAlignment(TrayType *tp, const char *str) {
 
@@ -1168,22 +1149,6 @@ void SetTrayVerticalAlignment(TrayType *tp, const char *str) {
       Warning(_("invalid tray vertical alignment: \"%s\""), str);
       tp->valign = TALIGN_FIXED;
    }
-
-}
-
-/** Set the tray transparency level. */
-void SetTrayOpacity(const char *str) {
-
-   double temp;
-
-   Assert(str);
-
-   temp = atof(str);
-   if(JUNLIKELY(temp <= 0.0 || temp > 1.0)) {
-      Warning(_("invalid tray opacity: %s"), str);
-      temp = 1.0;
-   }
-   trayOpacity = (unsigned int)(temp * UINT_MAX);
 
 }
 

@@ -50,7 +50,8 @@ void SetFont(FontType type, const char *value);
  * @param str The string to render.
  */
 void RenderString(Drawable d, FontType font, ColorType color,
-   int x, int y, int width, Region region, const char *str);
+                  int x, int y, int width, Region region,
+                  const char *str);
 
 /** Get the width of a string.
  * @param type The font used to determine the width.

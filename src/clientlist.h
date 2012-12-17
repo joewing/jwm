@@ -24,7 +24,7 @@ extern struct ClientNode *nodeTail[LAYER_COUNT];
  * @param np The client.
  * @return 1 if focus is allowed, 0 otherwise.
  */
-int ShouldFocus(const struct ClientNode *np);
+char ShouldFocus(const struct ClientNode *np);
 
 /** Start walking the window stack. */
 void StartWindowStackWalk();

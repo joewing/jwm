@@ -55,59 +55,49 @@ static ScaledIconNode *GetScaledIcon(IconNode *icon, int width, int height);
 
 static void InsertIcon(IconNode *icon);
 static IconNode *FindIcon(const char *name);
-static int GetHash(const char *str);
+static unsigned int GetHash(const char *str);
 
 /** Initialize icon data.
  * This must be initialized before parsing the configuration.
  */
-void InitializeIcons() {
-
-   int x;
-
+void InitializeIcons()
+{
+   unsigned int x;
    iconPaths = NULL;
    iconPathsTail = NULL;
-
    iconHash = Allocate(sizeof(IconNode*) * HASH_SIZE);
    for(x = 0; x < HASH_SIZE; x++) {
       iconHash[x] = NULL;
    }
-
    memset(&emptyIcon, 0, sizeof(emptyIcon));
-
 }
 
 /** Startup icon support. */
-void StartupIcons() {
-
+void StartupIcons()
+{
    XGCValues gcValues;
    unsigned long gcMask;
-
    gcMask = GCGraphicsExposures;
    gcValues.graphics_exposures = False;
    iconGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
-
 }
 
 /** Shutdown icon support. */
-void ShutdownIcons() {
-
-   int x;
-
+void ShutdownIcons()
+{
+   unsigned int x;
    for(x = 0; x < HASH_SIZE; x++) {
       while(iconHash[x]) {
          DoDestroyIcon(x, iconHash[x]);
       }
    }
-
    JXFreeGC(display, iconGC);
-
 }
 
 /** Destroy icon data. */
-void DestroyIcons() {
-
+void DestroyIcons()
+{
    IconPathNode *pn;
-
    while(iconPaths) {
       pn = iconPaths->next;
       Release(iconPaths->path);
@@ -115,7 +105,6 @@ void DestroyIcons() {
       iconPaths = pn;
    }
    iconPathsTail = NULL;
-
    if(iconHash) {
       Release(iconHash);
       iconHash = NULL;
@@ -123,7 +112,8 @@ void DestroyIcons() {
 }
 
 /** Set the preferred icon sizes on the root window. */
-void SetIconSize() {
+void SetIconSize()
+{
 
    XIconSize size;
 
@@ -146,7 +136,8 @@ void SetIconSize() {
 }
 
 /** Add an icon search path. */
-void AddIconPath(char *path) {
+void AddIconPath(char *path)
+{
 
    IconPathNode *ip;
    int length;
@@ -186,7 +177,8 @@ void AddIconPath(char *path) {
 
 /** Draw an icon. */
 void PutIcon(IconNode *icon, Drawable d, int x, int y,
-             int width, int height) {
+             int width, int height)
+{
 
    ScaledIconNode *node;
    int ix, iy;
@@ -221,7 +213,7 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
 
          /* Draw the icon. */
          JXCopyArea(display, node->image, d, iconGC, 0, 0,
-            node->width, node->height, ix, iy);
+                    node->width, node->height, ix, iy);
 
          /* Reset the clip mask. */
          if(node->mask != None) {
@@ -236,7 +228,8 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
 }
 
 /** Load the icon for a client. */
-void LoadIcon(ClientNode *np) {
+void LoadIcon(ClientNode *np)
+{
 
    IconPathNode *ip;
 
@@ -289,18 +282,20 @@ void LoadIcon(ClientNode *np) {
 
 /** Load an icon given a name, path, and suffix. */
 IconNode *LoadSuffixedIcon(const char *path, const char *name,
-   const char *suffix) {
+                           const char *suffix)
+{
 
    IconNode *result;
    ImageNode *image;
    char *iconName;
+   unsigned int len;
 
    Assert(path);
    Assert(name);
    Assert(suffix);
 
-   iconName = Allocate(strlen(name)
-      + strlen(path) + strlen(suffix) + 1);
+   len = strlen(name) + strlen(path) + strlen(suffix);
+   iconName = Allocate(len + 1);
    strcpy(iconName, path);
    strcat(iconName, name);
    strcat(iconName, suffix);
@@ -326,7 +321,8 @@ IconNode *LoadSuffixedIcon(const char *path, const char *name,
 }
 
 /** Load an icon from a file. */
-IconNode *LoadNamedIcon(const char *name) {
+IconNode *LoadNamedIcon(const char *name)
+{
 
    IconPathNode *ip;
    IconNode *icon;
@@ -350,7 +346,8 @@ IconNode *LoadNamedIcon(const char *name) {
 }
 
 /** Helper for loading icons by name. */
-IconNode *LoadNamedIconHelper(const char *name, const char *path) {
+IconNode *LoadNamedIconHelper(const char *name, const char *path)
+{
 
    IconNode *result;
    char *temp;
@@ -366,34 +363,33 @@ IconNode *LoadNamedIconHelper(const char *name, const char *path) {
 }
 
 /** Read the icon property from a client. */
-void ReadNetWMIcon(ClientNode *np) {
-
+void ReadNetWMIcon(ClientNode *np)
+{
    unsigned long count;
    int status;
    unsigned long extra;
    Atom realType;
    int realFormat;
    unsigned char *data;
-
    status = JXGetWindowProperty(display, np->window, atoms[ATOM_NET_WM_ICON],
-      0, 256 * 256 * 4, False, XA_CARDINAL, &realType, &realFormat, &count,
-      &extra, &data);
-
+                                0, 256 * 256 * 4, False, XA_CARDINAL,
+                                &realType, &realFormat, &count, &extra, &data);
    if(status == Success && data) {
       np->icon = CreateIconFromBinary((unsigned long*)data, count);
       JXFree(data);
    }
-
 }
 
 
 /** Create the default icon. */
-IconNode *GetDefaultIcon() {
+IconNode *GetDefaultIcon()
+{
    return CreateIconFromData("default", x_xpm);
 }
 
 /** Create an icon from XPM image data. */
-IconNode *CreateIconFromData(const char *name, char **data) {
+IconNode *CreateIconFromData(const char *name, char **data)
+{
 
    ImageNode *image;
    IconNode *result;
@@ -421,7 +417,8 @@ IconNode *CreateIconFromData(const char *name, char **data) {
 }
 
 /** Create an icon from the specified file. */
-IconNode *CreateIconFromFile(const char *fileName) {
+IconNode *CreateIconFromFile(const char *fileName)
+{
 
    ImageNode *image;
    IconNode *result;
@@ -450,7 +447,8 @@ IconNode *CreateIconFromFile(const char *fileName) {
 }
 
 /** Get a scaled icon. */
-ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
+ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight)
+{
 
    XColor color;
    XImage *image;
@@ -580,7 +578,8 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight) {
 
 /** Create an icon from binary data (as specified via window properties). */
 IconNode *CreateIconFromBinary(const unsigned long *input,
-   unsigned int length) {
+                               unsigned int length)
+{
 
    unsigned long height, width;
    IconNode *result;
@@ -627,10 +626,9 @@ IconNode *CreateIconFromBinary(const unsigned long *input,
 }
 
 /** Create an empty icon node. */
-IconNode *CreateIcon() {
-
+IconNode *CreateIcon()
+{
    IconNode *icon;
-
    icon = Allocate(sizeof(IconNode));
    icon->name = NULL;
    icon->image = NULL;
@@ -638,16 +636,13 @@ IconNode *CreateIcon() {
    icon->useRender = 1;
    icon->next = NULL;
    icon->prev = NULL;
-
    return icon;
-
 }
 
 /** Helper method for destroy icons. */
-void DoDestroyIcon(int index, IconNode *icon) {
-
+void DoDestroyIcon(int index, IconNode *icon)
+{
    ScaledIconNode *np;
-
    if(icon) {
       while(icon->nodes) {
          np = icon->nodes->next;
@@ -687,44 +682,37 @@ void DoDestroyIcon(int index, IconNode *icon) {
 }
 
 /** Destroy an icon. */
-void DestroyIcon(IconNode *icon) {
-
-   int index;
-
+void DestroyIcon(IconNode *icon)
+{
+   unsigned int index;
    if(icon && !icon->name) {
       index = GetHash(icon->name);
       DoDestroyIcon(index, icon);
    }
-
 }
 
 /** Insert an icon to the icon hash table. */
-void InsertIcon(IconNode *icon) {
-
-   int index;
-
+void InsertIcon(IconNode *icon)
+{
+   unsigned int index;
    Assert(icon);
    Assert(icon->name);
-
    index = GetHash(icon->name);
-
    icon->prev = NULL;
    if(iconHash[index]) {
       iconHash[index]->prev = icon;
    }
    icon->next = iconHash[index];
    iconHash[index] = icon;
-
 }
 
 /** Find a icon in the icon hash table. */
-IconNode *FindIcon(const char *name) {
-
+IconNode *FindIcon(const char *name)
+{
    IconNode *icon;
-   int index;
+   unsigned int index;
 
    index = GetHash(name);
-
    icon = iconHash[index];
    while(icon) {
       if(!strcmp(icon->name, name)) {
@@ -734,24 +722,20 @@ IconNode *FindIcon(const char *name) {
    }
 
    return NULL;
-
 }
 
 /** Get the hash for a string. */
-int GetHash(const char *str) {
-
-   int x;
+unsigned int GetHash(const char *str)
+{
+   unsigned int x;
    unsigned int hash = 0;
-
    if(str) {
       for(x = 0; str[x]; x++) {
          hash = (hash + (hash << 5)) ^ (unsigned int)str[x];
       }
       hash &= (HASH_SIZE - 1);
    }
-
    return hash;
-
 }
 
 #endif /* USE_ICONS */

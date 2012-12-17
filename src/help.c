@@ -11,74 +11,65 @@
 #include "help.h"
 
 /** Display program name, version, and compiled options . */
-void DisplayAbout() {
-   printf("JWM v%s by Joe Wingbermuehle\n", PACKAGE_VERSION);
+void DisplayAbout()
+{
+   printf("JWM v" PACKAGE_VERSION " by Joe Wingbermuehle\n");
    DisplayCompileOptions();
 }
 
 /** Display compiled options. */
-void DisplayCompileOptions() {
-
-   printf("compiled options: ");
-
+void DisplayCompileOptions()
+{
+   printf("compiled options: "
 #ifndef DISABLE_CONFIRM
-   printf("confirm ");
+          "confirm "
 #endif
-
 #ifdef DEBUG
-   printf("debug ");
+          "debug "
 #endif
-
 #ifdef USE_FRIBIDI
-   printf("fribidi ");
+          "fribidi "
 #endif
-
 #ifdef USE_ICONS
-   printf("icons ");
+          "icons "
 #endif
-
 #ifdef USE_PNG
-   printf("png ");
+          "png "
 #endif
-
 #ifdef USE_SHAPE
-   printf("shape ");
+          "shape "
 #endif
-
 #ifdef USE_XFT
-   printf("xft ");
+          "xft "
 #endif
-
 #ifdef USE_XINERAMA
-   printf("xinerama ");
+          "xinerama "
 #endif
-
 #ifdef USE_XPM
-   printf("xpm ");
+          "xpm "
 #endif
-
 #ifdef USE_XRENDER
-   printf("xrender ");
+          "xrender "
 #endif
-
-   printf("\nsystem configuration: %s\n", SYSTEM_CONFIG);
-
+          "\nsystem configuration: " SYSTEM_CONFIG "\n");
 }
 
 /** Display all help. */
-void DisplayHelp() {
+void DisplayHelp()
+{
    DisplayUsage();
-   printf("  -display X  Set the X display to use\n");
-   printf("  -exit       Exit JWM (send _JWM_EXIT to the root)\n");
-   printf("  -h          Display this help message\n");
-   printf("  -p          Parse the configuration file and exit\n");
-   printf("  -reload     Reload menu (send _JWM_RELOAD to the root)\n");
-   printf("  -restart    Restart JWM (send _JWM_RESTART to the root)\n");
-   printf("  -v          Display version information\n");
+   printf("  -display X  Set the X display to use\n"
+          "  -exit       Exit JWM (send _JWM_EXIT to the root)\n"
+          "  -h          Display this help message\n"
+          "  -p          Parse the configuration file and exit\n"
+          "  -reload     Reload menu (send _JWM_RELOAD to the root)\n"
+          "  -restart    Restart JWM (send _JWM_RESTART to the root)\n"
+          "  -v          Display version information\n");
 }
 
 /** Display program usage information. */
-void DisplayUsage() {
+void DisplayUsage()
+{
    DisplayAbout();
    printf("usage: jwm [ options ]\n");
 }

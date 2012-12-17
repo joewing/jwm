@@ -10,18 +10,16 @@
 #include "debug.h"
 
 /** Emit a message (if compiled with -DDEBUG). */
-void Debug(const char *str, ...) {
+void Debug(const char *str, ...)
+{
 #ifdef DEBUG
 
    va_list ap;
    va_start(ap, str);
-
    Assert(str);
-
    fprintf(stderr, "DEBUG: ");
    vfprintf(stderr, str, ap);
    fprintf(stderr, "\n");
-
    va_end(ap);
 
 #endif /* DEBUG */
@@ -43,29 +41,26 @@ static MemoryType *allocations = NULL;
 
 static const char *checkpointFile[CHECKPOINT_LIST_SIZE];
 static unsigned int checkpointLine[CHECKPOINT_LIST_SIZE];
-static int checkpointOffset;
+static unsigned int checkpointOffset;
 
 /** Start the debugger. */
-void DEBUG_StartDebug(const char *file, unsigned int line) {
-   int x;
-
+void DEBUG_StartDebug(const char *file, unsigned int line)
+{
+   unsigned int x;
    Debug("%s[%u]: debug mode started", file, line);
-
    checkpointOffset = 0;
    for(x = 0; x < CHECKPOINT_LIST_SIZE; x++) {
       checkpointFile[x] = NULL;
       checkpointLine[x] = 0;
    }
-
 }
 
 /** Stop the debugger. */
-void DEBUG_StopDebug(const char *file, unsigned int line) {
+void DEBUG_StopDebug(const char *file, unsigned int line)
+{
    MemoryType *mp;
    unsigned int count = 0;
-
    Debug("%s[%u]: debug mode stopped", file, line);
-
    if(allocations) {
       Debug("MEMORY: memory leaks follow");
       for(mp = allocations; mp; mp = mp->next) {
@@ -81,23 +76,20 @@ void DEBUG_StopDebug(const char *file, unsigned int line) {
    } else {
       Debug("MEMORY: no memory leaks");
    }
-
 }
 
 /** Set a checkpoint. */
-void DEBUG_SetCheckpoint(const char *file, unsigned int line) {
-
+void DEBUG_SetCheckpoint(const char *file, unsigned int line)
+{
    checkpointFile[checkpointOffset] = file;
    checkpointLine[checkpointOffset] = line;
-
    checkpointOffset = (checkpointOffset + 1) % CHECKPOINT_LIST_SIZE;
-
 }
 
 /** Display the location of the last checkpoint. */
-void DEBUG_ShowCheckpoint() {
-   int x, offset;
-
+void DEBUG_ShowCheckpoint()
+{
+   unsigned int x, offset;
    Debug("CHECKPOINT LIST (oldest)");
    offset = checkpointOffset;
    for(x = 0; x < CHECKPOINT_LIST_SIZE; x++) {
@@ -107,25 +99,21 @@ void DEBUG_ShowCheckpoint() {
       offset = (offset + 1) % CHECKPOINT_LIST_SIZE;
    }
    Debug("END OF CHECKPOINT LIST (most recent)");
-
 }
 
 /** Allocate memory and log. */
-void *DEBUG_Allocate(size_t size, const char *file, unsigned int line) {
+void *DEBUG_Allocate(size_t size, const char *file, unsigned int line)
+{
    MemoryType *mp;
-
    if(size <= 0) {
       Debug("MEMORY: %s[%u]: Attempt to allocate %d bytes of memory",
-         file, line, size);
+            file, line, size);
    }
-
    mp = (MemoryType*)malloc(sizeof(MemoryType));
    Assert(mp);
-
    mp->file = file;
    mp->line = line;
    mp->size = size;
-
    mp->pointer = malloc(size + sizeof(char));
    if(!mp->pointer) {
       Debug("MEMORY: %s[%u]: Memory allocation failed (%d bytes)",
@@ -141,16 +129,15 @@ void *DEBUG_Allocate(size_t size, const char *file, unsigned int line) {
 
    mp->next = allocations;
    allocations = mp;
-
    return mp->pointer;
 }
 
 /** Reallocate memory and log. */
-void *DEBUG_Reallocate(void *ptr, size_t size, const char *file,
-   unsigned int line) {
-
+void *DEBUG_Reallocate(void *ptr, size_t size,
+                       const char *file,
+                       unsigned int line)
+{
    MemoryType *mp;
-
    if(size <= 0) {
       Debug("MEMORY: %s[%u]: Attempt to reallocate %d bytes of memory",
          file, line, size);
@@ -160,21 +147,18 @@ void *DEBUG_Reallocate(void *ptr, size_t size, const char *file,
          "Calling Allocate...", file, line);
       return DEBUG_Allocate(size, file, line);
    } else {
-
       for(mp = allocations; mp; mp = mp->next) {
          if(mp->pointer == ptr) {
-
             if(((char*)ptr)[mp->size] != 42) {
                Debug("MEMORY: %s[%u]: The canary is dead.", file, line);
             }
-
             mp->file = file;
             mp->line = line;
             mp->size = size;
             mp->pointer = realloc(ptr, size + sizeof(char));
             if(!mp->pointer) {
                Debug("MEMORY: %s[%u]: Failed to reallocate %d bytes.",
-                  file, line, size);
+                     file, line, size);
                Assert(0);
             }
             ((char*)mp->pointer)[size] = 42;
@@ -183,7 +167,7 @@ void *DEBUG_Reallocate(void *ptr, size_t size, const char *file,
       }
 
       Debug("MEMORY: %s[%u]: Attempt to reallocate unallocated pointer",
-         file, line);
+            file, line);
       mp = malloc(sizeof(MemoryType));
       Assert(mp);
       mp->file = file;
@@ -192,29 +176,26 @@ void *DEBUG_Reallocate(void *ptr, size_t size, const char *file,
       mp->pointer = malloc(size + sizeof(char));
       if(!mp->pointer) {
          Debug("MEMORY: %s[%u]: Failed to reallocate %d bytes.",
-            file, line, size);
+               file, line, size);
          Assert(0);
       }
       memset(mp->pointer, 85, size);
       ((char*)mp->pointer)[size] = 42;
-
       mp->next = allocations;
       allocations = mp;
-
       return mp->pointer;
    }
-
 }
 
 /** Release memory and log. */
-void DEBUG_Release(void **ptr, const char *file, unsigned int line) {
+void DEBUG_Release(void **ptr, const char *file, unsigned int line)
+{
    MemoryType *mp, *last;
-
    if(!ptr) {
       Debug("MEMORY: %s[%u]: Invalid attempt to release", file, line);
    } else if(!*ptr) {
       Debug("MEMORY: %s[%u]: Attempt to delete NULL pointer",
-         file, line);
+            file, line);
    } else {
       last = NULL;
       for(mp = allocations; mp; mp = mp->next) {

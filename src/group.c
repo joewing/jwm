@@ -16,6 +16,7 @@
 #include "desktop.h"
 #include "main.h"
 #include "misc.h"
+#include "settings.h"
 
 /** What part of the window to match. */
 typedef enum {
@@ -53,22 +54,24 @@ static void AddPattern(PatternListType **lp, const char *pattern,
 static void ApplyGroup(const GroupType *gp, ClientNode *np);
 
 /** Initialize group data. */
-void InitializeGroups() {
+void InitializeGroups()
+{
 }
 
 /** Startup group support. */
-void StartupGroups() {
+void StartupGroups()
+{
 }
 
 /** Shutdown group support. */
-void ShutdownGroups() {
+void ShutdownGroups()
+{
 }
 
 /** Destroy group data. */
-void DestroyGroups() {
-
+void DestroyGroups()
+{
    GroupType *gp;
-
    while(groups) {
       gp = groups->next;
       ReleasePatternList(groups->patterns);
@@ -76,28 +79,24 @@ void DestroyGroups() {
       Release(groups);
       groups = gp;
    }
-
 }
 
 /** Release a group pattern list. */
-void ReleasePatternList(PatternListType *lp) {
-
+void ReleasePatternList(PatternListType *lp)
+{
    PatternListType *tp;
-
    while(lp) {
       tp = lp->next;
       Release(lp->pattern);
       Release(lp);
       lp = tp;
    }
-
 }
 
 /** Release a group option list. */
-void ReleaseOptionList(OptionListType *lp) {
-
+void ReleaseOptionList(OptionListType *lp)
+{
    OptionListType *tp;
-
    while(lp) {
       tp = lp->next;
       if(lp->value) {
@@ -106,97 +105,82 @@ void ReleaseOptionList(OptionListType *lp) {
       Release(lp);
       lp = tp;
    }
-
 }
 
 /** Create an empty group. */
-GroupType *CreateGroup() {
+GroupType *CreateGroup()
+{
    GroupType *tp;
-
    tp = Allocate(sizeof(GroupType));
    tp->patterns = NULL;
    tp->options = NULL;
    tp->next = groups;
    groups = tp;
-
    return tp;
 }
 
 /** Add a window class to a group. */
-void AddGroupClass(GroupType *gp, const char *pattern) {
-
+void AddGroupClass(GroupType *gp, const char *pattern)
+{
    Assert(gp);
-
    if(JLIKELY(pattern)) {
       AddPattern(&gp->patterns, pattern, MATCH_CLASS);
    } else {
       Warning(_("invalid group class"));
    }
-
 }
 
 /** Add a window name to a group. */
-void AddGroupName(GroupType *gp, const char *pattern) {
-
+void AddGroupName(GroupType *gp, const char *pattern)
+{
    Assert(gp);
-
    if(JLIKELY(pattern)) {
       AddPattern(&gp->patterns, pattern, MATCH_NAME);
    } else {
       Warning(_("invalid group name"));
    }
-
 }
 
 /** Add a pattern to a pattern list. */
-void AddPattern(PatternListType **lp, const char *pattern, MatchType match) {
-
+void AddPattern(PatternListType **lp, const char *pattern, MatchType match)
+{
    PatternListType *tp;
-
    Assert(lp);
    Assert(pattern);
-
    tp = Allocate(sizeof(PatternListType));
    tp->next = *lp;
    *lp = tp;
-
    tp->pattern = CopyString(pattern);
    tp->match = match;
-
 }
 
 /** Add an option to a group. */
-void AddGroupOption(GroupType *gp, OptionType option) {
-
+void AddGroupOption(GroupType *gp, OptionType option)
+{
    OptionListType *lp;
-
    lp = Allocate(sizeof(OptionListType));
    lp->option = option;
    lp->value = NULL;
    lp->next = gp->options;
    gp->options = lp;
-
 }
 
 /** Add an option (with value) to a group. */
 void AddGroupOptionValue(GroupType *gp, OptionType option,
-   const char *value) {
-
+                         const char *value)
+{
    OptionListType *lp;
-
    Assert(value);
-
    lp = Allocate(sizeof(OptionListType));
    lp->option = option;
    lp->value = CopyString(value);
    lp->next = gp->options;
    gp->options = lp;
-
 }
 
 /** Apply groups to a client. */
-void ApplyGroups(ClientNode *np) {
-
+void ApplyGroups(ClientNode *np)
+{
    PatternListType *lp;
    GroupType *gp;
    char hasClass;
@@ -205,7 +189,6 @@ void ApplyGroups(ClientNode *np) {
    char matchesName;
 
    Assert(np);
-
    for(gp = groups; gp; gp = gp->next) {
       hasClass = 0;
       hasName = 0;
@@ -234,7 +217,8 @@ void ApplyGroups(ClientNode *np) {
 }
 
 /** Apply a group to a client. */
-void ApplyGroup(const GroupType *gp, ClientNode *np) {
+void ApplyGroup(const GroupType *gp, ClientNode *np)
+{
 
    OptionListType *lp;
    unsigned int temp;
@@ -242,7 +226,6 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
 
    Assert(gp);
    Assert(np);
-
    for(lp = gp->options; lp; lp = lp->next) {
       switch(lp->option) {
       case OPTION_STICKY:
@@ -273,7 +256,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
          break;
       case OPTION_DESKTOP:
          temp = atoi(lp->value);
-         if(JLIKELY(temp >= 1 && temp <= desktopCount)) {
+         if(JLIKELY(temp >= 1 && temp <= settings.desktopCount)) {
             np->state.desktop = temp - 1;
          } else {
             Warning(_("invalid group desktop: %s"), lp->value);
@@ -298,7 +281,11 @@ void ApplyGroup(const GroupType *gp, ClientNode *np) {
       case OPTION_OPACITY:
          tempf = atof(lp->value);
          if(JLIKELY(tempf > 0.0 && tempf <= 1.0)) {
-            np->state.opacity = (unsigned int)(tempf * UINT_MAX);
+            if(tempf == 1.0) {
+               np->state.status = UINT_MAX;
+            } else {
+               np->state.opacity = (unsigned int)(tempf * UINT_MAX);
+            }
             np->state.status |= STAT_OPACITY;
          } else {
             Warning(_("invalid group opacity: %s"), lp->value);

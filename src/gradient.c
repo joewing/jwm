@@ -14,8 +14,10 @@
 
 /** Draw a horizontal gradient. */
 void DrawHorizontalGradient(Drawable d, GC g,
-   long fromColor, long toColor,
-   int x, int y, unsigned int width, unsigned int height) {
+                            long fromColor, long toColor,
+                            int x, int y,
+                            unsigned int width, unsigned int height)
+{
 
    const int shift = 15;
    unsigned int line;

@@ -28,34 +28,34 @@ static void ReleaseCommands(CommandNode **commands);
 static void AddCommand(CommandNode **commands, const char *command);
 
 /** Initialize the command lists. */
-void InitializeCommands() {
+void InitializeCommands()
+{
    startupCommands = NULL;
    shutdownCommands = NULL;
    restartCommands = NULL;
 }
 
 /** Process startup/restart commands. */
-void StartupCommands() {
-
+void StartupCommands()
+{
    if(isRestarting) {
       RunCommands(restartCommands);
    } else {
       RunCommands(startupCommands);
    }
-
 }
 
 /** Process shutdown commands. */
-void ShutdownCommands() {
-
+void ShutdownCommands()
+{
    if(!shouldRestart) {
       RunCommands(shutdownCommands);
    }
-
 }
 
 /** Destroy the command lists. */
-void DestroyCommands() {
+void DestroyCommands()
+{
    ReleaseCommands(&startupCommands);
    ReleaseCommands(&shutdownCommands);
    ReleaseCommands(&restartCommands);
@@ -73,12 +73,12 @@ void RunCommands(CommandNode *commands) {
 }
 
 /** Release a command list. */
-void ReleaseCommands(CommandNode **commands) {
+void ReleaseCommands(CommandNode **commands)
+{
 
    CommandNode *cp;
 
    Assert(commands);
-
    while(*commands) {
       cp = (*commands)->next;
       Release((*commands)->command);
@@ -89,12 +89,12 @@ void ReleaseCommands(CommandNode **commands) {
 }
 
 /** Add a command to a command list. */
-void AddCommand(CommandNode **commands, const char *command) {
+void AddCommand(CommandNode **commands, const char *command)
+{
 
    CommandNode *cp;
 
    Assert(commands);
-
    if(!command) {
       return;
    }
@@ -102,13 +102,13 @@ void AddCommand(CommandNode **commands, const char *command) {
    cp = Allocate(sizeof(CommandNode));
    cp->next = *commands;
    *commands = cp;
-
    cp->command = CopyString(command);
 
 }
 
 /** Add a startup command. */
-void AddStartupCommand(const char *command) {
+void AddStartupCommand(const char *command)
+{
    AddCommand(&startupCommands, command);
 }
 
@@ -123,7 +123,8 @@ void AddRestartCommand(const char *command) {
 }
 
 /** Execute an external program. */
-void RunCommand(const char *command) {
+void RunCommand(const char *command)
+{
 
    const char *displayString;
    char *str;
@@ -133,7 +134,6 @@ void RunCommand(const char *command) {
    }
 
    displayString = DisplayString(display);
-
    if(!fork()) {
       close(ConnectionNumber(display));
       if(displayString && displayString[0]) {

@@ -18,8 +18,7 @@
 #include "timing.h"
 #include "misc.h"
 #include "border.h"
-
-#define DEFAULT_POPUP_DELAY 600
+#include "settings.h"
 
 typedef struct PopupType {
    int isActive;
@@ -31,26 +30,25 @@ typedef struct PopupType {
 } PopupType;
 
 static PopupType popup;
-static int popupEnabled;
-int popupDelay;
 
 static void DrawPopup();
 
 /** Initialize popup data. */
-void InitializePopup() {
-   popupDelay = DEFAULT_POPUP_DELAY;
-   popupEnabled = 1;
+void InitializePopup()
+{
 }
 
 /** Startup popups. */
-void StartupPopup() {
+void StartupPopup()
+{
    popup.isActive = 0;
    popup.text = NULL;
    popup.window = None;
 }
 
 /** Shutdown popups. */
-void ShutdownPopup() {
+void ShutdownPopup()
+{
    if(popup.text) {
       Release(popup.text);
       popup.text = NULL;
@@ -62,11 +60,13 @@ void ShutdownPopup() {
 }
 
 /** Destroy popup data. */
-void DestroyPopup() {
+void DestroyPopup()
+{
 }
 
 /** Show a popup window. */
-void ShowPopup(int x, int y, const char *text) {
+void ShowPopup(int x, int y, const char *text)
+{
 
    unsigned long attrMask;
    XSetWindowAttributes attr;
@@ -74,7 +74,7 @@ void ShowPopup(int x, int y, const char *text) {
 
    Assert(text);
 
-   if(!popupEnabled) {
+   if(!settings.popupEnabled) {
       return;
    }
 
@@ -164,31 +164,9 @@ void ShowPopup(int x, int y, const char *text) {
 
 }
 
-/** Set whether popups show be shown. */
-void SetPopupEnabled(int e) {
-   popupEnabled = e;
-}
-
-/** Set the popup delay. */
-void SetPopupDelay(const char *str) {
-
-   int temp;
-
-   if(JUNLIKELY(str == NULL)) {
-      return;
-   }
-
-   temp = atoi(str);
-   if(JUNLIKELY(temp < 0)) {
-      Warning(_("invalid popup delay specified: %s"), str);
-   } else {
-      popupDelay = temp;
-   }
-
-}
-
 /** Signal popup (this is used to hide popups after awhile). */
-void SignalPopup(const TimeType *now, int x, int y) {
+void SignalPopup(const TimeType *now, int x, int y)
+{
 
    if(popup.isActive) {
       if(abs(popup.mx - x) > 2 || abs(popup.my - y) > 2) {
@@ -200,7 +178,8 @@ void SignalPopup(const TimeType *now, int x, int y) {
 }
 
 /** Process an event on a popup window. */
-int ProcessPopupEvent(const XEvent *event) {
+int ProcessPopupEvent(const XEvent *event)
+{
 
    if(popup.isActive && event->xany.window == popup.window) {
       if(event->type == Expose) {
@@ -218,7 +197,8 @@ int ProcessPopupEvent(const XEvent *event) {
 }
 
 /** Draw the popup window. */
-void DrawPopup() {
+void DrawPopup()
+{
 
    Assert(popup.isActive);
 

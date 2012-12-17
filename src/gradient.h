@@ -22,8 +22,9 @@
  * @param height The height of the area to fill.
  */
 void DrawHorizontalGradient(Drawable d, GC g,
-   long fromColor, long toColor,
-   int x, int y, unsigned int width, unsigned int height);
+                            long fromColor, long toColor,
+                            int x, int y,
+                            unsigned int width, unsigned int height);
 
 #endif /* GRADIENT_H */
 

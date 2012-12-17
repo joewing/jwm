@@ -14,6 +14,7 @@
 #include "border.h"
 #include "tray.h"
 #include "main.h"
+#include "settings.h"
 
 typedef struct Strut {
    ClientNode *client;
@@ -42,11 +43,11 @@ void StartupPlacement() {
    int count;
    int x;
 
-   count = desktopCount * GetScreenCount();
+   count = settings.desktopCount * GetScreenCount();
    cascadeOffsets = Allocate(count * sizeof(int));
 
    for(x = 0; x < count; x++) {
-      cascadeOffsets[x] = borderWidth + titleHeight;
+      cascadeOffsets[x] = settings.borderWidth + settings.titleHeight;
    }
 
 }
@@ -400,12 +401,13 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
       SubtractTrayBounds(GetTrays(), &box, np->state.layer);
       SubtractStrutBounds(&box);
 
-      cascadeIndex = sp->index * desktopCount + currentDesktop;
+      cascadeIndex = sp->index * settings.desktopCount + currentDesktop;
 
       /* Set the cascaded location. */
       np->x = box.x + west + cascadeOffsets[cascadeIndex];
       np->y = box.y + north + cascadeOffsets[cascadeIndex];
-      cascadeOffsets[cascadeIndex] += borderWidth + titleHeight;
+      cascadeOffsets[cascadeIndex] += settings.borderWidth
+                                    + settings.titleHeight;
 
       /* Check for cascade overflow. */
       overflow = 0;
@@ -417,7 +419,8 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 
       if(overflow) {
 
-         cascadeOffsets[cascadeIndex] = borderWidth + titleHeight;
+         cascadeOffsets[cascadeIndex] = settings.borderWidth
+                                      + settings.titleHeight;
          np->x = box.x + west + cascadeOffsets[cascadeIndex];
          np->y = box.y + north + cascadeOffsets[cascadeIndex];
 
@@ -434,7 +437,8 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
             np->x = box.x + west;
             np->y = box.y + north;
          } else {
-            cascadeOffsets[cascadeIndex] += borderWidth + titleHeight;
+            cascadeOffsets[cascadeIndex] += settings.borderWidth
+                                          + settings.titleHeight;
          }
 
       }

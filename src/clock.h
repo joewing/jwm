@@ -27,8 +27,10 @@ void DestroyClock();
  * @param width The width of the clock (0 for auto).
  * @param height The height of the clock (0 for auto).
  */
-struct TrayComponentType *CreateClock(const char *format, const char *zone,
-   const char *command, int width, int height);
+struct TrayComponentType *CreateClock(const char *format,
+                                      const char *zone,
+                                      const char *command,
+                                      int width, int height);
 
 /** Update clocks.
  * This is called on a regular basis to update the time.

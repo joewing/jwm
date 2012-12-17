@@ -34,6 +34,7 @@
 #include "traybutton.h"
 #include "winmenu.h"
 #include "error.h"
+#include "settings.h"
 
 #define MIN_TIME_DELTA 50
 
@@ -44,12 +45,12 @@ static void DispatchBorderButtonEvent(const XButtonEvent *event,
                                       ClientNode *np);
 
 static void HandleConfigureRequest(const XConfigureRequestEvent *event);
-static int HandleConfigureNotify(const XConfigureEvent *event);
-static int HandleExpose(const XExposeEvent *event);
-static int HandlePropertyNotify(const XPropertyEvent *event);
+static char HandleConfigureNotify(const XConfigureEvent *event);
+static char HandleExpose(const XExposeEvent *event);
+static char HandlePropertyNotify(const XPropertyEvent *event);
 static void HandleClientMessage(const XClientMessageEvent *event);
 static void HandleColormapChange(const XColormapEvent *event);
-static int HandleDestroyNotify(const XDestroyWindowEvent *event);
+static char HandleDestroyNotify(const XDestroyWindowEvent *event);
 static void HandleMapRequest(const XMapEvent *event);
 static void HandleUnmapNotify(const XUnmapEvent *event);
 static void HandleButtonEvent(const XButtonEvent *event);
@@ -58,7 +59,7 @@ static void HandleKeyRelease(const XKeyEvent *event);
 static void HandleEnterNotify(const XCrossingEvent *event);
 static void HandleLeaveNotify(const XCrossingEvent *event);
 static void HandleMotionNotify(const XMotionEvent *event);
-static int HandleSelectionClear(const XSelectionClearEvent *event);
+static char HandleSelectionClear(const XSelectionClearEvent *event);
 
 static void HandleNetMoveResize(const XClientMessageEvent *event,
                                 ClientNode *np);
@@ -70,12 +71,13 @@ static void HandleShapeEvent(const XShapeEvent *event);
 #endif
 
 /** Wait for an event and process it. */
-void WaitForEvent(XEvent *event) {
+void WaitForEvent(XEvent *event)
+{
 
    struct timeval timeout;
    fd_set fds;
    int fd;
-   int handled;
+   char handled;
 
    fd = JXConnectionNumber(display);
 
@@ -180,7 +182,8 @@ void WaitForEvent(XEvent *event) {
 }
 
 /** Wake up components that need to run at certain times. */
-void Signal() {
+void Signal()
+{
 
    static TimeType last = ZERO_TIME;
 
@@ -206,8 +209,8 @@ void Signal() {
 }
 
 /** Process an event. */
-void ProcessEvent(XEvent *event) {
-
+void ProcessEvent(XEvent *event)
+{
    switch(event->type) {
    case ButtonPress:
    case ButtonRelease:
@@ -241,10 +244,9 @@ void ProcessEvent(XEvent *event) {
 }
 
 /** Discard motion events for the specified window. */
-void DiscardMotionEvents(XEvent *event, Window w) {
-
+void DiscardMotionEvents(XEvent *event, Window w)
+{
    XEvent temp;
-
    while(JXCheckTypedEvent(display, MotionNotify, &temp)) {
       UpdateTime(event);
       SetMousePosition(temp.xmotion.x_root, temp.xmotion.y_root);
@@ -252,18 +254,17 @@ void DiscardMotionEvents(XEvent *event, Window w) {
          *event = temp;
       }
    }
-
 }
 
 /** Process a selection clear event. */
-int HandleSelectionClear(const XSelectionClearEvent *event) {
-
+char HandleSelectionClear(const XSelectionClearEvent *event)
+{
    return HandleDockSelectionClear(event);
-
 }
 
 /** Process a button event. */
-void HandleButtonEvent(const XButtonEvent *event) {
+void HandleButtonEvent(const XButtonEvent *event)
+{
 
    int x, y;
    ClientNode *np;
@@ -273,7 +274,7 @@ void HandleButtonEvent(const XButtonEvent *event) {
    if(np) {
       if(event->type == ButtonPress) {
          RaiseClient(np);
-         if(focusModel == FOCUS_CLICK) {
+         if(settings.focusModel == FOCUS_CLICK) {
             FocusClient(np);
          }
       }
@@ -315,7 +316,7 @@ void HandleButtonEvent(const XButtonEvent *event) {
          case Button1:
          case Button2:
             RaiseClient(np);
-            if(focusModel == FOCUS_CLICK) {
+            if(settings.focusModel == FOCUS_CLICK) {
                FocusClient(np);
             }
             if(event->state & Mod1Mask) {
@@ -330,7 +331,7 @@ void HandleButtonEvent(const XButtonEvent *event) {
                             event->x + west, event->y + north);
             } else {
                RaiseClient(np);
-               if(focusModel == FOCUS_CLICK) {
+               if(settings.focusModel == FOCUS_CLICK) {
                   FocusClient(np);
                }
             }
@@ -346,15 +347,12 @@ void HandleButtonEvent(const XButtonEvent *event) {
 }
 
 /** Process a key press event. */
-void HandleKeyPress(const XKeyEvent *event) {
-
+void HandleKeyPress(const XKeyEvent *event)
+{
    ClientNode *np;
    KeyType key;
-
    key = GetKey(event);
-
    np = GetActiveClient();
-
    switch(key & 0xFF) {
    case KEY_EXEC:
       RunKeyCommand(event);
@@ -463,24 +461,22 @@ void HandleKeyPress(const XKeyEvent *event) {
    default:
       break;
    }
-
 }
 
 /** Handle a key release event. */
-void HandleKeyRelease(const XKeyEvent *event) {
-
+void HandleKeyRelease(const XKeyEvent *event)
+{
    KeyType key;
    key = GetKey(event);
    if(((key & 0xFF) != KEY_NEXTSTACK) &&
       ((key & 0xFF) != KEY_PREVSTACK)) {
       StopWindowStackWalk();
    }
-
 }
 
 /** Process a configure request. */
-void HandleConfigureRequest(const XConfigureRequestEvent *event) {
-
+void HandleConfigureRequest(const XConfigureRequestEvent *event)
+{
    XWindowChanges wc;
    ClientNode *np;
    int north, south, east, west;
@@ -557,38 +553,34 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event) {
       JXConfigureWindow(display, event->window, event->value_mask, &wc);
 
    }
-
 }
 
 /** Process a configure notify event. */
-int HandleConfigureNotify(const XConfigureEvent *event) {
-
+char HandleConfigureNotify(const XConfigureEvent *event)
+{
    if(event->window != rootWindow) {
       return 0;
    }
-
    if(rootWidth != event->width || rootHeight != event->height) {
       rootWidth = event->width;
       rootHeight = event->height;
       shouldRestart = 1;
       shouldExit = 1;
    }
-
    return 1;
-
 }
 
 /** Process an enter notify event. */
-void HandleEnterNotify(const XCrossingEvent *event) {
-
+void HandleEnterNotify(const XCrossingEvent *event)
+{
    ClientNode *np;
    Cursor cur;
 
    SetMousePosition(event->x_root, event->y_root);
-
    np = FindClientByWindow(event->window);
    if(np) {
-      if(!(np->state.status & STAT_ACTIVE) && (focusModel == FOCUS_SLOPPY)) {
+      if(  !(np->state.status & STAT_ACTIVE)
+         && (settings.focusModel == FOCUS_SLOPPY)) {
          FocusClient(np);
       }
       if(np->parent == event->window) {
@@ -604,17 +596,15 @@ void HandleEnterNotify(const XCrossingEvent *event) {
 }
 
 /** Process a leave notify event. */
-void HandleLeaveNotify(const XCrossingEvent *event) {
-
+void HandleLeaveNotify(const XCrossingEvent *event)
+{
    SetMousePosition(event->x_root, event->y_root);
-
 }
 
 /** Handle an expose event. */
-int HandleExpose(const XExposeEvent *event) {
-
+char HandleExpose(const XExposeEvent *event)
+{
    ClientNode *np;
-
    np = FindClientByWindow(event->window);
    if(np) {
       if(event->window == np->parent) {
@@ -635,15 +625,13 @@ int HandleExpose(const XExposeEvent *event) {
    } else {
       return event->count ? 1 : 0;
    }
-
 }
 
 /** Handle a property notify event. */
-int HandlePropertyNotify(const XPropertyEvent *event) {
-
+char HandlePropertyNotify(const XPropertyEvent *event)
+{
    ClientNode *np;
-   int changed;
-
+   char changed;
    np = FindClientByWindow(event->window);
    if(np) {
       changed = 0;
@@ -694,7 +682,8 @@ int HandlePropertyNotify(const XPropertyEvent *event) {
 }
 
 /** Handle a client message. */
-void HandleClientMessage(const XClientMessageEvent *event) {
+void HandleClientMessage(const XClientMessageEvent *event)
+{
 
    ClientNode *np;
 #ifdef DEBUG
@@ -738,7 +727,8 @@ void HandleClientMessage(const XClientMessageEvent *event) {
                (np->controller)(0);
             }
 
-            if(event->data.l[0] >= 0 && event->data.l[0] < (long)desktopCount) {
+            if(   event->data.l[0] >= 0
+               && event->data.l[0] < (long)settings.desktopCount) {
                np->state.status &= ~STAT_STICKY;
                SetClientDesktop(np, event->data.l[0]);
             }
@@ -806,7 +796,8 @@ void HandleClientMessage(const XClientMessageEvent *event) {
 }
 
 /** Handle a _NET_MOVERESIZE_WINDOW request. */
-void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np) {
+void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
+{
 
    long flags;
    long x, y;
@@ -870,7 +861,8 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np) {
 }
 
 /** Handle a _NET_WM_STATE request. */
-void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
+void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
+{
 
    int actionMaxH;
    int actionMaxV;
@@ -1035,7 +1027,8 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np) {
 }
 
 /** Handle a motion notify event. */
-void HandleMotionNotify(const XMotionEvent *event) {
+void HandleMotionNotify(const XMotionEvent *event)
+{
 
    ClientNode *np;
    Cursor cur;
@@ -1061,22 +1054,20 @@ void HandleMotionNotify(const XMotionEvent *event) {
 
 /** Handle a shape event. */
 #ifdef USE_SHAPE
-void HandleShapeEvent(const XShapeEvent *event) {
-
+void HandleShapeEvent(const XShapeEvent *event)
+{
    ClientNode *np;
-
    np = FindClientByWindow(event->window);
    if(np) {
       SetShape(np);
    }
-
 }
 #endif /* USE_SHAPE */
 
 /** Handle a colormap event. */
-void HandleColormapChange(const XColormapEvent *event) {
+void HandleColormapChange(const XColormapEvent *event)
+{
    ClientNode *np;
-
    if(event->new == True) {
       np = FindClientByWindow(event->window);
       if(np) {
@@ -1084,27 +1075,24 @@ void HandleColormapChange(const XColormapEvent *event) {
          UpdateClientColormap(np);
       }
    }
-
 }
 
 /** Handle a map request. */
-void HandleMapRequest(const XMapEvent *event) {
-
+void HandleMapRequest(const XMapEvent *event)
+{
    ClientNode *np;
-
    Assert(event);
-
    if(CheckSwallowMap(event)) {
       return;
    }
-
    np = FindClientByWindow(event->window);
    if(!np) {
       JXSync(display, False);
       JXGrabServer(display);
       np = AddClientWindow(event->window, 0, 1);
       if(np) {
-         if(focusModel == FOCUS_CLICK && !(np->state.status & STAT_NOFOCUS)) {
+         if(     settings.focusModel == FOCUS_CLICK
+            && !(np->state.status & STAT_NOFOCUS)) {
             FocusClient(np);
          }
       } else {
@@ -1155,8 +1143,8 @@ void HandleMapRequest(const XMapEvent *event) {
 }
 
 /** Handle an unmap notify event. */
-void HandleUnmapNotify(const XUnmapEvent *event) {
-
+void HandleUnmapNotify(const XUnmapEvent *event)
+{
    ClientNode *np;
    XEvent e;
 
@@ -1191,37 +1179,28 @@ void HandleUnmapNotify(const XUnmapEvent *event) {
       }
 
    }
-
 }
 
 /** Handle a destroy notify event. */
-int HandleDestroyNotify(const XDestroyWindowEvent *event) {
-
+char HandleDestroyNotify(const XDestroyWindowEvent *event)
+{
    ClientNode *np;
-
    np = FindClientByWindow(event->window);
    if(np && np->window == event->window) {
-
       if(np->controller) {
          (np->controller)(1);
       }
-
       RemoveClient(np);
-
       return 1;
-
    } else if(!np) {
-
       return HandleDockDestroy(event->window);
-
    }
-
    return 0;
-
 }
 
 /** Take the appropriate action for a click on a client border. */
-void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
+void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np)
+{
 
    static Time lastClickTime = 0;
    static int lastX = 0, lastY = 0;
@@ -1241,9 +1220,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
       if(event->type == ButtonPress) {
          if(doubleClickActive
             && abs(event->time - lastClickTime) > 0
-            && abs(event->time - lastClickTime) <= doubleClickSpeed
-            && abs(event->x - lastX) <= doubleClickDelta
-            && abs(event->y - lastY) <= doubleClickDelta) {
+            && abs(event->time - lastClickTime) <= settings.doubleClickSpeed
+            && abs(event->x - lastX) <= settings.doubleClickDelta
+            && abs(event->y - lastY) <= settings.doubleClickDelta) {
             MaximizeClientDefault(np);
             doubleClickActive = 0;
          } else {
@@ -1262,12 +1241,12 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
    case BA_MENU:
       if(event->type == ButtonPress) {
          if(np->state.border & BORDER_OUTLINE) {
-            bsize = borderWidth;
+            bsize = settings.borderWidth;
          } else {
             bsize = 0;
          }
          ShowWindowMenu(np, np->x + event->x - bsize,
-            np->y + event->y - titleHeight - bsize);
+            np->y + event->y - settings.titleHeight - bsize);
       }
       break;
    case BA_CLOSE:
@@ -1288,16 +1267,13 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np) {
    default:
       break;
    }
-
 }
 
 /** Update the last event time. */
-void UpdateTime(const XEvent *event) {
-
+void UpdateTime(const XEvent *event)
+{
    Time t = CurrentTime;
-
    Assert(event);
-
    switch(event->type) {
    case KeyPress:
    case KeyRelease:
@@ -1329,12 +1305,10 @@ void UpdateTime(const XEvent *event) {
    default:
       break;
    }
-
    if(t != CurrentTime) {
       if(t > eventTime || t < eventTime - 60000) {
          eventTime = t;
       }
    }
-
 }
 

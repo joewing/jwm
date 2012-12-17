@@ -15,21 +15,12 @@
 #include "main.h"
 #include "client.h"
 #include "error.h"
-
-typedef enum {
-   SW_INVALID,
-   SW_OFF,
-   SW_SCREEN,
-   SW_WINDOW,
-   SW_CORNER
-} StatusWindowType;
+#include "settings.h"
 
 static Window statusWindow;
 static unsigned int statusWindowHeight;
 static unsigned int statusWindowWidth;
 static int statusWindowX, statusWindowY;
-static StatusWindowType moveStatusType;
-static StatusWindowType resizeStatusType;
 
 static void CreateMoveResizeWindow(const ClientNode *np,
                                    StatusWindowType type);
@@ -37,7 +28,6 @@ static void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type);
 static void DestroyMoveResizeWindow();
 static void GetMoveResizeCoordinates(const ClientNode *np,
                                      StatusWindowType type, int *x, int *y);
-static StatusWindowType ParseType(const char *str);
 
 /** Get the location to place the status window. */
 void GetMoveResizeCoordinates(const ClientNode *np, StatusWindowType type,
@@ -104,7 +94,7 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
       statusWindowX = x;
       statusWindowY = y;
       JXMoveResizeWindow(display, statusWindow, x, y,
-         statusWindowWidth, statusWindowHeight);
+                         statusWindowWidth, statusWindowHeight);
    }
 
    /* Shape window corners. */
@@ -139,7 +129,7 @@ void DestroyMoveResizeWindow() {
 /** Create a move status window. */
 void CreateMoveWindow(ClientNode *np) {
 
-   CreateMoveResizeWindow(np, moveStatusType);
+   CreateMoveResizeWindow(np, settings.moveStatusType);
 
 }
 
@@ -149,11 +139,11 @@ void UpdateMoveWindow(ClientNode *np) {
    char str[80];
    unsigned int width;
 
-   if(moveStatusType == SW_OFF) {
+   if(settings.moveStatusType == SW_OFF) {
       return;
    }
 
-   DrawMoveResizeWindow(np, moveStatusType);
+   DrawMoveResizeWindow(np, settings.moveStatusType);
 
    snprintf(str, sizeof(str), "(%d, %d)", np->x, np->y);
    width = GetStringWidth(FONT_MENU, str);
@@ -172,7 +162,7 @@ void DestroyMoveWindow() {
 /** Create a resize status window. */
 void CreateResizeWindow(ClientNode *np) {
 
-   CreateMoveResizeWindow(np, resizeStatusType);
+   CreateMoveResizeWindow(np, settings.resizeStatusType);
 
 }
 
@@ -182,11 +172,11 @@ void UpdateResizeWindow(ClientNode *np, int gwidth, int gheight) {
    char str[80];
    unsigned int fontWidth;
 
-   if(resizeStatusType == SW_OFF) {
+   if(settings.resizeStatusType == SW_OFF) {
       return;
    }
 
-   DrawMoveResizeWindow(np, resizeStatusType);
+   DrawMoveResizeWindow(np, settings.resizeStatusType);
 
    snprintf(str, sizeof(str), "%d x %d", gwidth, gheight);
    fontWidth = GetStringWidth(FONT_MENU, str);
@@ -199,55 +189,6 @@ void UpdateResizeWindow(ClientNode *np, int gwidth, int gheight) {
 void DestroyResizeWindow() {
 
    DestroyMoveResizeWindow();
-
-}
-
-/** Parse a status window type string. */
-StatusWindowType ParseType(const char *str) {
-
-   if(!str) {
-      return SW_SCREEN;
-   } else if(!strcmp(str, "off")) {
-      return SW_OFF;
-   } else if(!strcmp(str, "screen")) {
-      return SW_SCREEN;
-   } else if(!strcmp(str, "window")) {
-      return SW_WINDOW;
-   } else if(!strcmp(str, "corner")) {
-      return SW_CORNER;
-   } else {
-      return SW_INVALID;
-   }
-
-}
-
-/** Set the move status window type. */
-void SetMoveStatusType(const char *str) {
-
-   StatusWindowType type;
-
-   type = ParseType(str);
-   if(JUNLIKELY(type == SW_INVALID)) {
-      moveStatusType = SW_SCREEN;
-      Warning(_("invalid MoveMode coordinates: \"%s\""), str);
-   } else {
-      moveStatusType = type;
-   }
-
-}
-
-/** Set the resize status window type. */
-void SetResizeStatusType(const char *str) {
-
-   StatusWindowType type;
-
-   type = ParseType(str);
-   if(JUNLIKELY(type == SW_INVALID)) {
-      resizeStatusType = SW_SCREEN;
-      Warning(_("invalid ResizeMode coordinates: \"%s\""), str);
-   } else {
-      resizeStatusType = type;
-   }
 
 }
 

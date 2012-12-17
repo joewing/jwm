@@ -16,6 +16,7 @@
 #include "screen.h"
 #include "color.h"
 #include "misc.h"
+#include "settings.h"
 
 #ifndef DISABLE_CONFIRM
 
@@ -63,35 +64,38 @@ static void ComputeDimensions(DialogType *d);
 static void DrawMessage(DialogType *d);
 static void DrawButtons(DialogType *d);
 static DialogType *FindDialogByWindow(Window w);
-static int HandleDialogExpose(const XExposeEvent *event); 
-static int HandleDialogButtonPress(const XButtonEvent *event);
-static int HandleDialogButtonRelease(const XButtonEvent *event);
+static char HandleDialogExpose(const XExposeEvent *event); 
+static char HandleDialogButtonPress(const XButtonEvent *event);
+static char HandleDialogButtonRelease(const XButtonEvent *event);
 
 /** Initialize the dialog processing data. */
-void InitializeDialogs() {
+void InitializeDialogs()
+{
 }
 
 /** Startup dialog processing. */
-void StartupDialogs() {
+void StartupDialogs()
+{
 }
 
 /** Stop dialog processing. */
-void ShutdownDialogs() {
-
+void ShutdownDialogs()
+{
    while(dialogList) {
       DestroyConfirmDialog(dialogList);
    }
-
 }
 
 /** Destroy dialog processing data. */
-void DestroyDialogs() {
+void DestroyDialogs()
+{
 }
 
 /** Handle an event on a dialog window. */
-int ProcessDialogEvent(const XEvent *event) {
+char ProcessDialogEvent(const XEvent *event)
+{
 
-   int handled = 0;
+   char handled = 0;
 
    Assert(event);
 
@@ -111,7 +115,8 @@ int ProcessDialogEvent(const XEvent *event) {
 }
 
 /** Handle an expose event. */
-int HandleDialogExpose(const XExposeEvent *event) {
+char HandleDialogExpose(const XExposeEvent *event)
+{
 
    DialogType *dp;
 
@@ -127,11 +132,12 @@ int HandleDialogExpose(const XExposeEvent *event) {
 }
 
 /** Handle a mouse button release event. */
-int HandleDialogButtonRelease(const XButtonEvent *event) {
+char HandleDialogButtonRelease(const XButtonEvent *event)
+{
 
    DialogType *dp;
    int x, y;
-   int cancelPressed, okPressed;
+   char cancelPressed, okPressed;
 
    Assert(event);
 
@@ -177,11 +183,12 @@ int HandleDialogButtonRelease(const XButtonEvent *event) {
 }
 
 /** Handle a mouse button release event. */
-int HandleDialogButtonPress(const XButtonEvent *event) {
+char HandleDialogButtonPress(const XButtonEvent *event)
+{
 
    DialogType *dp;
-   int cancelPressed;
-   int okPressed;
+   char cancelPressed;
+   char okPressed;
    int x, y;
 
    Assert(event);
@@ -227,22 +234,20 @@ int HandleDialogButtonPress(const XButtonEvent *event) {
 }
 
 /** Find a dialog by window or frame. */
-DialogType *FindDialogByWindow(Window w) {
-
+DialogType *FindDialogByWindow(Window w)
+{
    DialogType *dp;
-
    for(dp = dialogList; dp; dp = dp->next) {
       if(dp->node->window == w) {
          return dp;
       }
    }
-
    return NULL;
-
 }
 
 /** Show a confirm dialog. */
-void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
+void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
+{
 
    va_list ap;
    DialogType *dp;
@@ -306,23 +311,22 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
 
    DrawConfirmDialog(dp);
 
-   JXGrabButton(display, AnyButton, AnyModifier, window,
-      True, ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
+   JXGrabButton(display, AnyButton, AnyModifier, window, True,
+                ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
 
 }
 
 /** Draw a confirm dialog. */
-void DrawConfirmDialog(DialogType *dp) {
-
+void DrawConfirmDialog(DialogType *dp)
+{
    Assert(dp);
-
    DrawMessage(dp);
    DrawButtons(dp);
-
 }
 
 /** Destroy a confirm dialog. */
-void DestroyConfirmDialog(DialogType *dp) {
+void DestroyConfirmDialog(DialogType *dp)
+{
 
    int x;
 
@@ -350,7 +354,8 @@ void DestroyConfirmDialog(DialogType *dp) {
 }
 
 /** Compute the size of a dialog window. */
-void ComputeDimensions(DialogType *dp) {
+void ComputeDimensions(DialogType *dp)
+{
 
    const ScreenType *sp;
    int width;
@@ -392,10 +397,11 @@ void ComputeDimensions(DialogType *dp) {
          dp->y = 0;
       }
       if(dp->x + dp->width >= rootWidth) {
-         dp->x = rootWidth - dp->width - (borderWidth * 2);
+         dp->x = rootWidth - dp->width - (settings.borderWidth * 2);
       }
       if(dp->y + dp->height >= rootHeight) {
-         dp->y = rootHeight - dp->height - (borderWidth * 2 + titleHeight);
+         dp->y = rootHeight - dp->height
+               - (settings.borderWidth * 2 + settings.titleHeight);
       }
 
    } else {
@@ -410,7 +416,8 @@ void ComputeDimensions(DialogType *dp) {
 }
 
 /** Display the message on the dialog window. */
-void DrawMessage(DialogType *dp) {
+void DrawMessage(DialogType *dp)
+{
 
    int yoffset;
    int x;
@@ -420,14 +427,15 @@ void DrawMessage(DialogType *dp) {
    yoffset = 4;
    for(x = 0; x < dp->lineCount; x++) {
       RenderString(dp->node->window, FONT_MENU, COLOR_TRAY_FG,
-         4, yoffset, dp->width, NULL, dp->message[x]);
+                   4, yoffset, dp->width, NULL, dp->message[x]);
       yoffset += dp->lineHeight;
    }
 
 }
 
 /** Draw the buttons on the dialog window. */
-void DrawButtons(DialogType *dp) {
+void DrawButtons(DialogType *dp)
+{
 
    ButtonNode button;
    int temp;
@@ -477,17 +485,16 @@ void DrawButtons(DialogType *dp) {
 #else /* DISABLE_CONFIRM */
 
 /** Process an event on a dialog window. */
-int ProcessDialogEvent(const XEvent *event) {
+char ProcessDialogEvent(const XEvent *event)
+{
    return 0;
 }
 
 /** Show a confirm dialog. */
-void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...) {
-
+void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
+{
    Assert(action);
-
    (action)(np);
-
 }
 
 #endif /* DISABLE_CONFIRM */

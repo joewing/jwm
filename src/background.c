@@ -52,14 +52,16 @@ static void LoadGradientBackground(BackgroundNode *bp);
 static void LoadImageBackground(BackgroundNode *bp);
 
 /** Initialize any data needed for background support. */
-void InitializeBackgrounds() {
+void InitializeBackgrounds()
+{
    backgrounds = NULL;
    defaultBackground = NULL;
    lastBackground = NULL;
 }
 
 /** Startup background support. */
-void StartupBackgrounds() {
+void StartupBackgrounds()
+{
 
    BackgroundNode *bp;
 
@@ -94,7 +96,8 @@ void StartupBackgrounds() {
 }
 
 /** Shutdown background support. */
-void ShutdownBackgrounds() {
+void ShutdownBackgrounds()
+{
 
    BackgroundNode *bp;
 
@@ -112,7 +115,8 @@ void ShutdownBackgrounds() {
 }
 
 /** Release any data needed for background support. */
-void DestroyBackgrounds() {
+void DestroyBackgrounds()
+{
 
    BackgroundNode *bp;
 
@@ -126,7 +130,8 @@ void DestroyBackgrounds() {
 }
 
 /** Set the background to use for the specified desktops. */
-void SetBackground(int desktop, const char *type, const char *value) {
+void SetBackground(int desktop, const char *type, const char *value)
+{
 
    BackgroundType bgType;
    BackgroundNode *bp;
@@ -166,7 +171,8 @@ void SetBackground(int desktop, const char *type, const char *value) {
 }
 
 /** Load the background for the specified desktop. */
-void LoadBackground(int desktop) {
+void LoadBackground(int desktop)
+{
 
    XSetWindowAttributes attr;
    long attrValues;
@@ -218,7 +224,8 @@ void LoadBackground(int desktop) {
 }
 
 /** Load a solid background. */
-void LoadSolidBackground(BackgroundNode *bp) {
+void LoadSolidBackground(BackgroundNode *bp)
+{
 
    XColor c;
 
@@ -237,7 +244,8 @@ void LoadSolidBackground(BackgroundNode *bp) {
 }
 
 /** Load a gradient background. */
-void LoadGradientBackground(BackgroundNode *bp) {
+void LoadGradientBackground(BackgroundNode *bp)
+{
 
    XColor color1;
    XColor color2;
@@ -287,7 +295,8 @@ void LoadGradientBackground(BackgroundNode *bp) {
 }
 
 /** Load an image background. */
-void LoadImageBackground(BackgroundNode *bp) {
+void LoadImageBackground(BackgroundNode *bp)
+{
 
    IconNode *ip;
    int width, height;

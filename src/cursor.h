@@ -23,22 +23,22 @@ void DestroyCursors();
  * @param action The resize action.
  * @return 1 on success, 0 on failure.
  */
-int GrabMouseForResize(BorderActionType action);
+char GrabMouseForResize(BorderActionType action);
 
 /** Grab the mouse for moving a window.
  * @return 1 on success, 0 on failure.
  */
-int GrabMouseForMove();
+char GrabMouseForMove();
 
 /** Grab the mouse.
  * @return 1 on success, 0 on failure.
  */
-int GrabMouse(Window w);
+char GrabMouse(Window w);
 
 /** Grab the mouse to select a window.
  * @return 1 on success, 0 on failure.
  */
-int GrabMouseForChoose();
+char GrabMouseForChoose();
 
 /** Get the cursor to use given a border action.
  * @param action The border action.
@@ -74,16 +74,6 @@ unsigned int GetMouseMask();
  * @param w The window whose cursor to change.
  */
 void SetDefaultCursor(Window w);
-
-/** Set the double click speed.
- * @param str The speed (ASCII, milliseconds).
- */
-void SetDoubleClickSpeed(const char *str);
-
-/** Set the double click delta.
- * @param str The delta (ASCII, pixels).
- */
-void SetDoubleClickDelta(const char *str);
 
 #endif /* CURSOR_H */
 

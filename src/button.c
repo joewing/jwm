@@ -21,7 +21,8 @@ static void GetScaledIconSize(IconNode *ip, int maxsize,
                               int *width, int *height);
 
 /** Draw a button. */
-void DrawButton(ButtonNode *bp) {
+void DrawButton(ButtonNode *bp)
+{
 
    long outlinePixel;
    ColorType fg;
@@ -159,7 +160,8 @@ void DrawButton(ButtonNode *bp) {
 }
 
 /** Reset a button node with default values. */
-void ResetButton(ButtonNode *bp, Drawable d, GC g) {
+void ResetButton(ButtonNode *bp, Drawable d, GC g)
+{
 
    Assert(bp);
 
@@ -179,7 +181,8 @@ void ResetButton(ButtonNode *bp, Drawable d, GC g) {
 
 /** Get the scaled size of an icon for a button. */
 void GetScaledIconSize(IconNode *ip, int maxsize,
-                       int *width, int *height) {
+                       int *width, int *height)
+{
 
    int ratio;
 

@@ -26,25 +26,24 @@ static GC fontGC;
 #endif
 
 /** Initialize font data. */
-void InitializeFonts() {
-
-   int x;
-
+void InitializeFonts()
+{
+   unsigned int x;
    for(x = 0; x < FONT_COUNT; x++) {
       fonts[x] = NULL;
       fontNames[x] = NULL;
    }
-
 }
 
 /** Startup font support. */
-void StartupFonts() {
+void StartupFonts()
+{
 
 #ifndef USE_XFT
    XGCValues gcValues;
    unsigned long gcMask;
 #endif
-   int x;
+   unsigned int x;
 
    /* Inherit unset fonts from the tray for tray items. */
    if(!fontNames[FONT_TASK]) {
@@ -106,10 +105,9 @@ void StartupFonts() {
 }
 
 /** Shutdown font support. */
-void ShutdownFonts() {
-
-   int x;
-
+void ShutdownFonts()
+{
+   unsigned int x;
    for(x = 0; x < FONT_COUNT; x++) {
       if(fonts[x]) {
 #ifdef USE_XFT
@@ -122,30 +120,25 @@ void ShutdownFonts() {
    }
 
 #ifndef USE_XFT
-
    JXFreeGC(display, fontGC);
-
 #endif
-
-
 }
 
 /** Destroy font data. */
-void DestroyFonts() {
-
-   int x;
-
+void DestroyFonts()
+{
+   unsigned int x;
    for(x = 0; x < FONT_COUNT; x++) {
       if(fontNames[x]) {
          Release(fontNames[x]);
          fontNames[x] = NULL;
       }
    }
-
 }
 
 /** Get the width of a string. */
-int GetStringWidth(FontType type, const char *str) {
+int GetStringWidth(FontType type, const char *str)
+{
 #ifdef USE_XFT
 
    XGlyphInfo extents;
@@ -172,33 +165,30 @@ int GetStringWidth(FontType type, const char *str) {
 }
 
 /** Get the height of a string. */
-int GetStringHeight(FontType type) {
-
+int GetStringHeight(FontType type)
+{
    Assert(fonts[type]);
-
    return fonts[type]->ascent + fonts[type]->descent;
-
 }
 
 /** Set the font to use for a component. */
-void SetFont(FontType type, const char *value) {
-
+void SetFont(FontType type, const char *value)
+{
    if(JUNLIKELY(!value)) {
       Warning(_("empty Font tag"));
       return;
    }
-
    if(fontNames[type]) {
       Release(fontNames[type]);
    }
-
    fontNames[type] = CopyString(value);
-
 }
 
 /** Display a string. */
 void RenderString(Drawable d, FontType font, ColorType color,
-   int x, int y, int width, Region region, const char *str) {
+                  int x, int y, int width, Region region,
+                  const char *str)
+{
 
 #ifdef USE_XFT
    XftDraw *xd;

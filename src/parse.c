@@ -10,35 +10,28 @@
 #include "jwm.h"
 #include "parse.h"
 #include "lex.h"
+#include "settings.h"
 #include "menu.h"
 #include "root.h"
-#include "client.h"
 #include "tray.h"
 #include "group.h"
-#include "desktop.h"
-#include "move.h"
-#include "resize.h"
 #include "misc.h"
 #include "swallow.h"
 #include "pager.h"
 #include "error.h"
 #include "key.h"
-#include "cursor.h"
 #include "main.h"
 #include "font.h"
 #include "color.h"
 #include "icon.h"
 #include "command.h"
-#include "button.h"
-#include "event.h"
 #include "taskbar.h"
 #include "traybutton.h"
 #include "clock.h"
 #include "dock.h"
-#include "popup.h"
-#include "status.h"
 #include "background.h"
 #include "spacer.h"
+#include "desktop.h"
 
 /** Structure to map key names to key types. */
 typedef struct KeyMapType {
@@ -132,6 +125,8 @@ static const char *TYPE_ATTRIBUTE = "type";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
+static const char *OUTLINE_VALUE = "outline";
+static const char *OPAQUE_VALUE = "opaque";
 
 static int ParseFile(const char *fileName, int depth);
 static char *ReadFile(FILE *fd);
@@ -188,11 +183,17 @@ static void ParseFocusModel(const TokenNode *tp);
 static void ParseGradient(const char *value, ColorType a, ColorType b);
 static char *FindAttribute(AttributeNode *ap, const char *name);
 static void ReleaseTokens(TokenNode *np);
+static unsigned int ParseUnsigned(const TokenNode *tp, const char *str);
+static unsigned int ParseOpacity(const TokenNode *tp, const char *str);
+static char *GetString(const char *str, unsigned int n);
+static StatusWindowType ParseStatusWindowType(const TokenNode *tp,
+                                              const char *str);
 static void InvalidTag(const TokenNode *tp, TokenType parent);
 static void ParseError(const TokenNode *tp, const char *str, ...);
 
 /** Parse the JWM configuration. */
-void ParseConfig(const char *fileName) {
+void ParseConfig(const char *fileName)
+{
    if(!ParseFile(fileName, 0)) {
       if(JUNLIKELY(!ParseFile(SYSTEM_CONFIG, 0))) {
          ParseError(NULL, "could not open %s or %s", fileName, SYSTEM_CONFIG);
@@ -206,7 +207,8 @@ void ParseConfig(const char *fileName) {
  * Parse a specific file.
  * @return 1 on success and 0 on failure.
  */
-int ParseFile(const char *fileName, int depth) {
+int ParseFile(const char *fileName, int depth)
+{
 
    TokenNode *tokens;
    FILE *fd;
@@ -236,7 +238,8 @@ int ParseFile(const char *fileName, int depth) {
 }
 
 /** Release a token list. */
-void ReleaseTokens(TokenNode *np) {
+void ReleaseTokens(TokenNode *np)
+{
 
    AttributeNode *ap;
    TokenNode *tp;
@@ -279,7 +282,8 @@ void ReleaseTokens(TokenNode *np) {
 }
 
 /** Parse a token list. */
-void Parse(const TokenNode *start, int depth) {
+void Parse(const TokenNode *start, int depth)
+{
 
    TokenNode *tp;
 
@@ -306,10 +310,10 @@ void Parse(const TokenNode *start, int depth) {
                ParseDesktops(tp);
                break;
             case TOK_DOUBLECLICKSPEED:
-               SetDoubleClickSpeed(tp->value);
+               settings.doubleClickSpeed = ParseUnsigned(tp, tp->value);
                break;
             case TOK_DOUBLECLICKDELTA:
-               SetDoubleClickDelta(tp->value);
+               settings.doubleClickDelta = ParseUnsigned(tp, tp->value);
                break;
             case TOK_FOCUSMODEL:
                ParseFocusModel(tp);
@@ -375,16 +379,20 @@ void Parse(const TokenNode *start, int depth) {
                ParseWindowStyle(tp);
                break;
             case TOK_BUTTONCLOSE:
-               SetButtonMask(BP_CLOSE, tp->value);
+               SetPathString(&settings.borderButtonBitmaps[BP_CLOSE],
+                             tp->value);
                break;
             case TOK_BUTTONMIN:
-               SetButtonMask(BP_MINIMIZE, tp->value);
+               SetPathString(&settings.borderButtonBitmaps[BP_MINIMIZE],
+                             tp->value);
                break;
             case TOK_BUTTONMAX:
-               SetButtonMask(BP_MAXIMIZE, tp->value);
+               SetPathString(&settings.borderButtonBitmaps[BP_MAXIMIZE],
+                             tp->value);
                break;
             case TOK_BUTTONMAXACTIVE:
-               SetButtonMask(BP_MAXIMIZE_ACTIVE, tp->value);
+               SetPathString(&settings.borderButtonBitmaps[BP_MAXIMIZE_ACTIVE],
+                             tp->value);
                break;
             default:
                InvalidTag(tp, TOK_JWM);
@@ -402,9 +410,9 @@ void Parse(const TokenNode *start, int depth) {
 void ParseFocusModel(const TokenNode *tp) {
    if(JLIKELY(tp->value)) {
       if(!strcmp(tp->value, "sloppy")) {
-         focusModel = FOCUS_SLOPPY;
+         settings.focusModel = FOCUS_SLOPPY;
       } else if(!strcmp(tp->value, "click")) {
-         focusModel = FOCUS_CLICK;
+         settings.focusModel = FOCUS_CLICK;
       } else {
          ParseError(tp, "invalid focus model: \"%s\"", tp->value);
       }
@@ -420,18 +428,16 @@ void ParseSnapMode(const TokenNode *tp) {
 
    distance = FindAttribute(tp->attributes, DISTANCE_ATTRIBUTE);
    if(distance) {
-      SetSnapDistance(distance);
-   } else {
-      SetDefaultSnapDistance();
+      settings.snapDistance = ParseUnsigned(tp, distance);
    }
 
    if(JLIKELY(tp->value)) {
       if(!strcmp(tp->value, "none")) {
-         SetSnapMode(SNAP_NONE);
+         settings.snapMode = SNAP_NONE;
       } else if(!strcmp(tp->value, "screen")) {
-         SetSnapMode(SNAP_SCREEN);
+         settings.snapMode = SNAP_SCREEN;
       } else if(!strcmp(tp->value, "border")) {
-         SetSnapMode(SNAP_BORDER);
+         settings.snapMode = SNAP_BORDER;
       } else {
          ParseError(tp, "invalid snap mode: %s", tp->value);
       }
@@ -446,13 +452,15 @@ void ParseMoveMode(const TokenNode *tp) {
    const char *str;
 
    str = FindAttribute(tp->attributes, COORDINATES_ATTRIBUTE);
-   SetMoveStatusType(str);
+   if(str) {
+      settings.moveStatusType = ParseStatusWindowType(tp, str);
+   }
 
    if(JLIKELY(tp->value)) {
-      if(!strcmp(tp->value, "outline")) {
-         SetMoveMode(MOVE_OUTLINE);
-      } else if(!strcmp(tp->value, "opaque")) {
-         SetMoveMode(MOVE_OPAQUE);
+      if(!strcmp(tp->value, OUTLINE_VALUE)) {
+         settings.moveMode = MOVE_OUTLINE;
+      } else if(!strcmp(tp->value, OPAQUE_VALUE)) {
+         settings.moveMode = MOVE_OPAQUE;
       } else {
          ParseError(tp, "invalid move mode: %s", tp->value);
       }
@@ -468,13 +476,15 @@ void ParseResizeMode(const TokenNode *tp) {
    const char *str;
 
    str = FindAttribute(tp->attributes, COORDINATES_ATTRIBUTE);
-   SetResizeStatusType(str);
+   if(str) {
+      settings.resizeStatusType = ParseStatusWindowType(tp, str);
+   }
 
    if(JLIKELY(tp->value)) {
-      if(!strcmp(tp->value, "outline")) {
-         SetResizeMode(RESIZE_OUTLINE);
-      } else if(!strcmp(tp->value, "opaque")) {
-         SetResizeMode(RESIZE_OPAQUE);
+      if(!strcmp(tp->value, OUTLINE_VALUE)) {
+         settings.resizeMode = RESIZE_OUTLINE;
+      } else if(!strcmp(tp->value, OPAQUE_VALUE)) {
+         settings.resizeMode = RESIZE_OPAQUE;
       } else {
          ParseError(tp, "invalid resize mode: %s", tp->value);
       }
@@ -494,7 +504,7 @@ void ParseRootMenu(const TokenNode *start) {
 
    value = FindAttribute(start->attributes, HEIGHT_ATTRIBUTE);
    if(value) {
-      menu->itemHeight = atoi(value);
+      menu->itemHeight = ParseUnsigned(start, value);
    } else {
       menu->itemHeight = 0;
    }
@@ -580,7 +590,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
 
          value = FindAttribute(start->attributes, HEIGHT_ATTRIBUTE);
          if(value) {
-            child->itemHeight = atoi(value);
+            child->itemHeight = ParseUnsigned(start, value);
          } else {
             child->itemHeight = menu->itemHeight;
          }
@@ -873,10 +883,10 @@ void ParseWindowStyle(const TokenNode *tp) {
          SetFont(FONT_BORDER, np->value);
          break;
       case TOK_WIDTH:
-         SetBorderWidth(np->value);
+         settings.borderWidth = ParseUnsigned(np, np->value);
          break;
       case TOK_HEIGHT:
-         SetTitleHeight(np->value);
+         settings.titleHeight = ParseUnsigned(np, np->value);
          break;
       case TOK_ACTIVE:
          ParseActiveWindowStyle(np);
@@ -912,10 +922,11 @@ void ParseActiveWindowStyle(const TokenNode *tp) {
          SetColor(COLOR_BORDER_ACTIVE_LINE, np->value);
          break;
       case TOK_OPACITY:
-         SetActiveClientOpacity(np->value);
+         settings.activeClientOpacity = ParseOpacity(np, np->value);
          break;
       default:
          InvalidTag(np, TOK_ACTIVE);
+         break;
       }
    }
 
@@ -925,6 +936,7 @@ void ParseActiveWindowStyle(const TokenNode *tp) {
 void ParseInactiveWindowStyle(const TokenNode *tp) {
 
    const TokenNode *np;
+   char *str;
 
    Assert(tp);
 
@@ -940,10 +952,25 @@ void ParseInactiveWindowStyle(const TokenNode *tp) {
          SetColor(COLOR_BORDER_LINE, np->value);
          break;
       case TOK_OPACITY:
-         SetInactiveClientOpacity(np->value);
+         str = GetString(np->value, 0);
+         if(str) {
+            settings.minClientOpacity = ParseOpacity(tp, str);
+            Release(str);
+         }
+         str = GetString(np->value, 1);
+         if(str) {
+            settings.maxClientOpacity = ParseOpacity(tp, str);
+            Release(str);
+         }
+         str = GetString(np->value, 2);
+         if(str) {
+            settings.deltaClientOpacity = ParseOpacity(tp, str);
+            Release(str);
+         }
          break;
       default:
          InvalidTag(np, TOK_INACTIVE);
+         break;
       }
    }
 
@@ -982,18 +1009,23 @@ void ParseDesktops(const TokenNode *tp) {
    TokenNode *np;
    const char *width;
    const char *height;
-   int x;
    int desktop;
 
    Assert(tp);
 
    width = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
+   if(width != NULL) {
+      settings.desktopWidth = ParseUnsigned(tp, width);
+   }
    height = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
-   SetDesktopCount(width, height);
+   if(height != NULL) {
+      settings.desktopHeight = ParseUnsigned(tp, height);
+   }
+   settings.desktopCount = settings.desktopWidth * settings.desktopHeight;
 
    desktop = 0;
-   for(x = 0, np = tp->subnodeHead; np; np = np->next, x++) {
-      if(desktop >= desktopCount) {
+   for(np = tp->subnodeHead; np; np = np->next) {
+      if(desktop >= settings.desktopCount) {
          break;
       }
       switch(np->type) {
@@ -1002,7 +1034,7 @@ void ParseDesktops(const TokenNode *tp) {
          break;
       case TOK_DESKTOP:
          ParseDesktop(desktop, np);
-         ++desktop;
+         desktop += 1;
          break;
       default:
          InvalidTag(np, TOK_DESKTOPS);
@@ -1099,7 +1131,7 @@ void ParseTrayStyle(const TokenNode *tp) {
          SetColor(COLOR_TRAY_FG, np->value);
          break;
       case TOK_OPACITY:
-         SetTrayOpacity(np->value);
+         settings.trayOpacity = ParseOpacity(np, np->value);
          break;
       default:
          InvalidTag(np, TOK_TRAYSTYLE);
@@ -1163,7 +1195,7 @@ void ParseTray(const TokenNode *tp) {
 
    attr = FindAttribute(tp->attributes, BORDER_ATTRIBUTE);
    if(attr) {
-      SetTrayBorder(tray, attr);
+      tray->width = ParseUnsigned(tp, attr);
    }
 
    for(np = tp->subnodeHead; np; np = np->next) {
@@ -1254,14 +1286,14 @@ void ParseSwallow(const TokenNode *tp, TrayType *tray) {
 
    temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
    if(temp) {
-      width = atoi(temp);
+      width = ParseUnsigned(tp, temp);
    } else {
       width = 0;
    }
 
    temp = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
    if(temp) {
-      height = atoi(temp);
+      height = ParseUnsigned(tp, temp);
    } else {
       height = 0;
    }
@@ -1292,14 +1324,14 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
 
    temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
    if(temp) {
-      width = atoi(temp);
+      width = ParseUnsigned(tp, temp);
    } else {
       width = 0;
    }
 
    temp = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
    if(temp) {
-      height = atoi(temp);
+      height = ParseUnsigned(tp, temp);
    } else {
       height = 0;
    }
@@ -1336,14 +1368,14 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
 
    temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
    if(temp) {
-      width = atoi(temp);
+      width = ParseUnsigned(tp, temp);
    } else {
       width = 0;
    }
 
    temp = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
    if(temp) {
-      height = atoi(temp);
+      height = ParseUnsigned(tp, temp);
    } else {
       height = 0;
    }
@@ -1367,7 +1399,7 @@ void ParseDock(const TokenNode *tp, TrayType *tray) {
 
    str = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
    if(str) {
-      width = atoi(str);
+      width = ParseUnsigned(tp, str);
    } else {
       width = 0;
    }
@@ -1393,7 +1425,7 @@ void ParseSpacer(const TokenNode *tp, TrayType *tray) {
    /* Get the width. */
    str = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
    if(str) {
-      width = atoi(str);
+      width = ParseUnsigned(tp, str);
    } else {
       width = 0;
    }
@@ -1401,7 +1433,7 @@ void ParseSpacer(const TokenNode *tp, TrayType *tray) {
    /* Get the height. */
    str = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
    if(str) {
-      height = atoi(str);
+      height = ParseUnsigned(tp, str);
    } else {
       height = 0;
    }
@@ -1463,9 +1495,9 @@ void ParsePopupStyle(const TokenNode *tp) {
    str = FindAttribute(tp->attributes, ENABLED_ATTRIBUTE);
    if(str) {
       if(!strcmp(str, TRUE_VALUE)) {
-         SetPopupEnabled(1);
+         settings.popupEnabled = 1;
       } else if(!strcmp(str, FALSE_VALUE)) {
-         SetPopupEnabled(0);
+         settings.popupEnabled = 0;
       } else {
          ParseError(tp, "invalid enabled value: \"%s\"", str);
       }
@@ -1473,7 +1505,7 @@ void ParsePopupStyle(const TokenNode *tp) {
 
    str = FindAttribute(tp->attributes, DELAY_ATTRIBUTE);
    if(str) {
-      SetPopupDelay(str);
+      settings.popupDelay = ParseUnsigned(tp, str);
    }
 
    for(np = tp->subnodeHead; np; np = np->next) {
@@ -1563,7 +1595,8 @@ void ParseClockStyle(const TokenNode *tp) {
 }
 
 /** Parse tray button style. */
-void ParseTrayButtonStyle(const TokenNode *tp) {
+void ParseTrayButtonStyle(const TokenNode *tp)
+{
 
    const TokenNode *np;
 
@@ -1589,7 +1622,8 @@ void ParseTrayButtonStyle(const TokenNode *tp) {
 }
 
 /** Parse an option group. */
-void ParseGroup(const TokenNode *tp) {
+void ParseGroup(const TokenNode *tp)
+{
 
    const TokenNode *np;
    struct GroupType *group;
@@ -1619,7 +1653,8 @@ void ParseGroup(const TokenNode *tp) {
 
 /** Parse a option group option. */
 void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
-   const char *option) {
+                      const char *option)
+{
 
    int x;
 
@@ -1650,7 +1685,8 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
 }
 
 /** Parse a color which may be a gradient. */
-void ParseGradient(const char *value, ColorType a, ColorType b) {
+void ParseGradient(const char *value, ColorType a, ColorType b)
+{
 
    const char *sep;
    char *temp;
@@ -1689,8 +1725,39 @@ void ParseGradient(const char *value, ColorType a, ColorType b) {
 
 }
 
+/** Get the nth string (0 based) in a colon separated list. */
+char *GetString(const char *str, unsigned int n)
+{
+   const char *end;
+   char *result;
+   unsigned int i;
+   int len;
+
+   for(i = 0; i < n; i++) {
+      str = strchr(str, ':');
+      if(str == NULL) {
+         return NULL;
+      }
+      str += 1;
+   }
+   if(str == NULL) {
+      return NULL;
+   }
+   len = strlen(str);
+   end = strchr(str, ':');
+   if(end) {
+      len -= strlen(end);
+   }
+   result = Allocate(len + 1);
+   memcpy(result, str, len);
+   result[len] = 0;
+   return result;
+
+}
+
 /** Find an attribute in a list of attributes. */
-char *FindAttribute(AttributeNode *ap, const char *name) {
+char *FindAttribute(AttributeNode *ap, const char *name)
+{
 
    while(ap) {
       if(!strcmp(name, ap->name)) {
@@ -1703,7 +1770,8 @@ char *FindAttribute(AttributeNode *ap, const char *name) {
 }
 
 /** Read a file. */
-char *ReadFile(FILE *fd) {
+char *ReadFile(FILE *fd)
+{
 
    const int BLOCK_SIZE = 8192;
 
@@ -1732,8 +1800,52 @@ char *ReadFile(FILE *fd) {
 
 }
 
+/** Parse an unsigned integer. */
+unsigned int ParseUnsigned(const TokenNode *tp, const char *str)
+{
+   const long value = strtol(str, NULL, 0);
+   if(JUNLIKELY(value < 0 || value > UINT_MAX)) {
+      ParseError(tp, _("invalid setting: %s"), str);
+      return 0;
+   } else {
+      return (unsigned int)value;
+   }
+}
+
+/** Parse opacity (a float between 0.0 and 1.0). */
+unsigned int ParseOpacity(const TokenNode *tp, const char *str)
+{
+   const float value = atof(str);
+   if(JUNLIKELY(value <= 0.0 || value > 1.0)) {
+      ParseError(tp, _("invalid opacity: %s"), str);
+      return UINT_MAX;
+   } else if(value == 1.0) {
+      return UINT_MAX;
+   } else {
+      return (unsigned int)(value * UINT_MAX);
+   }
+}
+
+/** Parse status window type. */
+StatusWindowType ParseStatusWindowType(const TokenNode *tp, const char *str)
+{
+   if(!strcmp(str, "off")) {
+      return SW_OFF;
+   } else if(!strcmp(str, "screen")) {
+      return SW_SCREEN;
+   } else if(!strcmp(str, "window")) {
+      return SW_WINDOW;
+   } else if(!strcmp(str, "corner")) {
+      return SW_CORNER;
+   } else {
+      ParseError(tp, _("invalid status window type: %s"), str);
+      return SW_SCREEN;
+   }
+}
+
 /** Display an invalid tag error message. */
-void InvalidTag(const TokenNode *tp, TokenType parent) {
+void InvalidTag(const TokenNode *tp, TokenType parent)
+{
 
    ParseError(tp, _("invalid tag in %s: %s"),
               GetTokenTypeName(parent), GetTokenName(tp));
@@ -1741,7 +1853,8 @@ void InvalidTag(const TokenNode *tp, TokenType parent) {
 }
 
 /** Display a parser error. */
-void ParseError(const TokenNode *tp, const char *str, ...) {
+void ParseError(const TokenNode *tp, const char *str, ...)
+{
 
    va_list ap;
 

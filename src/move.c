@@ -24,6 +24,7 @@
 #include "status.h"
 #include "tray.h"
 #include "desktop.h"
+#include "settings.h"
 
 typedef struct {
    int valid;
@@ -32,13 +33,9 @@ typedef struct {
 } RectangleType;
 
 static char shouldStopMove;
-static SnapModeType snapMode = SNAP_BORDER;
-static int snapDistance = DEFAULT_SNAP_DISTANCE;
 
-static MoveModeType moveMode = MOVE_OPAQUE;
-
-static void StopMove(ClientNode *np,
-   int doMove, int oldx, int oldy, int hmax, int vmax);
+static void StopMove(ClientNode *np, int doMove,
+                     int oldx, int oldy, int hmax, int vmax);
 static void MoveController(int wasDestroyed);
 
 static void DoSnap(ClientNode *np);
@@ -48,54 +45,27 @@ static int ShouldSnap(const ClientNode *np);
 static void GetClientRectangle(const ClientNode *np, RectangleType *r);
 
 static int CheckOverlapTopBottom(const RectangleType *a,
-   const RectangleType *b);
+                                 const RectangleType *b);
 static int CheckOverlapLeftRight(const RectangleType *a,
-   const RectangleType *b);
+                                 const RectangleType *b);
 
 static int CheckLeftValid(const RectangleType *client,
-   const RectangleType *other, const RectangleType *left);
+                          const RectangleType *other,
+                          const RectangleType *left);
 static int CheckRightValid(const RectangleType *client,
-   const RectangleType *other, const RectangleType *right);
+                           const RectangleType *other,
+                           const RectangleType *right);
 static int CheckTopValid(const RectangleType *client,
-   const RectangleType *other, const RectangleType *top);
+                         const RectangleType *other,
+                         const RectangleType *top);
 static int CheckBottomValid(const RectangleType *client,
-   const RectangleType *other, const RectangleType *bottom);
-
-/** Set the snap mode to use. */
-void SetSnapMode(SnapModeType mode) {
-   snapMode = mode;
-}
-
-/** Set the move mode to use. */
-void SetMoveMode(MoveModeType mode) {
-   moveMode = mode;
-}
-
-/** Set the snap distance. */
-void SetSnapDistance(const char *value) {
-   int temp;
-
-   Assert(value);
-
-   temp = atoi(value);
-   if(JUNLIKELY(temp > MAX_SNAP_DISTANCE || temp < MIN_SNAP_DISTANCE)) {
-      snapDistance = DEFAULT_SNAP_DISTANCE;
-      Warning(_("invalid snap distance specified: %d"), temp);
-   } else {
-      snapDistance = temp;
-   }
-
-}
-
-/** Restore the default snap distance. */
-void SetDefaultSnapDistance() {
-   snapDistance = DEFAULT_SNAP_DISTANCE;
-}
+                            const RectangleType *other,
+                            const RectangleType *bottom);
 
 /** Callback for stopping moves. */
 void MoveController(int wasDestroyed) {
 
-   if(moveMode == MOVE_OUTLINE) {
+   if(settings.moveMode == MOVE_OUTLINE) {
       ClearOutline();
    }
 
@@ -233,17 +203,17 @@ int MoveClient(ClientNode *np, int startx, int starty, int snap) {
 
          if(doMove) {
 
-            if(moveMode == MOVE_OUTLINE) {
+            if(settings.moveMode == MOVE_OUTLINE) {
                ClearOutline();
                height = north + south;
                if(!(np->state.status & STAT_SHADED)) {
                   height += np->height;
                }
                DrawOutline(np->x - west, np->y - north,
-                  np->width + west + east, height);
+                           np->width + west + east, height);
             } else {
                JXMoveWindow(display, np->parent, np->x - west,
-                  np->y - north);
+                            np->y - north);
                SendConfigureEvent(np);
             }
             UpdateMoveWindow(np);
@@ -381,10 +351,10 @@ int MoveClientKeyboard(ClientNode *np) {
 
       if(moved) {
 
-         if(moveMode == MOVE_OUTLINE) {
+         if(settings.moveMode == MOVE_OUTLINE) {
             ClearOutline();
             DrawOutline(np->x - west, np->y - west,
-               np->width + west + east, height + north + west);
+                        np->width + west + east, height + north + west);
          } else {
             JXMoveWindow(display, np->parent, np->x - west, np->y - north);
             SendConfigureEvent(np);
@@ -442,7 +412,7 @@ void StopMove(ClientNode *np, int doMove,
 
 /** Snap to the screen and/or neighboring windows. */
 void DoSnap(ClientNode *np) {
-   switch(snapMode) {
+   switch(settings.snapMode) {
    case SNAP_BORDER:
       DoSnapBorder(np);
       DoSnapScreen(np);
@@ -473,19 +443,19 @@ void DoSnapScreen(ClientNode *np) {
 
       sp = GetScreen(screen);
 
-      if(abs(client.right - sp->width - sp->x) <= snapDistance) {
+      if(abs(client.right - sp->width - sp->x) <= settings.snapDistance) {
          np->x = sp->x + sp->width - west - np->width;
       }
-      if(abs(client.left - sp->x) <= snapDistance) {
+      if(abs(client.left - sp->x) <= settings.snapDistance) {
          np->x = sp->x + east;
       }
-      if(abs(client.bottom - sp->height - sp->y) <= snapDistance) {
+      if(abs(client.bottom - sp->height - sp->y) <= settings.snapDistance) {
          np->y = sp->y + sp->height - south;
          if(!(np->state.status & STAT_SHADED)) {
             np->y -= np->height;
          }
       }
-      if(abs(client.top - sp->y) <= snapDistance) {
+      if(abs(client.top - sp->y) <= settings.snapDistance) {
          np->y = north + sp->y;
       }
 
@@ -533,18 +503,18 @@ void DoSnapBorder(ClientNode *np) {
          bottom.valid = CheckBottomValid(&client, &other, &bottom);
 
          if(CheckOverlapTopBottom(&client, &other)) {
-            if(abs(client.left - other.right) <= snapDistance) {
+            if(abs(client.left - other.right) <= settings.snapDistance) {
                left = other;
             }
-            if(abs(client.right - other.left) <= snapDistance) {
+            if(abs(client.right - other.left) <= settings.snapDistance) {
                right = other;
             }
          }
          if(CheckOverlapLeftRight(&client, &other)) {
-            if(abs(client.top - other.bottom) <= snapDistance) {
+            if(abs(client.top - other.bottom) <= settings.snapDistance) {
                top = other;
             }
-            if(abs(client.bottom - other.top) <= snapDistance) {
+            if(abs(client.bottom - other.top) <= settings.snapDistance) {
                bottom = other;
             }
          }
@@ -568,18 +538,18 @@ void DoSnapBorder(ClientNode *np) {
 
          /* Compute the new snap values. */
          if(CheckOverlapTopBottom(&client, &other)) {
-            if(abs(client.left - other.right) <= snapDistance) {
+            if(abs(client.left - other.right) <= settings.snapDistance) {
                left = other;
             }
-            if(abs(client.right - other.left) <= snapDistance) {
+            if(abs(client.right - other.left) <= settings.snapDistance) {
                right = other;
             }
          }
          if(CheckOverlapLeftRight(&client, &other)) {
-            if(abs(client.top - other.bottom) <= snapDistance) {
+            if(abs(client.top - other.bottom) <= settings.snapDistance) {
                top = other;
             }
-            if(abs(client.bottom - other.top) <= snapDistance) {
+            if(abs(client.bottom - other.top) <= settings.snapDistance) {
                bottom = other;
             }
          }

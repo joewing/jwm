@@ -110,12 +110,13 @@ static void LightenColor(ColorType oldColor, ColorType newColor);
 static void DarkenColor(ColorType oldColor, ColorType newColor);
 
 /** Initialize color data. */
-void InitializeColors() {
-
+void InitializeColors()
+{
 }
 
 /** Startup color support. */
-void StartupColors() {
+void StartupColors()
+{
 
    int x;
    int red, green, blue;
@@ -239,7 +240,8 @@ void StartupColors() {
 }
 
 /** Shutdown color support. */
-void ShutdownColors() {
+void ShutdownColors()
+{
 
 #ifdef USE_XFT
 
@@ -266,9 +268,10 @@ void ShutdownColors() {
 }
 
 /** Release color data. */
-void DestroyColors() {
+void DestroyColors()
+{
 
-   int x;
+   unsigned int x;
 
    if(names) {
       for(x = 0; x < COLOR_COUNT; x++) {
@@ -284,7 +287,8 @@ void DestroyColors() {
 
 /** Compute the mask for computing colors in a linear RGB colormap. */
 void ComputeShiftMask(unsigned long maskIn, unsigned long *shiftOut,
-                      unsigned long *maskOut) {
+                      unsigned long *maskOut)
+{
 
    int shift;
 
@@ -308,7 +312,8 @@ void ComputeShiftMask(unsigned long maskIn, unsigned long *shiftOut,
 }
 
 /** Get an RGB value from an XColor. */
-unsigned long GetRGBFromXColor(const XColor *c) {
+unsigned long GetRGBFromXColor(const XColor *c)
+{
 
    unsigned int red, green, blue;
    unsigned long rgb;
@@ -328,7 +333,8 @@ unsigned long GetRGBFromXColor(const XColor *c) {
 }
 
 /** Convert an RGB value to an XColor. */
-XColor GetXColorFromRGB(unsigned long rgb) {
+XColor GetXColorFromRGB(unsigned long rgb)
+{
 
    XColor ret = { 0 };
 
@@ -342,7 +348,8 @@ XColor GetXColorFromRGB(unsigned long rgb) {
 }
 
 /** Set the color to use for a component. */
-void SetColor(ColorType c, const char *value) {
+void SetColor(ColorType c, const char *value)
+{
 
    if(JUNLIKELY(!value)) {
       Warning("empty color tag");
@@ -360,7 +367,8 @@ void SetColor(ColorType c, const char *value) {
 }
 
 /** Parse a color for a component. */
-int ParseColor(const char *value, XColor *c) {
+int ParseColor(const char *value, XColor *c)
+{
 
    unsigned long rgb;
 
@@ -387,10 +395,11 @@ int ParseColor(const char *value, XColor *c) {
 }
 
 /** Set the specified color to its default. */
-void SetDefaultColor(ColorType type) {
+void SetDefaultColor(ColorType type)
+{
 
    XColor c;
-   int x;
+   unsigned int x;
 
    for(x = 0; DEFAULT_COLORS[x].value; x++) {
       if(DEFAULT_COLORS[x].type == type) {
@@ -404,9 +413,10 @@ void SetDefaultColor(ColorType type) {
 }
 
 /** Initialize color names to NULL. */
-void InitializeNames() {
+void InitializeNames()
+{
 
-   int x;
+   unsigned int x;
 
    if(names == NULL) {
       names = Allocate(sizeof(char*) * COLOR_COUNT);
@@ -418,10 +428,11 @@ void InitializeNames() {
 }
 
 /** Convert a hex value to an unsigned long. */
-unsigned long ReadHex(const char *hex) {
+unsigned long ReadHex(const char *hex)
+{
 
    unsigned long value = 0;
-   int x;
+   unsigned int x;
 
    Assert(hex);
 
@@ -441,7 +452,8 @@ unsigned long ReadHex(const char *hex) {
 }
 
 /** Compute a color lighter than the input. */
-void LightenColor(ColorType oldColor, ColorType newColor) {
+void LightenColor(ColorType oldColor, ColorType newColor)
+{
 
    XColor temp;
    int red, green, blue;
@@ -479,7 +491,8 @@ void LightenColor(ColorType oldColor, ColorType newColor) {
 }
 
 /** Compute a color darker than the input. */
-void DarkenColor(ColorType oldColor, ColorType newColor) {
+void DarkenColor(ColorType oldColor, ColorType newColor)
+{
 
    XColor temp;
    int red, green, blue;
@@ -512,7 +525,8 @@ void DarkenColor(ColorType oldColor, ColorType newColor) {
 }
 
 /** Look up a color by name. */
-int GetColorByName(const char *str, XColor *c) {
+int GetColorByName(const char *str, XColor *c)
+{
 
    Assert(str);
    Assert(c);
@@ -528,7 +542,8 @@ int GetColorByName(const char *str, XColor *c) {
 }
 
 /** Compute the RGB components from an index into our RGB colormap. */
-void GetColorFromIndex(XColor *c) {
+void GetColorFromIndex(XColor *c)
+{
 
    unsigned long red;
    unsigned long green;
@@ -547,7 +562,8 @@ void GetColorFromIndex(XColor *c) {
 }
 
 /** Compute the pixel value from RGB components. */
-void GetDirectPixel(XColor *c) {
+void GetDirectPixel(XColor *c)
+{
 
    unsigned long red;
    unsigned long green;
@@ -571,21 +587,18 @@ void GetDirectPixel(XColor *c) {
 }
 
 /** Compute the pixel value from RGB components. */
-void GetMappedPixel(XColor *c) {
-
+void GetMappedPixel(XColor *c)
+{
    Assert(c);
-
    GetDirectPixel(c);
    c->pixel = map[c->pixel];
-
 }
 
 /** Compute the pixel value from RGB components. */
-void GetColor(XColor *c) {
-
+void GetColor(XColor *c)
+{
    Assert(c);
    Assert(rootVisual);
-
    switch(rootVisual->class) {
    case DirectColor:
    case TrueColor:
@@ -595,14 +608,13 @@ void GetColor(XColor *c) {
       GetMappedPixel(c);
       return;
    }
-
 }
 
 /** Get the RGB components from a pixel value. */
-void GetColorFromPixel(XColor *c) {
+void GetColorFromPixel(XColor *c)
+{
 
    Assert(c);
-
 	switch(rootVisual->class) {
 	case DirectColor:
 	case TrueColor:
@@ -621,17 +633,16 @@ void GetColorFromPixel(XColor *c) {
 
 
 /** Get an RGB pixel value from RGB components. */
-void GetColorIndex(XColor *c) {
-
+void GetColorIndex(XColor *c)
+{
    Assert(c);
-
    GetDirectPixel(c);
-
 }
 
 /** Get an XFT color for the specified component. */
 #ifdef USE_XFT
-XftColor *GetXftColor(ColorType type) {
+XftColor *GetXftColor(ColorType type)
+{
 
    unsigned long rgb;
    XRenderColor rcolor;
@@ -644,7 +655,7 @@ XftColor *GetXftColor(ColorType type) {
       rcolor.green = ((rgb >> 8) & 0xFF) * 257;
       rcolor.blue = (rgb & 0xFF) * 257;
       JXftColorAllocValue(display, rootVisual, rootColormap, &rcolor,
-         xftColors[type]);
+                          xftColors[type]);
    }
 
    return xftColors[type];

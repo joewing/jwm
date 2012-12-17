@@ -1,5 +1,5 @@
 /**
- * @file client.h
+ * @file client.c
  * @author Joe Wingbermuehle
  * @date 2004-2006
  *
@@ -25,6 +25,7 @@
 #include "error.h"
 #include "place.h"
 #include "event.h"
+#include "settings.h"
 
 static ClientNode *activeClient;
 
@@ -40,21 +41,14 @@ static void RestoreTransients(ClientNode *np, char raise);
 
 static void KillClientHandler(ClientNode *np);
 
-static unsigned int activeOpacity;
-static unsigned int maxInactiveOpacity;
-static unsigned int minInactiveOpacity;
-static unsigned int deltaInactiveOpacity;
-
 /** Initialize client data. */
-void InitializeClients() {
-   activeOpacity = (unsigned int)(1.0 * UINT_MAX);
-   maxInactiveOpacity = (unsigned int)(0.9 * UINT_MAX);
-   minInactiveOpacity = (unsigned int)(0.5 * UINT_MAX);
-   deltaInactiveOpacity = (unsigned int)(0.1 * UINT_MAX);
+void InitializeClients()
+{
 }
 
 /** Load windows that are already mapped. */
-void StartupClients() {
+void StartupClients()
+{
 
    XWindowAttributes attr;
    Window rootReturn, parentReturn, *childrenReturn;
@@ -95,7 +89,8 @@ void StartupClients() {
 }
 
 /** Release client windows. */
-void ShutdownClients() {
+void ShutdownClients()
+{
 
    int x;
 
@@ -108,11 +103,13 @@ void ShutdownClients() {
 }
 
 /** Destroy client data. */
-void DestroyClients() {
+void DestroyClients()
+{
 }
 
 /** Set the focus to the window currently under the mouse pointer. */
-void LoadFocus() {
+void LoadFocus()
+{
 
    ClientNode *np;
    Window rootReturn, childReturn;
@@ -131,7 +128,8 @@ void LoadFocus() {
 }
 
 /** Add a window to management. */
-ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner) {
+ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
+{
 
    XWindowAttributes attr;
    ClientNode *np;
@@ -271,11 +269,12 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner) {
 }
 
 /** Minimize a client window and all of its transients. */
-void MinimizeClient(ClientNode *np) {
+void MinimizeClient(ClientNode *np)
+{
 
    Assert(np);
 
-   if(focusModel == FOCUS_CLICK && np == activeClient) {
+   if(settings.focusModel == FOCUS_CLICK && np == activeClient) {
       FocusNextStacked(np);
    }
 
@@ -287,7 +286,8 @@ void MinimizeClient(ClientNode *np) {
 }
 
 /** Minimize all transients as well as the specified client. */
-void MinimizeTransients(ClientNode *np) {
+void MinimizeTransients(ClientNode *np)
+{
 
    ClientNode *tp;
    int x;
@@ -323,7 +323,8 @@ void MinimizeTransients(ClientNode *np) {
 }
 
 /** Shade a client. */
-void ShadeClient(ClientNode *np) {
+void ShadeClient(ClientNode *np)
+{
 
    int north, south, east, west;
 
@@ -358,7 +359,8 @@ void ShadeClient(ClientNode *np) {
 }
 
 /** Unshade a client. */
-void UnshadeClient(ClientNode *np) {
+void UnshadeClient(ClientNode *np)
+{
 
    int north, south, east, west;
 
@@ -397,7 +399,8 @@ void UnshadeClient(ClientNode *np) {
 }
 
 /** Set a client's state to withdrawn. */
-void SetClientWithdrawn(ClientNode *np) {
+void SetClientWithdrawn(ClientNode *np)
+{
 
    Assert(np);
 
@@ -426,7 +429,8 @@ void SetClientWithdrawn(ClientNode *np) {
 }
 
 /** Restore a window with its transients (helper method). */
-void RestoreTransients(ClientNode *np, char raise) {
+void RestoreTransients(ClientNode *np, char raise)
+{
 
    ClientNode *tp;
    int x;
@@ -466,7 +470,8 @@ void RestoreTransients(ClientNode *np, char raise) {
 }
 
 /** Restore a client window and its transients. */
-void RestoreClient(ClientNode *np, char raise) {
+void RestoreClient(ClientNode *np, char raise)
+{
 
    Assert(np);
 
@@ -479,7 +484,8 @@ void RestoreClient(ClientNode *np, char raise) {
 }
 
 /** Set the client layer. This will affect transients. */
-void SetClientLayer(ClientNode *np, unsigned int layer) {
+void SetClientLayer(ClientNode *np, unsigned int layer)
+{
 
    ClientNode *tp, *next;
    int x;
@@ -542,7 +548,8 @@ void SetClientLayer(ClientNode *np, unsigned int layer) {
 }
 
 /** Set a client's sticky status. This will update transients. */
-void SetClientSticky(ClientNode *np, char isSticky) {
+void SetClientSticky(ClientNode *np, char isSticky)
+{
 
    ClientNode *tp;
    int x;
@@ -595,14 +602,15 @@ void SetClientSticky(ClientNode *np, char isSticky) {
 }
 
 /** Set a client's desktop. This will update transients. */
-void SetClientDesktop(ClientNode *np, unsigned int desktop) {
+void SetClientDesktop(ClientNode *np, unsigned int desktop)
+{
 
    ClientNode *tp;
    int x;
 
    Assert(np);
 
-   if(JUNLIKELY(desktop >= desktopWidth * desktopHeight)) {
+   if(JUNLIKELY(desktop >= settings.desktopCount)) {
       return;
    }
 
@@ -631,7 +639,8 @@ void SetClientDesktop(ClientNode *np, unsigned int desktop) {
 }
 
 /** Hide a client without unmapping. This will not update transients. */
-void HideClient(ClientNode *np) {
+void HideClient(ClientNode *np)
+{
 
    Assert(np);
 
@@ -646,7 +655,8 @@ void HideClient(ClientNode *np) {
 }
 
 /** Show a hidden client. This will not update transients. */
-void ShowClient(ClientNode *np) {
+void ShowClient(ClientNode *np)
+{
 
    Assert(np);
 
@@ -663,7 +673,8 @@ void ShowClient(ClientNode *np) {
 }
 
 /** Maximize a client window. */
-void MaximizeClient(ClientNode *np, char horiz, char vert) {
+void MaximizeClient(ClientNode *np, char horiz, char vert)
+{
 
    int north, south, east, west;
 
@@ -709,7 +720,8 @@ void MaximizeClient(ClientNode *np, char horiz, char vert) {
 }
 
 /** Maximize a client using its default maximize settings. */
-void MaximizeClientDefault(ClientNode *np) {
+void MaximizeClientDefault(ClientNode *np)
+{
 
    int hmax, vmax;
 
@@ -723,7 +735,8 @@ void MaximizeClientDefault(ClientNode *np) {
 }
 
 /** Set a client's full screen state. */
-void SetClientFullScreen(ClientNode *np, char fullScreen) {
+void SetClientFullScreen(ClientNode *np, char fullScreen)
+{
 
    XEvent event;
    int north, south, east, west;
@@ -818,7 +831,8 @@ void SetClientFullScreen(ClientNode *np, char fullScreen) {
 }
 
 /** Set the active client. */
-void FocusClient(ClientNode *np) {
+void FocusClient(ClientNode *np)
+{
 
    ClientProtocolType protocols;
 
@@ -859,7 +873,8 @@ void FocusClient(ClientNode *np) {
 
 
 /** Refocus the active client (if there is one). */
-void RefocusClient() {
+void RefocusClient()
+{
 
    if(activeClient) {
       FocusClient(activeClient);
@@ -868,7 +883,8 @@ void RefocusClient() {
 }
 
 /** Send a delete message to a client. */
-void DeleteClient(ClientNode *np) {
+void DeleteClient(ClientNode *np)
+{
 
    ClientProtocolType protocols;
 
@@ -885,7 +901,8 @@ void DeleteClient(ClientNode *np) {
 }
 
 /** Callback to kill a client after a confirm dialog. */
-void KillClientHandler(ClientNode *np) {
+void KillClientHandler(ClientNode *np)
+{
 
    Assert(np);
 
@@ -906,10 +923,9 @@ void KillClientHandler(ClientNode *np) {
 }
 
 /** Kill a client window. */
-void KillClient(ClientNode *np) {
-
+void KillClient(ClientNode *np)
+{
    Assert(np);
-
    ShowConfirmDialog(np, KillClientHandler,
       _("Kill this window?"),
       _("This may cause data to be lost!"),
@@ -917,10 +933,11 @@ void KillClient(ClientNode *np) {
 }
 
 /** Raise the client. This will affect transients. */
-void RaiseClient(ClientNode *np) {
+void RaiseClient(ClientNode *np)
+{
 
    ClientNode *tp, *next;
-   int x;
+   unsigned int x;
 
    Assert(np);
 
@@ -976,7 +993,8 @@ void RaiseClient(ClientNode *np) {
 }
 
 /** Lower the client. This will not affect transients. */
-void LowerClient(ClientNode *np) {
+void LowerClient(ClientNode *np)
+{
 
    ClientNode *tp;
 
@@ -1008,7 +1026,8 @@ void LowerClient(ClientNode *np) {
 }
 
 /** Restack the clients according the way we want them. */
-void RestackClients() {
+void RestackClients()
+{
 
    TrayType *tp;
    ClientNode *np;
@@ -1017,7 +1036,7 @@ void RestackClients() {
    Window *stack;
    unsigned int opacity;
    unsigned int temp;
-   int isFirst;
+   char isFirst;
 
    /* Allocate memory for restacking. */
    trayCount = GetTrayCount();
@@ -1027,7 +1046,7 @@ void RestackClients() {
    index = 0;
    layer = LAYER_TOP;
    isFirst = 1;
-   opacity = maxInactiveOpacity;
+   opacity = settings.maxClientOpacity;
    for(;;) {
 
       for(np = nodes[layer]; np; np = np->next) {
@@ -1036,8 +1055,8 @@ void RestackClients() {
             stack[index++] = np->parent;
             if(isFirst) {
                if(   !(np->state.status & STAT_OPACITY)
-                  && np->state.opacity != activeOpacity) {
-                  np->state.opacity = activeOpacity;
+                  && np->state.opacity != settings.activeClientOpacity) {
+                  np->state.opacity = settings.activeClientOpacity;
                   WriteState(np);
                }
                isFirst = 0;
@@ -1046,9 +1065,9 @@ void RestackClients() {
                   np->state.opacity = opacity;
                   WriteState(np);
                }
-               temp = opacity - deltaInactiveOpacity;
-               if(temp < minInactiveOpacity || temp > opacity) {
-                  opacity = minInactiveOpacity;
+               temp = opacity - settings.deltaClientOpacity;
+               if(temp < settings.minClientOpacity || temp > opacity) {
+                  opacity = settings.minClientOpacity;
                } else {
                   opacity = temp;
                }
@@ -1078,7 +1097,8 @@ void RestackClients() {
 }
 
 /** Send a client message to a window. */
-void SendClientMessage(Window w, AtomType type, AtomType message) {
+void SendClientMessage(Window w, AtomType type, AtomType message)
+{
 
    XEvent event;
    int status;
@@ -1100,7 +1120,8 @@ void SendClientMessage(Window w, AtomType type, AtomType message) {
 
 /** Set the border shape for windows using the shape extension. */
 #ifdef USE_SHAPE
-void SetShape(ClientNode *np) {
+void SetShape(ClientNode *np)
+{
 
    XRectangle rect[4];
    int north, south, east, west;
@@ -1165,7 +1186,8 @@ void SetShape(ClientNode *np) {
 #endif /* USE_SHAPE */
 
 /** Remove a client window from management. */
-void RemoveClient(ClientNode *np) {
+void RemoveClient(ClientNode *np)
+{
 
    ColormapNode *cp;
 
@@ -1262,14 +1284,14 @@ void RemoveClient(ClientNode *np) {
 }
 
 /** Get the active client (possibly NULL). */
-ClientNode *GetActiveClient() {
-
+ClientNode *GetActiveClient()
+{
    return activeClient;
-
 }
 
 /** Find a client given a window (searches frame windows too). */
-ClientNode *FindClientByWindow(Window w) {
+ClientNode *FindClientByWindow(Window w)
+{
 
    ClientNode *np;
 
@@ -1282,20 +1304,19 @@ ClientNode *FindClientByWindow(Window w) {
 }
 
 /** Find a client by its frame window. */
-ClientNode *FindClientByParent(Window p) {
-
+ClientNode *FindClientByParent(Window p)
+{
    ClientNode *np;
-
    if(!XFindContext(display, p, frameContext, (void*)&np)) {
       return np;
    } else {
       return NULL;
    }
-
 }
 
 /** Reparent a client window. */
-void ReparentClient(ClientNode *np, char notOwner) {
+void ReparentClient(ClientNode *np, char notOwner)
+{
 
    XSetWindowAttributes attr;
    int attrMask;
@@ -1389,7 +1410,8 @@ void ReparentClient(ClientNode *np, char notOwner) {
 
 /** Determine if a window uses the shape extension. */
 #ifdef USE_SHAPE
-void CheckShape(ClientNode *np) {
+void CheckShape(ClientNode *np)
+{
 
    int xb, yb;
    int xc, yc;
@@ -1408,7 +1430,8 @@ void CheckShape(ClientNode *np) {
 #endif
 
 /** Send a configure event to a client window. */
-void SendConfigureEvent(ClientNode *np) {
+void SendConfigureEvent(ClientNode *np)
+{
 
    XConfigureEvent event;
    const ScreenType *sp;
@@ -1446,11 +1469,12 @@ void SendConfigureEvent(ClientNode *np) {
  * client changed. This will change the active colormap(s) if the given
  * client is active.
  */
-void UpdateClientColormap(ClientNode *np) {
+void UpdateClientColormap(ClientNode *np)
+{
 
    XWindowAttributes attr;
    ColormapNode *cp;
-   int wasInstalled;
+   char wasInstalled;
 
    Assert(np);
 
@@ -1474,84 +1498,6 @@ void UpdateClientColormap(ClientNode *np) {
          JXInstallColormap(display, np->cmap);
       }
 
-   }
-
-}
-
-/** Set the opacity for active clients. */
-void SetActiveClientOpacity(const char *str) {
-
-   double temp;
-
-   Assert(str);
-
-   temp = atof(str);
-   if(JUNLIKELY(temp <= 0.0 || temp > 1.0)) {
-      Warning(_("invalid active client opacity: %s"), str);
-      activeOpacity = UINT_MAX;
-   } else {
-      activeOpacity = (unsigned int)(1.0 * UINT_MAX);
-   }
-
-}
-
-/** Set the opacity range for inactive clients. */
-void SetInactiveClientOpacity(const char *str) {
-
-   double temp;
-   const char *str_u;
-   const char *str_d;
-   unsigned int first;
-   unsigned int second;
-
-   Assert(str);
-
-   /* Reset in case there's a problem. */
-   maxInactiveOpacity = (unsigned int)(0.9 * UINT_MAX);
-   minInactiveOpacity = (unsigned int)(0.5 * UINT_MAX);
-   deltaInactiveOpacity = (unsigned int)(0.1 * UINT_MAX);
-
-   /* Read the first (or only) bound of the range. */
-   temp = atof(str);
-   if(JUNLIKELY(temp < 0.0 || temp > 1.0)) {
-      Warning(_("invalid inactive client opacity: %s"), str);
-      return;
-   }
-   first = (unsigned int)(temp * UINT_MAX);
-   second = first;
-
-   /* Check for a range. */
-   str_u = strchr(str, ':');
-   if(str_u) {
-
-      /* A range was specified. */
-      temp = atof(str_u + 1);
-      if(JUNLIKELY(temp < 0.0 || temp > 1.0)) {
-         Warning(_("invalid inactive client opacity: %s"), str);
-         return;
-      }
-      second = (unsigned int)(temp * UINT_MAX);
-
-      /* Check for a delta. */
-      str_d = strchr(str_u + 1, ':');
-      if(str_d) {
-         temp = atof(str_d + 1);
-         if(JUNLIKELY(temp <= 0.0 || temp > 1.0)) {
-            Warning(_("invalid inactive client opacity delta: %s"), str);
-            return;
-         }
-         deltaInactiveOpacity = (unsigned int)(temp * UINT_MAX);
-      }
-
-   }
-
-   /* Set the min/max opacities. */
-   if(first > second) {
-      minInactiveOpacity = second;
-      maxInactiveOpacity = first;
-   } else {
-      minInactiveOpacity = first;
-      maxInactiveOpacity = second;
    }
 
 }

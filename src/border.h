@@ -14,15 +14,6 @@
 
 struct ClientNode;
 
-/** Border button image masks. */
-typedef enum {
-   BP_CLOSE,
-   BP_MINIMIZE,
-   BP_MAXIMIZE,
-   BP_MAXIMIZE_ACTIVE,
-   BP_COUNT
-} BorderPixmapType;
-
 /** Flags to determine what action to take on the border. */
 typedef enum {
    BA_NONE      = 0,      /**< Do nothing. */
@@ -72,17 +63,7 @@ int GetBorderIconSize();
  * @param west Pointer to the value to contain the west border size.
  */
 void GetBorderSize(const struct ClientNode *np,
-   int *north, int *south, int *east, int *west);
-
-/** Set the size of window borders.
- * @param str The size to use in string form.
- */
-void SetBorderWidth(const char *str);
-
-/** Set the size of window title bars.
- * @param str The size to use in string form.
- */
-void SetTitleHeight(const char *str);
+                   int *north, int *south, int *east, int *west);
 
 /** Redraw all borders on the current desktop. */
 void ExposeCurrentDesktop();
@@ -98,12 +79,6 @@ void ResetRoundedRectWindow(Window w);
  * @param height The height of the window.
  */
 void ShapeRoundedRectWindow(Window w, int width, int height);
-
-/** Set the bitmask to use for a button.
- * @param pt The button bitmask to set.
- * @param filename The name of the file containing the bitmask.
- */
-void SetButtonMask(BorderPixmapType pt, const char *filename);
 
 /** Draw a rounded rectangle. */
 void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,

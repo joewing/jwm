@@ -32,17 +32,17 @@ typedef enum {
 /** Data used for drawing a button. */
 typedef struct {
 
-   ButtonType type;         /**< The type of button to draw. */
-   Drawable drawable;       /**< The place to put the button. */
-   GC gc;                   /**< Graphics context used for drawing. */
-   FontType font;           /**< The font for button text. */
-   AlignmentType alignment; /**< Alignment of the button content. */
+   ButtonType type;           /**< The type of button to draw. */
+   Drawable drawable;         /**< The place to put the button. */
+   GC gc;                     /**< Graphics context used for drawing. */
+   FontType font;             /**< The font for button text. */
+   AlignmentType alignment;   /**< Alignment of the button content. */
 
-   int x, y;           /**< The coordinates to render the button. */
-   int width, height;  /**< The size of the button. */
+   int x, y;                  /**< The coordinates to render the button. */
+   int width, height;         /**< The size of the button. */
 
-   struct IconNode *icon;  /**< Icon used in the button. */
-   const char *text;       /**< Text used in the button. */
+   struct IconNode *icon;     /**< Icon used in the button. */
+   const char *text;          /**< Text used in the button. */
 
 } ButtonNode;
 

@@ -25,6 +25,7 @@
 #include "timing.h"
 #include "command.h"
 #include "cursor.h"
+#include "settings.h"
 
 #define BUTTON_SIZE 4
 
@@ -166,8 +167,8 @@ TrayComponentType *CreateTrayButton(const char *iconName,
    cp->requestedWidth = width;
    cp->requestedHeight = height;
 
-   bp->mousex = -POPUP_DELTA;
-   bp->mousey = -POPUP_DELTA;
+   bp->mousex = -settings.doubleClickDelta;
+   bp->mousey = -settings.doubleClickDelta;
 
    cp->Create = Create;
    cp->Destroy = Destroy;
@@ -442,9 +443,9 @@ void SignalTrayButton(const TimeType *now, int x, int y) {
       } else {
          continue;
       }
-      if(abs(bp->mousex - x) < POPUP_DELTA
-         && abs(bp->mousey - y) < POPUP_DELTA) {
-         if(GetTimeDifference(now, &bp->mouseTime) >= popupDelay) {
+      if(abs(bp->mousex - x) < settings.doubleClickDelta
+         && abs(bp->mousey - y) < settings.doubleClickDelta) {
+         if(GetTimeDifference(now, &bp->mouseTime) >= settings.popupDelay) {
             ShowPopup(x, y, popup);
          }
       }

@@ -31,11 +31,13 @@ static int mousex;
 static int mousey;
 
 /** Initialize cursor data. */
-void InitializeCursors() {
+void InitializeCursors()
+{
 }
 
 /** Startup cursor support. */
-void StartupCursors() {
+void StartupCursors()
+{
 
    Window win1, win2;
    int winx, winy;
@@ -59,13 +61,14 @@ void StartupCursors() {
 }
 
 /** Create a cursor for the specified shape. */
-Cursor CreateCursor(unsigned int shape) {
+Cursor CreateCursor(unsigned int shape)
+{
    return JXCreateFontCursor(display, shape);
 }
 
 /** Shutdown cursor support. */
-void ShutdownCursors() {
-
+void ShutdownCursors()
+{
    JXFreeCursor(display, defaultCursor);
    JXFreeCursor(display, moveCursor);
    JXFreeCursor(display, northCursor);
@@ -77,16 +80,16 @@ void ShutdownCursors() {
    JXFreeCursor(display, southEastCursor);
    JXFreeCursor(display, southWestCursor);
    JXFreeCursor(display, chooseCursor);
-
 }
 
 /** Destroy cursor data. */
-void DestroyCursors() {
+void DestroyCursors()
+{
 }
 
 /** Get the cursor for the specified location on the frame. */
-Cursor GetFrameCursor(BorderActionType action) {
-
+Cursor GetFrameCursor(BorderActionType action)
+{
    switch(action & 0x0F) {
    case BA_RESIZE:
       return GetResizeCursor(action);
@@ -102,12 +105,11 @@ Cursor GetFrameCursor(BorderActionType action) {
       break;
    }
    return defaultCursor;
-
 }
 
 /** Get the cursor for resizing on the specified frame location. */
-Cursor GetResizeCursor(BorderActionType action) {
-
+Cursor GetResizeCursor(BorderActionType action)
+{
    if(action & BA_RESIZE_N) {
       if(action & BA_RESIZE_E) {
          return northEastCursor;
@@ -131,167 +133,116 @@ Cursor GetResizeCursor(BorderActionType action) {
          return westCursor;
       }
    }
-
 }
 
 /** Grab the mouse for resizing a window. */
-int GrabMouseForResize(BorderActionType action) {
-
+char GrabMouseForResize(BorderActionType action)
+{
    Cursor cur;
    int result;
+   unsigned int mask;
 
    cur = GetFrameCursor(action);
-
-   result = JXGrabPointer(display, rootWindow, False, ButtonPressMask
-      | ButtonReleaseMask | PointerMotionMask, GrabModeAsync,
-      GrabModeAsync, None, cur, CurrentTime);
-
+   mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+   result = JXGrabPointer(display, rootWindow, False, mask,
+                          GrabModeAsync, GrabModeAsync, None,
+                          cur, CurrentTime);
    if(JLIKELY(result == GrabSuccess)) {
       return 1;
    } else {
       return 0;
    }
-
 }
 
 /** Grab the mouse for moving a window. */
-int GrabMouseForMove() {
-
+char GrabMouseForMove()
+{
    int result;
-
-   result = JXGrabPointer(display, rootWindow, False,
-      ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
-      GrabModeAsync, GrabModeAsync, None, moveCursor, CurrentTime);
-
+   unsigned int mask;
+   mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+   result = JXGrabPointer(display, rootWindow, False, mask,
+                          GrabModeAsync, GrabModeAsync, None,
+                          moveCursor, CurrentTime);
    if(JLIKELY(result == GrabSuccess)) {
       return 1;
    } else {
       return 0;
    }
-
 }
 
 /** Grab the mouse. */
-int GrabMouse(Window w) {
-
+char GrabMouse(Window w)
+{
    int result;
-
-   result = JXGrabPointer(display, w, False,
-      ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
-      GrabModeAsync, GrabModeAsync, None, defaultCursor, CurrentTime);
-
+   unsigned int mask;
+   mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+   result = JXGrabPointer(display, w, False, mask,
+                          GrabModeAsync, GrabModeAsync, None,
+                          defaultCursor, CurrentTime);
    if(JLIKELY(result == GrabSuccess)) {
       return 1;
    } else {
       return 0;
    }
-
 }
 
 /** Grab the mouse for choosing a window. */
-int GrabMouseForChoose() {
-
+char GrabMouseForChoose()
+{
    int result;
-
-   result = JXGrabPointer(display, rootWindow, False,
-      ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
-      GrabModeAsync, GrabModeAsync, None, chooseCursor, CurrentTime);
-
+   unsigned int mask;
+   mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+   result = JXGrabPointer(display, rootWindow, False, mask,
+                          GrabModeAsync, GrabModeAsync, None,
+                          chooseCursor, CurrentTime);
    if(JLIKELY(result == GrabSuccess)) {
       return 1;
    } else {
       return 0;
    }
-
 }
 
 /** Set the default cursor for a window. */
-void SetDefaultCursor(Window w) {
-
+void SetDefaultCursor(Window w)
+{
    JXDefineCursor(display, w, defaultCursor);
-
 }
 
 /** Move the mouse to the specified coordinates on a window. */
-void MoveMouse(Window win, int x, int y) {
-
+void MoveMouse(Window win, int x, int y)
+{
    Window win1, win2;
    int winx, winy;
    unsigned int mask;
-
    JXWarpPointer(display, None, win, 0, 0, 0, 0, x, y);
-
    JXQueryPointer(display, rootWindow, &win1, &win2,
                   &mousex, &mousey, &winx, &winy, &mask);
-
 }
 
 /** Set the current mouse position. */
-void SetMousePosition(int x, int y) {
-
+void SetMousePosition(int x, int y)
+{
    mousex = x;
    mousey = y;
-
 }
 
 /** Get the current mouse position. */
-void GetMousePosition(int *x, int *y) {
-
+void GetMousePosition(int *x, int *y)
+{
    Assert(x);
    Assert(y);
-
    *x = mousex;
    *y = mousey;
-
 }
 
 /** Get the current mouse buttons pressed. */
-unsigned int GetMouseMask() {
-
+unsigned int GetMouseMask()
+{
    Window win1, win2;
    int winx, winy;
    unsigned int mask;
-
    JXQueryPointer(display, rootWindow, &win1, &win2,
-      &mousex, &mousey, &winx, &winy, &mask);
-
+                  &mousex, &mousey, &winx, &winy, &mask);
    return mask;
-
-}
-
-/** Set the double click speed to use. */
-void SetDoubleClickSpeed(const char *str) {
-
-   int speed;
-
-   if(str) {
-      speed = atoi(str);
-      if(JUNLIKELY(speed < MIN_DOUBLE_CLICK_SPEED
-                   || speed > MAX_DOUBLE_CLICK_SPEED)) {
-         Warning(_("invalid DoubleClickSpeed: %d"), speed);
-         doubleClickSpeed = DEFAULT_DOUBLE_CLICK_SPEED;
-      } else {
-         doubleClickSpeed = speed;
-      }
-   }
-
-}
-
-/** Set the double click delta to use. */
-void SetDoubleClickDelta(const char *str) {
-
-   int delta;
-
-   if(str) {
-      delta = atoi(str);
-      if(JUNLIKELY(delta < MIN_DOUBLE_CLICK_DELTA
-                   || delta > MAX_DOUBLE_CLICK_DELTA)) {
-         Warning(_("invalid DoubleClickDelta: %d"), delta);
-         doubleClickDelta = DEFAULT_DOUBLE_CLICK_DELTA;
-      } else {
-         doubleClickDelta = delta;
-      }
-   }
-
 }
 

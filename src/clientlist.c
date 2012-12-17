@@ -21,7 +21,8 @@ static int windowStackSize = 0;     /**< Size of the image. */
 static int windowStackCurrent = 0;  /**< Current location in the image. */
 
 /** Determine if a client is allowed focus. */
-int ShouldFocus(const ClientNode *np) {
+char ShouldFocus(const ClientNode *np)
+{
 
    /* Only display clients on the current desktop or clients that are sticky. */
    if(np->state.desktop != currentDesktop
@@ -49,7 +50,8 @@ int ShouldFocus(const ClientNode *np) {
 }
 
 /** Start walking the window stack. */
-void StartWindowStackWalk() {
+void StartWindowStackWalk()
+{
 
    /* Get an image of the window stack.
     * Here we get the Window IDs rather than client pointers so
@@ -103,7 +105,8 @@ void StartWindowStackWalk() {
 }
 
 /** Move to the next window in the window stack. */
-void WalkWindowStack(int forward) {
+void WalkWindowStack(int forward)
+{
 
    ClientNode *np;
    int x;
@@ -145,7 +148,8 @@ void WalkWindowStack(int forward) {
 }
 
 /** Stop walking the window stack. */
-void StopWindowStackWalk() {
+void StopWindowStackWalk()
+{
 
    ClientNode *np;
 
@@ -175,7 +179,8 @@ void StopWindowStackWalk() {
 }
 
 /** Focus the next client in the stacking order. */
-void FocusNextStacked(ClientNode *np) {
+void FocusNextStacked(ClientNode *np)
+{
 
    int x;
    ClientNode *tp;

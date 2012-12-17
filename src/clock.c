@@ -18,6 +18,7 @@
 #include "cursor.h"
 #include "popup.h"
 #include "misc.h"
+#include "settings.h"
 
 /** Structure to respresent a clock tray component. */
 typedef struct ClockType {
@@ -50,19 +51,21 @@ static void Create(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
 static void ProcessClockButtonEvent(TrayComponentType *cp,
-   int x, int y, int mask);
+                                    int x, int y, int mask);
 static void ProcessClockMotionEvent(TrayComponentType *cp,
-   int x, int y, int mask);
+                                    int x, int y, int mask);
 
 static void DrawClock(ClockType *clk, const TimeType *now, int x, int y);
 
 /** Initialize clocks. */
-void InitializeClock() {
+void InitializeClock()
+{
    clocks = NULL;
 }
 
 /** Start clock(s). */
-void StartupClock() {
+void StartupClock()
+{
 
    ClockType *clk;
 
@@ -78,11 +81,13 @@ void StartupClock() {
 }
 
 /** Stop clock(s). */
-void ShutdownClock() {
+void ShutdownClock()
+{
 }
 
 /** Destroy clock(s). */
-void DestroyClock() {
+void DestroyClock()
+{
 
    ClockType *cp;
 
@@ -107,7 +112,8 @@ void DestroyClock() {
 
 /** Create a clock tray component. */
 TrayComponentType *CreateClock(const char *format, const char *zone,
-                               const char *command, int width, int height) {
+                               const char *command, int width, int height)
+{
 
    TrayComponentType *cp;
    ClockType *clk;
@@ -116,8 +122,8 @@ TrayComponentType *CreateClock(const char *format, const char *zone,
    clk->next = clocks;
    clocks = clk;
 
-   clk->mousex = -POPUP_DELTA;
-   clk->mousey = -POPUP_DELTA;
+   clk->mousex = -settings.doubleClickDelta;
+   clk->mousey = -settings.doubleClickDelta;
    clk->mouseTime.seconds = 0;
    clk->mouseTime.ms = 0;
    clk->userWidth = 0;
@@ -156,7 +162,8 @@ TrayComponentType *CreateClock(const char *format, const char *zone,
 }
 
 /** Initialize a clock tray component. */
-void Create(TrayComponentType *cp) {
+void Create(TrayComponentType *cp)
+{
 
    Assert(cp);
 
@@ -169,7 +176,8 @@ void Create(TrayComponentType *cp) {
 }
 
 /** Resize a clock tray component. */
-void Resize(TrayComponentType *cp) {
+void Resize(TrayComponentType *cp)
+{
 
    ClockType *clk;
    TimeType now;
@@ -197,17 +205,17 @@ void Resize(TrayComponentType *cp) {
 }
 
 /** Destroy a clock tray component. */
-void Destroy(TrayComponentType *cp) {
-
+void Destroy(TrayComponentType *cp)
+{
    Assert(cp);
-
    if(cp->pixmap != None) {
       JXFreePixmap(display, cp->pixmap);
    }
 }
 
 /** Process a click event on a clock tray component. */
-void ProcessClockButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
+void ProcessClockButtonEvent(TrayComponentType *cp, int x, int y, int mask)
+{
 
    ClockType *clk;
 
@@ -225,7 +233,8 @@ void ProcessClockButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 
 /** Process a motion event on a clock tray component. */
 void ProcessClockMotionEvent(TrayComponentType *cp,
-                             int x, int y, int mask) {
+                             int x, int y, int mask)
+{
 
    ClockType *clk;
 
@@ -239,7 +248,8 @@ void ProcessClockMotionEvent(TrayComponentType *cp,
 }
 
 /** Update a clock tray component. */
-void SignalClock(const TimeType *now, int x, int y) {
+void SignalClock(const TimeType *now, int x, int y)
+{
 
    ClockType *cp;
    int shouldDraw;
@@ -262,9 +272,9 @@ void SignalClock(const TimeType *now, int x, int y) {
          DrawClock(cp, now, x, y);
       }
 
-      if(abs(cp->mousex - x) < POPUP_DELTA
-         && abs(cp->mousey - y) < POPUP_DELTA) {
-         if(GetTimeDifference(now, &cp->mouseTime) >= popupDelay) {
+      if(abs(cp->mousex - x) < settings.doubleClickDelta
+         && abs(cp->mousey - y) < settings.doubleClickDelta) {
+         if(GetTimeDifference(now, &cp->mouseTime) >= settings.popupDelay) {
             longTime = GetTimeString("%c", cp->zone);
             ShowPopup(x, y, longTime);
          }
@@ -275,7 +285,8 @@ void SignalClock(const TimeType *now, int x, int y) {
 }
 
 /** Draw a clock tray component. */
-void DrawClock(ClockType *clk, const TimeType *now, int x, int y) {
+void DrawClock(ClockType *clk, const TimeType *now, int x, int y)
+{
 
    TrayComponentType *cp;
    const char *shortTime;
@@ -320,5 +331,4 @@ void DrawClock(ClockType *clk, const TimeType *now, int x, int y) {
    }
 
 }
-
 

@@ -23,6 +23,7 @@
 #include "font.h"
 #include "winmenu.h"
 #include "screen.h"
+#include "settings.h"
 
 typedef enum {
    INSERT_LEFT,
@@ -133,8 +134,8 @@ TrayComponentType *CreateTaskBar() {
    bars = tp;
    tp->itemHeight = 0;
    tp->layout = LAYOUT_HORIZONTAL;
-   tp->mousex = -POPUP_DELTA;
-   tp->mousey = -POPUP_DELTA;
+   tp->mousex = -settings.doubleClickDelta;
+   tp->mousey = -settings.doubleClickDelta;
    tp->mouseTime.seconds = 0;
    tp->mouseTime.ms = 0;
    tp->maxItemWidth = 0;
@@ -425,9 +426,9 @@ void SignalTaskbar(const TimeType *now, int x, int y) {
    Node *np;
 
    for(bp = bars; bp; bp = bp->next) {
-      if(abs(bp->mousex - x) < POPUP_DELTA
-         && abs(bp->mousey - y) < POPUP_DELTA) {
-         if(GetTimeDifference(now, &bp->mouseTime) >= popupDelay) {
+      if(abs(bp->mousex - x) < settings.doubleClickDelta
+         && abs(bp->mousey - y) < settings.doubleClickDelta) {
+         if(GetTimeDifference(now, &bp->mouseTime) >= settings.popupDelay) {
             if(bp->layout == LAYOUT_HORIZONTAL) {
                np = GetNode(bp, x - bp->cp->screenx);
             } else {

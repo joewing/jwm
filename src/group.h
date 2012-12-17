@@ -69,7 +69,7 @@ void AddGroupOption(struct GroupType *gp, OptionType option);
  * @param value The option value.
  */
 void AddGroupOptionValue(struct GroupType *gp, OptionType option,
-   const char *value);
+                         const char *value);
 
 /** Apply any matching groups to a client.
  * @param np The client.

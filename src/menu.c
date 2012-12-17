@@ -21,6 +21,7 @@
 #include "event.h"
 #include "error.h"
 #include "root.h"
+#include "settings.h"
 
 #define BASE_ICON_OFFSET 3
 
@@ -302,8 +303,8 @@ int MenuLoop(Menu *menu) {
          if(!hadMotion) {
             break;
          }
-         if(abs(event.xbutton.x_root - pressx) < doubleClickDelta) {
-            if(abs(event.xbutton.y_root - pressy) < doubleClickDelta) {
+         if(abs(event.xbutton.x_root - pressx) < settings.doubleClickDelta) {
+            if(abs(event.xbutton.y_root - pressy) < settings.doubleClickDelta) {
                break;
             }
          }

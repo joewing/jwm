@@ -293,15 +293,5 @@ void SendConfigureEvent(ClientNode *np);
  */
 void SendClientMessage(Window w, AtomType type, AtomType message);
 
-/** Set the opacity for active clients.
- * @param str The opacity to use.
- */
-void SetActiveClientOpacity(const char *str);
-
-/** Set the opacity range for inactive clients.
- * @param str The opacity range to use.
- */
-void SetInactiveClientOpacity(const char *str);
-
 #endif /* CLIENT_H */
 

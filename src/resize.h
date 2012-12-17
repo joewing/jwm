@@ -14,12 +14,6 @@
 
 struct ClientNode;
 
-/** Enumeration of possible resize modes. */
-typedef enum {
-   RESIZE_OPAQUE,   /**< Show window contents while resizing. */
-   RESIZE_OUTLINE   /**< Show an outline while resizing. */
-} ResizeModeType;
-
 /** Resize a client window.
  * @param np The client to resize.
  * @param action The location on the border where the move should take place.
@@ -27,17 +21,12 @@ typedef enum {
  * @param starty The starting mouse y-coordinate (window relative).
  */
 void ResizeClient(struct ClientNode *np, BorderActionType action,
-   int startx, int starty);
+                  int startx, int starty);
 
 /** Resize a client window using the keyboard (mouse optional).
  * @param np The client to resize.
  */
 void ResizeClientKeyboard(struct ClientNode *np);
-
-/** Set the resize mode to use.
- * @param mode The resize mode to use.
- */
-void SetResizeMode(ResizeModeType mode);
 
 #endif /* RESIZE_H */
 

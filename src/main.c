@@ -41,6 +41,7 @@
 #include "dock.h"
 #include "misc.h"
 #include "background.h"
+#include "settings.h"
 
 Display *display = NULL;
 Window rootWindow;
@@ -58,20 +59,9 @@ char isRestarting = 0;
 char initializing = 0;
 char shouldReload = 0;
 
-unsigned int desktopWidth = 4;
-unsigned int desktopHeight = 1;
-unsigned int desktopCount = 4;
 unsigned int currentDesktop = 0;
 
 char *exitCommand = NULL;
-
-int borderWidth = DEFAULT_BORDER_WIDTH;
-int titleHeight = DEFAULT_TITLE_HEIGHT;
-
-unsigned int doubleClickSpeed;
-unsigned int doubleClickDelta;
-
-FocusModelType focusModel = FOCUS_SLOPPY;
 
 XContext clientContext;
 XContext frameContext;
@@ -391,6 +381,7 @@ void Initialize() {
    InitializePopup();
    InitializeRootMenu();
    InitializeScreens();
+   InitializeSettings();
    InitializeSwallow();
    InitializeTaskBar();
    InitializeTray();
@@ -410,6 +401,7 @@ void Startup() {
     * while we're still loading. */
    JXGrabServer(display);
 
+   StartupSettings();
    StartupScreens();
 
    StartupGroups();
@@ -497,6 +489,7 @@ void Shutdown() {
    ShutdownPlacement();
    ShutdownHints();
    ShutdownScreens();
+   ShutdownSettings();
 
    ShutdownCommands();
 
@@ -530,6 +523,7 @@ void Destroy() {
    DestroyPopup();
    DestroyRootMenu();
    DestroyScreens();
+   DestroySettings();
    DestroySwallow();
    DestroyTaskBar();
    DestroyTray();

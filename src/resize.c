@@ -19,8 +19,7 @@
 #include "key.h"
 #include "event.h"
 #include "border.h"
-
-static ResizeModeType resizeMode = RESIZE_OPAQUE;
+#include "settings.h"
 
 static char shouldStopResize;
 
@@ -29,14 +28,9 @@ static void ResizeController(int wasDestroyed);
 static void FixWidth(ClientNode *np);
 static void FixHeight(ClientNode *np);
 
-/** Set the resize mode to use. */
-void SetResizeMode(ResizeModeType mode) {
-   resizeMode = mode;
-}
-
 /** Callback to stop a resize. */
 void ResizeController(int wasDestroyed) {
-   if(resizeMode == RESIZE_OUTLINE) {
+   if(settings.resizeMode == RESIZE_OUTLINE) {
       ClearOutline();
    }
    JXUngrabPointer(display, CurrentTime);
@@ -208,7 +202,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 
             UpdateResizeWindow(np, gwidth, gheight);
 
-            if(resizeMode == RESIZE_OUTLINE) {
+            if(settings.resizeMode == RESIZE_OUTLINE) {
                ClearOutline();
                if(np->state.status & STAT_SHADED) {
                   DrawOutline(np->x - west, np->y - north,
@@ -384,7 +378,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 
          UpdateResizeWindow(np, gwidth, gheight);
 
-         if(resizeMode == RESIZE_OUTLINE) {
+         if(settings.resizeMode == RESIZE_OUTLINE) {
             ClearOutline();
             if(np->state.status & STAT_SHADED) {
                DrawOutline(np->x - west, np->y - north,
@@ -429,7 +423,7 @@ void StopResize(ClientNode *np) {
 
    np->controller = NULL;
 
-   if(resizeMode == RESIZE_OUTLINE) {
+   if(settings.resizeMode == RESIZE_OUTLINE) {
       ClearOutline();
    }
 

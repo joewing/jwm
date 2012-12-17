@@ -19,6 +19,7 @@
 #include "cursor.h"
 #include "misc.h"
 #include "root.h"
+#include "settings.h"
 
 static Menu *CreateWindowMenu();
 static void RunWindowCommand(const MenuAction *action);
@@ -211,7 +212,7 @@ void CreateWindowSendToMenu(Menu *menu) {
    unsigned int x;
 
    mask = 0;
-   for(x = 0; x < desktopCount; x++) {
+   for(x = 0; x < settings.desktopCount; x++) {
       if(client->state.desktop == x
          || (client->state.status & STAT_STICKY)) {
          mask |= 1 << x;

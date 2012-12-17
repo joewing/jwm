@@ -14,6 +14,7 @@
 #include "font.h"
 #include "error.h"
 #include "misc.h"
+#include "settings.h"
 
 typedef unsigned char BorderPixmapDataType[32];
 
@@ -42,7 +43,6 @@ static BorderPixmapDataType bitmaps[BP_COUNT] = {
 };
 
 static Pixmap pixmaps[BP_COUNT];
-static char *bmpFiles[BP_COUNT];
 
 static Region borderRegion = NULL;
 static GC borderGC;
@@ -52,27 +52,30 @@ static void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc);
 static int GetButtonCount(const ClientNode *np);
 
 /** Initialize non-server resources. */
-void InitializeBorders() {
-   memset(bmpFiles, 0, sizeof(bmpFiles));
+void InitializeBorders()
+{
 }
 
 /** Initialize server resources. */
-void StartupBorders() {
+void StartupBorders()
+{
 
    XGCValues gcValues;
+   const char *file;
    unsigned long gcMask;
    int x, hotx, hoty;
    unsigned int bmpHeight, bmpWidth;
    int found;
 
    for(x = 0; x < BP_COUNT; x++) {
-      found = bmpFiles[x] ? 1 : 0;
+      file = settings.borderButtonBitmaps[x];
+      found = file ? 1 : 0;
       if(found) {
-         found = XReadBitmapFile(display, rootWindow, bmpFiles[x], &bmpWidth,
+         found = XReadBitmapFile(display, rootWindow, file, &bmpWidth,
                                  &bmpHeight, &pixmaps[x], &hotx, &hoty)
                   == BitmapSuccess;
          if(JUNLIKELY(!found)) {
-            Warning(_("bitmap could not be loaded: %s"), bmpFiles[x]);
+            Warning(_("bitmap could not be loaded: %s"), file);
          }
       }
       if(!found) {
@@ -88,38 +91,30 @@ void StartupBorders() {
 }
 
 /** Release server resources. */
-void ShutdownBorders() {
-
-   int x;
+void ShutdownBorders()
+{
+   unsigned int x;
 
    JXFreeGC(display, borderGC);
-
    for(x = 0; x < BP_COUNT; x++) {
       JXFreePixmap(display, pixmaps[x]);
    }
-
 }
 
 /** Release non-server resources. */
-void DestroyBorders() {
-
-   int x;
-
-   for(x = 0; x < BP_COUNT; x++) {
-      if(bmpFiles[x]) {
-         Release(bmpFiles[x]);
-         bmpFiles[x] = NULL;
-      }
-   }
+void DestroyBorders()
+{
 }
 
 /** Get the size of the icon to display on a window. */
-int GetBorderIconSize() {
-   return titleHeight - 6;
+int GetBorderIconSize()
+{
+   return settings.titleHeight - 6;
 }
 
 /** Determine the border action to take given coordinates. */
-BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
+BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
+{
 
    int north, south, east, west;
    int offset;
@@ -132,35 +127,36 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
    if(np->state.border & BORDER_TITLE) {
 
       /* Check buttons on the title bar. */
-      if(y >= south && y <= titleHeight) {
+      if(y >= south && y <= settings.titleHeight) {
 
          /* Menu button. */
-         if(np->icon && np->width >= titleHeight) {
-            if(x > 0 && x <= titleHeight) {
+         if(np->icon && np->width >= settings.titleHeight) {
+            if(x > 0 && x <= settings.titleHeight) {
                return BA_MENU;
             }
          }
 
          /* Close button. */
-         offset = np->width + west + east - titleHeight;
-         if((np->state.border & BORDER_CLOSE) && offset > titleHeight) {
-            if(x > offset && x < offset + titleHeight) {
+         offset = np->width + west + east - settings.titleHeight;
+         if(   (np->state.border & BORDER_CLOSE)
+            && offset > settings.titleHeight) {
+            if(x > offset && x < offset + settings.titleHeight) {
                return BA_CLOSE;
             }
-            offset -= titleHeight;
+            offset -= settings.titleHeight;
          }
 
          /* Maximize button. */
-         if((np->state.border & BORDER_MAX) && offset > titleHeight) {
-            if(x > offset && x < offset + titleHeight) {
+         if((np->state.border & BORDER_MAX) && offset > settings.titleHeight) {
+            if(x > offset && x < offset + settings.titleHeight) {
                return BA_MAXIMIZE;
             }
-            offset -= titleHeight;
+            offset -= settings.titleHeight;
          }
 
          /* Minimize button. */
-         if((np->state.border & BORDER_MIN) && offset > titleHeight) {
-            if(x > offset && x < offset + titleHeight) {
+         if((np->state.border & BORDER_MIN) && offset > settings.titleHeight) {
+            if(x > offset && x < offset + settings.titleHeight) {
                return BA_MINIMIZE;
             }
          }
@@ -168,7 +164,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
       }
 
       /* Check for move. */
-      if(y >= south && y <= titleHeight) {
+      if(y >= south && y <= settings.titleHeight) {
          if(x > 0 && x < np->width + east + west) {
             if(np->state.border & BORDER_MOVE) {
                return BA_MOVE;
@@ -187,17 +183,18 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
    }
 
    /* Check south east/west and north east/west resizing. */
-   if(np->width >= titleHeight * 2 && np->height >= titleHeight * 2) {
-      if(y > np->height + north - titleHeight) {
-         if(x < titleHeight) {
+   if(   np->width >= settings.titleHeight * 2
+      && np->height >= settings.titleHeight * 2) {
+      if(y > np->height + north - settings.titleHeight) {
+         if(x < settings.titleHeight) {
             return BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE;
-         } else if(x > np->width + west - titleHeight) {
+         } else if(x > np->width + west - settings.titleHeight) {
             return BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE;
          }
-      } else if(y < titleHeight) {
-         if(x < titleHeight) {
+      } else if(y < settings.titleHeight) {
+         if(x < settings.titleHeight) {
             return BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE;
-         } else if(x > np->width + west - titleHeight) {
+         } else if(x > np->width + west - settings.titleHeight) {
             return BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE;
          }
       }
@@ -219,7 +216,8 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y) {
 }
 
 /** Draw a client border. */
-void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
+void DrawBorder(const ClientNode *np, const XExposeEvent *expose)
+{
 
    XRectangle rect;
    int drawIcon;
@@ -281,7 +279,7 @@ void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
       if(np->icon && (np->state.border & BORDER_TITLE)) {
          temp = GetBorderIconSize();
          rect.x = 6;
-         rect.y = (short)((titleHeight - temp) / 2);
+         rect.y = (short)((settings.titleHeight - temp) / 2);
          rect.width = (unsigned short)temp;
          rect.height = (unsigned short)temp;
          if(XRectInRegion(borderRegion,
@@ -316,7 +314,8 @@ void DrawBorder(const ClientNode *np, const XExposeEvent *expose) {
 }
 
 /** Helper method for drawing borders. */
-void DrawBorderHelper(const ClientNode *np, int drawIcon) {
+void DrawBorderHelper(const ClientNode *np, int drawIcon)
+{
 
    ColorType borderTextColor;
 
@@ -375,7 +374,7 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
    /* Determine how many pixels may be used for the title. */
    buttonCount = GetButtonCount(np);
    titleWidth = width;
-   titleWidth -= titleHeight * buttonCount;
+   titleWidth -= settings.titleHeight * buttonCount;
    titleWidth -= iconSize + 7 + 6;
 
    /* Draw the top part (either a title or north border. */
@@ -383,18 +382,18 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
 
       /* Draw a title bar. */
       DrawHorizontalGradient(canvas, gc, titleColor1, titleColor2,
-                             1, 1, width - 2, titleHeight - 2);
+                             1, 1, width - 2, settings.titleHeight - 2);
 
       /* Draw the icon. */
-      if(np->icon && np->width >= titleHeight && drawIcon) {
-         PutIcon(np->icon, canvas, 6, (titleHeight - iconSize) / 2,
+      if(np->icon && np->width >= settings.titleHeight && drawIcon) {
+         PutIcon(np->icon, canvas, 6, (settings.titleHeight - iconSize) / 2,
                  iconSize, iconSize);
       }
 
       if(np->name && np->name[0] && titleWidth > 0) {
          RenderString(canvas, FONT_BORDER, borderTextColor,
                       iconSize + 6 + 4,
-                      (titleHeight - GetStringHeight(FONT_BORDER)) / 2,
+                      (settings.titleHeight - GetStringHeight(FONT_BORDER)) / 2,
                       titleWidth, borderRegion, np->name);
       }
 
@@ -424,7 +423,8 @@ void DrawBorderHelper(const ClientNode *np, int drawIcon) {
 }
 
 /** Determine the number of buttons to be displayed for a client. */
-int GetButtonCount(const ClientNode *np) {
+int GetButtonCount(const ClientNode *np)
+{
 
    int north, south, east, west;
    int count;
@@ -436,24 +436,24 @@ int GetButtonCount(const ClientNode *np) {
 
    GetBorderSize(np, &north, &south, &east, &west);
 
-   offset = np->width + east + west - titleHeight;
-   if(offset <= titleHeight) {
+   offset = np->width + east + west - settings.titleHeight;
+   if(offset <= settings.titleHeight) {
       return 0;
    }
 
    count = 0;
    if(np->state.border & BORDER_CLOSE) {
-      offset -= titleHeight;
+      offset -= settings.titleHeight;
       ++count;
-      if(offset <= titleHeight) {
+      if(offset <= settings.titleHeight) {
          return count;
       }
    }
 
    if(np->state.border & BORDER_MAX) {
-      offset -= titleHeight;
+      offset -= settings.titleHeight;
       ++count;
-      if(offset <= titleHeight) {
+      if(offset <= settings.titleHeight) {
          return count;
       }
    }
@@ -467,7 +467,8 @@ int GetButtonCount(const ClientNode *np) {
 }
 
 /** Draw the buttons on a client frame. */
-void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
+void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
+{
 
    Pixmap pixmap;
    long color;
@@ -482,12 +483,12 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
    }
 
    GetBorderSize(np, &north, &south, &east, &west);
-   offset = np->width + east + west - titleHeight;
-   if(offset <= titleHeight) {
+   offset = np->width + east + west - settings.titleHeight;
+   if(offset <= settings.titleHeight) {
       return;
    }
 
-   yoffset = titleHeight / 2 - 16 / 2;
+   yoffset = settings.titleHeight / 2 - 16 / 2;
 
    /* Determine the colors to use. */
    if(np->state.status & STAT_ACTIVE) {
@@ -507,8 +508,8 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
       JXFillRectangle(display, canvas, gc, offset + yoffset, yoffset, 16, 16);
       JXSetClipMask(display, gc, None);
 
-      offset -= titleHeight;
-      if(offset <= titleHeight) {
+      offset -= settings.titleHeight;
+      if(offset <= settings.titleHeight) {
          return;
       }
 
@@ -529,8 +530,8 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
       JXFillRectangle(display, canvas, gc, offset + yoffset, yoffset, 16, 16);
       JXSetClipMask(display, gc, None);
 
-      offset -= titleHeight;
-      if(offset <= titleHeight) {
+      offset -= settings.titleHeight;
+      if(offset <= settings.titleHeight) {
          return;
       }
 
@@ -556,7 +557,8 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc) {
  * may cause borders on the current desktop to become visible after moving
  * clients to their assigned desktops.
  */
-void ExposeCurrentDesktop() {
+void ExposeCurrentDesktop()
+{
 
    ClientNode *np;
    int layer;
@@ -573,7 +575,8 @@ void ExposeCurrentDesktop() {
 
 /** Get the size of the borders for a client. */
 void GetBorderSize(const ClientNode *np,
-   int *north, int *south, int *east, int *west) {
+                   int *north, int *south, int *east, int *west)
+{
 
    Assert(np);
    Assert(north);
@@ -592,10 +595,10 @@ void GetBorderSize(const ClientNode *np,
 
    if(np->state.border & BORDER_OUTLINE) {
 
-      *north = borderWidth;
-      *south = borderWidth;
-      *east = borderWidth;
-      *west = borderWidth;
+      *north = settings.borderWidth;
+      *south = settings.borderWidth;
+      *east = settings.borderWidth;
+      *west = settings.borderWidth;
 
    } else {
 
@@ -607,7 +610,7 @@ void GetBorderSize(const ClientNode *np,
    }
 
    if(np->state.border & BORDER_TITLE) {
-      *north = titleHeight;
+      *north = settings.titleHeight;
    }
 
    if(np->state.status & STAT_SHADED) {
@@ -616,62 +619,10 @@ void GetBorderSize(const ClientNode *np,
 
 }
 
-/** Set the size of window borders. */
-void SetBorderWidth(const char *str) {
-
-   int width;
-
-   if(JLIKELY(str)) {
-
-      width = atoi(str);
-      if(JUNLIKELY(width < MIN_BORDER_WIDTH || width > MAX_BORDER_WIDTH)) {
-         borderWidth = DEFAULT_BORDER_WIDTH;
-         Warning(_("invalid border width specified: %d"), width);
-      } else {
-         borderWidth = width;
-      }
-
-   }
-
-}
-
-/** Set the height of the title bar. */
-void SetTitleHeight(const char *str) {
-
-   int height;
-
-   if(JLIKELY(str)) {
-
-      height = atoi(str);
-      if(JUNLIKELY(height < MIN_TITLE_HEIGHT || height > MAX_TITLE_HEIGHT)) {
-         titleHeight = DEFAULT_TITLE_HEIGHT;
-         Warning(_("invalid title height specified: %d"), height);
-      } else {
-         titleHeight = height;
-      }
-
-   }
-
-}
-
-/** Set the bitmask to use for a button. */
-void SetButtonMask(BorderPixmapType pt, const char *filename) {
-
-   if(bmpFiles[pt]) {
-      Release(bmpFiles[pt]);
-      bmpFiles[pt] = NULL;
-   }
-
-   if(JLIKELY(filename)) {
-      bmpFiles[pt] = CopyString(filename);
-      ExpandPath(&bmpFiles[pt]);
-   }
-
-}
-
 /** Draw a rounded rectangle. */
 void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
-                          int width, int height, int radius) {
+                          int width, int height, int radius)
+{
 
 #ifdef USE_XMU
 
@@ -725,7 +676,8 @@ void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
 
 /** Fill a rounded rectangle. */
 void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
-                          int width, int height, int radius) {
+                          int width, int height, int radius)
+{
 
 #ifdef USE_XMU
 
@@ -783,14 +735,16 @@ void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
 
 
 /** Clear the shape mask of a window. */
-void ResetRoundedRectWindow(Window w) {
+void ResetRoundedRectWindow(Window w)
+{
 #ifdef USE_SHAPE
    JXShapeCombineMask(display, w, ShapeBounding, 0, 0, None, ShapeSet);
 #endif
 }
  
 /** Set the shape mask on a window to give a rounded boarder. */
-void ShapeRoundedRectWindow(Window w, int width, int height) {
+void ShapeRoundedRectWindow(Window w, int width, int height)
+{
 #ifdef USE_SHAPE
 
    Pixmap shapePixmap;

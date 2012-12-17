@@ -40,15 +40,5 @@ void UpdateResizeWindow(struct ClientNode *np, int gwidth, int gheight);
 /** Destroy a resize status window. */
 void DestroyResizeWindow();
 
-/** Set the location of move status windows.
- * @param str The location (off, screen, window, or corner).
- */
-void SetMoveStatusType(const char *str);
-
-/** Set the location of resize status windows.
- * @param str The location (off, screen, window, or corner).
- */
-void SetResizeStatusType(const char *str);
-
 #endif /* STATUS_H */
 

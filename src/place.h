@@ -82,7 +82,7 @@ void GetScreenBounds(const struct ScreenType *sp, BoundingBox *box);
  * @param layer The maximum layer of the tray bounds.
  */
 void SubtractTrayBounds(const struct TrayType *tp, BoundingBox *box,
-   unsigned int layer);
+                        unsigned int layer);
 
 #endif /* PLACE_H */
 

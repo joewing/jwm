@@ -36,14 +36,14 @@ static char menu_bitmap[] = {
    0x01, 0x03, 0x07, 0x0F, 0x07, 0x03, 0x01
 };
 
-static int ShowSubmenu(Menu *menu, Menu *parent, int x, int y);
+static char ShowSubmenu(Menu *menu, Menu *parent, int x, int y);
 
 static void CreateMenu(Menu *menu, int x, int y);
 static void HideMenu(Menu *menu);
 static void DrawMenu(Menu *menu);
 static void RedrawMenuTree(Menu *menu);
 
-static int MenuLoop(Menu *menu);
+static char MenuLoop(Menu *menu);
 static MenuSelectionType UpdateMotion(Menu *menu, XEvent *event);
 
 static void UpdateMenu(Menu *menu);
@@ -53,15 +53,15 @@ static int GetNextMenuIndex(Menu *menu);
 static int GetPreviousMenuIndex(Menu *menu);
 static int GetMenuIndex(Menu *menu, int index);
 static void SetPosition(Menu *tp, int index);
-static int IsMenuValid(const Menu *menu);
+static char IsMenuValid(const Menu *menu);
 
 static MenuAction *menuAction = NULL;
-static unsigned int menuOpacity = UINT_MAX;
 
 int menuShown = 0;
 
 /** Initialize a menu. */
-void InitializeMenu(Menu *menu) {
+void InitializeMenu(Menu *menu)
+{
 
    MenuItem *np;
    int index, temp;
@@ -158,7 +158,8 @@ void InitializeMenu(Menu *menu) {
 }
 
 /** Show a menu. */
-void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y) {
+void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y)
+{
 
    int mouseStatus, keyboardStatus;
 
@@ -192,9 +193,9 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y) {
 }
 
 /** Destroy a menu. */
-void DestroyMenu(Menu *menu) {
+void DestroyMenu(Menu *menu)
+{
    MenuItem *np;
-
    if(menu) {
       while(menu->items) {
          np = menu->items->next;
@@ -232,9 +233,10 @@ void DestroyMenu(Menu *menu) {
 }
 
 /** Show a submenu. */
-int ShowSubmenu(Menu *menu, Menu *parent, int x, int y) {
+char ShowSubmenu(Menu *menu, Menu *parent, int x, int y)
+{
 
-   int status;
+   char status;
 
    menu->parent = parent;
    CreateMenu(menu, x, y);
@@ -252,13 +254,14 @@ int ShowSubmenu(Menu *menu, Menu *parent, int x, int y) {
 /** Menu process loop.
  * Returns 0 if no selection was made or 1 if a selection was made.
  */
-int MenuLoop(Menu *menu) {
+char MenuLoop(Menu *menu)
+{
 
    XEvent event;
    MenuItem *ip;
    int count;
-   int hadMotion;
    int pressx, pressy;
+   char hadMotion;
 
    hadMotion = 0;
 
@@ -328,7 +331,8 @@ int MenuLoop(Menu *menu) {
 }
 
 /** Create and map a menu. */
-void CreateMenu(Menu *menu, int x, int y) {
+void CreateMenu(Menu *menu, int x, int y)
+{
 
    XSetWindowAttributes attr;
    unsigned long attrMask;
@@ -371,8 +375,9 @@ void CreateMenu(Menu *menu, int x, int y) {
       menu->width, menu->height, 0, CopyFromParent, InputOutput,
       CopyFromParent, attrMask, &attr);
 
-   if(menuOpacity < UINT_MAX) {
-      SetCardinalAtom(menu->window, ATOM_NET_WM_WINDOW_OPACITY, menuOpacity);
+   if(settings.menuOpacity < UINT_MAX) {
+      SetCardinalAtom(menu->window, ATOM_NET_WM_WINDOW_OPACITY,
+                      settings.menuOpacity);
       JXSync(display, False);
    }
 
@@ -381,26 +386,24 @@ void CreateMenu(Menu *menu, int x, int y) {
 }
 
 /** Hide a menu. */
-void HideMenu(Menu *menu) {
-
+void HideMenu(Menu *menu)
+{
    JXDestroyWindow(display, menu->window);
-
 }
 
 /** Redraw a menu and its submenus. */
-void RedrawMenuTree(Menu *menu) {
-
+void RedrawMenuTree(Menu *menu)
+{
    if(menu->parent) {
       RedrawMenuTree(menu->parent);
    }
-
    DrawMenu(menu);
    UpdateMenu(menu);
-
 }
 
 /** Draw a menu. */
-void DrawMenu(Menu *menu) {
+void DrawMenu(Menu *menu)
+{
 
    MenuItem *np;
    int x;
@@ -441,7 +444,8 @@ void DrawMenu(Menu *menu) {
 }
 
 /** Determine the action to take given an event. */
-MenuSelectionType UpdateMotion(Menu *menu, XEvent *event) {
+MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
+{
 
    MenuItem *ip;
    Menu *tp;
@@ -613,7 +617,8 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event) {
 }
 
 /** Update the menu selection. */
-void UpdateMenu(Menu *menu) {
+void UpdateMenu(Menu *menu)
+{
 
    ButtonNode button;
    Pixmap pixmap;
@@ -662,7 +667,8 @@ void UpdateMenu(Menu *menu) {
 }
 
 /** Draw a menu item. */
-void DrawMenuItem(Menu *menu, MenuItem *item, int index) {
+void DrawMenuItem(Menu *menu, MenuItem *item, int index)
+{
 
    ButtonNode button;
    Pixmap pixmap;
@@ -725,7 +731,8 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index) {
 }
 
 /** Get the next item in the menu. */
-int GetNextMenuIndex(Menu *menu) {
+int GetNextMenuIndex(Menu *menu)
+{
 
    MenuItem *item;
    int x;
@@ -742,7 +749,8 @@ int GetNextMenuIndex(Menu *menu) {
 }
 
 /** Get the previous item in the menu. */
-int GetPreviousMenuIndex(Menu *menu) {
+int GetPreviousMenuIndex(Menu *menu)
+{
 
    MenuItem *item;
    int x;
@@ -759,7 +767,8 @@ int GetPreviousMenuIndex(Menu *menu) {
 }
 
 /** Get the item in the menu given a y-coordinate. */
-int GetMenuIndex(Menu *menu, int y) {
+int GetMenuIndex(Menu *menu, int y)
+{
 
    int x;
 
@@ -776,7 +785,8 @@ int GetMenuIndex(Menu *menu, int y) {
 }
 
 /** Get the menu item associated with an index. */
-MenuItem *GetMenuItem(Menu *menu, int index) {
+MenuItem *GetMenuItem(Menu *menu, int index)
+{
 
    MenuItem *ip;
 
@@ -796,7 +806,8 @@ MenuItem *GetMenuItem(Menu *menu, int index) {
 }
 
 /** Set the active menu item. */
-void SetPosition(Menu *tp, int index) {
+void SetPosition(Menu *tp, int index)
+{
 
    int y;
    int updated;
@@ -829,10 +840,9 @@ void SetPosition(Menu *tp, int index) {
 }
 
 /** Determine if a menu is valid (and can be shown). */
-int IsMenuValid(const Menu *menu) {
-
+char IsMenuValid(const Menu *menu)
+{
    MenuItem *ip;
-
    if(menu) {
       for(ip = menu->items; ip; ip = ip->next) {
          if(ip->type != MENU_ITEM_SEPARATOR) {
@@ -840,24 +850,6 @@ int IsMenuValid(const Menu *menu) {
          }
       }
    }
-
    return 0;
-
-}
-
-/** Set the Menu transparency level. */
-void SetMenuOpacity(const char *str) {
-
-   double temp;
-
-   Assert(str);
-
-   temp = atof(str);
-   if(JUNLIKELY(temp <= 0.0 || temp > 1.0)) {
-      Warning(_("invalid menu opacity: %s"), str);
-      temp = 1.0;
-   }
-   menuOpacity = (unsigned int)(temp * UINT_MAX);
-
 }
 

@@ -25,11 +25,6 @@
 #include "screen.h"
 #include "settings.h"
 
-typedef enum {
-   INSERT_LEFT,
-   INSERT_RIGHT
-} InsertModeType;
-
 typedef struct TaskBarType {
 
    TrayComponentType *cp;
@@ -63,7 +58,6 @@ static char minimized_bitmap[] = {
 static const int TASK_SPACER = 2;
 
 static Pixmap minimizedPixmap;
-static InsertModeType insertMode;
 
 static TaskBarType *bars;
 static Node *taskBarNodes;
@@ -72,7 +66,7 @@ static Node *taskBarNodesTail;
 static Node *GetNode(TaskBarType *bar, int x);
 static unsigned int GetItemCount();
 static unsigned int GetItemWidth(const TaskBarType *bp,
-   unsigned int itemCount);
+                                 unsigned int itemCount);
 static void Render(const TaskBarType *bp);
 static void ShowTaskWindowMenu(TaskBarType *bar, Node *np);
 
@@ -80,51 +74,49 @@ static void SetSize(TrayComponentType *cp, int width, int height);
 static void Create(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 static void ProcessTaskButtonEvent(TrayComponentType *cp,
-   int x, int y, int mask);
+                                   int x, int y, int mask);
 static void ProcessTaskMotionEvent(TrayComponentType *cp,
-   int x, int y, int mask);
+                                   int x, int y, int mask);
 
 /** Initialize task bar data. */
-void InitializeTaskBar() {
+void InitializeTaskBar()
+{
    bars = NULL;
    taskBarNodes = NULL;
    taskBarNodesTail = NULL;
-   insertMode = INSERT_RIGHT;
 }
 
 /** Startup the task bar. */
-void StartupTaskBar() {
+void StartupTaskBar()
+{
    minimizedPixmap = JXCreateBitmapFromData(display, rootWindow,
                                             minimized_bitmap, 4, 4);
 }
 
 /** Shutdown the task bar. */
-void ShutdownTaskBar() {
-
+void ShutdownTaskBar()
+{
    TaskBarType *bp;
-
    for(bp = bars; bp; bp = bp->next) {
       JXFreePixmap(display, bp->buffer);
    }
-
    JXFreePixmap(display, minimizedPixmap);
 }
 
 /** Destroy task bar data. */
-void DestroyTaskBar() {
-
+void DestroyTaskBar()
+{
    TaskBarType *bp;
-
    while(bars) {
       bp = bars->next;
       Release(bars);
       bars = bp;
    }
-
 }
 
 /** Create a new task bar tray component. */
-TrayComponentType *CreateTaskBar() {
+TrayComponentType *CreateTaskBar()
+{
 
    TrayComponentType *cp;
    TaskBarType *tp;
@@ -155,7 +147,8 @@ TrayComponentType *CreateTaskBar() {
 }
 
 /** Set the size of a task bar tray component. */
-void SetSize(TrayComponentType *cp, int width, int height) {
+void SetSize(TrayComponentType *cp, int width, int height)
+{
 
    TaskBarType *tp;
 
@@ -178,7 +171,8 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 }
 
 /** Initialize a task bar tray component. */
-void Create(TrayComponentType *cp) {
+void Create(TrayComponentType *cp)
+{
 
    TaskBarType *tp;
 
@@ -207,7 +201,8 @@ void Create(TrayComponentType *cp) {
 }
 
 /** Resize a task bar tray component. */
-void Resize(TrayComponentType *cp) {
+void Resize(TrayComponentType *cp)
+{
 
    TaskBarType *tp;
 
@@ -236,11 +231,12 @@ void Resize(TrayComponentType *cp) {
 
    JXSetForeground(display, rootGC, colors[COLOR_TRAY_BG]);
    JXFillRectangle(display, cp->pixmap, rootGC,
-      0, 0, cp->width, cp->height);
+                   0, 0, cp->width, cp->height);
 }
 
 /** Process a task list button event. */
-void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
+void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
+{
 
    TaskBarType *bar = (TaskBarType*)cp->object;
    Node *np;
@@ -281,18 +277,17 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 }
 
 /** Process a task list motion event. */
-void ProcessTaskMotionEvent(TrayComponentType *cp, int x, int y, int mask) {
-
+void ProcessTaskMotionEvent(TrayComponentType *cp, int x, int y, int mask)
+{
    TaskBarType *bp = (TaskBarType*)cp->object;
-
    bp->mousex = cp->screenx + x;
    bp->mousey = cp->screeny + y;
    GetCurrentTime(&bp->mouseTime);
-
 }
 
 /** Show the menu associated with a task list item. */
-void ShowTaskWindowMenu(TaskBarType *bar, Node *np) {
+void ShowTaskWindowMenu(TaskBarType *bar, Node *np)
+{
 
    int x, y;
    int mwidth, mheight;
@@ -324,7 +319,8 @@ void ShowTaskWindowMenu(TaskBarType *bar, Node *np) {
 }
 
 /** Add a client to the task bar. */
-void AddClientToTaskBar(ClientNode *np) {
+void AddClientToTaskBar(ClientNode *np)
+{
 
    Node *tp;
 
@@ -333,7 +329,7 @@ void AddClientToTaskBar(ClientNode *np) {
    tp = Allocate(sizeof(Node));
    tp->client = np;
 
-   if(insertMode == INSERT_RIGHT) {
+   if(settings.taskInsertMode == INSERT_RIGHT) {
       tp->next = NULL;
       tp->prev = taskBarNodesTail;
       if(taskBarNodesTail) {
@@ -361,7 +357,8 @@ void AddClientToTaskBar(ClientNode *np) {
 }
 
 /** Remove a client from the task bar. */
-void RemoveClientFromTaskBar(ClientNode *np) {
+void RemoveClientFromTaskBar(ClientNode *np)
+{
 
    Node *tp;
 
@@ -391,7 +388,8 @@ void RemoveClientFromTaskBar(ClientNode *np) {
 }
 
 /** Update all task bars. */
-void UpdateTaskBar() {
+void UpdateTaskBar()
+{
 
    TaskBarType *bp;
    unsigned int count;
@@ -420,7 +418,8 @@ void UpdateTaskBar() {
 }
 
 /** Signal task bar (for popups). */
-void SignalTaskbar(const TimeType *now, int x, int y) {
+void SignalTaskbar(const TimeType *now, int x, int y)
+{
 
    TaskBarType *bp;
    Node *np;
@@ -444,7 +443,8 @@ void SignalTaskbar(const TimeType *now, int x, int y) {
 }
 
 /** Draw a specific task bar. */
-void Render(const TaskBarType *bp) {
+void Render(const TaskBarType *bp)
+{
 
    Node *tp;
    ButtonNode button;
@@ -559,7 +559,8 @@ void Render(const TaskBarType *bp) {
 }
 
 /** Focus the next client in the task bar. */
-void FocusNext() {
+void FocusNext()
+{
 
    Node *tp;
 
@@ -595,7 +596,8 @@ void FocusNext() {
 }
 
 /** Focus the previous client in the task bar. */
-void FocusPrevious() {
+void FocusPrevious()
+{
 
    Node *tp;
 
@@ -631,7 +633,8 @@ void FocusPrevious() {
 }
 
 /** Get the item associated with an x-coordinate on the task bar. */
-Node *GetNode(TaskBarType *bar, int x) {
+Node *GetNode(TaskBarType *bar, int x)
+{
 
    Node *tp;
    int remainder;
@@ -684,7 +687,8 @@ Node *GetNode(TaskBarType *bar, int x) {
 }
 
 /** Get the number of items on the task bar. */
-unsigned int GetItemCount() {
+unsigned int GetItemCount()
+{
 
    Node *tp;
    unsigned int count;
@@ -701,7 +705,8 @@ unsigned int GetItemCount() {
 }
 
 /** Get the width of an item in the task bar. */
-unsigned int GetItemWidth(const TaskBarType *bp, unsigned int itemCount) {
+unsigned int GetItemWidth(const TaskBarType *bp, unsigned int itemCount)
+{
 
    unsigned int itemWidth;
 
@@ -725,7 +730,8 @@ unsigned int GetItemWidth(const TaskBarType *bp, unsigned int itemCount) {
 }
 
 /** Set the maximum width of an item in the task bar. */
-void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value) {
+void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value)
+{
 
    int temp;
    TaskBarType *bp;
@@ -744,27 +750,9 @@ void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value) {
 
 }
 
-/** Set the way items are inserted into the task bar. */
-void SetTaskBarInsertMode(const char *mode) {
-
-   if(!mode) {
-      insertMode = INSERT_RIGHT;
-      return;
-   }
-
-   if(!strcmp(mode, "right")) {
-      insertMode = INSERT_RIGHT;
-   } else if(!strcmp(mode, "left")) {
-      insertMode = INSERT_LEFT;
-   } else {
-      Warning(_("invalid insert mode: \"%s\""), mode);
-      insertMode = INSERT_RIGHT;
-   }
-
-}
-
 /** Maintain the _NET_CLIENT_LIST[_STACKING] properties on the root. */
-void UpdateNetClientList() {
+void UpdateNetClientList()
+{
 
    Node *np;
    ClientNode *client;

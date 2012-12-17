@@ -34,11 +34,13 @@ static void SubtractStrutBounds(BoundingBox *box);
 static void SubtractBounds(const BoundingBox *src, BoundingBox *dest);
 
 /** Initialize placement data. */
-void InitializePlacement() {
+void InitializePlacement()
+{
 }
 
 /** Startup placement. */
-void StartupPlacement() {
+void StartupPlacement()
+{
 
    int count;
    int x;
@@ -53,7 +55,8 @@ void StartupPlacement() {
 }
 
 /** Shutdown placement. */
-void ShutdownPlacement() {
+void ShutdownPlacement()
+{
 
    Strut *sp;
 
@@ -69,11 +72,13 @@ void ShutdownPlacement() {
 }
 
 /** Destroy placement data. */
-void DestroyPlacement() {
+void DestroyPlacement()
+{
 }
 
 /** Remove struts associated with a client. */
-void RemoveClientStrut(ClientNode *np) {
+void RemoveClientStrut(ClientNode *np)
+{
 
    Strut *sp;
 
@@ -100,7 +105,8 @@ void RemoveClientStrut(ClientNode *np) {
 }
 
 /** Add client specified struts to our list. */
-void ReadClientStrut(ClientNode *np) {
+void ReadClientStrut(ClientNode *np)
+{
 
    BoundingBox box;
    Strut *sp;
@@ -240,17 +246,17 @@ void ReadClientStrut(ClientNode *np) {
 }
 
 /** Get the screen bounds. */
-void GetScreenBounds(const ScreenType *sp, BoundingBox *box) {
-
+void GetScreenBounds(const ScreenType *sp, BoundingBox *box)
+{
    box->x = sp->x;
    box->y = sp->y;
    box->width = sp->width;
    box->height = sp->height;
-
 }
 
 /** Shrink dest such that it does not intersect with src. */
-void SubtractBounds(const BoundingBox *src, BoundingBox *dest) {
+void SubtractBounds(const BoundingBox *src, BoundingBox *dest)
+{
 
    BoundingBox boxes[4];
 
@@ -315,11 +321,10 @@ void SubtractBounds(const BoundingBox *src, BoundingBox *dest) {
 
 /** Subtract tray area from the bounding box. */
 void SubtractTrayBounds(const TrayType *tp, BoundingBox *box,
-   unsigned int layer) {
-
+                        unsigned int layer)
+{
    BoundingBox src;
    BoundingBox last;
-
    for(; tp; tp = tp->next) {
 
       if(tp->layer > layer && !tp->autoHide) {
@@ -345,11 +350,11 @@ void SubtractTrayBounds(const TrayType *tp, BoundingBox *box,
       }
 
    }
-
 }
 
 /** Remove struts from the bounding box. */
-void SubtractStrutBounds(BoundingBox *box) {
+void SubtractStrutBounds(BoundingBox *box)
+{
 
    Strut *sp;
    BoundingBox last;
@@ -369,7 +374,8 @@ void SubtractStrutBounds(BoundingBox *box) {
 }
 
 /** Place a client on the screen. */
-void PlaceClient(ClientNode *np, int alreadyMapped) {
+void PlaceClient(ClientNode *np, int alreadyMapped)
+{
 
    BoundingBox box;
    int north, south, east, west;
@@ -454,7 +460,8 @@ void PlaceClient(ClientNode *np, int alreadyMapped) {
 }
 
 /** Constrain the size of the client so it fits. */
-void ConstrainSize(ClientNode *np) {
+void ConstrainSize(ClientNode *np)
+{
 
    BoundingBox box;
    const ScreenType *sp;
@@ -513,7 +520,8 @@ void ConstrainSize(ClientNode *np) {
 }
 
 /** Place a maximized client on the screen. */
-void PlaceMaximizedClient(ClientNode *np, int horiz, int vert) {
+void PlaceMaximizedClient(ClientNode *np, int horiz, int vert)
+{
 
    BoundingBox box;
    const ScreenType *sp;
@@ -580,7 +588,8 @@ void PlaceMaximizedClient(ClientNode *np, int horiz, int vert) {
 }
 
 /** Determine which way to move the client for the border. */
-void GetGravityDelta(const ClientNode *np, int *x, int  *y) {
+void GetGravityDelta(const ClientNode *np, int *x, int  *y)
+{
 
    int north, south, east, west;
 
@@ -632,7 +641,8 @@ void GetGravityDelta(const ClientNode *np, int *x, int  *y) {
 }
 
 /** Move the window in the specified direction for reparenting. */
-void GravitateClient(ClientNode *np, int negate) {
+void GravitateClient(ClientNode *np, int negate)
+{
 
    int deltax, deltay;
 

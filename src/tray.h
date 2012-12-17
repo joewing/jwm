@@ -216,7 +216,7 @@ Window GetSupportingWindow();
  * @param event The event to process.
  * @return 1 if this event was for a tray, 0 otherwise.
  */
-int ProcessTrayEvent(const XEvent *event);
+char ProcessTrayEvent(const XEvent *event);
 
 /** Signal the trays.
  * This function is called regularly so that autohide, etc. can take place.

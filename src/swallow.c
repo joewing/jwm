@@ -38,53 +38,47 @@ static void Destroy(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 
 /** Initialize swallow data. */
-void InitializeSwallow() {
+void InitializeSwallow()
+{
    swallowNodes = NULL;
 }
 
 /** Start swallow processing. */
-void StartupSwallow() {
-
+void StartupSwallow()
+{
    SwallowNode *np;
-
    for(np = swallowNodes; np; np = np->next) {
       if(np->command) {
          RunCommand(np->command);
       }
    }
-
 }
 
 /** Stop swallow processing. */
-void ShutdownSwallow() {
+void ShutdownSwallow()
+{
 }
 
 /** Destroy swallow data. */
-void DestroySwallow() {
-
+void DestroySwallow()
+{
    SwallowNode *np;
-
    while(swallowNodes) {
-
       np = swallowNodes->next;
-
       Assert(swallowNodes->name);
       Release(swallowNodes->name);
-
       if(swallowNodes->command) {
          Release(swallowNodes->command);
       }
-
       Release(swallowNodes);
       swallowNodes = np;
-
    }
-
 }
 
 /** Create a swallowed application tray component. */
 TrayComponentType *CreateSwallow(const char *name, const char *command,
-                                 int width, int height) {
+                                 int width, int height)
+{
 
    TrayComponentType *cp;
    SwallowNode *np;
@@ -135,7 +129,8 @@ TrayComponentType *CreateSwallow(const char *name, const char *command,
 }
 
 /** Process an event on a swallowed window. */
-int ProcessSwallowEvent(const XEvent *event) {
+char ProcessSwallowEvent(const XEvent *event)
+{
 
    SwallowNode *np;
    int width, height;
@@ -180,7 +175,8 @@ int ProcessSwallowEvent(const XEvent *event) {
 }
 
 /** Handle a tray resize. */
-void Resize(TrayComponentType *cp) {
+void Resize(TrayComponentType *cp)
+{
 
    int width, height;
 
@@ -198,7 +194,8 @@ void Resize(TrayComponentType *cp) {
 }
 
 /** Destroy a swallow tray component. */
-void Destroy(TrayComponentType *cp) {
+void Destroy(TrayComponentType *cp)
+{
 
    ClientProtocolType protocols;
 
@@ -221,7 +218,8 @@ void Destroy(TrayComponentType *cp) {
 }
 
 /** Determine if this is a window to be swallowed, if it is, swallow it. */
-int CheckSwallowMap(const XMapEvent *event) {
+char CheckSwallowMap(const XMapEvent *event)
+{
 
    SwallowNode *np;
    XClassHint hint;

@@ -10,13 +10,6 @@
 #ifndef OUTLINE_H
 #define OUTLINE_H
 
-/*@{*/
-void InitializeOutline();
-void StartupOutline();
-void ShutdownOutline();
-void DestroyOutline();
-/*@}*/
-
 /** Draw an outline.
  * @param x The x-coordinate.
  * @param y The y-coordinate.

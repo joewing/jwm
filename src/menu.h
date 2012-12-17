@@ -115,10 +115,5 @@ void DestroyMenu(Menu *menu);
 /** The number of open menus. */
 extern int menuShown;
 
-/** Set the Menu opacity level.
- * @param str The value (ASCII).
- */
-void SetMenuOpacity(const char *str);
-
 #endif /* MENU_H */
 

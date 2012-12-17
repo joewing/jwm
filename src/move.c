@@ -41,29 +41,30 @@ static void MoveController(int wasDestroyed);
 static void DoSnap(ClientNode *np);
 static void DoSnapScreen(ClientNode *np);
 static void DoSnapBorder(ClientNode *np);
-static int ShouldSnap(const ClientNode *np);
+static char ShouldSnap(const ClientNode *np);
 static void GetClientRectangle(const ClientNode *np, RectangleType *r);
 
-static int CheckOverlapTopBottom(const RectangleType *a,
-                                 const RectangleType *b);
-static int CheckOverlapLeftRight(const RectangleType *a,
-                                 const RectangleType *b);
+static char CheckOverlapTopBottom(const RectangleType *a,
+                                  const RectangleType *b);
+static char CheckOverlapLeftRight(const RectangleType *a,
+                                  const RectangleType *b);
 
-static int CheckLeftValid(const RectangleType *client,
-                          const RectangleType *other,
-                          const RectangleType *left);
-static int CheckRightValid(const RectangleType *client,
+static char CheckLeftValid(const RectangleType *client,
                            const RectangleType *other,
-                           const RectangleType *right);
-static int CheckTopValid(const RectangleType *client,
-                         const RectangleType *other,
-                         const RectangleType *top);
-static int CheckBottomValid(const RectangleType *client,
+                           const RectangleType *left);
+static char CheckRightValid(const RectangleType *client,
                             const RectangleType *other,
-                            const RectangleType *bottom);
+                            const RectangleType *right);
+static char CheckTopValid(const RectangleType *client,
+                          const RectangleType *other,
+                          const RectangleType *top);
+static char CheckBottomValid(const RectangleType *client,
+                             const RectangleType *other,
+                             const RectangleType *bottom);
 
 /** Callback for stopping moves. */
-void MoveController(int wasDestroyed) {
+void MoveController(int wasDestroyed)
+{
 
    if(settings.moveMode == MOVE_OUTLINE) {
       ClearOutline();
@@ -78,7 +79,8 @@ void MoveController(int wasDestroyed) {
 }
 
 /** Move a client window. */
-int MoveClient(ClientNode *np, int startx, int starty, int snap) {
+int MoveClient(ClientNode *np, int startx, int starty, int snap)
+{
 
    XEvent event;
    int oldx, oldy;
@@ -228,7 +230,8 @@ int MoveClient(ClientNode *np, int startx, int starty, int snap) {
 }
 
 /** Move a client window (keyboard or menu initiated). */
-int MoveClientKeyboard(ClientNode *np) {
+int MoveClientKeyboard(ClientNode *np)
+{
 
    XEvent event;
    int oldx, oldy;
@@ -371,7 +374,8 @@ int MoveClientKeyboard(ClientNode *np) {
 
 /** Stop move. */
 void StopMove(ClientNode *np, int doMove,
-              int oldx, int oldy, int hmax, int vmax) {
+              int oldx, int oldy, int hmax, int vmax)
+{
 
    int north, south, east, west;
 
@@ -411,7 +415,8 @@ void StopMove(ClientNode *np, int doMove,
 }
 
 /** Snap to the screen and/or neighboring windows. */
-void DoSnap(ClientNode *np) {
+void DoSnap(ClientNode *np)
+{
    switch(settings.snapMode) {
    case SNAP_BORDER:
       DoSnapBorder(np);
@@ -426,7 +431,8 @@ void DoSnap(ClientNode *np) {
 }
 
 /** Snap to the screen. */
-void DoSnapScreen(ClientNode *np) {
+void DoSnapScreen(ClientNode *np)
+{
 
    RectangleType client;
    int screen;
@@ -464,7 +470,8 @@ void DoSnapScreen(ClientNode *np) {
 }
 
 /** Snap to window borders. */
-void DoSnapBorder(ClientNode *np) {
+void DoSnapBorder(ClientNode *np)
+{
 
    const ClientNode *tp;
    const TrayType *tray;
@@ -577,7 +584,8 @@ void DoSnapBorder(ClientNode *np) {
 }
 
 /** Determine if we should snap to the specified client. */
-int ShouldSnap(const ClientNode *np) {
+char ShouldSnap(const ClientNode *np)
+{
    if(np->state.status & STAT_HIDDEN) {
       return 0;
    } else if(np->state.status & STAT_MINIMIZED) {
@@ -588,7 +596,8 @@ int ShouldSnap(const ClientNode *np) {
 }
 
 /** Get a rectangle to represent a client window. */
-void GetClientRectangle(const ClientNode *np, RectangleType *r) {
+void GetClientRectangle(const ClientNode *np, RectangleType *r)
+{
 
    int north, south, east, west;
 
@@ -608,7 +617,8 @@ void GetClientRectangle(const ClientNode *np, RectangleType *r) {
 }
 
 /** Check for top/bottom overlap. */
-int CheckOverlapTopBottom(const RectangleType *a, const RectangleType *b) {
+char CheckOverlapTopBottom(const RectangleType *a, const RectangleType *b)
+{
    if(a->top >= b->bottom) {
       return 0;
    } else if(a->bottom <= b->top) {
@@ -619,7 +629,8 @@ int CheckOverlapTopBottom(const RectangleType *a, const RectangleType *b) {
 }
 
 /** Check for left/right overlap. */
-int CheckOverlapLeftRight(const RectangleType *a, const RectangleType *b) {
+char CheckOverlapLeftRight(const RectangleType *a, const RectangleType *b)
+{
    if(a->left >= b->right) {
       return 0;
    } else if(a->right <= b->left) {
@@ -636,8 +647,9 @@ int CheckOverlapLeftRight(const RectangleType *a, const RectangleType *b) {
  * @param left The top/bottom of the current left snap window.
  * @return 1 if the current left snap position is still valid, otherwise 0.
  */
-int CheckLeftValid(const RectangleType *client,
-   const RectangleType *other, const RectangleType *left) {
+char CheckLeftValid(const RectangleType *client,
+                    const RectangleType *other, const RectangleType *left)
+{
 
    if(!left->valid) {
       return 0;
@@ -666,8 +678,9 @@ int CheckLeftValid(const RectangleType *client,
 }
 
 /** Check if the current right snap position is valid. */
-int CheckRightValid(const RectangleType *client,
-   const RectangleType *other, const RectangleType *right) {
+char CheckRightValid(const RectangleType *client,
+                     const RectangleType *other, const RectangleType *right)
+{
 
    if(!right->valid) {
       return 0;
@@ -696,8 +709,9 @@ int CheckRightValid(const RectangleType *client,
 }
 
 /** Check if the current top snap position is valid. */
-int CheckTopValid(const RectangleType *client,
-   const RectangleType *other, const RectangleType *top) {
+char CheckTopValid(const RectangleType *client,
+                   const RectangleType *other, const RectangleType *top)
+{
 
    if(!top->valid) {
       return 0;
@@ -726,8 +740,9 @@ int CheckTopValid(const RectangleType *client,
 }
 
 /** Check if the current bottom snap position is valid. */
-int CheckBottomValid(const RectangleType *client,
-   const RectangleType *other, const RectangleType *bottom) {
+char CheckBottomValid(const RectangleType *client,
+                      const RectangleType *other, const RectangleType *bottom)
+{
 
    if(!bottom->valid) {
       return 0;

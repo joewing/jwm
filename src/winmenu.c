@@ -32,7 +32,8 @@ static void AddWindowMenuItem(Menu *menu, const char *name,
 static ClientNode *client = NULL;
 
 /** Get the size of a window menu. */
-void GetWindowMenuSize(ClientNode *np, int *width, int *height) {
+void GetWindowMenuSize(ClientNode *np, int *width, int *height)
+{
 
    Menu *menu;
 
@@ -46,7 +47,8 @@ void GetWindowMenuSize(ClientNode *np, int *width, int *height) {
 }
 
 /** Show a window menu. */
-void ShowWindowMenu(ClientNode *np, int x, int y) {
+void ShowWindowMenu(ClientNode *np, int x, int y)
+{
 
    Menu *menu;
 
@@ -62,7 +64,8 @@ void ShowWindowMenu(ClientNode *np, int x, int y) {
 }
 
 /** Create a new window menu. */
-Menu *CreateWindowMenu() {
+Menu *CreateWindowMenu()
+{
 
    Menu *menu;
 
@@ -142,7 +145,8 @@ Menu *CreateWindowMenu() {
 }
 
 /** Create a window layer submenu. */
-void CreateWindowLayerMenu(Menu *menu) {
+void CreateWindowLayerMenu(Menu *menu)
+{
 
    Menu *submenu;
    MenuItem *item;
@@ -206,7 +210,8 @@ void CreateWindowLayerMenu(Menu *menu) {
 }
 
 /** Create a send to submenu. */
-void CreateWindowSendToMenu(Menu *menu) {
+void CreateWindowSendToMenu(Menu *menu)
+{
 
    unsigned int mask;
    unsigned int x;
@@ -228,7 +233,8 @@ void CreateWindowSendToMenu(Menu *menu) {
 
 /** Add an item to the current window menu. */
 void AddWindowMenuItem(Menu *menu, const char *name,
-                       MenuActionType type, int value) {
+                       MenuActionType type, int value)
+{
 
    MenuItem *item;
 
@@ -250,7 +256,8 @@ void AddWindowMenuItem(Menu *menu, const char *name,
 }
 
 /** Select a window for performing an action. */
-void ChooseWindow(const MenuAction *action) {
+void ChooseWindow(const MenuAction *action)
+{
 
    XEvent event;
    ClientNode *np;
@@ -281,7 +288,8 @@ void ChooseWindow(const MenuAction *action) {
 }
 
 /** Window menu action callback. */
-void RunWindowCommand(const MenuAction *action) {
+void RunWindowCommand(const MenuAction *action)
+{
 
    switch(action->type) {
    case MA_STICK:

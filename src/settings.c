@@ -38,6 +38,8 @@ void InitializeSettings()
    settings.titleHeight = 20;
    settings.desktopWidth = 4;
    settings.desktopHeight = 1;
+   settings.menuOpacity = UINT_MAX;
+   settings.taskInsertMode = INSERT_RIGHT;
 }
 
 /** Make sure settings are reasonable. */

@@ -10,18 +10,20 @@
 #include "jwm.h"
 #include "misc.h"
 
-static int IsSpace(char ch);
-static int IsSymbolic(char ch);
+static char IsSymbolic(char ch);
 static char *GetSymbolName(const char *str);
 static void ReplaceSymbol(char **str, const char *name, const char *value);
 
 /** Determine if a character is a space character. */
-int IsSpace(char ch) {
+char IsSpace(char ch, unsigned int *lineNumber)
+{
    switch(ch) {
    case ' ':
    case '\t':
-   case '\n':
    case '\r':
+      return 1;
+   case '\n':
+      *lineNumber += 1;
       return 1;
    default:
       return 0;
@@ -29,8 +31,8 @@ int IsSpace(char ch) {
 }
 
 /** Determine if a character is a valid for a shell variable. */
-int IsSymbolic(char ch) {
-
+char IsSymbolic(char ch)
+{
    if(ch >= 'A' && ch <= 'Z') {
       return 1;
    } else if(ch >= 'a' && ch <= 'z') {
@@ -42,11 +44,11 @@ int IsSymbolic(char ch) {
    } else {
       return 0;
    }
-
 }
 
 /** Get the name of a shell variable (returns a copy). */
-char *GetSymbolName(const char *str) {
+char *GetSymbolName(const char *str)
+{
 
    char *temp;
    int stop;
@@ -67,7 +69,8 @@ char *GetSymbolName(const char *str) {
 }
 
 /** Replace "name" with "value" in str (reallocates if needed). */
-void ReplaceSymbol(char **str, const char *name, const char *value) {
+void ReplaceSymbol(char **str, const char *name, const char *value)
+{
 
    char *temp;
    int strLength;
@@ -122,11 +125,12 @@ void ReplaceSymbol(char **str, const char *name, const char *value) {
 }
 
 /** Perform shell-like macro path expansion. */
-void ExpandPath(char **path) {
+void ExpandPath(char **path)
+{
 
    char *name;
    char *value;
-   int x;
+   unsigned int x;
 
    Assert(path);
 
@@ -147,18 +151,20 @@ void ExpandPath(char **path) {
 }
 
 /** Trim leading and trailing whitespace from a string. */
-void Trim(char *str) {
+void Trim(char *str)
+{
 
-   int length;
-   int start;
-   int x;
+   unsigned int length;
+   unsigned int start;
+   unsigned int x;
+   unsigned int line;
 
    Assert(str);
 
    length = strlen(str);
 
    /* Determine how much to cut off of the left. */
-   for(start = 0; IsSpace(str[start]); start++);
+   for(start = 0; IsSpace(str[start], &line); start++);
 
    /* Trim the left. */
    if(start > 0) {
@@ -169,18 +175,19 @@ void Trim(char *str) {
    }
 
    /* Trim the right. */
-   while(length > 0 && IsSpace(str[length - 1])) {
-      --length;
+   while(length > 0 && IsSpace(str[length - 1], &line)) {
+      length -= 1;
       str[length] = 0;
    }
 
 }
 
 /** Copy a string. */
-char *CopyString(const char *str) {
+char *CopyString(const char *str)
+{
 
    char *temp;
-   int len;
+   unsigned int len;
 
    if(!str) {
       return NULL;

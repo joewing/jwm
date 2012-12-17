@@ -49,11 +49,6 @@ void FocusPrevious();
  */
 void SetMaxTaskBarItemWidth(struct TrayComponentType *cp, const char *value);
 
-/** Set the insertion mode for task bars.
- * @param mode The insertion mode (either right or left).
- */
-void SetTaskBarInsertMode(const char *mode);
-
 /** Update the _NET_CLIENT_LIST property. */
 void UpdateNetClientList();
 

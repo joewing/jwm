@@ -26,7 +26,6 @@
 #include "group.h"
 #include "key.h"
 #include "icon.h"
-#include "outline.h"
 #include "taskbar.h"
 #include "tray.h"
 #include "traybutton.h"
@@ -98,7 +97,8 @@ static char *displayString = NULL;
 char *configPath = NULL;
 
 /** The main entry point. */
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
    char *temp;
    int x;
@@ -197,7 +197,8 @@ int main(int argc, char *argv[]) {
 }
 
 /** Exit with the specified status code. */
-void DoExit(int code) {
+void DoExit(int code)
+{
 
    Destroy();
 
@@ -215,7 +216,8 @@ void DoExit(int code) {
 }
 
 /** Main JWM event loop. */
-void EventLoop() {
+void EventLoop()
+{
 
    XEvent event;
 
@@ -237,7 +239,8 @@ void EventLoop() {
 }
 
 /** Open a connection to the X server. */
-void OpenConnection() {
+void OpenConnection()
+{
 
    display = JXOpenDisplay(displayString);
    if(JUNLIKELY(!display)) {
@@ -265,7 +268,8 @@ void OpenConnection() {
 }
 
 /** Prepare the connection. */
-void StartupConnection() {
+void StartupConnection()
+{
 
    XSetWindowAttributes attr;
 #ifdef USE_SHAPE
@@ -338,25 +342,29 @@ void StartupConnection() {
 }
 
 /** Close the X server connection. */
-void CloseConnection() {
+void CloseConnection()
+{
    JXFlush(display);
    JXCloseDisplay(display);
 }
 
 /** Close the X server connection. */
-void ShutdownConnection() {
+void ShutdownConnection()
+{
    CloseConnection();
 }
 
 /** Signal handler. */
-void HandleExit(int sig) {
+void HandleExit(int sig)
+{
    shouldExit = 1;
 }
 
 /** Initialize data structures.
  * This is called before the X connection is opened.
  */
-void Initialize() {
+void Initialize()
+{
 
    InitializeBackgrounds();
    InitializeBorders();
@@ -375,7 +383,6 @@ void Initialize() {
    InitializeHints();
    InitializeIcons();
    InitializeKeys();
-   InitializeOutline();
    InitializePager();
    InitializePlacement();
    InitializePopup();
@@ -391,7 +398,8 @@ void Initialize() {
 /** Startup the various JWM components.
  * This is called after the X connection is opened.
  */
-void Startup() {
+void Startup()
+{
 
    /* This order is important. */
 
@@ -410,7 +418,6 @@ void Startup() {
    StartupBackgrounds();
    StartupFonts();
    StartupCursors();
-   StartupOutline();
 
    StartupPager();
    StartupClock();
@@ -457,13 +464,13 @@ void Startup() {
 /** Shutdown the various JWM components.
  * This is called before the X connection is closed.
  */
-void Shutdown() {
+void Shutdown()
+{
 
    /* This order is important. */
 
    ShutdownSwallow();
 
-   ShutdownOutline();
 #  ifndef DISABLE_CONFIRM
       ShutdownDialogs();
 #  endif
@@ -499,7 +506,8 @@ void Shutdown() {
  * This is called after the X connection is closed.
  * Note that it is possible for this to be called more than once.
  */
-void Destroy() {
+void Destroy()
+{
    DestroyBackgrounds();
    DestroyBorders();
    DestroyClients();
@@ -517,7 +525,6 @@ void Destroy() {
    DestroyHints();
    DestroyIcons();
    DestroyKeys();
-   DestroyOutline();
    DestroyPager();
    DestroyPlacement();
    DestroyPopup();
@@ -531,36 +538,34 @@ void Destroy() {
 }
 
 /** Send _JWM_RESTART to the root window. */
-void SendRestart() {
-	SendJWMMessage("_JWM_RESTART");
+void SendRestart()
+{
+	SendJWMMessage(jwmRestart);
 }
 
 /** Send _JWM_EXIT to the root window. */
-void SendExit() {
-	SendJWMMessage("_JWM_EXIT");
+void SendExit()
+{
+	SendJWMMessage(jwmExit);
 }
 
 /** Send _JWM_RELOAD to the root window. */
-void SendReload() {
-	SendJWMMessage("_JWM_RELOAD");
+void SendReload()
+{
+	SendJWMMessage(jwmReload);
 }
 
 /** Send a JWM message to the root window. */
-void SendJWMMessage(const char *message) {
-
+void SendJWMMessage(const char *message)
+{
    XEvent event;
-
    OpenConnection();
-
    memset(&event, 0, sizeof(event));
    event.xclient.type = ClientMessage;
    event.xclient.window = rootWindow;
    event.xclient.message_type = JXInternAtom(display, message, False);
    event.xclient.format = 32;
-
    JXSendEvent(display, rootWindow, False, SubstructureRedirectMask, &event);
-
    CloseConnection();
-
 }
 

@@ -31,7 +31,8 @@ static void GetMoveResizeCoordinates(const ClientNode *np,
 
 /** Get the location to place the status window. */
 void GetMoveResizeCoordinates(const ClientNode *np, StatusWindowType type,
-                              int *x, int *y) {
+                              int *x, int *y)
+{
 
    const ScreenType *sp;
 
@@ -56,7 +57,8 @@ void GetMoveResizeCoordinates(const ClientNode *np, StatusWindowType type,
 }
 
 /** Create the status window. */
-void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
+void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type)
+{
 
    XSetWindowAttributes attrs;
 
@@ -85,7 +87,8 @@ void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
 }
 
 /** Draw the status window. */
-void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
+void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type)
+{
 
    int x, y;
 
@@ -117,25 +120,23 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type) {
 }
 
 /** Destroy the status window. */
-void DestroyMoveResizeWindow() {
-
+void DestroyMoveResizeWindow()
+{
    if(statusWindow != None) {
       JXDestroyWindow(display, statusWindow);
       statusWindow = None;
    }
-
 }
 
 /** Create a move status window. */
-void CreateMoveWindow(ClientNode *np) {
-
+void CreateMoveWindow(ClientNode *np)
+{
    CreateMoveResizeWindow(np, settings.moveStatusType);
-
 }
 
 /** Update the move status window. */
-void UpdateMoveWindow(ClientNode *np) {
-
+void UpdateMoveWindow(ClientNode *np)
+{
    char str[80];
    unsigned int width;
 
@@ -149,25 +150,23 @@ void UpdateMoveWindow(ClientNode *np) {
    width = GetStringWidth(FONT_MENU, str);
    RenderString(statusWindow, FONT_MENU, COLOR_MENU_FG,
                 (statusWindowWidth - width) / 2, 4, rootWidth, NULL, str);
-
 }
 
 /** Destroy the move status window. */
-void DestroyMoveWindow() {
-
+void DestroyMoveWindow()
+{
    DestroyMoveResizeWindow();
-
 }
 
 /** Create a resize status window. */
-void CreateResizeWindow(ClientNode *np) {
-
+void CreateResizeWindow(ClientNode *np)
+{
    CreateMoveResizeWindow(np, settings.resizeStatusType);
-
 }
 
 /** Update the resize status window. */
-void UpdateResizeWindow(ClientNode *np, int gwidth, int gheight) {
+void UpdateResizeWindow(ClientNode *np, int gwidth, int gheight)
+{
 
    char str[80];
    unsigned int fontWidth;
@@ -186,9 +185,8 @@ void UpdateResizeWindow(ClientNode *np, int gwidth, int gheight) {
 }
 
 /** Destroy the resize status window. */
-void DestroyResizeWindow() {
-
+void DestroyResizeWindow()
+{
    DestroyMoveResizeWindow();
-
 }
 

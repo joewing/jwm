@@ -82,15 +82,15 @@ static int ShouldGrab(KeyType key);
 static void GrabKey(KeyNode *np, Window win);
 
 /** Initialize key data. */
-void InitializeKeys() {
-
+void InitializeKeys()
+{
    bindings = NULL;
    lockMask = 0;
-
 }
 
 /** Startup key bindings. */
-void StartupKeys() {
+void StartupKeys()
+{
 
    XModifierKeymap *modmap;
    KeyNode *np;
@@ -133,11 +133,12 @@ void StartupKeys() {
 }
 
 /** Shutdown key bindings. */
-void ShutdownKeys() {
+void ShutdownKeys()
+{
 
    ClientNode *np;
    TrayType *tp;
-   int layer;
+   unsigned int layer;
 
    /* Ungrab keys on client windows. */
    for(layer = 0; layer < LAYER_COUNT; layer++) {
@@ -157,10 +158,9 @@ void ShutdownKeys() {
 }
 
 /** Destroy key data. */
-void DestroyKeys() {
-
+void DestroyKeys()
+{
    KeyNode *np;
-
    while(bindings) {
       np = bindings->next;
       if(bindings->command) {
@@ -169,14 +169,13 @@ void DestroyKeys() {
       Release(bindings);
       bindings = np;
    }
-
 }
 
 /** Grab a key. */
-void GrabKey(KeyNode *np, Window win) {
-
-   int x;
-   int index, maxIndex;
+void GrabKey(KeyNode *np, Window win)
+{
+   unsigned int x;
+   unsigned int index, maxIndex;
    unsigned int mask;
 
    /* Don't attempt to grab if there is nothing to grab. */
@@ -206,7 +205,8 @@ void GrabKey(KeyNode *np, Window win) {
 }
 
 /** Get the key action from an event. */
-KeyType GetKey(const XKeyEvent *event) {
+KeyType GetKey(const XKeyEvent *event)
+{
 
    KeyNode *np;
    unsigned int state;
@@ -226,7 +226,8 @@ KeyType GetKey(const XKeyEvent *event) {
 }
 
 /** Run a command invoked from a key binding. */
-void RunKeyCommand(const XKeyEvent *event) {
+void RunKeyCommand(const XKeyEvent *event)
+{
 
    KeyNode *np;
    unsigned int state;
@@ -244,10 +245,11 @@ void RunKeyCommand(const XKeyEvent *event) {
 }
 
 /** Show a root menu caused by a key binding. */
-void ShowKeyMenu(const XKeyEvent *event) {
+void ShowKeyMenu(const XKeyEvent *event)
+{
 
    KeyNode *np;
-   int button;
+   unsigned int button;
    unsigned int state;
 
    /* Remove the lock key modifiers. */
@@ -255,8 +257,8 @@ void ShowKeyMenu(const XKeyEvent *event) {
 
    for(np = bindings; np; np = np->next) {
       if(np->state == state && np->code == event->keycode) {
-         button = atoi(np->command);
-         if(button >= 0 && button <= 9) {
+         button = (unsigned int)atoi(np->command);
+         if(JLIKELY(button <= 9)) {
             ShowRootMenu(button, 0, 0);
          }
          return;
@@ -266,7 +268,8 @@ void ShowKeyMenu(const XKeyEvent *event) {
 }
 
 /** Determine if a key should be grabbed on client windows. */
-int ShouldGrab(KeyType key) {
+int ShouldGrab(KeyType key)
+{
    switch(key & 0xFF) {
    case KEY_NEXT:
    case KEY_NEXTSTACK:
@@ -299,7 +302,8 @@ int ShouldGrab(KeyType key) {
 }
 
 /** Grab keys on a client window. */
-void GrabKeys(ClientNode *np) {
+void GrabKeys(ClientNode *np)
+{
 
    KeyNode *kp;
 
@@ -334,11 +338,11 @@ unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key) {
 }
 
 /** Parse a modifier mask string. */
-unsigned int ParseModifierString(const char *str) {
-
+unsigned int ParseModifierString(const char *str)
+{
    unsigned int mask;
-   int x, y;
-   int found;
+   unsigned int x, y;
+   char found;
 
    if(!str) {
       return MASK_NONE;
@@ -367,22 +371,21 @@ unsigned int ParseModifierString(const char *str) {
 }
 
 /** Parse a key string. */
-KeySym ParseKeyString(const char *str) {
-
+KeySym ParseKeyString(const char *str)
+{
    KeySym symbol;
-
    symbol = JXStringToKeysym(str);
    if(JUNLIKELY(symbol == NoSymbol)) {
       Warning(_("invalid key symbol: \"%s\""), str);
    }
-
    return symbol;
-
 }
 
 /** Insert a key binding. */
 void InsertBinding(KeyType key, const char *modifiers,
-   const char *stroke, const char *code, const char *command) {
+                   const char *stroke, const char *code,
+                   const char *command)
+{
 
    KeyNode *np;
    unsigned int mask;
@@ -462,11 +465,10 @@ void InsertBinding(KeyType key, const char *modifiers,
 }
 
 /** Validate key bindings. */
-void ValidateKeys() {
-
+void ValidateKeys()
+{
    KeyNode *kp;
    int bindex;
-
    for(kp = bindings; kp; kp = kp->next) {
       if((kp->key & 0xFF) == KEY_ROOT && kp->command) {
          bindex = atoi(kp->command);
@@ -475,6 +477,5 @@ void ValidateKeys() {
          }
       }
    }
-
 }
 

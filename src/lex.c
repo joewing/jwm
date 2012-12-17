@@ -95,32 +95,32 @@ static const char *TOKEN_MAP[] = {
 
 static TokenNode *head, *current;
 
-static TokenNode *CreateNode(TokenNode *parent, const char *file, int line);
+static TokenNode *CreateNode(TokenNode *parent, const char *file,
+                             unsigned int line);
 static AttributeNode *CreateAttribute(TokenNode *np); 
 
-static int IsElementEnd(char ch);
-static int IsValueEnd(char ch);
-static int IsAttributeEnd(char ch);
-static int IsSpace(char ch, int *lineNumber);
+static char IsElementEnd(char ch);
+static char IsValueEnd(char ch);
+static char IsAttributeEnd(char ch);
 static char *ReadElementName(const char *line);
 static char *ReadElementValue(const char *line, const char *file,
-                              int *lineNumber);
+                              unsigned int *lineNumber);
 static char *ReadAttributeValue(const char *line, const char *file,
-                                int *lineNumber);
+                                unsigned int *lineNumber);
 static int ParseEntity(const char *entity, char *ch,
-                       const char *file, int line);
+                       const char *file, unsigned int line);
 static TokenType LookupType(const char *name, TokenNode *np);
 
 /** Tokenize a data. */
-TokenNode *Tokenize(const char *line, const char *fileName) {
-
+TokenNode *Tokenize(const char *line, const char *fileName)
+{
    TokenNode *np;
    AttributeNode *ap;
    char *temp;
-   int inElement;
-   int x;
-   int found;
-   int lineNumber;
+   unsigned int x;
+   unsigned int lineNumber;
+   char inElement;
+   char found;
 
    head = NULL;
    current = NULL;
@@ -180,24 +180,24 @@ TokenNode *Tokenize(const char *line, const char *fileName) {
                if(JLIKELY(temp)) {
 
                   if(JUNLIKELY(current->type != LookupType(temp, NULL))) {
-                     Warning(_("%s[%d]: close tag \"%s\" does not "
+                     Warning(_("%s[%u]: close tag \"%s\" does not "
                              "match open tag \"%s\""),
                              fileName, lineNumber, temp,
                              GetTokenName(current));
                   }
 
                } else {
-                  Warning(_("%s[%d]: unexpected and invalid close tag"),
+                  Warning(_("%s[%u]: unexpected and invalid close tag"),
                           fileName, lineNumber);
                }
 
                current = current->parent;
             } else {
                if(temp) {
-                  Warning(_("%s[%d]: close tag \"%s\" without open tag"),
+                  Warning(_("%s[%u]: close tag \"%s\" without open tag"),
                           fileName, lineNumber, temp);
                } else {
-                  Warning(_("%s[%d]: invalid close tag"), fileName, lineNumber);
+                  Warning(_("%s[%u]: invalid close tag"), fileName, lineNumber);
                }
             }
 
@@ -216,7 +216,7 @@ TokenNode *Tokenize(const char *line, const char *fileName) {
                LookupType(temp, np);
                Release(temp);
             } else {
-               Warning(_("%s[%d]: invalid open tag"), fileName, lineNumber);
+               Warning(_("%s[%u]: invalid open tag"), fileName, lineNumber);
             }
          }
          inElement = 1;
@@ -229,7 +229,7 @@ TokenNode *Tokenize(const char *line, const char *fileName) {
                current = current->parent;
                inElement = 0;
             } else {
-               Warning(_("%s[%d]: invalid tag"), fileName, lineNumber);
+               Warning(_("%s[%u]: invalid tag"), fileName, lineNumber);
             }
          } else {
             goto ReadDefault;
@@ -276,7 +276,7 @@ ReadDefault:
                   }
                } else {
                   if(JUNLIKELY(temp[0])) {
-                     Warning(_("%s[%d]: unexpected text: \"%s\""),
+                     Warning(_("%s[%u]: unexpected text: \"%s\""),
                              fileName, lineNumber, temp);
                   }
                   Release(temp);
@@ -294,9 +294,11 @@ ReadDefault:
  * The entity value is returned in ch and the length of the entity
  * is returned as the value of the function.
  */
-int ParseEntity(const char *entity, char *ch, const char *file, int line) {
+int ParseEntity(const char *entity, char *ch, const char *file,
+                unsigned int line)
+{
    char *temp;
-   int x;
+   unsigned int x;
 
    if(!strncmp("&quot;", entity, 6)) {
       *ch = '\"';
@@ -330,7 +332,8 @@ int ParseEntity(const char *entity, char *ch, const char *file, int line) {
 }
 
 /** Determine if ch is the end of a tag/attribute name. */
-int IsElementEnd(char ch) {
+char IsElementEnd(char ch)
+{
    switch(ch) {
    case ' ':
    case '\t':
@@ -349,7 +352,8 @@ int IsElementEnd(char ch) {
 }
 
 /** Determine if ch is the end of an attribute value. */
-int IsAttributeEnd(char ch) {
+char IsAttributeEnd(char ch)
+{
    switch(ch) {
    case 0:
    case '\"':
@@ -360,7 +364,8 @@ int IsAttributeEnd(char ch) {
 }
 
 /** Determine if ch is the end of tag data. */
-int IsValueEnd(char ch) {
+char IsValueEnd(char ch)
+{
    switch(ch) {
    case 0:
    case '<':
@@ -370,26 +375,12 @@ int IsValueEnd(char ch) {
    }
 }
 
-/** Determine if ch is a space character. */
-int IsSpace(char ch, int *lineNumber) {
-   switch(ch) {
-   case ' ':
-   case '\t':
-   case '\r':
-      return 1;
-   case '\n':
-      ++*lineNumber;
-      return 1;
-   default:
-      return 0;
-   }
-}
-
 /** Get the name of the next element. */
-char *ReadElementName(const char *line) {
+char *ReadElementName(const char *line)
+{
 
    char *buffer;
-   int len;
+   unsigned int len;
 
    /* Get the length of the element. */
    for (len = 0; !IsElementEnd(line[len]); len++);
@@ -404,7 +395,9 @@ char *ReadElementName(const char *line) {
 }
 
 /** Get the value of the current element. */
-char *ReadElementValue(const char *line, const char *file, int *lineNumber) {
+char *ReadElementValue(const char *line, const char *file,
+                       unsigned int *lineNumber)
+{
    char *buffer;
    char ch;
    int len, max;
@@ -442,12 +435,13 @@ char *ReadElementValue(const char *line, const char *file, int *lineNumber) {
 
 /** Get the value of the current attribute. */
 char *ReadAttributeValue(const char *line, const char *file,
-   int *lineNumber) {
+                         unsigned int *lineNumber)
+{
 
    char *buffer;
    char ch;
-   int len, max;
-   int x;
+   unsigned int len, max;
+   unsigned int x;
 
    len = 0;
    max = BLOCK_SIZE;
@@ -479,7 +473,8 @@ char *ReadAttributeValue(const char *line, const char *file,
 }
 
 /** Get the token for a tag name. */
-TokenType LookupType(const char *name, TokenNode *np) {
+TokenType LookupType(const char *name, TokenNode *np)
+{
    unsigned int x;
 
    Assert(name);
@@ -503,7 +498,8 @@ TokenType LookupType(const char *name, TokenNode *np) {
 }
 
 /** Get a string representation of a token. */
-const char *GetTokenName(const TokenNode *tp) {
+const char *GetTokenName(const TokenNode *tp)
+{
    if(tp->invalidName) {
       return tp->invalidName;
    } else if(tp->type >= sizeof(TOKEN_MAP) / sizeof(const char*)) {
@@ -519,7 +515,9 @@ const char *GetTokenTypeName(TokenType type) {
 }
 
 /** Create an empty XML tag node. */
-TokenNode *CreateNode(TokenNode *parent, const char *file, int line) {
+TokenNode *CreateNode(TokenNode *parent, const char *file,
+                      unsigned int line)
+{
    TokenNode *np;
 
    np = Allocate(sizeof(TokenNode));
@@ -555,16 +553,14 @@ TokenNode *CreateNode(TokenNode *parent, const char *file, int line) {
 }
 
 /** Create an empty XML attribute node. */
-AttributeNode *CreateAttribute(TokenNode *np) {
+AttributeNode *CreateAttribute(TokenNode *np)
+{
    AttributeNode *ap;
-
    ap = Allocate(sizeof(AttributeNode));
    ap->name = NULL;
    ap->value = NULL;
-
    ap->next = np->attributes;
    np->attributes = ap;
-
    return ap;
 }
 

@@ -100,6 +100,10 @@ typedef enum {
    ATOM_COUNT
 } AtomType;
 
+extern const char jwmRestart[];
+extern const char jwmExit[];
+extern const char jwmReload[];
+
 #define FIRST_NET_ATOM ATOM_NET_SUPPORTED
 #define LAST_NET_ATOM  ATOM_NET_SYSTEM_TRAY_OPCODE
 

@@ -1086,7 +1086,14 @@ void ParseTaskListStyle(const TokenNode *tp) {
 
    temp = FindAttribute(tp->attributes, INSERT_ATTRIBUTE);
    if(temp) {
-      SetTaskBarInsertMode(temp);
+      if(!strcmp(temp, "right")) {
+         settings.taskInsertMode = INSERT_RIGHT;
+      } else if(!strcmp(temp, "left")) {
+         settings.taskInsertMode = INSERT_LEFT;
+      } else {
+         ParseError(tp, _("invalid insert mode: \"%s\""), temp);
+         settings.taskInsertMode = INSERT_RIGHT;
+      }
    }
 
    for(np = tp->subnodeHead; np; np = np->next) {
@@ -1558,7 +1565,7 @@ void ParseMenuStyle(const TokenNode *tp) {
          SetColor(COLOR_MENU_ACTIVE_OL, np->value);
          break;
       case TOK_OPACITY:
-         SetMenuOpacity(np->value);
+         settings.menuOpacity = ParseOpacity(np, np->value);
          break;
       default:
          InvalidTag(np, TOK_MENUSTYLE);
@@ -1858,7 +1865,7 @@ void ParseError(const TokenNode *tp, const char *str, ...)
 
    va_list ap;
 
-   static const char *FILE_MESSAGE = "%s[%d]";
+   static const char *FILE_MESSAGE = "%s[%u]";
 
    char *msg;
 

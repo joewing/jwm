@@ -46,14 +46,16 @@ static void LayoutTray(TrayType *tp, int *variableSize,
                        int *variableRemainder);
 
 /** Initialize tray data. */
-void InitializeTray() {
+void InitializeTray()
+{
    trays = NULL;
    trayCount = 0;
    supportingWindow = None;
 }
 
 /** Startup trays. */
-void StartupTray() {
+void StartupTray()
+{
 
    XSetWindowAttributes attr;
    Atom opacityAtom;
@@ -166,7 +168,8 @@ void StartupTray() {
 }
 
 /** Shutdown trays. */
-void ShutdownTray() {
+void ShutdownTray()
+{
 
    TrayType *tp;
    TrayComponentType *cp;
@@ -188,7 +191,8 @@ void ShutdownTray() {
 }
 
 /** Destroy tray data. */
-void DestroyTray() {
+void DestroyTray()
+{
 
    TrayType *tp;
    TrayComponentType *cp;
@@ -209,7 +213,8 @@ void DestroyTray() {
 }
 
 /** Create an empty tray. */
-TrayType *CreateTray() {
+TrayType *CreateTray()
+{
 
    TrayType *tp;
 
@@ -243,7 +248,8 @@ TrayType *CreateTray() {
 }
 
 /** Create an empty tray component. */
-TrayComponentType *CreateTrayComponent() {
+TrayComponentType *CreateTrayComponent()
+{
 
    TrayComponentType *cp;
 
@@ -280,7 +286,8 @@ TrayComponentType *CreateTrayComponent() {
 }
 
 /** Add a tray component to a tray. */
-void AddTrayComponent(TrayType *tp, TrayComponentType *cp) {
+void AddTrayComponent(TrayType *tp, TrayComponentType *cp)
+{
 
    Assert(tp);
    Assert(cp);
@@ -298,7 +305,8 @@ void AddTrayComponent(TrayType *tp, TrayComponentType *cp) {
 }
 
 /** Compute the max component width. */
-int ComputeMaxWidth(TrayType *tp) {
+int ComputeMaxWidth(TrayType *tp)
+{
 
    TrayComponentType *cp;
    int result;
@@ -320,7 +328,8 @@ int ComputeMaxWidth(TrayType *tp) {
 }
 
 /** Compute the total width of a tray. */
-int ComputeTotalWidth(TrayType *tp) {
+int ComputeTotalWidth(TrayType *tp)
+{
 
    TrayComponentType *cp;
    int result;
@@ -335,7 +344,8 @@ int ComputeTotalWidth(TrayType *tp) {
 }
 
 /** Compute the max component height. */
-int ComputeMaxHeight(TrayType *tp) {
+int ComputeMaxHeight(TrayType *tp)
+{
 
    TrayComponentType *cp;
    int result;
@@ -357,7 +367,8 @@ int ComputeMaxHeight(TrayType *tp) {
 }
 
 /** Compute the total height of a tray. */
-int ComputeTotalHeight(TrayType *tp) {
+int ComputeTotalHeight(TrayType *tp)
+{
 
    TrayComponentType *cp;
    int result;
@@ -372,7 +383,8 @@ int ComputeTotalHeight(TrayType *tp) {
 }
 
 /** Check if the tray fills the screen horizontally. */
-int CheckHorizontalFill(TrayType *tp) {
+int CheckHorizontalFill(TrayType *tp)
+{
 
    TrayComponentType *cp;
 
@@ -387,7 +399,8 @@ int CheckHorizontalFill(TrayType *tp) {
 }
 
 /** Check if the tray fills the screen vertically. */
-int CheckVerticalFill(TrayType *tp) {
+int CheckVerticalFill(TrayType *tp)
+{
 
    TrayComponentType *cp;
 
@@ -402,7 +415,8 @@ int CheckVerticalFill(TrayType *tp) {
 }
 
 /** Compute the size of a tray. */
-void ComputeTraySize(TrayType *tp) {
+void ComputeTraySize(TrayType *tp)
+{
 
    TrayComponentType *cp;
    const ScreenType *sp;
@@ -544,7 +558,8 @@ void ComputeTraySize(TrayType *tp) {
 }
 
 /** Display a tray (for autohide). */
-void ShowTray(TrayType *tp) {
+void ShowTray(TrayType *tp)
+{
 
    Window win1, win2;
    int winx, winy;
@@ -565,7 +580,8 @@ void ShowTray(TrayType *tp) {
 }
 
 /** Show all trays. */
-void ShowAllTrays() {
+void ShowAllTrays()
+{
 
    TrayType *tp;
 
@@ -580,7 +596,8 @@ void ShowAllTrays() {
 }
 
 /** Hide a tray (for autohide). */
-void HideTray(TrayType *tp) {
+void HideTray(TrayType *tp)
+{
 
    int x, y;
 
@@ -615,7 +632,8 @@ void HideTray(TrayType *tp) {
 }
 
 /** Process a tray event. */
-int ProcessTrayEvent(const XEvent *event) {
+char ProcessTrayEvent(const XEvent *event)
+{
 
    TrayType *tp;
 
@@ -648,7 +666,8 @@ int ProcessTrayEvent(const XEvent *event) {
 }
 
 /** Signal the tray (needed for autohide). */
-void SignalTray(const TimeType *now, int x, int y) {
+void SignalTray(const TimeType *now, int x, int y)
+{
 
    TrayType *tp;
 
@@ -664,21 +683,20 @@ void SignalTray(const TimeType *now, int x, int y) {
 }
 
 /** Handle a tray expose event. */
-void HandleTrayExpose(TrayType *tp, const XExposeEvent *event) {
-
+void HandleTrayExpose(TrayType *tp, const XExposeEvent *event)
+{
    DrawSpecificTray(tp);
-
 }
 
 /** Handle a tray enter notify (for autohide). */
-void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event) {
-
+void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event)
+{
    ShowTray(tp);
-
 }
 
 /** Get the tray component under the given coordinates. */
-TrayComponentType *GetTrayComponent(TrayType *tp, int x, int y) {
+TrayComponentType *GetTrayComponent(TrayType *tp, int x, int y)
+{
 
    TrayComponentType *cp;
    int xoffset, yoffset;
@@ -706,7 +724,8 @@ TrayComponentType *GetTrayComponent(TrayType *tp, int x, int y) {
 }
 
 /** Handle a button press on a tray. */
-void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event) {
+void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event)
+{
 
    TrayComponentType *cp;
    int x, y;
@@ -723,7 +742,8 @@ void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event) {
 }
 
 /** Handle a button release on a tray. */
-void HandleTrayButtonRelease(TrayType *tp, const XButtonEvent *event) {
+void HandleTrayButtonRelease(TrayType *tp, const XButtonEvent *event)
+{
 
    TrayComponentType *cp;
    int x, y;
@@ -753,7 +773,8 @@ void HandleTrayButtonRelease(TrayType *tp, const XButtonEvent *event) {
 }
 
 /** Handle a motion notify event. */
-void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event) {
+void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event)
+{
 
    TrayComponentType *cp;
    int x, y;
@@ -770,7 +791,8 @@ void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event) {
 }
 
 /** Draw all trays. */
-void DrawTray() {
+void DrawTray()
+{
 
    TrayType *tp;
 
@@ -785,7 +807,8 @@ void DrawTray() {
 }
 
 /** Draw a specific tray. */
-void DrawSpecificTray(const TrayType *tp) {
+void DrawSpecificTray(const TrayType *tp)
+{
 
    TrayComponentType *cp;
    int x;
@@ -825,7 +848,8 @@ void DrawSpecificTray(const TrayType *tp) {
 }
 
 /** Update a specific component on a tray. */
-void UpdateSpecificTray(const TrayType *tp, const TrayComponentType *cp) {
+void UpdateSpecificTray(const TrayType *tp, const TrayComponentType *cp)
+{
 
    if(cp->pixmap != None && !shouldExit) {
       JXCopyArea(display, cp->pixmap, tp->window, rootGC, 0, 0,
@@ -835,7 +859,8 @@ void UpdateSpecificTray(const TrayType *tp, const TrayComponentType *cp) {
 }
 
 /** Layout tray components on a tray. */
-void LayoutTray(TrayType *tp, int *variableSize, int *variableRemainder) {
+void LayoutTray(TrayType *tp, int *variableSize, int *variableRemainder)
+{
 
    TrayComponentType *cp;
    int variableCount;
@@ -904,7 +929,8 @@ void LayoutTray(TrayType *tp, int *variableSize, int *variableRemainder) {
 }
 
 /** Resize a tray. */
-void ResizeTray(TrayType *tp) {
+void ResizeTray(TrayType *tp)
+{
 
    TrayComponentType *cp;
    int variableSize;
@@ -977,17 +1003,20 @@ void ResizeTray(TrayType *tp) {
 }
 
 /** Get a linked list of trays. */
-TrayType *GetTrays() {
+TrayType *GetTrays()
+{
    return trays;
 }
 
 /** Get the number of trays. */
-int GetTrayCount() {
+int GetTrayCount()
+{
    return trayCount;
 }
 
 /** Get a supporting window to use. */
-Window GetSupportingWindow() {
+Window GetSupportingWindow()
+{
 
    if(trays) {
       return trays->window;
@@ -1002,27 +1031,31 @@ Window GetSupportingWindow() {
 }
 
 /** Determine if a tray should autohide. */
-void SetAutoHideTray(TrayType *tp, int v) {
+void SetAutoHideTray(TrayType *tp, int v)
+{
    Assert(tp);
    tp->autoHide = v;
 }
 
 /** Set the x-coordinate of a tray. */
-void SetTrayX(TrayType *tp, const char *str) {
+void SetTrayX(TrayType *tp, const char *str)
+{
    Assert(tp);
    Assert(str);
    tp->x = atoi(str);
 }
 
 /** Set the y-coordinate of a tray. */
-void SetTrayY(TrayType *tp, const char *str) {
+void SetTrayY(TrayType *tp, const char *str)
+{
    Assert(tp);
    Assert(str);
    tp->y = atoi(str);
 }
 
 /** Set the width of a tray. */
-void SetTrayWidth(TrayType *tp, const char *str) {
+void SetTrayWidth(TrayType *tp, const char *str)
+{
 
    int width;
 
@@ -1040,7 +1073,8 @@ void SetTrayWidth(TrayType *tp, const char *str) {
 }
 
 /** Set the height of a tray. */
-void SetTrayHeight(TrayType *tp, const char *str) {
+void SetTrayHeight(TrayType *tp, const char *str)
+{
 
    int height;
 
@@ -1059,7 +1093,8 @@ void SetTrayHeight(TrayType *tp, const char *str) {
 
 
 /** Set the tray orientation. */
-void SetTrayLayout(TrayType *tp, const char *str) {
+void SetTrayLayout(TrayType *tp, const char *str)
+{
 
    Assert(tp);
 
@@ -1095,7 +1130,8 @@ void SetTrayLayout(TrayType *tp, const char *str) {
 }
 
 /** Set the layer for a tray. */
-void SetTrayLayer(TrayType *tp, const char *str) {
+void SetTrayLayer(TrayType *tp, const char *str)
+{
 
    int temp;
 
@@ -1113,7 +1149,8 @@ void SetTrayLayer(TrayType *tp, const char *str) {
 }
 
 /** Set the horizontal tray alignment. */
-void SetTrayHorizontalAlignment(TrayType *tp, const char *str) {
+void SetTrayHorizontalAlignment(TrayType *tp, const char *str)
+{
 
    Assert(tp);
 
@@ -1133,7 +1170,8 @@ void SetTrayHorizontalAlignment(TrayType *tp, const char *str) {
 }
 
 /** Set the vertical tray alignment. */
-void SetTrayVerticalAlignment(TrayType *tp, const char *str) {
+void SetTrayVerticalAlignment(TrayType *tp, const char *str)
+{
 
    Assert(tp);
 

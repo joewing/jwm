@@ -15,7 +15,7 @@
  * @param expression The expression to check.
  * @return 1 if there is a match, 0 otherwise.
  */
-int Match(const char *pattern, const char *expression);
+char Match(const char *pattern, const char *expression);
 
 #endif /* MATCH_H */
 

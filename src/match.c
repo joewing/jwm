@@ -14,7 +14,8 @@
 #include <regex.h>
 
 /** Determine if expression matches pattern. */
-int Match(const char *pattern, const char *expression) {
+char Match(const char *pattern, const char *expression)
+{
 
 	regex_t re;
 	regmatch_t rm;
@@ -25,7 +26,6 @@ int Match(const char *pattern, const char *expression) {
    } else if(!pattern || !expression) {
       return 0;
    }
-
 
 	if(regcomp(&re, pattern, REG_EXTENDED) != 0) {
 		return 0;

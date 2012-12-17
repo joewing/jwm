@@ -17,7 +17,8 @@ static void SetSize(TrayComponentType *cp, int width, int height);
 static void Resize(TrayComponentType *cp);
 
 /** Create a spacer tray component. */
-TrayComponentType *CreateSpacer(int width, int height) {
+TrayComponentType *CreateSpacer(int width, int height)
+{
 
    TrayComponentType *cp;
 
@@ -42,7 +43,8 @@ TrayComponentType *CreateSpacer(int width, int height) {
 }
 
 /** Set the size. */
-void SetSize(TrayComponentType *cp, int width, int height) {
+void SetSize(TrayComponentType *cp, int width, int height)
+{
    if(width == 0) {
       cp->width = cp->requestedWidth;
       cp->height = height;
@@ -53,14 +55,17 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 }
 
 /** Initialize. */
-void Create(TrayComponentType *cp) {
+void Create(TrayComponentType *cp)
+{
 }
 
 /** Resize. */
-void Resize(TrayComponentType *cp) {
+void Resize(TrayComponentType *cp)
+{
 }
 
 /** Destroy. */
-void Destroy(TrayComponentType *cp) {
+void Destroy(TrayComponentType *cp)
+{
 }
 

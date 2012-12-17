@@ -39,13 +39,14 @@ static ImageNode *CreateImageFromXImages(XImage *image, XImage *shape);
 
 #ifdef USE_XPM
 static int AllocateColor(Display *d, Colormap cmap, char *name,
-   XColor *c, void *closure);
+                         XColor *c, void *closure);
 static int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
-   void *closure);
+                      void *closure);
 #endif
 
 /** Load an image from the specified file. */
-ImageNode *LoadImage(const char *fileName) {
+ImageNode *LoadImage(const char *fileName)
+{
 
    ImageNode *result;
 
@@ -82,7 +83,8 @@ ImageNode *LoadImage(const char *fileName) {
 }
 
 /** Load an image from the specified XPM data. */
-ImageNode *LoadImageFromData(char **data) {
+ImageNode *LoadImageFromData(char **data)
+{
 
    ImageNode *result = NULL;
 
@@ -119,7 +121,8 @@ ImageNode *LoadImageFromData(char **data) {
  * the issues surrounding longjmp and local variables.
  */
 #ifdef USE_PNG
-ImageNode *LoadPNGImage(const char *fileName) {
+ImageNode *LoadPNGImage(const char *fileName)
+{
 
    static ImageNode *result;
    static FILE *fd;
@@ -264,7 +267,8 @@ static void JPEGErrorHandler(j_common_ptr cinfo) {
    longjmp(es->jbuffer, 1);
 }
 
-ImageNode *LoadJPEGImage(const char *fileName) {
+ImageNode *LoadJPEGImage(const char *fileName)
+{
 
    static ImageNode *result;
    static struct jpeg_decompress_struct cinfo;
@@ -358,7 +362,8 @@ ImageNode *LoadJPEGImage(const char *fileName) {
 
 /** Load an XPM image from the specified file. */
 #ifdef USE_XPM
-ImageNode *LoadXPMImage(const char *fileName) {
+ImageNode *LoadXPMImage(const char *fileName)
+{
 
    ImageNode *result = NULL;
 
@@ -388,7 +393,8 @@ ImageNode *LoadXPMImage(const char *fileName) {
 #endif /* USE_XPM */
 
 /** Create an image from XImages giving color and shape information. */
-ImageNode *CreateImageFromXImages(XImage *image, XImage *shape) {
+ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
+{
 
    ImageNode *result;
    XColor color;
@@ -440,7 +446,7 @@ void DestroyImage(ImageNode *image) {
 /** Callback to allocate a color for libxpm. */
 #ifdef USE_XPM
 int AllocateColor(Display *d, Colormap cmap, char *name,
-   XColor *c, void *closure)
+                  XColor *c, void *closure)
 {
 
    if(name) {
@@ -460,10 +466,9 @@ int AllocateColor(Display *d, Colormap cmap, char *name,
  */
 #ifdef USE_XPM
 int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
-   void *closure) {
-
+               void *closure)
+{
    return 1;
-
 }
 #endif /* USE_XPM */
 

@@ -67,6 +67,10 @@ typedef struct {
 
 Atom atoms[ATOM_COUNT];
 
+const char jwmRestart[] = "_JWM_RESTART";
+const char jwmExit[]    = "_JWM_EXIT";
+const char jwmReload[]  = "_JWM_RELOAD";
+
 static const AtomNode atomList[] = {
 
    { &atoms[ATOM_COMPOUND_TEXT],             "COMPOUND_TEXT"               },
@@ -135,9 +139,9 @@ static const AtomNode atomList[] = {
 
    { &atoms[ATOM_MOTIF_WM_HINTS],            "_MOTIF_WM_HINTS"             },
 
-   { &atoms[ATOM_JWM_RESTART],               "_JWM_RESTART"                },
-   { &atoms[ATOM_JWM_EXIT],                  "_JWM_EXIT"                   },
-   { &atoms[ATOM_JWM_RELOAD],                "_JWM_RELOAD"                 }
+   { &atoms[ATOM_JWM_RESTART],               &jwmRestart[0]                },
+   { &atoms[ATOM_JWM_EXIT],                  &jwmExit[0]                   },
+   { &atoms[ATOM_JWM_RELOAD],                &jwmReload[0]                 }
 
 };
 

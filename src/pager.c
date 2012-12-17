@@ -54,55 +54,54 @@ static void SetSize(TrayComponentType *cp, int width, int height);
 static int GetPagerDesktop(PagerType *pp, int x, int y);
 
 static void ProcessPagerButtonEvent(TrayComponentType *cp,
-   int x, int y, int mask);
+                                    int x, int y, int mask);
 
 static void ProcessPagerMotionEvent(TrayComponentType *cp,
-   int x, int y, int mask);
+                                    int x, int y, int mask);
 
 static void StartPagerMove(TrayComponentType *cp, int x, int y);
 
 static void StopPagerMove(ClientNode *np,
-   int x, int y, int desktop, int hmax, int vmax);
+                          int x, int y, int desktop, int hmax, int vmax);
 
 static void PagerMoveController(int wasDestroyed);
 
 static void DrawPagerClient(const PagerType *pp, const ClientNode *np);
 
 /** Initialize pager data. */
-void InitializePager() {
+void InitializePager()
+{
    pagers = NULL;
 }
 
 /** Startup the pager. */
-void StartupPager() {
+void StartupPager()
+{
 }
 
 /** Shutdown the pager. */
-void ShutdownPager() {
-
+void ShutdownPager()
+{
    PagerType *pp;
-
    for(pp = pagers; pp; pp = pp->next) {
       JXFreePixmap(display, pp->buffer);
    }
-
 }
 
 /** Release pager data. */
-void DestroyPager() {
-
+void DestroyPager()
+{
    PagerType *pp;
-
    while(pagers) {
       pp = pagers->next;
       Release(pagers);
       pagers = pp;
    }
-
 }
 
 /** Create a new pager tray component. */
-TrayComponentType *CreatePager(int labeled) {
+TrayComponentType *CreatePager(int labeled)
+{
 
    TrayComponentType *cp;
    PagerType *pp;
@@ -128,7 +127,8 @@ TrayComponentType *CreatePager(int labeled) {
 }
 
 /** Initialize a pager tray component. */
-void Create(TrayComponentType *cp) {
+void Create(TrayComponentType *cp)
+{
 
    PagerType *pp;
 
@@ -148,7 +148,8 @@ void Create(TrayComponentType *cp) {
 }
 
 /** Set the size of a pager tray component. */
-void SetSize(TrayComponentType *cp, int width, int height) {
+void SetSize(TrayComponentType *cp, int width, int height)
+{
 
    PagerType *pp;
 
@@ -188,7 +189,8 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 }
 
 /** Get the desktop for a pager given a set of coordinates. */
-int GetPagerDesktop(PagerType *pp, int x, int y) {
+int GetPagerDesktop(PagerType *pp, int x, int y)
+{
 
    int pagerx, pagery;
 
@@ -200,7 +202,8 @@ int GetPagerDesktop(PagerType *pp, int x, int y) {
 }
 
 /** Process a button event on a pager tray component. */
-void ProcessPagerButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
+void ProcessPagerButtonEvent(TrayComponentType *cp, int x, int y, int mask)
+{
 
    PagerType *pp;
 
@@ -237,7 +240,8 @@ void ProcessPagerButtonEvent(TrayComponentType *cp, int x, int y, int mask) {
 }
 
 /** Process a motion event on a pager tray component. */
-void ProcessPagerMotionEvent(TrayComponentType *cp, int x, int y, int mask) {
+void ProcessPagerMotionEvent(TrayComponentType *cp, int x, int y, int mask)
+{
 
    PagerType *pp = (PagerType*)cp->object;
 
@@ -247,7 +251,8 @@ void ProcessPagerMotionEvent(TrayComponentType *cp, int x, int y, int mask) {
 }
 
 /** Start a pager move operation. */
-void StartPagerMove(TrayComponentType *cp, int x, int y) {
+void StartPagerMove(TrayComponentType *cp, int x, int y)
+{
 
    XEvent event;
    PagerType *pp;
@@ -453,7 +458,8 @@ ClientFound:
 
 /** Stop an active pager move. */
 void StopPagerMove(ClientNode *np,
-   int x, int y, int desktop, int hmax, int vmax) {
+                   int x, int y, int desktop, int hmax, int vmax)
+{
 
    int north, south, east, west;
 
@@ -481,7 +487,8 @@ void StopPagerMove(ClientNode *np,
 }
 
 /** Client-terminated pager move. */
-void PagerMoveController(int wasDestroyed) {
+void PagerMoveController(int wasDestroyed)
+{
 
    JXUngrabPointer(display, CurrentTime);
    JXUngrabKeyboard(display, CurrentTime);
@@ -490,7 +497,8 @@ void PagerMoveController(int wasDestroyed) {
 }
 
 /** Update the pager. */
-void UpdatePager() {
+void UpdatePager()
+{
 
    PagerType *pp;
    ClientNode *np;
@@ -574,10 +582,9 @@ void UpdatePager() {
 }
 
 /** Signal pagers (for popups). */
-void SignalPager(const struct TimeType *now, int x, int y) {
-
+void SignalPager(const struct TimeType *now, int x, int y)
+{
    PagerType *pp;
-
    for(pp = pagers; pp; pp = pp->next) {
       if(abs(pp->mousex - x) < settings.doubleClickDelta
          && abs(pp->mousey - y) < settings.doubleClickDelta) {
@@ -599,7 +606,8 @@ void SignalPager(const struct TimeType *now, int x, int y) {
 }
 
 /** Draw a client on the pager. */
-void DrawPagerClient(const PagerType *pp, const ClientNode *np) {
+void DrawPagerClient(const PagerType *pp, const ClientNode *np)
+{
 
    int x, y;
    int width, height;

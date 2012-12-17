@@ -52,6 +52,12 @@ typedef enum {
    FOCUS_CLICK
 } FocusModelType;
 
+/** Taskbar insert modes. */
+typedef enum {
+   INSERT_LEFT,
+   INSERT_RIGHT
+} InsertModeType;
+
 /** Settings. */
 typedef struct {
    char *borderButtonBitmaps[BP_COUNT];
@@ -69,12 +75,14 @@ typedef struct {
    unsigned int desktopWidth;
    unsigned int desktopHeight;
    unsigned int desktopCount;
+   unsigned int menuOpacity;
    SnapModeType snapMode;
    MoveModeType moveMode;
    StatusWindowType moveStatusType;
    StatusWindowType resizeStatusType;
    FocusModelType focusModel;
    ResizeModeType resizeMode;
+   InsertModeType taskInsertMode;
    char popupEnabled;
 } Settings;
 

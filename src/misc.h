@@ -16,6 +16,12 @@
 /** Return the maximum of two values. */
 #define Max( x, y ) ( (x) > (y) ? (x) : (y) )
 
+/** Determine if a character is a space character.
+ * @param ch The character to check.
+ * @param lineNumber The line number to update.
+ */
+char IsSpace(char ch, unsigned int *lineNumber);
+
 /** Perform shell-like macro path expansion.
  * @param path The path to expand (possibly reallocated).
  */

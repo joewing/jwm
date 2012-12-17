@@ -64,15 +64,15 @@ static void ProcessMotionEvent(TrayComponentType *cp,
                                int x, int y, int mask);
 
 /** Initialize tray button data. */
-void InitializeTrayButtons() {
+void InitializeTrayButtons()
+{
    buttons = NULL;
 }
 
 /** Startup tray buttons. */
-void StartupTrayButtons() {
-
+void StartupTrayButtons()
+{
    TrayButtonType *bp;
-
    for(bp = buttons; bp; bp = bp->next) {
       if(bp->label) {
          bp->cp->requestedWidth
@@ -95,19 +95,17 @@ void StartupTrayButtons() {
       bp->cp->requestedWidth += 2 * BUTTON_SIZE;
       bp->cp->requestedHeight += 2 * BUTTON_SIZE;
    }
-
 }
 
 /** Shutdown tray buttons. */
-void ShutdownTrayButtons() {
-
+void ShutdownTrayButtons()
+{
 }
 
 /** Release tray button data. */
-void DestroyTrayButtons() {
-
+void DestroyTrayButtons()
+{
    TrayButtonType *bp;
-
    while(buttons) {
       bp = buttons->next;
       if(buttons->label) {
@@ -125,13 +123,13 @@ void DestroyTrayButtons() {
       Release(buttons);
       buttons = bp;
    }
-
 }
 
 /** Create a button tray component. */
 TrayComponentType *CreateTrayButton(const char *iconName,
-   const char *label, const char *action,
-   const char *popup, int width, int height) {
+                                    const char *label, const char *action,
+                                    const char *popup, int width, int height)
+{
 
    TrayButtonType *bp;
    TrayComponentType *cp;
@@ -186,7 +184,8 @@ TrayComponentType *CreateTrayButton(const char *iconName,
 }
 
 /** Set the size of a button tray component. */
-void SetSize(TrayComponentType *cp, int width, int height) {
+void SetSize(TrayComponentType *cp, int width, int height)
+{
 
    TrayButtonType *bp;
    int labelWidth, labelHeight;
@@ -235,7 +234,8 @@ void SetSize(TrayComponentType *cp, int width, int height) {
 }
 
 /** Initialize a button tray component. */
-void Create(TrayComponentType *cp) {
+void Create(TrayComponentType *cp)
+{
 
    TrayButtonType *bp;
 
@@ -268,22 +268,23 @@ void Create(TrayComponentType *cp) {
 }
 
 /** Resize a button tray component. */
-void Resize(TrayComponentType *cp) {
-
+void Resize(TrayComponentType *cp)
+{
    Destroy(cp);
    Create(cp);
-
 }
 
 /** Destroy a button tray component. */
-void Destroy(TrayComponentType *cp) {
+void Destroy(TrayComponentType *cp)
+{
    if(cp->pixmap != None) {
       JXFreePixmap(display, cp->pixmap);
    }
 }
 
 /** Draw a tray button. */
-void Draw(TrayComponentType *cp, int active) {
+void Draw(TrayComponentType *cp, int active)
+{
 
    ButtonNode button;
    TrayButtonType *bp;
@@ -334,7 +335,8 @@ void Draw(TrayComponentType *cp, int active) {
 }
 
 /** Process a button press. */
-void ProcessButtonPress(TrayComponentType *cp, int x, int y, int mask) {
+void ProcessButtonPress(TrayComponentType *cp, int x, int y, int mask)
+{
 
    const ScreenType *sp;
    int mwidth, mheight;
@@ -387,7 +389,8 @@ void ProcessButtonPress(TrayComponentType *cp, int x, int y, int mask) {
 }
 
 /** Process a button release. */
-void ProcessButtonRelease(TrayComponentType *cp, int x, int y, int mask) {
+void ProcessButtonRelease(TrayComponentType *cp, int x, int y, int mask)
+{
 
    TrayButtonType *bp = (TrayButtonType*)cp->object;
 
@@ -419,19 +422,17 @@ void ProcessButtonRelease(TrayComponentType *cp, int x, int y, int mask) {
 }
 
 /** Process a motion event. */
-void ProcessMotionEvent(TrayComponentType *cp, int x, int y, int mask) {
-
+void ProcessMotionEvent(TrayComponentType *cp, int x, int y, int mask)
+{
    TrayButtonType *bp = (TrayButtonType*)cp->object;
-
    bp->mousex = cp->screenx + x;
    bp->mousey = cp->screeny + y;
    GetCurrentTime(&bp->mouseTime);
-
 }
 
 /** Signal (needed for popups). */
-void SignalTrayButton(const TimeType *now, int x, int y) {
-
+void SignalTrayButton(const TimeType *now, int x, int y)
+{
    TrayButtonType *bp;
    const char *popup;
 
@@ -450,15 +451,13 @@ void SignalTrayButton(const TimeType *now, int x, int y) {
          }
       }
    }
-
 }
 
 /** Validate tray buttons. */
-void ValidateTrayButtons() {
-
+void ValidateTrayButtons()
+{
    TrayButtonType *bp;
    int bindex;
-
    for(bp = buttons; bp; bp = bp->next) {
       if(bp->action && !strncmp(bp->action, "root:", 5)) {
          bindex = atoi(bp->action + 5);
@@ -467,6 +466,5 @@ void ValidateTrayButtons() {
          }
       }
    }
-
 }
 

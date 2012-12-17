@@ -13,7 +13,8 @@
 static const unsigned long MAX_TIME_SECONDS = 60;
 
 /** Get the current time in milliseconds since midnight 1970-01-01 UTC. */
-void GetCurrentTime(TimeType *t) {
+void GetCurrentTime(TimeType *t)
+{
    struct timeval val;
    gettimeofday(&val, NULL);
    t->seconds = val.tv_sec;
@@ -25,7 +26,8 @@ void GetCurrentTime(TimeType *t) {
  * MAX_TIME_SECONDS will be returned.
  * Note that the times must be normalized.
  */
-unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2) {
+unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2)
+{
    unsigned long deltaSeconds;
    int deltaMs;
 
@@ -52,7 +54,8 @@ unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2) {
 }
 
 /** Get the current time. */
-const char *GetTimeString(const char *format, const char *zone) {
+const char *GetTimeString(const char *format, const char *zone)
+{
 
    static char saveTZ[256];
    static char newTZ[256];

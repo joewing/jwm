@@ -13,3 +13,4 @@ po/*.gmo
 po/stamp-*
 src/Makefile
 src/jwm
+doc

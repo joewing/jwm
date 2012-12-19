@@ -49,10 +49,10 @@ void StartupCursors()
    southCursor = CreateCursor(XC_bottom_side);
    eastCursor = CreateCursor(XC_right_side);
    westCursor = CreateCursor(XC_left_side);
-   northEastCursor = CreateCursor(XC_ur_angle);
-   northWestCursor = CreateCursor(XC_ul_angle);
-   southEastCursor = CreateCursor(XC_lr_angle);
-   southWestCursor = CreateCursor(XC_ll_angle);
+   northEastCursor = CreateCursor(XC_top_right_corner);
+   northWestCursor = CreateCursor(XC_top_left_corner);
+   southEastCursor = CreateCursor(XC_bottom_right_corner);
+   southWestCursor = CreateCursor(XC_bottom_left_corner);
    chooseCursor = CreateCursor(XC_tcross);
 
    JXQueryPointer(display, rootWindow, &win1, &win2,

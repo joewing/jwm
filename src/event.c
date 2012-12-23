@@ -1103,6 +1103,7 @@ void HandleMapRequest(const XMapEvent *event)
    } else {
       if(!(np->state.status & STAT_MAPPED)) {
 
+         /* Remove from the layer list. */
          if(np->prev != NULL) {
             np->prev->next = np->next;
          } else {
@@ -1114,9 +1115,11 @@ void HandleMapRequest(const XMapEvent *event)
             nodeTail[np->state.layer] = np->prev;
          }
 
+         /* Read the state (and new layer). */
          np->state = ReadWindowState(np->window);
          np->state.status |= STAT_MAPPED;
 
+         /* Add to the layer list. */
          np->prev = NULL;
          np->next = nodes[np->state.layer];
          if(np->next == NULL) {
@@ -1124,8 +1127,6 @@ void HandleMapRequest(const XMapEvent *event)
          }
          nodes[np->state.layer] = np;
 
-         np->state = ReadWindowState(np->window);
-         np->state.status |= STAT_MAPPED;
          if(!(np->state.status & STAT_STICKY)) {
             np->state.desktop = currentDesktop;
          }

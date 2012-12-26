@@ -1107,11 +1107,13 @@ void HandleMapRequest(const XMapEvent *event)
          if(np->prev != NULL) {
             np->prev->next = np->next;
          } else {
+            Assert(nodes[np->state.layer] == np);
             nodes[np->state.layer] = np->next;
          }
          if(np->next != NULL) {
             np->next->prev = np->prev;
          } else {
+            Assert(nodeTail[np->state.layer] == np);
             nodeTail[np->state.layer] = np->prev;
          }
 
@@ -1124,6 +1126,8 @@ void HandleMapRequest(const XMapEvent *event)
          np->next = nodes[np->state.layer];
          if(np->next == NULL) {
             nodeTail[np->state.layer] = np;
+         } else {
+            np->next->prev = np;
          }
          nodes[np->state.layer] = np;
 

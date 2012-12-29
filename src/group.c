@@ -282,7 +282,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
          tempf = atof(lp->value);
          if(JLIKELY(tempf > 0.0 && tempf <= 1.0)) {
             if(tempf == 1.0) {
-               np->state.status = UINT_MAX;
+               np->state.opacity = UINT_MAX;
             } else {
                np->state.opacity = (unsigned int)(tempf * UINT_MAX);
             }

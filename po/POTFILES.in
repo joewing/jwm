@@ -36,6 +36,7 @@ src/render.c
 src/resize.c
 src/root.c
 src/screen.c
+src/settings.c
 src/spacer.c
 src/status.c
 src/swallow.c

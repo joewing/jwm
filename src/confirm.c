@@ -286,7 +286,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
 
    ComputeDimensions(dp);
 
-   attrs.background_pixel = colors[COLOR_TRAY_BG];
+   attrs.background_pixel = colors[COLOR_MENU_BG];
    attrs.event_mask = ButtonReleaseMask | ExposureMask;
 
    window = JXCreateWindow(display, rootWindow,
@@ -426,7 +426,7 @@ void DrawMessage(DialogType *dp)
 
    yoffset = 4;
    for(x = 0; x < dp->lineCount; x++) {
-      RenderString(dp->node->window, FONT_MENU, COLOR_TRAY_FG,
+      RenderString(dp->node->window, FONT_MENU, COLOR_MENU_FG,
                    4, yoffset, dp->width, NULL, dp->message[x]);
       yoffset += dp->lineHeight;
    }
@@ -461,9 +461,9 @@ void DrawButtons(DialogType *dp)
    dp->buttony = dp->height - dp->lineHeight - dp->lineHeight / 2;
 
    if(dp->buttonState == DBS_OK) {
-      button.type = BUTTON_TASK_ACTIVE;
+      button.type = BUTTON_MENU_ACTIVE;
    } else {
-      button.type = BUTTON_TASK;
+      button.type = BUTTON_MENU;
    }
    button.text = OK_STRING;
    button.x = dp->okx;
@@ -471,9 +471,9 @@ void DrawButtons(DialogType *dp)
    DrawButton(&button);
 
    if(dp->buttonState == DBS_CANCEL) {
-      button.type = BUTTON_TASK_ACTIVE;
+      button.type = BUTTON_MENU_ACTIVE;
    } else {
-      button.type = BUTTON_TASK;
+      button.type = BUTTON_MENU;
    }
    button.text = CANCEL_STRING;
    button.x = dp->cancelx;

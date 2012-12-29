@@ -83,14 +83,6 @@ void InitializeMenu(Menu *menu)
       if(np->iconName) {
          np->icon = LoadNamedIcon(np->iconName);
          if(np->icon) {
-            if(userHeight == 0) {
-               if(menu->itemHeight < (int)np->icon->image->height) {
-                  menu->itemHeight = np->icon->image->height;
-               }
-               if(menu->textOffset < (int)np->icon->image->width + 4) {
-                  menu->textOffset = np->icon->image->width + 4;
-               }
-            }
             hasIcon = 1;
          }
       } else {
@@ -102,6 +94,8 @@ void InitializeMenu(Menu *menu)
 
    if(userHeight) {
       menu->itemHeight = userHeight + BASE_ICON_OFFSET * 2;
+   }
+   if(hasIcon) {
       menu->textOffset = menu->itemHeight + BASE_ICON_OFFSET * 2;
    }
 
@@ -117,7 +111,7 @@ void InitializeMenu(Menu *menu)
       }
    }
 
-   menu->height = 1;
+   menu->height = 0;
    if(menu->label) {
       menu->height += menu->itemHeight;
    }
@@ -152,7 +146,6 @@ void InitializeMenu(Menu *menu)
          InitializeMenu(np->submenu);
       }
    }
-   menu->height += 2;
    menu->width += 12 + hasSubmenu + menu->textOffset;
 
 }
@@ -343,7 +336,7 @@ void CreateMenu(Menu *menu, int x, int y)
 
    if(x + menu->width > rootWidth) {
       if(menu->parent) {
-         x = menu->parent->x - menu->width;
+         x = menu->parent->x - menu->width - 1;
       } else {
          x = rootWidth - menu->width;
       }
@@ -368,12 +361,16 @@ void CreateMenu(Menu *menu, int x, int y)
    attrMask |= CWBackPixel;
    attr.background_pixel = colors[COLOR_MENU_BG];
 
+   attrMask |= CWBorderPixel;
+   attr.border_pixel = colors[COLOR_MENU_DOWN];
+
    attrMask |= CWSaveUnder;
    attr.save_under = True;
 
    menu->window = JXCreateWindow(display, rootWindow, x, y,
-      menu->width, menu->height, 0, CopyFromParent, InputOutput,
-      CopyFromParent, attrMask, &attr);
+                                 menu->width, menu->height, 1,
+                                 CopyFromParent, InputOutput,
+                                 CopyFromParent, attrMask, &attr);
 
    if(settings.menuOpacity < UINT_MAX) {
       SetCardinalAtom(menu->window, ATOM_NET_WM_WINDOW_OPACITY,
@@ -418,28 +415,6 @@ void DrawMenu(Menu *menu)
       DrawMenuItem(menu, np, x);
       ++x;
    }
-
-   JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
-   segments[0].x1 = 0;                 segments[0].y1 = 0;
-   segments[0].x2 = menu->width - 1;   segments[0].y2 = 0;
-   segments[1].x1 = 0;                 segments[1].y1 = 1;
-   segments[1].x2 = menu->width - 2;   segments[1].y2 = 1;
-   segments[2].x1 = 0;                 segments[2].y1 = 2;
-   segments[2].x2 = 0;                 segments[2].y2 = menu->height - 1;
-   segments[3].x1 = 1;                 segments[3].y1 = 2;
-   segments[3].x2 = 1;                 segments[3].y2 = menu->height - 2;
-   JXDrawSegments(display, menu->window, rootGC, segments, 4);
-
-   JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
-   segments[0].x1 = 1;                 segments[0].y1 = menu->height - 1;
-   segments[0].x2 = menu->width - 1;   segments[0].y2 = menu->height - 1;
-   segments[1].x1 = 2;                 segments[1].y1 = menu->height - 2;
-   segments[1].x2 = menu->width - 1;   segments[1].y2 = menu->height - 2;
-   segments[2].x1 = menu->width - 1;   segments[2].y1 = 1;
-   segments[2].x2 = menu->width - 1;   segments[2].y2 = menu->height - 3;
-   segments[3].x1 = menu->width - 2;   segments[3].y1 = 2;
-   segments[3].x2 = menu->width - 2;   segments[3].y2 = menu->height - 3;
-   JXDrawSegments(display, menu->window, rootGC, segments, 4);
 
 }
 
@@ -598,7 +573,7 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
    /* If the selected item is a submenu, show it. */
    ip = GetMenuItem(menu, menu->currentIndex);
    if(ip && IsMenuValid(ip->submenu)) {
-      if(ShowSubmenu(ip->submenu, menu, menu->x + menu->width,
+      if(ShowSubmenu(ip->submenu, menu, menu->x + menu->width + 1,
          menu->y + menu->offsets[menu->currentIndex])) {
 
          /* Item selected; destroy the menu tree. */
@@ -639,24 +614,22 @@ void UpdateMenu(Menu *menu)
       ResetButton(&button, menu->window, rootGC);
       button.type = BUTTON_MENU_ACTIVE;
       button.font = FONT_MENU;
-      button.width = menu->width - 5;
-      button.height = menu->itemHeight - 2;
+      button.width = menu->width;
+      button.height = menu->itemHeight - 1;
       button.icon = ip->icon;
       button.text = ip->name;
-      button.x = 2;
-      button.y = menu->offsets[menu->currentIndex] + 1;
+      button.x = 0;
+      button.y = menu->offsets[menu->currentIndex];
       DrawButton(&button);
 
       if(ip->submenu) {
          pixmap = JXCreateBitmapFromData(display, menu->window,
-            menu_bitmap, 4, 7);
+                                         menu_bitmap, 4, 7);
          JXSetForeground(display, rootGC, colors[COLOR_MENU_ACTIVE_FG]);
          JXSetClipMask(display, rootGC, pixmap);
-         JXSetClipOrigin(display, rootGC,
-            menu->width - 9,
+         JXSetClipOrigin(display, rootGC, menu->width - 9,
             menu->offsets[menu->currentIndex] + menu->itemHeight / 2 - 4);
-         JXFillRectangle(display, menu->window, rootGC,
-            menu->width - 9,
+         JXFillRectangle(display, menu->window, rootGC, menu->width - 9,
             menu->offsets[menu->currentIndex] + menu->itemHeight / 2 - 4,
             4, 7);
          JXSetClipMask(display, rootGC, None);
@@ -678,10 +651,10 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
    if(!item) {
       if(index == -1 && menu->label) {
          ResetButton(&button, menu->window, rootGC);
-         button.x = 2;
-         button.y = 2;
-         button.width = menu->width - 5;
-         button.height = menu->itemHeight - 2;
+         button.x = 0;
+         button.y = 0;
+         button.width = menu->width;
+         button.height = menu->itemHeight - 1;
          button.font = FONT_MENU;
          button.type = BUTTON_LABEL;
          button.text = menu->label;
@@ -694,12 +667,12 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
    if(item->type != MENU_ITEM_SEPARATOR) {
 
       ResetButton(&button, menu->window, rootGC);
-      button.x = 2;
-      button.y = 1 + menu->offsets[index];
+      button.x = 0;
+      button.y = menu->offsets[index];
       button.font = FONT_MENU;
       button.type = BUTTON_LABEL;
-      button.width = menu->width - 5;
-      button.height = menu->itemHeight - 2;
+      button.width = menu->width;
+      button.height = menu->itemHeight - 1;
       button.text = item->name;
       button.icon = item->icon;
       DrawButton(&button);

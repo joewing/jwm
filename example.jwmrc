@@ -4,44 +4,23 @@
 
    <!-- The root menu, if this is undefined you will not get a menu. -->
    <!-- Additional RootMenu attributes: onroot, labeled, label -->
-   <RootMenu height="32" onroot="12">
+   <RootMenu onroot="12">
       <Program icon="terminal.png" label="Terminal">xterm</Program>
 
       <Menu icon="folder.png" label="Applications">
-         <Program icon="editor.png" label="Dia">dia</Program>
-         <Program icon="www.png" label="Firefox">firefox</Program>
-         <Program icon="gimp.png" label="Gimp">gimp</Program>
-         <Program icon="mail.png" label="Mutt">
-            xterm -e mutt
-         </Program>
-         <Program icon="word-processor.png" label="Open Office">  
-            ooffice
-         </Program>
-         <Program icon="chat.png" label="Pidgin">pidgin</Program>
-         <Program icon="music.png" label="Rhythmbox">rhythmbox</Program>
-         <Program icon="development.png" label="Xilinx ISE">
-            /usr/local/xilinx/bin/ise
-         </Program>
-         <Program icon="video.png" label="Xine">gxine</Program>
+         <Program icon="calc.png" label="Calculator">xcalc</Program>
+         <Program icon="web-browser.png" label="Midori">midori</Program>
+         <Program icon="text-editor.png" label="XEdit">xedit</Program>
       </Menu>
       <Menu icon="folder.png" label="Utilities">
-         <Program icon="calculator.png" label="Calculator">xcalc</Program>
          <Program icon="font.png" label="Fonts">xfontsel</Program>
-         <Program icon="viewer.png" label="Magnify">xmag</Program>
-         <Program icon="programs.png" label="Synaptic">
-            gksudo synaptic
-         </Program>
-         <Program icon="window.png" label="Window Properties">
+         <Program icon="info.png" label="Window Properties">
             xprop | xmessage -file -
          </Program>
       </Menu>
       <Separator/>
-      <Program icon="lock.png" label="Lock">
-         xscreensaver-command -activate
-      </Program>
-      <Separator/>
-      <Restart label="Restart" icon="restart.png"/>
-      <Exit label="Exit" confirm="true" icon="quit.png"/>
+      <Restart label="Restart" icon="reload.png"/>
+      <Exit label="Exit" confirm="true" icon="exit.png"/>
    </RootMenu>
 
    <Group>
@@ -134,7 +113,7 @@
    </PagerStyle>
 
    <MenuStyle>
-      <Font>FreeSans-12:bold</Font>
+      <Font>FreeSans-10</Font>
       <Foreground>black</Foreground>
       <Background>gray90</Background>
       <ActiveForeground>white</ActiveForeground>
@@ -150,17 +129,38 @@
    </PopupStyle>
 
    <IconPath>
-      /usr/share/icons/wm-icons/32x32-gant
+      /usr/share/icons/gnome/32x32/actions
+   </IconPath>
+   <IconPath>
+      /usr/share/icons/gnome/32x32/apps
+   </IconPath>
+   <IconPath>
+      /usr/share/icons/gnome/32x32/places
+   </IconPath>
+   <IconPath>
+      /usr/share/icons/gnome/32x32/status
+   </IconPath>
+   <IconPath>
+      /usr/share/icons/gnome/32x32/mimetypes
+   </IconPath>
+   <IconPath>
+      /usr/share/icons/gnome/32x32/emblems
+   </IconPath>
+   <IconPath>
+      /usr/share/icons/gnome/32x32/devices
+   </IconPath>
+   <IconPath>
+      /usr/share/icons/gnome/32x32/categories
    </IconPath>
 
    <!-- Virtual Desktops -->
    <!-- Desktop tags can be contained within Desktops for desktop names. -->
-   <Desktops width="4" height="2">
+   <Desktops width="2" height="1">
       <!-- Default background. Note that a Background tag can be
            contained within a Desktop tag to give a specific background
            for that desktop.
        -->
-      <Background type="image">/export0/images/formulae.jpg</Background>
+      <Background type="solid">black</Background>
    </Desktops>
 
    <!-- Double click speed (in milliseconds) -->

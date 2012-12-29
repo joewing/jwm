@@ -51,6 +51,11 @@ static void DrawBorderHelper(const ClientNode *np, int drawIcon);
 static void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc);
 static int GetButtonCount(const ClientNode *np);
 
+#ifdef USE_SHAPE
+static void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
+                                 int width, int height, int radius);
+#endif
+
 /** Initialize non-server resources. */
 void InitializeBorders()
 {
@@ -675,6 +680,7 @@ void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
 }
 
 /** Fill a rounded rectangle. */
+#ifdef USE_SHAPE
 void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
                           int width, int height, int radius)
 {
@@ -732,7 +738,7 @@ void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
 #endif
 
 }
-
+#endif
 
 /** Clear the shape mask of a window. */
 void ResetRoundedRectWindow(Window w)

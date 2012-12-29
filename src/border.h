@@ -84,9 +84,5 @@ void ShapeRoundedRectWindow(Window w, int width, int height);
 void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
                           int width, int height, int radius);
 
-/** Fill a rounded rectangle. */
-void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
-                          int width, int height, int radius);
-
 #endif /* BORDER_H */
 

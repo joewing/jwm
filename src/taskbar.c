@@ -766,7 +766,7 @@ void UpdateNetClientList()
       ++count;
    }
    temp = 0;
-   for(layer = LAYER_BOTTOM; layer <= LAYER_TOP; layer++) {
+   for(layer = FIRST_LAYER; layer <= LAST_LAYER; layer++) {
       for(client = nodes[layer]; client; client = client->next) {
          ++temp;
       }
@@ -791,13 +791,14 @@ void UpdateNetClientList()
 
    /* Set _NET_CLIENT_LIST_STACKING */
    count = 0;
-   for(layer = LAYER_BOTTOM; layer <= LAYER_TOP; layer++) {
+   for(layer = FIRST_LAYER; layer <= LAST_LAYER; layer++) {
       for(client = nodes[layer]; client; client = client->next) {
          windows[count++] = client->window;
       }
    }
    JXChangeProperty(display, rootWindow, atoms[ATOM_NET_CLIENT_LIST_STACKING],
-      XA_WINDOW, 32, PropModeReplace, (unsigned char*)windows, count);
+                    XA_WINDOW, 32, PropModeReplace,
+                    (unsigned char*)windows, count);
 
    if(windows != NULL) {
       ReleaseStack(windows);

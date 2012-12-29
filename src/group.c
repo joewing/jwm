@@ -34,7 +34,8 @@ typedef struct PatternListType {
 /** List of options for a group. */
 typedef struct OptionListType {
    OptionType option;
-   char *value;
+   char *svalue;
+   unsigned int uvalue;
    struct OptionListType *next;
 } OptionListType;
 
@@ -99,8 +100,8 @@ void ReleaseOptionList(OptionListType *lp)
    OptionListType *tp;
    while(lp) {
       tp = lp->next;
-      if(lp->value) {
-         Release(lp->value);
+      if(lp->svalue) {
+         Release(lp->svalue);
       }
       Release(lp);
       lp = tp;
@@ -160,24 +161,37 @@ void AddGroupOption(GroupType *gp, OptionType option)
    OptionListType *lp;
    lp = Allocate(sizeof(OptionListType));
    lp->option = option;
-   lp->value = NULL;
+   lp->svalue = NULL;
    lp->next = gp->options;
    gp->options = lp;
 }
 
-/** Add an option (with value) to a group. */
-void AddGroupOptionValue(GroupType *gp, OptionType option,
-                         const char *value)
+/** Add an option (with a string) to a group. */
+void AddGroupOptionString(GroupType *gp, OptionType option,
+                          const char *value)
 {
    OptionListType *lp;
    Assert(value);
    lp = Allocate(sizeof(OptionListType));
    lp->option = option;
-   lp->value = CopyString(value);
+   lp->svalue = CopyString(value);
    lp->next = gp->options;
    gp->options = lp;
 }
 
+/** Add an option (with an unsigned integer) to a group. */
+void AddGroupOptionUnsigned(GroupType *gp, OptionType option,
+                            unsigned int value)
+{
+   OptionListType *lp;
+   Assert(value);
+   lp = Allocate(sizeof(OptionListType));
+   lp->option = option;
+   lp->svalue = NULL;
+   lp->uvalue = value;
+   lp->next = gp->options;
+   gp->options = lp;
+}
 /** Apply groups to a client. */
 void ApplyGroups(ClientNode *np)
 {
@@ -247,24 +261,18 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
          np->state.border &= ~BORDER_TITLE;
          break;
       case OPTION_LAYER:
-         temp = atoi(lp->value);
-         if(JLIKELY(temp <= LAYER_COUNT)) {
-            SetClientLayer(np, temp);
-         } else {
-            Warning(_("invalid group layer: %s"), lp->value);
-         }
+         SetClientLayer(np, lp->uvalue);
          break;
       case OPTION_DESKTOP:
-         temp = atoi(lp->value);
-         if(JLIKELY(temp >= 1 && temp <= settings.desktopCount)) {
-            np->state.desktop = temp - 1;
+         if(JLIKELY(lp->uvalue >= 1 && lp->uvalue <= settings.desktopCount)) {
+            np->state.desktop = lp->uvalue - 1;
          } else {
-            Warning(_("invalid group desktop: %s"), lp->value);
+            Warning(_("invalid group desktop: %d"), lp->uvalue);
          }
          break;
       case OPTION_ICON:
          DestroyIcon(np->icon);
-         np->icon = LoadNamedIcon(lp->value);
+         np->icon = LoadNamedIcon(lp->svalue);
          break;
       case OPTION_PIGNORE:
          np->state.status |= STAT_PIGNORE;
@@ -279,17 +287,8 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
          np->state.status |= STAT_SHADED;
          break;
       case OPTION_OPACITY:
-         tempf = atof(lp->value);
-         if(JLIKELY(tempf > 0.0 && tempf <= 1.0)) {
-            if(tempf == 1.0) {
-               np->state.opacity = UINT_MAX;
-            } else {
-               np->state.opacity = (unsigned int)(tempf * UINT_MAX);
-            }
-            np->state.status |= STAT_OPACITY;
-         } else {
-            Warning(_("invalid group opacity: %s"), lp->value);
-         }
+         np->state.opacity = lp->uvalue;
+         np->state.status |= STAT_OPACITY;
          break;
       case OPTION_MAX_V:
          np->state.border &= ~BORDER_MAX_H;

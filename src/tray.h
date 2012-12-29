@@ -264,9 +264,9 @@ void SetTrayLayout(TrayType *tp, const char *str);
 
 /** Set the tray layer.
  * @param tp The tray.
- * @param str The layer (ASCII).
+ * @param layer The layer.
  */
-void SetTrayLayer(TrayType *tp, const char *str);
+void SetTrayLayer(TrayType *tp, WinLayerType layer);
 
 /** Set the tray horizontal alignment.
  * @param tp The tray.

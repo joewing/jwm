@@ -69,7 +69,7 @@ void StartWindowStackWalk()
 
    /* First determine how much space to allocate for windows. */
    count = 0;
-   for(layer = LAYER_TOP; layer >= LAYER_BOTTOM; layer--) {
+   for(layer = LAST_LAYER; layer >= FIRST_LAYER; layer--) {
       for(np = nodes[layer]; np; np = np->next) {
          if(ShouldFocus(np)) {
             ++count;
@@ -87,7 +87,7 @@ void StartWindowStackWalk()
 
    /* Copy windows into the array. */
    windowStackSize = 0;
-   for(layer = LAYER_TOP; layer >= LAYER_BOTTOM; layer--) {
+   for(layer = LAST_LAYER; layer >= FIRST_LAYER; layer--) {
       for(np = nodes[layer]; np; np = np->next) {
          if(ShouldFocus(np)) {
             windowStack[windowStackSize++] = np->window;
@@ -194,7 +194,7 @@ void FocusNextStacked(ClientNode *np)
          return;
       }
    }
-   for(x = np->state.layer - 1; x >= LAYER_BOTTOM; x--) {
+   for(x = np->state.layer - 1; x >= FIRST_LAYER; x--) {
       for(tp = nodes[x]; tp; tp = tp->next) {
          if((tp->state.status & (STAT_MAPPED | STAT_SHADED))
             && !(tp->state.status & STAT_HIDDEN)) {

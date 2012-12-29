@@ -276,7 +276,7 @@ void StartPagerMove(TrayComponentType *cp, int x, int y)
    y -= (desktop / settings.desktopWidth) * (pp->deskHeight + 1);
 
    /* Find the client under the specified coordinates. */
-   for(layer = LAYER_TOP; layer >= LAYER_BOTTOM; layer--) {
+   for(layer = LAST_LAYER; layer >= FIRST_LAYER; layer--) {
       for(np = nodes[layer]; np; np = np->next) {
 
          /* Skip this client if it isn't mapped. */
@@ -555,7 +555,7 @@ void UpdatePager()
       }
 
       /* Draw the clients. */
-      for(x = LAYER_BOTTOM; x <= LAYER_TOP; x++) {
+      for(x = FIRST_LAYER; x <= LAST_LAYER; x++) {
          for(np = nodeTail[x]; np; np = np->prev) {
             DrawPagerClient(pp, np);
          }

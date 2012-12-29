@@ -407,15 +407,14 @@ The width of the border. The default is 1. Valid values are between 0 and 32
 inclusive.
 .RE
 .P
-\fBlayer\fP \fIint\fP
+\fBlayer\fP { \fBbelow\fP | \fBnormal\fP | \fBabove\fP }
 .RS
-The layer of the tray. The default is 8. Valid values are between 0 and
-12 inclusive.
+The layer of the tray. The default is \fBabove\fP.
 .RE
 .P
 \fBlayout\fP { \fBvertical\fP | \fBhorizontal\fP }
 .RS
-The layout of the tray. The default is horizontal.
+The layout of the tray. The default is \fBhorizontal\fP.
 .RE
 .P
 \fBvalign\fP { \fBfixed\fP | \fBtop\fP | \fBcenter\fP | \fBbottom\fP }
@@ -636,10 +635,10 @@ The desktop on which windows in this group will be started.
 The icon to be used for windows in this group.
 .RE
 .P
-.B layer:
-.I #
+\fBlayer:\fP\fIstring\fP
 .RS
 The layer on which windows in this group will be started.
+Valid options are \fBbelow\fP, \fBnormal\fP, and \fBabove\fP
 .RE
 .P
 .B maximized

@@ -491,16 +491,13 @@ void SetClientLayer(ClientNode *np, unsigned int layer)
    int x;
 
    Assert(np);
-
-   if(JUNLIKELY(layer > LAYER_TOP)) {
-      Warning(_("Client %s requested an invalid layer: %d"), np->name, layer);
-      return;
-   }
+   Assert(layer >= FIRST_LAYER);
+   Assert(layer <= LAST_LAYER);
 
    if(np->state.layer != layer) {
 
       /* Loop through all clients so we get transients. */
-      for(x = 0; x < LAYER_COUNT; x++) {
+      for(x = FIRST_LAYER; x <= LAST_LAYER; x++) {
          tp = nodes[x];
          while(tp) {
             if(tp == np || tp->owner == np->window) {
@@ -760,7 +757,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
 
       np->state.status |= STAT_FULLSCREEN;
       np->state.border &= ~BORDER_MOVE;
-      SetClientLayer(np, LAYER_TOP);
+      SetClientLayer(np, LAYER_ABOVE);
 
       np->oldx = np->x;
       np->oldy = np->y;
@@ -1044,7 +1041,7 @@ void RestackClients()
 
    /* Prepare the stacking array. */
    index = 0;
-   layer = LAYER_TOP;
+   layer = LAST_LAYER;
    isFirst = 1;
    opacity = settings.maxClientOpacity;
    for(;;) {
@@ -1081,7 +1078,7 @@ void RestackClients()
          }
       }
 
-      if(layer == 0) {
+      if(layer == FIRST_LAYER) {
          break;
       }
       --layer;

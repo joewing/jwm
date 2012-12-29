@@ -112,14 +112,16 @@ extern const char jwmReload[];
 
 /** Enumeration of window layers. */
 typedef enum {
-   LAYER_BOTTOM              = 0,
-   LAYER_BELOW               = 2,
-   LAYER_NORMAL              = 4,
-   LAYER_ABOVE               = 6,
-   DEFAULT_TRAY_LAYER        = 8,
-   LAYER_TOP                 = 12,
-   LAYER_COUNT               = 13
+   LAYER_DESKTOP     = 0,
+   LAYER_BELOW       = 1,
+   LAYER_NORMAL      = 2,
+   LAYER_ABOVE       = 3,
+   LAYER_COUNT       = 4
 } WinLayerType;
+
+#define FIRST_LAYER        LAYER_DESKTOP
+#define LAST_LAYER         LAYER_ABOVE
+#define DEFAULT_TRAY_LAYER LAYER_ABOVE
 
 /** Client state information. */
 typedef struct ClientState {

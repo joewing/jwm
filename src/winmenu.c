@@ -169,42 +169,20 @@ void CreateWindowLayerMenu(Menu *menu)
    submenu->items = NULL;
    submenu->label = NULL;
 
-   if(client->state.layer == LAYER_TOP) {
-      AddWindowMenuItem(submenu, _("[Top]"), MA_LAYER, LAYER_TOP);
+   if(client->state.layer == LAYER_ABOVE) {
+      AddWindowMenuItem(submenu, _("[Above]"), MA_LAYER, LAYER_ABOVE);
    } else {
-      AddWindowMenuItem(submenu, _("Top"), MA_LAYER, LAYER_TOP);
+      AddWindowMenuItem(submenu, _("Above"), MA_LAYER, LAYER_ABOVE);
    }
-
-   str[4] = 0;
-   for(x = LAYER_TOP - 1; x > LAYER_BOTTOM; x--) {
-      if(x == LAYER_NORMAL) {
-         if(client->state.layer == x) {
-            AddWindowMenuItem(submenu, _("[Normal]"), MA_LAYER, x);
-         } else {
-            AddWindowMenuItem(submenu, _("Normal"), MA_LAYER, x);
-         }
-      } else {
-         if(client->state.layer == x) {
-            str[0] = '[';
-            str[3] = ']';
-         } else {
-            str[0] = ' ';
-            str[3] = ' ';
-         }
-         if(x < 10) {
-            str[1] = ' ';
-         } else {
-            str[1] = (x / 10) + '0';
-         }
-         str[2] = (x % 10) + '0';
-         AddWindowMenuItem(submenu, str, MA_LAYER, x);
-      }
-   }
-
-   if(client->state.layer == LAYER_BOTTOM) {
-      AddWindowMenuItem(submenu, _("[Bottom]"), MA_LAYER, LAYER_BOTTOM);
+   if(client->state.layer == LAYER_NORMAL) {
+      AddWindowMenuItem(submenu, _("[Normal]"), MA_LAYER, LAYER_NORMAL);
    } else {
-      AddWindowMenuItem(submenu, _("Bottom"), MA_LAYER, LAYER_BOTTOM);
+      AddWindowMenuItem(submenu, _("Normal"), MA_LAYER, LAYER_NORMAL);
+   }
+   if(client->state.layer == LAYER_BELOW) {
+      AddWindowMenuItem(submenu, _("[Below]"), MA_LAYER, LAYER_BELOW);
+   } else {
+      AddWindowMenuItem(submenu, _("Below"), MA_LAYER, LAYER_BELOW);
    }
 
 }

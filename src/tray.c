@@ -1130,22 +1130,9 @@ void SetTrayLayout(TrayType *tp, const char *str)
 }
 
 /** Set the layer for a tray. */
-void SetTrayLayer(TrayType *tp, const char *str)
+void SetTrayLayer(TrayType *tp, WinLayerType layer)
 {
-
-   int temp;
-
-   Assert(tp);
-   Assert(str);
-
-   temp = atoi(str);
-   if(JUNLIKELY(temp < LAYER_BOTTOM || temp > LAYER_TOP)) {
-      Warning(_("invalid tray layer: %d"), temp);
-      tp->layer = DEFAULT_TRAY_LAYER;
-   } else {
-      tp->layer = temp;
-   }
-
+   tp->layer = layer;
 }
 
 /** Set the horizontal tray alignment. */

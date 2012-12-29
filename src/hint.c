@@ -514,7 +514,7 @@ ClientState ReadWindowState(Window win)
                maxHorz = 1;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_FULLSCREEN]) {
                fullScreen = 1;
-               result.layer = LAYER_TOP;
+               result.layer = LAYER_ABOVE;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_HIDDEN]) {
                result.status |= STAT_MINIMIZED;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_SKIP_TASKBAR]) {
@@ -552,7 +552,7 @@ ClientState ReadWindowState(Window win)
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DESKTOP]) {
             if(result.layer == LAYER_NORMAL) {
-               result.layer   = LAYER_BOTTOM;
+               result.layer   = LAYER_DESKTOP;
             }
             result.border  = BORDER_NONE;
             result.status |= STAT_STICKY;

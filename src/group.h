@@ -63,13 +63,21 @@ void AddGroupName(struct GroupType *gp, const char *pattern);
  */
 void AddGroupOption(struct GroupType *gp, OptionType option);
 
-/** Add a group option that takes a value.
+/** Add a group option that takes a string.
  * @param gp The group.
  * @param option The option.
  * @param value The option value.
  */
-void AddGroupOptionValue(struct GroupType *gp, OptionType option,
-                         const char *value);
+void AddGroupOptionString(struct GroupType *gp, OptionType option,
+                          const char *value);
+
+/** Add a group option that takes an unsigned integer.
+ * @param gp The group.
+ * @param option The option.
+ * @param value The option value.
+ */
+void AddGroupOptionUnsigned(struct GroupType *gp, OptionType option,
+                            unsigned int value);
 
 /** Apply any matching groups to a client.
  * @param np The client.

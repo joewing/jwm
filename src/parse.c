@@ -185,6 +185,7 @@ static char *FindAttribute(AttributeNode *ap, const char *name);
 static void ReleaseTokens(TokenNode *np);
 static unsigned int ParseUnsigned(const TokenNode *tp, const char *str);
 static unsigned int ParseOpacity(const TokenNode *tp, const char *str);
+static WinLayerType ParseLayer(const TokenNode *tp, const char *str);
 static char *GetString(const char *str, unsigned int n);
 static StatusWindowType ParseStatusWindowType(const TokenNode *tp,
                                               const char *str);
@@ -1197,7 +1198,8 @@ void ParseTray(const TokenNode *tp) {
 
    attr = FindAttribute(tp->attributes, LAYER_ATTRIBUTE);
    if(attr) {
-      SetTrayLayer(tray, attr);
+      const WinLayerType layer = ParseLayer(tp, attr);
+      SetTrayLayer(tray, layer);
    }
 
    attr = FindAttribute(tp->attributes, BORDER_ATTRIBUTE);
@@ -1678,13 +1680,16 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
 
    /* These options have arguments and so we handled them separately. */
    if(!strncmp(option, "layer:", 6)) {
-      AddGroupOptionValue(group, OPTION_LAYER, option + 6);
+      const WinLayerType layer = ParseLayer(tp, option + 6);
+      AddGroupOptionUnsigned(group, OPTION_LAYER, layer);
    } else if(!strncmp(option, "desktop:", 8)) {
-      AddGroupOptionValue(group, OPTION_DESKTOP, option + 8);
+      const unsigned int desktop = (unsigned int)atoi(option + 8);
+      AddGroupOptionUnsigned(group, OPTION_DESKTOP, desktop);
    } else if(!strncmp(option, "icon:", 5)) {
-      AddGroupOptionValue(group, OPTION_ICON, option + 5);
+      AddGroupOptionString(group, OPTION_ICON, option + 5);
    } else if(!strncmp(option, "opacity:", 8)) {
-      AddGroupOptionValue(group, OPTION_OPACITY, option + 8);
+      const unsigned int opacity = ParseOpacity(tp, option + 8);
+      AddGroupOptionUnsigned(group, OPTION_OPACITY, opacity);
    } else {
       ParseError(tp, "invalid Group Option: %s", option);
    }
@@ -1830,6 +1835,21 @@ unsigned int ParseOpacity(const TokenNode *tp, const char *str)
       return UINT_MAX;
    } else {
       return (unsigned int)(value * UINT_MAX);
+   }
+}
+
+/** Parse layer. */
+WinLayerType ParseLayer(const TokenNode *tp, const char *str)
+{
+   if(!strcmp(str, "below")) {
+      return LAYER_BELOW;
+   } else if(!strcmp(str, "normal")) {
+      return LAYER_NORMAL;
+   } else if(!strcmp(str, "above")) {
+      return LAYER_ABOVE;
+   } else {
+      ParseError(tp, _("invalid layer: %s"), str);
+      return LAYER_NORMAL;
    }
 }
 

@@ -143,7 +143,7 @@ void ChangeDesktop(unsigned int desktop)
       return;
    }
 
-   if(currentDesktop == desktop && !initializing) {
+   if(currentDesktop == desktop) {
       return;
    }
 

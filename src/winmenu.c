@@ -150,8 +150,6 @@ void CreateWindowLayerMenu(Menu *menu)
 
    Menu *submenu;
    MenuItem *item;
-   char str[10];
-   unsigned int x;
 
    item = Allocate(sizeof(MenuItem));
    item->type = MENU_ITEM_SUBMENU;

@@ -404,7 +404,6 @@ void DrawMenu(Menu *menu)
 
    MenuItem *np;
    int x;
-   XSegment segments[4];
 
    if(menu->label) {
       DrawMenuItem(menu, NULL, -1);

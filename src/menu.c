@@ -150,6 +150,7 @@ void InitializeMenu(Menu *menu)
    menu->width += hasSubmenu + menu->textOffset;
    menu->width += 2 * MENU_BORDER_SIZE;
    menu->width += 7;
+   menu->height += MENU_BORDER_SIZE;
 
 }
 

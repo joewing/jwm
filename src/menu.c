@@ -23,7 +23,8 @@
 #include "root.h"
 #include "settings.h"
 
-#define BASE_ICON_OFFSET 3
+#define MENU_BORDER_SIZE   1
+#define BASE_ICON_OFFSET   3
 
 typedef enum {
    MENU_NOSELECTION = 0,
@@ -111,7 +112,7 @@ void InitializeMenu(Menu *menu)
       }
    }
 
-   menu->height = 0;
+   menu->height = MENU_BORDER_SIZE;
    if(menu->label) {
       menu->height += menu->itemHeight;
    }
@@ -146,7 +147,9 @@ void InitializeMenu(Menu *menu)
          InitializeMenu(np->submenu);
       }
    }
-   menu->width += 12 + hasSubmenu + menu->textOffset;
+   menu->width += hasSubmenu + menu->textOffset;
+   menu->width += 2 * MENU_BORDER_SIZE;
+   menu->width += 7;
 
 }
 
@@ -168,7 +171,7 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y)
       return;
    }
 
-   ShowSubmenu(menu, NULL, x, y);
+   ShowSubmenu(menu, NULL, x - MENU_BORDER_SIZE, y - MENU_BORDER_SIZE);
 
    JXUngrabKeyboard(display, CurrentTime);
    JXUngrabPointer(display, CurrentTime);
@@ -361,14 +364,11 @@ void CreateMenu(Menu *menu, int x, int y)
    attrMask |= CWBackPixel;
    attr.background_pixel = colors[COLOR_MENU_BG];
 
-   attrMask |= CWBorderPixel;
-   attr.border_pixel = colors[COLOR_MENU_DOWN];
-
    attrMask |= CWSaveUnder;
    attr.save_under = True;
 
    menu->window = JXCreateWindow(display, rootWindow, x, y,
-                                 menu->width, menu->height, 1,
+                                 menu->width, menu->height, 0,
                                  CopyFromParent, InputOutput,
                                  CopyFromParent, attrMask, &attr);
 
@@ -404,6 +404,10 @@ void DrawMenu(Menu *menu)
 
    MenuItem *np;
    int x;
+
+   JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
+   JXDrawRectangle(display, menu->window, rootGC, 0, 0,
+                   menu->width - 1, menu->height - 1);
 
    if(menu->label) {
       DrawMenuItem(menu, NULL, -1);
@@ -572,8 +576,9 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
    /* If the selected item is a submenu, show it. */
    ip = GetMenuItem(menu, menu->currentIndex);
    if(ip && IsMenuValid(ip->submenu)) {
-      if(ShowSubmenu(ip->submenu, menu, menu->x + menu->width + 1,
-         menu->y + menu->offsets[menu->currentIndex])) {
+      if(ShowSubmenu(ip->submenu, menu,
+                     menu->x + menu->width - MENU_BORDER_SIZE,
+                     menu->y + menu->offsets[menu->currentIndex])) {
 
          /* Item selected; destroy the menu tree. */
          return MENU_SUBSELECT;
@@ -613,11 +618,11 @@ void UpdateMenu(Menu *menu)
       ResetButton(&button, menu->window, rootGC);
       button.type = BUTTON_MENU_ACTIVE;
       button.font = FONT_MENU;
-      button.width = menu->width;
+      button.width = menu->width - MENU_BORDER_SIZE * 2 - 1;
       button.height = menu->itemHeight - 1;
       button.icon = ip->icon;
       button.text = ip->name;
-      button.x = 0;
+      button.x = MENU_BORDER_SIZE;
       button.y = menu->offsets[menu->currentIndex];
       DrawButton(&button);
 
@@ -650,9 +655,9 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
    if(!item) {
       if(index == -1 && menu->label) {
          ResetButton(&button, menu->window, rootGC);
-         button.x = 0;
+         button.x = MENU_BORDER_SIZE;
          button.y = 0;
-         button.width = menu->width;
+         button.width = menu->width - 2 * MENU_BORDER_SIZE - 1;
          button.height = menu->itemHeight - 1;
          button.font = FONT_MENU;
          button.type = BUTTON_LABEL;
@@ -666,11 +671,11 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
    if(item->type != MENU_ITEM_SEPARATOR) {
 
       ResetButton(&button, menu->window, rootGC);
-      button.x = 0;
+      button.x = MENU_BORDER_SIZE;
       button.y = menu->offsets[index];
       button.font = FONT_MENU;
       button.type = BUTTON_LABEL;
-      button.width = menu->width;
+      button.width = menu->width - 2 * MENU_BORDER_SIZE - 1;
       button.height = menu->itemHeight - 1;
       button.text = item->name;
       button.icon = item->icon;

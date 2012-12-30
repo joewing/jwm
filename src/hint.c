@@ -262,7 +262,7 @@ void DestroyHints()
 void ReadCurrentDesktop()
 {
    unsigned long temp;
-   currentDesktop = 0;
+   currentDesktop = -1;
    if(GetCardinalAtom(rootWindow, ATOM_NET_CURRENT_DESKTOP, &temp)) {
       ChangeDesktop(temp);
    } else {

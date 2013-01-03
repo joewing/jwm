@@ -355,6 +355,7 @@ void ShadeClient(ClientNode *np)
       SetShape(np);
    }
 #endif
+   UpdatePager();
 
 }
 
@@ -395,6 +396,7 @@ void UnshadeClient(ClientNode *np)
 
    RefocusClient();
    RestackClients();
+   UpdatePager();
 
 }
 

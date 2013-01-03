@@ -718,6 +718,7 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
    ResetRoundedRectWindow(np);
    ShapeRoundedRectWindow(np->parent, np->width + east + west,
                           np->height + north + south);
+   UpdatePager();
 
 }
 

@@ -715,6 +715,9 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
 
    WriteState(np);
    SendConfigureEvent(np);
+   ResetRoundedRectWindow(np);
+   ShapeRoundedRectWindow(np->parent, np->width + east + west,
+                          np->height + north + south);
 
 }
 

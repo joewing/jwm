@@ -548,7 +548,7 @@ void UpdatePager()
                   xc = dx * (deskWidth + 1) + (deskWidth - textWidth) / 2;
                   yc = dy * (deskHeight + 1) + (deskHeight - textHeight) / 2;
                   RenderString(buffer, FONT_PAGER, COLOR_PAGER_TEXT, xc, yc,
-                     deskWidth, None, name);
+                               deskWidth, name);
                }
             }
          }

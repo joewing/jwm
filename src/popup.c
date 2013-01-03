@@ -212,7 +212,7 @@ void DrawPopup()
 #endif
 
    RenderString(popup.window, FONT_POPUP, COLOR_POPUP_FG, 4, 1,
-                popup.width, NULL, popup.text);
+                popup.width, popup.text);
 
 }
 

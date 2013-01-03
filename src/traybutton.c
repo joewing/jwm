@@ -328,8 +328,9 @@ void Draw(TrayComponentType *cp, int active)
 
    if(bp->label) {
       RenderString(cp->pixmap, FONT_TRAYBUTTON, COLOR_TRAYBUTTON_FG,
-         labelx + 2, cp->height / 2 - GetStringHeight(FONT_TRAYBUTTON) / 2,
-         cp->width - labelx, NULL, bp->label);
+                   labelx + 2,
+                   cp->height / 2 - GetStringHeight(FONT_TRAYBUTTON) / 2,
+                   cp->width - labelx, bp->label);
    }
 
 }

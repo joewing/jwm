@@ -46,12 +46,10 @@ void SetFont(FontType type, const char *value);
  * @param x The x-coordinate at which to render.
  * @param y The y-coordinate at which to render.
  * @param width The maximum width allowed.
- * @param region A clip region (may be None).
  * @param str The string to render.
  */
 void RenderString(Drawable d, FontType font, ColorType color,
-                  int x, int y, int width, Region region,
-                  const char *str);
+                  int x, int y, int width, const char *str);
 
 /** Get the width of a string.
  * @param type The font used to determine the width.

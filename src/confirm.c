@@ -427,7 +427,7 @@ void DrawMessage(DialogType *dp)
    yoffset = 4;
    for(x = 0; x < dp->lineCount; x++) {
       RenderString(dp->node->window, FONT_MENU, COLOR_MENU_FG,
-                   4, yoffset, dp->width, NULL, dp->message[x]);
+                   4, yoffset, dp->width, dp->message[x]);
       yoffset += dp->lineHeight;
    }
 

@@ -20,6 +20,7 @@ static char *fontNames[FONT_COUNT];
 
 #ifdef USE_XFT
 static XftFont *fonts[FONT_COUNT];
+static XftDraw *xd;
 #else
 static XFontStruct *fonts[FONT_COUNT];
 static GC fontGC;
@@ -79,6 +80,8 @@ void StartupFonts()
       }
    }
 
+   xd = XftDrawCreate(display, rootWindow, rootVisual, rootColormap);
+
 #else /* USE_XFT */
 
    for(x = 0; x < FONT_COUNT; x++) {
@@ -119,7 +122,9 @@ void ShutdownFonts()
       }
    }
 
-#ifndef USE_XFT
+#ifdef USE_XFT
+   XftDrawDestroy(xd);
+#else
    JXFreeGC(display, fontGC);
 #endif
 }
@@ -186,13 +191,8 @@ void SetFont(FontType type, const char *value)
 
 /** Display a string. */
 void RenderString(Drawable d, FontType font, ColorType color,
-                  int x, int y, int width, Region region,
-                  const char *str)
+                  int x, int y, int width, const char *str)
 {
-
-#ifdef USE_XFT
-   XftDraw *xd;
-#endif
 
    XRectangle rect;
    Region renderRegion;
@@ -228,11 +228,6 @@ void RenderString(Drawable d, FontType font, ColorType color,
    /* Combine the width bounds with the region to use. */
    XUnionRectWithRegion(&rect, renderRegion, renderRegion);
 
-   /* Combine the provided region with the region to use. */
-   if(region) {
-      XIntersectRegion(region, renderRegion, renderRegion);
-   }
-   
    /* Apply the bidi algorithm if requested. */
 
 #ifdef USE_FRIBIDI
@@ -255,12 +250,11 @@ void RenderString(Drawable d, FontType font, ColorType color,
 
 #ifdef USE_XFT
 
-   xd = XftDrawCreate(display, d, rootVisual, rootColormap);
+   XftDrawChange(xd, d);
    XftDrawSetClip(xd, renderRegion);
    JXftDrawStringUtf8(xd, GetXftColor(color), fonts[font],
                       x, y + fonts[font]->ascent,
                       (const unsigned char*)output, len);
-   XftDrawDestroy(xd);
 
 #else
 

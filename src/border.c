@@ -223,12 +223,6 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
 void DrawBorder(const ClientNode *np)
 {
 
-   XRectangle rect;
-   Pixmap canvas;
-   Region borderRegion;
-   int drawIcon;
-   int temp;
-
    Assert(np);
 
    /* Don't draw any more if we are shutting down. */

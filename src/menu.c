@@ -340,7 +340,7 @@ void CreateMenu(Menu *menu, int x, int y)
 
    if(x + menu->width > rootWidth) {
       if(menu->parent) {
-         x = menu->parent->x - menu->width - 1;
+         x = menu->parent->x - menu->width + MENU_BORDER_SIZE;
       } else {
          x = rootWidth - menu->width;
       }

@@ -608,7 +608,9 @@ char HandleExpose(const XExposeEvent *event)
    np = FindClientByWindow(event->window);
    if(np) {
       if(event->window == np->parent) {
-         DrawBorder(np, event);
+         if(event->count == 0) {
+            DrawBorder(np);
+         }
          return 1;
       } else if(event->window == np->window
          && np->state.status & STAT_WMDIALOG) {
@@ -667,7 +669,7 @@ char HandlePropertyNotify(const XPropertyEvent *event)
       }
 
       if(changed) {
-         DrawBorder(np, NULL);
+         DrawBorder(np);
          UpdateTaskBar();
          UpdatePager();
       }

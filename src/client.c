@@ -206,7 +206,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
       JXMapWindow(display, np->parent);
    }
 
-   DrawBorder(np, NULL);
+   DrawBorder(np);
 
    AddClientToTaskBar(np);
 
@@ -849,12 +849,12 @@ void FocusClient(ClientNode *np)
 
       if(activeClient) {
          activeClient->state.status &= ~STAT_ACTIVE;
-         DrawBorder(activeClient, NULL);
+         DrawBorder(activeClient);
       }
       np->state.status |= STAT_ACTIVE;
       activeClient = np;
 
-      DrawBorder(np, NULL);
+      DrawBorder(np);
       UpdatePager();
       UpdateTaskBar();
 

@@ -220,7 +220,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
 }
 
 /** Draw a client border. */
-void DrawBorder(const ClientNode *np, const XExposeEvent *expose)
+void DrawBorder(const ClientNode *np)
 {
 
    XRectangle rect;
@@ -248,10 +248,6 @@ void DrawBorder(const ClientNode *np, const XExposeEvent *expose)
 
    /* Return if there is no border. */
    if(!(np->state.border & (BORDER_TITLE | BORDER_OUTLINE))) {
-      return;
-   }
-
-   if(expose && expose->count) {
       return;
    }
 
@@ -514,7 +510,7 @@ void ExposeCurrentDesktop()
    for(layer = 0; layer < LAYER_COUNT; layer++) {
       for(np = nodes[layer]; np; np = np->next) {
          if(!(np->state.status & (STAT_HIDDEN | STAT_MINIMIZED))) {
-            DrawBorder(np, NULL);
+            DrawBorder(np);
          }
       }
    }

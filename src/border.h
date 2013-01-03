@@ -46,9 +46,8 @@ BorderActionType GetBorderActionType(const struct ClientNode *np, int x, int y);
 
 /** Draw a window border.
  * @param np The client whose frame to draw.
- * @param expose The expose event causing the redraw (or NULL).
  */
-void DrawBorder(const struct ClientNode *np, const XExposeEvent *expose);
+void DrawBorder(const struct ClientNode *np);
 
 /** Get the size of a border icon.
  * @return The size in pixels (note that icons are square).

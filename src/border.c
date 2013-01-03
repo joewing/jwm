@@ -684,10 +684,65 @@ void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
 #endif
 
 /** Clear the shape mask of a window. */
-void ResetRoundedRectWindow(Window w)
+void ResetRoundedRectWindow(const ClientNode *np)
 {
 #ifdef USE_SHAPE
-   JXShapeCombineMask(display, w, ShapeBounding, 0, 0, None, ShapeSet);
+   XRectangle rect[4];
+   int north, south, east, west;
+
+   Assert(np);
+
+   GetBorderSize(np, &north, &south, &east, &west);
+
+   /* Shaded windows are a special case. */
+   if(np->state.status & STAT_SHADED) {
+
+      rect[0].x = 0;
+      rect[0].y = 0;
+      rect[0].width = np->width + east + west;
+      rect[0].height = north + south;
+
+      JXShapeCombineRectangles(display, np->parent, ShapeBounding,
+                               0, 0, rect, 1, ShapeSet, Unsorted);
+
+      return;
+   }
+
+   /* Add the shape of window. */
+   JXShapeCombineShape(display, np->parent, ShapeBounding, west, north,
+                       np->window, ShapeBounding, ShapeSet);
+
+   /* Add the shape of the border. */
+   if(north > 0) {
+
+      /* Top */
+      rect[0].x = 0;
+      rect[0].y = 0;
+      rect[0].width = np->width + east + west;
+      rect[0].height = north;
+
+      /* Left */
+      rect[1].x = 0;
+      rect[1].y = 0;
+      rect[1].width = west;
+      rect[1].height = np->height + north + south;
+
+      /* Right */
+      rect[2].x = np->width + east;
+      rect[2].y = 0;
+      rect[2].width = west;
+      rect[2].height = np->height + north + south;
+
+      /* Bottom */
+      rect[3].x = 0;
+      rect[3].y = np->height + north;
+      rect[3].width = np->width + east + west;
+      rect[3].height = south;
+
+      JXShapeCombineRectangles(display, np->parent, ShapeBounding,
+                               0, 0, rect, 4, ShapeUnion, Unsorted);
+
+   }
 #endif
 }
  
@@ -711,7 +766,7 @@ void ShapeRoundedRectWindow(Window w, int width, int height)
    FillRoundedRectangle(shapePixmap, shapeGC, 0, 0, width, height,
                         CORNER_RADIUS - 1);
    
-   JXShapeCombineMask(display, w, ShapeBounding, 0, 0, shapePixmap, ShapeSet);
+   JXShapeCombineMask(display, w, ShapeBounding, 0, 0, shapePixmap, ShapeIntersect);
 
    JXFreeGC(display, shapeGC);
    JXFreePixmap(display, shapePixmap);

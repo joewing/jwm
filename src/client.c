@@ -336,7 +336,7 @@ void ShadeClient(ClientNode *np)
 
    GetBorderSize(np, &north, &south, &east, &west);
 
-   ResetRoundedRectWindow(np->parent);
+   ResetRoundedRectWindow(np);
    if(np->state.status & STAT_MAPPED) {
       JXUnmapWindow(display, np->window);
    }
@@ -379,7 +379,7 @@ void UnshadeClient(ClientNode *np)
 
    GetBorderSize(np, &north, &south, &east, &west);
 
-   ResetRoundedRectWindow(np->parent);
+   ResetRoundedRectWindow(np);
    ShapeRoundedRectWindow(np->parent, 
       np->width + west + east, np->height + north + south);
 
@@ -688,7 +688,7 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
       UnshadeClient(np);
    }
 
-   ResetRoundedRectWindow(np->parent);
+   ResetRoundedRectWindow(np);
 
    GetBorderSize(np, &north, &south, &east, &west);
 
@@ -753,7 +753,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
       UnshadeClient(np);
    }
 
-   ResetRoundedRectWindow(np->parent);
+   ResetRoundedRectWindow(np);
 
    if(fullScreen) {
 
@@ -1122,64 +1122,10 @@ void SendClientMessage(Window w, AtomType type, AtomType message)
 void SetShape(ClientNode *np)
 {
 
-   XRectangle rect[4];
-   int north, south, east, west;
-
    Assert(np);
 
    np->state.status |= STAT_SHAPE;
-
-   GetBorderSize(np, &north, &south, &east, &west);
-
-   /* Shaded windows are a special case. */
-   if(np->state.status & STAT_SHADED) {
-
-      rect[0].x = 0;
-      rect[0].y = 0;
-      rect[0].width = np->width + east + west;
-      rect[0].height = north + south;
-
-      JXShapeCombineRectangles(display, np->parent, ShapeBounding,
-         0, 0, rect, 1, ShapeSet, Unsorted);
-
-      return;
-   }
-
-   /* Add the shape of window. */
-   JXShapeCombineShape(display, np->parent, ShapeBounding, west, north,
-      np->window, ShapeBounding, ShapeSet);
-
-   /* Add the shape of the border. */
-   if(north > 0) {
-
-      /* Top */
-      rect[0].x = 0;
-      rect[0].y = 0;
-      rect[0].width = np->width + east + west;
-      rect[0].height = north;
-
-      /* Left */
-      rect[1].x = 0;
-      rect[1].y = 0;
-      rect[1].width = west;
-      rect[1].height = np->height + north + south;
-
-      /* Right */
-      rect[2].x = np->width + east;
-      rect[2].y = 0;
-      rect[2].width = west;
-      rect[2].height = np->height + north + south;
-
-      /* Bottom */
-      rect[3].x = 0;
-      rect[3].y = np->height + north;
-      rect[3].width = np->width + east + west;
-      rect[3].height = south;
-
-      JXShapeCombineRectangles(display, np->parent, ShapeBounding,
-         0, 0, rect, 4, ShapeUnion, Unsorted);
-
-   }
+   ResetRoundedRectWindow(np);
 
 }
 #endif /* USE_SHAPE */

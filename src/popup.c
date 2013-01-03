@@ -17,7 +17,6 @@
 #include "error.h"
 #include "timing.h"
 #include "misc.h"
-#include "border.h"
 #include "settings.h"
 
 typedef struct PopupType {
@@ -149,9 +148,6 @@ void ShowPopup(int x, int y, const char *text)
 
    }
 
-   ResetRoundedRectWindow(popup.window);
-   ShapeRoundedRectWindow(popup.window, popup.width, popup.height);
-
    popup.mx = x;
    popup.my = y;
 
@@ -203,13 +199,6 @@ void DrawPopup()
    Assert(popup.isActive);
 
    JXClearWindow(display, popup.window);
-
-#ifdef USE_SHAPE
-   JXSetForeground(display, rootGC, colors[COLOR_POPUP_OUTLINE]);
-   DrawRoundedRectangle(popup.window, rootGC, 0, 0, 
-                        popup.width - 1, popup.height - 1,
-                        CORNER_RADIUS);
-#endif
 
    RenderString(popup.window, FONT_POPUP, COLOR_POPUP_FG, 4, 1,
                 popup.width, popup.text);

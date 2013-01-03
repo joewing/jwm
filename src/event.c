@@ -519,7 +519,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
 
       GetBorderSize(np, &north, &south, &east, &west);
 
-      ResetRoundedRectWindow(np->parent);
+      ResetRoundedRectWindow(np);
 
       wc.stack_mode = Above;
       wc.sibling = np->parent;
@@ -844,7 +844,7 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
    }
 
    /** Reset shaped bound */
-   ResetRoundedRectWindow(np->parent);
+   ResetRoundedRectWindow(np);
    ShapeRoundedRectWindow(np->parent, 
       np->width + east + west,
       np->height + north + south);

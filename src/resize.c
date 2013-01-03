@@ -213,7 +213,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
                      np->height + north + south);
                }
             } else {
-               ResetRoundedRectWindow(np->parent);
+               ResetRoundedRectWindow(np);
                if(np->state.status & STAT_SHADED) {
                   ShapeRoundedRectWindow(np->parent, 
                      np->width + east + west,
@@ -390,7 +390,7 @@ void ResizeClientKeyboard(ClientNode *np) {
                   np->height + north + south);
             }
          } else {
-            ResetRoundedRectWindow(np->parent);
+            ResetRoundedRectWindow(np);
             if(np->state.status & STAT_SHADED) {
                ShapeRoundedRectWindow(np->parent, 
                   np->width + east + west,
@@ -435,7 +435,7 @@ void StopResize(ClientNode *np) {
    GetBorderSize(np, &north, &south, &east, &west);
 
    /* Reset shaped bound */
-   ResetRoundedRectWindow(np->parent);
+   ResetRoundedRectWindow(np);
 	  
    if(np->state.status & STAT_SHADED) {
       ShapeRoundedRectWindow(np->parent, 

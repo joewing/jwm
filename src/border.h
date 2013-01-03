@@ -69,9 +69,9 @@ void GetBorderSize(const struct ClientNode *np,
 void ExposeCurrentDesktop();
 
 /** Reset a rounded rectangle window.
- * @param w The window.
+ * @param np The client.
  */
-void ResetRoundedRectWindow(Window w);
+void ResetRoundedRectWindow(const struct ClientNode *np);
 
 /** Shape a rounded rectangle window.
  * @param w The window to shape.

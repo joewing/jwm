@@ -87,7 +87,7 @@ void DrawButton(ButtonNode *bp)
 
    /* Draw the background. */
    /* Flat taskbuttons for widths < 48 */
-   if(bp->type != BUTTON_TASK || width >= 48) {
+   if(bp->type != BUTTON_TASK) {
 
       /* Draw the button background. */
       JXSetForeground(display, gc, bg1);

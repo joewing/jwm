@@ -10,15 +10,6 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-/** Border button image masks. */
-typedef enum {
-   BP_CLOSE,
-   BP_MINIMIZE,
-   BP_MAXIMIZE,
-   BP_MAXIMIZE_ACTIVE,
-   BP_COUNT
-} BorderPixmapType;
-
 /** Window snap modes. */
 typedef enum {
    SNAP_NONE,     /**< Don't snap. */
@@ -60,7 +51,6 @@ typedef enum {
 
 /** Settings. */
 typedef struct {
-   char *borderButtonBitmaps[BP_COUNT];
    unsigned int doubleClickSpeed;
    unsigned int doubleClickDelta;
    unsigned int snapDistance;

@@ -379,22 +379,6 @@ void Parse(const TokenNode *start, int depth)
             case TOK_WINDOWSTYLE:
                ParseWindowStyle(tp);
                break;
-            case TOK_BUTTONCLOSE:
-               SetPathString(&settings.borderButtonBitmaps[BP_CLOSE],
-                             tp->value);
-               break;
-            case TOK_BUTTONMIN:
-               SetPathString(&settings.borderButtonBitmaps[BP_MINIMIZE],
-                             tp->value);
-               break;
-            case TOK_BUTTONMAX:
-               SetPathString(&settings.borderButtonBitmaps[BP_MAXIMIZE],
-                             tp->value);
-               break;
-            case TOK_BUTTONMAXACTIVE:
-               SetPathString(&settings.borderButtonBitmaps[BP_MAXIMIZE_ACTIVE],
-                             tp->value);
-               break;
             default:
                InvalidTag(tp, TOK_JWM);
                break;

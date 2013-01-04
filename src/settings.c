@@ -17,9 +17,6 @@ void InitializeSettings()
    int i;
    settings.doubleClickSpeed = 400;
    settings.doubleClickDelta = 2;
-   for(i = 0; i < BP_COUNT; i++) {
-      settings.borderButtonBitmaps[i] = NULL;
-   }
    settings.snapMode = SNAP_BORDER;
    settings.snapDistance = 5;
    settings.moveMode = MOVE_OPAQUE;
@@ -71,12 +68,6 @@ void ShutdownSettings()
 /** Free memory associated with settings. */
 void DestroySettings()
 {
-   int i;
-   for(i = 0; i < BP_COUNT; i++) {
-      if(settings.borderButtonBitmaps[i]) {
-         Release(settings.borderButtonBitmaps[i]);
-      }
-   }
 }
 
 /** Update a string setting. */

@@ -16,38 +16,14 @@
 #include "misc.h"
 #include "settings.h"
 
-typedef unsigned char BorderPixmapDataType[32];
-
-static BorderPixmapDataType bitmaps[BP_COUNT] = {
-
-   /* Close */
-   { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-     0x30, 0x06, 0x70, 0x07, 0xE0, 0x03, 0xC0, 0x01, 0xE0, 0x03, 0x70, 0x07,
-     0x30, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
-
-   /* Minimize */
-   { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-     0xF8, 0x07, 0xF8, 0x07, 0x00, 0x00, 0x00, 0x00 },
- 
-   /* Maximize */
-   { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF8, 0x1F,
-     0xF8, 0x1F, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10,
-     0xF8, 0x1F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
-
-   /* Maximize Active */
-   { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC0, 0x0F,
-     0xC0, 0x0F, 0x00, 0x08, 0xF0, 0x0B, 0xF0, 0x0B, 0x10, 0x0A, 0x10, 0x0A,
-     0x10, 0x02, 0xF0, 0x03, 0x00, 0x00, 0x00, 0x00 }
-
-};
-
-static Pixmap pixmaps[BP_COUNT];
-
 static GC borderGC;
 
 static void DrawBorderHelper(const ClientNode *np);
 static void DrawBorderButtons(const ClientNode *np, Pixmap canvas);
+static void DrawCloseButton(unsigned int offset, Pixmap canvas);
+static void DrawMaxIButton(unsigned int offset, Pixmap canvas);
+static void DrawMaxAButton(unsigned int offset, Pixmap canvas);
+static void DrawMinButton(unsigned int offset, Pixmap canvas);
 static int GetButtonCount(const ClientNode *np);
 
 #ifdef USE_SHAPE
@@ -65,28 +41,7 @@ void StartupBorders()
 {
 
    XGCValues gcValues;
-   const char *file;
    unsigned long gcMask;
-   int x, hotx, hoty;
-   unsigned int bmpHeight, bmpWidth;
-   int found;
-
-   for(x = 0; x < BP_COUNT; x++) {
-      file = settings.borderButtonBitmaps[x];
-      found = file ? 1 : 0;
-      if(found) {
-         found = XReadBitmapFile(display, rootWindow, file, &bmpWidth,
-                                 &bmpHeight, &pixmaps[x], &hotx, &hoty)
-                  == BitmapSuccess;
-         if(JUNLIKELY(!found)) {
-            Warning(_("bitmap could not be loaded: %s"), file);
-         }
-      }
-      if(!found) {
-         pixmaps[x] = JXCreateBitmapFromData(display, rootWindow,
-                                             (char*)bitmaps[x], 16, 16);
-      }
-   }
 
    gcMask = GCGraphicsExposures;
    gcValues.graphics_exposures = False;
@@ -97,12 +52,7 @@ void StartupBorders()
 /** Release server resources. */
 void ShutdownBorders()
 {
-   unsigned int x;
-
    JXFreeGC(display, borderGC);
-   for(x = 0; x < BP_COUNT; x++) {
-      JXFreePixmap(display, pixmaps[x]);
-   }
 }
 
 /** Release non-server resources. */
@@ -405,10 +355,8 @@ int GetButtonCount(const ClientNode *np)
 void DrawBorderButtons(const ClientNode *np, Pixmap canvas)
 {
 
-   Pixmap pixmap;
    long color;
    int offset;
-   int yoffset;
    int north, south, east, west;
 
    Assert(np);
@@ -423,71 +371,150 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas)
       return;
    }
 
-   yoffset = settings.titleHeight / 2 - 16 / 2;
-
    /* Determine the colors to use. */
    if(np->state.status & STAT_ACTIVE) {
       color = colors[COLOR_TITLE_ACTIVE_FG];
    } else {
       color = colors[COLOR_TITLE_FG];
    }
+   JXSetForeground(display, borderGC, color);
 
    /* Close button. */
    if(np->state.border & BORDER_CLOSE) {
-
-      pixmap = pixmaps[BP_CLOSE];
-
-      JXSetForeground(display, borderGC, color);
-      JXSetClipMask(display, borderGC, pixmap);
-      JXSetClipOrigin(display, borderGC, offset + yoffset, yoffset);
-      JXFillRectangle(display, canvas, borderGC,
-                      offset + yoffset, yoffset, 16, 16);
-      JXSetClipMask(display, borderGC, None);
-
+      DrawCloseButton(offset, canvas);
       offset -= settings.titleHeight;
       if(offset <= settings.titleHeight) {
          return;
       }
-
    }
 
    /* Maximize button. */
    if(np->state.border & BORDER_MAX) {
-
       if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
-         pixmap = pixmaps[BP_MAXIMIZE_ACTIVE];
+         DrawMaxAButton(offset, canvas);
       } else {
-         pixmap = pixmaps[BP_MAXIMIZE];
+         DrawMaxIButton(offset, canvas);
       }
-
-      JXSetForeground(display, borderGC, color);
-      JXSetClipMask(display, borderGC, pixmap);
-      JXSetClipOrigin(display, borderGC, offset + yoffset, yoffset);
-      JXFillRectangle(display, canvas, borderGC,
-                      offset + yoffset, yoffset, 16, 16);
-      JXSetClipMask(display, borderGC, None);
-
       offset -= settings.titleHeight;
       if(offset <= settings.titleHeight) {
          return;
       }
-
    }
 
    /* Minimize button. */
    if(np->state.border & BORDER_MIN) {
-
-      pixmap = pixmaps[BP_MINIMIZE];
-
-      JXSetForeground(display, borderGC, color);
-      JXSetClipMask(display, borderGC, pixmap);
-      JXSetClipOrigin(display, borderGC, offset + yoffset, yoffset);
-      JXFillRectangle(display, canvas, borderGC,
-                      offset + yoffset, yoffset, 16, 16);
-      JXSetClipMask(display, borderGC, None);
-
+      DrawMinButton(offset, canvas);
    }
 
+}
+
+/** Draw a close button. */
+void DrawCloseButton(unsigned int offset, Pixmap canvas)
+{
+   XSegment segments[4];
+
+   segments[0].x1 = offset + 2;
+   segments[0].y1 = settings.borderWidth + 1;
+   segments[0].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
+   segments[0].y2 = settings.titleHeight - settings.borderWidth - 1;
+
+   segments[1].x1 = offset + 2;
+   segments[1].y1 = settings.borderWidth + 2;
+   segments[1].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
+   segments[1].y2 = settings.titleHeight - settings.borderWidth;
+
+   segments[2].x1 = offset + settings.titleHeight - settings.borderWidth - 2;
+   segments[2].y1 = settings.borderWidth + 1;
+   segments[2].x2 = offset + 2;
+   segments[2].y2 = settings.titleHeight - settings.borderWidth - 1;
+
+   segments[3].x1 = offset + settings.titleHeight - settings.borderWidth - 2;
+   segments[3].y1 = settings.borderWidth + 2;
+   segments[3].x2 = offset + 2;
+   segments[3].y2 = settings.titleHeight - settings.borderWidth;
+
+   JXDrawSegments(display, canvas, borderGC, segments, 4);
+
+}
+
+/** Draw an inactive maximize button. */
+void DrawMaxIButton(unsigned int offset, Pixmap canvas)
+{
+
+   XSegment segments[5];
+
+   segments[0].x1 = offset + 2;
+   segments[0].y1 = settings.borderWidth + 2;
+   segments[0].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
+   segments[0].y2 = settings.borderWidth + 2;
+
+   segments[1].x1 = offset + 2;
+   segments[1].y1 = settings.borderWidth + 2 + 1;
+   segments[1].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
+   segments[1].y2 = settings.borderWidth + 2 + 1;
+
+   segments[2].x1 = offset + 2;
+   segments[2].y1 = settings.borderWidth + 2;
+   segments[2].x2 = offset + 2;
+   segments[2].y2 = settings.titleHeight - settings.borderWidth - 2;
+
+   segments[3].x1 = offset + settings.titleHeight - settings.borderWidth - 2;
+   segments[3].y1 = settings.borderWidth + 2;
+   segments[3].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
+   segments[3].y2 = settings.titleHeight - settings.borderWidth - 2;
+
+   segments[4].x1 = offset + 2;
+   segments[4].y1 = settings.titleHeight - settings.borderWidth - 2;
+   segments[4].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
+   segments[4].y2 = settings.titleHeight - settings.borderWidth - 2;
+
+   JXDrawSegments(display, canvas, borderGC, segments, 5);
+
+}
+
+/** Draw an active maximize button. */
+void DrawMaxAButton(unsigned int offset, Pixmap canvas)
+{
+
+   XSegment segments[5];
+
+   segments[0].x1 = offset + 2;
+   segments[0].y1 = settings.borderWidth + 2;
+   segments[0].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
+   segments[0].y2 = settings.borderWidth + 2;
+
+   segments[1].x1 = offset + 2;
+   segments[1].y1 = settings.borderWidth + 2 + 1;
+   segments[1].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
+   segments[1].y2 = settings.borderWidth + 2 + 1;
+
+   segments[2].x1 = offset + 2;
+   segments[2].y1 = settings.borderWidth + 2;
+   segments[2].x2 = offset + 2;
+   segments[2].y2 = settings.titleHeight - settings.borderWidth - 2;
+
+   segments[3].x1 = offset + settings.titleHeight - settings.borderWidth - 2;
+   segments[3].y1 = settings.borderWidth + 2;
+   segments[3].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
+   segments[3].y2 = settings.titleHeight - settings.borderWidth - 2;
+
+   segments[4].x1 = offset + 2;
+   segments[4].y1 = settings.titleHeight - settings.borderWidth - 2;
+   segments[4].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
+   segments[4].y2 = settings.titleHeight - settings.borderWidth - 2;
+
+   JXDrawSegments(display, canvas, borderGC, segments, 5);
+}
+
+/** Draw a minimize button. */
+void DrawMinButton(unsigned int offset, Pixmap canvas)
+{
+   XSetLineAttributes(display, borderGC, 2, LineSolid, CapButt, JoinMiter);
+   JXDrawLine(display, canvas, borderGC, offset + 2,
+              settings.titleHeight - settings.borderWidth - 1,
+              offset + settings.titleHeight - settings.borderWidth - 2,
+              settings.titleHeight - settings.borderWidth - 1);
+   XSetLineAttributes(display, borderGC, 1, LineSolid, CapButt, JoinMiter);
 }
 
 /** Redraw the borders on the current desktop.
@@ -756,7 +783,8 @@ void ShapeRoundedRectWindow(Window w, int width, int height)
    FillRoundedRectangle(shapePixmap, shapeGC, 0, 0, width, height,
                         CORNER_RADIUS - 1);
    
-   JXShapeCombineMask(display, w, ShapeBounding, 0, 0, shapePixmap, ShapeIntersect);
+   JXShapeCombineMask(display, w, ShapeBounding, 0, 0, shapePixmap,
+                      ShapeIntersect);
 
    JXFreeGC(display, shapeGC);
    JXFreePixmap(display, shapePixmap);

@@ -1043,7 +1043,7 @@ void HandleMotionNotify(const XMotionEvent *event)
    SetMousePosition(event->x_root, event->y_root);
 
    np = FindClientByParent(event->window);
-   if(np && (np->state.border & BORDER_OUTLINE)) {
+   if(np) {
       action = GetBorderActionType(np, event->x, event->y);
       if(np->borderAction != action) {
          np->borderAction = action;

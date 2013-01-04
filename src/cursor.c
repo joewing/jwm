@@ -12,17 +12,46 @@
 #include "main.h"
 #include "error.h"
 
-static Cursor defaultCursor;
-static Cursor moveCursor;
-static Cursor northCursor;
-static Cursor southCursor;
-static Cursor eastCursor;
-static Cursor westCursor;
-static Cursor northEastCursor;
-static Cursor northWestCursor;
-static Cursor southEastCursor;
-static Cursor southWestCursor;
-static Cursor chooseCursor;
+/** Cursor types. */
+typedef enum {
+   CURSOR_DEFAULT,
+   CURSOR_MOVE,
+   CURSOR_NORTH,
+   CURSOR_SOUTH,
+   CURSOR_EAST,
+   CURSOR_WEST,
+   CURSOR_NE,
+   CURSOR_NW,
+   CURSOR_SE,
+   CURSOR_SW,
+   CURSOR_CHOOSE,
+   CURSOR_CLOSE,
+   CURSOR_MAXIMIZE,
+   CURSOR_MINIMIZE,
+   CURSOR_COUNT
+} CursorType;
+
+/** Cursors to load for the various cursor types.
+ * This must be ordered the same as CursorType.
+ */
+static const unsigned int cursor_shapes[CURSOR_COUNT] = {
+   XC_left_ptr,
+   XC_fleur,
+   XC_top_side,
+   XC_bottom_side,
+   XC_right_side,
+   XC_left_side,
+   XC_top_right_corner,
+   XC_top_left_corner,
+   XC_bottom_right_corner,
+   XC_bottom_left_corner,
+   XC_tcross,
+   XC_dotbox,
+   XC_based_arrow_up,
+   XC_based_arrow_down
+};
+
+static Cursor cursors[CURSOR_COUNT];
 
 static Cursor GetResizeCursor(BorderActionType action);
 static Cursor CreateCursor(unsigned int shape);
@@ -42,18 +71,11 @@ void StartupCursors()
    Window win1, win2;
    int winx, winy;
    unsigned int mask;
+   int x;
 
-   defaultCursor = CreateCursor(XC_left_ptr);
-   moveCursor = CreateCursor(XC_fleur);
-   northCursor = CreateCursor(XC_top_side);
-   southCursor = CreateCursor(XC_bottom_side);
-   eastCursor = CreateCursor(XC_right_side);
-   westCursor = CreateCursor(XC_left_side);
-   northEastCursor = CreateCursor(XC_top_right_corner);
-   northWestCursor = CreateCursor(XC_top_left_corner);
-   southEastCursor = CreateCursor(XC_bottom_right_corner);
-   southWestCursor = CreateCursor(XC_bottom_left_corner);
-   chooseCursor = CreateCursor(XC_tcross);
+   for(x = 0; x < CURSOR_COUNT; x++) {
+      cursors[x] = CreateCursor(cursor_shapes[x]);
+   }
 
    JXQueryPointer(display, rootWindow, &win1, &win2,
                   &mousex, &mousey, &winx, &winy, &mask);
@@ -69,17 +91,10 @@ Cursor CreateCursor(unsigned int shape)
 /** Shutdown cursor support. */
 void ShutdownCursors()
 {
-   JXFreeCursor(display, defaultCursor);
-   JXFreeCursor(display, moveCursor);
-   JXFreeCursor(display, northCursor);
-   JXFreeCursor(display, southCursor);
-   JXFreeCursor(display, eastCursor);
-   JXFreeCursor(display, westCursor);
-   JXFreeCursor(display, northEastCursor);
-   JXFreeCursor(display, northWestCursor);
-   JXFreeCursor(display, southEastCursor);
-   JXFreeCursor(display, southWestCursor);
-   JXFreeCursor(display, chooseCursor);
+   int x;
+   for(x = 0; x < CURSOR_COUNT; x++) {
+      JXFreeCursor(display, cursors[x]);
+   }
 }
 
 /** Destroy cursor data. */
@@ -94,17 +109,17 @@ Cursor GetFrameCursor(BorderActionType action)
    case BA_RESIZE:
       return GetResizeCursor(action);
    case BA_CLOSE:
-      break;
+      return cursors[CURSOR_CLOSE];
    case BA_MAXIMIZE:
-      break;
+      return cursors[CURSOR_MAXIMIZE];
    case BA_MINIMIZE:
-      break;
+      return cursors[CURSOR_MINIMIZE];
    case BA_MOVE:
       break;
    default:
       break;
    }
-   return defaultCursor;
+   return cursors[CURSOR_DEFAULT];
 }
 
 /** Get the cursor for resizing on the specified frame location. */
@@ -112,25 +127,25 @@ Cursor GetResizeCursor(BorderActionType action)
 {
    if(action & BA_RESIZE_N) {
       if(action & BA_RESIZE_E) {
-         return northEastCursor;
+         return cursors[CURSOR_NE];
       } else if(action & BA_RESIZE_W) {
-         return northWestCursor;
+         return cursors[CURSOR_NW];
       } else {
-         return northCursor;
+         return cursors[CURSOR_NORTH];
       }
    } else if(action & BA_RESIZE_S) {
       if(action & BA_RESIZE_E) {
-         return southEastCursor;
+         return cursors[CURSOR_SE];
       } else if(action & BA_RESIZE_W) {
-         return southWestCursor;
+         return cursors[CURSOR_SW];
       } else {
-         return southCursor;
+         return cursors[CURSOR_SOUTH];
       }
    } else {
       if(action & BA_RESIZE_E) {
-         return eastCursor;
+         return cursors[CURSOR_EAST];
       } else {
-         return westCursor;
+         return cursors[CURSOR_WEST];
       }
    }
 }
@@ -162,7 +177,7 @@ char GrabMouseForMove()
    mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
    result = JXGrabPointer(display, rootWindow, False, mask,
                           GrabModeAsync, GrabModeAsync, None,
-                          moveCursor, CurrentTime);
+                          cursors[CURSOR_MOVE], CurrentTime);
    if(JLIKELY(result == GrabSuccess)) {
       return 1;
    } else {
@@ -178,7 +193,7 @@ char GrabMouse(Window w)
    mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
    result = JXGrabPointer(display, w, False, mask,
                           GrabModeAsync, GrabModeAsync, None,
-                          defaultCursor, CurrentTime);
+                          cursors[CURSOR_DEFAULT], CurrentTime);
    if(JLIKELY(result == GrabSuccess)) {
       return 1;
    } else {
@@ -194,7 +209,7 @@ char GrabMouseForChoose()
    mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
    result = JXGrabPointer(display, rootWindow, False, mask,
                           GrabModeAsync, GrabModeAsync, None,
-                          chooseCursor, CurrentTime);
+                          cursors[CURSOR_CHOOSE], CurrentTime);
    if(JLIKELY(result == GrabSuccess)) {
       return 1;
    } else {
@@ -205,7 +220,7 @@ char GrabMouseForChoose()
 /** Set the default cursor for a window. */
 void SetDefaultCursor(Window w)
 {
-   JXDefineCursor(display, w, defaultCursor);
+   JXDefineCursor(display, w, cursors[CURSOR_DEFAULT]);
 }
 
 /** Move the mouse to the specified coordinates on a window. */

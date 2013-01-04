@@ -124,6 +124,9 @@
 #define JXFillArcs( a, b, c, d, e ) \
    ( SetCheckpoint(), XFillArcs( a, b, c, d, e ) )
 
+#define JXSetLineAttributes( a, b, c, d, e, f ) \
+   ( SetCheckpoint(), XSetLineAttributes( a, b, c, d, e, f ) )
+
 #define JXDrawString( a, b, c, d, e, f, g ) \
    ( SetCheckpoint(), XDrawString( a, b, c, d, e, f, g ) )
 

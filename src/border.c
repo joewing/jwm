@@ -81,17 +81,17 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
    if(np->state.border & BORDER_TITLE) {
 
       /* Check buttons on the title bar. */
-      if(y >= south && y <= settings.titleHeight) {
+      if(y >= settings.borderWidth && y <= settings.titleHeight) {
 
          /* Menu button. */
-         if(np->icon && np->width >= settings.titleHeight) {
+         if(np->width >= settings.titleHeight) {
             if(x > 0 && x <= settings.titleHeight) {
                return BA_MENU;
             }
          }
 
          /* Close button. */
-         offset = np->width + west + east - settings.titleHeight;
+         offset = np->width + west - settings.titleHeight;
          if(   (np->state.border & BORDER_CLOSE)
             && offset > settings.titleHeight) {
             if(x > offset && x < offset + settings.titleHeight) {
@@ -118,8 +118,8 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
       }
 
       /* Check for move. */
-      if(y >= south && y <= settings.titleHeight) {
-         if(x > 0 && x < np->width + east + west) {
+      if(y >= settings.borderWidth && y <= settings.titleHeight) {
+         if(x > settings.borderWidth && x < offset) {
             if(np->state.border & BORDER_MOVE) {
                return BA_MOVE;
             } else {
@@ -275,7 +275,7 @@ void DrawBorderHelper(const ClientNode *np)
       if(np->name && np->name[0] && titleWidth > 0) {
          RenderString(canvas, FONT_BORDER, borderTextColor,
                       iconSize + 6 + 4,
-                      (settings.titleHeight - GetStringHeight(FONT_BORDER)) / 2,
+                     (settings.titleHeight - GetStringHeight(FONT_BORDER)) / 2,
                       titleWidth, np->name);
       }
 
@@ -366,7 +366,7 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas)
    }
 
    GetBorderSize(np, &north, &south, &east, &west);
-   offset = np->width + east + west - settings.titleHeight;
+   offset = np->width + west - settings.titleHeight;
    if(offset <= settings.titleHeight) {
       return;
    }
@@ -411,29 +411,32 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas)
 /** Draw a close button. */
 void DrawCloseButton(unsigned int offset, Pixmap canvas)
 {
-   XSegment segments[4];
+   XSegment segments[2];
+   unsigned int size;
+   unsigned int x1, y1;
+   unsigned int x2, y2;
 
-   segments[0].x1 = offset + 2;
-   segments[0].y1 = settings.borderWidth + 1;
-   segments[0].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
-   segments[0].y2 = settings.titleHeight - settings.borderWidth - 1;
+   size = settings.titleHeight - (settings.borderWidth + 1) * 2 - 2;
+   x1 = offset + settings.titleHeight / 2 - size / 2;
+   y1 = settings.titleHeight / 2 - size / 2;
+   x2 = x1 + size;
+   y2 = y1 + size;
 
-   segments[1].x1 = offset + 2;
-   segments[1].y1 = settings.borderWidth + 2;
-   segments[1].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
-   segments[1].y2 = settings.titleHeight - settings.borderWidth;
+   segments[0].x1 = x1;
+   segments[0].y1 = y1;
+   segments[0].x2 = x2;
+   segments[0].y2 = y2;
 
-   segments[2].x1 = offset + settings.titleHeight - settings.borderWidth - 2;
-   segments[2].y1 = settings.borderWidth + 1;
-   segments[2].x2 = offset + 2;
-   segments[2].y2 = settings.titleHeight - settings.borderWidth - 1;
+   segments[1].x1 = x2;
+   segments[1].y1 = y1;
+   segments[1].x2 = x1;
+   segments[1].y2 = y2;
 
-   segments[3].x1 = offset + settings.titleHeight - settings.borderWidth - 2;
-   segments[3].y1 = settings.borderWidth + 2;
-   segments[3].x2 = offset + 2;
-   segments[3].y2 = settings.titleHeight - settings.borderWidth;
-
-   JXDrawSegments(display, canvas, borderGC, segments, 4);
+   JXSetLineAttributes(display, borderGC, 2, LineSolid,
+                       CapProjecting, JoinBevel);
+   JXDrawSegments(display, canvas, borderGC, segments, 2);
+   JXSetLineAttributes(display, borderGC, 1, LineSolid,
+                       CapNotLast, JoinMiter);
 
 }
 
@@ -442,79 +445,128 @@ void DrawMaxIButton(unsigned int offset, Pixmap canvas)
 {
 
    XSegment segments[5];
+   unsigned int size;
+   unsigned int x1, y1;
+   unsigned int x2, y2;
 
-   segments[0].x1 = offset + 2;
-   segments[0].y1 = settings.borderWidth + 2;
-   segments[0].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
-   segments[0].y2 = settings.borderWidth + 2;
+   size = settings.titleHeight - (settings.borderWidth + 1) * 2 - 2;
+   x1 = offset + settings.titleHeight / 2 - size / 2;
+   y1 = settings.titleHeight / 2 - size / 2;
+   x2 = x1 + size;
+   y2 = y1 + size;
 
-   segments[1].x1 = offset + 2;
-   segments[1].y1 = settings.borderWidth + 2 + 1;
-   segments[1].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
-   segments[1].y2 = settings.borderWidth + 2 + 1;
+   segments[0].x1 = x1;
+   segments[0].y1 = y1;
+   segments[0].x2 = x1 + size;
+   segments[0].y2 = y1;
 
-   segments[2].x1 = offset + 2;
-   segments[2].y1 = settings.borderWidth + 2;
-   segments[2].x2 = offset + 2;
-   segments[2].y2 = settings.titleHeight - settings.borderWidth - 2;
+   segments[1].x1 = x1;
+   segments[1].y1 = y1 + 1;
+   segments[1].x2 = x1 + size;
+   segments[1].y2 = y1 + 1;
 
-   segments[3].x1 = offset + settings.titleHeight - settings.borderWidth - 2;
-   segments[3].y1 = settings.borderWidth + 2;
-   segments[3].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
-   segments[3].y2 = settings.titleHeight - settings.borderWidth - 2;
+   segments[2].x1 = x1;
+   segments[2].y1 = y1;
+   segments[2].x2 = x1;
+   segments[2].y2 = y2;
 
-   segments[4].x1 = offset + 2;
-   segments[4].y1 = settings.titleHeight - settings.borderWidth - 2;
-   segments[4].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
-   segments[4].y2 = settings.titleHeight - settings.borderWidth - 2;
+   segments[3].x1 = x2;
+   segments[3].y1 = y1;
+   segments[3].x2 = x2;
+   segments[3].y2 = y2;
 
+   segments[4].x1 = x1;
+   segments[4].y1 = y2;
+   segments[4].x2 = x2;
+   segments[4].y2 = y2;
+
+   JXSetLineAttributes(display, borderGC, 1, LineSolid,
+                       CapProjecting, JoinMiter);
    JXDrawSegments(display, canvas, borderGC, segments, 5);
+   JXSetLineAttributes(display, borderGC, 1, LineSolid,
+                       CapButt, JoinMiter);
 
 }
 
 /** Draw an active maximize button. */
 void DrawMaxAButton(unsigned int offset, Pixmap canvas)
 {
+   XSegment segments[8];
+   unsigned int size;
+   unsigned int x1, y1;
+   unsigned int x2, y2;
+   unsigned int x3, y3;
 
-   XSegment segments[5];
+   size = settings.titleHeight - (settings.borderWidth + 1) * 2 - 2;
+   x1 = offset + settings.titleHeight / 2 - size / 2;
+   y1 = settings.titleHeight / 2 - size / 2;
+   x2 = x1 + size;
+   y2 = y1 + size;
+   x3 = x1 + size / 2;
+   y3 = y1 + size / 2;
 
-   segments[0].x1 = offset + 2;
-   segments[0].y1 = settings.borderWidth + 2;
-   segments[0].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
-   segments[0].y2 = settings.borderWidth + 2;
+   segments[0].x1 = x1;
+   segments[0].y1 = y1;
+   segments[0].x2 = x2;
+   segments[0].y2 = y1;
 
-   segments[1].x1 = offset + 2;
-   segments[1].y1 = settings.borderWidth + 2 + 1;
-   segments[1].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
-   segments[1].y2 = settings.borderWidth + 2 + 1;
+   segments[1].x1 = x1;
+   segments[1].y1 = y1 + 1;
+   segments[1].x2 = x2;
+   segments[1].y2 = y1 + 1;
 
-   segments[2].x1 = offset + 2;
-   segments[2].y1 = settings.borderWidth + 2;
-   segments[2].x2 = offset + 2;
-   segments[2].y2 = settings.titleHeight - settings.borderWidth - 2;
+   segments[2].x1 = x1;
+   segments[2].y1 = y1;
+   segments[2].x2 = x1;
+   segments[2].y2 = y2;
 
-   segments[3].x1 = offset + settings.titleHeight - settings.borderWidth - 2;
-   segments[3].y1 = settings.borderWidth + 2;
-   segments[3].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
-   segments[3].y2 = settings.titleHeight - settings.borderWidth - 2;
+   segments[3].x1 = x2;
+   segments[3].y1 = y1;
+   segments[3].x2 = x2;
+   segments[3].y2 = y2;
 
-   segments[4].x1 = offset + 2;
-   segments[4].y1 = settings.titleHeight - settings.borderWidth - 2;
-   segments[4].x2 = offset + settings.titleHeight - settings.borderWidth - 2;
-   segments[4].y2 = settings.titleHeight - settings.borderWidth - 2;
+   segments[4].x1 = x1;
+   segments[4].y1 = y2;
+   segments[4].x2 = x2;
+   segments[4].y2 = y2;
 
-   JXDrawSegments(display, canvas, borderGC, segments, 5);
+   segments[5].x1 = x1;
+   segments[5].y1 = y3;
+   segments[5].x2 = x3;
+   segments[5].y2 = y3;
+
+   segments[6].x1 = x1;
+   segments[6].y1 = y3 + 1;
+   segments[6].x2 = x3;
+   segments[6].y2 = y3 + 1;
+
+   segments[7].x1 = x3;
+   segments[7].y1 = y3;
+   segments[7].x2 = x3;
+   segments[7].y2 = y2;
+
+   JXSetLineAttributes(display, borderGC, 1, LineSolid,
+                       CapProjecting, JoinMiter);
+   JXDrawSegments(display, canvas, borderGC, segments, 8);
+   JXSetLineAttributes(display, borderGC, 1, LineSolid,
+                       CapButt, JoinMiter);
 }
 
 /** Draw a minimize button. */
 void DrawMinButton(unsigned int offset, Pixmap canvas)
 {
-   XSetLineAttributes(display, borderGC, 2, LineSolid, CapButt, JoinMiter);
-   JXDrawLine(display, canvas, borderGC, offset + 2,
-              settings.titleHeight - settings.borderWidth - 1,
-              offset + settings.titleHeight - settings.borderWidth - 2,
-              settings.titleHeight - settings.borderWidth - 1);
-   XSetLineAttributes(display, borderGC, 1, LineSolid, CapButt, JoinMiter);
+   unsigned int size;
+   unsigned int x1, y1;
+   unsigned int x2, y2;
+   size = settings.titleHeight - (settings.borderWidth + 1) * 2 - 2;
+   x1 = offset + settings.titleHeight / 2 - size / 2;
+   y1 = settings.titleHeight / 2 - size / 2;
+   x2 = x1 + size;
+   y2 = y1 + size;
+   JXSetLineAttributes(display, borderGC, 2, LineSolid,
+                       CapProjecting, JoinMiter);
+   JXDrawLine(display, canvas, borderGC, x1, y2, x2, y2);
+   JXSetLineAttributes(display, borderGC, 1, LineSolid, CapButt, JoinMiter);
 }
 
 /** Redraw the borders on the current desktop.

@@ -44,7 +44,7 @@ void SignalPopup(const struct TimeType *now, int x, int y);
  * @param event The event to process.
  * @return 1 if handled, 0 otherwise.
  */
-int ProcessPopupEvent(const XEvent *event);
+char ProcessPopupEvent(const XEvent *event);
 
 #endif /* POPUP_H */
 

@@ -20,7 +20,6 @@
 #include "settings.h"
 
 typedef struct PopupType {
-   int isActive;
    int x, y;   /* The coordinates of the upper-left corner of the popup. */
    int mx, my; /* The mouse position when the popup was created. */
    int width, height;
@@ -40,7 +39,6 @@ void InitializePopup()
 /** Startup popups. */
 void StartupPopup()
 {
-   popup.isActive = 0;
    popup.text = NULL;
    popup.window = None;
 }
@@ -140,68 +138,53 @@ void ShowPopup(int x, int y, const char *text)
                                     popup.width, popup.height, 1,
                                     CopyFromParent, InputOutput,
                                     CopyFromParent, attrMask, &attr);
+      JXMapRaised(display, popup.window);
 
    } else {
 
       JXMoveResizeWindow(display, popup.window, popup.x, popup.y,
                          popup.width, popup.height);
+      DrawPopup();
 
    }
 
    popup.mx = x;
    popup.my = y;
 
-   if(!popup.isActive) {
-      JXMapRaised(display, popup.window);
-      popup.isActive = 1;
-   } else {
-      DrawPopup();
-   }
-
 }
 
 /** Signal popup (this is used to hide popups after awhile). */
 void SignalPopup(const TimeType *now, int x, int y)
 {
-
-   if(popup.isActive) {
+   if(popup.window != None) {
       if(abs(popup.mx - x) > 2 || abs(popup.my - y) > 2) {
-         JXUnmapWindow(display, popup.window);
-         popup.isActive = 0;
+         JXDestroyWindow(display, popup.window);
+         popup.window = None;
       }
    }
-
 }
 
 /** Process an event on a popup window. */
-int ProcessPopupEvent(const XEvent *event)
+char ProcessPopupEvent(const XEvent *event)
 {
-
-   if(popup.isActive && event->xany.window == popup.window) {
+   if(event->xany.window == popup.window) {
       if(event->type == Expose) {
          DrawPopup();
          return 1;
       } else if(event->type == MotionNotify) {
-         JXUnmapWindow(display, popup.window);
-         popup.isActive = 0;
+         JXDestroyWindow(display, popup.window);
+         popup.window = None;
          return 1;
       }
    }
-
    return 0;
-
 }
 
 /** Draw the popup window. */
 void DrawPopup()
 {
-
-   Assert(popup.isActive);
-
    JXClearWindow(display, popup.window);
-
    RenderString(popup.window, FONT_POPUP, COLOR_POPUP_FG, 4, 1,
                 popup.width, popup.text);
-
 }
 

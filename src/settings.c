@@ -14,7 +14,6 @@ Settings settings;
 /** Initialize settings. */
 void InitializeSettings()
 {
-   int i;
    settings.doubleClickSpeed = 400;
    settings.doubleClickDelta = 2;
    settings.snapMode = SNAP_BORDER;

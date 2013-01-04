@@ -42,7 +42,6 @@ static char ShowSubmenu(Menu *menu, Menu *parent, int x, int y);
 static void CreateMenu(Menu *menu, int x, int y);
 static void HideMenu(Menu *menu);
 static void DrawMenu(Menu *menu);
-static void RedrawMenuTree(Menu *menu);
 
 static char MenuLoop(Menu *menu);
 static MenuSelectionType UpdateMotion(Menu *menu, XEvent *event);
@@ -256,7 +255,6 @@ char MenuLoop(Menu *menu)
 
    XEvent event;
    MenuItem *ip;
-   int count;
    int pressx, pressy;
    char hadMotion;
 
@@ -270,7 +268,16 @@ char MenuLoop(Menu *menu)
 
       switch(event.type) {
       case Expose:
-         RedrawMenuTree(menu);
+         if(event.xexpose.count == 0) {
+            Menu *mp = menu;
+            while(mp) {
+               if(mp->window == event.xexpose.window) {
+                  DrawMenu(mp);
+                  break;
+               }
+               mp = mp->parent;
+            }
+         }
          break;
 
       case ButtonPress:
@@ -309,15 +316,9 @@ char MenuLoop(Menu *menu)
             }
          }
             
-         if(menu->currentIndex >= 0) {
-            count = 0;
-            for(ip = menu->items; ip; ip = ip->next) {
-               if(count == menu->currentIndex) {
-                  menuAction = &ip->action;
-                  break;
-               }
-               ++count;
-            }
+         ip = GetMenuItem(menu, menu->currentIndex);
+         if(ip != NULL) {
+            menuAction = &ip->action;
          }
          return 1;
       default:
@@ -387,16 +388,6 @@ void CreateMenu(Menu *menu, int x, int y)
 void HideMenu(Menu *menu)
 {
    JXDestroyWindow(display, menu->window);
-}
-
-/** Redraw a menu and its submenus. */
-void RedrawMenuTree(Menu *menu)
-{
-   if(menu->parent) {
-      RedrawMenuTree(menu->parent);
-   }
-   DrawMenu(menu);
-   UpdateMenu(menu);
 }
 
 /** Draw a menu. */
@@ -494,15 +485,9 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
       case KEY_ESC:
          return MENU_SUBSELECT;
       case KEY_ENTER:
-         if(tp->currentIndex >= 0) {
-            x = 0;
-            for(ip = tp->items; ip; ip = ip->next) {
-               if(x == tp->currentIndex) {
-                  menuAction = &ip->action;
-                  break;
-               }
-               ++x;
-            }
+         ip = GetMenuItem(menu, tp->currentIndex);
+         if(ip != NULL) {
+            menuAction = &ip->action;
          }
          return MENU_SUBSELECT;
       default:
@@ -600,8 +585,6 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
 void UpdateMenu(Menu *menu)
 {
 
-   ButtonNode button;
-   Pixmap pixmap;
    MenuItem *ip;
 
    /* Clear the old selection. */
@@ -610,36 +593,8 @@ void UpdateMenu(Menu *menu)
 
    /* Highlight the new selection. */
    ip = GetMenuItem(menu, menu->currentIndex);
-   if(ip) {
-
-      if(ip->type == MENU_ITEM_SEPARATOR) {
-         return;
-      }
-
-      ResetButton(&button, menu->window, rootGC);
-      button.type = BUTTON_MENU_ACTIVE;
-      button.font = FONT_MENU;
-      button.width = menu->width - MENU_BORDER_SIZE * 2 - 1;
-      button.height = menu->itemHeight - 1;
-      button.icon = ip->icon;
-      button.text = ip->name;
-      button.x = MENU_BORDER_SIZE;
-      button.y = menu->offsets[menu->currentIndex];
-      DrawButton(&button);
-
-      if(ip->submenu) {
-         pixmap = JXCreateBitmapFromData(display, menu->window,
-                                         menu_bitmap, 4, 7);
-         JXSetForeground(display, rootGC, colors[COLOR_MENU_ACTIVE_FG]);
-         JXSetClipMask(display, rootGC, pixmap);
-         JXSetClipOrigin(display, rootGC, menu->width - 9,
-            menu->offsets[menu->currentIndex] + menu->itemHeight / 2 - 4);
-         JXFillRectangle(display, menu->window, rootGC, menu->width - 9,
-            menu->offsets[menu->currentIndex] + menu->itemHeight / 2 - 4,
-            4, 7);
-         JXSetClipMask(display, rootGC, None);
-         JXFreePixmap(display, pixmap);
-      }
+   if(ip != NULL) {
+      DrawMenuItem(menu, ip, menu->currentIndex);
    }
 
 }
@@ -650,6 +605,7 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
 
    ButtonNode button;
    Pixmap pixmap;
+   ColorType fg;
 
    Assert(menu);
 
@@ -672,15 +628,36 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
    if(item->type != MENU_ITEM_SEPARATOR) {
 
       ResetButton(&button, menu->window, rootGC);
+      if(menu->currentIndex == index) {
+         button.type = BUTTON_MENU_ACTIVE;
+         fg = COLOR_MENU_ACTIVE_FG;
+      } else {
+         button.type = BUTTON_LABEL;
+         fg = COLOR_MENU_FG;
+      }
+
       button.x = MENU_BORDER_SIZE;
       button.y = menu->offsets[index];
       button.font = FONT_MENU;
-      button.type = BUTTON_LABEL;
       button.width = menu->width - 2 * MENU_BORDER_SIZE - 1;
       button.height = menu->itemHeight - 1;
       button.text = item->name;
       button.icon = item->icon;
       DrawButton(&button);
+
+      if(item->submenu) {
+         pixmap = JXCreateBitmapFromData(display, menu->window,
+                                         menu_bitmap, 4, 7);
+         JXSetForeground(display, rootGC, colors[fg]);
+         JXSetClipMask(display, rootGC, pixmap);
+         JXSetClipOrigin(display, rootGC, menu->width - 9,
+                         menu->offsets[index] + menu->itemHeight / 2 - 4);
+         JXFillRectangle(display, menu->window, rootGC, menu->width - 9,
+                         menu->offsets[index] + menu->itemHeight / 2 - 4,
+                         4, 7);
+         JXSetClipMask(display, rootGC, None);
+         JXFreePixmap(display, pixmap);
+      }
 
    } else {
 
@@ -692,17 +669,6 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
       JXDrawLine(display, menu->window, rootGC, 4,
                  menu->offsets[index] + 3, menu->width - 6,
                  menu->offsets[index] + 3);
-
-   }
-
-   if(item->submenu) {
-
-      pixmap = JXCreatePixmapFromBitmapData(display, menu->window,
-         menu_bitmap, 4, 7, colors[COLOR_MENU_FG],
-         colors[COLOR_MENU_BG], rootDepth);
-      JXCopyArea(display, pixmap, menu->window, rootGC, 0, 0, 4, 7,
-         menu->width - 9, menu->offsets[index] + menu->itemHeight / 2 - 4);
-      JXFreePixmap(display, pixmap);
 
    }
 

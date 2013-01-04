@@ -250,16 +250,17 @@ void RenderString(Drawable d, FontType font, ColorType color,
 
 #ifdef USE_XFT
 
-   XftDrawChange(xd, d);
-   XftDrawSetClip(xd, renderRegion);
+   JXftDrawChange(xd, d);
+   JXftDrawSetClip(xd, renderRegion);
    JXftDrawStringUtf8(xd, GetXftColor(color), fonts[font],
                       x, y + fonts[font]->ascent,
                       (const unsigned char*)output, len);
+   JXftDrawChange(xd, rootWindow);
 
 #else
 
    JXSetForeground(display, fontGC, colors[color]);
-   XSetRegion(display, fontGC, renderRegion);
+   JXSetRegion(display, fontGC, renderRegion);
    JXSetFont(display, fontGC, fonts[font]->fid);
    JXDrawString(display, d, fontGC, x, y + fonts[font]->ascent, output, len);
 

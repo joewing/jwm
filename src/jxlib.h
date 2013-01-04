@@ -384,6 +384,9 @@
 #define JXGetSelectionOwner( a, b ) \
    ( SetCheckpoint(), XGetSelectionOwner( a, b ) )
 
+#define JXSetRegion( a, b, c ) \
+   ( SetCheckpoint(), XSetRegion( a, b, c ) )
+
 /* XFT */
 
 #define JXftFontOpenName( a, b, c ) \
@@ -418,6 +421,9 @@
 
 #define JXftFontClose( a, b ) \
    ( SetCheckpoint(), XftFontClose( a, b ) )
+
+#define JXftDrawSetClip( a, b ) \
+   ( SetCheckpoint(), XftDrawSetClip( a, b ) )
 
 /* Xrender */
 

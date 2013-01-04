@@ -1041,6 +1041,10 @@ void RestackClients()
    unsigned int temp;
    char isFirst;
 
+   if(JUNLIKELY(shouldExit)) {
+      return;
+   }
+
    /* Allocate memory for restacking. */
    trayCount = GetTrayCount();
    stack = AllocateStack((clientCount + trayCount) * sizeof(Window));

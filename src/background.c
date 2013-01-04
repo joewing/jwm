@@ -215,11 +215,12 @@ void LoadBackground(int desktop)
       break;
    }
 
-   JXChangeWindowAttributes(display, bp->window, attrValues, &attr);
-   JXClearWindow(display, bp->window);
-   JXMapWindow(display, bp->window);
-
-   SetPixmapAtom(rootWindow, ATOM_XSETROOT_ID, bp->window);
+   if(bp->window) {
+      JXChangeWindowAttributes(display, bp->window, attrValues, &attr);
+      JXClearWindow(display, bp->window);
+      JXMapWindow(display, bp->window);
+      SetPixmapAtom(rootWindow, ATOM_XSETROOT_ID, bp->window);
+   }
 
 }
 

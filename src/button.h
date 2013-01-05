@@ -16,11 +16,14 @@ struct IconNode;
 
 /** Button types. */
 typedef enum {
-   BUTTON_LABEL,        /**< Label. */
-   BUTTON_MENU,         /**< Menu item. */
-   BUTTON_MENU_ACTIVE,  /**< Active menu item. */
-   BUTTON_TASK,         /**< Item in the task list. */
-   BUTTON_TASK_ACTIVE   /**< Active item in the task list. */
+   BUTTON_LABEL,           /**< Label. */
+   BUTTON_MENU,            /**< Menu item. */
+   BUTTON_MENU_ACTIVE,     /**< Active menu item. */
+   BUTTON_TRAY,            /**< Inactive tray button. */
+   BUTTON_TRAY_NOBORDER,   /**< Inactive tray button without a border. */
+   BUTTON_TRAY_ACTIVE,     /**< Active tray button. */
+   BUTTON_TASK,            /**< Item in the task list. */
+   BUTTON_TASK_ACTIVE      /**< Active item in the task list. */
 } ButtonType;
 
 /** Alignment of content in a button. */

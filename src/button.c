@@ -64,6 +64,20 @@ void DrawButton(ButtonNode *bp)
          outlinePixel = colors[COLOR_MENU_ACTIVE_DOWN];
       }
       break;
+   case BUTTON_TRAY:
+   case BUTTON_TRAY_NOBORDER:
+      fg = COLOR_TRAYBUTTON_FG;
+      bg1 = colors[COLOR_TRAYBUTTON_BG1];
+      bg2 = colors[COLOR_TRAYBUTTON_BG2];
+      outlinePixel = colors[COLOR_TRAYBUTTON_DOWN];
+      break;
+   case BUTTON_TRAY_ACTIVE:
+      fg = COLOR_TRAYBUTTON_ACTIVE_FG;
+      bg1 = colors[COLOR_TRAYBUTTON_ACTIVE_BG1];
+      bg2 = colors[COLOR_TRAYBUTTON_ACTIVE_BG2];
+      outlinePixel = colors[COLOR_TRAYBUTTON_ACTIVE_UP];
+      break;
+      break;
    case BUTTON_TASK:
       fg = COLOR_TASK_FG;
       bg1 = colors[COLOR_TASK_BG1];
@@ -86,7 +100,7 @@ void DrawButton(ButtonNode *bp)
    }
 
    /* Draw the background. */
-   if(bp->type != BUTTON_TASK || width > height) {
+   if(bp->type != BUTTON_TRAY_NOBORDER) {
 
       /* Draw the button background. */
       JXSetForeground(display, gc, bg1);

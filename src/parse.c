@@ -1306,7 +1306,8 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
    const char *label;
    const char *popup;
    const char *temp;
-   int width, height;
+   unsigned int width, height;
+   char border;
 
    Assert(tp);
    Assert(tray);
@@ -1314,6 +1315,13 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
    icon = FindAttribute(tp->attributes, ICON_ATTRIBUTE);
    label = FindAttribute(tp->attributes, LABEL_ATTRIBUTE);
    popup = FindAttribute(tp->attributes, POPUP_ATTRIBUTE);
+
+   temp = FindAttribute(tp->attributes, BORDER_ATTRIBUTE);
+   if(temp && !strcmp(temp, FALSE_VALUE)) {
+      border = 0;
+   } else {
+      border = 1;
+   }
 
    temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
    if(temp) {
@@ -1329,8 +1337,8 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
       height = 0;
    }
 
-   cp = CreateTrayButton(icon, label, tp->value, popup, width, height);
-   if(cp) {
+   cp = CreateTrayButton(icon, label, tp->value, popup, width, height, border);
+   if(JLIKELY(cp)) {
       AddTrayComponent(tray, cp);
    }
 
@@ -1486,14 +1494,10 @@ void ParsePopupStyle(const TokenNode *tp) {
    Assert(tp);
 
    str = FindAttribute(tp->attributes, ENABLED_ATTRIBUTE);
-   if(str) {
-      if(!strcmp(str, TRUE_VALUE)) {
-         settings.popupEnabled = 1;
-      } else if(!strcmp(str, FALSE_VALUE)) {
-         settings.popupEnabled = 0;
-      } else {
-         ParseError(tp, "invalid enabled value: \"%s\"", str);
-      }
+   if(str && !strcmp(str, FALSE_VALUE)) {
+      settings.popupEnabled = 0;
+   } else {
+      settings.popupEnabled = 1;
    }
 
    str = FindAttribute(tp->attributes, DELAY_ATTRIBUTE);
@@ -1604,7 +1608,14 @@ void ParseTrayButtonStyle(const TokenNode *tp)
          SetColor(COLOR_TRAYBUTTON_FG, np->value);
          break;
       case TOK_BACKGROUND:
-         SetColor(COLOR_TRAYBUTTON_BG, np->value);
+         ParseGradient(np->value, COLOR_TRAYBUTTON_BG1, COLOR_TRAYBUTTON_BG2);
+         break;
+      case TOK_ACTIVEFOREGROUND:
+         SetColor(COLOR_TRAYBUTTON_ACTIVE_FG, np->value);
+         break;
+      case TOK_ACTIVEBACKGROUND:
+         ParseGradient(np->value, COLOR_TRAYBUTTON_ACTIVE_BG1,
+                       COLOR_TRAYBUTTON_ACTIVE_BG2);
          break;
       default:
          InvalidTag(np, TOK_TRAYBUTTONSTYLE);

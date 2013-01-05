@@ -37,8 +37,8 @@ typedef struct TrayButtonType {
    char *popup;
    char *iconName;
    IconNode *icon;
-
    char *action;
+   char border;
 
    int mousex;
    int mousey;
@@ -127,8 +127,12 @@ void DestroyTrayButtons()
 
 /** Create a button tray component. */
 TrayComponentType *CreateTrayButton(const char *iconName,
-                                    const char *label, const char *action,
-                                    const char *popup, int width, int height)
+                                    const char *label,
+                                    const char *action,
+                                    const char *popup,
+                                    unsigned int width,
+                                    unsigned int height,
+                                    char border)
 {
 
    TrayButtonType *bp;
@@ -140,15 +144,6 @@ TrayComponentType *CreateTrayButton(const char *iconName,
       return NULL;
    }
 
-   if(JUNLIKELY(width < 0)) {
-      Warning(_("invalid TrayButton width: %d"), width);
-      width = 0;
-   }
-   if(JUNLIKELY(height < 0)) {
-      Warning(_("invalid TrayButton height: %d"), height);
-      height = 0;
-   }
-
    bp = Allocate(sizeof(TrayButtonType));
    bp->next = buttons;
    buttons = bp;
@@ -158,6 +153,7 @@ TrayComponentType *CreateTrayButton(const char *iconName,
    bp->label = CopyString(label);
    bp->action = CopyString(action);
    bp->popup = CopyString(popup);
+   bp->border = border;
 
    cp = CreateTrayComponent();
    cp->object = bp;
@@ -292,14 +288,18 @@ void Draw(TrayComponentType *cp, int active)
 
    bp = (TrayButtonType*)cp->object;
 
-   JXSetForeground(display, rootGC, colors[COLOR_TRAYBUTTON_BG]);
-   JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
+   if(colors[COLOR_TRAYBUTTON_BG1] == colors[COLOR_TRAYBUTTON_BG2]) {
+      JXSetForeground(display, rootGC, colors[COLOR_TRAYBUTTON_BG1]);
+      JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
+   }
 
    ResetButton(&button, cp->pixmap, rootGC);
    if(active) {
-      button.type = BUTTON_TASK_ACTIVE;
+      button.type = BUTTON_TRAY_ACTIVE;
+   } else if(bp->border) {
+      button.type = BUTTON_TRAY;
    } else {
-      button.type = BUTTON_TASK;
+      button.type = BUTTON_TRAY_NOBORDER;
    }
    button.width = cp->width - 3;
    button.height = cp->height - 3;

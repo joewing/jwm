@@ -33,51 +33,56 @@ static XftColor *xftColors[COLOR_COUNT] = { NULL };
 
 static DefaultColorNode DEFAULT_COLORS[] = {
 
-   { COLOR_TITLE_FG,           "black"   },
-   { COLOR_TITLE_ACTIVE_FG,    "black"   },
+   { COLOR_TITLE_FG,                "black"   },
+   { COLOR_TITLE_ACTIVE_FG,         "black"   },
 
-   { COLOR_TITLE_BG1,          "gray"    },
-   { COLOR_TITLE_BG2,          "gray"    },
-   { COLOR_TITLE_ACTIVE_BG1,   "red"     },
-   { COLOR_TITLE_ACTIVE_BG2,   "red"     },
+   { COLOR_TITLE_BG1,               "gray"    },
+   { COLOR_TITLE_BG2,               "gray"    },
+   { COLOR_TITLE_ACTIVE_BG1,        "red"     },
+   { COLOR_TITLE_ACTIVE_BG2,        "red"     },
 
-   { COLOR_BORDER_LINE,        "black"   },
-   { COLOR_BORDER_ACTIVE_LINE, "black"   },
+   { COLOR_BORDER_LINE,             "black"   },
+   { COLOR_BORDER_ACTIVE_LINE,      "black"   },
 
-   { COLOR_TRAY_BG,            "gray"    },
-   { COLOR_TRAY_FG,            "black"   },
+   { COLOR_TRAY_BG,                 "gray"    },
+   { COLOR_TRAY_FG,                 "black"   },
 
-   { COLOR_TASK_FG,            "black"   },
-   { COLOR_TASK_BG1,           "gray"    },
-   { COLOR_TASK_BG2,           "gray"    },
-   { COLOR_TASK_ACTIVE_FG,     "white"   },
-   { COLOR_TASK_ACTIVE_BG1,    "red"     },
-   { COLOR_TASK_ACTIVE_BG2,    "red"     },
+   { COLOR_TASK_FG,                 "black"   },
+   { COLOR_TASK_BG1,                "gray"    },
+   { COLOR_TASK_BG2,                "gray"    },
+   { COLOR_TASK_ACTIVE_FG,          "white"   },
+   { COLOR_TASK_ACTIVE_BG1,         "red"     },
+   { COLOR_TASK_ACTIVE_BG2,         "red"     },
 
-   { COLOR_PAGER_BG,           "black"   },
-   { COLOR_PAGER_FG,           "gray"    },
-   { COLOR_PAGER_ACTIVE_BG,    "red"     },
-   { COLOR_PAGER_ACTIVE_FG,    "red"     },
-   { COLOR_PAGER_OUTLINE,      "black"   },
-   { COLOR_PAGER_TEXT,         "black"   },
+   { COLOR_PAGER_BG,                "black"   },
+   { COLOR_PAGER_FG,                "gray"    },
+   { COLOR_PAGER_ACTIVE_BG,         "red"     },
+   { COLOR_PAGER_ACTIVE_FG,         "red"     },
+   { COLOR_PAGER_OUTLINE,           "black"   },
+   { COLOR_PAGER_TEXT,              "black"   },
 
-   { COLOR_MENU_BG,            "gray"    },
-   { COLOR_MENU_FG,            "black"   },
-   { COLOR_MENU_ACTIVE_BG1,    "red"     },
-   { COLOR_MENU_ACTIVE_BG2,    "red"     },
-   { COLOR_MENU_ACTIVE_FG,     "white"   },
-   { COLOR_MENU_ACTIVE_OL,     "black"   },
+   { COLOR_MENU_BG,                 "gray"    },
+   { COLOR_MENU_FG,                 "black"   },
+   { COLOR_MENU_ACTIVE_BG1,         "red"     },
+   { COLOR_MENU_ACTIVE_BG2,         "red"     },
+   { COLOR_MENU_ACTIVE_FG,          "white"   },
+   { COLOR_MENU_ACTIVE_OL,          "black"   },
 
-   { COLOR_POPUP_BG,           "yellow"  },
-   { COLOR_POPUP_FG,           "black"   },
-   { COLOR_POPUP_OUTLINE,      "black"   },
+   { COLOR_POPUP_BG,                "yellow"  },
+   { COLOR_POPUP_FG,                "black"   },
+   { COLOR_POPUP_OUTLINE,           "black"   },
 
-   { COLOR_TRAYBUTTON_FG,      "black"   },
-   { COLOR_TRAYBUTTON_BG,      "gray"    },
+   { COLOR_TRAYBUTTON_FG,           "black"   },
+   { COLOR_TRAYBUTTON_BG1,          "gray"    },
+   { COLOR_TRAYBUTTON_BG2,          "gray"    },
 
-   { COLOR_CLOCK_FG,           "black"   },
-   { COLOR_CLOCK_BG,           "gray"    },
-   { COLOR_COUNT,              NULL      }
+   { COLOR_TRAYBUTTON_ACTIVE_FG,    "black"   },
+   { COLOR_TRAYBUTTON_ACTIVE_BG1,   "gray"    },
+   { COLOR_TRAYBUTTON_ACTIVE_BG2,   "gray"    },
+
+   { COLOR_CLOCK_FG,                "black"   },
+   { COLOR_CLOCK_BG,                "gray"    },
+   { COLOR_COUNT,                   NULL      }
 
 };
 
@@ -91,7 +96,8 @@ static unsigned long greenMask;
 static unsigned long blueMask;
 
 static void ComputeShiftMask(unsigned long maskIn,
-   unsigned long *shiftOut, unsigned long *maskOut);
+                             unsigned long *shiftOut,
+                             unsigned long *maskOut);
 
 static void GetDirectPixel(XColor *c);
 static void GetMappedPixel(XColor *c);
@@ -174,27 +180,55 @@ void StartupColors()
    /* Inherit unset colors from the tray for tray items. */
    if(names) {
 
+      /* Task */
+      if(!names[COLOR_TASK_FG]) {
+         names[COLOR_TASK_FG] = CopyString(names[COLOR_TRAY_FG]);
+      }
       if(!names[COLOR_TASK_BG1]) {
          names[COLOR_TASK_BG1] = CopyString(names[COLOR_TRAY_BG]);
       }
       if(!names[COLOR_TASK_BG2]) {
          names[COLOR_TASK_BG2] = CopyString(names[COLOR_TRAY_BG]);
       }
+      if(!names[COLOR_TASK_ACTIVE_FG]) {
+         names[COLOR_TASK_ACTIVE_FG] = CopyString(names[COLOR_TRAY_FG]);
+      }
+      if(!names[COLOR_TASK_ACTIVE_BG1]) {
+         names[COLOR_TASK_ACTIVE_BG1] = CopyString(names[COLOR_TRAY_BG]);
+      }
+      if(!names[COLOR_TASK_ACTIVE_BG2]) {
+         names[COLOR_TASK_ACTIVE_BG2] = CopyString(names[COLOR_TRAY_BG]);
+      }
 
-      if(!names[COLOR_TRAYBUTTON_BG]) {
-         names[COLOR_TRAYBUTTON_BG] = CopyString(names[COLOR_TRAY_BG]);
+      /* Tray button */
+      if(!names[COLOR_TRAYBUTTON_FG]) {
+         names[COLOR_TRAYBUTTON_FG] = CopyString(names[COLOR_TASK_FG]);
+      }
+      if(!names[COLOR_TRAYBUTTON_BG1]) {
+         names[COLOR_TRAYBUTTON_BG1] = CopyString(names[COLOR_TASK_BG2]);
+      }
+      if(!names[COLOR_TRAYBUTTON_BG2]) {
+         names[COLOR_TRAYBUTTON_BG2] = CopyString(names[COLOR_TASK_BG2]);
+      }
+      if(!names[COLOR_TRAYBUTTON_ACTIVE_FG]) {
+         names[COLOR_TRAYBUTTON_ACTIVE_FG]
+            = CopyString(names[COLOR_TASK_ACTIVE_FG]);
+      }
+      if(!names[COLOR_TRAYBUTTON_ACTIVE_BG1]) {
+         names[COLOR_TRAYBUTTON_ACTIVE_BG1]
+            = CopyString(names[COLOR_TASK_ACTIVE_BG1]);
+      }
+      if(!names[COLOR_TRAYBUTTON_ACTIVE_BG2]) {
+         names[COLOR_TRAYBUTTON_ACTIVE_BG2]
+            = CopyString(names[COLOR_TASK_ACTIVE_BG2]);
+      }
+
+      /* Clock */
+      if(!names[COLOR_CLOCK_FG]) {
+         names[COLOR_CLOCK_FG] = CopyString(names[COLOR_TRAY_FG]);
       }
       if(!names[COLOR_CLOCK_BG]) {
          names[COLOR_CLOCK_BG] = CopyString(names[COLOR_TRAY_BG]);
-      }
-      if(!names[COLOR_TASK_FG]) {
-         names[COLOR_TASK_FG] = CopyString(names[COLOR_TRAY_FG]);
-      }
-      if(!names[COLOR_TRAYBUTTON_FG]) {
-         names[COLOR_TRAYBUTTON_FG] = CopyString(names[COLOR_TRAY_FG]);
-      }
-      if(!names[COLOR_CLOCK_FG]) {
-         names[COLOR_CLOCK_FG] = CopyString(names[COLOR_TRAY_FG]);
       }
    }
 
@@ -230,6 +264,9 @@ void StartupColors()
 
    LightenColor(COLOR_TASK_ACTIVE_BG1, COLOR_TASK_ACTIVE_UP);
    DarkenColor(COLOR_TASK_ACTIVE_BG1, COLOR_TASK_ACTIVE_DOWN);
+
+   LightenColor(COLOR_TRAYBUTTON_ACTIVE_BG1, COLOR_TRAYBUTTON_ACTIVE_UP);
+   DarkenColor(COLOR_TRAYBUTTON_BG1, COLOR_TRAYBUTTON_DOWN);
 
    LightenColor(COLOR_MENU_BG, COLOR_MENU_UP);
    DarkenColor(COLOR_MENU_BG, COLOR_MENU_DOWN);

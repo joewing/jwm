@@ -416,7 +416,7 @@ void DrawCloseButton(unsigned int offset, Pixmap canvas)
    unsigned int x1, y1;
    unsigned int x2, y2;
 
-   size = settings.titleHeight - (settings.borderWidth + 1) * 2 - 2;
+   size = (settings.titleHeight + 2) / 3;
    x1 = offset + settings.titleHeight / 2 - size / 2;
    y1 = settings.titleHeight / 2 - size / 2;
    x2 = x1 + size;
@@ -449,7 +449,7 @@ void DrawMaxIButton(unsigned int offset, Pixmap canvas)
    unsigned int x1, y1;
    unsigned int x2, y2;
 
-   size = settings.titleHeight - (settings.borderWidth + 1) * 2 - 2;
+   size = 2 + (settings.titleHeight + 2) / 3;
    x1 = offset + settings.titleHeight / 2 - size / 2;
    y1 = settings.titleHeight / 2 - size / 2;
    x2 = x1 + size;
@@ -497,7 +497,7 @@ void DrawMaxAButton(unsigned int offset, Pixmap canvas)
    unsigned int x2, y2;
    unsigned int x3, y3;
 
-   size = settings.titleHeight - (settings.borderWidth + 1) * 2 - 2;
+   size = 2 + (settings.titleHeight + 2) / 3;
    x1 = offset + settings.titleHeight / 2 - size / 2;
    y1 = settings.titleHeight / 2 - size / 2;
    x2 = x1 + size;
@@ -558,7 +558,7 @@ void DrawMinButton(unsigned int offset, Pixmap canvas)
    unsigned int size;
    unsigned int x1, y1;
    unsigned int x2, y2;
-   size = settings.titleHeight - (settings.borderWidth + 1) * 2 - 2;
+   size = (settings.titleHeight + 2) / 3;
    x1 = offset + settings.titleHeight / 2 - size / 2;
    y1 = settings.titleHeight / 2 - size / 2;
    x2 = x1 + size;

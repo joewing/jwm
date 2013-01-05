@@ -49,6 +49,12 @@ void StartupSettings()
       settings.maxClientOpacity = temp;
    }
 
+   if(JUNLIKELY(settings.borderWidth > settings.titleHeight)) {
+      settings.titleHeight = settings.borderWidth;
+   }
+   if(JUNLIKELY(settings.titleHeight < 4)) {
+      settings.titleHeight = 4;
+   }
    if(JUNLIKELY(settings.desktopWidth == 0)) {
       settings.desktopWidth = 4;
    }

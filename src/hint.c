@@ -353,9 +353,10 @@ void WriteNetState(ClientNode *np)
 
    Assert(np);
 
-   /* We remove the _NET_WM_STATE for withdrawn windows. */
+   /* We remove the _NET_WM_STATE and _NET_WM_DESKTOP for withdrawn windows. */
    if(!(np->state.status & STAT_MAPPED)) {
       JXDeleteProperty(display, np->window, atoms[ATOM_NET_WM_STATE]);
+      JXDeleteProperty(display, np->window, atoms[ATOM_NET_WM_DESKTOP]);
       return;
    } 
 
@@ -390,7 +391,8 @@ void WriteNetState(ClientNode *np)
    }
 
    JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_STATE],
-      XA_ATOM, 32, PropModeReplace, (unsigned char*)values, index);
+                    XA_ATOM, 32, PropModeReplace,
+                    (unsigned char*)values, index);
 
    GetBorderSize(np, &north, &south, &east, &west);
 
@@ -401,7 +403,8 @@ void WriteNetState(ClientNode *np)
    values[3] = south;
 
    JXChangeProperty(display, np->window, atoms[ATOM_NET_FRAME_EXTENTS],
-      XA_CARDINAL, 32, PropModeReplace, (unsigned char*)values, 4);
+                    XA_CARDINAL, 32, PropModeReplace,
+                    (unsigned char*)values, 4);
 
 }
 

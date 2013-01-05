@@ -1089,8 +1089,8 @@ void HandleMapRequest(const XMapEvent *event)
    }
    np = FindClientByWindow(event->window);
    if(!np) {
-      JXSync(display, False);
       JXGrabServer(display);
+      JXSync(display, False);
       np = AddClientWindow(event->window, 0, 1);
       if(np) {
          if(     settings.focusModel == FOCUS_CLICK
@@ -1160,22 +1160,29 @@ void HandleUnmapNotify(const XUnmapEvent *event)
    np = FindClientByWindow(event->window);
    if(np && np->window == event->window) {
 
-      if(JXCheckTypedWindowEvent(display, np->window, DestroyNotify, &e)) {
-         UpdateTime(&e);
-         HandleDestroyNotify(&e.xdestroywindow);
-         return;
-      }
+      /* Grab the server to prevent the client from destroying the
+       * window after we check for a DestroyNotify. */
+      JXGrabServer(display);
+      JXSync(display, False);
 
       if(np->controller) {
          (np->controller)(1);
       }
 
+      if(JXCheckTypedWindowEvent(display, np->window, DestroyNotify, &e)) {
+         UpdateTime(&e);
+         RemoveClient(np);
+         JXUngrabServer(display);
+         return;
+      }
+
       if(np->state.status & STAT_MAPPED) {
 
          np->state.status &= ~STAT_MAPPED;
-         JXUnmapWindow(display, np->parent);
 
+         JXUnmapWindow(display, np->parent);
          WriteState(np);
+
          UpdateTaskBar();
          UpdatePager();
 
@@ -1184,6 +1191,8 @@ void HandleUnmapNotify(const XUnmapEvent *event)
          }
 
       }
+
+      JXUngrabServer(display);
 
    }
 }

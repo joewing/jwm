@@ -627,7 +627,7 @@ void SetClientDesktop(ClientNode *np, unsigned int desktop)
                }
 
                SetCardinalAtom(tp->window, ATOM_NET_WM_DESKTOP,
-                  tp->state.desktop);
+                               tp->state.desktop);
             }
          }
       }
@@ -1148,8 +1148,6 @@ void RemoveClient(ClientNode *np)
    Assert(np->window != None);
    Assert(np->parent != None);
 
-   JXGrabServer(display);
-
    /* Remove this client from the client list */
    if(np->next) {
       np->next->prev = np->prev;
@@ -1189,7 +1187,7 @@ void RemoveClient(ClientNode *np)
          np->width = np->oldWidth;
          np->height = np->oldHeight;
          JXMoveResizeWindow(display, np->window,
-            np->x, np->y, np->width, np->height);
+                            np->x, np->y, np->width, np->height);
       }
       GravitateClient(np, 1);
       if(!(np->state.status & STAT_MAPPED)
@@ -1229,8 +1227,6 @@ void RemoveClient(ClientNode *np)
    DestroyIcon(np->icon);
 
    Release(np);
-
-   JXUngrabServer(display);
 
    RestackClients();
 

@@ -568,6 +568,11 @@ Minimize all windows on the current desktop.
 .P
 This tag supports the following attributes:
 .P
+\fBborder\fP \fbool\fP
+.RS
+Determines if a the button has a border. Default is true.
+.RE
+.P
 \fBlabel\fP \fIstring\fP
 .RS
 A label to display. No default.

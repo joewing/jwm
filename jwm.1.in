@@ -568,7 +568,7 @@ Minimize all windows on the current desktop.
 .P
 This tag supports the following attributes:
 .P
-\fBborder\fP \fbool\fP
+\fBborder\fP \fBbool\fP
 .RS
 Determines if a the button has a border. Default is true.
 .RE
@@ -596,7 +596,7 @@ An icon to display. No default.
 .RS
 Other configuration files may be included under the JWM tag via the 
 \fBInclude\fP tag.  The text of this tag specifies the location of an
-additional configuration file. The path may be relative to the loacation
+additional configuration file. The path may be relative to the location
 JWM was started, an absolute path, or a path referencing an environment
 variable (using '$'). The format of the configuration file is the same as
 the main configuration file.
@@ -1035,7 +1035,7 @@ support, an XFT font string.
 .B COLORS
 .RS
 Colors for various parts of JWM are specified within specific tags
-(discribed above). Colors may either be hex triplets in RGB format
+(described above). Colors may either be hex triplets in RGB format
 (for example, #FF0000 is red) or by a name recognized by the X server.
 For components that support gradients, two colors may be specified
 separated by a colon.

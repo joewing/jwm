@@ -1169,28 +1169,39 @@ combinations to the same action.
 
 .B "MOUSE BINDINGS"
 .RS
-Any button (other than the scroll wheel) on the root window will bring up
-the root menu unless otherwise specified  via the \fBonroot\fP attribute of
-\fBRootMenu\fP. Scrolling up on the root window switches to the previous
-desktop and scrolling down switches to the next desktop.
+Any button other than the scroll wheel (buttons 4 and 5) on the root
+window will bring up the root menu unless otherwise specified via the
+\fBonroot\fP attribute of \fBRootMenu\fP. Scrolling up on the root window
+switches to the left desktop and scrolling down switches to the right desktop.
+.P
+Button 1 (typically the left button):
+.RS
+Over the border, dragging resizes the window.
+Over the title bar, dragging moves the window and double clicking toggles
+the maximized state.
+Over the menu button, shows the menu.
+Over the minimize button, minimizes the window.
+Over the maximize button, toggles between maximized and normal.
+Over the close button, closes the window.
+.RE
+.P
+Button 2 (typically the middle button):
+.RS
+Anywhere on a window frame button 2 will move the window.
+.RE
+.P
+Button 3 (typically the right button):
+.RS
+Over the frame shows the window menu.
+On the minimize button, toggles between shaded and unshaded.
+On the maximize button, toggles between maximized and normal.
+On the close button, closes the window.
+.RE
 .RE
 .P
 .RS
-The right button will show the window menu on the frame.
-.RE
-.P
-.RS
-The left button will resize if on the border or move if in the title bar.
-.RE
-.P
-.RS
-The middle button will move anywhere on the frame.
-.RE
-.P
-.RS
-A double click on the title bar of a window will toggle the maximized state
-of the window. Scrolling up over the title bar will shade the window and
-scrolling down will unshade the window.
+Scrolling up over the title bar will shade the window and scrolling down
+will unshade the window.
 When a menu is open, the scroll wheel will move through menus.
 When over the pager, the scroll wheel will switch desktops.
 When over a task list, the scroll wheel will switch windows.

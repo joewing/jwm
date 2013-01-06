@@ -266,7 +266,6 @@ char HandleSelectionClear(const XSelectionClearEvent *event)
 void HandleButtonEvent(const XButtonEvent *event)
 {
 
-   int x, y;
    ClientNode *np;
    int north, south, east, west;
 
@@ -278,29 +277,7 @@ void HandleButtonEvent(const XButtonEvent *event)
             FocusClient(np);
          }
       }
-      switch(event->button) {
-      case Button1:
-         DispatchBorderButtonEvent(event, np);
-         break;
-      case Button2:
-         MoveClient(np, event->x, event->y,
-                    (event->state & Mod1Mask) ? 0 : 1);
-         break;
-      case Button3:
-         GetBorderSize(np, &north, &south, &east, &west);
-         x = event->x + np->x - west;
-         y = event->y + np->y - north;
-         ShowWindowMenu(np, x, y);
-         break;
-      case Button4:
-         ShadeClient(np);
-         break;
-      case Button5:
-         UnshadeClient(np);
-         break;
-      default:
-         break;
-      }
+      DispatchBorderButtonEvent(event, np);
    } else if(event->window == rootWindow && event->type == ButtonPress) {
       if(!ShowRootMenu(event->button, event->x, event->y)) {
          if(event->button == 4) {
@@ -1215,7 +1192,8 @@ char HandleDestroyNotify(const XDestroyWindowEvent *event)
 }
 
 /** Take the appropriate action for a click on a client border. */
-void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np)
+void DispatchBorderButtonEvent(const XButtonEvent *event,
+                               ClientNode *np)
 {
 
    static Time lastClickTime = 0;
@@ -1224,60 +1202,94 @@ void DispatchBorderButtonEvent(const XButtonEvent *event, ClientNode *np)
    BorderActionType action;
    int bsize;
 
-   action = GetBorderActionType(np, event->x, event->y);
+   /* Middle click always starts a move. */
+   if(event->button == Button2) {
+      MoveClient(np, event->x, event->y, (event->state & Mod1Mask) ? 0 : 1);
+      return;
+   }
 
+   /* Determine the size of the border. */
+   if(np->state.border & BORDER_OUTLINE) {
+      bsize = settings.borderWidth;
+   } else {
+      bsize = 0;
+   }
+
+   /* Other buttons are context sensitive. */
+   action = GetBorderActionType(np, event->x, event->y);
    switch(action & 0x0F) {
-   case BA_RESIZE:
+   case BA_RESIZE:   /* Border */
       if(event->type == ButtonPress) {
-         ResizeClient(np, action, event->x, event->y);
+         if(event->button == Button1) {
+            ResizeClient(np, action, event->x, event->y);
+         } else if(event->button == Button3) {
+            ShowWindowMenu(np, np->x + event->x - bsize,
+                           np->y + event->y - settings.titleHeight - bsize);
+         }
       }
       break;
-   case BA_MOVE:
-      if(event->type == ButtonPress) {
-         if(doubleClickActive
-            && abs(event->time - lastClickTime) > 0
-            && abs(event->time - lastClickTime) <= settings.doubleClickSpeed
-            && abs(event->x - lastX) <= settings.doubleClickDelta
-            && abs(event->y - lastY) <= settings.doubleClickDelta) {
-            MaximizeClientDefault(np);
-            doubleClickActive = 0;
-         } else {
-            if(MoveClient(np, event->x, event->y,
-                          (event->state & Mod1Mask) ? 0 : 1)) {
+   case BA_MOVE:     /* Title bar */
+      if(event->button == Button1) {
+         if(event->type == ButtonPress) {
+            if(doubleClickActive
+               && abs(event->time - lastClickTime) > 0
+               && abs(event->time - lastClickTime) <= settings.doubleClickSpeed
+               && abs(event->x - lastX) <= settings.doubleClickDelta
+               && abs(event->y - lastY) <= settings.doubleClickDelta) {
+               MaximizeClientDefault(np);
                doubleClickActive = 0;
             } else {
-               doubleClickActive = 1;
-               lastClickTime = event->time;
-               lastX = event->x;
-               lastY = event->y;
+               if(MoveClient(np, event->x, event->y,
+                             (event->state & Mod1Mask) ? 0 : 1)) {
+                  doubleClickActive = 0;
+               } else {
+                  doubleClickActive = 1;
+                  lastClickTime = event->time;
+                  lastX = event->x;
+                  lastY = event->y;
+               }
             }
          }
-      }
-      break;
-   case BA_MENU:
-      if(event->type == ButtonPress) {
-         if(np->state.border & BORDER_OUTLINE) {
-            bsize = settings.borderWidth;
-         } else {
-            bsize = 0;
-         }
+      } else if(event->button == Button3) {
          ShowWindowMenu(np, np->x + event->x - bsize,
-            np->y + event->y - settings.titleHeight - bsize);
+                        np->y + event->y - settings.titleHeight - bsize);
+      } else if(event->button == Button4) {
+         ShadeClient(np);
+      } else if(event->button == Button5) {
+         UnshadeClient(np);
       }
       break;
-   case BA_CLOSE:
+   case BA_MENU:  /* Menu button */
+      if(event->button == Button4) {
+         ShadeClient(np);
+      } else if(event->button == Button5) {
+         UnshadeClient(np);
+      } else if(event->type == ButtonPress) {
+         ShowWindowMenu(np, np->x + event->x - bsize,
+                        np->y + event->y - settings.titleHeight - bsize);
+      }
+      break;
+   case BA_CLOSE: /* Close button */
       if(event->type == ButtonRelease) {
          DeleteClient(np);
       }
       break;
-   case BA_MAXIMIZE:
+   case BA_MAXIMIZE: /* Maximize button */
       if(event->type == ButtonRelease) {
          MaximizeClientDefault(np);
       }
       break;
-   case BA_MINIMIZE:
+   case BA_MINIMIZE: /* Minimize button */
       if(event->type == ButtonRelease) {
-         MinimizeClient(np);
+         if(event->button == Button3) {
+            if(np->state.status & STAT_SHADED) {
+               UnshadeClient(np);
+            } else {
+               ShadeClient(np);
+            }
+         } else {
+            MinimizeClient(np);
+         }
       }
       break;
    default:

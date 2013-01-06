@@ -497,9 +497,9 @@ ClientState ReadWindowState(Window win)
    }
 
    /* _NET_WM_STATE */
-   status = JXGetWindowProperty(display, win,
-      atoms[ATOM_NET_WM_STATE], 0, 32, False, XA_ATOM, &realType,
-      &realFormat, &count, &extra, &temp);
+   status = JXGetWindowProperty(display, win, atoms[ATOM_NET_WM_STATE], 0, 32,
+                                False, XA_ATOM, &realType, &realFormat,
+                                &count, &extra, &temp);
    if(status == Success) {
       if(count > 0) {
          maxVert = 0;

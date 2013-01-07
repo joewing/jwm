@@ -236,8 +236,10 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
 
    /* Maximize the client if requested. */
    if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
+      const char hmax = (np->state.status & STAT_HMAX) ? 1 : 0;
+      const char vmax = (np->state.status & STAT_VMAX) ? 1 : 0;
       np->state.status &= ~(STAT_HMAX | STAT_VMAX);
-      MaximizeClientDefault(np);
+      MaximizeClient(np, hmax, vmax);
    }
 
    /* Make sure we're still in sync */
@@ -303,7 +305,9 @@ void MinimizeTransients(ClientNode *np)
 
    /* Unmap the window and update its state. */
    if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
-      JXUnmapWindow(display, np->window);
+      if(np->state.status & STAT_MAPPED) {
+         JXUnmapWindow(display, np->window);
+      }
       JXUnmapWindow(display, np->parent);
    }
    np->state.status |= STAT_MINIMIZED;
@@ -345,7 +349,6 @@ void ShadeClient(ClientNode *np)
       JXUnmapWindow(display, np->window);
    }
    np->state.status |= STAT_SHADED;
-   np->state.status &= ~STAT_MINIMIZED;
    np->state.status &= ~STAT_SDESKTOP;
    np->state.status &= ~STAT_MAPPED;
 
@@ -424,7 +427,9 @@ void SetClientWithdrawn(ClientNode *np)
       JXUnmapWindow(display, np->window);
       JXUnmapWindow(display, np->parent);
    } else if(np->state.status & STAT_SHADED) {
-      JXUnmapWindow(display, np->parent);
+      if(!(np->state.status & STAT_MINIMIZED)) {
+         JXUnmapWindow(display, np->parent);
+      }
    }
 
    np->state.status &= ~STAT_SHADED;
@@ -670,9 +675,11 @@ void ShowClient(ClientNode *np)
    if(np->state.status & STAT_HIDDEN) {
       np->state.status &= ~STAT_HIDDEN;
       if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
-         JXMapWindow(display, np->parent);
-         if(np->state.status & STAT_ACTIVE) {
-            FocusClient(np);
+         if(!(np->state.status & STAT_MINIMIZED)) {
+            JXMapWindow(display, np->parent);
+            if(np->state.status & STAT_ACTIVE) {
+               FocusClient(np);
+            }
          }
       }
    }
@@ -696,8 +703,6 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
       UnshadeClient(np);
    }
 
-   ResetRoundedRectWindow(np);
-
    GetBorderSize(np, &north, &south, &east, &west);
 
    if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
@@ -710,16 +715,12 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
       PlaceMaximizedClient(np, horiz, vert);
    }
 
-   ShapeRoundedRectWindow(np->parent, 
-      np->width + east + west,
-      np->height + north + south);
-
    JXMoveResizeWindow(display, np->parent,
-      np->x - west, np->y - north,
-      np->width + east + west,
-      np->height + north + south);
+                      np->x - west, np->y - north,
+                      np->width + east + west,
+                      np->height + north + south);
    JXMoveResizeWindow(display, np->window, west,
-      north, np->width, np->height);
+                      north, np->width, np->height);
 
    WriteState(np);
    SendConfigureEvent(np);
@@ -734,7 +735,7 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
 void MaximizeClientDefault(ClientNode *np)
 {
 
-   int hmax, vmax;
+   char hmax, vmax;
 
    Assert(np);
 

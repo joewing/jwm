@@ -319,6 +319,8 @@ void WriteState(ClientNode *np)
       data[0] = NormalState;
    } else if(np->state.status & STAT_MINIMIZED) {
       data[0] = IconicState;
+   } else if(np->state.status & STAT_SHADED) {
+      data[0] = NormalState;
    } else {
       data[0] = WithdrawnState;
    }
@@ -355,7 +357,7 @@ void WriteNetState(ClientNode *np)
    Assert(np);
 
    /* We remove the _NET_WM_STATE and _NET_WM_DESKTOP for withdrawn windows. */
-   if(!(np->state.status & (STAT_MAPPED | STAT_MINIMIZED))) {
+   if(!(np->state.status & (STAT_MAPPED | STAT_MINIMIZED | STAT_SHADED))) {
       JXDeleteProperty(display, np->window, atoms[ATOM_NET_WM_STATE]);
       JXDeleteProperty(display, np->window, atoms[ATOM_NET_WM_DESKTOP]);
       return;
@@ -472,16 +474,16 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
    unsigned char *temp;
    Atom *state;
    unsigned long card;
-   int maxVert, maxHorz;
-   int fullScreen;
+   char customLayer;
 
    Assert(win != None);
 
-   result.status = STAT_NONE;
+   result.status = STAT_MAPPED;
    result.border = BORDER_DEFAULT;
    result.layer = LAYER_NORMAL;
    result.desktop = currentDesktop;
    result.opacity = 0xFFFFFFFF;
+   customLayer = 0;
 
    if(alreadyMapped) {
       ReadWMState(win, &result);
@@ -507,9 +509,6 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
                                 &count, &extra, &temp);
    if(status == Success) {
       if(count > 0) {
-         maxVert = 0;
-         maxHorz = 0;
-         fullScreen = 0;
          state = (Atom*)temp;
          for(x = 0; x < count; x++) {
             if(state[x] == atoms[ATOM_NET_WM_STATE_STICKY]) {
@@ -517,11 +516,11 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_SHADED]) {
                result.status |= STAT_SHADED;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_MAXIMIZED_VERT]) {
-               maxVert = 1;
+               result.status |= STAT_VMAX;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ]) {
-               maxHorz = 1;
+               result.status |= STAT_HMAX;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_FULLSCREEN]) {
-               fullScreen = 1;
+               result.status |= STAT_FULLSCREEN;
                result.layer = LAYER_ABOVE;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_HIDDEN]) {
                result.status |= STAT_MINIMIZED;
@@ -529,18 +528,11 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
                result.status |= STAT_NOLIST;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_ABOVE]) {
                result.layer = LAYER_ABOVE;
+               customLayer = 1;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_BELOW]) {
                result.layer = LAYER_BELOW;
+               customLayer = 1;
             }
-         }
-         if(maxHorz) {
-            result.status |= STAT_HMAX;
-         }
-         if(maxVert) {
-            result.status |= STAT_VMAX;
-         }
-         if(fullScreen) {
-            result.status |= STAT_FULLSCREEN;
          }
       }
       if(temp) {
@@ -559,8 +551,8 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
          if(         state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_NORMAL]) {
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DESKTOP]) {
-            if(result.layer == LAYER_NORMAL) {
-               result.layer   = LAYER_DESKTOP;
+            if(!customLayer) {
+               result.layer = LAYER_DESKTOP;
             }
             result.border  = BORDER_NONE;
             result.status |= STAT_STICKY;
@@ -568,7 +560,7 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DOCK]) {
             result.border = BORDER_NONE;
-            if(result.layer == LAYER_NORMAL) {
+            if(!customLayer) {
                result.layer = LAYER_ABOVE;
             }
             break;
@@ -853,13 +845,13 @@ void ReadWMState(Window win, ClientState *state)
       case IconicState:
          state->status |= STAT_MINIMIZED;
          break;
+      case WithdrawnState:
+         state->status &= ~STAT_MAPPED;
+         break;
       default:
-         state->status |= STAT_MAPPED;
          break;
       }
       JXFree(temp);
-   } else {
-      state->status |= STAT_MAPPED;
    }
 
 }
@@ -881,17 +873,13 @@ void ReadWMHints(Window win, ClientState *state)
             state->status |= STAT_MINIMIZED;
             break;
          case WithdrawnState:
+            state->status &= ~STAT_MAPPED;
+            break;
          default:
-            if(!(state->status & (STAT_MINIMIZED | STAT_NOLIST))) {
-               state->status |= STAT_MAPPED;
-            }
+            break;
          }
-      } else {
-         state->status |= STAT_MAPPED;
       }
       JXFree(wmhints);
-   } else {
-      state->status |= STAT_MAPPED;
    }
 
 }

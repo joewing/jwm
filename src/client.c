@@ -224,6 +224,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
 
    /* Shade the client if requested. */
    if(np->state.status & STAT_SHADED) {
+      np->state.status &= ~STAT_SHADED;
       ShadeClient(np);
    }
 

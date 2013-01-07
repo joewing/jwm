@@ -172,7 +172,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    np->state.border = BORDER_DEFAULT;
    np->borderAction = BA_NONE;
 
-   ReadClientProtocols(np);
+   ReadClientProtocols(np, alreadyMapped);
 
    if(!notOwner) {
       np->state.border = BORDER_OUTLINE | BORDER_TITLE | BORDER_MOVE;

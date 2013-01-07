@@ -1097,7 +1097,7 @@ void HandleMapRequest(const XMapEvent *event)
          }
 
          /* Read the state (and new layer). */
-         np->state = ReadWindowState(np->window);
+         np->state = ReadWindowState(np->window, 0);
          np->state.status |= STAT_MAPPED;
 
          /* Add to the layer list. */

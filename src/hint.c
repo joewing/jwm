@@ -147,6 +147,7 @@ static const AtomNode atomList[] = {
 
 static void WriteNetState(ClientNode *np);
 static void WriteNetAllowed(ClientNode *np);
+static void ReadWMState(Window win, ClientState *state);
 static void ReadWMHints(Window win, ClientState *state);
 static void ReadMotifHints(Window win, ClientState *state);
 
@@ -273,7 +274,7 @@ void ReadCurrentDesktop()
 /** Read client protocls/hints.
  * This is called while the client is being added to management.
  */
-void ReadClientProtocols(ClientNode *np)
+void ReadClientProtocols(ClientNode *np, char alreadyMapped)
 {
 
    Status status;
@@ -291,7 +292,7 @@ void ReadClientProtocols(ClientNode *np)
       np->owner = None;
    }
 
-   np->state = ReadWindowState(np->window);
+   np->state = ReadWindowState(np->window, alreadyMapped);
    if(np->minWidth == np->maxWidth && np->minHeight == np->maxHeight) {
       np->state.border &= ~BORDER_RESIZE;
    }
@@ -354,7 +355,7 @@ void WriteNetState(ClientNode *np)
    Assert(np);
 
    /* We remove the _NET_WM_STATE and _NET_WM_DESKTOP for withdrawn windows. */
-   if(!(np->state.status & STAT_MAPPED)) {
+   if(!(np->state.status & (STAT_MAPPED | STAT_MINIMIZED))) {
       JXDeleteProperty(display, np->window, atoms[ATOM_NET_WM_STATE]);
       JXDeleteProperty(display, np->window, atoms[ATOM_NET_WM_DESKTOP]);
       return;
@@ -459,7 +460,7 @@ void WriteNetAllowed(ClientNode *np)
 }
 
 /** Read all hints needed to determine the current window state. */
-ClientState ReadWindowState(Window win)
+ClientState ReadWindowState(Window win, char alreadyMapped)
 {
 
    ClientState result;
@@ -482,7 +483,11 @@ ClientState ReadWindowState(Window win)
    result.desktop = currentDesktop;
    result.opacity = 0xFFFFFFFF;
 
-   ReadWMHints(win, &result);
+   if(alreadyMapped) {
+      ReadWMState(win, &result);
+   } else {
+      ReadWMHints(win, &result);
+   }
    ReadMotifHints(win, &result);
 
    /* _NET_WM_DESKTOP */
@@ -824,6 +829,37 @@ void ReadWMColormaps(ClientNode *np)
          JXFree(windows);
 
       }
+   }
+
+}
+
+/** Read the WM state for a window. */
+void ReadWMState(Window win, ClientState *state)
+{
+
+   Status status;
+   unsigned long count;
+   unsigned long extra;
+   Atom realType;
+   int realFormat;
+   unsigned int *temp;
+
+   status = JXGetWindowProperty(display, win, atoms[ATOM_WM_STATE], 0, 2,
+                                False, atoms[ATOM_WM_STATE],
+                                &realType, &realFormat,
+                                &count, &extra, (unsigned char**)&temp);
+   if(JLIKELY(status == Success && count == 2)) {
+      switch(temp[0]) {
+      case IconicState:
+         state->status |= STAT_MINIMIZED;
+         break;
+      default:
+         state->status |= STAT_MAPPED;
+         break;
+      }
+      JXFree(temp);
+   } else {
+      state->status |= STAT_MAPPED;
    }
 
 }

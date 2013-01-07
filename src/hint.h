@@ -151,8 +151,9 @@ void ReadCurrentDesktop();
 
 /** Read client protocols
  * @param np The client.
+ * @param alreadyMapped Set if the client is already mapped.
  */
-void ReadClientProtocols(struct ClientNode *np);
+void ReadClientProtocols(struct ClientNode *np, char alreadyMapped);
 
 /** Read a client's name.
  * @param np The client.
@@ -187,9 +188,10 @@ void ReadWinLayer(struct ClientNode *np);
 
 /** Read the current state of a window.
  * @param win The window.
+ * @param alreadyMapped Set if the window is already mapped.
  * @return The window state.
  */
-ClientState ReadWindowState(Window win);
+ClientState ReadWindowState(Window win, char alreadyMapped);
 
 /** Set the state of a client window.
  * @param np The client.

@@ -333,6 +333,9 @@ void ShadeClient(ClientNode *np)
    if(!(np->state.border & BORDER_TITLE)) {
       return;
    }
+   if(np->state.status & STAT_SHADED) {
+      return;
+   }
 
    GetBorderSize(np, &north, &south, &east, &west);
 
@@ -371,20 +374,24 @@ void UnshadeClient(ClientNode *np)
       return;
    }
 
-   if(np->state.status & STAT_SHADED) {
-      JXMapWindow(display, np->window);
-      np->state.status |= STAT_MAPPED;
-      np->state.status &= ~STAT_SHADED;
+   if(!(np->state.status & STAT_SHADED)) {
+      return;
    }
+
+   JXMapWindow(display, np->window);
+   np->state.status |= STAT_MAPPED;
+   np->state.status &= ~STAT_SHADED;
 
    GetBorderSize(np, &north, &south, &east, &west);
 
    ResetRoundedRectWindow(np);
    ShapeRoundedRectWindow(np->parent, 
-      np->width + west + east, np->height + north + south);
+                          np->width + west + east,
+                          np->height + north + south);
 
    JXResizeWindow(display, np->parent,
-                  np->width + west + east, np->height + north + south);
+                  np->width + west + east,
+                  np->height + north + south);
 
    WriteState(np);
 

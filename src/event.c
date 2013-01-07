@@ -1271,12 +1271,14 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
       }
       break;
    case BA_CLOSE: /* Close button */
-      if(event->type == ButtonRelease) {
+      if(event->type == ButtonRelease
+         && (event->button == Button1 || event->button == Button3)) {
          DeleteClient(np);
       }
       break;
    case BA_MAXIMIZE: /* Maximize button */
-      if(event->type == ButtonRelease) {
+      if(event->type == ButtonRelease
+         && (event->button == Button1 || event->button == Button3)) {
          MaximizeClientDefault(np);
       }
       break;
@@ -1288,7 +1290,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
             } else {
                ShadeClient(np);
             }
-         } else {
+         } else if(event->button == Button1) {
             MinimizeClient(np);
          }
       }

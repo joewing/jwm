@@ -496,8 +496,6 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
 
       GetBorderSize(np, &north, &south, &east, &west);
 
-      ResetRoundedRectWindow(np);
-
       wc.stack_mode = Above;
       wc.sibling = np->parent;
       wc.border_width = 0;
@@ -519,12 +517,6 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
       ResetRoundedRectWindow(np);
       ShapeRoundedRectWindow(np->parent, np->width + east + west,
                              np->height + north + south);
-      JXMoveResizeWindow(display, np->parent,
-                         np->x - west, np->y - north,
-                         np->width + east + west,
-                         np->height + north + south);
-      JXMoveResizeWindow(display, np->window, west, north,
-                         np->width, np->height);
 
    } else {
 

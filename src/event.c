@@ -516,6 +516,16 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
       wc.height = np->height;
       JXConfigureWindow(display, np->window, event->value_mask, &wc);
 
+      ResetRoundedRectWindow(np);
+      ShapeRoundedRectWindow(np->parent, np->width + east + west,
+                             np->height + north + south);
+      JXMoveResizeWindow(display, np->parent,
+                         np->x - west, np->y - north,
+                         np->width + east + west,
+                         np->height + north + south);
+      JXMoveResizeWindow(display, np->window, west, north,
+                         np->width, np->height);
+
    } else {
 
       /* We don't know about this window, just let the configure through. */
@@ -824,15 +834,14 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
 
    /** Reset shaped bound */
    ResetRoundedRectWindow(np);
-   ShapeRoundedRectWindow(np->parent, 
-      np->width + east + west,
-      np->height + north + south);
+   ShapeRoundedRectWindow(np->parent, np->width + east + west,
+                          np->height + north + south);
    JXMoveResizeWindow(display, np->parent,
-      np->x - west, np->y - north,
-      np->width + east + west,
-      np->height + north + south);
+                      np->x - west, np->y - north,
+                      np->width + east + west,
+                      np->height + north + south);
    JXMoveResizeWindow(display, np->window, west, north,
-      np->width, np->height);
+                      np->width, np->height);
 
    WriteState(np);
    SendConfigureEvent(np);

@@ -344,7 +344,6 @@ void ShadeClient(ClientNode *np)
 
    GetBorderSize(np, &north, &south, &east, &west);
 
-   ResetRoundedRectWindow(np);
    if(np->state.status & STAT_MAPPED) {
       JXUnmapWindow(display, np->window);
    }
@@ -352,16 +351,11 @@ void ShadeClient(ClientNode *np)
    np->state.status &= ~STAT_SDESKTOP;
    np->state.status &= ~STAT_MAPPED;
 
-   ShapeRoundedRectWindow(np->parent, np->width + west + east, north);
    JXResizeWindow(display, np->parent, np->width + east + west, north);
 
-   WriteState(np);
+   /* Shape will up updated in HandleUnmapNotify. */
 
-#ifdef USE_SHAPE
-   if(np->state.status & STAT_SHAPE) {
-      SetShape(np);
-   }
-#endif
+   WriteState(np);
    UpdatePager();
 
 }
@@ -388,17 +382,13 @@ void UnshadeClient(ClientNode *np)
 
    GetBorderSize(np, &north, &south, &east, &west);
 
-   ResetRoundedRectWindow(np);
-   ShapeRoundedRectWindow(np->parent, 
-                          np->width + west + east,
-                          np->height + north + south);
-
    JXResizeWindow(display, np->parent,
                   np->width + west + east,
                   np->height + north + south);
 
    WriteState(np);
 
+   ResetRoundedRectWindow(np);
 #ifdef USE_SHAPE
    if(np->state.status & STAT_SHAPE) {
       SetShape(np);
@@ -406,7 +396,6 @@ void UnshadeClient(ClientNode *np)
 #endif
 
    RefocusClient();
-   RestackClients();
    UpdatePager();
 
 }
@@ -721,12 +710,10 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
                       np->height + north + south);
    JXMoveResizeWindow(display, np->window, west,
                       north, np->width, np->height);
+   ResetRoundedRectWindow(np);
 
    WriteState(np);
    SendConfigureEvent(np);
-   ResetRoundedRectWindow(np);
-   ShapeRoundedRectWindow(np->parent, np->width + east + west,
-                          np->height + north + south);
    UpdatePager();
 
 }
@@ -766,8 +753,6 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
       UnshadeClient(np);
    }
 
-   ResetRoundedRectWindow(np);
-
    if(fullScreen) {
 
       np->state.status |= STAT_FULLSCREEN;
@@ -793,15 +778,13 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
       np->width = box.width;
       np->height = box.height;
 
-      ShapeRoundedRectWindow(np->parent,
-                             np->width + east + west,
-                             np->height + north + south);
       JXMoveResizeWindow(display, np->parent,
                          np->x - west, np->y - north,
                          np->width + east + west,
                          np->height + north + south);
       JXMoveResizeWindow(display, np->window, west, north,
                          np->width, np->height);
+      ResetRoundedRectWindow(np);
 
    } else {
 
@@ -813,9 +796,6 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
       np->height = np->oldHeight;
 
       GetBorderSize(np, &north, &south, &east, &west);
-      ShapeRoundedRectWindow(np->parent,
-                              np->width + east + west,
-                             np->height + north + south);
 
       JXMoveResizeWindow(display, np->parent,
                          np->x - west,
@@ -824,6 +804,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
                          np->height + north + south);
       JXMoveResizeWindow(display, np->window,
                          west, north, np->width, np->height);
+      ResetRoundedRectWindow(np);
 
       event.type = MapRequest;
       event.xmaprequest.send_event = True;
@@ -831,7 +812,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
       event.xmaprequest.parent = np->parent;
       event.xmaprequest.window = np->window;
       JXSendEvent(display, rootWindow, False,
-         SubstructureRedirectMask, &event);
+                  SubstructureRedirectMask, &event);
 
       SetClientLayer(np, LAYER_NORMAL);
 

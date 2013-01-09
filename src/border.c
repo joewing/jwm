@@ -815,7 +815,7 @@ void ResetRoundedRectWindow(const ClientNode *np)
 #endif
 }
  
-/** Set the shape mask on a window to give a rounded boarder. */
+/** Set the shape mask on a window to give a rounded border. */
 void ShapeRoundedRectWindow(Window w, int width, int height)
 {
 #ifdef USE_SHAPE

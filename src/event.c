@@ -513,10 +513,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
       wc.width = np->width;
       wc.height = np->height;
       JXConfigureWindow(display, np->window, event->value_mask, &wc);
-
       ResetRoundedRectWindow(np);
-      ShapeRoundedRectWindow(np->parent, np->width + east + west,
-                             np->height + north + south);
 
    } else {
 
@@ -824,16 +821,13 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
       Warning(_("Fullscreen state will be shaped!"));
    }
 
-   /** Reset shaped bound */
-   ResetRoundedRectWindow(np);
-   ShapeRoundedRectWindow(np->parent, np->width + east + west,
-                          np->height + north + south);
    JXMoveResizeWindow(display, np->parent,
                       np->x - west, np->y - north,
                       np->width + east + west,
                       np->height + north + south);
    JXMoveResizeWindow(display, np->window, west, north,
                       np->width, np->height);
+   ResetRoundedRectWindow(np);
 
    WriteState(np);
    SendConfigureEvent(np);

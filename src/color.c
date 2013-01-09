@@ -205,7 +205,7 @@ void StartupColors()
          names[COLOR_TRAYBUTTON_FG] = CopyString(names[COLOR_TASK_FG]);
       }
       if(!names[COLOR_TRAYBUTTON_BG1]) {
-         names[COLOR_TRAYBUTTON_BG1] = CopyString(names[COLOR_TASK_BG2]);
+         names[COLOR_TRAYBUTTON_BG1] = CopyString(names[COLOR_TASK_BG1]);
       }
       if(!names[COLOR_TRAYBUTTON_BG2]) {
          names[COLOR_TRAYBUTTON_BG2] = CopyString(names[COLOR_TASK_BG2]);

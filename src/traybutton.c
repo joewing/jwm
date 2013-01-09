@@ -288,10 +288,8 @@ void Draw(TrayComponentType *cp, int active)
 
    bp = (TrayButtonType*)cp->object;
 
-   if(colors[COLOR_TRAYBUTTON_BG1] == colors[COLOR_TRAYBUTTON_BG2]) {
-      JXSetForeground(display, rootGC, colors[COLOR_TRAYBUTTON_BG1]);
-      JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
-   }
+   JXSetForeground(display, rootGC, colors[COLOR_TRAY_BG]);
+   JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
 
    ResetButton(&button, cp->pixmap, rootGC);
    if(active) {

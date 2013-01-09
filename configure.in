@@ -280,7 +280,7 @@ if test "$enable_fribidi" != "no" ; then
 
 fi
 if test "$enable_fribidi" != "no" ; then
-   AC_CHECK_LIB(fribidi, fribidi_log2vis,
+   AC_CHECK_LIB(fribidi, fribidi_charset_to_unicode,
       [ LDFLAGS="$LDFLAGS $FRIBIDI_LDFLAGS"
         CFLAGS="$CFLAGS $FRIBIDI_CFLAGS"
         enable_fribidi="yes"

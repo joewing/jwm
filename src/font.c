@@ -202,7 +202,7 @@ void RenderString(Drawable d, FontType font, ColorType color,
 #ifdef USE_FRIBIDI
 
    FriBidiChar *temp;
-   FriBidiCharType type = FRIBIDI_TYPE_ON;
+   FriBidiParType type = FRIBIDI_PAR_ON;
    int unicodeLength;
 
 #endif
@@ -233,11 +233,12 @@ void RenderString(Drawable d, FontType font, ColorType color,
 #ifdef USE_FRIBIDI
 
    temp = AllocateStack((len + 1) * sizeof(FriBidiChar));
-   unicodeLength = fribidi_utf8_to_unicode((char*)str, len, temp);
+   unicodeLength = fribidi_charset_to_unicode(FRIBIDI_CHAR_SET_UTF8,
+                                              (char*)str, len, temp);
 
    fribidi_log2vis(temp, unicodeLength, &type, temp, NULL, NULL, NULL);
 
-   fribidi_unicode_to_utf8(temp, len, (char*)temp);
+   fribidi_unicode_to_charset(FRIBIDI_CHAR_SET_UTF8, temp, len, (char*)temp);
    output = (char*)temp;
 
 #else

@@ -206,8 +206,6 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
       JXMapWindow(display, np->parent);
    }
 
-   DrawBorder(np);
-
    AddClientToTaskBar(np);
 
    if(!alreadyMapped) {

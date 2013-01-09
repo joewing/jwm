@@ -240,6 +240,9 @@ void DrawBorderHelper(const ClientNode *np)
 
    }
 
+   /* Set parent background to reduce flicker. */
+   JXSetWindowBackground(display, np->parent, titleColor2);
+
    /* Shape window corners */
    if(np->state.status & STAT_SHADED) {
       ShapeRoundedRectWindow(np->parent, width, north);

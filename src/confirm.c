@@ -60,7 +60,6 @@ static void DestroyConfirmDialog();
 static void ComputeDimensions();
 static void DrawMessage();
 static void DrawButtons();
-static DialogType *FindDialogByWindow(Window w);
 static char HandleDialogExpose(const XExposeEvent *event); 
 static char HandleDialogButtonPress(const XButtonEvent *event);
 static char HandleDialogButtonRelease(const XButtonEvent *event);
@@ -79,7 +78,7 @@ void StartupDialogs()
 void ShutdownDialogs()
 {
    if(dialog) {
-      DestroyConfirmDialog(dialog);
+      DestroyConfirmDialog();
       dialog = NULL;
    }
 }
@@ -164,7 +163,7 @@ char HandleDialogButtonRelease(const XButtonEvent *event)
       if(dialog) {
          if(dialog->buttonState != DBS_NORMAL) {
             dialog->buttonState = DBS_NORMAL;
-            DrawButtons(dialog);
+            DrawButtons();
          }
       }
 

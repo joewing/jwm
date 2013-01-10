@@ -26,7 +26,7 @@ typedef enum {
    DBS_CANCEL   = 2
 } DialogButtonState;
 
-typedef struct DialogType {
+typedef struct {
 
    int x, y;
    int width, height;
@@ -46,23 +46,20 @@ typedef struct DialogType {
    void (*action)(ClientNode*);
    ClientNode *client;
 
-   struct DialogType *prev;
-   struct DialogType *next;
-
 } DialogType;
 
 static const char *OK_STRING = "Ok";
 static const char *CANCEL_STRING = "Cancel";
 
-static DialogType *dialogList = NULL;
+static DialogType *dialog = NULL;
 
 static int minWidth = 0;
 
-static void DrawConfirmDialog(DialogType *d);
-static void DestroyConfirmDialog(DialogType *d);
-static void ComputeDimensions(DialogType *d);
-static void DrawMessage(DialogType *d);
-static void DrawButtons(DialogType *d);
+static void DrawConfirmDialog();
+static void DestroyConfirmDialog();
+static void ComputeDimensions();
+static void DrawMessage();
+static void DrawButtons();
 static DialogType *FindDialogByWindow(Window w);
 static char HandleDialogExpose(const XExposeEvent *event); 
 static char HandleDialogButtonPress(const XButtonEvent *event);
@@ -81,8 +78,9 @@ void StartupDialogs()
 /** Stop dialog processing. */
 void ShutdownDialogs()
 {
-   while(dialogList) {
-      DestroyConfirmDialog(dialogList);
+   if(dialog) {
+      DestroyConfirmDialog(dialog);
+      dialog = NULL;
    }
 }
 
@@ -117,14 +115,9 @@ char ProcessDialogEvent(const XEvent *event)
 /** Handle an expose event. */
 char HandleDialogExpose(const XExposeEvent *event)
 {
-
-   DialogType *dp;
-
    Assert(event);
-
-   dp = FindDialogByWindow(event->window);
-   if(dp) {
-      DrawConfirmDialog(dp);
+   if(dialog && dialog->node->window == event->window) {
+      DrawConfirmDialog();
       return 1;
    } else {
       return 0;
@@ -135,44 +128,43 @@ char HandleDialogExpose(const XExposeEvent *event)
 char HandleDialogButtonRelease(const XButtonEvent *event)
 {
 
-   DialogType *dp;
    int x, y;
    char cancelPressed, okPressed;
 
    Assert(event);
 
-   dp = FindDialogByWindow(event->window);
-   if(dp) {
+   if(dialog && event->window == dialog->node->window) {
       cancelPressed = 0;
       okPressed = 0;
       y = event->y;
-      if(y >= dp->buttony && y < dp->buttony + dp->buttonHeight) {
+      if(y >= dialog->buttony && y < dialog->buttony + dialog->buttonHeight) {
          x = event->x;
-         if(x >= dp->okx && x < dp->okx + dp->buttonWidth) {
+         if(x >= dialog->okx && x < dialog->okx + dialog->buttonWidth) {
             okPressed = 1;
-         } else if(x >= dp->cancelx && x < dp->cancelx + dp->buttonWidth) {
+         } else if(x >= dialog->cancelx
+                  && x < dialog->cancelx + dialog->buttonWidth) {
             cancelPressed = 1;
          }
       }
 
       if(okPressed) {
-         (dp->action)(dp->client);
+         (dialog->action)(dialog->client);
       }
 
       if(cancelPressed || okPressed) {
-         DestroyConfirmDialog(dp);
+         DestroyConfirmDialog();
       } else {
-         dp->buttonState = DBS_NORMAL;
-         DrawButtons(dp);
+         dialog->buttonState = DBS_NORMAL;
+         DrawButtons();
       }
 
       return 1;
    } else {
 
-      for(dp = dialogList; dp; dp = dp->next) {
-         if(dp->buttonState != DBS_NORMAL) {
-            dp->buttonState = DBS_NORMAL;
-            DrawButtons(dp);
+      if(dialog) {
+         if(dialog->buttonState != DBS_NORMAL) {
+            dialog->buttonState = DBS_NORMAL;
+            DrawButtons(dialog);
          }
       }
 
@@ -186,7 +178,6 @@ char HandleDialogButtonRelease(const XButtonEvent *event)
 char HandleDialogButtonPress(const XButtonEvent *event)
 {
 
-   DialogType *dp;
    char cancelPressed;
    char okPressed;
    int x, y;
@@ -194,33 +185,33 @@ char HandleDialogButtonPress(const XButtonEvent *event)
    Assert(event);
 
    /* Find the dialog on which the press occured (if any). */
-   dp = FindDialogByWindow(event->window);
-   if(dp) {
+   if(dialog && event->window == dialog->node->window) {
 
       /* Determine which button was pressed (if any). */
       cancelPressed = 0;
       okPressed = 0;
       y = event->y;
-      if(y >= dp->buttony && y < dp->buttony + dp->buttonHeight) {
+      if(y >= dialog->buttony && y < dialog->buttony + dialog->buttonHeight) {
          x = event->x;
-         if(x >= dp->okx && x < dp->okx + dp->buttonWidth) {
+         if(x >= dialog->okx && x < dialog->okx + dialog->buttonWidth) {
             okPressed = 1;
-         } else if(x >= dp->cancelx && x < dp->cancelx + dp->buttonWidth) {
+         } else if(x >= dialog->cancelx
+                  && x < dialog->cancelx + dialog->buttonWidth) {
             cancelPressed = 1;
          }
       }
 
-      dp->buttonState = DBS_NORMAL;
+      dialog->buttonState = DBS_NORMAL;
       if(cancelPressed) {
-         dp->buttonState = DBS_CANCEL;
+         dialog->buttonState = DBS_CANCEL;
       }
 
       if(okPressed) {
-         dp->buttonState = DBS_OK;
+         dialog->buttonState = DBS_OK;
       }
 
       /* Draw the buttons. */
-      DrawButtons(dp);
+      DrawButtons();
 
       return 1;
 
@@ -233,24 +224,11 @@ char HandleDialogButtonPress(const XButtonEvent *event)
 
 }
 
-/** Find a dialog by window or frame. */
-DialogType *FindDialogByWindow(Window w)
-{
-   DialogType *dp;
-   for(dp = dialogList; dp; dp = dp->next) {
-      if(dp->node->window == w) {
-         return dp;
-      }
-   }
-   return NULL;
-}
-
 /** Show a confirm dialog. */
 void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
 {
 
    va_list ap;
-   DialogType *dp;
    XSetWindowAttributes attrs;
    XSizeHints shints;
    Window window;
@@ -259,57 +237,58 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
 
    Assert(action);
 
-   dp = Allocate(sizeof(DialogType));
-   dp->client = np;
-   dp->action = action;
-   dp->buttonState = DBS_NORMAL;
-
-   dp->prev = NULL;
-   dp->next = dialogList;
-   if(dialogList) {
-      dialogList->prev = dp;
+   /* Only allow one dialog at a time. */
+   if(dialog) {
+      RaiseClient(dialog->node);
+      FocusClient(dialog->node);
+      return;
    }
-   dialogList = dp;
+
+   dialog = Allocate(sizeof(DialogType));
+   dialog->client = np;
+   dialog->action = action;
+   dialog->buttonState = DBS_NORMAL;
 
    /* Get the number of lines. */
    va_start(ap, action);
-   for(dp->lineCount = 0; va_arg(ap, char*); dp->lineCount++);
+   for(dialog->lineCount = 0; va_arg(ap, char*); dialog->lineCount++);
    va_end(ap);
 
-   dp->message = Allocate(dp->lineCount * sizeof(char*));
+   dialog->message = Allocate(dialog->lineCount * sizeof(char*));
    va_start(ap, action);
-   for(x = 0; x < dp->lineCount; x++) {
+   for(x = 0; x < dialog->lineCount; x++) {
       str = va_arg(ap, char*);
-      dp->message[x] = CopyString(str);
+      dialog->message[x] = CopyString(str);
    }
    va_end(ap);
 
-   ComputeDimensions(dp);
+   ComputeDimensions();
 
    attrs.background_pixel = colors[COLOR_MENU_BG];
    attrs.event_mask = ButtonReleaseMask | ExposureMask;
 
    window = JXCreateWindow(display, rootWindow,
-      dp->x, dp->y, dp->width, dp->height, 0,
-      CopyFromParent, InputOutput, CopyFromParent,
-      CWBackPixel | CWEventMask, &attrs);
+                           dialog->x, dialog->y,
+                           dialog->width, dialog->height, 0,
+                           CopyFromParent, InputOutput, CopyFromParent,
+                           CWBackPixel | CWEventMask, &attrs);
 
-   shints.x = dp->x;
-   shints.y = dp->y;
+   shints.x = dialog->x;
+   shints.y = dialog->y;
    shints.flags = PPosition;
    JXSetWMNormalHints(display, window, &shints);
 
    JXStoreName(display, window, "Confirm");
 
-   dp->node = AddClientWindow(window, 0, 0);
-   Assert(dp->node);
+   dialog->node = AddClientWindow(window, 0, 0);
+   Assert(dialog->node);
    if(np) {
-      dp->node->owner = np->window;
+      dialog->node->owner = np->window;
    }
-   dp->node->state.status |= STAT_WMDIALOG;
-   FocusClient(dp->node);
+   dialog->node->state.status |= STAT_WMDIALOG;
+   FocusClient(dialog->node);
 
-   DrawConfirmDialog(dp);
+   DrawConfirmDialog();
 
    JXGrabButton(display, AnyButton, AnyModifier, window, True,
                 ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
@@ -317,51 +296,44 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
 }
 
 /** Draw a confirm dialog. */
-void DrawConfirmDialog(DialogType *dp)
+void DrawConfirmDialog()
 {
-   Assert(dp);
-   DrawMessage(dp);
-   DrawButtons(dp);
+   Assert(dialog);
+   DrawMessage();
+   DrawButtons();
 }
 
 /** Destroy a confirm dialog. */
-void DestroyConfirmDialog(DialogType *dp)
+void DestroyConfirmDialog()
 {
 
    int x;
 
-   Assert(dp);
+   Assert(dialog);
 
    /* This will take care of destroying the dialog window since
     * its parent will be destroyed. */
-   RemoveClient(dp->node);
+   RemoveClient(dialog->node);
 
-   for(x = 0; x < dp->lineCount; x++) {
-      Release(dp->message[x]);
+   for(x = 0; x < dialog->lineCount; x++) {
+      Release(dialog->message[x]);
    }
-   Release(dp->message);
+   Release(dialog->message);
 
-   if(dp->next) {
-      dp->next->prev = dp->prev;
-   }
-   if(dp->prev) {
-      dp->prev->next = dp->next;
-   } else {
-      dialogList = dp->next;
-   }
-   Release(dp);
+   Release(dialog);
+   dialog = NULL;
 
 }
 
 /** Compute the size of a dialog window. */
-void ComputeDimensions(DialogType *dp)
+void ComputeDimensions()
 {
 
    const ScreenType *sp;
    int width;
    int x;
 
-   Assert(dp);
+   Assert(dialog);
 
    /* Get the min width from the size of the buttons. */
    if(!minWidth) {
@@ -372,35 +344,37 @@ void ComputeDimensions(DialogType *dp)
       }
       minWidth += 16 * 3;
    }
-   dp->width = minWidth;
+   dialog->width = minWidth;
 
    /* Take into account the size of the message. */
-   for(x = 0; x < dp->lineCount; x++) {
-      width = GetStringWidth(FONT_MENU, dp->message[x]);
-      if(width > dp->width) {
-         dp->width = width;
+   for(x = 0; x < dialog->lineCount; x++) {
+      width = GetStringWidth(FONT_MENU, dialog->message[x]);
+      if(width > dialog->width) {
+         dialog->width = width;
       }
    }
-   dp->lineHeight = GetStringHeight(FONT_MENU);
-   dp->width += 8;
-   dp->height = (dp->lineCount + 2) * dp->lineHeight;
+   dialog->lineHeight = GetStringHeight(FONT_MENU);
+   dialog->width += 8;
+   dialog->height = (dialog->lineCount + 2) * dialog->lineHeight;
 
-   if(dp->client) {
+   if(dialog->client) {
 
-      dp->x = dp->client->x + (dp->client->width - dp->width) / 2;
-      dp->y = dp->client->y + (dp->client->height - dp->height) / 2;
+      dialog->x = dialog->client->x
+                + (dialog->client->width - dialog->width) / 2;
+      dialog->y = dialog->client->y
+                + (dialog->client->height - dialog->height) / 2;
 
-      if(dp->x < 0) {
-         dp->x = 0;
+      if(dialog->x < 0) {
+         dialog->x = 0;
       }
-      if(dp->y < 0) {
-         dp->y = 0;
+      if(dialog->y < 0) {
+         dialog->y = 0;
       }
-      if(dp->x + dp->width >= rootWidth) {
-         dp->x = rootWidth - dp->width - (settings.borderWidth * 2);
+      if(dialog->x + dialog->width >= rootWidth) {
+         dialog->x = rootWidth - dialog->width - (settings.borderWidth * 2);
       }
-      if(dp->y + dp->height >= rootHeight) {
-         dp->y = rootHeight - dp->height
+      if(dialog->y + dialog->height >= rootHeight) {
+         dialog->y = rootHeight - dialog->height
                - (settings.borderWidth * 2 + settings.titleHeight);
       }
 
@@ -408,76 +382,77 @@ void ComputeDimensions(DialogType *dp)
 
       sp = GetMouseScreen();
 
-      dp->x = (sp->width - dp->width) / 2 + sp->x;
-      dp->y = (sp->height - dp->height) / 2 + sp->y;
+      dialog->x = (sp->width - dialog->width) / 2 + sp->x;
+      dialog->y = (sp->height - dialog->height) / 2 + sp->y;
 
    }
 
 }
 
 /** Display the message on the dialog window. */
-void DrawMessage(DialogType *dp)
+void DrawMessage()
 {
 
    int yoffset;
    int x;
 
-   Assert(dp);
+   Assert(dialog);
 
    yoffset = 4;
-   for(x = 0; x < dp->lineCount; x++) {
-      RenderString(dp->node->window, FONT_MENU, COLOR_MENU_FG,
-                   4, yoffset, dp->width, dp->message[x]);
-      yoffset += dp->lineHeight;
+   for(x = 0; x < dialog->lineCount; x++) {
+      RenderString(dialog->node->window, FONT_MENU, COLOR_MENU_FG,
+                   4, yoffset, dialog->width, dialog->message[x]);
+      yoffset += dialog->lineHeight;
    }
 
 }
 
 /** Draw the buttons on the dialog window. */
-void DrawButtons(DialogType *dp)
+void DrawButtons()
 {
 
    ButtonNode button;
    int temp;
 
-   Assert(dp);
+   Assert(dialog);
 
-   dp->buttonWidth = GetStringWidth(FONT_MENU, CANCEL_STRING);
+   dialog->buttonWidth = GetStringWidth(FONT_MENU, CANCEL_STRING);
    temp = GetStringWidth(FONT_MENU, OK_STRING);
-   if(temp > dp->buttonWidth) {
-      dp->buttonWidth = temp;
+   if(temp > dialog->buttonWidth) {
+      dialog->buttonWidth = temp;
    }
-   dp->buttonWidth += 16;
-   dp->buttonHeight = dp->lineHeight + 4;
+   dialog->buttonWidth += 16;
+   dialog->buttonHeight = dialog->lineHeight + 4;
 
-   ResetButton(&button, dp->node->window, rootGC);
+   ResetButton(&button, dialog->node->window, rootGC);
    button.font = FONT_MENU;
-   button.width = dp->buttonWidth;
-   button.height = dp->buttonHeight;
+   button.width = dialog->buttonWidth;
+   button.height = dialog->buttonHeight;
    button.alignment = ALIGN_CENTER;
 
-   dp->okx = dp->width / 3 - dp->buttonWidth / 2;
-   dp->cancelx = 2 * dp->width / 3 - dp->buttonWidth / 2;
-   dp->buttony = dp->height - dp->lineHeight - dp->lineHeight / 2;
+   dialog->okx = dialog->width / 3 - dialog->buttonWidth / 2;
+   dialog->cancelx = 2 * dialog->width / 3 - dialog->buttonWidth / 2;
+   dialog->buttony = dialog->height - dialog->lineHeight
+                   - dialog->lineHeight / 2;
 
-   if(dp->buttonState == DBS_OK) {
+   if(dialog->buttonState == DBS_OK) {
       button.type = BUTTON_MENU_ACTIVE;
    } else {
       button.type = BUTTON_MENU;
    }
    button.text = OK_STRING;
-   button.x = dp->okx;
-   button.y = dp->buttony;
+   button.x = dialog->okx;
+   button.y = dialog->buttony;
    DrawButton(&button);
 
-   if(dp->buttonState == DBS_CANCEL) {
+   if(dialog->buttonState == DBS_CANCEL) {
       button.type = BUTTON_MENU_ACTIVE;
    } else {
       button.type = BUTTON_MENU;
    }
    button.text = CANCEL_STRING;
-   button.x = dp->cancelx;
-   button.y = dp->buttony;
+   button.x = dialog->cancelx;
+   button.y = dialog->buttony;
    DrawButton(&button);
 
 }

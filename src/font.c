@@ -14,7 +14,7 @@
 #include "color.h"
 #include "misc.h"
 
-static const char *DEFAULT_FONT = "-*-courier-*-r-*-*-14-*-*-*-*-*-*-*";
+static const char *DEFAULT_FONT = "fixed";
 
 static char *fontNames[FONT_COUNT];
 

@@ -25,6 +25,7 @@
 #include "tray.h"
 #include "desktop.h"
 #include "settings.h"
+#include "timing.h"
 
 typedef struct {
    int valid;
@@ -33,6 +34,12 @@ typedef struct {
 } RectangleType;
 
 static char shouldStopMove;
+static char atLeft;
+static char atRight;
+static char atBottom;
+static char atTop;
+static ClientNode *currentClient;
+static TimeType moveTime;
 
 static void StopMove(ClientNode *np, int doMove,
                      int oldx, int oldy, int hmax, int vmax);
@@ -75,11 +82,15 @@ void MoveController(int wasDestroyed)
 
    DestroyMoveWindow();
    shouldStopMove = 1;
+   atTop = 0;
+   atBottom = 0;
+   atLeft = 0;
+   atRight = 0;
 
 }
 
 /** Move a client window. */
-int MoveClient(ClientNode *np, int startx, int starty, int snap)
+char MoveClient(ClientNode *np, int startx, int starty, int snap)
 {
 
    XEvent event;
@@ -115,6 +126,11 @@ int MoveClient(ClientNode *np, int startx, int starty, int snap)
    startx -= west;
    starty -= north;
 
+   currentClient = np;
+   atTop = 0;
+   atBottom = 0;
+   atLeft = 0;
+   atRight = 0;
    doMove = 0;
    for(;;) {
 
@@ -141,42 +157,20 @@ int MoveClient(ClientNode *np, int startx, int starty, int snap)
          np->x = event.xmotion.x_root - startx;
          np->y = event.xmotion.y_root - starty;
 
+         GetCurrentTime(&moveTime);
+         atLeft = 0;
+         atTop = 0;
+         atRight = 0;
+         atBottom = 0;
          if(event.xmotion.x_root == 0) {
-            if(LeftDesktop()) {
-               SetClientDesktop(np, currentDesktop);
-               RestackClients();
-               np->x = rootWidth - 2 - startx;
-               np->y = event.xmotion.y_root - starty;
-               MoveMouse(rootWindow, np->x + startx, np->y + starty);
-               DiscardMotionEvents(&event, np->window);
-            }
+            atLeft = 1;
          } else if(event.xmotion.x_root == rootWidth - 1) {
-            if(RightDesktop()) {
-               SetClientDesktop(np, currentDesktop);
-               RestackClients();
-               np->x = 1 - startx;
-               np->y = event.xmotion.y_root - starty;
-               MoveMouse(rootWindow, np->x + startx, np->y + starty);
-               DiscardMotionEvents(&event, np->window);
-            }
-         } else if(event.xmotion.y_root == 0) {
-            if(AboveDesktop()) {
-               SetClientDesktop(np, currentDesktop);
-               RestackClients();
-               np->x = event.xmotion.x_root - startx;
-               np->y = rootHeight - 2 - starty;
-               MoveMouse(rootWindow, np->x + startx, np->y + starty);
-               DiscardMotionEvents(&event, np->window);
-            }
+            atRight = 1;
+         }
+         if(event.xmotion.y_root == 0) {
+            atTop = 1;
          } else if(event.xmotion.y_root == rootHeight - 1) {
-            if(BelowDesktop()) {
-               SetClientDesktop(np, currentDesktop);
-               RestackClients();
-               np->x = event.xmotion.x_root - startx;
-               np->y = 1 - starty;
-               MoveMouse(rootWindow, np->x + startx, np->y + starty);
-               DiscardMotionEvents(&event, np->window);
-            }
+            atBottom = 1;
          }
 
          if(snap) {
@@ -230,7 +224,7 @@ int MoveClient(ClientNode *np, int startx, int starty, int snap)
 }
 
 /** Move a client window (keyboard or menu initiated). */
-int MoveClientKeyboard(ClientNode *np)
+char MoveClientKeyboard(ClientNode *np)
 {
 
    XEvent event;
@@ -767,6 +761,34 @@ char CheckBottomValid(const RectangleType *client,
    }
 
    return 0;
+
+}
+
+/** Switch desktops if appropriate. */
+void SignalMove(const struct TimeType *now, int x, int y)
+{
+
+   if(settings.desktopDelay == 0) {
+      return;
+   }
+   if(GetTimeDifference(now, &moveTime) < settings.desktopDelay) {
+      return;
+   }
+
+   moveTime = *now;
+   if(atLeft && LeftDesktop()) {
+      SetClientDesktop(currentClient, currentDesktop);
+      RestackClients();
+   } else if(atRight && RightDesktop()) {
+      SetClientDesktop(currentClient, currentDesktop);
+      RestackClients();
+   } else if(atTop && AboveDesktop()) {
+      SetClientDesktop(currentClient, currentDesktop);
+      RestackClients();
+   } else if(atBottom && BelowDesktop()) {
+      SetClientDesktop(currentClient, currentDesktop);
+      RestackClients();
+   }
 
 }
 

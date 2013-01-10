@@ -205,6 +205,7 @@ void Signal()
    SignalTray(&now, x, y);
    SignalPager(&now, x, y);
    SignalPopup(&now, x, y);
+   SignalMove(&now, x, y);
 
 }
 

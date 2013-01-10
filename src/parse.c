@@ -441,6 +441,11 @@ void ParseMoveMode(const TokenNode *tp) {
       settings.moveStatusType = ParseStatusWindowType(tp, str);
    }
 
+   str = FindAttribute(tp->attributes, DELAY_ATTRIBUTE);
+   if(str) {
+      settings.desktopDelay = ParseUnsigned(tp, str);
+   }
+
    if(JLIKELY(tp->value)) {
       if(!strcmp(tp->value, OUTLINE_VALUE)) {
          settings.moveMode = MOVE_OUTLINE;

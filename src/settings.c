@@ -24,6 +24,7 @@ void InitializeSettings()
    settings.focusModel = FOCUS_SLOPPY;
    settings.resizeMode = RESIZE_OPAQUE;
    settings.popupDelay = 600;
+   settings.desktopDelay = 1000;
    settings.trayOpacity = UINT_MAX;
    settings.popupEnabled = 1;
    settings.activeClientOpacity = UINT_MAX;

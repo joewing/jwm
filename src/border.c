@@ -72,6 +72,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
 
    int north, south, east, west;
    int offset;
+   const unsigned int titleHeight = settings.titleHeight;
 
    Assert(np);
 
@@ -81,36 +82,35 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
    if(np->state.border & BORDER_TITLE) {
 
       /* Check buttons on the title bar. */
-      if(y >= settings.borderWidth && y <= settings.titleHeight) {
+      if(y >= settings.borderWidth && y <= titleHeight) {
 
          /* Menu button. */
-         if(np->width >= settings.titleHeight) {
-            if(x > 0 && x <= settings.titleHeight) {
+         if(np->width >= titleHeight) {
+            if(x > 0 && x <= titleHeight) {
                return BA_MENU;
             }
          }
 
          /* Close button. */
-         offset = np->width + west - settings.titleHeight;
-         if(   (np->state.border & BORDER_CLOSE)
-            && offset > settings.titleHeight) {
-            if(x > offset && x < offset + settings.titleHeight) {
+         offset = np->width + west;
+         if((np->state.border & BORDER_CLOSE) && offset > 2 * titleHeight) {
+            if(x > offset - titleHeight && x < offset) {
                return BA_CLOSE;
             }
-            offset -= settings.titleHeight;
+            offset -= titleHeight;
          }
 
          /* Maximize button. */
-         if((np->state.border & BORDER_MAX) && offset > settings.titleHeight) {
-            if(x > offset && x < offset + settings.titleHeight) {
+         if((np->state.border & BORDER_MAX) && offset > 2 * titleHeight) {
+            if(x > offset - titleHeight && x < offset) {
                return BA_MAXIMIZE;
             }
-            offset -= settings.titleHeight;
+            offset -= titleHeight;
          }
 
          /* Minimize button. */
-         if((np->state.border & BORDER_MIN) && offset > settings.titleHeight) {
-            if(x > offset && x < offset + settings.titleHeight) {
+         if((np->state.border & BORDER_MIN) && offset > 2 * titleHeight) {
+            if(x > offset - titleHeight && x < offset) {
                return BA_MINIMIZE;
             }
          }
@@ -118,7 +118,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
       }
 
       /* Check for move. */
-      if(y >= settings.borderWidth && y <= settings.titleHeight) {
+      if(y >= settings.borderWidth && y <= titleHeight) {
          if(x > settings.borderWidth && x < offset) {
             if(np->state.border & BORDER_MOVE) {
                return BA_MOVE;
@@ -324,30 +324,30 @@ int GetButtonCount(const ClientNode *np)
 
    GetBorderSize(np, &north, &south, &east, &west);
 
-   offset = np->width + east + west - settings.titleHeight;
-   if(offset <= settings.titleHeight) {
+   offset = np->width + west;
+   if(offset <= 2 * settings.titleHeight) {
       return 0;
    }
 
    count = 0;
    if(np->state.border & BORDER_CLOSE) {
-      offset -= settings.titleHeight;
-      ++count;
-      if(offset <= settings.titleHeight) {
+      count += 1;
+      if(offset <= 2 * settings.titleHeight) {
          return count;
       }
+      offset -= settings.titleHeight;
    }
 
    if(np->state.border & BORDER_MAX) {
-      offset -= settings.titleHeight;
-      ++count;
-      if(offset <= settings.titleHeight) {
+      count += 1;
+      if(offset < 2 * settings.titleHeight) {
          return count;
       }
+      offset -= settings.titleHeight;
    }
 
    if(np->state.border & BORDER_MIN) {
-      ++count;
+      count += 1;
    }
 
    return count;

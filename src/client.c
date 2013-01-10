@@ -173,6 +173,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    if(!notOwner) {
       np->state.border = BORDER_OUTLINE | BORDER_TITLE | BORDER_MOVE;
       np->state.status |= STAT_WMDIALOG | STAT_STICKY;
+      np->state.layer = LAYER_ABOVE;
    }
 
    /* We now know the layer, so insert */

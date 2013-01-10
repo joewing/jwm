@@ -1033,7 +1033,7 @@ void HandleShapeEvent(const XShapeEvent *event)
    ClientNode *np;
    np = FindClientByWindow(event->window);
    if(np) {
-      SetShape(np);
+      ResetRoundedRectWindow(np);
    }
 }
 #endif /* USE_SHAPE */

@@ -33,12 +33,8 @@ static int clientCount;
 
 static void LoadFocus();
 static void ReparentClient(ClientNode *np, char notOwner);
- 
 static void MinimizeTransients(ClientNode *np);
-static void CheckShape(ClientNode *np);
-
 static void RestoreTransients(ClientNode *np, char raise);
-
 static void KillClientHandler(ClientNode *np);
 
 /** Initialize client data. */
@@ -387,11 +383,6 @@ void UnshadeClient(ClientNode *np)
    WriteState(np);
 
    ResetRoundedRectWindow(np);
-#ifdef USE_SHAPE
-   if(np->state.status & STAT_SHAPE) {
-      SetShape(np);
-   }
-#endif
 
    RefocusClient();
    UpdatePager();
@@ -1113,19 +1104,6 @@ void SendClientMessage(Window w, AtomType type, AtomType message)
 
 }
 
-/** Set the border shape for windows using the shape extension. */
-#ifdef USE_SHAPE
-void SetShape(ClientNode *np)
-{
-
-   Assert(np);
-
-   np->state.status |= STAT_SHAPE;
-   ResetRoundedRectWindow(np);
-
-}
-#endif /* USE_SHAPE */
-
 /** Remove a client window from management. */
 void RemoveClient(ClientNode *np)
 {
@@ -1339,32 +1317,11 @@ void ReparentClient(ClientNode *np, char notOwner)
 #ifdef USE_SHAPE
    if(haveShape) {
       JXShapeSelectInput(display, np->window, ShapeNotifyMask);
-      CheckShape(np);
+      ResetRoundedRectWindow(np);
    }
 #endif
 
 }
-
-/** Determine if a window uses the shape extension. */
-#ifdef USE_SHAPE
-void CheckShape(ClientNode *np)
-{
-
-   int xb, yb;
-   int xc, yc;
-   unsigned int wb, hb;
-   unsigned int wc, hc;
-   Bool boundingShaped, clipShaped;
-
-   JXShapeQueryExtents(display, np->window, &boundingShaped,
-      &xb, &yb, &wb, &hb, &clipShaped, &xc, &yc, &wc, &hc);
-
-   if(boundingShaped == True) {
-      SetShape(np);
-   }
-
-}
-#endif
 
 /** Send a configure event to a client window. */
 void SendConfigureEvent(ClientNode *np)

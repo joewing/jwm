@@ -53,11 +53,10 @@ typedef enum {
    STAT_SHADED     = 1 << 8,  /**< This client is shaded. */
    STAT_WMDIALOG   = 1 << 9,  /**< This is a JWM dialog window. */
    STAT_PIGNORE    = 1 << 10, /**< Ignore the program-specified position. */
-   STAT_SHAPE      = 1 << 11, /**< This client uses the shape extension. */
-   STAT_SDESKTOP   = 1 << 12, /**< This client was minimized to show desktop. */
-   STAT_FULLSCREEN = 1 << 13, /**< This client wants to be full screen. */
-   STAT_OPACITY    = 1 << 14, /**< This client has a fixed opacity. */
-   STAT_NOFOCUS    = 1 << 15  /**< Don't focus on map. */
+   STAT_SDESKTOP   = 1 << 11, /**< This client was minimized to show desktop. */
+   STAT_FULLSCREEN = 1 << 12, /**< This client wants to be full screen. */
+   STAT_OPACITY    = 1 << 13, /**< This client has a fixed opacity. */
+   STAT_NOFOCUS    = 1 << 14  /**< Don't focus on map. */
 } StatusFlags;
 
 /** Colormap window linked list. */
@@ -274,11 +273,6 @@ void ShowClient(ClientNode *np);
  * @param np The client.
  */
 void UpdateClientColormap(ClientNode *np);
-
-/** Update the shape of a client using the shape extension.
- * @param np The client to update.
- */
-void SetShape(ClientNode *np);
 
 /** Send a configure event to a client.
  * This will send updated location and size information to a client.

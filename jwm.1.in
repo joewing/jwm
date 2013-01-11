@@ -727,13 +727,13 @@ The font used for title bars. See the \fBFONTS\fP section for more information.
 .B Width
 .RS
 The width of window borders in pixels. The default is 4, the minimum is 1,
-and the maximum is 32.
+and the maximum is 128.
 .RE
 .P
 .B Height
 .RS
 The height of window title bars in pixels. The default is 20, the minimum
-is 2, and the maximum is 64.
+is 2, and the maximum is 256.
 .RE
 .P
 .P

@@ -11,6 +11,11 @@
 
 Settings settings;
 
+static void FixRange(unsigned int *value,
+                     unsigned int min_value,
+                     unsigned int max_value,
+                     unsigned int def_value);
+
 /** Initialize settings. */
 void InitializeSettings()
 {
@@ -50,18 +55,14 @@ void StartupSettings()
       settings.maxClientOpacity = temp;
    }
 
-   if(JUNLIKELY(settings.borderWidth > settings.titleHeight)) {
-      settings.titleHeight = settings.borderWidth;
-   }
-   if(JUNLIKELY(settings.titleHeight < 4)) {
-      settings.titleHeight = 4;
-   }
-   if(JUNLIKELY(settings.desktopWidth == 0)) {
-      settings.desktopWidth = 4;
-   }
-   if(JUNLIKELY(settings.desktopHeight == 0)) {
-      settings.desktopHeight = 1;
-   }
+   FixRange(&settings.borderWidth, 1, 128, 4);
+   FixRange(&settings.titleHeight, 2, 256, 20);
+
+   FixRange(&settings.doubleClickDelta, 0, 64, 2);
+   FixRange(&settings.doubleClickSpeed, 1, 2000, 400);
+
+   FixRange(&settings.desktopWidth, 1, 64, 4);
+   FixRange(&settings.desktopHeight, 1, 64, 1);
    settings.desktopCount = settings.desktopWidth * settings.desktopHeight;
 
 }
@@ -85,6 +86,17 @@ void SetPathString(char **dest, const char *src)
    *dest = CopyString(src);
    if(JLIKELY(*dest)) {
       ExpandPath(dest);
+   }
+}
+
+/** Make sure a value is in range. */
+void FixRange(unsigned int *value,
+              unsigned int min_value,
+              unsigned int max_value,
+              unsigned int def_value)
+{
+   if(JUNLIKELY(*value < min_value || *value > max_value)) {
+      *value = def_value;
    }
 }
 

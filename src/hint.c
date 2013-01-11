@@ -354,7 +354,6 @@ void WriteNetState(ClientNode *np)
 {
 
    unsigned long values[8];
-   int north, south, east, west;
    int index;
 
    Assert(np);

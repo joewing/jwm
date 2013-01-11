@@ -1179,30 +1179,32 @@ Button 1 (typically the left button):
 Over the border, dragging resizes the window.
 Over the title bar, dragging moves the window and double clicking toggles
 the maximized state.
-Over the menu button, shows the menu.
-Over the minimize button, minimizes the window.
-Over the maximize button, toggles between maximized and normal.
-Over the close button, closes the window.
+Over the menu button, clicking shows the menu.
+Over the minimize button, clicking minimizes the window.
+Over the maximize button, clicking toggles between maximized and normal.
+Over the close button, clicking closes the window.
 .RE
 .P
 Button 2 (typically the middle button):
 .RS
-Anywhere on a window frame button 2 will move the window.
+Anywhere on a window frame, dragging while holding button 2 will
+move the window.
 .RE
 .P
 Button 3 (typically the right button):
 .RS
-Over the frame shows the window menu.
-On the minimize button, toggles between shaded and unshaded.
-On the maximize button, toggles between maximized and normal.
-On the close button, closes the window.
+Over the frame, clicking shows the window menu.
+On the minimize button, clicking toggles between shaded and unshaded.
+On the maximize button, clicking toggles between maximized and normal.
+On the close button, clicking closes the window.
+Over the pager, dragging while holding button 3 will move a window.
 .RE
 .RE
 .P
 .RS
 Scrolling up over the title bar will shade the window and scrolling down
 will unshade the window.
-When a menu is open, the scroll wheel will move through menus.
+When a menu is open, the scroll wheel will move through menu items.
 When over the pager, the scroll wheel will switch desktops.
 When over a task list, the scroll wheel will switch windows.
 .RE

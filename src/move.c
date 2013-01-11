@@ -121,7 +121,7 @@ char MoveClient(ClientNode *np, int startx, int starty, int snap)
       return 0;
    }
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    startx -= west;
    starty -= north;
@@ -259,7 +259,7 @@ char MoveClientKeyboard(ClientNode *np)
       return 0;
    }
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    oldx = np->x;
    oldy = np->y;
@@ -396,7 +396,7 @@ void StopMove(ClientNode *np, int doMove,
 
    }
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    JXMoveWindow(display, np->parent, np->x - west, np->y - north);
    SendConfigureEvent(np);
@@ -436,7 +436,7 @@ void DoSnapScreen(ClientNode *np)
 
    GetClientRectangle(np, &client);
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    screenCount = GetScreenCount();
    for(screen = 0; screen < screenCount; screen++) {
@@ -479,7 +479,7 @@ void DoSnapBorder(ClientNode *np)
 
    GetClientRectangle(np, &client);
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    other.valid = 1;
 
@@ -595,7 +595,7 @@ void GetClientRectangle(const ClientNode *np, RectangleType *r)
 
    int north, south, east, west;
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    r->left = np->x - west;
    r->right = np->x + np->width + east;

@@ -69,6 +69,7 @@ typedef enum {
 
    ATOM_NET_CLOSE_WINDOW,
    ATOM_NET_MOVERESIZE_WINDOW,
+   ATOM_NET_REQUEST_FRAME_EXTENTS,
 
    ATOM_NET_WM_NAME,
    ATOM_NET_WM_ICON,
@@ -197,6 +198,12 @@ ClientState ReadWindowState(Window win, char alreadyMapped);
  * @param np The client.
  */
 void WriteState(struct ClientNode *np);
+
+/** Set the frame extents of a window.
+ * @param win The window.
+ * @param state The client state.
+ */
+void WriteFrameExtents(Window win, const ClientState *state);
 
 /** Read a cardinal atom.
  * @param window The window.

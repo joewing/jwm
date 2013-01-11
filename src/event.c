@@ -65,6 +65,7 @@ static void HandleNetMoveResize(const XClientMessageEvent *event,
                                 ClientNode *np);
 static void HandleNetWMState(const XClientMessageEvent *event,
                              ClientNode *np);
+static void HandleFrameExtentsRequest(const XClientMessageEvent *event);
 
 #ifdef USE_SHAPE
 static void HandleShapeEvent(const XShapeEvent *event);
@@ -298,13 +299,13 @@ void HandleButtonEvent(const XButtonEvent *event)
                FocusClient(np);
             }
             if(event->state & Mod1Mask) {
-               GetBorderSize(np, &north, &south, &east, &west);
+               GetBorderSize(&np->state, &north, &south, &east, &west);
                MoveClient(np, event->x + west, event->y + north, 0);
             }
             break;
          case Button3:
             if(event->state & Mod1Mask) {
-               GetBorderSize(np, &north, &south, &east, &west);
+               GetBorderSize(&np->state, &north, &south, &east, &west);
                ResizeClient(np, BA_RESIZE | BA_RESIZE_E | BA_RESIZE_S,
                             event->x + west, event->y + north);
             } else {
@@ -495,7 +496,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
          (np->controller)(0);
       }
 
-      GetBorderSize(np, &north, &south, &east, &west);
+      GetBorderSize(&np->state, &north, &south, &east, &west);
 
       wc.stack_mode = Above;
       wc.sibling = np->parent;
@@ -759,6 +760,10 @@ void HandleClientMessage(const XClientMessageEvent *event)
 #endif
       }
 
+   } else if(event->message_type == atoms[ATOM_NET_REQUEST_FRAME_EXTENTS]) {
+
+      HandleFrameExtentsRequest(event);
+
    } else if(event->message_type == atoms[ATOM_NET_SYSTEM_TRAY_OPCODE]) {
 
       HandleDockEvent(event);
@@ -807,7 +812,7 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
       height = event->data.l[4];
    }
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
    GetGravityDelta(np, &deltax, &deltay);
 
    x -= deltax;
@@ -999,6 +1004,14 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
       Debug("bad _NET_WM_STATE action: %ld", event->data.l[0]);
       break;
    }
+}
+
+/** Handle a _NET_REQUEST_FRAME_EXTENTS request. */
+void HandleFrameExtentsRequest(const XClientMessageEvent *event)
+{
+   ClientState state;
+   state = ReadWindowState(event->window, 0);
+   WriteFrameExtents(event->window, &state);
 }
 
 /** Handle a motion notify event. */

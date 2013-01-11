@@ -363,7 +363,7 @@ ClientFound:
       MaximizeClient(np, 0, 0);
    }
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    /* Start the move. */
    GrabMouseForMove();
@@ -472,7 +472,7 @@ void StopPagerMove(ClientNode *np,
    np->x = x;
    np->y = y;
 
-   GetBorderSize(np, &north, &south, &east, & west);
+   GetBorderSize(&np->state, &north, &south, &east, & west);
    JXMoveWindow(display, np->parent, np->x - west, np->y - north);
    SendConfigureEvent(np);
 

@@ -337,7 +337,7 @@ void ShadeClient(ClientNode *np)
       return;
    }
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    if(np->state.status & STAT_MAPPED) {
       JXUnmapWindow(display, np->window);
@@ -375,7 +375,7 @@ void UnshadeClient(ClientNode *np)
    np->state.status |= STAT_MAPPED;
    np->state.status &= ~STAT_SHADED;
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    JXResizeWindow(display, np->parent,
                   np->width + west + east,
@@ -682,7 +682,7 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
       UnshadeClient(np);
    }
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
       np->x = np->oldx;
@@ -757,7 +757,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
       sp = GetCurrentScreen(np->x, np->y);
       GetScreenBounds(sp, &box);
 
-      GetBorderSize(np, &north, &south, &east, &west);
+      GetBorderSize(&np->state, &north, &south, &east, &west);
       box.x += west;
       box.y += north;
       box.width -= east + west;
@@ -785,7 +785,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
       np->width = np->oldWidth;   
       np->height = np->oldHeight;
 
-      GetBorderSize(np, &north, &south, &east, &west);
+      GetBorderSize(&np->state, &north, &south, &east, &west);
 
       JXMoveResizeWindow(display, np->parent,
                          np->x - west,
@@ -1289,7 +1289,7 @@ void ReparentClient(ClientNode *np, char notOwner)
    y = np->y;
    width = np->width;
    height = np->height;
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
    x -= west;
    y -= north;
    width += east + west;

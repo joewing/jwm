@@ -385,7 +385,7 @@ void PlaceClient(ClientNode *np, int alreadyMapped)
 
    Assert(np);
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    if(np->x + np->width > rootWidth || np->y + np->height > rootHeight) {
       overflow = 1;
@@ -477,7 +477,7 @@ void ConstrainSize(ClientNode *np)
    }
 
    /* Constrain the size. */
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    GetScreenBounds(sp, &box);
    SubtractTrayBounds(GetTrays(), &box, np->state.layer);
@@ -533,7 +533,7 @@ void PlaceMaximizedClient(ClientNode *np, int horiz, int vert)
    np->oldWidth = np->width;
    np->oldHeight = np->height;
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    sp = GetCurrentScreen(
       np->x + (east + west + np->width) / 2,
@@ -597,7 +597,7 @@ void GetGravityDelta(const ClientNode *np, int *x, int  *y)
    Assert(x);
    Assert(y);
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    switch(np->gravity) {
    case NorthWestGravity:

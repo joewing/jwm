@@ -13,6 +13,7 @@
 #include "gradient.h"
 
 struct ClientNode;
+struct ClientState;
 
 /** Flags to determine what action to take on the border. */
 typedef enum {
@@ -55,13 +56,13 @@ void DrawBorder(const struct ClientNode *np);
 int GetBorderIconSize();
 
 /** Get the size of a window border.
- * @param np The client.
+ * @param state The client state.
  * @param north Pointer to the value to contain the north border size.
  * @param south Pointer to the value to contain the south border size.
  * @param east Pointer to the value to contain the east border size.
  * @param west Pointer to the value to contain the west border size.
  */
-void GetBorderSize(const struct ClientNode *np,
+void GetBorderSize(const struct ClientState *state,
                    int *north, int *south, int *east, int *west);
 
 /** Redraw all borders on the current desktop. */

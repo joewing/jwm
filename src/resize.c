@@ -78,7 +78,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
    gwidth = (np->width - np->baseWidth) / np->xinc;
    gheight = (np->height - np->baseHeight) / np->yinc;
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    startx += np->x - west;
    starty += np->y - north;
@@ -271,7 +271,7 @@ void ResizeClientKeyboard(ClientNode *np) {
    gwidth = (np->width - np->baseWidth) / np->xinc;
    gheight = (np->height - np->baseHeight) / np->yinc;
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    CreateResizeWindow(np);
    UpdateResizeWindow(np, gwidth, gheight);
@@ -426,7 +426,7 @@ void StopResize(ClientNode *np) {
 
    DestroyResizeWindow();
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 	  
    if(np->state.status & STAT_SHADED) {
       JXMoveResizeWindow(display, np->parent,

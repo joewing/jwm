@@ -122,6 +122,7 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_ACTION_ABOVE],       "_NET_WM_ACTION_ABOVE"        },
    { &atoms[ATOM_NET_CLOSE_WINDOW],          "_NET_CLOSE_WINDOW"           },
    { &atoms[ATOM_NET_MOVERESIZE_WINDOW],     "_NET_MOVERESIZE_WINDOW"      },
+   { &atoms[ATOM_NET_REQUEST_FRAME_EXTENTS], "_NET_REQUEST_FRAME_EXTENTS"  },
    { &atoms[ATOM_NET_WM_NAME],               "_NET_WM_NAME"                },
    { &atoms[ATOM_NET_WM_ICON],               "_NET_WM_ICON"                },
    { &atoms[ATOM_NET_WM_WINDOW_TYPE],        "_NET_WM_WINDOW_TYPE"         },
@@ -195,8 +196,8 @@ void StartupHints()
       supported[x - FIRST_NET_ATOM] = atoms[x];
    }
    JXChangeProperty(display, rootWindow, atoms[ATOM_NET_SUPPORTED],
-      XA_ATOM, 32, PropModeReplace, (unsigned char*)supported,
-      LAST_NET_ATOM - FIRST_NET_ATOM + 1);
+                    XA_ATOM, 32, PropModeReplace, (unsigned char*)supported,
+                    LAST_NET_ATOM - FIRST_NET_ATOM + 1);
 
    /* _NET_NUMBER_OF_DESKTOPS */
    SetCardinalAtom(rootWindow, ATOM_NET_NUMBER_OF_DESKTOPS,
@@ -209,8 +210,8 @@ void StartupHints()
       count += strlen(GetDesktopName(x)) + 1;
    }
    JXChangeProperty(display, rootWindow, atoms[ATOM_NET_DESKTOP_NAMES],
-      atoms[ATOM_UTF8_STRING], 8, PropModeReplace,
-      (unsigned char*)data, count);
+                    atoms[ATOM_UTF8_STRING], 8, PropModeReplace,
+                    (unsigned char*)data, count);
 
    /* _NET_WORKAREA */
    for(x = 0; x < settings.desktopCount; x++) {
@@ -220,28 +221,30 @@ void StartupHints()
       array[x * 4 + 3] = rootHeight;
    }
    JXChangeProperty(display, rootWindow, atoms[ATOM_NET_WORKAREA],
-      XA_CARDINAL, 32, PropModeReplace,
-      (unsigned char*)array, settings.desktopCount * 4);
+                    XA_CARDINAL, 32, PropModeReplace,
+                    (unsigned char*)array, settings.desktopCount * 4);
 
    /* _NET_DESKTOP_GEOMETRY */
    array[0] = rootWidth;
    array[1] = rootHeight;
    JXChangeProperty(display, rootWindow, atoms[ATOM_NET_DESKTOP_GEOMETRY],
-      XA_CARDINAL, 32, PropModeReplace,
-      (unsigned char*)array, 2);
+                    XA_CARDINAL, 32, PropModeReplace,
+                    (unsigned char*)array, 2);
 
    /* _NET_DESKTOP_VIEWPORT */
    array[0] = 0;
    array[1] = 0;
    JXChangeProperty(display, rootWindow, atoms[ATOM_NET_DESKTOP_VIEWPORT],
-      XA_CARDINAL, 32, PropModeReplace,
-      (unsigned char*)array, 2);
+                    XA_CARDINAL, 32, PropModeReplace,
+                    (unsigned char*)array, 2);
 
+   /* _NET_WM_NAME */
    win = GetSupportingWindow();
    JXChangeProperty(display, win, atoms[ATOM_NET_WM_NAME],
-      atoms[ATOM_UTF8_STRING], 8, PropModeReplace,
-      (unsigned char*)"JWM", 3);
+                    atoms[ATOM_UTF8_STRING], 8, PropModeReplace,
+                    (unsigned char*)"JWM", 3);
 
+   /* _NET_SUPPORTING_WM_CHECK */
    SetWindowAtom(rootWindow, ATOM_NET_SUPPORTING_WM_CHECK, win);
    SetWindowAtom(win, ATOM_NET_SUPPORTING_WM_CHECK, win);
 
@@ -393,11 +396,17 @@ void WriteNetState(ClientNode *np)
       values[index++] = atoms[ATOM_NET_WM_STATE_ABOVE];
    }
 
-   JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_STATE],
-                    XA_ATOM, 32, PropModeReplace,
-                    (unsigned char*)values, index);
+   WriteFrameExtents(np->window, &np->state);
 
-   GetBorderSize(np, &north, &south, &east, &west);
+}
+
+/** Set _NET_FRAME_EXTENTS. */
+void WriteFrameExtents(Window win, const ClientState *state)
+{
+   unsigned long values[4];
+   int north, south, east, west;
+
+   GetBorderSize(state, &north, &south, &east, &west);
 
    /* left, right, top, bottom */
    values[0] = west;
@@ -405,7 +414,7 @@ void WriteNetState(ClientNode *np)
    values[2] = north;
    values[3] = south;
 
-   JXChangeProperty(display, np->window, atoms[ATOM_NET_FRAME_EXTENTS],
+   JXChangeProperty(display, win, atoms[ATOM_NET_FRAME_EXTENTS],
                     XA_CARDINAL, 32, PropModeReplace,
                     (unsigned char*)values, 4);
 

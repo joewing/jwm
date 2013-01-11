@@ -76,7 +76,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
 
    Assert(np);
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    /* Check title bar actions. */
    if(np->state.border & BORDER_TITLE) {
@@ -219,7 +219,7 @@ void DrawBorderHelper(const ClientNode *np)
    Assert(np);
 
    iconSize = GetBorderIconSize();
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
    width = np->width + east + west;
    height = np->height + north + south;
 
@@ -322,7 +322,7 @@ int GetButtonCount(const ClientNode *np)
       return 0;
    }
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    offset = np->width + west;
    if(offset <= 2 * settings.titleHeight) {
@@ -368,7 +368,7 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas)
       return;
    }
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
    offset = np->width + west - settings.titleHeight;
    if(offset <= settings.titleHeight) {
       return;
@@ -594,18 +594,18 @@ void ExposeCurrentDesktop()
 }
 
 /** Get the size of the borders for a client. */
-void GetBorderSize(const ClientNode *np,
+void GetBorderSize(const ClientState *state,
                    int *north, int *south, int *east, int *west)
 {
 
-   Assert(np);
+   Assert(state);
    Assert(north);
    Assert(south);
    Assert(east);
    Assert(west);
 
    /* Full screen is a special case. */
-   if(np->state.status & STAT_FULLSCREEN) {
+   if(state->status & STAT_FULLSCREEN) {
       *north = 0;
       *south = 0;
       *east = 0;
@@ -613,7 +613,7 @@ void GetBorderSize(const ClientNode *np,
       return;
    }
 
-   if(np->state.border & BORDER_OUTLINE) {
+   if(state->border & BORDER_OUTLINE) {
 
       *north = settings.borderWidth;
       *south = settings.borderWidth;
@@ -629,11 +629,11 @@ void GetBorderSize(const ClientNode *np,
 
    }
 
-   if(np->state.border & BORDER_TITLE) {
+   if(state->border & BORDER_TITLE) {
       *north = settings.titleHeight;
    }
 
-   if(np->state.status & STAT_SHADED) {
+   if(state->status & STAT_SHADED) {
       *south = 0;
    }
 
@@ -764,7 +764,7 @@ void ResetRoundedRectWindow(const ClientNode *np)
 
    Assert(np);
 
-   GetBorderSize(np, &north, &south, &east, &west);
+   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    /* Shaded windows are a special case. */
    if(np->state.status & STAT_SHADED) {

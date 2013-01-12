@@ -155,6 +155,12 @@
 /* Define to use libpng */
 #undef USE_PNG
 
+/* Define to use Cairo */
+#undef USE_CAIRO
+
+/* Define to use RSVG */
+#undef USE_RSVG
+
 /* Define to enable the X shape extension */
 #undef USE_SHAPE
 

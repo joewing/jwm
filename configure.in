@@ -113,6 +113,8 @@ AC_DEFUN([JWM_PKGCONFIG],
 
 JWM_PKGCONFIG([use_pkgconfig_png], [libpng])
 JWM_PKGCONFIG([use_pkgconfig_jpeg], [libjpeg])
+JWM_PKGCONFIG([use_pkgconfig_cairo], [cairo])
+JWM_PKGCONFIG([use_pkgconfig_rsvg], [librsvg-2.0])
 JWM_PKGCONFIG([use_pkgconfig_xft], [xft])
 JWM_PKGCONFIG([use_pkgconfig_xrender], [xrender])
 JWM_PKGCONFIG([use_pkgconfig_fribidi], [fribidi])
@@ -165,6 +167,61 @@ if test "$enable_png" != "no" ; then
       [ enable_png="no"
         AC_MSG_WARN([unable to use libpng, PNG support disabled]) ],
       [ $PNG_LDFLAGS ])
+fi
+
+############################################################################
+# Check if Cairo support was requested and available.
+############################################################################
+AC_ARG_ENABLE(cairo,
+   AC_HELP_STRING([--disable-cairo], [don't support Cairo]) )
+if test "$enable_cairo" != "no" ; then
+
+   if test "$use_pkgconfig_cairo" = "yes" ; then
+      CAIRO_CFLAGS=`$PKGCONFIG --cflags cairo`
+      CAIRO_LDFLAGS=`$PKGCONFIG --libs cairo`
+   elif test -x `which cairo-config` ; then
+      CAIRO_CFLAGS=`cairo-config --cflags`
+      CAIRO_LDFLAGS=`cairo-config --libs`
+   else
+      CAIRO_LDFLAGS="-lcairo"
+   fi
+
+fi
+if test "$enable_cairo" != "no" ; then
+   AC_CHECK_LIB(cairo, cairo_create,
+      [ LDFLAGS="$LDFLAGS $CAIRO_LDFLAGS"
+        CFLAGS="$CFLAGS $CAIRO_CFLAGS"
+        enable_cairo="yes"
+        AC_DEFINE(USE_CAIRO, 1, [Define to use Cairo]) ],
+      [ enable_cairo="no"
+        AC_MSG_WARN([unable to use Cairo, Cairo support disabled]) ],
+      [ $CAIRO_LDFLAGS ])
+fi
+
+############################################################################
+# Check if librsvg support was requested and available.
+############################################################################
+AC_ARG_ENABLE(rsvg,
+   AC_HELP_STRING([--disable-rsvg], [don't support rsvg]) )
+if test "$enable_rsvg" != "no" ; then
+
+   if test "$use_pkgconfig_rsvg" = "yes" ; then
+      RSVG_CFLAGS=`$PKGCONFIG --cflags librsvg-2.0`
+      RSVG_LDFLAGS=`$PKGCONFIG --libs librsvg-2.0`
+   else
+      RSVG_LDFLAGS="-lrsvg-2.0"
+   fi
+
+fi
+if test "$enable_rsvg" != "no" ; then
+   AC_CHECK_LIB(rsvg-2, rsvg_handle_render_cairo,
+      [ LDFLAGS="$LDFLAGS $RSVG_LDFLAGS"
+        CFLAGS="$CFLAGS $RSVG_CFLAGS"
+        enable_rsvg="yes"
+        AC_DEFINE(USE_RSVG, 1, [Define to use rsvg]) ],
+      [ enable_rsvg="no"
+        AC_MSG_WARN([unable to use rsvg, rsvg support disabled]) ],
+      [ $RSVG_LDFLAGS ])
 fi
 
 ############################################################################
@@ -451,6 +508,8 @@ echo "Options"
 echo
 echo "    Confirm:  $enable_confirm"
 echo "    Icon:     $enable_icons"
+echo "    Cairo:    $enable_cairo"
+echo "    RSVG:     $enable_rsvg"
 echo "    PNG:      $enable_png"
 echo "    JPEG:     $enable_jpeg"
 echo "    XPM:      $enable_xpm"

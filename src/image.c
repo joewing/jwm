@@ -19,6 +19,16 @@
 #  ifdef USE_JPEG
 #     include <jpeglib.h>
 #  endif
+#  ifdef USE_CAIRO
+#     include <cairo.h>
+#     include <cairo-svg.h>
+#  endif
+#  ifdef USE_RSVG
+#     include <librsvg/rsvg.h>
+#     ifdef USE_CAIRO
+#        include <librsvg/rsvg-cairo.h>
+#     endif
+#  endif
 #endif /* MAKE_DEPEND */
 
 #include "image.h"
@@ -26,6 +36,11 @@
 #include "error.h"
 #include "color.h"
 
+#ifdef USE_CAIRO
+#ifdef USE_RSVG
+static ImageNode *LoadSVGImage(const char *fileName);
+#endif
+#endif
 #ifdef USE_JPEG
 static ImageNode *LoadJPEGImage(const char *fileName);
 #endif
@@ -68,6 +83,16 @@ ImageNode *LoadImage(const char *fileName)
    if(result) {
       return result;
    }
+#endif
+
+   /* Attempt to load the file as an SVG image. */
+#ifdef USE_CAIRO
+#ifdef USE_RSVG
+   result = LoadSVGImage(fileName);
+   if(result) {
+      return result;
+   }
+#endif
 #endif
 
    /* Attempt to load the file as an XPM image. */
@@ -359,6 +384,75 @@ ImageNode *LoadJPEGImage(const char *fileName)
 
 }
 #endif /* USE_JPEG */
+
+#ifdef USE_CAIRO
+#ifdef USE_RSVG
+ImageNode *LoadSVGImage(const char *fileName)
+{
+
+   static char initialized = 0;
+   ImageNode *result = NULL;
+   RsvgHandle *rh;
+   RsvgDimensionData dim;
+   GError *e;
+   cairo_surface_t *target;
+   cairo_t *context;
+   int stride;
+   int i;
+
+   Assert(fileName);
+
+   if(!initialized) {
+      initialized = 1;
+      g_type_init();
+   }
+
+   /* Load the image from the file. */
+   rh = rsvg_handle_new_from_file(fileName, &e);
+   if(!rh) {
+      return NULL;
+   }
+
+   rsvg_handle_get_dimensions(rh, &dim);
+
+   result = (ImageNode*)Allocate(sizeof(ImageNode));
+   result->width = dim.width;
+   result->height = dim.height;
+   result->data = Allocate(4 * dim.width * dim.height);
+
+   /* Create the target surface. */
+   stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, dim.width);
+   target = cairo_image_surface_create_for_data(result->data,
+                                                CAIRO_FORMAT_ARGB32,
+                                                dim.width, dim.height, stride);
+   context = cairo_create(target);
+   cairo_set_source_rgba(context, 0.0, 0.0, 0.0, 0.0);
+   cairo_paint(context);
+   cairo_set_operator(context, CAIRO_OPERATOR_OVER);
+   rsvg_handle_render_cairo(rh, context);
+   cairo_destroy(context);
+   cairo_surface_destroy(target);
+   g_object_unref(rh);
+
+   for(i = 0; i < 4 * dim.width * dim.height; i += 4) {
+      const unsigned long temp = *(unsigned long*)&result->data[i];
+      const unsigned long alpha  = (temp >> 24) & 0xFF;
+      const unsigned long red    = (temp >> 16) & 0xFF;
+      const unsigned long green  = (temp >>  8) & 0xFF;
+      const unsigned long blue   = (temp >>  0) & 0xFF;
+      result->data[i + 0] = (alpha - 85) + (alpha - 85) / 2;
+      if(alpha > 0) {
+         result->data[i + 1] = (red * 255) / alpha;
+         result->data[i + 2] = (green * 255) / alpha;
+         result->data[i + 3] = (blue * 255) / alpha;
+      }
+   }
+
+   return result;
+
+}
+#endif /* USE_RSVG */
+#endif /* USE_CAIRO */
 
 /** Load an XPM image from the specified file. */
 #ifdef USE_XPM

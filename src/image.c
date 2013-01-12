@@ -408,6 +408,7 @@ ImageNode *LoadSVGImage(const char *fileName)
    }
 
    /* Load the image from the file. */
+   e = NULL;
    rh = rsvg_handle_new_from_file(fileName, &e);
    if(!rh) {
       return NULL;
@@ -419,6 +420,7 @@ ImageNode *LoadSVGImage(const char *fileName)
    result->width = dim.width;
    result->height = dim.height;
    result->data = Allocate(4 * dim.width * dim.height);
+   memset(result->data, 0, 4 * dim.width * dim.height);
 
    /* Create the target surface. */
    stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, dim.width);
@@ -426,9 +428,7 @@ ImageNode *LoadSVGImage(const char *fileName)
                                                 CAIRO_FORMAT_ARGB32,
                                                 dim.width, dim.height, stride);
    context = cairo_create(target);
-   cairo_set_source_rgba(context, 0.0, 0.0, 0.0, 0.0);
-   cairo_paint(context);
-   cairo_set_operator(context, CAIRO_OPERATOR_OVER);
+   cairo_paint_with_alpha(context, 0.0);
    rsvg_handle_render_cairo(rh, context);
    cairo_destroy(context);
    cairo_surface_destroy(target);
@@ -440,7 +440,7 @@ ImageNode *LoadSVGImage(const char *fileName)
       const unsigned long red    = (temp >> 16) & 0xFF;
       const unsigned long green  = (temp >>  8) & 0xFF;
       const unsigned long blue   = (temp >>  0) & 0xFF;
-      result->data[i + 0] = (alpha - 85) + (alpha - 85) / 2;
+      result->data[i + 0] = alpha;
       if(alpha > 0) {
          result->data[i + 1] = (red * 255) / alpha;
          result->data[i + 2] = (green * 255) / alpha;

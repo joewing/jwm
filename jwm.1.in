@@ -38,6 +38,11 @@ file to ensure there are no errors.
 Restart JWM by sending _JWM_RESTART to the root window.
 .RE
 .P
+.B "-reload"
+.RS
+Reload menus by sending _JWM_RELOAD to the root window.
+.RE
+.P
 .B "-v"
 .RS
 Display version information and exit.
@@ -1314,27 +1319,11 @@ The default is 1000.
 The resize mode. The default is "opaque". Valid values are
 "opaque" and "outline". The optional \fBcoordinates\fP attribute
 determines the location of the move status window. Possible values are:
-.RS
+This tag supports the following attribute:
 .P
-.B off
+\fBcoordinates\fP { \fBoff\fP | \fBcorner\fP | \fBwindow\fP | \fBscreen\fP }
 .RS
-Disable the status window.
-.RE
-.P
-.B corner
-.RS
-Place the status window in the corner of the screen.
-.RE
-.P
-.B window
-.RS
-Center the status window on the window being resized.
-.RE
-.P
-.B screen
-.RS
-Center the status window on the screen.
-.RE
+The location of the status window. The default is \fBscreen\fP.
 .RE
 .RE
 .P

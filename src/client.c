@@ -844,9 +844,11 @@ void FocusClient(ClientNode *np)
       UpdateClientColormap(np);
       SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, np->window);
       protocols = ReadWMProtocols(np->window);
-      JXSetInputFocus(display, np->window, RevertToPointerRoot, eventTime);
       if(protocols & PROT_TAKE_FOCUS) {
+         JXSetInputFocus(display, PointerRoot, RevertToPointerRoot, eventTime);
          SendClientMessage(np->window, ATOM_WM_PROTOCOLS, ATOM_WM_TAKE_FOCUS);
+      } else {
+         JXSetInputFocus(display, np->window, RevertToPointerRoot, eventTime);
       }
    } else {
       JXSetInputFocus(display, rootWindow, RevertToPointerRoot, eventTime);
@@ -875,8 +877,7 @@ void DeleteClient(ClientNode *np)
 
    protocols = ReadWMProtocols(np->window);
    if(protocols & PROT_DELETE) {
-      SendClientMessage(np->window, ATOM_WM_PROTOCOLS,
-         ATOM_WM_DELETE_WINDOW);
+      SendClientMessage(np->window, ATOM_WM_PROTOCOLS, ATOM_WM_DELETE_WINDOW);
    } else {
       KillClient(np);
    }

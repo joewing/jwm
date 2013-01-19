@@ -76,6 +76,10 @@ void ShowPopup(int x, int y, const char *text)
    }
 
    if(popup.text) {
+      if(x == popup.mx && y == popup.my && !strcmp(popup.text, text)) {
+         // This popup is already shown.
+         return;
+      }
       Release(popup.text);
       popup.text = NULL;
    }

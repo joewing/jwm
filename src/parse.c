@@ -1193,7 +1193,7 @@ void ParseTray(const TokenNode *tp) {
 
    attr = FindAttribute(tp->attributes, BORDER_ATTRIBUTE);
    if(attr) {
-      tray->width = ParseUnsigned(tp, attr);
+      tray->border = ParseUnsigned(tp, attr);
    }
 
    for(np = tp->subnodeHead; np; np = np->next) {

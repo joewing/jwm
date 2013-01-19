@@ -25,11 +25,10 @@ typedef struct PopupType {
    int width, height;
    char *text;
    Window window;
+   Pixmap pmap;
 } PopupType;
 
 static PopupType popup;
-
-static void DrawPopup();
 
 /** Initialize popup data. */
 void InitializePopup()
@@ -52,6 +51,7 @@ void ShutdownPopup()
    }
    if(popup.window != None) {
       JXDestroyWindow(display, popup.window);
+      JXFreePixmap(display, popup.pmap);
       popup.window = None;
    }
 }
@@ -126,12 +126,6 @@ void ShowPopup(int x, int y, const char *text)
       attrMask |= CWSaveUnder;
       attr.save_under = True;
 
-      attrMask |= CWBackPixel;
-      attr.background_pixel = colors[COLOR_POPUP_BG];
-
-      attrMask |= CWBorderPixel;
-      attr.border_pixel = colors[COLOR_POPUP_OUTLINE];
-
       attrMask |= CWDontPropagate;
       attr.do_not_propagate_mask
          = PointerMotionMask
@@ -139,7 +133,7 @@ void ShowPopup(int x, int y, const char *text)
          | ButtonReleaseMask;
 
       popup.window = JXCreateWindow(display, rootWindow, popup.x, popup.y,
-                                    popup.width, popup.height, 1,
+                                    popup.width, popup.height, 0,
                                     CopyFromParent, InputOutput,
                                     CopyFromParent, attrMask, &attr);
       JXMapRaised(display, popup.window);
@@ -148,12 +142,26 @@ void ShowPopup(int x, int y, const char *text)
 
       JXMoveResizeWindow(display, popup.window, popup.x, popup.y,
                          popup.width, popup.height);
-      DrawPopup();
+      JXFreePixmap(display, popup.pmap);
 
    }
 
+   popup.pmap = JXCreatePixmap(display, popup.window,
+                               popup.width, popup.height, rootDepth);
+
    popup.mx = x;
    popup.my = y;
+
+   JXSetForeground(display, rootGC, colors[COLOR_POPUP_BG]);
+   JXFillRectangle(display, popup.pmap, rootGC, 0, 0,
+                   popup.width - 1, popup.height - 1);
+   JXSetForeground(display, rootGC, colors[COLOR_POPUP_OUTLINE]);
+   JXDrawRectangle(display, popup.pmap, rootGC, 0, 0,
+                   popup.width - 1, popup.height - 1);
+   RenderString(popup.pmap, FONT_POPUP, COLOR_POPUP_FG, 4, 1,
+                popup.width, popup.text);
+   JXCopyArea(display, popup.pmap, popup.window, rootGC,
+              0, 0, popup.width, popup.height, 0, 0);
 
 }
 
@@ -163,6 +171,7 @@ void SignalPopup(const TimeType *now, int x, int y)
    if(popup.window != None) {
       if(abs(popup.mx - x) > 2 || abs(popup.my - y) > 2) {
          JXDestroyWindow(display, popup.window);
+         JXFreePixmap(display, popup.pmap);
          popup.window = None;
       }
    }
@@ -171,24 +180,17 @@ void SignalPopup(const TimeType *now, int x, int y)
 /** Process an event on a popup window. */
 char ProcessPopupEvent(const XEvent *event)
 {
-   if(event->xany.window == popup.window) {
-      if(event->type == Expose) {
-         DrawPopup();
-         return 1;
+   if(popup.window != None && event->xany.window == popup.window) {
+      if(event->type == Expose && event->xexpose.count == 0) {
+         JXCopyArea(display, popup.pmap, popup.window, rootGC,
+                    0, 0, popup.width, popup.height, 0, 0);
       } else if(event->type == MotionNotify) {
          JXDestroyWindow(display, popup.window);
+         JXFreePixmap(display, popup.pmap);
          popup.window = None;
-         return 1;
       }
+      return 1;
    }
    return 0;
-}
-
-/** Draw the popup window. */
-void DrawPopup()
-{
-   JXClearWindow(display, popup.window);
-   RenderString(popup.window, FONT_POPUP, COLOR_POPUP_FG, 4, 1,
-                popup.width, popup.text);
 }
 

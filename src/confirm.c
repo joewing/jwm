@@ -92,8 +92,6 @@ void DestroyDialogs()
 char ProcessDialogEvent(const XEvent *event)
 {
 
-   char handled = 0;
-
    Assert(event);
 
    switch(event->type) {
@@ -104,10 +102,8 @@ char ProcessDialogEvent(const XEvent *event)
    case ButtonRelease:
       return HandleDialogButtonRelease(&event->xbutton);
    default:
-      break;
+      return 0;
    }
-
-   return handled;
 
 }
 
@@ -287,8 +283,6 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
    dialog->node->state.status |= STAT_WMDIALOG;
    FocusClient(dialog->node);
 
-   DrawConfirmDialog();
-
    JXGrabButton(display, AnyButton, AnyModifier, window, True,
                 ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
 
@@ -312,6 +306,7 @@ void DestroyConfirmDialog()
 
    /* This will take care of destroying the dialog window since
     * its parent will be destroyed. */
+   JXSync(display, True);
    RemoveClient(dialog->node);
 
    for(x = 0; x < dialog->lineCount; x++) {

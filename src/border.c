@@ -250,11 +250,11 @@ void DrawBorderHelper(const ClientNode *np)
       ShapeRoundedRectWindow(np->parent, width, height);
    }
 
-   canvas = JXCreatePixmap(display, np->parent, width, height, rootDepth);
+   canvas = JXCreatePixmap(display, np->parent, width, north, rootDepth);
 
    /* Clear the window with the right color. */
    JXSetForeground(display, borderGC, titleColor2);
-   JXFillRectangle(display, canvas, borderGC, 0, 0, width, height);
+   JXFillRectangle(display, canvas, borderGC, 0, 0, width, north);
 
    /* Determine how many pixels may be used for the title. */
    buttonCount = GetButtonCount(np);
@@ -284,28 +284,36 @@ void DrawBorderHelper(const ClientNode *np)
 
    }
 
-   /* Window outline. */
+   DrawBorderButtons(np, canvas);
+
+   /** Copy the title bard to the window. */
+   JXCopyArea(display, canvas, np->parent, borderGC, 1, 1,
+              width - 2, north - 1, 1, 1);
+
+   /* Window outline.
+    * These are drawn directly to the window.
+    */
+   JXClearArea(display, np->parent, 1, north,
+               width - 2, height - north - 1, False);
    JXSetForeground(display, borderGC, outlineColor);
 #ifdef USE_SHAPE
    if(np->state.status & STAT_SHADED) {
-      DrawRoundedRectangle(canvas, borderGC, 0, 0, width - 1, north - 1,
+      DrawRoundedRectangle(np->parent, borderGC, 0, 0, width - 1, north - 1,
                            CORNER_RADIUS);
    } else {
-      DrawRoundedRectangle(canvas, borderGC, 0, 0, width - 1, height - 1,
+      DrawRoundedRectangle(np->parent, borderGC, 0, 0, width - 1, height - 1,
                            CORNER_RADIUS);
    }
 #else
    if(np->state.status & STAT_SHADED) {
-      JXDrawRectangle(display, canvas, borderGC, 0, 0, width - 1, north - 1);
+      JXDrawRectangle(display, np->parent, borderGC, 0, 0,
+                      width - 1, north - 1);
    } else {
-      JXDrawRectangle(display, canvas, borderGC, 0, 0, width - 1, height - 1);
+      JXDrawRectangle(display, np->parent, borderGC, 0, 0,
+                      width - 1, height - 1);
    }
 #endif
 
-   DrawBorderButtons(np, canvas);
-
-   JXCopyArea(display, canvas, np->parent, borderGC, 0, 0,
-              width, height, 0, 0);
    JXFreePixmap(display, canvas);
 
 }

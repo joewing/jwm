@@ -43,6 +43,9 @@
 #define JXClearWindow( a, b ) \
    ( SetCheckpoint(), XClearWindow( a, b ) )
 
+#define JXClearArea( a, b, c, d, e, f, g ) \
+   ( SetCheckpoint(), XClearArea( a, b, c, d, e, f, g ) )
+
 #define JXCloseDisplay( a ) \
    ( SetCheckpoint(), XCloseDisplay( a ) )
 

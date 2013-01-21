@@ -149,7 +149,6 @@ static const AtomNode atomList[] = {
 static void WriteNetState(ClientNode *np);
 static void WriteNetAllowed(ClientNode *np);
 static void ReadWMState(Window win, ClientState *state);
-static void ReadWMHints(Window win, ClientState *state);
 static void ReadMotifHints(Window win, ClientState *state);
 
 /** Initialize hints data. */
@@ -274,10 +273,10 @@ void ReadCurrentDesktop()
    }
 }
 
-/** Read client protocls/hints.
+/** Read client hints.
  * This is called while the client is being added to management.
  */
-void ReadClientProtocols(ClientNode *np, char alreadyMapped)
+void ReadClientInfo(ClientNode *np, char alreadyMapped)
 {
 
    Status status;
@@ -295,10 +294,14 @@ void ReadClientProtocols(ClientNode *np, char alreadyMapped)
       np->owner = None;
    }
 
+   /* Read the window state. */
    np->state = ReadWindowState(np->window, alreadyMapped);
    if(np->minWidth == np->maxWidth && np->minHeight == np->maxHeight) {
       np->state.border &= ~BORDER_RESIZE;
    }
+
+   /* Read WM protocols. */
+   ReadWMProtocols(np->window, &np->state);
 
    /* Set the client to the same layer as its owner. */
    if(np->owner != None) {
@@ -497,11 +500,8 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
    result.opacity = 0xFFFFFFFF;
    customLayer = 0;
 
-   if(alreadyMapped) {
-      ReadWMState(win, &result);
-   } else {
-      ReadWMHints(win, &result);
-   }
+   ReadWMHints(win, &result, alreadyMapped);
+   ReadWMState(win, &result);
    ReadMotifHints(win, &result);
 
    /* _NET_WM_DESKTOP */
@@ -675,10 +675,9 @@ void ReadWMClass(ClientNode *np)
 }
 
 /** Read the protocols hint for a window. */
-ClientProtocolType ReadWMProtocols(Window w)
+void ReadWMProtocols(Window w, ClientState *state)
 {
 
-   ClientProtocolType result;
    unsigned long count, x;
    int status;
    unsigned long extra;
@@ -689,27 +688,25 @@ ClientProtocolType ReadWMProtocols(Window w)
 
    Assert(w != None);
 
-   result = PROT_NONE;
+   state->status &= ~STAT_TAKEFOCUS;
+   state->status &= ~STAT_DELETE;
    status = JXGetWindowProperty(display, w, atoms[ATOM_WM_PROTOCOLS],
                                 0, 32, False, XA_ATOM, &realType, &realFormat,
                                 &count, &extra, &temp);
    p = (Atom*)temp;
-
    if(status != Success || !p) {
-      return result;
+      return;
    }
 
    for(x = 0; x < count; x++) {
       if(p[x] == atoms[ATOM_WM_DELETE_WINDOW]) {
-         result |= PROT_DELETE;
+         state->status |= STAT_DELETE;
       } else if(p[x] == atoms[ATOM_WM_TAKE_FOCUS]) {
-         result |= PROT_TAKE_FOCUS;
+         state->status |= STAT_TAKEFOCUS;
       }
    }
 
    JXFree(p);
-
-   return result;
 
 }
 
@@ -869,7 +866,7 @@ void ReadWMState(Window win, ClientState *state)
 }
 
 /** Read the WM hints for a window. */
-void ReadWMHints(Window win, ClientState *state)
+void ReadWMHints(Window win, ClientState *state, char alreadyMapped)
 {
 
    XWMHints *wmhints;
@@ -877,9 +874,10 @@ void ReadWMHints(Window win, ClientState *state)
    Assert(win != None);
    Assert(state);
 
+   state->status |= STAT_CANFOCUS;
    wmhints = JXGetWMHints(display, win);
    if(wmhints) {
-      if(wmhints->flags & StateHint) {
+      if(!alreadyMapped && (wmhints->flags & StateHint)) {
          switch(wmhints->initial_state) {
          case IconicState:
             state->status |= STAT_MINIMIZED;
@@ -890,6 +888,9 @@ void ReadWMHints(Window win, ClientState *state)
          default:
             break;
          }
+      }
+      if((wmhints->flags & InputHint) && wmhints->input == False) {
+         state->status &= ~STAT_CANFOCUS;
       }
       JXFree(wmhints);
    }
@@ -909,9 +910,9 @@ void ReadMotifHints(Window win, ClientState *state)
    Assert(win != None);
    Assert(state);
 
-   if(JXGetWindowProperty(display, win, atoms[ATOM_MOTIF_WM_HINTS],
-      0L, 20L, False, atoms[ATOM_MOTIF_WM_HINTS], &type, &format,
-      &itemCount, &bytesLeft, &data) != Success) {
+   if(JXGetWindowProperty(display, win, atoms[ATOM_MOTIF_WM_HINTS], 0L, 20L,
+                          False, atoms[ATOM_MOTIF_WM_HINTS], &type, &format,
+                          &itemCount, &bytesLeft, &data) != Success) {
       return;
    }
 
@@ -975,8 +976,8 @@ char GetCardinalAtom(Window window, AtomType atom, unsigned long *value)
    Assert(value);
 
    status = JXGetWindowProperty(display, window, atoms[atom], 0, 1, False,
-      XA_CARDINAL, &realType, &realFormat, &count, &extra, &data);
-
+                                XA_CARDINAL, &realType, &realFormat,
+                                &count, &extra, &data);
    ret = 0;
    if(status == Success && data) {
       if(count == 1) {

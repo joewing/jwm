@@ -625,6 +625,8 @@ char HandlePropertyNotify(const XPropertyEvent *event)
          changed = 1;
          break;
       case XA_WM_HINTS:
+         ReadWMHints(np->window, &np->state, 1);
+         break;
       case XA_WM_ICON_NAME:
       case XA_WM_CLIENT_MACHINE:
          break;
@@ -632,6 +634,8 @@ char HandlePropertyNotify(const XPropertyEvent *event)
          if(event->atom == atoms[ATOM_WM_COLORMAP_WINDOWS]) {
             ReadWMColormaps(np);
             UpdateClientColormap(np);
+         } else if(event->atom == atoms[ATOM_WM_PROTOCOLS]) {
+            ReadWMProtocols(np->window, &np->state);
          } else if(event->atom == atoms[ATOM_NET_WM_ICON]) {
             LoadIcon(np);
             changed = 1;

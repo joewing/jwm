@@ -56,7 +56,10 @@ typedef enum {
    STAT_SDESKTOP   = 1 << 11, /**< This client was minimized to show desktop. */
    STAT_FULLSCREEN = 1 << 12, /**< This client wants to be full screen. */
    STAT_OPACITY    = 1 << 13, /**< This client has a fixed opacity. */
-   STAT_NOFOCUS    = 1 << 14  /**< Don't focus on map. */
+   STAT_NOFOCUS    = 1 << 14, /**< Don't focus on map. */
+   STAT_CANFOCUS   = 1 << 15, /**< Set if this client accepts input focus. */
+   STAT_DELETE     = 1 << 16, /**< Set if this client accepts WM_DELETE. */
+   STAT_TAKEFOCUS  = 1 << 17  /**< Set if this client uses WM_TAKE_FOCUS. */
 } StatusFlags;
 
 /** Colormap window linked list. */

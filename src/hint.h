@@ -133,13 +133,6 @@ typedef struct ClientState {
    unsigned int opacity;   /**< Opacity (0 - 0xFFFFFFFF). */
 } ClientState;
 
-/** Client protocols (to be used as a bit mask). */
-typedef enum {
-   PROT_NONE       = 0,
-   PROT_DELETE     = 1,
-   PROT_TAKE_FOCUS = 2
-} ClientProtocolType;
-
 extern Atom atoms[ATOM_COUNT];
 
 void InitializeHints();
@@ -150,11 +143,11 @@ void DestroyHints();
 /** Determine the current desktop. */
 void ReadCurrentDesktop();
 
-/** Read client protocols
+/** Read client info.
  * @param np The client.
  * @param alreadyMapped Set if the client is already mapped.
  */
-void ReadClientProtocols(struct ClientNode *np, char alreadyMapped);
+void ReadClientInfo(struct ClientNode *np, char alreadyMapped);
 
 /** Read a client's name.
  * @param np The client.
@@ -173,9 +166,9 @@ void ReadWMNormalHints(struct ClientNode *np);
 
 /** Read the WM_PROTOCOLS property for a window.
  * @param w The window.
- * @return The protocols.
+ * @param state The client state to update.
  */
-ClientProtocolType ReadWMProtocols(Window w);
+void ReadWMProtocols(Window w, ClientState *state);
 
 /** Read colormap information for a client.
  * @param np The client.
@@ -193,6 +186,13 @@ void ReadWinLayer(struct ClientNode *np);
  * @return The window state.
  */
 ClientState ReadWindowState(Window win, char alreadyMapped);
+
+/** Read WM hints.
+ * @param win The window.
+ * @param state The state hints to update.
+ * @param alreadyMapped Set if the window is already mapped.
+ */
+void ReadWMHints(Window win, ClientState *state, char alreadyMapped);
 
 /** Set the state of a client window.
  * @param np The client.

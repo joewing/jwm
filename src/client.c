@@ -168,7 +168,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    np->state.border = BORDER_DEFAULT;
    np->borderAction = BA_NONE;
 
-   ReadClientProtocols(np, alreadyMapped);
+   ReadClientInfo(np, alreadyMapped);
 
    if(!notOwner) {
       np->state.border = BORDER_OUTLINE | BORDER_TITLE | BORDER_MOVE;
@@ -817,8 +817,6 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
 void FocusClient(ClientNode *np)
 {
 
-   ClientProtocolType protocols;
-
    Assert(np);
 
    if(np->state.status & STAT_HIDDEN) {
@@ -843,12 +841,13 @@ void FocusClient(ClientNode *np)
    if(np->state.status & STAT_MAPPED) {
       UpdateClientColormap(np);
       SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, np->window);
-      protocols = ReadWMProtocols(np->window);
-      if(protocols & PROT_TAKE_FOCUS) {
-         JXSetInputFocus(display, PointerRoot, RevertToPointerRoot, eventTime);
-         SendClientMessage(np->window, ATOM_WM_PROTOCOLS, ATOM_WM_TAKE_FOCUS);
-      } else {
+      if(np->state.status & STAT_CANFOCUS) {
          JXSetInputFocus(display, np->window, RevertToPointerRoot, eventTime);
+      } else {
+         JXSetInputFocus(display, rootWindow, RevertToPointerRoot, eventTime);
+      }
+      if(np->state.status & STAT_TAKEFOCUS) {
+         SendClientMessage(np->window, ATOM_WM_PROTOCOLS, ATOM_WM_TAKE_FOCUS);
       }
    } else {
       JXSetInputFocus(display, rootWindow, RevertToPointerRoot, eventTime);
@@ -870,18 +869,12 @@ void RefocusClient()
 /** Send a delete message to a client. */
 void DeleteClient(ClientNode *np)
 {
-
-   ClientProtocolType protocols;
-
    Assert(np);
-
-   protocols = ReadWMProtocols(np->window);
-   if(protocols & PROT_DELETE) {
+   if(np->state.status & STAT_DELETE) {
       SendClientMessage(np->window, ATOM_WM_PROTOCOLS, ATOM_WM_DELETE_WINDOW);
    } else {
       KillClient(np);
    }
-
 }
 
 /** Callback to kill a client after a confirm dialog. */
@@ -1334,10 +1327,10 @@ void SendConfigureEvent(ClientNode *np)
 
    Assert(np);
 
+   memset(&event, 0, sizeof(event));
    event.type = ConfigureNotify;
    event.event = np->window;
    event.window = np->window;
-
    if(np->state.status & STAT_FULLSCREEN) {
       sp = GetCurrentScreen(np->x, np->y);
       event.x = sp->x;
@@ -1351,12 +1344,8 @@ void SendConfigureEvent(ClientNode *np)
       event.height = np->height;
    }
 
-   event.border_width = 0;
-   event.above = None;
-   event.override_redirect = False;
-
    JXSendEvent(display, np->window, False, StructureNotifyMask,
-      (XEvent*)&event);
+               (XEvent*)&event);
 
 }
 

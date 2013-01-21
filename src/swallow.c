@@ -197,18 +197,18 @@ void Resize(TrayComponentType *cp)
 void Destroy(TrayComponentType *cp)
 {
 
-   ClientProtocolType protocols;
-
    /* Destroy the window if there is one. */
    if(cp->window) {
 
       JXReparentWindow(display, cp->window, rootWindow, 0, 0);
       JXRemoveFromSaveSet(display, cp->window);
 
-      protocols = ReadWMProtocols(cp->window);
-      if(protocols & PROT_DELETE) {
+      ClientState state;
+      memset(&state, 0, sizeof(state));
+      ReadWMProtocols(cp->window, &state);
+      if(state.status & STAT_DELETE) {
          SendClientMessage(cp->window, ATOM_WM_PROTOCOLS,
-            ATOM_WM_DELETE_WINDOW);
+                           ATOM_WM_DELETE_WINDOW);
       } else {
          JXKillClient(display, cp->window);
       }

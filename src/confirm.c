@@ -17,6 +17,7 @@
 #include "color.h"
 #include "misc.h"
 #include "settings.h"
+#include "key.h"
 
 #ifndef DISABLE_CONFIRM
 
@@ -63,6 +64,7 @@ static void DrawButtons();
 static char HandleDialogExpose(const XExposeEvent *event); 
 static char HandleDialogButtonPress(const XButtonEvent *event);
 static char HandleDialogButtonRelease(const XButtonEvent *event);
+static char HandleDialogKeyPress(const XKeyEvent *event);
 
 /** Initialize the dialog processing data. */
 void InitializeDialogs()
@@ -101,6 +103,8 @@ char ProcessDialogEvent(const XEvent *event)
       return HandleDialogButtonPress(&event->xbutton);
    case ButtonRelease:
       return HandleDialogButtonRelease(&event->xbutton);
+   case KeyPress:
+      return HandleDialogKeyPress(&event->xkey);
    default:
       return 0;
    }
@@ -219,6 +223,28 @@ char HandleDialogButtonPress(const XButtonEvent *event)
 
 }
 
+/** Handle a key press. */
+char HandleDialogKeyPress(const XKeyEvent *event)
+{
+   if(dialog && event->window == dialog->node->window) {
+      KeyType key = GetKey(event);
+      switch(key & 0xFF) {
+      case KEY_ENTER:
+         (dialog->action)(dialog->client);
+         DestroyConfirmDialog();
+         break;
+      case KEY_ESC:
+         DestroyConfirmDialog();
+         break;
+      default:
+         break;
+      }
+      return 1;
+   } else {
+      return 0;
+   }
+}
+
 /** Show a confirm dialog. */
 void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
 {
@@ -234,9 +260,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
 
    /* Only allow one dialog at a time. */
    if(dialog) {
-      RaiseClient(dialog->node);
-      FocusClient(dialog->node);
-      return;
+      DestroyConfirmDialog();
    }
 
    dialog = Allocate(sizeof(DialogType));
@@ -260,7 +284,10 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
    ComputeDimensions();
 
    attrs.background_pixel = colors[COLOR_MENU_BG];
-   attrs.event_mask = ButtonReleaseMask | ExposureMask;
+   attrs.event_mask = ButtonPressMask
+                    | ButtonReleaseMask
+                    | KeyPressMask
+                    | ExposureMask;
 
    window = JXCreateWindow(display, rootWindow,
                            dialog->x, dialog->y,

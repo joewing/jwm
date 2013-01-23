@@ -1115,9 +1115,9 @@ Move right. Not grabbed.
 .IP \fBleft\fP
 Move left. Not grabbed.
 .IP \fBescape\fP
-Stop a move/resize or exit a menu. Not grabbed.
+Stop a move/resize, exit a menu, or cancel an action. Not grabbed.
 .IP \fBselect\fP
-Make a menu selection. Not grabbed.
+Make a menu selection or confirm an action. Not grabbed.
 .IP \fBnext\fP
 Move to the next window in the task list. Grabbed.
 .IP \fBnextstacked\fP

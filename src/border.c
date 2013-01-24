@@ -86,7 +86,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
 
          /* Menu button. */
          if(np->width >= titleHeight) {
-            if(x > 0 && x <= titleHeight) {
+            if(x > settings.borderWidth && x <= titleHeight) {
                return BA_MENU;
             }
          }

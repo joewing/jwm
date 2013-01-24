@@ -42,6 +42,7 @@ typedef struct {
    int lineCount;
    char **message;
 
+   Pixmap pmap;
    ClientNode *node;
 
    void (*action)(ClientNode*);
@@ -56,11 +57,11 @@ static DialogType *dialog = NULL;
 
 static int minWidth = 0;
 
-static void DrawConfirmDialog();
 static void DestroyConfirmDialog();
 static void ComputeDimensions();
-static void DrawMessage();
+static void DrawDialog();
 static void DrawButtons();
+static void ExposeConfirmDialog();
 static char HandleDialogExpose(const XExposeEvent *event); 
 static char HandleDialogButtonPress(const XButtonEvent *event);
 static char HandleDialogButtonRelease(const XButtonEvent *event);
@@ -116,7 +117,7 @@ char HandleDialogExpose(const XExposeEvent *event)
 {
    Assert(event);
    if(dialog && dialog->node->window == event->window) {
-      DrawConfirmDialog();
+      ExposeConfirmDialog();
       return 1;
    } else {
       return 0;
@@ -155,6 +156,7 @@ char HandleDialogButtonRelease(const XButtonEvent *event)
       } else {
          dialog->buttonState = DBS_NORMAL;
          DrawButtons();
+         ExposeConfirmDialog();
       }
 
       return 1;
@@ -164,6 +166,7 @@ char HandleDialogButtonRelease(const XButtonEvent *event)
          if(dialog->buttonState != DBS_NORMAL) {
             dialog->buttonState = DBS_NORMAL;
             DrawButtons();
+            ExposeConfirmDialog();
          }
       }
 
@@ -211,6 +214,7 @@ char HandleDialogButtonPress(const XButtonEvent *event)
 
       /* Draw the buttons. */
       DrawButtons();
+      ExposeConfirmDialog();
 
       return 1;
 
@@ -283,25 +287,31 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
 
    ComputeDimensions();
 
+   /* Create the pixmap used for rendering. */
+   dialog->pmap = JXCreatePixmap(display, rootWindow,
+                                 dialog->width, dialog->height, rootDepth);
+
+   /* Create the window. */
    attrs.background_pixel = colors[COLOR_MENU_BG];
    attrs.event_mask = ButtonPressMask
                     | ButtonReleaseMask
                     | KeyPressMask
                     | ExposureMask;
-
    window = JXCreateWindow(display, rootWindow,
                            dialog->x, dialog->y,
                            dialog->width, dialog->height, 0,
                            CopyFromParent, InputOutput, CopyFromParent,
                            CWBackPixel | CWEventMask, &attrs);
-
    shints.x = dialog->x;
    shints.y = dialog->y;
    shints.flags = PPosition;
    JXSetWMNormalHints(display, window, &shints);
-
    JXStoreName(display, window, "Confirm");
 
+   /* Draw the dialog. */
+   DrawDialog();
+
+   /* Add the client and give it focus. */
    dialog->node = AddClientWindow(window, 0, 0);
    Assert(dialog->node);
    if(np) {
@@ -310,17 +320,19 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
    dialog->node->state.status |= STAT_WMDIALOG;
    FocusClient(dialog->node);
 
+   /* Grab the mouse. */
    JXGrabButton(display, AnyButton, AnyModifier, window, True,
                 ButtonReleaseMask, GrabModeAsync, GrabModeAsync, None, None);
 
+
 }
 
-/** Draw a confirm dialog. */
-void DrawConfirmDialog()
+/** Copy the pixmap to the confirm dialog. */
+void ExposeConfirmDialog()
 {
    Assert(dialog);
-   DrawMessage();
-   DrawButtons();
+   JXCopyArea(display, dialog->pmap, dialog->node->window, rootGC,
+              0, 0, dialog->width, dialog->height, 0, 0);
 }
 
 /** Destroy a confirm dialog. */
@@ -336,6 +348,10 @@ void DestroyConfirmDialog()
    JXSync(display, True);
    RemoveClient(dialog->node);
 
+   /* Free the pixmap. */
+   JXFreePixmap(display, dialog->pmap);
+
+   /* Free the message. */
    for(x = 0; x < dialog->lineCount; x++) {
       Release(dialog->message[x]);
    }
@@ -410,8 +426,8 @@ void ComputeDimensions()
 
 }
 
-/** Display the message on the dialog window. */
-void DrawMessage()
+/** Render the dialog to the pixmap. */
+void DrawDialog()
 {
 
    int yoffset;
@@ -419,12 +435,21 @@ void DrawMessage()
 
    Assert(dialog);
 
+   /* Clear the dialog. */
+   JXSetForeground(display, rootGC, colors[COLOR_MENU_BG]);
+   JXFillRectangle(display, dialog->pmap, rootGC, 0, 0,
+                   dialog->width, dialog->height);
+
+   /* Draw the message. */
    yoffset = 4;
    for(x = 0; x < dialog->lineCount; x++) {
-      RenderString(dialog->node->window, FONT_MENU, COLOR_MENU_FG,
+      RenderString(dialog->pmap, FONT_MENU, COLOR_MENU_FG,
                    4, yoffset, dialog->width, dialog->message[x]);
       yoffset += dialog->lineHeight;
    }
+
+   /* Draw the buttons. */
+   DrawButtons();
 
 }
 
@@ -445,7 +470,7 @@ void DrawButtons()
    dialog->buttonWidth += 16;
    dialog->buttonHeight = dialog->lineHeight + 4;
 
-   ResetButton(&button, dialog->node->window, rootGC);
+   ResetButton(&button, dialog->pmap, rootGC);
    button.font = FONT_MENU;
    button.width = dialog->buttonWidth;
    button.height = dialog->buttonHeight;

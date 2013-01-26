@@ -336,6 +336,9 @@ void ShadeClient(ClientNode *np)
    if(np->state.status & STAT_SHADED) {
       return;
    }
+   if(!(np->state.border & BORDER_SHADE)) {
+      return;
+   }
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
 

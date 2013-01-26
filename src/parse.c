@@ -92,6 +92,7 @@ static const OptionMapType OPTION_MAP[] = {
    { "hmax",         OPTION_MAX_H         },
    { "vmax",         OPTION_MAX_V         },
    { "nofocus",      OPTION_NOFOCUS       },
+   { "noshade",      OPTION_NOSHADE       },
    { NULL,           OPTION_INVALID       }
 };
 

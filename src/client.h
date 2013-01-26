@@ -24,7 +24,8 @@ typedef enum {
    BORDER_RESIZE  = 1 << 5,   /**< Window supports resizing. */
    BORDER_MOVE    = 1 << 6,   /**< Window supports moving. */
    BORDER_MAX_V   = 1 << 7,   /**< Maximize vertically. */
-   BORDER_MAX_H   = 1 << 8    /**< Maximize horizontally. */
+   BORDER_MAX_H   = 1 << 8,   /**< Maximize horizontally. */
+   BORDER_SHADE   = 1 << 9    /**< Allow shading. */
 } BorderFlags;
 
 /** The default border flags. */
@@ -37,7 +38,8 @@ typedef enum {
       | BORDER_RESIZE   \
       | BORDER_MOVE     \
       | BORDER_MAX_V    \
-      | BORDER_MAX_H    )
+      | BORDER_MAX_H    \
+      | BORDER_SHADE    )
 
 /** Window status flags. */
 typedef enum {

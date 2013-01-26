@@ -93,19 +93,16 @@ Menu *CreateWindowMenu()
       }
    }
 
-   if(client->state.border & BORDER_MIN) {
+   if(client->state.status & STAT_MINIMIZED) {
+      AddWindowMenuItem(menu, _("Restore"), MA_RESTORE, 0);
+   } else if(client->state.border & BORDER_MIN) {
+      AddWindowMenuItem(menu, _("Minimize"), MA_MINIMIZE, 0);
+   }
 
-      if(client->state.status & STAT_MINIMIZED) {
-         AddWindowMenuItem(menu, _("Restore"), MA_RESTORE, 0);
-      } else {
-         if(client->state.status & STAT_SHADED) {
-            AddWindowMenuItem(menu, _("Unshade"), MA_SHADE, 0);
-         } else {
-            AddWindowMenuItem(menu, _("Shade"), MA_SHADE, 0);
-         }
-         AddWindowMenuItem(menu, _("Minimize"), MA_MINIMIZE, 0);
-      }
-
+   if(client->state.status & STAT_SHADED) {
+      AddWindowMenuItem(menu, _("Unshade"), MA_SHADE, 0);
+   } else if(client->state.border & BORDER_SHADE) {
+      AddWindowMenuItem(menu, _("Shade"), MA_SHADE, 0);
    }
 
    if((client->state.border & BORDER_MAX)

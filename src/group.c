@@ -297,6 +297,9 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
       case OPTION_NOFOCUS:
          np->state.status |= STAT_NOFOCUS;
          break;
+      case OPTION_NOSHADE:
+         np->state.border &= ~BORDER_SHADE;
+         break;
       default:
          Debug("invalid option: %d", lp->option);
          break;

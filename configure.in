@@ -123,7 +123,7 @@ JWM_PKGCONFIG([use_pkgconfig_fribidi], [fribidi])
 # Check if confirm dialogs should be used.
 ############################################################################
 AC_ARG_ENABLE(confirm,
-   AC_HELP_STRING([--disable-confirm], [don't enable confirm dialogs]) )
+   AC_HELP_STRING([--disable-confirm], [disable confirm dialogs]) )
 if test "$enable_confirm" = "no" ; then
    AC_DEFINE(DISABLE_CONFIRM, 1, [Define to disable confirm dialogs])
 else
@@ -134,17 +134,23 @@ fi
 # Check if icon support was requested.
 ############################################################################
 AC_ARG_ENABLE(icons,
-   AC_HELP_STRING([--disable-icons], [don't enable icon support]) )
+   AC_HELP_STRING([--disable-icons], [disable icon support]) )
 if test "$enable_icons" != "no" ; then
    enable_icons="yes"
    AC_DEFINE(USE_ICONS, 1, [Define to enable icon support] )
+else
+   enable_png="no"
+   enable_xpm="no"
+   enable_rsvg="no"
+   enable_cairo="no"
+   enable_jpeg="no"
 fi
 
 ############################################################################
 # Check if PNG support was requested and available.
 ############################################################################
 AC_ARG_ENABLE(png,
-   AC_HELP_STRING([--disable-png], [don't support PNG images]) )
+   AC_HELP_STRING([--disable-png], [disable PNG images]) )
 if test "$enable_png" != "no" ; then
 
    if test "$use_pkgconfig_png" = "yes" ; then
@@ -173,7 +179,7 @@ fi
 # Check if Cairo support was requested and available.
 ############################################################################
 AC_ARG_ENABLE(cairo,
-   AC_HELP_STRING([--disable-cairo], [don't support Cairo]) )
+   AC_HELP_STRING([--disable-cairo], [disable Cairo support]) )
 if test "$enable_cairo" != "no" ; then
 
    if test "$use_pkgconfig_cairo" = "yes" ; then
@@ -197,12 +203,18 @@ if test "$enable_cairo" != "no" ; then
         AC_MSG_WARN([unable to use Cairo, Cairo support disabled]) ],
       [ $CAIRO_LDFLAGS ])
 fi
+if test "$enable_cairo" == "no" ; then
+   if test "$enable_rsvg" != "no" ; then
+      AC_MSG_WARN([disabling rsvg because Cairo is disabled])
+      enable_rsvg="no"
+   fi
+fi
 
 ############################################################################
 # Check if librsvg support was requested and available.
 ############################################################################
 AC_ARG_ENABLE(rsvg,
-   AC_HELP_STRING([--disable-rsvg], [don't support rsvg]) )
+   AC_HELP_STRING([--disable-rsvg], [disable rsvg support]) )
 if test "$enable_rsvg" != "no" ; then
 
    if test "$use_pkgconfig_rsvg" = "yes" ; then
@@ -223,12 +235,18 @@ if test "$enable_rsvg" != "no" ; then
         AC_MSG_WARN([unable to use rsvg, rsvg support disabled]) ],
       [ $RSVG_LDFLAGS ])
 fi
+if test "$enable_rsvg" == "no" ; then
+   if test "$enable_cairo" != "no" ; then
+      AC_MSG_WARN([disabling Cairo because rsvg is disabled])
+      enable_cairo="no"
+   fi
+fi
 
 ############################################################################
 # Check if JPEG support was requested and available.
 ############################################################################
 AC_ARG_ENABLE(jpeg,
-   AC_HELP_STRING([--disable-jpeg], [don't support JPEG images]) )
+   AC_HELP_STRING([--disable-jpeg], [disable JPEG images]) )
 if test "$enable_jpeg" != "no" ; then
    if test "$use_pkgconfig_jpeg" = "yes" ; then
       JPEG_CFLAGS=`$PKGCONFIG --cflags libjpeg`
@@ -252,7 +270,7 @@ fi
 # Check if XFT support was requested and available.
 ############################################################################
 AC_ARG_ENABLE(xft,
-   AC_HELP_STRING([--disable-xft], [don't use Xft]) )
+   AC_HELP_STRING([--disable-xft], [disable Xft]) )
 if test "$enable_xft" != "no"; then
 
    if test "$use_pkgconfig_xft" = "yes" ; then
@@ -287,7 +305,7 @@ fi
 # Check if support for the XRENDER extension was requested and available.
 ############################################################################
 AC_ARG_ENABLE(xrender,
-   AC_HELP_STRING([--disable-xrender], [don't use the XRender extension]) )
+   AC_HELP_STRING([--disable-xrender], [disable XRender]) )
 if test "$enable_xrender" != "no"; then
 
    if test "$use_pkgconfig_xrender" = "yes" ; then
@@ -351,7 +369,7 @@ fi
 # Check if XPM support was requested and available.
 ############################################################################
 AC_ARG_ENABLE(xpm,
-   AC_HELP_STRING([--disable-xpm], [don't support XPM images]) )
+   AC_HELP_STRING([--disable-xpm], [disable XPM images]) )
 if test "$enable_xpm" != "no"; then
    AC_CHECK_HEADERS([X11/xpm.h], [],
       [ enable_xpm="no";
@@ -378,7 +396,7 @@ fi
 # Check if support for the shape extension was requested and available.
 ############################################################################
 AC_ARG_ENABLE(shape,
-   AC_HELP_STRING([--disable-shape], [don't use the X shape extension]) )
+   AC_HELP_STRING([--disable-shape], [disable use of the X shape extension]) )
 if test "$enable_shape" != "no"; then
    AC_CHECK_LIB(Xext, XShapeCombineRectangles,
       [ LDFLAGS="$LDFLAGS -lXext"
@@ -394,7 +412,7 @@ fi
 # larger than 800 pixels in either direction causes problems).
 ############################################################################
 AC_ARG_ENABLE(xmu,
-   AC_HELP_STRING([--disable-xmu], [don't use Xmu]),
+   AC_HELP_STRING([--disable-xmu], [disable Xmu support]),
    [],
    [  if test `uname` == "IRIX" -o `uname` == "IRIX64" ; then
          AC_MSG_WARN([disabling Xmu (it is broken on IRIX)])
@@ -414,7 +432,7 @@ fi
 # Check if support for Xinerama was requested and available.
 ############################################################################
 AC_ARG_ENABLE(xinerama,
-   AC_HELP_STRING([--disable-xinerama], [don't use Xinerama]) )
+   AC_HELP_STRING([--disable-xinerama], [disable Xinerama support]) )
 if test "$enable_xinerama" != "no"; then
    AC_CHECK_LIB(Xinerama, XineramaQueryExtension,
       [ LDFLAGS="$LDFLAGS -lXinerama"

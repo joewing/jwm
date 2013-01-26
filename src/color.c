@@ -33,56 +33,56 @@ static XftColor *xftColors[COLOR_COUNT] = { NULL };
 
 static DefaultColorNode DEFAULT_COLORS[] = {
 
-   { COLOR_TITLE_FG,                "black"   },
-   { COLOR_TITLE_ACTIVE_FG,         "black"   },
+   { COLOR_TITLE_FG,                "#FFFFFF"   },
+   { COLOR_TITLE_ACTIVE_FG,         "#FFFFFF"   },
 
-   { COLOR_TITLE_BG1,               "gray"    },
-   { COLOR_TITLE_BG2,               "gray"    },
-   { COLOR_TITLE_ACTIVE_BG1,        "red"     },
-   { COLOR_TITLE_ACTIVE_BG2,        "red"     },
+   { COLOR_TITLE_BG1,               "#333333"   },
+   { COLOR_TITLE_BG2,               "#111111"   },
+   { COLOR_TITLE_ACTIVE_BG1,        "#CC7700"   },
+   { COLOR_TITLE_ACTIVE_BG2,        "#884400"   },
 
-   { COLOR_BORDER_LINE,             "black"   },
-   { COLOR_BORDER_ACTIVE_LINE,      "black"   },
+   { COLOR_BORDER_LINE,             "#000000"   },
+   { COLOR_BORDER_ACTIVE_LINE,      "#000000"   },
 
-   { COLOR_TRAY_BG,                 "gray"    },
-   { COLOR_TRAY_FG,                 "black"   },
+   { COLOR_TRAY_BG,                 "#111111"   },
+   { COLOR_TRAY_FG,                 "#FFFFFF"   },
 
-   { COLOR_TASK_FG,                 "black"   },
-   { COLOR_TASK_BG1,                "gray"    },
-   { COLOR_TASK_BG2,                "gray"    },
-   { COLOR_TASK_ACTIVE_FG,          "white"   },
-   { COLOR_TASK_ACTIVE_BG1,         "red"     },
-   { COLOR_TASK_ACTIVE_BG2,         "red"     },
+   { COLOR_TASK_FG,                 "#FFFFFF"   },
+   { COLOR_TASK_BG1,                "#333333"   },
+   { COLOR_TASK_BG2,                "#111111"   },
+   { COLOR_TASK_ACTIVE_FG,          "#FFFFFF"   },
+   { COLOR_TASK_ACTIVE_BG1,         "#111111"   },
+   { COLOR_TASK_ACTIVE_BG2,         "#333333"   },
 
-   { COLOR_PAGER_BG,                "black"   },
-   { COLOR_PAGER_FG,                "gray"    },
-   { COLOR_PAGER_ACTIVE_BG,         "red"     },
-   { COLOR_PAGER_ACTIVE_FG,         "red"     },
-   { COLOR_PAGER_OUTLINE,           "black"   },
-   { COLOR_PAGER_TEXT,              "black"   },
+   { COLOR_PAGER_BG,                "#111111"   },
+   { COLOR_PAGER_FG,                "#444444"   },
+   { COLOR_PAGER_ACTIVE_BG,         "#884400"   },
+   { COLOR_PAGER_ACTIVE_FG,         "#CC7700"   },
+   { COLOR_PAGER_OUTLINE,           "#000000"   },
+   { COLOR_PAGER_TEXT,              "#FFFFFF"   },
 
-   { COLOR_MENU_BG,                 "gray"    },
-   { COLOR_MENU_FG,                 "black"   },
-   { COLOR_MENU_ACTIVE_BG1,         "red"     },
-   { COLOR_MENU_ACTIVE_BG2,         "red"     },
-   { COLOR_MENU_ACTIVE_FG,          "white"   },
-   { COLOR_MENU_ACTIVE_OL,          "black"   },
+   { COLOR_MENU_BG,                 "#333333"   },
+   { COLOR_MENU_FG,                 "#FFFFFF"   },
+   { COLOR_MENU_ACTIVE_BG1,         "#CC7700"   },
+   { COLOR_MENU_ACTIVE_BG2,         "#884400"   },
+   { COLOR_MENU_ACTIVE_FG,          "#FFFFFF"   },
+   { COLOR_MENU_ACTIVE_OL,          "#CC7700"   },
 
-   { COLOR_POPUP_BG,                "yellow"  },
-   { COLOR_POPUP_FG,                "black"   },
-   { COLOR_POPUP_OUTLINE,           "black"   },
+   { COLOR_POPUP_BG,                "#999999"   },
+   { COLOR_POPUP_FG,                "#000000"   },
+   { COLOR_POPUP_OUTLINE,           "#000000"   },
 
-   { COLOR_TRAYBUTTON_FG,           "black"   },
-   { COLOR_TRAYBUTTON_BG1,          "gray"    },
-   { COLOR_TRAYBUTTON_BG2,          "gray"    },
+   { COLOR_TRAYBUTTON_FG,           "#FFFFFF"   },
+   { COLOR_TRAYBUTTON_BG1,          "#111111"   },
+   { COLOR_TRAYBUTTON_BG2,          "#333333"   },
 
-   { COLOR_TRAYBUTTON_ACTIVE_FG,    "black"   },
-   { COLOR_TRAYBUTTON_ACTIVE_BG1,   "gray"    },
-   { COLOR_TRAYBUTTON_ACTIVE_BG2,   "gray"    },
+   { COLOR_TRAYBUTTON_ACTIVE_FG,    "#FFFFFF"   },
+   { COLOR_TRAYBUTTON_ACTIVE_BG1,   "#333333"   },
+   { COLOR_TRAYBUTTON_ACTIVE_BG2,   "#111111"   },
 
-   { COLOR_CLOCK_FG,                "black"   },
-   { COLOR_CLOCK_BG,                "gray"    },
-   { COLOR_COUNT,                   NULL      }
+   { COLOR_CLOCK_FG,                "#FFFFFF"   },
+   { COLOR_CLOCK_BG,                "#111111"   },
+   { COLOR_COUNT,                   NULL        }
 
 };
 

@@ -29,19 +29,13 @@
    </Group>
 
    <Group>
-      <Name>gkrellm</Name>
-      <Option>nolist</Option>
-      <Option>sticky</Option>
-   </Group>
-
-   <Group>
       <Name>xterm</Name>
       <Option>vmax</Option>
       <Option>icon:terminal.png</Option>
    </Group>
 
    <!-- Additional tray attributes: autohide, width, border, layer, layout -->
-   <Tray  x="0" y="-1" height="32" autohide="false">
+   <Tray x="0" y="-1" height="32" autohide="false">
 
       <!-- Additional TrayButton attribute: label -->
       <TrayButton label="JWM">root:1</TrayButton>
@@ -65,69 +59,62 @@
    </Tray>
 
    <!-- Visual Styles -->
-
    <WindowStyle>
-
       <Font>FreeSans-9:bold</Font>
       <Width>4</Width>
       <Height>20</Height>
-
       <Active>
-         <Text>white</Text>
-         <Title>#70849d:#2e3a67</Title>
-         <Outline>black</Outline>
+         <Text>#FFFFFF</Text>
+         <Title>#CC7700:#884400</Title>
+         <Outline>#000000</Outline>
          <Opacity>1.0</Opacity>
       </Active>
-
       <Inactive>
-         <Text>#aaaaaa</Text>
-         <Title>#808488:#303438</Title>
-         <Outline>black</Outline>
+         <Text>#FFFFFF</Text>
+         <Title>#333333:#111111</Title>
+         <Outline>#000000</Outline>
          <Opacity>0.5:0.9:0.1</Opacity>
       </Inactive>
-
    </WindowStyle>
-
-   <TaskListStyle>
-      <Font>FreeSans-12:bold</Font>
-      <ActiveForeground>black</ActiveForeground>
-      <ActiveBackground>gray80:gray90</ActiveBackground>
-      <Foreground>black</Foreground>
-      <Background>gray90:gray80</Background>
-   </TaskListStyle>
-
-   <!-- Additional TrayStyle attribute: insert -->
    <TrayStyle>
       <Font>FreeSans-12:bold</Font>
-      <Background>gray90</Background>
-      <Foreground>black</Foreground>
+      <Background>#111111</Background>
+      <Foreground>#FFFFFF</Foreground>
       <Opacity>0.75</Opacity>
    </TrayStyle>
-
+   <TaskListStyle>
+      <Font>FreeSans-12:bold</Font>
+      <ActiveForeground>#FFFFFF</ActiveForeground>
+      <ActiveBackground>#111111:#333333</ActiveBackground>
+      <Foreground>#FFFFFF</Foreground>
+      <Background>#333333:#111111</Background>
+   </TaskListStyle>
    <PagerStyle>
-      <Outline>black</Outline>
-      <Foreground>gray90</Foreground>
-      <Background>#808488</Background>
-      <ActiveForeground>#70849d</ActiveForeground>
-      <ActiveBackground>#2e3a67</ActiveBackground>
+      <Outline>#000000</Outline>
+      <Text>#FFFFFF</Text>
+      <Foreground>#444444</Foreground>
+      <Background>#111111</Background>
+      <ActiveForeground>#CC7700</ActiveForeground>
+      <ActiveBackground>#884400</ActiveBackground>
    </PagerStyle>
-
    <MenuStyle>
       <Font>FreeSans-10</Font>
-      <Foreground>black</Foreground>
-      <Background>gray90</Background>
-      <ActiveForeground>white</ActiveForeground>
-      <ActiveBackground>#70849d:#2e3a67</ActiveBackground>
+      <Foreground>#FFFFFF</Foreground>
+      <Background>#333333</Background>
+      <ActiveForeground>FFFFFF</ActiveForeground>
+      <ActiveBackground>#CC7700:#884400</ActiveBackground>
       <Opacity>0.85</Opacity>
    </MenuStyle>
-
    <PopupStyle>
       <Font>FreeSans-10</Font>
-      <Outline>black</Outline>
-      <Foreground>black</Foreground>
-      <Background>yellow</Background>
+      <Outline>#000000</Outline>
+      <Foreground>#000000</Foreground>
+      <Background>#999999</Background>
    </PopupStyle>
 
+   <IconPath>
+      /usr/share/icons/hicolor/scalable/apps
+   </IconPath>
    <IconPath>
       /usr/share/icons/gnome/32x32/actions
    </IconPath>
@@ -160,7 +147,7 @@
            contained within a Desktop tag to give a specific background
            for that desktop.
        -->
-      <Background type="solid">black</Background>
+      <Background type="solid">gray10</Background>
    </Desktops>
 
    <!-- Double click speed (in milliseconds) -->
@@ -180,8 +167,6 @@
 
    <!-- The resize mode (outline or opaque) -->
    <ResizeMode>opaque</ResizeMode>
-
-   <StartupCommand>gkrellm</StartupCommand>
 
    <!-- Key bindings -->
    <Key key="Up">up</Key>

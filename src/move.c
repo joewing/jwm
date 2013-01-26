@@ -293,9 +293,7 @@ char MoveClientKeyboard(ClientNode *np)
 
       if(event.type == KeyPress) {
 
-         while(JXCheckTypedWindowEvent(display, np->window, KeyPress, &event));
-         UpdateTime(&event);
-
+         DiscardKeyEvents(&event, np->window);
          switch(GetKey(&event.xkey) & 0xFF) {
          case KEY_UP:
             if(np->y + height > 0) {
@@ -323,16 +321,13 @@ char MoveClientKeyboard(ClientNode *np)
          }
 
          MoveMouse(rootWindow, np->x, np->y);
-         JXCheckTypedWindowEvent(display, np->window, MotionNotify, &event);
-         UpdateTime(&event);
+         DiscardMotionEvents(&event, np->window);
 
          moved = 1;
 
       } else if(event.type == MotionNotify) {
 
-         while(JXCheckTypedWindowEvent(display, np->window,
-                                       MotionNotify, &event));
-         UpdateTime(&event);
+         DiscardMotionEvents(&event, np->window);
 
          np->x = event.xmotion.x;
          np->y = event.xmotion.y;

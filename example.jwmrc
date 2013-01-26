@@ -101,7 +101,7 @@
       <Font>FreeSans-10</Font>
       <Foreground>#FFFFFF</Foreground>
       <Background>#333333</Background>
-      <ActiveForeground>FFFFFF</ActiveForeground>
+      <ActiveForeground>#FFFFFF</ActiveForeground>
       <ActiveBackground>#CC7700:#884400</ActiveBackground>
       <Opacity>0.85</Opacity>
    </MenuStyle>

@@ -80,7 +80,11 @@ void WaitForEvent(XEvent *event)
    int fd;
    char handled;
 
+#ifdef ConnectionNumber
+   fd = ConnectionNumber(display);
+#else
    fd = JXConnectionNumber(display);
+#endif
 
    do {
 
@@ -250,11 +254,19 @@ void DiscardMotionEvents(XEvent *event, Window w)
 {
    XEvent temp;
    while(JXCheckTypedEvent(display, MotionNotify, &temp)) {
-      UpdateTime(event);
+      UpdateTime(&temp);
       SetMousePosition(temp.xmotion.x_root, temp.xmotion.y_root);
       if(temp.xmotion.window == w) {
          *event = temp;
       }
+   }
+}
+
+/** Discard key events for the specified window. */
+void DiscardKeyEvents(XEvent *event, Window w)
+{
+   while(JXCheckTypedWindowEvent(display, w, KeyPress, event)) {
+      UpdateTime(event);
    }
 }
 

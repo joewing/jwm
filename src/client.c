@@ -870,6 +870,7 @@ void RefocusClient()
 void DeleteClient(ClientNode *np)
 {
    Assert(np);
+   ReadWMProtocols(np->window, &np->state);
    if(np->state.status & STAT_DELETE) {
       SendClientMessage(np->window, ATOM_WM_PROTOCOLS, ATOM_WM_DELETE_WINDOW);
    } else {
@@ -1245,12 +1246,12 @@ void ReparentClient(ClientNode *np, char notOwner)
          | KeyReleaseMask
          | StructureNotifyMask;
       attr.do_not_propagate_mask = NoEventMask;
-      XChangeWindowAttributes(display, np->window,
-         CWEventMask | CWDontPropagate, &attr);
+      JXChangeWindowAttributes(display, np->window,
+                               CWEventMask | CWDontPropagate, &attr);
 
    }
-  JXGrabButton(display, AnyButton, AnyModifier, np->window,
-     True, ButtonPressMask, GrabModeSync, GrabModeAsync, None, None);
+   JXGrabButton(display, AnyButton, AnyModifier, np->window, True,
+                ButtonPressMask, GrabModeSync, GrabModeAsync, None, None);
    GrabKeys(np);
 
    attrMask = 0;
@@ -1290,9 +1291,9 @@ void ReparentClient(ClientNode *np, char notOwner)
    height += north + south;
 
    /* Create the frame window. */
-   np->parent = JXCreateWindow(display, rootWindow,
-      x, y, width, height, 0, rootDepth, InputOutput,
-      rootVisual, attrMask, &attr);
+   np->parent = JXCreateWindow(display, rootWindow, x, y, width, height,
+                               0, rootDepth, InputOutput,
+                               rootVisual, attrMask, &attr);
  
    /* Update the window to get only the events we want. */
    attrMask = CWDontPropagate;

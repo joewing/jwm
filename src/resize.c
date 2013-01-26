@@ -293,9 +293,7 @@ void ResizeClientKeyboard(ClientNode *np) {
 
       if(event.type == KeyPress) {
 
-         while(JXCheckTypedWindowEvent(display, np->window, KeyPress, &event));
-         UpdateTime(&event);
-
+         DiscardKeyEvents(&event, np->window);
          switch(GetKey(&event.xkey) & 0xFF) {
          case KEY_UP:
             deltay = Min(-np->yinc, -10);

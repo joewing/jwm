@@ -35,6 +35,8 @@ $(EXE): $(OBJECTS)
 .c.o:
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) $<
 
+$(OBJECTS): *.h ../config.h
+
 clean:
 	rm -f $(OBJECTS) $(EXE) core
 

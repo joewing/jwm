@@ -437,7 +437,7 @@ void WriteNetAllowed(ClientNode *np)
 
    index = 0;
 
-   if(np->state.border & BORDER_TITLE) {
+   if(np->state.border & BORDER_SHADE) {
       values[index++] = atoms[ATOM_NET_WM_ACTION_SHADE];
    }
 

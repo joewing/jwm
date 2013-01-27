@@ -21,8 +21,8 @@ struct ScaledIconNode;
  * @param y The y-coordinate to place the icon.
  * @return 1 if the icon was successfully rendered, 0 otherwise.
  */
-int PutScaledRenderIcon(struct IconNode *icon, struct ScaledIconNode *node,
-   Drawable d, int x, int y);
+void PutScaledRenderIcon(struct IconNode *icon, struct ScaledIconNode *node,
+                         Drawable d, int x, int y);
 
 /** Create a scaled icon.
  * @param icon The icon.
@@ -31,7 +31,7 @@ int PutScaledRenderIcon(struct IconNode *icon, struct ScaledIconNode *node,
  * @return The scaled icon.
  */
 struct ScaledIconNode *CreateScaledRenderIcon(struct IconNode *icon,
-   int width, int height);
+                                              int width, int height);
 
 #endif /* RENDER_H */
 

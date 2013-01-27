@@ -16,8 +16,8 @@
 #include "error.h"
 
 /** Draw a scaled icon. */
-int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
-   int x, int y)
+void PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
+                         int x, int y)
 {
 
 #ifdef USE_XRENDER
@@ -32,10 +32,7 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
    int xscale, yscale;
 
    Assert(icon);
-
-   if(!haveRender) {
-      return 0;
-   }
+   Assert(haveRender);
 
    source = node->imagePicture;
    alpha = node->alphaPicture;
@@ -78,12 +75,6 @@ int PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
 
    }
 
-   return 1;
-
-#else
-
-   return 0;
-
 #endif
 
 }
@@ -108,10 +99,7 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
    int maskLine;
 
    Assert(icon);
-
-   if(!haveRender) {
-      return NULL;
-   }
+   Assert(haveRender);
 
    result = Allocate(sizeof(ScaledIconNode));
    result->next = icon->nodes;

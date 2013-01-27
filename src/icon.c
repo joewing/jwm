@@ -198,9 +198,12 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
       iy = y + (height - node->height) / 2;
 
       /* If we support xrender, use it. */
-      if(PutScaledRenderIcon(icon, node, d, ix, iy)) {
+#ifdef USE_XRENDER
+      if(haveRender) {
+         PutScaledRenderIcon(icon, node, d, ix, iy);
          return;
       }
+#endif
 
       /* Draw the icon the old way. */
       if(node->image != None) {
@@ -500,10 +503,17 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight)
    }
 
    /* See if we can use XRender to create the icon. */
-   np = CreateScaledRenderIcon(icon, nwidth, nheight);
-   if(np) {
+#ifdef USE_XRENDER
+   if(haveRender) {
+      np = CreateScaledRenderIcon(icon, nwidth, nheight);
+
+      /* Don't keep the image data around after creating the icon. */
+      Release(icon->image->data);
+      icon->image->data = NULL;
+
       return np;
    }
+#endif
 
    /* Create a new ScaledIconNode the old-fashioned way. */
    np = Allocate(sizeof(ScaledIconNode));

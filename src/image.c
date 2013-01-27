@@ -532,7 +532,9 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
 /** Destroy an image node. */
 void DestroyImage(ImageNode *image) {
    if(image) {
-      Release(image->data);
+      if(image->data) {
+         Release(image->data);
+      }
       Release(image);
    }
 }

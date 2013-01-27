@@ -633,7 +633,6 @@ IconNode *CreateIcon()
    icon->name = NULL;
    icon->image = NULL;
    icon->nodes = NULL;
-   icon->useRender = 1;
    icon->next = NULL;
    icon->prev = NULL;
    return icon;

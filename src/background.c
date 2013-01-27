@@ -312,9 +312,6 @@ void LoadImageBackground(BackgroundNode *bp)
       return;
    }
 
-   /* We can't use render on these. */
-   ip->useRender = 0;
-
    /* Determine the size of the background pixmap. */
    if(bp->type == BACKGROUND_TILE) {
       width = ip->image->width;

@@ -35,8 +35,7 @@ typedef struct IconNode {
    char *name;                    /**< The name of the icon. */
    struct ImageNode *image;       /**< The image data. */
    struct ScaledIconNode *nodes;  /**< Scaled versions of the icon. */
-	int useRender;						 /**< 1 if render can be used. */
-   
+
    struct IconNode *next;         /**< The next icon in the list. */
    struct IconNode *prev;         /**< The previous icon in the list. */
 

@@ -66,6 +66,7 @@ static void HandleNetMoveResize(const XClientMessageEvent *event,
 static void HandleNetWMState(const XClientMessageEvent *event,
                              ClientNode *np);
 static void HandleFrameExtentsRequest(const XClientMessageEvent *event);
+static void UpdateState(ClientNode *np);
 
 #ifdef USE_SHAPE
 static void HandleShapeEvent(const XShapeEvent *event);
@@ -658,6 +659,31 @@ char HandlePropertyNotify(const XPropertyEvent *event)
             ReadClientStrut(np);
          } else if(event->atom == atoms[ATOM_NET_WM_STRUT]) {
             ReadClientStrut(np);
+         } else if(event->atom == atoms[ATOM_MOTIF_WM_HINTS]) {
+
+            XWindowChanges wc;
+            int north, south, east, west;
+            long mask;
+
+            UpdateState(np);
+            WriteState(np);
+
+            mask = CWWidth | CWHeight | CWX | CWY;
+            GetBorderSize(&np->state, &north, &south, &east, &west);
+
+            wc.x = np->x;
+            wc.y = np->y;
+            wc.width = np->width + east + west;
+            wc.height = np->height + north + south;
+            JXConfigureWindow(display, np->parent, mask, &wc);
+
+            wc.x = west;
+            wc.y = north;
+            wc.width = np->width;
+            wc.height = np->height;
+            JXConfigureWindow(display, np->window, mask, &wc);
+            ResetRoundedRectWindow(np);
+
          }
          break;
       }
@@ -1106,35 +1132,8 @@ void HandleMapRequest(const XMapEvent *event)
       JXUngrabServer(display);
    } else {
       if(!(np->state.status & STAT_MAPPED)) {
-
-         /* Remove from the layer list. */
-         if(np->prev != NULL) {
-            np->prev->next = np->next;
-         } else {
-            Assert(nodes[np->state.layer] == np);
-            nodes[np->state.layer] = np->next;
-         }
-         if(np->next != NULL) {
-            np->next->prev = np->prev;
-         } else {
-            Assert(nodeTail[np->state.layer] == np);
-            nodeTail[np->state.layer] = np->prev;
-         }
-
-         /* Read the state (and new layer). */
-         np->state = ReadWindowState(np->window, 0);
+         UpdateState(np);
          np->state.status |= STAT_MAPPED;
-
-         /* Add to the layer list. */
-         np->prev = NULL;
-         np->next = nodes[np->state.layer];
-         if(np->next == NULL) {
-            nodeTail[np->state.layer] = np;
-         } else {
-            np->next->prev = np;
-         }
-         nodes[np->state.layer] = np;
-
          if(!(np->state.status & STAT_STICKY)) {
             np->state.desktop = currentDesktop;
          }
@@ -1322,6 +1321,41 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
    default:
       break;
    }
+}
+
+/** Update window state information. */
+void UpdateState(ClientNode *np)
+{
+   char alreadyMapped;
+
+   /* Remove from the layer list. */
+   if(np->prev != NULL) {
+      np->prev->next = np->next;
+   } else {
+      Assert(nodes[np->state.layer] == np);
+      nodes[np->state.layer] = np->next;
+   }
+   if(np->next != NULL) {
+      np->next->prev = np->prev;
+   } else {
+      Assert(nodeTail[np->state.layer] == np);
+      nodeTail[np->state.layer] = np->prev;
+   }
+
+   /* Read the state (and new layer). */
+   alreadyMapped = (np->state.status & STAT_MAPPED) ? 1 : 0;
+   np->state = ReadWindowState(np->window, alreadyMapped);
+
+   /* Add to the layer list. */
+   np->prev = NULL;
+   np->next = nodes[np->state.layer];
+   if(np->next == NULL) {
+      nodeTail[np->state.layer] = np;
+   } else {
+      np->next->prev = np;
+   }
+   nodes[np->state.layer] = np;
+
 }
 
 /** Update the last event time. */

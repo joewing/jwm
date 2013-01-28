@@ -143,6 +143,9 @@
 /* default system configuration path */
 #undef SYSTEM_CONFIG
 
+/* Define to use Cairo */
+#undef USE_CAIRO
+
 /* Define to use FriBidi */
 #undef USE_FRIBIDI
 
@@ -155,10 +158,7 @@
 /* Define to use libpng */
 #undef USE_PNG
 
-/* Define to use Cairo */
-#undef USE_CAIRO
-
-/* Define to use RSVG */
+/* Define to use rsvg */
 #undef USE_RSVG
 
 /* Define to enable the X shape extension */

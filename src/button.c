@@ -58,11 +58,7 @@ void DrawButton(ButtonNode *bp)
       fg = COLOR_MENU_ACTIVE_FG;
       bg1 = colors[COLOR_MENU_ACTIVE_BG1];
       bg2 = colors[COLOR_MENU_ACTIVE_BG2];
-      if(bg1 == bg2) {
-         outlinePixel = colors[COLOR_MENU_ACTIVE_OL];
-      } else {
-         outlinePixel = colors[COLOR_MENU_ACTIVE_DOWN];
-      }
+      outlinePixel = colors[COLOR_MENU_ACTIVE_OL];
       break;
    case BUTTON_TRAY:
    case BUTTON_TRAY_NOBORDER:

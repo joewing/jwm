@@ -66,7 +66,6 @@ static DefaultColorNode DEFAULT_COLORS[] = {
    { COLOR_MENU_ACTIVE_BG1,         "#CC7700"   },
    { COLOR_MENU_ACTIVE_BG2,         "#884400"   },
    { COLOR_MENU_ACTIVE_FG,          "#FFFFFF"   },
-   { COLOR_MENU_ACTIVE_OL,          "#CC7700"   },
 
    { COLOR_POPUP_BG,                "#999999"   },
    { COLOR_POPUP_FG,                "#000000"   },
@@ -246,14 +245,9 @@ void StartupColors()
       }
    }
 
-   if(names) {
-      for(x = 0; x < COLOR_COUNT; x++) {
-         if(names[x]) {
-            Release(names[x]);
-         }
-      }
-      Release(names);
-      names = NULL;
+   /* If not explicity set, select an outline for active menu items. */
+   if(!names || !names[COLOR_MENU_ACTIVE_OL]) {
+      DarkenColor(COLOR_MENU_ACTIVE_BG1, COLOR_MENU_ACTIVE_OL);
    }
 
    LightenColor(COLOR_TRAY_BG, COLOR_TRAY_UP);
@@ -269,7 +263,15 @@ void StartupColors()
    LightenColor(COLOR_MENU_BG, COLOR_MENU_UP);
    DarkenColor(COLOR_MENU_BG, COLOR_MENU_DOWN);
 
-   DarkenColor(COLOR_MENU_ACTIVE_BG1, COLOR_MENU_ACTIVE_DOWN);
+   if(names) {
+      for(x = 0; x < COLOR_COUNT; x++) {
+         if(names[x]) {
+            Release(names[x]);
+         }
+      }
+      Release(names);
+      names = NULL;
+   }
 
 }
 

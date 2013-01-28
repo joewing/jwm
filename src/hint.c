@@ -347,9 +347,6 @@ void WriteState(ClientNode *np)
                       np->state.opacity);
    }
 
-   /* Flush to the server. */
-   JXSync(display, False);
-
 }
 
 /** Write the net state hint for a client. */

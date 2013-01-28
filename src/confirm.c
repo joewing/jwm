@@ -345,7 +345,6 @@ void DestroyConfirmDialog()
 
    /* This will take care of destroying the dialog window since
     * its parent will be destroyed. */
-   JXSync(display, True);
    RemoveClient(dialog->node);
 
    /* Free the pixmap. */

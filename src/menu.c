@@ -377,7 +377,6 @@ void CreateMenu(Menu *menu, int x, int y)
    if(settings.menuOpacity < UINT_MAX) {
       SetCardinalAtom(menu->window, ATOM_NET_WM_WINDOW_OPACITY,
                       settings.menuOpacity);
-      JXSync(display, False);
    }
 
    JXMapRaised(display, menu->window); 

@@ -892,10 +892,7 @@ void KillClientHandler(ClientNode *np)
    }
 
    JXGrabServer(display);
-   JXSync(display, False);
-
    JXKillClient(display, np->window);
-
    JXSync(display, True);
    JXUngrabServer(display);
 

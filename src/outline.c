@@ -25,7 +25,6 @@ void DrawOutline(int x, int y, int width, int height)
    outlineGC = JXCreateGC(display, rootWindow,
                           GCFunction | GCSubwindowMode | GCLineWidth,
                           &gcValues);
-   JXSync(display, False);
    JXGrabServer(display);
    JXDrawRectangle(display, rootWindow, outlineGC, x, y, width, height);
    lastX = x;
@@ -41,7 +40,6 @@ void ClearOutline()
       JXDrawRectangle(display, rootWindow, outlineGC,
                       lastX, lastY, lastWidth, lastHeight);
       JXUngrabServer(display);
-      JXSync(display, False);
       JXFreeGC(display, outlineGC);
       outlineGC = None;
    }

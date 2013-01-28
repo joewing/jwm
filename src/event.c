@@ -1118,7 +1118,6 @@ void HandleMapRequest(const XMapEvent *event)
    np = FindClientByWindow(event->window);
    if(!np) {
       JXGrabServer(display);
-      JXSync(display, False);
       np = AddClientWindow(event->window, 0, 1);
       if(np) {
          if(     settings.focusModel == FOCUS_CLICK
@@ -1128,7 +1127,6 @@ void HandleMapRequest(const XMapEvent *event)
       } else {
          JXMapWindow(display, event->window);
       }
-      JXSync(display, False);
       JXUngrabServer(display);
    } else {
       if(!(np->state.status & STAT_MAPPED)) {
@@ -1164,7 +1162,6 @@ void HandleUnmapNotify(const XUnmapEvent *event)
       /* Grab the server to prevent the client from destroying the
        * window after we check for a DestroyNotify. */
       JXGrabServer(display);
-      JXSync(display, False);
 
       if(np->controller) {
          (np->controller)(1);

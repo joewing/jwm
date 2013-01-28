@@ -93,15 +93,16 @@ void StartupTray()
       attr.background_pixel = colors[COLOR_TRAY_BG];
 
       tp->window = JXCreateWindow(display, rootWindow,
-         tp->x, tp->y, tp->width, tp->height,
-         0, rootDepth, InputOutput, rootVisual, attrMask, &attr);
+                                  tp->x, tp->y, tp->width, tp->height,
+                                  0, rootDepth, InputOutput, rootVisual,
+                                  attrMask, &attr);
 
       if(settings.trayOpacity < UINT_MAX) {
          /* Can't use atoms yet as it hasn't been initialized. */
          opacityAtom = JXInternAtom(display, "_NET_WM_WINDOW_OPACITY", False);
          JXChangeProperty(display, tp->window, opacityAtom, XA_CARDINAL, 32,
-            PropModeReplace, (unsigned char*)&settings.trayOpacity, 1);
-         JXSync(display, False);
+                          PropModeReplace,
+                          (unsigned char*)&settings.trayOpacity, 1);
       }
 
       SetDefaultCursor(tp->window);

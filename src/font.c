@@ -14,7 +14,11 @@
 #include "color.h"
 #include "misc.h"
 
+#ifdef USE_XFT
+static const char *DEFAULT_FONT = "FreeSans-9";
+#else
 static const char *DEFAULT_FONT = "fixed";
+#endif
 
 static char *fontNames[FONT_COUNT];
 
@@ -73,7 +77,7 @@ void StartupFonts()
          }
       }
       if(!fonts[x]) {
-         fonts[x] = JXftFontOpenXlfd(display, rootScreen, DEFAULT_FONT);
+         fonts[x] = JXftFontOpenName(display, rootScreen, DEFAULT_FONT);
       }
       if(JUNLIKELY(!fonts[x])) {
          FatalError(_("could not load the default font: %s"), DEFAULT_FONT);

@@ -116,7 +116,7 @@ void LoadFocus()
    JXQueryPointer(display, rootWindow, &rootReturn, &childReturn,
                   &rootx, &rooty, &winx, &winy, &mask);
 
-   np = FindClientByWindow(childReturn);
+   np = FindClient(childReturn);
    if(np) {
       FocusClient(np);
    }
@@ -330,30 +330,21 @@ void ShadeClient(ClientNode *np)
 
    Assert(np);
 
-   if(!(np->state.border & BORDER_TITLE)) {
+   if((np->state.status & STAT_SHADED) || !(np->state.border & BORDER_SHADE)) {
       return;
    }
-   if(np->state.status & STAT_SHADED) {
-      return;
-   }
-   if(!(np->state.border & BORDER_SHADE)) {
-      return;
-   }
-
-   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    if(np->state.status & STAT_MAPPED) {
+      np->state.status &= ~STAT_MAPPED;
       JXUnmapWindow(display, np->window);
    }
    np->state.status |= STAT_SHADED;
-   np->state.status &= ~STAT_SDESKTOP;
-   np->state.status &= ~STAT_MAPPED;
 
+   GetBorderSize(&np->state, &north, &south, &east, &west);
    JXResizeWindow(display, np->parent, np->width + east + west, north);
 
-   /* Shape will up updated in HandleUnmapNotify. */
-
    WriteState(np);
+   ResetRoundedRectWindow(np);
    UpdatePager();
 
 }
@@ -366,28 +357,23 @@ void UnshadeClient(ClientNode *np)
 
    Assert(np);
 
-   if(!(np->state.border & BORDER_TITLE)) {
-      return;
-   }
-
    if(!(np->state.status & STAT_SHADED)) {
       return;
    }
 
-   JXMapWindow(display, np->window);
-   np->state.status |= STAT_MAPPED;
+   if(!(np->state.status & (STAT_MINIMIZED | STAT_SDESKTOP))) {
+      JXMapWindow(display, np->window);
+      np->state.status |= STAT_MAPPED;
+   }
    np->state.status &= ~STAT_SHADED;
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
-
    JXResizeWindow(display, np->parent,
                   np->width + west + east,
                   np->height + north + south);
 
    WriteState(np);
-
    ResetRoundedRectWindow(np);
-
    RefocusClient();
    UpdatePager();
 
@@ -845,15 +831,15 @@ void FocusClient(ClientNode *np)
       UpdateClientColormap(np);
       SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, np->window);
       if(np->state.status & STAT_CANFOCUS) {
-         JXSetInputFocus(display, np->window, RevertToPointerRoot, eventTime);
+         JXSetInputFocus(display, np->window, RevertToParent, eventTime);
       } else {
-         JXSetInputFocus(display, rootWindow, RevertToPointerRoot, eventTime);
+         JXSetInputFocus(display, rootWindow, RevertToParent, eventTime);
       }
       if(np->state.status & STAT_TAKEFOCUS) {
          SendClientMessage(np->window, ATOM_WM_PROTOCOLS, ATOM_WM_TAKE_FOCUS);
       }
    } else {
-      JXSetInputFocus(display, rootWindow, RevertToPointerRoot, eventTime);
+      JXSetInputFocus(display, rootWindow, RevertToParent, eventTime);
    }
 
 }
@@ -862,11 +848,9 @@ void FocusClient(ClientNode *np)
 /** Refocus the active client (if there is one). */
 void RefocusClient()
 {
-
    if(activeClient) {
       FocusClient(activeClient);
    }
-
 }
 
 /** Send a delete message to a client. */
@@ -1136,7 +1120,7 @@ void RemoveClient(ClientNode *np)
       SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, None);
       activeClient = NULL;
 
-      JXSetInputFocus(display, rootWindow, RevertToPointerRoot, eventTime);
+      JXSetInputFocus(display, rootWindow, RevertToParent, eventTime);
 
    }
 
@@ -1200,18 +1184,26 @@ ClientNode *GetActiveClient()
    return activeClient;
 }
 
-/** Find a client given a window (searches frame windows too). */
+/** Find a client by parent or window. */
+ClientNode *FindClient(Window w)
+{
+   ClientNode *np;
+   np = FindClientByWindow(w);
+   if(!np) {
+      np = FindClientByParent(w);
+   }
+   return np;
+}
+
+/** Find a client by window. */
 ClientNode *FindClientByWindow(Window w)
 {
-
    ClientNode *np;
-
    if(!XFindContext(display, w, clientContext, (void*)&np)) {
       return np;
    } else {
-      return FindClientByParent(w);
+      return NULL;
    }
-
 }
 
 /** Find a client by its frame window. */

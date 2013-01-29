@@ -40,8 +40,7 @@ char ShouldFocus(const ClientNode *np)
       return 0;
    }
 
-   if(   !(np->state.status & STAT_MAPPED)
-      && !(np->state.status & (STAT_MINIMIZED | STAT_SHADED))) {
+   if(!(np->state.status & (STAT_MAPPED | STAT_MINIMIZED | STAT_SHADED))) {
       return 0;
    }
 

@@ -286,7 +286,7 @@ void DrawBorderHelper(const ClientNode *np)
 
    DrawBorderButtons(np, canvas);
 
-   /** Copy the title bard to the window. */
+   /** Copy the title bar to the window. */
    JXCopyArea(display, canvas, np->parent, borderGC, 1, 1,
               width - 2, north - 1, 1, 1);
 
@@ -823,6 +823,7 @@ void ResetRoundedRectWindow(const ClientNode *np)
                                0, 0, rect, 4, ShapeUnion, Unsorted);
 
    }
+
 #endif
 }
  

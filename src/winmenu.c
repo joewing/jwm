@@ -106,7 +106,7 @@ Menu *CreateWindowMenu()
    }
 
    if((client->state.border & BORDER_MAX)
-      && (client->state.status & STAT_MAPPED)) {
+      && (client->state.status & (STAT_MAPPED | STAT_SHADED))) {
 
       if(!(client->state.status & (STAT_HMAX | STAT_VMAX))) {
          AddWindowMenuItem(menu, _("Maximize-y"), MA_MAXIMIZE_V, 0);
@@ -245,7 +245,7 @@ void ChooseWindow(const MenuAction *action)
 
       if(event.type == ButtonPress) {
          if(event.xbutton.button == Button1) {
-            np = FindClientByWindow(event.xbutton.subwindow);
+            np = FindClient(event.xbutton.subwindow);
             if(np) {
                client = np;
                RunWindowCommand(action);

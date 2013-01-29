@@ -131,6 +131,12 @@ typedef struct ClientNode {
  * @param w The window.
  * @return The client (NULL if not found).
  */
+ClientNode *FindClient(Window w);
+
+/** Find a client by window.
+ * @param w The window.
+ * @return The client (NULL if not found).
+ */
 ClientNode *FindClientByWindow(Window w);
 
 /** Find a client by its parent window.

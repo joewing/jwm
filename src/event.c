@@ -295,9 +295,9 @@ void HandleButtonEvent(const XButtonEvent *event)
       DispatchBorderButtonEvent(event, np);
    } else if(event->window == rootWindow && event->type == ButtonPress) {
       if(!ShowRootMenu(event->button, event->x, event->y)) {
-         if(event->button == 4) {
+         if(event->button == Button4) {
             LeftDesktop();
-         } else if(event->button == 5) {
+         } else if(event->button == Button5) {
             RightDesktop();
          }
       }
@@ -481,7 +481,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
    }
 
    np = FindClientByWindow(event->window);
-   if(np && np->window == event->window) {
+   if(np) {
 
       changed = 0;
       if((event->value_mask & CWWidth) && (event->width != np->width)) {
@@ -566,9 +566,8 @@ void HandleEnterNotify(const XCrossingEvent *event)
 {
    ClientNode *np;
    Cursor cur;
-
    SetMousePosition(event->x_root, event->y_root);
-   np = FindClientByWindow(event->window);
+   np = FindClient(event->window);
    if(np) {
       if(  !(np->state.status & STAT_ACTIVE)
          && (settings.focusModel == FOCUS_SLOPPY)) {
@@ -596,26 +595,27 @@ void HandleLeaveNotify(const XCrossingEvent *event)
 char HandleExpose(const XExposeEvent *event)
 {
    ClientNode *np;
-   np = FindClientByWindow(event->window);
+   np = FindClientByParent(event->window);
    if(np) {
-      if(event->window == np->parent) {
-         if(event->count == 0) {
-            DrawBorder(np);
-         }
-         return 1;
-      } else if(event->window == np->window
-         && np->state.status & STAT_WMDIALOG) {
-
-         /* Dialog expose events are handled elsewhere. */
-         return 0;
-
-      } else {
-
-         /* Ignore other expose events. */
-         return 1;
-
+      if(event->count == 0) {
+         DrawBorder(np);
       }
+      return 1;
    } else {
+      np = FindClientByWindow(event->window);
+      if(np) {
+         if(np->state.status & STAT_WMDIALOG) {
+
+            /* Dialog expose events are handled elsewhere. */
+            return 0;
+
+         } else {
+
+            /* Ignore other expose events for client windows. */
+            return 1;
+
+         }
+      }
       return event->count ? 1 : 0;
    }
 }
@@ -1129,7 +1129,7 @@ void HandleMapRequest(const XMapEvent *event)
       }
       JXUngrabServer(display);
    } else {
-      if(!(np->state.status & STAT_MAPPED)) {
+      if(!(np->state.status & (STAT_MAPPED | STAT_SHADED))) {
          UpdateState(np);
          np->state.status |= STAT_MAPPED;
          if(!(np->state.status & STAT_STICKY)) {
@@ -1157,7 +1157,7 @@ void HandleUnmapNotify(const XUnmapEvent *event)
    Assert(event);
 
    np = FindClientByWindow(event->window);
-   if(np && np->window == event->window) {
+   if(np) {
 
       /* Grab the server to prevent the client from destroying the
        * window after we check for a DestroyNotify. */
@@ -1200,7 +1200,7 @@ char HandleDestroyNotify(const XDestroyWindowEvent *event)
 {
    ClientNode *np;
    np = FindClientByWindow(event->window);
-   if(np && np->window == event->window) {
+   if(np) {
       if(np->controller) {
          (np->controller)(1);
       }

@@ -257,6 +257,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
          break;
       case OPTION_NOTITLE:
          np->state.border &= ~BORDER_TITLE;
+         np->state.border &= ~BORDER_SHADE;
          break;
       case OPTION_LAYER:
          SetClientLayer(np, lp->uvalue);

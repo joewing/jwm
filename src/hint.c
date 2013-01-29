@@ -944,6 +944,7 @@ void ReadMotifHints(Window win, ClientState *state)
          }
          if(!(mhints->decorations & MWM_DECOR_TITLE)) {
             state->border &= ~BORDER_TITLE;
+            state->border &= ~BORDER_SHADE;
          }
          if(!(mhints->decorations & MWM_DECOR_MINIMIZE)) {
             state->border &= ~BORDER_MIN;

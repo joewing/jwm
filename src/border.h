@@ -45,6 +45,11 @@ void DestroyBorders();
  */
 BorderActionType GetBorderActionType(const struct ClientNode *np, int x, int y);
 
+/** Reset the shape of a window border.
+ * @param np The client.
+ */
+void ResetBorder(const struct ClientNode *np);
+
 /** Draw a window border.
  * @param np The client whose frame to draw.
  */
@@ -67,22 +72,6 @@ void GetBorderSize(const struct ClientState *state,
 
 /** Redraw all borders on the current desktop. */
 void ExposeCurrentDesktop();
-
-/** Reset a rounded rectangle window.
- * @param np The client.
- */
-void ResetRoundedRectWindow(const struct ClientNode *np);
-
-/** Shape a rounded rectangle window.
- * @param w The window to shape.
- * @param width The width of the window.
- * @param height The height of the window.
- */
-void ShapeRoundedRectWindow(Window w, int width, int height);
-
-/** Draw a rounded rectangle. */
-void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
-                          int width, int height, int radius);
 
 #endif /* BORDER_H */
 

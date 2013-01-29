@@ -25,6 +25,8 @@ static void DrawMaxIButton(unsigned int offset, Pixmap canvas);
 static void DrawMaxAButton(unsigned int offset, Pixmap canvas);
 static void DrawMinButton(unsigned int offset, Pixmap canvas);
 static int GetButtonCount(const ClientNode *np);
+static void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
+                                 int width, int height, int radius);
 
 #ifdef USE_SHAPE
 static void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
@@ -169,6 +171,64 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
 
 }
 
+/** Reset the shape of a window border. */
+void ResetBorder(const ClientNode *np)
+{
+#ifdef USE_SHAPE
+
+   Pixmap shapePixmap;
+   GC shapeGC;
+   int north, south, east, west;
+   int width, height;
+
+   Assert(np);
+
+   /* Determine the size of the window. */
+   GetBorderSize(&np->state, &north, &south, &east, &west);
+   width = np->width + east + west;
+   if(np->state.status & STAT_SHADED) {
+      height = north;
+   } else {
+      height = np->height + north + south;
+   }
+
+   /* First set the shape to the window border. */
+   shapePixmap = JXCreatePixmap(display, np->parent, width, height, 1);
+   shapeGC = JXCreateGC(display, shapePixmap, 0, NULL);
+
+   /* Make the whole area transparent. */
+   JXSetForeground(display, shapeGC, 0);
+   JXFillRectangle(display, shapePixmap, shapeGC, 0, 0, width, height);
+
+   /* Draw the window area without the corners. */
+   /* Corner bound radius -1 to allow slightly better outline drawing */
+   JXSetForeground(display, shapeGC, 1);
+   FillRoundedRectangle(shapePixmap, shapeGC, 0, 0, width, height,
+                        CORNER_RADIUS - 1);
+
+   /* Cut out an area for the client window. */
+   if(!(np->state.status & STAT_SHADED)) {
+      JXSetForeground(display, shapeGC, 0);
+      JXFillRectangle(display, shapePixmap, shapeGC, west, north,
+                      np->width, np->height);
+   }
+
+   /* Set the shape. */
+   JXShapeCombineMask(display, np->parent, ShapeBounding, 0, 0,
+                      shapePixmap, ShapeSet);
+
+   JXFreeGC(display, shapeGC);
+   JXFreePixmap(display, shapePixmap);
+
+   /* Add the shape of window. */
+   if(!(np->state.status & STAT_SHADED)) {
+      JXShapeCombineShape(display, np->parent, ShapeBounding, west, north,
+                          np->window, ShapeBounding, ShapeUnion);
+   }
+
+#endif
+}
+
 /** Draw a client border. */
 void DrawBorder(const ClientNode *np)
 {
@@ -242,13 +302,6 @@ void DrawBorderHelper(const ClientNode *np)
 
    /* Set parent background to reduce flicker. */
    JXSetWindowBackground(display, np->parent, titleColor2);
-
-   /* Shape window corners */
-   if(np->state.status & STAT_SHADED) {
-      ShapeRoundedRectWindow(np->parent, width, north);
-   } else {
-      ShapeRoundedRectWindow(np->parent, width, height);
-   }
 
    canvas = JXCreatePixmap(display, np->parent, width, north, rootDepth);
 
@@ -762,97 +815,4 @@ void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
 
 }
 #endif
-
-/** Clear the shape mask of a window. */
-void ResetRoundedRectWindow(const ClientNode *np)
-{
-#ifdef USE_SHAPE
-   XRectangle rect[4];
-   int north, south, east, west;
-
-   Assert(np);
-
-   GetBorderSize(&np->state, &north, &south, &east, &west);
-
-   /* Shaded windows are a special case. */
-   if(np->state.status & STAT_SHADED) {
-
-      rect[0].x = 0;
-      rect[0].y = 0;
-      rect[0].width = np->width + east + west;
-      rect[0].height = north + south;
-
-      JXShapeCombineRectangles(display, np->parent, ShapeBounding,
-                               0, 0, rect, 1, ShapeSet, Unsorted);
-
-      return;
-   }
-
-   /* Add the shape of window. */
-   JXShapeCombineShape(display, np->parent, ShapeBounding, west, north,
-                       np->window, ShapeBounding, ShapeSet);
-
-   /* Add the shape of the border. */
-   if(north > 0) {
-
-      /* Top */
-      rect[0].x = 0;
-      rect[0].y = 0;
-      rect[0].width = np->width + east + west;
-      rect[0].height = north;
-
-      /* Left */
-      rect[1].x = 0;
-      rect[1].y = 0;
-      rect[1].width = west;
-      rect[1].height = np->height + north + south;
-
-      /* Right */
-      rect[2].x = np->width + east;
-      rect[2].y = 0;
-      rect[2].width = west;
-      rect[2].height = np->height + north + south;
-
-      /* Bottom */
-      rect[3].x = 0;
-      rect[3].y = np->height + north;
-      rect[3].width = np->width + east + west;
-      rect[3].height = south;
-
-      JXShapeCombineRectangles(display, np->parent, ShapeBounding,
-                               0, 0, rect, 4, ShapeUnion, Unsorted);
-
-   }
-
-#endif
-}
  
-/** Set the shape mask on a window to give a rounded border. */
-void ShapeRoundedRectWindow(Window w, int width, int height)
-{
-#ifdef USE_SHAPE
-
-   Pixmap shapePixmap;
-   GC shapeGC;
-
-   shapePixmap = JXCreatePixmap(display, w, width, height, 1);
-   shapeGC = JXCreateGC(display, shapePixmap, 0, NULL);
-
-   JXSetForeground(display, shapeGC, 0);
-   JXFillRectangle(display, shapePixmap, shapeGC, 0, 0,
-                   width + 1, height + 1);
-
-   /* Corner bound radius -1 to allow slightly better outline drawing */
-   JXSetForeground(display, shapeGC, 1);
-   FillRoundedRectangle(shapePixmap, shapeGC, 0, 0, width, height,
-                        CORNER_RADIUS - 1);
-   
-   JXShapeCombineMask(display, w, ShapeBounding, 0, 0, shapePixmap,
-                      ShapeIntersect);
-
-   JXFreeGC(display, shapeGC);
-   JXFreePixmap(display, shapePixmap);
-
-#endif
-}
-

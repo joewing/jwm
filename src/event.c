@@ -528,7 +528,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
       wc.width = np->width;
       wc.height = np->height;
       JXConfigureWindow(display, np->window, event->value_mask, &wc);
-      ResetRoundedRectWindow(np);
+      ResetBorder(np);
 
    } else {
 
@@ -682,7 +682,7 @@ char HandlePropertyNotify(const XPropertyEvent *event)
             wc.width = np->width;
             wc.height = np->height;
             JXConfigureWindow(display, np->window, mask, &wc);
-            ResetRoundedRectWindow(np);
+            ResetBorder(np);
 
          }
          break;
@@ -875,7 +875,7 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
                       np->height + north + south);
    JXMoveResizeWindow(display, np->window, west, north,
                       np->width, np->height);
-   ResetRoundedRectWindow(np);
+   ResetBorder(np);
 
    WriteState(np);
    SendConfigureEvent(np);
@@ -1089,7 +1089,7 @@ void HandleShapeEvent(const XShapeEvent *event)
    ClientNode *np;
    np = FindClientByWindow(event->window);
    if(np) {
-      ResetRoundedRectWindow(np);
+      ResetBorder(np);
    }
 }
 #endif /* USE_SHAPE */

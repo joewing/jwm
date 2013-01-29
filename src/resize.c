@@ -219,13 +219,13 @@ void ResizeClient(ClientNode *np, BorderActionType action,
                   JXMoveResizeWindow(display, np->parent,
                                      np->x - west, np->y - north,
                                      np->width + west + east, north + south);
-                  ResetRoundedRectWindow(np);
+                  ResetBorder(np);
                } else {
                   JXMoveResizeWindow(display, np->parent,
                                      np->x - west, np->y - north,
                                      np->width + west + east,
                                      np->height + north + south);
-                  ResetRoundedRectWindow(np);
+                  ResetBorder(np);
                }
                SendConfigureEvent(np);
             }
@@ -389,13 +389,13 @@ void ResizeClientKeyboard(ClientNode *np) {
                JXMoveResizeWindow(display, np->parent,
                                   np->x - west, np->y - north,
                                   np->width + west + east, north + south);
-               ResetRoundedRectWindow(np);
+               ResetBorder(np);
             } else {
                JXMoveResizeWindow(display, np->parent,
                                   np->x - west, np->y - north,
                                   np->width + west + east,
                                   np->height + north + south);
-               ResetRoundedRectWindow(np);
+               ResetBorder(np);
             }
             SendConfigureEvent(np);
          }
@@ -438,7 +438,7 @@ void StopResize(ClientNode *np) {
    }
    JXMoveResizeWindow(display, np->window, west,
                       north, np->width, np->height);
-   ResetRoundedRectWindow(np);
+   ResetBorder(np);
    SendConfigureEvent(np);
 
 }

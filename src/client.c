@@ -344,7 +344,7 @@ void ShadeClient(ClientNode *np)
    JXResizeWindow(display, np->parent, np->width + east + west, north);
 
    WriteState(np);
-   ResetRoundedRectWindow(np);
+   ResetBorder(np);
    UpdatePager();
 
 }
@@ -373,7 +373,7 @@ void UnshadeClient(ClientNode *np)
                   np->height + north + south);
 
    WriteState(np);
-   ResetRoundedRectWindow(np);
+   ResetBorder(np);
    RefocusClient();
    UpdatePager();
 
@@ -689,7 +689,7 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
                       np->height + north + south);
    JXMoveResizeWindow(display, np->window, west,
                       north, np->width, np->height);
-   ResetRoundedRectWindow(np);
+   ResetBorder(np);
 
    WriteState(np);
    SendConfigureEvent(np);
@@ -763,7 +763,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
                          np->height + north + south);
       JXMoveResizeWindow(display, np->window, west, north,
                          np->width, np->height);
-      ResetRoundedRectWindow(np);
+      ResetBorder(np);
 
    } else {
 
@@ -783,7 +783,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
                          np->height + north + south);
       JXMoveResizeWindow(display, np->window,
                          west, north, np->width, np->height);
-      ResetRoundedRectWindow(np);
+      ResetBorder(np);
 
       event.type = MapRequest;
       event.xmaprequest.send_event = True;
@@ -1305,7 +1305,7 @@ void ReparentClient(ClientNode *np, char notOwner)
 #ifdef USE_SHAPE
    if(haveShape) {
       JXShapeSelectInput(display, np->window, ShapeNotifyMask);
-      ResetRoundedRectWindow(np);
+      ResetBorder(np);
    }
 #endif
 

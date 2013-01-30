@@ -351,6 +351,9 @@
    ( SetCheckpoint(), \
    XShapeQueryExtents( a, b, c, d, e, f, g, h, i, j, k, l ) )
 
+#define JXShapeGetRectangles( a, b, c, d, e ) \
+   ( SetCheckpoint(), XShapeGetRectangles( a, b, c, d, e ) )
+
 #define JXShapeSelectInput( a, b, c ) \
    ( SetCheckpoint(), XShapeSelectInput( a, b, c ) )
 

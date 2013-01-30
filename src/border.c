@@ -206,11 +206,32 @@ void ResetBorder(const ClientNode *np)
    FillRoundedRectangle(shapePixmap, shapeGC, 0, 0, width, height,
                         CORNER_RADIUS - 1);
 
-   /* Cut out an area for the client window. */
+   /* Apply the client window. */
    if(!(np->state.status & STAT_SHADED)) {
+
+      XRectangle *rects;
+      int count;
+      int ordering;
+      int i;
+
+      /* Cut out an area for the client window. */
       JXSetForeground(display, shapeGC, 0);
       JXFillRectangle(display, shapePixmap, shapeGC, west, north,
                       np->width, np->height);
+
+      /* Fill in the visible area. */
+      rects = JXShapeGetRectangles(display, np->window, ShapeBounding,
+                                   &count, &ordering);
+      if(JLIKELY(rects)) {
+         for(i = 0; i < count; i++) {
+            rects[i].x += east;
+            rects[i].y += north;
+         }
+         JXSetForeground(display, shapeGC, 1);
+         JXFillRectangles(display, shapePixmap, shapeGC, rects, count);
+         JXFree(rects);
+      }
+
    }
 
    /* Set the shape. */
@@ -219,12 +240,6 @@ void ResetBorder(const ClientNode *np)
 
    JXFreeGC(display, shapeGC);
    JXFreePixmap(display, shapePixmap);
-
-   /* Add the shape of window. */
-   if(!(np->state.status & STAT_SHADED)) {
-      JXShapeCombineShape(display, np->parent, ShapeBounding, west, north,
-                          np->window, ShapeBounding, ShapeUnion);
-   }
 
 #endif
 }

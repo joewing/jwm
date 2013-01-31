@@ -142,7 +142,7 @@ void Create(TrayComponentType *cp)
    Assert(cp->height > 0);
 
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width,
-      cp->height, rootDepth);
+                               cp->height, rootDepth);
    pp->buffer = cp->pixmap;
 
 }
@@ -167,7 +167,8 @@ void SetSize(TrayComponentType *cp, int width, int height)
       pp->deskWidth = width / settings.desktopWidth;
       pp->deskHeight = (pp->deskWidth * rootHeight) / rootWidth;
 
-      cp->height = (pp->deskHeight + 1) * settings.desktopHeight;
+      cp->height = pp->deskHeight * settings.desktopHeight
+                 + settings.desktopHeight - 1;
 
    } else if(height) {
 
@@ -177,7 +178,8 @@ void SetSize(TrayComponentType *cp, int width, int height)
       pp->deskHeight = height / settings.desktopHeight;
       pp->deskWidth = (pp->deskHeight * rootWidth) / rootHeight;
 
-      cp->width = (pp->deskWidth + 1) * settings.desktopWidth;
+      cp->width = pp->deskWidth * settings.desktopWidth
+                + settings.desktopWidth - 1;
 
    } else {
       Assert(0);
@@ -565,13 +567,13 @@ void UpdatePager()
       JXSetForeground(display, rootGC, colors[COLOR_PAGER_FG]);
       for(x = 1; x < settings.desktopHeight; x++) {
          JXDrawLine(display, buffer, rootGC,
-            0, (deskHeight + 1) * x - 1,
-            width, (deskHeight + 1) * x - 1);
+                    0, (deskHeight + 1) * x - 1,
+                    width, (deskHeight + 1) * x - 1);
       }
       for(x = 1; x < settings.desktopWidth; x++) {
          JXDrawLine(display, buffer, rootGC,
-            (deskWidth + 1) * x - 1, 0,
-            (deskWidth + 1) * x - 1, height);
+                    (deskWidth + 1) * x - 1, 0,
+                    (deskWidth + 1) * x - 1, height);
       }
 
       /* Tell the tray to redraw. */
@@ -676,7 +678,7 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np)
       }
       JXSetForeground(display, rootGC, colors[fillColor]);
       JXFillRectangle(display, pp->cp->pixmap, rootGC, x + 1, y + 1,
-         width - 1, height - 1);
+                      width - 1, height - 1);
    }
 
 }

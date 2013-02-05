@@ -73,5 +73,8 @@ void GetBorderSize(const struct ClientState *state,
 /** Redraw all borders on the current desktop. */
 void ExposeCurrentDesktop();
 
+void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
+                          int width, int height, int radius);
+
 #endif /* BORDER_H */
 

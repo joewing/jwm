@@ -112,7 +112,7 @@ void DrawButton(ButtonNode *bp)
 
       /* Draw the outline. */
       JXSetForeground(display, gc, outlinePixel);
-      JXDrawRectangle(display, drawable, gc, x, y, width, height);
+      DrawRoundedRectangle(drawable, gc, x, y, width, height, 3);
 
    }
 

@@ -25,8 +25,6 @@ static void DrawMaxIButton(unsigned int offset, Pixmap canvas);
 static void DrawMaxAButton(unsigned int offset, Pixmap canvas);
 static void DrawMinButton(unsigned int offset, Pixmap canvas);
 static int GetButtonCount(const ClientNode *np);
-static void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
-                                 int width, int height, int radius);
 
 #ifdef USE_SHAPE
 static void FillRoundedRectangle(Drawable d, GC gc, int x, int y,

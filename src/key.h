@@ -69,8 +69,8 @@ void GrabKeys(struct ClientNode *np);
  * @param code The key code (not needed if stroke given).
  * @param command Extra parameter needed for some key binding types.
  */
-void InsertBinding(KeyType key, const char *modifiers,
-   const char *stroke, const char *code, const char *command);
+void InsertBinding(KeyType key, const char *modifiers, const char *stroke,
+                   const char *code, const char *command);
 
 /** Run a command caused by a key binding.
  * @param event The event causing the command to be run.

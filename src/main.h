@@ -34,11 +34,11 @@ extern XContext clientContext;
 extern XContext frameContext;
 
 #ifdef USE_SHAPE
-extern int haveShape;
+extern char haveShape;
 extern int shapeEvent;
 #endif
 #ifdef USE_XRENDER
-extern int haveRender;
+extern char haveRender;
 #endif
 
 extern char *configPath;

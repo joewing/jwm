@@ -28,9 +28,9 @@
 #include "timing.h"
 
 typedef struct {
-   int valid;
    int left, right;
    int top, bottom;
+   char valid;
 } RectangleType;
 
 static char shouldStopMove;

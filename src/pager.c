@@ -28,11 +28,11 @@ typedef struct PagerType {
 
    TrayComponentType *cp;  /**< Common tray component data. */
 
-   int labeled;            /**< Set to label the pager. */
    int deskWidth;          /**< Width of a desktop. */
    int deskHeight;         /**< Height of a desktop. */
    int scalex;             /**< Horizontal scale factor (fixed point). */
    int scaley;             /**< Vertical scale factor (fixed point). */
+   char labeled;           /**< Set to label the pager. */
 
    Pixmap buffer;          /**< Buffer for rendering the pager. */
 
@@ -45,7 +45,7 @@ typedef struct PagerType {
 
 static PagerType *pagers;
 
-static int shouldStopMove;
+static char shouldStopMove;
 
 static void Create(TrayComponentType *cp);
 
@@ -100,7 +100,7 @@ void DestroyPager()
 }
 
 /** Create a new pager tray component. */
-TrayComponentType *CreatePager(int labeled)
+TrayComponentType *CreatePager(char labeled)
 {
 
    TrayComponentType *cp;

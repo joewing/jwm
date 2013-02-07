@@ -20,12 +20,14 @@ static ScreenType *screens;
 static int screenCount;
 
 /** Initialize screen data. */
-void InitializeScreens() {
+void InitializeScreens()
+{
    screens = NULL;
 }
 
 /** Startup screens. */
-void StartupScreens() {
+void StartupScreens()
+{
 #ifdef USE_XINERAMA
 
    XineramaScreenInfo *info;
@@ -72,7 +74,8 @@ void StartupScreens() {
 }
 
 /** Shutdown screens. */
-void ShutdownScreens() {
+void ShutdownScreens()
+{
    if(screens) {
       Release(screens);
       screens = NULL;
@@ -80,11 +83,13 @@ void ShutdownScreens() {
 }
 
 /** Destroy screen data. */
-void DestroyScreens() {
+void DestroyScreens()
+{
 }
 
 /** Get the screen given global screen coordinates. */
-const ScreenType *GetCurrentScreen(int x, int y) {
+const ScreenType *GetCurrentScreen(int x, int y)
+{
 
    ScreenType *sp;
    int index;
@@ -103,7 +108,8 @@ const ScreenType *GetCurrentScreen(int x, int y) {
 }
 
 /** Get the screen the mouse is currently on. */
-const ScreenType *GetMouseScreen() {
+const ScreenType *GetMouseScreen()
+{
 #ifdef USE_XINERAMA
 
    int x, y;
@@ -119,7 +125,8 @@ const ScreenType *GetMouseScreen() {
 }
 
 /** Get data for a screen. */
-const ScreenType *GetScreen(int index) {
+const ScreenType *GetScreen(int index)
+{
 
    Assert(index >= 0);
    Assert(index < screenCount);
@@ -129,10 +136,9 @@ const ScreenType *GetScreen(int index) {
 }
 
 /** Get the number of screens. */
-int GetScreenCount() {
-
+int GetScreenCount()
+{
    return screenCount;
-
 }
 
 

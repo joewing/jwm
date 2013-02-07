@@ -97,7 +97,6 @@ void StartupKeys()
    TrayType *tp;
    int x;
 
-
    /* Get the keys that we don't care about (num lock, etc). */
    modmap = JXGetModifierMapping(display);
    for(x = 0; x < sizeof(lockMods) / sizeof(lockMods[0]); x++) {
@@ -128,7 +127,6 @@ void StartupKeys()
       }
 
    }
-
 
 }
 

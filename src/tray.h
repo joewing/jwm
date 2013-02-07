@@ -94,15 +94,15 @@ typedef struct TrayComponentType {
 
    /** Callback for mouse presses. */
    void (*ProcessButtonPress)(struct TrayComponentType *cp,
-      int x, int y, int mask);
+                              int x, int y, int mask);
 
    /** Callback for mouse releases. */
    void (*ProcessButtonRelease)(struct TrayComponentType *cp,
-      int x, int y, int mask);
+                                int x, int y, int mask);
 
    /** Callback for mouse motion. */
    void (*ProcessMotionEvent)(struct TrayComponentType *cp,
-      int x, int y, int mask);
+                              int x, int y, int mask);
 
    /** The next component in the tray. */
    struct TrayComponentType *next;
@@ -127,8 +127,8 @@ typedef struct TrayType {
    TrayAlignmentType valign;  /**< Vertical alignment. */
    TrayAlignmentType halign;  /**< Horizontal alignment. */
 
-   int autoHide;  /**< 1 for autohide, 0 otherwise. */
-   int hidden;    /**< 1 if hidden (due to autohide), 0 otherwise. */
+   char autoHide;    /**< 1 for autohide, 0 otherwise. */
+   char hidden;      /**< 1 if hidden (due to autohide), 0 otherwise. */
 
    Window window; /**< The tray window. */
 
@@ -230,7 +230,7 @@ void SignalTray(const struct TimeType *now, int x, int y);
  * @param tp The tray.
  * @param v 1 to enable, 0 to disable.
  */
-void SetAutoHideTray(TrayType *tp, int v);
+void SetAutoHideTray(TrayType *tp, char v);
 
 /** Set the tray x-coordinate.
  * @param tp The tray.

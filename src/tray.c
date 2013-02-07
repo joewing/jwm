@@ -40,8 +40,8 @@ static int ComputeMaxWidth(TrayType *tp);
 static int ComputeTotalWidth(TrayType *tp);
 static int ComputeMaxHeight(TrayType *tp);
 static int ComputeTotalHeight(TrayType *tp);
-static int CheckHorizontalFill(TrayType *tp);
-static int CheckVerticalFill(TrayType *tp);
+static char CheckHorizontalFill(TrayType *tp);
+static char CheckVerticalFill(TrayType *tp);
 static void LayoutTray(TrayType *tp, int *variableSize,
                        int *variableRemainder);
 
@@ -384,7 +384,7 @@ int ComputeTotalHeight(TrayType *tp)
 }
 
 /** Check if the tray fills the screen horizontally. */
-int CheckHorizontalFill(TrayType *tp)
+char CheckHorizontalFill(TrayType *tp)
 {
 
    TrayComponentType *cp;
@@ -400,7 +400,7 @@ int CheckHorizontalFill(TrayType *tp)
 }
 
 /** Check if the tray fills the screen vertically. */
-int CheckVerticalFill(TrayType *tp)
+char CheckVerticalFill(TrayType *tp)
 {
 
    TrayComponentType *cp;
@@ -1025,14 +1025,14 @@ Window GetSupportingWindow()
       return supportingWindow;
    } else {
       supportingWindow = JXCreateSimpleWindow(display, rootWindow,
-         0, 0, 1, 1, 0, 0, 0);
+                                              0, 0, 1, 1, 0, 0, 0);
       return supportingWindow;
    }
 
 }
 
 /** Determine if a tray should autohide. */
-void SetAutoHideTray(TrayType *tp, int v)
+void SetAutoHideTray(TrayType *tp, char v)
 {
    Assert(tp);
    tp->autoHide = v;

@@ -25,7 +25,7 @@
 typedef struct DockNode {
 
    Window window;
-   int needs_reparent;
+   char needs_reparent;
 
    struct DockNode *next;
 
@@ -47,7 +47,7 @@ static const char BASE_SELECTION_NAME[] = "_NET_SYSTEM_TRAY_S%d";
 static const char ORIENTATION_ATOM[] = "_NET_SYSTEM_TRAY_ORIENTATION";
 
 static DockType *dock = NULL;
-static int owner;
+static char owner;
 static Atom dockAtom;
 static unsigned long orientation;
 static int dockItemCount;
@@ -338,7 +338,7 @@ char HandleDockReparentNotify(const XReparentEvent *event)
 {
 
    DockNode *np;
-   int handled;
+   char handled;
 
    Assert(event);
 

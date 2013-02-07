@@ -66,11 +66,11 @@ XContext clientContext;
 XContext frameContext;
 
 #ifdef USE_SHAPE
-int haveShape;
+char haveShape;
 int shapeEvent;
 #endif
 #ifdef USE_XRENDER
-int haveRender;
+char haveRender;
 #endif
 
 static const char *CONFIG_FILE = "/.jwmrc";

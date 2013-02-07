@@ -33,20 +33,20 @@ static void UnpatchRootMenu(Menu *menu);
 static void RunRootCommand(const MenuAction *action);
 
 /** Initialize root menu data. */
-void InitializeRootMenu() {
-
-   int x;
+void InitializeRootMenu()
+{
+   unsigned int x;
    for(x = 0; x < ROOT_MENU_COUNT; x++) {
       rootMenu[x] = NULL;
    }
-
 }
 
 /** Startup root menus. */
-void StartupRootMenu() {
+void StartupRootMenu()
+{
 
-   int x, y;
-   int found;
+   unsigned int x, y;
+   char found;
 
    for(x = 0; x < ROOT_MENU_COUNT; x++) {
       if(rootMenu[x]) {
@@ -66,13 +66,15 @@ void StartupRootMenu() {
 }
 
 /** Shutdown root menus. */
-void ShutdownRootMenu() {
+void ShutdownRootMenu()
+{
 }
 
 /** Destroy root menu data. */
-void DestroyRootMenu() {
+void DestroyRootMenu()
+{
 
-   int x, y;
+   unsigned int x, y;
 
    for(x = 0; x < ROOT_MENU_COUNT; x++) {
       if(rootMenu[x]) {
@@ -89,11 +91,12 @@ void DestroyRootMenu() {
 }
 
 /** Set a root menu. */
-void SetRootMenu(const char *indexes, Menu *m) {
+void SetRootMenu(const char *indexes, Menu *m)
+{
 
-   int x, y;
+   unsigned int x, y;
    int index;
-   int found;
+   char found;
 
    /* Loop over each index to consider. */
    for(x = 0; indexes[x]; x++) {
@@ -130,12 +133,14 @@ void SetRootMenu(const char *indexes, Menu *m) {
 }
 
 /** Set whether a dialog should be shown before exiting. */
-void SetShowExitConfirmation(char v) {
+void SetShowExitConfirmation(char v)
+{
    showExitConfirmation = v;
 }
 
 /** Determine if the specified root menu is defined. */
-int IsRootMenuDefined(int index) {
+char IsRootMenuDefined(int index)
+{
    if(index >= 0 && index < ROOT_MENU_COUNT && rootMenu[index]) {
       return 1;
    } else {
@@ -144,7 +149,8 @@ int IsRootMenuDefined(int index) {
 }
 
 /** Determine the size of a root menu. */
-void GetRootMenuSize(int index, int *width, int *height) {
+void GetRootMenuSize(int index, int *width, int *height)
+{
 
    if(!rootMenu[index]) {
       *width = 0;
@@ -160,7 +166,8 @@ void GetRootMenuSize(int index, int *width, int *height) {
 }
 
 /** Show a root menu. */
-int ShowRootMenu(int index, int x, int y) {
+char ShowRootMenu(int index, int x, int y)
+{
 
    if(!rootMenu[index]) {
       return 0;
@@ -175,7 +182,8 @@ int ShowRootMenu(int index, int x, int y) {
 }
 
 /** Prepare a root menu to be shown. */
-void PatchRootMenu(Menu *menu) {
+void PatchRootMenu(Menu *menu)
+{
 
    MenuItem *item;
 
@@ -208,18 +216,21 @@ void UnpatchRootMenu(Menu *menu) {
 }
 
 /** Exit callback for the exit menu item. */
-void ExitHandler(ClientNode *np) {
+void ExitHandler(ClientNode *np)
+{
    shouldExit = 1;
 }
 
 /** Restart callback for the restart menu item. */
-void Restart() {
+void Restart()
+{
    shouldRestart = 1;
    shouldExit = 1;
 }
 
 /** Exit with optional confirmation. */
-void Exit() {
+void Exit()
+{
    if(showExitConfirmation) {
       ShowConfirmDialog(NULL, ExitHandler,
                         _("Exit JWM"),
@@ -231,7 +242,8 @@ void Exit() {
 }
 
 /** Reload the menu. */
-void ReloadMenu() {
+void ReloadMenu()
+{
 	shouldReload = 1;
    if(!menuShown) {
       ShutdownRootMenu();
@@ -244,7 +256,8 @@ void ReloadMenu() {
 }
 
 /** Root menu callback. */
-void RunRootCommand(const MenuAction *action) {
+void RunRootCommand(const MenuAction *action)
+{
 
    switch(action->type) {
 

@@ -33,7 +33,7 @@ void SetShowExitConfirmation(char v);
 /** Determine if a root menu is defined for the specified index.
  * @return 1 if it is defined, 0 if not.
  */
-int IsRootMenuDefined(int index);
+char IsRootMenuDefined(int index);
 
 /** Get the size of a root menu.
  * @param index The root menu index.
@@ -48,7 +48,7 @@ void GetRootMenuSize(int index, int *width, int *height);
  * @param y The y-coordinate.
  * @return 1 if a menu was displayed, 0 if not.
  */
-int ShowRootMenu(int index, int x, int y);
+char ShowRootMenu(int index, int x, int y);
 
 /** Restart the window manager. */
 void Restart();

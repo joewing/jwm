@@ -374,14 +374,14 @@ void SubtractStrutBounds(BoundingBox *box)
 }
 
 /** Place a client on the screen. */
-void PlaceClient(ClientNode *np, int alreadyMapped)
+void PlaceClient(ClientNode *np, char alreadyMapped)
 {
 
    BoundingBox box;
    int north, south, east, west;
    const ScreenType *sp;
    int cascadeIndex;
-   int overflow;
+   char overflow;
 
    Assert(np);
 
@@ -520,7 +520,7 @@ void ConstrainSize(ClientNode *np)
 }
 
 /** Place a maximized client on the screen. */
-void PlaceMaximizedClient(ClientNode *np, int horiz, int vert)
+void PlaceMaximizedClient(ClientNode *np, char horiz, char vert)
 {
 
    BoundingBox box;
@@ -641,13 +641,15 @@ void GetGravityDelta(const ClientNode *np, int *x, int  *y)
 }
 
 /** Move the window in the specified direction for reparenting. */
-void GravitateClient(ClientNode *np, int negate)
+void GravitateClient(ClientNode *np, char negate)
 {
 
    int deltax, deltay;
 
    Assert(np);
 
+   deltax = 0;
+   deltay = 0;
    GetGravityDelta(np, &deltax, &deltay);
 
    if(negate) {

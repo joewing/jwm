@@ -82,6 +82,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
    if(np->state.border & BORDER_TITLE) {
 
       /* Check buttons on the title bar. */
+      offset = np->width + west;
       if(y >= settings.borderWidth && y <= titleHeight) {
 
          /* Menu button. */
@@ -92,7 +93,6 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
          }
 
          /* Close button. */
-         offset = np->width + west;
          if((np->state.border & BORDER_CLOSE) && offset > 2 * titleHeight) {
             if(x > offset - titleHeight && x < offset) {
                return BA_CLOSE;
@@ -417,7 +417,6 @@ int GetButtonCount(const ClientNode *np)
       if(offset < 2 * settings.titleHeight) {
          return count;
       }
-      offset -= settings.titleHeight;
    }
 
    if(np->state.border & BORDER_MIN) {

@@ -219,8 +219,7 @@ void DEBUG_Release(void **ptr, const char *file, unsigned int line)
          last = mp;
       }
       Debug("MEMORY: %s[%u]: Attempt to delete unallocated pointer",
-         file, line);
-      memset(*ptr, 0xFF, mp->size);
+            file, line);
       free(*ptr);
 
       /* This address should cause a segfault or bus error. */

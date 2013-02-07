@@ -19,13 +19,6 @@ void ShutdownPopup();
 void DestroyPopup();
 /*@}*/
 
-/** Calculate dimensions of a popup window given the popup text.
- * @param text The text to measure.
- * @param width The width output.
- * @param height The height output.
- */
-void MeasurePopupText(const char *text, int *width, int *height);
-
 /** Show a popup window.
  * @param x The x coordinate of the left edge of the popup window.
  * @param y The y coordinate of the bottom edge of the popup window.

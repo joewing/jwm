@@ -73,6 +73,15 @@ void GetBorderSize(const struct ClientState *state,
 /** Redraw all borders on the current desktop. */
 void ExposeCurrentDesktop();
 
+/** Draw a rounded rectangle.
+ * @param d The drawable on which to render.
+ * @param gc The graphics context.
+ * @param x The x-coodinate.
+ * @param y The y-coordinate.
+ * @param width The width.
+ * @param height The height.
+ * @param radius The corner radius.
+ */
 void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
                           int width, int height, int radius);
 

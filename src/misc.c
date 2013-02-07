@@ -164,6 +164,7 @@ void Trim(char *str)
    length = strlen(str);
 
    /* Determine how much to cut off of the left. */
+   line = 0;
    for(start = 0; IsSpace(str[start], &line); start++);
 
    /* Trim the left. */

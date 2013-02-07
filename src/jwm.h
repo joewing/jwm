@@ -115,10 +115,6 @@
 
 #define MAX_INCLUDE_DEPTH 16
 
-#define MAX_TRAY_BORDER 32
-#define MIN_TRAY_BORDER 0
-#define DEFAULT_TRAY_BORDER 1
-
 #define MAX_WINDOW_WIDTH (1 << 15)
 #define MAX_WINDOW_HEIGHT (1 << 15)
 
@@ -127,8 +123,6 @@
 #define RESTART_DELAY 50000
 
 #define SHELL_NAME "/bin/sh"
-
-#define DEFAULT_MENU_TITLE "JWM"
 
 /** Fixed radius of 4x4 */
 #ifdef USE_SHAPE

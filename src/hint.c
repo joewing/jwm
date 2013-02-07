@@ -641,10 +641,9 @@ void ReadWMName(ClientNode *np)
          tprop.nitems = strlen((char *)name);
          if(Xutf8TextPropertyToTextList(display, &tprop, &text_list, &tcount)
             == Success && tcount > 0) {
-            np->name = Xmalloc(strlen(text_list[0]) + 1);
-            if(np->name) {
-               strcpy(np->name, text_list[0]);
-            }
+            const size_t len = strlen(text_list[0]) + 1;
+            np->name = Xmalloc(len);
+            memcpy(np->name, text_list[0], len);
             XFreeStringList(text_list);
          }
          JXFree(name);

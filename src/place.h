@@ -43,20 +43,20 @@ void ReadClientStrut(struct ClientNode *np);
  * @param np The client to place.
  * @param alreadyMapped 1 if already mapped, 0 if unmapped.
  */
-void PlaceClient(struct ClientNode *np, int alreadyMapped);
+void PlaceClient(struct ClientNode *np, char alreadyMapped);
 
 /** Place a maximized client on the screen.
  * @param np The client to place.
  * @param horiz Set if maximizing horizontally.
  * @param vert Set if maximizing vertically.
  */
-void PlaceMaximizedClient(struct ClientNode *np, int horiz, int vert);
+void PlaceMaximizedClient(struct ClientNode *np, char horiz, char vert);
 
 /** Move a client window for a border.
  * @param np The client.
  * @param negate 0 to gravitate for a border, 1 to gravitate for no border.
  */
-void GravitateClient(struct ClientNode *np, int negate);
+void GravitateClient(struct ClientNode *np, char negate);
 
 /** Get the x and y deltas for gravitating a client.
  * @param np The client.

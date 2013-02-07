@@ -626,6 +626,7 @@ void GetDirectPixel(XColor *c)
 void GetMappedPixel(XColor *c)
 {
    Assert(c);
+   Assert(map);
    GetDirectPixel(c);
    c->pixel = map[c->pixel];
 }

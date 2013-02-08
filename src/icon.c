@@ -141,7 +141,7 @@ void AddIconPath(char *path)
 
    IconPathNode *ip;
    int length;
-   int addSep;
+   char addSep;
 
    if(!path) {
       return;

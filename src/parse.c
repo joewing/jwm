@@ -129,7 +129,7 @@ static const char *TRUE_VALUE = "true";
 static const char *OUTLINE_VALUE = "outline";
 static const char *OPAQUE_VALUE = "opaque";
 
-static int ParseFile(const char *fileName, int depth);
+static char ParseFile(const char *fileName, int depth);
 static char *ReadFile(FILE *fd);
 
 /* Misc. */
@@ -209,14 +209,14 @@ void ParseConfig(const char *fileName)
  * Parse a specific file.
  * @return 1 on success and 0 on failure.
  */
-int ParseFile(const char *fileName, int depth)
+char ParseFile(const char *fileName, int depth)
 {
 
    TokenNode *tokens;
    FILE *fd;
    char *buffer;
 
-   ++depth;
+   depth += 1;
    if(JUNLIKELY(depth > MAX_INCLUDE_DEPTH)) {
       ParseError(NULL, "include depth (%d) exceeded", MAX_INCLUDE_DEPTH);
       return 0;
@@ -1786,7 +1786,7 @@ char *FindAttribute(AttributeNode *ap, const char *name)
 char *ReadFile(FILE *fd)
 {
 
-   const int BLOCK_SIZE = 8192;
+   const int BLOCK_SIZE = 1 << 14;  // Start at 16k.
 
    char *buffer;
    int len, max;
@@ -1798,12 +1798,16 @@ char *ReadFile(FILE *fd)
 
    for(;;) {
       ch = fgetc(fd);
-      if(ch == EOF) {
+      if(JUNLIKELY(ch == EOF || ch == 0)) {
          break;
       }
       buffer[len++] = ch;
-      if(len >= max) {
-         max += BLOCK_SIZE;
+      if(JUNLIKELY(len >= max)) {
+         max *= 2;
+         if(JUNLIKELY(max < 0)) {
+            /* File is too big. */
+            break;
+         }
          buffer = Reallocate(buffer, max + 1);
       }
    }

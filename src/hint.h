@@ -127,8 +127,8 @@ typedef enum {
 /** Client state information. */
 typedef struct ClientState {
    unsigned int status;    /**< Status bit mask. */
-   unsigned int border;    /**< Border bit mask. */
-   unsigned int layer;     /**< Window layer. */
+   unsigned short border;  /**< Border bit mask. */
+   unsigned short layer;   /**< Window layer. */
    unsigned int desktop;   /**< Desktop. */
    unsigned int opacity;   /**< Opacity (0 - 0xFFFFFFFF). */
 } ClientState;

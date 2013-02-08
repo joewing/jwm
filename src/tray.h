@@ -71,7 +71,7 @@ typedef struct TrayComponentType {
    int width;     /**< Actual width. */
    int height;    /**< Actual height. */
 
-   int grabbed;   /**< 1 if the mouse was grabbed by this component. */
+   char grabbed;     /**< 1 if the mouse was grabbed by this component. */
 
    Window window;    /**< Content (if a window, otherwise None). */
    Pixmap pixmap;    /**< Content (if a pixmap, otherwise None). */
@@ -203,7 +203,7 @@ TrayType *GetTrays();
 /** Get the number of trays.
  * @return The number of trays.
  */
-int GetTrayCount();
+unsigned int GetTrayCount();
 
 /** Get a window to use as the supporting window.
  * This is used by clients to validate that compliant window manager is

@@ -25,7 +25,7 @@
 
 static TrayType *trays;
 static Window supportingWindow;
-static int trayCount;
+static unsigned int trayCount;
 
 static void HandleTrayExpose(TrayType *tp, const XExposeEvent *event);
 static void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event);
@@ -119,8 +119,8 @@ void StartupTray()
                if(width == 0) {
                   width = variableSize;
                   if(variableRemainder) {
-                     ++width;
-                     --variableRemainder;
+                     width += 1;
+                     variableRemainder -= 1;
                   }
                }
             } else {
@@ -129,8 +129,8 @@ void StartupTray()
                if(height == 0) {
                   height = variableSize;
                   if(variableRemainder) {
-                     ++height;
-                     --variableRemainder;
+                     height += 1;
+                     variableRemainder -= 1;
                   }
                }
             }
@@ -159,7 +159,7 @@ void StartupTray()
       /* Show the tray. */
       JXMapWindow(display, tp->window);
 
-      ++trayCount;
+      trayCount += 1;
 
    }
 
@@ -864,7 +864,7 @@ void LayoutTray(TrayType *tp, int *variableSize, int *variableRemainder)
 {
 
    TrayComponentType *cp;
-   int variableCount;
+   unsigned int variableCount;
    int width, height;
    int temp;
 
@@ -889,14 +889,14 @@ void LayoutTray(TrayType *tp, int *variableSize, int *variableRemainder)
          if(temp > 0) {
             width -= temp;
          } else {
-            ++variableCount;
+            variableCount += 1;
          }
       } else {
          temp = cp->height;
          if(temp > 0) {
             height -= temp;
          } else {
-            ++variableCount;
+            variableCount += 1;
          }
       }
    }
@@ -960,8 +960,8 @@ void ResizeTray(TrayType *tp)
             if(width == 0) {
                width = variableSize;
                if(variableRemainder) {
-                  ++width;
-                  --variableRemainder;
+                  width += 1;
+                  variableRemainder -= 1;
                }
             }
          } else {
@@ -970,8 +970,8 @@ void ResizeTray(TrayType *tp)
             if(height == 0) {
                height = variableSize;
                if(variableRemainder) {
-                  ++height;
-                  --variableRemainder;
+                  height += 1;
+                  variableRemainder -= 1;
                }
             }
          }
@@ -1010,7 +1010,7 @@ TrayType *GetTrays()
 }
 
 /** Get the number of trays. */
-int GetTrayCount()
+unsigned int GetTrayCount()
 {
    return trayCount;
 }

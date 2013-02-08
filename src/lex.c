@@ -125,19 +125,21 @@ TokenNode *Tokenize(const char *line, const char *fileName)
 
    x = 0;
    /* Skip any initial white space */
-   while(IsSpace(line[x], &lineNumber)) ++x;
+   while(IsSpace(line[x], &lineNumber)) {
+      x += 1;
+   }
 
    /* Skip any XML stuff */
    if(!strncmp(line + x, "<?", 2)) {
       while(line[x]) {
          if(line[x] == '\n') {
-            ++lineNumber;
+            lineNumber += 1;
          }
          if(!strncmp(line + x, "?>", 2)) {
             x += 2;
             break;
          }
-         ++x;
+         x += 1;
       }
    }
 
@@ -145,30 +147,32 @@ TokenNode *Tokenize(const char *line, const char *fileName)
 
       do {
 
-         while(IsSpace(line[x], &lineNumber)) ++x;
+         while(IsSpace(line[x], &lineNumber)) {
+            x += 1;
+         }
 
          /* Skip comments */
          found = 0;
          if(!strncmp(line + x, "<!--", 4)) {
             while(line[x]) {
                if(line[x] == '\n') {
-                  ++lineNumber;
+                  lineNumber += 1;
                }
                if(!strncmp(line + x, "-->", 3)) {
                   x += 3;
                   found = 1;
                   break;
                }
-               ++x;
+               x += 1;
             }
          }
       } while(found);
 
       switch(line[x]) {
       case '<':
-         ++x;
+         x += 1;
          if(line[x] == '/') {
-            ++x;
+            x += 1;
             temp = ReadElementName(line + x);
 
             if(current) {
@@ -219,9 +223,9 @@ TokenNode *Tokenize(const char *line, const char *fileName)
          break;
       case '/':
          if(inElement) {
-            ++x;
+            x += 1;
             if(JLIKELY(line[x] == '>' && current)) {
-               ++x;
+               x += 1;
                current = current->parent;
                inElement = 0;
             } else {
@@ -232,7 +236,7 @@ TokenNode *Tokenize(const char *line, const char *fileName)
          }
          break;
       case '>':
-         ++x;
+         x += 1;
          inElement = 0;
          break;
       default:
@@ -243,18 +247,18 @@ ReadDefault:
             if(ap->name) {
                x += strlen(ap->name);
                if(line[x] == '=') {
-                  ++x;
+                  x += 1;
                }
                if(line[x] == '\"') {
-                  ++x;
+                  x += 1;
                }
                ap->value = ReadAttributeValue(line + x, fileName,
-                  &lineNumber);
+                                              &lineNumber);
                if(ap->value) {
                   x += strlen(ap->value);
                }
                if(line[x] == '\"') {
-                  ++x;
+                  x += 1;
                }
             }
          } else {
@@ -264,7 +268,8 @@ ReadDefault:
                if(current) {
                   if(current->value) {
                      current->value = Reallocate(current->value,
-                        strlen(current->value) + strlen(temp) + 1);
+                                                 strlen(current->value) +
+                                                 strlen(temp) + 1);
                      strcat(current->value, temp);
                      Release(temp);
                   } else {
@@ -379,7 +384,7 @@ char *ReadElementName(const char *line)
    unsigned int len;
 
    /* Get the length of the element. */
-   for (len = 0; !IsElementEnd(line[len]); len++);
+   for(len = 0; !IsElementEnd(line[len]); len++);
 
    /* Allocate space for the element. */
    buffer = Allocate(len + 1);
@@ -413,11 +418,11 @@ char *ReadElementValue(const char *line, const char *file,
          }
       } else {
          if(line[x] == '\n') {
-            ++*lineNumber;
+            *lineNumber += 1;
          }
          buffer[len] = line[x];
       }
-      ++len;
+      len += 1;
       if(len >= max) {
          max += BLOCK_SIZE;
          buffer = Reallocate(buffer, max + 1);
@@ -453,11 +458,11 @@ char *ReadAttributeValue(const char *line, const char *file,
          }
       } else {
          if(line[x] == '\n') {
-            ++*lineNumber;
+            *lineNumber += 1;
          }
          buffer[len] = line[x];
       }
-      ++len;
+      len += 1;
       if(len >= max) {
          max += BLOCK_SIZE;
          buffer = Reallocate(buffer, max + 1);

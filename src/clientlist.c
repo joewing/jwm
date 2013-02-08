@@ -104,7 +104,7 @@ void StartWindowStackWalk()
 }
 
 /** Move to the next window in the window stack. */
-void WalkWindowStack(int forward)
+void WalkWindowStack(char forward)
 {
 
    ClientNode *np;
@@ -122,7 +122,7 @@ void WalkWindowStack(int forward)
              if(windowStackCurrent == 0) {
                  windowStackCurrent = windowStackSize;
              }
-             --windowStackCurrent;
+             windowStackCurrent -= 1;
          }
 
          /* Look up the window. */

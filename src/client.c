@@ -29,7 +29,7 @@
 
 static ClientNode *activeClient;
 
-static int clientCount;
+unsigned int clientCount;
 
 static void LoadFocus();
 static void ReparentClient(ClientNode *np, char notOwner);
@@ -203,13 +203,11 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
       JXMapWindow(display, np->parent);
    }
 
-   AddClientToTaskBar(np);
-
    if(!alreadyMapped) {
       RaiseClient(np);
    }
 
-   ++clientCount;
+   clientCount += 1;
 
    if(np->state.status & STAT_STICKY) {
       SetCardinalAtom(np->window, ATOM_NET_WM_DESKTOP, ~0UL);
@@ -236,6 +234,9 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
       np->state.status &= ~(STAT_HMAX | STAT_VMAX);
       MaximizeClient(np, hmax, vmax);
    }
+
+   /* Update task bars. */
+   AddClientToTaskBar(np);
 
    /* Make sure we're still in sync */
    WriteState(np);
@@ -1105,7 +1106,7 @@ void RemoveClient(ClientNode *np)
    } else {
       nodes[np->state.layer] = np->next;
    }
-   --clientCount;
+   clientCount -= 1;
    XDeleteContext(display, np->window, clientContext);
    XDeleteContext(display, np->parent, frameContext);
 

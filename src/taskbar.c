@@ -351,7 +351,6 @@ void AddClientToTaskBar(ClientNode *np)
    }
 
    UpdateTaskBar();
-
    UpdateNetClientList();
 
 }
@@ -382,7 +381,6 @@ void RemoveClientFromTaskBar(ClientNode *np)
    }
 
    UpdateTaskBar();
-
    UpdateNetClientList();
 
 }
@@ -392,26 +390,22 @@ void UpdateTaskBar()
 {
 
    TaskBarType *bp;
-   unsigned int count;
    int lastHeight;
 
-   if(shouldExit) {
+   if(JUNLIKELY(shouldExit)) {
       return;
    }
 
    for(bp = bars; bp; bp = bp->next) {
-
       if(bp->layout == LAYOUT_VERTICAL) {
          lastHeight = bp->cp->requestedHeight;
-         count = GetItemCount();
          bp->cp->requestedHeight = GetStringHeight(FONT_TASK) + 12;
-         bp->cp->requestedHeight *= count;
+         bp->cp->requestedHeight *= GetItemCount();
          bp->cp->requestedHeight += 2;
          if(lastHeight != bp->cp->requestedHeight) {
             ResizeTray(bp->cp->tray);
          }
       }
-
       Render(bp);
    }
 
@@ -456,7 +450,7 @@ void Render(const TaskBarType *bp)
    GC gc;
    char *minimizedName;
 
-   if(shouldExit) {
+   if(JUNLIKELY(shouldExit)) {
       return;
    }
 
@@ -533,21 +527,21 @@ void Render(const TaskBarType *bp)
             JXSetClipMask(display, gc, minimizedPixmap);
             JXSetClipOrigin(display, gc, x + 3, y + bp->itemHeight - 7);
             JXFillRectangle(display, buffer, gc,
-               x + 3, y + bp->itemHeight - 7, 4, 4);
+                            x + 3, y + bp->itemHeight - 7, 4, 4);
             JXSetClipMask(display, gc, None);
          }
 
          if(bp->layout == LAYOUT_HORIZONTAL) {
             x += itemWidth;
             if(remainder) {
-               ++x;
-               --remainder;
+               x += 1;
+               remainder -= 1;
             }
          } else {
             y += bp->itemHeight;
             if(remainder) {
-               ++y;
-               --remainder;
+               y += 1;
+               remainder -= 1;
             }
          }
 
@@ -638,7 +632,7 @@ Node *GetNode(TaskBarType *bar, int x)
 
    Node *tp;
    int remainder;
-   int itemCount;
+   unsigned int itemCount;
    int itemWidth;
    int index, stop;
    int width;
@@ -657,7 +651,7 @@ Node *GetNode(TaskBarType *bar, int x)
          if(ShouldFocus(tp->client)) {
             if(remainder) {
                stop = index + itemWidth + 1;
-               --remainder;
+               remainder -= 1;
             } else {
                stop = index + itemWidth;
             }
@@ -696,7 +690,7 @@ unsigned int GetItemCount()
    count = 0;
    for(tp = taskBarNodes; tp; tp = tp->next) {
       if(ShouldFocus(tp->client)) {
-         ++count;
+         count += 1;
       }
    }
 
@@ -733,20 +727,19 @@ unsigned int GetItemWidth(const TaskBarType *bp, unsigned int itemCount)
 void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value)
 {
 
-   int temp;
    TaskBarType *bp;
+   int temp;
 
    Assert(cp);
+   Assert(value);
 
-   if(value) {
-      temp = atoi(value);
-      if(JUNLIKELY(temp < 0)) {
-         Warning(_("invalid maxwidth for TaskList: %s"), value);
-         return;
-      }
-      bp = (TaskBarType*)cp->object;
-      bp->maxItemWidth = temp;
+   temp = atoi(value);
+   if(JUNLIKELY(temp < 0)) {
+      Warning(_("invalid maxwidth for TaskList: %s"), value);
+      return;
    }
+   bp = (TaskBarType*)cp->object;
+   bp->maxItemWidth = temp;
 
 }
 
@@ -757,43 +750,32 @@ void UpdateNetClientList()
    Node *np;
    ClientNode *client;
    Window *windows;
-   int count, temp;
+   unsigned int count;
    int layer;
 
    /* Determine how much we need to allocate. */
-   count = 0;
-   for(np = taskBarNodes; np; np = np->next) {
-      ++count;
-   }
-   temp = 0;
-   for(layer = FIRST_LAYER; layer <= LAST_LAYER; layer++) {
-      for(client = nodes[layer]; client; client = client->next) {
-         ++temp;
-      }
-   }
-   if(temp > count) {
-      count = temp;
-   }
-
-   if(count == 0) {
+   if(clientCount == 0) {
       windows = NULL;
    } else {
-      windows = AllocateStack(count * sizeof(Window));
+      windows = AllocateStack(clientCount * sizeof(Window));
    }
 
    /* Set _NET_CLIENT_LIST */
    count = 0;
    for(np = taskBarNodes; np; np = np->next) {
-      windows[count++] = np->client->window;
+      windows[count] = np->client->window;
+      count += 1;
    }
    JXChangeProperty(display, rootWindow, atoms[ATOM_NET_CLIENT_LIST],
-      XA_WINDOW, 32, PropModeReplace, (unsigned char*)windows, count);
+                    XA_WINDOW, 32, PropModeReplace,
+                    (unsigned char*)windows, count);
 
    /* Set _NET_CLIENT_LIST_STACKING */
    count = 0;
    for(layer = FIRST_LAYER; layer <= LAST_LAYER; layer++) {
       for(client = nodes[layer]; client; client = client->next) {
-         windows[count++] = client->window;
+         windows[count] = client->window;
+         count += 1;
       }
    }
    JXChangeProperty(display, rootWindow, atoms[ATOM_NET_CLIENT_LIST_STACKING],

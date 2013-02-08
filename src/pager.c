@@ -268,7 +268,7 @@ void StartPagerMove(TrayComponentType *cp, int x, int y)
    int oldx, oldy;
    int oldDesk;
    int startx, starty;
-   int hmax, vmax;
+   char hmax, vmax;
 
    pp = (PagerType*)cp->object;
 

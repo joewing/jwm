@@ -326,7 +326,7 @@ void ComputeShiftMask(unsigned long maskIn, unsigned long *shiftOut,
                       unsigned long *maskOut)
 {
 
-   int shift;
+   unsigned int shift;
 
    Assert(shiftOut);
    Assert(maskOut);
@@ -340,7 +340,7 @@ void ComputeShiftMask(unsigned long maskIn, unsigned long *shiftOut,
    shift = 0;
    *maskOut = maskIn;
    while(maskIn && (maskIn & (1 << 31)) == 0) {
-      ++shift;
+      shift += 1;
       maskIn <<= 1;
    }
    *shiftOut = shift;

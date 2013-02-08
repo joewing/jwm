@@ -90,7 +90,7 @@ int ErrorHandler(Display *d, XErrorEvent *e) {
 
    snprintf(code, sizeof(code), "%d", e->request_code);
    XGetErrorDatabaseText(display, "XRequest", code, "?",
-      buffer, sizeof(buffer));
+                         buffer, sizeof(buffer));
    Debug("   Request Code: %d (%s)", e->request_code, buffer);
    Debug("   Minor Code: %d", e->minor_code);
    Debug("   Resource ID: 0x%lx", (unsigned long)e->resourceid);

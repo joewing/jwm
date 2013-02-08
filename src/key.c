@@ -78,7 +78,7 @@ static unsigned int lockMask;
 static unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key);
 static unsigned int ParseModifierString(const char *str);
 static KeySym ParseKeyString(const char *str);
-static int ShouldGrab(KeyType key);
+static char ShouldGrab(KeyType key);
 static void GrabKey(KeyNode *np, Window win);
 
 /** Initialize key data. */
@@ -266,7 +266,7 @@ void ShowKeyMenu(const XKeyEvent *event)
 }
 
 /** Determine if a key should be grabbed on client windows. */
-int ShouldGrab(KeyType key)
+char ShouldGrab(KeyType key)
 {
    switch(key & 0xFF) {
    case KEY_NEXT:

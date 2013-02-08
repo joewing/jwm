@@ -472,8 +472,8 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
    XWindowChanges wc;
    ClientNode *np;
    int north, south, east, west;
-   int changed;
-   int handled;
+   char changed;
+   char handled;
 
    handled = HandleDockConfigureRequest(event);
    if(handled) {
@@ -886,16 +886,16 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
 void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
 {
 
-   int actionMaxH;
-   int actionMaxV;
-   int actionStick;
-   int actionShade;
-   int actionFullScreen;
-   int actionMinimize;
-   int actionNolist;
-   int actionBelow;
-   int actionAbove;
-   int x;
+   unsigned int x;
+   char actionMaxH;
+   char actionMaxV;
+   char actionStick;
+   char actionShade;
+   char actionFullScreen;
+   char actionMinimize;
+   char actionNolist;
+   char actionBelow;
+   char actionAbove;
 
    /* Up to two actions to be applied together. */
    actionMaxH = 0;

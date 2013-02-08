@@ -13,7 +13,10 @@
 #include "border.h"
 #include "hint.h"
 
-/** Window border flags. */
+/** Window border flags.
+ * We use an unsigned short for storing these, so we get at least 16
+ * on reasonable architectures.
+ */
 typedef enum {
    BORDER_NONE    = 0,
    BORDER_OUTLINE = 1 << 0,   /**< Window has a border. */
@@ -41,7 +44,10 @@ typedef enum {
       | BORDER_MAX_H    \
       | BORDER_SHADE    )
 
-/** Window status flags. */
+/** Window status flags.
+ * We use an unsigned int for storing these, so we get 32 on
+ * reasonable architectures.
+ */
 typedef enum {
    STAT_NONE       = 0,
    STAT_ACTIVE     = 1 << 0,  /**< This client has focus. */
@@ -126,6 +132,9 @@ typedef struct ClientNode {
    struct ClientNode *next;   /**< The next client in this layer. */
 
 } ClientNode;
+
+/** The number of clients (maintained in client.c). */
+extern unsigned int clientCount;
 
 /** Find a client by window or parent window.
  * @param w The window.

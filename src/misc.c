@@ -98,7 +98,7 @@ void ReplaceSymbol(char **str, const char *name, const char *value)
 
    temp = strstr(*str, name);
    Assert(temp);
-   --temp; /* Account for the "$" */
+   temp -= 1; /* Account for the "$" */
 
    if(nameLength > valueLength) {
 

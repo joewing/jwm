@@ -24,7 +24,7 @@ static void DrawCloseButton(unsigned int offset, Pixmap canvas);
 static void DrawMaxIButton(unsigned int offset, Pixmap canvas);
 static void DrawMaxAButton(unsigned int offset, Pixmap canvas);
 static void DrawMinButton(unsigned int offset, Pixmap canvas);
-static int GetButtonCount(const ClientNode *np);
+static unsigned int GetButtonCount(const ClientNode *np);
 
 #ifdef USE_SHAPE
 static void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
@@ -286,7 +286,8 @@ void DrawBorderHelper(const ClientNode *np)
    unsigned int width, height;
    int iconSize;
 
-   int buttonCount, titleWidth;
+   unsigned int buttonCount;
+   int titleWidth;
    Pixmap canvas;
 
    Assert(np);
@@ -385,11 +386,11 @@ void DrawBorderHelper(const ClientNode *np)
 }
 
 /** Determine the number of buttons to be displayed for a client. */
-int GetButtonCount(const ClientNode *np)
+unsigned int GetButtonCount(const ClientNode *np)
 {
 
    int north, south, east, west;
-   int count;
+   unsigned int count;
    int offset;
 
    if(!(np->state.border & BORDER_TITLE)) {

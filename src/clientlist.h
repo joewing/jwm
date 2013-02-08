@@ -30,7 +30,7 @@ char ShouldFocus(const struct ClientNode *np);
 void StartWindowStackWalk();
 
 /** Move to the next/previous window in the window stack. */
-void WalkWindowStack(int forward);
+void WalkWindowStack(char forward);
 
 /** Stop walking the window stack. */
 void StopWindowStackWalk();

@@ -445,6 +445,8 @@ fi
 ############################################################################
 # Check if support for gettext was requested and available.
 ############################################################################
+# Use m4_pattern_allow to work around gettext's use of AM_PROG_MKDIR_P.
+m4_pattern_allow([AM_PROG_MKDIR_P])
 AM_GNU_GETTEXT([external])
 LDFLAGS="$LDFLAGS $LIBINTL"
 

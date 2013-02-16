@@ -78,9 +78,10 @@ void LoadIcon(struct ClientNode *np);
 
 /** Load an icon.
  * @param name The name of the icon to load.
+ * @param save Set if this icon should be saved in the icon hash.
  * @return A pointer to the icon (NULL if not found).
  */
-IconNode *LoadNamedIcon(const char *name);
+IconNode *LoadNamedIcon(const char *name, char save);
 
 /** Destroy an icon.
  * @param icon The icon to destroy.

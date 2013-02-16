@@ -84,7 +84,7 @@ void StartupTrayButtons()
          bp->cp->requestedHeight = 0;
       }
       if(bp->iconName) {
-         bp->icon = LoadNamedIcon(bp->iconName);
+         bp->icon = LoadNamedIcon(bp->iconName, 1);
          if(JLIKELY(bp->icon)) {
             bp->cp->requestedWidth += bp->icon->image->width;
             bp->cp->requestedHeight += bp->icon->image->height;

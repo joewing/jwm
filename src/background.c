@@ -289,8 +289,8 @@ void LoadGradientBackground(BackgroundNode *bp)
       JXFillRectangle(display, bp->pixmap, rootGC,
                       0, 0, rootWidth, rootHeight);
    } else {
-      DrawHorizontalGradient(bp->pixmap, rootGC,
-         color1.pixel, color2.pixel, 0, 0, rootWidth, rootHeight);
+      DrawHorizontalGradient(bp->pixmap, rootGC, color1.pixel,
+                             color2.pixel, 0, 0, rootWidth, rootHeight);
    }
 
 }
@@ -304,7 +304,7 @@ void LoadImageBackground(BackgroundNode *bp)
 
    /* Load the icon. */
    ExpandPath(&bp->value);
-   ip = LoadNamedIcon(bp->value);
+   ip = LoadNamedIcon(bp->value, 0);
    if(JUNLIKELY(!ip)) {
       bp->pixmap = None;
       bp->window = None;

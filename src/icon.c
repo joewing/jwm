@@ -43,10 +43,11 @@ static void DoDestroyIcon(int index, IconNode *icon);
 static void ReadNetWMIcon(ClientNode *np);
 static IconNode *GetDefaultIcon();
 static IconNode *CreateIconFromData(const char *name, char **data);
-static IconNode *CreateIconFromFile(const char *fileName);
+static IconNode *CreateIconFromFile(const char *fileName, char save);
 static IconNode *CreateIconFromBinary(const unsigned long *data,
                                       unsigned int length);
-static IconNode *LoadNamedIconHelper(const char *name, const char *path);
+static IconNode *LoadNamedIconHelper(const char *name, const char *path,
+                                     char save);
 
 static IconNode *LoadSuffixedIcon(const char *path, const char *name,
                                   const char *suffix);
@@ -324,7 +325,7 @@ IconNode *LoadSuffixedIcon(const char *path, const char *name,
 }
 
 /** Load an icon from a file. */
-IconNode *LoadNamedIcon(const char *name)
+IconNode *LoadNamedIcon(const char *name, char save)
 {
 
    IconPathNode *ip;
@@ -335,10 +336,10 @@ IconNode *LoadNamedIcon(const char *name)
    SetIconSize();
 
    if(name[0] == '/') {
-      return CreateIconFromFile(name);
+      return CreateIconFromFile(name, save);
    } else {
       for(ip = iconPaths; ip; ip = ip->next) {
-         icon = LoadNamedIconHelper(name, ip->path);
+         icon = LoadNamedIconHelper(name, ip->path, save);
          if(icon) {
             return icon;
          }
@@ -349,7 +350,7 @@ IconNode *LoadNamedIcon(const char *name)
 }
 
 /** Helper for loading icons by name. */
-IconNode *LoadNamedIconHelper(const char *name, const char *path)
+IconNode *LoadNamedIconHelper(const char *name, const char *path, char save)
 {
 
    IconNode *result;
@@ -358,7 +359,7 @@ IconNode *LoadNamedIconHelper(const char *name, const char *path)
    temp = AllocateStack(strlen(name) + strlen(path) + 1);
    strcpy(temp, path);
    strcat(temp, name);
-   result = CreateIconFromFile(temp);
+   result = CreateIconFromFile(temp, save);
    ReleaseStack(temp);
 
    return result;
@@ -420,7 +421,7 @@ IconNode *CreateIconFromData(const char *name, char **data)
 }
 
 /** Create an icon from the specified file. */
-IconNode *CreateIconFromFile(const char *fileName)
+IconNode *CreateIconFromFile(const char *fileName, char save)
 {
 
    ImageNode *image;
@@ -439,9 +440,11 @@ IconNode *CreateIconFromFile(const char *fileName)
    image = LoadImage(fileName);
    if(image) {
       result = CreateIcon();
-      result->name = CopyString(fileName);
       result->image = image;
-      InsertIcon(result);
+      if(save) {
+         result->name = CopyString(fileName);
+         InsertIcon(result);
+      }
       return result;
    } else {
       return NULL;
@@ -659,6 +662,9 @@ void DoDestroyIcon(int index, IconNode *icon)
 #ifdef USE_XRENDER
          if(icon->nodes->imagePicture != None) {
             JXRenderFreePicture(display, icon->nodes->imagePicture);
+         }
+         if(icon->nodes->alphaPicture != None) {
+            JXRenderFreePicture(display, icon->nodes->alphaPicture);
          }
 #endif
 

@@ -195,10 +195,7 @@ if test "$enable_cairo" != "no" ; then
 fi
 if test "$enable_cairo" != "no" ; then
    AC_CHECK_LIB(cairo, cairo_create,
-      [ LDFLAGS="$LDFLAGS $CAIRO_LDFLAGS"
-        CFLAGS="$CFLAGS $CAIRO_CFLAGS"
-        enable_cairo="yes"
-        AC_DEFINE(USE_CAIRO, 1, [Define to use Cairo]) ],
+      [ enable_cairo="yes" ],
       [ enable_cairo="no"
         AC_MSG_WARN([unable to use Cairo, Cairo support disabled]) ],
       [ $CAIRO_LDFLAGS ])
@@ -240,6 +237,11 @@ if test "$enable_rsvg" == "no" ; then
       AC_MSG_WARN([disabling Cairo because rsvg is disabled])
       enable_cairo="no"
    fi
+fi
+if test "$enable_rsvg" == "yes" ; then
+   LDFLAGS="$LDFLAGS $CAIRO_LDFLAGS"
+   CFLAGS="$CFLAGS $CAIRO_CFLAGS"
+   AC_DEFINE(USE_CAIRO, 1, [Define to use Cairo]) ],
 fi
 
 ############################################################################

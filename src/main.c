@@ -139,7 +139,8 @@ int main(int argc, char *argv[])
       } else if(!strcmp(argv[x], "-display") && x + 1 < argc) {
          displayString = argv[++x];
       } else {
-         DisplayUsage();
+         printf("unrecognized option: %s\n", argv[x]);
+         DisplayHelp();
          DoExit(1);
       }
    }

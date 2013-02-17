@@ -10,6 +10,8 @@
 #include "jwm.h"
 #include "help.h"
 
+static void DisplayUsage();
+
 /** Display program name, version, and compiled options . */
 void DisplayAbout()
 {

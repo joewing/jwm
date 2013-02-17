@@ -19,8 +19,5 @@ void DisplayCompileOptions();
 /** Display all help. */
 void DisplayHelp();
 
-/** Display program usage information. */
-void DisplayUsage();
-
 #endif /* HELP_H */
 

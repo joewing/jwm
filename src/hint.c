@@ -67,9 +67,10 @@ typedef struct {
 
 Atom atoms[ATOM_COUNT];
 
-const char jwmRestart[] = "_JWM_RESTART";
-const char jwmExit[]    = "_JWM_EXIT";
-const char jwmReload[]  = "_JWM_RELOAD";
+const char jwmRestart[]    = "_JWM_RESTART";
+const char jwmExit[]       = "_JWM_EXIT";
+const char jwmReload[]     = "_JWM_RELOAD";
+const char opacityAtom[]   = "_NET_WM_WINDOW_OPACITY";
 
 static const AtomNode atomList[] = {
 
@@ -136,7 +137,7 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_STRUT_PARTIAL],      "_NET_WM_STRUT_PARTIAL"       },
    { &atoms[ATOM_NET_WM_STRUT],              "_NET_WM_STRUT"               },
    { &atoms[ATOM_NET_SYSTEM_TRAY_OPCODE],    "_NET_SYSTEM_TRAY_OPCODE"     },
-   { &atoms[ATOM_NET_WM_WINDOW_OPACITY],     "_NET_WM_WINDOW_OPACITY"      },
+   { &atoms[ATOM_NET_WM_WINDOW_OPACITY],     &opacityAtom[0]               },
 
    { &atoms[ATOM_MOTIF_WM_HINTS],            "_MOTIF_WM_HINTS"             },
 

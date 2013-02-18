@@ -395,16 +395,17 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
    }
 
    sp = GetMouseScreen();
-   GetScreenBounds(sp, &box);
 
    if(!overflow && (alreadyMapped
       || (!(np->state.status & STAT_PIGNORE)
       && (np->sizeFlags & (PPosition | USPosition))))) {
 
       GravitateClient(np, 0);
+      ConstrainClient(np);
 
    } else {
 
+      GetScreenBounds(sp, &box);
       SubtractTrayBounds(GetTrays(), &box, np->state.layer);
       SubtractStrutBounds(&box);
 
@@ -460,8 +461,8 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
 
 }
 
-/** Constrain the size of the client so it fits. */
-void ConstrainSize(ClientNode *np)
+/** Constrain the size and location of the client so it fits. */
+void ConstrainClient(ClientNode *np)
 {
 
    BoundingBox box;
@@ -471,52 +472,71 @@ void ConstrainSize(ClientNode *np)
 
    Assert(np);
 
-   /* Determine if the size needs to be constrained. */
+   /* Constrain the size if necessary. */
    sp = GetCurrentScreen(np->x, np->y);
-   if(np->width < sp->width && np->height < sp->height) {
+   GetBorderSize(&np->state, &north, &south, &east, &west);
+   if(np->width > sp->width || np->height > sp->height) {
+
+      GetScreenBounds(sp, &box);
+      SubtractTrayBounds(GetTrays(), &box, np->state.layer);
+      SubtractStrutBounds(&box);
+
+      box.x += west;
+      box.y += north;
+      box.width -= east + west;
+      box.height -= north + south;
+      if(box.width > np->maxWidth) {
+         box.width = np->maxWidth;
+      }
+      if(box.height > np->maxHeight) {
+         box.height = np->maxHeight;
+      }
+
+      if(np->sizeFlags & PAspect) {
+
+         /* Fixed point with a 16-bit fraction. */
+         ratio = (box.width << 16) / box.height;
+
+         minr = (np->aspect.minx << 16) / np->aspect.miny;
+         if(ratio < minr) {
+            box.height = (box.width << 16) / minr;
+         }
+
+         maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
+         if(ratio > maxr) {
+            box.width = (box.height * maxr) >> 16;
+         }
+
+      }
+
+      np->x = box.x;
+      np->y = box.y;
+      np->width = box.width - (box.width % np->xinc);
+      np->height = box.height - (box.height % np->yinc);
       return;
+
    }
 
-   /* Constrain the size. */
-   GetBorderSize(&np->state, &north, &south, &east, &west);
-
-   GetScreenBounds(sp, &box);
+   /* Constain the location. */
+   box.x = 0;
+   box.y = 0;
+   box.width = rootWidth;
+   box.height = rootHeight;
    SubtractTrayBounds(GetTrays(), &box, np->state.layer);
    SubtractStrutBounds(&box);
 
-   box.x += west;
-   box.y += north;
-   box.width -= east + west;
-   box.height -= north + south;
-
-   if(box.width > np->maxWidth) {
-      box.width = np->maxWidth;
+   if(np->x + np->width + west > box.x + box.width) {
+      np->x = box.x + box.width - np->width - west;
    }
-   if(box.height > np->maxHeight) {
-      box.height = np->maxHeight;
+   if(np->y + np->height + north > box.y + box.height) {
+      np->y = box.y + box.height - np->height - north;
    }
-
-   if(np->sizeFlags & PAspect) {
-
-      /* Fixed point with a 16-bit fraction. */
-      ratio = (box.width << 16) / box.height;
-
-      minr = (np->aspect.minx << 16) / np->aspect.miny;
-      if(ratio < minr) {
-         box.height = (box.width << 16) / minr;
-      }
-
-      maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
-      if(ratio > maxr) {
-         box.width = (box.height * maxr) >> 16;
-      }
-
+   if(np->x < box.x) {
+      np->x = box.x;
    }
-
-   np->x = box.x;
-   np->y = box.y;
-   np->width = box.width - (box.width % np->xinc);
-   np->height = box.height - (box.height % np->yinc);
+   if(np->y < box.y) {
+      np->y = box.y;
+   }
 
 }
 

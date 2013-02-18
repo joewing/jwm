@@ -515,7 +515,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
       wc.sibling = np->parent;
       wc.border_width = 0;
 
-      ConstrainSize(np);
+      ConstrainClient(np);
 
       wc.x = np->x;
       wc.y = np->y;
@@ -864,6 +864,7 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
    np->y = y;
    np->width = width;
    np->height = height;
+   ConstrainClient(np);
 
    if(JUNLIKELY(np->state.status & STAT_FULLSCREEN)) {
       Warning(_("Fullscreen state will be shaped!"));

@@ -526,10 +526,10 @@ void ConstrainClient(ClientNode *np)
    SubtractStrutBounds(&box);
 
    if(np->x + np->width + west > box.x + box.width) {
-      np->x = box.x + box.width - np->width - west;
+      np->x = box.x + box.width - np->width - east;
    }
    if(np->y + np->height + north > box.y + box.height) {
-      np->y = box.y + box.height - np->height - north;
+      np->y = box.y + box.height - np->height - south;
    }
    if(np->x < box.x) {
       np->x = box.x;

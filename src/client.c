@@ -721,6 +721,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
    int north, south, east, west;
    BoundingBox box;
    const ScreenType *sp;
+   char vmax, hmax;
 
    Assert(np);
 
@@ -739,10 +740,12 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
       np->state.border &= ~BORDER_MOVE;
       SetClientLayer(np, LAYER_ABOVE);
 
-      np->oldx = np->x;
-      np->oldy = np->y;
-      np->oldWidth = np->width;
-      np->oldHeight = np->height;
+      if(!(np->state.status & (STAT_HMAX | STAT_VMAX))) {
+         np->oldx = np->x;
+         np->oldy = np->y;
+         np->oldWidth = np->width;
+         np->oldHeight = np->height;
+      }
 
       sp = GetCurrentScreen(np->x, np->y);
       GetScreenBounds(sp, &box);
@@ -770,10 +773,19 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
 
       np->state.status &= ~STAT_FULLSCREEN;
       np->state.border |= BORDER_MOVE;
+
+      SetClientLayer(np, LAYER_NORMAL);
+
       np->x = np->oldx;
       np->y = np->oldy;
       np->width = np->oldWidth;   
       np->height = np->oldHeight;
+
+      hmax = (np->state.status & STAT_HMAX) ? 1 : 0;
+      vmax = (np->state.status & STAT_VMAX) ? 1 : 0;
+      if(vmax || hmax) {
+         PlaceMaximizedClient(np, hmax, vmax);
+      }
 
       GetBorderSize(&np->state, &north, &south, &east, &west);
 
@@ -794,7 +806,6 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
       JXSendEvent(display, rootWindow, False,
                   SubstructureRedirectMask, &event);
 
-      SetClientLayer(np, LAYER_NORMAL);
 
    }
 

@@ -196,14 +196,9 @@ ImageNode *LoadPNGImage(const char *fileName)
          fclose(fd);
       }
       if(rows) {
-         Release(rows);
+         ReleaseStack(rows);
       }
-      if(result) {
-         if(result->data) {
-            Release(result->data);
-         }
-         Release(result);
-      }
+      DestroyImage(result);
       Warning(_("error reading PNG image: %s"), fileName);
    }
 
@@ -229,9 +224,10 @@ ImageNode *LoadPNGImage(const char *fileName)
    png_read_info(pngData, pngInfo);
 
    result = Allocate(sizeof(ImageNode));
+   result->data = NULL;
 
    png_get_IHDR(pngData, pngInfo, &width, &height,
-      &bitDepth, &colorType, NULL, NULL, NULL);
+                &bitDepth, &colorType, NULL, NULL, NULL);
    result->width = (int)width;
    result->height = (int)height;
 
@@ -257,7 +253,6 @@ ImageNode *LoadPNGImage(const char *fileName)
    result->data = Allocate(rowBytes * result->height);
 
    rows = AllocateStack(result->height * sizeof(result->data));
-
    y = 0;
    for(x = 0; x < result->height; x++) {
       rows[x] = &result->data[y];
@@ -321,16 +316,10 @@ ImageNode *LoadJPEGImage(const char *fileName)
 
    /* Control will return here if an error was encountered. */
    if(setjmp(jerr.jbuffer)) {
-
-      if(result) {
-         DestroyImage(result);
-      }
-
+      DestroyImage(result);
       jpeg_destroy_decompress(&cinfo);
       fclose(fd);
-
       return NULL;
-
    }
 
    /* Prepare to load the file. */
@@ -344,7 +333,7 @@ ImageNode *LoadJPEGImage(const char *fileName)
    jpeg_start_decompress(&cinfo);
    rowStride = cinfo.output_width * cinfo.output_components;
    buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr)&cinfo,
-      JPOOL_IMAGE, rowStride, 1);
+                                       JPOOL_IMAGE, rowStride, 1);
 
    result = Allocate(sizeof(ImageNode));
    result->width = cinfo.image_width;

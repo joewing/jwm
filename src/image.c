@@ -379,7 +379,9 @@ ImageNode *LoadJPEGImage(const char *fileName)
 ImageNode *LoadSVGImage(const char *fileName)
 {
 
+#if !GLIB_CHECK_VERSION(2, 35, 0)
    static char initialized = 0;
+#endif
    ImageNode *result = NULL;
    RsvgHandle *rh;
    RsvgDimensionData dim;
@@ -391,10 +393,12 @@ ImageNode *LoadSVGImage(const char *fileName)
 
    Assert(fileName);
 
+#if !GLIB_CHECK_VERSION(2, 35, 0)
    if(!initialized) {
       initialized = 1;
       g_type_init();
    }
+#endif
 
    /* Load the image from the file. */
    e = NULL;

@@ -1368,7 +1368,7 @@ void UpdateTime(const XEvent *event)
       break;
    case ButtonPress:
    case ButtonRelease:
-      t = event->xkey.time;
+      t = event->xbutton.time;
       break;
    case MotionNotify:
       t = event->xmotion.time;

@@ -99,18 +99,22 @@ void ShowPopup(int x, int y, const char *text)
    }
 
    popup.x = x;
-   popup.y = y - popup.height - 2;
+   if(y + 2 * popup.height + 2 >= sp->height) {
+      popup.y = y - popup.height - 2;
+   } else {
+      popup.y = y + popup.height + 2;
+   }
 
-   if(popup.width + popup.x >= sp->width) {
+   if(popup.width + popup.x > sp->width) {
       popup.x = sp->width - popup.width - 2;
    }
-   if(popup.height + popup.y >= sp->height) {
+   if(popup.height + popup.y > sp->height) {
       popup.y = sp->height - popup.height - 2;
    }
-   if (popup.x < 2) {
+   if(popup.x < 2) {
       popup.x = 2;
    }
-   if (popup.y < 2) {
+   if(popup.y < 2) {
       popup.y = 2;
    }
 
@@ -119,18 +123,17 @@ void ShowPopup(int x, int y, const char *text)
       attrMask = 0;
 
       attrMask |= CWEventMask;
-      attr.event_mask
-         = ExposureMask
-         | PointerMotionMask | PointerMotionHintMask;
+      attr.event_mask = ExposureMask
+                      | PointerMotionMask
+                      | PointerMotionHintMask;
 
       attrMask |= CWSaveUnder;
       attr.save_under = True;
 
       attrMask |= CWDontPropagate;
-      attr.do_not_propagate_mask
-         = PointerMotionMask
-         | ButtonPressMask
-         | ButtonReleaseMask;
+      attr.do_not_propagate_mask = PointerMotionMask
+                                 | ButtonPressMask
+                                 | ButtonReleaseMask;
 
       popup.window = JXCreateWindow(display, rootWindow, popup.x, popup.y,
                                     popup.width, popup.height, 0,

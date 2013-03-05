@@ -773,13 +773,13 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
 
       np->state.status &= ~STAT_FULLSCREEN;
       np->state.border |= BORDER_MOVE;
-
       SetClientLayer(np, LAYER_NORMAL);
 
       np->x = np->oldx;
       np->y = np->oldy;
       np->width = np->oldWidth;   
       np->height = np->oldHeight;
+      ConstrainClient(np);
 
       hmax = (np->state.status & STAT_HMAX) ? 1 : 0;
       vmax = (np->state.status & STAT_VMAX) ? 1 : 0;

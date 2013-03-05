@@ -387,18 +387,10 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
    Assert(np);
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
-
-   if(np->x + np->width > rootWidth || np->y + np->height > rootHeight) {
-      overflow = 1;
-   } else {
-      overflow = 0;
-   }
-
    sp = GetMouseScreen();
 
-   if(!overflow && (alreadyMapped
-      || (!(np->state.status & STAT_PIGNORE)
-      && (np->sizeFlags & (PPosition | USPosition))))) {
+   if(alreadyMapped || (!(np->state.status & STAT_PIGNORE)
+                        && (np->sizeFlags & (PPosition | USPosition)))) {
 
       GravitateClient(np, 0);
       ConstrainClient(np);
@@ -454,10 +446,17 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
    }
 
    if(np->state.status & STAT_FULLSCREEN) {
-      JXMoveWindow(display, np->parent, sp->x, sp->y);
+      JXMoveResizeWindow(display, np->parent, sp->x, sp->y,
+                         sp->width, sp->height);
+      JXMoveResizeWindow(display, np->window, sp->x, sp->y,
+                         sp->width, sp->height);
    } else {
-      JXMoveWindow(display, np->parent, np->x - west, np->y - north);
+      JXMoveResizeWindow(display, np->parent, np->x - west, np->y - north,
+                         np->width + east + west, np->height + north + south);
+      JXMoveResizeWindow(display, np->window, west, north,
+                         np->width, np->height);
    }
+   SendConfigureEvent(np);
 
 }
 
@@ -475,7 +474,8 @@ void ConstrainClient(ClientNode *np)
    /* Constrain the size if necessary. */
    sp = GetCurrentScreen(np->x, np->y);
    GetBorderSize(&np->state, &north, &south, &east, &west);
-   if(np->width > sp->width || np->height > sp->height) {
+   if(   np->width + east + west > sp->width
+      || np->height + north + south > sp->height) {
 
       GetScreenBounds(sp, &box);
       SubtractTrayBounds(GetTrays(), &box, np->state.layer);
@@ -488,8 +488,14 @@ void ConstrainClient(ClientNode *np)
       if(box.width > np->maxWidth) {
          box.width = np->maxWidth;
       }
+      if(box.width > np->width) {
+         box.width = np->width;
+      }
       if(box.height > np->maxHeight) {
          box.height = np->maxHeight;
+      }
+      if(box.height > np->height) {
+         box.height = np->height;
       }
 
       if(np->sizeFlags & PAspect) {
@@ -508,11 +514,11 @@ void ConstrainClient(ClientNode *np)
          }
 
       }
-
       np->x = box.x;
       np->y = box.y;
       np->width = box.width - (box.width % np->xinc);
       np->height = box.height - (box.height % np->yinc);
+
       return;
 
    }
@@ -525,10 +531,10 @@ void ConstrainClient(ClientNode *np)
    SubtractTrayBounds(GetTrays(), &box, np->state.layer);
    SubtractStrutBounds(&box);
 
-   if(np->x + np->width + west > box.x + box.width) {
+   if(np->x + np->width + east + west > box.x + box.width) {
       np->x = box.x + box.width - np->width - east;
    }
-   if(np->y + np->height + north > box.y + box.height) {
+   if(np->y + np->height + north + south > box.y + box.height) {
       np->y = box.y + box.height - np->height - south;
    }
    if(np->x < box.x) {

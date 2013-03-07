@@ -445,19 +445,6 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
 
    }
 
-   if(np->state.status & STAT_FULLSCREEN) {
-      JXMoveResizeWindow(display, np->parent, sp->x, sp->y,
-                         sp->width, sp->height);
-      JXMoveResizeWindow(display, np->window, sp->x, sp->y,
-                         sp->width, sp->height);
-   } else {
-      JXMoveResizeWindow(display, np->parent, np->x - west, np->y - north,
-                         np->width + east + west, np->height + north + south);
-      JXMoveResizeWindow(display, np->window, west, north,
-                         np->width, np->height);
-   }
-   SendConfigureEvent(np);
-
 }
 
 /** Constrain the size and location of the client so it fits. */
@@ -562,9 +549,8 @@ void PlaceMaximizedClient(ClientNode *np, char horiz, char vert)
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
 
-   sp = GetCurrentScreen(
-      np->x + (east + west + np->width) / 2,
-      np->y + (north + south + np->height) / 2);
+   sp = GetCurrentScreen(np->x + (east + west + np->width) / 2,
+                         np->y + (north + south + np->height) / 2);
    GetScreenBounds(sp, &box);
    SubtractTrayBounds(GetTrays(), &box, np->state.layer);
    SubtractStrutBounds(&box);

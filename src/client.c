@@ -194,6 +194,15 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    ReparentClient(np, notOwner);
    PlaceClient(np, alreadyMapped);
 
+   if(!(np->state.status & (STAT_FULLSCREEN | STAT_VMAX | STAT_HMAX))) {
+      int north, south, east, west;
+      GetBorderSize(&np->state, &north, &south, &east, &west);
+      JXMoveResizeWindow(display, np->parent, np->x - west, np->y - north,
+                         np->width + east + west, np->height + north + south);
+      JXMoveResizeWindow(display, np->window, west, north,
+                         np->width, np->height);
+   }
+
    /* If one of these fails we are SOL, so who cares. */
    XSaveContext(display, np->window, clientContext, (void*)np);
    XSaveContext(display, np->parent, frameContext, (void*)np);
@@ -690,6 +699,7 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
    JXMoveResizeWindow(display, np->window, west,
                       north, np->width, np->height);
    ResetBorder(np);
+   DrawBorder(np);
 
    WriteState(np);
    SendConfigureEvent(np);

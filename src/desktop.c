@@ -179,8 +179,6 @@ void ChangeDesktop(unsigned int desktop)
    SetCardinalAtom(rootWindow, ATOM_NET_CURRENT_DESKTOP, currentDesktop);
 
    RestackClients();
-
-   UpdatePager();
    UpdateTaskBar();
 
    LoadBackground(desktop);

@@ -1143,7 +1143,6 @@ void HandleMapRequest(const XMapEvent *event)
             FocusClient(np);
          }
          UpdateTaskBar();
-         UpdatePager();
       }
    }
    RestackClients();

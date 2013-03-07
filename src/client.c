@@ -1173,7 +1173,6 @@ void RemoveClient(ClientNode *np)
 
    RemoveClientFromTaskBar(np);
    RemoveClientStrut(np);
-   UpdatePager();
 
    while(np->colormaps) {
       cp = np->colormaps->next;

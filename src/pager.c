@@ -591,12 +591,10 @@ void SignalPager(const struct TimeType *now, int x, int y)
       if(abs(pp->mousex - x) < settings.doubleClickDelta
          && abs(pp->mousey - y) < settings.doubleClickDelta) {
          if(GetTimeDifference(now, &pp->mouseTime) >= settings.popupDelay) {
-            int desktop;
-            desktop = GetPagerDesktop(pp, x - pp->cp->screenx,
-                                      y - pp->cp->screeny);
-            if(desktop >= 0) {
-               const char *desktopName;
-               desktopName = GetDesktopName(desktop);
+            const int desktop = GetPagerDesktop(pp, x - pp->cp->screenx,
+                                                    y - pp->cp->screeny);
+            if(desktop >= 0 && desktop < settings.desktopCount) {
+               const char *desktopName = GetDesktopName(desktop);
                if(desktopName) {
                   ShowPopup(x, y, desktopName);
                }

@@ -463,7 +463,6 @@ void RestoreClient(ClientNode *np, char raise)
 
    RestackClients();
    UpdateTaskBar();
-   UpdatePager();
 
 }
 
@@ -1069,8 +1068,8 @@ void RestackClients()
    JXRestackWindows(display, stack, index);
 
    ReleaseStack(stack);
-
    UpdateNetClientList();
+   UpdatePager();
 
 }
 

@@ -1197,7 +1197,9 @@ Over the close button, clicking closes the window.
 .P
 Button 2 (typically the middle button):
 .RS
-Anywhere on a window frame, dragging while holding button 2 will
+Over the maximize button, clicking toggles between vertically maximized
+and normal.
+Anywhere else on a window frame, dragging while holding button 2 will
 move the window.
 .RE
 .P
@@ -1205,7 +1207,8 @@ Button 3 (typically the right button):
 .RS
 Over the frame, clicking shows the window menu.
 On the minimize button, clicking toggles between shaded and unshaded.
-On the maximize button, clicking toggles between maximized and normal.
+On the maximize button, clicking toggles between horizontally maximized
+and normal.
 On the close button, clicking closes the window.
 Over the pager, dragging while holding button 3 will move a window.
 .RE

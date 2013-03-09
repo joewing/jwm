@@ -1223,8 +1223,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
    BorderActionType action;
    int bsize;
 
-   /* Middle click always starts a move. */
-   if(event->button == Button2) {
+   /* Middle click starts a move unless it's over the maximize button. */
+   action = GetBorderActionType(np, event->x, event->y);
+   if(event->button == Button2 && action != BA_MAXIMIZE) {
       MoveClient(np, event->x, event->y, (event->state & Mod1Mask) ? 0 : 1);
       return;
    }
@@ -1237,7 +1238,6 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
    }
 
    /* Other buttons are context sensitive. */
-   action = GetBorderActionType(np, event->x, event->y);
    switch(action & 0x0F) {
    case BA_RESIZE:   /* Border */
       if(event->type == ButtonPress) {
@@ -1297,9 +1297,20 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
       }
       break;
    case BA_MAXIMIZE: /* Maximize button */
-      if(event->type == ButtonRelease
-         && (event->button == Button1 || event->button == Button3)) {
-         MaximizeClientDefault(np);
+      if(event->type == ButtonRelease) {
+         switch(event->button) {
+         case Button1:
+            MaximizeClientDefault(np);
+            break;
+         case Button2:
+            MaximizeClient(np, 0, 1);
+            break;
+         case Button3:
+            MaximizeClient(np, 1, 0);
+            break;
+         default:
+            break;
+         }
       }
       break;
    case BA_MINIMIZE: /* Minimize button */

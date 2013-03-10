@@ -104,7 +104,7 @@ IconNode *CreateIcon();
 #define AddIconPath( a )                ICON_DUMMY_FUNCTION
 #define PutIcon( a, b, c, d, e, f )     ICON_DUMMY_FUNCTION
 #define LoadIcon( a )                   ICON_DUMMY_FUNCTION
-#define LoadNamedIcon( a )              ICON_DUMMY_FUNCTION
+#define LoadNamedIcon( a, b )           ICON_DUMMY_FUNCTION
 #define DestroyIcon( a )                ICON_DUMMY_FUNCTION
 
 #endif /* USE_ICONS */

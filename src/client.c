@@ -306,6 +306,7 @@ void MinimizeTransients(ClientNode *np)
    if(activeClient == np) {
       activeClient = NULL;
       np->state.status &= ~STAT_ACTIVE;
+      JXSetInputFocus(display, rootWindow, RevertToParent, eventTime);
    }
 
    /* Unmap the window and update its state. */

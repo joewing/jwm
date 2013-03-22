@@ -11,74 +11,56 @@
 #define COLOR_H
 
 /** Enumeration of colors used for various JWM components. */
-typedef enum {
-
-   COLOR_TITLE_FG,
-   COLOR_TITLE_ACTIVE_FG,
-
-   COLOR_TITLE_BG1,
-   COLOR_TITLE_BG2,
-   COLOR_TITLE_ACTIVE_BG1,
-   COLOR_TITLE_ACTIVE_BG2,
-
-   COLOR_BORDER_LINE,
-   COLOR_BORDER_ACTIVE_LINE,
-
-   COLOR_TRAY_BG,
-   COLOR_TRAY_FG,
-
-   COLOR_TASK_FG,
-   COLOR_TASK_BG1,
-   COLOR_TASK_BG2,
-   COLOR_TASK_ACTIVE_FG,
-   COLOR_TASK_ACTIVE_BG1,
-   COLOR_TASK_ACTIVE_BG2,
-
-   COLOR_PAGER_BG,
-   COLOR_PAGER_FG,
-   COLOR_PAGER_ACTIVE_BG,
-   COLOR_PAGER_ACTIVE_FG,
-   COLOR_PAGER_OUTLINE,
-   COLOR_PAGER_TEXT,
-
-   COLOR_MENU_BG,
-   COLOR_MENU_FG,
-   COLOR_MENU_ACTIVE_BG1,
-   COLOR_MENU_ACTIVE_BG2,
-   COLOR_MENU_ACTIVE_FG,
-   COLOR_MENU_ACTIVE_OL,
-
-   COLOR_POPUP_BG,
-   COLOR_POPUP_FG,
-   COLOR_POPUP_OUTLINE,
-
-   COLOR_TRAYBUTTON_FG,
-   COLOR_TRAYBUTTON_BG1,
-   COLOR_TRAYBUTTON_BG2,
-   COLOR_TRAYBUTTON_ACTIVE_FG,
-   COLOR_TRAYBUTTON_ACTIVE_BG1,
-   COLOR_TRAYBUTTON_ACTIVE_BG2,
-
-   COLOR_CLOCK_BG,
-   COLOR_CLOCK_FG,
-
-   /* Colors below this point are calculated from the above values. */
-
-   COLOR_TRAY_UP,
-   COLOR_TRAY_DOWN,
-
-   COLOR_TASK_DOWN,
-   COLOR_TASK_ACTIVE_UP,
-
-   COLOR_MENU_UP,
-   COLOR_MENU_DOWN,
-
-   COLOR_TRAYBUTTON_DOWN,
-   COLOR_TRAYBUTTON_ACTIVE_UP,
-
-   COLOR_COUNT
-
-} ColorType;
+typedef unsigned char ColorType;
+#define COLOR_TITLE_FG              0
+#define COLOR_TITLE_ACTIVE_FG       1
+#define COLOR_TITLE_BG1             2
+#define COLOR_TITLE_BG2             3
+#define COLOR_TITLE_ACTIVE_BG1      4
+#define COLOR_TITLE_ACTIVE_BG2      5
+#define COLOR_BORDER_LINE           6
+#define COLOR_BORDER_ACTIVE_LINE    7
+#define COLOR_TRAY_BG               8
+#define COLOR_TRAY_FG               9
+#define COLOR_TASK_FG               10
+#define COLOR_TASK_BG1              11
+#define COLOR_TASK_BG2              12
+#define COLOR_TASK_ACTIVE_FG        13
+#define COLOR_TASK_ACTIVE_BG1       14
+#define COLOR_TASK_ACTIVE_BG2       15
+#define COLOR_PAGER_BG              16
+#define COLOR_PAGER_FG              17
+#define COLOR_PAGER_ACTIVE_BG       18
+#define COLOR_PAGER_ACTIVE_FG       19
+#define COLOR_PAGER_OUTLINE         20
+#define COLOR_PAGER_TEXT            21
+#define COLOR_MENU_BG               22
+#define COLOR_MENU_FG               23
+#define COLOR_MENU_ACTIVE_BG1       24
+#define COLOR_MENU_ACTIVE_BG2       25
+#define COLOR_MENU_ACTIVE_FG        26
+#define COLOR_MENU_ACTIVE_OL        27
+#define COLOR_POPUP_BG              28
+#define COLOR_POPUP_FG              29
+#define COLOR_POPUP_OUTLINE         30
+#define COLOR_TRAYBUTTON_FG         31
+#define COLOR_TRAYBUTTON_BG1        32
+#define COLOR_TRAYBUTTON_BG2        33
+#define COLOR_TRAYBUTTON_ACTIVE_FG  34
+#define COLOR_TRAYBUTTON_ACTIVE_BG1 35
+#define COLOR_TRAYBUTTON_ACTIVE_BG2 36
+#define COLOR_CLOCK_BG              37
+#define COLOR_CLOCK_FG              38
+         /* Colors below this point are calculated from the above values. */
+#define COLOR_TRAY_UP               39
+#define COLOR_TRAY_DOWN             40
+#define COLOR_TASK_DOWN             41
+#define COLOR_TASK_ACTIVE_UP        42
+#define COLOR_MENU_UP               43
+#define COLOR_MENU_DOWN             44
+#define COLOR_TRAYBUTTON_DOWN       45
+#define COLOR_TRAYBUTTON_ACTIVE_UP  46
+#define COLOR_COUNT                 47
 
 extern unsigned long colors[COLOR_COUNT];
 

@@ -17,19 +17,18 @@
  * We use an unsigned short for storing these, so we get at least 16
  * on reasonable architectures.
  */
-typedef enum {
-   BORDER_NONE    = 0,
-   BORDER_OUTLINE = 1 << 0,   /**< Window has a border. */
-   BORDER_TITLE   = 1 << 1,   /**< Window has a title bar. */
-   BORDER_MIN     = 1 << 2,   /**< Window supports minimize. */
-   BORDER_MAX     = 1 << 3,   /**< Window supports maximize. */
-   BORDER_CLOSE   = 1 << 4,   /**< Window supports close. */
-   BORDER_RESIZE  = 1 << 5,   /**< Window supports resizing. */
-   BORDER_MOVE    = 1 << 6,   /**< Window supports moving. */
-   BORDER_MAX_V   = 1 << 7,   /**< Maximize vertically. */
-   BORDER_MAX_H   = 1 << 8,   /**< Maximize horizontally. */
-   BORDER_SHADE   = 1 << 9    /**< Allow shading. */
-} BorderFlags;
+typedef unsigned short BorderFlags;
+#define BORDER_NONE    0
+#define BORDER_OUTLINE (1 << 0)  /**< Window has a border. */
+#define BORDER_TITLE   (1 << 1)  /**< Window has a title bar. */
+#define BORDER_MIN     (1 << 2)  /**< Window supports minimize. */
+#define BORDER_MAX     (1 << 3)  /**< Window supports maximize. */
+#define BORDER_CLOSE   (1 << 4)  /**< Window supports close. */
+#define BORDER_RESIZE  (1 << 5)  /**< Window supports resizing. */
+#define BORDER_MOVE    (1 << 6)  /**< Window supports moving. */
+#define BORDER_MAX_V   (1 << 7)  /**< Maximize vertically. */
+#define BORDER_MAX_H   (1 << 8)  /**< Maximize horizontally. */
+#define BORDER_SHADE   (1 << 9)  /**< Allow shading. */
 
 /** The default border flags. */
 #define BORDER_DEFAULT ( \
@@ -48,27 +47,26 @@ typedef enum {
  * We use an unsigned int for storing these, so we get 32 on
  * reasonable architectures.
  */
-typedef enum {
-   STAT_NONE       = 0,
-   STAT_ACTIVE     = 1 << 0,  /**< This client has focus. */
-   STAT_MAPPED     = 1 << 1,  /**< This client is shown (on some desktop). */
-   STAT_HMAX       = 1 << 2,  /**< This client is maximized horizonatally. */
-   STAT_VMAX       = 1 << 3,  /**< This client is maximized vertically. */
-   STAT_HIDDEN     = 1 << 4,  /**< This client is not on the current desktop. */
-   STAT_STICKY     = 1 << 5,  /**< This client is on all desktops. */
-   STAT_NOLIST     = 1 << 6,  /**< Skip this client in the task list. */
-   STAT_MINIMIZED  = 1 << 7,  /**< This client is minimized. */
-   STAT_SHADED     = 1 << 8,  /**< This client is shaded. */
-   STAT_WMDIALOG   = 1 << 9,  /**< This is a JWM dialog window. */
-   STAT_PIGNORE    = 1 << 10, /**< Ignore the program-specified position. */
-   STAT_SDESKTOP   = 1 << 11, /**< This client was minimized to show desktop. */
-   STAT_FULLSCREEN = 1 << 12, /**< This client wants to be full screen. */
-   STAT_OPACITY    = 1 << 13, /**< This client has a fixed opacity. */
-   STAT_NOFOCUS    = 1 << 14, /**< Don't focus on map. */
-   STAT_CANFOCUS   = 1 << 15, /**< Set if this client accepts input focus. */
-   STAT_DELETE     = 1 << 16, /**< Set if this client accepts WM_DELETE. */
-   STAT_TAKEFOCUS  = 1 << 17  /**< Set if this client uses WM_TAKE_FOCUS. */
-} StatusFlags;
+typedef unsigned int StatusFlags;
+#define STAT_NONE       0
+#define STAT_ACTIVE     (1 << 0)    /**< Has focus. */
+#define STAT_MAPPED     (1 << 1)    /**< Shown (on some desktop). */
+#define STAT_HMAX       (1 << 2)    /**< Maximized horizonatally. */
+#define STAT_VMAX       (1 << 3)    /**< Maximized vertically. */
+#define STAT_HIDDEN     (1 << 4)    /**< Not on the current desktop. */
+#define STAT_STICKY     (1 << 5)    /**< This client is on all desktops. */
+#define STAT_NOLIST     (1 << 6)    /**< Skip this client in the task list. */
+#define STAT_MINIMIZED  (1 << 7)    /**< Minimized. */
+#define STAT_SHADED     (1 << 8)    /**< Shaded. */
+#define STAT_WMDIALOG   (1 << 9)    /**< This is a JWM dialog window. */
+#define STAT_PIGNORE    (1 << 10)   /**< Ignore the program-position. */
+#define STAT_SDESKTOP   (1 << 11)   /**< Minimized to show desktop. */
+#define STAT_FULLSCREEN (1 << 12)   /**< Full screen. */
+#define STAT_OPACITY    (1 << 13)   /**< Fixed opacity. */
+#define STAT_NOFOCUS    (1 << 14)   /**< Don't focus on map. */
+#define STAT_CANFOCUS   (1 << 15)   /**< Client accepts input focus. */
+#define STAT_DELETE     (1 << 16)   /**< Client accepts WM_DELETE. */
+#define STAT_TAKEFOCUS  (1 << 17)   /**< Client uses WM_TAKE_FOCUS. */
 
 /** Colormap window linked list. */
 typedef struct ColormapNode {

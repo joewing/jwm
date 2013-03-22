@@ -16,19 +16,18 @@ struct ClientNode;
 struct ClientState;
 
 /** Flags to determine what action to take on the border. */
-typedef enum {
-   BA_NONE      = 0,      /**< Do nothing. */
-   BA_RESIZE    = 1,      /**< Resize the window. */
-   BA_MOVE      = 2,      /**< Move the window. */
-   BA_CLOSE     = 3,      /**< Close the window. */
-   BA_MAXIMIZE  = 4,      /**< Maximize the window. */
-   BA_MINIMIZE  = 5,      /**< Minimize the window. */
-   BA_MENU      = 6,      /**< Show the window menu. */
-   BA_RESIZE_N  = 0x10,   /**< Resize north. */
-   BA_RESIZE_S  = 0x20,   /**< Resize south. */
-   BA_RESIZE_E  = 0x40,   /**< Resize east. */
-   BA_RESIZE_W  = 0x80    /**< Resize west. */
-} BorderActionType;
+typedef unsigned char BorderActionType;
+#define BA_NONE      0     /**< Do nothing. */
+#define BA_RESIZE    1     /**< Resize the window. */
+#define BA_MOVE      2     /**< Move the window. */
+#define BA_CLOSE     3     /**< Close the window. */
+#define BA_MAXIMIZE  4     /**< Maximize the window. */
+#define BA_MINIMIZE  5     /**< Minimize the window. */
+#define BA_MENU      6     /**< Show the window menu. */
+#define BA_RESIZE_N  0x10  /**< Resize north. */
+#define BA_RESIZE_S  0x20  /**< Resize south. */
+#define BA_RESIZE_E  0x40  /**< Resize east. */
+#define BA_RESIZE_W  0x80  /**< Resize west. */
 
 /*@{*/
 void InitializeBorders();

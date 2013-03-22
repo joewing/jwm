@@ -11,43 +11,37 @@
 #define SETTINGS_H
 
 /** Window snap modes. */
-typedef enum {
-   SNAP_NONE,     /**< Don't snap. */
-   SNAP_SCREEN,   /**< Snap to the edges of the screen. */
-   SNAP_BORDER    /**< Snap to all borders. */
-} SnapModeType;
+typedef unsigned char SnapModeType;
+#define SNAP_NONE    0  /**< Don't snap. */
+#define SNAP_SCREEN  1  /**< Snap to the edges of the screen. */
+#define SNAP_BORDER  2  /**< Snap to all borders. */
 
 /** Window move modes. */
-typedef enum {
-   MOVE_OPAQUE,   /**< Show window contents while moving. */
-   MOVE_OUTLINE   /**< Show an outline while moving. */
-} MoveModeType;
+typedef unsigned char MoveModeType;
+#define MOVE_OPAQUE     0  /**< Show window contents while moving. */
+#define MOVE_OUTLINE    1  /**< Show an outline while moving. */
 
 /** Window resize modes. */
-typedef enum {
-   RESIZE_OPAQUE,   /**< Show window contents while resizing. */
-   RESIZE_OUTLINE   /**< Show an outline while resizing. */
-} ResizeModeType;
+typedef unsigned char ResizeModeType;
+#define RESIZE_OPAQUE   0  /**< Show window contents while resizing. */
+#define RESIZE_OUTLINE  1  /**< Show an outline while resizing. */
 
 /** Status window types. */
-typedef enum {
-   SW_OFF,        /**< No status window. */
-   SW_SCREEN,     /**< Centered on screen. */
-   SW_WINDOW,     /**< Centered on window. */
-   SW_CORNER      /**< Upper-left corner. */
-} StatusWindowType;
+typedef unsigned char StatusWindowType;
+#define SW_OFF       0  /**< No status window. */
+#define SW_SCREEN    1  /**< Centered on screen. */
+#define SW_WINDOW    2  /**< Centered on window. */
+#define SW_CORNER    3  /**< Upper-left corner. */
 
 /** Focus models. */
-typedef enum {
-   FOCUS_SLOPPY,
-   FOCUS_CLICK
-} FocusModelType;
+typedef unsigned char FocusModelType;
+#define FOCUS_SLOPPY 0
+#define FOCUS_CLICK  1
 
 /** Taskbar insert modes. */
-typedef enum {
-   INSERT_LEFT,
-   INSERT_RIGHT
-} InsertModeType;
+typedef unsigned char InsertModeType;
+#define INSERT_LEFT  0
+#define INSERT_RIGHT 1
 
 /** Settings. */
 typedef struct {

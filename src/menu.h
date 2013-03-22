@@ -11,26 +11,25 @@
 #define MENU_H
 
 /** Enumeration of menu action types. */
-typedef enum {
-   MA_NONE,
-   MA_EXECUTE,
-   MA_DESKTOP,
-   MA_SENDTO,
-   MA_LAYER,
-   MA_STICK,
-   MA_MAXIMIZE,
-   MA_MAXIMIZE_H,
-   MA_MAXIMIZE_V,
-   MA_MINIMIZE,
-   MA_RESTORE,
-   MA_SHADE,
-   MA_MOVE,
-   MA_RESIZE,
-   MA_KILL,
-   MA_CLOSE,
-   MA_EXIT,
-   MA_RESTART
-} MenuActionType;
+typedef unsigned char MenuActionType;
+#define MA_NONE         0
+#define MA_EXECUTE      1
+#define MA_DESKTOP      2
+#define MA_SENDTO       3
+#define MA_LAYER        4
+#define MA_STICK        5
+#define MA_MAXIMIZE     6
+#define MA_MAXIMIZE_H   7
+#define MA_MAXIMIZE_V   8
+#define MA_MINIMIZE     9
+#define MA_RESTORE      10
+#define MA_SHADE        11
+#define MA_MOVE         12
+#define MA_RESIZE       13
+#define MA_KILL         14
+#define MA_CLOSE        15
+#define MA_EXIT         16
+#define MA_RESTART      17
 
 /** Structure to represent a menu action for callbacks. */
 typedef struct MenuAction {
@@ -46,11 +45,10 @@ typedef struct MenuAction {
 } MenuAction;
 
 /** Enumeration of possible menu elements. */
-typedef enum {
-   MENU_ITEM_NORMAL,       /**< Normal menu item (button). */
-   MENU_ITEM_SUBMENU,      /**< Submenu. */
-   MENU_ITEM_SEPARATOR     /**< Item separator. */
-} MenuItemType;
+typedef unsigned char MenuItemType;
+#define MENU_ITEM_NORMAL      0  /**< Normal menu item (button). */
+#define MENU_ITEM_SUBMENU     1  /**< Submenu. */
+#define MENU_ITEM_SEPARATOR   2  /**< Item separator. */
 
 /** Structure to represent a menu item. */
 typedef struct MenuItem {

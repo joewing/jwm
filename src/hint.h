@@ -113,13 +113,12 @@ extern const char opacityAtom[];
 #define LAST_MWM_ATOM  ATOM_MOTIF_WM_HINTS
 
 /** Enumeration of window layers. */
-typedef enum {
-   LAYER_DESKTOP     = 0,
-   LAYER_BELOW       = 1,
-   LAYER_NORMAL      = 2,
-   LAYER_ABOVE       = 3,
-   LAYER_COUNT       = 4
-} WinLayerType;
+typedef unsigned char WinLayerType;
+#define LAYER_DESKTOP   0
+#define LAYER_BELOW     1
+#define LAYER_NORMAL    2
+#define LAYER_ABOVE     3
+#define LAYER_COUNT     4
 
 #define FIRST_LAYER        LAYER_DESKTOP
 #define LAST_LAYER         LAYER_ABOVE

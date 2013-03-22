@@ -541,7 +541,12 @@ the default.
 .B TaskList
 .RS
 Add a task list to the tray.
-This tag supports the following attribute:
+This tag supports the following attributes:
+.P
+\fBborder\fP \fIbool\fP
+.RS
+Determines if items in the task list have a border. Default is true.
+.RE
 .P
 \fBmaxwidth\fP \fIint\fP
 .RS
@@ -573,7 +578,7 @@ Minimize all windows on the current desktop.
 .P
 This tag supports the following attributes:
 .P
-\fBborder\fP \fBbool\fP
+\fBborder\fP \fIbool\fP
 .RS
 Determines if a the button has a border. Default is true.
 .RE

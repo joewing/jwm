@@ -15,31 +15,30 @@
 struct IconNode;
 
 /** Button types. */
-typedef enum {
-   BUTTON_LABEL,           /**< Label. */
-   BUTTON_MENU,            /**< Menu item. */
-   BUTTON_MENU_ACTIVE,     /**< Active menu item. */
-   BUTTON_TRAY,            /**< Inactive tray button. */
-   BUTTON_TRAY_NOBORDER,   /**< Inactive tray button without a border. */
-   BUTTON_TRAY_ACTIVE,     /**< Active tray button. */
-   BUTTON_TASK,            /**< Item in the task list. */
-   BUTTON_TASK_ACTIVE      /**< Active item in the task list. */
-} ButtonType;
+typedef unsigned char ButtonType;
+#define BUTTON_LABEL       0  /**< Label. */
+#define BUTTON_MENU        1  /**< Menu item. */
+#define BUTTON_MENU_ACTIVE 2  /**< Active menu item. */
+#define BUTTON_TRAY        3  /**< Inactive tray button. */
+#define BUTTON_TRAY_ACTIVE 4  /**< Active tray button. */
+#define BUTTON_TASK        5  /**< Item in the task list. */
+#define BUTTON_TASK_ACTIVE 6  /**< Active item in the task list. */
 
 /** Alignment of content in a button. */
-typedef enum {
-   ALIGN_LEFT,   /**< Left align. */
-   ALIGN_CENTER  /**< Center align. */
-} AlignmentType;
+typedef unsigned char AlignmentType;
+#define ALIGN_LEFT   0  /**< Left align. */
+#define ALIGN_CENTER 1  /**< Center align. */
 
 /** Data used for drawing a button. */
 typedef struct {
 
    ButtonType type;           /**< The type of button to draw. */
+   AlignmentType alignment;   /**< Alignment of the button content. */
+   FontType font;             /**< The font for button text. */
+   char border;               /**< Determine if we should have a border. */
+
    Drawable drawable;         /**< The place to put the button. */
    GC gc;                     /**< Graphics context used for drawing. */
-   FontType font;             /**< The font for button text. */
-   AlignmentType alignment;   /**< Alignment of the button content. */
 
    int x, y;                  /**< The coordinates to render the button. */
    int width, height;         /**< The size of the button. */

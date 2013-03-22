@@ -294,10 +294,9 @@ void Draw(TrayComponentType *cp, int active)
    ResetButton(&button, cp->pixmap, rootGC);
    if(active) {
       button.type = BUTTON_TRAY_ACTIVE;
-   } else if(bp->border) {
-      button.type = BUTTON_TRAY;
    } else {
-      button.type = BUTTON_TRAY_NOBORDER;
+      button.border = bp->border;
+      button.type = BUTTON_TRAY;
    }
    button.width = cp->width - 3;
    button.height = cp->height - 3;

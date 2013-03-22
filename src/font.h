@@ -13,20 +13,16 @@
 #include "color.h"
 
 /** Enumeration of different components that use fonts. */
-typedef enum {
-
-   FONT_BORDER,
-   FONT_MENU,
-   FONT_TASK,
-   FONT_POPUP,
-   FONT_CLOCK,
-   FONT_TRAY,
-   FONT_TRAYBUTTON,
-   FONT_PAGER,
-
-   FONT_COUNT
-
-} FontType;
+typedef unsigned char FontType;
+#define FONT_BORDER     0
+#define FONT_MENU       1
+#define FONT_TASK       2
+#define FONT_POPUP      3
+#define FONT_CLOCK      4
+#define FONT_TRAY       5
+#define FONT_TRAYBUTTON 6
+#define FONT_PAGER      7
+#define FONT_COUNT      8
 
 void InitializeFonts();
 void StartupFonts();

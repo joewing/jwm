@@ -20,13 +20,12 @@
 #include "hint.h"
 
 /** Enumeration of background types. */
-typedef enum {
-   BACKGROUND_SOLID,    /**< Solid color background. */
-   BACKGROUND_GRADIENT, /**< Gradient background. */
-   BACKGROUND_COMMAND,  /**< Command to run for setting the background. */
-   BACKGROUND_STRETCH,  /**< Stretched image. */
-   BACKGROUND_TILE      /**< Tiled image. */
-} BackgroundType;
+typedef unsigned char BackgroundType;
+#define BACKGROUND_SOLID      0  /**< Solid color background. */
+#define BACKGROUND_GRADIENT   1  /**< Gradient background. */
+#define BACKGROUND_COMMAND    2  /**< Command to run. */
+#define BACKGROUND_STRETCH    3  /**< Stretched image. */
+#define BACKGROUND_TILE       4  /**< Tiled image. */
 
 /** Structure to represent a background for one or more desktops. */
 typedef struct BackgroundNode {

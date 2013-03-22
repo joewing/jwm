@@ -31,6 +31,7 @@ typedef struct TaskBarType {
 
    int itemHeight;
    LayoutType layout;
+   char border;
 
    Pixmap buffer;
 
@@ -115,7 +116,7 @@ void DestroyTaskBar()
 }
 
 /** Create a new task bar tray component. */
-TrayComponentType *CreateTaskBar()
+TrayComponentType *CreateTaskBar(char border)
 {
 
    TrayComponentType *cp;
@@ -131,6 +132,7 @@ TrayComponentType *CreateTaskBar()
    tp->mouseTime.seconds = 0;
    tp->mouseTime.ms = 0;
    tp->maxItemWidth = 0;
+   tp->border = border;
 
    cp = CreateTrayComponent();
    cp->object = tp;
@@ -492,7 +494,9 @@ void Render(const TaskBarType *bp)
 
          if(tp->client->state.status & STAT_ACTIVE) {
             button.type = BUTTON_TASK_ACTIVE;
+            button.border = 1;
          } else {
+            button.border = bp->border;
             button.type = BUTTON_TASK;
          }
 

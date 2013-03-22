@@ -1253,11 +1253,19 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray) {
 
    TrayComponentType *cp;
    const char *temp;
+   char border;
 
    Assert(tp);
    Assert(tray);
 
-   cp = CreateTaskBar();
+   temp = FindAttribute(tp->attributes, BORDER_ATTRIBUTE);
+   if(temp && !strcmp(temp, FALSE_VALUE)) {
+      border = 0;
+   } else {
+      border = 1;
+   }
+
+   cp = CreateTaskBar(border);
    AddTrayComponent(tray, cp);
 
    temp = FindAttribute(tp->attributes, MAX_WIDTH_ATTRIBUTE);

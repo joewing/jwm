@@ -15,20 +15,18 @@
 struct TimeType;
 
 /** Enumeration of tray layouts. */
-typedef enum {
-   LAYOUT_HORIZONTAL,   /**< Left-to-right. */
-   LAYOUT_VERTICAL      /**< Top-to-bottom. */
-} LayoutType;
+typedef unsigned char LayoutType;
+#define LAYOUT_HORIZONTAL  0  /**< Left-to-right. */
+#define LAYOUT_VERTICAL    1  /**< Top-to-bottom. */
 
 /** Enumeration of tray alignments. */
-typedef enum {
-   TALIGN_FIXED,     /**< Fixed at user specified x and y coordinates. */
-   TALIGN_LEFT,      /**< Left aligned. */
-   TALIGN_TOP,       /**< Top aligned. */
-   TALIGN_CENTER,    /**< Center aligned. */
-   TALIGN_RIGHT,     /**< Right aligned. */
-   TALIGN_BOTTOM     /**< Bottom aligned. */
-} TrayAlignmentType;
+typedef unsigned char TrayAlignmentType;
+#define TALIGN_FIXED    0 /**< Fixed at user specified x and y coordinates. */
+#define TALIGN_LEFT     1 /**< Left aligned. */
+#define TALIGN_TOP      2 /**< Top aligned. */
+#define TALIGN_CENTER   3 /**< Center aligned. */
+#define TALIGN_RIGHT    4 /**< Right aligned. */
+#define TALIGN_BOTTOM   5 /**< Bottom aligned. */
 
 /** Structure to hold common tray component data.
  * Sizing is handled as follows:

@@ -200,7 +200,7 @@ if test "$enable_cairo" != "no" ; then
         AC_MSG_WARN([unable to use Cairo, Cairo support disabled]) ],
       [ $CAIRO_LDFLAGS ])
 fi
-if test "$enable_cairo" == "no" ; then
+if test "$enable_cairo" = "no" ; then
    if test "$enable_rsvg" != "no" ; then
       AC_MSG_WARN([disabling rsvg because Cairo is disabled])
       enable_rsvg="no"
@@ -232,13 +232,13 @@ if test "$enable_rsvg" != "no" ; then
         AC_MSG_WARN([unable to use rsvg, rsvg support disabled]) ],
       [ $RSVG_LDFLAGS ])
 fi
-if test "$enable_rsvg" == "no" ; then
+if test "$enable_rsvg" = "no" ; then
    if test "$enable_cairo" != "no" ; then
       AC_MSG_WARN([disabling Cairo because rsvg is disabled])
       enable_cairo="no"
    fi
 fi
-if test "$enable_rsvg" == "yes" ; then
+if test "$enable_rsvg" = "yes" ; then
    LDFLAGS="$LDFLAGS $CAIRO_LDFLAGS"
    CFLAGS="$CFLAGS $CAIRO_CFLAGS"
    AC_DEFINE(USE_CAIRO, 1, [Define to use Cairo]) ],
@@ -416,7 +416,7 @@ fi
 AC_ARG_ENABLE(xmu,
    AC_HELP_STRING([--disable-xmu], [disable Xmu support]),
    [],
-   [  if test `uname` == "IRIX" -o `uname` == "IRIX64" ; then
+   [  if test `uname` = "IRIX" -o `uname` = "IRIX64" ; then
          AC_MSG_WARN([disabling Xmu (it is broken on IRIX)])
          enable_xmu="no"
       fi

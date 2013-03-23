@@ -89,7 +89,7 @@ AC_CHECK_FUNCS([unsetenv putenv setlocale])
 AC_DEFUN([JWM_PKGCONFIG_EXISTS],
 [
    AC_MSG_CHECKING([for pkg-config])
-   if test -x `which pkg-config` ; then
+   if test -x "$(which pkg-config)" ; then
       PKGCONFIG="pkg-config"
    fi
    AC_MSG_RESULT($PKGCONFIG)
@@ -156,7 +156,7 @@ if test "$enable_png" != "no" ; then
    if test "$use_pkgconfig_png" = "yes" ; then
       PNG_CFLAGS=`$PKGCONFIG --cflags libpng`
       PNG_LDFLAGS=`$PKGCONFIG --libs libpng`
-   elif test -x `which libpng-config` ; then
+   elif test -x "$(which libpng-config)" ; then
       PNG_CFLAGS=`libpng-config --cflags`
       PNG_LDFLAGS=`libpng-config --libs`
    else
@@ -185,7 +185,7 @@ if test "$enable_cairo" != "no" ; then
    if test "$use_pkgconfig_cairo" = "yes" ; then
       CAIRO_CFLAGS=`$PKGCONFIG --cflags cairo`
       CAIRO_LDFLAGS=`$PKGCONFIG --libs cairo`
-   elif test -x `which cairo-config` ; then
+   elif test -x "$(which cairo-config)" ; then
       CAIRO_CFLAGS=`cairo-config --cflags`
       CAIRO_LDFLAGS=`cairo-config --libs`
    else
@@ -278,7 +278,7 @@ if test "$enable_xft" != "no"; then
    if test "$use_pkgconfig_xft" = "yes" ; then
       XFT_CFLAGS=`$PKGCONFIG --cflags xft`
       XFT_LDFLAGS=`$PKGCONFIG --libs xft`
-   elif test -x `which xft-config` ; then
+   elif test -x "$(which xft-config)" ; then
       XFT_CFLAGS=`xft-config --cflags`
       XFT_LDFLAGS=`xft-config --libs`
    else
@@ -348,7 +348,7 @@ if test "$enable_fribidi" != "no" ; then
    if test "$use_pkgconfig_fribidi" = "yes" ; then
       FRIBIDI_CFLAGS=`$PKGCONFIG --cflags fribidi`
       FRIBIDI_LDFLAGS=`$PKGCONFIG --libs fribidi`
-   elif test -x `which fribidi-config` ; then
+   elif test -x "$(which fribidi-config)" ; then
       FRIBIDI_CFLAGS=`fribidi-config --cflags`
       FRIBIDI_LDFLAGS=`fribidi-config --libs`
    else

@@ -1126,6 +1126,8 @@ Move right. Not grabbed.
 Move left. Not grabbed.
 .IP \fBescape\fP
 Stop a move/resize, exit a menu, or cancel an action. Not grabbed.
+.IP \fBfullscreen\fP
+Toggle between fullscreen and not fullscreen. Grabbed.
 .IP \fBselect\fP
 Make a menu selection or confirm an action. Not grabbed.
 .IP \fBnext\fP

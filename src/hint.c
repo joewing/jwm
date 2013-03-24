@@ -889,6 +889,12 @@ void ReadWMHints(Window win, ClientState *state, char alreadyMapped)
       if((wmhints->flags & InputHint) && wmhints->input == False) {
          state->status &= ~STAT_CANFOCUS;
       }
+      if(wmhints->flags & XUrgencyHint) {
+printf("URGENT!\n");
+         state->status |= STAT_URGENT;
+      } else {
+         state->status &= ~STAT_URGENT;
+      }
       JXFree(wmhints);
    }
 

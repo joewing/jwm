@@ -26,10 +26,14 @@
 #include "place.h"
 #include "event.h"
 #include "settings.h"
+#include "timing.h"
+
+#define URGENCY_TIME_DELTA    500
 
 static ClientNode *activeClient;
 
 unsigned int clientCount;
+char urgencyState;
 
 static void LoadFocus();
 static void ReparentClient(ClientNode *np, char notOwner);
@@ -40,6 +44,7 @@ static void KillClientHandler(ClientNode *np);
 /** Initialize client data. */
 void InitializeClients()
 {
+   urgencyState = 0;
 }
 
 /** Load windows that are already mapped. */
@@ -1397,6 +1402,40 @@ void UpdateClientColormap(ClientNode *np)
          JXInstallColormap(display, np->cmap);
       }
 
+   }
+
+}
+
+/** Update clients with the urgency hint set. */
+void SignalClients(const struct TimeType *now)
+{
+   static TimeType last = ZERO_TIME;
+   int layer;
+   char updated;
+
+   if(GetTimeDifference(now, &last) < URGENCY_TIME_DELTA) {
+      return;
+   }
+   last = *now;
+
+   /* Toggle the urgency state. */
+   urgencyState ^= 1;
+
+   /* Redraw borders. */
+   updated = 0;
+   for(layer = 0; layer < LAYER_COUNT; layer++) {
+      const ClientNode *np;
+      for(np = nodes[layer]; np; np = np->next) {
+         if(np->state.status & STAT_URGENT) {
+            DrawBorder(np);
+            updated = 1;
+         }
+      }
+   }
+
+   /* Redraw the task bar. */
+   if(updated) {
+      UpdateTaskBar();
    }
 
 }

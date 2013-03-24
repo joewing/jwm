@@ -254,7 +254,7 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
    if(np) {
       switch(mask) {
       case Button1:
-         if(np->client->state.status & STAT_ACTIVE
+         if(   (np->client->state.status & STAT_ACTIVE)
             && np->client == nodes[np->client->state.layer]) {
             MinimizeClient(np->client);
          } else {
@@ -492,7 +492,8 @@ void Render(const TaskBarType *bp)
 
          tp->y = y;
 
-         if(tp->client->state.status & STAT_ACTIVE) {
+         if(   (tp->client->state.status & STAT_ACTIVE)
+            || ((tp->client->state.status & STAT_URGENT) && urgencyState)) {
             button.type = BUTTON_TASK_ACTIVE;
             button.border = 1;
          } else {

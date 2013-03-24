@@ -13,6 +13,8 @@
 #include "border.h"
 #include "hint.h"
 
+struct TimeType;
+
 /** Window border flags.
  * We use an unsigned short for storing these, so we get at least 16
  * on reasonable architectures.
@@ -67,6 +69,7 @@ typedef unsigned int StatusFlags;
 #define STAT_CANFOCUS   (1 << 15)   /**< Client accepts input focus. */
 #define STAT_DELETE     (1 << 16)   /**< Client accepts WM_DELETE. */
 #define STAT_TAKEFOCUS  (1 << 17)   /**< Client uses WM_TAKE_FOCUS. */
+#define STAT_URGENT     (1 << 18)   /**< Urgency hint is set. */
 
 /** Colormap window linked list. */
 typedef struct ColormapNode {
@@ -133,6 +136,9 @@ typedef struct ClientNode {
 
 /** The number of clients (maintained in client.c). */
 extern unsigned int clientCount;
+
+/** Current urgency state (1 to show active, 0 to show inactive). */
+extern char urgencyState;
 
 /** Find a client by window or parent window.
  * @param w The window.
@@ -304,6 +310,9 @@ void SendConfigureEvent(ClientNode *np);
  * @param message The message to send.
  */
 void SendClientMessage(Window w, AtomType type, AtomType message);
+
+/** Update clients that have the urgency hint set. */
+void SignalClients(const struct TimeType *now);
 
 #endif /* CLIENT_H */
 

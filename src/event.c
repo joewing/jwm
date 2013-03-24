@@ -92,8 +92,8 @@ void WaitForEvent(XEvent *event)
       while(JXPending(display) == 0) {
          FD_ZERO(&fds);
          FD_SET(fd, &fds);
-         timeout.tv_usec = 0;
-         timeout.tv_sec = 1;
+         timeout.tv_usec = 500;
+         timeout.tv_sec = 0;
          if(select(fd + 1, &fds, NULL, NULL, &timeout) <= 0) {
             Signal();
          }
@@ -212,6 +212,7 @@ void Signal()
    SignalPager(&now, x, y);
    SignalPopup(&now, x, y);
    SignalMove(&now, x, y);
+   SignalClients(&now);
 
 }
 
@@ -638,6 +639,7 @@ char HandlePropertyNotify(const XPropertyEvent *event)
          changed = 1;
          break;
       case XA_WM_HINTS:
+printf("READ WM HINTS\n");
          ReadWMHints(np->window, &np->state, 1);
          break;
       case XA_WM_ICON_NAME:

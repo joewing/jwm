@@ -298,8 +298,7 @@ void DrawBorderHelper(const ClientNode *np)
    height = np->height + north + south;
 
    /* Determine the colors and gradients to use. */
-   if(   (np->state.status & STAT_ACTIVE)
-      || ((np->state.status & STAT_URGENT) && urgencyState)) {
+   if(np->state.status & (STAT_ACTIVE | STAT_FLASH)) {
 
       borderTextColor = COLOR_TITLE_ACTIVE_FG;
       titleColor1 = colors[COLOR_TITLE_ACTIVE_BG1];
@@ -450,8 +449,7 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas)
    }
 
    /* Determine the colors to use. */
-   if(   (np->state.status & STAT_ACTIVE)
-      || ((np->state.status & STAT_URGENT) && urgencyState)) {
+   if(np->state.status & (STAT_ACTIVE | STAT_FLASH)) {
       color = colors[COLOR_TITLE_ACTIVE_FG];
    } else {
       color = colors[COLOR_TITLE_FG];

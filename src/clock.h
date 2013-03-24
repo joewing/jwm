@@ -11,7 +11,6 @@
 #define CLOCK_H
 
 struct TrayComponentType;
-struct TimeType;
 
 /*@{*/
 void InitializeClock();
@@ -31,14 +30,6 @@ struct TrayComponentType *CreateClock(const char *format,
                                       const char *zone,
                                       const char *command,
                                       int width, int height);
-
-/** Update clocks.
- * This is called on a regular basis to update the time.
- * @param now The current time.
- * @param x The x-coordinate of the mouse.
- * @param y The y-coordinate of the mouse.
- */
-void SignalClock(const struct TimeType *now, int x, int y);
 
 #endif /* CLOCK_H */
 

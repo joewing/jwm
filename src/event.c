@@ -12,7 +12,6 @@
 
 #include "client.h"
 #include "clientlist.h"
-#include "clock.h"
 #include "confirm.h"
 #include "cursor.h"
 #include "desktop.h"
@@ -22,23 +21,32 @@
 #include "key.h"
 #include "main.h"
 #include "move.h"
-#include "pager.h"
 #include "place.h"
-#include "popup.h"
 #include "resize.h"
 #include "root.h"
 #include "swallow.h"
 #include "taskbar.h"
 #include "timing.h"
-#include "tray.h"
-#include "traybutton.h"
 #include "winmenu.h"
 #include "error.h"
 #include "settings.h"
+#include "tray.h"
+#include "popup.h"
+#include "pager.h"
 
 #define MIN_TIME_DELTA 50
 
 Time eventTime = CurrentTime;
+
+typedef struct CallbackNode {
+   TimeType last;
+   int freq;
+   SignalCallback callback;
+   void *data;
+   struct CallbackNode *next;
+} CallbackNode;
+
+static CallbackNode *callbacks = NULL;
 
 static void Signal();
 static void DispatchBorderButtonEvent(const XButtonEvent *event,
@@ -77,7 +85,9 @@ void WaitForEvent(XEvent *event)
 {
 
    struct timeval timeout;
+   CallbackNode *cp;
    fd_set fds;
+   long sleepTime;
    int fd;
    char handled;
 
@@ -87,13 +97,21 @@ void WaitForEvent(XEvent *event)
    fd = JXConnectionNumber(display);
 #endif
 
+   /* Compute how long we should sleep. */
+   sleepTime = 10 * 1000;  /* 10 seconds. */
+   for(cp = callbacks; cp; cp = cp->next) {
+      if(cp->freq > 0 && cp->freq < sleepTime) {
+         sleepTime = cp->freq;
+      }
+   }
+
    do {
 
       while(JXPending(display) == 0) {
          FD_ZERO(&fds);
          FD_SET(fd, &fds);
-         timeout.tv_usec = 500;
-         timeout.tv_sec = 0;
+         timeout.tv_sec = sleepTime / 1000;
+         timeout.tv_usec = (sleepTime % 1000) * 1000;
          if(select(fd + 1, &fds, NULL, NULL, &timeout) <= 0) {
             Signal();
          }
@@ -193,26 +211,23 @@ void Signal()
 
    static TimeType last = ZERO_TIME;
 
+   CallbackNode *cp;   
    TimeType now;
    int x, y;
 
    GetCurrentTime(&now);
-
    if(GetTimeDifference(&now, &last) < MIN_TIME_DELTA) {
       return;
    }
    last = now;
 
    GetMousePosition(&x, &y);
-
-   SignalTaskbar(&now, x, y);
-   SignalTrayButton(&now, x, y);
-   SignalClock(&now, x, y);
-   SignalTray(&now, x, y);
-   SignalPager(&now, x, y);
-   SignalPopup(&now, x, y);
-   SignalMove(&now, x, y);
-   SignalClients(&now);
+   for(cp = callbacks; cp; cp = cp->next) {
+      if(cp->freq > 0 || GetTimeDifference(&now, &cp->last) >= cp->freq) {
+         cp->last = now;
+         (cp->callback)(&now, x, y, cp->data);
+      }
+   }
 
 }
 
@@ -639,8 +654,13 @@ char HandlePropertyNotify(const XPropertyEvent *event)
          changed = 1;
          break;
       case XA_WM_HINTS:
-printf("READ WM HINTS\n");
+         if(np->state.status & STAT_URGENT) {
+            UnregisterCallback(SignalUrgent, np);
+         }
          ReadWMHints(np->window, &np->state, 1);
+         if(np->state.status & STAT_URGENT) {
+            RegisterCallback(500, SignalUrgent, np);
+         }
          break;
       case XA_WM_ICON_NAME:
       case XA_WM_CLIENT_MACHINE:
@@ -1409,5 +1429,34 @@ void UpdateTime(const XEvent *event)
          eventTime = t;
       }
    }
+}
+
+/** Register a callback. */
+void RegisterCallback(int freq, SignalCallback callback, void *data)
+{
+   CallbackNode *cp;
+   cp = Allocate(sizeof(CallbackNode));
+   cp->last.seconds = 0;
+   cp->last.ms = 0;
+   cp->freq = freq;
+   cp->callback = callback;
+   cp->data = data;
+   cp->next = callbacks;
+   callbacks = cp;
+}
+
+/** Unregister a callback. */
+void UnregisterCallback(SignalCallback callback, void *data)
+{
+   CallbackNode **cp;
+   for(cp = &callbacks; *cp; cp = &(*cp)->next) {
+      if((*cp)->callback == callback && (*cp)->data == data) {
+         CallbackNode *temp = *cp;
+         *cp = (*cp)->next;
+         Release(temp);
+         return;
+      }
+   }
+   Assert(0);
 }
 

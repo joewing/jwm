@@ -38,13 +38,6 @@ struct TrayComponentType *CreateTrayButton(const char *iconName,
                                            unsigned int height,
                                            char border);
 
-/** Signal a tray button.
- * @param now The current time.
- * @param x The x-coordinate of the mouse (root relative).
- * @param y The y-coordinate of the mouse (root relative).
- */
-void SignalTrayButton(const struct TimeType *now, int x, int y);
-
 /** Validate the tray buttons and print a warning if something is wrong.
  * This is called after parsing the configuration file(s) to determine
  * if a root menu is defined for each each tray button that specifies

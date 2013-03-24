@@ -18,6 +18,7 @@
 #include "timing.h"
 #include "misc.h"
 #include "settings.h"
+#include "event.h"
 
 typedef struct PopupType {
    int x, y;   /* The coordinates of the upper-left corner of the popup. */
@@ -30,6 +31,8 @@ typedef struct PopupType {
 
 static PopupType popup;
 
+static void SignalPopup(const TimeType *now, int x, int y, void *data);
+
 /** Initialize popup data. */
 void InitializePopup()
 {
@@ -40,11 +43,13 @@ void StartupPopup()
 {
    popup.text = NULL;
    popup.window = None;
+   RegisterCallback(100, SignalPopup, NULL);
 }
 
 /** Shutdown popups. */
 void ShutdownPopup()
 {
+   UnregisterCallback(SignalPopup, NULL);
    if(popup.text) {
       Release(popup.text);
       popup.text = NULL;
@@ -169,7 +174,7 @@ void ShowPopup(int x, int y, const char *text)
 }
 
 /** Signal popup (this is used to hide popups after awhile). */
-void SignalPopup(const TimeType *now, int x, int y)
+void SignalPopup(const TimeType *now, int x, int y, void *data)
 {
    if(popup.window != None) {
       if(abs(popup.mx - x) > 2 || abs(popup.my - y) > 2) {

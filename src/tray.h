@@ -12,8 +12,6 @@
 
 #include "hint.h"
 
-struct TimeType;
-
 /** Enumeration of tray layouts. */
 typedef unsigned char LayoutType;
 #define LAYOUT_HORIZONTAL  0  /**< Left-to-right. */
@@ -215,14 +213,6 @@ Window GetSupportingWindow();
  * @return 1 if this event was for a tray, 0 otherwise.
  */
 char ProcessTrayEvent(const XEvent *event);
-
-/** Signal the trays.
- * This function is called regularly so that autohide, etc. can take place.
- * @param now The current time.
- * @param x The mouse x-coordinate (root relative).
- * @param y The mouse y-coordinate (root relative).
- */
-void SignalTray(const struct TimeType *now, int x, int y);
 
 /** Set whether auto hide is enabled for a tray.
  * @param tp The tray.

@@ -11,7 +11,6 @@
 #define MOVE_H
 
 struct ClientNode;
-struct TimeType;
 
 /** Move a client window.
  * @param np The client to move.
@@ -27,13 +26,6 @@ char MoveClient(struct ClientNode *np, int startx, int starty, int snap);
  * @return 1 if the client moved, 0 otherwise.
  */
 char MoveClientKeyboard(struct ClientNode *np);
-
-/** Switch desktops if appropriate.
- * @param now The current time.
- * @param x The x-coordinate of the mouse.
- * @param y The y-coordinate of the mouse.
- */
-void SignalMove(const struct TimeType *now, int x, int y);
 
 #endif /* MOVE_H */
 

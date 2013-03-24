@@ -24,6 +24,7 @@
 #include "winmenu.h"
 #include "screen.h"
 #include "settings.h"
+#include "event.h"
 
 typedef struct TaskBarType {
 
@@ -78,6 +79,7 @@ static void ProcessTaskButtonEvent(TrayComponentType *cp,
                                    int x, int y, int mask);
 static void ProcessTaskMotionEvent(TrayComponentType *cp,
                                    int x, int y, int mask);
+static void SignalTaskbar(const TimeType *now, int x, int y, void *data);
 
 /** Initialize task bar data. */
 void InitializeTaskBar()
@@ -99,6 +101,7 @@ void ShutdownTaskBar()
 {
    TaskBarType *bp;
    for(bp = bars; bp; bp = bp->next) {
+      UnregisterCallback(SignalTaskbar, bp);
       JXFreePixmap(display, bp->buffer);
    }
    JXFreePixmap(display, minimizedPixmap);
@@ -143,6 +146,8 @@ TrayComponentType *CreateTaskBar(char border)
    cp->Resize = Resize;
    cp->ProcessButtonPress = ProcessTaskButtonEvent;
    cp->ProcessMotionEvent = ProcessTaskMotionEvent;
+
+   RegisterCallback(settings.popupDelay / 2, SignalTaskbar, tp);
 
    return cp;
 
@@ -414,24 +419,22 @@ void UpdateTaskBar()
 }
 
 /** Signal task bar (for popups). */
-void SignalTaskbar(const TimeType *now, int x, int y)
+void SignalTaskbar(const TimeType *now, int x, int y, void *data)
 {
 
-   TaskBarType *bp;
+   TaskBarType *bp = (TaskBarType*)data;
    Node *np;
 
-   for(bp = bars; bp; bp = bp->next) {
-      if(abs(bp->mousex - x) < settings.doubleClickDelta
-         && abs(bp->mousey - y) < settings.doubleClickDelta) {
-         if(GetTimeDifference(now, &bp->mouseTime) >= settings.popupDelay) {
-            if(bp->layout == LAYOUT_HORIZONTAL) {
-               np = GetNode(bp, x - bp->cp->screenx);
-            } else {
-               np = GetNode(bp, y - bp->cp->screeny);
-            }
-            if(np && np->client->name) {
-               ShowPopup(x, y, np->client->name);
-            }
+   if(abs(bp->mousex - x) < settings.doubleClickDelta
+      && abs(bp->mousey - y) < settings.doubleClickDelta) {
+      if(GetTimeDifference(now, &bp->mouseTime) >= settings.popupDelay) {
+         if(bp->layout == LAYOUT_HORIZONTAL) {
+            np = GetNode(bp, x - bp->cp->screenx);
+         } else {
+            np = GetNode(bp, y - bp->cp->screeny);
+         }
+         if(np && np->client->name) {
+            ShowPopup(x, y, np->client->name);
          }
       }
    }
@@ -492,8 +495,7 @@ void Render(const TaskBarType *bp)
 
          tp->y = y;
 
-         if(   (tp->client->state.status & STAT_ACTIVE)
-            || ((tp->client->state.status & STAT_URGENT) && urgencyState)) {
+         if(tp->client->state.status & (STAT_ACTIVE | STAT_FLASH)) {
             button.type = BUTTON_TASK_ACTIVE;
             button.border = 1;
          } else {

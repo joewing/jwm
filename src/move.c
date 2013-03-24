@@ -69,6 +69,8 @@ static char CheckBottomValid(const RectangleType *client,
                              const RectangleType *other,
                              const RectangleType *bottom);
 
+static void SignalMove(const TimeType *now, int x, int y, void *data);
+
 /** Callback for stopping moves. */
 void MoveController(int wasDestroyed)
 {
@@ -108,6 +110,7 @@ char MoveClient(ClientNode *np, int startx, int starty, int snap)
 
    GrabMouseForMove();
 
+   RegisterCallback(0, SignalMove, NULL);
    np->controller = MoveController;
    shouldStopMove = 0;
 
@@ -139,6 +142,7 @@ char MoveClient(ClientNode *np, int startx, int starty, int snap)
       if(shouldStopMove) {
          np->controller = NULL;
          SetDefaultCursor(np->parent);
+         UnregisterCallback(SignalMove, NULL);
          return doMove;
       }
 
@@ -264,6 +268,7 @@ char MoveClientKeyboard(ClientNode *np)
    oldx = np->x;
    oldy = np->y;
 
+   RegisterCallback(0, SignalMove, NULL);
    np->controller = MoveController;
    shouldStopMove = 0;
 
@@ -286,6 +291,7 @@ char MoveClientKeyboard(ClientNode *np)
       if(shouldStopMove) {
          np->controller = NULL;
          SetDefaultCursor(np->parent);
+         UnregisterCallback(SignalMove, NULL);
          return 1;
       }
 
@@ -376,6 +382,7 @@ void StopMove(ClientNode *np, int doMove,
    np->controller = NULL;
 
    SetDefaultCursor(np->parent);
+   UnregisterCallback(SignalMove, NULL);
 
    if(!doMove) {
 
@@ -760,7 +767,7 @@ char CheckBottomValid(const RectangleType *client,
 }
 
 /** Switch desktops if appropriate. */
-void SignalMove(const struct TimeType *now, int x, int y)
+void SignalMove(const TimeType *now, int x, int y, void *data)
 {
 
    if(settings.desktopDelay == 0) {

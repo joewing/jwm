@@ -19,6 +19,7 @@
 #include "popup.h"
 #include "misc.h"
 #include "settings.h"
+#include "event.h"
 
 /** Structure to respresent a clock tray component. */
 typedef struct ClockType {
@@ -45,7 +46,6 @@ typedef struct ClockType {
 static const char *DEFAULT_FORMAT = "%I:%M %p";
 
 static ClockType *clocks;
-static TimeType lastUpdate = ZERO_TIME;
 
 static void Create(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
@@ -56,6 +56,9 @@ static void ProcessClockMotionEvent(TrayComponentType *cp,
                                     int x, int y, int mask);
 
 static void DrawClock(ClockType *clk, const TimeType *now, int x, int y);
+
+static void SignalClock(const struct TimeType *now, int x, int y, void *data);
+
 
 /** Initialize clocks. */
 void InitializeClock()
@@ -103,6 +106,7 @@ void DestroyClock()
       if(clocks->command) {
          Release(clocks->command);
       }
+      UnregisterCallback(SignalClock, clocks);
 
       Release(clocks);
       clocks = cp;
@@ -156,6 +160,8 @@ TrayComponentType *CreateClock(const char *format, const char *zone,
    cp->Destroy = Destroy;
    cp->ProcessButtonPress = ProcessClockButtonEvent;
    cp->ProcessMotionEvent = ProcessClockMotionEvent;
+
+   RegisterCallback(Min(900, settings.popupDelay / 2), SignalClock, clk);
 
    return cp;
 
@@ -248,38 +254,19 @@ void ProcessClockMotionEvent(TrayComponentType *cp,
 }
 
 /** Update a clock tray component. */
-void SignalClock(const TimeType *now, int x, int y)
+void SignalClock(const TimeType *now, int x, int y, void *data)
 {
 
-   ClockType *cp;
-   int shouldDraw;
+   ClockType *cp = (ClockType*)data;
    const char *longTime;
 
-   Assert(now);
-
-   /* Determine if we should update the clock(s). */
-   if(GetTimeDifference(&lastUpdate, now) > 900) {
-      shouldDraw = 1;
-      lastUpdate = *now;
-   } else {
-      shouldDraw = 0;
-   }
-
-   /* Update each clock. */
-   for(cp = clocks; cp; cp = cp->next) {
-
-      if(shouldDraw) {
-         DrawClock(cp, now, x, y);
+   DrawClock(cp, now, x, y);
+   if(abs(cp->mousex - x) < settings.doubleClickDelta
+      && abs(cp->mousey - y) < settings.doubleClickDelta) {
+      if(GetTimeDifference(now, &cp->mouseTime) >= settings.popupDelay) {
+         longTime = GetTimeString("%c", cp->zone);
+         ShowPopup(x, y, longTime);
       }
-
-      if(abs(cp->mousex - x) < settings.doubleClickDelta
-         && abs(cp->mousey - y) < settings.doubleClickDelta) {
-         if(GetTimeDifference(now, &cp->mouseTime) >= settings.popupDelay) {
-            longTime = GetTimeString("%c", cp->zone);
-            ShowPopup(x, y, longTime);
-         }
-      }
-
    }
 
 }

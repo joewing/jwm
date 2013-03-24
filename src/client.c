@@ -33,7 +33,6 @@
 static ClientNode *activeClient;
 
 unsigned int clientCount;
-char urgencyState;
 
 static void LoadFocus();
 static void ReparentClient(ClientNode *np, char notOwner);
@@ -44,7 +43,6 @@ static void KillClientHandler(ClientNode *np);
 /** Initialize client data. */
 void InitializeClients()
 {
-   urgencyState = 0;
 }
 
 /** Load windows that are already mapped. */
@@ -247,6 +245,10 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
       const char vmax = (np->state.status & STAT_VMAX) ? 1 : 0;
       np->state.status &= ~(STAT_HMAX | STAT_VMAX);
       MaximizeClient(np, hmax, vmax);
+   }
+
+   if(np->state.status & STAT_URGENT) {
+      RegisterCallback(500, SignalUrgent, np);
    }
 
    /* Update task bars. */
@@ -1136,6 +1138,10 @@ void RemoveClient(ClientNode *np)
    XDeleteContext(display, np->window, clientContext);
    XDeleteContext(display, np->parent, frameContext);
 
+   if(np->state.status & STAT_URGENT) {
+      UnregisterCallback(SignalUrgent, np);
+   }
+
    /* Make sure this client isn't active */
    if(activeClient == np && !shouldExit) {
       FocusNextStacked(np);
@@ -1406,37 +1412,20 @@ void UpdateClientColormap(ClientNode *np)
 
 }
 
-/** Update clients with the urgency hint set. */
-void SignalClients(const struct TimeType *now)
+/** Update callback for clients with the urgency hint set. */
+void SignalUrgent(const TimeType *now, int x, int y, void *data)
 {
-   static TimeType last = ZERO_TIME;
-   int layer;
-   char updated;
 
-   if(GetTimeDifference(now, &last) < URGENCY_TIME_DELTA) {
-      return;
-   }
-   last = *now;
-
-   /* Toggle the urgency state. */
-   urgencyState ^= 1;
+   ClientNode *np = (ClientNode*)data;
 
    /* Redraw borders. */
-   updated = 0;
-   for(layer = 0; layer < LAYER_COUNT; layer++) {
-      const ClientNode *np;
-      for(np = nodes[layer]; np; np = np->next) {
-         if(np->state.status & STAT_URGENT) {
-            DrawBorder(np);
-            updated = 1;
-         }
-      }
+   if(np->state.status & STAT_FLASH) {
+      np->state.status &= ~STAT_FLASH;
+   } else {
+      np->state.status |= STAT_FLASH;
    }
-
-   /* Redraw the task bar. */
-   if(updated) {
-      UpdateTaskBar();
-   }
+   DrawBorder(np);
+   UpdateTaskBar();
 
 }
 

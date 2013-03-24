@@ -22,6 +22,7 @@
 #include "popup.h"
 #include "font.h"
 #include "settings.h"
+#include "event.h"
 
 /** Structure to represent a pager tray component. */
 typedef struct PagerType {
@@ -68,6 +69,9 @@ static void PagerMoveController(int wasDestroyed);
 
 static void DrawPagerClient(const PagerType *pp, const ClientNode *np);
 
+static void SignalPager(const TimeType *now, int x, int y, void *data);
+
+
 /** Initialize pager data. */
 void InitializePager()
 {
@@ -85,6 +89,7 @@ void ShutdownPager()
    PagerType *pp;
    for(pp = pagers; pp; pp = pp->next) {
       JXFreePixmap(display, pp->buffer);
+      UnregisterCallback(SignalPager, pp);
    }
 }
 
@@ -122,6 +127,8 @@ TrayComponentType *CreatePager(char labeled)
    cp->SetSize = SetSize;
    cp->ProcessButtonPress = ProcessPagerButtonEvent;
    cp->ProcessMotionEvent = ProcessPagerMotionEvent;
+
+   RegisterCallback(settings.popupDelay / 2, SignalPager, pp);
 
    return cp;
 }
@@ -584,23 +591,21 @@ void UpdatePager()
 }
 
 /** Signal pagers (for popups). */
-void SignalPager(const struct TimeType *now, int x, int y)
+void SignalPager(const TimeType *now, int x, int y, void *data)
 {
-   PagerType *pp;
-   for(pp = pagers; pp; pp = pp->next) {
-      if(abs(pp->mousex - x) < settings.doubleClickDelta
-         && abs(pp->mousey - y) < settings.doubleClickDelta) {
-         if(GetTimeDifference(now, &pp->mouseTime) >= settings.popupDelay) {
-            const int desktop = GetPagerDesktop(pp, x - pp->cp->screenx,
-                                                    y - pp->cp->screeny);
-            if(desktop >= 0 && desktop < settings.desktopCount) {
-               const char *desktopName = GetDesktopName(desktop);
-               if(desktopName) {
-                  ShowPopup(x, y, desktopName);
-               }
+   PagerType *pp = (PagerType*)data;
+   if(abs(pp->mousex - x) < settings.doubleClickDelta
+      && abs(pp->mousey - y) < settings.doubleClickDelta) {
+      if(GetTimeDifference(now, &pp->mouseTime) >= settings.popupDelay) {
+         const int desktop = GetPagerDesktop(pp, x - pp->cp->screenx,
+                                                 y - pp->cp->screeny);
+         if(desktop >= 0 && desktop < settings.desktopCount) {
+            const char *desktopName = GetDesktopName(desktop);
+            if(desktopName) {
+               ShowPopup(x, y, desktopName);
             }
-
          }
+
       }
    }
 }

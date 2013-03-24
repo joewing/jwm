@@ -26,6 +26,7 @@
 #include "command.h"
 #include "cursor.h"
 #include "settings.h"
+#include "event.h"
 
 #define BUTTON_SIZE 4
 
@@ -62,6 +63,8 @@ static void ProcessButtonRelease(TrayComponentType *cp,
                                  int x, int y, int mask);
 static void ProcessMotionEvent(TrayComponentType *cp,
                                int x, int y, int mask);
+static void SignalTrayButton(const TimeType *now,
+                             int x, int y, void *data);
 
 /** Initialize tray button data. */
 void InitializeTrayButtons()
@@ -108,6 +111,7 @@ void DestroyTrayButtons()
    TrayButtonType *bp;
    while(buttons) {
       bp = buttons->next;
+      UnregisterCallback(SignalTrayButton, buttons);
       if(buttons->label) {
          Release(buttons->label);
       }
@@ -174,6 +178,8 @@ TrayComponentType *CreateTrayButton(const char *iconName,
    if(popup || label) {
       cp->ProcessMotionEvent = ProcessMotionEvent;
    }
+
+   RegisterCallback(settings.popupDelay / 2, SignalTrayButton, bp);
 
    return cp;
 
@@ -429,24 +435,22 @@ void ProcessMotionEvent(TrayComponentType *cp, int x, int y, int mask)
 }
 
 /** Signal (needed for popups). */
-void SignalTrayButton(const TimeType *now, int x, int y)
+void SignalTrayButton(const TimeType *now, int x, int y, void *data)
 {
-   TrayButtonType *bp;
+   TrayButtonType *bp = (TrayButtonType*)data;
    const char *popup;
 
-   for(bp = buttons; bp; bp = bp->next) {
-      if(bp->popup) {
-         popup = bp->popup;
-      } else if(bp->label) {
-         popup = bp->label;
-      } else {
-         continue;
-      }
-      if(abs(bp->mousex - x) < settings.doubleClickDelta
-         && abs(bp->mousey - y) < settings.doubleClickDelta) {
-         if(GetTimeDifference(now, &bp->mouseTime) >= settings.popupDelay) {
-            ShowPopup(x, y, popup);
-         }
+   if(bp->popup) {
+      popup = bp->popup;
+   } else if(bp->label) {
+      popup = bp->label;
+   } else {
+      return;
+   }
+   if(abs(bp->mousex - x) < settings.doubleClickDelta
+      && abs(bp->mousey - y) < settings.doubleClickDelta) {
+      if(GetTimeDifference(now, &bp->mouseTime) >= settings.popupDelay) {
+         ShowPopup(x, y, popup);
       }
    }
 }

@@ -37,8 +37,6 @@ void RemoveClientFromTaskBar(struct ClientNode *np);
 
 void UpdateTaskBar();
 
-void SignalTaskbar(const struct TimeType *now, int x, int y);
-
 /** Focus the next client in the task bar. */
 void FocusNext();
 

@@ -19,6 +19,7 @@
 #include "timing.h"
 #include "screen.h"
 #include "settings.h"
+#include "event.h"
 
 #define DEFAULT_TRAY_WIDTH 32
 #define DEFAULT_TRAY_HEIGHT 32
@@ -44,6 +45,9 @@ static char CheckHorizontalFill(TrayType *tp);
 static char CheckVerticalFill(TrayType *tp);
 static void LayoutTray(TrayType *tp, int *variableSize,
                        int *variableRemainder);
+
+static void SignalTray(const TimeType *now, int x, int y, void *data);
+
 
 /** Initialize tray data. */
 void InitializeTray()
@@ -182,6 +186,7 @@ void ShutdownTray()
          }
       }
       JXDestroyWindow(display, tp->window);
+      UnregisterCallback(SignalTray, tp);
    }
 
    if(supportingWindow != None) {
@@ -243,6 +248,8 @@ TrayType *CreateTray()
 
    tp->next = trays;
    trays = tp;
+
+   RegisterCallback(100, SignalTray, tp);
 
    return tp;
 
@@ -667,20 +674,15 @@ char ProcessTrayEvent(const XEvent *event)
 }
 
 /** Signal the tray (needed for autohide). */
-void SignalTray(const TimeType *now, int x, int y)
+void SignalTray(const TimeType *now, int x, int y, void *data)
 {
-
-   TrayType *tp;
-
-   for(tp = trays; tp; tp = tp->next) {
-      if(tp->autoHide && !tp->hidden && !menuShown) {
-         if(x < tp->x || x >= tp->x + tp->width
-            || y < tp->y || y >= tp->y + tp->height) {
-            HideTray(tp);
-         }
+   TrayType *tp = (TrayType*)data;
+   if(tp->autoHide && !tp->hidden && !menuShown) {
+      if(x < tp->x || x >= tp->x + tp->width
+         || y < tp->y || y >= tp->y + tp->height) {
+         HideTray(tp);
       }
    }
-
 }
 
 /** Handle a tray expose event. */

@@ -11,7 +11,6 @@
 #define PAGER_H
 
 struct TrayComponentType;
-struct TimeType;
 
 /*@{*/
 void InitializePager();
@@ -28,9 +27,6 @@ struct TrayComponentType *CreatePager(char labeled);
 
 /** Update pagers. */
 void UpdatePager();
-
-/** Signal pagers. */
-void SignalPager(const struct TimeType *now, int x, int y);
 
 #endif /* PAGER_H */
 

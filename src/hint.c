@@ -890,10 +890,9 @@ void ReadWMHints(Window win, ClientState *state, char alreadyMapped)
          state->status &= ~STAT_CANFOCUS;
       }
       if(wmhints->flags & XUrgencyHint) {
-printf("URGENT!\n");
          state->status |= STAT_URGENT;
       } else {
-         state->status &= ~STAT_URGENT;
+         state->status &= ~(STAT_URGENT | STAT_FLASH);
       }
       JXFree(wmhints);
    }

@@ -403,7 +403,7 @@ void SetColor(ColorType c, const char *value)
 }
 
 /** Parse a color for a component. */
-int ParseColor(const char *value, XColor *c)
+char ParseColor(const char *value, XColor *c)
 {
 
    unsigned long rgb;

@@ -26,11 +26,10 @@
 #define MENU_BORDER_SIZE   1
 #define BASE_ICON_OFFSET   3
 
-typedef enum {
-   MENU_NOSELECTION = 0,
-   MENU_LEAVE       = 1,
-   MENU_SUBSELECT   = 2
-} MenuSelectionType;
+typedef unsigned char MenuSelectionType;
+#define MENU_NOSELECTION   0
+#define MENU_LEAVE         1
+#define MENU_SUBSELECT     2
 
 /** Submenu arrow, 4 x 7 pixels */
 static char menu_bitmap[] = {

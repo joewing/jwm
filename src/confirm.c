@@ -21,11 +21,11 @@
 
 #ifndef DISABLE_CONFIRM
 
-typedef enum {
-   DBS_NORMAL   = 0,
-   DBS_OK      = 1,
-   DBS_CANCEL   = 2
-} DialogButtonState;
+/** Current state of dialog buttons. */
+typedef unsigned char DialogButtonState;
+#define DBS_NORMAL   0  /**< No button pressed. */
+#define DBS_OK       1  /**< OK pressed. */
+#define DBS_CANCEL   2  /**< Cancel pressed. */
 
 typedef struct {
 

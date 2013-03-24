@@ -19,10 +19,9 @@
 #include "settings.h"
 
 /** What part of the window to match. */
-typedef enum {
-   MATCH_NAME,  /**< Match the window name. */
-   MATCH_CLASS  /**< Match the window class. */
-} MatchType;
+typedef unsigned int MatchType;
+#define MATCH_NAME   0  /**< Match the window name. */
+#define MATCH_CLASS  1  /**< Match the window class. */
 
 /** List of match patterns for a group. */
 typedef struct PatternListType {

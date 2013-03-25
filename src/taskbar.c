@@ -52,14 +52,7 @@ typedef struct Node {
    struct Node *prev;
 } Node;
 
-static char minimized_bitmap[] = {
-   0x01, 0x03,
-   0x07, 0x0F
-};
-
 static const int TASK_SPACER = 2;
-
-static Pixmap minimizedPixmap;
 
 static TaskBarType *bars;
 static Node *taskBarNodes;
@@ -92,8 +85,6 @@ void InitializeTaskBar()
 /** Startup the task bar. */
 void StartupTaskBar()
 {
-   minimizedPixmap = JXCreateBitmapFromData(display, rootWindow,
-                                            minimized_bitmap, 4, 4);
 }
 
 /** Shutdown the task bar. */
@@ -104,7 +95,6 @@ void ShutdownTaskBar()
       UnregisterCallback(SignalTaskbar, bp);
       JXFreePixmap(display, bp->buffer);
    }
-   JXFreePixmap(display, minimizedPixmap);
 }
 
 /** Destroy task bar data. */
@@ -530,12 +520,15 @@ void Render(const TaskBarType *bp)
          }
 
          if(tp->client->state.status & STAT_MINIMIZED) {
+            const int isize = (bp->itemHeight + 7) / 8;
+            int i;
             JXSetForeground(display, gc, colors[COLOR_TASK_FG]);
-            JXSetClipMask(display, gc, minimizedPixmap);
-            JXSetClipOrigin(display, gc, x + 3, y + bp->itemHeight - 7);
-            JXFillRectangle(display, buffer, gc,
-                            x + 3, y + bp->itemHeight - 7, 4, 4);
-            JXSetClipMask(display, gc, None);
+            for(i = 0; i <= isize; i++) {
+               const int xc = x + i + 3;
+               const int y1 = bp->itemHeight - 3 - isize + i;
+               const int y2 = bp->itemHeight - 3;
+               JXDrawLine(display, buffer, gc, xc, y1, xc, y2);
+            }
          }
 
          if(bp->layout == LAYOUT_HORIZONTAL) {

@@ -31,11 +31,6 @@ typedef unsigned char MenuSelectionType;
 #define MENU_LEAVE         1
 #define MENU_SUBSELECT     2
 
-/** Submenu arrow, 4 x 7 pixels */
-static char menu_bitmap[] = {
-   0x01, 0x03, 0x07, 0x0F, 0x07, 0x03, 0x01
-};
-
 static char ShowSubmenu(Menu *menu, Menu *parent, int x, int y);
 
 static void CreateMenu(Menu *menu, int x, int y);
@@ -602,7 +597,6 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
 {
 
    ButtonNode button;
-   Pixmap pixmap;
    ColorType fg;
 
    Assert(menu);
@@ -644,17 +638,19 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
       DrawButton(&button);
 
       if(item->submenu) {
-         pixmap = JXCreateBitmapFromData(display, menu->window,
-                                         menu_bitmap, 4, 7);
+
+         const int asize = (menu->itemHeight + 7) / 8;
+         const int y = menu->offsets[index] + (menu->itemHeight + 1) / 2;
+         int i;
+
          JXSetForeground(display, rootGC, colors[fg]);
-         JXSetClipMask(display, rootGC, pixmap);
-         JXSetClipOrigin(display, rootGC, menu->width - 9,
-                         menu->offsets[index] + menu->itemHeight / 2 - 4);
-         JXFillRectangle(display, menu->window, rootGC, menu->width - 9,
-                         menu->offsets[index] + menu->itemHeight / 2 - 4,
-                         4, 7);
-         JXSetClipMask(display, rootGC, None);
-         JXFreePixmap(display, pixmap);
+         for(i = 0; i <= asize; i++) {
+            const int x = menu->width - 3 * asize + i;
+            const int y1 = y - asize + i;
+            const int y2 = y + asize - i;
+            JXDrawLine(display, menu->window, rootGC, x, y1, x, y2);
+         }
+
       }
 
    } else {

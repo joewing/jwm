@@ -28,8 +28,6 @@
 #include "settings.h"
 #include "timing.h"
 
-#define URGENCY_TIME_DELTA    500
-
 static ClientNode *activeClient;
 
 unsigned int clientCount;
@@ -248,7 +246,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    }
 
    if(np->state.status & STAT_URGENT) {
-      RegisterCallback(500, SignalUrgent, np);
+      RegisterCallback(URGENCY_DELAY, SignalUrgent, np);
    }
 
    /* Update task bars. */
@@ -1426,6 +1424,7 @@ void SignalUrgent(const TimeType *now, int x, int y, void *data)
    }
    DrawBorder(np);
    UpdateTaskBar();
+   UpdatePager();
 
 }
 

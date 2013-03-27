@@ -113,14 +113,16 @@
 #  endif
 #endif
 
-#define MAX_INCLUDE_DEPTH 16
+/** Maximum window size.
+ * Making this larger will require code changes in some places where
+ * there are fixed point calculations. */
+#define MAX_WINDOW_WIDTH   (1 << 15)
+#define MAX_WINDOW_HEIGHT  (1 << 15)
 
-#define MAX_WINDOW_WIDTH (1 << 15)
-#define MAX_WINDOW_HEIGHT (1 << 15)
-
-#define MOVE_DELTA 3
-
-#define RESTART_DELAY 50000
+#define MAX_INCLUDE_DEPTH  16    /**< Max includes. */
+#define MOVE_DELTA         3     /**< Pixels before trigging a move. */
+#define RESTART_DELAY      50000 /**< us before restarting. */
+#define URGENCY_DELAY      500   /**< Flash timeout in ms for urgency. */
 
 #define SHELL_NAME "/bin/sh"
 

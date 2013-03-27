@@ -676,6 +676,8 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np)
          && (np->state.desktop == currentDesktop
          || (np->state.status & STAT_STICKY))) {
          fillColor = COLOR_PAGER_ACTIVE_FG;
+      } else if(np->state.status & STAT_FLASH) {
+         fillColor = COLOR_PAGER_ACTIVE_FG;
       } else {
          fillColor = COLOR_PAGER_FG;
       }

@@ -223,7 +223,7 @@ void Signal()
 
    GetMousePosition(&x, &y);
    for(cp = callbacks; cp; cp = cp->next) {
-      if(cp->freq > 0 || GetTimeDifference(&now, &cp->last) >= cp->freq) {
+      if(cp->freq == 0 || GetTimeDifference(&now, &cp->last) >= cp->freq) {
          cp->last = now;
          (cp->callback)(&now, x, y, cp->data);
       }
@@ -659,7 +659,7 @@ char HandlePropertyNotify(const XPropertyEvent *event)
          }
          ReadWMHints(np->window, &np->state, 1);
          if(np->state.status & STAT_URGENT) {
-            RegisterCallback(500, SignalUrgent, np);
+            RegisterCallback(URGENCY_DELAY, SignalUrgent, np);
          }
          break;
       case XA_WM_ICON_NAME:

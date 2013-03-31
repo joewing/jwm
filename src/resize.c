@@ -29,7 +29,8 @@ static void FixWidth(ClientNode *np);
 static void FixHeight(ClientNode *np);
 
 /** Callback to stop a resize. */
-void ResizeController(int wasDestroyed) {
+void ResizeController(int wasDestroyed)
+{
    if(settings.resizeMode == RESIZE_OUTLINE) {
       ClearOutline();
    }
@@ -41,7 +42,8 @@ void ResizeController(int wasDestroyed) {
 
 /** Resize a client window (mouse initiated). */
 void ResizeClient(ClientNode *np, BorderActionType action,
-                  int startx, int starty) {
+                  int startx, int starty)
+{
 
    XEvent event;
    int oldx, oldy;
@@ -213,20 +215,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
                      np->height + north + south);
                }
             } else {
-               JXMoveResizeWindow(display, np->window, west,
-                                  north, np->width, np->height);
-               if(np->state.status & STAT_SHADED) {
-                  JXMoveResizeWindow(display, np->parent,
-                                     np->x - west, np->y - north,
-                                     np->width + west + east, north + south);
-                  ResetBorder(np);
-               } else {
-                  JXMoveResizeWindow(display, np->parent,
-                                     np->x - west, np->y - north,
-                                     np->width + west + east,
-                                     np->height + north + south);
-                  ResetBorder(np);
-               }
+               ResetBorder(np);
                SendConfigureEvent(np);
             }
 
@@ -243,7 +232,8 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 }
 
 /** Resize a client window (keyboard or menu initiated). */
-void ResizeClientKeyboard(ClientNode *np) {
+void ResizeClientKeyboard(ClientNode *np)
+{
 
    XEvent event;
    int gwidth, gheight;
@@ -383,20 +373,7 @@ void ResizeClientKeyboard(ClientNode *np) {
                   np->height + north + south);
             }
          } else {
-            JXMoveResizeWindow(display, np->window, west,
-                               north, np->width, np->height);
-            if(np->state.status & STAT_SHADED) {
-               JXMoveResizeWindow(display, np->parent,
-                                  np->x - west, np->y - north,
-                                  np->width + west + east, north + south);
-               ResetBorder(np);
-            } else {
-               JXMoveResizeWindow(display, np->parent,
-                                  np->x - west, np->y - north,
-                                  np->width + west + east,
-                                  np->height + north + south);
-               ResetBorder(np);
-            }
+            ResetBorder(np);
             SendConfigureEvent(np);
          }
 
@@ -409,9 +386,8 @@ void ResizeClientKeyboard(ClientNode *np) {
 }
 
 /** Stop a resize action. */
-void StopResize(ClientNode *np) {
-
-   int north, south, east, west;
+void StopResize(ClientNode *np)
+{
 
    np->controller = NULL;
 
@@ -424,27 +400,14 @@ void StopResize(ClientNode *np) {
 
    DestroyResizeWindow();
 
-   GetBorderSize(&np->state, &north, &south, &east, &west);
-	  
-   if(np->state.status & STAT_SHADED) {
-      JXMoveResizeWindow(display, np->parent,
-                         np->x - west, np->y - north,
-                         np->width + east + west, north + south);
-   } else {
-      JXMoveResizeWindow(display, np->parent,
-                         np->x - west, np->y - north,
-                         np->width + east + west,
-                         np->height + north + south);
-   }
-   JXMoveResizeWindow(display, np->window, west,
-                      north, np->width, np->height);
    ResetBorder(np);
    SendConfigureEvent(np);
 
 }
 
 /** Fix the width to match the aspect ratio. */
-void FixWidth(ClientNode *np) {
+void FixWidth(ClientNode *np)
+{
 
    int ratio, minr, maxr;
 
@@ -470,7 +433,8 @@ void FixWidth(ClientNode *np) {
 }
 
 /** Fix the height to match the aspect ratio. */
-void FixHeight(ClientNode *np) {
+void FixHeight(ClientNode *np)
+{
 
    int ratio, minr, maxr;
 

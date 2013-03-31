@@ -173,13 +173,12 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
 void ResetBorder(const ClientNode *np)
 {
 #ifdef USE_SHAPE
-
    Pixmap shapePixmap;
    GC shapeGC;
+#endif
+
    int north, south, east, west;
    int width, height;
-
-   Assert(np);
 
    /* Determine the size of the window. */
    GetBorderSize(&np->state, &north, &south, &east, &west);
@@ -189,6 +188,16 @@ void ResetBorder(const ClientNode *np)
    } else {
       height = np->height + north + south;
    }
+
+   /** Set the window size. */
+   if(!(np->state.status & STAT_SHADED)) {
+      JXMoveResizeWindow(display, np->window, west, north,
+                         np->width, np->height);
+   }
+   JXMoveResizeWindow(display, np->parent, np->x - west, np->y - north,
+                      width, height);
+
+#ifdef USE_SHAPE
 
    /* First set the shape to the window border. */
    shapePixmap = JXCreatePixmap(display, np->parent, width, height, 1);
@@ -240,6 +249,7 @@ void ResetBorder(const ClientNode *np)
    JXFreePixmap(display, shapePixmap);
 
 #endif
+
 }
 
 /** Draw a client border. */

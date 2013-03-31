@@ -342,8 +342,6 @@ void MinimizeTransients(ClientNode *np)
 void ShadeClient(ClientNode *np)
 {
 
-   int north, south, east, west;
-
    Assert(np);
 
    if((np->state.status & STAT_SHADED) || !(np->state.border & BORDER_SHADE)) {
@@ -356,9 +354,6 @@ void ShadeClient(ClientNode *np)
    }
    np->state.status |= STAT_SHADED;
 
-   GetBorderSize(&np->state, &north, &south, &east, &west);
-   JXResizeWindow(display, np->parent, np->width + east + west, north);
-
    WriteState(np);
    ResetBorder(np);
    UpdatePager();
@@ -368,8 +363,6 @@ void ShadeClient(ClientNode *np)
 /** Unshade a client. */
 void UnshadeClient(ClientNode *np)
 {
-
-   int north, south, east, west;
 
    Assert(np);
 
@@ -382,11 +375,6 @@ void UnshadeClient(ClientNode *np)
       np->state.status |= STAT_MAPPED;
    }
    np->state.status &= ~STAT_SHADED;
-
-   GetBorderSize(&np->state, &north, &south, &east, &west);
-   JXResizeWindow(display, np->parent,
-                  np->width + west + east,
-                  np->height + north + south);
 
    WriteState(np);
    ResetBorder(np);
@@ -698,16 +686,8 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
       PlaceMaximizedClient(np, horiz, vert);
    }
 
-   JXMoveResizeWindow(display, np->parent,
-                      np->x - west, np->y - north,
-                      np->width + east + west,
-                      np->height + north + south);
-   JXMoveResizeWindow(display, np->window, west,
-                      north, np->width, np->height);
-   ResetBorder(np);
-   DrawBorder(np);
-
    WriteState(np);
+   ResetBorder(np);
    SendConfigureEvent(np);
    UpdatePager();
 
@@ -775,13 +755,6 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
       np->y = box.y;
       np->width = box.width;
       np->height = box.height;
-
-      JXMoveResizeWindow(display, np->parent,
-                         np->x - west, np->y - north,
-                         np->width + east + west,
-                         np->height + north + south);
-      JXMoveResizeWindow(display, np->window, west, north,
-                         np->width, np->height);
       ResetBorder(np);
 
    } else {
@@ -802,15 +775,6 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
          PlaceMaximizedClient(np, hmax, vmax);
       }
 
-      GetBorderSize(&np->state, &north, &south, &east, &west);
-
-      JXMoveResizeWindow(display, np->parent,
-                         np->x - west,
-                         np->y - north,
-                         np->width + east + west,
-                         np->height + north + south);
-      JXMoveResizeWindow(display, np->window,
-                         west, north, np->width, np->height);
       ResetBorder(np);
 
       event.type = MapRequest;

@@ -487,12 +487,9 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
 {
    XWindowChanges wc;
    ClientNode *np;
-   int north, south, east, west;
    char changed;
-   char handled;
 
-   handled = HandleDockConfigureRequest(event);
-   if(handled) {
+   if(HandleDockConfigureRequest(event)) {
       return;
    }
 
@@ -525,25 +522,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
          (np->controller)(0);
       }
 
-      GetBorderSize(&np->state, &north, &south, &east, &west);
-
-      wc.stack_mode = Above;
-      wc.sibling = np->parent;
-      wc.border_width = 0;
-
       ConstrainClient(np);
-
-      wc.x = np->x;
-      wc.y = np->y;
-      wc.width = np->width + east + west;
-      wc.height = np->height + north + south;
-      JXConfigureWindow(display, np->parent, event->value_mask, &wc);
-
-      wc.x = west;
-      wc.y = north;
-      wc.width = np->width;
-      wc.height = np->height;
-      JXConfigureWindow(display, np->window, event->value_mask, &wc);
       ResetBorder(np);
 
    } else {
@@ -682,30 +661,9 @@ char HandlePropertyNotify(const XPropertyEvent *event)
          } else if(event->atom == atoms[ATOM_NET_WM_STRUT]) {
             ReadClientStrut(np);
          } else if(event->atom == atoms[ATOM_MOTIF_WM_HINTS]) {
-
-            XWindowChanges wc;
-            int north, south, east, west;
-            long mask;
-
             UpdateState(np);
             WriteState(np);
-
-            mask = CWWidth | CWHeight | CWX | CWY;
-            GetBorderSize(&np->state, &north, &south, &east, &west);
-
-            wc.x = np->x;
-            wc.y = np->y;
-            wc.width = np->width + east + west;
-            wc.height = np->height + north + south;
-            JXConfigureWindow(display, np->parent, mask, &wc);
-
-            wc.x = west;
-            wc.y = north;
-            wc.width = np->width;
-            wc.height = np->height;
-            JXConfigureWindow(display, np->window, mask, &wc);
             ResetBorder(np);
-
          }
          break;
       }
@@ -892,16 +850,10 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
       Warning(_("Fullscreen state will be shaped!"));
    }
 
-   JXMoveResizeWindow(display, np->parent,
-                      np->x - west, np->y - north,
-                      np->width + east + west,
-                      np->height + north + south);
-   JXMoveResizeWindow(display, np->window, west, north,
-                      np->width, np->height);
-   ResetBorder(np);
-
    WriteState(np);
+   ResetBorder(np);
    SendConfigureEvent(np);
+   UpdatePager();
 
 }
 

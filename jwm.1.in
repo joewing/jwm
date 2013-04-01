@@ -716,6 +716,16 @@ Make windows in this group initially shaded.
 Make windows in this group sticky.
 .RE
 .P
+.B centered
+.RS
+Center windows in this group upon initial placement.
+.RE
+.P
+.B tiled
+.RS
+Tile windows in this group upon initial placement.
+.RE
+.P
 \fBopacity:\fP\fI#\fP
 .RS
 Set the opacity for windows in this group.

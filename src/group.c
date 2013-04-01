@@ -300,6 +300,12 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
       case OPTION_NOSHADE:
          np->state.border &= ~BORDER_SHADE;
          break;
+      case OPTION_CENTERED:
+         np->state.status |= STAT_CENTERED;
+         break;
+      case OPTION_TILED:
+         np->state.status |= STAT_TILED;
+         break;
       default:
          Debug("invalid option: %d", lp->option);
          break;

@@ -71,6 +71,8 @@ typedef unsigned int StatusFlags;
 #define STAT_TAKEFOCUS  (1 << 17)   /**< Client uses WM_TAKE_FOCUS. */
 #define STAT_URGENT     (1 << 18)   /**< Urgency hint is set. */
 #define STAT_FLASH      (1 << 19)   /**< Flash for urgency. */
+#define STAT_CENTERED   (1 << 20)   /**< Use centered window placement. */
+#define STAT_TILED      (1 << 21)   /**< Use tiled window placement. */
 
 /** Colormap window linked list. */
 typedef struct ColormapNode {

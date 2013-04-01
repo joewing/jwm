@@ -34,6 +34,8 @@ typedef unsigned char OptionType;
 #define OPTION_MAX_V       16    /**< Use vertical maximization. */
 #define OPTION_NOFOCUS     17    /**< Don't focus on map. */
 #define OPTION_NOSHADE     18    /**< Don't allow shading. */
+#define OPTION_CENTERED    19    /**< Centered placement. */
+#define OPTION_TILED       20    /**< Tiled placement. */
 
 void InitializeGroups();
 void StartupGroups();

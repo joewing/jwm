@@ -15,6 +15,7 @@
 #include "tray.h"
 #include "main.h"
 #include "settings.h"
+#include "clientlist.h"
 
 typedef struct Strut {
    ClientNode *client;
@@ -29,6 +30,13 @@ static Strut *strutsTail = NULL;
 /* desktopCount x screenCount */
 /* Note that we assume x and y are 0 based for all screens here. */
 static int *cascadeOffsets = NULL;
+
+static void CenterClient(const BoundingBox *box, ClientNode *np);
+static int IntComparator(const void *a, const void *b);
+static char TryTileClient(const BoundingBox *box, ClientNode *np,
+                          int x, int y);
+static void TileClient(const BoundingBox *box, ClientNode *np);
+static void CascadeClient(const BoundingBox *box, ClientNode *np);
 
 static void SubtractStrutBounds(BoundingBox *box);
 static void SubtractBounds(const BoundingBox *src, BoundingBox *dest);
@@ -374,20 +382,233 @@ void SubtractStrutBounds(BoundingBox *box)
 
 }
 
+/** Centered placement. */
+void CenterClient(const BoundingBox *box, ClientNode *np)
+{
+   np->x = box->x + (box->width / 2) - (np->width / 2);
+   np->y = box->y + (box->height / 2) - (np->height / 2);
+   ConstrainClient(np);
+}
+
+/** Compare two integers. */
+int IntComparator(const void *a, const void *b)
+{
+   const int ia = *(const long*)a;
+   const int ib = *(const long*)b;
+   return ia - ib;
+}
+
+/** Attempt to place the client at the specified coordinates. */
+char TryTileClient(const BoundingBox *box, ClientNode *np, int x, int y)
+{
+   const ClientNode *tp;
+   int layer;
+   int north, south, east, west;
+   int x1, x2, y1, y2;
+   int ox1, ox2, oy1, oy2;
+
+   /* Set the client position. */
+   GetBorderSize(&np->state, &north, &south, &east, &west);
+   np->x = x + west;
+   np->y = y + north;
+   ConstrainClient(np);
+
+   /* Get the client boundaries. */
+   x1 = np->x - west;
+   x2 = np->x + np->width + east;
+   y1 = np->y - north;
+   y2 = np->y + np->height + south;
+
+   /* Loop over each client. */
+   for(layer = np->state.layer; layer < LAYER_COUNT; layer++) {
+      for(tp = nodes[layer]; tp; tp = tp->next) {
+
+         /* Skip clients that aren't visible. */
+         if(tp->state.desktop != currentDesktop) {
+            if(!(tp->state.status & STAT_STICKY)) {
+               continue;
+            }
+         }
+         if(!(tp->state.status & STAT_MAPPED)) {
+            continue;
+         }
+         if(tp == np) {
+            continue;
+         }
+
+         /* Get the boundaries of the other client. */
+         GetBorderSize(&tp->state, &north, &south, &east, &west);
+         ox1 = tp->x - west;
+         ox2 = tp->x + tp->width + east;
+         oy1 = tp->y - north;
+         oy2 = tp->y + tp->height + south;
+
+         /* Check for an overlap. */
+         if(x2 <= ox1 || x1 >= ox2) {
+            continue;
+         }
+         if(y2 <= oy1 || y1 >= oy2) {
+            continue;
+         }
+         return 0;
+
+      }
+   }
+
+   /* No client overlaps this position. */
+   return 1;
+
+}
+
+/** Tiled placement. */
+void TileClient(const BoundingBox *box, ClientNode *np)
+{
+
+   const ClientNode *tp;
+   int layer;
+   int north, south, east, west;
+   int i, j;
+   int count;
+   int *xs;
+   int *ys;
+
+   /* Determine how much space to allocate. */
+   count = 1;
+   for(layer = np->state.layer; layer < LAYER_COUNT; layer++) {
+      for(tp = nodes[layer]; tp; tp = tp->next) {
+         if(tp->state.desktop != currentDesktop) {
+            if(!(tp->state.status & STAT_STICKY)) {
+               continue;
+            }
+         }
+         if(!(tp->state.status & STAT_MAPPED)) {
+            continue;
+         }
+         if(tp == np) {
+            continue;
+         }
+         count += 2;
+      }
+   }
+
+   /* Allocate space for the points. */
+   xs = AllocateStack(sizeof(int) * count);
+   ys = AllocateStack(sizeof(int) * count);
+
+   /* Insert points. */
+   xs[0] = box->x;
+   ys[0] = box->y;
+   count = 1;
+   for(layer = np->state.layer; layer < LAYER_COUNT; layer++) {
+      for(tp = nodes[layer]; tp; tp = tp->next) {
+         if(tp->state.desktop != currentDesktop) {
+            if(!(tp->state.status & STAT_STICKY)) {
+               continue;
+            }
+         }
+         if(!(tp->state.status & STAT_MAPPED)) {
+            continue;
+         }
+         if(tp == np) {
+            continue;
+         }
+         GetBorderSize(&tp->state, &north, &south, &east, &west);
+         xs[count + 0] = tp->x - west;
+         xs[count + 1] = tp->x + tp->width + east;
+         ys[count + 0] = tp->y - north;
+         ys[count + 1] = tp->y + tp->height + south;
+         count += 2;
+      }
+   }
+
+   /* Sort the points. */
+   qsort(xs, count, sizeof(int), IntComparator);
+   qsort(ys, count, sizeof(int), IntComparator);
+
+   /* Try all possible positions. */
+   for(i = 0; i < count; i++) {
+      for(j = 0; j < count; j++) {
+         if(TryTileClient(box, np, xs[i], ys[j])) {
+            ReleaseStack(xs);
+            ReleaseStack(ys);
+            return;
+         }
+      }
+   }
+
+   ReleaseStack(xs);
+   ReleaseStack(ys);
+
+   /* If we got here, tiled placement failed.
+    * Fall back to cascade.
+    */
+   CascadeClient(box, np);
+
+}
+
+/** Cascade placement. */
+void CascadeClient(const BoundingBox *box, ClientNode *np)
+{
+
+   const ScreenType *sp;
+   int north, south, east, west;
+   int cascadeIndex;
+   char overflow;
+
+   GetBorderSize(&np->state, &north, &south, &east, &west);
+   sp = GetMouseScreen();
+   cascadeIndex = sp->index * settings.desktopCount + currentDesktop;
+
+   /* Set the cascaded location. */
+   np->x = box->x + west + cascadeOffsets[cascadeIndex];
+   np->y = box->y + north + cascadeOffsets[cascadeIndex];
+   cascadeOffsets[cascadeIndex] += settings.borderWidth
+                                 + settings.titleHeight;
+
+   /* Check for cascade overflow. */
+   overflow = 0;
+   if(np->x + np->width - box->x > box->width) {
+      overflow = 1;
+   } else if(np->y + np->height - box->y > box->height) {
+      overflow = 1;
+   }
+
+   if(overflow) {
+
+      cascadeOffsets[cascadeIndex] = settings.borderWidth
+                                   + settings.titleHeight;
+      np->x = box->x + west + cascadeOffsets[cascadeIndex];
+      np->y = box->y + north + cascadeOffsets[cascadeIndex];
+
+      /* Check for client overflow. */
+      overflow = 0;
+      if(np->x + np->width - box->x > box->width) {
+         overflow = 1;
+      } else if(np->y + np->height - box->y > box->height) {
+         overflow = 1;
+      }
+
+      /* Update cascade position or position client. */
+      if(overflow) {
+         np->x = box->x + west;
+         np->y = box->y + north;
+      } else {
+         cascadeOffsets[cascadeIndex] += settings.borderWidth
+                                       + settings.titleHeight;
+      }
+
+   }
+
+}
+
 /** Place a client on the screen. */
 void PlaceClient(ClientNode *np, char alreadyMapped)
 {
 
    BoundingBox box;
-   int north, south, east, west;
    const ScreenType *sp;
-   int cascadeIndex;
-   char overflow;
 
    Assert(np);
-
-   GetBorderSize(&np->state, &north, &south, &east, &west);
-   sp = GetMouseScreen();
 
    if(alreadyMapped || (!(np->state.status & STAT_PIGNORE)
                         && (np->sizeFlags & (PPosition | USPosition)))) {
@@ -397,50 +618,17 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
 
    } else {
 
+      sp = GetMouseScreen();
       GetScreenBounds(sp, &box);
       SubtractTrayBounds(GetTrays(), &box, np->state.layer);
       SubtractStrutBounds(&box);
 
-      cascadeIndex = sp->index * settings.desktopCount + currentDesktop;
-
-      /* Set the cascaded location. */
-      np->x = box.x + west + cascadeOffsets[cascadeIndex];
-      np->y = box.y + north + cascadeOffsets[cascadeIndex];
-      cascadeOffsets[cascadeIndex] += settings.borderWidth
-                                    + settings.titleHeight;
-
-      /* Check for cascade overflow. */
-      overflow = 0;
-      if(np->x + np->width - box.x > box.width) {
-         overflow = 1;
-      } else if(np->y + np->height - box.y > box.height) {
-         overflow = 1;
-      }
-
-      if(overflow) {
-
-         cascadeOffsets[cascadeIndex] = settings.borderWidth
-                                      + settings.titleHeight;
-         np->x = box.x + west + cascadeOffsets[cascadeIndex];
-         np->y = box.y + north + cascadeOffsets[cascadeIndex];
-
-         /* Check for client overflow. */
-         overflow = 0;
-         if(np->x + np->width - box.x > box.width) {
-            overflow = 1;
-         } else if(np->y + np->height - box.y > box.height) {
-            overflow = 1;
-         }
-
-         /* Update cascade position or position client. */
-         if(overflow) {
-            np->x = box.x + west;
-            np->y = box.y + north;
-         } else {
-            cascadeOffsets[cascadeIndex] += settings.borderWidth
-                                          + settings.titleHeight;
-         }
-
+      if(np->state.status & STAT_CENTERED) {
+         CenterClient(&box, np);
+      } else if(np->state.status & STAT_TILED) {
+         TileClient(&box, np);
+      } else {
+         CascadeClient(&box, np);
       }
 
    }

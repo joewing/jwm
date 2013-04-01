@@ -35,7 +35,7 @@ static void CenterClient(const BoundingBox *box, ClientNode *np);
 static int IntComparator(const void *a, const void *b);
 static char TryTileClient(const BoundingBox *box, ClientNode *np,
                           int x, int y);
-static void TileClient(const BoundingBox *box, ClientNode *np);
+static char TileClient(const BoundingBox *box, ClientNode *np);
 static void CascadeClient(const BoundingBox *box, ClientNode *np);
 
 static void SubtractStrutBounds(BoundingBox *box);
@@ -461,7 +461,7 @@ char TryTileClient(const BoundingBox *box, ClientNode *np, int x, int y)
 }
 
 /** Tiled placement. */
-void TileClient(const BoundingBox *box, ClientNode *np)
+char TileClient(const BoundingBox *box, ClientNode *np)
 {
 
    const ClientNode *tp;
@@ -531,7 +531,7 @@ void TileClient(const BoundingBox *box, ClientNode *np)
          if(TryTileClient(box, np, xs[i], ys[j])) {
             ReleaseStack(xs);
             ReleaseStack(ys);
-            return;
+            return 1;
          }
       }
    }
@@ -539,10 +539,8 @@ void TileClient(const BoundingBox *box, ClientNode *np)
    ReleaseStack(xs);
    ReleaseStack(ys);
 
-   /* If we got here, tiled placement failed.
-    * Fall back to cascade.
-    */
-   CascadeClient(box, np);
+   /* Tiled placement failed. */
+   return 0;
 
 }
 
@@ -623,10 +621,16 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
       SubtractTrayBounds(GetTrays(), &box, np->state.layer);
       SubtractStrutBounds(&box);
 
+      /* If tiled is specified, first attempt to use tiled placement. */
+      if(np->state.status & STAT_TILED) {
+         if(TileClient(&box, np)) {
+            return;
+         }
+      }
+
+      /* Either tiled placement failed or was not specified. */
       if(np->state.status & STAT_CENTERED) {
          CenterClient(&box, np);
-      } else if(np->state.status & STAT_TILED) {
-         TileClient(&box, np);
       } else {
          CascadeClient(&box, np);
       }

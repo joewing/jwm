@@ -487,6 +487,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
 {
    XWindowChanges wc;
    ClientNode *np;
+   int north, south, east, west;
    char changed;
 
    if(HandleDockConfigureRequest(event)) {
@@ -496,6 +497,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
    np = FindClientByWindow(event->window);
    if(np) {
 
+      GetBorderSize(&np->state, &north, &south, &east, &west);
       changed = 0;
       if((event->value_mask & CWWidth) && (event->width != np->width)) {
          np->width = event->width;
@@ -505,12 +507,12 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
          np->height = event->height;
          changed = 1;
       }
-      if((event->value_mask & CWX) && (event->x != np->x)) {
-         np->x = event->x;
+      if((event->value_mask & CWX) && (event->x + west != np->x)) {
+         np->x = event->x + west;
          changed = 1;
       }
-      if((event->value_mask & CWY) && (event->y != np->y)) {
-         np->y = event->y;
+      if((event->value_mask & CWY) && (event->y + north != np->y)) {
+         np->y = event->y + north;
          changed = 1;
       }
 
@@ -809,7 +811,6 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
    long x, y;
    long width, height;
    int deltax, deltay;
-   int north, south, east, west;
 
    Assert(event);
    Assert(np);
@@ -834,7 +835,6 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
       height = event->data.l[4];
    }
 
-   GetBorderSize(&np->state, &north, &south, &east, &west);
    GetGravityDelta(np, &deltax, &deltay);
 
    x -= deltax;

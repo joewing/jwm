@@ -1151,10 +1151,8 @@ void HandleUnmapNotify(const XUnmapEvent *event)
       if(np->state.status & STAT_MAPPED) {
 
          np->state.status &= ~STAT_MAPPED;
-
          JXUnmapWindow(display, np->parent);
          WriteState(np);
-
          UpdateTaskBar();
          UpdatePager();
 
@@ -1327,6 +1325,11 @@ void UpdateState(ClientNode *np)
    /* Read the state (and new layer). */
    alreadyMapped = (np->state.status & STAT_MAPPED) ? 1 : 0;
    np->state = ReadWindowState(np->window, alreadyMapped);
+
+   /* We don't handle mapping the window, so restore its mapped state. */
+   if(!alreadyMapped) {
+      np->state.status &= ~STAT_MAPPED;
+   }
 
    /* Add to the layer list. */
    np->prev = NULL;

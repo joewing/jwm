@@ -136,7 +136,7 @@ void InitializeMenu(Menu *menu)
          np->icon = &emptyIcon;
       }
       if(np->submenu) {
-         hasSubmenu = 7;
+         hasSubmenu = (menu->itemHeight + 3) / 4;
          InitializeMenu(np->submenu);
       }
    }
@@ -645,7 +645,7 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
 
          JXSetForeground(display, rootGC, colors[fg]);
          for(i = 0; i <= asize; i++) {
-            const int x = menu->width - 3 * asize + i;
+            const int x = menu->width - 2 * asize + i - 1;
             const int y1 = y - asize + i;
             const int y2 = y + asize - i;
             JXDrawLine(display, menu->window, rootGC, x, y1, x, y2);

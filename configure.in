@@ -89,10 +89,13 @@ AC_CHECK_FUNCS([unsetenv putenv setlocale])
 AC_DEFUN([JWM_PKGCONFIG_EXISTS],
 [
    AC_MSG_CHECKING([for pkg-config])
-   if test -x "$(which pkg-config)" ; then
-      PKGCONFIG="pkg-config"
+   if which pkg-config >/dev/null ; then
+      PKGCONFIG=pkg-config
+      AC_MSG_RESULT($PKGCONFIG)
+   else
+      PKGCONFIG=""
+      AC_MSG_RESULT([no])
    fi
-   AC_MSG_RESULT($PKGCONFIG)
 ])
 
 AC_DEFUN([JWM_PKGCONFIG],
@@ -100,7 +103,7 @@ AC_DEFUN([JWM_PKGCONFIG],
    AC_REQUIRE([JWM_PKGCONFIG_EXISTS])
    if test "x$PKGCONFIG" != "x" ; then
       AC_MSG_CHECKING([if pkg-config knows about $2])
-      if test `$PKGCONFIG $2 ; echo $?` -eq 0 ; then
+      if `$PKGCONFIG $2` ; then
          $1="yes"
       else
          $1="no"
@@ -156,7 +159,7 @@ if test "$enable_png" != "no" ; then
    if test "$use_pkgconfig_png" = "yes" ; then
       PNG_CFLAGS=`$PKGCONFIG --cflags libpng`
       PNG_LDFLAGS=`$PKGCONFIG --libs libpng`
-   elif test -x "$(which libpng-config)" ; then
+   elif which libpng-config >/dev/null ; then
       PNG_CFLAGS=`libpng-config --cflags`
       PNG_LDFLAGS=`libpng-config --libs`
    else
@@ -185,7 +188,7 @@ if test "$enable_cairo" != "no" ; then
    if test "$use_pkgconfig_cairo" = "yes" ; then
       CAIRO_CFLAGS=`$PKGCONFIG --cflags cairo`
       CAIRO_LDFLAGS=`$PKGCONFIG --libs cairo`
-   elif test -x "$(which cairo-config)" ; then
+   elif which cairo-config >/dev/null ; then
       CAIRO_CFLAGS=`cairo-config --cflags`
       CAIRO_LDFLAGS=`cairo-config --libs`
    else
@@ -278,7 +281,7 @@ if test "$enable_xft" != "no"; then
    if test "$use_pkgconfig_xft" = "yes" ; then
       XFT_CFLAGS=`$PKGCONFIG --cflags xft`
       XFT_LDFLAGS=`$PKGCONFIG --libs xft`
-   elif test -x "$(which xft-config)" ; then
+   elif which xft-config >/dev/null ; then
       XFT_CFLAGS=`xft-config --cflags`
       XFT_LDFLAGS=`xft-config --libs`
    else
@@ -297,10 +300,9 @@ if test "$enable_xft" != "no" ; then
       [ $XFT_LDFLAGS ])
 fi
 if test "$enable_xft" != "no" ; then
-   AC_CHECK_HEADERS([ft2build.h], [], [],
-[
+   AC_CHECK_HEADER([ft2build.h], [], [], [
 #include <X11/Xlib.h>
-])
+      ])
 fi
 
 ############################################################################
@@ -348,7 +350,7 @@ if test "$enable_fribidi" != "no" ; then
    if test "$use_pkgconfig_fribidi" = "yes" ; then
       FRIBIDI_CFLAGS=`$PKGCONFIG --cflags fribidi`
       FRIBIDI_LDFLAGS=`$PKGCONFIG --libs fribidi`
-   elif test -x "$(which fribidi-config)" ; then
+   elif which fribidi-config >/dev/null ; then
       FRIBIDI_CFLAGS=`fribidi-config --cflags`
       FRIBIDI_LDFLAGS=`fribidi-config --libs`
    else

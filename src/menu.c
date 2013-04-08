@@ -641,15 +641,17 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
 
          const int asize = (menu->itemHeight + 7) / 8;
          const int y = menu->offsets[index] + (menu->itemHeight + 1) / 2;
+         int x = menu->width - 2 * asize - 1;
          int i;
 
          JXSetForeground(display, rootGC, colors[fg]);
-         for(i = 0; i <= asize; i++) {
-            const int x = menu->width - 2 * asize + i - 1;
+         for(i = 0; i < asize; i++) {
             const int y1 = y - asize + i;
             const int y2 = y + asize - i;
             JXDrawLine(display, menu->window, rootGC, x, y1, x, y2);
+            x += 1;
          }
+         JXDrawPoint(display, menu->window, rootGC, x, y);
 
       }
 

@@ -33,6 +33,18 @@
 #include "spacer.h"
 #include "desktop.h"
 
+/* Save some space by reusing parts of strings. */
+static const char NOBORDER_STRING[] = "noborder";
+#define BORDER_STRING (&NOBORDER_STRING[2])
+static const char NOTITLE_STRING[]  = "notitle";
+#define TITLE_STRING (&NOTITLE_STRING[2])
+static const char MAX_WIDTH_STRING[] = "maxwidth";
+#define WIDTH_STRING (&MAX_WIDTH_STRING[3])
+static const char NOSHADE_STRING[] = "noshade";
+#define SHADE_STRING (&NOSHADE_STRING[2])
+static const char FULLSCREEN_STRING[] = "fullscreen";
+#define SCREEN_STRING (&FULLSCREEN_STRING[4])
+
 /** Structure to map key names to key types. */
 typedef struct KeyMapType {
    const char *name;
@@ -41,35 +53,35 @@ typedef struct KeyMapType {
 
 /** Mapping of key names to key types. */
 static const KeyMapType KEY_MAP[] = {
-   { "up",          KEY_UP           },
-   { "down",        KEY_DOWN         },
-   { "right",       KEY_RIGHT        },
-   { "left",        KEY_LEFT         },
-   { "escape",      KEY_ESC          },
-   { "select",      KEY_ENTER        },
-   { "next",        KEY_NEXT         },
-   { "nextstacked", KEY_NEXTSTACK    },
-   { "prev",        KEY_PREV         },
-   { "prevstacked", KEY_PREVSTACK    },
-   { "close",       KEY_CLOSE        },
-   { "minimize",    KEY_MIN          },
-   { "maximize",    KEY_MAX          },
-   { "shade",       KEY_SHADE        },
-   { "stick",       KEY_STICK        },
-   { "move",        KEY_MOVE         },
-   { "resize",      KEY_RESIZE       },
-   { "window",      KEY_WIN          },
-   { "restart",     KEY_RESTART      },
-   { "exit",        KEY_EXIT         },
-   { "desktop#",    KEY_DESKTOP      },
-   { "rdesktop",    KEY_RDESKTOP     },
-   { "ldesktop",    KEY_LDESKTOP     },
-   { "udesktop",    KEY_UDESKTOP     },
-   { "ddesktop",    KEY_DDESKTOP     },
-   { "showdesktop", KEY_SHOWDESK     },
-   { "showtray",    KEY_SHOWTRAY     },
-   { "fullscreen",  KEY_FULLSCREEN   },
-   { NULL,          KEY_NONE         }
+   { "up",                    KEY_UP           },
+   { "down",                  KEY_DOWN         },
+   { "right",                 KEY_RIGHT        },
+   { "left",                  KEY_LEFT         },
+   { "escape",                KEY_ESC          },
+   { "select",                KEY_ENTER        },
+   { "next",                  KEY_NEXT         },
+   { "nextstacked",           KEY_NEXTSTACK    },
+   { "prev",                  KEY_PREV         },
+   { "prevstacked",           KEY_PREVSTACK    },
+   { "close",                 KEY_CLOSE        },
+   { "minimize",              KEY_MIN          },
+   { "maximize",              KEY_MAX          },
+   { &SHADE_STRING[0],        KEY_SHADE        },
+   { "stick",                 KEY_STICK        },
+   { "move",                  KEY_MOVE         },
+   { "resize",                KEY_RESIZE       },
+   { "window",                KEY_WIN          },
+   { "restart",               KEY_RESTART      },
+   { "exit",                  KEY_EXIT         },
+   { "desktop#",              KEY_DESKTOP      },
+   { "rdesktop",              KEY_RDESKTOP     },
+   { "ldesktop",              KEY_LDESKTOP     },
+   { "udesktop",              KEY_UDESKTOP     },
+   { "ddesktop",              KEY_DDESKTOP     },
+   { "showdesktop",           KEY_SHOWDESK     },
+   { "showtray",              KEY_SHOWTRAY     },
+   { &FULLSCREEN_STRING[0],   KEY_FULLSCREEN   },
+   { NULL,                    KEY_NONE         }
 };
 
 /** Structure to map names to group options. */
@@ -80,22 +92,22 @@ typedef struct OptionMapType {
 
 /** Mapping of names to group options. */
 static const OptionMapType OPTION_MAP[] = {
-   { "sticky",       OPTION_STICKY        },
-   { "nolist",       OPTION_NOLIST        },
-   { "border",       OPTION_BORDER        },
-   { "noborder",     OPTION_NOBORDER      },
-   { "title",        OPTION_TITLE         },
-   { "notitle",      OPTION_NOTITLE       },
-   { "pignore",      OPTION_PIGNORE       },
-   { "maximized",    OPTION_MAXIMIZED     },
-   { "minimized",    OPTION_MINIMIZED     },
-   { "hmax",         OPTION_MAX_H         },
-   { "vmax",         OPTION_MAX_V         },
-   { "nofocus",      OPTION_NOFOCUS       },
-   { "noshade",      OPTION_NOSHADE       },
-   { "centered",     OPTION_CENTERED      },
-   { "tiled",        OPTION_TILED         },
-   { NULL,           OPTION_INVALID       }
+   { "sticky",             OPTION_STICKY        },
+   { "nolist",             OPTION_NOLIST        },
+   { &BORDER_STRING[0],    OPTION_BORDER        },
+   { &NOBORDER_STRING[0],  OPTION_NOBORDER      },
+   { &TITLE_STRING[0],     OPTION_TITLE         },
+   { &NOTITLE_STRING[0],   OPTION_NOTITLE       },
+   { "pignore",            OPTION_PIGNORE       },
+   { "maximized",          OPTION_MAXIMIZED     },
+   { "minimized",          OPTION_MINIMIZED     },
+   { "hmax",               OPTION_MAX_H         },
+   { "vmax",               OPTION_MAX_V         },
+   { "nofocus",            OPTION_NOFOCUS       },
+   { &NOSHADE_STRING[0],   OPTION_NOSHADE       },
+   { "centered",           OPTION_CENTERED      },
+   { "tiled",              OPTION_TILED         },
+   { NULL,                 OPTION_INVALID       }
 };
 
 static const char *DEFAULT_TITLE = "JWM";
@@ -109,13 +121,13 @@ static const char *LAYOUT_ATTRIBUTE = "layout";
 static const char *AUTOHIDE_ATTRIBUTE = "autohide";
 static const char *X_ATTRIBUTE = "x";
 static const char *Y_ATTRIBUTE = "y";
-static const char *WIDTH_ATTRIBUTE = "width";
+static const char *WIDTH_ATTRIBUTE = &WIDTH_STRING[0];
 static const char *HEIGHT_ATTRIBUTE = "height";
 static const char *NAME_ATTRIBUTE = "name";
-static const char *BORDER_ATTRIBUTE = "border";
+static const char *BORDER_ATTRIBUTE = BORDER_STRING;
 static const char *DISTANCE_ATTRIBUTE = "distance";
 static const char *INSERT_ATTRIBUTE = "insert";
-static const char *MAX_WIDTH_ATTRIBUTE = "maxwidth";
+static const char *MAX_WIDTH_ATTRIBUTE = &MAX_WIDTH_STRING[0];
 static const char *FORMAT_ATTRIBUTE = "format";
 static const char *ZONE_ATTRIBUTE = "zone";
 static const char *VALIGN_ATTRIBUTE = "valign";
@@ -144,9 +156,9 @@ static void ParseDesktopBackground(int desktop, const TokenNode *tp);
 /* Menus. */
 static void ParseRootMenu(const TokenNode *start);
 static MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
-   MenuItem *last);
+                               MenuItem *last);
 static MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
-   MenuItem *last);
+                                  MenuItem *last);
 static MenuItem *InsertMenuItem(MenuItem *last);
 
 /* Tray. */
@@ -162,7 +174,8 @@ static void ParseSpacer(const TokenNode *tp, TrayType *tray);
 /* Groups. */
 static void ParseGroup(const TokenNode *tp);
 static void ParseGroupOption(const TokenNode *tp,
-   struct GroupType *group, const char *option);
+                             struct GroupType *group,
+                             const char *option);
 
 /* Style. */
 static void ParseWindowStyle(const TokenNode *start);
@@ -422,9 +435,9 @@ void ParseSnapMode(const TokenNode *tp) {
    if(JLIKELY(tp->value)) {
       if(!strcmp(tp->value, "none")) {
          settings.snapMode = SNAP_NONE;
-      } else if(!strcmp(tp->value, "screen")) {
+      } else if(!strcmp(tp->value, SCREEN_STRING)) {
          settings.snapMode = SNAP_SCREEN;
-      } else if(!strcmp(tp->value, "border")) {
+      } else if(!strcmp(tp->value, BORDER_STRING)) {
          settings.snapMode = SNAP_BORDER;
       } else {
          ParseError(tp, "invalid snap mode: %s", tp->value);
@@ -1873,7 +1886,7 @@ StatusWindowType ParseStatusWindowType(const TokenNode *tp, const char *str)
 {
    if(!strcmp(str, "off")) {
       return SW_OFF;
-   } else if(!strcmp(str, "screen")) {
+   } else if(!strcmp(str, SCREEN_STRING)) {
       return SW_SCREEN;
    } else if(!strcmp(str, "window")) {
       return SW_WINDOW;

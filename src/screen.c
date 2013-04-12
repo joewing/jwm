@@ -16,14 +16,8 @@
 #include "main.h"
 #include "cursor.h"
 
-static ScreenType *screens;
+static ScreenType *screens = NULL;
 static int screenCount;
-
-/** Initialize screen data. */
-void InitializeScreens()
-{
-   screens = NULL;
-}
 
 /** Startup screens. */
 void StartupScreens()
@@ -80,11 +74,6 @@ void ShutdownScreens()
       Release(screens);
       screens = NULL;
    }
-}
-
-/** Destroy screen data. */
-void DestroyScreens()
-{
 }
 
 /** Get the screen given global screen coordinates. */

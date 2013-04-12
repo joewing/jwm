@@ -44,7 +44,7 @@ typedef struct PagerType {
 
 } PagerType;
 
-static PagerType *pagers;
+static PagerType *pagers = NULL;
 
 static char shouldStopMove;
 
@@ -71,17 +71,6 @@ static void DrawPagerClient(const PagerType *pp, const ClientNode *np);
 
 static void SignalPager(const TimeType *now, int x, int y, void *data);
 
-
-/** Initialize pager data. */
-void InitializePager()
-{
-   pagers = NULL;
-}
-
-/** Startup the pager. */
-void StartupPager()
-{
-}
 
 /** Shutdown the pager. */
 void ShutdownPager()

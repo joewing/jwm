@@ -76,8 +76,8 @@ extern Settings settings;
 /*@{*/
 void InitializeSettings();
 void StartupSettings();
-void ShutdownSettings();
-void DestroySettings();
+#define ShutdownSettings()    (void)(0)
+#define DestroySettings()     (void)(0)
 /*@}*/
 
 /** Update a string setting. */

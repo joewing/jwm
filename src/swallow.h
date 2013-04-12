@@ -11,9 +11,9 @@
 #define SWALLOW_H
 
 /*@{*/
-void InitializeSwallow();
+#define InitializeSwallow()   (void)(0)
 void StartupSwallow();
-void ShutdownSwallow();
+#define ShutdownSwallow()     (void)(0)
 void DestroySwallow();
 /*@}*/
 

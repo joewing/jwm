@@ -23,10 +23,10 @@ typedef struct BoundingBox {
 } BoundingBox;
 
 /*@{*/
-void InitializePlacement();
+#define InitializePlacement() (void)(0)
 void StartupPlacement();
 void ShutdownPlacement();
-void DestroyPlacement();
+#define DestroyPlacement()    (void)(0)
 /*@}*/
 
 /** Remove struts associated with a client.

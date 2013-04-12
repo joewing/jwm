@@ -135,10 +135,12 @@ typedef struct ClientState {
 
 extern Atom atoms[ATOM_COUNT];
 
-void InitializeHints();
+/*@{*/
+#define InitializeHints()  (void)(0)
 void StartupHints();
-void ShutdownHints();
-void DestroyHints();
+#define ShutdownHints()    (void)(0)
+#define DestroyHints()     (void)(0)
+/*@}*/
 
 /** Determine the current desktop. */
 void ReadCurrentDesktop();

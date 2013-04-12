@@ -152,11 +152,6 @@ static void WriteNetAllowed(ClientNode *np);
 static void ReadWMState(Window win, ClientState *state);
 static void ReadMotifHints(Window win, ClientState *state);
 
-/** Initialize hints data. */
-void InitializeHints()
-{
-}
-
 /** Set root hints and intern atoms. */
 void StartupHints()
 {
@@ -250,16 +245,6 @@ void StartupHints()
 
    ReleaseStack(data);
 
-}
-
-/** Shutdown hints. */
-void ShutdownHints()
-{
-}
-
-/** Destroy hints data. */
-void DestroyHints()
-{
 }
 
 /** Determine the current desktop. */

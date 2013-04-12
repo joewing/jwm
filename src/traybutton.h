@@ -14,9 +14,9 @@ struct TrayComponentType;
 struct TimeType;
 
 /*@{*/
-void InitializeTrayButtons();
+#define InitializeTrayButtons()  (void)(0)
 void StartupTrayButtons();
-void ShutdownTrayButtons();
+#define ShutdownTrayButtons()    (void)(0)
 void DestroyTrayButtons();
 /*@}*/
 

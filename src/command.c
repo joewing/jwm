@@ -19,21 +19,13 @@ typedef struct CommandNode {
    struct CommandNode *next;  /**< The next command in the list. */
 } CommandNode;
 
-static CommandNode *startupCommands;
-static CommandNode *shutdownCommands;
-static CommandNode *restartCommands;
+static CommandNode *startupCommands = NULL;
+static CommandNode *shutdownCommands = NULL;
+static CommandNode *restartCommands = NULL;
 
 static void RunCommands(CommandNode *commands);
 static void ReleaseCommands(CommandNode **commands);
 static void AddCommand(CommandNode **commands, const char *command);
-
-/** Initialize the command lists. */
-void InitializeCommands()
-{
-   startupCommands = NULL;
-   shutdownCommands = NULL;
-   restartCommands = NULL;
-}
 
 /** Process startup/restart commands. */
 void StartupCommands()

@@ -15,7 +15,7 @@ struct TrayComponentType;
 /*@{*/
 void InitializeClock();
 void StartupClock();
-void ShutdownClock();
+#define ShutdownClock() (void)(0)
 void DestroyClock();
 /*@}*/
 

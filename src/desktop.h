@@ -15,9 +15,9 @@ struct MenuType;
 extern char showingDesktop;
 
 /*@{*/
-void InitializeDesktops();
+#define InitializeDesktops()  (void)(0)
 void StartupDesktops();
-void ShutdownDesktops();
+#define ShutdownDesktops()    (void)(0)
 void DestroyDesktops();
 /*@}*/
 

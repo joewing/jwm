@@ -13,10 +13,10 @@
 #include "border.h"
 
 /*@{*/
-void InitializeCursors();
+#define InitializeCursors()   (void)(0)
 void StartupCursors();
 void ShutdownCursors();
-void DestroyCursors();
+#define DestroyCursors()      (void)(0)
 /*@}*/
 
 /** Grab the mouse for resizing a window.

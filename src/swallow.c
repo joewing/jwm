@@ -32,16 +32,10 @@ typedef struct SwallowNode {
 
 } SwallowNode;
 
-static SwallowNode *swallowNodes;
+static SwallowNode *swallowNodes = NULL;
 
 static void Destroy(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
-
-/** Initialize swallow data. */
-void InitializeSwallow()
-{
-   swallowNodes = NULL;
-}
 
 /** Start swallow processing. */
 void StartupSwallow()
@@ -52,11 +46,6 @@ void StartupSwallow()
          RunCommand(np->command);
       }
    }
-}
-
-/** Stop swallow processing. */
-void ShutdownSwallow()
-{
 }
 
 /** Destroy swallow data. */

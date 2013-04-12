@@ -67,16 +67,6 @@ static char HandleDialogButtonPress(const XButtonEvent *event);
 static char HandleDialogButtonRelease(const XButtonEvent *event);
 static char HandleDialogKeyPress(const XKeyEvent *event);
 
-/** Initialize the dialog processing data. */
-void InitializeDialogs()
-{
-}
-
-/** Startup dialog processing. */
-void StartupDialogs()
-{
-}
-
 /** Stop dialog processing. */
 void ShutdownDialogs()
 {
@@ -84,11 +74,6 @@ void ShutdownDialogs()
       DestroyConfirmDialog();
       dialog = NULL;
    }
-}
-
-/** Destroy dialog processing data. */
-void DestroyDialogs()
-{
 }
 
 /** Handle an event on a dialog window. */

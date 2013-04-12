@@ -41,11 +41,6 @@ static void CascadeClient(const BoundingBox *box, ClientNode *np);
 static void SubtractStrutBounds(BoundingBox *box);
 static void SubtractBounds(const BoundingBox *src, BoundingBox *dest);
 
-/** Initialize placement data. */
-void InitializePlacement()
-{
-}
-
 /** Startup placement. */
 void StartupPlacement()
 {
@@ -77,11 +72,6 @@ void ShutdownPlacement()
    }
    strutsTail = NULL;
 
-}
-
-/** Destroy placement data. */
-void DestroyPlacement()
-{
 }
 
 /** Remove struts associated with a client. */

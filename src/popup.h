@@ -11,10 +11,10 @@
 #define POPUP_H
 
 /*@{*/
-void InitializePopup();
+#define InitializePopup()  (void)(0)
 void StartupPopup();
 void ShutdownPopup();
-void DestroyPopup();
+#define DestroyPopup()     (void)(0)
 /*@}*/
 
 /** Show a popup window.

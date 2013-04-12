@@ -114,11 +114,6 @@ static void InitializeNames();
 static void LightenColor(ColorType oldColor, ColorType newColor);
 static void DarkenColor(ColorType oldColor, ColorType newColor);
 
-/** Initialize color data. */
-void InitializeColors()
-{
-}
-
 /** Startup color support. */
 void StartupColors()
 {

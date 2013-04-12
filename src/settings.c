@@ -67,16 +67,6 @@ void StartupSettings()
 
 }
 
-/** Prepare to destroy settings. */
-void ShutdownSettings()
-{
-}
-
-/** Free memory associated with settings. */
-void DestroySettings()
-{
-}
-
 /** Update a string setting. */
 void SetPathString(char **dest, const char *src)
 {

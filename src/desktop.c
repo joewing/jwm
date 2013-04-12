@@ -25,11 +25,6 @@ char **desktopNames = NULL;
 
 char showingDesktop;
 
-/** Initialize desktop data. */
-void InitializeDesktops()
-{
-}
-
 /** Startup desktop support. */
 void StartupDesktops()
 {
@@ -51,10 +46,6 @@ void StartupDesktops()
 
    showingDesktop = 0;
 
-}
-
-/** Shutdown desktop support. */
-void ShutdownDesktops() {
 }
 
 /** Release desktop data. */

@@ -11,7 +11,7 @@
 #define COMMAND_H
 
 /*@{*/
-void InitializeCommands();
+#define InitializeCommands()  (void)(0)
 void StartupCommands();
 void ShutdownCommands();
 void DestroyCommands();

@@ -163,10 +163,12 @@ ClientNode *FindClientByParent(Window p);
  */
 ClientNode *GetActiveClient();
 
-void InitializeClients();
+/*@{*/
+#define InitializeClients()   (void)(0)
 void StartupClients();
 void ShutdownClients();
-void DestroyClients();
+#define DestroyClients()      (void)(0)
+/*@}*/
 
 /** Add a window to management.
  * @param w The client window.

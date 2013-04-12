@@ -38,11 +38,6 @@ static void MinimizeTransients(ClientNode *np);
 static void RestoreTransients(ClientNode *np, char raise);
 static void KillClientHandler(ClientNode *np);
 
-/** Initialize client data. */
-void InitializeClients()
-{
-}
-
 /** Load windows that are already mapped. */
 void StartupClients()
 {
@@ -97,11 +92,6 @@ void ShutdownClients()
       }
    }
 
-}
-
-/** Destroy client data. */
-void DestroyClients()
-{
 }
 
 /** Set the focus to the window currently under the mouse pointer. */

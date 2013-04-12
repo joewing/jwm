@@ -37,10 +37,12 @@ typedef unsigned char OptionType;
 #define OPTION_CENTERED    19    /**< Centered placement. */
 #define OPTION_TILED       20    /**< Tiled placement. */
 
-void InitializeGroups();
-void StartupGroups();
-void ShutdownGroups();
+/*@{*/
+#define InitializeGroups() (void)(0)
+#define StartupGroups()    (void)(0)
+#define ShutdownGroups()   (void)(0)
 void DestroyGroups();
+/*@}*/
 
 /** Create an empty group.
  * @return An empty group.

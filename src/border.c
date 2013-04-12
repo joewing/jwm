@@ -31,11 +31,6 @@ static void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
                                  int width, int height, int radius);
 #endif
 
-/** Initialize non-server resources. */
-void InitializeBorders()
-{
-}
-
 /** Initialize server resources. */
 void StartupBorders()
 {
@@ -53,11 +48,6 @@ void StartupBorders()
 void ShutdownBorders()
 {
    JXFreeGC(display, borderGC);
-}
-
-/** Release non-server resources. */
-void DestroyBorders()
-{
 }
 
 /** Get the size of the icon to display on a window. */

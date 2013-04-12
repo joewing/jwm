@@ -15,7 +15,7 @@ struct Menu;
 /*@{*/
 void InitializeRootMenu();
 void StartupRootMenu();
-void ShutdownRootMenu();
+#define ShutdownRootMenu() (void)(0)
 void DestroyRootMenu();
 /*@}*/
 

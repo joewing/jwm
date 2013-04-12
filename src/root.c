@@ -65,11 +65,6 @@ void StartupRootMenu()
 
 }
 
-/** Shutdown root menus. */
-void ShutdownRootMenu()
-{
-}
-
 /** Destroy root menu data. */
 void DestroyRootMenu()
 {

@@ -83,11 +83,6 @@ void StartupClock()
 
 }
 
-/** Stop clock(s). */
-void ShutdownClock()
-{
-}
-
 /** Destroy clock(s). */
 void DestroyClock()
 {

@@ -13,10 +13,10 @@
 struct ClientNode;
 
 /*@{*/
-void InitializeDialogs();
-void StartupDialogs();
+#define InitializeDialogs()   (void)(0)
+#define StartupDialogs()      (void)(0)
 void ShutdownDialogs();
-void DestroyDialogs();
+#define DestroyDialogs()      (void)(0)
 /*@}*/
 
 /** Handle an event on a dialog window.

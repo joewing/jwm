@@ -59,11 +59,6 @@ static Cursor CreateCursor(unsigned int shape);
 static int mousex;
 static int mousey;
 
-/** Initialize cursor data. */
-void InitializeCursors()
-{
-}
-
 /** Startup cursor support. */
 void StartupCursors()
 {
@@ -95,11 +90,6 @@ void ShutdownCursors()
    for(x = 0; x < CURSOR_COUNT; x++) {
       JXFreeCursor(display, cursors[x]);
    }
-}
-
-/** Destroy cursor data. */
-void DestroyCursors()
-{
 }
 
 /** Get the cursor for the specified location on the frame. */

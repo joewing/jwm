@@ -33,11 +33,6 @@ static PopupType popup;
 
 static void SignalPopup(const TimeType *now, int x, int y, void *data);
 
-/** Initialize popup data. */
-void InitializePopup()
-{
-}
-
 /** Startup popups. */
 void StartupPopup()
 {
@@ -59,11 +54,6 @@ void ShutdownPopup()
       JXFreePixmap(display, popup.pmap);
       popup.window = None;
    }
-}
-
-/** Destroy popup data. */
-void DestroyPopup()
-{
 }
 
 /** Show a popup window. */

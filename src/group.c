@@ -53,21 +53,6 @@ static void AddPattern(PatternListType **lp, const char *pattern,
                        MatchType match);
 static void ApplyGroup(const GroupType *gp, ClientNode *np);
 
-/** Initialize group data. */
-void InitializeGroups()
-{
-}
-
-/** Startup group support. */
-void StartupGroups()
-{
-}
-
-/** Shutdown group support. */
-void ShutdownGroups()
-{
-}
-
 /** Destroy group data. */
 void DestroyGroups()
 {

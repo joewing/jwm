@@ -49,7 +49,7 @@ typedef struct TrayButtonType {
 
 } TrayButtonType;
 
-static TrayButtonType *buttons;
+static TrayButtonType *buttons = NULL;
 
 static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
@@ -65,12 +65,6 @@ static void ProcessMotionEvent(TrayComponentType *cp,
                                int x, int y, int mask);
 static void SignalTrayButton(const TimeType *now,
                              int x, int y, void *data);
-
-/** Initialize tray button data. */
-void InitializeTrayButtons()
-{
-   buttons = NULL;
-}
 
 /** Startup tray buttons. */
 void StartupTrayButtons()
@@ -98,11 +92,6 @@ void StartupTrayButtons()
       bp->cp->requestedWidth += 2 * BUTTON_SIZE;
       bp->cp->requestedHeight += 2 * BUTTON_SIZE;
    }
-}
-
-/** Shutdown tray buttons. */
-void ShutdownTrayButtons()
-{
 }
 
 /** Release tray button data. */

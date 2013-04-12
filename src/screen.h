@@ -21,10 +21,12 @@ typedef struct ScreenType {
    int width, height;   /**< The size of this screen. */
 } ScreenType;
 
-void InitializeScreens();
+/*@{*/
+#define InitializeScreens()   (void)(0)
 void StartupScreens();
 void ShutdownScreens();
-void DestroyScreens();
+#define DestroyScreens()      (void)(0)
+/*@}*/
 
 /** Get the screen of the specified coordinates.
  * @param x The x-coordinate.

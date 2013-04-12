@@ -65,7 +65,7 @@ typedef unsigned char ColorType;
 extern unsigned long colors[COLOR_COUNT];
 
 /*@{*/
-void InitializeColors();
+#define InitializeColors() (void)(0)
 void StartupColors();
 void ShutdownColors();
 void DestroyColors();

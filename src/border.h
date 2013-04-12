@@ -30,10 +30,10 @@ typedef unsigned char BorderActionType;
 #define BA_RESIZE_W  0x80  /**< Resize west. */
 
 /*@{*/
-void InitializeBorders();
+#define InitializeBorders()   (void)(0)
 void StartupBorders();
 void ShutdownBorders();
-void DestroyBorders();
+#define DestroyBorders()      (void)(0)
 /*@}*/
 
 /** Determine the action to take for a client.

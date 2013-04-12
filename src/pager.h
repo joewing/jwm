@@ -13,8 +13,8 @@
 struct TrayComponentType;
 
 /*@{*/
-void InitializePager();
-void StartupPager();
+#define InitializePager()  (void)(0)
+#define StartupPager()     (void)(0)
 void ShutdownPager();
 void DestroyPager();
 /*@}*/

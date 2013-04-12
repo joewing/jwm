@@ -82,11 +82,6 @@ void InitializeTaskBar()
    taskBarNodesTail = NULL;
 }
 
-/** Startup the task bar. */
-void StartupTaskBar()
-{
-}
-
 /** Shutdown the task bar. */
 void ShutdownTaskBar()
 {

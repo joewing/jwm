@@ -15,7 +15,7 @@ struct TimeType;
 
 /*@{*/
 void InitializeTaskBar();
-void StartupTaskBar();
+#define StartupTaskBar()   (void)(0)
 void ShutdownTaskBar();
 void DestroyTaskBar();
 /*@}*/

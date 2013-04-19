@@ -99,9 +99,18 @@ static char IsElementEnd(char ch);
 static char IsValueEnd(char ch);
 static char IsAttributeEnd(char ch);
 static char *ReadElementName(const char *line);
-static char *ReadElementValue(const char *line, const char *file,
+static char *ReadValue(const char *line,
+                       const char *file,
+                       char (*IsEnd)(char),
+                       unsigned int *offset,
+                       unsigned int *lineNumber);
+static char *ReadElementValue(const char *line,
+                              const char *file,
+                              unsigned int *offset,
                               unsigned int *lineNumber);
-static char *ReadAttributeValue(const char *line, const char *file,
+static char *ReadAttributeValue(const char *line,
+                                const char *file,
+                                unsigned int *offset,
                                 unsigned int *lineNumber);
 static int ParseEntity(const char *entity, char *ch,
                        const char *file, unsigned int line);
@@ -114,6 +123,7 @@ TokenNode *Tokenize(const char *line, const char *fileName)
    AttributeNode *ap;
    char *temp;
    unsigned int x;
+   unsigned int offset;
    unsigned int lineNumber;
    char inElement;
    char found;
@@ -253,18 +263,16 @@ ReadDefault:
                   x += 1;
                }
                ap->value = ReadAttributeValue(line + x, fileName,
-                                              &lineNumber);
-               if(ap->value) {
-                  x += strlen(ap->value);
-               }
+                                              &offset, &lineNumber);
+               x += offset;
                if(line[x] == '\"') {
                   x += 1;
                }
             }
          } else {
-            temp = ReadElementValue(line + x, fileName, &lineNumber);
+            temp = ReadElementValue(line + x, fileName, &offset, &lineNumber);
+            x += offset;
             if(temp) {
-               x += strlen(temp);
                if(current) {
                   if(current->value) {
                      current->value = Reallocate(current->value,
@@ -395,20 +403,23 @@ char *ReadElementName(const char *line)
 
 }
 
-/** Get the value of the current element. */
-char *ReadElementValue(const char *line, const char *file,
-                       unsigned int *lineNumber)
+/** Read the value of an element or attribute. */
+char *ReadValue(const char *line,
+                const char *file,
+                char (*IsEnd)(char),
+                unsigned int *offset,
+                unsigned int *lineNumber)
 {
    char *buffer;
    char ch;
-   int len, max;
-   int x;
+   unsigned int len, max;
+   unsigned int x;
 
    len = 0;
    max = BLOCK_SIZE;
    buffer = Allocate(max + 1);
 
-   for(x = 0; !IsValueEnd(line[x]); x++) {
+   for(x = 0; !(IsEnd)(line[x]); x++) {
       if(line[x] == '&') {
          x += ParseEntity(line + x, &ch, file, *lineNumber) - 1;
          if(ch) {
@@ -430,47 +441,27 @@ char *ReadElementValue(const char *line, const char *file,
    }
    buffer[len] = 0;
    Trim(buffer);
+   *offset = x;
 
    return buffer;
 }
 
+/** Get the value of the current element. */
+char *ReadElementValue(const char *line,
+                       const char *file,
+                       unsigned int *offset,
+                       unsigned int *lineNumber)
+{
+   return ReadValue(line, file, IsValueEnd, offset, lineNumber);
+}
+
 /** Get the value of the current attribute. */
-char *ReadAttributeValue(const char *line, const char *file,
+char *ReadAttributeValue(const char *line,
+                         const char *file,
+                         unsigned int *offset,
                          unsigned int *lineNumber)
 {
-
-   char *buffer;
-   char ch;
-   unsigned int len, max;
-   unsigned int x;
-
-   len = 0;
-   max = BLOCK_SIZE;
-   buffer = Allocate(max + 1);
-
-   for(x = 0; !IsAttributeEnd(line[x]); x++) {
-      if(line[x] == '&') {
-         x += ParseEntity(line + x, &ch, file, *lineNumber) - 1;
-         if(ch) {
-            buffer[len] = ch;
-         } else {
-            buffer[len] = line[x];
-         }
-      } else {
-         if(line[x] == '\n') {
-            *lineNumber += 1;
-         }
-         buffer[len] = line[x];
-      }
-      len += 1;
-      if(len >= max) {
-         max += BLOCK_SIZE;
-         buffer = Reallocate(buffer, max + 1);
-      }
-   }
-   buffer[len] = 0;
-
-   return buffer;
+   return ReadValue(line, file, IsAttributeEnd, offset, lineNumber);
 }
 
 /** Get the token for a tag name. */

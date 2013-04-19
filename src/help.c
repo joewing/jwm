@@ -35,11 +35,20 @@ void DisplayCompileOptions()
 #ifdef USE_ICONS
           "icons "
 #endif
+#ifdef USE_JPEG
+          "jpeg "
+#endif
+#ifdef ENABLE_NLS
+          "nls "
+#endif
 #ifdef USE_PNG
           "png "
 #endif
 #ifdef USE_SHAPE
           "shape "
+#endif
+#if defined(USE_CAIRO) && defined(USE_RSVG)
+          "svg "
 #endif
 #ifdef USE_XFT
           "xft "

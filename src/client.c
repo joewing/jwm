@@ -414,6 +414,9 @@ void RestoreTransients(ClientNode *np, char raise)
 
    Assert(np);
 
+   /* Make sure this window is on the current desktop. */
+   SetClientDesktop(np, currentDesktop);
+
    /* Restore this window. */
    if(!(np->state.status & STAT_MAPPED)) {
       if(np->state.status & STAT_SHADED) {

@@ -32,8 +32,10 @@ typedef struct SwallowNode {
 
 } SwallowNode;
 
+static SwallowNode *pendingNodes = NULL;
 static SwallowNode *swallowNodes = NULL;
 
+static void ReleaseNodes(SwallowNode *nodes);
 static void Destroy(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 
@@ -41,7 +43,7 @@ static void Resize(TrayComponentType *cp);
 void StartupSwallow()
 {
    SwallowNode *np;
-   for(np = swallowNodes; np; np = np->next) {
+   for(np = pendingNodes; np; np = np->next) {
       if(np->command) {
          RunCommand(np->command);
       }
@@ -51,16 +53,24 @@ void StartupSwallow()
 /** Destroy swallow data. */
 void DestroySwallow()
 {
-   SwallowNode *np;
-   while(swallowNodes) {
-      np = swallowNodes->next;
-      Assert(swallowNodes->name);
-      Release(swallowNodes->name);
-      if(swallowNodes->command) {
-         Release(swallowNodes->command);
+   ReleaseNodes(pendingNodes);
+   ReleaseNodes(swallowNodes);
+   pendingNodes = NULL;
+   swallowNodes = NULL;
+}
+
+/** Release a linked list of swallow nodes. */
+void ReleaseNodes(SwallowNode *nodes)
+{
+   while(nodes) {
+      SwallowNode *np = nodes->next;
+      Assert(nodes->name);
+      Release(nodes->name);
+      if(nodes->command) {
+         Release(nodes->command);
       }
-      Release(swallowNodes);
-      swallowNodes = np;
+      Release(nodes);
+      nodes = np;
    }
 }
 
@@ -78,7 +88,7 @@ TrayComponentType *CreateSwallow(const char *name, const char *command,
    }
 
    /* Make sure this name isn't already used. */
-   for(np = swallowNodes; np; np = np->next) {
+   for(np = pendingNodes; np; np = np->next) {
       if(JUNLIKELY(!strcmp(np->name, name))) {
          Warning(_("cannot swallow the same client multiple times"));
          return NULL;
@@ -89,8 +99,8 @@ TrayComponentType *CreateSwallow(const char *name, const char *command,
    np->name = CopyString(name);
    np->command = CopyString(command);
 
-   np->next = swallowNodes;
-   swallowNodes = np;
+   np->next = pendingNodes;
+   pendingNodes = np;
 
    cp = CreateTrayComponent();
    np->cp = cp;
@@ -210,58 +220,70 @@ void Destroy(TrayComponentType *cp)
 char CheckSwallowMap(const XMapEvent *event)
 {
 
-   SwallowNode *np;
+   SwallowNode **npp;
    XClassHint hint;
    XWindowAttributes attr;
+   char result;
 
-   for(np = swallowNodes; np; np = np->next) {
-
-      if(np->cp->window != None) {
-         continue;
-      }
-
-      Assert(np->cp->tray->window != None);
-
-      if(JXGetClassHint(display, event->window, &hint)) {
-         if(!strcmp(hint.res_name, np->name)) {
-
-            /* Swallow the window. */
-            JXSelectInput(display, event->window,
-                 StructureNotifyMask | ResizeRedirectMask);
-            JXAddToSaveSet(display, event->window);
-            JXSetWindowBorder(display, event->window, colors[COLOR_TRAY_BG]);
-            JXReparentWindow(display, event->window,
-               np->cp->tray->window, 0, 0);
-            JXMapRaised(display, event->window);
-            JXFree(hint.res_name);
-            JXFree(hint.res_class);
-            np->cp->window = event->window;
-
-            /* Update the size. */
-            JXGetWindowAttributes(display, event->window, &attr);
-            np->border = attr.border_width;
-            if(!np->userWidth) {
-               np->cp->requestedWidth = attr.width + 2 * np->border;
-            }
-            if(!np->userHeight) {
-               np->cp->requestedHeight = attr.height + 2 * np->border;
-            }
-
-            ResizeTray(np->cp->tray);
-
-            return 1;
-
-         } else {
-
-            JXFree(hint.res_name);
-            JXFree(hint.res_class);
-
-         }
-      }
-
+   /* Return if there are no programs left to swallow. */
+   if(!pendingNodes) {
+      return 0;
    }
 
-   return 0;
+   /* Get the name of the window. */
+   if(JXGetClassHint(display, event->window, &hint) == 0) {
+      return 0;
+   }
+
+   /* Check if we should swallow this window. */
+   result = 0;
+   npp = &pendingNodes;
+   while(*npp) {
+
+      SwallowNode *np = *npp;
+      Assert(np->cp->tray->window != None);
+
+      if(!strcmp(hint.res_name, np->name)) {
+
+         /* Swallow the window. */
+         JXSelectInput(display, event->window,
+                       StructureNotifyMask | ResizeRedirectMask);
+         JXAddToSaveSet(display, event->window);
+         JXSetWindowBorder(display, event->window, colors[COLOR_TRAY_BG]);
+         JXReparentWindow(display, event->window,
+                          np->cp->tray->window, 0, 0);
+         JXMapRaised(display, event->window);
+         np->cp->window = event->window;
+
+         /* Remove this node from the pendingNodes list and place it
+          * on the swallowNodes list. */
+         *npp = np->next;
+         np->next = swallowNodes;
+         swallowNodes = np;
+
+         /* Update the size. */
+         JXGetWindowAttributes(display, event->window, &attr);
+         np->border = attr.border_width;
+         if(!np->userWidth) {
+            np->cp->requestedWidth = attr.width + 2 * np->border;
+         }
+         if(!np->userHeight) {
+            np->cp->requestedHeight = attr.height + 2 * np->border;
+         }
+
+         ResizeTray(np->cp->tray);
+         result = 1;
+
+         break;
+      }
+
+      npp = &np->next;
+
+   }
+   JXFree(hint.res_name);
+   JXFree(hint.res_class);
+
+   return result;
 
 }
 

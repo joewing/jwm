@@ -27,17 +27,22 @@ struct TrayComponentType *CreateSwallow(const char *name,
                                         const char *command,
                                         int width, int height);
 
-/** Determine if a map event was for a window that should be swallowed.
- * @param event The map event.
+/** Determine if a window should be swallowed.
+ * @param win The window.
  * @return 1 if this window should be swallowed, 0 if not.
  */
-char CheckSwallowMap(const XMapEvent *event);
+char CheckSwallowMap(Window win);
 
 /** Process an event on a swallowed window.
  * @param event The event to process.
  * @return 1 if the event was for a swallowed window, 0 if not.
  */
 char ProcessSwallowEvent(const XEvent *event);
+
+/** Determine if there are swallow processes pending.
+ * @return 1 if there are still pending swallow processes, 0 otherwise.
+ */
+char IsSwallowPending();
 
 #endif /* SWALLOW_H */
 

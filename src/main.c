@@ -41,6 +41,7 @@
 #include "misc.h"
 #include "background.h"
 #include "settings.h"
+#include "timing.h"
 
 Display *display = NULL;
 Window rootWindow;
@@ -221,6 +222,7 @@ void EventLoop()
 {
 
    XEvent event;
+   TimeType start;
 
    /* Loop processing events until it's time to exit. */
    while(JLIKELY(!shouldExit)) {
@@ -228,11 +230,20 @@ void EventLoop()
       ProcessEvent(&event);
    }
 
-   /* Give windows (swallow windows especially) time to map. */
-   usleep(RESTART_DELAY);
-
    /* Process events one last time. */
-   while(JXPending(display) > 0) {
+   GetCurrentTime(&start);
+   for(;;) {
+      if(JXPending(display) == 0) {
+         if(!IsSwallowPending()) {
+            break;
+         } else {
+            TimeType now;
+            GetCurrentTime(&now);
+            if(GetTimeDifference(&start, &now) > RESTART_DELAY) {
+               break;
+            }
+         }
+      }
       WaitForEvent(&event);
       ProcessEvent(&event);
    }

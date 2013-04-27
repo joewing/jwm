@@ -121,7 +121,7 @@
 
 #define MAX_INCLUDE_DEPTH  16    /**< Max includes. */
 #define MOVE_DELTA         3     /**< Pixels before trigging a move. */
-#define RESTART_DELAY      50000 /**< us before restarting. */
+#define RESTART_DELAY      1000  /**< Max timeout in ms before restarting. */
 #define URGENCY_DELAY      500   /**< Flash timeout in ms for urgency. */
 
 #define SHELL_NAME "/bin/sh"

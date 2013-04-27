@@ -64,8 +64,7 @@ void StartupClients()
    /* Add each client. */
    for(x = 0; x < childrenCount; x++) {
       if(JXGetWindowAttributes(display, childrenReturn[x], &attr)) {
-         if(attr.override_redirect == False
-            && attr.map_state == IsViewable) {
+         if(attr.override_redirect == False && attr.map_state == IsViewable) {
             AddClientWindow(childrenReturn[x], 1, 1);
          }
       }

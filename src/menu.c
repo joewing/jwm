@@ -157,6 +157,9 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y)
    if(JUNLIKELY(!IsMenuValid(menu))) {
       return;
    }
+   if(JUNLIKELY(shouldExit)) {
+      return;
+   }
 
    mouseStatus = GrabMouse(rootWindow);
    keyboardStatus = JXGrabKeyboard(display, rootWindow, False,

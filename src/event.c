@@ -1088,7 +1088,7 @@ void HandleMapRequest(const XMapEvent *event)
 {
    ClientNode *np;
    Assert(event);
-   if(CheckSwallowMap(event)) {
+   if(CheckSwallowMap(event->window)) {
       return;
    }
    np = FindClientByWindow(event->window);

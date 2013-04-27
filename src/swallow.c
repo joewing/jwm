@@ -217,7 +217,7 @@ void Destroy(TrayComponentType *cp)
 }
 
 /** Determine if this is a window to be swallowed, if it is, swallow it. */
-char CheckSwallowMap(const XMapEvent *event)
+char CheckSwallowMap(Window win)
 {
 
    SwallowNode **npp;
@@ -231,7 +231,7 @@ char CheckSwallowMap(const XMapEvent *event)
    }
 
    /* Get the name of the window. */
-   if(JXGetClassHint(display, event->window, &hint) == 0) {
+   if(JXGetClassHint(display, win, &hint) == 0) {
       return 0;
    }
 
@@ -246,14 +246,14 @@ char CheckSwallowMap(const XMapEvent *event)
       if(!strcmp(hint.res_name, np->name)) {
 
          /* Swallow the window. */
-         JXSelectInput(display, event->window,
+         JXSelectInput(display, win,
                        StructureNotifyMask | ResizeRedirectMask);
-         JXAddToSaveSet(display, event->window);
-         JXSetWindowBorder(display, event->window, colors[COLOR_TRAY_BG]);
-         JXReparentWindow(display, event->window,
+         JXAddToSaveSet(display, win);
+         JXSetWindowBorder(display, win, colors[COLOR_TRAY_BG]);
+         JXReparentWindow(display, win,
                           np->cp->tray->window, 0, 0);
-         JXMapRaised(display, event->window);
-         np->cp->window = event->window;
+         JXMapRaised(display, win);
+         np->cp->window = win;
 
          /* Remove this node from the pendingNodes list and place it
           * on the swallowNodes list. */
@@ -262,7 +262,7 @@ char CheckSwallowMap(const XMapEvent *event)
          swallowNodes = np;
 
          /* Update the size. */
-         JXGetWindowAttributes(display, event->window, &attr);
+         JXGetWindowAttributes(display, win, &attr);
          np->border = attr.border_width;
          if(!np->userWidth) {
             np->cp->requestedWidth = attr.width + 2 * np->border;
@@ -285,5 +285,11 @@ char CheckSwallowMap(const XMapEvent *event)
 
    return result;
 
+}
+
+/** Determine if there are swallow processes pending. */
+char IsSwallowPending()
+{
+   return pendingNodes ? 1 : 0;
 }
 

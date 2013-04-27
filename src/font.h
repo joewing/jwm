@@ -48,17 +48,17 @@ void RenderString(Drawable d, FontType font, ColorType color,
                   int x, int y, int width, const char *str);
 
 /** Get the width of a string.
- * @param type The font used to determine the width.
+ * @param ft The font used to determine the width.
  * @param str The string whose width to get.
  * @return The width of the string in pixels.
  */
-int GetStringWidth(FontType type, const char *str);
+int GetStringWidth(FontType ft, const char *str);
 
 /** Get the height of a string.
- * @param type The font used to determine the height.
+ * @param ft The font used to determine the height.
  * @return The height in pixels.
  */
-int GetStringHeight(FontType type);
+int GetStringHeight(FontType ft);
 
 #endif /* FONT_H */
 

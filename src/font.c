@@ -146,38 +146,59 @@ void DestroyFonts()
 }
 
 /** Get the width of a string. */
-int GetStringWidth(FontType type, const char *str)
+int GetStringWidth(FontType ft, const char *str)
 {
 #ifdef USE_XFT
-
    XGlyphInfo extents;
-   unsigned int length;
-
-   Assert(str);
-   Assert(fonts[type]);
-
-   length = strlen(str);
-
-   JXftTextExtentsUtf8(display, fonts[type], (const unsigned char*)str,
-                       length, &extents);
-
-   return extents.xOff;
-
-#else
-
-   Assert(str);
-   Assert(fonts[type]);
-
-   return XTextWidth(fonts[type], str, strlen(str));
-
 #endif
+#ifdef USE_FRIBIDI
+   FriBidiChar *temp;
+   FriBidiParType type = FRIBIDI_PAR_ON;
+   int unicodeLength;
+#endif
+   int len;
+   char *output;
+   int result;
+
+   len = strlen(str);
+
+   /* Apply the bidi algorithm if requested. */
+#ifdef USE_FRIBIDI
+   temp = AllocateStack((len + 1) * sizeof(FriBidiChar));
+   unicodeLength = fribidi_charset_to_unicode(FRIBIDI_CHAR_SET_UTF8,
+                                              (char*)str, len, temp);
+   fribidi_log2vis(temp, unicodeLength, &type, temp, NULL, NULL, NULL);
+   output = AllocateStack(4 * len + 1);
+   fribidi_unicode_to_charset(FRIBIDI_CHAR_SET_UTF8, temp, unicodeLength,
+                              (char*)output);
+   len = strlen(output);
+#else
+   output = (char*)str;
+#endif
+
+   /* Get the width of the string. */
+#ifdef USE_XFT
+   JXftTextExtentsUtf8(display, fonts[ft], (const unsigned char*)output,
+                       len, &extents);
+   result = extents.xOff;
+#else
+   result = XTextWidth(fonts[ft], output, len);
+#endif
+
+   /* Clean up. */
+#ifdef USE_FRIBIDI
+   ReleaseStack(temp);
+   ReleaseStack(output);
+#endif
+
+   return result;
 }
 
 /** Get the height of a string. */
-int GetStringHeight(FontType type)
+int GetStringHeight(FontType ft)
 {
-   Assert(fonts[type]);
-   return fonts[type]->ascent + fonts[type]->descent;
+   Assert(fonts[ft]);
+   return fonts[ft]->ascent + fonts[ft]->descent;
 }
 
 /** Set the font to use for a component. */
@@ -202,13 +223,13 @@ void RenderString(Drawable d, FontType font, ColorType color,
    Region renderRegion;
    int len;
    char *output;
-
 #ifdef USE_FRIBIDI
-
    FriBidiChar *temp;
    FriBidiParType type = FRIBIDI_PAR_ON;
    int unicodeLength;
-
+#endif
+#ifdef USE_XFT
+   XGlyphInfo extents;
 #endif
 
    if(!str) {
@@ -220,63 +241,55 @@ void RenderString(Drawable d, FontType font, ColorType color,
       return;
    }
 
-   /* Get the bounds for the string based on the specified width. */
-   rect.x = x;
-   rect.y = y;
-   rect.width = Min(GetStringWidth(font, str), width) + 2;
-   rect.height = GetStringHeight(font);
-
-   /* Create a region to use. */
-   renderRegion = XCreateRegion();
-
-   /* Combine the width bounds with the region to use. */
-   XUnionRectWithRegion(&rect, renderRegion, renderRegion);
-
    /* Apply the bidi algorithm if requested. */
-
 #ifdef USE_FRIBIDI
-
    temp = AllocateStack((len + 1) * sizeof(FriBidiChar));
    unicodeLength = fribidi_charset_to_unicode(FRIBIDI_CHAR_SET_UTF8,
                                               (char*)str, len, temp);
-
    fribidi_log2vis(temp, unicodeLength, &type, temp, NULL, NULL, NULL);
-
-   fribidi_unicode_to_charset(FRIBIDI_CHAR_SET_UTF8, temp, len, (char*)temp);
-   output = (char*)temp;
-
+   output = AllocateStack(4 * len + 1);
+   fribidi_unicode_to_charset(FRIBIDI_CHAR_SET_UTF8, temp, unicodeLength,
+                              (char*)output);
+   len = strlen(output);
 #else
-
    output = (char*)str;
-
 #endif
 
-   /* Display the string. */
-
+   /* Get the bounds for the string based on the specified width. */
+   rect.x = x;
+   rect.y = y;
+   rect.height = GetStringHeight(font);
 #ifdef USE_XFT
+   JXftTextExtentsUtf8(display, fonts[font], (const unsigned char*)output,
+                       len, &extents);
+   rect.width = extents.xOff + 2;
+#else
+   rect.width = XTextWidth(fonts[font], output, len) + 2;
+#endif
 
+   /* Combine the width bounds with the region to use. */
+   renderRegion = XCreateRegion();
+   XUnionRectWithRegion(&rect, renderRegion, renderRegion);
+
+   /* Display the string. */
+#ifdef USE_XFT
    JXftDrawChange(xd, d);
    JXftDrawSetClip(xd, renderRegion);
    JXftDrawStringUtf8(xd, GetXftColor(color), fonts[font],
                       x, y + fonts[font]->ascent,
                       (const unsigned char*)output, len);
    JXftDrawChange(xd, rootWindow);
-
 #else
-
    JXSetForeground(display, fontGC, colors[color]);
    JXSetRegion(display, fontGC, renderRegion);
    JXSetFont(display, fontGC, fonts[font]->fid);
    JXDrawString(display, d, fontGC, x, y + fonts[font]->ascent, output, len);
-
 #endif
 
    /* Free any memory used for UTF conversion. */
-
 #ifdef USE_FRIBIDI
-
+   ReleaseStack(temp);
    ReleaseStack(output);
-
 #endif
 
    XDestroyRegion(renderRegion);

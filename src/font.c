@@ -262,10 +262,11 @@ void RenderString(Drawable d, FontType font, ColorType color,
 #ifdef USE_XFT
    JXftTextExtentsUtf8(display, fonts[font], (const unsigned char*)output,
                        len, &extents);
-   rect.width = extents.xOff + 2;
+   rect.width = extents.xOff;
 #else
-   rect.width = XTextWidth(fonts[font], output, len) + 2;
+   rect.width = XTextWidth(fonts[font], output, len);
 #endif
+   rect.width = Min(rect.width, width) + 2;
 
    /* Combine the width bounds with the region to use. */
    renderRegion = XCreateRegion();

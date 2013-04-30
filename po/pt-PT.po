@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
 "POT-Creation-Date: 2013-04-29 10:17-0500\n"
-"PO-Revision-Date: 2013-04-29 03:50+0100\n"
+"PO-Revision-Date: 2013-04-30 16:37+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
 "Language: pt-PT\n"
@@ -39,7 +39,8 @@ msgstr "eliminar esta janela?"
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 
-#: src/command.c:138 src/main.c:190
+#: src/command.c:138
+#: src/main.c:190
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "comando executável falhou (exec): (%s) %s"
@@ -60,12 +61,14 @@ msgstr "não pode adquirir a seleção da bandeja do sistema"
 msgid "Fullscreen state will be shaped!"
 msgstr "Estado do ecrã expandido será moldado!"
 
-#: src/font.c:76 src/font.c:95
+#: src/font.c:76
+#: src/font.c:95
 #, c-format
 msgid "could not load font: %s"
 msgstr "impossível carregar fonte %s"
 
-#: src/font.c:83 src/font.c:102
+#: src/font.c:83
+#: src/font.c:102
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "Não foi possível carregar a fonte padrão %s"
@@ -128,16 +131,12 @@ msgstr "tecla e código de tecla não foi especificado para esta tecla"
 #: src/key.c:474
 #, c-format
 msgid "key binding: root menu %d not defined"
-msgstr ""
-"teclas de atalho: não foram especificadas para o menu root %d não esta "
-"definido"
+msgstr "teclas de atalho: não foram especificadas para o menu root %d não esta definido"
 
 #: src/lex.c:193
 #, fuzzy, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
-msgstr ""
-"%s[%d]: terminação da etiqueta (tag) \"%s\" não corresponde à abertura da "
-"etiqueta (tag) \"%s\""
+msgstr "%s[%d]: terminação da etiqueta (tag) \"%s\" não corresponde à abertura da etiqueta (tag) \"%s\""
 
 #: src/lex.c:200
 #, fuzzy, c-format
@@ -147,8 +146,7 @@ msgstr "%s[%d]: terminação da etiqueta (tag) inesperada e invalida"
 #: src/lex.c:207
 #, fuzzy, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
-msgstr ""
-"%s[%d]: terminação da etiqueta (tag) \"%s\" sem ter etiqueta de abertura"
+msgstr "%s[%d]: terminação da etiqueta (tag) \"%s\" sem ter etiqueta de abertura"
 
 #: src/lex.c:210
 #, fuzzy, c-format
@@ -295,7 +293,8 @@ msgstr "Redimensionar"
 msgid "Move"
 msgstr "Mover"
 
-#: src/winmenu.c:97 src/winmenu.c:120
+#: src/winmenu.c:97
+#: src/winmenu.c:120
 msgid "Restore"
 msgstr "Restaurar"
 
@@ -337,11 +336,11 @@ msgstr "Camada"
 
 #: src/winmenu.c:170
 msgid "[Above]"
-msgstr ""
+msgstr "[Acima]"
 
 #: src/winmenu.c:172
 msgid "Above"
-msgstr ""
+msgstr "Acima"
 
 #: src/winmenu.c:175
 msgid "[Normal]"
@@ -353,11 +352,11 @@ msgstr "Normal"
 
 #: src/winmenu.c:180
 msgid "[Below]"
-msgstr ""
+msgstr "[Abaixo]"
 
 #: src/winmenu.c:182
 msgid "Below"
-msgstr ""
+msgstr "Abaixo"
 
 #: src/winmenu.c:202
 msgid "Send To"
@@ -368,75 +367,3 @@ msgstr "Enviar Para"
 
 #~ msgid "invalid border width specified: %d"
 #~ msgstr "largura da borda (border width) não foi especificado %d"
-
-# Notes:
-# Add Note
-#
-# Format:
-# C
-# need to check the contest!
-#~ msgid "invalid title height specified: %d"
-#~ msgstr "titulo invalido (tittle height) especificado: %d"
-
-#~ msgid "Client %s requested an invalid layer: %d"
-#~ msgstr "solicitou %s uma camada inválida: %d"
-
-#~ msgid "invalid active client opacity: %s"
-#~ msgstr "transparência do cliente ativo invalida (opacity): %s"
-
-#~ msgid "invalid inactive client opacity: %s"
-#~ msgstr "transparência do cliente inativo: %s"
-
-#~ msgid "invalid inactive client opacity delta: %s"
-#~ msgstr "transparência do cliente inativo invalido delta: %s"
-
-#~ msgid "invalid DoubleClickSpeed: %d"
-#~ msgstr "velocidade do duplo clique invalido: %d"
-
-#~ msgid "invalid DoubleClickDelta: %d"
-#~ msgstr "duplo CliqueDelta invalido: %d"
-
-#~ msgid "invalid desktop count"
-#~ msgstr "numero de ambientes de trabalho invalido"
-
-#~ msgid "invalid group opacity: %s"
-#~ msgstr "transparência do grupo invalida %s"
-
-#~ msgid "invalid snap distance specified: %d"
-#~ msgstr "distancia de snap invalida: %d"
-
-#~ msgid "invalid popup delay specified: %s"
-#~ msgstr "atraso especificado do popup invalido: %s"
-
-#~ msgid "invalid MoveMode coordinates: \"%s\""
-#~ msgstr "coordenadas do MoveMode invalidas: \"%s\""
-
-#~ msgid "invalid ResizeMode coordinates: \"%s\""
-#~ msgstr "coordenadas do ResizeMode invalidas: \"%s\""
-
-#~ msgid "invalid TrayButton width: %d"
-#~ msgstr "largura do TrayButton invalida: %d"
-
-#~ msgid "invalid TrayButton height: %d"
-#~ msgstr "altura do TrayButton invalida: %d"
-
-#~ msgid "invalid tray layer: %d"
-#~ msgstr "camada (layer) do tabuleiro invalida: %d"
-
-#~ msgid "invalid tray border: %d"
-#~ msgstr "bordas (border) do tbuleiro invalidas: %d"
-
-#~ msgid "invalid tray opacity: %s"
-#~ msgstr "transparência do tabuleiro invalida: %s"
-
-#~ msgid "[Top]"
-#~ msgstr "[Topo]"
-
-#~ msgid "Top"
-#~ msgstr "Topo"
-
-#~ msgid "[Bottom]"
-#~ msgstr "[Botão]"
-
-#~ msgid "Bottom"
-#~ msgstr "Botão"

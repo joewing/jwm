@@ -1,5 +1,9 @@
-JWM (Joe's Window Manager)
+Amigo Desktop based on JWM (Joe's Window Manager)
 ==============================================================================
+
+Amigo Desktop his an attempt and experiment at the same time, trying to make
+some improvements in my view on top of JWM to making it more eye candy and
+accessible in the user side point of view.
 
 JWM is a light-weight window manager for the X11 Window System.
 

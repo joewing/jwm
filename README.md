@@ -2,10 +2,21 @@ Amigo Desktop based on JWM (Joe's Window Manager)
 ==============================================================================
 
 Amigo Desktop his an attempt and experiment at the same time, trying to make
-some improvements in my view on top of JWM to making it more eye candy and
-accessible in the user side point of view.
+some improvements in my view on top (not the core) of JWM to making it more
+eye candy and accessible in the user side point of view and at the same
+showing that it can easily compete with the big desktop names but without all
+that blunt.
+
+Advantages:
 
 JWM is a light-weight window manager for the X11 Window System.
+
+It his super fast almost intant to open a window in modern computers.
+
+only takes 5mb ram, wont stand in your way wating for stuff to load.
+
+jwm runs on a 76mb pc with no lag (was not tested in anything lower,
+openbox lagged and toke a wille to start).
 
 Requirements
 ------------------------------------------------------------------------------
@@ -39,5 +50,5 @@ License
 ------------------------------------------------------------------------------
 See LICENSE for license information.
 
-For more information see http://joewing.net/projects/jwm/
-
+For more information see: 
+http://joewing.net/projects/jwm/

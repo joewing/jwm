@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: jwm 2.1.1\n"
+"Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2011-12-22 18:24-0600\n"
+"POT-Creation-Date: 2013-04-29 10:17-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,170 +17,111 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/background.c:136
+#: src/background.c:140
 msgid "no value specified for background"
 msgstr ""
 
-#: src/background.c:152
+#: src/background.c:156
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr ""
 
-#: src/background.c:301
+#: src/background.c:310
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr ""
 
-#: src/border.c:82
-#, c-format
-msgid "bitmap could not be loaded: %s"
-msgstr ""
-
-#: src/border.c:654
-#, c-format
-msgid "invalid border width specified: %d"
-msgstr ""
-
-#: src/border.c:673
-#, c-format
-msgid "invalid title height specified: %d"
-msgstr ""
-
-#: src/client.c:490
-#, c-format
-msgid "Client %s requested an invalid layer: %d"
-msgstr ""
-
-#: src/client.c:914
+#: src/client.c:875
 msgid "Kill this window?"
 msgstr ""
 
-#: src/client.c:915
+#: src/client.c:876
 msgid "This may cause data to be lost!"
 msgstr ""
 
-#: src/client.c:1487
-#, c-format
-msgid "invalid active client opacity: %s"
-msgstr ""
-
-#: src/client.c:1514 src/client.c:1527
-#, c-format
-msgid "invalid inactive client opacity: %s"
-msgstr ""
-
-#: src/client.c:1537
-#, c-format
-msgid "invalid inactive client opacity delta: %s"
-msgstr ""
-
-#: src/command.c:146 src/main.c:198
+#: src/command.c:138 src/main.c:190
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr ""
 
-#: src/cursor.c:271
-#, c-format
-msgid "invalid DoubleClickSpeed: %d"
-msgstr ""
-
-#: src/cursor.c:289
-#, c-format
-msgid "invalid DoubleClickDelta: %d"
-msgstr ""
-
-#: src/desktop.c:269
-msgid "invalid desktop count"
-msgstr ""
-
-#: src/desktop.c:283
+#: src/desktop.c:266
 msgid "empty Desktops Name tag"
 msgstr ""
 
-#: src/dock.c:149
+#: src/dock.c:151
 msgid "only one Dock allowed"
 msgstr ""
 
-#: src/dock.c:226
+#: src/dock.c:230
 msgid "could not acquire system tray selection"
 msgstr ""
 
-#: src/event.c:831
+#: src/event.c:851
 msgid "Fullscreen state will be shaped!"
 msgstr ""
 
-#: src/font.c:72 src/font.c:89
+#: src/font.c:76 src/font.c:95
 #, c-format
 msgid "could not load font: %s"
 msgstr ""
 
-#: src/font.c:79 src/font.c:96
+#: src/font.c:83 src/font.c:102
 #, c-format
 msgid "could not load the default font: %s"
 msgstr ""
 
-#: src/font.c:187
+#: src/font.c:208
 msgid "empty Font tag"
 msgstr ""
 
-#: src/group.c:133
+#: src/group.c:114
 msgid "invalid group class"
 msgstr ""
 
-#: src/group.c:146
+#: src/group.c:125
 msgid "invalid group name"
 msgstr ""
 
-#: src/group.c:271
+#: src/group.c:253
 #, c-format
-msgid "invalid group layer: %s"
+msgid "invalid group desktop: %d"
 msgstr ""
 
-#: src/group.c:279
-#, c-format
-msgid "invalid group desktop: %s"
-msgstr ""
-
-#: src/group.c:304
-#, c-format
-msgid "invalid group opacity: %s"
-msgstr ""
-
-#: src/image.c:161
+#: src/image.c:189
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr ""
 
-#: src/image.c:179
+#: src/image.c:202
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr ""
 
-#: src/image.c:186
+#: src/image.c:209
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr ""
 
-#: src/key.c:322
+#: src/key.c:324
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr ""
 
-#: src/key.c:330
+#: src/key.c:332
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr ""
 
-#: src/key.c:360
+#: src/key.c:362
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr ""
 
-#: src/key.c:376
+#: src/key.c:377
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr ""
 
-#: src/key.c:457
+#: src/key.c:458
 msgid "neither key nor keycode specified for Key"
 msgstr ""
 
@@ -189,260 +130,230 @@ msgstr ""
 msgid "key binding: root menu %d not defined"
 msgstr ""
 
-#: src/lex.c:183
+#: src/lex.c:193
 #, c-format
-msgid "%s[%d]: close tag \"%s\" does not match open tag \"%s\""
-msgstr ""
-
-#: src/lex.c:190
-#, c-format
-msgid "%s[%d]: unexpected and invalid close tag"
-msgstr ""
-
-#: src/lex.c:197
-#, c-format
-msgid "%s[%d]: close tag \"%s\" without open tag"
+msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 
 #: src/lex.c:200
 #, c-format
-msgid "%s[%d]: invalid close tag"
+msgid "%s[%u]: unexpected and invalid close tag"
 msgstr ""
 
-#: src/lex.c:219
+#: src/lex.c:207
 #, c-format
-msgid "%s[%d]: invalid open tag"
+msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr ""
 
-#: src/lex.c:232
+#: src/lex.c:210
 #, c-format
-msgid "%s[%d]: invalid tag"
+msgid "%s[%u]: invalid close tag"
 msgstr ""
 
-#: src/lex.c:279
+#: src/lex.c:229
 #, c-format
-msgid "%s[%d]: unexpected text: \"%s\""
+msgid "%s[%u]: invalid open tag"
 msgstr ""
 
-#: src/lex.c:325
+#: src/lex.c:242
+#, c-format
+msgid "%s[%u]: invalid tag"
+msgstr ""
+
+#: src/lex.c:288
+#, c-format
+msgid "%s[%u]: unexpected text: \"%s\""
+msgstr ""
+
+#: src/lex.c:336
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/menu.c:851
-#, c-format
-msgid "invalid menu opacity: %s"
-msgstr ""
-
-#: src/move.c:83
-#, c-format
-msgid "invalid snap distance specified: %d"
-msgstr ""
-
-#: src/parse.c:1738
-#, c-format
-msgid "invalid tag in %s: %s"
-msgstr ""
-
-#: src/parse.c:1758
-msgid "configuration error"
-msgstr ""
-
-#: src/popup.c:183
-#, c-format
-msgid "invalid popup delay specified: %s"
-msgstr ""
-
-#: src/root.c:104
-#, c-format
-msgid "invalid root menu specified: \"%c\""
-msgstr ""
-
-#: src/root.c:225
-msgid "Exit JWM"
-msgstr ""
-
-#: src/root.c:226
-msgid "Are you sure?"
-msgstr ""
-
-#: src/status.c:227
-#, c-format
-msgid "invalid MoveMode coordinates: \"%s\""
-msgstr ""
-
-#: src/status.c:242
-#, c-format
-msgid "invalid ResizeMode coordinates: \"%s\""
-msgstr ""
-
-#: src/swallow.c:93
-msgid "cannot swallow a client with no name"
-msgstr ""
-
-#: src/swallow.c:100
-msgid "cannot swallow the same client multiple times"
-msgstr ""
-
-#: src/taskbar.c:766
-#, c-format
-msgid "invalid maxwidth for TaskList: %s"
-msgstr ""
-
-#: src/taskbar.c:788
+#: src/parse.c:1100
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr ""
 
-#: src/traybutton.c:91
+#: src/parse.c:1848
+#, c-format
+msgid "invalid setting: %s"
+msgstr ""
+
+#: src/parse.c:1860
+#, c-format
+msgid "invalid opacity: %s"
+msgstr ""
+
+#: src/parse.c:1879
+#, c-format
+msgid "invalid layer: %s"
+msgstr ""
+
+#: src/parse.c:1896
+#, c-format
+msgid "invalid status window type: %s"
+msgstr ""
+
+#: src/parse.c:1905
+#, c-format
+msgid "invalid tag in %s: %s"
+msgstr ""
+
+#: src/parse.c:1926
+msgid "configuration error"
+msgstr ""
+
+#: src/root.c:102
+#, c-format
+msgid "invalid root menu specified: \"%c\""
+msgstr ""
+
+#: src/root.c:231
+msgid "Exit JWM"
+msgstr ""
+
+#: src/root.c:232
+msgid "Are you sure?"
+msgstr ""
+
+#: src/swallow.c:86
+msgid "cannot swallow a client with no name"
+msgstr ""
+
+#: src/swallow.c:93
+msgid "cannot swallow the same client multiple times"
+msgstr ""
+
+#: src/taskbar.c:733
+#, c-format
+msgid "invalid maxwidth for TaskList: %s"
+msgstr ""
+
+#: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr ""
 
-#: src/traybutton.c:140
+#: src/traybutton.c:136
 msgid "no icon or label for TrayButton"
 msgstr ""
 
-#: src/traybutton.c:145
-#, c-format
-msgid "invalid TrayButton width: %d"
-msgstr ""
-
-#: src/traybutton.c:149
-#, c-format
-msgid "invalid TrayButton height: %d"
-msgstr ""
-
-#: src/traybutton.c:254
+#: src/traybutton.c:246
 #, c-format
 msgid "invalid TrayButton action: \"%s\""
 msgstr ""
 
-#: src/traybutton.c:465
+#: src/traybutton.c:456
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr ""
 
-#: src/tray.c:1036
+#: src/tray.c:1071
 #, c-format
 msgid "invalid tray width: %d"
 msgstr ""
 
-#: src/tray.c:1054
+#: src/tray.c:1090
 #, c-format
 msgid "invalid tray height: %d"
 msgstr ""
 
-#: src/tray.c:1082
+#: src/tray.c:1119
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr ""
 
-#: src/tray.c:1108
-#, c-format
-msgid "invalid tray layer: %d"
-msgstr ""
-
-#: src/tray.c:1126
-#, c-format
-msgid "invalid tray border: %d"
-msgstr ""
-
-#: src/tray.c:1148
+#: src/tray.c:1156
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr ""
 
-#: src/tray.c:1168
+#: src/tray.c:1177
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr ""
 
-#: src/tray.c:1183
-#, c-format
-msgid "invalid tray opacity: %s"
-msgstr ""
-
-#: src/winmenu.c:76
+#: src/winmenu.c:80
 msgid "Close"
 msgstr ""
 
-#: src/winmenu.c:77
+#: src/winmenu.c:81
 msgid "Kill"
 msgstr ""
 
-#: src/winmenu.c:83
+#: src/winmenu.c:88
 msgid "Resize"
 msgstr ""
 
-#: src/winmenu.c:86
+#: src/winmenu.c:91
 msgid "Move"
 msgstr ""
 
-#: src/winmenu.c:93 src/winmenu.c:117
+#: src/winmenu.c:97 src/winmenu.c:120
 msgid "Restore"
 msgstr ""
 
-#: src/winmenu.c:96
-msgid "Unshade"
-msgstr ""
-
-#: src/winmenu.c:98
-msgid "Shade"
-msgstr ""
-
-#: src/winmenu.c:100
+#: src/winmenu.c:99
 msgid "Minimize"
 msgstr ""
 
-#: src/winmenu.c:109
+#: src/winmenu.c:103
+msgid "Unshade"
+msgstr ""
+
+#: src/winmenu.c:105
+msgid "Shade"
+msgstr ""
+
+#: src/winmenu.c:112
 msgid "Maximize-y"
 msgstr ""
 
-#: src/winmenu.c:113
+#: src/winmenu.c:116
 msgid "Maximize-x"
 msgstr ""
 
-#: src/winmenu.c:119
+#: src/winmenu.c:122
 msgid "Maximize"
 msgstr ""
 
-#: src/winmenu.c:127
+#: src/winmenu.c:130
 msgid "Unstick"
 msgstr ""
 
-#: src/winmenu.c:129
+#: src/winmenu.c:132
 msgid "Stick"
 msgstr ""
 
-#: src/winmenu.c:153
+#: src/winmenu.c:155
 msgid "Layer"
 msgstr ""
 
-#: src/winmenu.c:168
-msgid "[Top]"
-msgstr ""
-
 #: src/winmenu.c:170
-msgid "Top"
+msgid "[Above]"
 msgstr ""
 
-#: src/winmenu.c:177
+#: src/winmenu.c:172
+msgid "Above"
+msgstr ""
+
+#: src/winmenu.c:175
 msgid "[Normal]"
 msgstr ""
 
-#: src/winmenu.c:179
+#: src/winmenu.c:177
 msgid "Normal"
 msgstr ""
 
-#: src/winmenu.c:200
-msgid "[Bottom]"
+#: src/winmenu.c:180
+msgid "[Below]"
+msgstr ""
+
+#: src/winmenu.c:182
+msgid "Below"
 msgstr ""
 
 #: src/winmenu.c:202
-msgid "Bottom"
-msgstr ""
-
-#: src/winmenu.c:221
 msgid "Send To"
 msgstr ""

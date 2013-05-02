@@ -1,4 +1,5 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
+# Translation of JWM 2.1.1 in Portuguese (Portugal)
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # Vitor Lopes <vmnlop@gmail.com>, 2013.
@@ -8,7 +9,7 @@ msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
 "POT-Creation-Date: 2013-04-29 10:17-0500\n"
-"PO-Revision-Date: 2013-04-30 16:37+0100\n"
+"PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
 "Language: pt-PT\n"
@@ -16,6 +17,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: PORTUGAL\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
 #: src/background.c:140
 msgid "no value specified for background"
@@ -83,9 +87,9 @@ msgid "invalid group name"
 msgstr "nome do grupo invalido"
 
 #: src/group.c:253
-#, fuzzy, c-format
+#, c-format
 msgid "invalid group desktop: %d"
-msgstr "grupo do ambiente de trabalho invalido %d"
+msgstr "grupo do ambiente de trabalho invalido: %d"
 
 #: src/image.c:189
 #, c-format
@@ -133,42 +137,39 @@ msgstr ""
 "definido"
 
 #: src/lex.c:193
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
-msgstr ""
-"%s[%d]: terminação da etiqueta (tag) \"%s\" não corresponde à abertura da "
-"etiqueta (tag) \"%s\""
+msgstr "%s[%u]: terminação da etiqueta (tag) \"%s\" não corresponde à abertura da etiqueta (tag) \"%s\""
 
 #: src/lex.c:200
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
-msgstr "%s[%d]: terminação da etiqueta (tag) inesperada e invalida"
+msgstr "%s[%u]: terminação da etiqueta (tag) inesperada e invalida"
 
 #: src/lex.c:207
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
-msgstr ""
-"%s[%d]: terminação da etiqueta (tag) \"%s\" sem ter etiqueta de abertura"
+msgstr "%s[%d]: terminação da etiqueta (tag) \"%s\" sem etiqueta de abertura"
 
 #: src/lex.c:210
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%d]: terminação de etiqueta (tag) invalida"
 
 #: src/lex.c:229
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: invalid open tag"
-msgstr "%s[%d]: abertura de etiqueta (tag) invalida"
+msgstr "%s[%u]: abertura de etiqueta (tag) invalida"
 
 #: src/lex.c:242
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: invalid tag"
-msgstr "%s[%d]: etiqueta invalida (tag)"
+msgstr "%s[%u]: etiqueta invalida (tag)"
 
 #: src/lex.c:288
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
-msgstr "%s[%d]: texto inesperado: \"%s\""
+msgstr "%s[%u]: texto inesperado: \"%s\""
 
 #: src/lex.c:336
 #, c-format
@@ -181,24 +182,24 @@ msgid "invalid insert mode: \"%s\""
 msgstr "modo de inserção invalido: \"%s\""
 
 #: src/parse.c:1848
-#, fuzzy, c-format
+#, c-format
 msgid "invalid setting: %s"
-msgstr "etiqueta invalida dentro %s: %s"
+msgstr "Configuração invalida: %s"
 
 #: src/parse.c:1860
-#, fuzzy, c-format
+#, c-format
 msgid "invalid opacity: %s"
-msgstr "transparência do menu invalida: %s"
+msgstr "transparência invalida: %s"
 
 #: src/parse.c:1879
-#, fuzzy, c-format
+#, c-format
 msgid "invalid layer: %s"
-msgstr "camada do grupo invalida %s"
+msgstr "camada invalida: %s"
 
 #: src/parse.c:1896
-#, fuzzy, c-format
+#, c-format
 msgid "invalid status window type: %s"
-msgstr "tipo de fundo invalido: \"%s\""
+msgstr "tipo de fundo invalido: %s"
 
 #: src/parse.c:1905
 #, c-format
@@ -362,9 +363,3 @@ msgstr "Abaixo"
 #: src/winmenu.c:202
 msgid "Send To"
 msgstr "Enviar Para"
-
-#~ msgid "bitmap could not be loaded: %s"
-#~ msgstr "imagem (bitmap) não foi carregada: %s"
-
-#~ msgid "invalid border width specified: %d"
-#~ msgstr "largura da borda (border width) não foi especificado %d"

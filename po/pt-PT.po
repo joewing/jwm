@@ -139,7 +139,9 @@ msgstr ""
 #: src/lex.c:193
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
-msgstr "%s[%u]: terminação da etiqueta (tag) \"%s\" não corresponde à abertura da etiqueta (tag) \"%s\""
+msgstr ""
+"%s[%u]: terminação da etiqueta (tag) \"%s\" não corresponde à abertura da "
+"etiqueta (tag) \"%s\""
 
 #: src/lex.c:200
 #, c-format

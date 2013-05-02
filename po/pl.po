@@ -54,12 +54,10 @@ msgid "only one Dock allowed"
 msgstr "tylko jeden dozwolony Dock"
 
 #: src/dock.c:230
-#, fuzzy
 msgid "could not acquire system tray selection"
 msgstr "nie można nabyć wyboru w zasobniku systemowym"
 
 #: src/event.c:851
-#, fuzzy
 msgid "Fullscreen state will be shaped!"
 msgstr "Pełnoekranowy stan będzie kształtowany!"
 
@@ -86,12 +84,12 @@ msgid "invalid group name"
 msgstr "nieprawidłowa nazwa grupy"
 
 #: src/group.c:253
-#, fuzzy, c-format
+#, c-format
 msgid "invalid group desktop: %d"
-msgstr "nieprawidłowy pulpitu grupy: %s"
+msgstr "nieprawidłowy pulpitu grupy: %d"
 
 #: src/image.c:189
-#, fuzzy, c-format
+#, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr "nie można utworzyć przeczytać struct dla obrazu PNG: %s"
 
@@ -125,7 +123,6 @@ msgid "invalid key symbol: \"%s\""
 msgstr "nieprawidłowy symbol klucza: \"%s\""
 
 #: src/key.c:458
-#, fuzzy
 msgid "neither key nor keycode specified for Key"
 msgstr "ani klucza ani keycode określony dla Key"
 
@@ -135,39 +132,39 @@ msgid "key binding: root menu %d not defined"
 msgstr "klucz wiązania: menu główne %d nie zdefiniowano"
 
 #: src/lex.c:193
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
-msgstr "%s[%d]: zamknij znacznik \"%s\" nie pasuje otwarty znacznik \"%s\""
+msgstr "%s[%u]: zamknij znacznik \"%s\" nie pasuje otwarty znacznik \"%s\""
 
 #: src/lex.c:200
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
-msgstr "%s[%d]: nieoczekiwany i nieprawidłowo zamknięty znacznik"
+msgstr "%s[%u]: nieoczekiwany i nieprawidłowo zamknięty znacznik"
 
 #: src/lex.c:207
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
-msgstr "%s[%d]: zamknij znacznik \"%s\" bez otwartego znacznika"
+msgstr "%s[%u]: zamknij znacznik \"%s\" bez otwartego znacznika"
 
 #: src/lex.c:210
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: invalid close tag"
-msgstr "%s[%d]: nieprawidłowo zamknięty znacznik"
+msgstr "%s[%u]: nieprawidłowo zamknięty znacznik"
 
 #: src/lex.c:229
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: invalid open tag"
-msgstr "%s[%d]: nieprawidłowo otwarty znacznik"
+msgstr "%s[%u]: nieprawidłowo otwarty znacznik"
 
 #: src/lex.c:242
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: invalid tag"
-msgstr "%s[%d]: nieprawidłowy znacznik"
+msgstr "%s[%u]: nieprawidłowy znacznik"
 
 #: src/lex.c:288
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
-msgstr "%s[%d]: nieoczekiwany tekst: \"%s\""
+msgstr "%s[%u]: nieoczekiwany tekst: \"%s\""
 
 #: src/lex.c:336
 #, c-format
@@ -180,24 +177,24 @@ msgid "invalid insert mode: \"%s\""
 msgstr "nieprawidłowy tryb edycji: \"%s\""
 
 #: src/parse.c:1848
-#, fuzzy, c-format
+#, c-format
 msgid "invalid setting: %s"
-msgstr "nieprawidłowy znacznik w %s: %s"
+msgstr "nieprawidłowy znacznik w: %s"
 
 #: src/parse.c:1860
-#, fuzzy, c-format
+#, c-format
 msgid "invalid opacity: %s"
 msgstr "nieprawidłowa nieprzezroczystość menu: %s"
 
 #: src/parse.c:1879
-#, fuzzy, c-format
+#, c-format
 msgid "invalid layer: %s"
 msgstr "nieprawidłowa warstwa grupy: %s"
 
 #: src/parse.c:1896
-#, fuzzy, c-format
+#, c-format
 msgid "invalid status window type: %s"
-msgstr "nieprawidłowy typ tła: \"%s\""
+msgstr "nieprawidłowy typ tła: %s"
 
 #: src/parse.c:1905
 #, c-format
@@ -361,76 +358,3 @@ msgstr ""
 #: src/winmenu.c:202
 msgid "Send To"
 msgstr "Wyślij do"
-
-#~ msgid "bitmap could not be loaded: %s"
-#~ msgstr "mapa bitowa nie może być załadowana: %s"
-
-#~ msgid "invalid border width specified: %d"
-#~ msgstr "nieprawidłowo określona szerokość granicy: %d"
-
-#~ msgid "invalid title height specified: %d"
-#~ msgstr "nieprawidłowo określono wysokość tytułu: %d"
-
-#~ msgid "Client %s requested an invalid layer: %d"
-#~ msgstr "Klient %s zażądał nieprawidłową warstwę: %d"
-
-#~ msgid "invalid active client opacity: %s"
-#~ msgstr "nieprawidłowa aktywna nieprzezroczystość klienta: %s"
-
-#~ msgid "invalid inactive client opacity: %s"
-#~ msgstr "nieprawidłowa nieaktywne nieprzezroczystość klienta: %s"
-
-#~ msgid "invalid inactive client opacity delta: %s"
-#~ msgstr "nieprawidłowa nieaktywna delta nieprzezroczystość klienta: %s"
-
-#~ msgid "invalid DoubleClickSpeed: %d"
-#~ msgstr "nieważne DoubleClickSpeed: %d"
-
-#~ msgid "invalid DoubleClickDelta: %d"
-#~ msgstr "nieważne DoubleClickDelta: %d"
-
-#~ msgid "invalid desktop count"
-#~ msgstr "nieprawidłowa ilość pulpitów"
-
-#~ msgid "invalid group opacity: %s"
-#~ msgstr "nieprawidłowa nieprzezroczystość grupy: %s"
-
-#, fuzzy
-#~ msgid "invalid snap distance specified: %d"
-#~ msgstr "nieprawidłowo określona odległość snap: %d"
-
-#~ msgid "invalid popup delay specified: %s"
-#~ msgstr "nieprawidłowo określono opóźnienie popup: %s"
-
-#~ msgid "invalid MoveMode coordinates: \"%s\""
-#~ msgstr "nieprawidłowe współrzędne MoveMode: \"%s\""
-
-#~ msgid "invalid ResizeMode coordinates: \"%s\""
-#~ msgstr "nieprawidłowe współrzędne ResizeMode: \"%s\""
-
-#~ msgid "invalid TrayButton width: %d"
-#~ msgstr "nieprawidłowa szerokość TrayButton: %d"
-
-#~ msgid "invalid TrayButton height: %d"
-#~ msgstr "nieprawidłowa wysokość TrayButton: %d"
-
-#~ msgid "invalid tray layer: %d"
-#~ msgstr "nieprawidłowa warstwa zasobnika: %d"
-
-#~ msgid "invalid tray border: %d"
-#~ msgstr "nieprawidłowa granica zasobnika: %d"
-
-#~ msgid "invalid tray opacity: %s"
-#~ msgstr "nieprawidłowa nieprzezroczystość zasobnika: %s"
-
-#~ msgid "[Top]"
-#~ msgstr "[Góra]"
-
-#~ msgid "Top"
-#~ msgstr "Góra"
-
-#~ msgid "[Bottom]"
-#~ msgstr "[Dół]"
-
-#~ msgid "Bottom"
-#~ msgstr "Dół"

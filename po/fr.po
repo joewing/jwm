@@ -79,7 +79,7 @@ msgid "invalid group name"
 msgstr "nom de groupe incorrect"
 
 #: src/group.c:253
-#, fuzzy, c-format
+#, c-format
 msgid "invalid group desktop: %d"
 msgstr "bureau de groupe incorrect: %d"
 
@@ -127,41 +127,41 @@ msgid "key binding: root menu %d not defined"
 msgstr "combinaison de touches: menu racine %d non défini"
 
 #: src/lex.c:193
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
-"%s[%d]: la balise de fermeture \"%s\" ne coïncide pas avec la balise "
+"%s[%u]: la balise de fermeture \"%s\" ne coïncide pas avec la balise "
 "d'ouverture \"%s\""
 
 #: src/lex.c:200
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
-msgstr "%s[%d]: balise de fermeture inattendue ou incorrecte"
+msgstr "%s[%u]: balise de fermeture inattendue ou incorrecte"
 
 #: src/lex.c:207
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
-msgstr "%s[%d]: balise de fermeture \"%s\" sans balise d'ouverture"
+msgstr "%s[%u]: balise de fermeture \"%s\" sans balise d'ouverture"
 
 #: src/lex.c:210
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: invalid close tag"
-msgstr "%s[%d]: balise de fermeture incorrecte"
+msgstr "%s[%u]: balise de fermeture incorrecte"
 
 #: src/lex.c:229
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: invalid open tag"
-msgstr "%s[%d]: balise d'ouverture incorrecte"
+msgstr "%s[%u]: balise d'ouverture incorrecte"
 
 #: src/lex.c:242
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: invalid tag"
-msgstr "%s[%d]: balise incorrecte"
+msgstr "%s[%u]: balise incorrecte"
 
 #: src/lex.c:288
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
-msgstr "%s[%d]: texte inattendu: \"%s\""
+msgstr "%s[%u]: texte inattendu: \"%s\""
 
 #: src/lex.c:336
 #, c-format
@@ -174,24 +174,24 @@ msgid "invalid insert mode: \"%s\""
 msgstr "Mode d'insertion incorrect: \"%s\""
 
 #: src/parse.c:1848
-#, fuzzy, c-format
+#, c-format
 msgid "invalid setting: %s"
-msgstr "Balise incorrecte dans %s: %s"
+msgstr "Balise incorrecte dans: %s"
 
 #: src/parse.c:1860
-#, fuzzy, c-format
+#, c-format
 msgid "invalid opacity: %s"
 msgstr "opacité de menu incorrecte: %s"
 
 #: src/parse.c:1879
-#, fuzzy, c-format
+#, c-format
 msgid "invalid layer: %s"
 msgstr "plan de groupe incorrect: %s"
 
 #: src/parse.c:1896
-#, fuzzy, c-format
+#, c-format
 msgid "invalid status window type: %s"
-msgstr "type de fond d'écran incorrect: \"%s\""
+msgstr "type de fond d'écran incorrect: %s"
 
 #: src/parse.c:1905
 #, c-format
@@ -355,75 +355,3 @@ msgstr ""
 #: src/winmenu.c:202
 msgid "Send To"
 msgstr "Envoyer vers"
-
-#~ msgid "bitmap could not be loaded: %s"
-#~ msgstr "Impossible de charger l'image bitmap: %s"
-
-#~ msgid "invalid border width specified: %d"
-#~ msgstr "largeur de bordure spécifiée incorrecte: %d"
-
-#~ msgid "invalid title height specified: %d"
-#~ msgstr "Hauteur de titre spécifiée incorrecte: %d"
-
-#~ msgid "Client %s requested an invalid layer: %d"
-#~ msgstr "Requête de plan client %s incorrecte: %d"
-
-#~ msgid "invalid active client opacity: %s"
-#~ msgstr "opacité client actif incorrecte: %s"
-
-#~ msgid "invalid inactive client opacity: %s"
-#~ msgstr "opacité client inactif incorrecte: %s"
-
-#~ msgid "invalid inactive client opacity delta: %s"
-#~ msgstr "opacité delta client inactif incorrecte: %s"
-
-#~ msgid "invalid DoubleClickSpeed: %d"
-#~ msgstr "vitesse de double-clic incorrecte: %d"
-
-#~ msgid "invalid DoubleClickDelta: %d"
-#~ msgstr "delta de double-clic incorrect: %d"
-
-#~ msgid "invalid desktop count"
-#~ msgstr "nombre de bureaux virtuels incorrect"
-
-#~ msgid "invalid group opacity: %s"
-#~ msgstr "opacité de groupe incorrecte: %s"
-
-#~ msgid "invalid snap distance specified: %d"
-#~ msgstr "Distance d'accrochage spécifiée incorrecte: %d"
-
-#~ msgid "invalid popup delay specified: %s"
-#~ msgstr "délai de surgissement des fenêtres éclair incorrect: %s"
-
-#~ msgid "invalid MoveMode coordinates: \"%s\""
-#~ msgstr "coordonnées de mode de déplacement incorrectes: \"%s\""
-
-#~ msgid "invalid ResizeMode coordinates: \"%s\""
-#~ msgstr "coordonnées de mode de redimensionnent incorrectes: \"%s\""
-
-#~ msgid "invalid TrayButton width: %d"
-#~ msgstr "largeur de bouton de barre incorrect: %d"
-
-#~ msgid "invalid TrayButton height: %d"
-#~ msgstr "hauteur de bouton de barre incorrect: %d"
-
-#~ msgid "invalid tray layer: %d"
-#~ msgstr "plan de barre incorrect: %d"
-
-#~ msgid "invalid tray border: %d"
-#~ msgstr "bordure de barre incorrecte: %d"
-
-#~ msgid "invalid tray opacity: %s"
-#~ msgstr "opacité de barre incorrecte: %s"
-
-#~ msgid "[Top]"
-#~ msgstr "[Avant-plan]"
-
-#~ msgid "Top"
-#~ msgstr "Avant-plan"
-
-#~ msgid "[Bottom]"
-#~ msgstr "[Arrière-plan]"
-
-#~ msgid "Bottom"
-#~ msgstr "Arrière-plan"

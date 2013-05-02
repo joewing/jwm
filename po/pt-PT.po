@@ -149,12 +149,12 @@ msgstr "%s[%u]: terminação da etiqueta (tag) inesperada e invalida"
 #: src/lex.c:207
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
-msgstr "%s[%d]: terminação da etiqueta (tag) \"%s\" sem etiqueta de abertura"
+msgstr "%s[%u]: terminação da etiqueta (tag) \"%s\" sem etiqueta de abertura"
 
 #: src/lex.c:210
 #, c-format
 msgid "%s[%u]: invalid close tag"
-msgstr "%s[%d]: terminação de etiqueta (tag) invalida"
+msgstr "%s[%u]: terminação de etiqueta (tag) invalida"
 
 #: src/lex.c:229
 #, c-format

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-04-29 10:17-0500\n"
+"POT-Creation-Date: 2013-05-03 17:41-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -226,7 +226,7 @@ msgstr "nie może połknąć klienta bez nazwy"
 msgid "cannot swallow the same client multiple times"
 msgstr "nie można połknąć tego samego klienta, wiele razy"
 
-#: src/taskbar.c:733
+#: src/taskbar.c:732
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"

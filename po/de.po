@@ -1,48 +1,43 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: jwm 2.2.0\n"
+"Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
 "POT-Creation-Date: 2013-05-03 17:41-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2013-03-11 14:25+0100\n"
+"Last-Translator: fido <L18L@puppy.forum>\n"
+"Language-Team: German\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/background.c:140
 msgid "no value specified for background"
-msgstr ""
+msgstr "kein Wert für Hintergrund spezifiziert"
 
 #: src/background.c:156
 #, c-format
 msgid "invalid background type: \"%s\""
-msgstr ""
+msgstr "ungültiger Typ für Hintergrund: \"%s\""
 
 #: src/background.c:310
 #, c-format
 msgid "background image not found: \"%s\""
-msgstr ""
+msgstr "Hintergrundbild nicht gefunden: \"%s\""
 
 #: src/client.c:875
 msgid "Kill this window?"
-msgstr ""
+msgstr "Dieses Fenster töten?"
 
 #: src/client.c:876
 msgid "This may cause data to be lost!"
-msgstr ""
+msgstr "Das kann Datenverlust verursachen!"
 
 #: src/command.c:138 src/main.c:190
 #, c-format
 msgid "exec failed: (%s) %s"
-msgstr ""
+msgstr "Ausführung fehlgeschlagen: (%s) %s"
 
 #: src/desktop.c:266
 msgid "empty Desktops Name tag"
@@ -63,12 +58,12 @@ msgstr ""
 #: src/font.c:76 src/font.c:95
 #, c-format
 msgid "could not load font: %s"
-msgstr ""
+msgstr "konnte Schrift nicht laden: %s"
 
 #: src/font.c:83 src/font.c:102
 #, c-format
 msgid "could not load the default font: %s"
-msgstr ""
+msgstr "konnte Standard-Schrift nicht laden: %s"
 
 #: src/font.c:208
 msgid "empty Font tag"
@@ -76,16 +71,16 @@ msgstr ""
 
 #: src/group.c:114
 msgid "invalid group class"
-msgstr ""
+msgstr "ungültige Gruppenklasse"
 
 #: src/group.c:125
 msgid "invalid group name"
-msgstr ""
+msgstr "ungültiger Gruppenname"
 
 #: src/group.c:253
 #, c-format
 msgid "invalid group desktop: %d"
-msgstr ""
+msgstr "ungültiger Gruppen-Desktop: %d"
 
 #: src/image.c:189
 #, c-format
@@ -114,12 +109,12 @@ msgstr ""
 #: src/key.c:362
 #, c-format
 msgid "invalid modifier: \"%c\""
-msgstr ""
+msgstr "ungültiger Modifizierer: \"%c\""
 
 #: src/key.c:377
 #, c-format
 msgid "invalid key symbol: \"%s\""
-msgstr ""
+msgstr "ungültiges Tastensymbol: \"%s\""
 
 #: src/key.c:458
 msgid "neither key nor keycode specified for Key"
@@ -173,22 +168,22 @@ msgstr ""
 #: src/parse.c:1100
 #, c-format
 msgid "invalid insert mode: \"%s\""
-msgstr ""
+msgstr "ungültiger EInfügungsmodus: \"%s\""
 
 #: src/parse.c:1848
 #, c-format
 msgid "invalid setting: %s"
-msgstr ""
+msgstr "ungültige Einstellung %s"
 
 #: src/parse.c:1860
 #, c-format
 msgid "invalid opacity: %s"
-msgstr ""
+msgstr "ungültige Opazität: \"%s\""
 
 #: src/parse.c:1879
 #, c-format
 msgid "invalid layer: %s"
-msgstr ""
+msgstr "ungültige Ebene %s"
 
 #: src/parse.c:1896
 #, c-format
@@ -198,24 +193,24 @@ msgstr ""
 #: src/parse.c:1905
 #, c-format
 msgid "invalid tag in %s: %s"
-msgstr ""
+msgstr "ungültiger tag in %s: %s"
 
 #: src/parse.c:1926
 msgid "configuration error"
-msgstr ""
+msgstr "Konfigurationsfehler"
 
 #: src/root.c:102
 #, c-format
 msgid "invalid root menu specified: \"%c\""
-msgstr ""
+msgstr "ungültiges root Menü spezifiziert: \"%c\""
 
 #: src/root.c:231
 msgid "Exit JWM"
-msgstr ""
+msgstr "JWM beenden"
 
 #: src/root.c:232
 msgid "Are you sure?"
-msgstr ""
+msgstr "Sicher?"
 
 #: src/swallow.c:86
 msgid "cannot swallow a client with no name"
@@ -233,7 +228,7 @@ msgstr ""
 #: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
-msgstr ""
+msgstr "konnte Leistensymbol nicht laden: %s"
 
 #: src/traybutton.c:136
 msgid "no icon or label for TrayButton"
@@ -252,108 +247,108 @@ msgstr ""
 #: src/tray.c:1071
 #, c-format
 msgid "invalid tray width: %d"
-msgstr ""
+msgstr "ungültige Leistenbreite: %d"
 
 #: src/tray.c:1090
 #, c-format
 msgid "invalid tray height: %d"
-msgstr ""
+msgstr "ungültige Leistenhöhe: %d"
 
 #: src/tray.c:1119
 #, c-format
 msgid "invalid tray layout: \"%s\""
-msgstr ""
+msgstr "ungültiges Leistenlayout: \"%s\""
 
 #: src/tray.c:1156
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
-msgstr ""
+msgstr "ungültige Horizontalausrichtung für Leiste: \"%s\""
 
 #: src/tray.c:1177
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
-msgstr ""
+msgstr "ungültige Vertikalausrichtung für Leiste: \"%s\""
 
 #: src/winmenu.c:80
 msgid "Close"
-msgstr ""
+msgstr "Schließen"
 
 #: src/winmenu.c:81
 msgid "Kill"
-msgstr ""
+msgstr "Töten"
 
 #: src/winmenu.c:88
 msgid "Resize"
-msgstr ""
+msgstr "Größe ändern"
 
 #: src/winmenu.c:91
 msgid "Move"
-msgstr ""
+msgstr "Verschieben"
 
 #: src/winmenu.c:97 src/winmenu.c:120
 msgid "Restore"
-msgstr ""
+msgstr "Wiedereinlesen"
 
 #: src/winmenu.c:99
 msgid "Minimize"
-msgstr ""
+msgstr "Minimieren"
 
 #: src/winmenu.c:103
 msgid "Unshade"
-msgstr ""
+msgstr "Entschattieren"
 
 #: src/winmenu.c:105
 msgid "Shade"
-msgstr ""
+msgstr "Schattieren"
 
 #: src/winmenu.c:112
 msgid "Maximize-y"
-msgstr ""
+msgstr "Maximieren-y"
 
 #: src/winmenu.c:116
 msgid "Maximize-x"
-msgstr ""
+msgstr "Maximieren-x"
 
 #: src/winmenu.c:122
 msgid "Maximize"
-msgstr ""
+msgstr "Maximieren"
 
 #: src/winmenu.c:130
 msgid "Unstick"
-msgstr ""
+msgstr "Abkleben"
 
 #: src/winmenu.c:132
 msgid "Stick"
-msgstr ""
+msgstr "Ankleben"
 
 #: src/winmenu.c:155
 msgid "Layer"
-msgstr ""
+msgstr "Ebene"
 
 #: src/winmenu.c:170
 msgid "[Above]"
-msgstr ""
+msgstr "[Darüber]"
 
 #: src/winmenu.c:172
 msgid "Above"
-msgstr ""
+msgstr "Darüber"
 
 #: src/winmenu.c:175
 msgid "[Normal]"
-msgstr ""
+msgstr "[Normal]"
 
 #: src/winmenu.c:177
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #: src/winmenu.c:180
 msgid "[Below]"
-msgstr ""
+msgstr "[Darunter]"
 
 #: src/winmenu.c:182
 msgid "Below"
-msgstr ""
+msgstr "Darunter"
 
 #: src/winmenu.c:202
 msgid "Send To"
-msgstr ""
+msgstr "Senden an"

@@ -244,8 +244,7 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
    if(np) {
       switch(mask) {
       case Button1:
-         if(   (np->client->state.status & STAT_ACTIVE)
-            && np->client == nodes[np->client->state.layer]) {
+         if(np->client->state.status & STAT_ACTIVE) {
             MinimizeClient(np->client);
          } else {
             RestoreClient(np->client, 1);

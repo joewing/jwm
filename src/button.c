@@ -213,13 +213,13 @@ void GetScaledIconSize(IconNode *ip, int maxsize,
    if(ip->image->width > ip->image->height) {
 
       /* Compute size wrt width */
-      *width = (maxsize * ratio) >> 16;
+      *width = maxsize;
       *height = (*width << 16) / ratio;
 
    } else {
 
       /* Compute size wrt height */
-      *height = (maxsize << 16) / ratio;
+      *height = maxsize;
       *width = (*height * ratio) >> 16;
 
    }

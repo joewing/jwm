@@ -248,9 +248,9 @@ void ResizeClientKeyboard(ClientNode *np)
       return;
    }
 
-   if(JUNLIKELY(JXGrabKeyboard(display, np->window, True, GrabModeAsync,
-      GrabModeAsync, CurrentTime) != GrabSuccess)) {
-      Debug("ResizeClientKeyboard: could not grab keyboard");
+   if(JUNLIKELY(JXGrabKeyboard(display, np->parent, True, GrabModeAsync,
+                               GrabModeAsync, CurrentTime) != GrabSuccess)) {
+      Debug("ResizeClient: could not grab keyboard");
       return;
    }
    GrabMouseForResize(BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE);
@@ -266,7 +266,11 @@ void ResizeClientKeyboard(ClientNode *np)
    CreateResizeWindow(np);
    UpdateResizeWindow(np, gwidth, gheight);
 
-   MoveMouse(rootWindow, np->x + np->width, np->y + np->height);
+   if(np->state.status & STAT_SHADED) {
+      MoveMouse(rootWindow, np->x + np->width, np->y);
+   } else {
+      MoveMouse(rootWindow, np->x + np->width, np->y + np->height);
+   }
    DiscardMotionEvents(&event, np->window);
 
    for(;;) {
@@ -308,7 +312,11 @@ void ResizeClientKeyboard(ClientNode *np)
          DiscardMotionEvents(&event, np->window);
 
          deltax = event.xmotion.x - (np->x + np->width);
-         deltay = event.xmotion.y - (np->y + np->height);
+         if(np->state.status & STAT_SHADED) {
+            deltay = 0;
+         } else {
+            deltay = event.xmotion.y - (np->y + np->height);
+         }
 
       } else if(event.type == ButtonRelease) {
 

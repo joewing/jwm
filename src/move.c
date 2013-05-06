@@ -256,12 +256,10 @@ char MoveClientKeyboard(ClientNode *np)
       MaximizeClient(np, 0, 0);
    }
 
-   if(np->state.status & STAT_SHADED) {
-      JXGrabKeyboard(display, np->parent, True, GrabModeAsync,
-                     GrabModeAsync, CurrentTime);
-   } else {
-      JXGrabKeyboard(display, np->window, True, GrabModeAsync,
-                     GrabModeAsync, CurrentTime);
+   if(JUNLIKELY(JXGrabKeyboard(display, np->parent, True, GrabModeAsync,
+                               GrabModeAsync, CurrentTime))) {
+      Debug("MoveClient: could not grab keyboard");
+      return 0;
    }
    GrabMouseForMove();
 

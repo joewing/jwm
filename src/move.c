@@ -256,12 +256,14 @@ char MoveClientKeyboard(ClientNode *np)
       MaximizeClient(np, 0, 0);
    }
 
-   GrabMouseForMove();
-   if(JUNLIKELY(JXGrabKeyboard(display, np->window, True, GrabModeAsync,
-      GrabModeAsync, CurrentTime) != GrabSuccess)) {
-      Debug("could not grab keyboard for client move");
-      return 0;
+   if(np->state.status & STAT_SHADED) {
+      JXGrabKeyboard(display, np->parent, True, GrabModeAsync,
+                     GrabModeAsync, CurrentTime);
+   } else {
+      JXGrabKeyboard(display, np->window, True, GrabModeAsync,
+                     GrabModeAsync, CurrentTime);
    }
+   GrabMouseForMove();
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
 

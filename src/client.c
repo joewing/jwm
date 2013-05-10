@@ -154,6 +154,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    np->colormaps = NULL;
    np->state.status = STAT_NONE;
    np->state.layer = LAYER_NORMAL;
+   np->state.defaultLayer = LAYER_NORMAL;
 
    np->state.border = BORDER_DEFAULT;
    np->borderAction = BA_NONE;
@@ -164,6 +165,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
       np->state.border = BORDER_OUTLINE | BORDER_TITLE | BORDER_MOVE;
       np->state.status |= STAT_WMDIALOG | STAT_STICKY;
       np->state.layer = LAYER_ABOVE;
+      np->state.defaultLayer = LAYER_ABOVE;
    }
 
    /* We now know the layer, so insert */
@@ -478,9 +480,8 @@ void SetClientLayer(ClientNode *np, unsigned int layer)
       for(x = FIRST_LAYER; x <= LAST_LAYER; x++) {
          tp = nodes[x];
          while(tp) {
+            next = tp->next;
             if(tp == np || tp->owner == np->window) {
-
-               next = tp->next;
 
                /* Remove from the old node list */
                if(next) {
@@ -506,13 +507,10 @@ void SetClientLayer(ClientNode *np, unsigned int layer)
 
                /* Set the new layer */
                tp->state.layer = layer;
+               WriteState(tp);
 
-               /* Make sure we continue on the correct layer list. */
-               tp = next;
-
-            } else {
-               tp = tp->next;
             }
+            tp = next;
          }
       }
 
@@ -753,7 +751,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
 
       np->state.status &= ~STAT_FULLSCREEN;
       np->state.border |= BORDER_MOVE;
-      SetClientLayer(np, LAYER_NORMAL);
+      SetClientLayer(np, np->state.defaultLayer);
 
       np->x = np->oldx;
       np->y = np->oldy;

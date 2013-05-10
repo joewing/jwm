@@ -939,10 +939,10 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
          UpdateTaskBar();
       }
       if(actionBelow && np->state.layer == LAYER_BELOW) {
-         SetClientLayer(np, LAYER_NORMAL);
+         SetClientLayer(np, np->state.defaultLayer);
       }
       if(actionAbove && np->state.layer == LAYER_ABOVE) {
-         SetClientLayer(np, LAYER_NORMAL);
+         SetClientLayer(np, np->state.defaultLayer);
       }
       break;
    case 1: /* Add */
@@ -965,10 +965,10 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
          np->state.status |= STAT_NOLIST;
          UpdateTaskBar();
       }
-      if(actionBelow && np->state.layer == LAYER_NORMAL) {
+      if(actionBelow) {
          SetClientLayer(np, LAYER_BELOW);
       }
-      if(actionAbove && np->state.layer == LAYER_NORMAL) {
+      if(actionAbove) {
          SetClientLayer(np, LAYER_ABOVE);
       }
       break;
@@ -998,17 +998,17 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
          }
       }
       if(actionBelow) {
-         if(np->state.layer == LAYER_NORMAL) {
+         if(np->state.layer == LAYER_BELOW) {
+            SetClientLayer(np, np->state.defaultLayer);
+         } else {
             SetClientLayer(np, LAYER_BELOW);
-         } else if(np->state.layer == LAYER_BELOW) {
-            SetClientLayer(np, LAYER_NORMAL);
          }
       }
       if(actionAbove) {
-         if(np->state.layer == LAYER_NORMAL) {
+         if(np->state.layer == LAYER_ABOVE) {
+            SetClientLayer(np, np->state.defaultLayer);
+         } else {
             SetClientLayer(np, LAYER_ABOVE);
-         } else if(np->state.layer == LAYER_ABOVE) {
-            SetClientLayer(np, LAYER_NORMAL);
          }
       }
       /* Note that we don't handle toggling of hidden per EWMH

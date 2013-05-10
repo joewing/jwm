@@ -375,10 +375,12 @@ void WriteNetState(ClientNode *np)
       values[index++] = atoms[ATOM_NET_WM_STATE_SKIP_TASKBAR];
    }
 
-   if(np->state.layer == LAYER_BELOW) {
-      values[index++] = atoms[ATOM_NET_WM_STATE_BELOW];
-   } else if(np->state.layer == LAYER_ABOVE) {
-      values[index++] = atoms[ATOM_NET_WM_STATE_ABOVE];
+   if(np->state.layer != np->state.defaultLayer) {
+      if(np->state.layer == LAYER_BELOW) {
+         values[index++] = atoms[ATOM_NET_WM_STATE_BELOW];
+      } else if(np->state.layer == LAYER_ABOVE) {
+         values[index++] = atoms[ATOM_NET_WM_STATE_ABOVE];
+      }
    }
 
    JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_STATE],
@@ -472,16 +474,15 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
    unsigned char *temp;
    Atom *state;
    unsigned long card;
-   char customLayer;
 
    Assert(win != None);
 
    result.status = STAT_MAPPED;
    result.border = BORDER_DEFAULT;
    result.layer = LAYER_NORMAL;
+   result.defaultLayer = LAYER_NORMAL;
    result.desktop = currentDesktop;
    result.opacity = 0xFFFFFFFF;
-   customLayer = 0;
 
    ReadWMHints(win, &result, alreadyMapped);
    ReadWMState(win, &result);
@@ -523,10 +524,8 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
                result.status |= STAT_NOLIST;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_ABOVE]) {
                result.layer = LAYER_ABOVE;
-               customLayer = 1;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_BELOW]) {
                result.layer = LAYER_BELOW;
-               customLayer = 1;
             }
          }
       }
@@ -546,18 +545,14 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
          if(         state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_NORMAL]) {
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DESKTOP]) {
-            if(!customLayer) {
-               result.layer = LAYER_DESKTOP;
-            }
-            result.border  = BORDER_NONE;
-            result.status |= STAT_STICKY;
-            result.status |= STAT_NOLIST;
+            result.defaultLayer  = LAYER_DESKTOP;
+            result.border        = BORDER_NONE;
+            result.status       |= STAT_STICKY;
+            result.status       |= STAT_NOLIST;
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DOCK]) {
-            result.border = BORDER_NONE;
-            if(!customLayer) {
-               result.layer = LAYER_ABOVE;
-            }
+            result.border        = BORDER_NONE;
+            result.defaultLayer  = LAYER_ABOVE;
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_SPLASH]) {
             result.border = BORDER_NONE;
@@ -573,6 +568,11 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
       if(temp) {
          JXFree(temp);
       }
+   }
+
+   /* Use the default layer if the layer wasn't set explicitly. */
+   if(result.layer == LAYER_NORMAL) {
+      result.layer = result.defaultLayer;
    }
 
    /* _NET_WM_WINDOW_OPACITY */

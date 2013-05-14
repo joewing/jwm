@@ -992,14 +992,15 @@ void RestackClients()
    /* Prepare the stacking array. */
    index = 0;
    layer = LAST_LAYER;
-   isFirst = 1;
-   opacity = settings.maxClientOpacity;
    for(;;) {
 
+      isFirst = 1;
+      opacity = settings.maxClientOpacity;
       for(np = nodes[layer]; np; np = np->next) {
          if((np->state.status & (STAT_MAPPED | STAT_SHADED))
             && !(np->state.status & STAT_HIDDEN)) {
-            stack[index++] = np->parent;
+            stack[index] = np->parent;
+            index += 1;
             if(isFirst) {
                if(   !(np->state.status & STAT_OPACITY)
                   && np->state.opacity != settings.activeClientOpacity) {
@@ -1024,14 +1025,15 @@ void RestackClients()
 
       for(tp = GetTrays(); tp; tp = tp->next) {
          if(layer == tp->layer) {
-            stack[index++] = tp->window;
+            stack[index] = tp->window;
+            index += 1;
          }
       }
 
       if(layer == FIRST_LAYER) {
          break;
       }
-      --layer;
+      layer -= 1;
 
    }
 

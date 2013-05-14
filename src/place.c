@@ -602,7 +602,6 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
                         && (np->sizeFlags & (PPosition | USPosition)))) {
 
       GravitateClient(np, 0);
-      ConstrainClient(np);
 
    } else {
 

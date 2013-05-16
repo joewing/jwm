@@ -797,18 +797,19 @@ more information on colors. The following tags are supported:
 .B Text
 .RS
 The color of text on the title bar.
-The default is black.
+The default is white.
 .RE
 .P
 .B Title
 .RS
 The color of the title bar (gradients are supported).
-The default is red:red.
+The default is #CC7700:#884400.
 .RE
 .P
 .B Opacity
 .RS
 The opacity of the window. This is a floating point value between 0.0 and 1.0.
+The default is 1.0.
 Note that a composite manager, such as xcompmgr, is required for this.
 .RE
 .P
@@ -827,19 +828,20 @@ more information on colors. The following tags are supported:
 .B Text
 .RS
 The color of text on the title bar.
-The default is black.
+The default is white.
 .RE
 .P
 .B Title
 .RS
 The color of the title bar (gradients are supported).
-The default is gray:gray.
+The default is #333333:#111111.
 .RE
 .P
 .B Opacity
 .RS
-The opacity of the window. This is a floating point value between 0.0 and 1.0.
-Note that a composite manager, such as xcompmgr, is required for this.
+The opacity of inactive windows. This is a floating point value between
+0.0 and 1.0.  The default is 0.75.  Note that a composite manager, such as
+xcompmgr, is required for this.
 .RE
 .P
 .B Outline
@@ -875,7 +877,7 @@ more information.
 .P
 .B Opacity
 .RS
-The opacity of the window. This is a floating point value between 0.0 and 1.0.
+The opacity of trays. This is a floating point value between 0.0 and 1.0.
 Note that a composite manager, such as xcompmgr, is required for this.
 .RE
 .RE
@@ -1030,7 +1032,7 @@ See the \fBCOLORS\fP section for more information.
 .P
 .B Opacity
 .RS
-The opacity of the window. This is a floating point value between 0.0 and 1.0.
+The opacity of menus. This is a floating point value between 0.0 and 1.0.
 Note that a composite manager, such as xcompmgr, is required for this.
 .RE
 .RE

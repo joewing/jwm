@@ -797,10 +797,12 @@ void FocusClient(ClientNode *np)
 
       if(activeClient) {
          activeClient->state.status &= ~STAT_ACTIVE;
+         SetOpacity(activeClient, settings.inactiveClientOpacity);
          DrawBorder(activeClient);
       }
       np->state.status |= STAT_ACTIVE;
       activeClient = np;
+      SetOpacity(np, settings.activeClientOpacity);
 
       DrawBorder(np);
       UpdatePager();
@@ -977,9 +979,6 @@ void RestackClients()
    unsigned int layer, index;
    int trayCount;
    Window *stack;
-   unsigned int opacity;
-   unsigned int temp;
-   char isFirst;
 
    if(JUNLIKELY(shouldExit)) {
       return;
@@ -994,32 +993,11 @@ void RestackClients()
    layer = LAST_LAYER;
    for(;;) {
 
-      isFirst = 1;
-      opacity = settings.maxClientOpacity;
       for(np = nodes[layer]; np; np = np->next) {
-         if((np->state.status & (STAT_MAPPED | STAT_SHADED))
+         if(    (np->state.status & (STAT_MAPPED | STAT_SHADED))
             && !(np->state.status & STAT_HIDDEN)) {
             stack[index] = np->parent;
             index += 1;
-            if(isFirst) {
-               if(   !(np->state.status & STAT_OPACITY)
-                  && np->state.opacity != settings.activeClientOpacity) {
-                  np->state.opacity = settings.activeClientOpacity;
-                  WriteState(np);
-               }
-               isFirst = 0;
-            } else if(!(np->state.status & STAT_OPACITY)) {
-               if(np->state.opacity != opacity) {
-                  np->state.opacity = opacity;
-                  WriteState(np);
-               }
-               temp = opacity - settings.deltaClientOpacity;
-               if(temp < settings.minClientOpacity || temp > opacity) {
-                  opacity = settings.minClientOpacity;
-               } else {
-                  opacity = temp;
-               }
-            }
          }
       }
 

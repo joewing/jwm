@@ -958,21 +958,7 @@ void ParseInactiveWindowStyle(const TokenNode *tp) {
          SetColor(COLOR_BORDER_LINE, np->value);
          break;
       case TOK_OPACITY:
-         str = GetString(np->value, 0);
-         if(str) {
-            settings.minClientOpacity = ParseOpacity(tp, str);
-            Release(str);
-         }
-         str = GetString(np->value, 1);
-         if(str) {
-            settings.maxClientOpacity = ParseOpacity(tp, str);
-            Release(str);
-         }
-         str = GetString(np->value, 2);
-         if(str) {
-            settings.deltaClientOpacity = ParseOpacity(tp, str);
-            Release(str);
-         }
+         settings.inactiveClientOpacity = ParseOpacity(tp, np->value);
          break;
       default:
          InvalidTag(np, TOK_INACTIVE);

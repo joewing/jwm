@@ -202,6 +202,12 @@ void ReadWMHints(Window win, ClientState *state, char alreadyMapped);
  */
 void WriteState(struct ClientNode *np);
 
+/** Set the opacity of a client window.
+ * @param np The client.
+ * @param opacity The opacity to set.
+ */
+void SetOpacity(struct ClientNode *np, unsigned int opacity);
+
 /** Set the frame extents of a window.
  * @param win The window.
  * @param state The client state.

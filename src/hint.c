@@ -325,14 +325,24 @@ void WriteState(ClientNode *np)
    WriteNetState(np);
    WriteNetAllowed(np);
 
-   /* Write the opacity. */
-   if(np->state.opacity == UINT_MAX) {
-      JXDeleteProperty(display, np->parent, atoms[ATOM_NET_WM_WINDOW_OPACITY]);
-   } else {
-      SetCardinalAtom(np->parent, ATOM_NET_WM_WINDOW_OPACITY,
-                      np->state.opacity);
+}
+
+/** Set the opacity of a client. */
+void SetOpacity(struct ClientNode *np, unsigned int opacity)
+{
+
+   /* Just return if there's nothing to do. */
+   if(np->state.opacity == opacity) {
+      return;
    }
 
+   /* Update the opacity. */
+   np->state.opacity = opacity;
+   if(opacity == UINT_MAX) {
+      JXDeleteProperty(display, np->parent, atoms[ATOM_NET_WM_WINDOW_OPACITY]);
+   } else {
+      SetCardinalAtom(np->parent, ATOM_NET_WM_WINDOW_OPACITY, opacity);
+   }
 }
 
 /** Write the net state hint for a client. */
@@ -482,7 +492,7 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
    result.layer = LAYER_NORMAL;
    result.defaultLayer = LAYER_NORMAL;
    result.desktop = currentDesktop;
-   result.opacity = 0xFFFFFFFF;
+   result.opacity = UINT_MAX;
 
    ReadWMHints(win, &result, alreadyMapped);
    ReadWMState(win, &result);
@@ -575,10 +585,8 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
       result.layer = result.defaultLayer;
    }
 
-   /* _NET_WM_WINDOW_OPACITY */
-   if(GetCardinalAtom(win, ATOM_NET_WM_WINDOW_OPACITY, &card)) {
-      result.opacity = card;
-   }
+   /* Note that since we set _NET_WM_WINDOW_OPACITY, we don't
+    * bother reading it. */
 
    return result;
 

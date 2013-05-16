@@ -33,9 +33,7 @@ void InitializeSettings()
    settings.trayOpacity = UINT_MAX;
    settings.popupEnabled = 1;
    settings.activeClientOpacity = UINT_MAX;
-   settings.minClientOpacity = (unsigned int)(0.5 * UINT_MAX);
-   settings.maxClientOpacity = (unsigned int)(0.9 * UINT_MAX);
-   settings.deltaClientOpacity = (unsigned int)(0.1 * UINT_MAX);
+   settings.inactiveClientOpacity = (unsigned int)(0.75 * UINT_MAX);
    settings.borderWidth = 4;
    settings.titleHeight = 20;
    settings.desktopWidth = 4;
@@ -47,13 +45,6 @@ void InitializeSettings()
 /** Make sure settings are reasonable. */
 void StartupSettings()
 {
-   unsigned int temp;
-
-   if(settings.minClientOpacity > settings.maxClientOpacity) {
-      temp = settings.minClientOpacity;
-      settings.minClientOpacity = settings.maxClientOpacity;
-      settings.maxClientOpacity = temp;
-   }
 
    FixRange(&settings.borderWidth, 1, 128, 4);
    FixRange(&settings.titleHeight, 2, 256, 20);

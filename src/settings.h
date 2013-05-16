@@ -51,9 +51,7 @@ typedef struct {
    unsigned int popupDelay;
    unsigned int trayOpacity;
    unsigned int activeClientOpacity;
-   unsigned int minClientOpacity;
-   unsigned int maxClientOpacity;
-   unsigned int deltaClientOpacity;
+   unsigned int inactiveClientOpacity;
    unsigned int borderWidth;
    unsigned int titleHeight;
    unsigned int desktopWidth;

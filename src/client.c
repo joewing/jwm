@@ -678,6 +678,7 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
 
    WriteState(np);
    ResetBorder(np);
+   DrawBorder(np);
    SendConfigureEvent(np);
    UpdatePager();
 

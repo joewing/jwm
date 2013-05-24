@@ -1119,6 +1119,7 @@ void HandleMapRequest(const XMapEvent *event)
          }
          UpdateTaskBar();
       }
+      WriteState(np);
    }
    RestackClients();
 }

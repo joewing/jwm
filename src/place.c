@@ -562,30 +562,23 @@ void CascadeClient(const BoundingBox *box, ClientNode *np)
    }
 
    if(overflow) {
-
       cascadeOffsets[cascadeIndex] = settings.borderWidth
                                    + settings.titleHeight;
       np->x = box->x + west + cascadeOffsets[cascadeIndex];
       np->y = box->y + north + cascadeOffsets[cascadeIndex];
 
-      /* Check for client overflow. */
-      overflow = 0;
+      /* Check for client overflow and update cascade position. */
       if(np->x + np->width - box->x > box->width) {
-         overflow = 1;
-      } else if(np->y + np->height - box->y > box->height) {
-         overflow = 1;
-      }
-
-      /* Update cascade position or position client. */
-      if(overflow) {
          np->x = box->x + west;
+      } else if(np->y + np->height - box->y > box->height) {
          np->y = box->y + north;
       } else {
          cascadeOffsets[cascadeIndex] += settings.borderWidth
                                        + settings.titleHeight;
       }
-
    }
+
+   ConstrainClient(np);
 
 }
 
@@ -602,6 +595,9 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
                         && (np->sizeFlags & (PPosition | USPosition)))) {
 
       GravitateClient(np, 0);
+      if(!alreadyMapped) {
+         ConstrainClient(np);
+      }
 
    } else {
 
@@ -639,58 +635,37 @@ void ConstrainClient(ClientNode *np)
 
    Assert(np);
 
-   /* Constrain the size if necessary. */
+   /* Constrain the width if necessary. */
    sp = GetCurrentScreen(np->x, np->y);
+   GetScreenBounds(sp, &box);
+   SubtractTrayBounds(GetTrays(), &box, np->state.layer);
+   SubtractStrutBounds(&box);
    GetBorderSize(&np->state, &north, &south, &east, &west);
-   if(   np->width + east + west > sp->width
-      || np->height + north + south > sp->height) {
-
-      GetScreenBounds(sp, &box);
-      SubtractTrayBounds(GetTrays(), &box, np->state.layer);
-      SubtractStrutBounds(&box);
-
+   if(np->width + east + west > sp->width) {
       box.x += west;
-      box.y += north;
       box.width -= east + west;
-      box.height -= north + south;
       if(box.width > np->maxWidth) {
          box.width = np->maxWidth;
       }
       if(box.width > np->width) {
          box.width = np->width;
       }
+      np->x = box.x;
+      np->width = box.width - (box.width % np->xinc);
+   }
+
+   /* Constrain the height if necessary. */
+   if(np->height + north + south > sp->height) {
+      box.y += north;
+      box.height -= north + south;
       if(box.height > np->maxHeight) {
          box.height = np->maxHeight;
       }
       if(box.height > np->height) {
          box.height = np->height;
       }
-
-      if(np->sizeFlags & PAspect) {
-
-         /* Fixed point with a 16-bit fraction. */
-         ratio = (box.width << 16) / box.height;
-
-         minr = (np->aspect.minx << 16) / np->aspect.miny;
-         if(ratio < minr) {
-            box.height = (box.width << 16) / minr;
-         }
-
-         maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
-         if(ratio > maxr) {
-            box.width = (box.height * maxr) >> 16;
-         }
-
-      }
-      np->x = box.x + west;
-      np->y = box.y + north;
-      np->width = box.width - east - west;
-      np->height = box.height - north - south;
-      np->width = np->width - (np->width % np->xinc);
-      np->height = np->height - (np->height % np->yinc);
-
-      return;
-
+      np->y = box.y;
+      np->height = box.height - (box.height % np->yinc);
    }
 
    /* Constain the location. */
@@ -700,7 +675,6 @@ void ConstrainClient(ClientNode *np)
    box.height = rootHeight;
    SubtractTrayBounds(GetTrays(), &box, np->state.layer);
    SubtractStrutBounds(&box);
-
    if(np->x + np->width + east + west > box.x + box.width) {
       np->x = box.x + box.width - np->width - east;
    }
@@ -712,6 +686,22 @@ void ConstrainClient(ClientNode *np)
    }
    if(np->y < box.y) {
       np->y = box.y + north;
+   }
+
+   /* Fix the aspect ratio. */
+   if(np->sizeFlags & PAspect) {
+
+      /* Fixed point with a 16-bit fraction. */
+      ratio = (np->width << 16) / np->height;
+      minr = (np->aspect.minx << 16) / np->aspect.miny;
+      if(ratio < minr) {
+         np->height = (np->width << 16) / minr;
+      }
+      maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
+      if(ratio > maxr) {
+         np->width = (np->height * maxr) >> 16;
+      }
+
    }
 
 }

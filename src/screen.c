@@ -15,6 +15,7 @@
 #include "screen.h"
 #include "main.h"
 #include "cursor.h"
+#include "misc.h"
 
 static ScreenType *screens = NULL;
 static int screenCount;
@@ -83,10 +84,12 @@ const ScreenType *GetCurrentScreen(int x, int y)
    ScreenType *sp;
    int index;
 
+   x = Max(0, x);
+   y = Max(0, y);
    for(index = 1; index < screenCount; index++) {
       sp = &screens[index];
       if(x >= sp->x && x < sp->x + sp->width) {
-         if(y >= sp->y && y <= sp->y + sp->height) {
+         if(y >= sp->y && y < sp->y + sp->height) {
             return sp;
          }
       }

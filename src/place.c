@@ -682,10 +682,12 @@ void ConstrainClient(ClientNode *np)
          }
 
       }
-      np->x = box.x;
-      np->y = box.y;
-      np->width = box.width - (box.width % np->xinc);
-      np->height = box.height - (box.height % np->yinc);
+      np->x = box.x + west;
+      np->y = box.y + north;
+      np->width = box.width - east - west;
+      np->height = box.height - north - south;
+      np->width = np->width - (np->width % np->xinc);
+      np->height = np->height - (np->height % np->yinc);
 
       return;
 
@@ -706,10 +708,10 @@ void ConstrainClient(ClientNode *np)
       np->y = box.y + box.height - np->height - south;
    }
    if(np->x < box.x) {
-      np->x = box.x;
+      np->x = box.x + west;
    }
    if(np->y < box.y) {
-      np->y = box.y;
+      np->y = box.y + north;
    }
 
 }

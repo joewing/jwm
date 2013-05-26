@@ -1106,20 +1106,25 @@ void HandleMapRequest(const XMapEvent *event)
       JXUngrabServer(display);
    } else {
       if(!(np->state.status & (STAT_MAPPED | STAT_SHADED))) {
+         int north, south, east, west;
          UpdateState(np);
          np->state.status |= STAT_MAPPED;
          if(!(np->state.status & STAT_STICKY)) {
             np->state.desktop = currentDesktop;
          }
+         GetBorderSize(&np->state, &north, &south, &east, &west);
+         JXReparentWindow(display, np->window, np->parent, west, north);
          JXMapWindow(display, np->window);
          JXMapWindow(display, np->parent);
+         ResetBorder(np);
          if(!(np->state.status & STAT_NOFOCUS)) {
             RaiseClient(np);
             FocusClient(np);
          }
+         WriteState(np);
          UpdateTaskBar();
+         UpdatePager();
       }
-      WriteState(np);
    }
    RestackClients();
 }
@@ -1153,6 +1158,7 @@ void HandleUnmapNotify(const XUnmapEvent *event)
       if(np->state.status & STAT_MAPPED) {
 
          np->state.status &= ~STAT_MAPPED;
+         JXReparentWindow(display, np->window, rootWindow, np->x, np->y);
          JXUnmapWindow(display, np->parent);
          WriteState(np);
          UpdateTaskBar();

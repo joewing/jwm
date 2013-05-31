@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
 "POT-Creation-Date: 2013-05-31 18:35-0500\n"
-"PO-Revision-Date: 2013-01-20 17:26+0800\n"
+"PO-Revision-Date: 2013-05-31 14:19+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language: fr\n"
@@ -326,15 +326,15 @@ msgstr "Coller"
 
 #: src/winmenu.c:155
 msgid "Layer"
-msgstr "Plan"
+msgstr "Couche"
 
 #: src/winmenu.c:170
 msgid "[Above]"
-msgstr ""
+msgstr "[Au-dessus]"
 
 #: src/winmenu.c:172
 msgid "Above"
-msgstr ""
+msgstr "Au-dessus"
 
 #: src/winmenu.c:175
 msgid "[Normal]"
@@ -346,11 +346,11 @@ msgstr "Normal"
 
 #: src/winmenu.c:180
 msgid "[Below]"
-msgstr ""
+msgstr "[En-dessous]"
 
 #: src/winmenu.c:182
 msgid "Below"
-msgstr ""
+msgstr "En-dessous"
 
 #: src/winmenu.c:202
 msgid "Send To"

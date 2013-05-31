@@ -1841,7 +1841,7 @@ unsigned int ParseUnsigned(const TokenNode *tp, const char *str)
 /** Parse opacity (a float between 0.0 and 1.0). */
 unsigned int ParseOpacity(const TokenNode *tp, const char *str)
 {
-   const float value = atof(str);
+   const float value = ParseFloat(str);
    if(JUNLIKELY(value <= 0.0 || value > 1.0)) {
       ParseError(tp, _("invalid opacity: %s"), str);
       return UINT_MAX;

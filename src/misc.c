@@ -202,3 +202,13 @@ char *CopyString(const char *str)
 
 }
 
+/** Parse a float. */
+float ParseFloat(const char *str)
+{
+   float result;
+   setlocale(LC_ALL, "C");
+   result = atof(str);
+   setlocale(LC_ALL, "");
+   return result;
+}
+

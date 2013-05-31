@@ -39,5 +39,11 @@ void Trim(char *str);
  */
 char *CopyString(const char *str);
 
+/** Read a float in a locale-independent way.
+ * @param str The string containing the float.
+ * @return The float.
+ */
+float ParseFloat(const char *str);
+
 #endif /* MISC_H */
 

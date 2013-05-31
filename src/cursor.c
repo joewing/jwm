@@ -25,9 +25,6 @@ typedef enum {
    CURSOR_SE,
    CURSOR_SW,
    CURSOR_CHOOSE,
-   CURSOR_CLOSE,
-   CURSOR_MAXIMIZE,
-   CURSOR_MINIMIZE,
    CURSOR_COUNT
 } CursorType;
 
@@ -45,10 +42,7 @@ static const unsigned int cursor_shapes[CURSOR_COUNT] = {
    XC_top_left_corner,
    XC_bottom_right_corner,
    XC_bottom_left_corner,
-   XC_tcross,
-   XC_dotbox,
-   XC_based_arrow_up,
-   XC_based_arrow_down
+   XC_tcross
 };
 
 static Cursor cursors[CURSOR_COUNT];
@@ -99,11 +93,11 @@ Cursor GetFrameCursor(BorderActionType action)
    case BA_RESIZE:
       return GetResizeCursor(action);
    case BA_CLOSE:
-      return cursors[CURSOR_CLOSE];
+      break;
    case BA_MAXIMIZE:
-      return cursors[CURSOR_MAXIMIZE];
+      break;
    case BA_MINIMIZE:
-      return cursors[CURSOR_MINIMIZE];
+      break;
    case BA_MOVE:
       break;
    default:

@@ -85,7 +85,9 @@ const ScreenType *GetCurrentScreen(int x, int y)
    int index;
 
    x = Max(0, x);
+   x = Min(x, rootWidth);
    y = Max(0, y);
+   y = Min(y, rootHeight);
    for(index = 1; index < screenCount; index++) {
       sp = &screens[index];
       if(x >= sp->x && x < sp->x + sp->width) {

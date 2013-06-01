@@ -202,7 +202,6 @@ static void ReleaseTokens(TokenNode *np);
 static unsigned int ParseUnsigned(const TokenNode *tp, const char *str);
 static unsigned int ParseOpacity(const TokenNode *tp, const char *str);
 static WinLayerType ParseLayer(const TokenNode *tp, const char *str);
-static char *GetString(const char *str, unsigned int n);
 static StatusWindowType ParseStatusWindowType(const TokenNode *tp,
                                               const char *str);
 static void InvalidTag(const TokenNode *tp, TokenType parent);
@@ -942,7 +941,6 @@ void ParseActiveWindowStyle(const TokenNode *tp) {
 void ParseInactiveWindowStyle(const TokenNode *tp) {
 
    const TokenNode *np;
-   char *str;
 
    Assert(tp);
 
@@ -1744,36 +1742,6 @@ void ParseGradient(const char *value, ColorType a, ColorType b)
       ReleaseStack(temp);
 
    }
-
-}
-
-/** Get the nth string (0 based) in a colon separated list. */
-char *GetString(const char *str, unsigned int n)
-{
-   const char *end;
-   char *result;
-   unsigned int i;
-   int len;
-
-   for(i = 0; i < n; i++) {
-      str = strchr(str, ':');
-      if(str == NULL) {
-         return NULL;
-      }
-      str += 1;
-   }
-   if(str == NULL) {
-      return NULL;
-   }
-   len = strlen(str);
-   end = strchr(str, ':');
-   if(end) {
-      len -= strlen(end);
-   }
-   result = Allocate(len + 1);
-   memcpy(result, str, len);
-   result[len] = 0;
-   return result;
 
 }
 

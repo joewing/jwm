@@ -363,7 +363,6 @@ void DrawBorderHelper(const ClientNode *np)
    JXClearArea(display, np->parent, 1, north,
                width - 2, height - north - 1, False);
    JXSetForeground(display, borderGC, outlineColor);
-#ifdef USE_SHAPE
    if(np->state.status & STAT_SHADED) {
       DrawRoundedRectangle(np->parent, borderGC, 0, 0, width - 1, north - 1,
                            CORNER_RADIUS);
@@ -371,15 +370,6 @@ void DrawBorderHelper(const ClientNode *np)
       DrawRoundedRectangle(np->parent, borderGC, 0, 0, width - 1, height - 1,
                            CORNER_RADIUS);
    }
-#else
-   if(np->state.status & STAT_SHADED) {
-      JXDrawRectangle(display, np->parent, borderGC, 0, 0,
-                      width - 1, north - 1);
-   } else {
-      JXDrawRectangle(display, np->parent, borderGC, 0, 0,
-                      width - 1, height - 1);
-   }
-#endif
 
    JXFreePixmap(display, canvas);
 
@@ -717,7 +707,7 @@ void GetBorderSize(const ClientState *state,
 void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
                           int width, int height, int radius)
 {
-
+#ifdef USE_SHAPE
 #ifdef USE_XMU
 
    XmuDrawRoundedRectangle(display, d, gc, x, y, width, height,
@@ -765,7 +755,11 @@ void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
    JXDrawArcs(display, d, gc, arcs, 4);
 
 #endif
+#else
 
+   JXDrawRectangle(display, d, gc, x, y, width, height);
+   
+#endif
 }
 
 /** Fill a rounded rectangle. */

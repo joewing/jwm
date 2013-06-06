@@ -37,6 +37,7 @@ static void ReparentClient(ClientNode *np, char notOwner);
 static void MinimizeTransients(ClientNode *np);
 static void RestoreTransients(ClientNode *np, char raise);
 static void KillClientHandler(ClientNode *np);
+static void UnmapClient(ClientNode *np);
 
 /** Load windows that are already mapped. */
 void StartupClients()
@@ -307,13 +308,10 @@ void MinimizeTransients(ClientNode *np)
 
    /* Unmap the window and update its state. */
    if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
-      if(np->state.status & STAT_MAPPED) {
-         JXUnmapWindow(display, np->window);
-      }
+      UnmapClient(np);
       JXUnmapWindow(display, np->parent);
    }
    np->state.status |= STAT_MINIMIZED;
-   np->state.status &= ~STAT_MAPPED;
    WriteState(np);
 
    /* Minimize transient windows. */
@@ -339,10 +337,7 @@ void ShadeClient(ClientNode *np)
       return;
    }
 
-   if(np->state.status & STAT_MAPPED) {
-      np->state.status &= ~STAT_MAPPED;
-      JXUnmapWindow(display, np->window);
-   }
+   UnmapClient(np);
    np->state.status |= STAT_SHADED;
 
    WriteState(np);
@@ -387,7 +382,7 @@ void SetClientWithdrawn(ClientNode *np)
    }
 
    if(np->state.status & STAT_MAPPED) {
-      JXUnmapWindow(display, np->window);
+      UnmapClient(np);
       JXUnmapWindow(display, np->parent);
    } else if(np->state.status & STAT_SHADED) {
       if(!(np->state.status & STAT_MINIMIZED)) {
@@ -396,7 +391,6 @@ void SetClientWithdrawn(ClientNode *np)
    }
 
    np->state.status &= ~STAT_SHADED;
-   np->state.status &= ~STAT_MAPPED;
    np->state.status &= ~STAT_MINIMIZED;
    np->state.status &= ~STAT_SDESKTOP;
 
@@ -1068,6 +1062,7 @@ void RemoveClient(ClientNode *np)
    clientCount -= 1;
    XDeleteContext(display, np->window, clientContext);
    XDeleteContext(display, np->parent, frameContext);
+   JXRemoveFromSaveSet(display, np->window);
 
    if(np->state.status & STAT_URGENT) {
       UnregisterCallback(SignalUrgent, np);
@@ -1080,10 +1075,8 @@ void RemoveClient(ClientNode *np)
    if(activeClient == np) {
 
       /* Must be the last client. */
-
       SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, None);
       activeClient = NULL;
-
       JXSetInputFocus(display, rootWindow, RevertToParent, eventTime);
 
    }
@@ -1106,7 +1099,6 @@ void RemoveClient(ClientNode *np)
       }
       JXUngrabButton(display, AnyButton, AnyModifier, np->window);
       JXReparentWindow(display, np->window, rootWindow, np->x, np->y);
-      JXRemoveFromSaveSet(display, np->window);
    }
 
    /* Destroy the parent */
@@ -1359,5 +1351,15 @@ void SignalUrgent(const TimeType *now, int x, int y, void *data)
    UpdateTaskBar();
    UpdatePager();
 
+}
+
+/** Unmap a client window and consume the UnmapNotify event. */
+void UnmapClient(ClientNode *np)
+{
+   XEvent event;
+   if(np->state.status & STAT_MAPPED) {
+      np->state.status &= ~STAT_MAPPED;
+      JXUnmapWindow(display, np->window);
+   }
 }
 

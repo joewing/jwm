@@ -1106,17 +1106,11 @@ void HandleMapRequest(const XMapEvent *event)
       JXUngrabServer(display);
    } else {
       if(!(np->state.status & (STAT_MAPPED | STAT_SHADED))) {
-         int north, south, east, west;
          UpdateState(np);
          np->state.status |= STAT_MAPPED;
          if(!(np->state.status & STAT_STICKY)) {
             np->state.desktop = currentDesktop;
          }
-         GetBorderSize(&np->state, &north, &south, &east, &west);
-         JXReparentWindow(display, np->window, np->parent, west, north);
-         JXMapWindow(display, np->window);
-         JXMapWindow(display, np->parent);
-         ResetBorder(np);
          if(!(np->state.status & STAT_NOFOCUS)) {
             RaiseClient(np);
             FocusClient(np);
@@ -1125,8 +1119,8 @@ void HandleMapRequest(const XMapEvent *event)
          UpdateTaskBar();
          UpdatePager();
       }
+      RestackClients();
    }
-   RestackClients();
 }
 
 /** Handle an unmap notify event. */
@@ -1136,6 +1130,10 @@ void HandleUnmapNotify(const XUnmapEvent *event)
    XEvent e;
 
    Assert(event);
+
+   if(event->window != event->event) {
+      return;
+   }
 
    np = FindClientByWindow(event->window);
    if(np) {
@@ -1151,25 +1149,14 @@ void HandleUnmapNotify(const XUnmapEvent *event)
       if(JXCheckTypedWindowEvent(display, np->window, DestroyNotify, &e)) {
          UpdateTime(&e);
          RemoveClient(np);
-         JXUngrabServer(display);
-         return;
-      }
-
-      if(np->state.status & STAT_MAPPED) {
-
+      } else if(np->state.status & STAT_MAPPED) {
          np->state.status &= ~STAT_MAPPED;
+         GravitateClient(np, 1);
+         JXUngrabButton(display, AnyButton, AnyModifier, np->window);
          JXReparentWindow(display, np->window, rootWindow, np->x, np->y);
-         JXUnmapWindow(display, np->parent);
          WriteState(np);
-         UpdateTaskBar();
-         UpdatePager();
-
-         if(np->state.status & STAT_ACTIVE) {
-            FocusNextStacked(np);
-         }
-
+         RemoveClient(np);
       }
-
       JXUngrabServer(display);
 
    }

@@ -1186,10 +1186,9 @@ char HandleDestroyNotify(const XDestroyWindowEvent *event)
       }
       RemoveClient(np);
       return 1;
-   } else if(!np) {
+   } else {
       return HandleDockDestroy(event->window);
    }
-   return 0;
 }
 
 /** Take the appropriate action for a click on a client border. */

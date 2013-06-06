@@ -436,9 +436,7 @@ void RestoreTransients(ClientNode *np, char raise)
    /* Restore transient windows. */
    for(x = 0; x < LAYER_COUNT; x++) {
       for(tp = nodes[x]; tp; tp = tp->next) {
-         if(tp->owner == np->window
-            && !(tp->state.status & (STAT_MAPPED | STAT_SHADED))
-            && (tp->state.status & STAT_MINIMIZED)) {
+         if(tp->owner == np->window && (tp->state.status & STAT_MINIMIZED)) {
             RestoreTransients(tp, raise);
          }
       }

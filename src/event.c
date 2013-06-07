@@ -1119,8 +1119,8 @@ void HandleMapRequest(const XMapEvent *event)
          UpdateTaskBar();
          UpdatePager();
       }
-      RestackClients();
    }
+   RestackClients();
 }
 
 /** Handle an unmap notify event. */

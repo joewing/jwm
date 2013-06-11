@@ -100,11 +100,11 @@ void ShowPopup(int x, int y, const char *text)
       popup.y = y + popup.height + 2;
    }
 
-   if(popup.width + popup.x > sp->width) {
-      popup.x = sp->width - popup.width - 2;
+   if(popup.width + popup.x > sp->x + sp->width) {
+      popup.x = sp->x + sp->width - popup.width - 2;
    }
-   if(popup.height + popup.y > sp->height) {
-      popup.y = sp->height - popup.height - 2;
+   if(popup.height + popup.y > sp->y + sp->height) {
+      popup.y = sp->y + sp->height - popup.height - 2;
    }
    if(popup.x < 2) {
       popup.x = 2;

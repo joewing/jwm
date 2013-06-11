@@ -55,18 +55,11 @@ void ResizeClient(ClientNode *np, BorderActionType action,
    int ratio, minr, maxr;
 
    Assert(np);
-
-   if(!(np->state.border & BORDER_RESIZE)) {
-      return;
-   }
+   Assert(np->state.border & BORDER_RESIZE);
 
    if(JUNLIKELY(!GrabMouseForResize(action))) {
       Debug("ResizeClient: could not grab mouse");
       return;
-   }
-
-   if(np->state.status & STAT_SHADED) {
-      action &= ~(BA_RESIZE_N | BA_RESIZE_S);
    }
 
    np->controller = ResizeController;
@@ -196,12 +189,6 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 
          if(lastgheight != gheight || lastgwidth != gwidth) {
 
-            if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
-               np->state.status &= ~(STAT_HMAX | STAT_VMAX);
-               WriteState(np);
-               SendConfigureEvent(np);
-            }
-
             UpdateResizeWindow(np, gwidth, gheight);
 
             if(settings.resizeMode == RESIZE_OUTLINE) {
@@ -245,6 +232,9 @@ void ResizeClientKeyboard(ClientNode *np)
    Assert(np);
 
    if(!(np->state.border & BORDER_RESIZE)) {
+      return;
+   }
+   if(np->state.status & (STAT_VMAX | STAT_HMAX)) {
       return;
    }
 
@@ -361,12 +351,6 @@ void ResizeClientKeyboard(ClientNode *np)
 
       if(lastgwidth != gwidth || lastgheight != gheight) {
 
-         if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
-            np->state.status &= ~(STAT_HMAX | STAT_VMAX);
-            WriteState(np);
-            SendConfigureEvent(np);
-         }
-
          UpdateResizeWindow(np, gwidth, gheight);
 
          if(settings.resizeMode == RESIZE_OUTLINE) {
@@ -398,6 +382,17 @@ void StopResize(ClientNode *np)
 {
 
    np->controller = NULL;
+
+   /* Set the old width/height if maximized so the window
+    * is restored to the new size. */
+   if(np->state.status & STAT_VMAX) {
+      np->oldWidth = np->width;
+      np->oldx = np->x;
+   }
+   if(np->state.status & STAT_HMAX) {
+      np->oldHeight = np->height;
+      np->oldy = np->y;
+   }
 
    if(settings.resizeMode == RESIZE_OUTLINE) {
       ClearOutline();

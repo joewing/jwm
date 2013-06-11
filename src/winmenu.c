@@ -82,7 +82,7 @@ Menu *CreateWindowMenu()
       AddWindowMenuItem(menu, NULL, MA_NONE, 0);
    }
 
-   if(!(client->state.status & STAT_MINIMIZED)) {
+   if(!(client->state.status & (STAT_MINIMIZED | STAT_VMAX | STAT_HMAX))) {
       if(client->state.status & (STAT_MAPPED | STAT_SHADED)) {
          if(client->state.border & BORDER_RESIZE) {
             AddWindowMenuItem(menu, _("Resize"), MA_RESIZE, 0);

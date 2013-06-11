@@ -760,14 +760,14 @@ void PlaceMaximizedClient(ClientNode *np, char horiz, char vert)
    /* If maximizing horizontally, update width. */
    if(horiz) {
       np->x = box.x;
-      np->width = box.width - ((box.width - np->baseWidth) % np->xinc);
+      np->width = box.width;
       np->state.status |= STAT_HMAX;
    }
 
    /* If maximizing vertically, update height. */
    if(vert) {
       np->y = box.y;
-      np->height = box.height - ((box.height - np->baseHeight) % np->yinc);
+      np->height = box.height;
       np->state.status |= STAT_VMAX;
    }
 

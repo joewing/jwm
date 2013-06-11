@@ -62,6 +62,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
 
    int north, south, east, west;
    int offset;
+   unsigned int resizeMask;
    const unsigned int titleHeight = settings.titleHeight;
 
    Assert(np);
@@ -126,33 +127,47 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
       return BA_NONE;
    }
 
+   /* We don't allow resizing maximized windows. */
+   resizeMask = BA_RESIZE_S | BA_RESIZE_N
+              | BA_RESIZE_E | BA_RESIZE_W
+              | BA_RESIZE;
+   if(np->state.status & STAT_HMAX) {
+      resizeMask &= ~(BA_RESIZE_E | BA_RESIZE_W);
+   }
+   if(np->state.status & STAT_VMAX) {
+      resizeMask &= ~(BA_RESIZE_N | BA_RESIZE_S);
+   }
+   if(np->state.status & STAT_SHADED) {
+      resizeMask &= ~(BA_RESIZE_N | BA_RESIZE_S);
+   }
+
    /* Check south east/west and north east/west resizing. */
    if(   np->width >= settings.titleHeight * 2
       && np->height >= settings.titleHeight * 2) {
       if(y > np->height + north - settings.titleHeight) {
          if(x < settings.titleHeight) {
-            return BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE;
+            return (BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE) & resizeMask;
          } else if(x > np->width + west - settings.titleHeight) {
-            return BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE;
+            return (BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE) & resizeMask;
          }
       } else if(y < settings.titleHeight) {
          if(x < settings.titleHeight) {
-            return BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE;
+            return (BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE) & resizeMask;
          } else if(x > np->width + west - settings.titleHeight) {
-            return BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE;
+            return (BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE) & resizeMask;
          }
       }
    }
 
    /* Check east, west, north, and south resizing. */
    if(x <= west) {
-      return BA_RESIZE_W | BA_RESIZE;
+      return (BA_RESIZE_W | BA_RESIZE) & resizeMask;
    } else if(x >= np->width + west) {
-      return BA_RESIZE_E | BA_RESIZE;
+      return (BA_RESIZE_E | BA_RESIZE) & resizeMask;
    } else if(y >= np->height + north) {
-      return BA_RESIZE_S | BA_RESIZE;
+      return (BA_RESIZE_S | BA_RESIZE) & resizeMask;
    } else if(y <= south) {
-      return BA_RESIZE_N | BA_RESIZE;
+      return (BA_RESIZE_N | BA_RESIZE) & resizeMask;
    } else {
       return BA_NONE;
    }

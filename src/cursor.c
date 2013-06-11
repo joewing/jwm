@@ -125,12 +125,12 @@ Cursor GetResizeCursor(BorderActionType action)
       } else {
          return cursors[CURSOR_SOUTH];
       }
-   } else {
-      if(action & BA_RESIZE_E) {
+   } else if(action & BA_RESIZE_E) {
          return cursors[CURSOR_EAST];
-      } else {
-         return cursors[CURSOR_WEST];
-      }
+   } else if(action & BA_RESIZE_W) {
+      return cursors[CURSOR_WEST];
+   } else {
+      return cursors[CURSOR_DEFAULT];
    }
 }
 

@@ -1356,7 +1356,6 @@ void SignalUrgent(const TimeType *now, int x, int y, void *data)
 /** Unmap a client window and consume the UnmapNotify event. */
 void UnmapClient(ClientNode *np)
 {
-   XEvent event;
    if(np->state.status & STAT_MAPPED) {
       np->state.status &= ~STAT_MAPPED;
       JXUnmapWindow(display, np->window);

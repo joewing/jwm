@@ -1146,13 +1146,13 @@ void HandleUnmapNotify(const XUnmapEvent *event)
          (np->controller)(1);
       }
 
+      JXUngrabButton(display, AnyButton, AnyModifier, np->window);
       if(JXCheckTypedWindowEvent(display, np->window, DestroyNotify, &e)) {
          UpdateTime(&e);
          RemoveClient(np);
       } else if(np->state.status & STAT_MAPPED) {
          np->state.status &= ~STAT_MAPPED;
          GravitateClient(np, 1);
-         JXUngrabButton(display, AnyButton, AnyModifier, np->window);
          JXReparentWindow(display, np->window, rootWindow, np->x, np->y);
          WriteState(np);
          RemoveClient(np);

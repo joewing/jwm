@@ -70,7 +70,8 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
    GetBorderSize(&np->state, &north, &south, &east, &west);
 
    /* Check title bar actions. */
-   if(np->state.border & BORDER_TITLE) {
+   if((np->state.border & BORDER_TITLE) &&
+      settings.titleHeight > settings.borderWidth) {
 
       /* Check buttons on the title bar. */
       offset = np->width + west;
@@ -344,8 +345,9 @@ void DrawBorderHelper(const ClientNode *np)
    titleWidth -= settings.titleHeight * buttonCount;
    titleWidth -= iconSize + 7 + 6;
 
-   /* Draw the top part (either a title or north border. */
-   if(np->state.border & BORDER_TITLE) {
+   /* Draw the top part (either a title or north border). */
+   if((np->state.border & BORDER_TITLE) &&
+      settings.titleHeight > settings.borderWidth) {
 
       /* Draw a title bar. */
       DrawHorizontalGradient(canvas, borderGC, titleColor1, titleColor2,
@@ -358,17 +360,19 @@ void DrawBorderHelper(const ClientNode *np)
       }
 
       if(np->name && np->name[0] && titleWidth > 0) {
+         const int sheight = GetStringHeight(FONT_BORDER);
          RenderString(canvas, FONT_BORDER, borderTextColor,
                       iconSize + 6 + 4,
-                     (settings.titleHeight - GetStringHeight(FONT_BORDER)) / 2,
+                      (settings.titleHeight - sheight) / 2,
                       titleWidth, np->name);
       }
 
+      DrawBorderButtons(np, canvas);
+
    }
 
-   DrawBorderButtons(np, canvas);
 
-   /** Copy the title bar to the window. */
+   /* Copy the title bar to the window. */
    JXCopyArea(display, canvas, np->parent, borderGC, 1, 1,
               width - 2, north - 1, 1, 1);
 
@@ -399,6 +403,9 @@ unsigned int GetButtonCount(const ClientNode *np)
    int offset;
 
    if(!(np->state.border & BORDER_TITLE)) {
+      return 0;
+   }
+   if(settings.titleHeight <= settings.borderWidth) {
       return 0;
    }
 
@@ -442,10 +449,6 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas)
    int north, south, east, west;
 
    Assert(np);
-
-   if(!(np->state.border & BORDER_TITLE)) {
-      return;
-   }
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
    offset = np->width + west - settings.titleHeight;

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-05-31 18:35-0500\n"
+"POT-Creation-Date: 2013-06-13 13:21-0500\n"
 "PO-Revision-Date: 2013-05-31 14:19+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -27,11 +27,11 @@ msgstr "type de fond d'écran incorrect: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Image de fond d'écran introuvable: \"%s\""
 
-#: src/client.c:876
+#: src/client.c:868
 msgid "Kill this window?"
 msgstr "Éliminer la fenêtre?"
 
-#: src/client.c:877
+#: src/client.c:869
 msgid "This may cause data to be lost!"
 msgstr "Cela peut entraîner la perte de données!"
 
@@ -168,37 +168,37 @@ msgstr "%s[%u]: texte inattendu: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entité incorrecte: \"%.8s\""
 
-#: src/parse.c:1086
+#: src/parse.c:1084
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "Mode d'insertion incorrect: \"%s\""
 
-#: src/parse.c:1834
+#: src/parse.c:1802
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Balise incorrecte dans: %s"
 
-#: src/parse.c:1846
+#: src/parse.c:1814
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacité de menu incorrecte: %s"
 
-#: src/parse.c:1865
+#: src/parse.c:1833
 #, c-format
 msgid "invalid layer: %s"
 msgstr "plan de groupe incorrect: %s"
 
-#: src/parse.c:1882
+#: src/parse.c:1850
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "type de fond d'écran incorrect: %s"
 
-#: src/parse.c:1891
+#: src/parse.c:1859
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Balise incorrecte dans %s: %s"
 
-#: src/parse.c:1912
+#: src/parse.c:1880
 msgid "configuration error"
 msgstr "erreur de configuration"
 

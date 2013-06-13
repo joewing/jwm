@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-05-31 18:35-0500\n"
+"POT-Creation-Date: 2013-06-13 13:21-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -32,11 +32,11 @@ msgstr "nieprawidłowy typ tła: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "nie znaleziono obrazu tła: \"%s\""
 
-#: src/client.c:876
+#: src/client.c:868
 msgid "Kill this window?"
 msgstr "Zabić to okno?"
 
-#: src/client.c:877
+#: src/client.c:869
 msgid "This may cause data to be lost!"
 msgstr "Może to spowodować utratę danych!"
 
@@ -171,37 +171,37 @@ msgstr "%s[%u]: nieoczekiwany tekst: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: nieprawidłowa jednostka: \"%.8s\""
 
-#: src/parse.c:1086
+#: src/parse.c:1084
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "nieprawidłowy tryb edycji: \"%s\""
 
-#: src/parse.c:1834
+#: src/parse.c:1802
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nieprawidłowy znacznik w: %s"
 
-#: src/parse.c:1846
+#: src/parse.c:1814
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "nieprawidłowa nieprzezroczystość menu: %s"
 
-#: src/parse.c:1865
+#: src/parse.c:1833
 #, c-format
 msgid "invalid layer: %s"
 msgstr "nieprawidłowa warstwa grupy: %s"
 
-#: src/parse.c:1882
+#: src/parse.c:1850
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "nieprawidłowy typ tła: %s"
 
-#: src/parse.c:1891
+#: src/parse.c:1859
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:1912
+#: src/parse.c:1880
 msgid "configuration error"
 msgstr "błąd konfiguracji"
 

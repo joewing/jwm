@@ -670,6 +670,13 @@ The icon to be used for windows in this group.
 .RE
 
 .P
+.B iignore
+.RS
+Ignore the size increment hint when maximizing windows in this group.
+.RE
+
+
+.P
 \fBlayer:\fP\fIstring\fP
 .RS
 The layer on which windows in this group will be started.

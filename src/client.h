@@ -73,6 +73,7 @@ typedef unsigned int StatusFlags;
 #define STAT_FLASH      (1 << 19)   /**< Flash for urgency. */
 #define STAT_CENTERED   (1 << 20)   /**< Use centered window placement. */
 #define STAT_TILED      (1 << 21)   /**< Use tiled window placement. */
+#define STAT_IIGNORE    (1 << 22)   /**< Ignore increment when maximized. */
 
 /** Colormap window linked list. */
 typedef struct ColormapNode {

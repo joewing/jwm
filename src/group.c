@@ -260,6 +260,9 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
       case OPTION_PIGNORE:
          np->state.status |= STAT_PIGNORE;
          break;
+      case OPTION_IIGNORE:
+         np->state.status |= STAT_IIGNORE;
+         break;
       case OPTION_MAXIMIZED:
          np->state.status |= STAT_HMAX | STAT_VMAX;
          break;

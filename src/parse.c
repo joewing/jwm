@@ -99,6 +99,7 @@ static const OptionMapType OPTION_MAP[] = {
    { &TITLE_STRING[0],     OPTION_TITLE         },
    { &NOTITLE_STRING[0],   OPTION_NOTITLE       },
    { "pignore",            OPTION_PIGNORE       },
+   { "iignore",            OPTION_IIGNORE       },
    { "maximized",          OPTION_MAXIMIZED     },
    { "minimized",          OPTION_MINIMIZED     },
    { "hmax",               OPTION_MAX_H         },

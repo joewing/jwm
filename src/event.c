@@ -1105,9 +1105,11 @@ void HandleMapRequest(const XMapEvent *event)
       }
       JXUngrabServer(display);
    } else {
-      if(!(np->state.status & (STAT_MAPPED | STAT_SHADED))) {
+      if(!(np->state.status & STAT_MAPPED)) {
          UpdateState(np);
          np->state.status |= STAT_MAPPED;
+         XMapWindow(display, np->window);
+         XMapWindow(display, np->parent);
          if(!(np->state.status & STAT_STICKY)) {
             np->state.desktop = currentDesktop;
          }

@@ -1110,6 +1110,7 @@ void HandleMapRequest(const XMapEvent *event)
          np->state.status |= STAT_MAPPED;
          XMapWindow(display, np->window);
          XMapWindow(display, np->parent);
+         GrabMouse(np->window);
          if(!(np->state.status & STAT_STICKY)) {
             np->state.desktop = currentDesktop;
          }
@@ -1148,12 +1149,12 @@ void HandleUnmapNotify(const XUnmapEvent *event)
          (np->controller)(1);
       }
 
-      JXUngrabButton(display, AnyButton, AnyModifier, np->window);
       if(JXCheckTypedWindowEvent(display, np->window, DestroyNotify, &e)) {
          UpdateTime(&e);
          RemoveClient(np);
       } else if(np->state.status & STAT_MAPPED) {
          np->state.status &= ~STAT_MAPPED;
+         JXUngrabButton(display, AnyButton, AnyModifier, np->window);
          GravitateClient(np, 1);
          JXReparentWindow(display, np->window, rootWindow, np->x, np->y);
          WriteState(np);

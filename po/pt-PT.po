@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-14 07:28-0500\n"
+"POT-Creation-Date: 2013-06-14 18:53-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -21,16 +21,16 @@ msgstr ""
 "X-Poedit-Country: PORTUGAL\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: src/background.c:140
+#: src/background.c:135
 msgid "no value specified for background"
 msgstr "nenhum valor foi especificado para o fundo (background)"
 
-#: src/background.c:156
+#: src/background.c:151
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "tipo de fundo invalido: \"%s\""
 
-#: src/background.c:310
+#: src/background.c:286
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""

@@ -76,7 +76,7 @@ static const AtomNode atomList[] = {
 
    { &atoms[ATOM_COMPOUND_TEXT],             "COMPOUND_TEXT"               },
    { &atoms[ATOM_UTF8_STRING],               "UTF8_STRING"                 },
-   { &atoms[ATOM_XSETROOT_ID],               "_XSETROOT_ID"                },
+   { &atoms[ATOM_XROOTPMAP_ID],              "_XROOTPMAP_ID"               },
 
    { &atoms[ATOM_WM_STATE],                  "WM_STATE"                    },
    { &atoms[ATOM_WM_PROTOCOLS],              "WM_PROTOCOLS"                },

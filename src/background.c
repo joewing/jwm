@@ -33,7 +33,6 @@ typedef struct BackgroundNode {
    BackgroundType type;          /**< The type of background. */
    char *value;
    Pixmap pixmap;
-   Window window;
    struct BackgroundNode *next;  /**< Next background in the list. */
 } BackgroundNode;
 
@@ -104,10 +103,6 @@ void ShutdownBackgrounds()
       if(bp->pixmap != None) {
          JXFreePixmap(display, bp->pixmap);
          bp->pixmap = None;
-      }
-      if(bp->window != None) {
-         JXDestroyWindow(display, bp->window);
-         bp->window = None;
       }
    }
 
@@ -198,28 +193,19 @@ void LoadBackground(int desktop)
       && !strcmp(bp->value, lastBackground->value)) {
       return;
    }
-   if(lastBackground && lastBackground->window) {
-      JXUnmapWindow(display, lastBackground->window);
-   }
    lastBackground = bp;
 
    /* Load the background based on type. */
-   switch(bp->type) {
-   case BACKGROUND_COMMAND:
+   if(bp->type == BACKGROUND_COMMAND) {
       RunCommand(bp->value);
       return;
-   default:
-      attrValues = CWBackPixmap;
-      attr.background_pixmap = bp->pixmap;
-      break;
    }
 
-   if(bp->window) {
-      JXChangeWindowAttributes(display, bp->window, attrValues, &attr);
-      JXClearWindow(display, bp->window);
-      JXMapWindow(display, bp->window);
-      SetPixmapAtom(rootWindow, ATOM_XSETROOT_ID, bp->window);
-   }
+   attrValues = CWBackPixmap;
+   attr.background_pixmap = bp->pixmap;
+   JXChangeWindowAttributes(display, rootWindow, attrValues, &attr);
+   SetPixmapAtom(rootWindow, ATOM_XROOTPMAP_ID, bp->pixmap);
+   JXClearWindow(display, rootWindow);
 
 }
 
@@ -231,12 +217,8 @@ void LoadSolidBackground(BackgroundNode *bp)
 
    ParseColor(bp->value, &c);
 
-   /* Create the window. */
-   bp->window = JXCreateSimpleWindow(display, rootWindow, 0, 0,
-                                     rootWidth, rootHeight, 0, 0, 0);
-
    /* Create the pixmap. */
-   bp->pixmap = JXCreatePixmap(display, bp->window, 1, 1, rootDepth);
+   bp->pixmap = JXCreatePixmap(display, rootWindow, 1, 1, rootDepth);
 
    JXSetForeground(display, rootGC, c.pixel);
    JXDrawPoint(display, bp->pixmap, rootGC, 0, 0);
@@ -256,7 +238,6 @@ void LoadGradientBackground(BackgroundNode *bp)
    sep = strchr(bp->value, ':');
    if(!sep) {
       bp->pixmap = None;
-      bp->window = None;
       return;
    }
 
@@ -276,11 +257,7 @@ void LoadGradientBackground(BackgroundNode *bp)
    ParseColor(temp, &color2);
    ReleaseStack(temp);
 
-   /* Create the window. */
-   bp->window = JXCreateSimpleWindow(display, rootWindow, 0, 0,
-                                     rootWidth, rootHeight, 0, 0, 0);
-
-   bp->pixmap = JXCreatePixmap(display, bp->window,
+   bp->pixmap = JXCreatePixmap(display, rootWindow,
                                rootWidth, rootHeight, rootDepth);
 
    if(color1.pixel == color2.pixel) {
@@ -306,7 +283,6 @@ void LoadImageBackground(BackgroundNode *bp)
    ip = LoadNamedIcon(bp->value, 0);
    if(JUNLIKELY(!ip)) {
       bp->pixmap = None;
-      bp->window = None;
       Warning(_("background image not found: \"%s\""), bp->value);
       return;
    }
@@ -320,12 +296,8 @@ void LoadImageBackground(BackgroundNode *bp)
       height = rootHeight;
    }
 
-   /* Create the window. */
-   bp->window = JXCreateSimpleWindow(display, rootWindow, 0, 0,
-                                     rootWidth, rootHeight, 0, 0, 0);
-
    /* Create the pixmap. */
-   bp->pixmap = JXCreatePixmap(display, bp->window,
+   bp->pixmap = JXCreatePixmap(display, rootWindow,
                                width, height, rootDepth);
 
    /* Clear the pixmap in case it is too small. */

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-14 07:28-0500\n"
+"POT-Creation-Date: 2013-06-14 18:53-0500\n"
 "PO-Revision-Date: 2013-05-31 14:19+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -13,16 +13,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-Language: French\n"
 
-#: src/background.c:140
+#: src/background.c:135
 msgid "no value specified for background"
 msgstr "Pas de valeur spécifiée pour le fond d'écran"
 
-#: src/background.c:156
+#: src/background.c:151
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "type de fond d'écran incorrect: \"%s\""
 
-#: src/background.c:310
+#: src/background.c:286
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "Image de fond d'écran introuvable: \"%s\""

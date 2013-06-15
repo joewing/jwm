@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-14 07:28-0500\n"
+"POT-Creation-Date: 2013-06-14 18:53-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -12,16 +12,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/background.c:140
+#: src/background.c:135
 msgid "no value specified for background"
 msgstr "kein Wert für Hintergrund spezifiziert"
 
-#: src/background.c:156
+#: src/background.c:151
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "ungültiger Typ für Hintergrund: \"%s\""
 
-#: src/background.c:310
+#: src/background.c:286
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "Hintergrundbild nicht gefunden: \"%s\""

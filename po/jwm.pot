@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-14 07:28-0500\n"
+"POT-Creation-Date: 2013-06-14 18:53-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,16 +17,16 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/background.c:140
+#: src/background.c:135
 msgid "no value specified for background"
 msgstr ""
 
-#: src/background.c:156
+#: src/background.c:151
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr ""
 
-#: src/background.c:310
+#: src/background.c:286
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr ""

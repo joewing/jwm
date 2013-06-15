@@ -1110,7 +1110,6 @@ void HandleMapRequest(const XMapEvent *event)
          np->state.status |= STAT_MAPPED;
          XMapWindow(display, np->window);
          XMapWindow(display, np->parent);
-         GrabMouse(np->window);
          if(!(np->state.status & STAT_STICKY)) {
             np->state.desktop = currentDesktop;
          }

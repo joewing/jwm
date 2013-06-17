@@ -1157,6 +1157,7 @@ void HandleUnmapNotify(const XUnmapEvent *event)
          GravitateClient(np, 1);
          JXReparentWindow(display, np->window, rootWindow, np->x, np->y);
          WriteState(np);
+         JXRemoveFromSaveSet(display, np->window);
          RemoveClient(np);
       }
       JXUngrabServer(display);

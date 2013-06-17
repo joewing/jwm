@@ -1062,7 +1062,6 @@ void RemoveClient(ClientNode *np)
    clientCount -= 1;
    XDeleteContext(display, np->window, clientContext);
    XDeleteContext(display, np->parent, frameContext);
-   JXRemoveFromSaveSet(display, np->window);
 
    if(np->state.status & STAT_URGENT) {
       UnregisterCallback(SignalUrgent, np);
@@ -1099,6 +1098,7 @@ void RemoveClient(ClientNode *np)
       }
       JXUngrabButton(display, AnyButton, AnyModifier, np->window);
       JXReparentWindow(display, np->window, rootWindow, np->x, np->y);
+      JXRemoveFromSaveSet(display, np->window);
    }
 
    /* Destroy the parent */

@@ -169,6 +169,8 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
       np->state.defaultLayer = LAYER_ABOVE;
    }
 
+   LoadIcon(np);
+
    ApplyGroups(np);
 
    /* We now know the layer, so insert */
@@ -180,8 +182,6 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
       nodeTail[np->state.layer] = np;
    }
    nodes[np->state.layer] = np;
-
-   LoadIcon(np);
 
    SetDefaultCursor(np->window);
    ReparentClient(np, notOwner);

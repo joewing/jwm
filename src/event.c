@@ -1143,6 +1143,7 @@ void HandleUnmapNotify(const XUnmapEvent *event)
       /* Grab the server to prevent the client from destroying the
        * window after we check for a DestroyNotify. */
       JXGrabServer(display);
+      JXSync(display, False);
 
       if(np->controller) {
          (np->controller)(1);

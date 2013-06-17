@@ -244,7 +244,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
          np->state.border &= ~BORDER_SHADE;
          break;
       case OPTION_LAYER:
-         SetClientLayer(np, lp->uvalue);
+         np->state.layer = lp->uvalue;
          break;
       case OPTION_DESKTOP:
          if(JLIKELY(lp->uvalue >= 1 && lp->uvalue <= settings.desktopCount)) {

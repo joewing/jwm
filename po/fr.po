@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-14 18:53-0500\n"
+"POT-Creation-Date: 2013-06-19 18:52-0500\n"
 "PO-Revision-Date: 2013-05-31 14:19+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -52,7 +52,7 @@ msgstr "Un seul dock autorisé"
 msgid "could not acquire system tray selection"
 msgstr "Impossible d'obtenir la sélection de la barre système"
 
-#: src/event.c:851
+#: src/event.c:893
 msgid "Fullscreen state will be shaped!"
 msgstr "L'état du mode plein-écran sera défini!"
 
@@ -78,7 +78,7 @@ msgstr "classe de groupe incorrecte"
 msgid "invalid group name"
 msgstr "nom de groupe incorrect"
 
-#: src/group.c:253
+#: src/group.c:256
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr "bureau de groupe incorrect: %d"
@@ -168,37 +168,37 @@ msgstr "%s[%u]: texte inattendu: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entité incorrecte: \"%.8s\""
 
-#: src/parse.c:1085
+#: src/parse.c:1086
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "Mode d'insertion incorrect: \"%s\""
 
-#: src/parse.c:1803
+#: src/parse.c:1804
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Balise incorrecte dans: %s"
 
-#: src/parse.c:1815
+#: src/parse.c:1816
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacité de menu incorrecte: %s"
 
-#: src/parse.c:1834
+#: src/parse.c:1835
 #, c-format
 msgid "invalid layer: %s"
 msgstr "plan de groupe incorrect: %s"
 
-#: src/parse.c:1851
+#: src/parse.c:1852
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "type de fond d'écran incorrect: %s"
 
-#: src/parse.c:1860
+#: src/parse.c:1861
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Balise incorrecte dans %s: %s"
 
-#: src/parse.c:1881
+#: src/parse.c:1882
 msgid "configuration error"
 msgstr "erreur de configuration"
 

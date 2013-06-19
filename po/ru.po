@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-05-03 17:41-0500\n"
+"POT-Creation-Date: 2013-06-19 18:52-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -38,8 +38,7 @@ msgstr "Ликвидировать окно?"
 msgid "This may cause data to be lost!"
 msgstr "Это может привести к потере данных!"
 
-#: src/command.c:138
-#: src/main.c:190
+#: src/command.c:138 src/main.c:190
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "не удалось выполнить: (%s) %s"
@@ -56,18 +55,16 @@ msgstr "можно использовать только один Dock (обла
 msgid "could not acquire system tray selection"
 msgstr "не удалось получить активное приложение в панели задач"
 
-#: src/event.c:851
+#: src/event.c:893
 msgid "Fullscreen state will be shaped!"
 msgstr "Применено оформление в полноэкранном режиме!"
 
-#: src/font.c:76
-#: src/font.c:95
+#: src/font.c:76 src/font.c:95
 #, c-format
 msgid "could not load font: %s"
 msgstr "не удалось загрузить шрифт: %s"
 
-#: src/font.c:83
-#: src/font.c:102
+#: src/font.c:83 src/font.c:102
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "не удалось загрузить шрифт по-умолчанию: %s"
@@ -84,7 +81,7 @@ msgstr "недопустимое значение класса группы"
 msgid "invalid group name"
 msgstr "недопустимое значение названия группы"
 
-#: src/group.c:253
+#: src/group.c:256
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr "недопустимое значение рабочего стола группы: %d"
@@ -172,37 +169,37 @@ msgstr "%s[%u]: непонятный текст: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
-#: src/parse.c:1085
+#: src/parse.c:1086
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "недопустимое значение режима вставки: \"%s\""
 
-#: src/parse.c:1803
+#: src/parse.c:1804
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:1815
+#: src/parse.c:1816
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:1834
+#: src/parse.c:1835
 #, c-format
 msgid "invalid layer: %s"
 msgstr "недопустимое значение расположения окна: %s"
 
-#: src/parse.c:1851
+#: src/parse.c:1852
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "недопустимое значение типа статусного окна для перемещения: %s"
 
-#: src/parse.c:1860
+#: src/parse.c:1861
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:1881
+#: src/parse.c:1882
 msgid "configuration error"
 msgstr "ошибка конфигурации"
 
@@ -225,12 +222,14 @@ msgstr "нельзя использовать микро-окно панели (
 
 #: src/swallow.c:93
 msgid "cannot swallow the same client multiple times"
-msgstr "нельзя использовать одно и то же микро-окно панели (swallow) несколько раз"
+msgstr ""
+"нельзя использовать одно и то же микро-окно панели (swallow) несколько раз"
 
 #: src/taskbar.c:732
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
-msgstr "недопустимое значение макс. ширины кнопки в панели задач (TaskList): %s"
+msgstr ""
+"недопустимое значение макс. ширины кнопки в панели задач (TaskList): %s"
 
 #: src/traybutton.c:89
 #, c-format
@@ -292,8 +291,7 @@ msgstr "Изменить размер"
 msgid "Move"
 msgstr "Переместить"
 
-#: src/winmenu.c:97
-#: src/winmenu.c:120
+#: src/winmenu.c:97 src/winmenu.c:120
 msgid "Restore"
 msgstr "Восстановить"
 
@@ -360,4 +358,3 @@ msgstr "Всегда позади"
 #: src/winmenu.c:202
 msgid "Send To"
 msgstr "Переместить на рабочий стол"
-

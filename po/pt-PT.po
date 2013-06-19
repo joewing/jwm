@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-14 18:53-0500\n"
+"POT-Creation-Date: 2013-06-19 18:52-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -60,7 +60,7 @@ msgstr "só um tabuleiro e permitido"
 msgid "could not acquire system tray selection"
 msgstr "não pode adquirir a seleção da bandeja do sistema"
 
-#: src/event.c:851
+#: src/event.c:893
 msgid "Fullscreen state will be shaped!"
 msgstr "Estado do ecrã expandido será moldado!"
 
@@ -86,7 +86,7 @@ msgstr "classe do grupo invalida"
 msgid "invalid group name"
 msgstr "nome do grupo invalido"
 
-#: src/group.c:253
+#: src/group.c:256
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr "grupo do ambiente de trabalho invalido: %d"
@@ -178,37 +178,37 @@ msgstr "%s[%u]: texto inesperado: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entrada invalida: \"%.8s\""
 
-#: src/parse.c:1085
+#: src/parse.c:1086
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "modo de inserção invalido: \"%s\""
 
-#: src/parse.c:1803
+#: src/parse.c:1804
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Configuração invalida: %s"
 
-#: src/parse.c:1815
+#: src/parse.c:1816
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "transparência invalida: %s"
 
-#: src/parse.c:1834
+#: src/parse.c:1835
 #, c-format
 msgid "invalid layer: %s"
 msgstr "camada invalida: %s"
 
-#: src/parse.c:1851
+#: src/parse.c:1852
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "tipo de fundo invalido: %s"
 
-#: src/parse.c:1860
+#: src/parse.c:1861
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta invalida dentro %s: %s"
 
-#: src/parse.c:1881
+#: src/parse.c:1882
 msgid "configuration error"
 msgstr "erro de configuração"
 

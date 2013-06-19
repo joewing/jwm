@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-14 18:53-0500\n"
+"POT-Creation-Date: 2013-06-19 18:52-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -57,7 +57,7 @@ msgstr "tylko jeden dozwolony Dock"
 msgid "could not acquire system tray selection"
 msgstr "nie można nabyć wyboru w zasobniku systemowym"
 
-#: src/event.c:851
+#: src/event.c:893
 msgid "Fullscreen state will be shaped!"
 msgstr "Pełnoekranowy stan będzie kształtowany!"
 
@@ -83,7 +83,7 @@ msgstr "nieprawidłowa klasa grupy"
 msgid "invalid group name"
 msgstr "nieprawidłowa nazwa grupy"
 
-#: src/group.c:253
+#: src/group.c:256
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr "nieprawidłowy pulpitu grupy: %d"
@@ -171,37 +171,37 @@ msgstr "%s[%u]: nieoczekiwany tekst: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: nieprawidłowa jednostka: \"%.8s\""
 
-#: src/parse.c:1085
+#: src/parse.c:1086
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "nieprawidłowy tryb edycji: \"%s\""
 
-#: src/parse.c:1803
+#: src/parse.c:1804
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nieprawidłowy znacznik w: %s"
 
-#: src/parse.c:1815
+#: src/parse.c:1816
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "nieprawidłowa nieprzezroczystość menu: %s"
 
-#: src/parse.c:1834
+#: src/parse.c:1835
 #, c-format
 msgid "invalid layer: %s"
 msgstr "nieprawidłowa warstwa grupy: %s"
 
-#: src/parse.c:1851
+#: src/parse.c:1852
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "nieprawidłowy typ tła: %s"
 
-#: src/parse.c:1860
+#: src/parse.c:1861
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:1881
+#: src/parse.c:1882
 msgid "configuration error"
 msgstr "błąd konfiguracji"
 

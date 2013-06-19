@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-14 18:53-0500\n"
+"POT-Creation-Date: 2013-06-19 18:52-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,7 +56,7 @@ msgstr ""
 msgid "could not acquire system tray selection"
 msgstr ""
 
-#: src/event.c:851
+#: src/event.c:893
 msgid "Fullscreen state will be shaped!"
 msgstr ""
 
@@ -82,7 +82,7 @@ msgstr ""
 msgid "invalid group name"
 msgstr ""
 
-#: src/group.c:253
+#: src/group.c:256
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr ""
@@ -170,37 +170,37 @@ msgstr ""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/parse.c:1085
+#: src/parse.c:1086
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr ""
 
-#: src/parse.c:1803
+#: src/parse.c:1804
 #, c-format
 msgid "invalid setting: %s"
 msgstr ""
 
-#: src/parse.c:1815
+#: src/parse.c:1816
 #, c-format
 msgid "invalid opacity: %s"
 msgstr ""
 
-#: src/parse.c:1834
+#: src/parse.c:1835
 #, c-format
 msgid "invalid layer: %s"
 msgstr ""
 
-#: src/parse.c:1851
+#: src/parse.c:1852
 #, c-format
 msgid "invalid status window type: %s"
 msgstr ""
 
-#: src/parse.c:1860
+#: src/parse.c:1861
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr ""
 
-#: src/parse.c:1881
+#: src/parse.c:1882
 msgid "configuration error"
 msgstr ""
 

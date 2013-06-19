@@ -564,6 +564,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
 
       ConstrainClient(np);
       ResetBorder(np);
+      UpdatePager();
 
    } else {
 

@@ -682,6 +682,9 @@ char HandlePropertyNotify(const XPropertyEvent *event)
             RegisterCallback(URGENCY_DELAY, SignalUrgent, np);
          }
          break;
+      case XA_WM_TRANSIENT_FOR:
+         JXGetTransientForHint(display, np->window, &np->owner);
+         break;
       case XA_WM_ICON_NAME:
       case XA_WM_CLIENT_MACHINE:
          break;

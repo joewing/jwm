@@ -94,6 +94,7 @@ typedef struct OptionMapType {
 static const OptionMapType OPTION_MAP[] = {
    { "sticky",             OPTION_STICKY        },
    { "nolist",             OPTION_NOLIST        },
+   { "nopager",            OPTION_NOPAGER       },
    { &BORDER_STRING[0],    OPTION_BORDER        },
    { &NOBORDER_STRING[0],  OPTION_NOBORDER      },
    { &TITLE_STRING[0],     OPTION_TITLE         },

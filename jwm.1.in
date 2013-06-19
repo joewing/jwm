@@ -714,9 +714,15 @@ Causes the tray to ignore windows in this group.
 .RE
 
 .P
+.B nopager
+.RS
+Causes the pager to ignore windows in this group.
+.RE
+
+.P
 .B noshade
 .RS
-Disallow windows in this group from being shaded.
+Prevent windows in this group from being shaded.
 .RE
 
 .P

@@ -870,6 +870,7 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
    char actionFullScreen;
    char actionMinimize;
    char actionNolist;
+   char actionNopager;
    char actionBelow;
    char actionAbove;
 
@@ -881,6 +882,7 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
    actionFullScreen = 0;
    actionMinimize = 0;
    actionNolist = 0;
+   actionNopager = 0;
    actionBelow = 0;
    actionAbove = 0;
 
@@ -906,6 +908,9 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
       } else if(event->data.l[x]
          == (long)atoms[ATOM_NET_WM_STATE_SKIP_TASKBAR]) {
          actionNolist = 1;
+      } else if(event->data.l[x]
+         == (long)atoms[ATOM_NET_WM_STATE_SKIP_PAGER]) {
+         actionNopager = 1;
       } else if(event->data.l[x]
          == (long)atoms[ATOM_NET_WM_STATE_BELOW]) {
          actionBelow = 1;
@@ -938,6 +943,10 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
          np->state.status &= ~STAT_NOLIST;
          UpdateTaskBar();
       }
+      if(actionNopager) {
+         np->state.status &= ~STAT_NOPAGER;
+         UpdatePager();
+      }
       if(actionBelow && np->state.layer == LAYER_BELOW) {
          SetClientLayer(np, np->state.defaultLayer);
       }
@@ -964,6 +973,10 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
       if(actionNolist) {
          np->state.status |= STAT_NOLIST;
          UpdateTaskBar();
+      }
+      if(actionNopager) {
+         np->state.status |= STAT_NOPAGER;
+         UpdatePager();
       }
       if(actionBelow) {
          SetClientLayer(np, LAYER_BELOW);
@@ -1016,6 +1029,10 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
       if(actionNolist) {
          np->state.status ^= STAT_NOLIST;
          UpdateTaskBar();
+      }
+      if(actionNopager) {
+         np->state.status ^= STAT_NOPAGER;
+         UpdatePager();
       }
       break;
    default:

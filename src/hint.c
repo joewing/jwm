@@ -106,6 +106,7 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_STATE_FULLSCREEN],   "_NET_WM_STATE_FULLSCREEN"    },
    { &atoms[ATOM_NET_WM_STATE_HIDDEN],       "_NET_WM_STATE_HIDDEN"        },
    { &atoms[ATOM_NET_WM_STATE_SKIP_TASKBAR], "_NET_WM_STATE_SKIP_TASKBAR"  },
+   { &atoms[ATOM_NET_WM_STATE_SKIP_PAGER],   "_NET_WM_STATE_SKIP_PAGER"    },
    { &atoms[ATOM_NET_WM_STATE_BELOW],        "_NET_WM_STATE_BELOW"         },
    { &atoms[ATOM_NET_WM_STATE_ABOVE],        "_NET_WM_STATE_ABOVE"         },
    { &atoms[ATOM_NET_WM_ALLOWED_ACTIONS],    "_NET_WM_ALLOWED_ACTIONS"     },
@@ -389,6 +390,10 @@ void WriteNetState(ClientNode *np)
       values[index++] = atoms[ATOM_NET_WM_STATE_SKIP_TASKBAR];
    }
 
+   if(np->state.status & STAT_NOPAGER) {
+      values[index++] = atoms[ATOM_NET_WM_STATE_SKIP_PAGER];
+   }
+
    if(np->state.layer != np->state.defaultLayer) {
       if(np->state.layer == LAYER_BELOW) {
          values[index++] = atoms[ATOM_NET_WM_STATE_BELOW];
@@ -536,6 +541,8 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
                result.status |= STAT_MINIMIZED;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_SKIP_TASKBAR]) {
                result.status |= STAT_NOLIST;
+            } else if(state[x] == atoms[ATOM_NET_WM_STATE_SKIP_PAGER]) {
+               result.status |= STAT_NOPAGER;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_ABOVE]) {
                result.layer = LAYER_ABOVE;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_BELOW]) {

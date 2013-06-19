@@ -37,6 +37,7 @@ typedef unsigned char OptionType;
 #define OPTION_CENTERED    19    /**< Centered placement. */
 #define OPTION_TILED       20    /**< Tiled placement. */
 #define OPTION_IIGNORE     21    /**< Ignore increment when maximized. */
+#define OPTION_NOPAGER     22    /**< Do not show in pager. */
 
 /*@{*/
 #define InitializeGroups() (void)(0)

@@ -281,6 +281,9 @@ void StartPagerMove(TrayComponentType *cp, int x, int y)
          if(!(np->state.status & STAT_MAPPED)) {
             continue;
          }
+         if(np->state.status & STAT_NOPAGER) {
+            continue;
+         }
 
          /* Skip this client if it isn't on the selected desktop. */
          if(np->state.status & STAT_STICKY) {
@@ -610,6 +613,9 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np)
 
    /* Don't draw the client if it isn't mapped. */
    if(!(np->state.status & STAT_MAPPED)) {
+      return;
+   }
+   if(np->state.status & STAT_NOPAGER) {
       return;
    }
 

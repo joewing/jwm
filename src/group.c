@@ -230,6 +230,9 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
       case OPTION_NOLIST:
          np->state.status |= STAT_NOLIST;
          break;
+      case OPTION_NOPAGER:
+         np->state.status |= STAT_NOPAGER;
+         break;
       case OPTION_BORDER:
          np->state.border |= BORDER_OUTLINE;
          break;

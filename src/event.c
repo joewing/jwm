@@ -500,10 +500,48 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
       GetGravityDelta(np, &deltax, &deltay);
       changed = 0;
       if((event->value_mask & CWWidth) && (event->width != np->width)) {
+         switch(np->gravity) {
+         case EastGravity:
+         case NorthEastGravity:
+         case SouthEastGravity:
+            /* Right side should not move. */
+            np->x -= event->width - np->width;
+            break;
+         case WestGravity:
+         case NorthWestGravity:
+         case SouthWestGravity:
+            /* Left side should not move. */
+            break;
+         case CenterGravity:
+            /* Center of the window should not move. */
+            np->x -= (event->width - np->width) / 2;
+            break;
+         default:
+            break;
+         }
          np->width = event->width;
          changed = 1;
       }
       if((event->value_mask & CWHeight) && (event->height != np->height)) {
+         switch(np->gravity) {
+         case NorthGravity:
+         case NorthEastGravity:
+         case NorthWestGravity:
+            /* Top should not move. */
+            break;
+         case SouthGravity:
+         case SouthEastGravity:
+         case SouthWestGravity:
+            /* Bottom should not move. */
+            np->y -= event->height - np->height;
+            break;
+         case CenterGravity:
+            /* Center of the window should not move. */
+            np->y -= (event->height - np->height) / 2;
+            break;
+         default:
+            break;
+         }
          np->height = event->height;
          changed = 1;
       }

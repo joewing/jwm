@@ -798,6 +798,7 @@ void GetGravityDelta(const ClientNode *np, int *x, int  *y)
       break;
    case NorthGravity:
       *y = -north;
+      *x = (west - east) / 2;
       break;
    case NorthEastGravity:
       *y = -north;
@@ -805,19 +806,22 @@ void GetGravityDelta(const ClientNode *np, int *x, int  *y)
       break;
    case WestGravity:
       *x = -west;
+      *y = (north - south) / 2;
       break;
    case CenterGravity:
-      *y = (north + south) / 2;
-      *x = (east + west) / 2;
+      *y = (north - south) / 2;
+      *x = (west - east) / 2;
       break;
    case EastGravity:
       *x = west;
+      *y = (north - south) / 2;
       break;
    case SouthWestGravity:
       *y = south;
       *x = -west;
       break;
    case SouthGravity:
+      *x = (west - east) / 2;
       *y = south;
       break;
    case SouthEastGravity:

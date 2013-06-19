@@ -420,6 +420,7 @@ void Startup()
    /* First we grab the server to prevent clients from changing things
     * while we're still loading. */
    JXGrabServer(display);
+   JXSync(display, False);
 
    StartupSettings();
    StartupScreens();

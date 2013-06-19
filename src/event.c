@@ -1094,6 +1094,7 @@ void HandleMapRequest(const XMapEvent *event)
    np = FindClientByWindow(event->window);
    if(!np) {
       JXGrabServer(display);
+      JXSync(display, False);
       np = AddClientWindow(event->window, 0, 1);
       if(np) {
          if(     settings.focusModel == FOCUS_CLICK

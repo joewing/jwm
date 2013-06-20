@@ -489,6 +489,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
    ClientNode *np;
    int deltax, deltay;
    char changed;
+   char resized;
 
    if(HandleDockConfigureRequest(event)) {
       return;
@@ -499,6 +500,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
 
       GetGravityDelta(np, &deltax, &deltay);
       changed = 0;
+      resized = 0;
       if((event->value_mask & CWWidth) && (event->width != np->width)) {
          switch(np->gravity) {
          case EastGravity:
@@ -521,6 +523,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
          }
          np->width = event->width;
          changed = 1;
+         resized = 1;
       }
       if((event->value_mask & CWHeight) && (event->height != np->height)) {
          switch(np->gravity) {
@@ -544,6 +547,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
          }
          np->height = event->height;
          changed = 1;
+         resized = 1;
       }
       if((event->value_mask & CWX) && (event->x - deltax != np->x)) {
          np->x = event->x - deltax;
@@ -562,8 +566,14 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
          (np->controller)(0);
       }
 
-      ConstrainClient(np);
-      ResetBorder(np);
+      if(resized) {
+         ConstrainClient(np);
+         ResetBorder(np);
+      } else {
+         int north, south, east, west;
+         GetBorderSize(&np->state, &north, &south, &east, &west);
+         JXMoveWindow(display, np->parent, np->x - west, np->y - north);
+      }
       UpdatePager();
 
    } else {

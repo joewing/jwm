@@ -34,7 +34,7 @@ unsigned int clientCount;
 
 static void LoadFocus();
 static void ReparentClient(ClientNode *np, char notOwner);
-static void MinimizeTransients(ClientNode *np);
+static char MinimizeTransients(ClientNode *np, char active);
 static void RestoreTransients(ClientNode *np, char raise);
 static void KillClientHandler(ClientNode *np);
 static void UnmapClient(ClientNode *np);
@@ -276,22 +276,17 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
 /** Minimize a client window and all of its transients. */
 void MinimizeClient(ClientNode *np)
 {
-
    Assert(np);
-
-   if(settings.focusModel == FOCUS_CLICK && np == activeClient) {
-      FocusNextStacked(np);
+   if(MinimizeTransients(np, 0)) {
+      /* If the active window was minimized, focus the next window. */
+      FocusNextStacked(activeClient);
    }
-
-   MinimizeTransients(np);
-
    UpdateTaskBar();
    UpdatePager();
-
 }
 
 /** Minimize all transients as well as the specified client. */
-void MinimizeTransients(ClientNode *np)
+char MinimizeTransients(ClientNode *np, char active)
 {
 
    ClientNode *tp;
@@ -301,9 +296,7 @@ void MinimizeTransients(ClientNode *np)
 
    /* A minimized client can't be active. */
    if(activeClient == np) {
-      activeClient = NULL;
-      np->state.status &= ~STAT_ACTIVE;
-      JXSetInputFocus(display, rootWindow, RevertToParent, eventTime);
+      active = 1;
    }
 
    /* Unmap the window and update its state. */
@@ -320,10 +313,12 @@ void MinimizeTransients(ClientNode *np)
          if(tp->owner == np->window
             && (tp->state.status & (STAT_MAPPED | STAT_SHADED))
             && !(tp->state.status & STAT_MINIMIZED)) {
-            MinimizeTransients(tp);
+            active = MinimizeTransients(tp, active);
          }
       }
    }
+
+   return active;
 
 }
 
@@ -783,6 +778,9 @@ void FocusClient(ClientNode *np)
    Assert(np);
 
    if(np->state.status & STAT_HIDDEN) {
+      return;
+   }
+   if(!(np->state.status & (STAT_MAPPED | STAT_SHADED))) {
       return;
    }
 

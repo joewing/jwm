@@ -10,6 +10,7 @@
 #include "jwm.h"
 #include "outline.h"
 #include "main.h"
+#include "grab.h"
 
 static GC outlineGC = None;
 static int lastX, lastY;
@@ -25,7 +26,7 @@ void DrawOutline(int x, int y, int width, int height)
    outlineGC = JXCreateGC(display, rootWindow,
                           GCFunction | GCSubwindowMode | GCLineWidth,
                           &gcValues);
-   JXGrabServer(display);
+   GrabServer();
    JXDrawRectangle(display, rootWindow, outlineGC, x, y, width, height);
    lastX = x;
    lastY = y;
@@ -39,7 +40,7 @@ void ClearOutline()
    if(outlineGC != None) {
       JXDrawRectangle(display, rootWindow, outlineGC,
                       lastX, lastY, lastWidth, lastHeight);
-      JXUngrabServer(display);
+      UngrabServer();
       JXFreeGC(display, outlineGC);
       outlineGC = None;
    }

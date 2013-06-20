@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2004-2007
  *
- * @brief Header file client window functions.
+ * @brief Header file for client window functions.
  *
  */
 
@@ -75,6 +75,7 @@ typedef unsigned int StatusFlags;
 #define STAT_TILED      (1 << 21)   /**< Use tiled window placement. */
 #define STAT_IIGNORE    (1 << 22)   /**< Ignore increment when maximized. */
 #define STAT_NOPAGER    (1 << 23)   /**< Don't show in pager. */
+#define STAT_SHAPED     (1 << 24)   /**< This window is shaped. */
 
 /** Colormap window linked list. */
 typedef struct ColormapNode {

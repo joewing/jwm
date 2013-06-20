@@ -27,11 +27,13 @@
 #include "event.h"
 #include "settings.h"
 #include "timing.h"
+#include "grab.h"
 
 static ClientNode *activeClient;
 
 unsigned int clientCount;
 
+static void CheckShape(ClientNode *np);
 static void LoadFocus();
 static void ReparentClient(ClientNode *np, char notOwner);
 static char MinimizeTransients(ClientNode *np, char active);
@@ -183,6 +185,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    }
    nodes[np->state.layer] = np;
 
+   CheckShape(np);
    SetDefaultCursor(np->window);
    ReparentClient(np, notOwner);
    PlaceClient(np, alreadyMapped);
@@ -271,6 +274,23 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
 
    return np;
 
+}
+
+/* Determine if this client uses the shape extension. */
+void CheckShape(ClientNode *np)
+{
+#ifdef USE_SHAPE
+   int shaped = 0;
+   int r1;
+   unsigned int r2;
+
+   XShapeQueryExtents(display, np->window, &shaped,
+                      &r1, &r1, &r2, &r2,
+                      &r1, &r1, &r1, &r2, &r2);
+   if(shaped) {
+      np->state.status |= STAT_SHAPED;
+   }
+#endif
 }
 
 /** Minimize a client window and all of its transients. */
@@ -638,8 +658,6 @@ void ShowClient(ClientNode *np)
 void MaximizeClient(ClientNode *np, char horiz, char vert)
 {
 
-   int north, south, east, west;
-
    Assert(np);
 
    /* We don't want to mess with full screen clients. */
@@ -650,8 +668,6 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
    if(np->state.status & STAT_SHADED) {
       UnshadeClient(np);
    }
-
-   GetBorderSize(&np->state, &north, &south, &east, &west);
 
    if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
       np->x = np->oldx;
@@ -849,10 +865,10 @@ void KillClientHandler(ClientNode *np)
       FocusNextStacked(np);
    }
 
-   JXGrabServer(display);
+   GrabServer();
    JXKillClient(display, np->window);
    JXSync(display, True);
-   JXUngrabServer(display);
+   UngrabServer();
 
    RemoveClient(np);
 

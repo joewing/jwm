@@ -998,36 +998,6 @@ char GetCardinalAtom(Window window, AtomType atom, unsigned long *value)
 
 }
 
-/** Read a window atom. */
-char GetWindowAtom(Window window, AtomType atom, Window *value)
-{
-   unsigned long count;
-   int status;
-   unsigned long extra;
-   Atom realType;
-   int realFormat;
-   unsigned char *data;
-   char ret;
-
-   Assert(window != None);
-   Assert(value);
-
-   status = JXGetWindowProperty(display, window, atoms[atom], 0, 1, False,
-      XA_WINDOW, &realType, &realFormat, &count, &extra, &data);
-
-   ret = 0;
-   if(status == Success && data) {
-      if(count == 1) {
-         *value = *(Window*)data;
-         ret = 1;
-      }
-      JXFree(data);
-   }
-
-   return ret;
-
-}
-
 /** Set a cardinal atom. */
 void SetCardinalAtom(Window window, AtomType atom, unsigned long value)
 {

@@ -33,6 +33,7 @@
 #include "tray.h"
 #include "popup.h"
 #include "pager.h"
+#include "grab.h"
 
 #define MIN_TIME_DELTA 50
 
@@ -1134,6 +1135,7 @@ void HandleShapeEvent(const XShapeEvent *event)
    ClientNode *np;
    np = FindClientByWindow(event->window);
    if(np) {
+      np->state.status |= STAT_SHAPED;
       ResetBorder(np);
    }
 }
@@ -1162,8 +1164,7 @@ void HandleMapRequest(const XMapEvent *event)
    }
    np = FindClientByWindow(event->window);
    if(!np) {
-      JXGrabServer(display);
-      JXSync(display, False);
+      GrabServer();
       np = AddClientWindow(event->window, 0, 1);
       if(np) {
          if(     settings.focusModel == FOCUS_CLICK
@@ -1173,7 +1174,7 @@ void HandleMapRequest(const XMapEvent *event)
       } else {
          JXMapWindow(display, event->window);
       }
-      JXUngrabServer(display);
+      UngrabServer();
    } else {
       if(!(np->state.status & STAT_MAPPED)) {
          UpdateState(np);
@@ -1212,8 +1213,7 @@ void HandleUnmapNotify(const XUnmapEvent *event)
 
       /* Grab the server to prevent the client from destroying the
        * window after we check for a DestroyNotify. */
-      JXGrabServer(display);
-      JXSync(display, False);
+      GrabServer();
 
       if(np->controller) {
          (np->controller)(1);
@@ -1231,7 +1231,7 @@ void HandleUnmapNotify(const XUnmapEvent *event)
          JXRemoveFromSaveSet(display, np->window);
          RemoveClient(np);
       }
-      JXUngrabServer(display);
+      UngrabServer();
 
    }
 }

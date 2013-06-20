@@ -223,14 +223,6 @@ void WriteFrameExtents(Window win, const ClientState *state);
  */
 char GetCardinalAtom(Window window, AtomType atom, unsigned long *value);
 
-/** Read a window atom.
- * @param window The window.
- * @param atom The atom to read.
- * @param value A pointer to the location to save the atom.
- * @return 1 on success, 0 on failure.
- */
-char GetWindowAtom(Window window, AtomType atom, Window *value);
-
 /** Set a cardinal atom.
  * @param window The window.
  * @param atom The atom to set.

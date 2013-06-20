@@ -42,6 +42,7 @@
 #include "background.h"
 #include "settings.h"
 #include "timing.h"
+#include "grab.h"
 
 Display *display = NULL;
 Window rootWindow;
@@ -419,8 +420,7 @@ void Startup()
 
    /* First we grab the server to prevent clients from changing things
     * while we're still loading. */
-   JXGrabServer(display);
-   JXSync(display, False);
+   GrabServer();
 
    StartupSettings();
    StartupScreens();
@@ -460,7 +460,7 @@ void Startup()
 
    /* Allow clients to do their thing. */
    JXSync(display, True);
-   JXUngrabServer(display);
+   UngrabServer();
 
    StartupSwallow();
 

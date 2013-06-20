@@ -15,6 +15,7 @@
 #include "error.h"
 #include "misc.h"
 #include "settings.h"
+#include "grab.h"
 
 static GC borderGC;
 
@@ -186,6 +187,8 @@ void ResetBorder(const ClientNode *np)
    int north, south, east, west;
    int width, height;
 
+   GrabServer();
+
    /* Determine the size of the window. */
    GetBorderSize(&np->state, &north, &south, &east, &west);
    width = np->width + east + west;
@@ -220,7 +223,7 @@ void ResetBorder(const ClientNode *np)
                         CORNER_RADIUS - 1);
 
    /* Apply the client window. */
-   if(!(np->state.status & STAT_SHADED)) {
+   if(!(np->state.status & STAT_SHADED) && (np->state.status & STAT_SHAPED)) {
 
       XRectangle *rects;
       int count;
@@ -255,6 +258,8 @@ void ResetBorder(const ClientNode *np)
    JXFreePixmap(display, shapePixmap);
 
 #endif
+
+   UngrabServer();
 
 }
 

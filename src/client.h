@@ -20,17 +20,17 @@ struct TimeType;
  * on reasonable architectures.
  */
 typedef unsigned short BorderFlags;
-#define BORDER_NONE    0
-#define BORDER_OUTLINE (1 << 0)  /**< Window has a border. */
-#define BORDER_TITLE   (1 << 1)  /**< Window has a title bar. */
-#define BORDER_MIN     (1 << 2)  /**< Window supports minimize. */
-#define BORDER_MAX     (1 << 3)  /**< Window supports maximize. */
-#define BORDER_CLOSE   (1 << 4)  /**< Window supports close. */
-#define BORDER_RESIZE  (1 << 5)  /**< Window supports resizing. */
-#define BORDER_MOVE    (1 << 6)  /**< Window supports moving. */
-#define BORDER_MAX_V   (1 << 7)  /**< Maximize vertically. */
-#define BORDER_MAX_H   (1 << 8)  /**< Maximize horizontally. */
-#define BORDER_SHADE   (1 << 9)  /**< Allow shading. */
+#define BORDER_NONE     0
+#define BORDER_OUTLINE  (1 << 0)    /**< Window has a border. */
+#define BORDER_TITLE    (1 << 1)    /**< Window has a title bar. */
+#define BORDER_MIN      (1 << 2)    /**< Window supports minimize. */
+#define BORDER_MAX      (1 << 3)    /**< Window supports maximize. */
+#define BORDER_CLOSE    (1 << 4)    /**< Window supports close. */
+#define BORDER_RESIZE   (1 << 5)    /**< Window supports resizing. */
+#define BORDER_MOVE     (1 << 6)    /**< Window supports moving. */
+#define BORDER_MAX_V    (1 << 7)    /**< Maximize vertically. */
+#define BORDER_MAX_H    (1 << 8)    /**< Maximize horizontally. */
+#define BORDER_SHADE    (1 << 9)    /**< Allow shading. */
 
 /** The default border flags. */
 #define BORDER_DEFAULT ( \
@@ -70,12 +70,13 @@ typedef unsigned int StatusFlags;
 #define STAT_DELETE     (1 << 16)   /**< Client accepts WM_DELETE. */
 #define STAT_TAKEFOCUS  (1 << 17)   /**< Client uses WM_TAKE_FOCUS. */
 #define STAT_URGENT     (1 << 18)   /**< Urgency hint is set. */
-#define STAT_FLASH      (1 << 19)   /**< Flash for urgency. */
+#define STAT_NOTURGENT  (1 << 19)   /**< Ignore the urgency hint. */
 #define STAT_CENTERED   (1 << 20)   /**< Use centered window placement. */
 #define STAT_TILED      (1 << 21)   /**< Use tiled window placement. */
 #define STAT_IIGNORE    (1 << 22)   /**< Ignore increment when maximized. */
 #define STAT_NOPAGER    (1 << 23)   /**< Don't show in pager. */
 #define STAT_SHAPED     (1 << 24)   /**< This window is shaped. */
+#define STAT_FLASH      (1 << 25)   /**< Flashing for urgency. */
 
 /** Colormap window linked list. */
 typedef struct ColormapNode {

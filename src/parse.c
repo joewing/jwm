@@ -107,6 +107,7 @@ static const OptionMapType OPTION_MAP[] = {
    { "vmax",               OPTION_MAX_V         },
    { "nofocus",            OPTION_NOFOCUS       },
    { &NOSHADE_STRING[0],   OPTION_NOSHADE       },
+   { "noturgent",          OPTION_NOTURGENT     },
    { "centered",           OPTION_CENTERED      },
    { "tiled",              OPTION_TILED         },
    { NULL,                 OPTION_INVALID       }

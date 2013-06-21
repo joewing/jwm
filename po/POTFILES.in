@@ -14,6 +14,7 @@ src/dock.c
 src/error.c
 src/event.c
 src/font.c
+src/grab.c
 src/gradient.c
 src/group.c
 src/help.c

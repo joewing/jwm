@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-19 18:52-0500\n"
+"POT-Creation-Date: 2013-06-20 19:27-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -35,15 +35,15 @@ msgstr "tipo de fundo invalido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""
 
-#: src/client.c:868
+#: src/client.c:882
 msgid "Kill this window?"
 msgstr "eliminar esta janela?"
 
-#: src/client.c:869
+#: src/client.c:883
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 
-#: src/command.c:138 src/main.c:190
+#: src/command.c:138 src/main.c:191
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "comando executável falhou (exec): (%s) %s"
@@ -60,7 +60,7 @@ msgstr "só um tabuleiro e permitido"
 msgid "could not acquire system tray selection"
 msgstr "não pode adquirir a seleção da bandeja do sistema"
 
-#: src/event.c:893
+#: src/event.c:904
 msgid "Fullscreen state will be shaped!"
 msgstr "Estado do ecrã expandido será moldado!"
 

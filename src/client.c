@@ -1358,7 +1358,7 @@ void SignalUrgent(const TimeType *now, int x, int y, void *data)
    /* Redraw borders. */
    if(np->state.status & STAT_FLASH) {
       np->state.status &= ~STAT_FLASH;
-   } else {
+   } else if(!(np->state.status & STAT_NOTURGENT)) {
       np->state.status |= STAT_FLASH;
    }
    DrawBorder(np);

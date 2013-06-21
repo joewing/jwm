@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-19 18:52-0500\n"
+"POT-Creation-Date: 2013-06-20 19:27-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,15 +31,15 @@ msgstr ""
 msgid "background image not found: \"%s\""
 msgstr ""
 
-#: src/client.c:868
+#: src/client.c:882
 msgid "Kill this window?"
 msgstr ""
 
-#: src/client.c:869
+#: src/client.c:883
 msgid "This may cause data to be lost!"
 msgstr ""
 
-#: src/command.c:138 src/main.c:190
+#: src/command.c:138 src/main.c:191
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr ""
@@ -56,7 +56,7 @@ msgstr ""
 msgid "could not acquire system tray selection"
 msgstr ""
 
-#: src/event.c:893
+#: src/event.c:904
 msgid "Fullscreen state will be shaped!"
 msgstr ""
 

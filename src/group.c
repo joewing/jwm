@@ -297,6 +297,9 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
       case OPTION_TILED:
          np->state.status |= STAT_TILED;
          break;
+      case OPTION_NOTURGENT:
+         np->state.status |= STAT_NOTURGENT;
+         break;
       default:
          Debug("invalid option: %d", lp->option);
          break;

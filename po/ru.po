@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-20 19:27-0500\n"
+"POT-Creation-Date: 2013-06-20 19:49-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -169,37 +169,37 @@ msgstr "%s[%u]: непонятный текст: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
-#: src/parse.c:1086
+#: src/parse.c:1087
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "недопустимое значение режима вставки: \"%s\""
 
-#: src/parse.c:1804
+#: src/parse.c:1805
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:1816
+#: src/parse.c:1817
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:1835
+#: src/parse.c:1836
 #, c-format
 msgid "invalid layer: %s"
 msgstr "недопустимое значение расположения окна: %s"
 
-#: src/parse.c:1852
+#: src/parse.c:1853
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "недопустимое значение типа статусного окна для перемещения: %s"
 
-#: src/parse.c:1861
+#: src/parse.c:1862
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:1882
+#: src/parse.c:1883
 msgid "configuration error"
 msgstr "ошибка конфигурации"
 

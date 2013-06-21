@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-20 19:27-0500\n"
+"POT-Creation-Date: 2013-06-20 19:49-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -170,37 +170,37 @@ msgstr ""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/parse.c:1086
+#: src/parse.c:1087
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr ""
 
-#: src/parse.c:1804
+#: src/parse.c:1805
 #, c-format
 msgid "invalid setting: %s"
 msgstr ""
 
-#: src/parse.c:1816
+#: src/parse.c:1817
 #, c-format
 msgid "invalid opacity: %s"
 msgstr ""
 
-#: src/parse.c:1835
+#: src/parse.c:1836
 #, c-format
 msgid "invalid layer: %s"
 msgstr ""
 
-#: src/parse.c:1852
+#: src/parse.c:1853
 #, c-format
 msgid "invalid status window type: %s"
 msgstr ""
 
-#: src/parse.c:1861
+#: src/parse.c:1862
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr ""
 
-#: src/parse.c:1882
+#: src/parse.c:1883
 msgid "configuration error"
 msgstr ""
 

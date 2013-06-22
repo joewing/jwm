@@ -297,33 +297,10 @@ void Draw(TrayComponentType *cp, int active)
    button.height = cp->height - 3;
    button.x = 1;
    button.y = 1;
+   button.font = FONT_TRAYBUTTON;
+   button.text = bp->label;
+   button.icon = bp->icon;
    DrawButton(&button);
-
-   /* Compute the offset of the text. */
-   if(bp->label) {
-      if(!bp->icon) {
-         labelx = 2 + cp->width / 2;
-         labelx -= GetStringWidth(FONT_TRAYBUTTON, bp->label) / 2;
-      } else {
-         labelx = cp->width;
-         labelx -= GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
-      }
-   } else {
-      labelx = cp->width;
-   }
-   labelx -= BUTTON_SIZE;
-
-   if(bp->icon) {
-      PutIcon(bp->icon, cp->pixmap, BUTTON_SIZE, BUTTON_SIZE,
-         labelx - BUTTON_SIZE, cp->height - BUTTON_SIZE * 2);
-   }
-
-   if(bp->label) {
-      RenderString(cp->pixmap, FONT_TRAYBUTTON, COLOR_TRAYBUTTON_FG,
-                   labelx + 2,
-                   cp->height / 2 - GetStringHeight(FONT_TRAYBUTTON) / 2,
-                   cp->width - labelx, bp->label);
-   }
 
 }
 

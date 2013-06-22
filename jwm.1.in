@@ -894,6 +894,18 @@ The default background color. See the \fBCOLORS\fP section for
 more information.
 .RE
 .P
+.B ActiveForeground
+.RS
+The default foreground color for active items.
+See the \fBCOLORS\fP section for more information.
+.RE
+.P
+.B ActiveBackground
+.RS
+The default background color for active items.
+See the \fBCOLORS\fP section for more information.
+.RE
+.P
 .B Opacity
 .RS
 The opacity of trays. This is a floating point value between 0.0 and 1.0.
@@ -916,32 +928,77 @@ Within this tag the following tags are supported:
 .P
 .B Font
 .RS
-The font used for program names. See the \fBFONTS\fP section for more
-information.
+The font used for program names.
+Inherited from \fBTrayStyle\fP by default.
+See the \fBFONTS\fP section for more information.
 .RE
 .P
 .B Foreground
 .RS
 The foreground color of the task list items.
+Inherited from \fBTrayStyle\fP by default.
 See the \fBCOLORS\fP section for more information.
 .RE
 .P
 .B Background
 .RS
 The background color of the task list items (gradients are supported).
+Inherited from \fBTrayStyle\fP by default.
 See the \fBCOLORS\fP section for more information.
 .RE
 .P
 .B ActiveForeground
 .RS
-The foreground color of an active item on the task list. See the \fBCOLORS\fP
-section for more information.
+The foreground color of an active item on the task list.
+Inherited from \fBTrayStyle\fP by default.
+See the \fBCOLORS\fP section for more information.
 .RE
 .P
 .B ActiveBackground
 .RS
 The background color of an active item on the task list
-(gradients are supported). See the \fBCOLORS\fP section for more information.
+(gradients are supported).
+Inherited from \fBTrayStyle\fP by default.
+See the \fBCOLORS\fP section for more information.
+.RE
+.RE
+
+.B "TRAY BUTTON STYLE"
+.RS
+The \fBTrayButtonStyle\fP tag controls the look of tray buttons.
+Within this tag, the following tags are supported.
+.P
+.B Font
+.RS
+The font used for tray buttons.
+Inherited from \fBTrayStyle\fP by default.
+See the \fBFONTS\fP section for more information.
+.RE
+.P
+.B Foreground
+.RS
+The foreground color for tray buttons.  
+Inherited from \fBTrayStyle\fP by default.
+See the \fBCOLORS\fP section for more information.
+.RE
+.P
+.B Background
+.RS
+The background color for tray buttons (gradients are supported).
+Inherited from \fBTrayStyle\fP by default.
+See the \fBCOLORS\fP section for more information.
+.RE
+.B ActiveForeground
+.RS
+The foreground color for pressed tray buttons.
+Inherited from \fBTrayStyle\fP by default.
+See the \fBCOLORS\fP section for more information.
+.RE
+.B ActiveBackground
+.RS
+The background color for pressed tray buttons (gradients are supported).
+Inherited from \fBTrayStyle\fP by default.
+See the \fBCOLORS\fP section for more information.
 .RE
 .RE
 
@@ -952,17 +1009,23 @@ Within this tag, the following tags are supported.
 .P
 .B Font
 .RS
-The font used. See the \fBFONTS\fP section for more information.
+The font used for clocks.
+Inherited from \fBTrayStyle\fP by default.
+See the \fBFONTS\fP section for more information.
 .RE
 .P
 .B Foreground
 .RS
-The color of the text. See the \fBCOLORS\fP section for more information.
+The color of the text.
+Inherited from \fBTrayStyle\fP by default.
+See the \fBCOLORS\fP section for more information.
 .RE
 .P
 .B Background
 .RS
-The background color. See the \fBCOLORS\fP section for more information.
+The background color.
+Inherited from \fBTrayStyle\fP by default.
+See the \fBCOLORS\fP section for more information.
 .RE
 .RE
 

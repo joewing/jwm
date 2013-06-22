@@ -1125,10 +1125,16 @@ void ParseTrayStyle(const TokenNode *tp) {
          SetFont(FONT_TRAY, np->value);
          break;
       case TOK_BACKGROUND:
-         SetColor(COLOR_TRAY_BG, np->value);
+         ParseGradient(np->value, COLOR_TRAY_BG1, COLOR_TRAY_BG2);
          break;
       case TOK_FOREGROUND:
          SetColor(COLOR_TRAY_FG, np->value);
+         break;
+      case TOK_ACTIVEBACKGROUND:
+         ParseGradient(np->value, COLOR_TRAY_ACTIVE_BG1, COLOR_TRAY_ACTIVE_BG2);
+         break;
+      case TOK_ACTIVEFOREGROUND:
+         SetColor(COLOR_TRAY_ACTIVE_FG, np->value);
          break;
       case TOK_OPACITY:
          settings.trayOpacity = ParseOpacity(np, np->value);

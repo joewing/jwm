@@ -13,10 +13,17 @@
 #include "error.h"
 #include "misc.h"
 
+/** Mapping between color types and default values. */
 typedef struct {
    ColorType type;
-   const char *value;
+   unsigned int value;
 } DefaultColorNode;
+
+/** Mapping from color type to the value it from which it inherits. */
+typedef struct {
+   ColorType dest;
+   ColorType src;
+} ColorInheritNode;
 
 unsigned long colors[COLOR_COUNT];
 static unsigned long rgbColors[COLOR_COUNT];
@@ -31,59 +38,84 @@ static unsigned long *rmap;
 static XftColor *xftColors[COLOR_COUNT] = { NULL };
 #endif
 
-static DefaultColorNode DEFAULT_COLORS[] = {
+static const DefaultColorNode DEFAULT_COLORS[] = {
 
-   { COLOR_TITLE_FG,                "#FFFFFF"   },
-   { COLOR_TITLE_ACTIVE_FG,         "#FFFFFF"   },
+   { COLOR_TITLE_FG,                0xFFFFFF    },
+   { COLOR_TITLE_ACTIVE_FG,         0xFFFFFF    },
 
-   { COLOR_TITLE_BG1,               "#333333"   },
-   { COLOR_TITLE_BG2,               "#111111"   },
-   { COLOR_TITLE_ACTIVE_BG1,        "#CC7700"   },
-   { COLOR_TITLE_ACTIVE_BG2,        "#884400"   },
+   { COLOR_TITLE_BG1,               0x333333    },
+   { COLOR_TITLE_BG2,               0x111111    },
+   { COLOR_TITLE_ACTIVE_BG1,        0xCC7700    },
+   { COLOR_TITLE_ACTIVE_BG2,        0x884400    },
 
-   { COLOR_BORDER_LINE,             "#000000"   },
-   { COLOR_BORDER_ACTIVE_LINE,      "#000000"   },
+   { COLOR_BORDER_LINE,             0x000000    },
+   { COLOR_BORDER_ACTIVE_LINE,      0x000000    },
 
-   { COLOR_TRAY_BG,                 "#111111"   },
-   { COLOR_TRAY_FG,                 "#FFFFFF"   },
+   { COLOR_TRAY_FG,                 0xFFFFFF    },
+   { COLOR_TRAY_BG1,                0x333333    },
+   { COLOR_TRAY_BG2,                0x111111    },
+   { COLOR_TRAY_ACTIVE_FG,          0xFFFFFF    },
+   { COLOR_TRAY_ACTIVE_BG1,         0x111111    },
+   { COLOR_TRAY_ACTIVE_BG2,         0x333333    },
 
-   { COLOR_TASK_FG,                 "#FFFFFF"   },
-   { COLOR_TASK_BG1,                "#333333"   },
-   { COLOR_TASK_BG2,                "#111111"   },
-   { COLOR_TASK_ACTIVE_FG,          "#FFFFFF"   },
-   { COLOR_TASK_ACTIVE_BG1,         "#111111"   },
-   { COLOR_TASK_ACTIVE_BG2,         "#333333"   },
+   { COLOR_TASK_FG,                 0xFFFFFF    },
+   { COLOR_TASK_BG1,                0x333333    },
+   { COLOR_TASK_BG2,                0x111111    },
+   { COLOR_TASK_ACTIVE_FG,          0xFFFFFF    },
+   { COLOR_TASK_ACTIVE_BG1,         0x111111    },
+   { COLOR_TASK_ACTIVE_BG2,         0x333333    },
 
-   { COLOR_PAGER_BG,                "#111111"   },
-   { COLOR_PAGER_FG,                "#444444"   },
-   { COLOR_PAGER_ACTIVE_BG,         "#884400"   },
-   { COLOR_PAGER_ACTIVE_FG,         "#CC7700"   },
-   { COLOR_PAGER_OUTLINE,           "#000000"   },
-   { COLOR_PAGER_TEXT,              "#FFFFFF"   },
+   { COLOR_PAGER_BG,                0x111111    },
+   { COLOR_PAGER_FG,                0x444444    },
+   { COLOR_PAGER_ACTIVE_BG,         0x884400    },
+   { COLOR_PAGER_ACTIVE_FG,         0xCC7700    },
+   { COLOR_PAGER_OUTLINE,           0x000000    },
+   { COLOR_PAGER_TEXT,              0xFFFFFF    },
 
-   { COLOR_MENU_BG,                 "#333333"   },
-   { COLOR_MENU_FG,                 "#FFFFFF"   },
-   { COLOR_MENU_ACTIVE_BG1,         "#CC7700"   },
-   { COLOR_MENU_ACTIVE_BG2,         "#884400"   },
-   { COLOR_MENU_ACTIVE_FG,          "#FFFFFF"   },
+   { COLOR_MENU_BG,                 0x333333    },
+   { COLOR_MENU_FG,                 0xFFFFFF    },
+   { COLOR_MENU_ACTIVE_BG1,         0xCC7700    },
+   { COLOR_MENU_ACTIVE_BG2,         0x884400    },
+   { COLOR_MENU_ACTIVE_FG,          0xFFFFFF    },
 
-   { COLOR_POPUP_BG,                "#999999"   },
-   { COLOR_POPUP_FG,                "#000000"   },
-   { COLOR_POPUP_OUTLINE,           "#000000"   },
+   { COLOR_POPUP_BG,                0x999999    },
+   { COLOR_POPUP_FG,                0x000000    },
+   { COLOR_POPUP_OUTLINE,           0x000000    },
 
-   { COLOR_TRAYBUTTON_FG,           "#FFFFFF"   },
-   { COLOR_TRAYBUTTON_BG1,          "#111111"   },
-   { COLOR_TRAYBUTTON_BG2,          "#333333"   },
+   { COLOR_TRAYBUTTON_FG,           0xFFFFFF    },
+   { COLOR_TRAYBUTTON_BG1,          0x333333    },
+   { COLOR_TRAYBUTTON_BG2,          0x111111    },
+   { COLOR_TRAYBUTTON_ACTIVE_FG,    0xFFFFFF    },
+   { COLOR_TRAYBUTTON_ACTIVE_BG1,   0x111111    },
+   { COLOR_TRAYBUTTON_ACTIVE_BG2,   0x333333    },
 
-   { COLOR_TRAYBUTTON_ACTIVE_FG,    "#FFFFFF"   },
-   { COLOR_TRAYBUTTON_ACTIVE_BG1,   "#333333"   },
-   { COLOR_TRAYBUTTON_ACTIVE_BG2,   "#111111"   },
-
-   { COLOR_CLOCK_FG,                "#FFFFFF"   },
-   { COLOR_CLOCK_BG,                "#111111"   },
-   { COLOR_COUNT,                   NULL        }
+   { COLOR_CLOCK_FG,                0xFFFFFF    },
+   { COLOR_CLOCK_BG1,               0x111111    },
+   { COLOR_CLOCK_BG2,               0x111111    }
 
 };
+static const unsigned int DEFAULT_COUNT
+   = sizeof(DEFAULT_COLORS) / sizeof(DEFAULT_COLORS[0]);
+
+static const ColorInheritNode INHERIT_COLORS[] = {
+   { COLOR_TASK_FG,                 COLOR_TRAY_FG           },
+   { COLOR_TASK_BG1,                COLOR_TRAY_BG1          },
+   { COLOR_TASK_BG2,                COLOR_TRAY_BG2          },
+   { COLOR_TASK_ACTIVE_FG,          COLOR_TRAY_ACTIVE_FG    },
+   { COLOR_TASK_ACTIVE_BG1,         COLOR_TRAY_ACTIVE_BG1   },
+   { COLOR_TASK_ACTIVE_BG2,         COLOR_TRAY_ACTIVE_BG2   },
+   { COLOR_TRAYBUTTON_FG,           COLOR_TRAY_FG           },
+   { COLOR_TRAYBUTTON_BG1,          COLOR_TRAY_BG1          },
+   { COLOR_TRAYBUTTON_BG2,          COLOR_TRAY_BG2,         },
+   { COLOR_TRAYBUTTON_ACTIVE_FG,    COLOR_TRAY_ACTIVE_FG    },
+   { COLOR_TRAYBUTTON_ACTIVE_BG1,   COLOR_TRAY_ACTIVE_BG1   },
+   { COLOR_TRAYBUTTON_ACTIVE_BG2,   COLOR_TRAY_ACTIVE_BG2   },
+   { COLOR_CLOCK_FG,                COLOR_TRAY_FG           },
+   { COLOR_CLOCK_BG1,               COLOR_TRAY_BG1          },
+   { COLOR_CLOCK_BG2,               COLOR_TRAY_BG2          }
+};
+static const unsigned int INHERIT_COUNT
+   = sizeof(INHERIT_COLORS) / sizeof(INHERIT_COLORS[0]);
 
 static char **names = NULL;
 
@@ -118,7 +150,7 @@ static void DarkenColor(ColorType oldColor, ColorType newColor);
 void StartupColors()
 {
 
-   int x;
+   unsigned int x;
    int red, green, blue;
    XColor c;
 
@@ -171,58 +203,13 @@ void StartupColors()
       break;
    }
 
-   /* Inherit unset colors from the tray for tray items. */
+   /* Inherit unset colors. */
    if(names) {
-
-      /* Task */
-      if(!names[COLOR_TASK_FG]) {
-         names[COLOR_TASK_FG] = CopyString(names[COLOR_TRAY_FG]);
-      }
-      if(!names[COLOR_TASK_BG1]) {
-         names[COLOR_TASK_BG1] = CopyString(names[COLOR_TRAY_BG]);
-      }
-      if(!names[COLOR_TASK_BG2]) {
-         names[COLOR_TASK_BG2] = CopyString(names[COLOR_TRAY_BG]);
-      }
-      if(!names[COLOR_TASK_ACTIVE_FG]) {
-         names[COLOR_TASK_ACTIVE_FG] = CopyString(names[COLOR_TRAY_FG]);
-      }
-      if(!names[COLOR_TASK_ACTIVE_BG1]) {
-         names[COLOR_TASK_ACTIVE_BG1] = CopyString(names[COLOR_TRAY_BG]);
-      }
-      if(!names[COLOR_TASK_ACTIVE_BG2]) {
-         names[COLOR_TASK_ACTIVE_BG2] = CopyString(names[COLOR_TRAY_BG]);
-      }
-
-      /* Tray button */
-      if(!names[COLOR_TRAYBUTTON_FG]) {
-         names[COLOR_TRAYBUTTON_FG] = CopyString(names[COLOR_TASK_FG]);
-      }
-      if(!names[COLOR_TRAYBUTTON_BG1]) {
-         names[COLOR_TRAYBUTTON_BG1] = CopyString(names[COLOR_TASK_BG1]);
-      }
-      if(!names[COLOR_TRAYBUTTON_BG2]) {
-         names[COLOR_TRAYBUTTON_BG2] = CopyString(names[COLOR_TASK_BG2]);
-      }
-      if(!names[COLOR_TRAYBUTTON_ACTIVE_FG]) {
-         names[COLOR_TRAYBUTTON_ACTIVE_FG]
-            = CopyString(names[COLOR_TASK_ACTIVE_FG]);
-      }
-      if(!names[COLOR_TRAYBUTTON_ACTIVE_BG1]) {
-         names[COLOR_TRAYBUTTON_ACTIVE_BG1]
-            = CopyString(names[COLOR_TASK_ACTIVE_BG1]);
-      }
-      if(!names[COLOR_TRAYBUTTON_ACTIVE_BG2]) {
-         names[COLOR_TRAYBUTTON_ACTIVE_BG2]
-            = CopyString(names[COLOR_TASK_ACTIVE_BG2]);
-      }
-
-      /* Clock */
-      if(!names[COLOR_CLOCK_FG]) {
-         names[COLOR_CLOCK_FG] = CopyString(names[COLOR_TRAY_FG]);
-      }
-      if(!names[COLOR_CLOCK_BG]) {
-         names[COLOR_CLOCK_BG] = CopyString(names[COLOR_TRAY_BG]);
+      for(x = 0; x < INHERIT_COUNT; x++) {
+         if(!names[INHERIT_COLORS[x].dest]) {
+            names[INHERIT_COLORS[x].dest]
+               = CopyString(names[INHERIT_COLORS[x].src]);
+         }
       }
    }
 
@@ -245,8 +232,8 @@ void StartupColors()
       DarkenColor(COLOR_MENU_ACTIVE_BG1, COLOR_MENU_ACTIVE_OL);
    }
 
-   LightenColor(COLOR_TRAY_BG, COLOR_TRAY_UP);
-   DarkenColor(COLOR_TRAY_BG, COLOR_TRAY_DOWN);
+   LightenColor(COLOR_TRAY_BG1, COLOR_TRAY_UP);
+   DarkenColor(COLOR_TRAY_BG1, COLOR_TRAY_DOWN);
 
    DarkenColor(COLOR_TASK_BG1, COLOR_TASK_DOWN);
 
@@ -432,11 +419,16 @@ void SetDefaultColor(ColorType type)
    XColor c;
    unsigned int x;
 
-   for(x = 0; DEFAULT_COLORS[x].value; x++) {
+   for(x = 0; x < DEFAULT_COUNT; x++) {
       if(DEFAULT_COLORS[x].type == type) {
-         ParseColor(DEFAULT_COLORS[x].value, &c);
+         const unsigned int rgb = DEFAULT_COLORS[x].value;
+         c.red = ((rgb >> 16) & 0xFF) * 257;
+         c.green = ((rgb >> 8) & 0xFF) * 257;
+         c.blue = (rgb & 0xFF) * 257;
+         c.flags = DoRed | DoGreen | DoBlue;
+         GetColor(&c);
          colors[type] = c.pixel;
-         rgbColors[type] = GetRGBFromXColor(&c);
+         rgbColors[type] = rgb;
          return;
       }
    }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-20 19:49-0500\n"
+"POT-Creation-Date: 2013-06-23 08:01-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -30,11 +30,11 @@ msgstr "неизвестный тип фона: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "фоновое изображение не найдено: \"%s\""
 
-#: src/client.c:882
+#: src/client.c:885
 msgid "Kill this window?"
 msgstr "Ликвидировать окно?"
 
-#: src/client.c:883
+#: src/client.c:886
 msgid "This may cause data to be lost!"
 msgstr "Это может привести к потере данных!"
 
@@ -174,32 +174,32 @@ msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 msgid "invalid insert mode: \"%s\""
 msgstr "недопустимое значение режима вставки: \"%s\""
 
-#: src/parse.c:1805
+#: src/parse.c:1811
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:1817
+#: src/parse.c:1823
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:1836
+#: src/parse.c:1842
 #, c-format
 msgid "invalid layer: %s"
 msgstr "недопустимое значение расположения окна: %s"
 
-#: src/parse.c:1853
+#: src/parse.c:1859
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "недопустимое значение типа статусного окна для перемещения: %s"
 
-#: src/parse.c:1862
+#: src/parse.c:1868
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:1883
+#: src/parse.c:1889
 msgid "configuration error"
 msgstr "ошибка конфигурации"
 
@@ -245,7 +245,7 @@ msgstr "не заданы ни иконка, ни текст кнопки зап
 msgid "invalid TrayButton action: \"%s\""
 msgstr "недопустимое значение действия кнопки запуска: \"%s\""
 
-#: src/traybutton.c:456
+#: src/traybutton.c:433
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "кнопка запуска: главное меню %d не задано"

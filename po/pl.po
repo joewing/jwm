@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-20 19:49-0500\n"
+"POT-Creation-Date: 2013-06-23 08:01-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -32,11 +32,11 @@ msgstr "nieprawidłowy typ tła: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "nie znaleziono obrazu tła: \"%s\""
 
-#: src/client.c:882
+#: src/client.c:885
 msgid "Kill this window?"
 msgstr "Zabić to okno?"
 
-#: src/client.c:883
+#: src/client.c:886
 msgid "This may cause data to be lost!"
 msgstr "Może to spowodować utratę danych!"
 
@@ -176,32 +176,32 @@ msgstr "%s[%d]: nieprawidłowa jednostka: \"%.8s\""
 msgid "invalid insert mode: \"%s\""
 msgstr "nieprawidłowy tryb edycji: \"%s\""
 
-#: src/parse.c:1805
+#: src/parse.c:1811
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nieprawidłowy znacznik w: %s"
 
-#: src/parse.c:1817
+#: src/parse.c:1823
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "nieprawidłowa nieprzezroczystość menu: %s"
 
-#: src/parse.c:1836
+#: src/parse.c:1842
 #, c-format
 msgid "invalid layer: %s"
 msgstr "nieprawidłowa warstwa grupy: %s"
 
-#: src/parse.c:1853
+#: src/parse.c:1859
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "nieprawidłowy typ tła: %s"
 
-#: src/parse.c:1862
+#: src/parse.c:1868
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:1883
+#: src/parse.c:1889
 msgid "configuration error"
 msgstr "błąd konfiguracji"
 
@@ -245,7 +245,7 @@ msgstr "brak ikony lub etykiety dla TrayButton"
 msgid "invalid TrayButton action: \"%s\""
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/traybutton.c:456
+#: src/traybutton.c:433
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "przycisk zasobnika: menu głównym %d nie zdefiniowano"

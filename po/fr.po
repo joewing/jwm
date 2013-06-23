@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-20 19:49-0500\n"
+"POT-Creation-Date: 2013-06-23 08:01-0500\n"
 "PO-Revision-Date: 2013-05-31 14:19+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -27,11 +27,11 @@ msgstr "type de fond d'écran incorrect: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Image de fond d'écran introuvable: \"%s\""
 
-#: src/client.c:882
+#: src/client.c:885
 msgid "Kill this window?"
 msgstr "Éliminer la fenêtre?"
 
-#: src/client.c:883
+#: src/client.c:886
 msgid "This may cause data to be lost!"
 msgstr "Cela peut entraîner la perte de données!"
 
@@ -173,32 +173,32 @@ msgstr "%s[%d]: entité incorrecte: \"%.8s\""
 msgid "invalid insert mode: \"%s\""
 msgstr "Mode d'insertion incorrect: \"%s\""
 
-#: src/parse.c:1805
+#: src/parse.c:1811
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Balise incorrecte dans: %s"
 
-#: src/parse.c:1817
+#: src/parse.c:1823
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacité de menu incorrecte: %s"
 
-#: src/parse.c:1836
+#: src/parse.c:1842
 #, c-format
 msgid "invalid layer: %s"
 msgstr "plan de groupe incorrect: %s"
 
-#: src/parse.c:1853
+#: src/parse.c:1859
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "type de fond d'écran incorrect: %s"
 
-#: src/parse.c:1862
+#: src/parse.c:1868
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Balise incorrecte dans %s: %s"
 
-#: src/parse.c:1883
+#: src/parse.c:1889
 msgid "configuration error"
 msgstr "erreur de configuration"
 
@@ -242,7 +242,7 @@ msgstr "aucune icône ou étiquette pour le bouton de barre"
 msgid "invalid TrayButton action: \"%s\""
 msgstr "action de bouton de barre incorrect: \"%s\""
 
-#: src/traybutton.c:456
+#: src/traybutton.c:433
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "Bouton de barre: menu racine %d non défini"

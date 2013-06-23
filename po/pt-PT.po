@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-20 19:49-0500\n"
+"POT-Creation-Date: 2013-06-23 08:01-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -35,11 +35,11 @@ msgstr "tipo de fundo invalido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""
 
-#: src/client.c:882
+#: src/client.c:885
 msgid "Kill this window?"
 msgstr "eliminar esta janela?"
 
-#: src/client.c:883
+#: src/client.c:886
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 
@@ -183,32 +183,32 @@ msgstr "%s[%d]: entrada invalida: \"%.8s\""
 msgid "invalid insert mode: \"%s\""
 msgstr "modo de inserção invalido: \"%s\""
 
-#: src/parse.c:1805
+#: src/parse.c:1811
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Configuração invalida: %s"
 
-#: src/parse.c:1817
+#: src/parse.c:1823
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "transparência invalida: %s"
 
-#: src/parse.c:1836
+#: src/parse.c:1842
 #, c-format
 msgid "invalid layer: %s"
 msgstr "camada invalida: %s"
 
-#: src/parse.c:1853
+#: src/parse.c:1859
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "tipo de fundo invalido: %s"
 
-#: src/parse.c:1862
+#: src/parse.c:1868
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta invalida dentro %s: %s"
 
-#: src/parse.c:1883
+#: src/parse.c:1889
 msgid "configuration error"
 msgstr "erro de configuração"
 
@@ -252,7 +252,7 @@ msgstr "ícone ou nome não esta definido no TrayButton"
 msgid "invalid TrayButton action: \"%s\""
 msgstr "ação do Traybutton invalida: \"%s\""
 
-#: src/traybutton.c:456
+#: src/traybutton.c:433
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "botão do tabuleiro: menu root %d não esta definida"

@@ -257,11 +257,6 @@ void KillClient(ClientNode *np);
  */
 void RaiseClient(ClientNode *np);
 
-/** Lower a client to the bottom of its layer.
- * @param np The client to lower.
- */
-void LowerClient(ClientNode *np);
-
 /** Restack the clients.
  * This is used when a client is mapped so that the stacking order
  * remains consistent.

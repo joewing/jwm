@@ -36,7 +36,7 @@ unsigned int clientCount;
 static void CheckShape(ClientNode *np);
 static void LoadFocus();
 static void ReparentClient(ClientNode *np, char notOwner);
-static char MinimizeTransients(ClientNode *np, char active);
+static void MinimizeTransients(ClientNode *np);
 static void RestoreTransients(ClientNode *np, char raise);
 static void KillClientHandler(ClientNode *np);
 static void UnmapClient(ClientNode *np);
@@ -300,16 +300,14 @@ void CheckShape(ClientNode *np)
 void MinimizeClient(ClientNode *np)
 {
    Assert(np);
-   if(MinimizeTransients(np, 0)) {
-      /* If the active window was minimized, focus the next window. */
-      FocusNextStacked(activeClient);
-   }
+   MinimizeTransients(np);
+   RestackClients();
    UpdateTaskBar();
    UpdatePager();
 }
 
 /** Minimize all transients as well as the specified client. */
-char MinimizeTransients(ClientNode *np, char active)
+void MinimizeTransients(ClientNode *np)
 {
 
    ClientNode *tp;
@@ -317,31 +315,48 @@ char MinimizeTransients(ClientNode *np, char active)
 
    Assert(np);
 
-   /* A minimized client can't be active. */
-   if(activeClient == np) {
-      active = 1;
-   }
-
    /* Unmap the window and update its state. */
    if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
       UnmapClient(np);
       JXUnmapWindow(display, np->parent);
    }
    np->state.status |= STAT_MINIMIZED;
-   WriteState(np);
 
    /* Minimize transient windows. */
    for(x = 0; x < LAYER_COUNT; x++) {
-      for(tp = nodes[x]; tp; tp = tp->next) {
+      tp = nodes[x];
+      while(tp) {
+         ClientNode *next = tp->next;
          if(tp->owner == np->window
             && (tp->state.status & (STAT_MAPPED | STAT_SHADED))
             && !(tp->state.status & STAT_MINIMIZED)) {
-            active = MinimizeTransients(tp, active);
+            MinimizeTransients(tp);
          }
+         tp = next;
       }
    }
 
-   return active;
+   /* Focus the next window. */
+   if(np->state.status & STAT_ACTIVE) {
+      FocusNextStacked(np);
+   }
+
+   /* Move this client to the end of the layer list. */
+   if(nodeTail[np->state.layer] != np) {
+      if(np->prev) {
+         np->prev->next = np->next;
+      } else {
+         nodes[np->state.layer] = np->next;
+      }
+      np->next->prev = np->prev;
+      tp = nodeTail[np->state.layer];
+      nodeTail[np->state.layer] = np;
+      tp->next = np;
+      np->prev = tp;
+      np->next = NULL;
+   }
+
+   WriteState(np);
 
 }
 
@@ -937,39 +952,6 @@ void RaiseClient(ClientNode *np)
             }
          }
       }
-
-      RestackClients();
-
-   }
-
-}
-
-/** Lower the client. This will not affect transients. */
-void LowerClient(ClientNode *np)
-{
-
-   ClientNode *tp;
-
-   Assert(np);
-
-   if(nodeTail[np->state.layer] != np) {
-
-      Assert(np->next);
-
-      /* Take the client out of the list. */
-      if(np->prev) {
-         np->prev->next = np->next;
-      } else {
-         nodes[np->state.layer] = np->next;
-      }
-      np->next->prev = np->prev;
-
-      /* Place the client at the end of the list. */
-      tp = nodeTail[np->state.layer];
-      nodeTail[np->state.layer] = np;
-      tp->next = np;
-      np->prev = tp;
-      np->next = NULL;
 
       RestackClients();
 

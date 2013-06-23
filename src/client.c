@@ -303,7 +303,6 @@ void MinimizeClient(ClientNode *np)
    MinimizeTransients(np);
    RestackClients();
    UpdateTaskBar();
-   UpdatePager();
 }
 
 /** Minimize all transients as well as the specified client. */

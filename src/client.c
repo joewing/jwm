@@ -271,6 +271,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
       np->state.status &= ~STAT_FULLSCREEN;
       SetClientFullScreen(np, 1);
    }
+   ResetBorder(np);
 
    return np;
 
@@ -283,12 +284,14 @@ void CheckShape(ClientNode *np)
    int shaped = 0;
    int r1;
    unsigned int r2;
-
-   XShapeQueryExtents(display, np->window, &shaped,
-                      &r1, &r1, &r2, &r2,
-                      &r1, &r1, &r1, &r2, &r2);
-   if(shaped) {
-      np->state.status |= STAT_SHAPED;
+   if(haveShape) {
+      JXShapeSelectInput(display, np->window, ShapeNotifyMask);
+      XShapeQueryExtents(display, np->window, &shaped,
+                         &r1, &r1, &r2, &r2,
+                         &r1, &r1, &r1, &r2, &r2);
+      if(shaped) {
+         np->state.status |= STAT_SHAPED;
+      }
    }
 #endif
 }
@@ -1270,13 +1273,6 @@ void ReparentClient(ClientNode *np, char notOwner)
 
    /* Reparent the client window. */
    JXReparentWindow(display, np->window, np->parent, west, north);
-
-#ifdef USE_SHAPE
-   if(haveShape) {
-      JXShapeSelectInput(display, np->window, ShapeNotifyMask);
-      ResetBorder(np);
-   }
-#endif
 
 }
 

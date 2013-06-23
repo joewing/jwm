@@ -799,9 +799,6 @@ void FocusClient(ClientNode *np)
    if(np->state.status & STAT_HIDDEN) {
       return;
    }
-   if(!(np->state.status & (STAT_MAPPED | STAT_SHADED))) {
-      return;
-   }
 
    if(activeClient != np || !(np->state.status & STAT_ACTIVE)) {
 

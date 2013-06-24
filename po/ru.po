@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-23 18:04-0500\n"
+"POT-Creation-Date: 2013-06-24 14:14-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -30,11 +30,11 @@ msgstr "неизвестный тип фона: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "фоновое изображение не найдено: \"%s\""
 
-#: src/client.c:896
+#: src/client.c:898
 msgid "Kill this window?"
 msgstr "Ликвидировать окно?"
 
-#: src/client.c:897
+#: src/client.c:899
 msgid "This may cause data to be lost!"
 msgstr "Это может привести к потере данных!"
 
@@ -43,7 +43,7 @@ msgstr "Это может привести к потере данных!"
 msgid "exec failed: (%s) %s"
 msgstr "не удалось выполнить: (%s) %s"
 
-#: src/desktop.c:266
+#: src/desktop.c:260
 msgid "empty Desktops Name tag"
 msgstr "пустой тэг Desktops Name (название рабочего стола)"
 
@@ -208,11 +208,11 @@ msgstr "ошибка конфигурации"
 msgid "invalid root menu specified: \"%c\""
 msgstr "неправильно задано главное меню: \"%c\""
 
-#: src/root.c:231
+#: src/root.c:225
 msgid "Exit JWM"
 msgstr "Выход из JWM"
 
-#: src/root.c:232
+#: src/root.c:226
 msgid "Are you sure?"
 msgstr "Вы уверены?"
 

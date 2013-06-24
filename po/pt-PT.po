@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-23 18:04-0500\n"
+"POT-Creation-Date: 2013-06-24 14:14-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -35,11 +35,11 @@ msgstr "tipo de fundo invalido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""
 
-#: src/client.c:896
+#: src/client.c:898
 msgid "Kill this window?"
 msgstr "eliminar esta janela?"
 
-#: src/client.c:897
+#: src/client.c:899
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 
@@ -48,7 +48,7 @@ msgstr "esta ação pode causar perda de dados!"
 msgid "exec failed: (%s) %s"
 msgstr "comando executável falhou (exec): (%s) %s"
 
-#: src/desktop.c:266
+#: src/desktop.c:260
 msgid "empty Desktops Name tag"
 msgstr "etiqueta do ambiente de trabalho vazia (tag)"
 
@@ -217,11 +217,11 @@ msgstr "erro de configuração"
 msgid "invalid root menu specified: \"%c\""
 msgstr "menu root especificado invalido: \"%c\""
 
-#: src/root.c:231
+#: src/root.c:225
 msgid "Exit JWM"
 msgstr "Sair do JWM?"
 
-#: src/root.c:232
+#: src/root.c:226
 msgid "Are you sure?"
 msgstr "Tem a certeza?"
 

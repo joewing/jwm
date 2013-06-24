@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-23 18:04-0500\n"
+"POT-Creation-Date: 2013-06-24 14:14-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,11 +31,11 @@ msgstr ""
 msgid "background image not found: \"%s\""
 msgstr ""
 
-#: src/client.c:896
+#: src/client.c:898
 msgid "Kill this window?"
 msgstr ""
 
-#: src/client.c:897
+#: src/client.c:899
 msgid "This may cause data to be lost!"
 msgstr ""
 
@@ -44,7 +44,7 @@ msgstr ""
 msgid "exec failed: (%s) %s"
 msgstr ""
 
-#: src/desktop.c:266
+#: src/desktop.c:260
 msgid "empty Desktops Name tag"
 msgstr ""
 
@@ -209,11 +209,11 @@ msgstr ""
 msgid "invalid root menu specified: \"%c\""
 msgstr ""
 
-#: src/root.c:231
+#: src/root.c:225
 msgid "Exit JWM"
 msgstr ""
 
-#: src/root.c:232
+#: src/root.c:226
 msgid "Are you sure?"
 msgstr ""
 

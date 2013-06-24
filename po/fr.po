@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-23 18:04-0500\n"
+"POT-Creation-Date: 2013-06-24 14:14-0500\n"
 "PO-Revision-Date: 2013-05-31 14:19+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -27,11 +27,11 @@ msgstr "type de fond d'écran incorrect: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Image de fond d'écran introuvable: \"%s\""
 
-#: src/client.c:896
+#: src/client.c:898
 msgid "Kill this window?"
 msgstr "Éliminer la fenêtre?"
 
-#: src/client.c:897
+#: src/client.c:899
 msgid "This may cause data to be lost!"
 msgstr "Cela peut entraîner la perte de données!"
 
@@ -40,7 +40,7 @@ msgstr "Cela peut entraîner la perte de données!"
 msgid "exec failed: (%s) %s"
 msgstr "Échec de l'exécution: (%s) %s"
 
-#: src/desktop.c:266
+#: src/desktop.c:260
 msgid "empty Desktops Name tag"
 msgstr "Balise de noms de bureaux vide"
 
@@ -207,11 +207,11 @@ msgstr "erreur de configuration"
 msgid "invalid root menu specified: \"%c\""
 msgstr "menu racine spécifié incorrect: \"%c\""
 
-#: src/root.c:231
+#: src/root.c:225
 msgid "Exit JWM"
 msgstr "Quitter JWM"
 
-#: src/root.c:232
+#: src/root.c:226
 msgid "Are you sure?"
 msgstr "En êtes-vous certain?"
 

@@ -12,6 +12,7 @@
 #include "client.h"
 #include "main.h"
 #include "key.h"
+#include "event.h"
 
 ClientNode *nodes[LAYER_COUNT];
 ClientNode *nodeTail[LAYER_COUNT];
@@ -202,6 +203,9 @@ void FocusNextStacked(ClientNode *np)
          }
       }
    }
+
+   /* No client to focus. */
+   JXSetInputFocus(display, rootWindow, RevertToParent, eventTime);
 
 }
 

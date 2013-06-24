@@ -227,21 +227,15 @@ void ShowDesktop()
 
    for(layer = 0; layer < LAYER_COUNT; layer++) {
       for(np = nodes[layer]; np; np = np->next) {
-
-         /* Skip "nolist" items. */
-         if(np->state.status & STAT_NOLIST) {
-            continue;
-         }
-
-         if(showingDesktop) {
-            if(np->state.status & STAT_SDESKTOP) {
-               RestoreClient(np, 0);
-            }
-         } else if(np->state.desktop == currentDesktop
-             || (np->state.status & STAT_STICKY)) {
-            if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
-               if(!(np->state.status & STAT_MINIMIZED)) {
-                  MinimizeClient(np);
+         if(!(np->state.status & STAT_NOLIST)) {
+            if(showingDesktop) {
+               if(np->state.status & STAT_SDESKTOP) {
+                  RestoreClient(np, 0);
+               }
+            } else if(np->state.desktop == currentDesktop
+                || (np->state.status & STAT_STICKY)) {
+               if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
+                  MinimizeClient(np, 0);
                   np->state.status |= STAT_SDESKTOP;
                }
             }

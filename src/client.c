@@ -36,7 +36,7 @@ unsigned int clientCount;
 static void CheckShape(ClientNode *np);
 static void LoadFocus();
 static void ReparentClient(ClientNode *np, char notOwner);
-static void MinimizeTransients(ClientNode *np);
+static void MinimizeTransients(ClientNode *np, char lower);
 static void RestoreTransients(ClientNode *np, char raise);
 static void KillClientHandler(ClientNode *np);
 static void UnmapClient(ClientNode *np);
@@ -229,7 +229,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    /* Minimize the client if requested. */
    if(np->state.status & STAT_MINIMIZED) {
       np->state.status &= ~STAT_MINIMIZED;
-      MinimizeClient(np);
+      MinimizeClient(np, 0);
    }
 
    /* Maximize the client if requested. */
@@ -297,16 +297,16 @@ void CheckShape(ClientNode *np)
 }
 
 /** Minimize a client window and all of its transients. */
-void MinimizeClient(ClientNode *np)
+void MinimizeClient(ClientNode *np, char lower)
 {
    Assert(np);
-   MinimizeTransients(np);
+   MinimizeTransients(np, lower);
    RestackClients();
    UpdateTaskBar();
 }
 
 /** Minimize all transients as well as the specified client. */
-void MinimizeTransients(ClientNode *np)
+void MinimizeTransients(ClientNode *np, char lower)
 {
 
    ClientNode *tp;
@@ -329,7 +329,7 @@ void MinimizeTransients(ClientNode *np)
          if(tp->owner == np->window
             && (tp->state.status & (STAT_MAPPED | STAT_SHADED))
             && !(tp->state.status & STAT_MINIMIZED)) {
-            MinimizeTransients(tp);
+            MinimizeTransients(tp, lower);
          }
          tp = next;
       }
@@ -340,19 +340,21 @@ void MinimizeTransients(ClientNode *np)
       FocusNextStacked(np);
    }
 
-   /* Move this client to the end of the layer list. */
-   if(nodeTail[np->state.layer] != np) {
-      if(np->prev) {
-         np->prev->next = np->next;
-      } else {
-         nodes[np->state.layer] = np->next;
+   if(lower) {
+      /* Move this client to the end of the layer list. */
+      if(nodeTail[np->state.layer] != np) {
+         if(np->prev) {
+            np->prev->next = np->next;
+         } else {
+            nodes[np->state.layer] = np->next;
+         }
+         np->next->prev = np->prev;
+         tp = nodeTail[np->state.layer];
+         nodeTail[np->state.layer] = np;
+         tp->next = np;
+         np->prev = tp;
+         np->next = NULL;
       }
-      np->next->prev = np->prev;
-      tp = nodeTail[np->state.layer];
-      nodeTail[np->state.layer] = np;
-      tp->next = np;
-      np->prev = tp;
-      np->next = NULL;
    }
 
    WriteState(np);

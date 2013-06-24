@@ -436,7 +436,7 @@ void HandleKeyPress(const XKeyEvent *event)
       break;
    case KEY_MIN:
       if(np) {
-         MinimizeClient(np);
+         MinimizeClient(np, 1);
       }
       break;
    case KEY_MAX:
@@ -760,7 +760,7 @@ void HandleClientMessage(const XClientMessageEvent *event)
             SetClientWithdrawn(np);
             break;
          case IconicState:
-            MinimizeClient(np);
+            MinimizeClient(np, 1);
             break;
          case NormalState:
             RestoreClient(np, 1);
@@ -1021,7 +1021,7 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
          SetClientFullScreen(np, 1);
       }
       if(actionMinimize) {
-         MinimizeClient(np);
+         MinimizeClient(np, 1);
       }
       if(actionNolist) {
          np->state.status |= STAT_NOLIST;
@@ -1362,7 +1362,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
                ShadeClient(np);
             }
          } else if(event->button == Button1) {
-            MinimizeClient(np);
+            MinimizeClient(np, 1);
          }
       }
       break;

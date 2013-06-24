@@ -189,8 +189,9 @@ void RemoveClient(ClientNode *np);
 
 /** Minimize a client.
  * @param np The client to minimize.
+ * @param lower Set to lower the client in the stacking order.
  */
-void MinimizeClient(ClientNode *np);
+void MinimizeClient(ClientNode *np, char lower);
 
 /** Shade a client.
  * @param np The client to shade.

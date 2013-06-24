@@ -284,7 +284,7 @@ void RunWindowCommand(const MenuAction *action)
       MaximizeClient(client, 0, 1);
       break;
    case MA_MINIMIZE:
-      MinimizeClient(client);
+      MinimizeClient(client, 1);
       break;
    case MA_RESTORE:
       RestoreClient(client, 1);

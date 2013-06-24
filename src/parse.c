@@ -714,9 +714,9 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
 
          value = FindAttribute(start->attributes, CONFIRM_ATTRIBUTE);
          if(value && !strcmp(value, FALSE_VALUE)) {
-            SetShowExitConfirmation(0);
+            settings.exitConfirmation = 0;
          } else {
-            SetShowExitConfirmation(1);
+            settings.exitConfirmation = 1;
          }
 
          value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);

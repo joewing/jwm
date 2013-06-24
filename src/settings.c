@@ -40,6 +40,7 @@ void InitializeSettings()
    settings.desktopHeight = 1;
    settings.menuOpacity = UINT_MAX;
    settings.taskInsertMode = INSERT_RIGHT;
+   settings.exitConfirmation = 1;
 }
 
 /** Make sure settings are reasonable. */

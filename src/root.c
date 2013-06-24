@@ -19,12 +19,12 @@
 #include "winmenu.h"
 #include "command.h"
 #include "parse.h"
+#include "settings.h"
 
 /** Number of root menus to support. */
 #define ROOT_MENU_COUNT 10
 
 static Menu *rootMenu[ROOT_MENU_COUNT];
-static char showExitConfirmation = 1;
 
 static void ExitHandler(ClientNode *np);
 static void PatchRootMenu(Menu *menu);
@@ -127,12 +127,6 @@ void SetRootMenu(const char *indexes, Menu *m)
 
 }
 
-/** Set whether a dialog should be shown before exiting. */
-void SetShowExitConfirmation(char v)
-{
-   showExitConfirmation = v;
-}
-
 /** Determine if the specified root menu is defined. */
 char IsRootMenuDefined(int index)
 {
@@ -226,7 +220,7 @@ void Restart()
 /** Exit with optional confirmation. */
 void Exit()
 {
-   if(showExitConfirmation) {
+   if(settings.exitConfirmation) {
       ShowConfirmDialog(NULL, ExitHandler,
                         _("Exit JWM"),
                         _("Are you sure?"),
@@ -239,14 +233,14 @@ void Exit()
 /** Reload the menu. */
 void ReloadMenu()
 {
-	shouldReload = 1;
+   shouldReload = 1;
    if(!menuShown) {
       ShutdownRootMenu();
       DestroyRootMenu();
       InitializeRootMenu();
       ParseConfig(configPath);
       StartupRootMenu();
-	   shouldReload = 0;
+      shouldReload = 0;
    }
 }
 

@@ -25,11 +25,6 @@ void DestroyRootMenu();
  */
 void SetRootMenu(const char *indexes, struct Menu *m);
 
-/** Set whether a confirmation dialog is displayed on exit.
- * @param v 1 to display confirmation, 0 to just exit.
- */
-void SetShowExitConfirmation(char v);
-
 /** Determine if a root menu is defined for the specified index.
  * @return 1 if it is defined, 0 if not.
  */

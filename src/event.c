@@ -571,13 +571,13 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
       }
 
       if(resized) {
-         ConstrainClient(np);
          ResetBorder(np);
       } else {
          int north, south, east, west;
          GetBorderSize(&np->state, &north, &south, &east, &west);
          JXMoveWindow(display, np->parent, np->x - west, np->y - north);
       }
+      SendConfigureEvent(np);
       UpdatePager();
 
    } else {

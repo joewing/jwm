@@ -566,6 +566,9 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
       if(np->controller) {
          (np->controller)(0);
       }
+      if(np->state.status & (STAT_VMAX | STAT_HMAX)) {
+         MaximizeClient(np, 0, 0);
+      }
 
       if(resized) {
          ConstrainClient(np);

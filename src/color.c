@@ -232,8 +232,8 @@ void StartupColors()
       DarkenColor(COLOR_MENU_ACTIVE_BG1, COLOR_MENU_ACTIVE_OL);
    }
 
-   LightenColor(COLOR_TRAY_BG1, COLOR_TRAY_UP);
-   DarkenColor(COLOR_TRAY_BG1, COLOR_TRAY_DOWN);
+   LightenColor(COLOR_TRAY_BG, COLOR_TRAY_UP);
+   DarkenColor(COLOR_TRAY_BG, COLOR_TRAY_DOWN);
 
    DarkenColor(COLOR_TASK_BG1, COLOR_TASK_DOWN);
 

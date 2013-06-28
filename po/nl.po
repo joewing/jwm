@@ -156,9 +156,9 @@ msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: ongeldig label"
 
 #: src/lex.c:288
-#, fuzzy, c-format
+#, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
-msgstr "%s[%d]: ongeldige entiteit: \"%.8s\""
+msgstr "%s[%u]: ongeldige entiteit: \"%.8s\""
 
 #: src/lex.c:336
 #, c-format

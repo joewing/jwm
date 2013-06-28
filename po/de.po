@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-24 14:14-0500\n"
+"POT-Creation-Date: 2013-06-28 07:20-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -51,7 +51,7 @@ msgstr ""
 msgid "could not acquire system tray selection"
 msgstr ""
 
-#: src/event.c:904
+#: src/event.c:907
 msgid "Fullscreen state will be shaped!"
 msgstr ""
 
@@ -220,7 +220,7 @@ msgstr ""
 msgid "cannot swallow the same client multiple times"
 msgstr ""
 
-#: src/taskbar.c:732
+#: src/taskbar.c:733
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""

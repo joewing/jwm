@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-06-24 14:14-0500\n"
+"POT-Creation-Date: 2013-06-28 07:20-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -55,7 +55,7 @@ msgstr "можно использовать только один Dock (обла
 msgid "could not acquire system tray selection"
 msgstr "не удалось получить активное приложение в панели задач"
 
-#: src/event.c:904
+#: src/event.c:907
 msgid "Fullscreen state will be shaped!"
 msgstr "Применено оформление в полноэкранном режиме!"
 
@@ -225,7 +225,7 @@ msgid "cannot swallow the same client multiple times"
 msgstr ""
 "нельзя использовать одно и то же микро-окно панели (swallow) несколько раз"
 
-#: src/taskbar.c:732
+#: src/taskbar.c:733
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""

@@ -33,7 +33,6 @@ static ClientNode *activeClient;
 
 unsigned int clientCount;
 
-static void CheckShape(ClientNode *np);
 static void LoadFocus();
 static void ReparentClient(ClientNode *np, char notOwner);
 static void MinimizeTransients(ClientNode *np, char lower);
@@ -185,7 +184,6 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    }
    nodes[np->state.layer] = np;
 
-   CheckShape(np);
    SetDefaultCursor(np->window);
    ReparentClient(np, notOwner);
    PlaceClient(np, alreadyMapped);
@@ -275,25 +273,6 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
 
    return np;
 
-}
-
-/* Determine if this client uses the shape extension. */
-void CheckShape(ClientNode *np)
-{
-#ifdef USE_SHAPE
-   int shaped = 0;
-   int r1;
-   unsigned int r2;
-   if(haveShape) {
-      JXShapeSelectInput(display, np->window, ShapeNotifyMask);
-      XShapeQueryExtents(display, np->window, &shaped,
-                         &r1, &r1, &r2, &r2,
-                         &r1, &r1, &r1, &r2, &r2);
-      if(shaped) {
-         np->state.status |= STAT_SHAPED;
-      }
-   }
-#endif
 }
 
 /** Minimize a client window and all of its transients. */

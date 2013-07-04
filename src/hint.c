@@ -148,6 +148,7 @@ static const AtomNode atomList[] = {
 
 };
 
+static char CheckShape(Window win);
 static void WriteNetState(ClientNode *np);
 static void WriteNetAllowed(ClientNode *np);
 static void ReadWMState(Window win, ClientState *state);
@@ -480,6 +481,27 @@ void WriteNetAllowed(ClientNode *np)
 
 }
 
+/** Check if a window uses the shape extension. */
+char CheckShape(Window win)
+{
+#ifdef USE_SHAPE
+   int shaped = 0;
+   int r1;
+   unsigned int r2;
+   if(haveShape) {
+      JXShapeSelectInput(display, win, ShapeNotifyMask);
+      XShapeQueryExtents(display, win, &shaped,
+                         &r1, &r1, &r2, &r2,
+                         &r1, &r1, &r1, &r2, &r2);
+      return shaped ? 1 : 0;
+   } else {
+      return 0;
+   }
+#else
+   return 0;
+#endif
+}
+
 /** Read all hints needed to determine the current window state. */
 ClientState ReadWindowState(Window win, char alreadyMapped)
 {
@@ -594,6 +616,11 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
    /* Use the default layer if the layer wasn't set explicitly. */
    if(result.layer == LAYER_NORMAL) {
       result.layer = result.defaultLayer;
+   }
+
+   /* Check if this window uses the shape extension. */
+   if(CheckShape(win)) {
+      result.status |= STAT_SHAPED;
    }
 
    /* Note that since we set _NET_WM_WINDOW_OPACITY, we don't

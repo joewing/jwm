@@ -279,7 +279,6 @@ void Draw(TrayComponentType *cp, int active)
 
    ButtonNode button;
    TrayButtonType *bp;
-   int labelx;
 
    bp = (TrayButtonType*)cp->object;
 

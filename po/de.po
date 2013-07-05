@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-07-04 09:38-0500\n"
+"POT-Creation-Date: 2013-07-05 16:30-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -51,7 +51,7 @@ msgstr ""
 msgid "could not acquire system tray selection"
 msgstr ""
 
-#: src/event.c:907
+#: src/event.c:910
 msgid "Fullscreen state will be shaped!"
 msgstr ""
 
@@ -239,7 +239,7 @@ msgstr ""
 msgid "invalid TrayButton action: \"%s\""
 msgstr ""
 
-#: src/traybutton.c:433
+#: src/traybutton.c:432
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr ""

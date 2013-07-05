@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-07-04 09:38-0500\n"
+"POT-Creation-Date: 2013-07-05 16:30-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -57,7 +57,7 @@ msgstr "tylko jeden dozwolony Dock"
 msgid "could not acquire system tray selection"
 msgstr "nie można nabyć wyboru w zasobniku systemowym"
 
-#: src/event.c:907
+#: src/event.c:910
 msgid "Fullscreen state will be shaped!"
 msgstr "Pełnoekranowy stan będzie kształtowany!"
 
@@ -245,7 +245,7 @@ msgstr "brak ikony lub etykiety dla TrayButton"
 msgid "invalid TrayButton action: \"%s\""
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/traybutton.c:433
+#: src/traybutton.c:432
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "przycisk zasobnika: menu głównym %d nie zdefiniowano"

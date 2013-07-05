@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-07-04 09:38-0500\n"
+"POT-Creation-Date: 2013-07-05 16:30-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -55,7 +55,7 @@ msgstr "можно использовать только один Dock (обла
 msgid "could not acquire system tray selection"
 msgstr "не удалось получить активное приложение в панели задач"
 
-#: src/event.c:907
+#: src/event.c:910
 msgid "Fullscreen state will be shaped!"
 msgstr "Применено оформление в полноэкранном режиме!"
 
@@ -245,7 +245,7 @@ msgstr "не заданы ни иконка, ни текст кнопки зап
 msgid "invalid TrayButton action: \"%s\""
 msgstr "недопустимое значение действия кнопки запуска: \"%s\""
 
-#: src/traybutton.c:433
+#: src/traybutton.c:432
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "кнопка запуска: главное меню %d не задано"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-07-04 09:38-0500\n"
+"POT-Creation-Date: 2013-07-05 16:30-0500\n"
 "PO-Revision-Date: 2013-06-27 15:00-0300\n"
 "Last-Translator: Víctor Martínez <vikmz@myopera.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -56,7 +56,7 @@ msgstr "solo se permite un Dock"
 msgid "could not acquire system tray selection"
 msgstr "no se pudo adquirir selección de bandeja de sistema"
 
-#: src/event.c:907
+#: src/event.c:910
 msgid "Fullscreen state will be shaped!"
 msgstr "¡Se definirá el estado de Pantalla Completa!"
 
@@ -246,7 +246,7 @@ msgstr "no hay icono o etiqueta para el Botón de Bandeja"
 msgid "invalid TrayButton action: \"%s\""
 msgstr "acción no válida para Botón de Bandeja: \"%s\""
 
-#: src/traybutton.c:433
+#: src/traybutton.c:432
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "botón de bandeja: menú root %d no definido"

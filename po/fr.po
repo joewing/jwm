@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-07-04 09:38-0500\n"
+"POT-Creation-Date: 2013-07-05 16:30-0500\n"
 "PO-Revision-Date: 2013-05-31 14:19+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -52,7 +52,7 @@ msgstr "Un seul dock autorisé"
 msgid "could not acquire system tray selection"
 msgstr "Impossible d'obtenir la sélection de la barre système"
 
-#: src/event.c:907
+#: src/event.c:910
 msgid "Fullscreen state will be shaped!"
 msgstr "L'état du mode plein-écran sera défini!"
 
@@ -242,7 +242,7 @@ msgstr "aucune icône ou étiquette pour le bouton de barre"
 msgid "invalid TrayButton action: \"%s\""
 msgstr "action de bouton de barre incorrect: \"%s\""
 
-#: src/traybutton.c:433
+#: src/traybutton.c:432
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "Bouton de barre: menu racine %d non défini"

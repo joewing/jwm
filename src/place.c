@@ -625,15 +625,18 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
 }
 
 /** Constrain the size and location of the client so it fits. */
-void ConstrainClient(ClientNode *np)
+char ConstrainClient(ClientNode *np)
 {
 
    BoundingBox box;
    const ScreenType *sp;
    int north, south, east, west;
    int ratio, minr, maxr;
+   char resized;
 
    Assert(np);
+
+   resized = 0;
 
    /* Constrain the width if necessary. */
    sp = GetCurrentScreen(np->x, np->y);
@@ -652,6 +655,7 @@ void ConstrainClient(ClientNode *np)
       }
       np->x = box.x;
       np->width = box.width - (box.width % np->xinc);
+      resized = 1;
    }
 
    /* Constrain the height if necessary. */
@@ -666,6 +670,7 @@ void ConstrainClient(ClientNode *np)
       }
       np->y = box.y;
       np->height = box.height - (box.height % np->yinc);
+      resized = 1;
    }
 
    /* Constain the location. */
@@ -681,10 +686,10 @@ void ConstrainClient(ClientNode *np)
    if(np->y + np->height + north + south > box.y + box.height) {
       np->y = box.y + box.height - np->height - south;
    }
-   if(np->x < box.x) {
+   if(np->x < box.x + west) {
       np->x = box.x + west;
    }
-   if(np->y < box.y) {
+   if(np->y < box.y + north) {
       np->y = box.y + north;
    }
 
@@ -696,13 +701,17 @@ void ConstrainClient(ClientNode *np)
       minr = (np->aspect.minx << 16) / np->aspect.miny;
       if(ratio < minr) {
          np->height = (np->width << 16) / minr;
+         resized = 1;
       }
       maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
       if(ratio > maxr) {
          np->width = (np->height * maxr) >> 16;
+         resized = 1;
       }
 
    }
+
+   return resized;
 
 }
 

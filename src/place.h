@@ -67,8 +67,9 @@ void GetGravityDelta(const struct ClientNode *np, int *x, int *y);
 
 /** Constrain the size and location of a client to available screen space.
  * @param np The client.
+ * @return 1 if resized, 0 otherwise.
  */
-void ConstrainClient(struct ClientNode *np);
+char ConstrainClient(struct ClientNode *np);
 
 /** Get the bounding box for the screen.
  * @param sp A pointer to the screen whose bounds to get.

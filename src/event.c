@@ -570,6 +570,9 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
          MaximizeClient(np, 0, 0);
       }
 
+      if(ConstrainClient(np)) {
+         resized = 1;
+      }
       if(resized) {
          ResetBorder(np);
       } else {

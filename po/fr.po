@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-07-05 16:30-0500\n"
+"POT-Creation-Date: 2013-07-08 18:29-0500\n"
 "PO-Revision-Date: 2013-05-31 14:19+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -27,11 +27,11 @@ msgstr "type de fond d'écran incorrect: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Image de fond d'écran introuvable: \"%s\""
 
-#: src/client.c:877
+#: src/client.c:878
 msgid "Kill this window?"
 msgstr "Éliminer la fenêtre?"
 
-#: src/client.c:878
+#: src/client.c:879
 msgid "This may cause data to be lost!"
 msgstr "Cela peut entraîner la perte de données!"
 
@@ -51,10 +51,6 @@ msgstr "Un seul dock autorisé"
 #: src/dock.c:230
 msgid "could not acquire system tray selection"
 msgstr "Impossible d'obtenir la sélection de la barre système"
-
-#: src/event.c:910
-msgid "Fullscreen state will be shaped!"
-msgstr "L'état du mode plein-écran sera défini!"
 
 #: src/font.c:76 src/font.c:95
 #, c-format
@@ -355,3 +351,6 @@ msgstr "En-dessous"
 #: src/winmenu.c:202
 msgid "Send To"
 msgstr "Envoyer vers"
+
+#~ msgid "Fullscreen state will be shaped!"
+#~ msgstr "L'état du mode plein-écran sera défini!"

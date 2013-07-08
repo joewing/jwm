@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-07-05 16:30-0500\n"
+"POT-Creation-Date: 2013-07-08 18:29-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -32,11 +32,11 @@ msgstr "nieprawidłowy typ tła: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "nie znaleziono obrazu tła: \"%s\""
 
-#: src/client.c:877
+#: src/client.c:878
 msgid "Kill this window?"
 msgstr "Zabić to okno?"
 
-#: src/client.c:878
+#: src/client.c:879
 msgid "This may cause data to be lost!"
 msgstr "Może to spowodować utratę danych!"
 
@@ -56,10 +56,6 @@ msgstr "tylko jeden dozwolony Dock"
 #: src/dock.c:230
 msgid "could not acquire system tray selection"
 msgstr "nie można nabyć wyboru w zasobniku systemowym"
-
-#: src/event.c:910
-msgid "Fullscreen state will be shaped!"
-msgstr "Pełnoekranowy stan będzie kształtowany!"
 
 #: src/font.c:76 src/font.c:95
 #, c-format
@@ -358,3 +354,6 @@ msgstr ""
 #: src/winmenu.c:202
 msgid "Send To"
 msgstr "Wyślij do"
+
+#~ msgid "Fullscreen state will be shaped!"
+#~ msgstr "Pełnoekranowy stan będzie kształtowany!"

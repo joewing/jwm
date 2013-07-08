@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-07-05 16:30-0500\n"
+"POT-Creation-Date: 2013-07-08 18:29-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -30,11 +30,11 @@ msgstr "неизвестный тип фона: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "фоновое изображение не найдено: \"%s\""
 
-#: src/client.c:877
+#: src/client.c:878
 msgid "Kill this window?"
 msgstr "Ликвидировать окно?"
 
-#: src/client.c:878
+#: src/client.c:879
 msgid "This may cause data to be lost!"
 msgstr "Это может привести к потере данных!"
 
@@ -54,10 +54,6 @@ msgstr "можно использовать только один Dock (обла
 #: src/dock.c:230
 msgid "could not acquire system tray selection"
 msgstr "не удалось получить активное приложение в панели задач"
-
-#: src/event.c:910
-msgid "Fullscreen state will be shaped!"
-msgstr "Применено оформление в полноэкранном режиме!"
 
 #: src/font.c:76 src/font.c:95
 #, c-format
@@ -358,3 +354,6 @@ msgstr "Всегда позади"
 #: src/winmenu.c:202
 msgid "Send To"
 msgstr "Переместить на рабочий стол"
+
+#~ msgid "Fullscreen state will be shaped!"
+#~ msgstr "Применено оформление в полноэкранном режиме!"

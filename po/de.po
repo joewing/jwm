@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-07-05 16:30-0500\n"
+"POT-Creation-Date: 2013-07-08 18:29-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -26,11 +26,11 @@ msgstr "ungültiger Typ für Hintergrund: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Hintergrundbild nicht gefunden: \"%s\""
 
-#: src/client.c:877
+#: src/client.c:878
 msgid "Kill this window?"
 msgstr "Dieses Fenster töten?"
 
-#: src/client.c:878
+#: src/client.c:879
 msgid "This may cause data to be lost!"
 msgstr "Das kann Datenverlust verursachen!"
 
@@ -49,10 +49,6 @@ msgstr ""
 
 #: src/dock.c:230
 msgid "could not acquire system tray selection"
-msgstr ""
-
-#: src/event.c:910
-msgid "Fullscreen state will be shaped!"
 msgstr ""
 
 #: src/font.c:76 src/font.c:95

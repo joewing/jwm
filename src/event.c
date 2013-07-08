@@ -808,12 +808,6 @@ void HandleClientMessage(const XClientMessageEvent *event)
 
          HandleNetWMState(event, np);
 
-      } else if(event->message_type == atoms[ATOM_NET_SHOWING_DESKTOP]) {
-
-         if(event->data.l[0] != showingDesktop) {
-            ShowDesktop();
-         }
-
       } else {
 
 #ifdef DEBUG
@@ -834,6 +828,8 @@ void HandleClientMessage(const XClientMessageEvent *event)
          ReloadMenu();
       } else if(event->message_type == atoms[ATOM_NET_CURRENT_DESKTOP]) {
          ChangeDesktop(event->data.l[0]);
+      } else if(event->message_type == atoms[ATOM_NET_SHOWING_DESKTOP]) {
+         ShowDesktop();
       } else {
 #ifdef DEBUG
          atomName = JXGetAtomName(display, event->message_type);

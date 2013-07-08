@@ -20,17 +20,16 @@
 typedef struct Strut {
    ClientNode *client;
    BoundingBox box;
-   struct Strut *prev;
    struct Strut *next;
 } Strut;
 
 static Strut *struts = NULL;
-static Strut *strutsTail = NULL;
 
 /* desktopCount x screenCount */
 /* Note that we assume x and y are 0 based for all screens here. */
 static int *cascadeOffsets = NULL;
 
+static void InsertStrut(const BoundingBox *box, ClientNode *np);
 static void CenterClient(const BoundingBox *box, ClientNode *np);
 static int IntComparator(const void *a, const void *b);
 static char TryTileClient(const BoundingBox *box, ClientNode *np,
@@ -70,7 +69,6 @@ void ShutdownPlacement()
       Release(struts);
       struts = sp;
    }
-   strutsTail = NULL;
 
 }
 
@@ -78,28 +76,30 @@ void ShutdownPlacement()
 void RemoveClientStrut(ClientNode *np)
 {
 
-   Strut *sp;
-
-   sp = struts;
-   while(sp) {
+   Strut **spp = &struts;
+   while(*spp) {
+      Strut *sp = *spp;
       if(sp->client == np) {
-         if(sp->prev) {
-            sp->prev->next = sp->next;
-         } else {
-            struts = sp->next;
-         }
-         if(sp->next) {
-            sp->next->prev = sp->prev;
-         } else {
-            strutsTail = sp->prev;
-         }
+         *spp = sp->next;
          Release(sp);
-         sp = struts;
       } else {
-         sp = sp->next;
+         spp = &sp->next;
       }
    }
 
+}
+
+
+/** Insert a bounding box to the list of struts. */
+void InsertStrut(const BoundingBox *box, ClientNode *np)
+{
+   if(JLIKELY(box->width > 0 && box->height > 0)) {
+      Strut *sp = Allocate(sizeof(Strut));
+      sp->client = np;
+      sp->box = *box;
+      sp->next = struts;
+      struts = sp;
+   }
 }
 
 /** Add client specified struts to our list. */
@@ -107,7 +107,6 @@ void ReadClientStrut(ClientNode *np)
 {
 
    BoundingBox box;
-   Strut *sp;
    int status;
    Atom actualType;
    int actualFormat;
@@ -116,8 +115,10 @@ void ReadClientStrut(ClientNode *np)
    unsigned char *value;
    long *lvalue;
    long leftWidth, rightWidth, topHeight, bottomHeight;
-   long leftStart, rightStart;
-   long topStart, bottomStart;
+   long leftStart, leftStop;
+   long rightStart, rightStop;
+   long topStart, topStop;
+   long bottomStart, bottomStop;
 
    RemoveClientStrut(np);
 
@@ -139,53 +140,50 @@ void ReadClientStrut(ClientNode *np)
    if(status == Success) {
       if(count == 12) {
          lvalue = (long*)value;
-         leftWidth = lvalue[0];
-         rightWidth = lvalue[1];
-         topHeight = lvalue[2];
-         bottomHeight = lvalue[3];
-         leftStart = lvalue[4];
-         rightStart = lvalue[6];
-         topStart = lvalue[8];
-         bottomStart = lvalue[10];
+         leftWidth      = lvalue[0];
+         rightWidth     = lvalue[1];
+         topHeight      = lvalue[2];
+         bottomHeight   = lvalue[3];
+         leftStart      = lvalue[4];
+         leftStop       = lvalue[5];
+         rightStart     = lvalue[6];
+         rightStop      = lvalue[7];
+         topStart       = lvalue[8];
+         topStop        = lvalue[9];
+         bottomStart    = lvalue[10];
+         bottomStop     = lvalue[11];
 
          if(leftWidth > 0) {
+            box.x = 0;
+            box.y = leftStart;
+            box.height = leftStop - leftStart;
             box.width = leftWidth;
-            box.x = leftStart;
+            InsertStrut(&box, np);
          }
 
          if(rightWidth > 0) {
+            box.x = rootWidth - rightWidth;
+            box.y = rightStart;
+            box.height = rightStop - rightStart;
             box.width = rightWidth;
-            box.x = rightStart;
+            InsertStrut(&box, np);
          }
 
          if(topHeight > 0) {
+            box.x = topStart;
+            box.y = 0;
             box.height = topHeight;
-            box.y = topStart;
+            box.width = topStop - topStart;
+            InsertStrut(&box, np);
          }
 
          if(bottomHeight > 0) {
+            box.x = bottomStart;
+            box.y = rootHeight - bottomHeight;
+            box.width = bottomStop - bottomStart;
             box.height = bottomHeight;
-            box.y = bottomStart;
+            InsertStrut(&box, np);
          }
-
-         if(box.width == 0 && box.height > 0) {
-            box.width = rootWidth;
-         }
-         if(box.height == 0 && box.width > 0) {
-            box.height = rootHeight;
-         }
-
-         sp = Allocate(sizeof(Strut));
-         sp->client = np;
-         sp->box = box;
-         sp->prev = NULL;
-         sp->next = struts;
-         if(struts) {
-            struts->prev = sp;
-         } else {
-            strutsTail = sp;
-         }
-         struts = sp;
 
       }
       JXFree(value);
@@ -207,35 +205,35 @@ void ReadClientStrut(ClientNode *np)
 
          if(leftWidth > 0) {
             box.x = 0;
+            box.y = 0;
             box.width = leftWidth;
+            box.height = rootHeight;
+            InsertStrut(&box, np);
          }
 
          if(rightWidth > 0) {
             box.x = rootWidth - rightWidth;
+            box.y = 0;
             box.width = rightWidth;
+            box.height = rootHeight;
+            InsertStrut(&box, np);
          }
 
          if(topHeight > 0) {
+            box.x = 0;
             box.y = 0;
+            box.width = rootWidth;
             box.height = topHeight;
+            InsertStrut(&box, np);
          }
 
          if(bottomHeight > 0) {
+            box.x = 0;
             box.y = rootHeight - bottomHeight;
+            box.width = rootWidth;
             box.height = bottomHeight;
+            InsertStrut(&box, np);
          }
-
-         sp = Allocate(sizeof(Strut));
-         sp->client = np;
-         sp->box = box;
-         sp->prev = NULL;
-         sp->next = struts;
-         if(struts) {
-            struts->prev = sp;
-         } else {
-            strutsTail = sp;
-         }
-         struts = sp;
 
       }
       JXFree(value);
@@ -377,7 +375,8 @@ void CenterClient(const BoundingBox *box, ClientNode *np)
 {
    np->x = box->x + (box->width / 2) - (np->width / 2);
    np->y = box->y + (box->height / 2) - (np->height / 2);
-   ConstrainClient(np);
+   ConstrainSize(np);
+   ConstrainPosition(np);
 }
 
 /** Compare two integers. */
@@ -401,7 +400,8 @@ char TryTileClient(const BoundingBox *box, ClientNode *np, int x, int y)
    GetBorderSize(&np->state, &north, &south, &east, &west);
    np->x = x + west;
    np->y = y + north;
-   ConstrainClient(np);
+   ConstrainSize(np);
+   ConstrainPosition(np);
 
    /* Get the client boundaries. */
    x1 = np->x - west;
@@ -578,7 +578,8 @@ void CascadeClient(const BoundingBox *box, ClientNode *np)
       }
    }
 
-   ConstrainClient(np);
+   ConstrainSize(np);
+   ConstrainPosition(np);
 
 }
 
@@ -596,7 +597,8 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
 
       GravitateClient(np, 0);
       if(!alreadyMapped) {
-         ConstrainClient(np);
+         ConstrainSize(np);
+         ConstrainPosition(np);
       }
 
    } else {
@@ -624,19 +626,16 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
 
 }
 
-/** Constrain the size and location of the client so it fits. */
-char ConstrainClient(ClientNode *np)
+/** Constrain the size of the client. */
+void ConstrainSize(ClientNode *np)
 {
 
    BoundingBox box;
    const ScreenType *sp;
    int north, south, east, west;
    int ratio, minr, maxr;
-   char resized;
 
    Assert(np);
-
-   resized = 0;
 
    /* Constrain the width if necessary. */
    sp = GetCurrentScreen(np->x, np->y);
@@ -655,7 +654,6 @@ char ConstrainClient(ClientNode *np)
       }
       np->x = box.x;
       np->width = box.width - (box.width % np->xinc);
-      resized = 1;
    }
 
    /* Constrain the height if necessary. */
@@ -670,16 +668,43 @@ char ConstrainClient(ClientNode *np)
       }
       np->y = box.y;
       np->height = box.height - (box.height % np->yinc);
-      resized = 1;
    }
 
-   /* Constain the location. */
+   /* Fix the aspect ratio. */
+   if(np->sizeFlags & PAspect) {
+
+      /* Fixed point with a 16-bit fraction. */
+      ratio = (np->width << 16) / np->height;
+      minr = (np->aspect.minx << 16) / np->aspect.miny;
+      if(ratio < minr) {
+         np->height = (np->width << 16) / minr;
+      }
+      maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
+      if(ratio > maxr) {
+         np->width = (np->height * maxr) >> 16;
+      }
+
+   }
+
+}
+
+/** Constrain the position of a client. */
+void ConstrainPosition(ClientNode *np)
+{
+
+   BoundingBox box;
+   int north, south, east, west;
+
+   /* Get the bounds for placement. */
    box.x = 0;
    box.y = 0;
    box.width = rootWidth;
    box.height = rootHeight;
    SubtractTrayBounds(GetTrays(), &box, np->state.layer);
    SubtractStrutBounds(&box);
+
+   /* Fix the position. */
+   GetBorderSize(&np->state, &north, &south, &east, &west);
    if(np->x + np->width + east + west > box.x + box.width) {
       np->x = box.x + box.width - np->width - east;
    }
@@ -692,26 +717,6 @@ char ConstrainClient(ClientNode *np)
    if(np->y < box.y + north) {
       np->y = box.y + north;
    }
-
-   /* Fix the aspect ratio. */
-   if(np->sizeFlags & PAspect) {
-
-      /* Fixed point with a 16-bit fraction. */
-      ratio = (np->width << 16) / np->height;
-      minr = (np->aspect.minx << 16) / np->aspect.miny;
-      if(ratio < minr) {
-         np->height = (np->width << 16) / minr;
-         resized = 1;
-      }
-      maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
-      if(ratio > maxr) {
-         np->width = (np->height * maxr) >> 16;
-         resized = 1;
-      }
-
-   }
-
-   return resized;
 
 }
 

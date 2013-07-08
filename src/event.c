@@ -570,10 +570,8 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
          MaximizeClient(np, 0, 0);
       }
 
-      if(ConstrainClient(np)) {
-         resized = 1;
-      }
       if(resized) {
+         ConstrainSize(np);
          ResetBorder(np);
       } else {
          int north, south, east, west;
@@ -895,8 +893,12 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
       height = event->data.l[4];
    }
 
-   GetGravityDelta(np, &deltax, &deltay);
+   /* Don't let maximized clients be moved or resized. */
+   if(JUNLIKELY(np->state.status & STAT_FULLSCREEN)) {
+      MaximizeClient(np, 0, 0);
+   }
 
+   GetGravityDelta(np, &deltax, &deltay);
    x -= deltax;
    y -= deltay;
 
@@ -904,11 +906,7 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
    np->y = y;
    np->width = width;
    np->height = height;
-   ConstrainClient(np);
-
-   if(JUNLIKELY(np->state.status & STAT_FULLSCREEN)) {
-      Warning(_("Fullscreen state will be shaped!"));
-   }
+   ConstrainSize(np);
 
    WriteState(np);
    ResetBorder(np);

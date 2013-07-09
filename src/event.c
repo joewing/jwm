@@ -572,6 +572,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
 
       if(resized) {
          ConstrainSize(np);
+         ConstrainPosition(np);
          ResetBorder(np);
       } else {
          int north, south, east, west;

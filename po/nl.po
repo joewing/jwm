@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-07-08 18:29-0500\n"
+"POT-Creation-Date: 2013-07-15 13:31-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -26,11 +26,11 @@ msgstr "ongeldig achtergrond-type: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Achtergrond-afbeelding niet gevonden: \"%s\""
 
-#: src/client.c:878
+#: src/client.c:879
 msgid "Kill this window?"
 msgstr "Sluiten van dit venster forceren?"
 
-#: src/client.c:879
+#: src/client.c:880
 msgid "This may cause data to be lost!"
 msgstr "Dit kan verlies van data veroorzaken!"
 
@@ -78,17 +78,17 @@ msgstr "ongeldige groepsnaam"
 msgid "invalid group desktop: %d"
 msgstr "ongeldige groep bureaublad: %d"
 
-#: src/image.c:189
+#: src/image.c:193
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr "kon geen lees-structuur voor PNG afbeelding aanmaken: %s"
 
-#: src/image.c:202
+#: src/image.c:206
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr "fout bij lezen van PNG afbeelding: %s"
 
-#: src/image.c:209
+#: src/image.c:213
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "kon geen info-structuur aanmaken voor PNG afbeelding: %s"

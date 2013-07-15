@@ -793,6 +793,7 @@ void FocusClient(ClientNode *np)
    Assert(np);
 
    if(np->state.status & STAT_HIDDEN) {
+      JXSetInputFocus(display, rootWindow, RevertToParent, eventTime);
       return;
    }
 

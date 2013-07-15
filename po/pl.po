@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-07-08 18:29-0500\n"
+"POT-Creation-Date: 2013-07-15 13:31-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -32,11 +32,11 @@ msgstr "nieprawidłowy typ tła: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "nie znaleziono obrazu tła: \"%s\""
 
-#: src/client.c:878
+#: src/client.c:879
 msgid "Kill this window?"
 msgstr "Zabić to okno?"
 
-#: src/client.c:879
+#: src/client.c:880
 msgid "This may cause data to be lost!"
 msgstr "Może to spowodować utratę danych!"
 
@@ -84,17 +84,17 @@ msgstr "nieprawidłowa nazwa grupy"
 msgid "invalid group desktop: %d"
 msgstr "nieprawidłowy pulpitu grupy: %d"
 
-#: src/image.c:189
+#: src/image.c:193
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr "nie można utworzyć przeczytać struct dla obrazu PNG: %s"
 
-#: src/image.c:202
+#: src/image.c:206
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr "błąd odczytu obrazu PNG: %s"
 
-#: src/image.c:209
+#: src/image.c:213
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "nie można utworzyć struktur informacji dla obrazu PNG: %s"

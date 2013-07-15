@@ -41,6 +41,7 @@ static GC iconGC;
 static void SetIconSize();
 static void DoDestroyIcon(int index, IconNode *icon);
 static void ReadNetWMIcon(ClientNode *np);
+static IconNode *CreateIcon();
 static IconNode *GetDefaultIcon();
 static IconNode *CreateIconFromData(const char *name, char **data);
 static IconNode *CreateIconFromFile(const char *fileName, char save);
@@ -49,8 +50,10 @@ static IconNode *CreateIconFromBinary(const unsigned long *data,
 static IconNode *LoadNamedIconHelper(const char *name, const char *path,
                                      char save);
 
+#if defined(USE_PNG) || defined(USE_XPM) || defined(USE_JPEG)
 static IconNode *LoadSuffixedIcon(const char *path, const char *name,
                                   const char *suffix);
+#endif
 
 static ScaledIconNode *GetScaledIcon(IconNode *icon, int width, int height);
 
@@ -285,6 +288,7 @@ void LoadIcon(ClientNode *np)
 }
 
 /** Load an icon given a name, path, and suffix. */
+#if defined(USE_PNG) || defined(USE_XPM) || defined(USE_JPEG)
 IconNode *LoadSuffixedIcon(const char *path, const char *name,
                            const char *suffix)
 {
@@ -323,6 +327,7 @@ IconNode *LoadSuffixedIcon(const char *path, const char *name,
    }
 
 }
+#endif /* defined(USE_PNG) || defined(USE_XPM) || defined(USE_JPEG) */
 
 /** Load an icon from a file. */
 IconNode *LoadNamedIcon(const char *name, char save)

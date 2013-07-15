@@ -50,7 +50,11 @@ static ImageNode *LoadPNGImage(const char *fileName);
 #ifdef USE_XPM
 static ImageNode *LoadXPMImage(const char *fileName);
 #endif
+#ifdef USE_ICONS
+#ifdef USE_XPM
 static ImageNode *CreateImageFromXImages(XImage *image, XImage *shape);
+#endif
+#endif
 
 #ifdef USE_XPM
 static int AllocateColor(Display *d, Colormap cmap, char *name,
@@ -63,10 +67,10 @@ static int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
 ImageNode *LoadImage(const char *fileName)
 {
 
-   ImageNode *result;
+   ImageNode *result = NULL;
 
    if(!fileName) {
-      return NULL;
+      return result;
    }
 
    /* Attempt to load the file as a PNG image. */
@@ -103,7 +107,7 @@ ImageNode *LoadImage(const char *fileName)
    }
 #endif
 
-   return NULL;
+   return result;
 
 }
 
@@ -480,6 +484,8 @@ ImageNode *LoadXPMImage(const char *fileName)
 #endif /* USE_XPM */
 
 /** Create an image from XImages giving color and shape information. */
+#ifdef USE_ICONS
+#ifdef USE_XPM
 ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
 {
 
@@ -521,6 +527,8 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
    return result;
 
 }
+#endif /* USE_XPM */
+#endif /* USE_ICONS */
 
 /** Destroy an image node. */
 void DestroyImage(ImageNode *image) {

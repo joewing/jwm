@@ -88,14 +88,9 @@ IconNode *LoadNamedIcon(const char *name, char save);
  */
 void DestroyIcon(IconNode *icon);
 
-/** Create and initialize a new icon structure.
- * @return The new icon structure.
- */
-IconNode *CreateIcon();
-
 #else
 
-#define ICON_DUMMY_FUNCTION 0
+#define ICON_DUMMY_FUNCTION ((void)0)
 
 #define InitializeIcons()               ICON_DUMMY_FUNCTION
 #define StartupIcons()                  ICON_DUMMY_FUNCTION
@@ -104,7 +99,7 @@ IconNode *CreateIcon();
 #define AddIconPath( a )                ICON_DUMMY_FUNCTION
 #define PutIcon( a, b, c, d, e, f )     ICON_DUMMY_FUNCTION
 #define LoadIcon( a )                   ICON_DUMMY_FUNCTION
-#define LoadNamedIcon( a, b )           ICON_DUMMY_FUNCTION
+#define LoadNamedIcon( a, b )           NULL
 #define DestroyIcon( a )                ICON_DUMMY_FUNCTION
 
 #endif /* USE_ICONS */

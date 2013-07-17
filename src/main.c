@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
       }
    }
 
-#ifdef HAVE_SETLOCALE
+#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS)
    setlocale(LC_ALL, "");
 #endif
 #ifdef HAVE_GETTEXT

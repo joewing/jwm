@@ -187,8 +187,7 @@ void Create(TrayComponentType *cp)
       rootDepth);
    tp->buffer = cp->pixmap;
 
-   JXSetForeground(display, rootGC, colors[COLOR_TRAY_BG]);
-   JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
+   ClearTrayDrawable(cp);
 
 }
 
@@ -221,9 +220,7 @@ void Resize(TrayComponentType *cp)
       rootDepth);
    tp->buffer = cp->pixmap;
 
-   JXSetForeground(display, rootGC, colors[COLOR_TRAY_BG]);
-   JXFillRectangle(display, cp->pixmap, rootGC,
-                   0, 0, cp->width, cp->height);
+   ClearTrayDrawable(cp);
 }
 
 /** Process a task list button event. */
@@ -456,8 +453,7 @@ void Render(const TaskBarType *bp)
    width -= x;
    y = 1;
 
-   JXSetForeground(display, gc, colors[COLOR_TRAY_BG]);
-   JXFillRectangle(display, buffer, gc, 0, 0, width, height);
+   ClearTrayDrawable(bp->cp);
 
    itemCount = GetItemCount();
    if(!itemCount) {

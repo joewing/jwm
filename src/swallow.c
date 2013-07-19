@@ -249,7 +249,7 @@ char CheckSwallowMap(Window win)
          JXSelectInput(display, win,
                        StructureNotifyMask | ResizeRedirectMask);
          JXAddToSaveSet(display, win);
-         JXSetWindowBorder(display, win, colors[COLOR_TRAY_BG]);
+         JXSetWindowBorder(display, win, colors[COLOR_TRAY_BG2]);
          JXReparentWindow(display, win,
                           np->cp->tray->window, 0, 0);
          JXMapRaised(display, win);

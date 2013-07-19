@@ -90,7 +90,7 @@ static const DefaultColorNode DEFAULT_COLORS[] = {
    { COLOR_TRAYBUTTON_ACTIVE_BG2,   0x333333    },
 
    { COLOR_CLOCK_FG,                0xFFFFFF    },
-   { COLOR_CLOCK_BG1,               0x111111    },
+   { COLOR_CLOCK_BG1,               0x333333    },
    { COLOR_CLOCK_BG2,               0x111111    }
 
 };
@@ -232,8 +232,8 @@ void StartupColors()
       DarkenColor(COLOR_MENU_ACTIVE_BG1, COLOR_MENU_ACTIVE_OL);
    }
 
-   LightenColor(COLOR_TRAY_BG, COLOR_TRAY_UP);
-   DarkenColor(COLOR_TRAY_BG, COLOR_TRAY_DOWN);
+   LightenColor(COLOR_TRAY_BG1, COLOR_TRAY_UP);
+   DarkenColor(COLOR_TRAY_BG2, COLOR_TRAY_DOWN);
 
    DarkenColor(COLOR_TASK_BG1, COLOR_TASK_DOWN);
 

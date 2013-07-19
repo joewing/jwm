@@ -191,6 +191,9 @@ void UpdateSpecificTray(const TrayType *tp, const TrayComponentType *cp);
  */
 void ResizeTray(TrayType *tp);
 
+/** Draw the tray background on a drawable. */
+void ClearTrayDrawable(const TrayComponentType *cp);
+
 /** Get a linked list of trays.
  * @return The trays.
  */

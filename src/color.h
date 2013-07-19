@@ -67,9 +67,6 @@ typedef unsigned char ColorType;
 #define COLOR_TRAYBUTTON_ACTIVE_UP  51
 #define COLOR_COUNT                 52
 
-#define COLOR_TRAY_BG               COLOR_TRAY_BG2
-#define COLOR_CLOCK_BG              COLOR_CLOCK_BG2
-
 extern unsigned long colors[COLOR_COUNT];
 
 /*@{*/

@@ -41,8 +41,7 @@ void ResizeController(int wasDestroyed)
 }
 
 /** Resize a client window (mouse initiated). */
-void ResizeClient(ClientNode *np, BorderActionType action,
-                  int startx, int starty)
+void ResizeClient(ClientNode *np, int startx, int starty)
 {
 
    XEvent event;
@@ -53,10 +52,13 @@ void ResizeClient(ClientNode *np, BorderActionType action,
    int delta;
    int north, south, east, west;
    int ratio, minr, maxr;
+   BorderActionType action;
 
    Assert(np);
    Assert(np->state.border & BORDER_RESIZE);
 
+   GetBorderSize(&np->state, &north, &south, &east, &west);
+   action = GetResizeType(np, startx - np->x + west, starty - np->y + north);
    if(JUNLIKELY(!GrabMouseForResize(action))) {
       Debug("ResizeClient: could not grab mouse");
       return;
@@ -72,11 +74,6 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 
    gwidth = (np->width - np->baseWidth) / np->xinc;
    gheight = (np->height - np->baseHeight) / np->yinc;
-
-   GetBorderSize(&np->state, &north, &south, &east, &west);
-
-   startx += np->x - west;
-   starty += np->y - north;
 
    CreateResizeWindow(np);
    UpdateResizeWindow(np, gwidth, gheight);
@@ -243,7 +240,7 @@ void ResizeClientKeyboard(ClientNode *np)
       Debug("ResizeClient: could not grab keyboard");
       return;
    }
-   GrabMouseForResize(BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE);
+   GrabMouseForResize(BA_RESIZE_S | BA_RESIZE_E);
 
    np->controller = ResizeController;
    shouldStopResize = 0;
@@ -278,7 +275,7 @@ void ResizeClientKeyboard(ClientNode *np)
       if(event.type == KeyPress) {
 
          DiscardKeyEvents(&event, np->window);
-         switch(GetKey(&event.xkey) & 0xFF) {
+         switch(GetKey(&event.xkey)) {
          case KEY_UP:
             deltay = Min(-np->yinc, -10);
             break;

@@ -217,7 +217,7 @@ char HandleDialogKeyPress(const XKeyEvent *event)
 {
    if(dialog && event->window == dialog->node->window) {
       KeyType key = GetKey(event);
-      switch(key & 0xFF) {
+      switch(key) {
       case KEY_ENTER:
          (dialog->action)(dialog->client);
          DestroyConfirmDialog();

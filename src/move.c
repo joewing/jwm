@@ -126,9 +126,6 @@ char MoveClient(ClientNode *np, int startx, int starty, int snap)
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
 
-   startx -= west;
-   starty -= north;
-
    currentClient = np;
    atTop = 0;
    atBottom = 0;
@@ -300,7 +297,7 @@ char MoveClientKeyboard(ClientNode *np)
       if(event.type == KeyPress) {
 
          DiscardKeyEvents(&event, np->window);
-         switch(GetKey(&event.xkey) & 0xFF) {
+         switch(GetKey(&event.xkey)) {
          case KEY_UP:
             if(np->y + height > 0) {
                np->y -= 10;

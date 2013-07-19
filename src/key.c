@@ -16,8 +16,8 @@
 #include "error.h"
 #include "main.h"
 #include "misc.h"
-#include "root.h"
 #include "tray.h"
+#include "binding.h"
 
 #define MASK_NONE    0
 #define MASK_SHIFT   (1 << ShiftMapIndex)
@@ -51,10 +51,11 @@ static ModifierNode modifiers[] = {
 typedef struct KeyNode {
 
    /* These are filled in when the configuration file is parsed */
-   int key;
+   KeyType key;
+   ActionType action;
+   char *command;
    unsigned int state;
    KeySym symbol;
-   char *command;
    struct KeyNode *next;
 
    /* This is filled in by StartupKeys if it isn't already set. */
@@ -73,10 +74,9 @@ static LockNode lockMods[] = {
 };
 
 static KeyNode *bindings;
-static unsigned int lockMask;
+unsigned int lockMask;
 
 static unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key);
-static unsigned int ParseModifierString(const char *str);
 static KeySym ParseKeyString(const char *str);
 static char ShouldGrab(KeyType key);
 static void GrabKey(KeyNode *np, Window win);
@@ -103,6 +103,7 @@ void StartupKeys()
       lockMods[x].mask = GetModifierMask(modmap, lockMods[x].symbol);
       lockMask |= lockMods[x].mask;
    }
+   lockMask = ~lockMask;
    JXFreeModifiermap(modmap);
 
    /* Look up and grab the keys. */
@@ -196,7 +197,7 @@ void GrabKey(KeyNode *np, Window win)
 
       /* Grab the key. */
       JXGrabKey(display, np->code, mask, win,
-         True, GrabModeAsync, GrabModeAsync);
+                True, GrabModeAsync, GrabModeAsync);
 
    }
 
@@ -210,7 +211,7 @@ KeyType GetKey(const XKeyEvent *event)
    unsigned int state;
 
    /* Remove modifiers we don't care about from the state. */
-   state = event->state & ~lockMask;
+   state = event->state & lockMask;
 
    /* Loop looking for a matching key binding. */
    for(np = bindings; np; np = np->next) {
@@ -227,37 +228,21 @@ KeyType GetKey(const XKeyEvent *event)
 void RunKeyCommand(const XKeyEvent *event)
 {
 
-   KeyNode *np;
+   KeyNode *kp;
    unsigned int state;
 
    /* Remove the lock key modifiers. */
-   state = event->state & ~lockMask;
+   state = event->state & lockMask;
 
-   for(np = bindings; np; np = np->next) {
-      if(np->state == state && np->code == event->keycode) {
-         RunCommand(np->command);
-         return;
-      }
-   }
-
-}
-
-/** Show a root menu caused by a key binding. */
-void ShowKeyMenu(const XKeyEvent *event)
-{
-
-   KeyNode *np;
-   unsigned int button;
-   unsigned int state;
-
-   /* Remove the lock key modifiers. */
-   state = event->state & ~lockMask;
-
-   for(np = bindings; np; np = np->next) {
-      if(np->state == state && np->code == event->keycode) {
-         button = (unsigned int)atoi(np->command);
-         if(JLIKELY(button <= 9)) {
-            ShowRootMenu(button, 0, 0);
+   for(kp = bindings; kp; kp = kp->next) {
+      if(kp->state == state && kp->code == event->keycode) {
+         if(event->type == KeyPress) {
+            RunAction(NULL, 0, 0, kp->action, kp->command);
+         } else {
+            if(kp->action != ACTION_NEXTSTACK &&
+               kp->action != ACTION_PREVSTACK) {
+               StopWindowStackWalk();
+            }
          }
          return;
       }
@@ -268,35 +253,7 @@ void ShowKeyMenu(const XKeyEvent *event)
 /** Determine if a key should be grabbed on client windows. */
 char ShouldGrab(KeyType key)
 {
-   switch(key & 0xFF) {
-   case KEY_NEXT:
-   case KEY_NEXTSTACK:
-   case KEY_PREV:
-   case KEY_PREVSTACK:
-   case KEY_CLOSE:
-   case KEY_MIN:
-   case KEY_MAX:
-   case KEY_SHADE:
-   case KEY_STICK:
-   case KEY_MOVE:
-   case KEY_RESIZE:
-   case KEY_ROOT:
-   case KEY_WIN:
-   case KEY_DESKTOP:
-   case KEY_RDESKTOP:
-   case KEY_LDESKTOP:
-   case KEY_DDESKTOP:
-   case KEY_UDESKTOP:
-   case KEY_SHOWDESK:
-   case KEY_SHOWTRAY:
-   case KEY_EXEC:
-   case KEY_RESTART:
-   case KEY_EXIT:
-   case KEY_FULLSCREEN:
-      return 1;
-   default:
-      return 0;
-   }
+   return key == KEY_ACTION;
 }
 
 /** Grab keys on a client window. */
@@ -380,9 +337,12 @@ KeySym ParseKeyString(const char *str)
 }
 
 /** Insert a key binding. */
-void InsertBinding(KeyType key, const char *modifiers,
-                   const char *stroke, const char *code,
-                   const char *command)
+void InsertKeyBinding(KeyType key,
+                      ActionType action,
+                      const char *modifiers,
+                      const char *stroke,
+                      const char *code,
+                      const char *command)
 {
 
    KeyNode *np;
@@ -412,10 +372,11 @@ void InsertBinding(KeyType key, const char *modifiers,
                np->next = bindings;
                bindings = np;
 
-               np->key = key | ((temp[offset] - '1' + 1) << 8);
+               np->key = key;
                np->state = mask;
                np->symbol = sym;
-               np->command = NULL;
+               np->command = Allocate(1);
+               np->command[0] = temp[offset] - '1' + 1;
                np->code = 0;
 
             }
@@ -468,7 +429,7 @@ void ValidateKeys()
    KeyNode *kp;
    int bindex;
    for(kp = bindings; kp; kp = kp->next) {
-      if((kp->key & 0xFF) == KEY_ROOT && kp->command) {
+      if(kp->action == ACTION_ROOT && kp->command) {
          bindex = atoi(kp->command);
          if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
             Warning(_("key binding: root menu %d not defined"), bindex);

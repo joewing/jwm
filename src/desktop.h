@@ -21,6 +21,18 @@ void StartupDesktops();
 void DestroyDesktops();
 /*@}*/
 
+/** Get the desktop to the right. */
+int GetRightDesktop();
+
+/** Get the above desktop. */
+int GetLeftDesktop();
+
+/** Get the above desktop. */
+int GetAboveDesktop();
+
+/** Get the below desktop. */
+int GetBelowDesktop();
+
 /** Switch to the desktop to the right. */
 char RightDesktop();
 
@@ -36,7 +48,7 @@ char BelowDesktop();
 /** Switch to a specific desktop.
  * @param desktop The desktop to show (0 based).
  */
-void ChangeDesktop(unsigned int desktop);
+char ChangeDesktop(unsigned int desktop);
 
 /** Toggle the "show desktop" state.
  * This will either minimize or restore all items on the current desktop.

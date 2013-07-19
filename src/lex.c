@@ -52,6 +52,7 @@ static const char *TOKEN_MAP[] = {
    "Menu",
    "MenuStyle",
    "Minimize",
+   "Mouse",
    "Move",
    "MoveMode",
    "Name",

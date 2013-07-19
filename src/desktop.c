@@ -63,37 +63,49 @@ void DestroyDesktops() {
 
 }
 
-/** Change to the desktop to the right. */
-char RightDesktop()
+/** Get the desktop to the right. */
+int GetRightDesktop()
 {
    int x, y;
    if(settings.desktopWidth > 1) {
       y = currentDesktop / settings.desktopWidth;
       x = (currentDesktop + 1) % settings.desktopWidth;
-      ChangeDesktop(y * settings.desktopWidth + x);
-      return 1;
+      return y * settings.desktopWidth + x;
    } else {
-      return 0;
+      return currentDesktop;
    }
 }
 
-/** Change to the desktop to the left. */
-char LeftDesktop()
+/** Change to the desktop to the right. */
+char RightDesktop()
+{
+   const int right = GetRightDesktop();
+   return ChangeDesktop(right);
+}
+
+/** Get the desktop to the left. */
+int GetLeftDesktop()
 {
    int x, y;
    if(settings.desktopWidth > 1) {
       y = currentDesktop / settings.desktopWidth;
       x = currentDesktop % settings.desktopWidth;
       x = x > 0 ? x - 1 : settings.desktopWidth - 1;
-      ChangeDesktop(y * settings.desktopWidth + x);
-      return 1;
+      return y * settings.desktopWidth + x;
    } else {
-      return 0;
+      return currentDesktop;
    }
 }
 
-/** Change to the desktop above. */
-char AboveDesktop()
+/** Change to the desktop to the left. */
+char LeftDesktop()
+{
+   const int left = GetLeftDesktop();
+   return ChangeDesktop(left);
+}
+
+/** Get the above desktop. */
+int GetAboveDesktop()
 {
    unsigned int next;
    if(settings.desktopHeight > 1) {
@@ -103,39 +115,49 @@ char AboveDesktop()
          next = currentDesktop
               + (settings.desktopHeight - 1) * settings.desktopWidth;
       }
-      ChangeDesktop(next);
-      return 1;
+      return next;
    } else {
-      return 0;
+      return currentDesktop;
+   }
+}
+
+/** Change to the desktop above. */
+char AboveDesktop()
+{
+   const int next = GetAboveDesktop();
+   return ChangeDesktop(next);;
+}
+
+/** Get the below desktop. */
+int GetBelowDesktop()
+{
+   if(settings.desktopHeight > 1) {
+       return (currentDesktop + settings.desktopWidth) % settings.desktopCount;
+   } else {
+      return currentDesktop;
    }
 }
 
 /** Change to the desktop below. */
 char BelowDesktop()
 {
-   unsigned int next;
-   if(settings.desktopHeight > 1) {
-      next = (currentDesktop + settings.desktopWidth) % settings.desktopCount;
-      ChangeDesktop(next);
-      return 1;
-   } else {
-      return 0;
-   }
+   const unsigned int next = GetBelowDesktop();
+   return ChangeDesktop(next);
 }
 
 /** Change to the specified desktop. */
-void ChangeDesktop(unsigned int desktop)
+char ChangeDesktop(unsigned int desktop)
 {
 
    ClientNode *np;
    unsigned int x;
 
    if(JUNLIKELY(desktop >= settings.desktopCount)) {
-      return;
+      return 0;
    }
 
    if(currentDesktop == desktop) {
-      return;
+      return 0;
    }
 
    /* Hide clients from the old desktop.
@@ -173,6 +195,8 @@ void ChangeDesktop(unsigned int desktop)
    UpdateTaskBar();
 
    LoadBackground(desktop);
+
+   return 1;
 
 }
 

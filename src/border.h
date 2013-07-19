@@ -24,10 +24,10 @@ typedef unsigned char BorderActionType;
 #define BA_MAXIMIZE  4     /**< Maximize the window. */
 #define BA_MINIMIZE  5     /**< Minimize the window. */
 #define BA_MENU      6     /**< Show the window menu. */
-#define BA_RESIZE_N  0x10  /**< Resize north. */
-#define BA_RESIZE_S  0x20  /**< Resize south. */
-#define BA_RESIZE_E  0x40  /**< Resize east. */
-#define BA_RESIZE_W  0x80  /**< Resize west. */
+#define BA_RESIZE_N  0x10  /**< Mask for north resize. */
+#define BA_RESIZE_S  0x20  /**< Mask for south resize. */
+#define BA_RESIZE_E  0x40  /**< Mask for east resize. */
+#define BA_RESIZE_W  0x80  /**< Mask for west resize. */
 
 /*@{*/
 #define InitializeBorders()   (void)(0)
@@ -43,6 +43,9 @@ void ShutdownBorders();
  * @return The action to take.
  */
 BorderActionType GetBorderActionType(const struct ClientNode *np, int x, int y);
+
+/** Get the window corners to use for resize. */
+BorderActionType GetResizeType(const struct ClientNode *np, int x, int y);
 
 /** Reset the shape of a window border.
  * @param np The client.

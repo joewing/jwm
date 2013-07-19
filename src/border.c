@@ -129,6 +129,18 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
       return BA_NONE;
    }
 
+   return GetResizeType(np, x, y);
+
+}
+
+/** Get the window corners to use for resize. */
+BorderActionType GetResizeType(const ClientNode *np, int x, int y)
+{
+   int north, south, east, west;
+   BorderActionType resizeMask;
+
+   GetBorderSize(&np->state, &north, &south, &east, &west);
+
    /* We don't allow resizing maximized windows. */
    resizeMask = BA_RESIZE_S | BA_RESIZE_N
               | BA_RESIZE_E | BA_RESIZE_W
@@ -173,7 +185,6 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
    } else {
       return BA_NONE;
    }
-
 }
 
 /** Reset the shape of a window border. */

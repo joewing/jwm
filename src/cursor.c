@@ -126,7 +126,7 @@ Cursor GetResizeCursor(BorderActionType action)
          return cursors[CURSOR_SOUTH];
       }
    } else if(action & BA_RESIZE_E) {
-         return cursors[CURSOR_EAST];
+      return cursors[CURSOR_EAST];
    } else if(action & BA_RESIZE_W) {
       return cursors[CURSOR_WEST];
    } else {

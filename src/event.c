@@ -34,6 +34,7 @@
 #include "popup.h"
 #include "pager.h"
 #include "grab.h"
+#include "mouse.h"
 
 #define MIN_TIME_DELTA 50
 
@@ -63,8 +64,6 @@ static char HandleDestroyNotify(const XDestroyWindowEvent *event);
 static void HandleMapRequest(const XMapEvent *event);
 static void HandleUnmapNotify(const XUnmapEvent *event);
 static void HandleButtonEvent(const XButtonEvent *event);
-static void HandleKeyPress(const XKeyEvent *event);
-static void HandleKeyRelease(const XKeyEvent *event);
 static void HandleEnterNotify(const XCrossingEvent *event);
 static void HandleLeaveNotify(const XCrossingEvent *event);
 static void HandleMotionNotify(const XMotionEvent *event);
@@ -241,10 +240,8 @@ void ProcessEvent(XEvent *event)
       HandleButtonEvent(&event->xbutton);
       break;
    case KeyPress:
-      HandleKeyPress(&event->xkey);
-      break;
    case KeyRelease:
-      HandleKeyRelease(&event->xkey);
+      RunKeyCommand(&event->xkey);
       break;
    case EnterNotify:
       HandleEnterNotify(&event->xcrossing);
@@ -310,177 +307,21 @@ void HandleButtonEvent(const XButtonEvent *event)
          }
       }
       DispatchBorderButtonEvent(event, np);
-   } else if(event->window == rootWindow && event->type == ButtonPress) {
-      if(!ShowRootMenu(event->button, event->x, event->y)) {
-         if(event->button == Button4) {
-            LeftDesktop();
-         } else if(event->button == Button5) {
-            RightDesktop();
-         }
-      }
+   } else if(event->window == rootWindow) {
+      RunMouseCommand(event, CONTEXT_ROOT);
    } else {
       np = FindClientByWindow(event->window);
       if(np) {
-         switch(event->button) {
-         case Button1:
-         case Button2:
-            RaiseClient(np);
-            if(settings.focusModel == FOCUS_CLICK) {
-               FocusClient(np);
-            }
-            if(event->state & Mod1Mask) {
-               GetBorderSize(&np->state, &north, &south, &east, &west);
-               MoveClient(np, event->x + west, event->y + north, 0);
-            }
-            break;
-         case Button3:
-            if(event->state & Mod1Mask) {
-               GetBorderSize(&np->state, &north, &south, &east, &west);
-               ResizeClient(np, BA_RESIZE | BA_RESIZE_E | BA_RESIZE_S,
-                            event->x + west, event->y + north);
-            } else {
-               RaiseClient(np);
-               if(settings.focusModel == FOCUS_CLICK) {
-                  FocusClient(np);
-               }
-            }
-            break;
-         default:
-            break;
+         RaiseClient(np);
+         if(settings.focusModel == FOCUS_CLICK) {
+            FocusClient(np);
          }
+         RunMouseCommand(event, CONTEXT_WINDOW);
          JXAllowEvents(display, ReplayPointer, eventTime);
       }
 
    }
 
-}
-
-/** Process a key press event. */
-void HandleKeyPress(const XKeyEvent *event)
-{
-   ClientNode *np;
-   KeyType key;
-   key = GetKey(event);
-   np = GetActiveClient();
-   switch(key & 0xFF) {
-   case KEY_EXEC:
-      RunKeyCommand(event);
-      break;
-   case KEY_DESKTOP:
-      ChangeDesktop((key >> 8) - 1);
-      break;
-   case KEY_RDESKTOP:
-      RightDesktop();
-      break;
-   case KEY_LDESKTOP:
-      LeftDesktop();
-      break;
-   case KEY_UDESKTOP:
-      AboveDesktop();
-      break;
-   case KEY_DDESKTOP:
-      BelowDesktop();
-      break;
-   case KEY_SHOWDESK:
-      ShowDesktop();
-      break;
-   case KEY_SHOWTRAY:
-      ShowAllTrays();
-      break;
-   case KEY_NEXT:
-      FocusNext();
-      break;
-   case KEY_NEXTSTACK:
-      StartWindowStackWalk();
-      WalkWindowStack(1);
-      break;
-   case KEY_PREV:
-      FocusPrevious();
-      break;
-   case KEY_PREVSTACK:
-      StartWindowStackWalk();
-      WalkWindowStack(0);
-      break;
-   case KEY_CLOSE:
-      if(np) {
-         DeleteClient(np);
-      }
-      break;
-   case KEY_SHADE:
-      if(np) {
-         if(np->state.status & STAT_SHADED) {
-            UnshadeClient(np);
-         } else {
-            ShadeClient(np);
-         }
-      }
-      break;
-   case KEY_STICK:
-      if(np) {
-         if(np->state.status & STAT_STICKY) {
-            SetClientSticky(np, 0);
-         } else {
-            SetClientSticky(np, 1);
-         }
-      }
-      break;
-   case KEY_MOVE:
-      if(np) {
-         MoveClientKeyboard(np);
-      }
-      break;
-   case KEY_RESIZE:
-      if(np) {
-         ResizeClientKeyboard(np);
-      }
-      break;
-   case KEY_MIN:
-      if(np) {
-         MinimizeClient(np, 1);
-      }
-      break;
-   case KEY_MAX:
-      if(np) {
-         MaximizeClient(np, 1, 1);
-      }
-      break;
-   case KEY_ROOT:
-      ShowKeyMenu(event);
-      break;
-   case KEY_WIN:
-      if(np) {
-         ShowWindowMenu(np, np->x, np->y);
-      }
-      break;
-   case KEY_RESTART:
-      Restart();
-      break;
-   case KEY_EXIT:
-      Exit();
-      break;
-   case KEY_FULLSCREEN:
-      if(np) {
-         if(np->state.status & STAT_FULLSCREEN) {
-            SetClientFullScreen(np, 0);
-         } else {
-            SetClientFullScreen(np, 1);
-         }
-      }
-      break;
-   default:
-      break;
-   }
-}
-
-/** Handle a key release event. */
-void HandleKeyRelease(const XKeyEvent *event)
-{
-   KeyType key;
-   key = GetKey(event);
-   if(((key & 0xFF) != KEY_NEXTSTACK) &&
-      ((key & 0xFF) != KEY_PREVSTACK)) {
-      StopWindowStackWalk();
-   }
 }
 
 /** Process a configure request. */
@@ -1258,9 +1099,6 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
                                ClientNode *np)
 {
 
-   static Time lastClickTime = 0;
-   static int lastX = 0, lastY = 0;
-   static char doubleClickActive = 0;
    BorderActionType action;
    int bsize;
 
@@ -1281,91 +1119,22 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
    /* Other buttons are context sensitive. */
    switch(action & 0x0F) {
    case BA_RESIZE:   /* Border */
-      if(event->type == ButtonPress) {
-         if(event->button == Button1) {
-            ResizeClient(np, action, event->x, event->y);
-         } else if(event->button == Button3) {
-            ShowWindowMenu(np, np->x + event->x - bsize,
-                           np->y + event->y - settings.titleHeight - bsize);
-         }
-      }
+      RunMouseCommand(event, CONTEXT_BORDER);
       break;
    case BA_MOVE:     /* Title bar */
-      if(event->button == Button1) {
-         if(event->type == ButtonPress) {
-            if(doubleClickActive
-               && abs(event->time - lastClickTime) > 0
-               && abs(event->time - lastClickTime) <= settings.doubleClickSpeed
-               && abs(event->x - lastX) <= settings.doubleClickDelta
-               && abs(event->y - lastY) <= settings.doubleClickDelta) {
-               MaximizeClientDefault(np);
-               doubleClickActive = 0;
-            } else {
-               if(MoveClient(np, event->x, event->y,
-                             (event->state & Mod1Mask) ? 0 : 1)) {
-                  doubleClickActive = 0;
-               } else {
-                  doubleClickActive = 1;
-                  lastClickTime = event->time;
-                  lastX = event->x;
-                  lastY = event->y;
-               }
-            }
-         }
-      } else if(event->button == Button3) {
-         ShowWindowMenu(np, np->x + event->x - bsize,
-                        np->y + event->y - settings.titleHeight - bsize);
-      } else if(event->button == Button4) {
-         ShadeClient(np);
-      } else if(event->button == Button5) {
-         UnshadeClient(np);
-      }
+      RunMouseCommand(event, CONTEXT_TITLE);
       break;
    case BA_MENU:  /* Menu button */
-      if(event->button == Button4) {
-         ShadeClient(np);
-      } else if(event->button == Button5) {
-         UnshadeClient(np);
-      } else if(event->type == ButtonPress) {
-         ShowWindowMenu(np, np->x + event->x - bsize,
-                        np->y + event->y - settings.titleHeight - bsize);
-      }
+      RunMouseCommand(event, CONTEXT_MENU);
       break;
    case BA_CLOSE: /* Close button */
-      if(event->type == ButtonRelease
-         && (event->button == Button1 || event->button == Button3)) {
-         DeleteClient(np);
-      }
+      RunMouseCommand(event, CONTEXT_CLOSE);
       break;
    case BA_MAXIMIZE: /* Maximize button */
-      if(event->type == ButtonRelease) {
-         switch(event->button) {
-         case Button1:
-            MaximizeClientDefault(np);
-            break;
-         case Button2:
-            MaximizeClient(np, 0, 1);
-            break;
-         case Button3:
-            MaximizeClient(np, 1, 0);
-            break;
-         default:
-            break;
-         }
-      }
+      RunMouseCommand(event, CONTEXT_MAX);
       break;
    case BA_MINIMIZE: /* Minimize button */
-      if(event->type == ButtonRelease) {
-         if(event->button == Button3) {
-            if(np->state.status & STAT_SHADED) {
-               UnshadeClient(np);
-            } else {
-               ShadeClient(np);
-            }
-         } else if(event->button == Button1) {
-            MinimizeClient(np, 1);
-         }
-      }
+      RunMouseCommand(event, CONTEXT_MIN);
       break;
    default:
       break;

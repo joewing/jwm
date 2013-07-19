@@ -49,6 +49,7 @@ typedef enum {
    TOK_MENU,
    TOK_MENUSTYLE,
    TOK_MINIMIZE,
+   TOK_MOUSE,
    TOK_MOVE,
    TOK_MOVEMODE,
    TOK_NAME,

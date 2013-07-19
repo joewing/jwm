@@ -43,6 +43,7 @@
 #include "settings.h"
 #include "timing.h"
 #include "grab.h"
+#include "mouse.h"
 
 Display *display = NULL;
 Window rootWindow;
@@ -396,6 +397,7 @@ void Initialize()
    InitializeHints();
    InitializeIcons();
    InitializeKeys();
+   InitializeMouse();
    InitializePager();
    InitializePlacement();
    InitializePopup();
@@ -439,6 +441,7 @@ void Startup()
    StartupDock();
    StartupTray();
    StartupKeys();
+   StartupMouse();
    StartupDesktops();
    StartupHints();
    StartupBorders();
@@ -488,6 +491,7 @@ void Shutdown()
       ShutdownDialogs();
 #  endif
    ShutdownPopup();
+   ShutdownMouse();
    ShutdownKeys();
    ShutdownPager();
    ShutdownRootMenu();
@@ -537,6 +541,7 @@ void Destroy()
    DestroyGroups();
    DestroyHints();
    DestroyIcons();
+   DestroyMouse();
    DestroyKeys();
    DestroyPager();
    DestroyPlacement();

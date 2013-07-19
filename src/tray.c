@@ -20,6 +20,7 @@
 #include "screen.h"
 #include "settings.h"
 #include "event.h"
+#include "gradient.h"
 
 #define DEFAULT_TRAY_WIDTH 32
 #define DEFAULT_TRAY_HEIGHT 32
@@ -94,7 +95,7 @@ void StartupTray()
          | PointerMotionMask;
 
       attrMask |= CWBackPixel;
-      attr.background_pixel = colors[COLOR_TRAY_BG];
+      attr.background_pixel = colors[COLOR_TRAY_BG2];
 
       tp->window = JXCreateWindow(display, rootWindow,
                                   tp->x, tp->y, tp->width, tp->height,
@@ -1003,6 +1004,20 @@ void ResizeTray(TrayType *tp)
       HideTray(tp);
    }
 
+}
+
+/** Draw the tray background on a drawable. */
+void ClearTrayDrawable(const TrayComponentType *cp)
+{
+   const Drawable d = cp->pixmap != None ? cp->pixmap : cp->window;
+   if(colors[COLOR_TRAY_BG1] == colors[COLOR_TRAY_BG2]) {
+      JXSetForeground(display, rootGC, colors[COLOR_TRAY_BG1]);
+      JXFillRectangle(display, d, rootGC, 0, 0, cp->width, cp->height);
+   } else {
+      DrawHorizontalGradient(d, rootGC, colors[COLOR_TRAY_BG1],
+                             colors[COLOR_TRAY_BG2], 0, 0,
+                             cp->width, cp->height);
+   }
 }
 
 /** Get a linked list of trays. */

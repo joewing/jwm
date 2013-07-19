@@ -1603,7 +1603,7 @@ void ParseClockStyle(const TokenNode *tp) {
          SetColor(COLOR_CLOCK_FG, np->value);
          break;
       case TOK_BACKGROUND:
-         SetColor(COLOR_CLOCK_BG, np->value);
+         ParseGradient(np->value, COLOR_CLOCK_BG1, COLOR_CLOCK_BG2);
          break;
       default:
          InvalidTag(np, TOK_CLOCKSTYLE);

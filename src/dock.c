@@ -94,7 +94,7 @@ void StartupDock()
       dock->window = JXCreateSimpleWindow(display, rootWindow,
          /* x, y, width, height */ 0, 0, 1, 1,
          /* border_size, border_color */ 0, 0,
-         /* background */ colors[COLOR_TRAY_BG]);
+         /* background */ colors[COLOR_TRAY_BG2]);
       JXSelectInput(display, dock->window,
            SubstructureNotifyMask
          | SubstructureRedirectMask

@@ -20,6 +20,7 @@
 #include "misc.h"
 #include "settings.h"
 #include "event.h"
+#include "gradient.h"
 
 /** Structure to respresent a clock tray component. */
 typedef struct ClockType {
@@ -171,9 +172,6 @@ void Create(TrayComponentType *cp)
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
                                rootDepth);
 
-   JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG]);
-   JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
-
 }
 
 /** Resize a clock tray component. */
@@ -288,8 +286,15 @@ void DrawClock(ClockType *clk, const TimeType *now, int x, int y)
    cp = clk->cp;
 
    /* Clear the area. */
-   JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG]);
-   JXFillRectangle(display, cp->pixmap, rootGC, 0, 0, cp->width, cp->height);
+   if(colors[COLOR_CLOCK_BG1] == colors[COLOR_CLOCK_BG2]) {
+      JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG1]);
+      JXFillRectangle(display, cp->pixmap, rootGC, 0, 0,
+                      cp->width, cp->height);
+   } else {
+      DrawHorizontalGradient(cp->pixmap, rootGC,
+                             colors[COLOR_CLOCK_BG1], colors[COLOR_CLOCK_BG2],
+                             0, 0, cp->width, cp->height);
+   }
 
    /* Determine if the clock is the right size. */
    width = GetStringWidth(FONT_CLOCK, shortTime);

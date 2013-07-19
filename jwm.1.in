@@ -890,8 +890,8 @@ more information.
 .P
 .B Background
 .RS
-The default background color. See the \fBCOLORS\fP section for
-more information.
+The default background color (gradients are supported).
+See the \fBCOLORS\fP section for more information.
 .RE
 .P
 .B ActiveForeground
@@ -902,7 +902,7 @@ See the \fBCOLORS\fP section for more information.
 .P
 .B ActiveBackground
 .RS
-The default background color for active items.
+The default background color for active items (gradients are supported).
 See the \fBCOLORS\fP section for more information.
 .RE
 .P

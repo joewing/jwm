@@ -20,9 +20,7 @@
 #include "icon.h"
 #include "key.h"
 #include "main.h"
-#include "move.h"
 #include "place.h"
-#include "resize.h"
 #include "root.h"
 #include "swallow.h"
 #include "taskbar.h"
@@ -1101,13 +1099,6 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
 
    BorderActionType action;
    int bsize;
-
-   /* Middle click starts a move unless it's over the maximize button. */
-   action = GetBorderActionType(np, event->x, event->y);
-   if(event->button == Button2 && action != BA_MAXIMIZE) {
-      MoveClient(np, event->x, event->y, (event->state & Mod1Mask) ? 0 : 1);
-      return;
-   }
 
    /* Determine the size of the border. */
    if(np->state.border & BORDER_OUTLINE) {

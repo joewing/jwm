@@ -75,7 +75,6 @@ void RunMouseCommand(const XButtonEvent *event, ContextType context)
    while(mp) {
       if(button == mp->button && state == mp->state) {
          RunAction(np, event->x_root, event->y_root, mp->action, mp->command);
-         break;
       }
       mp = mp->next;
    }

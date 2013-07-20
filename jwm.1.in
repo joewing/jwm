@@ -1235,7 +1235,7 @@ The key specified in the \fBkey\fP attribute must contain a valid key
 string for \fBXStringToKeysym\fP(3). These values are usually what one would
 expect (for example, the escape key is called "Escape").
 .P
-See the \fBACTIONS\fP section for a list of actinos that can be bound
+See the \fBACTIONS\fP section for a list of actions that can be bound
 to keys.  Note that all actions in the \fBACTIONS\fP section are grabbed
 and, therefore, not passed on to application windows.  The active window
 is used for actions that apply to windows.
@@ -1269,13 +1269,13 @@ Mouse bindings are specified using \fBMouse\fP tags.  Within a
 \fBMouse\fP tag, the \fBbutton\fP attribute specifies the mouse button.
 Button \fI1\fP is usually the left button, button \fI3\fP is usually the
 right button, button \fI2\fP is usually the middle button, and
-buttons \fI4\fP and \fI5\fP are usually the scroll wheel.  To specifiy
+buttons \fI4\fP and \fI5\fP are usually the scroll wheel.  To specify
 a double click, enter the value twice.  For example, \fI11\fP would
 indicate double clicking the left-button.
 .P
 The optional \fBmask\fP attribute specifies which keys should be held to
 activate the mouse binding.  See the \fBKEY BINDINGS\fP section for more
-information on key masks.  Note that, by default, no mask is necessary.
+information on key masks.
 .P
 The \fBcontext\fP attribute specifies the context in which the mouse
 binding applies.  The following contexts are available:

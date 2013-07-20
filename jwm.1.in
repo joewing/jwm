@@ -1265,47 +1265,43 @@ Make a menu selection or confirm an action.
 
 .B "MOUSE BINDINGS"
 .RS
-Any button other than the scroll wheel (buttons 4 and 5) on the root
-window will bring up the root menu unless otherwise specified via the
-\fBonroot\fP attribute of \fBRootMenu\fP. Scrolling up on the root window
-switches to the left desktop and scrolling down switches to the right desktop.
+Mouse bindings are specified using \fBMouse\fP tags.  Within a
+\fBMouse\fP tag, the \fBbutton\fP attribute specifies the mouse button.
+Button \fI1\fP is usually the left button, button \fI3\fP is usually the
+right button, button \fI2\fP is usually the middle button, and
+buttons \fI4\fP and \fI5\fP are usually the scroll wheel.  To specifiy
+a double click, enter the value twice.  For example, \fI11\fP would
+indicate double clicking the left-button.
 .P
-Button 1 (typically the left button):
+The optional \fBmask\fP attribute specifies which keys should be held to
+activate the mouse binding.  See the \fBKEY BINDINGS\fP section for more
+information on key masks.  Note that, by default, no mask is necessary.
+.P
+The \fBcontext\fP attribute specifies the context in which the mouse
+binding applies.  The following contexts are available:
 .RS
-Over the border, dragging resizes the window.
-Over the title bar, dragging moves the window and double clicking toggles
-the maximized state.
-Over the menu button, clicking shows the menu.
-Over the minimize button, clicking minimizes the window.
-Over the maximize button, clicking toggles between maximized and normal.
-Over the close button, clicking closes the window.
+.IP \fBborder\fP
+The window border.
+.IP \fBtitle\fP
+The window title bar.
+.IP \fBmenu\fP
+The window menu button.  This is the button the has the application icon.
+.IP \fBmin\fP
+The minimize window button.
+.IP \fBmax\fP
+The maximize window button.
+.IP \fBclose\fP
+The close window button.
+.IP \fBbutton\fP
+.IP \fBpager\fP
+.IP \fBclock\fP
+.IP \fBroot\fP
+.IP \fBwindow\fP
 .RE
 .P
-Button 2 (typically the middle button):
-.RS
-Over the maximize button, clicking toggles between vertically maximized
-and normal.
-Anywhere else on a window frame, dragging while holding button 2 will
-move the window.
-.RE
-.P
-Button 3 (typically the right button):
-.RS
-Over the frame, clicking shows the window menu.
-On the minimize button, clicking toggles between shaded and unshaded.
-On the maximize button, clicking toggles between horizontally maximized
-and normal.
-On the close button, clicking closes the window.
-Over the pager, dragging while holding button 3 will move a window.
-.RE
-.RE
-.P
-.RS
-Scrolling up over the title bar will shade the window and scrolling down
-will unshade the window.
-When a menu is open, the scroll wheel will move through menu items.
-When over the pager, the scroll wheel will switch desktops.
-When over a task list, the scroll wheel will switch windows.
+The action to perform is specified in the text of the \fBMouse\fP tag.
+See the \fBACTIONS\fP section for the actions.
+Note that there are no mouse bindings by default.
 .RE
 
 .B "ACTIONS"

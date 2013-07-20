@@ -1235,74 +1235,32 @@ The key specified in the \fBkey\fP attribute must contain a valid key
 string for \fBXStringToKeysym\fP(3). These values are usually what one would
 expect (for example, the escape key is called "Escape").
 .P
-Valid actions for a key binding are:
+See the \fBACTIONS\fP section for a list of actinos that can be bound
+to keys.  Note that all actions in the \fBACTIONS\fP section are grabbed
+and, therefore, not passed on to application windows.  The active window
+is used for actions that apply to windows.
+It is possible to bind multiple keys to the same action.
+Note that there are no default key bindings.
+.P
+In addition to the actions from the \fBACTIONS\fP section, there are
+several key bindings used for menu navigation that JWM uses.  These
+key bindings are not grabbed, that is, they are passed to applications 
+and only used when JWM presents a menu.  The following such
+bindings are available:
 .RS
 .IP \fBup\fP
-Move up. Not grabbed.
+Move up.
 .IP \fBdown\fP
-Move down. Not grabbed.
+Move down.
 .IP \fBright\fP
-Move right. Not grabbed.
+Move right.
 .IP \fBleft\fP
-Move left. Not grabbed.
+Move left.
 .IP \fBescape\fP
-Stop a move/resize, exit a menu, or cancel an action. Not grabbed.
-.IP \fBfullscreen\fP
-Toggle between fullscreen and not fullscreen. Grabbed.
+Stop a move/resize, exit a menu, or cancel an action.
 .IP \fBselect\fP
-Make a menu selection or confirm an action. Not grabbed.
-.IP \fBnext\fP
-Move to the next window in the task list. Grabbed.
-.IP \fBnextstacked\fP
-Move to the next window in the stacking order. Grabbed.
-.IP \fBprev\fP
-Move to the previous window in the task list. Grabbed.
-.IP \fBprevstacked\fP
-Move to the previous window in the stacking order. Grabbed.
-.IP \fBclose\fP
-Close the active window. Grabbed.
-.IP \fBminimize\fP
-Minimize the active window. Grabbed.
-.IP \fBmaximize\fP
-Maximize the active window. Grabbed.
-.IP \fBshade\fP
-Shade the active window. Grabbed.
-.IP \fBstick\fP
-Stick/unstick the active window. Grabbed.
-.IP \fBmove\fP
-Move the active window. Grabbed.
-.IP \fBresize\fP
-Resize the active window. Grabbed.
-.IP \fBroot:\fP\fIn\fP
-Show root menu \fIn\fP. Grabbed.
-.IP \fBwindow\fP
-Show the window menu for the active window. Grabbed.
-.IP \fBdesktop#\fP
-Switch to a specific desktop. To use this, "#" must be specified in
-the key section. The number 1 to the number of desktops configured
-are then substituted for "#". Grabbed.
-.IP \fBrdesktop\fP
-Move one desktop to the right. Grabbed.
-.IP \fBldesktop\fP
-Move one desktop to the left. Grabbed.
-.IP \fBudesktop\fP
-Move up one desktop. Grabbed.
-.IP \fBddesktop\fP
-Move down one desktop. Grabbed.
-.IP \fBshowdesktop\fP
-Show/hide the desktop (maximize/minimize all windows). Grabbed.
-.IP \fBshowtray\fP
-Unhide the tray (when using autohide). Grabbed.
-.IP \fBexec:\fP\fIcommand\fP
-Execute \fIcommand\fP. Grabbed.
-.IP \fBrestart\fP
-Restart JWM. Grabbed.
+Make a menu selection or confirm an action.
 .RE
-.P
-Note that keys that are grabbed will not be available to applications other
-than JWM since JWM will interpret these. Also note that there are no
-default key bindings. Finally, it is possible to bind multiple key
-combinations to the same action.
 .RE
 
 .B "MOUSE BINDINGS"
@@ -1348,6 +1306,61 @@ will unshade the window.
 When a menu is open, the scroll wheel will move through menu items.
 When over the pager, the scroll wheel will switch desktops.
 When over a task list, the scroll wheel will switch windows.
+.RE
+
+.B "ACTIONS"
+.RS
+The following actions are available for both key and mouse bindings:
+.RS
+.IP \fBfullscreen\fP
+Toggle between fullscreen and not fullscreen.
+.IP \fBnext\fP
+Move to the next window in the task list.
+.IP \fBnextstacked\fP
+Move to the next window in the stacking order.
+.IP \fBprev\fP
+Move to the previous window in the task list.
+.IP \fBprevstacked\fP
+Move to the previous window in the stacking order.
+.IP \fBclose\fP
+Close the active window.
+.IP \fBminimize\fP
+Minimize the active window.
+.IP \fBmaximize\fP
+Maximize the active window.
+.IP \fBshade\fP
+Shade the active window.
+.IP \fBstick\fP
+Stick/unstick the active window.
+.IP \fBmove\fP
+Move the active window.
+.IP \fBresize\fP
+Resize the active window.
+.IP \fBroot:\fP\fIn\fP
+Show root menu \fIn\fP.
+.IP \fBwindow\fP
+Show the window menu for the active window.
+.IP \fBdesktop#\fP
+Switch to a specific desktop. To use this, "#" must be specified in
+the key section. The number 1 to the number of desktops configured
+are then substituted for "#".
+.IP \fBrdesktop\fP
+Move one desktop to the right.
+.IP \fBldesktop\fP
+Move one desktop to the left.
+.IP \fBudesktop\fP
+Move up one desktop.
+.IP \fBddesktop\fP
+Move down one desktop.
+.IP \fBshowdesktop\fP
+Show/hide the desktop (maximize/minimize all windows).
+.IP \fBshowtray\fP
+Unhide the tray (when using autohide).
+.IP \fBexec:\fP\fIcommand\fP
+Execute \fIcommand\fP.
+.IP \fBrestart\fP
+Restart JWM. Grabbed.
+.RE
 .RE
 
 .B DESKTOPS

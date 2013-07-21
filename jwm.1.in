@@ -1308,8 +1308,10 @@ Note that there are no mouse bindings by default.
 .RS
 The following actions are available for both key and mouse bindings:
 .RS
-.IP \fBfullscreen\fP
+.IP \fBfullscreen\fP[:\fIbool\fP]
 Toggle between fullscreen and not fullscreen.
+An optional argument (\fI0\fP or \fI1\fP) can be supplied to set the
+fullscreen status.
 .IP \fBnext\fP
 Move to the next window in the task list.
 .IP \fBnextstacked\fP
@@ -1320,14 +1322,22 @@ Move to the previous window in the task list.
 Move to the previous window in the stacking order.
 .IP \fBclose\fP
 Close the active window.
-.IP \fBminimize\fP
-Minimize the active window.
-.IP \fBmaximize\fP
-Maximize the active window.
-.IP \fBshade\fP
-Shade the active window.
-.IP \fBstick\fP
-Stick/unstick the active window.
+.IP \fBminimize\fP[:\fIbool\fP]
+Toggle the minimized status of a window.
+An optional argument (\fI0\fP or \fI1\fP) can be supplied to set the
+minimized status.
+.IP \fBmaximize\fP[:\fIbool\fP]
+Toggle the maximized status of a window.
+An optional argument (\fI0\fP or \fI1\fP) can be supplied to set the
+maximized status.
+.IP \fBshade\fP[:\fIbool\fP]
+Toggle the shaded status of a window.
+An optional argument (\fI0\fP or \fI1\fP) can be supplied to set the
+shaded status.
+.IP \fBstick\fP[:\fIbool\fP]
+Toggle the sticky status of a window.
+An optional argument (\fI0\fP or \fI1\fP) can be supplied to set the
+sticky status.
 .IP \fBmove\fP
 Move the active window.
 .IP \fBresize\fP

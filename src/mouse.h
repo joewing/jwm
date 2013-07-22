@@ -1,3 +1,11 @@
+/**
+ * @file mouse.h
+ * @author Joe Wingbermuehle
+ * @date 2013
+ *
+ * @brief Header for the mouse binding functions.
+ *
+ */
 
 #ifndef MOUSE_H_
 #define MOUSE_H_
@@ -20,6 +28,8 @@ typedef unsigned char ContextType;
 
 #define CONTEXT_COUNT         12
 
+typedef void (*ReleaseCallback)(int x, int y);
+
 /*@{*/
 void InitializeMouse();
 #define StartupMouse()        (void)(0)
@@ -27,9 +37,28 @@ void InitializeMouse();
 void DestroyMouse();
 /*@}*/
 
+/** Run a mouse bindings for a button event.
+ * @param event The event (ButtonPress or ButtonRelease).
+ * @param context The context where the event happened.
+ */
 void RunMouseCommand(const XButtonEvent *event,
                      ContextType context);
 
+/** Register a callback for a mouse grab.
+ * This should be done when grabbing the mouse to be notified of a release.
+ * The mouse grab should be removed within this callback.
+ * @param c The callback.
+ */
+void SetButtonReleaseCallback(ReleaseCallback c);
+
+/** Insert a mouse binding.
+ * This is called while parsing the configuration.
+ * @param context The context of the binding.
+ * @param action The action to perform.
+ * @param button The mouse button.
+ * @param modifiers Keyboard modifiers.
+ * @param command Extra parameter for the action.
+ */
 void InsertMouseBinding(ContextType context,
                         ActionType action,
                         int button,

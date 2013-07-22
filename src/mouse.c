@@ -1,3 +1,11 @@
+/**
+ * @file mouse.c
+ * @author Joe Wingbermuehle
+ * @date 2013
+ *
+ * @brief Mouse binding functions.
+ *
+ */
 
 #include "jwm.h"
 #include "mouse.h"
@@ -17,15 +25,19 @@ typedef struct MouseNode {
 } MouseNode;
 
 static MouseNode *bindings[CONTEXT_COUNT];
+static ReleaseCallback callback;
 
+/** Initialize mouse bindings. */
 void InitializeMouse()
 {
    int i;
    for(i = 0; i < CONTEXT_COUNT; i++) {
       bindings[i] = NULL;
    }
+   callback = NULL;
 }
 
+/** Clean up mouse bindings. */
 void DestroyMouse()
 {
    MouseNode *mp;
@@ -42,6 +54,7 @@ void DestroyMouse()
    }
 }
 
+/** Run mouse bindings for an event. */
 void RunMouseCommand(const XButtonEvent *event, ContextType context)
 {
 
@@ -52,6 +65,11 @@ void RunMouseCommand(const XButtonEvent *event, ContextType context)
    int button;
    ClientNode *np;
    MouseNode *mp;
+
+   if(event->type == ButtonRelease && callback) {
+      (callback)(event->x, event->y);
+      callback = NULL;
+   }
 
    button = event->button;
    if(event->type == ButtonPress) {
@@ -81,6 +99,13 @@ void RunMouseCommand(const XButtonEvent *event, ContextType context)
 
 }
 
+/** Set the callback for a mouse grab. */
+void SetButtonReleaseCallback(ReleaseCallback c)
+{
+   callback = c;
+}
+
+/** Insert a mouse binding. */
 void InsertMouseBinding(ContextType context,
                         ActionType action,
                         int button,

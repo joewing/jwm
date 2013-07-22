@@ -1,3 +1,12 @@
+/**
+ * @file binding.h
+ * @author Joe Wingbermuehle
+ * @date 2013
+ *
+ * @brief Header for the binding functions that are shared between key
+ *        and mouse bindings.
+ *
+ */
 
 #ifndef BINDING_H_
 #define BINDING_H_
@@ -39,6 +48,13 @@ typedef unsigned char ActionType;
 #define ACTION_SENDUP         31
 #define ACTION_SENDDOWN       32
 
+/** Run an action.
+ * @param np The client to which the action should apply.
+ * @param x The x-coordinate for the action.
+ * @param y The y-coordinate for the action.
+ * @param action The action to perform.
+ * @param arg An argument to the action.
+ */
 void RunAction(struct ClientNode *np,
                int x, int y,
                ActionType action,

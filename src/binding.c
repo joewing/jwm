@@ -1,3 +1,11 @@
+/**
+ * @file binding.c
+ * @author Joe Wingbermuehle
+ * @date 2013
+ *
+ * @brief Binding functions that are shared between key and mouse bindings.
+ *
+ */
 
 #include "jwm.h"
 #include "binding.h"
@@ -8,6 +16,7 @@
 #include "main.h"
 #include "desktop.h"
 
+/** Run an action. */
 void RunAction(ClientNode *np,
                int x, int y,
                ActionType action,

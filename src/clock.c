@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "event.h"
 #include "gradient.h"
+#include "mouse.h"
 
 /** Structure to respresent a clock tray component. */
 typedef struct ClockType {
@@ -29,7 +30,6 @@ typedef struct ClockType {
 
    char *format;            /**< The time format to use. */
    char *zone;              /**< The time zone to use (NULL = local). */
-   char *command;           /**< A command to run when clicked. */
    char shortTime[80];      /**< Currently displayed time. */
 
    /* The following are used to control popups. */
@@ -52,7 +52,8 @@ static void Create(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
 static void ProcessClockButtonEvent(TrayComponentType *cp,
-                                    int x, int y, int mask);
+                                    const XButtonEvent *event,
+                                    int x, int y);
 static void ProcessClockMotionEvent(TrayComponentType *cp,
                                     int x, int y, int mask);
 
@@ -99,9 +100,6 @@ void DestroyClock()
       if(clocks->zone) {
          Release(clocks->zone);
       }
-      if(clocks->command) {
-         Release(clocks->command);
-      }
       UnregisterCallback(SignalClock, clocks);
 
       Release(clocks);
@@ -112,7 +110,7 @@ void DestroyClock()
 
 /** Create a clock tray component. */
 TrayComponentType *CreateClock(const char *format, const char *zone,
-                               const char *command, int width, int height)
+                               int width, int height)
 {
 
    TrayComponentType *cp;
@@ -135,8 +133,6 @@ TrayComponentType *CreateClock(const char *format, const char *zone,
 
    clk->zone = CopyString(zone);
 
-   clk->command = CopyString(command);
-
    clk->shortTime[0] = 0;
 
    cp = CreateTrayComponent();
@@ -154,7 +150,7 @@ TrayComponentType *CreateClock(const char *format, const char *zone,
    cp->Create = Create;
    cp->Resize = Resize;
    cp->Destroy = Destroy;
-   cp->ProcessButtonPress = ProcessClockButtonEvent;
+   cp->ProcessButtonEvent = ProcessClockButtonEvent;
    cp->ProcessMotionEvent = ProcessClockMotionEvent;
 
    RegisterCallback(Min(900, settings.popupDelay / 2), SignalClock, clk);
@@ -212,22 +208,19 @@ void Destroy(TrayComponentType *cp)
    }
 }
 
-/** Process a click event on a clock tray component. */
-void ProcessClockButtonEvent(TrayComponentType *cp, int x, int y, int mask)
+/** Process a button event on a clock tray component. */
+void ProcessClockButtonEvent(TrayComponentType *cp,
+                             const XButtonEvent *event,
+                             int x, int y)
 {
-
-   ClockType *clk;
-
-   Assert(cp);
-
-   clk = (ClockType*)cp->object;
-
-   Assert(clk);
-
-   if(clk->command) {
-      RunCommand(clk->command);
-   }
-
+   ActionDataType data;
+   data.client = NULL;
+   data.x = event->x_root;
+   data.y = event->y_root;
+   data.desktop = currentDesktop;
+   data.MoveFunc = NULL;
+   data.ResizeFunc = NULL;
+   RunMouseCommand(event, CONTEXT_CLOCK, &data);
 }
 
 /** Process a motion event on a clock tray component. */

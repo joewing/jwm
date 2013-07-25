@@ -23,8 +23,10 @@ void ResizeClient(struct ClientNode *np, int startx, int starty);
 
 /** Resize a client window using the keyboard (mouse optional).
  * @param np The client to resize.
+ * @param startx (ignored)
+ * @param starty (ignored)
  */
-void ResizeClientKeyboard(struct ClientNode *np);
+void ResizeClientKeyboard(struct ClientNode *np, int startx, int starty);
 
 #endif /* RESIZE_H */
 

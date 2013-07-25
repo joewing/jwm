@@ -18,6 +18,9 @@
 #include "misc.h"
 #include "tray.h"
 #include "binding.h"
+#include "move.h"
+#include "resize.h"
+#include "root.h"
 
 #define MASK_NONE    0
 #define MASK_SHIFT   (1 << ShiftMapIndex)
@@ -229,15 +232,22 @@ void RunKeyCommand(const XKeyEvent *event)
 {
 
    KeyNode *kp;
+   ActionDataType data;
    unsigned int state;
 
    /* Remove the lock key modifiers. */
    state = event->state & lockMask;
 
+   data.client = NULL;
+   data.desktop = currentDesktop;
+   data.x = 0;
+   data.y = 0;
+   data.MoveFunc = MoveClientKeyboard;
+   data.ResizeFunc = ResizeClientKeyboard;
    for(kp = bindings; kp; kp = kp->next) {
       if(kp->state == state && kp->code == event->keycode) {
          if(event->type == KeyPress) {
-            RunAction(NULL, 0, 0, kp->action, kp->command);
+            RunAction(kp->action, kp->command, &data);
          } else {
             if(kp->action != ACTION_NEXTSTACK &&
                kp->action != ACTION_PREVSTACK) {

@@ -15,175 +15,171 @@
 #include "command.h"
 #include "main.h"
 #include "desktop.h"
+#include "tray.h"
+#include "taskbar.h"
+#include "winmenu.h"
 
 /** Run an action. */
-void RunAction(ClientNode *np,
-               int x, int y,
-               ActionType action,
-               const char *arg)
+char RunAction(ActionType action,
+               const char *arg,
+               const ActionDataType *data)
 {
    char value;
-   char useKeyboard = 0;
-   if(np == NULL) {
-      useKeyboard = 1;
-      np = GetActiveClient();
-   }
    switch(action) {
    case ACTION_EXEC:
       RunCommand(arg);
-      break;
+      return 0;
    case ACTION_DESKTOP:
-      if(JLIKELY(arg)) {
-         ChangeDesktop(arg[0]);
+      if(arg) {
+         ChangeDesktop((unsigned int)atoi(arg));
+      } else {
+         ChangeDesktop(data->desktop);
       }
-      break;
+      return 0;
    case ACTION_RDESKTOP:
       RightDesktop();
-      break;
+      return 0;
    case ACTION_LDESKTOP:
       LeftDesktop();
-      break;
+      return 0;
    case ACTION_UDESKTOP:
       AboveDesktop();
-      break;
+      return 0;
    case ACTION_DDESKTOP:
       BelowDesktop();
-      break;
+      return 0;
    case ACTION_SHOWDESK:
       ShowDesktop();
-      break;
+      return 0;
    case ACTION_SHOWTRAY:
       ShowAllTrays();
-      break;
+      return 0;
    case ACTION_NEXT:
       FocusNext();
-      break;
+      return 0;
    case ACTION_NEXTSTACK:
       StartWindowStackWalk();
       WalkWindowStack(1);
-      break;
+      return 0;
    case ACTION_PREV:
       FocusPrevious();
-      break;
+      return 0;
    case ACTION_PREVSTACK:
       StartWindowStackWalk();
       WalkWindowStack(0);
-      break;
+      return 0;
    case ACTION_CLOSE:
-      if(np) {
-         DeleteClient(np);
+      if(data->client) {
+         DeleteClient(data->client);
       }
-      break;
+      return 0;
    case ACTION_SHADE:
-      if(np) {
+      if(data->client) {
          if(arg) {
             value = arg[0] == '1';
          } else {
-            value = !(np->state.status & STAT_SHADED);
+            value = !(data->client->state.status & STAT_SHADED);
          }
          if(value) {
-            ShadeClient(np);
+            ShadeClient(data->client);
          } else {
-            UnshadeClient(np);
+            UnshadeClient(data->client);
          }
       }
-      break;
+      return 0;
    case ACTION_STICK:
-      if(np) {
+      if(data->client) {
          if(arg) {
             value = arg[0] == '1';
          } else {
-            value = !(np->state.status & STAT_STICKY);
+            value = !(data->client->state.status & STAT_STICKY);
          }
-         SetClientSticky(np, value);
+         SetClientSticky(data->client, value);
       }
-      break;
+      return 0;
    case ACTION_MOVE:
-      if(np) {
-         if(useKeyboard) {
-            MoveClientKeyboard(np);
-         } else {
-            MoveClient(np, x - np->x, y - np->y, 1);
-         }
+      if(data->client && data->MoveFunc) {
+         (data->MoveFunc)(data->client, data->x - data->client->x,
+                             data->y - data->client->y, 1);
       }
-      break;
+      return 0;
    case ACTION_RESIZE:
-      if(np) {
-         if(useKeyboard) {
-            ResizeClientKeyboard(np);
-         } else {
-            ResizeClient(np, x, y);
-         }
+      if(data->client && data->ResizeFunc) {
+         (data->ResizeFunc)(data->client, data->x, data->y);
       }
-      break;
+      return 0;
    case ACTION_MIN:
-      if(np) {
+      if(data->client) {
          if(arg) {
             value = arg[0] == '1';
          } else {
-            value = !(np->state.status & STAT_MINIMIZED);
+            value = !(data->client->state.status & STAT_MINIMIZED);
          }
-         MinimizeClient(np, value);
+         MinimizeClient(data->client, value);
       }
-      break;
+      return 0;
    case ACTION_MAX:
-      if(np) {
-         MaximizeClientDefault(np);
+      if(data->client) {
+         MaximizeClientDefault(data->client);
       }
-      break;
+      return 0;
    case ACTION_ROOT:
       if(JLIKELY(arg)) {
-         ShowRootMenu((unsigned int)atoi(arg), x, y);
+         ShowRootMenu((unsigned int)atoi(arg), data->x, data->y);
+         return 1;
+      } else {
+         return 0;
       }
-      break;
    case ACTION_WIN:
-      if(np) {
-         ShowWindowMenu(np, x, y);
+      if(data->client) {
+         ShowWindowMenu(data->client, data->x, data->y);
+         return 1;
+      } else {
+         return 0;
       }
-      break;
    case ACTION_RESTART:
       Restart();
-      break;
+      return 0;
    case ACTION_EXIT:
       Exit();
-      break;
+      return 0;
    case ACTION_FULLSCREEN:
-      if(np) {
+      if(data->client) {
          if(arg) {
             value = arg[0] == '1';
          } else {
-            value = !(np->state.status & STAT_FULLSCREEN);
+            value = !(data->client->state.status & STAT_FULLSCREEN);
          }
-         SetClientFullScreen(np, value);
+         SetClientFullScreen(data->client, value);
       }
-      break;
+      return 0;
    case ACTION_SENDTO:
-      if(np && arg) {
-         SetClientDesktop(np, atoi(arg));
+      if(data->client && arg) {
+         SetClientDesktop(data->client, atoi(arg));
       }
-      break;
+      return 0;
    case ACTION_SENDLEFT:
-      if(np) {
-         SetClientDesktop(np, GetLeftDesktop());
+      if(data->client) {
+         SetClientDesktop(data->client, GetLeftDesktop());
       }
-      break;
+      return 0;
    case ACTION_SENDRIGHT:
-      if(np) {
-         SetClientDesktop(np, GetRightDesktop());
+      if(data->client) {
+         SetClientDesktop(data->client, GetRightDesktop());
       }
-      break;
+      return 0;
    case ACTION_SENDUP:
-      if(np) {
-         SetClientDesktop(np, GetAboveDesktop());
+      if(data->client) {
+         SetClientDesktop(data->client, GetAboveDesktop());
       }
-      break;
+      return 0;
    case ACTION_SENDDOWN:
-      if(np) {
-         SetClientDesktop(np, GetBelowDesktop());
+      if(data->client) {
+         SetClientDesktop(data->client, GetBelowDesktop());
       }
-      break;
+      return 0;
    default:
-      break;
+      return 0;
    }
 }
 

@@ -48,16 +48,25 @@ typedef unsigned char ActionType;
 #define ACTION_SENDUP         31
 #define ACTION_SENDDOWN       32
 
+typedef struct {
+
+   struct ClientNode *client;
+   int desktop;
+   int x;
+   int y;
+   char (*MoveFunc)(struct ClientNode *np, int x, int y, char snap);
+   void (*ResizeFunc)(struct ClientNode *np, int x, int y);
+
+} ActionDataType;
+
 /** Run an action.
- * @param np The client to which the action should apply.
- * @param x The x-coordinate for the action.
- * @param y The y-coordinate for the action.
  * @param action The action to perform.
  * @param arg An argument to the action.
+ * @param data Data for the action.
+ * @return 1 if a menu was shown, 0 otherwise.
  */
-void RunAction(struct ClientNode *np,
-               int x, int y,
-               ActionType action,
-               const char *arg);
+char RunAction(ActionType action,
+               const char *arg,
+               const ActionDataType *data);
 
 #endif /* BINDING_H_ */

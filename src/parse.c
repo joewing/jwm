@@ -1454,7 +1454,6 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
    TrayComponentType *cp;
    const char *format;
    const char *zone;
-   const char *command;
    const char *temp;
    int width, height;
 
@@ -1464,12 +1463,6 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
    format = FindAttribute(tp->attributes, FORMAT_ATTRIBUTE);
 
    zone = FindAttribute(tp->attributes, ZONE_ATTRIBUTE);
-
-   if(tp->value && strlen(tp->value) > 0) {
-      command = tp->value;
-   } else {
-      command = NULL;
-   }
 
    temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
    if(temp) {
@@ -1485,7 +1478,7 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
       height = 0;
    }
 
-   cp = CreateClock(format, zone, command, width, height);
+   cp = CreateClock(format, zone, width, height);
    if(JLIKELY(cp)) {
       AddTrayComponent(tray, cp);
    }

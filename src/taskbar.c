@@ -25,6 +25,9 @@
 #include "screen.h"
 #include "settings.h"
 #include "event.h"
+#include "mouse.h"
+#include "move.h"
+#include "resize.h"
 
 typedef struct TaskBarType {
 
@@ -69,7 +72,8 @@ static void SetSize(TrayComponentType *cp, int width, int height);
 static void Create(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 static void ProcessTaskButtonEvent(TrayComponentType *cp,
-                                   int x, int y, int mask);
+                                   const XButtonEvent *event,
+                                   int x, int y);
 static void ProcessTaskMotionEvent(TrayComponentType *cp,
                                    int x, int y, int mask);
 static void SignalTaskbar(const TimeType *now, int x, int y, void *data);
@@ -129,7 +133,7 @@ TrayComponentType *CreateTaskBar(char border)
    cp->SetSize = SetSize;
    cp->Create = Create;
    cp->Resize = Resize;
-   cp->ProcessButtonPress = ProcessTaskButtonEvent;
+   cp->ProcessButtonEvent = ProcessTaskButtonEvent;
    cp->ProcessMotionEvent = ProcessTaskMotionEvent;
 
    RegisterCallback(settings.popupDelay / 2, SignalTaskbar, tp);
@@ -224,11 +228,14 @@ void Resize(TrayComponentType *cp)
 }
 
 /** Process a task list button event. */
-void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
+void ProcessTaskButtonEvent(TrayComponentType *cp,
+                            const XButtonEvent *event,
+                            int x, int y)
 {
 
    TaskBarType *bar = (TaskBarType*)cp->object;
    Node *np;
+   ActionDataType data;
 
    Assert(bar);
 
@@ -237,31 +244,14 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
    } else {
       np = GetNode(bar, y);
    }
+   data.client = np ? np->client : NULL;
+   data.x = event->x_root;
+   data.y = event->y_root;
+   data.desktop = currentDesktop;
+   data.ResizeFunc = ResizeClientKeyboard;
+   data.MoveFunc = MoveClientKeyboard;
 
-   if(np) {
-      switch(mask) {
-      case Button1:
-         if((np->client->state.status & STAT_ACTIVE) &&
-            !(np->client->state.status & STAT_MINIMIZED)) {
-            MinimizeClient(np->client, 1);
-         } else {
-            RestoreClient(np->client, 1);
-            FocusClient(np->client);
-         }
-         break;
-      case Button3:
-         ShowTaskWindowMenu(bar, np);
-         break;
-      case Button4:
-         FocusPrevious();
-         break;
-      case Button5:
-         FocusNext();
-         break;
-      default:
-         break;
-      }
-   }
+   RunMouseCommand(event, CONTEXT_TASK, &data);
 
 }
 

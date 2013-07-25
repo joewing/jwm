@@ -23,6 +23,7 @@
 #include "font.h"
 #include "settings.h"
 #include "event.h"
+#include "mouse.h"
 
 /** Structure to represent a pager tray component. */
 typedef struct PagerType {
@@ -55,12 +56,13 @@ static void SetSize(TrayComponentType *cp, int width, int height);
 static int GetPagerDesktop(PagerType *pp, int x, int y);
 
 static void ProcessPagerButtonEvent(TrayComponentType *cp,
-                                    int x, int y, int mask);
+                                    const XButtonEvent *event,
+                                    int x, int y);
 
 static void ProcessPagerMotionEvent(TrayComponentType *cp,
                                     int x, int y, int mask);
 
-static void StartPagerMove(TrayComponentType *cp, int x, int y);
+static char StartPagerMove(TrayComponentType *cp, int x, int y, char snap);
 
 static void StopPagerMove(ClientNode *np,
                           int x, int y, int desktop, int hmax, int vmax);
@@ -114,8 +116,7 @@ TrayComponentType *CreatePager(char labeled)
    pp->cp = cp;
    cp->Create = Create;
    cp->SetSize = SetSize;
-   cp->ProcessButtonPress = ProcessPagerButtonEvent;
-   cp->ProcessMotionEvent = ProcessPagerMotionEvent;
+   cp->ProcessButtonEvent = ProcessPagerButtonEvent;
 
    RegisterCallback(settings.popupDelay / 2, SignalPager, pp);
 
@@ -200,41 +201,19 @@ int GetPagerDesktop(PagerType *pp, int x, int y)
 }
 
 /** Process a button event on a pager tray component. */
-void ProcessPagerButtonEvent(TrayComponentType *cp, int x, int y, int mask)
+void ProcessPagerButtonEvent(TrayComponentType *cp,
+                             const XButtonEvent *event,
+                             int x, int y)
 {
-
-   PagerType *pp;
-
-   switch(mask) {
-   case Button1:
-   case Button2:
-
-      /* Change to the selected desktop. */
-      pp = (PagerType*)cp->object;
-      ChangeDesktop(GetPagerDesktop(pp, x, y));
-      break;
-
-   case Button3:
-
-      /* Move a client and possibly change its desktop. */
-      StartPagerMove(cp, x, y);
-      break;
-
-   case Button4:
-
-      /* Change to the previous desktop. */
-      LeftDesktop();
-      break;
-
-   case Button5:
-
-      /* Change to the next desktop. */
-      RightDesktop();
-      break;
-
-   default:
-      break;
-   }
+   PagerType *pp = (PagerType*)cp->object;
+   ActionDataType data;
+   data.client = NULL;
+   data.x = event->x_root;
+   data.y = event->y_root;
+   data.desktop = GetPagerDesktop(pp, x, y);
+   data.MoveFunc = StartPagerMove;
+   data.ResizeFunc = NULL;
+   RunMouseCommand(event, CONTEXT_PAGER, &data);
 }
 
 /** Process a motion event on a pager tray component. */
@@ -249,7 +228,7 @@ void ProcessPagerMotionEvent(TrayComponentType *cp, int x, int y, int mask)
 }
 
 /** Start a pager move operation. */
-void StartPagerMove(TrayComponentType *cp, int x, int y)
+char StartPagerMove(TrayComponentType *cp, int x, int y, char snap)
 {
 
    XEvent event;
@@ -340,7 +319,7 @@ void StartPagerMove(TrayComponentType *cp, int x, int y)
    }
 
    /* Client wasn't found. Just return. */
-   return;
+   return 0;
 
 ClientFound:
 
@@ -348,7 +327,7 @@ ClientFound:
 
    /* The selected client was found. Now make sure we can move it. */
    if(!(np->state.border & BORDER_MOVE)) {
-      return;
+      return 0;
    }
 
    /* If the client is maximized, unmaximize it. */
@@ -389,7 +368,7 @@ ClientFound:
 
       if(shouldStopMove) {
          np->controller = NULL;
-         return;
+         return 0;
       }
 
       switch(event.type) {
@@ -398,7 +377,7 @@ ClientFound:
          /* Done when the 3rd mouse button is released. */
          if(event.xbutton.button == Button3) {
             StopPagerMove(np, oldx, oldy, oldDesk, hmax, vmax);
-            return;
+            return 1;
          }
          break;
 

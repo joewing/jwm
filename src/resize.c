@@ -216,7 +216,7 @@ void ResizeClient(ClientNode *np, int startx, int starty)
 }
 
 /** Resize a client window (keyboard or menu initiated). */
-void ResizeClientKeyboard(ClientNode *np)
+void ResizeClientKeyboard(ClientNode *np, int startx, int starty)
 {
 
    XEvent event;

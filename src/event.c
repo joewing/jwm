@@ -33,6 +33,8 @@
 #include "pager.h"
 #include "grab.h"
 #include "mouse.h"
+#include "move.h"
+#include "resize.h"
 
 #define MIN_TIME_DELTA 50
 
@@ -50,7 +52,7 @@ static CallbackNode *callbacks = NULL;
 
 static void Signal();
 static void DispatchBorderButtonEvent(const XButtonEvent *event,
-                                      ClientNode *np);
+                                      const ActionDataType *data);
 
 static void HandleConfigureRequest(const XConfigureRequestEvent *event);
 static char HandleConfigureNotify(const XConfigureEvent *event);
@@ -294,7 +296,11 @@ void HandleButtonEvent(const XButtonEvent *event)
 {
 
    ClientNode *np;
-   int north, south, east, west;
+   ActionDataType data;
+
+   if(CheckMouseGrab(event)) {
+      return;
+   }
 
    np = FindClientByParent(event->window);
    if(np) {
@@ -304,9 +310,21 @@ void HandleButtonEvent(const XButtonEvent *event)
             FocusClient(np);
          }
       }
-      DispatchBorderButtonEvent(event, np);
+      data.client = np;
+      data.x = event->x_root;
+      data.y = event->y_root;
+      data.desktop = currentDesktop;
+      data.MoveFunc = MoveClient;
+      data.ResizeFunc = ResizeClient;
+      DispatchBorderButtonEvent(event, &data);
    } else if(event->window == rootWindow) {
-      RunMouseCommand(event, CONTEXT_ROOT);
+      data.client = NULL;
+      data.x = event->x_root;
+      data.y = event->y_root;
+      data.desktop = currentDesktop;
+      data.MoveFunc = MoveClient;
+      data.ResizeFunc = ResizeClient;
+      RunMouseCommand(event, CONTEXT_ROOT, &data);
    } else {
       np = FindClientByWindow(event->window);
       if(np) {
@@ -314,10 +332,15 @@ void HandleButtonEvent(const XButtonEvent *event)
          if(settings.focusModel == FOCUS_CLICK) {
             FocusClient(np);
          }
-         RunMouseCommand(event, CONTEXT_WINDOW);
+         data.client = np;
+         data.x = event->x_root;
+         data.y = event->y_root;
+         data.desktop = currentDesktop;
+         data.MoveFunc = MoveClient;
+         data.ResizeFunc = ResizeClient;
+         RunMouseCommand(event, CONTEXT_WINDOW, &data);
          JXAllowEvents(display, ReplayPointer, eventTime);
       }
-
    }
 
 }
@@ -1094,42 +1117,35 @@ char HandleDestroyNotify(const XDestroyWindowEvent *event)
 
 /** Take the appropriate action for a click on a client border. */
 void DispatchBorderButtonEvent(const XButtonEvent *event,
-                               ClientNode *np)
+                               const ActionDataType *data)
 {
 
-   BorderActionType action;
-   int bsize;
-
-   /* Determine the size of the border. */
-   if(np->state.border & BORDER_OUTLINE) {
-      bsize = settings.borderWidth;
-   } else {
-      bsize = 0;
-   }
-
-   /* Other buttons are context sensitive. */
+   const BorderActionType action = GetBorderActionType(data->client,
+                                                       event->x, event->y);
+   ContextType context = CONTEXT_NONE;
    switch(action & 0x0F) {
    case BA_RESIZE:   /* Border */
-      RunMouseCommand(event, CONTEXT_BORDER);
+      context = CONTEXT_BORDER;
       break;
    case BA_MOVE:     /* Title bar */
-      RunMouseCommand(event, CONTEXT_TITLE);
+      context = CONTEXT_TITLE;
       break;
    case BA_MENU:  /* Menu button */
-      RunMouseCommand(event, CONTEXT_MENU);
+      context = CONTEXT_MENU;
       break;
    case BA_CLOSE: /* Close button */
-      RunMouseCommand(event, CONTEXT_CLOSE);
+      context = CONTEXT_CLOSE;
       break;
    case BA_MAXIMIZE: /* Maximize button */
-      RunMouseCommand(event, CONTEXT_MAX);
+      context = CONTEXT_MAX;
       break;
    case BA_MINIMIZE: /* Minimize button */
-      RunMouseCommand(event, CONTEXT_MIN);
+      context = CONTEXT_MIN;
       break;
    default:
       break;
    }
+   RunMouseCommand(event, context, data);
 }
 
 /** Update window state information. */

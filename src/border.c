@@ -63,7 +63,6 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
 
    int north, south, east, west;
    int offset;
-   unsigned int resizeMask;
    const unsigned int titleHeight = settings.titleHeight;
 
    Assert(np);

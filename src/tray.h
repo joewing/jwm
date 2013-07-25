@@ -88,13 +88,15 @@ typedef struct TrayComponentType {
    /** Callback to resize the component. */
    void (*Resize)(struct TrayComponentType *cp);
 
-   /** Callback for mouse presses. */
-   void (*ProcessButtonPress)(struct TrayComponentType *cp,
-                              int x, int y, int mask);
-
-   /** Callback for mouse releases. */
-   void (*ProcessButtonRelease)(struct TrayComponentType *cp,
-                                int x, int y, int mask);
+   /** Callback for button events.
+    * @param cp The tray component.
+    * @param event The event that caused this callback.
+    * @param x The x-coordinate of the event relative to the component.
+    * @param y The y-coordinate of the event relative to the component.
+    */
+   void (*ProcessButtonEvent)(struct TrayComponentType *cp,
+                              const XButtonEvent *event,
+                              int x, int y);
 
    /** Callback for mouse motion. */
    void (*ProcessMotionEvent)(struct TrayComponentType *cp,

@@ -92,7 +92,7 @@ void MoveController(int wasDestroyed)
 }
 
 /** Move a client window. */
-char MoveClient(ClientNode *np, int startx, int starty, int snap)
+char MoveClient(ClientNode *np, int startx, int starty, char snap)
 {
 
    XEvent event;
@@ -225,7 +225,7 @@ char MoveClient(ClientNode *np, int startx, int starty, int snap)
 }
 
 /** Move a client window (keyboard or menu initiated). */
-char MoveClientKeyboard(ClientNode *np)
+char MoveClientKeyboard(ClientNode *np, int startx, int starty, char snap)
 {
 
    XEvent event;

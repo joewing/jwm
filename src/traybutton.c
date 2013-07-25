@@ -57,10 +57,10 @@ static void SetSize(TrayComponentType *cp, int width, int height);
 static void Resize(TrayComponentType *cp);
 static void Draw(TrayComponentType *cp, int active);
 
-static void ProcessButtonPress(TrayComponentType *cp,
-                               int x, int y, int mask);
-static void ProcessButtonRelease(TrayComponentType *cp,
-                                 int x, int y, int mask);
+static void ProcessButtonEvent(TrayComponentType *cp,
+                               const XButtonEvent *event,
+                               int x, int y);
+static void ProcessButtonRelease(const XButtonEvent *event, void *arg);
 static void ProcessMotionEvent(TrayComponentType *cp,
                                int x, int y, int mask);
 static void SignalTrayButton(const TimeType *now,
@@ -162,8 +162,7 @@ TrayComponentType *CreateTrayButton(const char *iconName,
    cp->SetSize = SetSize;
    cp->Resize = Resize;
 
-   cp->ProcessButtonPress = ProcessButtonPress;
-   cp->ProcessButtonRelease = ProcessButtonRelease;
+   cp->ProcessButtonEvent = ProcessButtonEvent;
    if(popup || label) {
       cp->ProcessMotionEvent = ProcessMotionEvent;
    }
@@ -301,8 +300,10 @@ void Draw(TrayComponentType *cp, int active)
 
 }
 
-/** Process a button press. */
-void ProcessButtonPress(TrayComponentType *cp, int x, int y, int mask)
+/** Process a button event. */
+void ProcessButtonEvent(TrayComponentType *cp,
+                        const XButtonEvent *event,
+                        int x, int y)
 {
 
    const ScreenType *sp;
@@ -350,42 +351,16 @@ void ProcessButtonPress(TrayComponentType *cp, int x, int y, int mask)
    Draw(cp, 1);
    UpdateSpecificTray(cp->tray, cp);
    ShowRootMenu(button, x, y);
-   Draw(cp, 0);
-   UpdateSpecificTray(cp->tray, cp);
 
 }
 
 /** Process a button release. */
-void ProcessButtonRelease(TrayComponentType *cp, int x, int y, int mask)
+void ProcessButtonRelease(const XButtonEvent *event, void *arg)
 {
-
-   TrayButtonType *bp = (TrayButtonType*)cp->object;
-
-   Assert(bp);
-
+   const TrayButtonType *bp = (TrayButtonType*)arg;
+   const TrayComponentType *cp = bp->cp;
    Draw(cp, 0);
    UpdateSpecificTray(cp->tray, cp);
-
-   // Since we grab the mouse, make sure the mouse is actually
-   // over the button.
-   if(x < 0 || x >= cp->width) {
-      return;
-   }
-   if(y < 0 || y >= cp->height) {
-      return;
-   }
-
-   // Run the tray button action (if any).
-   if(bp->action && strlen(bp->action) > 0) {
-      if(!strncmp(bp->action, "exec:", 5)) {
-         RunCommand(bp->action + 5);
-         return;
-      } else if(!strcmp(bp->action, "showdesktop")) {
-         ShowDesktop();
-         return;
-      }
-   }
-
 }
 
 /** Process a motion event. */

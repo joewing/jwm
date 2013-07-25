@@ -33,8 +33,7 @@ static void HandleTrayExpose(TrayType *tp, const XExposeEvent *event);
 static void HandleTrayEnterNotify(TrayType *tp, const XCrossingEvent *event);
 
 static TrayComponentType *GetTrayComponent(TrayType *tp, int x, int y);
-static void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event);
-static void HandleTrayButtonRelease(TrayType *tp, const XButtonEvent *event);
+static void HandleTrayButtonEvent(TrayType *tp, const XButtonEvent *event);
 static void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event);
 
 static void ComputeTraySize(TrayType *tp);
@@ -284,8 +283,7 @@ TrayComponentType *CreateTrayComponent()
    cp->SetSize = NULL;
    cp->Resize = NULL;
 
-   cp->ProcessButtonPress = NULL;
-   cp->ProcessButtonRelease = NULL;
+   cp->ProcessButtonEvent = NULL;
    cp->ProcessMotionEvent = NULL;
 
    cp->next = NULL;
@@ -656,10 +654,8 @@ char ProcessTrayEvent(const XEvent *event)
             HandleTrayEnterNotify(tp, &event->xcrossing);
             return 1;
          case ButtonPress:
-            HandleTrayButtonPress(tp, &event->xbutton);
-            return 1;
          case ButtonRelease:
-            HandleTrayButtonRelease(tp, &event->xbutton);
+            HandleTrayButtonEvent(tp, &event->xbutton);
             return 1;
          case MotionNotify:
             HandleTrayMotionNotify(tp, &event->xmotion);
@@ -728,52 +724,14 @@ TrayComponentType *GetTrayComponent(TrayType *tp, int x, int y)
 }
 
 /** Handle a button press on a tray. */
-void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event)
+void HandleTrayButtonEvent(TrayType *tp, const XButtonEvent *event)
 {
-
-   TrayComponentType *cp;
-   int x, y;
-   int mask;
-
-   cp = GetTrayComponent(tp, event->x, event->y);
-   if(cp && cp->ProcessButtonPress) {
-      x = event->x - cp->x;
-      y = event->y - cp->y;
-      mask = event->button;
-      (cp->ProcessButtonPress)(cp, x, y, mask);
+   TrayComponentType *cp = GetTrayComponent(tp, event->x, event->y);
+   if(cp && cp->ProcessButtonEvent) {
+      const int x = event->x - cp->x;
+      const int y = event->y - cp->y;
+      (cp->ProcessButtonEvent)(cp, event, x, y);
    }
-
-}
-
-/** Handle a button release on a tray. */
-void HandleTrayButtonRelease(TrayType *tp, const XButtonEvent *event)
-{
-
-   TrayComponentType *cp;
-   int x, y;
-   int mask;
-
-   // First inform any components that have a grab.
-   for(cp = tp->components; cp; cp = cp->next) {
-      if(cp->grabbed) {
-         x = event->x - cp->x;
-         y = event->y - cp->y;
-         mask = event->button;
-         (cp->ProcessButtonRelease)(cp, x, y, mask);
-         JXUngrabPointer(display, CurrentTime);
-         cp->grabbed = 0;
-         return;
-      }
-   }
-
-   cp = GetTrayComponent(tp, event->x, event->y);
-   if(cp && cp->ProcessButtonRelease) {
-      x = event->x - cp->x;
-      y = event->y - cp->y;
-      mask = event->button;
-      (cp->ProcessButtonRelease)(cp, x, y, mask);
-   }
-
 }
 
 /** Handle a motion notify event. */

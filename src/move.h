@@ -19,13 +19,17 @@ struct ClientNode;
  * @param snap 1 to do edge snapping, 0 otherwise.
  * @return 1 if the client moved, 0 otherwise.
  */
-char MoveClient(struct ClientNode *np, int startx, int starty, int snap);
+char MoveClient(struct ClientNode *np, int startx, int starty, char snap);
 
 /** Move a client window using the keyboard (mouse optional).
  * @param np The client to move.
+ * @param startx (ignored)
+ * @param starty (ignored)
+ * @param snap (ignored)
  * @return 1 if the client moved, 0 otherwise.
  */
-char MoveClientKeyboard(struct ClientNode *np);
+char MoveClientKeyboard(struct ClientNode *np, int startx, int starty,
+                        char snap);
 
 #endif /* MOVE_H */
 

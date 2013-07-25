@@ -304,10 +304,10 @@ void RunWindowCommand(const MenuAction *action)
       }
       break;
    case MA_MOVE:
-      MoveClientKeyboard(client);
+      MoveClientKeyboard(client, 0, 0, 0);
       break;
    case MA_RESIZE:
-      ResizeClientKeyboard(client);
+      ResizeClientKeyboard(client, 0, 0);
       break;
    case MA_KILL:
       KillClient(client);

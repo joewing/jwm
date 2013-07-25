@@ -14,6 +14,7 @@
 #include "binding.h"
 #include "client.h"
 #include "settings.h"
+#include "main.h"
 
 typedef struct MouseNode {
    int button;
@@ -26,6 +27,7 @@ typedef struct MouseNode {
 
 static MouseNode *bindings[CONTEXT_COUNT];
 static ReleaseCallback callback;
+static void *callbackArg;
 
 /** Initialize mouse bindings. */
 void InitializeMouse()
@@ -54,22 +56,32 @@ void DestroyMouse()
    }
 }
 
+/** Check for and process a mouse grab. */
+char CheckMouseGrab(const XButtonEvent *event)
+{
+   if(event->type == ButtonRelease && callback) {
+      JXUngrabPointer(display, CurrentTime);
+      (callback)(event->x, event->y);
+      callback = NULL;
+      return 1;
+   } else {
+      return 0;
+   }
+}
+
 /** Run mouse bindings for an event. */
-void RunMouseCommand(const XButtonEvent *event, ContextType context)
+void RunMouseCommand(const XButtonEvent *event,
+                     ContextType context,
+                     const ActionDataType *data)
 {
 
    static int lastX = 0, lastY = 0;
    static Time lastClickTime;
    static char doubleClickActive = 0;
-   const unsigned int state = event->state & lockMask;
-   int button;
-   ClientNode *np;
-   MouseNode *mp;
 
-   if(event->type == ButtonRelease && callback) {
-      (callback)(event->x, event->y);
-      callback = NULL;
-   }
+   const unsigned int state = event->state & lockMask;
+   MouseNode *mp;
+   int button;
 
    button = event->button;
    if(event->type == ButtonPress) {
@@ -88,11 +100,10 @@ void RunMouseCommand(const XButtonEvent *event, ContextType context)
       }
    }
 
-   np = FindClient(event->window);
    mp = bindings[context];
    while(mp) {
       if(button == mp->button && state == mp->state) {
-         RunAction(np, event->x_root, event->y_root, mp->action, mp->command);
+         RunAction(mp->action, mp->command, data);
       }
       mp = mp->next;
    }
@@ -100,9 +111,10 @@ void RunMouseCommand(const XButtonEvent *event, ContextType context)
 }
 
 /** Set the callback for a mouse grab. */
-void SetButtonReleaseCallback(ReleaseCallback c)
+void SetButtonReleaseCallback(ReleaseCallback c, void *a)
 {
    callback = c;
+   callbackArg = a;
 }
 
 /** Insert a mouse binding. */

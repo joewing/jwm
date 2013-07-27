@@ -20,6 +20,7 @@
 #include "event.h"
 #include "border.h"
 #include "settings.h"
+#include "binding.h"
 
 static char shouldStopResize;
 
@@ -41,10 +42,11 @@ void ResizeController(int wasDestroyed)
 }
 
 /** Resize a client window (mouse initiated). */
-void ResizeClient(ClientNode *np, int startx, int starty)
+void ResizeClient(const ActionDataType *ad, int startx, int starty)
 {
 
    XEvent event;
+   ClientNode *np;
    int oldx, oldy;
    int oldw, oldh;
    int gwidth, gheight;
@@ -54,6 +56,7 @@ void ResizeClient(ClientNode *np, int startx, int starty)
    int ratio, minr, maxr;
    BorderActionType action;
 
+   np = ad->client;
    Assert(np);
    Assert(np->state.border & BORDER_RESIZE);
 
@@ -216,16 +219,18 @@ void ResizeClient(ClientNode *np, int startx, int starty)
 }
 
 /** Resize a client window (keyboard or menu initiated). */
-void ResizeClientKeyboard(ClientNode *np, int startx, int starty)
+void ResizeClientKeyboard(const ActionDataType *ad, int startx, int starty)
 {
 
    XEvent event;
+   ClientNode *np;
    int gwidth, gheight;
    int lastgwidth, lastgheight;
    int north, south, east, west;
    int deltax, deltay;
    int ratio, minr, maxr;
 
+   np = ad->client;
    Assert(np);
 
    if(!(np->state.border & BORDER_RESIZE)) {

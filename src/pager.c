@@ -62,7 +62,8 @@ static void ProcessPagerButtonEvent(TrayComponentType *cp,
 static void ProcessPagerMotionEvent(TrayComponentType *cp,
                                     int x, int y, int mask);
 
-static char StartPagerMove(TrayComponentType *cp, int x, int y, char snap);
+static void StartPagerMove(const ActionDataType *ad,
+                           int x, int y, char snap);
 
 static void StopPagerMove(ClientNode *np,
                           int x, int y, int desktop, int hmax, int vmax);
@@ -117,6 +118,7 @@ TrayComponentType *CreatePager(char labeled)
    cp->Create = Create;
    cp->SetSize = SetSize;
    cp->ProcessButtonEvent = ProcessPagerButtonEvent;
+   cp->ProcessMotionEvent = ProcessPagerMotionEvent;
 
    RegisterCallback(settings.popupDelay / 2, SignalPager, pp);
 
@@ -213,6 +215,7 @@ void ProcessPagerButtonEvent(TrayComponentType *cp,
    data.desktop = GetPagerDesktop(pp, x, y);
    data.MoveFunc = StartPagerMove;
    data.ResizeFunc = NULL;
+   data.arg = cp;
    RunMouseCommand(event, CONTEXT_PAGER, &data);
 }
 
@@ -228,12 +231,13 @@ void ProcessPagerMotionEvent(TrayComponentType *cp, int x, int y, int mask)
 }
 
 /** Start a pager move operation. */
-char StartPagerMove(TrayComponentType *cp, int x, int y, char snap)
+void StartPagerMove(const ActionDataType *ad, int x, int y, char snap)
 {
 
    XEvent event;
    PagerType *pp;
    ClientNode *np;
+   TrayComponentType *cp;
    int layer;
    int desktop;
    int cx, cy;
@@ -245,6 +249,7 @@ char StartPagerMove(TrayComponentType *cp, int x, int y, char snap)
    int startx, starty;
    char hmax, vmax;
 
+   cp = (TrayComponentType*)ad->arg;
    pp = (PagerType*)cp->object;
 
    /* Determine the selected desktop. */
@@ -319,7 +324,7 @@ char StartPagerMove(TrayComponentType *cp, int x, int y, char snap)
    }
 
    /* Client wasn't found. Just return. */
-   return 0;
+   return;
 
 ClientFound:
 
@@ -327,7 +332,7 @@ ClientFound:
 
    /* The selected client was found. Now make sure we can move it. */
    if(!(np->state.border & BORDER_MOVE)) {
-      return 0;
+      return;
    }
 
    /* If the client is maximized, unmaximize it. */
@@ -368,7 +373,7 @@ ClientFound:
 
       if(shouldStopMove) {
          np->controller = NULL;
-         return 0;
+         return;
       }
 
       switch(event.type) {
@@ -377,7 +382,7 @@ ClientFound:
          /* Done when the 3rd mouse button is released. */
          if(event.xbutton.button == Button3) {
             StopPagerMove(np, oldx, oldy, oldDesk, hmax, vmax);
-            return 1;
+            return;
          }
          break;
 

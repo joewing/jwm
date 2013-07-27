@@ -26,6 +26,7 @@
 #include "desktop.h"
 #include "settings.h"
 #include "timing.h"
+#include "binding.h"
 
 typedef struct {
    int left, right;
@@ -92,20 +93,22 @@ void MoveController(int wasDestroyed)
 }
 
 /** Move a client window. */
-char MoveClient(ClientNode *np, int startx, int starty, char snap)
+void MoveClient(const ActionDataType *ad, int startx, int starty, char snap)
 {
 
    XEvent event;
+   ClientNode *np;
    int oldx, oldy;
    int doMove;
    int north, south, east, west;
    int height;
    int hmax, vmax;
 
+   np = ad->client;
    Assert(np);
 
    if(!(np->state.border & BORDER_MOVE)) {
-      return 0;
+      return;
    }
 
    GrabMouseForMove();
@@ -121,7 +124,7 @@ char MoveClient(ClientNode *np, int startx, int starty, char snap)
 
    if(!(GetMouseMask() & (Button1Mask | Button2Mask))) {
       StopMove(np, 0, oldx, oldy, 0, 0);
-      return 0;
+      return;
    }
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
@@ -140,7 +143,7 @@ char MoveClient(ClientNode *np, int startx, int starty, char snap)
          np->controller = NULL;
          SetDefaultCursor(np->parent);
          UnregisterCallback(SignalMove, NULL);
-         return doMove;
+         return;
       }
 
       switch(event.type) {
@@ -148,7 +151,7 @@ char MoveClient(ClientNode *np, int startx, int starty, char snap)
          if(event.xbutton.button == Button1
             || event.xbutton.button == Button2) {
             StopMove(np, doMove, oldx, oldy, hmax, vmax);
-            return doMove;
+            return;
          }
          break;
       case MotionNotify:
@@ -225,20 +228,23 @@ char MoveClient(ClientNode *np, int startx, int starty, char snap)
 }
 
 /** Move a client window (keyboard or menu initiated). */
-char MoveClientKeyboard(ClientNode *np, int startx, int starty, char snap)
+void MoveClientKeyboard(const ActionDataType *ad,
+                        int startx, int starty, char snap)
 {
 
    XEvent event;
+   ClientNode *np;
    int oldx, oldy;
    int moved;
    int height;
    int north, south, east, west;
    int hmax, vmax;
 
+   np = ad->client;
    Assert(np);
 
    if(!(np->state.border & BORDER_MOVE)) {
-      return 0;
+      return;
    }
 
    hmax = 0;
@@ -256,7 +262,7 @@ char MoveClientKeyboard(ClientNode *np, int startx, int starty, char snap)
    if(JUNLIKELY(JXGrabKeyboard(display, np->parent, True, GrabModeAsync,
                                GrabModeAsync, CurrentTime))) {
       Debug("MoveClient: could not grab keyboard");
-      return 0;
+      return;
    }
    GrabMouseForMove();
 
@@ -289,7 +295,7 @@ char MoveClientKeyboard(ClientNode *np, int startx, int starty, char snap)
          np->controller = NULL;
          SetDefaultCursor(np->parent);
          UnregisterCallback(SignalMove, NULL);
-         return 1;
+         return;
       }
 
       moved = 0;
@@ -320,7 +326,7 @@ char MoveClientKeyboard(ClientNode *np, int startx, int starty, char snap)
             break;
          default:
             StopMove(np, 1, oldx, oldy, hmax, vmax);
-            return 1;
+            return;
          }
 
          MoveMouse(rootWindow, np->x, np->y);
@@ -340,7 +346,7 @@ char MoveClientKeyboard(ClientNode *np, int startx, int starty, char snap)
       } else if(event.type == ButtonRelease) {
 
          StopMove(np, 1, oldx, oldy, hmax, vmax);
-         return 1;
+         return;
 
       }
 

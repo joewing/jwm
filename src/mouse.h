@@ -31,7 +31,7 @@ typedef unsigned char ContextType;
 
 #define CONTEXT_COUNT         13
 
-typedef void (*ReleaseCallback)(int x, int y);
+typedef void (*ReleaseCallback)(void *arg, int x, int y);
 
 /*@{*/
 void InitializeMouse();

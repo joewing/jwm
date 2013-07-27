@@ -27,6 +27,10 @@
 #include "cursor.h"
 #include "settings.h"
 #include "event.h"
+#include "mouse.h"
+#include "binding.h"
+#include "move.h"
+#include "resize.h"
 
 #define BUTTON_SIZE 4
 
@@ -306,51 +310,25 @@ void ProcessButtonEvent(TrayComponentType *cp,
                         int x, int y)
 {
 
-   const ScreenType *sp;
-   int mwidth, mheight;
-   int button;
-
    TrayButtonType *bp = (TrayButtonType*)cp->object;
+   ActionDataType data;
 
-   Assert(bp);
-
-   if(bp->action && strlen(bp->action) > 0) {
-      if(strncmp(bp->action, "root:", 5)) {
-         GrabMouse(cp->tray->window);
-         cp->grabbed = 1;
-         Draw(cp, 1);
-         UpdateSpecificTray(cp->tray, cp);
-         return;
-      } else {
-         button = atoi(bp->action + 5);
-      }
-   } else {
-      button = 1;
-   }
-
-   GetRootMenuSize(button, &mwidth, &mheight);
-
-   sp = GetCurrentScreen(cp->screenx, cp->screeny);
-
-   if(cp->tray->layout == LAYOUT_HORIZONTAL) {
-      x = cp->screenx;
-      if(cp->screeny + cp->height / 2 < sp->y + sp->height / 2) {
-         y = cp->screeny + cp->height;
-      } else {
-         y = cp->screeny - mheight;
-      }
-   } else {
-      y = cp->screeny;
-      if(cp->screenx + cp->width / 2 < sp->x + sp->width / 2) {
-         x = cp->screenx + cp->width;
-      } else {
-         x = cp->screenx - mwidth;
-      }
-   }
+   data.client = NULL;
+   data.x = event->x_root;
+   data.y = event->y_root;
+   data.desktop = currentDesktop;
+   data.MoveFunc = MoveClientKeyboard;
+   data.ResizeFunc = ResizeClientKeyboard;
 
    Draw(cp, 1);
    UpdateSpecificTray(cp->tray, cp);
-   ShowRootMenu(button, x, y);
+
+   if(RunMouseCommand(event, CONTEXT_TASK, &data)) {
+      Draw(cp, 0);
+      UpdateSpecificTray(cp->tray, cp);
+   } else {
+      SetButtonReleaseCallback(ProcessButtonRelease, bp);
+   }
 
 }
 
@@ -358,7 +336,7 @@ void ProcessButtonEvent(TrayComponentType *cp,
 void ProcessButtonRelease(const XButtonEvent *event, void *arg)
 {
    const TrayButtonType *bp = (TrayButtonType*)arg;
-   const TrayComponentType *cp = bp->cp;
+   TrayComponentType *cp = bp->cp;
    Draw(cp, 0);
    UpdateSpecificTray(cp->tray, cp);
 }

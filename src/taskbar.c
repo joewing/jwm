@@ -66,7 +66,6 @@ static unsigned int GetItemCount();
 static unsigned int GetItemWidth(const TaskBarType *bp,
                                  unsigned int itemCount);
 static void Render(const TaskBarType *bp);
-static void ShowTaskWindowMenu(TaskBarType *bar, Node *np);
 
 static void SetSize(TrayComponentType *cp, int width, int height);
 static void Create(TrayComponentType *cp);
@@ -262,39 +261,6 @@ void ProcessTaskMotionEvent(TrayComponentType *cp, int x, int y, int mask)
    bp->mousex = cp->screenx + x;
    bp->mousey = cp->screeny + y;
    GetCurrentTime(&bp->mouseTime);
-}
-
-/** Show the menu associated with a task list item. */
-void ShowTaskWindowMenu(TaskBarType *bar, Node *np)
-{
-
-   int x, y;
-   int mwidth, mheight;
-   const ScreenType *sp;
-
-   GetWindowMenuSize(np->client, &mwidth, &mheight);
-
-   sp = GetCurrentScreen(bar->cp->screenx, bar->cp->screeny);
-
-   if(bar->layout == LAYOUT_HORIZONTAL) {
-      GetMousePosition(&x, &y);
-      if(bar->cp->screeny + bar->cp->height / 2 < sp->y + sp->height / 2) {
-         y = bar->cp->screeny + bar->cp->height;
-      } else {
-         y = bar->cp->screeny - mheight;
-      }
-      x -= mwidth / 2;
-   } else {
-      if(bar->cp->screenx + bar->cp->width / 2 < sp->x + sp->width / 2) {
-         x = bar->cp->screenx + bar->cp->width;
-      } else {
-         x = bar->cp->screenx - mwidth;
-      }
-      y = bar->cp->screeny + np->y;
-   }
-
-   ShowWindowMenu(np->client, x, y);
-
 }
 
 /** Add a client to the task bar. */

@@ -48,14 +48,15 @@ typedef unsigned char ActionType;
 #define ACTION_SENDUP         31
 #define ACTION_SENDDOWN       32
 
-typedef struct {
+typedef struct ActionDataType {
 
    struct ClientNode *client;
+   void *arg;
    int desktop;
    int x;
    int y;
-   char (*MoveFunc)(struct ClientNode *np, int x, int y, char snap);
-   void (*ResizeFunc)(struct ClientNode *np, int x, int y);
+   void (*MoveFunc)(const struct ActionDataType *ad, int x, int y, char snap);
+   void (*ResizeFunc)(const struct ActionDataType *ad, int x, int y);
 
 } ActionDataType;
 

@@ -99,15 +99,15 @@ char RunAction(ActionType action,
       return 0;
    case ACTION_MOVE:
       if(data->client && data->MoveFunc) {
-         (data->MoveFunc)(data->client, data->x - data->client->x,
-                             data->y - data->client->y, 1);
+         (data->MoveFunc)(data, data->x - data->client->x,
+                          data->y - data->client->y, 1);
       }
-      return 0;
+      return 1;
    case ACTION_RESIZE:
       if(data->client && data->ResizeFunc) {
-         (data->ResizeFunc)(data->client, data->x, data->y);
+         (data->ResizeFunc)(data, data->x, data->y);
       }
-      return 0;
+      return 1;
    case ACTION_MIN:
       if(data->client) {
          if(arg) {

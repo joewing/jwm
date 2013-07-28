@@ -140,7 +140,7 @@ void InsertMouseBinding(ContextType context,
    mp->action           = *action;
    mp->state            = ParseModifierString(modifiers);
 
-   switch(mp->action.action) {
+   switch(mp->action.type) {
    case ACTION_ROOT:
    case ACTION_WIN:
    case ACTION_MOVE:

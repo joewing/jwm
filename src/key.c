@@ -116,7 +116,7 @@ void StartupKeys()
       }
 
       /* Grab the key if needed. */
-      if(ShouldGrab(np->action.action)) {
+      if(ShouldGrab(np->action.type)) {
 
          /* Grab on the root. */
          GrabKey(np, rootWindow);
@@ -217,7 +217,7 @@ ActionType GetKey(const XKeyEvent *event)
    /* Loop looking for a matching key binding. */
    for(np = bindings; np; np = np->next) {
       if(np->state == state && np->code == event->keycode) {
-         return np->action.action;
+         return np->action.type;
       }
    }
 
@@ -244,8 +244,8 @@ void RunKeyCommand(const XKeyEvent *event)
          if(event->type == KeyPress) {
             RunAction(&ac, &kp->action);
          } else {
-            if(kp->action.action != ACTION_NEXTSTACK &&
-               kp->action.action != ACTION_PREVSTACK) {
+            if(kp->action.type != ACTION_NEXTSTACK &&
+               kp->action.type != ACTION_PREVSTACK) {
                StopWindowStackWalk();
             }
          }
@@ -279,7 +279,7 @@ void GrabKeys(ClientNode *np)
    KeyNode *kp;
 
    for(kp = bindings; kp; kp = kp->next) {
-      if(ShouldGrab(kp->action.action)) {
+      if(ShouldGrab(kp->action.type)) {
          GrabKey(kp, np->window);
       }
    }

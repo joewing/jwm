@@ -30,8 +30,6 @@ static void ExitHandler(ClientNode *np);
 static void PatchRootMenu(Menu *menu);
 static void UnpatchRootMenu(Menu *menu);
 
-static void RunRootCommand(const MenuAction *action);
-
 /** Initialize root menu data. */
 void InitializeRootMenu()
 {
@@ -158,12 +156,18 @@ void GetRootMenuSize(int index, int *width, int *height)
 char ShowRootMenu(int index, int x, int y)
 {
 
+   ActionContext ac;
+
    if(!rootMenu[index]) {
       return 0;
    }
 
+   InitActionContext(&ac);
+   ac.x = x;
+   ac.y = y;
+
    PatchRootMenu(rootMenu[index]);
-   ShowMenu(rootMenu[index], RunRootCommand, x, y);
+   ShowMenu(&ac, rootMenu[index]);
    UnpatchRootMenu(rootMenu[index]);
 
    return 1;
@@ -180,7 +184,7 @@ void PatchRootMenu(Menu *menu)
       if(item->submenu) {
          PatchRootMenu(item->submenu);
       }
-      if(item->action.type == MA_DESKTOP) {
+      if(item->action.type == ACTION_DESKTOP && item->action.arg == NULL) {
          item->submenu = CreateDesktopMenu(1 << currentDesktop);
          InitializeMenu(item->submenu);
       }
@@ -194,7 +198,7 @@ void UnpatchRootMenu(Menu *menu) {
    MenuItem *item;
 
    for(item = menu->items; item; item = item->next) {
-      if(item->action.type == MA_DESKTOP) {
+      if(item->action.type == ACTION_DESKTOP && item->action.arg == NULL) {
          DestroyMenu(item->submenu);
          item->submenu = NULL;
       } else if(item->submenu) {
@@ -242,48 +246,5 @@ void ReloadMenu()
       StartupRootMenu();
       shouldReload = 0;
    }
-}
-
-/** Root menu callback. */
-void RunRootCommand(const MenuAction *action)
-{
-
-   switch(action->type) {
-
-   case MA_EXECUTE:
-      RunCommand(action->data.str);
-      break;
-   case MA_RESTART:
-      Restart();
-      break;
-   case MA_EXIT:
-      if(exitCommand) {
-         Release(exitCommand);
-      }
-      exitCommand = CopyString(action->data.str);
-      Exit();
-      break;
-   case MA_DESKTOP:
-      ChangeDesktop(action->data.i);
-      break;
-
-   case MA_SENDTO:
-   case MA_LAYER:
-   case MA_MAXIMIZE:
-   case MA_MINIMIZE:
-   case MA_RESTORE:
-   case MA_SHADE:
-   case MA_MOVE:
-   case MA_RESIZE:
-   case MA_KILL:
-   case MA_CLOSE:
-      ChooseWindow(action);
-      break;
-
-   default:
-      Debug("invalid RunRootCommand action: %d", action->type);
-      break;
-   }
-
 }
 

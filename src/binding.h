@@ -53,10 +53,12 @@ typedef unsigned char ActionType;
 #define ACTION_LEFT           36    /**< Right key */
 #define ACTION_UP             37    /**< Up key */
 #define ACTION_DOWN           38    /**< Down key */
+#define ACTION_KILL           39    /**< Kill a window */
+#define ACTION_LAYER          40    /**< Set window layer */
 
 typedef struct {
    char *arg;
-   ActionType action;
+   ActionType type;
 } ActionNode;
 
 typedef struct ActionContext {

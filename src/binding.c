@@ -36,7 +36,7 @@ char RunAction(const ActionContext *context,
                const ActionNode *action)
 {
    char value;
-   switch(action->action) {
+   switch(action->type) {
    case ACTION_EXEC:
       RunCommand(action->arg);
       return 0;
@@ -82,6 +82,11 @@ char RunAction(const ActionContext *context,
    case ACTION_CLOSE:
       if(context->client) {
          DeleteClient(context->client);
+      }
+      return 0;
+   case ACTION_KILL:
+      if(context->client) {
+         KillClient(context->client);
       }
       return 0;
    case ACTION_SHADE:
@@ -188,6 +193,11 @@ char RunAction(const ActionContext *context,
    case ACTION_SENDDOWN:
       if(context->client) {
          SetClientDesktop(context->client, GetBelowDesktop());
+      }
+      return 0;
+   case ACTION_LAYER:
+      if(context->client && action->arg) {
+         SetClientLayer(context->client, atoi(action->arg));
       }
       return 0;
    default:

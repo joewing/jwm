@@ -234,7 +234,7 @@ void ProcessTaskButtonEvent(TrayComponentType *cp,
 
    TaskBarType *bar = (TaskBarType*)cp->object;
    Node *np;
-   ActionDataType data;
+   ActionContext context;
 
    Assert(bar);
 
@@ -243,14 +243,14 @@ void ProcessTaskButtonEvent(TrayComponentType *cp,
    } else {
       np = GetNode(bar, y);
    }
-   data.client = np ? np->client : NULL;
-   data.x = event->x_root;
-   data.y = event->y_root;
-   data.desktop = currentDesktop;
-   data.ResizeFunc = ResizeClientKeyboard;
-   data.MoveFunc = MoveClientKeyboard;
+   InitActionContext(&context);
+   context.client = np ? np->client : NULL;
+   context.x = event->x_root;
+   context.y = event->y_root;
+   context.ResizeFunc = ResizeClientKeyboard;
+   context.MoveFunc = MoveClientKeyboard;
 
-   RunMouseCommand(event, CONTEXT_TASK, &data);
+   RunMouseCommand(event, CONTEXT_TASK, &context);
 
 }
 

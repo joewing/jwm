@@ -565,7 +565,7 @@ MenuItem *InsertMenuItem(MenuItem *last) {
    item->name = NULL;
    item->type = MENU_ITEM_NORMAL;
    item->iconName = NULL;
-   item->action.action = ACTION_NONE;
+   item->action.type = ACTION_NONE;
    item->action.arg = NULL;
    item->submenu = NULL;
 
@@ -1797,7 +1797,7 @@ static char ParseAction(const TokenNode *tp, ActionNode *np)
 
       value += 1;
       arg = strchr(value, ':');
-      np->action = ACTION_NONE;
+      np->type = ACTION_NONE;
       if(arg) {
          len = (size_t)(arg - value);
          np->arg = CopyString(arg + 1);
@@ -1807,7 +1807,7 @@ static char ParseAction(const TokenNode *tp, ActionNode *np)
 
       for(x = 0; ACTION_MAP[x].name; x++) {
          if(!strncmp(value, ACTION_MAP[x].name, len)) {
-            np->action = ACTION_MAP[x].action;
+            np->type = ACTION_MAP[x].action;
             return 1;
          }
       }
@@ -1820,7 +1820,7 @@ static char ParseAction(const TokenNode *tp, ActionNode *np)
 
    } else {
 
-      np->action = ACTION_EXEC;
+      np->type = ACTION_EXEC;
       np->arg = CopyString(value);
       return 1;
 

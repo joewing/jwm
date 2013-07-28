@@ -22,14 +22,12 @@
 #include "settings.h"
 
 static Menu *CreateWindowMenu();
-static void RunWindowCommand(const MenuAction *action);
-
 static void CreateWindowLayerMenu(Menu *menu);
 static void CreateWindowSendToMenu(Menu *menu);
 static void AddWindowMenuItem(Menu *menu,
                               const char *name,
-                              MenuActionType type,
-                              int value);
+                              ActionType type,
+                              const char *value);
 
 static ClientNode *client = NULL;
 
@@ -53,13 +51,20 @@ void ShowWindowMenu(ClientNode *np, int x, int y)
 {
 
    Menu *menu;
+   ActionContext context;
 
-   client = np;
+   InitActionContext(&context);
+   context.client = np;
+   context.x = x;
+   context.y = y;
+   context.MoveFunc = MoveClient;
+   context.ResizeFunc = ResizeClient;
+
    menu = CreateWindowMenu();
 
    InitializeMenu(menu);
 
-   ShowMenu(menu, RunWindowCommand, x, y);
+   ShowMenu(&context, menu);
 
    DestroyMenu(menu);
 
@@ -79,49 +84,49 @@ Menu *CreateWindowMenu()
    /* Note that items are added in reverse order of display. */
 
    if(!(client->state.status & STAT_WMDIALOG)) {
-      AddWindowMenuItem(menu, _("Close"), MA_CLOSE, 0);
-      AddWindowMenuItem(menu, _("Kill"), MA_KILL, 0);
-      AddWindowMenuItem(menu, NULL, MA_NONE, 0);
+      AddWindowMenuItem(menu, _("Close"), ACTION_CLOSE, NULL);
+      AddWindowMenuItem(menu, _("Kill"), ACTION_KILL, NULL);
+      AddWindowMenuItem(menu, NULL, ACTION_NONE, NULL);
    }
 
    if(!(client->state.status & (STAT_MINIMIZED | STAT_VMAX | STAT_HMAX))) {
       if(client->state.status & (STAT_MAPPED | STAT_SHADED)) {
          if(client->state.border & BORDER_RESIZE) {
-            AddWindowMenuItem(menu, _("Resize"), MA_RESIZE, 0);
+            AddWindowMenuItem(menu, _("Resize"), ACTION_RESIZE, NULL);
          }
          if(client->state.border & BORDER_MOVE) {
-            AddWindowMenuItem(menu, _("Move"), MA_MOVE, 0);
+            AddWindowMenuItem(menu, _("Move"), ACTION_MOVE, NULL);
          }
       }
    }
 
    if(client->state.status & STAT_MINIMIZED) {
-      AddWindowMenuItem(menu, _("Restore"), MA_RESTORE, 0);
+      AddWindowMenuItem(menu, _("Restore"), ACTION_MIN, NULL);
    } else if(client->state.border & BORDER_MIN) {
-      AddWindowMenuItem(menu, _("Minimize"), MA_MINIMIZE, 0);
+      AddWindowMenuItem(menu, _("Minimize"), ACTION_MIN, NULL);
    }
 
    if(client->state.status & STAT_SHADED) {
-      AddWindowMenuItem(menu, _("Unshade"), MA_SHADE, 0);
+      AddWindowMenuItem(menu, _("Unshade"), ACTION_SHADE, NULL);
    } else if(client->state.border & BORDER_SHADE) {
-      AddWindowMenuItem(menu, _("Shade"), MA_SHADE, 0);
+      AddWindowMenuItem(menu, _("Shade"), ACTION_SHADE, NULL);
    }
 
    if((client->state.border & BORDER_MAX)
       && (client->state.status & (STAT_MAPPED | STAT_SHADED))) {
 
       if(!(client->state.status & (STAT_HMAX | STAT_VMAX))) {
-         AddWindowMenuItem(menu, _("Maximize-y"), MA_MAXIMIZE_V, 0);
+         AddWindowMenuItem(menu, _("Maximize-y"), ACTION_VMAX, NULL);
       }
 
       if(!(client->state.status & (STAT_HMAX | STAT_VMAX))) {
-         AddWindowMenuItem(menu, _("Maximize-x"), MA_MAXIMIZE_H, 0);
+         AddWindowMenuItem(menu, _("Maximize-x"), ACTION_HMAX, NULL);
       }
 
       if((client->state.status & (STAT_HMAX | STAT_VMAX))) {
-         AddWindowMenuItem(menu, _("Restore"), MA_MAXIMIZE, 0);
+         AddWindowMenuItem(menu, _("Restore"), ACTION_MAX, NULL);
       } else {
-         AddWindowMenuItem(menu, _("Maximize"), MA_MAXIMIZE, 0);
+         AddWindowMenuItem(menu, _("Maximize"), ACTION_MAX, NULL);
       }
 
    }
@@ -129,9 +134,9 @@ Menu *CreateWindowMenu()
    if(!(client->state.status & STAT_WMDIALOG)) {
 
       if(client->state.status & STAT_STICKY) {
-         AddWindowMenuItem(menu, _("Unstick"), MA_STICK, 0);
+         AddWindowMenuItem(menu, _("Unstick"), ACTION_STICK, NULL);
       } else {
-         AddWindowMenuItem(menu, _("Stick"), MA_STICK, 0);
+         AddWindowMenuItem(menu, _("Stick"), ACTION_STICK, NULL);
       }
 
       CreateWindowLayerMenu(menu);
@@ -155,8 +160,8 @@ void CreateWindowLayerMenu(Menu *menu)
    item = Allocate(sizeof(MenuItem));
    item->type = MENU_ITEM_SUBMENU;
    item->name = CopyString(_("Layer"));
-   item->action = ACTION_NONE;
-   item->arg = NULL;
+   item->action.type = ACTION_NONE;
+   item->action.arg = NULL;
    item->iconName = NULL;
 
    item->next = menu->items;
@@ -169,19 +174,25 @@ void CreateWindowLayerMenu(Menu *menu)
    submenu->label = NULL;
 
    if(client->state.layer == LAYER_ABOVE) {
-      AddWindowMenuItem(submenu, _("[Above]"), MA_LAYER, LAYER_ABOVE);
+      AddWindowMenuItem(submenu, _("[Above]"), ACTION_LAYER,
+                        (LAYER_ABOVE));
    } else {
-      AddWindowMenuItem(submenu, _("Above"), MA_LAYER, LAYER_ABOVE);
+      AddWindowMenuItem(submenu, _("Above"), ACTION_LAYER,
+                        (LAYER_ABOVE));
    }
    if(client->state.layer == LAYER_NORMAL) {
-      AddWindowMenuItem(submenu, _("[Normal]"), MA_LAYER, LAYER_NORMAL);
+      AddWindowMenuItem(submenu, _("[Normal]"), ACTION_LAYER,
+                        (LAYER_NORMAL));
    } else {
-      AddWindowMenuItem(submenu, _("Normal"), MA_LAYER, LAYER_NORMAL);
+      AddWindowMenuItem(submenu, _("Normal"), ACTION_LAYER,
+                        (LAYER_NORMAL));
    }
    if(client->state.layer == LAYER_BELOW) {
-      AddWindowMenuItem(submenu, _("[Below]"), MA_LAYER, LAYER_BELOW);
+      AddWindowMenuItem(submenu, _("[Below]"), ACTION_LAYER,
+                        (LAYER_BELOW));
    } else {
-      AddWindowMenuItem(submenu, _("Below"), MA_LAYER, LAYER_BELOW);
+      AddWindowMenuItem(submenu, _("Below"), ACTION_LAYER,
+                        (LAYER_BELOW));
    }
 
 }
@@ -251,7 +262,7 @@ void ChooseWindow(const ActionContext *context,
             np = FindClient(event.xbutton.subwindow);
             if(np) {
                client = np;
-               RunWindowCommand(action);
+               RunCommand(context, action);
             }
          }
          break;
@@ -262,66 +273,6 @@ void ChooseWindow(const ActionContext *context,
    }
 
    JXUngrabPointer(display, CurrentTime);
-
-}
-
-/** Window menu action callback. */
-void RunWindowCommand(const ActionDataType *ad, ActionType action)
-{
-
-   switch(action) {
-   case MA_STICK:
-      if(client->state.status & STAT_STICKY) {
-         SetClientSticky(client, 0);
-      } else {
-         SetClientSticky(client, 1);
-      }
-      break;
-   case MA_MAXIMIZE:
-      MaximizeClient(client, 1, 1);
-      break;
-   case MA_MAXIMIZE_H:
-      MaximizeClient(client, 1, 0);
-      break;
-   case MA_MAXIMIZE_V:
-      MaximizeClient(client, 0, 1);
-      break;
-   case MA_MINIMIZE:
-      MinimizeClient(client, 1);
-      break;
-   case MA_RESTORE:
-      RestoreClient(client, 1);
-      break;
-   case MA_CLOSE:
-      DeleteClient(client);
-      break;
-   case MA_SENDTO:
-   case MA_DESKTOP:
-      SetClientDesktop(client, action->data.i);
-      break;
-   case MA_SHADE:
-      if(client->state.status & STAT_SHADED) {
-         UnshadeClient(client);
-      } else {
-         ShadeClient(client);
-      }
-      break;
-   case MA_MOVE:
-      MoveClientKeyboard(client, 0, 0, 0);
-      break;
-   case MA_RESIZE:
-      ResizeClientKeyboard(client, 0, 0);
-      break;
-   case MA_KILL:
-      KillClient(client);
-      break;
-   case MA_LAYER:
-      SetClientLayer(client, action->data.i);
-      break;
-   default:
-      Debug("unknown window command: %d", action->type);
-      break;
-   }
 
 }
 

@@ -222,7 +222,7 @@ Menu *CreateDesktopMenu(unsigned int mask)
       item->next = menu->items;
       menu->items = item;
 
-      item->action.action = ACTION_DESKTOP;
+      item->action.type = ACTION_DESKTOP;
       item->action.arg = Allocate(4);
       sprintf(item->action.arg, "%d", x + 1);
 

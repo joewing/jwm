@@ -144,6 +144,8 @@
 #  define JUNLIKELY(x) (x)
 #endif
 
+#define STRINGIZE(x) #x
+
 #include "debug.h"
 #include "jxlib.h"
 

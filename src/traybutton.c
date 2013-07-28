@@ -311,19 +311,18 @@ void ProcessButtonEvent(TrayComponentType *cp,
 {
 
    TrayButtonType *bp = (TrayButtonType*)cp->object;
-   ActionDataType data;
+   ActionContext context;
 
-   data.client = NULL;
-   data.x = event->x_root;
-   data.y = event->y_root;
-   data.desktop = currentDesktop;
-   data.MoveFunc = MoveClientKeyboard;
-   data.ResizeFunc = ResizeClientKeyboard;
+   InitActionContext(&context);
+   context.x = event->x_root;
+   context.y = event->y_root;
+   context.MoveFunc = MoveClientKeyboard;
+   context.ResizeFunc = ResizeClientKeyboard;
 
    Draw(cp, 1);
    UpdateSpecificTray(cp->tray, cp);
 
-   if(RunMouseCommand(event, CONTEXT_TASK, &data)) {
+   if(RunMouseCommand(event, CONTEXT_TASK, &context)) {
       Draw(cp, 0);
       UpdateSpecificTray(cp->tray, cp);
    } else {

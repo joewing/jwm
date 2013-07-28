@@ -26,8 +26,10 @@ static void RunWindowCommand(const MenuAction *action);
 
 static void CreateWindowLayerMenu(Menu *menu);
 static void CreateWindowSendToMenu(Menu *menu);
-static void AddWindowMenuItem(Menu *menu, const char *name,
-                              MenuActionType type, int value);
+static void AddWindowMenuItem(Menu *menu,
+                              const char *name,
+                              MenuActionType type,
+                              int value);
 
 static ClientNode *client = NULL;
 
@@ -153,8 +155,8 @@ void CreateWindowLayerMenu(Menu *menu)
    item = Allocate(sizeof(MenuItem));
    item->type = MENU_ITEM_SUBMENU;
    item->name = CopyString(_("Layer"));
-   item->action.type = MA_NONE;
-   item->action.data.str = NULL;
+   item->action = ACTION_NONE;
+   item->arg = NULL;
    item->iconName = NULL;
 
    item->next = menu->items;
@@ -231,7 +233,8 @@ void AddWindowMenuItem(Menu *menu, const char *name,
 }
 
 /** Select a window for performing an action. */
-void ChooseWindow(const MenuAction *action)
+void ChooseWindow(const ActionContext *context,
+                  const ActionNode *action)
 {
 
    XEvent event;
@@ -263,10 +266,10 @@ void ChooseWindow(const MenuAction *action)
 }
 
 /** Window menu action callback. */
-void RunWindowCommand(const MenuAction *action)
+void RunWindowCommand(const ActionDataType *ad, ActionType action)
 {
 
-   switch(action->type) {
+   switch(action) {
    case MA_STICK:
       if(client->state.status & STAT_STICKY) {
          SetClientSticky(client, 0);

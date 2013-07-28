@@ -44,6 +44,7 @@ static const char *TOKEN_MAP[] = {
    "IconPath",
    "Inactive",
    "Include",
+   "Item",
    "JWM",
    "Key",
    "Kill",

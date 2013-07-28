@@ -41,6 +41,7 @@ typedef enum {
    TOK_ICONPATH,
    TOK_INACTIVE,
    TOK_INCLUDE,
+   TOK_ITEM,
    TOK_JWM,
    TOK_KEY,
    TOK_KILL,

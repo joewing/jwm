@@ -222,8 +222,9 @@ Menu *CreateDesktopMenu(unsigned int mask)
       item->next = menu->items;
       menu->items = item;
 
-      item->action.type = MA_DESKTOP;
-      item->action.data.i = x;
+      item->action.action = ACTION_DESKTOP;
+      item->action.arg = Allocate(4);
+      sprintf(item->action.arg, "%d", x + 1);
 
       item->name = Allocate(strlen(desktopNames[x]) + 3);
       if(mask & (1 << x)) {

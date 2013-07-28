@@ -93,7 +93,7 @@ void MoveController(int wasDestroyed)
 }
 
 /** Move a client window. */
-void MoveClient(const ActionDataType *ad, int startx, int starty, char snap)
+void MoveClient(const ActionContext *ac, int startx, int starty, char snap)
 {
 
    XEvent event;
@@ -104,7 +104,7 @@ void MoveClient(const ActionDataType *ad, int startx, int starty, char snap)
    int height;
    int hmax, vmax;
 
-   np = ad->client;
+   np = ac->client;
    Assert(np);
 
    if(!(np->state.border & BORDER_MOVE)) {
@@ -228,7 +228,7 @@ void MoveClient(const ActionDataType *ad, int startx, int starty, char snap)
 }
 
 /** Move a client window (keyboard or menu initiated). */
-void MoveClientKeyboard(const ActionDataType *ad,
+void MoveClientKeyboard(const ActionContext *ac,
                         int startx, int starty, char snap)
 {
 
@@ -240,7 +240,7 @@ void MoveClientKeyboard(const ActionDataType *ad,
    int north, south, east, west;
    int hmax, vmax;
 
-   np = ad->client;
+   np = ac->client;
    Assert(np);
 
    if(!(np->state.border & BORDER_MOVE)) {
@@ -304,22 +304,22 @@ void MoveClientKeyboard(const ActionDataType *ad,
 
          DiscardKeyEvents(&event, np->window);
          switch(GetKey(&event.xkey)) {
-         case KEY_UP:
+         case ACTION_UP:
             if(np->y + height > 0) {
                np->y -= 10;
             }
             break;
-         case KEY_DOWN:
+         case ACTION_DOWN:
             if(np->y < rootHeight) {
                np->y += 10;
             }
             break;
-         case KEY_RIGHT:
+         case ACTION_RIGHT:
             if(np->x < rootWidth) {
                np->x += 10;
             }
             break;
-         case KEY_LEFT:
+         case ACTION_LEFT:
             if(np->x + np->width > 0) {
                np->x -= 10;
             }

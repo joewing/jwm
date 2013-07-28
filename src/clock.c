@@ -213,14 +213,11 @@ void ProcessClockButtonEvent(TrayComponentType *cp,
                              const XButtonEvent *event,
                              int x, int y)
 {
-   ActionDataType data;
-   data.client = NULL;
-   data.x = event->x_root;
-   data.y = event->y_root;
-   data.desktop = currentDesktop;
-   data.MoveFunc = NULL;
-   data.ResizeFunc = NULL;
-   RunMouseCommand(event, CONTEXT_CLOCK, &data);
+   ActionContext ac;
+   InitActionContext(&ac);
+   ac.x = event->x_root;
+   ac.y = event->y_root;
+   RunMouseCommand(event, CONTEXT_CLOCK, &ac);
 }
 
 /** Process a motion event on a clock tray component. */

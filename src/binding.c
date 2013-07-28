@@ -19,21 +19,32 @@
 #include "taskbar.h"
 #include "winmenu.h"
 
+/** Initialize action context. */
+void InitActionContext(ActionContext *ac)
+{
+   ac->client = NULL;
+   ac->data = NULL;
+   ac->desktop = currentDesktop;
+   ac->x = 0;
+   ac->y = 0;
+   ac->MoveFunc = NULL;
+   ac->ResizeFunc = NULL;
+}
+
 /** Run an action. */
-char RunAction(ActionType action,
-               const char *arg,
-               const ActionDataType *data)
+char RunAction(const ActionContext *context,
+               const ActionNode *action)
 {
    char value;
-   switch(action) {
+   switch(action->action) {
    case ACTION_EXEC:
-      RunCommand(arg);
+      RunCommand(action->arg);
       return 0;
    case ACTION_DESKTOP:
-      if(arg) {
-         ChangeDesktop((unsigned int)atoi(arg));
+      if(action->arg) {
+         ChangeDesktop((unsigned int)atoi(action->arg));
       } else {
-         ChangeDesktop(data->desktop);
+         ChangeDesktop(context->desktop);
       }
       return 0;
    case ACTION_RDESKTOP:
@@ -69,70 +80,71 @@ char RunAction(ActionType action,
       WalkWindowStack(0);
       return 0;
    case ACTION_CLOSE:
-      if(data->client) {
-         DeleteClient(data->client);
+      if(context->client) {
+         DeleteClient(context->client);
       }
       return 0;
    case ACTION_SHADE:
-      if(data->client) {
-         if(arg) {
-            value = arg[0] == '1';
+      if(context->client) {
+         if(action->arg) {
+            value = action->arg[0] == '1';
          } else {
-            value = !(data->client->state.status & STAT_SHADED);
+            value = !(context->client->state.status & STAT_SHADED);
          }
          if(value) {
-            ShadeClient(data->client);
+            ShadeClient(context->client);
          } else {
-            UnshadeClient(data->client);
+            UnshadeClient(context->client);
          }
       }
       return 0;
    case ACTION_STICK:
-      if(data->client) {
-         if(arg) {
-            value = arg[0] == '1';
+      if(context->client) {
+         if(action->arg) {
+            value = action->arg[0] == '1';
          } else {
-            value = !(data->client->state.status & STAT_STICKY);
+            value = !(context->client->state.status & STAT_STICKY);
          }
-         SetClientSticky(data->client, value);
+         SetClientSticky(context->client, value);
       }
       return 0;
    case ACTION_MOVE:
-      if(data->client && data->MoveFunc) {
-         (data->MoveFunc)(data, data->x - data->client->x,
-                          data->y - data->client->y, 1);
+      if(context->client && context->MoveFunc) {
+         (context->MoveFunc)(context, context->x - context->client->x,
+                             context->y - context->client->y, 1);
       }
       return 1;
    case ACTION_RESIZE:
-      if(data->client && data->ResizeFunc) {
-         (data->ResizeFunc)(data, data->x, data->y);
+      if(context->client && context->ResizeFunc) {
+         (context->ResizeFunc)(context, context->x, context->y);
       }
       return 1;
    case ACTION_MIN:
-      if(data->client) {
-         if(arg) {
-            value = arg[0] == '1';
+      if(context->client) {
+         if(action->arg) {
+            value = action->arg[0] == '1';
          } else {
-            value = !(data->client->state.status & STAT_MINIMIZED);
+            value = !(context->client->state.status & STAT_MINIMIZED);
          }
-         MinimizeClient(data->client, value);
+         MinimizeClient(context->client, value);
       }
       return 0;
    case ACTION_MAX:
-      if(data->client) {
-         MaximizeClientDefault(data->client);
+      if(context->client) {
+         MaximizeClientDefault(context->client);
       }
       return 0;
    case ACTION_ROOT:
-      if(JLIKELY(arg)) {
-         ShowRootMenu((unsigned int)atoi(arg), data->x, data->y);
+      if(JLIKELY(action->arg)) {
+         ShowRootMenu((unsigned int)atoi(action->arg),
+                      context->x, context->y);
          return 1;
       } else {
          return 0;
       }
    case ACTION_WIN:
-      if(data->client) {
-         ShowWindowMenu(data->client, data->x, data->y);
+      if(context->client) {
+         ShowWindowMenu(context->client, context->x, context->y);
          return 1;
       } else {
          return 0;
@@ -144,38 +156,38 @@ char RunAction(ActionType action,
       Exit();
       return 0;
    case ACTION_FULLSCREEN:
-      if(data->client) {
-         if(arg) {
-            value = arg[0] == '1';
+      if(context->client) {
+         if(action->arg) {
+            value = action->arg[0] == '1';
          } else {
-            value = !(data->client->state.status & STAT_FULLSCREEN);
+            value = !(context->client->state.status & STAT_FULLSCREEN);
          }
-         SetClientFullScreen(data->client, value);
+         SetClientFullScreen(context->client, value);
       }
       return 0;
    case ACTION_SENDTO:
-      if(data->client && arg) {
-         SetClientDesktop(data->client, atoi(arg));
+      if(context->client && action->arg) {
+         SetClientDesktop(context->client, atoi(action->arg));
       }
       return 0;
    case ACTION_SENDLEFT:
-      if(data->client) {
-         SetClientDesktop(data->client, GetLeftDesktop());
+      if(context->client) {
+         SetClientDesktop(context->client, GetLeftDesktop());
       }
       return 0;
    case ACTION_SENDRIGHT:
-      if(data->client) {
-         SetClientDesktop(data->client, GetRightDesktop());
+      if(context->client) {
+         SetClientDesktop(context->client, GetRightDesktop());
       }
       return 0;
    case ACTION_SENDUP:
-      if(data->client) {
-         SetClientDesktop(data->client, GetAboveDesktop());
+      if(context->client) {
+         SetClientDesktop(context->client, GetAboveDesktop());
       }
       return 0;
    case ACTION_SENDDOWN:
-      if(data->client) {
-         SetClientDesktop(data->client, GetBelowDesktop());
+      if(context->client) {
+         SetClientDesktop(context->client, GetBelowDesktop());
       }
       return 0;
    default:

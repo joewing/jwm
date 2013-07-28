@@ -31,7 +31,7 @@ typedef unsigned char ContextType;
 
 #define CONTEXT_COUNT         13
 
-typedef void (*ReleaseCallback)(void *arg, int x, int y);
+typedef void (*ReleaseCallback)(const XButtonEvent *event, void *arg);
 
 /*@{*/
 void InitializeMouse();
@@ -49,11 +49,12 @@ char CheckMouseGrab(const XButtonEvent *event);
 /** Run a mouse bindings for a button event.
  * @param event The event (ButtonPress or ButtonRelease).
  * @param context The context where the event happened.
- * @param data Data to be used for the action.
+ * @param ac The action context.
+ * @return 1 if the button was released (for a menu), 0 otherwise.
  */
-void RunMouseCommand(const XButtonEvent *event,
+char RunMouseCommand(const XButtonEvent *event,
                      ContextType context,
-                     const ActionDataType *data);
+                     const ActionContext *ac);
 
 /** Register a callback for a mouse grab.
  * This should be done when grabbing the mouse to be notified of a release.
@@ -66,15 +67,13 @@ void SetButtonReleaseCallback(ReleaseCallback c, void *arg);
 /** Insert a mouse binding.
  * This is called while parsing the configuration.
  * @param context The context of the binding.
- * @param action The action to perform.
  * @param button The mouse button.
  * @param modifiers Keyboard modifiers.
- * @param command Extra parameter for the action.
+ * @param action The action.
  */
 void InsertMouseBinding(ContextType context,
-                        ActionType action,
                         int button,
                         const char *modifiers,
-                        const char *command);
+                        const ActionNode *action);
 
 #endif /* MOUSE_H_ */

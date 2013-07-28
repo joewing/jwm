@@ -12,22 +12,22 @@
 
 #include "border.h"
 
-struct ActionDataType;
+struct ActionContext;
 
 /** Resize a client window.
- * @param ad Action data.
+ * @param ac The action context.
  * @param startx The starting mouse x-coordinate (window relative).
  * @param starty The starting mouse y-coordinate (window relative).
  */
-void ResizeClient(const struct ActionDataType *ad,
+void ResizeClient(const struct ActionContext *ac,
                   int startx, int starty);
 
 /** Resize a client window using the keyboard (mouse optional).
- * @param ad Action data.
+ * @param ac The action context.
  * @param startx (ignored)
  * @param starty (ignored)
  */
-void ResizeClientKeyboard(const struct ActionDataType *ad,
+void ResizeClientKeyboard(const struct ActionContext *ac,
                           int startx, int starty);
 
 #endif /* RESIZE_H */

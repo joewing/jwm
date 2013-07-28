@@ -49,7 +49,7 @@ static int GetMenuIndex(Menu *menu, int index);
 static void SetPosition(Menu *tp, int index);
 static char IsMenuValid(const Menu *menu);
 
-static MenuAction *menuAction = NULL;
+static ActionNode *menuAction = NULL;
 
 int menuShown = 0;
 
@@ -148,7 +148,7 @@ void InitializeMenu(Menu *menu)
 }
 
 /** Show a menu. */
-void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y)
+void ShowMenu(const ActionContext *context, Menu *menu)
 {
 
    int mouseStatus, keyboardStatus;
@@ -168,14 +168,16 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y)
       return;
    }
 
-   ShowSubmenu(menu, NULL, x - MENU_BORDER_SIZE, y - MENU_BORDER_SIZE);
+   ShowSubmenu(menu, NULL,
+               context->x - MENU_BORDER_SIZE,
+               context->y - MENU_BORDER_SIZE);
 
    JXUngrabKeyboard(display, CurrentTime);
    JXUngrabPointer(display, CurrentTime);
    RefocusClient();
 
    if(menuAction) {
-      (runner)(menuAction);
+      RunAction(context, menuAction);
       menuAction = NULL;
    }
 
@@ -195,15 +197,8 @@ void DestroyMenu(Menu *menu)
          if(menu->items->name) {
             Release(menu->items->name);
          }
-         switch(menu->items->action.type) {
-         case MA_EXECUTE:
-         case MA_EXIT:
-            if(menu->items->action.data.str) {
-               Release(menu->items->action.data.str);
-            }
-            break;
-         default:
-            break;
+         if(menu->items->action.arg) {
+            Release(menu->items->action.arg);
          }
          if(menu->items->iconName) {
             Release(menu->items->iconName);
@@ -458,17 +453,17 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
 
       y = -1;
       switch(GetKey(&event->xkey)) {
-      case KEY_UP:
+      case ACTION_UP:
          y = GetPreviousMenuIndex(tp);
          break;
-      case KEY_DOWN:
+      case ACTION_DOWN:
          y = GetNextMenuIndex(tp);
          break;
-      case KEY_RIGHT:
+      case ACTION_RIGHT:
          tp = menu;
          y = 0;
          break;
-      case KEY_LEFT:
+      case ACTION_LEFT:
          if(tp->parent) {
             tp = tp->parent;
             if(tp->currentIndex >= 0) {
@@ -478,9 +473,9 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
             }
          }
          break;
-      case KEY_ESC:
+      case ACTION_ESC:
          return MENU_SUBSELECT;
-      case KEY_ENTER:
+      case ACTION_ENTER:
          ip = GetMenuItem(menu, tp->currentIndex);
          if(ip != NULL) {
             menuAction = &ip->action;

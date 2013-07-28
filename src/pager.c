@@ -62,7 +62,7 @@ static void ProcessPagerButtonEvent(TrayComponentType *cp,
 static void ProcessPagerMotionEvent(TrayComponentType *cp,
                                     int x, int y, int mask);
 
-static void StartPagerMove(const ActionDataType *ad,
+static void StartPagerMove(const ActionContext *ac,
                            int x, int y, char snap);
 
 static void StopPagerMove(ClientNode *np,
@@ -208,15 +208,14 @@ void ProcessPagerButtonEvent(TrayComponentType *cp,
                              int x, int y)
 {
    PagerType *pp = (PagerType*)cp->object;
-   ActionDataType data;
-   data.client = NULL;
-   data.x = event->x_root;
-   data.y = event->y_root;
-   data.desktop = GetPagerDesktop(pp, x, y);
-   data.MoveFunc = StartPagerMove;
-   data.ResizeFunc = NULL;
-   data.arg = cp;
-   RunMouseCommand(event, CONTEXT_PAGER, &data);
+   ActionContext ac;
+   InitActionContext(&ac);
+   ac.x = event->x_root;
+   ac.y = event->y_root;
+   ac.desktop = GetPagerDesktop(pp, x, y);
+   ac.MoveFunc = StartPagerMove;
+   ac.data = cp;
+   RunMouseCommand(event, CONTEXT_PAGER, &ac);
 }
 
 /** Process a motion event on a pager tray component. */
@@ -231,7 +230,7 @@ void ProcessPagerMotionEvent(TrayComponentType *cp, int x, int y, int mask)
 }
 
 /** Start a pager move operation. */
-void StartPagerMove(const ActionDataType *ad, int x, int y, char snap)
+void StartPagerMove(const ActionContext *ac, int x, int y, char snap)
 {
 
    XEvent event;
@@ -249,7 +248,7 @@ void StartPagerMove(const ActionDataType *ad, int x, int y, char snap)
    int startx, starty;
    char hmax, vmax;
 
-   cp = (TrayComponentType*)ad->arg;
+   cp = (TrayComponentType*)ac->data;
    pp = (PagerType*)cp->object;
 
    /* Determine the selected desktop. */

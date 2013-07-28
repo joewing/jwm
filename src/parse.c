@@ -34,32 +34,6 @@
 #include "desktop.h"
 #include "mouse.h"
 
-/* Save some space by reusing parts of strings. */
-static const char NOBORDER_STRING[] = "noborder";
-#define BORDER_STRING (&NOBORDER_STRING[2])
-static const char NOTITLE_STRING[]  = "notitle";
-#define TITLE_STRING (&NOTITLE_STRING[2])
-static const char MAX_WIDTH_STRING[] = "maxwidth";
-#define WIDTH_STRING (&MAX_WIDTH_STRING[3])
-static const char NOSHADE_STRING[] = "noshade";
-#define SHADE_STRING (&NOSHADE_STRING[2])
-static const char FULLSCREEN_STRING[] = "fullscreen";
-#define SCREEN_STRING (&FULLSCREEN_STRING[4])
-
-/** Mapping of key names to key types. */
-static const struct {
-   const char *name;
-   KeyType key;
-} KEY_MAP[] = {
-   { "up",                    KEY_UP            },
-   { "down",                  KEY_DOWN          },
-   { "right",                 KEY_RIGHT         },
-   { "left",                  KEY_LEFT          },
-   { "escape",                KEY_ESC           },
-   { "select",                KEY_ENTER         },
-   { NULL,                    KEY_NONE          }
-};
-
 /** Mapping of action names to action types. */
 static const struct {
    const char *name;
@@ -75,7 +49,7 @@ static const struct {
    { "close",                 ACTION_CLOSE         },
    { "minimize",              ACTION_MIN           },
    { "maximize",              ACTION_MAX           },
-   { &SHADE_STRING[0],        ACTION_SHADE         },
+   { "shade",                 ACTION_SHADE         },
    { "stick",                 ACTION_STICK         },
    { "move",                  ACTION_MOVE          },
    { "resize",                ACTION_RESIZE        },
@@ -89,12 +63,18 @@ static const struct {
    { "ddesktop",              ACTION_DDESKTOP      },
    { "showdesktop",           ACTION_SHOWDESK      },
    { "showtray",              ACTION_SHOWTRAY      },
-   { &FULLSCREEN_STRING[0],   ACTION_FULLSCREEN    },
+   { "fullscreen",            ACTION_FULLSCREEN    },
    { "sendto",                ACTION_SENDTO        },
    { "sendleft",              ACTION_SENDLEFT      },
    { "sendright",             ACTION_SENDRIGHT     },
    { "sendup",                ACTION_SENDUP        },
    { "senddown",              ACTION_SENDDOWN      },
+   { "up",                    ACTION_UP            },
+   { "down",                  ACTION_DOWN          },
+   { "right",                 ACTION_RIGHT         },
+   { "left",                  ACTION_LEFT          },
+   { "escape",                ACTION_ESC           },
+   { "select",                ACTION_ENTER         },
    { NULL,                    ACTION_NONE          }
 };
 
@@ -127,10 +107,10 @@ static const OptionMapType OPTION_MAP[] = {
    { "sticky",             OPTION_STICKY        },
    { "nolist",             OPTION_NOLIST        },
    { "nopager",            OPTION_NOPAGER       },
-   { &BORDER_STRING[0],    OPTION_BORDER        },
-   { &NOBORDER_STRING[0],  OPTION_NOBORDER      },
-   { &TITLE_STRING[0],     OPTION_TITLE         },
-   { &NOTITLE_STRING[0],   OPTION_NOTITLE       },
+   { "border",             OPTION_BORDER        },
+   { "noborder",           OPTION_NOBORDER      },
+   { "title",              OPTION_TITLE         },
+   { "notitle",            OPTION_NOTITLE       },
    { "pignore",            OPTION_PIGNORE       },
    { "iignore",            OPTION_IIGNORE       },
    { "maximized",          OPTION_MAXIMIZED     },
@@ -138,7 +118,7 @@ static const OptionMapType OPTION_MAP[] = {
    { "hmax",               OPTION_MAX_H         },
    { "vmax",               OPTION_MAX_V         },
    { "nofocus",            OPTION_NOFOCUS       },
-   { &NOSHADE_STRING[0],   OPTION_NOSHADE       },
+   { "noshade",            OPTION_NOSHADE       },
    { "noturgent",          OPTION_NOTURGENT     },
    { "centered",           OPTION_CENTERED      },
    { "tiled",              OPTION_TILED         },
@@ -148,7 +128,6 @@ static const OptionMapType OPTION_MAP[] = {
 static const char *DEFAULT_TITLE = "JWM";
 static const char *LABEL_ATTRIBUTE = "label";
 static const char *ICON_ATTRIBUTE = "icon";
-static const char *CONFIRM_ATTRIBUTE = "confirm";
 static const char *LABELED_ATTRIBUTE = "labeled";
 static const char *ONROOT_ATTRIBUTE = "onroot";
 static const char *LAYER_ATTRIBUTE = "layer";
@@ -156,13 +135,13 @@ static const char *LAYOUT_ATTRIBUTE = "layout";
 static const char *AUTOHIDE_ATTRIBUTE = "autohide";
 static const char *X_ATTRIBUTE = "x";
 static const char *Y_ATTRIBUTE = "y";
-static const char *WIDTH_ATTRIBUTE = &WIDTH_STRING[0];
+static const char *WIDTH_ATTRIBUTE = "width";
 static const char *HEIGHT_ATTRIBUTE = "height";
 static const char *NAME_ATTRIBUTE = "name";
-static const char *BORDER_ATTRIBUTE = BORDER_STRING;
+static const char *BORDER_ATTRIBUTE = "border";
 static const char *DISTANCE_ATTRIBUTE = "distance";
 static const char *INSERT_ATTRIBUTE = "insert";
-static const char *MAX_WIDTH_ATTRIBUTE = &MAX_WIDTH_STRING[0];
+static const char *MAX_WIDTH_ATTRIBUTE = "maxwidth";
 static const char *FORMAT_ATTRIBUTE = "format";
 static const char *ZONE_ATTRIBUTE = "zone";
 static const char *VALIGN_ATTRIBUTE = "valign";
@@ -241,7 +220,7 @@ static unsigned int ParseOpacity(const TokenNode *tp, const char *str);
 static WinLayerType ParseLayer(const TokenNode *tp, const char *str);
 static StatusWindowType ParseStatusWindowType(const TokenNode *tp,
                                               const char *str);
-static ActionType ParseAction(const char *value, const char **arg);
+static char ParseAction(const TokenNode *tp, ActionNode *np);
 static void InvalidTag(const TokenNode *tp, TokenType parent);
 static void ParseError(const TokenNode *tp, const char *str, ...);
 
@@ -254,7 +233,6 @@ void ParseConfig(const char *fileName)
       }
    }
    ValidateTrayButtons();
-   ValidateKeys();
 }
 
 /**
@@ -475,9 +453,9 @@ void ParseSnapMode(const TokenNode *tp) {
    if(JLIKELY(tp->value)) {
       if(!strcmp(tp->value, "none")) {
          settings.snapMode = SNAP_NONE;
-      } else if(!strcmp(tp->value, SCREEN_STRING)) {
+      } else if(!strcmp(tp->value, "screen")) {
          settings.snapMode = SNAP_SCREEN;
-      } else if(!strcmp(tp->value, BORDER_STRING)) {
+      } else if(!strcmp(tp->value, "border")) {
          settings.snapMode = SNAP_BORDER;
       } else {
          ParseError(tp, "invalid snap mode: %s", tp->value);
@@ -587,8 +565,8 @@ MenuItem *InsertMenuItem(MenuItem *last) {
    item->name = NULL;
    item->type = MENU_ITEM_NORMAL;
    item->iconName = NULL;
-   item->action.type = MA_NONE;
-   item->action.data.str = NULL;
+   item->action.action = ACTION_NONE;
+   item->action.arg = NULL;
    item->submenu = NULL;
 
    item->next = NULL;
@@ -601,8 +579,9 @@ MenuItem *InsertMenuItem(MenuItem *last) {
 }
 
 /** Parse a menu item. */
-MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
-   MenuItem *last) {
+MenuItem *ParseMenuItem(const TokenNode *start,
+                        Menu *menu,
+                        MenuItem *last) {
 
    Menu *child;
    const char *value;
@@ -656,7 +635,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
          ParseMenuItem(start->subnodeHead, last->submenu, NULL);
 
          break;
-      case TOK_PROGRAM:
+      case TOK_ITEM:
 
          last = InsertMenuItem(last);
          if(!menu->items) {
@@ -666,128 +645,22 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
          value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
          if(value) {
             last->name = CopyString(value);
-         } else if(start->value) {
+         } else {
             last->name = CopyString(start->value);
          }
 
          value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
          last->iconName = CopyString(value);
 
-         last->action.type = MA_EXECUTE;
-         last->action.data.str = CopyString(start->value);
+         ParseAction(start, &last->action);
 
          break;
       case TOK_SEPARATOR:
-
          last = InsertMenuItem(last);
          last->type = MENU_ITEM_SEPARATOR;
          if(!menu->items) {
             menu->items = last;
          }
-
-         break;
-      case TOK_DESKTOPS:
-      case TOK_STICK:
-      case TOK_MAXIMIZE:
-      case TOK_MINIMIZE:
-      case TOK_SHADE:
-      case TOK_MOVE:
-      case TOK_RESIZE:
-      case TOK_KILL:
-      case TOK_CLOSE:
-
-         last = InsertMenuItem(last);
-         if(!menu->items) {
-            menu->items = last;
-         }
-
-         value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
-         if(!value) {
-            value = GetTokenName(start);
-         }
-         last->name = CopyString(value);
-
-         value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
-         last->iconName = CopyString(value);
-
-         switch(start->type) {
-         case TOK_DESKTOPS:
-            last->action.type = MA_DESKTOP;
-            break;
-         case TOK_STICK:
-            last->action.type = MA_STICK;
-            break;
-         case TOK_MAXIMIZE:
-            last->action.type = MA_MAXIMIZE;
-            break;
-         case TOK_MINIMIZE:
-            last->action.type = MA_MINIMIZE;
-            break;
-         case TOK_SHADE:
-            last->action.type = MA_SHADE;
-            break;
-         case TOK_MOVE:
-            last->action.type = MA_MOVE;
-            break;
-         case TOK_RESIZE:
-            last->action.type = MA_RESIZE;
-            break;
-         case TOK_KILL:
-            last->action.type = MA_KILL;
-            break;
-         case TOK_CLOSE:
-            last->action.type = MA_CLOSE;
-            break;
-         default:
-            break;
-         }
-
-         break;
-      case TOK_EXIT:
-
-         last = InsertMenuItem(last);
-         if(!menu->items) {
-            menu->items = last;
-         }
-
-         value = FindAttribute(start->attributes, CONFIRM_ATTRIBUTE);
-         if(value && !strcmp(value, FALSE_VALUE)) {
-            settings.exitConfirmation = 0;
-         } else {
-            settings.exitConfirmation = 1;
-         }
-
-         value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
-         if(!value) {
-            value = GetTokenName(start);
-         }
-         last->name = CopyString(value);
-
-         value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
-         last->iconName = CopyString(value);
-
-         last->action.type = MA_EXIT;
-         last->action.data.str = CopyString(start->value);
-
-         break;
-      case TOK_RESTART:
-
-         last = InsertMenuItem(last);
-         if(!menu->items) {
-            menu->items = last;
-         }
-
-         value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
-         if(!value) {
-            value = GetTokenName(start);
-         }
-         last->name = CopyString(value);
-
-         value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
-         last->iconName = CopyString(value);
-
-         last->action.type = MA_RESTART;
-
          break;
       default:
          InvalidTag(start, TOK_MENU);
@@ -870,11 +743,7 @@ void ParseKey(const TokenNode *tp)
    const char *key;
    const char *code;
    const char *mask;
-   const char *action;
-   const char *command;
-   KeyType k;
-   ActionType a;
-   int x;
+   ActionNode action;
 
    Assert(tp);
 
@@ -882,33 +751,13 @@ void ParseKey(const TokenNode *tp)
    key = FindAttribute(tp->attributes, "key");
    code = FindAttribute(tp->attributes, "keycode");
 
-   action = tp->value;
-   if(JUNLIKELY(action == NULL)) {
+   if(JUNLIKELY(tp->value == NULL)) {
       ParseError(tp, _("no action specified for Key"));
       return;
    }
 
-   command = NULL;
-   k = KEY_NONE;
-   a = ACTION_NONE;
-   for(x = 0; KEY_MAP[x].name; x++) {
-      if(!strcmp(action, KEY_MAP[x].name)) {
-         k = KEY_MAP[x].key;
-         break;
-      }
-   }
-   if(k == KEY_NONE) {
-      a = ParseAction(action, &command);
-      if(JLIKELY(a != ACTION_NONE)) {
-         k = KEY_ACTION;
-      }
-   }
-
-   /* Insert the binding if it's valid. */
-   if(JUNLIKELY(k == KEY_NONE)) {
-      ParseError(tp, _("invalid Key action: \"%s\""), action);
-   } else {
-      InsertKeyBinding(k, a, mask, key, code, command);
+   if(ParseAction(tp, &action)) {
+      InsertKeyBinding(mask, key, code, &action);
    }
 
 }
@@ -920,29 +769,26 @@ void ParseMouse(const TokenNode *tp)
    const char *button;
    const char *mask;
    const char *context;
-   const char *action;
-   const char *command;
    int i;
-   ActionType a;
    ContextType c;
+   ActionNode action;
 
+   /* Get the button. */
    button = FindAttribute(tp->attributes, "button");
-   mask = FindAttribute(tp->attributes, MASK_ATTRIBUTE);
+   if(JUNLIKELY(button == NULL)) {
+      ParseError(tp, _("no button specified for mouse binding"));
+      return;
+   }
 
-   /* Parse the action. */
-   action = tp->value;
-   if(JUNLIKELY(action == NULL)) {
-      ParseError(tp, _("no action specified for Mouse"));
-      return;
-   }
-   a = ParseAction(action, &command);
-   if(JUNLIKELY(a == ACTION_NONE)) {
-      ParseError(tp, _("invalid Mouse action: \"%s\""), action);
-      return;
-   }
+   /* Get the key mask. */
+   mask = FindAttribute(tp->attributes, MASK_ATTRIBUTE);
 
    /* Parse the context. */
    context = FindAttribute(tp->attributes, "context");
+   if(JUNLIKELY(context == NULL)) {
+      ParseError(tp, _("no context specified for mouse binding"));
+      return;
+   }
    c = CONTEXT_NONE;
    for(i = 0; CONTEXT_MAP[i].name; i++) {
       if(!strcmp(context, CONTEXT_MAP[i].name)) {
@@ -951,11 +797,14 @@ void ParseMouse(const TokenNode *tp)
       }
    }
    if(JUNLIKELY(c == CONTEXT_NONE)) {
-      ParseError(tp, _("invalid Mouse context: \"%s\""), context);
+      ParseError(tp, _("invalid mouse binding context: \"%s\""), context);
       return;
    }
 
-   InsertMouseBinding(c, a, atoi(button), mask, command);
+   /* Parse the action. */
+   if(ParseAction(tp, &action)) {
+      InsertMouseBinding(c, atoi(button), mask, &action);
+   }
 
 }
 
@@ -1924,7 +1773,7 @@ StatusWindowType ParseStatusWindowType(const TokenNode *tp, const char *str)
 {
    if(!strcmp(str, "off")) {
       return SW_OFF;
-   } else if(!strcmp(str, SCREEN_STRING)) {
+   } else if(!strcmp(str, "screen")) {
       return SW_SCREEN;
    } else if(!strcmp(str, "window")) {
       return SW_WINDOW;
@@ -1937,24 +1786,45 @@ StatusWindowType ParseStatusWindowType(const TokenNode *tp, const char *str)
 }
 
 /** Parse an action name for a key or mouse binding. */
-static ActionType ParseAction(const char *value, const char **arg)
+static char ParseAction(const TokenNode *tp, ActionNode *np)
 {
-   size_t len = 1024;
-   int x;
+   const char *value = tp->value;
+   if(value[0] == '-') {
 
-   *arg = strchr(value, ':');
-   if(*arg) {
-      len = (size_t)(*arg - value);
-      *arg += 1;
-   }
+      const char *arg;
+      size_t len;
+      int x;
 
-   for(x = 0; ACTION_MAP[x].name; x++) {
-      if(!strncmp(value, ACTION_MAP[x].name, len)) {
-         return ACTION_MAP[x].action;
+      value += 1;
+      arg = strchr(value, ':');
+      np->action = ACTION_NONE;
+      if(arg) {
+         len = (size_t)(arg - value);
+         np->arg = CopyString(arg + 1);
+      } else {
+         np->arg = NULL;
       }
-   }
 
-   return ACTION_NONE;
+      for(x = 0; ACTION_MAP[x].name; x++) {
+         if(!strncmp(value, ACTION_MAP[x].name, len)) {
+            np->action = ACTION_MAP[x].action;
+            return 1;
+         }
+      }
+
+      if(np->arg) {
+         Release(np->arg);
+      }
+      ParseError(tp, _("invalid action: %s"), tp->value);
+      return 0;
+
+   } else {
+
+      np->action = ACTION_EXEC;
+      np->arg = CopyString(value);
+      return 1;
+
+   }
 
 }
 

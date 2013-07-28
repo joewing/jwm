@@ -54,9 +54,7 @@ static ModifierNode modifiers[] = {
 typedef struct KeyNode {
 
    /* These are filled in when the configuration file is parsed */
-   KeyType key;
-   ActionType action;
-   char *command;
+   ActionNode action;
    unsigned int state;
    KeySym symbol;
    struct KeyNode *next;
@@ -81,7 +79,7 @@ unsigned int lockMask;
 
 static unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key);
 static KeySym ParseKeyString(const char *str);
-static char ShouldGrab(KeyType key);
+static char ShouldGrab(ActionType action);
 static void GrabKey(KeyNode *np, Window win);
 
 /** Initialize key data. */
@@ -118,7 +116,7 @@ void StartupKeys()
       }
 
       /* Grab the key if needed. */
-      if(ShouldGrab(np->key)) {
+      if(ShouldGrab(np->action.action)) {
 
          /* Grab on the root. */
          GrabKey(np, rootWindow);
@@ -165,8 +163,8 @@ void DestroyKeys()
    KeyNode *np;
    while(bindings) {
       np = bindings->next;
-      if(bindings->command) {
-         Release(bindings->command);
+      if(bindings->action.arg) {
+         Release(bindings->action.arg);
       }
       Release(bindings);
       bindings = np;
@@ -207,7 +205,7 @@ void GrabKey(KeyNode *np, Window win)
 }
 
 /** Get the key action from an event. */
-KeyType GetKey(const XKeyEvent *event)
+ActionType GetKey(const XKeyEvent *event)
 {
 
    KeyNode *np;
@@ -219,11 +217,11 @@ KeyType GetKey(const XKeyEvent *event)
    /* Loop looking for a matching key binding. */
    for(np = bindings; np; np = np->next) {
       if(np->state == state && np->code == event->keycode) {
-         return np->key;
+         return np->action.action;
       }
    }
 
-   return KEY_NONE;
+   return ACTION_NONE;
 
 }
 
@@ -232,25 +230,22 @@ void RunKeyCommand(const XKeyEvent *event)
 {
 
    KeyNode *kp;
-   ActionDataType data;
+   ActionContext ac;
    unsigned int state;
 
    /* Remove the lock key modifiers. */
    state = event->state & lockMask;
 
-   data.client = NULL;
-   data.desktop = currentDesktop;
-   data.x = 0;
-   data.y = 0;
-   data.MoveFunc = MoveClientKeyboard;
-   data.ResizeFunc = ResizeClientKeyboard;
+   InitActionContext(&ac);
+   ac.MoveFunc = MoveClientKeyboard;
+   ac.ResizeFunc = ResizeClientKeyboard;
    for(kp = bindings; kp; kp = kp->next) {
       if(kp->state == state && kp->code == event->keycode) {
          if(event->type == KeyPress) {
-            RunAction(kp->action, kp->command, &data);
+            RunAction(&ac, &kp->action);
          } else {
-            if(kp->action != ACTION_NEXTSTACK &&
-               kp->action != ACTION_PREVSTACK) {
+            if(kp->action.action != ACTION_NEXTSTACK &&
+               kp->action.action != ACTION_PREVSTACK) {
                StopWindowStackWalk();
             }
          }
@@ -261,9 +256,20 @@ void RunKeyCommand(const XKeyEvent *event)
 }
 
 /** Determine if a key should be grabbed on client windows. */
-char ShouldGrab(KeyType key)
+char ShouldGrab(ActionType action)
 {
-   return key == KEY_ACTION;
+   switch(action) {
+   case ACTION_NONE:
+   case ACTION_UP:
+   case ACTION_DOWN:
+   case ACTION_RIGHT:
+   case ACTION_LEFT:
+   case ACTION_ESC:
+   case ACTION_ENTER:
+      return 0;
+   default:
+      return 1;
+   }
 }
 
 /** Grab keys on a client window. */
@@ -273,7 +279,7 @@ void GrabKeys(ClientNode *np)
    KeyNode *kp;
 
    for(kp = bindings; kp; kp = kp->next) {
-      if(ShouldGrab(kp->key)) {
+      if(ShouldGrab(kp->action.action)) {
          GrabKey(kp, np->window);
       }
    }
@@ -347,55 +353,19 @@ KeySym ParseKeyString(const char *str)
 }
 
 /** Insert a key binding. */
-void InsertKeyBinding(KeyType key,
-                      ActionType action,
-                      const char *modifiers,
+void InsertKeyBinding(const char *modifiers,
                       const char *stroke,
                       const char *code,
-                      const char *command)
+                      const ActionNode *action)
 {
 
    KeyNode *np;
    unsigned int mask;
-   char *temp;
-   int offset;
    KeySym sym;
 
    mask = ParseModifierString(modifiers);
 
    if(stroke && strlen(stroke) > 0) {
-
-      for(offset = 0; stroke[offset]; offset++) {
-         if(stroke[offset] == '#') {
-
-            temp = CopyString(stroke);
-
-            for(temp[offset] = '1'; temp[offset] <= '9'; temp[offset]++) {
-
-               sym = ParseKeyString(temp);
-               if(sym == NoSymbol) {
-                  Release(temp);
-                  return;
-               }
-
-               np = Allocate(sizeof(KeyNode));
-               np->next = bindings;
-               bindings = np;
-
-               np->key = key;
-               np->state = mask;
-               np->symbol = sym;
-               np->command = Allocate(1);
-               np->command[0] = temp[offset] - '1' + 1;
-               np->code = 0;
-
-            }
-
-            Release(temp);
-
-            return;
-         }
-      }
 
       sym = ParseKeyString(stroke);
       if(sym == NoSymbol) {
@@ -406,10 +376,9 @@ void InsertKeyBinding(KeyType key,
       np->next = bindings;
       bindings = np;
 
-      np->key = key;
+      np->action = *action;
       np->state = mask;
       np->symbol = sym;
-      np->command = CopyString(command);
       np->code = 0;
 
    } else if(code && strlen(code) > 0) {
@@ -418,10 +387,9 @@ void InsertKeyBinding(KeyType key,
       np->next = bindings;
       bindings = np;
 
-      np->key = key;
+      np->action = *action;
       np->state = mask;
       np->symbol = NoSymbol;
-      np->command = CopyString(command);
       np->code = atoi(code);
 
    } else {
@@ -431,20 +399,5 @@ void InsertKeyBinding(KeyType key,
 
    }
 
-}
-
-/** Validate key bindings. */
-void ValidateKeys()
-{
-   KeyNode *kp;
-   int bindex;
-   for(kp = bindings; kp; kp = kp->next) {
-      if(kp->action == ACTION_ROOT && kp->command) {
-         bindex = atoi(kp->command);
-         if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
-            Warning(_("key binding: root menu %d not defined"), bindex);
-         }
-      }
-   }
 }
 

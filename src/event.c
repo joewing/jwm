@@ -52,7 +52,7 @@ static CallbackNode *callbacks = NULL;
 
 static void Signal();
 static void DispatchBorderButtonEvent(const XButtonEvent *event,
-                                      const ActionDataType *data);
+                                      const ActionContext *ac);
 
 static void HandleConfigureRequest(const XConfigureRequestEvent *event);
 static char HandleConfigureNotify(const XConfigureEvent *event);
@@ -296,12 +296,13 @@ void HandleButtonEvent(const XButtonEvent *event)
 {
 
    ClientNode *np;
-   ActionDataType data;
+   ActionContext ac;
 
    if(CheckMouseGrab(event)) {
       return;
    }
 
+   InitActionContext(&ac);
    np = FindClientByParent(event->window);
    if(np) {
       if(event->type == ButtonPress) {
@@ -310,21 +311,18 @@ void HandleButtonEvent(const XButtonEvent *event)
             FocusClient(np);
          }
       }
-      data.client = np;
-      data.x = event->x_root;
-      data.y = event->y_root;
-      data.desktop = currentDesktop;
-      data.MoveFunc = MoveClient;
-      data.ResizeFunc = ResizeClient;
-      DispatchBorderButtonEvent(event, &data);
+      ac.client = np;
+      ac.x = event->x_root;
+      ac.y = event->y_root;
+      ac.MoveFunc = MoveClient;
+      ac.ResizeFunc = ResizeClient;
+      DispatchBorderButtonEvent(event, &ac);
    } else if(event->window == rootWindow) {
-      data.client = NULL;
-      data.x = event->x_root;
-      data.y = event->y_root;
-      data.desktop = currentDesktop;
-      data.MoveFunc = MoveClient;
-      data.ResizeFunc = ResizeClient;
-      RunMouseCommand(event, CONTEXT_ROOT, &data);
+      ac.x = event->x_root;
+      ac.y = event->y_root;
+      ac.MoveFunc = MoveClient;
+      ac.ResizeFunc = ResizeClient;
+      RunMouseCommand(event, CONTEXT_ROOT, &ac);
    } else {
       np = FindClientByWindow(event->window);
       if(np) {
@@ -332,13 +330,12 @@ void HandleButtonEvent(const XButtonEvent *event)
          if(settings.focusModel == FOCUS_CLICK) {
             FocusClient(np);
          }
-         data.client = np;
-         data.x = event->x_root;
-         data.y = event->y_root;
-         data.desktop = currentDesktop;
-         data.MoveFunc = MoveClient;
-         data.ResizeFunc = ResizeClient;
-         RunMouseCommand(event, CONTEXT_WINDOW, &data);
+         ac.client = np;
+         ac.x = event->x_root;
+         ac.y = event->y_root;
+         ac.MoveFunc = MoveClient;
+         ac.ResizeFunc = ResizeClient;
+         RunMouseCommand(event, CONTEXT_WINDOW, &ac);
          JXAllowEvents(display, ReplayPointer, eventTime);
       }
    }
@@ -1117,10 +1114,10 @@ char HandleDestroyNotify(const XDestroyWindowEvent *event)
 
 /** Take the appropriate action for a click on a client border. */
 void DispatchBorderButtonEvent(const XButtonEvent *event,
-                               const ActionDataType *data)
+                               const ActionContext *ac)
 {
 
-   const BorderActionType action = GetBorderActionType(data->client,
+   const BorderActionType action = GetBorderActionType(ac->client,
                                                        event->x, event->y);
    ContextType context = CONTEXT_NONE;
    switch(action & 0x0F) {
@@ -1145,7 +1142,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
    default:
       break;
    }
-   RunMouseCommand(event, context, data);
+   RunMouseCommand(event, context, ac);
 }
 
 /** Update window state information. */

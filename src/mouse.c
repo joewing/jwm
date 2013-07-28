@@ -19,8 +19,7 @@
 typedef struct MouseNode {
    int button;
    ContextType context;
-   ActionType  action;
-   char *command;
+   ActionNode action;
    unsigned int state;
    struct MouseNode *next;
 } MouseNode;
@@ -47,8 +46,8 @@ void DestroyMouse()
    for(i = 0; i < CONTEXT_COUNT; i++) {
       while(bindings[i]) {
          mp = bindings[i]->next;
-         if(bindings[i]->command) {
-            Release(bindings[i]->command);
+         if(bindings[i]->action.arg) {
+            Release(bindings[i]->action.arg);
          }
          Release(bindings[i]);
          bindings[i] = mp;
@@ -61,7 +60,7 @@ char CheckMouseGrab(const XButtonEvent *event)
 {
    if(event->type == ButtonRelease && callback) {
       JXUngrabPointer(display, CurrentTime);
-      (callback)(event->x, event->y);
+      (callback)(event, callbackArg);
       callback = NULL;
       return 1;
    } else {
@@ -70,9 +69,9 @@ char CheckMouseGrab(const XButtonEvent *event)
 }
 
 /** Run mouse bindings for an event. */
-void RunMouseCommand(const XButtonEvent *event,
+char RunMouseCommand(const XButtonEvent *event,
                      ContextType context,
-                     const ActionDataType *data)
+                     const ActionContext *ac)
 {
 
    static int lastX = 0, lastY = 0;
@@ -82,6 +81,7 @@ void RunMouseCommand(const XButtonEvent *event,
    const unsigned int state = event->state & lockMask;
    MouseNode *mp;
    int button;
+   char menuShown;
 
    button = event->button;
    if(event->type == ButtonPress) {
@@ -100,13 +100,18 @@ void RunMouseCommand(const XButtonEvent *event,
       }
    }
 
+   menuShown = 0;
    mp = bindings[context];
    while(mp) {
       if(button == mp->button && state == mp->state) {
-         RunAction(mp->action, mp->command, data);
+         if(RunAction(ac, &mp->action)) {
+            menuShown = 1;
+         }
       }
       mp = mp->next;
    }
+
+   return menuShown;
 
 }
 
@@ -119,10 +124,9 @@ void SetButtonReleaseCallback(ReleaseCallback c, void *a)
 
 /** Insert a mouse binding. */
 void InsertMouseBinding(ContextType context,
-                        ActionType action,
                         int button,
                         const char *modifiers,
-                        const char *command)
+                        const ActionNode *action)
 {
 
    MouseNode *mp;
@@ -131,13 +135,12 @@ void InsertMouseBinding(ContextType context,
    mp->next = bindings[context];
    bindings[context] = mp;
 
-   mp->context = context;
-   mp->button  = button;
-   mp->action  = action;
-   mp->state   = ParseModifierString(modifiers);
-   mp->command = CopyString(command);
+   mp->context          = context;
+   mp->button           = button;
+   mp->action           = *action;
+   mp->state            = ParseModifierString(modifiers);
 
-   switch(mp->action) {
+   switch(mp->action.action) {
    case ACTION_ROOT:
    case ACTION_WIN:
    case ACTION_MOVE:

@@ -42,7 +42,7 @@ void ResizeController(int wasDestroyed)
 }
 
 /** Resize a client window (mouse initiated). */
-void ResizeClient(const ActionDataType *ad, int startx, int starty)
+void ResizeClient(const ActionContext *ac, int startx, int starty)
 {
 
    XEvent event;
@@ -56,7 +56,7 @@ void ResizeClient(const ActionDataType *ad, int startx, int starty)
    int ratio, minr, maxr;
    BorderActionType action;
 
-   np = ad->client;
+   np = ac->client;
    Assert(np);
    Assert(np->state.border & BORDER_RESIZE);
 
@@ -219,7 +219,7 @@ void ResizeClient(const ActionDataType *ad, int startx, int starty)
 }
 
 /** Resize a client window (keyboard or menu initiated). */
-void ResizeClientKeyboard(const ActionDataType *ad, int startx, int starty)
+void ResizeClientKeyboard(const ActionContext *ac, int startx, int starty)
 {
 
    XEvent event;
@@ -230,7 +230,7 @@ void ResizeClientKeyboard(const ActionDataType *ad, int startx, int starty)
    int deltax, deltay;
    int ratio, minr, maxr;
 
-   np = ad->client;
+   np = ac->client;
    Assert(np);
 
    if(!(np->state.border & BORDER_RESIZE)) {
@@ -281,16 +281,16 @@ void ResizeClientKeyboard(const ActionDataType *ad, int startx, int starty)
 
          DiscardKeyEvents(&event, np->window);
          switch(GetKey(&event.xkey)) {
-         case KEY_UP:
+         case ACTION_UP:
             deltay = Min(-np->yinc, -10);
             break;
-         case KEY_DOWN:
+         case ACTION_DOWN:
             deltay = Max(np->yinc, 10);
             break;
-         case KEY_RIGHT:
+         case ACTION_RIGHT:
             deltax = Max(np->xinc, 10);
             break;
-         case KEY_LEFT:
+         case ACTION_LEFT:
             deltax = Min(-np->xinc, -10);
             break;
          default:

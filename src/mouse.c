@@ -81,7 +81,6 @@ char RunMouseCommand(const XButtonEvent *event,
    const unsigned int state = event->state & lockMask;
    MouseNode *mp;
    int button;
-   char menuShown;
 
    button = event->button;
    if(event->type == ButtonPress) {
@@ -100,18 +99,17 @@ char RunMouseCommand(const XButtonEvent *event,
       }
    }
 
-   menuShown = 0;
    mp = bindings[context];
    while(mp) {
       if(button == mp->button && state == mp->state) {
          if(RunAction(ac, &mp->action)) {
-            menuShown = 1;
+            return 1;
          }
       }
       mp = mp->next;
    }
 
-   return menuShown;
+   return 0;
 
 }
 

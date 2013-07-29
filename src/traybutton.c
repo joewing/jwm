@@ -42,7 +42,7 @@ typedef struct TrayButtonType {
    char *popup;
    char *iconName;
    IconNode *icon;
-   char *action;
+   ActionNode action;
    char border;
 
    int mousex;
@@ -111,8 +111,8 @@ void DestroyTrayButtons()
       if(buttons->iconName) {
          Release(buttons->iconName);
       }
-      if(buttons->action) {
-         Release(buttons->action);
+      if(buttons->action.arg) {
+         Release(buttons->action.arg);
       }
       if(buttons->popup) {
          Release(buttons->popup);
@@ -125,7 +125,7 @@ void DestroyTrayButtons()
 /** Create a button tray component. */
 TrayComponentType *CreateTrayButton(const char *iconName,
                                     const char *label,
-                                    const char *action,
+                                    const ActionNode *action,
                                     const char *popup,
                                     unsigned int width,
                                     unsigned int height,
@@ -148,7 +148,7 @@ TrayComponentType *CreateTrayButton(const char *iconName,
    bp->icon = NULL;
    bp->iconName = CopyString(iconName);
    bp->label = CopyString(label);
-   bp->action = CopyString(action);
+   bp->action = *action;
    bp->popup = CopyString(popup);
    bp->border = border;
 
@@ -230,35 +230,9 @@ void SetSize(TrayComponentType *cp, int width, int height)
 /** Initialize a button tray component. */
 void Create(TrayComponentType *cp)
 {
-
-   TrayButtonType *bp;
-
-   bp = (TrayButtonType*)cp->object;
-
-   /* Validate the action for this tray button. */
-   if(bp->action && strlen(bp->action) > 0) {
-      if(!strncmp(bp->action, "exec:", 5)) {
-         /* Valid. */
-      } else if(!strncmp(bp->action, "root:", 5)) {
-         /* Valid. However, the specified root menu may not exist.
-          * This case is handled in ValidateTrayButtons.
-          */
-      } else if(!strcmp(bp->action, "showdesktop")) {
-         /* Valid. */
-      } else {
-         Warning(_("invalid TrayButton action: \"%s\""), bp->action);
-      }
-   } else {
-      /* Valid. However, root menu 1 may not exist.
-       * This case is handled in ValidateTrayButtons.
-       */
-   }
-
    cp->pixmap = JXCreatePixmap(display, rootWindow,
                                cp->width, cp->height, rootDepth);
-
    Draw(cp, 0);
-
 }
 
 /** Resize a button tray component. */
@@ -326,6 +300,7 @@ void ProcessButtonEvent(TrayComponentType *cp,
       Draw(cp, 0);
       UpdateSpecificTray(cp->tray, cp);
    } else {
+      GrabMouse(cp->tray->window);
       SetButtonReleaseCallback(ProcessButtonRelease, bp);
    }
 
@@ -334,8 +309,18 @@ void ProcessButtonEvent(TrayComponentType *cp,
 /** Process a button release. */
 void ProcessButtonRelease(const XButtonEvent *event, void *arg)
 {
+
    const TrayButtonType *bp = (TrayButtonType*)arg;
    TrayComponentType *cp = bp->cp;
+   ActionContext context;
+
+   InitActionContext(&context);
+   context.x = event->x_root;
+   context.y = event->y_root;
+   context.MoveFunc = MoveClientKeyboard;
+   context.ResizeFunc = ResizeClientKeyboard;
+   RunMouseCommand(event, CONTEXT_TASK, &context);
+
    Draw(cp, 0);
    UpdateSpecificTray(cp->tray, cp);
 }
@@ -366,21 +351,6 @@ void SignalTrayButton(const TimeType *now, int x, int y, void *data)
       && abs(bp->mousey - y) < settings.doubleClickDelta) {
       if(GetTimeDifference(now, &bp->mouseTime) >= settings.popupDelay) {
          ShowPopup(x, y, popup);
-      }
-   }
-}
-
-/** Validate tray buttons. */
-void ValidateTrayButtons()
-{
-   TrayButtonType *bp;
-   int bindex;
-   for(bp = buttons; bp; bp = bp->next) {
-      if(bp->action && !strncmp(bp->action, "root:", 5)) {
-         bindex = atoi(bp->action + 5);
-         if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
-            Warning(_("tray button: root menu %d not defined"), bindex);
-         }
       }
    }
 }

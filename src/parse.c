@@ -232,7 +232,6 @@ void ParseConfig(const char *fileName)
          ParseError(NULL, "could not open %s or %s", fileName, SYSTEM_CONFIG);
       }
    }
-   ValidateTrayButtons();
 }
 
 /**
@@ -1259,6 +1258,7 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
    const char *label;
    const char *popup;
    const char *temp;
+   ActionNode action;
    unsigned int width, height;
    char border;
 
@@ -1290,9 +1290,11 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
       height = 0;
    }
 
-   cp = CreateTrayButton(icon, label, tp->value, popup, width, height, border);
-   if(JLIKELY(cp)) {
-      AddTrayComponent(tray, cp);
+   if(ParseAction(tp, &action)) {
+      cp = CreateTrayButton(icon, label, &action, popup, width, height, border);
+      if(JLIKELY(cp)) {
+         AddTrayComponent(tray, cp);
+      }
    }
 
 }

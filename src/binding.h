@@ -56,7 +56,7 @@ typedef unsigned char ActionType;
 #define ACTION_KILL           39    /**< Kill a window */
 #define ACTION_LAYER          40    /**< Set window layer */
 
-typedef struct {
+typedef struct ActionNode {
    char *arg;
    ActionType type;
 } ActionNode;

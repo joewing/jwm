@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "event.h"
 #include "gradient.h"
+#include "mouse.h"
 
 #define DEFAULT_TRAY_WIDTH 32
 #define DEFAULT_TRAY_HEIGHT 32
@@ -726,7 +727,13 @@ TrayComponentType *GetTrayComponent(TrayType *tp, int x, int y)
 /** Handle a button press on a tray. */
 void HandleTrayButtonEvent(TrayType *tp, const XButtonEvent *event)
 {
-   TrayComponentType *cp = GetTrayComponent(tp, event->x, event->y);
+   TrayComponentType *cp;
+
+   if(CheckMouseGrab(event)) {
+      return;
+   }
+
+   cp = GetTrayComponent(tp, event->x, event->y);
    if(cp && cp->ProcessButtonEvent) {
       const int x = event->x - cp->x;
       const int y = event->y - cp->y;

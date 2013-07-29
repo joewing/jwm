@@ -29,10 +29,11 @@ void GetWindowMenuSize(struct ClientNode *np, int *width, int *height);
 void ShowWindowMenu(struct ClientNode *np, int x, int y);
 
 /** Grab the mouse to select a window.
+ * @param context The action context.
  * @param action The action to perform when a window is selected.
- * @param arg Action argument.
  */
-void ChooseWindow(const ActionType action, const char *arg);
+void ChooseWindow(const ActionContext *context,
+                  const ActionNode *action);
 
 #endif /* WINMENU_H */
 

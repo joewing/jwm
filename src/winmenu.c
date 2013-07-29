@@ -174,25 +174,19 @@ void CreateWindowLayerMenu(Menu *menu)
    submenu->label = NULL;
 
    if(client->state.layer == LAYER_ABOVE) {
-      AddWindowMenuItem(submenu, _("[Above]"), ACTION_LAYER,
-                        (LAYER_ABOVE));
+      AddWindowMenuItem(submenu, _("[Above]"), ACTION_LAYER, "above");
    } else {
-      AddWindowMenuItem(submenu, _("Above"), ACTION_LAYER,
-                        (LAYER_ABOVE));
+      AddWindowMenuItem(submenu, _("Above"), ACTION_LAYER, "above");
    }
    if(client->state.layer == LAYER_NORMAL) {
-      AddWindowMenuItem(submenu, _("[Normal]"), ACTION_LAYER,
-                        (LAYER_NORMAL));
+      AddWindowMenuItem(submenu, _("[Normal]"), ACTION_LAYER, "normal");
    } else {
-      AddWindowMenuItem(submenu, _("Normal"), ACTION_LAYER,
-                        (LAYER_NORMAL));
+      AddWindowMenuItem(submenu, _("Normal"), ACTION_LAYER, "normal");
    }
    if(client->state.layer == LAYER_BELOW) {
-      AddWindowMenuItem(submenu, _("[Below]"), ACTION_LAYER,
-                        (LAYER_BELOW));
+      AddWindowMenuItem(submenu, _("[Below]"), ACTION_LAYER, "below");
    } else {
-      AddWindowMenuItem(submenu, _("Below"), ACTION_LAYER,
-                        (LAYER_BELOW));
+      AddWindowMenuItem(submenu, _("Below"), ACTION_LAYER, "below");
    }
 
 }
@@ -212,7 +206,7 @@ void CreateWindowSendToMenu(Menu *menu)
       }
    }
 
-   AddWindowMenuItem(menu, _("Send To"), MA_NONE, 0);
+   AddWindowMenuItem(menu, _("Send To"), ACTION_NONE, NULL);
 
    /* Now the first item in the menu is for the desktop list. */
    menu->items->submenu = CreateDesktopMenu(mask);
@@ -221,7 +215,7 @@ void CreateWindowSendToMenu(Menu *menu)
 
 /** Add an item to the current window menu. */
 void AddWindowMenuItem(Menu *menu, const char *name,
-                       MenuActionType type, int value)
+                       ActionType type, const char *value)
 {
 
    MenuItem *item;
@@ -234,7 +228,7 @@ void AddWindowMenuItem(Menu *menu, const char *name,
    }
    item->name = CopyString(name);
    item->action.type = type;
-   item->action.data.i = value;
+   item->action.arg = (char*)value;
    item->iconName = NULL;
    item->submenu = NULL;
 
@@ -262,7 +256,7 @@ void ChooseWindow(const ActionContext *context,
             np = FindClient(event.xbutton.subwindow);
             if(np) {
                client = np;
-               RunCommand(context, action);
+               RunAction(context, action);
             }
          }
          break;

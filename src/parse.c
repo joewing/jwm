@@ -93,6 +93,7 @@ static const struct {
    { "clock",           CONTEXT_CLOCK        },
    { "root",            CONTEXT_ROOT         },
    { "window",          CONTEXT_WINDOW       },
+   { "task",            CONTEXT_TASK         },
    { NULL,              CONTEXT_NONE         }
 };
 
@@ -182,6 +183,7 @@ static void ParsePager(const TokenNode *tp, TrayType *tray);
 static void ParseTaskList(const TokenNode *tp, TrayType *tray);
 static void ParseSwallow(const TokenNode *tp, TrayType *tray);
 static void ParseTrayButton(const TokenNode *tp, TrayType *tray);
+static void ParseTrayButtonAction(const TokenNode *tp, TrayComponentType *cp);
 static void ParseClock(const TokenNode *tp, TrayType *tray);
 static void ParseDock(const TokenNode *tp, TrayType *tray);
 static void ParseSpacer(const TokenNode *tp, TrayType *tray);
@@ -1254,11 +1256,11 @@ void ParseSwallow(const TokenNode *tp, TrayType *tray) {
 void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
 
    TrayComponentType *cp;
+   TokenNode *np;
    const char *icon;
    const char *label;
    const char *popup;
    const char *temp;
-   ActionNode action;
    unsigned int width, height;
    char border;
 
@@ -1290,11 +1292,43 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
       height = 0;
    }
 
-   if(ParseAction(tp, &action)) {
-      cp = CreateTrayButton(icon, label, &action, popup, width, height, border);
-      if(JLIKELY(cp)) {
-         AddTrayComponent(tray, cp);
+   cp = CreateTrayButton(icon, label, popup, width, height, border);
+   if(JUNLIKELY(cp == NULL)) {
+      return;
+   }
+
+   AddTrayComponent(tray, cp);
+
+   for(np = tp->subnodeHead; np; np = np->next) {
+      switch(np->type) {
+      case TOK_MOUSE:
+         ParseTrayButtonAction(np, cp);
+         break;
+      default:
+         InvalidTag(np, TOK_TRAYBUTTON);
+         break;
       }
+   }
+
+}
+
+/** Parse a tray button binding. */
+void ParseTrayButtonAction(const TokenNode *tp, TrayComponentType *cp)
+{
+
+   const char *mask;
+   const char *button;
+   ActionNode action;
+
+   mask = FindAttribute(tp->attributes, MASK_ATTRIBUTE);
+   button = FindAttribute(tp->attributes, "button");
+   if(JUNLIKELY(button == NULL)) {
+      ParseError(tp, _("no button specified for tray button binding"));
+      return;
+   }
+
+   if(ParseAction(tp, &action)) {
+      AddTrayButtonAction(cp, atoi(button), mask, &action);
    }
 
 }

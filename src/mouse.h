@@ -14,7 +14,7 @@
 
 struct ClientNode;
 
-typedef unsigned char ContextType;
+typedef unsigned int ContextType;
 #define CONTEXT_NONE          0
 #define CONTEXT_BORDER        1
 #define CONTEXT_TITLE         2
@@ -39,6 +39,11 @@ void InitializeMouse();
 #define ShutdownMouse()       (void)(0)
 void DestroyMouse();
 /*@}*/
+
+/** Create a new context.
+ * @return The context value.
+ */
+ContextType CreateMouseContext();
 
 /** Check for and process a mouse grab.
  * @param event The event.
@@ -69,7 +74,7 @@ void SetButtonReleaseCallback(ReleaseCallback c, void *arg);
  * @param context The context of the binding.
  * @param button The mouse button.
  * @param modifiers Keyboard modifiers.
- * @param action The action.
+ * @param action The action (shallow copied).
  */
 void InsertMouseBinding(ContextType context,
                         int button,

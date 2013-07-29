@@ -24,7 +24,6 @@ void DestroyTrayButtons();
 /** Create a tray button component.
  * @param iconName The name of the icon to use for the button.
  * @param label The label to use for the button.
- * @param action The action to take when the button is clicked.
  * @param popup Text to display in a popup window.
  * @param width The width to use for the button (0 for default).
  * @param height The height to use for the button (0 for default).
@@ -33,11 +32,21 @@ void DestroyTrayButtons();
  */
 struct TrayComponentType *CreateTrayButton(const char *iconName,
                                            const char *label,
-                                           const struct ActionNode *action,
                                            const char *popup,
                                            unsigned int width,
                                            unsigned int height,
                                            char border);
+
+/** Add an action to a tray button.
+ * @param cp The tray button component.
+ * @param mask The key mask.
+ * @param button The mouse button.
+ * @param action The action (shallow copied).
+ */
+void AddTrayButtonAction(const struct TrayComponentType *cp,
+                         int button,
+                         const char *mask,
+                         const struct ActionNode *action);
 
 #endif /* TRAY_BUTTON_H */
 

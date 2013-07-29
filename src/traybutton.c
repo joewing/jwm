@@ -42,8 +42,8 @@ typedef struct TrayButtonType {
    char *popup;
    char *iconName;
    IconNode *icon;
-   ActionNode action;
    char border;
+   ContextType context;
 
    int mousex;
    int mousey;
@@ -111,9 +111,6 @@ void DestroyTrayButtons()
       if(buttons->iconName) {
          Release(buttons->iconName);
       }
-      if(buttons->action.arg) {
-         Release(buttons->action.arg);
-      }
       if(buttons->popup) {
          Release(buttons->popup);
       }
@@ -125,7 +122,6 @@ void DestroyTrayButtons()
 /** Create a button tray component. */
 TrayComponentType *CreateTrayButton(const char *iconName,
                                     const char *label,
-                                    const ActionNode *action,
                                     const char *popup,
                                     unsigned int width,
                                     unsigned int height,
@@ -148,9 +144,9 @@ TrayComponentType *CreateTrayButton(const char *iconName,
    bp->icon = NULL;
    bp->iconName = CopyString(iconName);
    bp->label = CopyString(label);
-   bp->action = *action;
    bp->popup = CopyString(popup);
    bp->border = border;
+   bp->context = CreateMouseContext();
 
    cp = CreateTrayComponent();
    cp->object = bp;
@@ -175,6 +171,16 @@ TrayComponentType *CreateTrayButton(const char *iconName,
 
    return cp;
 
+}
+
+/** Add an action to a tray button. */
+void AddTrayButtonAction(const TrayComponentType *cp,
+                         int button,
+                         const char *mask,
+                         const ActionNode *action)
+{
+   const TrayButtonType *bp = (const TrayButtonType*)cp->object;
+   InsertMouseBinding(bp->context, button, mask, action);
 }
 
 /** Set the size of a button tray component. */
@@ -288,6 +294,7 @@ void ProcessButtonEvent(TrayComponentType *cp,
    ActionContext context;
 
    InitActionContext(&context);
+   context.data = bp;
    context.x = event->x_root;
    context.y = event->y_root;
    context.MoveFunc = MoveClientKeyboard;
@@ -296,7 +303,7 @@ void ProcessButtonEvent(TrayComponentType *cp,
    Draw(cp, 1);
    UpdateSpecificTray(cp->tray, cp);
 
-   if(RunMouseCommand(event, CONTEXT_TASK, &context)) {
+   if(RunMouseCommand(event, bp->context, &context)) {
       Draw(cp, 0);
       UpdateSpecificTray(cp->tray, cp);
    } else {
@@ -315,11 +322,12 @@ void ProcessButtonRelease(const XButtonEvent *event, void *arg)
    ActionContext context;
 
    InitActionContext(&context);
+   context.data = arg;
    context.x = event->x_root;
    context.y = event->y_root;
    context.MoveFunc = MoveClientKeyboard;
    context.ResizeFunc = ResizeClientKeyboard;
-   RunMouseCommand(event, CONTEXT_TASK, &context);
+   RunMouseCommand(event, bp->context, &context);
 
    Draw(cp, 0);
    UpdateSpecificTray(cp->tray, cp);

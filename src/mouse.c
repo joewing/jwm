@@ -24,18 +24,20 @@ typedef struct MouseNode {
    struct MouseNode *next;
 } MouseNode;
 
-static MouseNode *bindings[CONTEXT_COUNT];
+static MouseNode *bindings[CONTEXT_COUNT + 1];
 static ReleaseCallback callback;
 static void *callbackArg;
+static ContextType contextCounter;
 
 /** Initialize mouse bindings. */
 void InitializeMouse()
 {
    int i;
-   for(i = 0; i < CONTEXT_COUNT; i++) {
+   for(i = 0; i <= CONTEXT_COUNT; i++) {
       bindings[i] = NULL;
    }
    callback = NULL;
+   contextCounter = CONTEXT_COUNT;
 }
 
 /** Clean up mouse bindings. */
@@ -43,7 +45,7 @@ void DestroyMouse()
 {
    MouseNode *mp;
    int i;
-   for(i = 0; i < CONTEXT_COUNT; i++) {
+   for(i = 0; i <= CONTEXT_COUNT; i++) {
       while(bindings[i]) {
          mp = bindings[i]->next;
          if(bindings[i]->action.arg) {
@@ -53,6 +55,14 @@ void DestroyMouse()
          bindings[i] = mp;
       }
    }
+}
+
+/** Create a new context. */
+ContextType CreateMouseContext()
+{
+   const ContextType result = contextCounter;
+   contextCounter += 1;
+   return result;
 }
 
 /** Check for and process a mouse grab. */
@@ -99,11 +109,17 @@ char RunMouseCommand(const XButtonEvent *event,
       }
    }
 
-   mp = bindings[context];
+   if(context < CONTEXT_COUNT) {
+      mp = bindings[context];
+   } else {
+      mp = bindings[CONTEXT_COUNT];
+   }
    while(mp) {
-      if(button == mp->button && state == mp->state) {
-         if(RunAction(ac, &mp->action)) {
-            return 1;
+      if(mp->context == context) {
+         if(button == mp->button && state == mp->state) {
+            if(RunAction(ac, &mp->action)) {
+               return 1;
+            }
          }
       }
       mp = mp->next;
@@ -130,8 +146,13 @@ void InsertMouseBinding(ContextType context,
    MouseNode *mp;
 
    mp = Allocate(sizeof(MouseNode));
-   mp->next = bindings[context];
-   bindings[context] = mp;
+   if(context < CONTEXT_COUNT) {
+      mp->next = bindings[context];
+      bindings[context] = mp;
+   } else {
+      mp->next = bindings[CONTEXT_COUNT];
+      bindings[CONTEXT_COUNT] = mp;
+   }
 
    mp->context          = context;
    mp->button           = button;

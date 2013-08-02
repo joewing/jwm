@@ -150,7 +150,12 @@ char RunAction(const ActionContext *context,
          } else {
             value = !(context->client->state.status & STAT_MINIMIZED);
          }
-         MinimizeClient(context->client, value);
+         if(value) {
+            MinimizeClient(context->client, 0);
+         } else {
+            RestoreClient(context->client, 1);
+            FocusClient(context->client);
+         }
       }
       return 0;
    case ACTION_MAX:

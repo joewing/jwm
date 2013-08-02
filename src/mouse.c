@@ -48,8 +48,8 @@ void DestroyMouse()
    for(i = 0; i <= CONTEXT_COUNT; i++) {
       while(bindings[i]) {
          mp = bindings[i]->next;
-         if(bindings[i]->action.arg) {
-            Release(bindings[i]->action.arg);
+         if(bindings[i]->action.str) {
+            Release(bindings[i]->action.str);
          }
          Release(bindings[i]);
          bindings[i] = mp;

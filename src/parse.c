@@ -567,7 +567,8 @@ MenuItem *InsertMenuItem(MenuItem *last) {
    item->type = MENU_ITEM_NORMAL;
    item->iconName = NULL;
    item->action.type = ACTION_NONE;
-   item->action.arg = NULL;
+   item->action.str = NULL;
+   item->action.value = 0;
    item->submenu = NULL;
 
    item->next = NULL;
@@ -1836,28 +1837,22 @@ static char ParseAction(const TokenNode *tp, ActionNode *np)
       np->type = ACTION_NONE;
       if(arg) {
          len = (size_t)(arg - value);
-         np->arg = CopyString(arg + 1);
-      } else {
-         np->arg = NULL;
+         arg += 1;
       }
 
       for(x = 0; ACTION_MAP[x].name; x++) {
          if(!strncmp(value, ACTION_MAP[x].name, len)) {
-            np->type = ACTION_MAP[x].action;
+            CreateAction(np, ACTION_MAP[x].action, arg);
             return 1;
          }
       }
 
-      if(np->arg) {
-         Release(np->arg);
-      }
       ParseError(tp, _("invalid action: %s"), tp->value);
       return 0;
 
    } else {
 
-      np->type = ACTION_EXEC;
-      np->arg = CopyString(value);
+      CreateAction(np, ACTION_EXEC, value);
       return 1;
 
    }

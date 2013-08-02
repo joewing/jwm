@@ -158,7 +158,8 @@ void CreateWindowLayerMenu(const ClientNode *np, Menu *menu)
    item->type = MENU_ITEM_SUBMENU;
    item->name = CopyString(_("Layer"));
    item->action.type = ACTION_NONE;
-   item->action.arg = NULL;
+   item->action.str = NULL;
+   item->action.value = 0;
    item->iconName = NULL;
 
    item->next = menu->items;
@@ -223,8 +224,7 @@ void AddWindowMenuItem(Menu *menu, const char *name,
       item->type = MENU_ITEM_SEPARATOR;
    }
    item->name = CopyString(name);
-   item->action.type = type;
-   item->action.arg = (char*)value;
+   CreateAction(&item->action, type, value);
    item->iconName = NULL;
    item->submenu = NULL;
 

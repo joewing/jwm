@@ -18,6 +18,25 @@
 #include "tray.h"
 #include "taskbar.h"
 #include "winmenu.h"
+#include "misc.h"
+
+/** Create an action. */
+void CreateAction(ActionNode *ap, ActionType type, const char *arg)
+{
+   ap->type    = type;
+   ap->value   = -1;
+   ap->str     = NULL;
+   if(arg) {
+      switch(type) {
+      case ACTION_EXEC:
+         ap->str = CopyString(arg);
+         break;
+      default:
+         ap->value = atoi(arg);
+         break;
+      }
+   }
+}
 
 /** Initialize action context. */
 void InitActionContext(ActionContext *ac)
@@ -38,11 +57,11 @@ char RunAction(const ActionContext *context,
    char value;
    switch(action->type) {
    case ACTION_EXEC:
-      RunCommand(action->arg);
+      RunCommand(action->str);
       return 0;
    case ACTION_DESKTOP:
-      if(action->arg) {
-         ChangeDesktop((unsigned int)atoi(action->arg));
+      if(action->value >= 0) {
+         ChangeDesktop(action->value);
       } else {
          ChangeDesktop(context->desktop);
       }
@@ -91,8 +110,8 @@ char RunAction(const ActionContext *context,
       return 0;
    case ACTION_SHADE:
       if(context->client) {
-         if(action->arg) {
-            value = action->arg[0] == '1';
+         if(action->value >= 0) {
+            value = action->value;
          } else {
             value = !(context->client->state.status & STAT_SHADED);
          }
@@ -105,8 +124,8 @@ char RunAction(const ActionContext *context,
       return 0;
    case ACTION_STICK:
       if(context->client) {
-         if(action->arg) {
-            value = action->arg[0] == '1';
+         if(action->value >= 0) {
+            value = action->value;
          } else {
             value = !(context->client->state.status & STAT_STICKY);
          }
@@ -126,8 +145,8 @@ char RunAction(const ActionContext *context,
       return 1;
    case ACTION_MIN:
       if(context->client) {
-         if(action->arg) {
-            value = action->arg[0] == '1';
+         if(action->value >= 0) {
+            value = action->value;
          } else {
             value = !(context->client->state.status & STAT_MINIMIZED);
          }
@@ -140,13 +159,7 @@ char RunAction(const ActionContext *context,
       }
       return 0;
    case ACTION_ROOT:
-      if(JLIKELY(action->arg)) {
-         ShowRootMenu((unsigned int)atoi(action->arg),
-                      context->x, context->y);
-         return 1;
-      } else {
-         return 0;
-      }
+      return ShowRootMenu(action->value, context->x, context->y);
    case ACTION_WIN:
       if(context->client) {
          ShowWindowMenu(context->client, context->x, context->y);
@@ -162,8 +175,8 @@ char RunAction(const ActionContext *context,
       return 0;
    case ACTION_FULLSCREEN:
       if(context->client) {
-         if(action->arg) {
-            value = action->arg[0] == '1';
+         if(action->value >= 0) {
+            value = action->value;
          } else {
             value = !(context->client->state.status & STAT_FULLSCREEN);
          }
@@ -171,8 +184,8 @@ char RunAction(const ActionContext *context,
       }
       return 0;
    case ACTION_SENDTO:
-      if(context->client && action->arg) {
-         SetClientDesktop(context->client, atoi(action->arg));
+      if(context->client) {
+         SetClientDesktop(context->client, action->value);
       }
       return 0;
    case ACTION_SENDLEFT:
@@ -196,8 +209,8 @@ char RunAction(const ActionContext *context,
       }
       return 0;
    case ACTION_LAYER:
-      if(context->client && action->arg) {
-         SetClientLayer(context->client, atoi(action->arg));
+      if(context->client) {
+         SetClientLayer(context->client, action->value);
       }
       return 0;
    default:

@@ -475,9 +475,9 @@ void SetClientLayer(ClientNode *np, unsigned int layer)
    ClientNode *tp, *next;
    int x;
 
-   Assert(np);
-   Assert(layer >= FIRST_LAYER);
-   Assert(layer <= LAST_LAYER);
+   if(JUNLIKELY(layer >= LAYER_COUNT)) {
+      return;
+   }
 
    if(np->state.layer != layer) {
 

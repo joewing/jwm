@@ -163,8 +163,8 @@ void DestroyKeys()
    KeyNode *np;
    while(bindings) {
       np = bindings->next;
-      if(bindings->action.arg) {
-         Release(bindings->action.arg);
+      if(bindings->action.str) {
+         Release(bindings->action.str);
       }
       Release(bindings);
       bindings = np;
@@ -395,6 +395,9 @@ void InsertKeyBinding(const char *modifiers,
    } else {
 
       Warning(_("neither key nor keycode specified for Key"));
+      if(action->str) {
+         Release(action->str);
+      }
       np = NULL;
 
    }

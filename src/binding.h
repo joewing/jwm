@@ -57,7 +57,8 @@ typedef unsigned char ActionType;
 #define ACTION_LAYER          40    /**< Set window layer */
 
 typedef struct ActionNode {
-   char *arg;
+   char *str;
+   int value;
    ActionType type;
 } ActionNode;
 
@@ -72,6 +73,13 @@ typedef struct ActionContext {
    void (*ResizeFunc)(const struct ActionContext *ac, int x, int y);
 
 } ActionContext;
+
+/** Create an action.
+ * @param ap The action to be initialized.
+ * @param type The action type.
+ * @param arg An argument to the action (copied).
+ */
+void CreateAction(ActionNode *ap, ActionType type, const char *arg);
 
 /** Initialize action context.
  * @param ad The action context to initialize.

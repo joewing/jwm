@@ -197,8 +197,8 @@ void DestroyMenu(Menu *menu)
          if(menu->items->name) {
             Release(menu->items->name);
          }
-         if(menu->items->action.arg) {
-            Release(menu->items->action.arg);
+         if(menu->items->action.str) {
+            Release(menu->items->action.str);
          }
          if(menu->items->iconName) {
             Release(menu->items->iconName);

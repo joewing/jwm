@@ -21,9 +21,8 @@
 #include "background.h"
 #include "settings.h"
 
-char **desktopNames = NULL;
-
-char showingDesktop;
+static char **desktopNames = NULL;
+static char *showingDesktop = NULL;
 
 /** Startup desktop support. */
 void StartupDesktops()
@@ -43,9 +42,12 @@ void StartupDesktops()
          snprintf(desktopNames[x], 4, "%d", x + 1);
       }
    }
-
-   showingDesktop = 0;
-
+   if(showingDesktop == NULL) {
+      showingDesktop = Allocate(settings.desktopCount * sizeof(char));
+      for(x = 0; x < settings.desktopCount; x++) {
+         showingDesktop[x] = 0;
+      }
+   }
 }
 
 /** Release desktop data. */
@@ -59,6 +61,10 @@ void DestroyDesktops() {
       }
       Release(desktopNames);
       desktopNames = NULL;
+   }
+   if(showingDesktop) {
+      Release(showingDesktop);
+      showingDesktop = NULL;
    }
 
 }
@@ -168,6 +174,8 @@ void ChangeDesktop(unsigned int desktop)
    currentDesktop = desktop;
 
    SetCardinalAtom(rootWindow, ATOM_NET_CURRENT_DESKTOP, currentDesktop);
+   SetCardinalAtom(rootWindow, ATOM_NET_SHOWING_DESKTOP,
+                   showingDesktop[currentDesktop]);
 
    RestackClients();
    UpdateTaskBar();
@@ -227,24 +235,28 @@ void ShowDesktop()
 
    for(layer = 0; layer < LAYER_COUNT; layer++) {
       for(np = nodes[layer]; np; np = np->next) {
-         if(!(np->state.status & STAT_NOLIST)) {
-            if(showingDesktop) {
-               if(np->state.status & STAT_SDESKTOP) {
-                  RestoreClient(np, 0);
-               }
-            } else if(np->state.desktop == currentDesktop
-                || (np->state.status & STAT_STICKY)) {
-               if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
-                  MinimizeClient(np, 0);
-                  np->state.status |= STAT_SDESKTOP;
-               }
+        if(np->state.status & STAT_NOLIST) {
+           continue;
+        }
+        if((np->state.desktop == currentDesktop) ||
+           (np->state.status & STAT_STICKY)) {
+          if(showingDesktop[currentDesktop]) {
+            if(np->state.status & STAT_SDESKTOP) {
+              RestoreClient(np, 0);
             }
-         }
+          } else {
+            if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
+              MinimizeClient(np, 0);
+              np->state.status |= STAT_SDESKTOP;
+            }
+          }
+        }
       }
    }
 
-   showingDesktop = !showingDesktop;
-   SetCardinalAtom(rootWindow, ATOM_NET_SHOWING_DESKTOP, showingDesktop);
+   showingDesktop[currentDesktop] = !showingDesktop[currentDesktop];
+   SetCardinalAtom(rootWindow, ATOM_NET_SHOWING_DESKTOP,
+                   showingDesktop[currentDesktop]);
 
    RestackClients();
 

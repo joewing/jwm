@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-07-15 13:35-0500\n"
+"POT-Creation-Date: 2013-08-06 11:10-0500\n"
 "PO-Revision-Date: 2013-06-27 15:00-0300\n"
 "Last-Translator: Víctor Martínez <vikmz@myopera.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -44,7 +44,7 @@ msgstr "¡Esto puede causar pérdida de datos!"
 msgid "exec failed: (%s) %s"
 msgstr "exec falló: (%s) %s"
 
-#: src/desktop.c:260
+#: src/desktop.c:272
 msgid "empty Desktops Name tag"
 msgstr "etiqueta Nombre de Escritorio vacía"
 
@@ -223,7 +223,7 @@ msgstr "no se puede mostrar un cliente sin nombre"
 msgid "cannot swallow the same client multiple times"
 msgstr "no se puede mostrar el mismo cliente varias veces"
 
-#: src/taskbar.c:733
+#: src/taskbar.c:729
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ancho máx. no válido para Lista de Tareas: %s"
@@ -242,32 +242,32 @@ msgstr "no hay icono o etiqueta para el Botón de Bandeja"
 msgid "invalid TrayButton action: \"%s\""
 msgstr "acción no válida para Botón de Bandeja: \"%s\""
 
-#: src/traybutton.c:432
+#: src/traybutton.c:430
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "botón de bandeja: menú root %d no definido"
 
-#: src/tray.c:1071
+#: src/tray.c:1086
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "ancho de bandeja no válido: %d"
 
-#: src/tray.c:1090
+#: src/tray.c:1105
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "alto de bandeja no válido: %d"
 
-#: src/tray.c:1119
+#: src/tray.c:1134
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "forma no válida para bandeja: \"%s\""
 
-#: src/tray.c:1156
+#: src/tray.c:1171
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alineación horizontal no válida para bandeja: \"%s\""
 
-#: src/tray.c:1177
+#: src/tray.c:1192
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alineación vertical no válida para bandeja: \"%s\""

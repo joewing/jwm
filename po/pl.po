@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-07-15 13:35-0500\n"
+"POT-Creation-Date: 2013-08-06 11:10-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -45,7 +45,7 @@ msgstr "Może to spowodować utratę danych!"
 msgid "exec failed: (%s) %s"
 msgstr "exec nie powiodło się: (%s) %s"
 
-#: src/desktop.c:260
+#: src/desktop.c:272
 msgid "empty Desktops Name tag"
 msgstr "pusty znacznik Nazwa Pulpitów"
 
@@ -222,7 +222,7 @@ msgstr "nie może połknąć klienta bez nazwy"
 msgid "cannot swallow the same client multiple times"
 msgstr "nie można połknąć tego samego klienta, wiele razy"
 
-#: src/taskbar.c:733
+#: src/taskbar.c:729
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
@@ -241,32 +241,32 @@ msgstr "brak ikony lub etykiety dla TrayButton"
 msgid "invalid TrayButton action: \"%s\""
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/traybutton.c:432
+#: src/traybutton.c:430
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "przycisk zasobnika: menu głównym %d nie zdefiniowano"
 
-#: src/tray.c:1071
+#: src/tray.c:1086
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "nieprawidłowa szerokość zasobnika: %d"
 
-#: src/tray.c:1090
+#: src/tray.c:1105
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "nieprawidłowa wysokość zasobnika: %d"
 
-#: src/tray.c:1119
+#: src/tray.c:1134
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "nieprawidłowy układ zasobnika: \"%s\""
 
-#: src/tray.c:1156
+#: src/tray.c:1171
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "nieprawidłowe wypoziomowanie zasobnika: \"%s\""
 
-#: src/tray.c:1177
+#: src/tray.c:1192
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""

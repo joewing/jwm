@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-06 11:10-0500\n"
+"POT-Creation-Date: 2013-08-09 17:05-0500\n"
 "PO-Revision-Date: 2013-07-25 16:40+0100\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -222,7 +222,7 @@ msgstr "Impossibile includere un client senza nome"
 msgid "cannot swallow the same client multiple times"
 msgstr "Impossibile includere più volte lo stesso client"
 
-#: src/taskbar.c:729
+#: src/taskbar.c:728
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "Larghezza massima per TaskList non valida: %s"

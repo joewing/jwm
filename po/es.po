@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-06 11:10-0500\n"
+"POT-Creation-Date: 2013-08-09 17:05-0500\n"
 "PO-Revision-Date: 2013-06-27 15:00-0300\n"
 "Last-Translator: Víctor Martínez <vikmz@myopera.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -223,7 +223,7 @@ msgstr "no se puede mostrar un cliente sin nombre"
 msgid "cannot swallow the same client multiple times"
 msgstr "no se puede mostrar el mismo cliente varias veces"
 
-#: src/taskbar.c:729
+#: src/taskbar.c:728
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ancho máx. no válido para Lista de Tareas: %s"

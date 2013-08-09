@@ -432,7 +432,7 @@ void Render(const TaskBarType *bp)
    int x, y;
    int remainder;
    int itemWidth, itemCount;
-   int width, height;
+   int width;
    Pixmap buffer;
    GC gc;
    char *minimizedName;
@@ -445,7 +445,6 @@ void Render(const TaskBarType *bp)
    Assert(bp->cp);
 
    width = bp->cp->width;
-   height = bp->cp->height;
    buffer = bp->cp->pixmap;
    gc = rootGC;
 

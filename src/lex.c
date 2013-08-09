@@ -64,7 +64,6 @@ static const char *TOKEN_MAP[] = {
    "PagerStyle",
    "Popup",
    "PopupStyle",
-   "Program",
    "Resize",
    "ResizeMode",
    "Restart",

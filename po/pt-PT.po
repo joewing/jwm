@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-06 11:10-0500\n"
+"POT-Creation-Date: 2013-08-09 17:05-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -229,7 +229,7 @@ msgstr "não podes inserir um cliente no swallow sem nome"
 msgid "cannot swallow the same client multiple times"
 msgstr "não podes inserir um cliente no swallow mais que uma vez"
 
-#: src/taskbar.c:729
+#: src/taskbar.c:728
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largura máxima (maxwidth) invalida para o Tasklist: %s"

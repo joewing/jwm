@@ -8,6 +8,7 @@
  */
 
 #include "jwm.h"
+#include "main.h"
 #include "spacer.h"
 #include "tray.h"
 
@@ -57,15 +58,27 @@ void SetSize(TrayComponentType *cp, int width, int height)
 /** Initialize. */
 void Create(TrayComponentType *cp)
 {
+   cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
+                               rootDepth);
+   ClearTrayDrawable(cp);
 }
 
 /** Resize. */
 void Resize(TrayComponentType *cp)
 {
+   if(cp->pixmap != None) {
+      JXFreePixmap(display, cp->pixmap);
+   }
+   cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
+                               rootDepth);
+   ClearTrayDrawable(cp);
 }
 
 /** Destroy. */
 void Destroy(TrayComponentType *cp)
 {
+   if(cp->pixmap != None) {
+      JXFreePixmap(display, cp->pixmap);
+   }
 }
 

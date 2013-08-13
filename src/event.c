@@ -305,9 +305,7 @@ void HandleButtonEvent(const XButtonEvent *event)
    if(np) {
       if(event->type == ButtonPress) {
          RaiseClient(np);
-         if(settings.focusModel == FOCUS_CLICK) {
-            FocusClient(np);
-         }
+         FocusClient(np);
       }
       DispatchBorderButtonEvent(event, np);
    } else if(event->window == rootWindow && event->type == ButtonPress) {
@@ -325,9 +323,7 @@ void HandleButtonEvent(const XButtonEvent *event)
          case Button1:
          case Button2:
             RaiseClient(np);
-            if(settings.focusModel == FOCUS_CLICK) {
-               FocusClient(np);
-            }
+            FocusClient(np);
             if(event->state & Mod1Mask) {
                GetBorderSize(&np->state, &north, &south, &east, &west);
                MoveClient(np, event->x + west, event->y + north, 0);
@@ -340,9 +336,7 @@ void HandleButtonEvent(const XButtonEvent *event)
                             event->x + west, event->y + north);
             } else {
                RaiseClient(np);
-               if(settings.focusModel == FOCUS_CLICK) {
-                  FocusClient(np);
-               }
+               FocusClient(np);
             }
             break;
          default:

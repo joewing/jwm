@@ -245,6 +245,7 @@ void RunKeyCommand(const XKeyEvent *event)
             RunAction(&ac, &kp->action);
          } else {
             if(kp->action.type != ACTION_NEXTSTACK &&
+               kp->action.type != ACTION_NEXT &&
                kp->action.type != ACTION_PREVSTACK) {
                StopWindowStackWalk();
             }

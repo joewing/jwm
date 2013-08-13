@@ -85,6 +85,7 @@ char RunAction(const ActionContext *context,
       ShowAllTrays();
       return 0;
    case ACTION_NEXT:
+      StartWindowStackWalk();
       FocusNext();
       return 0;
    case ACTION_NEXTSTACK:

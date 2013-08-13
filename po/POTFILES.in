@@ -1,4 +1,5 @@
 src/background.c
+src/binding.c
 src/border.c
 src/button.c
 src/client.c
@@ -27,6 +28,7 @@ src/main.c
 src/match.c
 src/menu.c
 src/misc.c
+src/mouse.c
 src/move.c
 src/outline.c
 src/pager.c

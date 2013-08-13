@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-09 17:05-0500\n"
+"POT-Creation-Date: 2013-08-13 13:10-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -35,20 +35,20 @@ msgstr "tipo de fundo invalido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""
 
-#: src/client.c:878
+#: src/client.c:877
 msgid "Kill this window?"
 msgstr "eliminar esta janela?"
 
-#: src/client.c:879
+#: src/client.c:878
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 
-#: src/command.c:138 src/main.c:191
+#: src/command.c:138 src/main.c:192
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "comando executável falhou (exec): (%s) %s"
 
-#: src/desktop.c:272
+#: src/desktop.c:285
 msgid "empty Desktops Name tag"
 msgstr "etiqueta do ambiente de trabalho vazia (tag)"
 
@@ -102,122 +102,145 @@ msgstr "erro lendo imagem PNG %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "não foi possível criar estrutura de informação para imagem PNG: %s"
 
-#: src/key.c:324
+#: src/key.c:297
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr "KeySym especificado não esta defendido por nenhum Keycode"
 
-#: src/key.c:332
+#: src/key.c:305
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "modificador não foi encontrado para o Keysym 0x%0x"
 
-#: src/key.c:362
+#: src/key.c:335
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "modificador invalido: \"%c\""
 
-#: src/key.c:377
+#: src/key.c:350
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "símbolo da tecla invalido: \"%s\""
 
-#: src/key.c:458
+#: src/key.c:397
 msgid "neither key nor keycode specified for Key"
 msgstr "tecla e código de tecla não foi especificado para esta tecla"
 
-#: src/key.c:474
-#, c-format
-msgid "key binding: root menu %d not defined"
-msgstr ""
-"teclas de atalho: não foram especificadas para o menu root %d não esta "
-"definido"
-
-#: src/lex.c:193
+#: src/lex.c:194
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: terminação da etiqueta (tag) \"%s\" não corresponde à abertura da "
 "etiqueta (tag) \"%s\""
 
-#: src/lex.c:200
+#: src/lex.c:201
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: terminação da etiqueta (tag) inesperada e invalida"
 
-#: src/lex.c:207
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: terminação da etiqueta (tag) \"%s\" sem etiqueta de abertura"
 
-#: src/lex.c:210
+#: src/lex.c:211
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: terminação de etiqueta (tag) invalida"
 
-#: src/lex.c:229
+#: src/lex.c:230
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: abertura de etiqueta (tag) invalida"
 
-#: src/lex.c:242
+#: src/lex.c:243
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: etiqueta invalida (tag)"
 
-#: src/lex.c:288
+#: src/lex.c:289
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: texto inesperado: \"%s\""
 
-#: src/lex.c:336
+#: src/lex.c:337
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entrada invalida: \"%.8s\""
 
-#: src/parse.c:1087
+#: src/parse.c:757
+#, fuzzy
+msgid "no action specified for Key"
+msgstr "tecla e código de tecla não foi especificado para esta tecla"
+
+#: src/parse.c:781
+#, fuzzy
+msgid "no button specified for mouse binding"
+msgstr "nenhum valor foi especificado para o fundo (background)"
+
+#: src/parse.c:791
+#, fuzzy
+msgid "no context specified for mouse binding"
+msgstr "nenhum valor foi especificado para o fundo (background)"
+
+#: src/parse.c:802
+#, fuzzy, c-format
+msgid "invalid mouse binding context: \"%s\""
+msgstr "tipo de fundo invalido: \"%s\""
+
+#: src/parse.c:1020
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "modo de inserção invalido: \"%s\""
 
-#: src/parse.c:1811
+#: src/parse.c:1327
+#, fuzzy
+msgid "no button specified for tray button binding"
+msgstr "nenhum valor foi especificado para o fundo (background)"
+
+#: src/parse.c:1772
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Configuração invalida: %s"
 
-#: src/parse.c:1823
+#: src/parse.c:1784
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "transparência invalida: %s"
 
-#: src/parse.c:1842
+#: src/parse.c:1803
 #, c-format
 msgid "invalid layer: %s"
 msgstr "camada invalida: %s"
 
-#: src/parse.c:1859
+#: src/parse.c:1820
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "tipo de fundo invalido: %s"
 
-#: src/parse.c:1868
+#: src/parse.c:1850
+#, fuzzy, c-format
+msgid "invalid action: %s"
+msgstr "Configuração invalida: %s"
+
+#: src/parse.c:1866
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta invalida dentro %s: %s"
 
-#: src/parse.c:1889
+#: src/parse.c:1887
 msgid "configuration error"
 msgstr "erro de configuração"
 
-#: src/root.c:102
+#: src/root.c:100
 #, c-format
 msgid "invalid root menu specified: \"%c\""
 msgstr "menu root especificado invalido: \"%c\""
 
-#: src/root.c:225
+#: src/root.c:229
 msgid "Exit JWM"
 msgstr "Sair do JWM?"
 
-#: src/root.c:226
+#: src/root.c:230
 msgid "Are you sure?"
 msgstr "Tem a certeza?"
 
@@ -229,12 +252,12 @@ msgstr "não podes inserir um cliente no swallow sem nome"
 msgid "cannot swallow the same client multiple times"
 msgstr "não podes inserir um cliente no swallow mais que uma vez"
 
-#: src/taskbar.c:728
+#: src/taskbar.c:684
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largura máxima (maxwidth) invalida para o Tasklist: %s"
 
-#: src/traybutton.c:89
+#: src/traybutton.c:93
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
@@ -243,124 +266,125 @@ msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
 msgid "no icon or label for TrayButton"
 msgstr "ícone ou nome não esta definido no TrayButton"
 
-#: src/traybutton.c:246
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "ação do Traybutton invalida: \"%s\""
-
-#: src/traybutton.c:430
-#, c-format
-msgid "tray button: root menu %d not defined"
-msgstr "botão do tabuleiro: menu root %d não esta definida"
-
-#: src/tray.c:1086
+#: src/tray.c:1072
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "largura do tabuleiro invalida: %d"
 
-#: src/tray.c:1105
+#: src/tray.c:1091
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "altura do tabuleiro invalida: %d"
 
-#: src/tray.c:1134
+#: src/tray.c:1120
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "layout do tabuleiro invalido: \"%s\""
 
-#: src/tray.c:1171
+#: src/tray.c:1157
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alinhamento do tabuleiro invalido: \"%s\""
 
-#: src/tray.c:1192
+#: src/tray.c:1178
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
 
-#: src/winmenu.c:80
+#: src/winmenu.c:84
 msgid "Close"
 msgstr "Fechar"
 
-#: src/winmenu.c:81
+#: src/winmenu.c:85
 msgid "Kill"
 msgstr "Terminar"
 
-#: src/winmenu.c:88
+#: src/winmenu.c:92
 msgid "Resize"
 msgstr "Redimensionar"
 
-#: src/winmenu.c:91
+#: src/winmenu.c:95
 msgid "Move"
 msgstr "Mover"
 
-#: src/winmenu.c:97 src/winmenu.c:120
+#: src/winmenu.c:101 src/winmenu.c:124
 msgid "Restore"
 msgstr "Restaurar"
 
-#: src/winmenu.c:99
+#: src/winmenu.c:103
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: src/winmenu.c:103
+#: src/winmenu.c:107
 msgid "Unshade"
 msgstr "Desligar Sombra"
 
-#: src/winmenu.c:105
+#: src/winmenu.c:109
 msgid "Shade"
 msgstr "Ligar Sombra"
 
-#: src/winmenu.c:112
+#: src/winmenu.c:116
 msgid "Maximize-y"
 msgstr "Maximizar-y"
 
-#: src/winmenu.c:116
+#: src/winmenu.c:120
 msgid "Maximize-x"
 msgstr "Maximizar-x"
 
-#: src/winmenu.c:122
+#: src/winmenu.c:126
 msgid "Maximize"
 msgstr "Maximizar"
 
-#: src/winmenu.c:130
+#: src/winmenu.c:134
 msgid "Unstick"
 msgstr "Descolar"
 
-#: src/winmenu.c:132
+#: src/winmenu.c:136
 msgid "Stick"
 msgstr "Colar"
 
-#: src/winmenu.c:155
+#: src/winmenu.c:159
 msgid "Layer"
 msgstr "Camada"
 
-#: src/winmenu.c:170
+#: src/winmenu.c:175
 msgid "[Above]"
 msgstr "[Acima]"
 
-#: src/winmenu.c:172
+#: src/winmenu.c:177
 msgid "Above"
 msgstr "Acima"
 
-#: src/winmenu.c:175
+#: src/winmenu.c:180
 msgid "[Normal]"
 msgstr "[Normal]"
 
-#: src/winmenu.c:177
+#: src/winmenu.c:182
 msgid "Normal"
 msgstr "Normal"
 
-#: src/winmenu.c:180
+#: src/winmenu.c:185
 msgid "[Below]"
 msgstr "[Abaixo]"
 
-#: src/winmenu.c:182
+#: src/winmenu.c:187
 msgid "Below"
 msgstr "Abaixo"
 
-#: src/winmenu.c:202
+#: src/winmenu.c:206
 msgid "Send To"
 msgstr "Enviar Para"
+
+#~ msgid "key binding: root menu %d not defined"
+#~ msgstr ""
+#~ "teclas de atalho: não foram especificadas para o menu root %d não esta "
+#~ "definido"
+
+#~ msgid "invalid TrayButton action: \"%s\""
+#~ msgstr "ação do Traybutton invalida: \"%s\""
+
+#~ msgid "tray button: root menu %d not defined"
+#~ msgstr "botão do tabuleiro: menu root %d não esta definida"
 
 #~ msgid "Fullscreen state will be shaped!"
 #~ msgstr "Estado do ecrã expandido será moldado!"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-09 17:05-0500\n"
+"POT-Creation-Date: 2013-08-13 13:10-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -26,20 +26,20 @@ msgstr "ungültiger Typ für Hintergrund: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Hintergrundbild nicht gefunden: \"%s\""
 
-#: src/client.c:878
+#: src/client.c:877
 msgid "Kill this window?"
 msgstr "Dieses Fenster töten?"
 
-#: src/client.c:879
+#: src/client.c:878
 msgid "This may cause data to be lost!"
 msgstr "Das kann Datenverlust verursachen!"
 
-#: src/command.c:138 src/main.c:191
+#: src/command.c:138 src/main.c:192
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "Ausführung fehlgeschlagen: (%s) %s"
 
-#: src/desktop.c:272
+#: src/desktop.c:285
 msgid "empty Desktops Name tag"
 msgstr ""
 
@@ -93,118 +93,143 @@ msgstr ""
 msgid "could not create info struct for PNG image: %s"
 msgstr ""
 
-#: src/key.c:324
+#: src/key.c:297
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr ""
 
-#: src/key.c:332
+#: src/key.c:305
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr ""
 
-#: src/key.c:362
+#: src/key.c:335
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "ungültiger Modifizierer: \"%c\""
 
-#: src/key.c:377
+#: src/key.c:350
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "ungültiges Tastensymbol: \"%s\""
 
-#: src/key.c:458
+#: src/key.c:397
 msgid "neither key nor keycode specified for Key"
 msgstr ""
 
-#: src/key.c:474
-#, c-format
-msgid "key binding: root menu %d not defined"
-msgstr ""
-
-#: src/lex.c:193
+#: src/lex.c:194
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 
-#: src/lex.c:200
+#: src/lex.c:201
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr ""
 
-#: src/lex.c:207
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr ""
 
-#: src/lex.c:210
+#: src/lex.c:211
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr ""
 
-#: src/lex.c:229
+#: src/lex.c:230
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr ""
 
-#: src/lex.c:242
+#: src/lex.c:243
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr ""
 
-#: src/lex.c:288
+#: src/lex.c:289
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr ""
 
-#: src/lex.c:336
+#: src/lex.c:337
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/parse.c:1087
+#: src/parse.c:757
+#, fuzzy
+msgid "no action specified for Key"
+msgstr "kein Wert für Hintergrund spezifiziert"
+
+#: src/parse.c:781
+#, fuzzy
+msgid "no button specified for mouse binding"
+msgstr "kein Wert für Hintergrund spezifiziert"
+
+#: src/parse.c:791
+#, fuzzy
+msgid "no context specified for mouse binding"
+msgstr "kein Wert für Hintergrund spezifiziert"
+
+#: src/parse.c:802
+#, fuzzy, c-format
+msgid "invalid mouse binding context: \"%s\""
+msgstr "ungültiger Typ für Hintergrund: \"%s\""
+
+#: src/parse.c:1020
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "ungültiger EInfügungsmodus: \"%s\""
 
-#: src/parse.c:1811
+#: src/parse.c:1327
+#, fuzzy
+msgid "no button specified for tray button binding"
+msgstr "kein Wert für Hintergrund spezifiziert"
+
+#: src/parse.c:1772
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ungültige Einstellung %s"
 
-#: src/parse.c:1823
+#: src/parse.c:1784
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ungültige Opazität: \"%s\""
 
-#: src/parse.c:1842
+#: src/parse.c:1803
 #, c-format
 msgid "invalid layer: %s"
 msgstr "ungültige Ebene %s"
 
-#: src/parse.c:1859
+#: src/parse.c:1820
 #, c-format
 msgid "invalid status window type: %s"
 msgstr ""
 
-#: src/parse.c:1868
+#: src/parse.c:1850
+#, fuzzy, c-format
+msgid "invalid action: %s"
+msgstr "ungültige Einstellung %s"
+
+#: src/parse.c:1866
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ungültiger tag in %s: %s"
 
-#: src/parse.c:1889
+#: src/parse.c:1887
 msgid "configuration error"
 msgstr "Konfigurationsfehler"
 
-#: src/root.c:102
+#: src/root.c:100
 #, c-format
 msgid "invalid root menu specified: \"%c\""
 msgstr "ungültiges root Menü spezifiziert: \"%c\""
 
-#: src/root.c:225
+#: src/root.c:229
 msgid "Exit JWM"
 msgstr "JWM beenden"
 
-#: src/root.c:226
+#: src/root.c:230
 msgid "Are you sure?"
 msgstr "Sicher?"
 
@@ -216,12 +241,12 @@ msgstr ""
 msgid "cannot swallow the same client multiple times"
 msgstr ""
 
-#: src/taskbar.c:728
+#: src/taskbar.c:684
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 
-#: src/traybutton.c:89
+#: src/traybutton.c:93
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "konnte Leistensymbol nicht laden: %s"
@@ -230,121 +255,111 @@ msgstr "konnte Leistensymbol nicht laden: %s"
 msgid "no icon or label for TrayButton"
 msgstr ""
 
-#: src/traybutton.c:246
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr ""
-
-#: src/traybutton.c:430
-#, c-format
-msgid "tray button: root menu %d not defined"
-msgstr ""
-
-#: src/tray.c:1086
+#: src/tray.c:1072
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "ungültige Leistenbreite: %d"
 
-#: src/tray.c:1105
+#: src/tray.c:1091
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "ungültige Leistenhöhe: %d"
 
-#: src/tray.c:1134
+#: src/tray.c:1120
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "ungültiges Leistenlayout: \"%s\""
 
-#: src/tray.c:1171
+#: src/tray.c:1157
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "ungültige Horizontalausrichtung für Leiste: \"%s\""
 
-#: src/tray.c:1192
+#: src/tray.c:1178
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ungültige Vertikalausrichtung für Leiste: \"%s\""
 
-#: src/winmenu.c:80
+#: src/winmenu.c:84
 msgid "Close"
 msgstr "Schließen"
 
-#: src/winmenu.c:81
+#: src/winmenu.c:85
 msgid "Kill"
 msgstr "Töten"
 
-#: src/winmenu.c:88
+#: src/winmenu.c:92
 msgid "Resize"
 msgstr "Größe ändern"
 
-#: src/winmenu.c:91
+#: src/winmenu.c:95
 msgid "Move"
 msgstr "Verschieben"
 
-#: src/winmenu.c:97 src/winmenu.c:120
+#: src/winmenu.c:101 src/winmenu.c:124
 msgid "Restore"
 msgstr "Wiedereinlesen"
 
-#: src/winmenu.c:99
+#: src/winmenu.c:103
 msgid "Minimize"
 msgstr "Minimieren"
 
-#: src/winmenu.c:103
+#: src/winmenu.c:107
 msgid "Unshade"
 msgstr "Entschattieren"
 
-#: src/winmenu.c:105
+#: src/winmenu.c:109
 msgid "Shade"
 msgstr "Schattieren"
 
-#: src/winmenu.c:112
+#: src/winmenu.c:116
 msgid "Maximize-y"
 msgstr "Maximieren-y"
 
-#: src/winmenu.c:116
+#: src/winmenu.c:120
 msgid "Maximize-x"
 msgstr "Maximieren-x"
 
-#: src/winmenu.c:122
+#: src/winmenu.c:126
 msgid "Maximize"
 msgstr "Maximieren"
 
-#: src/winmenu.c:130
+#: src/winmenu.c:134
 msgid "Unstick"
 msgstr "Abkleben"
 
-#: src/winmenu.c:132
+#: src/winmenu.c:136
 msgid "Stick"
 msgstr "Ankleben"
 
-#: src/winmenu.c:155
+#: src/winmenu.c:159
 msgid "Layer"
 msgstr "Ebene"
 
-#: src/winmenu.c:170
+#: src/winmenu.c:175
 msgid "[Above]"
 msgstr "[Darüber]"
 
-#: src/winmenu.c:172
+#: src/winmenu.c:177
 msgid "Above"
 msgstr "Darüber"
 
-#: src/winmenu.c:175
+#: src/winmenu.c:180
 msgid "[Normal]"
 msgstr "[Normal]"
 
-#: src/winmenu.c:177
+#: src/winmenu.c:182
 msgid "Normal"
 msgstr "Normal"
 
-#: src/winmenu.c:180
+#: src/winmenu.c:185
 msgid "[Below]"
 msgstr "[Darunter]"
 
-#: src/winmenu.c:182
+#: src/winmenu.c:187
 msgid "Below"
 msgstr "Darunter"
 
-#: src/winmenu.c:202
+#: src/winmenu.c:206
 msgid "Send To"
 msgstr "Senden an"

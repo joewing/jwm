@@ -675,7 +675,7 @@ char ProcessTrayEvent(const XEvent *event)
 void SignalTray(const TimeType *now, int x, int y, void *data)
 {
    TrayType *tp = (TrayType*)data;
-   if(tp->autoHide && !tp->hidden && !menuShown) {
+   if(tp->autoHide == 1 && !tp->hidden && !menuShown) {
       if(x < tp->x || x >= tp->x + tp->width
          || y < tp->y || y >= tp->y + tp->height) {
          HideTray(tp);
@@ -814,6 +814,27 @@ void DrawSpecificTray(const TrayType *tp)
 
    }
 
+}
+
+/** Raise tray windows. */
+void RaiseTrays()
+{
+   TrayType *tp;
+   for(tp = trays; tp; tp = tp->next) {
+      tp->autoHide |= 2;
+      ShowTray(tp);
+      JXRaiseWindow(display, tp->window);
+   }
+}
+
+/** Lower tray windows. */
+void LowerTrays()
+{
+   TrayType *tp;
+   for(tp = trays; tp; tp = tp->next) {
+      tp->autoHide &= ~2;
+   }
+   RestackClients();
 }
 
 /** Update a specific component on a tray. */

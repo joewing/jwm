@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-09 17:05-0500\n"
+"POT-Creation-Date: 2013-08-13 13:10-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -30,20 +30,20 @@ msgstr "неизвестный тип фона: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "фоновое изображение не найдено: \"%s\""
 
-#: src/client.c:878
+#: src/client.c:877
 msgid "Kill this window?"
 msgstr "Ликвидировать окно?"
 
-#: src/client.c:879
+#: src/client.c:878
 msgid "This may cause data to be lost!"
 msgstr "Это может привести к потере данных!"
 
-#: src/command.c:138 src/main.c:191
+#: src/command.c:138 src/main.c:192
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "не удалось выполнить: (%s) %s"
 
-#: src/desktop.c:272
+#: src/desktop.c:285
 msgid "empty Desktops Name tag"
 msgstr "пустой тэг Desktops Name (название рабочего стола)"
 
@@ -97,118 +97,143 @@ msgstr "ошибка чтения изображения PNG: %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "ошибка создания структуры информации об изображении PNG: %s"
 
-#: src/key.c:324
+#: src/key.c:297
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr "Указанный KeySym не определен ни для одного значения KeyCode"
 
-#: src/key.c:332
+#: src/key.c:305
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "модификатор не найден для KeySym 0x%0x"
 
-#: src/key.c:362
+#: src/key.c:335
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "недопустимое значение для модификатора: \"%c\""
 
-#: src/key.c:377
+#: src/key.c:350
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "недопустимое значение символа клавиши: \"%s\""
 
-#: src/key.c:458
+#: src/key.c:397
 msgid "neither key nor keycode specified for Key"
 msgstr "ни символ, ни код клавиши не заданы в тэге Key"
 
-#: src/key.c:474
-#, c-format
-msgid "key binding: root menu %d not defined"
-msgstr "назначение клавиши: главное меню %d не задано"
-
-#: src/lex.c:193
+#: src/lex.c:194
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: закрывающий тэг \"%s\" не соответствует открывающему \"%s\""
 
-#: src/lex.c:200
+#: src/lex.c:201
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: непонятный и неправильный закрывающий тэг"
 
-#: src/lex.c:207
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: закрывающий тэг \"%s\" без открывающего"
 
-#: src/lex.c:210
+#: src/lex.c:211
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: неправильный закрывающий тэг"
 
-#: src/lex.c:229
+#: src/lex.c:230
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: неправильный открывающий тэг"
 
-#: src/lex.c:242
+#: src/lex.c:243
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: неправильный тэг"
 
-#: src/lex.c:288
+#: src/lex.c:289
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: непонятный текст: \"%s\""
 
-#: src/lex.c:336
+#: src/lex.c:337
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
-#: src/parse.c:1087
+#: src/parse.c:757
+#, fuzzy
+msgid "no action specified for Key"
+msgstr "ни символ, ни код клавиши не заданы в тэге Key"
+
+#: src/parse.c:781
+#, fuzzy
+msgid "no button specified for mouse binding"
+msgstr "не задано значение для цвета фона"
+
+#: src/parse.c:791
+#, fuzzy
+msgid "no context specified for mouse binding"
+msgstr "не задано значение для цвета фона"
+
+#: src/parse.c:802
+#, fuzzy, c-format
+msgid "invalid mouse binding context: \"%s\""
+msgstr "неизвестный тип фона: \"%s\""
+
+#: src/parse.c:1020
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "недопустимое значение режима вставки: \"%s\""
 
-#: src/parse.c:1811
+#: src/parse.c:1327
+#, fuzzy
+msgid "no button specified for tray button binding"
+msgstr "не задано значение для цвета фона"
+
+#: src/parse.c:1772
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:1823
+#: src/parse.c:1784
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:1842
+#: src/parse.c:1803
 #, c-format
 msgid "invalid layer: %s"
 msgstr "недопустимое значение расположения окна: %s"
 
-#: src/parse.c:1859
+#: src/parse.c:1820
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "недопустимое значение типа статусного окна для перемещения: %s"
 
-#: src/parse.c:1868
+#: src/parse.c:1850
+#, fuzzy, c-format
+msgid "invalid action: %s"
+msgstr "недопустимое значение положительного числа: %s"
+
+#: src/parse.c:1866
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:1889
+#: src/parse.c:1887
 msgid "configuration error"
 msgstr "ошибка конфигурации"
 
-#: src/root.c:102
+#: src/root.c:100
 #, c-format
 msgid "invalid root menu specified: \"%c\""
 msgstr "неправильно задано главное меню: \"%c\""
 
-#: src/root.c:225
+#: src/root.c:229
 msgid "Exit JWM"
 msgstr "Выход из JWM"
 
-#: src/root.c:226
+#: src/root.c:230
 msgid "Are you sure?"
 msgstr "Вы уверены?"
 
@@ -221,13 +246,13 @@ msgid "cannot swallow the same client multiple times"
 msgstr ""
 "нельзя использовать одно и то же микро-окно панели (swallow) несколько раз"
 
-#: src/taskbar.c:728
+#: src/taskbar.c:684
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 "недопустимое значение макс. ширины кнопки в панели задач (TaskList): %s"
 
-#: src/traybutton.c:89
+#: src/traybutton.c:93
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "не удалось загрузить иконку для кнопки запуска: \"%s\""
@@ -236,124 +261,123 @@ msgstr "не удалось загрузить иконку для кнопки 
 msgid "no icon or label for TrayButton"
 msgstr "не заданы ни иконка, ни текст кнопки запуска"
 
-#: src/traybutton.c:246
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "недопустимое значение действия кнопки запуска: \"%s\""
-
-#: src/traybutton.c:430
-#, c-format
-msgid "tray button: root menu %d not defined"
-msgstr "кнопка запуска: главное меню %d не задано"
-
-#: src/tray.c:1086
+#: src/tray.c:1072
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "недопустимое значение ширины панели: %d"
 
-#: src/tray.c:1105
+#: src/tray.c:1091
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "недопустимое значение высоты панели: %d"
 
-#: src/tray.c:1134
+#: src/tray.c:1120
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "недопустимое значение расположения панели: \"%s\""
 
-#: src/tray.c:1171
+#: src/tray.c:1157
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "недопустимое значение горизонтального выравнивания панели: \"%s\""
 
-#: src/tray.c:1192
+#: src/tray.c:1178
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""
 
-#: src/winmenu.c:80
+#: src/winmenu.c:84
 msgid "Close"
 msgstr "Закрыть"
 
-#: src/winmenu.c:81
+#: src/winmenu.c:85
 msgid "Kill"
 msgstr "Ликвидировать"
 
-#: src/winmenu.c:88
+#: src/winmenu.c:92
 msgid "Resize"
 msgstr "Изменить размер"
 
-#: src/winmenu.c:91
+#: src/winmenu.c:95
 msgid "Move"
 msgstr "Переместить"
 
-#: src/winmenu.c:97 src/winmenu.c:120
+#: src/winmenu.c:101 src/winmenu.c:124
 msgid "Restore"
 msgstr "Восстановить"
 
-#: src/winmenu.c:99
+#: src/winmenu.c:103
 msgid "Minimize"
 msgstr "Свернуть"
 
-#: src/winmenu.c:103
+#: src/winmenu.c:107
 msgid "Unshade"
 msgstr "Развернуть из заголовка"
 
-#: src/winmenu.c:105
+#: src/winmenu.c:109
 msgid "Shade"
 msgstr "Свернуть в заголовок"
 
-#: src/winmenu.c:112
+#: src/winmenu.c:116
 msgid "Maximize-y"
 msgstr "Развернуть-y"
 
-#: src/winmenu.c:116
+#: src/winmenu.c:120
 msgid "Maximize-x"
 msgstr "Развернуть-x"
 
-#: src/winmenu.c:122
+#: src/winmenu.c:126
 msgid "Maximize"
 msgstr "Развернуть"
 
-#: src/winmenu.c:130
+#: src/winmenu.c:134
 msgid "Unstick"
 msgstr "Только на этом рабочем столе"
 
-#: src/winmenu.c:132
+#: src/winmenu.c:136
 msgid "Stick"
 msgstr "Всегда на видимом рабочем столе"
 
-#: src/winmenu.c:155
+#: src/winmenu.c:159
 msgid "Layer"
 msgstr "Расположение окна"
 
-#: src/winmenu.c:170
+#: src/winmenu.c:175
 msgid "[Above]"
 msgstr "[Всегда наверху]"
 
-#: src/winmenu.c:172
+#: src/winmenu.c:177
 msgid "Above"
 msgstr "Всегда наверху"
 
-#: src/winmenu.c:175
+#: src/winmenu.c:180
 msgid "[Normal]"
 msgstr "[Также как другие]"
 
-#: src/winmenu.c:177
+#: src/winmenu.c:182
 msgid "Normal"
 msgstr "Также как другие"
 
-#: src/winmenu.c:180
+#: src/winmenu.c:185
 msgid "[Below]"
 msgstr "[Всегда позади]"
 
-#: src/winmenu.c:182
+#: src/winmenu.c:187
 msgid "Below"
 msgstr "Всегда позади"
 
-#: src/winmenu.c:202
+#: src/winmenu.c:206
 msgid "Send To"
 msgstr "Переместить на рабочий стол"
+
+#~ msgid "key binding: root menu %d not defined"
+#~ msgstr "назначение клавиши: главное меню %d не задано"
+
+#~ msgid "invalid TrayButton action: \"%s\""
+#~ msgstr "недопустимое значение действия кнопки запуска: \"%s\""
+
+#~ msgid "tray button: root menu %d not defined"
+#~ msgstr "кнопка запуска: главное меню %d не задано"
 
 #~ msgid "Fullscreen state will be shaped!"
 #~ msgstr "Применено оформление в полноэкранном режиме!"

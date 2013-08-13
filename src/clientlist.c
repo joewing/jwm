@@ -13,6 +13,7 @@
 #include "main.h"
 #include "key.h"
 #include "event.h"
+#include "tray.h"
 
 ClientNode *nodes[LAYER_COUNT];
 ClientNode *nodeTail[LAYER_COUNT];
@@ -102,6 +103,8 @@ void StartWindowStackWalk()
    JXGrabKeyboard(display, rootWindow, False, GrabModeAsync,
                   GrabModeAsync, CurrentTime);
 
+   RaiseTrays();
+
 }
 
 /** Move to the next window in the window stack. */
@@ -175,6 +178,8 @@ void StopWindowStackWalk()
       JXUngrabKeyboard(display, CurrentTime);
 
    }
+
+   LowerTrays();
 
 }
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-09 17:05-0500\n"
+"POT-Creation-Date: 2013-08-13 12:58-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -35,11 +35,11 @@ msgstr "tipo de fundo invalido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""
 
-#: src/client.c:878
+#: src/client.c:877
 msgid "Kill this window?"
 msgstr "eliminar esta janela?"
 
-#: src/client.c:879
+#: src/client.c:878
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 
@@ -253,27 +253,27 @@ msgstr "ação do Traybutton invalida: \"%s\""
 msgid "tray button: root menu %d not defined"
 msgstr "botão do tabuleiro: menu root %d não esta definida"
 
-#: src/tray.c:1086
+#: src/tray.c:1107
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "largura do tabuleiro invalida: %d"
 
-#: src/tray.c:1105
+#: src/tray.c:1126
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "altura do tabuleiro invalida: %d"
 
-#: src/tray.c:1134
+#: src/tray.c:1155
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "layout do tabuleiro invalido: \"%s\""
 
-#: src/tray.c:1171
+#: src/tray.c:1192
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alinhamento do tabuleiro invalido: \"%s\""
 
-#: src/tray.c:1192
+#: src/tray.c:1213
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""

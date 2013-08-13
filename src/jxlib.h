@@ -293,6 +293,9 @@
 #define JXRestackWindows( a, b, c ) \
    ( SetCheckpoint(), XRestackWindows( a, b, c ) )
 
+#define JXRaiseWindow( a, b ) \
+   ( SetCheckpoint(), XRaiseWindow( a, b ) )
+
 #define JXSelectInput( a, b, c ) \
    ( SetCheckpoint(), XSelectInput( a, b, c ) )
 

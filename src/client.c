@@ -778,7 +778,6 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
       JXSendEvent(display, rootWindow, False,
                   SubstructureRedirectMask, &event);
 
-
    }
 
    WriteState(np);

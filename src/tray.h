@@ -180,6 +180,12 @@ void DrawTray();
  */
 void DrawSpecificTray(const TrayType *tp);
 
+/** Raise tray windows. */
+void RaiseTrays();
+
+/** Lower tray windows. */
+void LowerTrays();
+
 /** Update a component on a tray.
  * @param tp The tray containing the component.
  * @param cp The component that needs updating.

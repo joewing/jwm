@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-09 17:05-0500\n"
+"POT-Creation-Date: 2013-08-13 12:58-0500\n"
 "PO-Revision-Date: 2013-07-25 16:40+0100\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -31,11 +31,11 @@ msgstr "Formato di sfondo non valido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Immagine di sfondo non trovata: \"%s\""
 
-#: src/client.c:878
+#: src/client.c:877
 msgid "Kill this window?"
 msgstr "Chiudere questa finestra?"
 
-#: src/client.c:879
+#: src/client.c:878
 msgid "This may cause data to be lost!"
 msgstr "Questo può causare una perdita di dati!"
 
@@ -246,27 +246,27 @@ msgstr "Azione del TrayButton non valida:  \"%s\""
 msgid "tray button: root menu %d not defined"
 msgstr "Tray button: root menu %d non definito"
 
-#: src/tray.c:1086
+#: src/tray.c:1107
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "Larghezza del vassoio non valida: %d"
 
-#: src/tray.c:1105
+#: src/tray.c:1126
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "Altezza del vassoio non valida: %d"
 
-#: src/tray.c:1134
+#: src/tray.c:1155
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "Disposizione del vassoio non valida: \"%s\""
 
-#: src/tray.c:1171
+#: src/tray.c:1192
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "Allineamento orizzontale del vassoio non valido: \"%s\""
 
-#: src/tray.c:1192
+#: src/tray.c:1213
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "Allineamento verticale del vassoio non valido: \"%s\""

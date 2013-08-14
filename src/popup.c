@@ -167,7 +167,7 @@ void ShowPopup(int x, int y, const char *text)
 void SignalPopup(const TimeType *now, int x, int y, void *data)
 {
    if(popup.window != None) {
-      if(abs(popup.mx - x) > 2 || abs(popup.my - y) > 2) {
+      if(abs(popup.mx - x) > 0 || abs(popup.my - y) > 0) {
          JXDestroyWindow(display, popup.window);
          JXFreePixmap(display, popup.pmap);
          popup.window = None;

@@ -18,6 +18,7 @@ void ShutdownPopup();
 /*@}*/
 
 /** Show a popup window.
+ * @param w The window under the mouse.
  * @param x The x coordinate of the left edge of the popup window.
  * @param y The y coordinate of the bottom edge of the popup window.
  * @param text The text to display in the popup.

@@ -58,7 +58,8 @@ static void ProcessClockMotionEvent(TrayComponentType *cp,
 
 static void DrawClock(ClockType *clk, const TimeType *now, int x, int y);
 
-static void SignalClock(const struct TimeType *now, int x, int y, void *data);
+static void SignalClock(const struct TimeType *now, int x, int y, Window w,
+                        void *data);
 
 
 /** Initialize clocks. */
@@ -180,6 +181,7 @@ void Resize(TrayComponentType *cp)
 
    ClockType *clk;
    TimeType now;
+   Window w;
    int x, y;
 
    Assert(cp);
@@ -198,7 +200,7 @@ void Resize(TrayComponentType *cp)
    clk->shortTime[0] = 0;
 
    GetCurrentTime(&now);
-   GetMousePosition(&x, &y);
+   GetMousePosition(&x, &y, &w);
    DrawClock(clk, &now, x, y);
 
 }
@@ -247,15 +249,16 @@ void ProcessClockMotionEvent(TrayComponentType *cp,
 }
 
 /** Update a clock tray component. */
-void SignalClock(const TimeType *now, int x, int y, void *data)
+void SignalClock(const TimeType *now, int x, int y, Window w, void *data)
 {
 
    ClockType *cp = (ClockType*)data;
    const char *longTime;
 
    DrawClock(cp, now, x, y);
-   if(abs(cp->mousex - x) < settings.doubleClickDelta
-      && abs(cp->mousey - y) < settings.doubleClickDelta) {
+   if(cp->cp->tray->window == w &&
+      abs(cp->mousex - x) < settings.doubleClickDelta &&
+      abs(cp->mousey - y) < settings.doubleClickDelta) {
       if(GetTimeDifference(now, &cp->mouseTime) >= settings.popupDelay) {
          longTime = GetTimeString("%c", cp->zone);
          ShowPopup(x, y, longTime);

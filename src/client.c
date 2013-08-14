@@ -449,6 +449,7 @@ void RestoreTransients(ClientNode *np, char raise)
    }
 
    if(raise) {
+      FocusClient(np);
       RaiseClient(np);
    }
    WriteState(np);
@@ -725,7 +726,6 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
 
       np->state.status |= STAT_FULLSCREEN;
       np->state.border &= ~BORDER_MOVE;
-      SetClientLayer(np, LAYER_ABOVE);
 
       if(!(np->state.status & (STAT_HMAX | STAT_VMAX))) {
          np->oldx = np->x;
@@ -753,7 +753,6 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
 
       np->state.status &= ~STAT_FULLSCREEN;
       np->state.border |= BORDER_MOVE;
-      SetClientLayer(np, np->state.defaultLayer);
 
       np->x = np->oldx;
       np->y = np->oldy;
@@ -782,6 +781,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
 
    WriteState(np);
    SendConfigureEvent(np);
+   RestackClients();
 
 }
 
@@ -959,14 +959,20 @@ void RestackClients()
 
    /* Prepare the stacking array. */
    index = 0;
+   if(activeClient && (activeClient->state.status & STAT_FULLSCREEN)) {
+      stack[index] = activeClient->parent;
+      index += 1;
+   }
    layer = LAST_LAYER;
    for(;;) {
 
       for(np = nodes[layer]; np; np = np->next) {
          if(    (np->state.status & (STAT_MAPPED | STAT_SHADED))
             && !(np->state.status & STAT_HIDDEN)) {
-            stack[index] = np->parent;
-            index += 1;
+            if(activeClient != np || !(np->state.status & STAT_FULLSCREEN)) {
+               stack[index] = np->parent;
+               index += 1;
+            }
          }
       }
 
@@ -1305,7 +1311,7 @@ void UpdateClientColormap(ClientNode *np)
 }
 
 /** Update callback for clients with the urgency hint set. */
-void SignalUrgent(const TimeType *now, int x, int y, void *data)
+void SignalUrgent(const TimeType *now, int x, int y, Window w, void *data)
 {
 
    ClientNode *np = (ClientNode*)data;

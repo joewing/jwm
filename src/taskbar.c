@@ -72,7 +72,8 @@ static void ProcessTaskButtonEvent(TrayComponentType *cp,
                                    int x, int y, int mask);
 static void ProcessTaskMotionEvent(TrayComponentType *cp,
                                    int x, int y, int mask);
-static void SignalTaskbar(const TimeType *now, int x, int y, void *data);
+static void SignalTaskbar(const TimeType *now, int x, int y, Window w,
+                          void *data);
 
 /** Initialize task bar data. */
 void InitializeTaskBar()
@@ -184,7 +185,7 @@ void Create(TrayComponentType *cp)
    Assert(cp->height > 0);
 
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
-      rootDepth);
+                               rootDepth);
    tp->buffer = cp->pixmap;
 
    ClearTrayDrawable(cp);
@@ -217,7 +218,7 @@ void Resize(TrayComponentType *cp)
    Assert(cp->height > 0);
 
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
-      rootDepth);
+                               rootDepth);
    tp->buffer = cp->pixmap;
 
    ClearTrayDrawable(cp);
@@ -281,13 +282,14 @@ void ShowTaskWindowMenu(TaskBarType *bar, Node *np)
    int x, y;
    int mwidth, mheight;
    const ScreenType *sp;
+   Window w;
 
    GetWindowMenuSize(np->client, &mwidth, &mheight);
 
    sp = GetCurrentScreen(bar->cp->screenx, bar->cp->screeny);
 
    if(bar->layout == LAYOUT_HORIZONTAL) {
-      GetMousePosition(&x, &y);
+      GetMousePosition(&x, &y, &w);
       if(bar->cp->screeny + bar->cp->height / 2 < sp->y + sp->height / 2) {
          y = bar->cp->screeny + bar->cp->height;
       } else {
@@ -401,14 +403,15 @@ void UpdateTaskBar()
 }
 
 /** Signal task bar (for popups). */
-void SignalTaskbar(const TimeType *now, int x, int y, void *data)
+void SignalTaskbar(const TimeType *now, int x, int y, Window w, void *data)
 {
 
    TaskBarType *bp = (TaskBarType*)data;
    Node *np;
 
-   if(abs(bp->mousex - x) < settings.doubleClickDelta
-      && abs(bp->mousey - y) < settings.doubleClickDelta) {
+   if(w == bp->cp->tray->window &&
+      abs(bp->mousex - x) < settings.doubleClickDelta &&
+      abs(bp->mousey - y) < settings.doubleClickDelta) {
       if(GetTimeDifference(now, &bp->mouseTime) >= settings.popupDelay) {
          if(bp->layout == LAYOUT_HORIZONTAL) {
             np = GetNode(bp, x - bp->cp->screenx);

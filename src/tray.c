@@ -47,7 +47,8 @@ static char CheckVerticalFill(TrayType *tp);
 static void LayoutTray(TrayType *tp, int *variableSize,
                        int *variableRemainder);
 
-static void SignalTray(const TimeType *now, int x, int y, void *data);
+static void SignalTray(const TimeType *now, int x, int y, Window w,
+                       void *data);
 
 
 /** Initialize tray data. */
@@ -581,8 +582,8 @@ void ShowTray(TrayType *tp)
       JXMoveWindow(display, tp->window, tp->x, tp->y);
 
       JXQueryPointer(display, rootWindow, &win1, &win2,
-         &mousex, &mousey, &winx, &winy, &mask);
-      SetMousePosition(mousex, mousey);
+                     &mousex, &mousey, &winx, &winy, &mask);
+      SetMousePosition(mousex, mousey, win2);
 
    }
 
@@ -675,7 +676,7 @@ char ProcessTrayEvent(const XEvent *event)
 }
 
 /** Signal the tray (needed for autohide). */
-void SignalTray(const TimeType *now, int x, int y, void *data)
+void SignalTray(const TimeType *now, int x, int y, Window w, void *data)
 {
    TrayType *tp = (TrayType*)data;
    if(tp->autoHide == 1 && !tp->hidden && !menuShown) {

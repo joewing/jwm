@@ -105,7 +105,8 @@ void ResizeClient(ClientNode *np, BorderActionType action,
          break;
       case MotionNotify:
 
-         SetMousePosition(event.xmotion.x_root, event.xmotion.y_root);
+         SetMousePosition(event.xmotion.x_root, event.xmotion.y_root,
+                          event.xmotion.window);
          DiscardMotionEvents(&event, np->window);
 
          if(action & BA_RESIZE_N) {
@@ -298,7 +299,8 @@ void ResizeClientKeyboard(ClientNode *np)
 
       } else if(event.type == MotionNotify) {
 
-         SetMousePosition(event.xmotion.x_root, event.xmotion.y_root);
+         SetMousePosition(event.xmotion.x_root, event.xmotion.y_root,
+                          event.xmotion.window);
          DiscardMotionEvents(&event, np->window);
 
          deltax = event.xmotion.x - (np->x + np->width);

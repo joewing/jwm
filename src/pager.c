@@ -69,7 +69,8 @@ static void PagerMoveController(int wasDestroyed);
 
 static void DrawPagerClient(const PagerType *pp, const ClientNode *np);
 
-static void SignalPager(const TimeType *now, int x, int y, void *data);
+static void SignalPager(const TimeType *now, int x, int y, Window w,
+                        void *data);
 
 
 /** Shutdown the pager. */
@@ -404,7 +405,8 @@ ClientFound:
 
       case MotionNotify:
 
-         SetMousePosition(event.xmotion.x_root, event.xmotion.y_root);
+         SetMousePosition(event.xmotion.x_root, event.xmotion.y_root,
+                          event.xmotion.window);
 
          /* Get the mouse position on the pager. */
          x = event.xmotion.x_root - cp->screenx;
@@ -583,11 +585,12 @@ void UpdatePager()
 }
 
 /** Signal pagers (for popups). */
-void SignalPager(const TimeType *now, int x, int y, void *data)
+void SignalPager(const TimeType *now, int x, int y, Window w, void *data)
 {
    PagerType *pp = (PagerType*)data;
-   if(abs(pp->mousex - x) < settings.doubleClickDelta
-      && abs(pp->mousey - y) < settings.doubleClickDelta) {
+   if(pp->cp->tray->window == w &&
+      abs(pp->mousex - x) < settings.doubleClickDelta &&
+      abs(pp->mousey - y) < settings.doubleClickDelta) {
       if(GetTimeDifference(now, &pp->mouseTime) >= settings.popupDelay) {
          const int desktop = GetPagerDesktop(pp, x - pp->cp->screenx,
                                                  y - pp->cp->screeny);

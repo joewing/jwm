@@ -106,9 +106,10 @@ const ScreenType *GetMouseScreen()
 {
 #ifdef USE_XINERAMA
 
+   Window w;
    int x, y;
 
-   GetMousePosition(&x, &y);
+   GetMousePosition(&x, &y, &w);
    return GetCurrentScreen(x, y);
 
 #else

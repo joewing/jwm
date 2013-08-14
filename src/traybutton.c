@@ -64,7 +64,7 @@ static void ProcessButtonRelease(TrayComponentType *cp,
 static void ProcessMotionEvent(TrayComponentType *cp,
                                int x, int y, int mask);
 static void SignalTrayButton(const TimeType *now,
-                             int x, int y, void *data);
+                             int x, int y, Window w, void *data);
 
 /** Startup tray buttons. */
 void StartupTrayButtons()
@@ -398,7 +398,7 @@ void ProcessMotionEvent(TrayComponentType *cp, int x, int y, int mask)
 }
 
 /** Signal (needed for popups). */
-void SignalTrayButton(const TimeType *now, int x, int y, void *data)
+void SignalTrayButton(const TimeType *now, int x, int y, Window w, void *data)
 {
    TrayButtonType *bp = (TrayButtonType*)data;
    const char *popup;
@@ -410,8 +410,9 @@ void SignalTrayButton(const TimeType *now, int x, int y, void *data)
    } else {
       return;
    }
-   if(abs(bp->mousex - x) < settings.doubleClickDelta
-      && abs(bp->mousey - y) < settings.doubleClickDelta) {
+   if(bp->cp->tray->window == w &&
+      abs(bp->mousex - x) < settings.doubleClickDelta &&
+      abs(bp->mousey - y) < settings.doubleClickDelta) {
       if(GetTimeDifference(now, &bp->mouseTime) >= settings.popupDelay) {
          ShowPopup(x, y, popup);
       }

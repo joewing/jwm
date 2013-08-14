@@ -23,6 +23,7 @@
 typedef struct PopupType {
    int x, y;   /* The coordinates of the upper-left corner of the popup. */
    int mx, my; /* The mouse position when the popup was created. */
+   Window mw;
    int width, height;
    char *text;
    Window window;
@@ -31,7 +32,8 @@ typedef struct PopupType {
 
 static PopupType popup;
 
-static void SignalPopup(const TimeType *now, int x, int y, void *data);
+static void SignalPopup(const TimeType *now, int x, int y, Window w,
+                        void *data);
 
 /** Startup popups. */
 void StartupPopup()
@@ -71,7 +73,7 @@ void ShowPopup(int x, int y, const char *text)
    }
 
    if(popup.text) {
-      if(x == popup.mx && y == popup.my && !strcmp(popup.text, text)) {
+      if(x == popup.x && y == popup.y && !strcmp(popup.text, text)) {
          // This popup is already shown.
          return;
       }
@@ -83,6 +85,7 @@ void ShowPopup(int x, int y, const char *text)
       return;
    }
 
+   GetMousePosition(&popup.mx, &popup.my, &popup.mw);
    popup.text = CopyString(text);
    popup.height = GetStringHeight(FONT_POPUP) + 2;
    popup.width = GetStringWidth(FONT_POPUP, popup.text) + 9;
@@ -147,9 +150,6 @@ void ShowPopup(int x, int y, const char *text)
    popup.pmap = JXCreatePixmap(display, popup.window,
                                popup.width, popup.height, rootDepth);
 
-   popup.mx = x;
-   popup.my = y;
-
    JXSetForeground(display, rootGC, colors[COLOR_POPUP_BG]);
    JXFillRectangle(display, popup.pmap, rootGC, 0, 0,
                    popup.width - 1, popup.height - 1);
@@ -164,10 +164,11 @@ void ShowPopup(int x, int y, const char *text)
 }
 
 /** Signal popup (this is used to hide popups after awhile). */
-void SignalPopup(const TimeType *now, int x, int y, void *data)
+void SignalPopup(const TimeType *now, int x, int y, Window w, void *data)
 {
    if(popup.window != None) {
-      if(abs(popup.mx - x) > 0 || abs(popup.my - y) > 0) {
+      if(popup.mw != w ||
+         abs(popup.mx - x) > 0 || abs(popup.my - y) > 0) {
          JXDestroyWindow(display, popup.window);
          JXFreePixmap(display, popup.pmap);
          popup.window = None;

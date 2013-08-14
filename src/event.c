@@ -66,7 +66,6 @@ static void HandleButtonEvent(const XButtonEvent *event);
 static void HandleKeyPress(const XKeyEvent *event);
 static void HandleKeyRelease(const XKeyEvent *event);
 static void HandleEnterNotify(const XCrossingEvent *event);
-static void HandleLeaveNotify(const XCrossingEvent *event);
 static void HandleMotionNotify(const XMotionEvent *event);
 static char HandleSelectionClear(const XSelectionClearEvent *event);
 
@@ -160,7 +159,24 @@ void WaitForEvent(XEvent *event)
          handled = HandleDockResizeRequest(&event->xresizerequest);
          break;
       case MotionNotify:
-         SetMousePosition(event->xmotion.x_root, event->xmotion.y_root);
+         SetMousePosition(event->xmotion.x_root, event->xmotion.y_root,
+                          event->xmotion.window);
+         handled = 0;
+         break;
+      case ButtonPress:
+      case ButtonRelease:
+         SetMousePosition(event->xbutton.x_root, event->xbutton.y_root,
+                          event->xbutton.window);
+         handled = 0;
+         break;
+      case EnterNotify:
+         SetMousePosition(event->xcrossing.x_root, event->xcrossing.y_root,
+                          event->xcrossing.window);
+         handled = 0;
+         break;
+      case LeaveNotify:
+         SetMousePosition(event->xcrossing.x_root, event->xcrossing.y_root,
+                          None);
          handled = 0;
          break;
       case ReparentNotify:
@@ -214,6 +230,7 @@ void Signal()
 
    CallbackNode *cp;   
    TimeType now;
+   Window w;
    int x, y;
 
    GetCurrentTime(&now);
@@ -222,11 +239,11 @@ void Signal()
    }
    last = now;
 
-   GetMousePosition(&x, &y);
+   GetMousePosition(&x, &y, &w);
    for(cp = callbacks; cp; cp = cp->next) {
       if(cp->freq == 0 || GetTimeDifference(&now, &cp->last) >= cp->freq) {
          cp->last = now;
-         (cp->callback)(&now, x, y, cp->data);
+         (cp->callback)(&now, x, y, w, cp->data);
       }
    }
 
@@ -249,14 +266,12 @@ void ProcessEvent(XEvent *event)
    case EnterNotify:
       HandleEnterNotify(&event->xcrossing);
       break;
-   case LeaveNotify:
-      HandleLeaveNotify(&event->xcrossing);
-      break;
    case MotionNotify:
       while(JXCheckTypedEvent(display, MotionNotify, event));
       UpdateTime(event);
       HandleMotionNotify(&event->xmotion);
       break;
+   case LeaveNotify:
    case DestroyNotify:
    case Expose:
    case ConfigureNotify:
@@ -273,7 +288,8 @@ void DiscardMotionEvents(XEvent *event, Window w)
    XEvent temp;
    while(JXCheckTypedEvent(display, MotionNotify, &temp)) {
       UpdateTime(&temp);
-      SetMousePosition(temp.xmotion.x_root, temp.xmotion.y_root);
+      SetMousePosition(temp.xmotion.x_root, temp.xmotion.y_root,
+                       temp.xmotion.window);
       if(temp.xmotion.window == w) {
          *event = temp;
       }
@@ -304,8 +320,8 @@ void HandleButtonEvent(const XButtonEvent *event)
    np = FindClientByParent(event->window);
    if(np) {
       if(event->type == ButtonPress) {
-         RaiseClient(np);
          FocusClient(np);
+         RaiseClient(np);
       }
       DispatchBorderButtonEvent(event, np);
    } else if(event->window == rootWindow && event->type == ButtonPress) {
@@ -322,8 +338,8 @@ void HandleButtonEvent(const XButtonEvent *event)
          switch(event->button) {
          case Button1:
          case Button2:
-            RaiseClient(np);
             FocusClient(np);
+            RaiseClient(np);
             if(event->state & Mod1Mask) {
                GetBorderSize(&np->state, &north, &south, &east, &west);
                MoveClient(np, event->x + west, event->y + north, 0);
@@ -335,8 +351,8 @@ void HandleButtonEvent(const XButtonEvent *event)
                ResizeClient(np, BA_RESIZE | BA_RESIZE_E | BA_RESIZE_S,
                             event->x + west, event->y + north);
             } else {
-               RaiseClient(np);
                FocusClient(np);
+               RaiseClient(np);
             }
             break;
          default:
@@ -614,7 +630,6 @@ void HandleEnterNotify(const XCrossingEvent *event)
 {
    ClientNode *np;
    Cursor cur;
-   SetMousePosition(event->x_root, event->y_root);
    np = FindClient(event->window);
    if(np) {
       if(  !(np->state.status & STAT_ACTIVE)
@@ -631,12 +646,6 @@ void HandleEnterNotify(const XCrossingEvent *event)
       }
    }
 
-}
-
-/** Process a leave notify event. */
-void HandleLeaveNotify(const XCrossingEvent *event)
-{
-   SetMousePosition(event->x_root, event->y_root);
 }
 
 /** Handle an expose event. */
@@ -1111,8 +1120,6 @@ void HandleMotionNotify(const XMotionEvent *event)
       return;
    }
 
-   SetMousePosition(event->x_root, event->y_root);
-
    np = FindClientByParent(event->window);
    if(np) {
       action = GetBorderActionType(np, event->x, event->y);
@@ -1182,8 +1189,8 @@ void HandleMapRequest(const XMapEvent *event)
             np->state.desktop = currentDesktop;
          }
          if(!(np->state.status & STAT_NOFOCUS)) {
-            RaiseClient(np);
             FocusClient(np);
+            RaiseClient(np);
          }
          WriteState(np);
          UpdateTaskBar();

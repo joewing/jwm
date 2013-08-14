@@ -14,6 +14,7 @@ struct TimeType;
 
 typedef void (*SignalCallback)(const struct TimeType *now,
                                int x, int y,
+                               Window w,
                                void *data);
 
 /** Last event time. */

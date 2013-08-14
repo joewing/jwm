@@ -69,7 +69,7 @@ static char CheckBottomValid(const RectangleType *client,
                              const RectangleType *other,
                              const RectangleType *bottom);
 
-static void SignalMove(const TimeType *now, int x, int y, void *data);
+static void SignalMove(const TimeType *now, int x, int y, Window w, void *data);
 
 /** Callback for stopping moves. */
 void MoveController(int wasDestroyed)
@@ -767,7 +767,7 @@ char CheckBottomValid(const RectangleType *client,
 }
 
 /** Switch desktops if appropriate. */
-void SignalMove(const TimeType *now, int x, int y, void *data)
+void SignalMove(const TimeType *now, int x, int y, Window w, void *data)
 {
 
    if(settings.desktopDelay == 0) {

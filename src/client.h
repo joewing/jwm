@@ -314,7 +314,8 @@ void SendConfigureEvent(ClientNode *np);
 void SendClientMessage(Window w, AtomType type, AtomType message);
 
 /** Update callback for clients with the urgency hint set. */
-void SignalUrgent(const struct TimeType *now, int x, int y, void *data);
+void SignalUrgent(const struct TimeType *now, int x, int y, Window w,
+                  void *data);
 
 #endif /* CLIENT_H */
 

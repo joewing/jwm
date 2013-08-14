@@ -56,14 +56,16 @@ void MoveMouse(Window win, int x, int y);
 /** Set the current mouse position.
  * @param x The x-coordinate (relative to the current desktop).
  * @param y The y-coordinate (relative to the current desktop).
+ * @param w The window under the mouse.
  */
-void SetMousePosition(int x, int y);
+void SetMousePosition(int x, int y, Window w);
 
 /** Get the current mouse position.
  * @param x Location to store the x-coordinate.
  * @param y Location to store the y-coordinate.
+ * @param w The window under the mouse.
  */
-void GetMousePosition(int *x, int *y);
+void GetMousePosition(int *x, int *y, Window *w);
 
 /** Get a mask of the current mouse buttons pressed.
  * @return A mask of the current mouse buttons pressed.

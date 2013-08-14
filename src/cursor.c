@@ -52,12 +52,13 @@ static Cursor CreateCursor(unsigned int shape);
 
 static int mousex;
 static int mousey;
+static Window mousew;
 
 /** Startup cursor support. */
 void StartupCursors()
 {
 
-   Window win1, win2;
+   Window win1;
    int winx, winy;
    unsigned int mask;
    int x;
@@ -66,7 +67,7 @@ void StartupCursors()
       cursors[x] = CreateCursor(cursor_shapes[x]);
    }
 
-   JXQueryPointer(display, rootWindow, &win1, &win2,
+   JXQueryPointer(display, rootWindow, &win1, &mousew,
                   &mousex, &mousey, &winx, &winy, &mask);
 
 }
@@ -147,6 +148,7 @@ char GrabMouseForResize(BorderActionType action)
                           GrabModeAsync, GrabModeAsync, None,
                           cur, CurrentTime);
    if(JLIKELY(result == GrabSuccess)) {
+      mousew = rootWindow;
       return 1;
    } else {
       return 0;
@@ -163,6 +165,7 @@ char GrabMouseForMove()
                           GrabModeAsync, GrabModeAsync, None,
                           cursors[CURSOR_MOVE], CurrentTime);
    if(JLIKELY(result == GrabSuccess)) {
+      mousew = rootWindow;
       return 1;
    } else {
       return 0;
@@ -179,6 +182,7 @@ char GrabMouse(Window w)
                           GrabModeAsync, GrabModeAsync, None,
                           cursors[CURSOR_DEFAULT], CurrentTime);
    if(JLIKELY(result == GrabSuccess)) {
+      mousew = w;
       return 1;
    } else {
       return 0;
@@ -195,6 +199,7 @@ char GrabMouseForChoose()
                           GrabModeAsync, GrabModeAsync, None,
                           cursors[CURSOR_CHOOSE], CurrentTime);
    if(JLIKELY(result == GrabSuccess)) {
+      mousew = rootWindow;
       return 1;
    } else {
       return 0;
@@ -210,37 +215,39 @@ void SetDefaultCursor(Window w)
 /** Move the mouse to the specified coordinates on a window. */
 void MoveMouse(Window win, int x, int y)
 {
-   Window win1, win2;
+   Window win1;
    int winx, winy;
    unsigned int mask;
    JXWarpPointer(display, None, win, 0, 0, 0, 0, x, y);
-   JXQueryPointer(display, rootWindow, &win1, &win2,
+   JXQueryPointer(display, rootWindow, &win1, &mousew,
                   &mousex, &mousey, &winx, &winy, &mask);
 }
 
 /** Set the current mouse position. */
-void SetMousePosition(int x, int y)
+void SetMousePosition(int x, int y, Window w)
 {
    mousex = x;
    mousey = y;
+   mousew = w;
 }
 
 /** Get the current mouse position. */
-void GetMousePosition(int *x, int *y)
+void GetMousePosition(int *x, int *y, Window *w)
 {
    Assert(x);
    Assert(y);
    *x = mousex;
    *y = mousey;
+   *w = mousew;
 }
 
 /** Get the current mouse buttons pressed. */
 unsigned int GetMouseMask()
 {
-   Window win1, win2;
+   Window win1;
    int winx, winy;
    unsigned int mask;
-   JXQueryPointer(display, rootWindow, &win1, &win2,
+   JXQueryPointer(display, rootWindow, &win1, &mousew,
                   &mousex, &mousey, &winx, &winy, &mask);
    return mask;
 }

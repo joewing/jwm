@@ -252,12 +252,13 @@ char MenuLoop(Menu *menu)
 
    XEvent event;
    MenuItem *ip;
+   Window pressw;
    int pressx, pressy;
    char hadMotion;
 
    hadMotion = 0;
 
-   GetMousePosition(&pressx, &pressy);
+   GetMousePosition(&pressx, &pressy, &pressw);
 
    for(;;) {
 
@@ -420,7 +421,8 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
 
    if(event->type == MotionNotify) {
 
-      SetMousePosition(event->xmotion.x_root, event->xmotion.y_root);
+      SetMousePosition(event->xmotion.x_root, event->xmotion.y_root,
+                       event->xmotion.window);
       DiscardMotionEvents(event, menu->window);
 
       x = event->xmotion.x_root - menu->x;

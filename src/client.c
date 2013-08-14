@@ -349,6 +349,9 @@ void ShadeClient(ClientNode *np)
    if((np->state.status & STAT_SHADED) || !(np->state.border & BORDER_SHADE)) {
       return;
    }
+   if(np->state.status & STAT_FULLSCREEN) {
+      SetClientFullScreen(np, 0);
+   }
 
    UnmapClient(np);
    np->state.status |= STAT_SHADED;
@@ -659,9 +662,8 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
 
    Assert(np);
 
-   /* We don't want to mess with full screen clients. */
    if(np->state.status & STAT_FULLSCREEN) {
-      return; 
+      SetClientFullScreen(np, 0);
    }
 
    if(np->state.status & STAT_SHADED) {
@@ -725,7 +727,6 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
    if(fullScreen) {
 
       np->state.status |= STAT_FULLSCREEN;
-      np->state.border &= ~BORDER_MOVE;
 
       if(!(np->state.status & (STAT_HMAX | STAT_VMAX))) {
          np->oldx = np->x;
@@ -752,7 +753,6 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
    } else {
 
       np->state.status &= ~STAT_FULLSCREEN;
-      np->state.border |= BORDER_MOVE;
 
       np->x = np->oldx;
       np->y = np->oldy;

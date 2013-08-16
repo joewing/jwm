@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-13 12:58-0500\n"
+"POT-Creation-Date: 2013-08-15 20:17-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -221,7 +221,7 @@ msgid "cannot swallow the same client multiple times"
 msgstr ""
 "нельзя использовать одно и то же микро-окно панели (swallow) несколько раз"
 
-#: src/taskbar.c:728
+#: src/taskbar.c:731
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
@@ -241,32 +241,32 @@ msgstr "не заданы ни иконка, ни текст кнопки зап
 msgid "invalid TrayButton action: \"%s\""
 msgstr "недопустимое значение действия кнопки запуска: \"%s\""
 
-#: src/traybutton.c:430
+#: src/traybutton.c:431
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "кнопка запуска: главное меню %d не задано"
 
-#: src/tray.c:1107
+#: src/tray.c:1108
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "недопустимое значение ширины панели: %d"
 
-#: src/tray.c:1126
+#: src/tray.c:1127
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "недопустимое значение высоты панели: %d"
 
-#: src/tray.c:1155
+#: src/tray.c:1156
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "недопустимое значение расположения панели: \"%s\""
 
-#: src/tray.c:1192
+#: src/tray.c:1193
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "недопустимое значение горизонтального выравнивания панели: \"%s\""
 
-#: src/tray.c:1213
+#: src/tray.c:1214
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""
@@ -279,79 +279,79 @@ msgstr "Закрыть"
 msgid "Kill"
 msgstr "Ликвидировать"
 
-#: src/winmenu.c:88
+#: src/winmenu.c:90
 msgid "Resize"
 msgstr "Изменить размер"
 
-#: src/winmenu.c:91
+#: src/winmenu.c:93
 msgid "Move"
 msgstr "Переместить"
 
-#: src/winmenu.c:97 src/winmenu.c:120
+#: src/winmenu.c:99 src/winmenu.c:122
 msgid "Restore"
 msgstr "Восстановить"
 
-#: src/winmenu.c:99
+#: src/winmenu.c:101
 msgid "Minimize"
 msgstr "Свернуть"
 
-#: src/winmenu.c:103
+#: src/winmenu.c:105
 msgid "Unshade"
 msgstr "Развернуть из заголовка"
 
-#: src/winmenu.c:105
+#: src/winmenu.c:107
 msgid "Shade"
 msgstr "Свернуть в заголовок"
 
-#: src/winmenu.c:112
+#: src/winmenu.c:114
 msgid "Maximize-y"
 msgstr "Развернуть-y"
 
-#: src/winmenu.c:116
+#: src/winmenu.c:118
 msgid "Maximize-x"
 msgstr "Развернуть-x"
 
-#: src/winmenu.c:122
+#: src/winmenu.c:124
 msgid "Maximize"
 msgstr "Развернуть"
 
-#: src/winmenu.c:130
+#: src/winmenu.c:132
 msgid "Unstick"
 msgstr "Только на этом рабочем столе"
 
-#: src/winmenu.c:132
+#: src/winmenu.c:134
 msgid "Stick"
 msgstr "Всегда на видимом рабочем столе"
 
-#: src/winmenu.c:155
+#: src/winmenu.c:157
 msgid "Layer"
 msgstr "Расположение окна"
 
-#: src/winmenu.c:170
+#: src/winmenu.c:172
 msgid "[Above]"
 msgstr "[Всегда наверху]"
 
-#: src/winmenu.c:172
+#: src/winmenu.c:174
 msgid "Above"
 msgstr "Всегда наверху"
 
-#: src/winmenu.c:175
+#: src/winmenu.c:177
 msgid "[Normal]"
 msgstr "[Также как другие]"
 
-#: src/winmenu.c:177
+#: src/winmenu.c:179
 msgid "Normal"
 msgstr "Также как другие"
 
-#: src/winmenu.c:180
+#: src/winmenu.c:182
 msgid "[Below]"
 msgstr "[Всегда позади]"
 
-#: src/winmenu.c:182
+#: src/winmenu.c:184
 msgid "Below"
 msgstr "Всегда позади"
 
-#: src/winmenu.c:202
+#: src/winmenu.c:204
 msgid "Send To"
 msgstr "Переместить на рабочий стол"
 

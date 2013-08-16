@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-13 12:58-0500\n"
+"POT-Creation-Date: 2013-08-15 20:17-0500\n"
 "PO-Revision-Date: 2013-07-25 16:40+0100\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -222,7 +222,7 @@ msgstr "Impossibile includere un client senza nome"
 msgid "cannot swallow the same client multiple times"
 msgstr "Impossibile includere più volte lo stesso client"
 
-#: src/taskbar.c:728
+#: src/taskbar.c:731
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "Larghezza massima per TaskList non valida: %s"
@@ -241,32 +241,32 @@ msgstr "Nessuna icona o etichetta per il TrayButton"
 msgid "invalid TrayButton action: \"%s\""
 msgstr "Azione del TrayButton non valida:  \"%s\""
 
-#: src/traybutton.c:430
+#: src/traybutton.c:431
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "Tray button: root menu %d non definito"
 
-#: src/tray.c:1107
+#: src/tray.c:1108
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "Larghezza del vassoio non valida: %d"
 
-#: src/tray.c:1126
+#: src/tray.c:1127
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "Altezza del vassoio non valida: %d"
 
-#: src/tray.c:1155
+#: src/tray.c:1156
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "Disposizione del vassoio non valida: \"%s\""
 
-#: src/tray.c:1192
+#: src/tray.c:1193
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "Allineamento orizzontale del vassoio non valido: \"%s\""
 
-#: src/tray.c:1213
+#: src/tray.c:1214
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "Allineamento verticale del vassoio non valido: \"%s\""
@@ -279,78 +279,78 @@ msgstr "Chiudi"
 msgid "Kill"
 msgstr "Termina"
 
-#: src/winmenu.c:88
+#: src/winmenu.c:90
 msgid "Resize"
 msgstr "Ridimensiona"
 
-#: src/winmenu.c:91
+#: src/winmenu.c:93
 msgid "Move"
 msgstr "Sposta"
 
-#: src/winmenu.c:97 src/winmenu.c:120
+#: src/winmenu.c:99 src/winmenu.c:122
 msgid "Restore"
 msgstr "Ripristina"
 
-#: src/winmenu.c:99
+#: src/winmenu.c:101
 msgid "Minimize"
 msgstr "Riduci"
 
-#: src/winmenu.c:103
+#: src/winmenu.c:105
 msgid "Unshade"
 msgstr "Srotola"
 
-#: src/winmenu.c:105
+#: src/winmenu.c:107
 msgid "Shade"
 msgstr "Arrotola"
 
-#: src/winmenu.c:112
+#: src/winmenu.c:114
 msgid "Maximize-y"
 msgstr "Ingrandisci-y"
 
-#: src/winmenu.c:116
+#: src/winmenu.c:118
 msgid "Maximize-x"
 msgstr "Ingrandisci-x"
 
-#: src/winmenu.c:122
+#: src/winmenu.c:124
 msgid "Maximize"
 msgstr "Ingrandisci"
 
-#: src/winmenu.c:130
+#: src/winmenu.c:132
 msgid "Unstick"
 msgstr "Sgancia"
 
-#: src/winmenu.c:132
+#: src/winmenu.c:134
 msgid "Stick"
 msgstr "Aggancia"
 
-#: src/winmenu.c:155
+#: src/winmenu.c:157
 msgid "Layer"
 msgstr "Layer"
 
-#: src/winmenu.c:170
+#: src/winmenu.c:172
 msgid "[Above]"
 msgstr "[Sopra]"
 
-#: src/winmenu.c:172
+#: src/winmenu.c:174
 msgid "Above"
 msgstr "Sopra"
 
-#: src/winmenu.c:175
+#: src/winmenu.c:177
 msgid "[Normal]"
 msgstr "[Normale]"
 
-#: src/winmenu.c:177
+#: src/winmenu.c:179
 msgid "Normal"
 msgstr "Normale"
 
-#: src/winmenu.c:180
+#: src/winmenu.c:182
 msgid "[Below]"
 msgstr "[Sotto]"
 
-#: src/winmenu.c:182
+#: src/winmenu.c:184
 msgid "Below"
 msgstr "Sotto"
 
-#: src/winmenu.c:202
+#: src/winmenu.c:204
 msgid "Send To"
 msgstr "Manda A"

@@ -21,6 +21,7 @@ ClientNode *nodeTail[LAYER_COUNT];
 static Window *windowStack = NULL;  /**< Image of the window stack. */
 static int windowStackSize = 0;     /**< Size of the image. */
 static int windowStackCurrent = 0;  /**< Current location in the image. */
+static char walkingWindows = 0;     /**< Are we walking windows? */
 
 /** Determine if a client is allowed focus. */
 char ShouldFocus(const ClientNode *np)
@@ -48,6 +49,15 @@ char ShouldFocus(const ClientNode *np)
 
    return 1;
 
+}
+
+/** Start walking windows in client list order. */
+void StartWindowWalk()
+{
+   JXGrabKeyboard(display, rootWindow, False, GrabModeAsync,
+                  GrabModeAsync, CurrentTime);
+   RaiseTrays();
+   walkingWindows = 1;
 }
 
 /** Start walking the window stack. */
@@ -105,6 +115,8 @@ void StartWindowStackWalk()
 
    RaiseTrays();
 
+   walkingWindows = 1;
+
 }
 
 /** Move to the next window in the window stack. */
@@ -150,8 +162,8 @@ void WalkWindowStack(char forward)
 
 }
 
-/** Stop walking the window stack. */
-void StopWindowStackWalk()
+/** Stop walking the window stack or client list. */
+void StopWindowWalk()
 {
 
    ClientNode *np;
@@ -175,11 +187,13 @@ void StopWindowStackWalk()
       windowStackSize = 0;
       windowStackCurrent = 0;
 
-      JXUngrabKeyboard(display, CurrentTime);
-
    }
 
-   LowerTrays();
+   if(walkingWindows) {
+      JXUngrabKeyboard(display, CurrentTime);
+      LowerTrays();
+      walkingWindows = 0;
+   }
 
 }
 

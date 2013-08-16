@@ -398,7 +398,7 @@ void HandleKeyPress(const XKeyEvent *event)
       ShowAllTrays();
       break;
    case KEY_NEXT:
-      StartWindowStackWalk();
+      StartWindowWalk();
       FocusNext();
       break;
    case KEY_NEXTSTACK:
@@ -406,6 +406,7 @@ void HandleKeyPress(const XKeyEvent *event)
       WalkWindowStack(1);
       break;
    case KEY_PREV:
+      StartWindowWalk();
       FocusPrevious();
       break;
    case KEY_PREVSTACK:
@@ -490,8 +491,9 @@ void HandleKeyRelease(const XKeyEvent *event)
    key = GetKey(event);
    if(((key & 0xFF) != KEY_NEXTSTACK) &&
       ((key & 0xFF) != KEY_NEXT) &&
+      ((key & 0xFF) != KEY_PREV) &&
       ((key & 0xFF) != KEY_PREVSTACK)) {
-      StopWindowStackWalk();
+      StopWindowWalk();
    }
 }
 

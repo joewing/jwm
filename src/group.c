@@ -300,6 +300,9 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
       case OPTION_NOTURGENT:
          np->state.status |= STAT_NOTURGENT;
          break;
+      case OPTION_CONSTRAIN:
+         np->state.border |= BORDER_CONSTRAIN;
+         break;
       default:
          Debug("invalid option: %d", lp->option);
          break;

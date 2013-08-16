@@ -584,6 +584,9 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
          MaximizeClient(np, 0, 0);
       }
 
+      if(np->state.border & BORDER_CONSTRAIN) {
+         resized = 1;
+      }
       if(resized) {
          ConstrainSize(np);
          ConstrainPosition(np);

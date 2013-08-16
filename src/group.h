@@ -39,6 +39,7 @@ typedef unsigned char OptionType;
 #define OPTION_IIGNORE     21    /**< Ignore increment when maximized. */
 #define OPTION_NOPAGER     22    /**< Do not show in pager. */
 #define OPTION_NOTURGENT   23    /**< Ignore the urgency hint. */
+#define OPTION_CONSTRAIN   24    /**< Constrain the window to the screen. */
 
 /*@{*/
 #define InitializeGroups() (void)(0)

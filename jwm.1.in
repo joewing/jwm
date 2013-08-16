@@ -652,6 +652,12 @@ cascaded placement.
 .RE
 
 .P
+.B constrain
+.RS
+Constrain windows in this group to the screen.
+.RE
+
+.P
 \fBdesktop:\fP\fI#\fP
 .RS
 The desktop on which windows in this group will be started.
@@ -674,7 +680,6 @@ The icon to be used for windows in this group.
 .RS
 Ignore the size increment hint when maximizing windows in this group.
 .RE
-
 
 .P
 \fBlayer:\fP\fIstring\fP

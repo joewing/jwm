@@ -20,17 +20,18 @@ struct TimeType;
  * on reasonable architectures.
  */
 typedef unsigned short BorderFlags;
-#define BORDER_NONE     0
-#define BORDER_OUTLINE  (1 << 0)    /**< Window has a border. */
-#define BORDER_TITLE    (1 << 1)    /**< Window has a title bar. */
-#define BORDER_MIN      (1 << 2)    /**< Window supports minimize. */
-#define BORDER_MAX      (1 << 3)    /**< Window supports maximize. */
-#define BORDER_CLOSE    (1 << 4)    /**< Window supports close. */
-#define BORDER_RESIZE   (1 << 5)    /**< Window supports resizing. */
-#define BORDER_MOVE     (1 << 6)    /**< Window supports moving. */
-#define BORDER_MAX_V    (1 << 7)    /**< Maximize vertically. */
-#define BORDER_MAX_H    (1 << 8)    /**< Maximize horizontally. */
-#define BORDER_SHADE    (1 << 9)    /**< Allow shading. */
+#define BORDER_NONE        0
+#define BORDER_OUTLINE     (1 << 0)    /**< Window has a border. */
+#define BORDER_TITLE       (1 << 1)    /**< Window has a title bar. */
+#define BORDER_MIN         (1 << 2)    /**< Window supports minimize. */
+#define BORDER_MAX         (1 << 3)    /**< Window supports maximize. */
+#define BORDER_CLOSE       (1 << 4)    /**< Window supports close. */
+#define BORDER_RESIZE      (1 << 5)    /**< Window supports resizing. */
+#define BORDER_MOVE        (1 << 6)    /**< Window supports moving. */
+#define BORDER_MAX_V       (1 << 7)    /**< Maximize vertically. */
+#define BORDER_MAX_H       (1 << 8)    /**< Maximize horizontally. */
+#define BORDER_SHADE       (1 << 9)    /**< Allow shading. */
+#define BORDER_CONSTRAIN   (1 << 10)   /**< Constrain to the screen. */
 
 /** The default border flags. */
 #define BORDER_DEFAULT ( \

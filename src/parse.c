@@ -110,6 +110,7 @@ static const OptionMapType OPTION_MAP[] = {
    { "noturgent",          OPTION_NOTURGENT     },
    { "centered",           OPTION_CENTERED      },
    { "tiled",              OPTION_TILED         },
+   { "constrain",          OPTION_CONSTRAIN     },
    { NULL,                 OPTION_INVALID       }
 };
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-23 13:23-0500\n"
+"POT-Creation-Date: 2013-08-23 18:33-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -253,27 +253,27 @@ msgstr "ação do Traybutton invalida: \"%s\""
 msgid "tray button: root menu %d not defined"
 msgstr "botão do tabuleiro: menu root %d não esta definida"
 
-#: src/tray.c:1108
+#: src/tray.c:1109
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "largura do tabuleiro invalida: %d"
 
-#: src/tray.c:1127
+#: src/tray.c:1128
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "altura do tabuleiro invalida: %d"
 
-#: src/tray.c:1156
+#: src/tray.c:1157
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "layout do tabuleiro invalido: \"%s\""
 
-#: src/tray.c:1193
+#: src/tray.c:1194
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alinhamento do tabuleiro invalido: \"%s\""
 
-#: src/tray.c:1214
+#: src/tray.c:1215
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-23 13:23-0500\n"
+"POT-Creation-Date: 2013-08-23 18:33-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -240,27 +240,27 @@ msgstr ""
 msgid "tray button: root menu %d not defined"
 msgstr ""
 
-#: src/tray.c:1108
+#: src/tray.c:1109
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "ungültige Leistenbreite: %d"
 
-#: src/tray.c:1127
+#: src/tray.c:1128
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "ungültige Leistenhöhe: %d"
 
-#: src/tray.c:1156
+#: src/tray.c:1157
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "ungültiges Leistenlayout: \"%s\""
 
-#: src/tray.c:1193
+#: src/tray.c:1194
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "ungültige Horizontalausrichtung für Leiste: \"%s\""
 
-#: src/tray.c:1214
+#: src/tray.c:1215
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ungültige Vertikalausrichtung für Leiste: \"%s\""

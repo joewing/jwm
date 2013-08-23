@@ -15,6 +15,14 @@
 struct ClientNode;
 struct ClientState;
 
+/** Border icon types. */
+typedef unsigned char BorderIconType;
+#define BI_CLOSE        0
+#define BI_MAX          1
+#define BI_MAX_ACTIVE   2
+#define BI_MIN          3
+#define BI_COUNT        4
+
 /** Flags to determine what action to take on the border. */
 typedef unsigned char BorderActionType;
 #define BA_NONE      0     /**< Do nothing. */
@@ -30,7 +38,7 @@ typedef unsigned char BorderActionType;
 #define BA_RESIZE_W  0x80  /**< Resize west. */
 
 /*@{*/
-#define InitializeBorders()   (void)(0)
+void InitializeBorders();
 void StartupBorders();
 void ShutdownBorders();
 #define DestroyBorders()      (void)(0)
@@ -83,6 +91,9 @@ void ExposeCurrentDesktop();
  */
 void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
                           int width, int height, int radius);
+
+/** Set the icon to use for a border button. */
+void SetBorderIcon(BorderIconType t, const char *name);
 
 #endif /* BORDER_H */
 

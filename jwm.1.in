@@ -1418,6 +1418,26 @@ See \fBBackground\fP above for more information.
 .RS
 The following tags may also be supplied:
 .P
+.B ButtonClose
+.RS
+An icon to display for the close button on client windows instead of the
+default.
+.RE
+.B ButtonMax
+.RS
+An icon to display for the maximize button on client windows instead of the
+default.
+.RE
+.B ButtonMaxActive
+.RS
+An icon to display for the maximize button on maximized client windows instead
+of the default.
+.RE
+.B ButtonMin
+.RS
+An icon to display for the minimize button on client windows instead
+of the default.
+.RE
 .B DoubleClickDelta
 .RS
 The number of pixels the mouse can move during a double click.

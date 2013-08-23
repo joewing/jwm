@@ -16,11 +16,16 @@
 #include "misc.h"
 #include "settings.h"
 #include "grab.h"
+#include "button.h"
 
 static GC borderGC;
+static char *buttonNames[BI_COUNT];
+static IconNode *buttonIcons[BI_COUNT];
 
 static void DrawBorderHelper(const ClientNode *np);
 static void DrawBorderButtons(const ClientNode *np, Pixmap canvas);
+static char DrawBorderIcon(BorderIconType t, unsigned int offset,
+                           Pixmap canvas);
 static void DrawCloseButton(unsigned int offset, Pixmap canvas);
 static void DrawMaxIButton(unsigned int offset, Pixmap canvas);
 static void DrawMaxAButton(unsigned int offset, Pixmap canvas);
@@ -32,16 +37,32 @@ static void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
                                  int width, int height, int radius);
 #endif
 
+/** Initialize structures. */
+void InitializeBorders()
+{
+   memset(buttonNames, 0, sizeof(buttonNames));
+}
+
 /** Initialize server resources. */
 void StartupBorders()
 {
 
    XGCValues gcValues;
    unsigned long gcMask;
+   unsigned int i;
 
    gcMask = GCGraphicsExposures;
    gcValues.graphics_exposures = False;
    borderGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
+
+   for(i = 0; i < BI_COUNT; i++) {
+      if(buttonNames[i]) {
+         buttonIcons[i] = LoadNamedIcon(buttonNames[i], 1);
+         Release(buttonNames[i]);
+      } else {
+         buttonIcons[i] = NULL;
+      }
+   }
 
 }
 
@@ -498,6 +519,25 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas)
 
 }
 
+/** Attempt to draw a border icon. */
+char DrawBorderIcon(BorderIconType t, unsigned int offset, Pixmap canvas)
+{
+   if(buttonIcons[t]) {
+      ButtonNode button;
+      ResetButton(&button, canvas, borderGC);
+      button.x       = offset;
+      button.y       = 0;
+      button.width   = settings.titleHeight;
+      button.height  = settings.titleHeight;
+      button.icon    = buttonIcons[t];
+      button.border  = 0;
+      DrawButton(&button);
+      return 1;
+   } else {
+      return 0;
+   }
+}
+
 /** Draw a close button. */
 void DrawCloseButton(unsigned int offset, Pixmap canvas)
 {
@@ -505,6 +545,10 @@ void DrawCloseButton(unsigned int offset, Pixmap canvas)
    unsigned int size;
    unsigned int x1, y1;
    unsigned int x2, y2;
+
+   if(DrawBorderIcon(BI_CLOSE, offset, canvas)) {
+      return;
+   }
 
    size = (settings.titleHeight + 2) / 3;
    x1 = offset + settings.titleHeight / 2 - size / 2;
@@ -538,6 +582,10 @@ void DrawMaxIButton(unsigned int offset, Pixmap canvas)
    unsigned int size;
    unsigned int x1, y1;
    unsigned int x2, y2;
+
+   if(DrawBorderIcon(BI_MAX, offset, canvas)) {
+      return;
+   }
 
    size = 2 + (settings.titleHeight + 2) / 3;
    x1 = offset + settings.titleHeight / 2 - size / 2;
@@ -586,6 +634,10 @@ void DrawMaxAButton(unsigned int offset, Pixmap canvas)
    unsigned int x1, y1;
    unsigned int x2, y2;
    unsigned int x3, y3;
+
+   if(DrawBorderIcon(BI_MAX_ACTIVE, offset, canvas)) {
+      return;
+   }
 
    size = 2 + (settings.titleHeight + 2) / 3;
    x1 = offset + settings.titleHeight / 2 - size / 2;
@@ -645,9 +697,15 @@ void DrawMaxAButton(unsigned int offset, Pixmap canvas)
 /** Draw a minimize button. */
 void DrawMinButton(unsigned int offset, Pixmap canvas)
 {
+
    unsigned int size;
    unsigned int x1, y1;
    unsigned int x2, y2;
+
+   if(DrawBorderIcon(BI_MIN, offset, canvas)) {
+      return;
+   }
+
    size = (settings.titleHeight + 2) / 3;
    x1 = offset + settings.titleHeight / 2 - size / 2;
    y1 = settings.titleHeight / 2 - size / 2;
@@ -657,6 +715,7 @@ void DrawMinButton(unsigned int offset, Pixmap canvas)
                        CapProjecting, JoinMiter);
    JXDrawLine(display, canvas, borderGC, x1, y2, x2, y2);
    JXSetLineAttributes(display, borderGC, 1, LineSolid, CapButt, JoinMiter);
+
 }
 
 /** Redraw the borders on the current desktop.
@@ -845,4 +904,10 @@ void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
 
 }
 #endif
+
+/** Set the icon to use for a button. */
+void SetBorderIcon(BorderIconType t, const char *name)
+{
+   buttonNames[t] = CopyString(name);
+}
  

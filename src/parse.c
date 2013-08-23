@@ -32,18 +32,7 @@
 #include "background.h"
 #include "spacer.h"
 #include "desktop.h"
-
-/* Save some space by reusing parts of strings. */
-static const char NOBORDER_STRING[] = "noborder";
-#define BORDER_STRING (&NOBORDER_STRING[2])
-static const char NOTITLE_STRING[]  = "notitle";
-#define TITLE_STRING (&NOTITLE_STRING[2])
-static const char MAX_WIDTH_STRING[] = "maxwidth";
-#define WIDTH_STRING (&MAX_WIDTH_STRING[3])
-static const char NOSHADE_STRING[] = "noshade";
-#define SHADE_STRING (&NOSHADE_STRING[2])
-static const char FULLSCREEN_STRING[] = "fullscreen";
-#define SCREEN_STRING (&FULLSCREEN_STRING[4])
+#include "border.h"
 
 /** Structure to map key names to key types. */
 typedef struct KeyMapType {
@@ -66,7 +55,7 @@ static const KeyMapType KEY_MAP[] = {
    { "close",                 KEY_CLOSE        },
    { "minimize",              KEY_MIN          },
    { "maximize",              KEY_MAX          },
-   { &SHADE_STRING[0],        KEY_SHADE        },
+   { "shade",                 KEY_SHADE        },
    { "stick",                 KEY_STICK        },
    { "move",                  KEY_MOVE         },
    { "resize",                KEY_RESIZE       },
@@ -80,7 +69,7 @@ static const KeyMapType KEY_MAP[] = {
    { "ddesktop",              KEY_DDESKTOP     },
    { "showdesktop",           KEY_SHOWDESK     },
    { "showtray",              KEY_SHOWTRAY     },
-   { &FULLSCREEN_STRING[0],   KEY_FULLSCREEN   },
+   { "fullscreen",            KEY_FULLSCREEN   },
    { NULL,                    KEY_NONE         }
 };
 
@@ -95,10 +84,10 @@ static const OptionMapType OPTION_MAP[] = {
    { "sticky",             OPTION_STICKY        },
    { "nolist",             OPTION_NOLIST        },
    { "nopager",            OPTION_NOPAGER       },
-   { &BORDER_STRING[0],    OPTION_BORDER        },
-   { &NOBORDER_STRING[0],  OPTION_NOBORDER      },
-   { &TITLE_STRING[0],     OPTION_TITLE         },
-   { &NOTITLE_STRING[0],   OPTION_NOTITLE       },
+   { "border",             OPTION_BORDER        },
+   { "noborder",           OPTION_NOBORDER      },
+   { "title",              OPTION_TITLE         },
+   { "notitle",            OPTION_NOTITLE       },
    { "pignore",            OPTION_PIGNORE       },
    { "iignore",            OPTION_IIGNORE       },
    { "maximized",          OPTION_MAXIMIZED     },
@@ -106,7 +95,7 @@ static const OptionMapType OPTION_MAP[] = {
    { "hmax",               OPTION_MAX_H         },
    { "vmax",               OPTION_MAX_V         },
    { "nofocus",            OPTION_NOFOCUS       },
-   { &NOSHADE_STRING[0],   OPTION_NOSHADE       },
+   { "noshade",            OPTION_NOSHADE       },
    { "noturgent",          OPTION_NOTURGENT     },
    { "centered",           OPTION_CENTERED      },
    { "tiled",              OPTION_TILED         },
@@ -125,13 +114,13 @@ static const char *LAYOUT_ATTRIBUTE = "layout";
 static const char *AUTOHIDE_ATTRIBUTE = "autohide";
 static const char *X_ATTRIBUTE = "x";
 static const char *Y_ATTRIBUTE = "y";
-static const char *WIDTH_ATTRIBUTE = &WIDTH_STRING[0];
+static const char *WIDTH_ATTRIBUTE = "width";
 static const char *HEIGHT_ATTRIBUTE = "height";
 static const char *NAME_ATTRIBUTE = "name";
-static const char *BORDER_ATTRIBUTE = BORDER_STRING;
+static const char *BORDER_ATTRIBUTE = "border";
 static const char *DISTANCE_ATTRIBUTE = "distance";
 static const char *INSERT_ATTRIBUTE = "insert";
-static const char *MAX_WIDTH_ATTRIBUTE = &MAX_WIDTH_STRING[0];
+static const char *MAX_WIDTH_ATTRIBUTE = "maxwidth";
 static const char *FORMAT_ATTRIBUTE = "format";
 static const char *ZONE_ATTRIBUTE = "zone";
 static const char *VALIGN_ATTRIBUTE = "valign";
@@ -398,6 +387,18 @@ void Parse(const TokenNode *start, int depth)
             case TOK_WINDOWSTYLE:
                ParseWindowStyle(tp);
                break;
+            case TOK_BUTTONCLOSE:
+               SetBorderIcon(BI_CLOSE, tp->value);
+               break;
+            case TOK_BUTTONMAX:
+               SetBorderIcon(BI_MAX, tp->value);
+               break;
+            case TOK_BUTTONMAXACTIVE:
+               SetBorderIcon(BI_MAX_ACTIVE, tp->value);
+               break;
+            case TOK_BUTTONMIN:
+               SetBorderIcon(BI_MIN, tp->value);
+               break;
             default:
                InvalidTag(tp, TOK_JWM);
                break;
@@ -438,9 +439,9 @@ void ParseSnapMode(const TokenNode *tp) {
    if(JLIKELY(tp->value)) {
       if(!strcmp(tp->value, "none")) {
          settings.snapMode = SNAP_NONE;
-      } else if(!strcmp(tp->value, SCREEN_STRING)) {
+      } else if(!strcmp(tp->value, "screen")) {
          settings.snapMode = SNAP_SCREEN;
-      } else if(!strcmp(tp->value, BORDER_STRING)) {
+      } else if(!strcmp(tp->value, "border")) {
          settings.snapMode = SNAP_BORDER;
       } else {
          ParseError(tp, "invalid snap mode: %s", tp->value);
@@ -1850,7 +1851,7 @@ StatusWindowType ParseStatusWindowType(const TokenNode *tp, const char *str)
 {
    if(!strcmp(str, "off")) {
       return SW_OFF;
-   } else if(!strcmp(str, SCREEN_STRING)) {
+   } else if(!strcmp(str, "screen")) {
       return SW_SCREEN;
    } else if(!strcmp(str, "window")) {
       return SW_WINDOW;

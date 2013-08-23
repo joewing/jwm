@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-16 17:40-0500\n"
+"POT-Creation-Date: 2013-08-23 13:23-0500\n"
 "PO-Revision-Date: 2013-06-27 15:00-0300\n"
 "Last-Translator: Víctor Martínez <vikmz@myopera.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -127,78 +127,78 @@ msgstr "ni tecla ni código especificado para Tecla"
 msgid "key binding: root menu %d not defined"
 msgstr "atajo de teclado: menú root %d no definido"
 
-#: src/lex.c:193
+#: src/lex.c:197
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: etiqueta de cerrar \"%s\" no coincide con etiqueta de abrir \"%s\""
 
-#: src/lex.c:200
+#: src/lex.c:204
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: etiqueta de cerrar inesperada y no válida"
 
-#: src/lex.c:207
+#: src/lex.c:211
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: etiqueta de cerrar \"%s\" sin etiqueta de abrir"
 
-#: src/lex.c:210
+#: src/lex.c:214
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: etiqueta de cerrar no válida"
 
-#: src/lex.c:229
+#: src/lex.c:233
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: etiqueta de abrir no válida"
 
-#: src/lex.c:242
+#: src/lex.c:246
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: etiqueta no válida"
 
-#: src/lex.c:288
+#: src/lex.c:292
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: texto inesperado: \"%s\""
 
-#: src/lex.c:336
+#: src/lex.c:340
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entidad no válida: \"%.8s\""
 
-#: src/parse.c:1088
+#: src/parse.c:1089
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "modo de insertar no válido: \"%s\""
 
-#: src/parse.c:1812
+#: src/parse.c:1813
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ajuste no válido: %s"
 
-#: src/parse.c:1824
+#: src/parse.c:1825
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacidad no válida: %s"
 
-#: src/parse.c:1843
+#: src/parse.c:1844
 #, c-format
 msgid "invalid layer: %s"
 msgstr "capa no válida: %s"
 
-#: src/parse.c:1860
+#: src/parse.c:1861
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "tipo de ventana de estado no válido: %s"
 
-#: src/parse.c:1869
+#: src/parse.c:1870
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta no válida en %s: %s"
 
-#: src/parse.c:1890
+#: src/parse.c:1891
 msgid "configuration error"
 msgstr "error de configuración"
 

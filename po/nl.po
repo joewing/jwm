@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-16 17:40-0500\n"
+"POT-Creation-Date: 2013-08-23 13:23-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -121,77 +121,77 @@ msgstr "Toets en Toetscode niet opgegeven voor Toets"
 msgid "key binding: root menu %d not defined"
 msgstr "Sneltoets: root menu %d niet gedefiniëerd"
 
-#: src/lex.c:193
+#: src/lex.c:197
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: sluiten-label \"%s\" komt niet overeen met openen-label \"%s\""
 
-#: src/lex.c:200
+#: src/lex.c:204
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: onverwacht en ongeldig sluiten-label "
 
-#: src/lex.c:207
+#: src/lex.c:211
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: sluiten-label \"%s\" zonder openen-label"
 
-#: src/lex.c:210
+#: src/lex.c:214
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: ongeldig sluiten-label"
 
-#: src/lex.c:229
+#: src/lex.c:233
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: ongeldig openen-label"
 
-#: src/lex.c:242
+#: src/lex.c:246
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: ongeldig label"
 
-#: src/lex.c:288
+#: src/lex.c:292
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: ongeldige entiteit: \"%.8s\""
 
-#: src/lex.c:336
+#: src/lex.c:340
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ongeldige entiteit: \"%.8s\""
 
-#: src/parse.c:1088
+#: src/parse.c:1089
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "ongeldige invoeg-modus: \"%s\""
 
-#: src/parse.c:1812
+#: src/parse.c:1813
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ongeldige instelling: %s"
 
-#: src/parse.c:1824
+#: src/parse.c:1825
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ongeldige transparantie: %s"
 
-#: src/parse.c:1843
+#: src/parse.c:1844
 #, c-format
 msgid "invalid layer: %s"
 msgstr "ongeldige laag: %s"
 
-#: src/parse.c:1860
+#: src/parse.c:1861
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "ongeldig staus-venster type: %s"
 
-#: src/parse.c:1869
+#: src/parse.c:1870
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ongeldig label in %s: %s"
 
-#: src/parse.c:1890
+#: src/parse.c:1891
 msgid "configuration error"
 msgstr "configuratie-fout"
 

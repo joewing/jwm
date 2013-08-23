@@ -21,6 +21,7 @@
 #include "settings.h"
 #include "event.h"
 #include "gradient.h"
+#include "client.h"
 
 #define DEFAULT_TRAY_WIDTH 32
 #define DEFAULT_TRAY_HEIGHT 32

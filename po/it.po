@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-23 18:33-0500\n"
+"POT-Creation-Date: 2013-08-25 09:27-0500\n"
 "PO-Revision-Date: 2013-07-25 16:40+0100\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -315,42 +315,42 @@ msgstr "Ingrandisci-x"
 msgid "Maximize"
 msgstr "Ingrandisci"
 
-#: src/winmenu.c:132
+#: src/winmenu.c:133
 msgid "Unstick"
 msgstr "Sgancia"
 
-#: src/winmenu.c:134
+#: src/winmenu.c:135
 msgid "Stick"
 msgstr "Aggancia"
 
-#: src/winmenu.c:157
+#: src/winmenu.c:161
 msgid "Layer"
 msgstr "Layer"
 
-#: src/winmenu.c:172
+#: src/winmenu.c:176
 msgid "[Above]"
 msgstr "[Sopra]"
 
-#: src/winmenu.c:174
+#: src/winmenu.c:178
 msgid "Above"
 msgstr "Sopra"
 
-#: src/winmenu.c:177
+#: src/winmenu.c:181
 msgid "[Normal]"
 msgstr "[Normale]"
 
-#: src/winmenu.c:179
+#: src/winmenu.c:183
 msgid "Normal"
 msgstr "Normale"
 
-#: src/winmenu.c:182
+#: src/winmenu.c:186
 msgid "[Below]"
 msgstr "[Sotto]"
 
-#: src/winmenu.c:184
+#: src/winmenu.c:188
 msgid "Below"
 msgstr "Sotto"
 
-#: src/winmenu.c:204
+#: src/winmenu.c:208
 msgid "Send To"
 msgstr "Manda A"

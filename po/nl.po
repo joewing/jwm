@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-23 18:33-0500\n"
+"POT-Creation-Date: 2013-08-25 09:27-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -309,43 +309,43 @@ msgstr "Maximaliseer-x"
 msgid "Maximize"
 msgstr "Maximaliseren"
 
-#: src/winmenu.c:132
+#: src/winmenu.c:133
 msgid "Unstick"
 msgstr "Losmaken"
 
-#: src/winmenu.c:134
+#: src/winmenu.c:135
 msgid "Stick"
 msgstr "Vastmaken"
 
-#: src/winmenu.c:157
+#: src/winmenu.c:161
 msgid "Layer"
 msgstr "Laag"
 
-#: src/winmenu.c:172
+#: src/winmenu.c:176
 msgid "[Above]"
 msgstr "[Boven]"
 
-#: src/winmenu.c:174
+#: src/winmenu.c:178
 msgid "Above"
 msgstr "Boven"
 
-#: src/winmenu.c:177
+#: src/winmenu.c:181
 msgid "[Normal]"
 msgstr "[Normaal]"
 
-#: src/winmenu.c:179
+#: src/winmenu.c:183
 msgid "Normal"
 msgstr "Normaal"
 
-#: src/winmenu.c:182
+#: src/winmenu.c:186
 msgid "[Below]"
 msgstr "[Onder]"
 
-#: src/winmenu.c:184
+#: src/winmenu.c:188
 msgid "Below"
 msgstr "Onder"
 
-#: src/winmenu.c:204
+#: src/winmenu.c:208
 msgid "Send To"
 msgstr "Zend naar"
 

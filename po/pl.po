@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-23 18:33-0500\n"
+"POT-Creation-Date: 2013-08-25 09:27-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -315,43 +315,43 @@ msgstr "Zmaksymalizuj poz."
 msgid "Maximize"
 msgstr "Zmaksymalizuj"
 
-#: src/winmenu.c:132
+#: src/winmenu.c:133
 msgid "Unstick"
 msgstr "Odepnij"
 
-#: src/winmenu.c:134
+#: src/winmenu.c:135
 msgid "Stick"
 msgstr "Przypnij"
 
-#: src/winmenu.c:157
+#: src/winmenu.c:161
 msgid "Layer"
 msgstr "Warstwa"
 
-#: src/winmenu.c:172
+#: src/winmenu.c:176
 msgid "[Above]"
 msgstr ""
 
-#: src/winmenu.c:174
+#: src/winmenu.c:178
 msgid "Above"
 msgstr ""
 
-#: src/winmenu.c:177
+#: src/winmenu.c:181
 msgid "[Normal]"
 msgstr "[Normalny]"
 
-#: src/winmenu.c:179
+#: src/winmenu.c:183
 msgid "Normal"
 msgstr "Normalny"
 
-#: src/winmenu.c:182
+#: src/winmenu.c:186
 msgid "[Below]"
 msgstr ""
 
-#: src/winmenu.c:184
+#: src/winmenu.c:188
 msgid "Below"
 msgstr ""
 
-#: src/winmenu.c:204
+#: src/winmenu.c:208
 msgid "Send To"
 msgstr "Wyślij do"
 

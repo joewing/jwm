@@ -128,16 +128,20 @@ Menu *CreateWindowMenu()
 
    if(!(client->state.status & STAT_WMDIALOG)) {
 
-      if(client->state.status & STAT_STICKY) {
-         AddWindowMenuItem(menu, _("Unstick"), MA_STICK, 0);
-      } else {
-         AddWindowMenuItem(menu, _("Stick"), MA_STICK, 0);
+      if(settings.desktopCount > 1) {
+         if(client->state.status & STAT_STICKY) {
+            AddWindowMenuItem(menu, _("Unstick"), MA_STICK, 0);
+         } else {
+            AddWindowMenuItem(menu, _("Stick"), MA_STICK, 0);
+         }
       }
 
       CreateWindowLayerMenu(menu);
 
-      if(!(client->state.status & STAT_STICKY)) {
-         CreateWindowSendToMenu(menu);
+      if(settings.desktopCount > 1) {
+         if(!(client->state.status & STAT_STICKY)) {
+            CreateWindowSendToMenu(menu);
+         }
       }
 
    }

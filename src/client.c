@@ -950,6 +950,7 @@ void RestackClients()
    unsigned int layer, index;
    int trayCount;
    Window *stack;
+   Window fw;
 
    if(JUNLIKELY(shouldExit)) {
       return;
@@ -960,8 +961,16 @@ void RestackClients()
    stack = AllocateStack((clientCount + trayCount) * sizeof(Window));
 
    /* Prepare the stacking array. */
+   fw = None;
    index = 0;
    if(activeClient && (activeClient->state.status & STAT_FULLSCREEN)) {
+      fw = activeClient->window;
+      for(np = nodes[activeClient->state.layer]; np; np = np->next) {
+         if(np->owner == fw) {
+            stack[index] = np->parent;
+            index += 1;
+         }
+      }
       stack[index] = activeClient->parent;
       index += 1;
    }
@@ -971,10 +980,11 @@ void RestackClients()
       for(np = nodes[layer]; np; np = np->next) {
          if(    (np->state.status & (STAT_MAPPED | STAT_SHADED))
             && !(np->state.status & STAT_HIDDEN)) {
-            if(activeClient != np || !(np->state.status & STAT_FULLSCREEN)) {
-               stack[index] = np->parent;
-               index += 1;
+            if(fw != None && (np->window == fw || np->owner == fw)) {
+               continue;
             }
+            stack[index] = np->parent;
+            index += 1;
          }
       }
 

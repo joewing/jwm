@@ -107,6 +107,9 @@ char MoveClient(ClientNode *np, int startx, int starty, int snap)
    if(!(np->state.border & BORDER_MOVE)) {
       return 0;
    }
+   if(np->state.status & STAT_FULLSCREEN) {
+      return 0;
+   }
 
    GrabMouseForMove();
 
@@ -241,6 +244,9 @@ char MoveClientKeyboard(ClientNode *np)
    Assert(np);
 
    if(!(np->state.border & BORDER_MOVE)) {
+      return 0;
+   }
+   if(np->state.status & STAT_FULLSCREEN) {
       return 0;
    }
 

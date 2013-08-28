@@ -55,7 +55,13 @@ void ResizeClient(ClientNode *np, BorderActionType action,
    int ratio, minr, maxr;
 
    Assert(np);
-   Assert(np->state.border & BORDER_RESIZE);
+
+   if(!(np->state.border & BORDER_RESIZE)) {
+      return;
+   }
+   if(np->state.status & (STAT_VMAX | STAT_HMAX | STAT_FULLSCREEN)) {
+      return;
+   }
 
    if(JUNLIKELY(!GrabMouseForResize(action))) {
       Debug("ResizeClient: could not grab mouse");
@@ -235,7 +241,7 @@ void ResizeClientKeyboard(ClientNode *np)
    if(!(np->state.border & BORDER_RESIZE)) {
       return;
    }
-   if(np->state.status & (STAT_VMAX | STAT_HMAX)) {
+   if(np->state.status & (STAT_VMAX | STAT_HMAX | STAT_FULLSCREEN)) {
       return;
    }
 

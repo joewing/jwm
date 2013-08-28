@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-25 09:27-0500\n"
+"POT-Creation-Date: 2013-08-28 16:19-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -26,11 +26,11 @@ msgstr "ongeldig achtergrond-type: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Achtergrond-afbeelding niet gevonden: \"%s\""
 
-#: src/client.c:877
+#: src/client.c:879
 msgid "Kill this window?"
 msgstr "Sluiten van dit venster forceren?"
 
-#: src/client.c:878
+#: src/client.c:880
 msgid "This may cause data to be lost!"
 msgstr "Dit kan verlies van data veroorzaken!"
 
@@ -281,7 +281,7 @@ msgstr "Grootte wijzigen"
 msgid "Move"
 msgstr "Verplaatsen"
 
-#: src/winmenu.c:99 src/winmenu.c:122
+#: src/winmenu.c:99 src/winmenu.c:119
 msgid "Restore"
 msgstr "Herstellen"
 
@@ -289,63 +289,63 @@ msgstr "Herstellen"
 msgid "Minimize"
 msgstr "Minimaliseren"
 
-#: src/winmenu.c:105
+#: src/winmenu.c:106
 msgid "Unshade"
 msgstr "Uitrollen"
 
-#: src/winmenu.c:107
+#: src/winmenu.c:108
 msgid "Shade"
 msgstr "Oprollen"
 
-#: src/winmenu.c:114
+#: src/winmenu.c:113
 msgid "Maximize-y"
 msgstr "Maximaliseer-y"
 
-#: src/winmenu.c:118
+#: src/winmenu.c:116
 msgid "Maximize-x"
 msgstr "Maximaliseer-x"
 
-#: src/winmenu.c:124
+#: src/winmenu.c:121
 msgid "Maximize"
 msgstr "Maximaliseren"
 
-#: src/winmenu.c:133
+#: src/winmenu.c:130
 msgid "Unstick"
 msgstr "Losmaken"
 
-#: src/winmenu.c:135
+#: src/winmenu.c:132
 msgid "Stick"
 msgstr "Vastmaken"
 
-#: src/winmenu.c:161
+#: src/winmenu.c:158
 msgid "Layer"
 msgstr "Laag"
 
-#: src/winmenu.c:176
+#: src/winmenu.c:173
 msgid "[Above]"
 msgstr "[Boven]"
 
-#: src/winmenu.c:178
+#: src/winmenu.c:175
 msgid "Above"
 msgstr "Boven"
 
-#: src/winmenu.c:181
+#: src/winmenu.c:178
 msgid "[Normal]"
 msgstr "[Normaal]"
 
-#: src/winmenu.c:183
+#: src/winmenu.c:180
 msgid "Normal"
 msgstr "Normaal"
 
-#: src/winmenu.c:186
+#: src/winmenu.c:183
 msgid "[Below]"
 msgstr "[Onder]"
 
-#: src/winmenu.c:188
+#: src/winmenu.c:185
 msgid "Below"
 msgstr "Onder"
 
-#: src/winmenu.c:208
+#: src/winmenu.c:205
 msgid "Send To"
 msgstr "Zend naar"
 

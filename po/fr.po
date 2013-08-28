@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-25 09:27-0500\n"
+"POT-Creation-Date: 2013-08-28 16:19-0500\n"
 "PO-Revision-Date: 2013-05-31 14:19+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -27,11 +27,11 @@ msgstr "type de fond d'écran incorrect: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Image de fond d'écran introuvable: \"%s\""
 
-#: src/client.c:877
+#: src/client.c:879
 msgid "Kill this window?"
 msgstr "Éliminer la fenêtre?"
 
-#: src/client.c:878
+#: src/client.c:880
 msgid "This may cause data to be lost!"
 msgstr "Cela peut entraîner la perte de données!"
 
@@ -284,7 +284,7 @@ msgstr "Redimensionner"
 msgid "Move"
 msgstr "Déplacer"
 
-#: src/winmenu.c:99 src/winmenu.c:122
+#: src/winmenu.c:99 src/winmenu.c:119
 msgid "Restore"
 msgstr "Restaurer"
 
@@ -292,63 +292,63 @@ msgstr "Restaurer"
 msgid "Minimize"
 msgstr "Réduire"
 
-#: src/winmenu.c:105
+#: src/winmenu.c:106
 msgid "Unshade"
 msgstr "Déplier"
 
-#: src/winmenu.c:107
+#: src/winmenu.c:108
 msgid "Shade"
 msgstr "Replier"
 
-#: src/winmenu.c:114
+#: src/winmenu.c:113
 msgid "Maximize-y"
 msgstr "Maximiser-y"
 
-#: src/winmenu.c:118
+#: src/winmenu.c:116
 msgid "Maximize-x"
 msgstr "Maximiser-x"
 
-#: src/winmenu.c:124
+#: src/winmenu.c:121
 msgid "Maximize"
 msgstr "Maximiser"
 
-#: src/winmenu.c:133
+#: src/winmenu.c:130
 msgid "Unstick"
 msgstr "Décoller"
 
-#: src/winmenu.c:135
+#: src/winmenu.c:132
 msgid "Stick"
 msgstr "Coller"
 
-#: src/winmenu.c:161
+#: src/winmenu.c:158
 msgid "Layer"
 msgstr "Couche"
 
-#: src/winmenu.c:176
+#: src/winmenu.c:173
 msgid "[Above]"
 msgstr "[Au-dessus]"
 
-#: src/winmenu.c:178
+#: src/winmenu.c:175
 msgid "Above"
 msgstr "Au-dessus"
 
-#: src/winmenu.c:181
+#: src/winmenu.c:178
 msgid "[Normal]"
 msgstr "[Normal]"
 
-#: src/winmenu.c:183
+#: src/winmenu.c:180
 msgid "Normal"
 msgstr "Normal"
 
-#: src/winmenu.c:186
+#: src/winmenu.c:183
 msgid "[Below]"
 msgstr "[En-dessous]"
 
-#: src/winmenu.c:188
+#: src/winmenu.c:185
 msgid "Below"
 msgstr "En-dessous"
 
-#: src/winmenu.c:208
+#: src/winmenu.c:205
 msgid "Send To"
 msgstr "Envoyer vers"
 

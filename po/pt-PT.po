@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-25 09:27-0500\n"
+"POT-Creation-Date: 2013-08-28 16:19-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -35,11 +35,11 @@ msgstr "tipo de fundo invalido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""
 
-#: src/client.c:877
+#: src/client.c:879
 msgid "Kill this window?"
 msgstr "eliminar esta janela?"
 
-#: src/client.c:878
+#: src/client.c:880
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 
@@ -294,7 +294,7 @@ msgstr "Redimensionar"
 msgid "Move"
 msgstr "Mover"
 
-#: src/winmenu.c:99 src/winmenu.c:122
+#: src/winmenu.c:99 src/winmenu.c:119
 msgid "Restore"
 msgstr "Restaurar"
 
@@ -302,63 +302,63 @@ msgstr "Restaurar"
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: src/winmenu.c:105
+#: src/winmenu.c:106
 msgid "Unshade"
 msgstr "Desligar Sombra"
 
-#: src/winmenu.c:107
+#: src/winmenu.c:108
 msgid "Shade"
 msgstr "Ligar Sombra"
 
-#: src/winmenu.c:114
+#: src/winmenu.c:113
 msgid "Maximize-y"
 msgstr "Maximizar-y"
 
-#: src/winmenu.c:118
+#: src/winmenu.c:116
 msgid "Maximize-x"
 msgstr "Maximizar-x"
 
-#: src/winmenu.c:124
+#: src/winmenu.c:121
 msgid "Maximize"
 msgstr "Maximizar"
 
-#: src/winmenu.c:133
+#: src/winmenu.c:130
 msgid "Unstick"
 msgstr "Descolar"
 
-#: src/winmenu.c:135
+#: src/winmenu.c:132
 msgid "Stick"
 msgstr "Colar"
 
-#: src/winmenu.c:161
+#: src/winmenu.c:158
 msgid "Layer"
 msgstr "Camada"
 
-#: src/winmenu.c:176
+#: src/winmenu.c:173
 msgid "[Above]"
 msgstr "[Acima]"
 
-#: src/winmenu.c:178
+#: src/winmenu.c:175
 msgid "Above"
 msgstr "Acima"
 
-#: src/winmenu.c:181
+#: src/winmenu.c:178
 msgid "[Normal]"
 msgstr "[Normal]"
 
-#: src/winmenu.c:183
+#: src/winmenu.c:180
 msgid "Normal"
 msgstr "Normal"
 
-#: src/winmenu.c:186
+#: src/winmenu.c:183
 msgid "[Below]"
 msgstr "[Abaixo]"
 
-#: src/winmenu.c:188
+#: src/winmenu.c:185
 msgid "Below"
 msgstr "Abaixo"
 
-#: src/winmenu.c:208
+#: src/winmenu.c:205
 msgid "Send To"
 msgstr "Enviar Para"
 

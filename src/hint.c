@@ -558,7 +558,6 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
                result.status |= STAT_HMAX;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_FULLSCREEN]) {
                result.status |= STAT_FULLSCREEN;
-               result.layer = LAYER_ABOVE;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_HIDDEN]) {
                result.status |= STAT_MINIMIZED;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_SKIP_TASKBAR]) {

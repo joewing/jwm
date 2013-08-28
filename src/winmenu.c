@@ -101,29 +101,26 @@ Menu *CreateWindowMenu()
       AddWindowMenuItem(menu, _("Minimize"), MA_MINIMIZE, 0);
    }
 
-   if(client->state.status & STAT_SHADED) {
-      AddWindowMenuItem(menu, _("Unshade"), MA_SHADE, 0);
-   } else if(client->state.border & BORDER_SHADE) {
-      AddWindowMenuItem(menu, _("Shade"), MA_SHADE, 0);
-   }
-
-   if((client->state.border & BORDER_MAX)
-      && (client->state.status & (STAT_MAPPED | STAT_SHADED))) {
-
-      if(!(client->state.status & (STAT_HMAX | STAT_VMAX))) {
-         AddWindowMenuItem(menu, _("Maximize-y"), MA_MAXIMIZE_V, 0);
+   if(!(client->state.status & STAT_FULLSCREEN)) {
+      if(client->state.status & STAT_SHADED) {
+         AddWindowMenuItem(menu, _("Unshade"), MA_SHADE, 0);
+      } else if(client->state.border & BORDER_SHADE) {
+         AddWindowMenuItem(menu, _("Shade"), MA_SHADE, 0);
       }
-
-      if(!(client->state.status & (STAT_HMAX | STAT_VMAX))) {
-         AddWindowMenuItem(menu, _("Maximize-x"), MA_MAXIMIZE_H, 0);
+      if((client->state.border & BORDER_MAX) &&
+         (client->state.status & (STAT_MAPPED | STAT_SHADED))) {
+         if(!(client->state.status & (STAT_HMAX | STAT_VMAX))) {
+            AddWindowMenuItem(menu, _("Maximize-y"), MA_MAXIMIZE_V, 0);
+         }
+         if(!(client->state.status & (STAT_HMAX | STAT_VMAX))) {
+            AddWindowMenuItem(menu, _("Maximize-x"), MA_MAXIMIZE_H, 0);
+         }
+         if((client->state.status & (STAT_HMAX | STAT_VMAX))) {
+            AddWindowMenuItem(menu, _("Restore"), MA_MAXIMIZE, 0);
+         } else {
+            AddWindowMenuItem(menu, _("Maximize"), MA_MAXIMIZE, 0);
+         }
       }
-
-      if((client->state.status & (STAT_HMAX | STAT_VMAX))) {
-         AddWindowMenuItem(menu, _("Restore"), MA_MAXIMIZE, 0);
-      } else {
-         AddWindowMenuItem(menu, _("Maximize"), MA_MAXIMIZE, 0);
-      }
-
    }
 
    if(!(client->state.status & STAT_WMDIALOG)) {

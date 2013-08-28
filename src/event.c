@@ -902,6 +902,9 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
 
    /* Don't let maximized clients be moved or resized. */
    if(JUNLIKELY(np->state.status & STAT_FULLSCREEN)) {
+      SetClientFullScreen(np, 0);
+   }
+   if(JUNLIKELY(np->state.status & (STAT_HMAX | STAT_VMAX))) {
       MaximizeClient(np, 0, 0);
    }
 

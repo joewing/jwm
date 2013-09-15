@@ -371,6 +371,8 @@ void CreateMenu(Menu *menu, int x, int y)
                                  menu->width, menu->height, 0,
                                  CopyFromParent, InputOutput,
                                  CopyFromParent, attrMask, &attr);
+   menu->pixmap = JXCreatePixmap(display, menu->window,
+                                 menu->width, menu->height, rootDepth);
 
    if(settings.menuOpacity < UINT_MAX) {
       SetCardinalAtom(menu->window, ATOM_NET_WM_WINDOW_OPACITY,
@@ -385,6 +387,7 @@ void CreateMenu(Menu *menu, int x, int y)
 void HideMenu(Menu *menu)
 {
    JXDestroyWindow(display, menu->window);
+   JXFreePixmap(display, menu->pixmap);
 }
 
 /** Draw a menu. */
@@ -394,8 +397,11 @@ void DrawMenu(Menu *menu)
    MenuItem *np;
    int x;
 
+   JXSetForeground(display, rootGC, colors[COLOR_MENU_BG]);
+   JXFillRectangle(display, menu->pixmap, rootGC, 0, 0,
+                   menu->width, menu->height);
    JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
-   JXDrawRectangle(display, menu->window, rootGC, 0, 0,
+   JXDrawRectangle(display, menu->pixmap, rootGC, 0, 0,
                    menu->width - 1, menu->height - 1);
 
    if(menu->label) {
@@ -407,6 +413,8 @@ void DrawMenu(Menu *menu)
       DrawMenuItem(menu, np, x);
       ++x;
    }
+   JXCopyArea(display, menu->pixmap, menu->window, rootGC,
+              0, 0, menu->width, menu->height, 0, 0);
 
 }
 
@@ -537,7 +545,7 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
       /* If near the top, shift down. */
       if(y + menu->y <= 0) {
          if(menu->currentIndex > 0) {
-            --menu->currentIndex;
+            menu->currentIndex -= 1;
             SetPosition(menu, menu->currentIndex);
          }
       }
@@ -545,7 +553,7 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
       /* If near the bottom, shift up. */
       if(y + menu->y + menu->itemHeight / 2 >= rootHeight) {
          if(menu->currentIndex + 1 < menu->itemCount) {
-            ++menu->currentIndex;
+            menu->currentIndex += 1;
             SetPosition(menu, menu->currentIndex);
          }
       }
@@ -595,6 +603,9 @@ void UpdateMenu(Menu *menu)
       DrawMenuItem(menu, ip, menu->currentIndex);
    }
 
+   JXCopyArea(display, menu->pixmap, menu->window, rootGC,
+              0, 0, menu->width, menu->height, 0, 0);
+
 }
 
 /** Draw a menu item. */
@@ -608,7 +619,7 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
 
    if(!item) {
       if(index == -1 && menu->label) {
-         ResetButton(&button, menu->window, rootGC);
+         ResetButton(&button, menu->pixmap, rootGC);
          button.x = MENU_BORDER_SIZE;
          button.y = 0;
          button.width = menu->width - 2 * MENU_BORDER_SIZE - 1;
@@ -624,7 +635,7 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
 
    if(item->type != MENU_ITEM_SEPARATOR) {
 
-      ResetButton(&button, menu->window, rootGC);
+      ResetButton(&button, menu->pixmap, rootGC);
       if(menu->currentIndex == index) {
          button.type = BUTTON_MENU_ACTIVE;
          fg = COLOR_MENU_ACTIVE_FG;
@@ -653,21 +664,21 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
          for(i = 0; i < asize; i++) {
             const int y1 = y - asize + i;
             const int y2 = y + asize - i;
-            JXDrawLine(display, menu->window, rootGC, x, y1, x, y2);
+            JXDrawLine(display, menu->pixmap, rootGC, x, y1, x, y2);
             x += 1;
          }
-         JXDrawPoint(display, menu->window, rootGC, x, y);
+         JXDrawPoint(display, menu->pixmap, rootGC, x, y);
 
       }
 
    } else {
 
       JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
-      JXDrawLine(display, menu->window, rootGC, 4,
+      JXDrawLine(display, menu->pixmap, rootGC, 4,
                  menu->offsets[index] + 2, menu->width - 6,
                  menu->offsets[index] + 2);
       JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
-      JXDrawLine(display, menu->window, rootGC, 4,
+      JXDrawLine(display, menu->pixmap, rootGC, 4,
                  menu->offsets[index] + 3, menu->width - 6,
                  menu->offsets[index] + 3);
 

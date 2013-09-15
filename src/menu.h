@@ -76,6 +76,7 @@ typedef struct Menu {
 
    /* These fields are handled by menu.c */
    Window window;          /**< The menu window. */
+   Pixmap pixmap;          /**< Pixmap where the menu is rendered. */
    int x;                  /**< The x-coordinate of the menu. */
    int y;                  /**< The y-coordinate of the menu. */
    int width;              /**< The width of the menu. */

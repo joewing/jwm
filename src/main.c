@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
       isRestarting = shouldRestart;
       shouldExit = 0;
       shouldRestart = 0;
-		shouldReload = 0;
+      shouldReload = 0;
 
       /* Prepare JWM components. */
       Initialize();
@@ -416,8 +416,6 @@ void Startup()
 
    /* This order is important. */
 
-   StartupCommands();
-
    /* First we grab the server to prevent clients from changing things
     * while we're still loading. */
    GrabServer();
@@ -471,6 +469,9 @@ void Startup()
 
    /* Draw the background (if backgrounds are used). */
    LoadBackground(currentDesktop);
+
+   /* Run any startup commands. */
+   StartupCommands();
 
 }
 

@@ -333,6 +333,7 @@ void HandleButtonEvent(const XButtonEvent *event)
          }
       }
    } else {
+      const unsigned int mask = event->state & ~lockMask;
       np = FindClientByWindow(event->window);
       if(np) {
          switch(event->button) {
@@ -340,13 +341,13 @@ void HandleButtonEvent(const XButtonEvent *event)
          case Button2:
             FocusClient(np);
             RaiseClient(np);
-            if(event->state & Mod1Mask) {
+            if(mask == Mod1Mask) {
                GetBorderSize(&np->state, &north, &south, &east, &west);
                MoveClient(np, event->x + west, event->y + north, 0);
             }
             break;
          case Button3:
-            if(event->state & Mod1Mask) {
+            if(mask == Mod1Mask) {
                GetBorderSize(&np->state, &north, &south, &east, &west);
                ResizeClient(np, BA_RESIZE | BA_RESIZE_E | BA_RESIZE_S,
                             event->x + west, event->y + north);

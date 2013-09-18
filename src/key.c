@@ -73,7 +73,7 @@ static LockNode lockMods[] = {
 };
 
 static KeyNode *bindings;
-static unsigned int lockMask;
+unsigned int lockMask;
 
 static unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key);
 static unsigned int ParseModifierString(const char *str);

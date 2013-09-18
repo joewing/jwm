@@ -54,6 +54,9 @@ void StartupKeys();
 void ShutdownKeys();
 void DestroyKeys();
 
+/** Mask of 'lock' keys. */
+extern unsigned int lockMask;
+
 /** Get the action to take from a key event.
  * @param event The event.
  */

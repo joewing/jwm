@@ -742,10 +742,8 @@ void PlaceMaximizedClient(ClientNode *np, char horiz, char vert)
    SubtractTrayBounds(GetTrays(), &box, np->state.layer);
    SubtractStrutBounds(&box);
 
-   box.x += west;
    box.y += north;
-   box.width -= east + west;
-   box.height -= north + south;
+   box.height -= north;
 
    if(box.width > np->maxWidth) {
       box.width = np->maxWidth;

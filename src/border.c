@@ -240,8 +240,13 @@ void ResetBorder(const ClientNode *np)
    /* Draw the window area without the corners. */
    /* Corner bound radius -1 to allow slightly better outline drawing */
    JXSetForeground(display, shapeGC, 1);
-   FillRoundedRectangle(shapePixmap, shapeGC, 0, 0, width, height,
-                        CORNER_RADIUS - 1);
+   if((np->state.status & (STAT_HMAX | STAT_VMAX)) &&
+      !(np->state.status & (STAT_SHADED))) {
+      JXFillRectangle(display, shapePixmap, shapeGC, 0, 0, width, height);
+   } else {
+      FillRoundedRectangle(shapePixmap, shapeGC, 0, 0, width, height,
+                           CORNER_RADIUS - 1);
+   }
 
    /* Apply the client window. */
    if(!(np->state.status & STAT_SHADED) && (np->state.status & STAT_SHAPED)) {
@@ -411,6 +416,9 @@ void DrawBorderHelper(const ClientNode *np)
    if(np->state.status & STAT_SHADED) {
       DrawRoundedRectangle(np->parent, borderGC, 0, 0, width - 1, north - 1,
                            CORNER_RADIUS);
+   } else if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
+      JXDrawRectangle(display, np->parent, borderGC, 0, 0,
+                      width - 1, height - 1);
    } else {
       DrawRoundedRectangle(np->parent, borderGC, 0, 0, width - 1, height - 1,
                            CORNER_RADIUS);
@@ -778,8 +786,14 @@ void GetBorderSize(const ClientState *state,
    if(state->border & BORDER_TITLE) {
       *north = settings.titleHeight;
    }
-
    if(state->status & STAT_SHADED) {
+      *south = 0;
+   }
+   if(state->status & STAT_HMAX) {
+      *east = 0;
+      *west = 0;
+   }
+   if(state->status & STAT_VMAX) {
       *south = 0;
    }
 

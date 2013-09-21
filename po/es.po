@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-28 16:19-0500\n"
+"POT-Creation-Date: 2013-09-21 17:00-0500\n"
 "PO-Revision-Date: 2013-06-27 15:00-0300\n"
 "Last-Translator: Víctor Martínez <vikmz@myopera.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -44,7 +44,7 @@ msgstr "¡Esto puede causar pérdida de datos!"
 msgid "exec failed: (%s) %s"
 msgstr "exec falló: (%s) %s"
 
-#: src/desktop.c:272
+#: src/desktop.c:304
 msgid "empty Desktops Name tag"
 msgstr "etiqueta Nombre de Escritorio vacía"
 
@@ -168,37 +168,37 @@ msgstr "%s[%u]: texto inesperado: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entidad no válida: \"%.8s\""
 
-#: src/parse.c:1089
+#: src/parse.c:1093
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "modo de insertar no válido: \"%s\""
 
-#: src/parse.c:1813
+#: src/parse.c:1817
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ajuste no válido: %s"
 
-#: src/parse.c:1825
+#: src/parse.c:1829
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacidad no válida: %s"
 
-#: src/parse.c:1844
+#: src/parse.c:1848
 #, c-format
 msgid "invalid layer: %s"
 msgstr "capa no válida: %s"
 
-#: src/parse.c:1861
+#: src/parse.c:1865
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "tipo de ventana de estado no válido: %s"
 
-#: src/parse.c:1870
+#: src/parse.c:1874
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta no válida en %s: %s"
 
-#: src/parse.c:1891
+#: src/parse.c:1895
 msgid "configuration error"
 msgstr "error de configuración"
 
@@ -207,11 +207,11 @@ msgstr "error de configuración"
 msgid "invalid root menu specified: \"%c\""
 msgstr "menú root especificado no válido: \"%c\""
 
-#: src/root.c:225
+#: src/root.c:232
 msgid "Exit JWM"
 msgstr "Salir de JWM"
 
-#: src/root.c:226
+#: src/root.c:233
 msgid "Are you sure?"
 msgstr "¿Está seguro?"
 

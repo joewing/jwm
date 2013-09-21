@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-08-28 16:19-0500\n"
+"POT-Creation-Date: 2013-09-21 17:00-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -39,7 +39,7 @@ msgstr "Dit kan verlies van data veroorzaken!"
 msgid "exec failed: (%s) %s"
 msgstr "uitvoeren mislukt: (%s) %s"
 
-#: src/desktop.c:272
+#: src/desktop.c:304
 msgid "empty Desktops Name tag"
 msgstr "leeg Bureaublad-naam label"
 
@@ -161,37 +161,37 @@ msgstr "%s[%u]: ongeldige entiteit: \"%.8s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ongeldige entiteit: \"%.8s\""
 
-#: src/parse.c:1089
+#: src/parse.c:1093
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "ongeldige invoeg-modus: \"%s\""
 
-#: src/parse.c:1813
+#: src/parse.c:1817
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ongeldige instelling: %s"
 
-#: src/parse.c:1825
+#: src/parse.c:1829
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ongeldige transparantie: %s"
 
-#: src/parse.c:1844
+#: src/parse.c:1848
 #, c-format
 msgid "invalid layer: %s"
 msgstr "ongeldige laag: %s"
 
-#: src/parse.c:1861
+#: src/parse.c:1865
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "ongeldig staus-venster type: %s"
 
-#: src/parse.c:1870
+#: src/parse.c:1874
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ongeldig label in %s: %s"
 
-#: src/parse.c:1891
+#: src/parse.c:1895
 msgid "configuration error"
 msgstr "configuratie-fout"
 
@@ -200,11 +200,11 @@ msgstr "configuratie-fout"
 msgid "invalid root menu specified: \"%c\""
 msgstr "opgegeven root menu ongeldig: \"%c\""
 
-#: src/root.c:225
+#: src/root.c:232
 msgid "Exit JWM"
 msgstr "JWM afsluiten"
 
-#: src/root.c:226
+#: src/root.c:233
 msgid "Are you sure?"
 msgstr "Wet je het zeker?"
 

@@ -47,6 +47,11 @@ void ShowDesktop();
  */
 struct Menu *CreateDesktopMenu(unsigned int mask);
 
+/** Create a menu containing a list of desktops.
+ * @return A menu containing all the desktops.
+ */
+struct Menu *CreateSendtoMenu();
+
 /** Set the name of a desktop.
  * This is called before startup.
  * @param desktop The desktop to name (0 based).

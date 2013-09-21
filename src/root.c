@@ -184,6 +184,10 @@ void PatchRootMenu(Menu *menu)
          item->submenu = CreateDesktopMenu(1 << currentDesktop);
          InitializeMenu(item->submenu);
       }
+      if(item->action.type == MA_SENDTO) {
+         item->submenu = CreateSendtoMenu();
+         InitializeMenu(item->submenu);
+      }
    }
 
 }
@@ -195,6 +199,9 @@ void UnpatchRootMenu(Menu *menu) {
 
    for(item = menu->items; item; item = item->next) {
       if(item->action.type == MA_DESKTOP) {
+         DestroyMenu(item->submenu);
+         item->submenu = NULL;
+      } else if(item->action.type == MA_SENDTO) {
          DestroyMenu(item->submenu);
          item->submenu = NULL;
       } else if(item->submenu) {

@@ -659,6 +659,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
       case TOK_RESIZE:
       case TOK_KILL:
       case TOK_CLOSE:
+      case TOK_SENDTO:
 
          last = InsertMenuItem(last);
          if(!menu->items) {
@@ -701,6 +702,9 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
             break;
          case TOK_CLOSE:
             last->action.type = MA_CLOSE;
+            break;
+         case TOK_SENDTO:
+            last->action.type = MA_SENDTO;
             break;
          default:
             break;

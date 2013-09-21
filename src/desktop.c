@@ -226,6 +226,38 @@ Menu *CreateDesktopMenu(unsigned int mask)
 
 }
 
+/** Create a sendto menu. */
+Menu *CreateSendtoMenu()
+{
+
+   Menu *menu;
+   MenuItem *item;
+   int x;
+
+   menu = Allocate(sizeof(Menu));
+   menu->itemHeight = 0;
+   menu->items = NULL;
+   menu->label = NULL;
+
+   for(x = settings.desktopCount - 1; x >= 0; x--) {
+
+      item = Allocate(sizeof(MenuItem));
+      item->type = MENU_ITEM_NORMAL;
+      item->iconName = NULL;
+      item->submenu = NULL;
+      item->next = menu->items;
+      menu->items = item;
+
+      item->action.type = MA_SENDTO;
+      item->action.data.i = x;
+
+      item->name = Allocate(strlen(desktopNames[x]) + 1);
+      strcpy(item->name, desktopNames[x]);
+   }
+
+   return menu;
+}
+
 /** Toggle the "show desktop" state. */
 void ShowDesktop()
 {

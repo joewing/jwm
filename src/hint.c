@@ -115,6 +115,7 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_ACTION_MINIMIZE],    "_NET_WM_ACTION_MINIMIZE"     },
    { &atoms[ATOM_NET_WM_ACTION_SHADE],       "_NET_WM_ACTION_SHADE"        },
    { &atoms[ATOM_NET_WM_ACTION_STICK],       "_NET_WM_ACTION_STICK"        },
+   { &atoms[ATOM_NET_WM_ACTION_FULLSCREEN],  "_NET_WM_ACTION_FULLSCREEN"   },
    { &atoms[ATOM_NET_WM_ACTION_MAXIMIZE_HORZ], "_NET_WM_ACTION_MAXIMIZE_HORZ"},
    { &atoms[ATOM_NET_WM_ACTION_MAXIMIZE_VERT], "_NET_WM_ACTION_MAXIMIZE_VERT"},
    { &atoms[ATOM_NET_WM_ACTION_CHANGE_DESKTOP],
@@ -125,14 +126,23 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_CLOSE_WINDOW],          "_NET_CLOSE_WINDOW"           },
    { &atoms[ATOM_NET_MOVERESIZE_WINDOW],     "_NET_MOVERESIZE_WINDOW"      },
    { &atoms[ATOM_NET_REQUEST_FRAME_EXTENTS], "_NET_REQUEST_FRAME_EXTENTS"  },
+   { &atoms[ATOM_NET_WM_PID],                "_NET_WM_PID"                 },
    { &atoms[ATOM_NET_WM_NAME],               "_NET_WM_NAME"                },
+   { &atoms[ATOM_NET_WM_VISIBLE_NAME],       "_NET_WM_VISIBLE_NAME"        },
    { &atoms[ATOM_NET_WM_ICON],               "_NET_WM_ICON"                },
+   { &atoms[ATOM_NET_WM_ICON_NAME],          "_NET_WM_ICON_NAME"           },
+   { &atoms[ATOM_NET_WM_VISIBLE_ICON_NAME],  "_NET_WM_VISIBLE_ICON_NAME"   },
    { &atoms[ATOM_NET_WM_WINDOW_TYPE],        "_NET_WM_WINDOW_TYPE"         },
    { &atoms[ATOM_NET_WM_WINDOW_TYPE_DESKTOP],"_NET_WM_WINDOW_TYPE_DESKTOP" },
    { &atoms[ATOM_NET_WM_WINDOW_TYPE_DOCK],   "_NET_WM_WINDOW_TYPE_DOCK"    },
    { &atoms[ATOM_NET_WM_WINDOW_TYPE_SPLASH], "_NET_WM_WINDOW_TYPE_SPLASH"  },
    { &atoms[ATOM_NET_WM_WINDOW_TYPE_DIALOG], "_NET_WM_WINDOW_TYPE_DIALOG"  },
    { &atoms[ATOM_NET_WM_WINDOW_TYPE_NORMAL], "_NET_WM_WINDOW_TYPE_NORMAL"  },
+   { &atoms[ATOM_NET_WM_WINDOW_TYPE_MENU],   "_NET_WM_WINDOW_TYPE_MENU"    },
+   { &atoms[ATOM_NET_WM_WINDOW_TYPE_NOTIFICATION],
+      "_NET_WM_WINDOW_TYPE_NOTIFICATION"},
+   { &atoms[ATOM_NET_WM_WINDOW_TYPE_TOOLBAR], "_NET_WM_WINDOW_TYPE_TOOLBAR"},
+   { &atoms[ATOM_NET_WM_WINDOW_TYPE_UTILITY], "_NET_WM_WINDOW_TYPE_UTILITY"},
    { &atoms[ATOM_NET_CLIENT_LIST],           "_NET_CLIENT_LIST"            },
    { &atoms[ATOM_NET_CLIENT_LIST_STACKING],  "_NET_CLIENT_LIST_STACKING"   },
    { &atoms[ATOM_NET_WM_STRUT_PARTIAL],      "_NET_WM_STRUT_PARTIAL"       },
@@ -226,6 +236,12 @@ void StartupHints()
    JXChangeProperty(display, win, atoms[ATOM_NET_WM_NAME],
                     atoms[ATOM_UTF8_STRING], 8, PropModeReplace,
                     (unsigned char*)"JWM", 3);
+
+   /* _NET_WM_PID */
+   array[0] = getpid();
+   JXChangeProperty(display, win, atoms[ATOM_NET_WM_PID],
+                    XA_CARDINAL, 32, PropModeReplace,
+                    (unsigned char*)array, 1);
 
    /* _NET_SUPPORTING_WM_CHECK */
    SetWindowAtom(rootWindow, ATOM_NET_SUPPORTING_WM_CHECK, win);
@@ -439,6 +455,7 @@ void WriteNetAllowed(ClientNode *np)
    if(np->state.border & BORDER_MAX) {
       values[index++] = atoms[ATOM_NET_WM_ACTION_MAXIMIZE_HORZ];
       values[index++] = atoms[ATOM_NET_WM_ACTION_MAXIMIZE_VERT];
+      values[index++] = atoms[ATOM_NET_WM_ACTION_FULLSCREEN];
    }
 
    if(np->state.border & BORDER_CLOSE) {
@@ -589,6 +606,19 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
             result.border &= ~BORDER_MIN;
             result.status |= STAT_NOLIST;
             break;
+         } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_MENU]) {
+            result.border        = BORDER_NONE;
+            result.status       |= STAT_NOLIST;
+         } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_NOTIFICATION]) {
+            result.border        = BORDER_NONE;
+            result.status       |= STAT_NOLIST;
+         } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_TOOLBAR]) {
+            result.border        = BORDER_NONE;
+            result.defaultLayer  = LAYER_ABOVE;
+            result.status       |= STAT_STICKY;
+            result.status       |= STAT_NOLIST;
+         } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_UTILITY]) {
+            result.border        = BORDER_NONE;
          } else {
             Debug("Unknown _NET_WM_WINDOW_TYPE: %lu", state[x]);
          }

@@ -151,7 +151,7 @@ void ReadClientStrut(ClientNode *np)
                                 atoms[ATOM_NET_WM_STRUT_PARTIAL],
                                 0, 12, False, XA_CARDINAL, &actualType,
                                 &actualFormat, &count, &bytesLeft, &value);
-   if(status == Success) {
+   if(status == Success && actualFormat != 0) {
       if(count == 12) {
          lvalue = (long*)value;
          leftWidth      = lvalue[0];
@@ -210,7 +210,7 @@ void ReadClientStrut(ClientNode *np)
    status = JXGetWindowProperty(display, np->window, atoms[ATOM_NET_WM_STRUT],
                                 0, 4, False, XA_CARDINAL, &actualType,
                                 &actualFormat, &count, &bytesLeft, &value);
-   if(status == Success) {
+   if(status == Success && actualFormat != 0) {
       if(count == 4) {
          lvalue = (long*)value;
          leftWidth = lvalue[0];

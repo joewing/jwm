@@ -383,7 +383,7 @@ void ReadNetWMIcon(ClientNode *np)
    status = JXGetWindowProperty(display, np->window, atoms[ATOM_NET_WM_ICON],
                                 0, 256 * 256 * 4, False, XA_CARDINAL,
                                 &realType, &realFormat, &count, &extra, &data);
-   if(status == Success && data) {
+   if(status == Success && realFormat != 0 && data) {
       np->icon = CreateIconFromBinary((unsigned long*)data, count);
       JXFree(data);
    }

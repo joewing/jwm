@@ -547,7 +547,7 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
    status = JXGetWindowProperty(display, win, atoms[ATOM_NET_WM_STATE], 0, 32,
                                 False, XA_ATOM, &realType, &realFormat,
                                 &count, &extra, &temp);
-   if(status == Success) {
+   if(status == Success && realFormat != 0) {
       if(count > 0) {
          state = (Atom*)temp;
          for(x = 0; x < count; x++) {
@@ -583,7 +583,7 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
    status = JXGetWindowProperty(display, win, atoms[ATOM_NET_WM_WINDOW_TYPE],
                                 0, 32, False, XA_ATOM, &realType, &realFormat,
                                 &count, &extra, &temp);
-   if(status == Success) {
+   if(status == Success && realFormat != 0) {
       /* Loop until we hit a window type we recognize. */
       state = (Atom*)temp;
       for(x = 0; x < count; x++) {
@@ -670,7 +670,7 @@ void ReadWMName(ClientNode *np)
    status = JXGetWindowProperty(display, np->window,
       atoms[ATOM_NET_WM_NAME], 0, 1024, False,
       atoms[ATOM_UTF8_STRING], &realType, &realFormat, &count, &extra, &name);
-   if(status != Success) {
+   if(status != Success || realFormat == 0) {
       np->name = NULL;
    } else {
       np->name = (char*)name;
@@ -679,8 +679,10 @@ void ReadWMName(ClientNode *np)
 #ifdef USE_XUTF8
    if(!np->name) {
       status = JXGetWindowProperty(display, np->window,
-            XA_WM_NAME, 0, 1024, False, atoms[ATOM_COMPOUND_TEXT],
-            &realType, &realFormat, &count, &extra, &name);
+                                   XA_WM_NAME, 0, 1024, False,
+                                   atoms[ATOM_COMPOUND_TEXT],
+                                   &realType, &realFormat, &count,
+                                   &extra, &name);
       if(status == Success && realFormat == 8) {
          tprop.value = name;
          tprop.encoding = atoms[ATOM_COMPOUND_TEXT];
@@ -737,7 +739,7 @@ void ReadWMProtocols(Window w, ClientState *state)
                                 0, 32, False, XA_ATOM, &realType, &realFormat,
                                 &count, &extra, &temp);
    p = (Atom*)temp;
-   if(status != Success || !p) {
+   if(status != Success || realFormat == 0 || !p) {
       return;
    }
 
@@ -892,7 +894,7 @@ void ReadWMState(Window win, ClientState *state)
                                 False, atoms[ATOM_WM_STATE],
                                 &realType, &realFormat,
                                 &count, &extra, (unsigned char**)&temp);
-   if(JLIKELY(status == Success && count == 2)) {
+   if(JLIKELY(status == Success && realFormat != 0 && count == 2)) {
       switch(temp[0]) {
       case IconicState:
          state->status |= STAT_MINIMIZED;
@@ -960,7 +962,8 @@ void ReadMotifHints(Window win, ClientState *state)
 
    if(JXGetWindowProperty(display, win, atoms[ATOM_MOTIF_WM_HINTS], 0L, 20L,
                           False, atoms[ATOM_MOTIF_WM_HINTS], &type, &format,
-                          &itemCount, &bytesLeft, &data) != Success) {
+                          &itemCount, &bytesLeft, &data) != Success
+         || format == 0) {
       return;
    }
 
@@ -1028,7 +1031,7 @@ char GetCardinalAtom(Window window, AtomType atom, unsigned long *value)
                                 XA_CARDINAL, &realType, &realFormat,
                                 &count, &extra, &data);
    ret = 0;
-   if(status == Success && data) {
+   if(status == Success && realFormat != 0 && data) {
       if(count == 1) {
          *value = *(unsigned long*)data;
          ret = 1;

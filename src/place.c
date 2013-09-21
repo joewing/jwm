@@ -29,6 +29,7 @@ static Strut *struts = NULL;
 /* Note that we assume x and y are 0 based for all screens here. */
 static int *cascadeOffsets = NULL;
 
+static char DoRemoveClientStrut(ClientNode *np);
 static void InsertStrut(const BoundingBox *box, ClientNode *np);
 static void CenterClient(const BoundingBox *box, ClientNode *np);
 static int IntComparator(const void *a, const void *b);
@@ -39,6 +40,7 @@ static void CascadeClient(const BoundingBox *box, ClientNode *np);
 
 static void SubtractStrutBounds(BoundingBox *box);
 static void SubtractBounds(const BoundingBox *src, BoundingBox *dest);
+static void SetWorkarea();
 
 /** Startup placement. */
 void StartupPlacement()
@@ -53,6 +55,8 @@ void StartupPlacement()
    for(x = 0; x < count; x++) {
       cascadeOffsets[x] = settings.borderWidth + settings.titleHeight;
    }
+
+   SetWorkarea();
 
 }
 
@@ -75,18 +79,27 @@ void ShutdownPlacement()
 /** Remove struts associated with a client. */
 void RemoveClientStrut(ClientNode *np)
 {
+   if(DoRemoveClientStrut(np)) {
+      SetWorkarea();
+   }
+}
 
+/** Remove struts associated with a client. */
+char DoRemoveClientStrut(ClientNode *np)
+{
+   char updated = 0;
    Strut **spp = &struts;
    while(*spp) {
       Strut *sp = *spp;
       if(sp->client == np) {
          *spp = sp->next;
          Release(sp);
+         updated = 1;
       } else {
          spp = &sp->next;
       }
    }
-
+   return updated;
 }
 
 
@@ -119,8 +132,9 @@ void ReadClientStrut(ClientNode *np)
    long rightStart, rightStop;
    long topStart, topStop;
    long bottomStart, bottomStop;
+   char updated;
 
-   RemoveClientStrut(np);
+   updated = DoRemoveClientStrut(np);
 
    box.x = 0;
    box.y = 0;
@@ -187,6 +201,7 @@ void ReadClientStrut(ClientNode *np)
 
       }
       JXFree(value);
+      SetWorkarea();
       return;
    }
 
@@ -237,7 +252,13 @@ void ReadClientStrut(ClientNode *np)
 
       }
       JXFree(value);
+      SetWorkarea();
       return;
+   }
+
+   /* Struts were removed. */
+   if(updated) {
+      SetWorkarea();
    }
 
 }
@@ -867,6 +888,39 @@ void GravitateClient(ClientNode *np, char negate)
       np->x -= deltax;
       np->y -= deltay;
    }
+
+}
+
+/** Set _NET_WORKAREA. */
+static void SetWorkarea()
+{
+   BoundingBox box;
+   unsigned long *array;
+   unsigned int count;
+   int x;
+
+   count = 4 * settings.desktopCount * sizeof(unsigned long);
+   array = (unsigned long*)AllocateStack(count);
+
+   box.x = 0;
+   box.y = 0;
+   box.width = rootWidth;
+   box.height = rootHeight;
+
+   SubtractTrayBounds(GetTrays(), &box, LAYER_NORMAL);
+   SubtractStrutBounds(&box);
+
+   for(x = 0; x < settings.desktopCount; x++) {
+      array[x * 4 + 0] = box.x;
+      array[x * 4 + 1] = box.y;
+      array[x * 4 + 2] = box.width;
+      array[x * 4 + 3] = box.height;
+   }
+   JXChangeProperty(display, rootWindow, atoms[ATOM_NET_WORKAREA],
+                    XA_CARDINAL, 32, PropModeReplace,
+                    (unsigned char*)array, settings.desktopCount * 4);
+
+   ReleaseStack(array);
 
 }
 

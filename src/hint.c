@@ -170,9 +170,6 @@ void StartupHints()
    for(x = 0; x < settings.desktopCount; x++) {
       count += strlen(GetDesktopName(x)) + 1;
    }
-   if(count < 4 * settings.desktopCount * sizeof(unsigned long)) {
-      count = 4 * settings.desktopCount * sizeof(unsigned long);
-   }
    if(count < 2 * sizeof(unsigned long)) {
       count = 2 * sizeof(unsigned long);
    }
@@ -209,17 +206,6 @@ void StartupHints()
    JXChangeProperty(display, rootWindow, atoms[ATOM_NET_DESKTOP_NAMES],
                     atoms[ATOM_UTF8_STRING], 8, PropModeReplace,
                     (unsigned char*)data, count);
-
-   /* _NET_WORKAREA */
-   for(x = 0; x < settings.desktopCount; x++) {
-      array[x * 4 + 0] = 0;
-      array[x * 4 + 1] = 0;
-      array[x * 4 + 2] = rootWidth;
-      array[x * 4 + 3] = rootHeight;
-   }
-   JXChangeProperty(display, rootWindow, atoms[ATOM_NET_WORKAREA],
-                    XA_CARDINAL, 32, PropModeReplace,
-                    (unsigned char*)array, settings.desktopCount * 4);
 
    /* _NET_DESKTOP_GEOMETRY */
    array[0] = rootWidth;

@@ -129,8 +129,11 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_PID],                "_NET_WM_PID"                 },
    { &atoms[ATOM_NET_WM_NAME],               "_NET_WM_NAME"                },
    { &atoms[ATOM_NET_WM_VISIBLE_NAME],       "_NET_WM_VISIBLE_NAME"        },
+   { &atoms[ATOM_NET_WM_HANDLED_ICONS],      "_NET_WM_HANDLED_ICONS"       },
    { &atoms[ATOM_NET_WM_ICON],               "_NET_WM_ICON"                },
    { &atoms[ATOM_NET_WM_ICON_NAME],          "_NET_WM_ICON_NAME"           },
+   { &atoms[ATOM_NET_WM_USER_TIME],          "_NET_WM_USER_TIME"           },
+   { &atoms[ATOM_NET_WM_USER_TIME_WINDOW],   "_NET_WM_USER_TIME_WINDOW"    },
    { &atoms[ATOM_NET_WM_VISIBLE_ICON_NAME],  "_NET_WM_VISIBLE_ICON_NAME"   },
    { &atoms[ATOM_NET_WM_WINDOW_TYPE],        "_NET_WM_WINDOW_TYPE"         },
    { &atoms[ATOM_NET_WM_WINDOW_TYPE_DESKTOP],"_NET_WM_WINDOW_TYPE_DESKTOP" },
@@ -518,6 +521,7 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
    unsigned char *temp;
    Atom *state;
    unsigned long card;
+   Window utwin;
 
    Assert(win != None);
 
@@ -594,10 +598,12 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
             result.border        = BORDER_NONE;
             result.status       |= STAT_STICKY;
             result.status       |= STAT_NOLIST;
+            result.status       |= STAT_NOFOCUS;
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DOCK]) {
             result.border        = BORDER_NONE;
             result.defaultLayer  = LAYER_ABOVE;
+            result.status       |= STAT_NOFOCUS;
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_SPLASH]) {
             result.border = BORDER_NONE;
@@ -612,19 +618,43 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_NOTIFICATION]) {
             result.border        = BORDER_NONE;
             result.status       |= STAT_NOLIST;
+            result.status       |= STAT_NOFOCUS;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_TOOLBAR]) {
             result.border        = BORDER_NONE;
             result.defaultLayer  = LAYER_ABOVE;
             result.status       |= STAT_STICKY;
             result.status       |= STAT_NOLIST;
+            result.status       |= STAT_NOFOCUS;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_UTILITY]) {
             result.border        = BORDER_NONE;
+            result.status       |= STAT_NOFOCUS;
          } else {
             Debug("Unknown _NET_WM_WINDOW_TYPE: %lu", state[x]);
          }
       }
       if(temp) {
          JXFree(temp);
+      }
+   }
+
+   /* _NET_WM_USER_TIME_WINDOW */
+   status = JXGetWindowProperty(display, win,
+                                atoms[ATOM_NET_WM_USER_TIME_WINDOW],
+                                0, 32, False, XA_WINDOW, &realType,
+                                &realFormat, &count, &extra, &temp);
+   if(status == Success && realFormat != 0) {
+      utwin = *(Window*)temp;
+   } else {
+      utwin = win;
+   }
+
+   /* _NET_WM_USER_TIME */
+   status = JXGetWindowProperty(display, utwin, atoms[ATOM_NET_WM_USER_TIME],
+                                0, 32, False, XA_WINDOW, &realType, &realFormat,
+                                &count, &extra, &temp);
+   if(status == Success && realFormat != 0) {
+      if(*(Cardinal*)temp == 0) {
+         result.status |= STAT_NOFOCUS;
       }
    }
 

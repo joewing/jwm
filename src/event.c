@@ -1180,8 +1180,7 @@ void HandleMapRequest(const XMapEvent *event)
       GrabServer();
       np = AddClientWindow(event->window, 0, 1);
       if(np) {
-         if(     settings.focusModel == FOCUS_CLICK
-            && !(np->state.status & STAT_NOFOCUS)) {
+         if(!(np->state.status & STAT_NOFOCUS)) {
             FocusClient(np);
          }
       } else {

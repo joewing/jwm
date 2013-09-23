@@ -1218,7 +1218,10 @@ void HandleUnmapNotify(const XUnmapEvent *event)
    Assert(event);
 
    if(event->window != event->event) {
-      return;
+      /* Allow ICCCM synthetic UnmapNotify events through. */
+      if (event->event != rootWindow || !event->send_event) {
+         return;
+      }
    }
 
    np = FindClientByWindow(event->window);
@@ -1235,7 +1238,7 @@ void HandleUnmapNotify(const XUnmapEvent *event)
       if(JXCheckTypedWindowEvent(display, np->window, DestroyNotify, &e)) {
          UpdateTime(&e);
          RemoveClient(np);
-      } else if(np->state.status & STAT_MAPPED) {
+      } else if((np->state.status & STAT_MAPPED) || event->send_event) {
          np->state.status &= ~STAT_MAPPED;
          JXUngrabButton(display, AnyButton, AnyModifier, np->window);
          GravitateClient(np, 1);

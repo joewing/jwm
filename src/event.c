@@ -1407,7 +1407,13 @@ void UpdateState(ClientNode *np)
 
    /* Read the state (and new layer). */
    alreadyMapped = (np->state.status & STAT_MAPPED) ? 1 : 0;
+   if(np->state.status & STAT_URGENT) {
+      UnregisterCallback(SignalUrgent, np);
+   }
    np->state = ReadWindowState(np->window, alreadyMapped);
+   if(np->state.status & STAT_URGENT) {
+      RegisterCallback(URGENCY_DELAY, SignalUrgent, np);
+   }
 
    /* We don't handle mapping the window, so restore its mapped state. */
    if(!alreadyMapped) {

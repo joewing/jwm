@@ -109,6 +109,8 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_STATE_SKIP_PAGER],   "_NET_WM_STATE_SKIP_PAGER"    },
    { &atoms[ATOM_NET_WM_STATE_BELOW],        "_NET_WM_STATE_BELOW"         },
    { &atoms[ATOM_NET_WM_STATE_ABOVE],        "_NET_WM_STATE_ABOVE"         },
+   { &atoms[ATOM_NET_WM_STATE_DEMANDS_ATTENTION],
+      "_NET_WM_STATE_DEMANDS_ATTENTION"},
    { &atoms[ATOM_NET_WM_ALLOWED_ACTIONS],    "_NET_WM_ALLOWED_ACTIONS"     },
    { &atoms[ATOM_NET_WM_ACTION_MOVE],        "_NET_WM_ACTION_MOVE"         },
    { &atoms[ATOM_NET_WM_ACTION_RESIZE],      "_NET_WM_ACTION_RESIZE"       },
@@ -408,6 +410,10 @@ void WriteNetState(ClientNode *np)
       }
    }
 
+   if(np->state.status & STAT_URGENT) {
+      values[index++] = atoms[ATOM_NET_WM_STATE_DEMANDS_ATTENTION];
+   }
+
    JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_STATE],
                     XA_ATOM, 32, PropModeReplace,
                     (unsigned char*)values, index);
@@ -575,6 +581,8 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
                result.layer = LAYER_ABOVE;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_BELOW]) {
                result.layer = LAYER_BELOW;
+            } else if(state[x] == atoms[ATOM_NET_WM_STATE_DEMANDS_ATTENTION]) {
+               result.status |= STAT_URGENT;
             }
          }
       }

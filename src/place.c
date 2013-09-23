@@ -38,7 +38,7 @@ static char TryTileClient(const BoundingBox *box, ClientNode *np,
 static char TileClient(const BoundingBox *box, ClientNode *np);
 static void CascadeClient(const BoundingBox *box, ClientNode *np);
 
-static void SubtractStrutBounds(BoundingBox *box);
+static void SubtractStrutBounds(BoundingBox *box, const ClientNode *np);
 static void SubtractBounds(const BoundingBox *src, BoundingBox *dest);
 static void SetWorkarea();
 
@@ -371,13 +371,16 @@ void SubtractTrayBounds(const TrayType *tp, BoundingBox *box,
 }
 
 /** Remove struts from the bounding box. */
-void SubtractStrutBounds(BoundingBox *box)
+void SubtractStrutBounds(BoundingBox *box, const ClientNode *np)
 {
 
    Strut *sp;
    BoundingBox last;
 
    for(sp = struts; sp; sp = sp->next) {
+      if(np != NULL && sp->client == np) {
+         continue;
+      }
       if(sp->client->state.desktop == currentDesktop
          || (sp->client->state.status & STAT_STICKY)) {
          last = *box;
@@ -627,7 +630,7 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
       sp = GetMouseScreen();
       GetScreenBounds(sp, &box);
       SubtractTrayBounds(GetTrays(), &box, np->state.layer);
-      SubtractStrutBounds(&box);
+      SubtractStrutBounds(&box, np);
 
       /* If tiled is specified, first attempt to use tiled placement. */
       if(np->state.status & STAT_TILED) {
@@ -662,7 +665,7 @@ void ConstrainSize(ClientNode *np)
    sp = GetCurrentScreen(np->x, np->y);
    GetScreenBounds(sp, &box);
    SubtractTrayBounds(GetTrays(), &box, np->state.layer);
-   SubtractStrutBounds(&box);
+   SubtractStrutBounds(&box, np);
    GetBorderSize(&np->state, &north, &south, &east, &west);
    if(np->width + east + west > sp->width) {
       box.x += west;
@@ -722,7 +725,7 @@ void ConstrainPosition(ClientNode *np)
    box.width = rootWidth;
    box.height = rootHeight;
    SubtractTrayBounds(GetTrays(), &box, np->state.layer);
-   SubtractStrutBounds(&box);
+   SubtractStrutBounds(&box, np);
 
    /* Fix the position. */
    GetBorderSize(&np->state, &north, &south, &east, &west);
@@ -761,7 +764,7 @@ void PlaceMaximizedClient(ClientNode *np, char horiz, char vert)
                          np->y + (north + south + np->height) / 2);
    GetScreenBounds(sp, &box);
    SubtractTrayBounds(GetTrays(), &box, np->state.layer);
-   SubtractStrutBounds(&box);
+   SubtractStrutBounds(&box, np);
 
    box.y += north;
    box.height -= north;
@@ -908,7 +911,7 @@ static void SetWorkarea()
    box.height = rootHeight;
 
    SubtractTrayBounds(GetTrays(), &box, LAYER_NORMAL);
-   SubtractStrutBounds(&box);
+   SubtractStrutBounds(&box, NULL);
 
    for(x = 0; x < settings.desktopCount; x++) {
       array[x * 4 + 0] = box.x;

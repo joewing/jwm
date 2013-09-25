@@ -657,11 +657,8 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
    }
 
    /* _NET_WM_USER_TIME */
-   status = JXGetWindowProperty(display, utwin, atoms[ATOM_NET_WM_USER_TIME],
-                                0, 32, False, XA_WINDOW, &realType, &realFormat,
-                                &count, &extra, &temp);
-   if(status == Success && realFormat != 0) {
-      if(*(Cardinal*)temp == 0) {
+   if(GetCardinalAtom(utwin, ATOM_NET_WM_USER_TIME, &card)) {
+      if(card == 0) {
          result.status |= STAT_NOFOCUS;
       }
    }
@@ -706,8 +703,9 @@ void ReadWMName(ClientNode *np)
    }
 
    status = JXGetWindowProperty(display, np->window,
-      atoms[ATOM_NET_WM_NAME], 0, 1024, False,
-      atoms[ATOM_UTF8_STRING], &realType, &realFormat, &count, &extra, &name);
+                                atoms[ATOM_NET_WM_NAME], 0, 1024, False,
+                                atoms[ATOM_UTF8_STRING], &realType,
+                                &realFormat, &count, &extra, &name);
    if(status != Success || realFormat == 0) {
       np->name = NULL;
    } else {
@@ -1087,6 +1085,37 @@ void SetCardinalAtom(Window window, AtomType atom, unsigned long value)
    Assert(window != None);
    JXChangeProperty(display, window, atoms[atom], XA_CARDINAL, 32,
                     PropModeReplace, (unsigned char*)&value, 1);
+}
+
+/** Read a window atom. */
+char GetWindowAtom(Window window, AtomType atom, Window *value)
+{
+
+   unsigned long count;
+   int status;
+   unsigned long extra;
+   Atom realType;
+   int realFormat;
+   unsigned char *data;
+   char ret;
+
+   Assert(window != None);
+   Assert(value);
+
+   status = JXGetWindowProperty(display, window, atoms[atom], 0, 1, False,
+                                XA_WINDOW, &realType, &realFormat,
+                                &count, &extra, &data);
+   ret = 0;
+   if(status == Success && realFormat != 0 && data) {
+      if(count == 1) {
+         *value = *(Window*)data;
+         ret = 1;
+      }
+      JXFree(data);
+   }
+
+   return ret;
+
 }
 
 /** Set a window atom. */

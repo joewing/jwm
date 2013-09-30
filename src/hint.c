@@ -646,13 +646,7 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
    }
 
    /* _NET_WM_USER_TIME_WINDOW */
-   status = JXGetWindowProperty(display, win,
-                                atoms[ATOM_NET_WM_USER_TIME_WINDOW],
-                                0, 32, False, XA_WINDOW, &realType,
-                                &realFormat, &count, &extra, &temp);
-   if(status == Success && realFormat != 0) {
-      utwin = *(Window*)temp;
-   } else {
+   if(!GetWindowAtom(win, ATOM_NET_WM_USER_TIME_WINDOW, &utwin)) {
       utwin = win;
    }
 

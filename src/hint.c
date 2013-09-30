@@ -621,20 +621,20 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
             result.status |= STAT_NOLIST;
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_MENU]) {
-            result.border        = BORDER_NONE;
+            result.border       &= ~BORDER_MAX;
             result.status       |= STAT_NOLIST;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_NOTIFICATION]) {
             result.border        = BORDER_NONE;
             result.status       |= STAT_NOLIST;
             result.status       |= STAT_NOFOCUS;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_TOOLBAR]) {
-            result.border        = BORDER_NONE;
+            result.border       &= ~BORDER_MAX;
             result.defaultLayer  = LAYER_ABOVE;
             result.status       |= STAT_STICKY;
             result.status       |= STAT_NOLIST;
             result.status       |= STAT_NOFOCUS;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_UTILITY]) {
-            result.border        = BORDER_NONE;
+            result.border       &= ~BORDER_MAX;
             result.status       |= STAT_NOFOCUS;
          } else {
             Debug("Unknown _NET_WM_WINDOW_TYPE: %lu", state[x]);

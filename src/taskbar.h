@@ -14,10 +14,10 @@ struct ClientNode;
 struct TimeType;
 
 /*@{*/
-void InitializeTaskBar();
+void InitializeTaskBar(void);
 #define StartupTaskBar()   (void)(0)
-void ShutdownTaskBar();
-void DestroyTaskBar();
+void ShutdownTaskBar(void);
+void DestroyTaskBar(void);
 /*@}*/
 
 /** Create a new task bar tray component.
@@ -35,13 +35,14 @@ void AddClientToTaskBar(struct ClientNode *np);
  */
 void RemoveClientFromTaskBar(struct ClientNode *np);
 
-void UpdateTaskBar();
+/** Update all task bars. */
+void UpdateTaskBar(void);
 
 /** Focus the next client in the task bar. */
-void FocusNext();
+void FocusNext(void);
 
 /** Focus the previous client in the task bar. */
-void FocusPrevious();
+void FocusPrevious(void);
 
 /** Set the maximum width of task bar items.
  * @param cp The task bar component.
@@ -50,7 +51,7 @@ void FocusPrevious();
 void SetMaxTaskBarItemWidth(struct TrayComponentType *cp, const char *value);
 
 /** Update the _NET_CLIENT_LIST property. */
-void UpdateNetClientList();
+void UpdateNetClientList(void);
 
 #endif /* TASKBAR_H */
 

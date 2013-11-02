@@ -166,12 +166,12 @@ ClientNode *FindClientByParent(Window p);
 /** Get the active client.
  * @return The active client (NULL if no client is active).
  */
-ClientNode *GetActiveClient();
+ClientNode *GetActiveClient(void);
 
 /*@{*/
 #define InitializeClients()   (void)(0)
-void StartupClients();
-void ShutdownClients();
+void StartupClients(void);
+void ShutdownClients(void);
 #define DestroyClients()      (void)(0)
 /*@}*/
 
@@ -242,7 +242,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen);
 void FocusClient(ClientNode *np);
 
 /** Set the keyboard focus back to the active client. */
-void RefocusClient();
+void RefocusClient(void);
 
 /** Tell a client to exit.
  * @param np The client to delete.
@@ -263,7 +263,7 @@ void RaiseClient(ClientNode *np);
  * This is used when a client is mapped so that the stacking order
  * remains consistent.
  */
-void RestackClients();
+void RestackClients(void);
 
 /** Set the layer of a client.
  * @param np The client whose layer to set.

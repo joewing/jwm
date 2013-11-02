@@ -11,10 +11,10 @@
 #define BACKGROUND_H
 
 /*@{*/
-void InitializeBackgrounds();
-void StartupBackgrounds();
-void ShutdownBackgrounds();
-void DestroyBackgrounds();
+void InitializeBackgrounds(void);
+void StartupBackgrounds(void);
+void ShutdownBackgrounds(void);
+void DestroyBackgrounds(void);
 /*@}*/
 
 /** Set the background to use for the specified desktops.

@@ -15,8 +15,8 @@ struct TrayComponentType;
 /*@{*/
 #define InitializePager()  (void)(0)
 #define StartupPager()     (void)(0)
-void ShutdownPager();
-void DestroyPager();
+void ShutdownPager(void);
+void DestroyPager(void);
 /*@}*/
 
 /** Create a pager tray component.
@@ -26,7 +26,7 @@ void DestroyPager();
 struct TrayComponentType *CreatePager(char labeled);
 
 /** Update pagers. */
-void UpdatePager();
+void UpdatePager(void);
 
 #endif /* PAGER_H */
 

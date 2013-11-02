@@ -33,7 +33,7 @@ static ClientNode *activeClient;
 
 unsigned int clientCount;
 
-static void LoadFocus();
+static void LoadFocus(void);
 static void ReparentClient(ClientNode *np, char notOwner);
 static void MinimizeTransients(ClientNode *np, char lower);
 static void RestoreTransients(ClientNode *np, char raise);
@@ -41,7 +41,7 @@ static void KillClientHandler(ClientNode *np);
 static void UnmapClient(ClientNode *np);
 
 /** Load windows that are already mapped. */
-void StartupClients()
+void StartupClients(void)
 {
 
    XWindowAttributes attr;
@@ -82,7 +82,7 @@ void StartupClients()
 }
 
 /** Release client windows. */
-void ShutdownClients()
+void ShutdownClients(void)
 {
 
    int x;
@@ -96,7 +96,7 @@ void ShutdownClients()
 }
 
 /** Set the focus to the window currently under the mouse pointer. */
-void LoadFocus()
+void LoadFocus(void)
 {
 
    ClientNode *np;
@@ -833,7 +833,7 @@ void FocusClient(ClientNode *np)
 
 
 /** Refocus the active client (if there is one). */
-void RefocusClient()
+void RefocusClient(void)
 {
    if(activeClient) {
       FocusClient(activeClient);
@@ -942,7 +942,7 @@ void RaiseClient(ClientNode *np)
 }
 
 /** Restack the clients according the way we want them. */
-void RestackClients()
+void RestackClients(void)
 {
 
    TrayType *tp;
@@ -1128,7 +1128,7 @@ void RemoveClient(ClientNode *np)
 }
 
 /** Get the active client (possibly NULL). */
-ClientNode *GetActiveClient()
+ClientNode *GetActiveClient(void)
 {
    return activeClient;
 }

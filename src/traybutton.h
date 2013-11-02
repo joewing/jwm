@@ -15,9 +15,9 @@ struct TimeType;
 
 /*@{*/
 #define InitializeTrayButtons()  (void)(0)
-void StartupTrayButtons();
+void StartupTrayButtons(void);
 #define ShutdownTrayButtons()    (void)(0)
-void DestroyTrayButtons();
+void DestroyTrayButtons(void);
 /*@}*/
 
 /** Create a tray button component.
@@ -43,7 +43,7 @@ struct TrayComponentType *CreateTrayButton(const char *iconName,
  * if a root menu is defined for each each tray button that specifies
  * a root menu.
  */
-void ValidateTrayButtons();
+void ValidateTrayButtons(void);
 
 #endif /* TRAY_BUTTON_H */
 

@@ -24,10 +24,10 @@ typedef unsigned char FontType;
 #define FONT_PAGER      7
 #define FONT_COUNT      8
 
-void InitializeFonts();
-void StartupFonts();
-void ShutdownFonts();
-void DestroyFonts();
+void InitializeFonts(void);
+void StartupFonts(void);
+void ShutdownFonts(void);
+void DestroyFonts(void);
 
 /** Set the font to use for a component.
  * @param type The font component.

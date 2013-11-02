@@ -50,7 +50,7 @@ static void LoadGradientBackground(BackgroundNode *bp);
 static void LoadImageBackground(BackgroundNode *bp);
 
 /** Initialize any data needed for background support. */
-void InitializeBackgrounds()
+void InitializeBackgrounds(void)
 {
    backgrounds = NULL;
    defaultBackground = NULL;
@@ -58,7 +58,7 @@ void InitializeBackgrounds()
 }
 
 /** Startup background support. */
-void StartupBackgrounds()
+void StartupBackgrounds(void)
 {
 
    BackgroundNode *bp;
@@ -94,7 +94,7 @@ void StartupBackgrounds()
 }
 
 /** Shutdown background support. */
-void ShutdownBackgrounds()
+void ShutdownBackgrounds(void)
 {
 
    BackgroundNode *bp;
@@ -109,7 +109,7 @@ void ShutdownBackgrounds()
 }
 
 /** Release any data needed for background support. */
-void DestroyBackgrounds()
+void DestroyBackgrounds(void)
 {
 
    BackgroundNode *bp;

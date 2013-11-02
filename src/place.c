@@ -40,10 +40,10 @@ static void CascadeClient(const BoundingBox *box, ClientNode *np);
 
 static void SubtractStrutBounds(BoundingBox *box, const ClientNode *np);
 static void SubtractBounds(const BoundingBox *src, BoundingBox *dest);
-static void SetWorkarea();
+static void SetWorkarea(void);
 
 /** Startup placement. */
-void StartupPlacement()
+void StartupPlacement(void)
 {
 
    int count;
@@ -61,7 +61,7 @@ void StartupPlacement()
 }
 
 /** Shutdown placement. */
-void ShutdownPlacement()
+void ShutdownPlacement(void)
 {
 
    Strut *sp;
@@ -895,7 +895,7 @@ void GravitateClient(ClientNode *np, char negate)
 }
 
 /** Set _NET_WORKAREA. */
-static void SetWorkarea()
+void SetWorkarea(void)
 {
    BoundingBox box;
    unsigned long *array;

@@ -59,18 +59,18 @@ static void Resize(TrayComponentType *cp);
 static void DockWindow(Window win);
 static char UndockWindow(Window win);
 
-static void UpdateDock();
+static void UpdateDock(void);
 static void GetDockSize(int *width, int *height);
 
 /** Initialize dock data. */
-void InitializeDock()
+void InitializeDock(void)
 {
    dockItemCount = 0;
    owner = 0;
 }
 
 /** Startup the dock. */
-void StartupDock()
+void StartupDock(void)
 {
 
    char *selectionName;
@@ -106,7 +106,7 @@ void StartupDock()
 }
 
 /** Shutdown the dock. */
-void ShutdownDock()
+void ShutdownDock(void)
 {
 
    DockNode *np;
@@ -134,7 +134,7 @@ void ShutdownDock()
 }
 
 /** Destroy dock data. */
-void DestroyDock()
+void DestroyDock(void)
 {
    if(dock) {
       Release(dock);
@@ -482,7 +482,7 @@ char UndockWindow(Window win)
 }
 
 /** Layout items on the dock. */
-void UpdateDock()
+void UpdateDock(void)
 {
 
    XWindowAttributes attr;

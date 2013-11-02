@@ -24,8 +24,8 @@ typedef struct BoundingBox {
 
 /*@{*/
 #define InitializePlacement() (void)(0)
-void StartupPlacement();
-void ShutdownPlacement();
+void StartupPlacement(void);
+void ShutdownPlacement(void);
 #define DestroyPlacement()    (void)(0)
 /*@}*/
 

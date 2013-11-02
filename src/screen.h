@@ -23,8 +23,8 @@ typedef struct ScreenType {
 
 /*@{*/
 #define InitializeScreens()   (void)(0)
-void StartupScreens();
-void ShutdownScreens();
+void StartupScreens(void);
+void ShutdownScreens(void);
 #define DestroyScreens()      (void)(0)
 /*@}*/
 
@@ -38,7 +38,7 @@ const ScreenType *GetCurrentScreen(int x, int y);
 /** Get the screen containing the mouse.
  * @return The screen containing the mouse.
  */
-const ScreenType *GetMouseScreen();
+const ScreenType *GetMouseScreen(void);
 
 /** Get the screen of the specified index.
  * @param index The screen index (0 based).
@@ -49,7 +49,7 @@ const ScreenType *GetScreen(int index);
 /** Get the number of screens.
  * @return The number of screens.
  */
-int GetScreenCount();
+int GetScreenCount(void);
 
 #endif /* SCREEN_H */
 

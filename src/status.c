@@ -25,7 +25,7 @@ static int statusWindowX, statusWindowY;
 static void CreateMoveResizeWindow(const ClientNode *np,
                                    StatusWindowType type);
 static void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type);
-static void DestroyMoveResizeWindow();
+static void DestroyMoveResizeWindow(void);
 static void GetMoveResizeCoordinates(const ClientNode *np,
                                      StatusWindowType type, int *x, int *y);
 
@@ -111,7 +111,7 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type)
 }
 
 /** Destroy the status window. */
-void DestroyMoveResizeWindow()
+void DestroyMoveResizeWindow(void)
 {
    if(statusWindow != None) {
       JXDestroyWindow(display, statusWindow);
@@ -144,7 +144,7 @@ void UpdateMoveWindow(ClientNode *np)
 }
 
 /** Destroy the move status window. */
-void DestroyMoveWindow()
+void DestroyMoveWindow(void)
 {
    DestroyMoveResizeWindow();
 }
@@ -176,7 +176,7 @@ void UpdateResizeWindow(ClientNode *np, int gwidth, int gheight)
 }
 
 /** Destroy the resize status window. */
-void DestroyResizeWindow()
+void DestroyResizeWindow(void)
 {
    DestroyMoveResizeWindow();
 }

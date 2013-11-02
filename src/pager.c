@@ -74,7 +74,7 @@ static void SignalPager(const TimeType *now, int x, int y, Window w,
 
 
 /** Shutdown the pager. */
-void ShutdownPager()
+void ShutdownPager(void)
 {
    PagerType *pp;
    for(pp = pagers; pp; pp = pp->next) {
@@ -84,7 +84,7 @@ void ShutdownPager()
 }
 
 /** Release pager data. */
-void DestroyPager()
+void DestroyPager(void)
 {
    PagerType *pp;
    while(pagers) {
@@ -500,7 +500,7 @@ void PagerMoveController(int wasDestroyed)
 }
 
 /** Update the pager. */
-void UpdatePager()
+void UpdatePager(void)
 {
 
    PagerType *pp;

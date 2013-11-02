@@ -28,7 +28,7 @@ static void ReleaseCommands(CommandNode **commands);
 static void AddCommand(CommandNode **commands, const char *command);
 
 /** Process startup/restart commands. */
-void StartupCommands()
+void StartupCommands(void)
 {
    if(isRestarting) {
       RunCommands(restartCommands);
@@ -38,7 +38,7 @@ void StartupCommands()
 }
 
 /** Process shutdown commands. */
-void ShutdownCommands()
+void ShutdownCommands(void)
 {
    if(!shouldRestart) {
       RunCommands(shutdownCommands);
@@ -46,7 +46,7 @@ void ShutdownCommands()
 }
 
 /** Destroy the command lists. */
-void DestroyCommands()
+void DestroyCommands(void)
 {
    ReleaseCommands(&startupCommands);
    ReleaseCommands(&shutdownCommands);

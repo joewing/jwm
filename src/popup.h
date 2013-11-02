@@ -12,8 +12,8 @@
 
 /*@{*/
 #define InitializePopup()  (void)(0)
-void StartupPopup();
-void ShutdownPopup();
+void StartupPopup(void);
+void ShutdownPopup(void);
 #define DestroyPopup()     (void)(0)
 /*@}*/
 

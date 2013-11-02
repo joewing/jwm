@@ -38,9 +38,9 @@ typedef unsigned char BorderActionType;
 #define BA_RESIZE_W  0x80  /**< Resize west. */
 
 /*@{*/
-void InitializeBorders();
-void StartupBorders();
-void ShutdownBorders();
+void InitializeBorders(void);
+void StartupBorders(void);
+void ShutdownBorders(void);
 #define DestroyBorders()      (void)(0)
 /*@}*/
 
@@ -65,7 +65,7 @@ void DrawBorder(const struct ClientNode *np);
 /** Get the size of a border icon.
  * @return The size in pixels (note that icons are square).
  */
-int GetBorderIconSize();
+int GetBorderIconSize(void);
 
 /** Get the size of a window border.
  * @param state The client state.
@@ -78,7 +78,7 @@ void GetBorderSize(const struct ClientState *state,
                    int *north, int *south, int *east, int *west);
 
 /** Redraw all borders on the current desktop. */
-void ExposeCurrentDesktop();
+void ExposeCurrentDesktop(void);
 
 /** Draw a rounded rectangle.
  * @param d The drawable on which to render.

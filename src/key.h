@@ -49,10 +49,10 @@ typedef unsigned short KeyType;
 #define KEY_EXIT           29
 #define KEY_FULLSCREEN     30
 
-void InitializeKeys();
-void StartupKeys();
-void ShutdownKeys();
-void DestroyKeys();
+void InitializeKeys(void);
+void StartupKeys(void);
+void ShutdownKeys(void);
+void DestroyKeys(void);
 
 /** Mask of 'lock' keys. */
 extern unsigned int lockMask;
@@ -91,7 +91,7 @@ void ShowKeyMenu(const XKeyEvent *event);
  * This will log an error if an invalid key binding is found.
  * This is called after parsing the configuration file.
  */
-void ValidateKeys();
+void ValidateKeys(void);
 
 #endif /* KEY_H */
 

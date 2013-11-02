@@ -87,7 +87,7 @@ void DEBUG_SetCheckpoint(const char *file, unsigned int line)
 }
 
 /** Display the location of the last checkpoint. */
-void DEBUG_ShowCheckpoint()
+void DEBUG_ShowCheckpoint(void)
 {
    unsigned int x, offset;
    Debug("CHECKPOINT LIST (oldest)");

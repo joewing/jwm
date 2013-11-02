@@ -17,7 +17,7 @@ static void FixRange(unsigned int *value,
                      unsigned int def_value);
 
 /** Initialize settings. */
-void InitializeSettings()
+void InitializeSettings(void)
 {
    settings.doubleClickSpeed = 400;
    settings.doubleClickDelta = 2;
@@ -44,7 +44,7 @@ void InitializeSettings()
 }
 
 /** Make sure settings are reasonable. */
-void StartupSettings()
+void StartupSettings(void)
 {
 
    FixRange(&settings.borderWidth, 1, 128, 4);

@@ -138,20 +138,20 @@ typedef struct TrayType {
 
 } TrayType;
 
-void InitializeTray();
-void StartupTray();
-void ShutdownTray();
-void DestroyTray();
+void InitializeTray(void);
+void StartupTray(void);
+void ShutdownTray(void);
+void DestroyTray(void);
 
 /** Create a new tray.
  * @return A new, empty tray.
  */
-TrayType *CreateTray();
+TrayType *CreateTray(void);
 
 /** Create a tray component.
  * @return A new tray component structure.
  */
-TrayComponentType *CreateTrayComponent();
+TrayComponentType *CreateTrayComponent(void);
 
 /** Add a tray component to a tray.
  * @param tp The tray to update.
@@ -165,7 +165,7 @@ void AddTrayComponent(TrayType *tp, TrayComponentType *cp);
 void ShowTray(TrayType *tp);
 
 /** Show all trays. */
-void ShowAllTrays();
+void ShowAllTrays(void);
 
 /** Hide a tray.
  * @param tp The tray to hide.
@@ -173,7 +173,7 @@ void ShowAllTrays();
 void HideTray(TrayType *tp);
 
 /** Draw all trays. */
-void DrawTray();
+void DrawTray(void);
 
 /** Draw a specific tray.
  * @param tp The tray to draw.
@@ -181,10 +181,10 @@ void DrawTray();
 void DrawSpecificTray(const TrayType *tp);
 
 /** Raise tray windows. */
-void RaiseTrays();
+void RaiseTrays(void);
 
 /** Lower tray windows. */
-void LowerTrays();
+void LowerTrays(void);
 
 /** Update a component on a tray.
  * @param tp The tray containing the component.
@@ -203,19 +203,19 @@ void ClearTrayDrawable(const TrayComponentType *cp);
 /** Get a linked list of trays.
  * @return The trays.
  */
-TrayType *GetTrays();
+TrayType *GetTrays(void);
 
 /** Get the number of trays.
  * @return The number of trays.
  */
-unsigned int GetTrayCount();
+unsigned int GetTrayCount(void);
 
 /** Get a window to use as the supporting window.
  * This is used by clients to validate that compliant window manager is
  * running.
  * @return The supporting window.
  */
-Window GetSupportingWindow();
+Window GetSupportingWindow(void);
 
 /** Process an event that may be for a tray.
  * @param event The event to process.

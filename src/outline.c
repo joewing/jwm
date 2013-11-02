@@ -35,7 +35,7 @@ void DrawOutline(int x, int y, int width, int height)
 }
 
 /** Clear the last outline. */
-void ClearOutline()
+void ClearOutline(void)
 {
    if(outlineGC != None) {
       JXDrawRectangle(display, rootWindow, outlineGC,

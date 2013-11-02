@@ -15,7 +15,7 @@ struct ClientNode;
 /*@{*/
 #define InitializeDialogs()   (void)(0)
 #define StartupDialogs()      (void)(0)
-void ShutdownDialogs();
+void ShutdownDialogs(void);
 #define DestroyDialogs()      (void)(0)
 /*@}*/
 

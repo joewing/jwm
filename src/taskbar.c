@@ -59,7 +59,7 @@ static Node *taskBarNodes;
 static Node *taskBarNodesTail;
 
 static Node *GetNode(TaskBarType *bar, int x);
-static unsigned int GetItemCount();
+static unsigned int GetItemCount(void);
 static unsigned int GetItemWidth(const TaskBarType *bp,
                                  unsigned int itemCount);
 static void Render(const TaskBarType *bp);
@@ -76,7 +76,7 @@ static void SignalTaskbar(const TimeType *now, int x, int y, Window w,
                           void *data);
 
 /** Initialize task bar data. */
-void InitializeTaskBar()
+void InitializeTaskBar(void)
 {
    bars = NULL;
    taskBarNodes = NULL;
@@ -84,7 +84,7 @@ void InitializeTaskBar()
 }
 
 /** Shutdown the task bar. */
-void ShutdownTaskBar()
+void ShutdownTaskBar(void)
 {
    TaskBarType *bp;
    for(bp = bars; bp; bp = bp->next) {
@@ -94,7 +94,7 @@ void ShutdownTaskBar()
 }
 
 /** Destroy task bar data. */
-void DestroyTaskBar()
+void DestroyTaskBar(void)
 {
    TaskBarType *bp;
    while(bars) {
@@ -377,7 +377,7 @@ void RemoveClientFromTaskBar(ClientNode *np)
 }
 
 /** Update all task bars. */
-void UpdateTaskBar()
+void UpdateTaskBar(void)
 {
 
    TaskBarType *bp;
@@ -546,7 +546,7 @@ void Render(const TaskBarType *bp)
 }
 
 /** Focus the next client in the task bar. */
-void FocusNext()
+void FocusNext(void)
 {
 
    Node *tp;
@@ -583,7 +583,7 @@ void FocusNext()
 }
 
 /** Focus the previous client in the task bar. */
-void FocusPrevious()
+void FocusPrevious(void)
 {
 
    Node *tp;
@@ -674,7 +674,7 @@ Node *GetNode(TaskBarType *bar, int x)
 }
 
 /** Get the number of items on the task bar. */
-unsigned int GetItemCount()
+unsigned int GetItemCount(void)
 {
 
    Node *tp;
@@ -737,7 +737,7 @@ void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value)
 }
 
 /** Maintain the _NET_CLIENT_LIST[_STACKING] properties on the root. */
-void UpdateNetClientList()
+void UpdateNetClientList(void)
 {
 
    Node *np;

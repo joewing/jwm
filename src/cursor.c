@@ -55,7 +55,7 @@ static int mousey;
 static Window mousew;
 
 /** Startup cursor support. */
-void StartupCursors()
+void StartupCursors(void)
 {
 
    Window win1;
@@ -79,7 +79,7 @@ Cursor CreateCursor(unsigned int shape)
 }
 
 /** Shutdown cursor support. */
-void ShutdownCursors()
+void ShutdownCursors(void)
 {
    int x;
    for(x = 0; x < CURSOR_COUNT; x++) {
@@ -156,7 +156,7 @@ char GrabMouseForResize(BorderActionType action)
 }
 
 /** Grab the mouse for moving a window. */
-char GrabMouseForMove()
+char GrabMouseForMove(void)
 {
    int result;
    unsigned int mask;
@@ -190,7 +190,7 @@ char GrabMouse(Window w)
 }
 
 /** Grab the mouse for choosing a window. */
-char GrabMouseForChoose()
+char GrabMouseForChoose(void)
 {
    int result;
    unsigned int mask;
@@ -242,7 +242,7 @@ void GetMousePosition(int *x, int *y, Window *w)
 }
 
 /** Get the current mouse buttons pressed. */
-unsigned int GetMouseMask()
+unsigned int GetMouseMask(void)
 {
    Window win1;
    int winx, winy;

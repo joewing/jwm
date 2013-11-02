@@ -38,11 +38,11 @@ static IconPathNode *iconPaths;
 static IconPathNode *iconPathsTail;
 static GC iconGC;
 
-static void SetIconSize();
+static void SetIconSize(void);
 static void DoDestroyIcon(int index, IconNode *icon);
 static void ReadNetWMIcon(ClientNode *np);
-static IconNode *CreateIcon();
-static IconNode *GetDefaultIcon();
+static IconNode *CreateIcon(void);
+static IconNode *GetDefaultIcon(void);
 static IconNode *CreateIconFromData(const char *name, char **data);
 static IconNode *CreateIconFromFile(const char *fileName, char save);
 static IconNode *CreateIconFromBinary(const unsigned long *data,
@@ -64,7 +64,7 @@ static unsigned int GetHash(const char *str);
 /** Initialize icon data.
  * This must be initialized before parsing the configuration.
  */
-void InitializeIcons()
+void InitializeIcons(void)
 {
    unsigned int x;
    iconPaths = NULL;
@@ -77,7 +77,7 @@ void InitializeIcons()
 }
 
 /** Startup icon support. */
-void StartupIcons()
+void StartupIcons(void)
 {
    XGCValues gcValues;
    unsigned long gcMask;
@@ -87,7 +87,7 @@ void StartupIcons()
 }
 
 /** Shutdown icon support. */
-void ShutdownIcons()
+void ShutdownIcons(void)
 {
    unsigned int x;
    for(x = 0; x < HASH_SIZE; x++) {
@@ -99,7 +99,7 @@ void ShutdownIcons()
 }
 
 /** Destroy icon data. */
-void DestroyIcons()
+void DestroyIcons(void)
 {
    IconPathNode *pn;
    while(iconPaths) {
@@ -116,7 +116,7 @@ void DestroyIcons()
 }
 
 /** Set the preferred icon sizes on the root window. */
-void SetIconSize()
+void SetIconSize(void)
 {
 
    XIconSize size;
@@ -391,7 +391,7 @@ void ReadNetWMIcon(ClientNode *np)
 
 
 /** Create the default icon. */
-IconNode *GetDefaultIcon()
+IconNode *GetDefaultIcon(void)
 {
    return CreateIconFromData("default", x_xpm);
 }
@@ -644,7 +644,7 @@ IconNode *CreateIconFromBinary(const unsigned long *input,
 }
 
 /** Create an empty icon node. */
-IconNode *CreateIcon()
+IconNode *CreateIcon(void)
 {
    IconNode *icon;
    icon = Allocate(sizeof(IconNode));

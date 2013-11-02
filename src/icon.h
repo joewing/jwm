@@ -46,10 +46,10 @@ extern IconNode emptyIcon;
 #ifdef USE_ICONS
 
 /*@{*/
-void InitializeIcons();
-void StartupIcons();
-void ShutdownIcons();
-void DestroyIcons();
+void InitializeIcons(void);
+void StartupIcons(void);
+void ShutdownIcons(void);
+void DestroyIcons(void);
 /*@}*/
 
 /** Add an icon path.

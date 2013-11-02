@@ -14,22 +14,22 @@ struct MenuType;
 
 /*@{*/
 #define InitializeDesktops()  (void)(0)
-void StartupDesktops();
+void StartupDesktops(void);
 #define ShutdownDesktops()    (void)(0)
-void DestroyDesktops();
+void DestroyDesktops(void);
 /*@}*/
 
 /** Switch to the desktop to the right. */
-char RightDesktop();
+char RightDesktop(void);
 
 /** Switch to the desktop to the left. */
-char LeftDesktop();
+char LeftDesktop(void);
 
 /** Switch to the desktop above. */
-char AboveDesktop();
+char AboveDesktop(void);
 
 /** Switch to the desktop below. */
-char BelowDesktop();
+char BelowDesktop(void);
 
 /** Switch to a specific desktop.
  * @param desktop The desktop to show (0 based).
@@ -39,7 +39,7 @@ void ChangeDesktop(unsigned int desktop);
 /** Toggle the "show desktop" state.
  * This will either minimize or restore all items on the current desktop.
  */
-void ShowDesktop();
+void ShowDesktop(void);
 
 /** Create a menu containing a list of desktops.
  * @param mask A bit mask of desktops to highlight.
@@ -50,7 +50,7 @@ struct Menu *CreateDesktopMenu(unsigned int mask);
 /** Create a menu containing a list of desktops.
  * @return A menu containing all the desktops.
  */
-struct Menu *CreateSendtoMenu();
+struct Menu *CreateSendtoMenu(void);
 
 /** Set the name of a desktop.
  * This is called before startup.

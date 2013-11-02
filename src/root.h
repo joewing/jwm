@@ -13,10 +13,10 @@
 struct Menu;
 
 /*@{*/
-void InitializeRootMenu();
-void StartupRootMenu();
+void InitializeRootMenu(void);
+void StartupRootMenu(void);
 #define ShutdownRootMenu() (void)(0)
-void DestroyRootMenu();
+void DestroyRootMenu(void);
 /*@}*/
 
 /** Set the root menu to be used for the specified indexes.
@@ -46,13 +46,13 @@ void GetRootMenuSize(int index, int *width, int *height);
 char ShowRootMenu(int index, int x, int y);
 
 /** Restart the window manager. */
-void Restart();
+void Restart(void);
 
 /** Exit the window manager. */
-void Exit();
+void Exit(void);
 
 /** Reload the menu. */
-void ReloadMenu();
+void ReloadMenu(void);
 
 #endif /* ROOT_H */
 

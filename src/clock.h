@@ -13,10 +13,10 @@
 struct TrayComponentType;
 
 /*@{*/
-void InitializeClock();
-void StartupClock();
+void InitializeClock(void);
+void StartupClock(void);
 #define ShutdownClock() (void)(0)
-void DestroyClock();
+void DestroyClock(void);
 /*@}*/
 
 /** Create a clock component for the tray.

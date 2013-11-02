@@ -52,7 +52,7 @@ char ShouldFocus(const ClientNode *np)
 }
 
 /** Start walking windows in client list order. */
-void StartWindowWalk()
+void StartWindowWalk(void)
 {
    JXGrabKeyboard(display, rootWindow, False, GrabModeAsync,
                   GrabModeAsync, CurrentTime);
@@ -61,7 +61,7 @@ void StartWindowWalk()
 }
 
 /** Start walking the window stack. */
-void StartWindowStackWalk()
+void StartWindowStackWalk(void)
 {
 
    /* Get an image of the window stack.
@@ -163,7 +163,7 @@ void WalkWindowStack(char forward)
 }
 
 /** Stop walking the window stack or client list. */
-void StopWindowWalk()
+void StopWindowWalk(void)
 {
 
    ClientNode *np;

@@ -21,7 +21,7 @@ static ScreenType *screens = NULL;
 static int screenCount;
 
 /** Startup screens. */
-void StartupScreens()
+void StartupScreens(void)
 {
 #ifdef USE_XINERAMA
 
@@ -69,7 +69,7 @@ void StartupScreens()
 }
 
 /** Shutdown screens. */
-void ShutdownScreens()
+void ShutdownScreens(void)
 {
    if(screens) {
       Release(screens);
@@ -102,7 +102,7 @@ const ScreenType *GetCurrentScreen(int x, int y)
 }
 
 /** Get the screen the mouse is currently on. */
-const ScreenType *GetMouseScreen()
+const ScreenType *GetMouseScreen(void)
 {
 #ifdef USE_XINERAMA
 
@@ -131,7 +131,7 @@ const ScreenType *GetScreen(int index)
 }
 
 /** Get the number of screens. */
-int GetScreenCount()
+int GetScreenCount(void)
 {
    return screenCount;
 }

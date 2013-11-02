@@ -12,9 +12,9 @@
 
 /*@{*/
 #define InitializeSwallow()   (void)(0)
-void StartupSwallow();
+void StartupSwallow(void);
 #define ShutdownSwallow()     (void)(0)
-void DestroySwallow();
+void DestroySwallow(void);
 /*@}*/
 
 /** Create a swallowed application tray component.
@@ -42,7 +42,7 @@ char ProcessSwallowEvent(const XEvent *event);
 /** Determine if there are swallow processes pending.
  * @return 1 if there are still pending swallow processes, 0 otherwise.
  */
-char IsSwallowPending();
+char IsSwallowPending(void);
 
 #endif /* SWALLOW_H */
 

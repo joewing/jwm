@@ -14,8 +14,8 @@
 
 /*@{*/
 #define InitializeCursors()   (void)(0)
-void StartupCursors();
-void ShutdownCursors();
+void StartupCursors(void);
+void ShutdownCursors(void);
 #define DestroyCursors()      (void)(0)
 /*@}*/
 
@@ -28,7 +28,7 @@ char GrabMouseForResize(BorderActionType action);
 /** Grab the mouse for moving a window.
  * @return 1 on success, 0 on failure.
  */
-char GrabMouseForMove();
+char GrabMouseForMove(void);
 
 /** Grab the mouse.
  * @return 1 on success, 0 on failure.
@@ -38,7 +38,7 @@ char GrabMouse(Window w);
 /** Grab the mouse to select a window.
  * @return 1 on success, 0 on failure.
  */
-char GrabMouseForChoose();
+char GrabMouseForChoose(void);
 
 /** Get the cursor to use given a border action.
  * @param action The border action.
@@ -70,7 +70,7 @@ void GetMousePosition(int *x, int *y, Window *w);
 /** Get a mask of the current mouse buttons pressed.
  * @return A mask of the current mouse buttons pressed.
  */
-unsigned int GetMouseMask();
+unsigned int GetMouseMask(void);
 
 /** Reset to the default cursor on a window.
  * @param w The window whose cursor to change.

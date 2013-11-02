@@ -12,9 +12,9 @@
 
 /*@{*/
 #define InitializeCommands()  (void)(0)
-void StartupCommands();
-void ShutdownCommands();
-void DestroyCommands();
+void StartupCommands(void);
+void ShutdownCommands(void);
+void DestroyCommands(void);
 /*@}*/
 
 /** Add a command to be executed at startup.

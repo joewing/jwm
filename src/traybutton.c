@@ -67,7 +67,7 @@ static void SignalTrayButton(const TimeType *now,
                              int x, int y, Window w, void *data);
 
 /** Startup tray buttons. */
-void StartupTrayButtons()
+void StartupTrayButtons(void)
 {
    TrayButtonType *bp;
    for(bp = buttons; bp; bp = bp->next) {
@@ -95,7 +95,7 @@ void StartupTrayButtons()
 }
 
 /** Release tray button data. */
-void DestroyTrayButtons()
+void DestroyTrayButtons(void)
 {
    TrayButtonType *bp;
    while(buttons) {
@@ -420,7 +420,7 @@ void SignalTrayButton(const TimeType *now, int x, int y, Window w, void *data)
 }
 
 /** Validate tray buttons. */
-void ValidateTrayButtons()
+void ValidateTrayButtons(void)
 {
    TrayButtonType *bp;
    int bindex;

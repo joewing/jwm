@@ -45,13 +45,13 @@ typedef unsigned char OptionType;
 #define InitializeGroups() (void)(0)
 #define StartupGroups()    (void)(0)
 #define ShutdownGroups()   (void)(0)
-void DestroyGroups();
+void DestroyGroups(void);
 /*@}*/
 
 /** Create an empty group.
  * @return An empty group.
  */
-struct GroupType *CreateGroup();
+struct GroupType *CreateGroup(void);
 
 /** Add a window class to a group.
  * @param gp The group.

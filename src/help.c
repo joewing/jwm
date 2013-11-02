@@ -10,17 +10,17 @@
 #include "jwm.h"
 #include "help.h"
 
-static void DisplayUsage();
+static void DisplayUsage(void);
 
 /** Display program name, version, and compiled options . */
-void DisplayAbout()
+void DisplayAbout(void)
 {
    printf("JWM v" PACKAGE_VERSION " by Joe Wingbermuehle\n");
    DisplayCompileOptions();
 }
 
 /** Display compiled options. */
-void DisplayCompileOptions()
+void DisplayCompileOptions(void)
 {
    printf("compiled options: "
 #ifndef DISABLE_CONFIRM
@@ -66,7 +66,7 @@ void DisplayCompileOptions()
 }
 
 /** Display all help. */
-void DisplayHelp()
+void DisplayHelp(void)
 {
    DisplayUsage();
    printf("  -display X  Set the X display to use\n"
@@ -79,7 +79,7 @@ void DisplayHelp()
 }
 
 /** Display program usage information. */
-void DisplayUsage()
+void DisplayUsage(void)
 {
    DisplayAbout();
    printf("usage: jwm [ options ]\n");

@@ -63,13 +63,13 @@ static void SignalClock(const struct TimeType *now, int x, int y, Window w,
 
 
 /** Initialize clocks. */
-void InitializeClock()
+void InitializeClock(void)
 {
    clocks = NULL;
 }
 
 /** Start clock(s). */
-void StartupClock()
+void StartupClock(void)
 {
 
    ClockType *clk;
@@ -86,7 +86,7 @@ void StartupClock()
 }
 
 /** Destroy clock(s). */
-void DestroyClock()
+void DestroyClock(void)
 {
 
    ClockType *cp;

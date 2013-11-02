@@ -38,13 +38,13 @@ static void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
 #endif
 
 /** Initialize structures. */
-void InitializeBorders()
+void InitializeBorders(void)
 {
    memset(buttonNames, 0, sizeof(buttonNames));
 }
 
 /** Initialize server resources. */
-void StartupBorders()
+void StartupBorders(void)
 {
 
    XGCValues gcValues;
@@ -67,13 +67,13 @@ void StartupBorders()
 }
 
 /** Release server resources. */
-void ShutdownBorders()
+void ShutdownBorders(void)
 {
    JXFreeGC(display, borderGC);
 }
 
 /** Get the size of the icon to display on a window. */
-int GetBorderIconSize()
+int GetBorderIconSize(void)
 {
    return settings.titleHeight - 6;
 }
@@ -731,7 +731,7 @@ void DrawMinButton(unsigned int offset, Pixmap canvas)
  * may cause borders on the current desktop to become visible after moving
  * clients to their assigned desktops.
  */
-void ExposeCurrentDesktop()
+void ExposeCurrentDesktop(void)
 {
 
    ClientNode *np;

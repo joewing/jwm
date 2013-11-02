@@ -152,13 +152,13 @@ extern Atom atoms[ATOM_COUNT];
 
 /*@{*/
 #define InitializeHints()  (void)(0)
-void StartupHints();
+void StartupHints(void);
 #define ShutdownHints()    (void)(0)
 #define DestroyHints()     (void)(0)
 /*@}*/
 
 /** Determine the current desktop. */
-void ReadCurrentDesktop();
+void ReadCurrentDesktop(void);
 
 /** Read client info.
  * @param np The client.

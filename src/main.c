@@ -77,21 +77,21 @@ char haveRender;
 
 static const char *CONFIG_FILE = "/.jwmrc";
 
-static void Initialize();
-static void Startup();
-static void Shutdown();
-static void Destroy();
+static void Initialize(void);
+static void Startup(void);
+static void Shutdown(void);
+static void Destroy(void);
 
-static void OpenConnection();
-static void CloseConnection();
-static void StartupConnection();
-static void ShutdownConnection();
-static void EventLoop();
+static void OpenConnection(void);
+static void CloseConnection(void);
+static void StartupConnection(void);
+static void ShutdownConnection(void);
+static void EventLoop(void);
 static void HandleExit(int sig);
 static void DoExit(int code);
-static void SendRestart();
-static void SendExit();
-static void SendReload();
+static void SendRestart(void);
+static void SendExit(void);
+static void SendReload(void);
 static void SendJWMMessage(const char *message);
 
 static char *displayString = NULL;
@@ -219,7 +219,7 @@ void DoExit(int code)
 }
 
 /** Main JWM event loop. */
-void EventLoop()
+void EventLoop(void)
 {
 
    XEvent event;
@@ -252,7 +252,7 @@ void EventLoop()
 }
 
 /** Open a connection to the X server. */
-void OpenConnection()
+void OpenConnection(void)
 {
 
    display = JXOpenDisplay(displayString);
@@ -281,7 +281,7 @@ void OpenConnection()
 }
 
 /** Prepare the connection. */
-void StartupConnection()
+void StartupConnection(void)
 {
 
    XSetWindowAttributes attr;
@@ -355,14 +355,14 @@ void StartupConnection()
 }
 
 /** Close the X server connection. */
-void CloseConnection()
+void CloseConnection(void)
 {
    JXFlush(display);
    JXCloseDisplay(display);
 }
 
 /** Close the X server connection. */
-void ShutdownConnection()
+void ShutdownConnection(void)
 {
    CloseConnection();
 }
@@ -376,7 +376,7 @@ void HandleExit(int sig)
 /** Initialize data structures.
  * This is called before the X connection is opened.
  */
-void Initialize()
+void Initialize(void)
 {
 
    InitializeBackgrounds();
@@ -411,7 +411,7 @@ void Initialize()
 /** Startup the various JWM components.
  * This is called after the X connection is opened.
  */
-void Startup()
+void Startup(void)
 {
 
    /* This order is important. */
@@ -478,7 +478,7 @@ void Startup()
 /** Shutdown the various JWM components.
  * This is called before the X connection is closed.
  */
-void Shutdown()
+void Shutdown(void)
 {
 
    /* This order is important. */
@@ -520,7 +520,7 @@ void Shutdown()
  * This is called after the X connection is closed.
  * Note that it is possible for this to be called more than once.
  */
-void Destroy()
+void Destroy(void)
 {
    DestroyBackgrounds();
    DestroyBorders();
@@ -552,19 +552,19 @@ void Destroy()
 }
 
 /** Send _JWM_RESTART to the root window. */
-void SendRestart()
+void SendRestart(void)
 {
 	SendJWMMessage(jwmRestart);
 }
 
 /** Send _JWM_EXIT to the root window. */
-void SendExit()
+void SendExit(void)
 {
 	SendJWMMessage(jwmExit);
 }
 
 /** Send _JWM_RELOAD to the root window. */
-void SendReload()
+void SendReload(void)
 {
 	SendJWMMessage(jwmReload);
 }

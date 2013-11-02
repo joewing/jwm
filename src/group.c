@@ -54,7 +54,7 @@ static void AddPattern(PatternListType **lp, const char *pattern,
 static void ApplyGroup(const GroupType *gp, ClientNode *np);
 
 /** Destroy group data. */
-void DestroyGroups()
+void DestroyGroups(void)
 {
    GroupType *gp;
    while(groups) {
@@ -93,7 +93,7 @@ void ReleaseOptionList(OptionListType *lp)
 }
 
 /** Create an empty group. */
-GroupType *CreateGroup()
+GroupType *CreateGroup(void)
 {
    GroupType *tp;
    tp = Allocate(sizeof(GroupType));

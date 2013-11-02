@@ -49,7 +49,7 @@ typedef struct CallbackNode {
 
 static CallbackNode *callbacks = NULL;
 
-static void Signal();
+static void Signal(void);
 static void DispatchBorderButtonEvent(const XButtonEvent *event,
                                       ClientNode *np);
 
@@ -223,7 +223,7 @@ void WaitForEvent(XEvent *event)
 }
 
 /** Wake up components that need to run at certain times. */
-void Signal()
+void Signal(void)
 {
 
    static TimeType last = ZERO_TIME;

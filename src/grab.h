@@ -11,10 +11,10 @@
 #define GRAB_H
 
 /** Grab the server and sync. */
-void GrabServer();
+void GrabServer(void);
 
 /** Ungrab the server. */
-void UngrabServer();
+void UngrabServer(void);
 
 #endif /* GRAB_H */
 

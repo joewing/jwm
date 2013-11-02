@@ -27,7 +27,7 @@ extern struct ClientNode *nodeTail[LAYER_COUNT];
 char ShouldFocus(const struct ClientNode *np);
 
 /** Start walking the window client list. */
-void StartWindowWalk();
+void StartWindowWalk(void);
 
 /** Start walking the window stack. */
 void StartWindowStackWalk();
@@ -36,7 +36,7 @@ void StartWindowStackWalk();
 void WalkWindowStack(char forward);
 
 /** Stop walking the window stack or client list. */
-void StopWindowWalk();
+void StopWindowWalk(void);
 
 /** Set the keyboard focus to the next client.
  * This is used to focus the next client in the stacking order.

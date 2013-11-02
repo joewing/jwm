@@ -31,7 +31,7 @@ static GC fontGC;
 #endif
 
 /** Initialize font data. */
-void InitializeFonts()
+void InitializeFonts(void)
 {
    unsigned int x;
    for(x = 0; x < FONT_COUNT; x++) {
@@ -41,7 +41,7 @@ void InitializeFonts()
 }
 
 /** Startup font support. */
-void StartupFonts()
+void StartupFonts(void)
 {
 
 #ifndef USE_XFT
@@ -112,7 +112,7 @@ void StartupFonts()
 }
 
 /** Shutdown font support. */
-void ShutdownFonts()
+void ShutdownFonts(void)
 {
    unsigned int x;
    for(x = 0; x < FONT_COUNT; x++) {
@@ -134,7 +134,7 @@ void ShutdownFonts()
 }
 
 /** Destroy font data. */
-void DestroyFonts()
+void DestroyFonts(void)
 {
    unsigned int x;
    for(x = 0; x < FONT_COUNT; x++) {

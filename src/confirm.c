@@ -57,18 +57,18 @@ static DialogType *dialog = NULL;
 
 static int minWidth = 0;
 
-static void DestroyConfirmDialog();
-static void ComputeDimensions();
-static void DrawDialog();
-static void DrawButtons();
-static void ExposeConfirmDialog();
+static void DestroyConfirmDialog(void);
+static void ComputeDimensions(void);
+static void DrawDialog(void);
+static void DrawButtons(void);
+static void ExposeConfirmDialog(void);
 static char HandleDialogExpose(const XExposeEvent *event); 
 static char HandleDialogButtonPress(const XButtonEvent *event);
 static char HandleDialogButtonRelease(const XButtonEvent *event);
 static char HandleDialogKeyPress(const XKeyEvent *event);
 
 /** Stop dialog processing. */
-void ShutdownDialogs()
+void ShutdownDialogs(void)
 {
    if(dialog) {
       DestroyConfirmDialog();
@@ -313,7 +313,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
 }
 
 /** Copy the pixmap to the confirm dialog. */
-void ExposeConfirmDialog()
+void ExposeConfirmDialog(void)
 {
    Assert(dialog);
    JXCopyArea(display, dialog->pmap, dialog->node->window, rootGC,
@@ -321,7 +321,7 @@ void ExposeConfirmDialog()
 }
 
 /** Destroy a confirm dialog. */
-void DestroyConfirmDialog()
+void DestroyConfirmDialog(void)
 {
 
    int x;
@@ -347,7 +347,7 @@ void DestroyConfirmDialog()
 }
 
 /** Compute the size of a dialog window. */
-void ComputeDimensions()
+void ComputeDimensions(void)
 {
 
    const ScreenType *sp;
@@ -411,7 +411,7 @@ void ComputeDimensions()
 }
 
 /** Render the dialog to the pixmap. */
-void DrawDialog()
+void DrawDialog(void)
 {
 
    int yoffset;
@@ -438,7 +438,7 @@ void DrawDialog()
 }
 
 /** Draw the buttons on the dialog window. */
-void DrawButtons()
+void DrawButtons(void)
 {
 
    ButtonNode button;

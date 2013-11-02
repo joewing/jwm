@@ -77,7 +77,7 @@ void Debug(const char *str, ...);
       DEBUG_Release( (void*)(& x), __FILE__, __LINE__ )
 
    void DEBUG_SetCheckpoint(const char*, unsigned int);
-   void DEBUG_ShowCheckpoint();
+   void DEBUG_ShowCheckpoint(void);
 
    void DEBUG_StartDebug(const char*, unsigned int);
    void DEBUG_StopDebug(const char*, unsigned int);

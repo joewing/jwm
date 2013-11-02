@@ -170,7 +170,7 @@ static void ReadWMState(Window win, ClientState *state);
 static void ReadMotifHints(Window win, ClientState *state);
 
 /** Set root hints and intern atoms. */
-void StartupHints()
+void StartupHints(void)
 {
 
    unsigned long *array;
@@ -257,7 +257,7 @@ void StartupHints()
 }
 
 /** Determine the current desktop. */
-void ReadCurrentDesktop()
+void ReadCurrentDesktop(void)
 {
    unsigned long temp;
    currentDesktop = 0;

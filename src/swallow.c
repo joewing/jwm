@@ -40,7 +40,7 @@ static void Destroy(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 
 /** Start swallow processing. */
-void StartupSwallow()
+void StartupSwallow(void)
 {
    SwallowNode *np;
    for(np = pendingNodes; np; np = np->next) {
@@ -51,7 +51,7 @@ void StartupSwallow()
 }
 
 /** Destroy swallow data. */
-void DestroySwallow()
+void DestroySwallow(void)
 {
    ReleaseNodes(pendingNodes);
    ReleaseNodes(swallowNodes);
@@ -288,7 +288,7 @@ char CheckSwallowMap(Window win)
 }
 
 /** Determine if there are swallow processes pending. */
-char IsSwallowPending()
+char IsSwallowPending(void)
 {
    return pendingNodes ? 1 : 0;
 }

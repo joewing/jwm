@@ -25,7 +25,7 @@ static char **desktopNames = NULL;
 static char *showingDesktop = NULL;
 
 /** Startup desktop support. */
-void StartupDesktops()
+void StartupDesktops(void)
 {
 
    unsigned int x;
@@ -51,7 +51,8 @@ void StartupDesktops()
 }
 
 /** Release desktop data. */
-void DestroyDesktops() {
+void DestroyDesktops(void)
+{
 
    unsigned int x;
 
@@ -70,7 +71,7 @@ void DestroyDesktops() {
 }
 
 /** Change to the desktop to the right. */
-char RightDesktop()
+char RightDesktop(void)
 {
    int x, y;
    if(settings.desktopWidth > 1) {
@@ -84,7 +85,7 @@ char RightDesktop()
 }
 
 /** Change to the desktop to the left. */
-char LeftDesktop()
+char LeftDesktop(void)
 {
    int x, y;
    if(settings.desktopWidth > 1) {
@@ -99,7 +100,7 @@ char LeftDesktop()
 }
 
 /** Change to the desktop above. */
-char AboveDesktop()
+char AboveDesktop(void)
 {
    unsigned int next;
    if(settings.desktopHeight > 1) {
@@ -117,7 +118,7 @@ char AboveDesktop()
 }
 
 /** Change to the desktop below. */
-char BelowDesktop()
+char BelowDesktop(void)
 {
    unsigned int next;
    if(settings.desktopHeight > 1) {
@@ -227,7 +228,7 @@ Menu *CreateDesktopMenu(unsigned int mask)
 }
 
 /** Create a sendto menu. */
-Menu *CreateSendtoMenu()
+Menu *CreateSendtoMenu(void)
 {
 
    Menu *menu;
@@ -259,7 +260,7 @@ Menu *CreateSendtoMenu()
 }
 
 /** Toggle the "show desktop" state. */
-void ShowDesktop()
+void ShowDesktop(void)
 {
 
    ClientNode *np;

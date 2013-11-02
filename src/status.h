@@ -23,7 +23,7 @@ void CreateMoveWindow(struct ClientNode *np);
 void UpdateMoveWindow(struct ClientNode *np);
 
 /** Destroy a move status window. */
-void DestroyMoveWindow();
+void DestroyMoveWindow(void);
 
 /** Create a resize status window.
  * @param np The client being resized.
@@ -38,7 +38,7 @@ void CreateResizeWindow(struct ClientNode *np);
 void UpdateResizeWindow(struct ClientNode *np, int gwidth, int gheight);
 
 /** Destroy a resize status window. */
-void DestroyResizeWindow();
+void DestroyResizeWindow(void);
 
 #endif /* STATUS_H */
 

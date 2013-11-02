@@ -53,7 +53,7 @@ static void SignalTray(const TimeType *now, int x, int y, Window w,
 
 
 /** Initialize tray data. */
-void InitializeTray()
+void InitializeTray(void)
 {
    trays = NULL;
    trayCount = 0;
@@ -61,7 +61,7 @@ void InitializeTray()
 }
 
 /** Startup trays. */
-void StartupTray()
+void StartupTray(void)
 {
 
    XSetWindowAttributes attr;
@@ -176,7 +176,7 @@ void StartupTray()
 }
 
 /** Shutdown trays. */
-void ShutdownTray()
+void ShutdownTray(void)
 {
 
    TrayType *tp;
@@ -200,7 +200,7 @@ void ShutdownTray()
 }
 
 /** Destroy tray data. */
-void DestroyTray()
+void DestroyTray(void)
 {
 
    TrayType *tp;
@@ -222,7 +222,7 @@ void DestroyTray()
 }
 
 /** Create an empty tray. */
-TrayType *CreateTray()
+TrayType *CreateTray(void)
 {
 
    TrayType *tp;
@@ -259,7 +259,7 @@ TrayType *CreateTray()
 }
 
 /** Create an empty tray component. */
-TrayComponentType *CreateTrayComponent()
+TrayComponentType *CreateTrayComponent(void)
 {
 
    TrayComponentType *cp;
@@ -591,7 +591,7 @@ void ShowTray(TrayType *tp)
 }
 
 /** Show all trays. */
-void ShowAllTrays()
+void ShowAllTrays(void)
 {
 
    TrayType *tp;
@@ -797,7 +797,7 @@ void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event)
 }
 
 /** Draw all trays. */
-void DrawTray()
+void DrawTray(void)
 {
 
    TrayType *tp;
@@ -854,7 +854,7 @@ void DrawSpecificTray(const TrayType *tp)
 }
 
 /** Raise tray windows. */
-void RaiseTrays()
+void RaiseTrays(void)
 {
    TrayType *tp;
    for(tp = trays; tp; tp = tp->next) {
@@ -865,7 +865,7 @@ void RaiseTrays()
 }
 
 /** Lower tray windows. */
-void LowerTrays()
+void LowerTrays(void)
 {
    TrayType *tp;
    for(tp = trays; tp; tp = tp->next) {
@@ -1044,19 +1044,19 @@ void ClearTrayDrawable(const TrayComponentType *cp)
 }
 
 /** Get a linked list of trays. */
-TrayType *GetTrays()
+TrayType *GetTrays(void)
 {
    return trays;
 }
 
 /** Get the number of trays. */
-unsigned int GetTrayCount()
+unsigned int GetTrayCount(void)
 {
    return trayCount;
 }
 
 /** Get a supporting window to use. */
-Window GetSupportingWindow()
+Window GetSupportingWindow(void)
 {
 
    if(trays) {

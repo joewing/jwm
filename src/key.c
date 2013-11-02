@@ -82,14 +82,14 @@ static char ShouldGrab(KeyType key);
 static void GrabKey(KeyNode *np, Window win);
 
 /** Initialize key data. */
-void InitializeKeys()
+void InitializeKeys(void)
 {
    bindings = NULL;
    lockMask = 0;
 }
 
 /** Startup key bindings. */
-void StartupKeys()
+void StartupKeys(void)
 {
 
    XModifierKeymap *modmap;
@@ -131,7 +131,7 @@ void StartupKeys()
 }
 
 /** Shutdown key bindings. */
-void ShutdownKeys()
+void ShutdownKeys(void)
 {
 
    ClientNode *np;
@@ -156,7 +156,7 @@ void ShutdownKeys()
 }
 
 /** Destroy key data. */
-void DestroyKeys()
+void DestroyKeys(void)
 {
    KeyNode *np;
    while(bindings) {
@@ -463,7 +463,7 @@ void InsertBinding(KeyType key, const char *modifiers,
 }
 
 /** Validate key bindings. */
-void ValidateKeys()
+void ValidateKeys(void)
 {
    KeyNode *kp;
    int bindex;

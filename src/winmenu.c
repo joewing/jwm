@@ -21,7 +21,7 @@
 #include "root.h"
 #include "settings.h"
 
-static Menu *CreateWindowMenu();
+static Menu *CreateWindowMenu(void);
 static void RunWindowCommand(const MenuAction *action);
 
 static void CreateWindowLayerMenu(Menu *menu);
@@ -64,7 +64,7 @@ void ShowWindowMenu(ClientNode *np, int x, int y)
 }
 
 /** Create a new window menu. */
-Menu *CreateWindowMenu()
+Menu *CreateWindowMenu(void)
 {
 
    Menu *menu;

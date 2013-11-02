@@ -73,8 +73,8 @@ typedef struct {
 extern Settings settings;
 
 /*@{*/
-void InitializeSettings();
-void StartupSettings();
+void InitializeSettings(void);
+void StartupSettings(void);
 #define ShutdownSettings()    (void)(0)
 #define DestroySettings()     (void)(0)
 /*@}*/

@@ -11,13 +11,13 @@
 #define HELP_H
 
 /** Display program name, version, and compiled options . */
-void DisplayAbout();
+void DisplayAbout(void);
 
 /** Display compiled options. */
-void DisplayCompileOptions();
+void DisplayCompileOptions(void);
 
 /** Display all help. */
-void DisplayHelp();
+void DisplayHelp(void);
 
 #endif /* HELP_H */
 

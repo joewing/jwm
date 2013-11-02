@@ -141,13 +141,13 @@ static unsigned long GetRGBFromXColor(const XColor *c);
 static XColor GetXColorFromRGB(unsigned long rgb);
 
 static int GetColorByName(const char *str, XColor *c);
-static void InitializeNames();
+static void InitializeNames(void);
 
 static void LightenColor(ColorType oldColor, ColorType newColor);
 static void DarkenColor(ColorType oldColor, ColorType newColor);
 
 /** Startup color support. */
-void StartupColors()
+void StartupColors(void)
 {
 
    unsigned int x;
@@ -258,7 +258,7 @@ void StartupColors()
 }
 
 /** Shutdown color support. */
-void ShutdownColors()
+void ShutdownColors(void)
 {
 
 #ifdef USE_XFT
@@ -286,7 +286,7 @@ void ShutdownColors()
 }
 
 /** Release color data. */
-void DestroyColors()
+void DestroyColors(void)
 {
 
    unsigned int x;
@@ -436,7 +436,7 @@ void SetDefaultColor(ColorType type)
 }
 
 /** Initialize color names to NULL. */
-void InitializeNames()
+void InitializeNames(void)
 {
 
    unsigned int x;

@@ -13,10 +13,10 @@
 struct TrayComponentType;
 
 /*@{*/
-void InitializeDock();
-void StartupDock();
-void ShutdownDock();
-void DestroyDock();
+void InitializeDock(void);
+void StartupDock(void);
+void ShutdownDock(void);
+void DestroyDock(void);
 /*@}*/
 
 /** Create a dock to be used for notifications.

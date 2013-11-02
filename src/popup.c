@@ -36,7 +36,7 @@ static void SignalPopup(const TimeType *now, int x, int y, Window w,
                         void *data);
 
 /** Startup popups. */
-void StartupPopup()
+void StartupPopup(void)
 {
    popup.text = NULL;
    popup.window = None;
@@ -44,7 +44,7 @@ void StartupPopup()
 }
 
 /** Shutdown popups. */
-void ShutdownPopup()
+void ShutdownPopup(void)
 {
    UnregisterCallback(SignalPopup, NULL);
    if(popup.text) {

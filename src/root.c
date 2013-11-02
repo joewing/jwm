@@ -33,7 +33,7 @@ static void UnpatchRootMenu(Menu *menu);
 static void RunRootCommand(const MenuAction *action);
 
 /** Initialize root menu data. */
-void InitializeRootMenu()
+void InitializeRootMenu(void)
 {
    unsigned int x;
    for(x = 0; x < ROOT_MENU_COUNT; x++) {
@@ -42,7 +42,7 @@ void InitializeRootMenu()
 }
 
 /** Startup root menus. */
-void StartupRootMenu()
+void StartupRootMenu(void)
 {
 
    unsigned int x, y;
@@ -66,7 +66,7 @@ void StartupRootMenu()
 }
 
 /** Destroy root menu data. */
-void DestroyRootMenu()
+void DestroyRootMenu(void)
 {
 
    unsigned int x, y;
@@ -218,14 +218,14 @@ void ExitHandler(ClientNode *np)
 }
 
 /** Restart callback for the restart menu item. */
-void Restart()
+void Restart(void)
 {
    shouldRestart = 1;
    shouldExit = 1;
 }
 
 /** Exit with optional confirmation. */
-void Exit()
+void Exit(void)
 {
    if(settings.exitConfirmation) {
       ShowConfirmDialog(NULL, ExitHandler,
@@ -238,7 +238,7 @@ void Exit()
 }
 
 /** Reload the menu. */
-void ReloadMenu()
+void ReloadMenu(void)
 {
    shouldReload = 1;
    if(!menuShown) {

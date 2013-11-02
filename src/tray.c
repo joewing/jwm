@@ -153,7 +153,7 @@ void StartupTray(void)
 
          if(cp->window != None) {
             JXReparentWindow(display, cp->window, tp->window,
-               xoffset, yoffset);
+                             xoffset, yoffset);
          }
 
          if(tp->layout == LAYOUT_HORIZONTAL) {
@@ -1018,7 +1018,7 @@ void ResizeTray(TrayType *tp)
    }
 
    JXMoveResizeWindow(display, tp->window, tp->x, tp->y,
-      tp->width, tp->height);
+                      tp->width, tp->height);
 
    UpdateTaskBar();
    DrawSpecificTray(tp);

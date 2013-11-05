@@ -605,7 +605,6 @@ void GetDockSize(int *width, int *height)
          *height += itemHeight;
       }
    }
-   printf("SIZE: %d, %d\n", *width, *height);
 
 }
 

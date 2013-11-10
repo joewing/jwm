@@ -504,9 +504,9 @@ void ComputeTraySize(TrayType *tp)
       }
       break;
    }
-   sp = GetCurrentScreen(x, y);
 
    /* Determine the missing dimension. */
+   sp = GetCurrentScreen(x, y);
    if(tp->layout == LAYOUT_HORIZONTAL) {
       if(tp->width == 0) {
          if(CheckHorizontalFill(tp)) {
@@ -534,34 +534,34 @@ void ComputeTraySize(TrayType *tp)
    /* Compute the tray location. */
    switch(tp->valign) {
    case TALIGN_TOP:
-      tp->y = 0;
+      tp->y = sp->y;
       break;
    case TALIGN_BOTTOM:
-      tp->y = sp->height - tp->height + 1;
+      tp->y = sp->y + sp->height - tp->height;
       break;
    case TALIGN_CENTER:
-      tp->y = (sp->height - tp->height) / 2;
+      tp->y = sp->y + (sp->height - tp->height) / 2;
       break;
    default:
       if(tp->y < 0) {
-         tp->y = sp->height + tp->y - tp->height + 1;
+         tp->y = sp->y + sp->height - tp->height;
       }
       break;
    }
 
    switch(tp->halign) {
    case TALIGN_LEFT:
-      tp->x = 0;
+      tp->x = sp->x;
       break;
    case TALIGN_RIGHT:
-      tp->x = sp->width - tp->width + 1;
+      tp->x = sp->x + sp->width - tp->width;
       break;
    case TALIGN_CENTER:
-      tp->x = (sp->width - tp->width) / 2;
+      tp->x = sp->x + (sp->width - tp->width) / 2;
       break;
    default:
       if(tp->x < 0) {
-         tp->x = sp->width + tp->x - tp->width + 1;
+         tp->x = sp->x + sp->width - tp->width;
       }
       break;
    }
@@ -610,29 +610,31 @@ void ShowAllTrays(void)
 void HideTray(TrayType *tp)
 {
 
+   const ScreenType *sp;
    int x, y;
 
    tp->hidden = 1;
 
    /* Determine where to move the tray. */
+   sp = GetCurrentScreen(tp->x, tp->y);
    if(tp->layout == LAYOUT_HORIZONTAL) {
 
       x = tp->x;
 
-      if(tp->y >= rootHeight / 2) {
-         y = rootHeight - 1;
+      if(tp->y >= sp->y + (sp->height / 2)) {
+         y = sp->y + sp->height - 1;
       } else {
-         y = 1 - tp->height;
+         y = sp->y - tp->height + 1;
       }
 
    } else {
 
       y = tp->y;
 
-      if(tp->x >= rootWidth / 2) {
-         x = rootWidth - 1;
+      if(tp->x >= sp->x + (sp->width / 2)) {
+         x = sp->x + sp->width - 1;
       } else {
-         x = 1 - tp->width;
+         x = sp->x - tp->width + 1;
       }
 
    }

@@ -606,5 +606,13 @@ void GetDockSize(int *width, int *height)
       }
    }
 
+   /* Don't allow the dock to have zero size since a size of
+    * zero indicates a variable sized component. */
+   if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
+      *width = Max(*width, 1);
+   } else {
+      *height = Max(*height, 1);
+   }
+
 }
 

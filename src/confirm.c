@@ -113,17 +113,14 @@ char HandleDialogExpose(const XExposeEvent *event)
 char HandleDialogButtonRelease(const XButtonEvent *event)
 {
 
-   int x, y;
-   char cancelPressed, okPressed;
-
    Assert(event);
 
    if(dialog && event->window == dialog->node->window) {
-      cancelPressed = 0;
-      okPressed = 0;
-      y = event->y;
+      char cancelPressed = 0;
+      char okPressed = 0;
+      const int y = event->y;
       if(y >= dialog->buttony && y < dialog->buttony + dialog->buttonHeight) {
-         x = event->x;
+         const int x = event->x;
          if(x >= dialog->okx && x < dialog->okx + dialog->buttonWidth) {
             okPressed = 1;
          } else if(x >= dialog->cancelx
@@ -165,21 +162,17 @@ char HandleDialogButtonRelease(const XButtonEvent *event)
 char HandleDialogButtonPress(const XButtonEvent *event)
 {
 
-   char cancelPressed;
-   char okPressed;
-   int x, y;
-
    Assert(event);
 
    /* Find the dialog on which the press occured (if any). */
    if(dialog && event->window == dialog->node->window) {
 
       /* Determine which button was pressed (if any). */
-      cancelPressed = 0;
-      okPressed = 0;
-      y = event->y;
+      char cancelPressed = 0;
+      char okPressed = 0;
+      const int y = event->y;
       if(y >= dialog->buttony && y < dialog->buttony + dialog->buttonHeight) {
-         x = event->x;
+         const int x = event->x;
          if(x >= dialog->okx && x < dialog->okx + dialog->buttonWidth) {
             okPressed = 1;
          } else if(x >= dialog->cancelx

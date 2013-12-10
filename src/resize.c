@@ -420,14 +420,13 @@ void StopResize(ClientNode *np)
 void FixWidth(ClientNode *np)
 {
 
-   int ratio, minr, maxr;
-
    Assert(np);
 
    if((np->sizeFlags & PAspect) && np->height > 0) {
 
       /* Fixed point with a 16-bit fraction. */
-      ratio = (np->width << 16) / np->height;
+      const int ratio = (np->width << 16) / np->height;
+      int minr, maxr;
 
       minr = (np->aspect.minx << 16) / np->aspect.miny;
       if(ratio < minr) {
@@ -447,13 +446,13 @@ void FixWidth(ClientNode *np)
 void FixHeight(ClientNode *np)
 {
 
-   int ratio, minr, maxr;
 
    Assert(np);
 
    if((np->sizeFlags & PAspect) && np->height > 0) {
 
-      ratio = (np->width << 16) / np->height;
+      const int ratio = (np->width << 16) / np->height;
+      int minr, maxr;
 
       minr = (np->aspect.minx << 16) / np->aspect.miny;
       if(ratio < minr) {

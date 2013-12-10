@@ -612,7 +612,6 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np)
    int x, y;
    int width, height;
    int offx, offy;
-   ColorType fillColor;
 
    /* Don't draw the client if it isn't mapped. */
    if(!(np->state.status & STAT_MAPPED)) {
@@ -670,6 +669,7 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np)
 
    /* Fill the client if there's room. */
    if(width > 1 && height > 1) {
+      ColorType fillColor;
       if((np->state.status & STAT_ACTIVE)
          && (np->state.desktop == currentDesktop
          || (np->state.status & STAT_STICKY))) {

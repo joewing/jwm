@@ -124,9 +124,9 @@ void WalkWindowStack(char forward)
 {
 
    ClientNode *np;
-   int x;
 
    if(windowStack != NULL) {
+      int x;
 
       /* Loop until we either raise a window or go through them all. */
       for(x = 0; x < windowStackSize; x++) {

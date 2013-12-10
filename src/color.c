@@ -289,9 +289,8 @@ void ShutdownColors(void)
 void DestroyColors(void)
 {
 
-   unsigned int x;
-
    if(names) {
+      unsigned int x;
       for(x = 0; x < COLOR_COUNT; x++) {
          if(names[x]) {
             Release(names[x]);
@@ -388,14 +387,13 @@ void SetColor(ColorType c, const char *value)
 char ParseColor(const char *value, XColor *c)
 {
 
-   unsigned long rgb;
 
    if(JUNLIKELY(!value)) {
       return 0;
    }
 
    if(value[0] == '#' && strlen(value) == 7) {
-      rgb = ReadHex(value + 1);
+      const unsigned long rgb = ReadHex(value + 1);
       c->red = ((rgb >> 16) & 0xFF) * 257;
       c->green = ((rgb >> 8) & 0xFF) * 257;
       c->blue = (rgb & 0xFF) * 257;
@@ -439,9 +437,8 @@ void SetDefaultColor(ColorType type)
 void InitializeNames(void)
 {
 
-   unsigned int x;
-
    if(names == NULL) {
+      unsigned int x;
       names = Allocate(sizeof(char*) * COLOR_COUNT);
       for(x = 0; x < COLOR_COUNT; x++) {
          names[x] = NULL;
@@ -668,11 +665,9 @@ void GetColorIndex(XColor *c)
 XftColor *GetXftColor(ColorType type)
 {
 
-   unsigned long rgb;
-   XRenderColor rcolor;
-
    if(!xftColors[type]) {
-      rgb = rgbColors[type];
+      XRenderColor rcolor;
+      const unsigned long rgb = rgbColors[type];
       xftColors[type] = Allocate(sizeof(XftColor));
       rcolor.alpha = 65535;
       rcolor.red = ((rgb >> 16) & 0xFF) * 257;

@@ -734,19 +734,13 @@ TrayComponentType *GetTrayComponent(TrayType *tp, int x, int y)
 /** Handle a button press on a tray. */
 void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event)
 {
-
-   TrayComponentType *cp;
-   int x, y;
-   int mask;
-
-   cp = GetTrayComponent(tp, event->x, event->y);
+   TrayComponentType *cp = GetTrayComponent(tp, event->x, event->y);
    if(cp && cp->ProcessButtonPress) {
-      x = event->x - cp->x;
-      y = event->y - cp->y;
-      mask = event->button;
+      const int x = event->x - cp->x;
+      const int y = event->y - cp->y;
+      const int mask = event->button;
       (cp->ProcessButtonPress)(cp, x, y, mask);
    }
-
 }
 
 /** Handle a button release on a tray. */
@@ -754,15 +748,13 @@ void HandleTrayButtonRelease(TrayType *tp, const XButtonEvent *event)
 {
 
    TrayComponentType *cp;
-   int x, y;
-   int mask;
 
    // First inform any components that have a grab.
    for(cp = tp->components; cp; cp = cp->next) {
       if(cp->grabbed) {
-         x = event->x - cp->x;
-         y = event->y - cp->y;
-         mask = event->button;
+         const int x = event->x - cp->x;
+         const int y = event->y - cp->y;
+         const int mask = event->button;
          (cp->ProcessButtonRelease)(cp, x, y, mask);
          JXUngrabPointer(display, CurrentTime);
          cp->grabbed = 0;
@@ -772,9 +764,9 @@ void HandleTrayButtonRelease(TrayType *tp, const XButtonEvent *event)
 
    cp = GetTrayComponent(tp, event->x, event->y);
    if(cp && cp->ProcessButtonRelease) {
-      x = event->x - cp->x;
-      y = event->y - cp->y;
-      mask = event->button;
+      const int x = event->x - cp->x;
+      const int y = event->y - cp->y;
+      const int mask = event->button;
       (cp->ProcessButtonRelease)(cp, x, y, mask);
    }
 
@@ -784,15 +776,11 @@ void HandleTrayButtonRelease(TrayType *tp, const XButtonEvent *event)
 void HandleTrayMotionNotify(TrayType *tp, const XMotionEvent *event)
 {
 
-   TrayComponentType *cp;
-   int x, y;
-   int mask;
-
-   cp = GetTrayComponent(tp, event->x, event->y);
+   TrayComponentType *cp = GetTrayComponent(tp, event->x, event->y);
    if(cp && cp->ProcessMotionEvent) {
-      x = event->x - cp->x;
-      y = event->y - cp->y;
-      mask = event->state;
+      const int x = event->x - cp->x;
+      const int y = event->y - cp->y;
+      const int mask = event->state;
       (cp->ProcessMotionEvent)(cp, x, y, mask);
    }
 

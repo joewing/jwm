@@ -54,9 +54,8 @@ void StartupDesktops(void)
 void DestroyDesktops(void)
 {
 
-   unsigned int x;
-
    if(desktopNames) {
+      unsigned int x;
       for(x = 0; x < settings.desktopCount; x++) {
          Release(desktopNames[x]);
       }
@@ -73,10 +72,9 @@ void DestroyDesktops(void)
 /** Change to the desktop to the right. */
 char RightDesktop(void)
 {
-   int x, y;
    if(settings.desktopWidth > 1) {
-      y = currentDesktop / settings.desktopWidth;
-      x = (currentDesktop + 1) % settings.desktopWidth;
+      const int y = currentDesktop / settings.desktopWidth;
+      const int x = (currentDesktop + 1) % settings.desktopWidth;
       ChangeDesktop(y * settings.desktopWidth + x);
       return 1;
    } else {
@@ -87,10 +85,9 @@ char RightDesktop(void)
 /** Change to the desktop to the left. */
 char LeftDesktop(void)
 {
-   int x, y;
    if(settings.desktopWidth > 1) {
-      y = currentDesktop / settings.desktopWidth;
-      x = currentDesktop % settings.desktopWidth;
+      const int y = currentDesktop / settings.desktopWidth;
+      int x = currentDesktop % settings.desktopWidth;
       x = x > 0 ? x - 1 : settings.desktopWidth - 1;
       ChangeDesktop(y * settings.desktopWidth + x);
       return 1;
@@ -102,8 +99,8 @@ char LeftDesktop(void)
 /** Change to the desktop above. */
 char AboveDesktop(void)
 {
-   unsigned int next;
    if(settings.desktopHeight > 1) {
+      unsigned int next;
       if(currentDesktop >= settings.desktopWidth) {
          next = currentDesktop - settings.desktopWidth;
       } else {
@@ -120,8 +117,8 @@ char AboveDesktop(void)
 /** Change to the desktop below. */
 char BelowDesktop(void)
 {
-   unsigned int next;
    if(settings.desktopHeight > 1) {
+      unsigned int next;
       next = (currentDesktop + settings.desktopWidth) % settings.desktopCount;
       ChangeDesktop(next);
       return 1;
@@ -299,17 +296,16 @@ void ShowDesktop(void)
 void SetDesktopName(unsigned int desktop, const char *str)
 {
 
-   unsigned int x;
 
    if(JUNLIKELY(!str)) {
       Warning(_("empty Desktops Name tag"));
       return;
    }
 
-   Assert(desktop >= 0);
    Assert(desktop < settings.desktopWidth * settings.desktopHeight);
 
    if(!desktopNames) {
+      unsigned int x;
       desktopNames = Allocate(settings.desktopCount * sizeof(char*));
       for(x = 0; x < settings.desktopCount; x++) {
          desktopNames[x] = NULL;

@@ -177,17 +177,13 @@ char ProcessSwallowEvent(const XEvent *event)
 void Resize(TrayComponentType *cp)
 {
 
-   int width, height;
 
    SwallowNode *np = (SwallowNode*)cp->object;
 
    if(cp->window != None) {
-
-      width = cp->width - np->border * 2;
-      height = cp->height - np->border * 2;
-
+      const int width = cp->width - np->border * 2;
+      const int height = cp->height - np->border * 2;
       JXResizeWindow(display, cp->window, width, height);
-
    }
 
 }

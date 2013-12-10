@@ -51,13 +51,13 @@ char *GetSymbolName(const char *str)
 {
 
    char *temp;
-   int stop;
 
    if(*str == '$') {
       temp = Allocate(2);
       temp[0] = '$';
       temp[1] = 0;
    } else {
+      int stop;
       for(stop = 0; IsSymbolic(str[stop]); stop++);
       temp = Allocate(stop + 1);
       memcpy(temp, str, stop);

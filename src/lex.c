@@ -311,7 +311,6 @@ int ParseEntity(const char *entity, char *ch, const char *file,
                 unsigned int line)
 {
    char *temp;
-   unsigned int x;
 
    if(!strncmp("&quot;", entity, 6)) {
       *ch = '\"';
@@ -329,6 +328,7 @@ int ParseEntity(const char *entity, char *ch, const char *file,
       *ch = '\'';
       return 6;
    } else {
+      unsigned int x;
       for(x = 0; entity[x]; x++) {
          if(entity[x] == ';') {
             break;
@@ -441,6 +441,9 @@ char *ReadValue(const char *line,
       if(len >= max) {
          max += BLOCK_SIZE;
          buffer = Reallocate(buffer, max + 1);
+         if(JUNLIKELY(buffer == NULL)) {
+            FatalError(_("out of memory"));
+         }
       }
    }
    buffer[len] = 0;

@@ -128,10 +128,6 @@ void ReadClientStrut(ClientNode *np)
    unsigned char *value;
    long *lvalue;
    long leftWidth, rightWidth, topHeight, bottomHeight;
-   long leftStart, leftStop;
-   long rightStart, rightStop;
-   long topStart, topStop;
-   long bottomStart, bottomStop;
    char updated;
 
    updated = DoRemoveClientStrut(np);
@@ -153,6 +149,12 @@ void ReadClientStrut(ClientNode *np)
                                 &actualFormat, &count, &bytesLeft, &value);
    if(status == Success && actualFormat != 0) {
       if(count == 12) {
+
+         long leftStart, leftStop;
+         long rightStart, rightStop;
+         long topStart, topStop;
+         long bottomStart, bottomStop;
+
          lvalue = (long*)value;
          leftWidth      = lvalue[0];
          rightWidth     = lvalue[1];
@@ -657,7 +659,6 @@ void ConstrainSize(ClientNode *np)
    BoundingBox box;
    const ScreenType *sp;
    int north, south, east, west;
-   int ratio, minr, maxr;
 
    Assert(np);
 
@@ -698,7 +699,8 @@ void ConstrainSize(ClientNode *np)
    if(np->sizeFlags & PAspect) {
 
       /* Fixed point with a 16-bit fraction. */
-      ratio = (np->width << 16) / np->height;
+      const int ratio = (np->width << 16) / np->height;
+      int minr, maxr;
       minr = (np->aspect.minx << 16) / np->aspect.miny;
       if(ratio < minr) {
          np->height = (np->width << 16) / minr;
@@ -751,7 +753,6 @@ void PlaceMaximizedClient(ClientNode *np, char horiz, char vert)
    BoundingBox box;
    const ScreenType *sp;
    int north, south, east, west;
-   int ratio, minr, maxr;
 
    np->oldx = np->x;
    np->oldy = np->y;
@@ -779,7 +780,8 @@ void PlaceMaximizedClient(ClientNode *np, char horiz, char vert)
    if(np->sizeFlags & PAspect) {
 
       /* Fixed point with a 16-bit fraction. */
-      ratio = (box.width << 16) / box.height;
+      const int ratio = (box.width << 16) / box.height;
+      int minr, maxr;
 
       minr = (np->aspect.minx << 16) / np->aspect.miny;
       if(ratio < minr) {

@@ -179,13 +179,14 @@ void SetSize(TrayComponentType *cp, int width, int height)
 {
 
    TrayButtonType *bp;
-   int labelWidth, labelHeight;
-   int iconWidth, iconHeight;
-   int ratio;
 
    bp = (TrayButtonType*)cp->object;
 
    if(bp->icon) {
+
+      int labelWidth, labelHeight;
+      int iconWidth, iconHeight;
+      int ratio;
 
       if(bp->label) {
          labelWidth = GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;

@@ -388,12 +388,12 @@ void InsertBinding(KeyType key, const char *modifiers,
    KeyNode *np;
    unsigned int mask;
    char *temp;
-   int offset;
    KeySym sym;
 
    mask = ParseModifierString(modifiers);
 
    if(stroke && strlen(stroke) > 0) {
+      int offset;
 
       for(offset = 0; stroke[offset]; offset++) {
          if(stroke[offset] == '#') {

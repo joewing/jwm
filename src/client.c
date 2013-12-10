@@ -475,13 +475,12 @@ void SetClientLayer(ClientNode *np, unsigned int layer)
 {
 
    ClientNode *tp, *next;
-   int x;
 
    Assert(np);
-   Assert(layer >= FIRST_LAYER);
    Assert(layer <= LAST_LAYER);
 
    if(np->state.layer != layer) {
+      int x;
 
       /* Loop through all clients so we get transients. */
       for(x = FIRST_LAYER; x <= LAST_LAYER; x++) {
@@ -586,7 +585,6 @@ void SetClientDesktop(ClientNode *np, unsigned int desktop)
 {
 
    ClientNode *tp;
-   int x;
 
    Assert(np);
 
@@ -595,6 +593,7 @@ void SetClientDesktop(ClientNode *np, unsigned int desktop)
    }
 
    if(!(np->state.status & STAT_STICKY)) {
+      int x;
       for(x = 0; x < LAYER_COUNT; x++) {
          for(tp = nodes[x]; tp; tp = tp->next) {
             if(tp == np || tp->owner == np->window) {
@@ -713,7 +712,6 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
    int north, south, east, west;
    BoundingBox box;
    const ScreenType *sp;
-   char vmax, hmax;
 
    Assert(np);
 
@@ -753,6 +751,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
       ResetBorder(np);
 
    } else {
+      char vmax, hmax;
 
       np->state.status &= ~STAT_FULLSCREEN;
 
@@ -886,11 +885,12 @@ void RaiseClient(ClientNode *np)
 {
 
    ClientNode *tp, *next;
-   unsigned int x;
 
    Assert(np);
 
    if(nodes[np->state.layer] != np) {
+
+      unsigned int x;
 
       /* Raise the window */
       Assert(np->prev);
@@ -1292,17 +1292,14 @@ void SendConfigureEvent(ClientNode *np)
 void UpdateClientColormap(ClientNode *np)
 {
 
-   XWindowAttributes attr;
-   ColormapNode *cp;
-   char wasInstalled;
-
    Assert(np);
 
    if(np == activeClient) {
 
-      wasInstalled = 0;
-      cp = np->colormaps;
+      ColormapNode *cp = np->colormaps;
+      char wasInstalled = 0;
       while(cp) {
+         XWindowAttributes attr;
          if(JXGetWindowAttributes(display, cp->window, &attr)) {
             if(attr.colormap != None) {
                if(attr.colormap == np->cmap) {

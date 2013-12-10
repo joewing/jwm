@@ -83,7 +83,6 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
 {
 
    int north, south, east, west;
-   int offset;
    unsigned int resizeMask;
    const unsigned int titleHeight = settings.titleHeight;
 
@@ -96,7 +95,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
       settings.titleHeight > settings.borderWidth) {
 
       /* Check buttons on the title bar. */
-      offset = np->width + west;
+      int offset = np->width + west;
       if(y >= settings.borderWidth && y <= titleHeight) {
 
          /* Menu button. */
@@ -254,7 +253,6 @@ void ResetBorder(const ClientNode *np)
       XRectangle *rects;
       int count;
       int ordering;
-      int i;
 
       /* Cut out an area for the client window. */
       JXSetForeground(display, shapeGC, 0);
@@ -265,6 +263,7 @@ void ResetBorder(const ClientNode *np)
       rects = JXShapeGetRectangles(display, np->window, ShapeBounding,
                                    &count, &ordering);
       if(JLIKELY(rects)) {
+         int i;
          for(i = 0; i < count; i++) {
             rects[i].x += east;
             rects[i].y += north;

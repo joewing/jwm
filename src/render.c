@@ -22,23 +22,21 @@ void PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
 
 #ifdef USE_XRENDER
 
-   Picture dest;
    Picture source;
-   Picture alpha;
-   XRenderPictFormat *fp;
-   XRenderPictureAttributes pa;
-   XTransform xf;
-   int width, height;
-   int xscale, yscale;
 
    Assert(icon);
    Assert(haveRender);
 
    source = node->imagePicture;
-   alpha = node->alphaPicture;
    if(source != None) {
 
-      fp = JXRenderFindVisualFormat(display, rootVisual);
+      XRenderPictureAttributes pa;
+      XTransform xf;
+      int width, height;
+      int xscale, yscale;
+      Picture dest;
+      Picture alpha = node->alphaPicture;
+      XRenderPictFormat *fp = JXRenderFindVisualFormat(display, rootVisual);
       Assert(fp);
 
       pa.subwindow_mode = IncludeInferiors;
@@ -95,7 +93,6 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
    unsigned long alpha;
    int index, yindex;
    int x, y;
-   int imageLine;
    int maskLine;
 
    Assert(icon);
@@ -123,7 +120,6 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
                             NULL, width, height, 8, 0);
    destMask->data = Allocate(width * height);
 
-   imageLine = 0;
    maskLine = 0;
    for(y = 0; y < height; y++) {
       yindex = y * icon->image->width;
@@ -147,7 +143,6 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
          destMask->data[maskLine + x] = alpha;
 
       }
-      imageLine += destImage->bytes_per_line;
       maskLine += destMask->bytes_per_line;
    }
 

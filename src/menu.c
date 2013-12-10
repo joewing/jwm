@@ -221,7 +221,6 @@ void DestroyMenu(Menu *menu)
          Release(menu->offsets);
       }
       Release(menu);
-      menu = NULL;
    }
 }
 
@@ -613,7 +612,6 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
 {
 
    ButtonNode button;
-   ColorType fg;
 
    Assert(menu);
 
@@ -634,6 +632,7 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
    }
 
    if(item->type != MENU_ITEM_SEPARATOR) {
+      ColorType fg;
 
       ResetButton(&button, menu->pixmap, rootGC);
       if(menu->currentIndex == index) {
@@ -765,14 +764,10 @@ MenuItem *GetMenuItem(Menu *menu, int index)
 void SetPosition(Menu *tp, int index)
 {
 
-   int y;
-   int updated;
-
-   y = tp->offsets[index] + tp->itemHeight / 2;
-
+   int y = tp->offsets[index] + tp->itemHeight / 2;
    if(tp->height > rootHeight) {
 
-      updated = 0;
+      int updated = 0;
       while(y + tp->y < tp->itemHeight / 2) {
          tp->y += tp->itemHeight;
          updated = tp->itemHeight;
@@ -798,8 +793,8 @@ void SetPosition(Menu *tp, int index)
 /** Determine if a menu is valid (and can be shown). */
 char IsMenuValid(const Menu *menu)
 {
-   MenuItem *ip;
    if(menu) {
+      MenuItem *ip;
       for(ip = menu->items; ip; ip = ip->next) {
          if(ip->type != MENU_ITEM_SEPARATOR) {
             return 1;

@@ -204,6 +204,7 @@ ImageNode *LoadPNGImage(const char *fileName)
       }
       DestroyImage(result);
       Warning(_("error reading PNG image: %s"), fileName);
+      return NULL;
    }
 
    pngInfo = png_create_info_struct(pngData);

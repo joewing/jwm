@@ -119,7 +119,6 @@ void RunCommand(const char *command)
 {
 
    const char *displayString;
-   char *str;
 
    if(JUNLIKELY(!command)) {
       return;
@@ -129,7 +128,7 @@ void RunCommand(const char *command)
    if(!fork()) {
       close(ConnectionNumber(display));
       if(displayString && displayString[0]) {
-         str = malloc(strlen(displayString) + 9);
+         char *str = malloc(strlen(displayString) + 9);
          sprintf(str, "DISPLAY=%s", displayString);
          putenv(str);
       }

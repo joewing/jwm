@@ -624,21 +624,15 @@ Node *GetNode(TaskBarType *bar, int x)
 {
 
    Node *tp;
-   int remainder;
-   unsigned int itemCount;
-   int itemWidth;
    int index, stop;
-   int width;
 
    index = TASK_SPACER;
-
-   itemCount = GetItemCount();
-
    if(bar->layout == LAYOUT_HORIZONTAL) {
 
-      width = bar->cp->width - index; 
-      itemWidth = GetItemWidth(bar, itemCount);
-      remainder = width - itemWidth * itemCount;
+      const int width = bar->cp->width - index; 
+      const unsigned int itemCount = GetItemCount();
+      const int itemWidth = GetItemWidth(bar, itemCount);
+      int remainder = width - itemWidth * itemCount;
 
       for(tp = taskBarNodes; tp; tp = tp->next) {
          if(ShouldFocus(tp->client)) {

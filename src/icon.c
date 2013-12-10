@@ -185,7 +185,6 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
 {
 
    ScaledIconNode *node;
-   int ix, iy;
 
    Assert(icon);
 
@@ -198,8 +197,8 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
 
    if(node) {
 
-      ix = x + (width - node->width) / 2;
-      iy = y + (height - node->height) / 2;
+      const int ix = x + (width - node->width) / 2;
+      const int iy = y + (height - node->height) / 2;
 
       /* If we support xrender, use it. */
 #ifdef USE_XRENDER
@@ -704,9 +703,8 @@ void DoDestroyIcon(int index, IconNode *icon)
 /** Destroy an icon. */
 void DestroyIcon(IconNode *icon)
 {
-   unsigned int index;
    if(icon && !icon->name) {
-      index = GetHash(icon->name);
+      const unsigned int index = GetHash(icon->name);
       DoDestroyIcon(index, icon);
    }
 }
@@ -729,11 +727,8 @@ void InsertIcon(IconNode *icon)
 /** Find a icon in the icon hash table. */
 IconNode *FindIcon(const char *name)
 {
-   IconNode *icon;
-   unsigned int index;
-
-   index = GetHash(name);
-   icon = iconHash[index];
+   const unsigned int index = GetHash(name);
+   IconNode *icon = iconHash[index];
    while(icon) {
       if(!strcmp(icon->name, name)) {
          return icon;
@@ -747,9 +742,9 @@ IconNode *FindIcon(const char *name)
 /** Get the hash for a string. */
 unsigned int GetHash(const char *str)
 {
-   unsigned int x;
    unsigned int hash = 0;
    if(str) {
+      unsigned int x;
       for(x = 0; str[x]; x++) {
          hash = (hash + (hash << 5)) ^ (unsigned int)str[x];
       }

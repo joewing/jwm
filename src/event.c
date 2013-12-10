@@ -503,9 +503,6 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
 {
    XWindowChanges wc;
    ClientNode *np;
-   int deltax, deltay;
-   char changed;
-   char resized;
 
    if(HandleDockConfigureRequest(event)) {
       return;
@@ -514,9 +511,11 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
    np = FindClientByWindow(event->window);
    if(np) {
 
+      char changed = 0;
+      char resized = 0;
+      int deltax, deltay;
+
       GetGravityDelta(np, &deltax, &deltay);
-      changed = 0;
-      resized = 0;
       if((event->value_mask & CWWidth) && (event->width != np->width)) {
          switch(np->gravity) {
          case EastGravity:
@@ -686,11 +685,9 @@ char HandleExpose(const XExposeEvent *event)
 /** Handle a property notify event. */
 char HandlePropertyNotify(const XPropertyEvent *event)
 {
-   ClientNode *np;
-   char changed;
-   np = FindClientByWindow(event->window);
+   ClientNode *np = FindClientByWindow(event->window);
    if(np) {
-      changed = 0;
+      char changed = 0;
       switch(event->atom) {
       case XA_WM_NAME:
          ReadWMName(np);
@@ -1123,7 +1120,6 @@ void HandleMotionNotify(const XMotionEvent *event)
 
    ClientNode *np;
    Cursor cur;
-   BorderActionType action;
 
    if(event->is_hint) {
       return;
@@ -1131,6 +1127,7 @@ void HandleMotionNotify(const XMotionEvent *event)
 
    np = FindClientByParent(event->window);
    if(np) {
+      BorderActionType action;
       action = GetBorderActionType(np, event->x, event->y);
       if(np->borderAction != action) {
          np->borderAction = action;

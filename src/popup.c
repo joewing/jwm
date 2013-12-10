@@ -62,8 +62,6 @@ void ShutdownPopup(void)
 void ShowPopup(int x, int y, const char *text)
 {
 
-   unsigned long attrMask;
-   XSetWindowAttributes attr;
    const ScreenType *sp;
 
    Assert(text);
@@ -118,7 +116,8 @@ void ShowPopup(int x, int y, const char *text)
 
    if(popup.window == None) {
 
-      attrMask = 0;
+      XSetWindowAttributes attr;
+      unsigned long attrMask = 0;
 
       attrMask |= CWEventMask;
       attr.event_mask = ExposureMask

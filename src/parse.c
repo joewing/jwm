@@ -840,7 +840,6 @@ void ParseKey(const TokenNode *tp) {
    const char *action;
    const char *command;
    KeyType k;
-   int x;
 
    Assert(tp);
 
@@ -863,6 +862,7 @@ void ParseKey(const TokenNode *tp) {
       k = KEY_ROOT;
       command = action + 5;
    } else {
+      int x;
       for(x = 0; KEY_MAP[x].name; x++) {
          if(!strcmp(action, KEY_MAP[x].name)) {
             k = KEY_MAP[x].key;
@@ -1725,7 +1725,6 @@ void ParseGradient(const char *value, ColorType a, ColorType b)
 
    const char *sep;
    char *temp;
-   int len;
 
    /* Find the separator. */
    sep = strchr(value, ':');
@@ -1741,7 +1740,7 @@ void ParseGradient(const char *value, ColorType a, ColorType b)
       /* Two colors. */
 
       /* Get the first color. */
-      len = (int)(sep - value);
+      int len = (int)(sep - value);
       temp = AllocateStack(len + 1);
       memcpy(temp, value, len);
       temp[len] = 0;
@@ -1801,6 +1800,9 @@ char *ReadFile(FILE *fd)
             break;
          }
          buffer = Reallocate(buffer, max + 1);
+         if(JUNLIKELY(buffer == NULL)) {
+            FatalError(_("out of memory)"));
+         }
       }
    }
    buffer[len] = 0;

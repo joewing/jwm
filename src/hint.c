@@ -875,12 +875,12 @@ void ReadWMColormaps(ClientNode *np)
    Window *windows;
    ColormapNode *cp;
    int count;
-   int x;
 
    Assert(np);
 
    if(JXGetWMColormapWindows(display, np->window, &windows, &count)) {
       if(count > 0) {
+         int x;
 
          /* Free old colormaps. */
          while(np->colormaps) {

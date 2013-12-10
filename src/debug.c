@@ -58,10 +58,10 @@ void DEBUG_StartDebug(const char *file, unsigned int line)
 /** Stop the debugger. */
 void DEBUG_StopDebug(const char *file, unsigned int line)
 {
-   MemoryType *mp;
-   unsigned int count = 0;
    Debug("%s[%u]: debug mode stopped", file, line);
    if(allocations) {
+      MemoryType *mp;
+      unsigned int count = 0;
       Debug("MEMORY: memory leaks follow");
       for(mp = allocations; mp; mp = mp->next) {
          Debug("        %u bytes in %s at line %u",
@@ -105,10 +105,6 @@ void DEBUG_ShowCheckpoint(void)
 void *DEBUG_Allocate(size_t size, const char *file, unsigned int line)
 {
    MemoryType *mp;
-   if(size <= 0) {
-      Debug("MEMORY: %s[%u]: Attempt to allocate %d bytes of memory",
-            file, line, size);
-   }
    mp = (MemoryType*)malloc(sizeof(MemoryType));
    Assert(mp);
    mp->file = file;
@@ -117,7 +113,7 @@ void *DEBUG_Allocate(size_t size, const char *file, unsigned int line)
    mp->pointer = malloc(size + sizeof(char));
    if(!mp->pointer) {
       Debug("MEMORY: %s[%u]: Memory allocation failed (%d bytes)",
-         file, line, size);
+            file, line, (int)size);
       Assert(0);
    }
 
@@ -138,13 +134,9 @@ void *DEBUG_Reallocate(void *ptr, size_t size,
                        unsigned int line)
 {
    MemoryType *mp;
-   if(size <= 0) {
-      Debug("MEMORY: %s[%u]: Attempt to reallocate %d bytes of memory",
-         file, line, size);
-   }
    if(!ptr) {
       Debug("MEMORY: %s[%u]: Attempt to reallocate NULL pointer. "
-         "Calling Allocate...", file, line);
+            "Calling Allocate...", file, line);
       return DEBUG_Allocate(size, file, line);
    } else {
       for(mp = allocations; mp; mp = mp->next) {
@@ -158,7 +150,7 @@ void *DEBUG_Reallocate(void *ptr, size_t size,
             mp->pointer = realloc(ptr, size + sizeof(char));
             if(!mp->pointer) {
                Debug("MEMORY: %s[%u]: Failed to reallocate %d bytes.",
-                     file, line, size);
+                     file, line, (int)size);
                Assert(0);
             }
             ((char*)mp->pointer)[size] = 42;
@@ -176,7 +168,7 @@ void *DEBUG_Reallocate(void *ptr, size_t size,
       mp->pointer = malloc(size + sizeof(char));
       if(!mp->pointer) {
          Debug("MEMORY: %s[%u]: Failed to reallocate %d bytes.",
-               file, line, size);
+               file, line, (int)size);
          Assert(0);
       }
       memset(mp->pointer, 85, size);

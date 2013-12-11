@@ -60,7 +60,7 @@ static void DockWindow(Window win);
 static char UndockWindow(Window win);
 
 static void UpdateDock(void);
-static void GetDockItemSize(const DockNode *np, int *width, int *height);
+static void GetDockItemSize(DockNode *np, int *width, int *height);
 static void GetDockSize(int *width, int *height);
 
 /** Initialize dock data. */
@@ -305,7 +305,6 @@ char HandleDockResizeRequest(const XResizeRequestEvent *event)
 char HandleDockConfigureRequest(const XConfigureRequestEvent *event)
 {
 
-   XWindowChanges wc;
    DockNode *np;
 
    Assert(event);
@@ -316,14 +315,6 @@ char HandleDockConfigureRequest(const XConfigureRequestEvent *event)
 
    for(np = dock->nodes; np; np = np->next) {
       if(np->window == event->window) {
-         wc.stack_mode = event->detail;
-         wc.sibling = event->above;
-         wc.border_width = event->border_width;
-         wc.x = event->x;
-         wc.y = event->y;
-         wc.width = event->width;
-         wc.height = event->height;
-         JXConfigureWindow(display, np->window, event->value_mask, &wc);
          UpdateDock();
          return 1;
       }
@@ -395,6 +386,7 @@ char HandleDockSelectionClear(const XSelectionClearEvent *event)
 /** Add a window to the dock. */
 void DockWindow(Window win)
 {
+
    DockNode *np;
 
 	/* If no dock is running, just return. */
@@ -534,9 +526,8 @@ void UpdateDock(void)
 }
 
 /** Get the size of a particular window on the dock. */
-void GetDockItemSize(const DockNode *np, int *width, int *height)
+void GetDockItemSize(DockNode *np, int *width, int *height)
 {
-   XWindowAttributes attr;
    int itemSize;
 
    /* Determine the default size of items in the dock. */
@@ -548,33 +539,11 @@ void GetDockItemSize(const DockNode *np, int *width, int *height)
    if(dock->itemSize > 0 && itemSize > dock->itemSize) {
       itemSize = dock->itemSize;
    }
+
+   /* Determine the size of the window. */
    *width = itemSize;
    *height = itemSize;
 
-   /* Get the size of the window. */
-   if(JXGetWindowAttributes(display, np->window, &attr)) {
-
-      /* Fixed point with 16 bit fraction. */
-      const int ratio = (attr.width << 16) / attr.height;
-
-      if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-         /** Allow the window to be as tall as it wants. */
-         *height = Max(attr.height, itemSize);
-         *width = (*height * ratio) >> 16;
-         if(*width > itemSize) {
-            *width = itemSize;
-            *height = (*width << 16) / ratio;
-         }
-      } else {
-         /** Allow the window to be as wide as it wants. */
-         *width = Max(attr.width, itemSize);
-         *height = (*width << 16) / ratio;
-         if(*height > itemSize) {
-            *height = itemSize;
-            *width = (*height * ratio) >> 16;
-         }
-      }
-   }
 }
 
 /** Get the size of the dock. */

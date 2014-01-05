@@ -20,13 +20,13 @@ depend:
 	cd src ; $(MAKE) depend
 
 tarball:
-	rm -f ../jwm-$(VERSION).tar.bz2 ;
+	rm -f ../jwm-$(VERSION).tar.xz ;
 	rm -fr ../jwm-$(VERSION) ;
 	cp -r ../jwm ../jwm-$(VERSION) ;
 	(cd ../jwm-$(VERSION) && $(MAKE) distclean) ;
 	(cd .. && tar -cf jwm-$(VERSION).tar jwm-$(VERSION));
 	rm -fr ../jwm-$(VERSION) ;
-	(cd .. && bzip2 jwm-$(VERSION).tar)
+	(cd .. && xz jwm-$(VERSION).tar)
 
 clean:
 	(cd src && $(MAKE) clean)
@@ -35,10 +35,9 @@ clean:
 
 distclean: clean
 	rm -f *[~#] config.cache config.log config.status config.h
-	rm -f Makefile src/Makefile jwm.tardist jwm.1
+	rm -f Makefile src/Makefile jwm.1
 	rm -fr autom4te.cache
 	rm -f Makefile.bak src/Makefile.bak
-	rm -fr `find . \( -name .svn -o -name .gdb_history \) -print` ;
 	rm -fr .git .gitignore
 
 check-gettext:
@@ -70,4 +69,3 @@ force-update-gmo-%: check-gettext
 	cd po && $(MAKE) $(AM_MAKEFLAGS) update-gmo
 
 .PHONY: check-gettext update-po update-gmo force-update-gmo
-

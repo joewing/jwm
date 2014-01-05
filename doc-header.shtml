@@ -1,6 +1,6 @@
 
 <!--#set var="TITLE" value="JWM Source Documentation"-->
-<!--#include virtual="../../../../head.shtml"-->
+<!--#include virtual="/head.shtml"-->
 
 <h1><!--#echo var="TITLE"--></h1>
 <p/>

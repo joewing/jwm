@@ -4,26 +4,27 @@
 
     <!-- The root menu. -->
     <RootMenu onroot="12">
-        <Program icon="terminal.xpm" label="Terminal">xterm</Program>
-        <Menu icon="folder.xpm" label="Applications">
-            <Program icon="sound.xpm" label="Audacious">audacious</Program>
-            <Program icon="calculator.xpm" label="Calculator">xcalc</Program>
-            <Program icon="www.xpm" label="Iceweasel">iceweasel</Program>
-            <Program icon="word-processor.xpm" label="XEdit">xedit</Program>
+        <Program icon="terminal.png" label="Terminal">xterm</Program>
+        <Menu icon="folder.png" label="Applications">
+            <Program icon="music.png" label="Audacious">audacious</Program>
+            <Program icon="calculator.png" label="Calculator">xcalc</Program>
+            <Program icon="gimp.png" label="Gimp">gimp</Program>
+            <Program icon="www.png" label="Iceweasel">iceweasel</Program>
+            <Program icon="editor.png" label="XEdit">xedit</Program>
         </Menu>
-        <Menu icon="folder.xpm" label="Utilities">
-            <Program icon="font.xpm" label="Fonts">xfontsel</Program>
-            <Program icon="window.xpm" label="Window Properties">
+        <Menu icon="folder.png" label="Utilities">
+            <Program icon="font.png" label="Fonts">xfontsel</Program>
+            <Program icon="window.png" label="Window Properties">
                 xprop | xmessage -file -
             </Program>
         </Menu>
         <Separator/>
-        <Program icon="lock.xpm" label="Lock">
+        <Program icon="lock.png" label="Lock">
             xscreensaver-command -lock
         </Program>
         <Separator/>
-        <Restart label="Restart" icon="refresh.xpm"/>
-        <Exit label="Exit" confirm="true" icon="quit.xpm"/>
+        <Restart label="Restart" icon="restart.png"/>
+        <Exit label="Exit" confirm="true" icon="quit.png"/>
     </RootMenu>
 
     <!-- Options for program groups. -->
@@ -34,7 +35,15 @@
     <Group>
         <Name>xterm</Name>
         <Option>vmax</Option>
-        <Option>icon:terminal.xpm</Option>
+        <Option>icon:terminal.png</Option>
+    </Group>
+    <Group>
+        <Name>xedit</Name>
+        <Option>icon:editor.png</Option>
+    </Group>
+    <Group>
+        <Name>xcalc</Name>
+        <Option>icon:calculator.png</Option>
     </Group>
 
     <!-- Tray at the bottom. -->
@@ -92,7 +101,7 @@
         <ActiveBackground>#884400</ActiveBackground>
     </PagerStyle>
     <MenuStyle>
-        <Font>FreeSans-10</Font>
+        <Font>FreeSans-11</Font>
         <Foreground>#FFFFFF</Foreground>
         <Background>#333333</Background>
         <ActiveForeground>#FFFFFF</ActiveForeground>
@@ -106,8 +115,12 @@
         <Background>#999999</Background>
     </PopupStyle>
 
+    <!-- Path where icons can be found.
+         IconPath can be listed multiple times to allow searching
+         for icons in multiple paths.
+      -->
     <IconPath>
-        /usr/share/icons/wm-icons/16x16-general
+        /usr/share/icons/wm-icons/32x32-gant
     </IconPath>
 
     <!-- Virtual Desktops -->

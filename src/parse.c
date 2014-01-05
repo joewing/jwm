@@ -1801,7 +1801,7 @@ char *ReadFile(FILE *fd)
          }
          buffer = Reallocate(buffer, max + 1);
          if(JUNLIKELY(buffer == NULL)) {
-            FatalError(_("out of memory)"));
+            FatalError(_("out of memory"));
          }
       }
    }

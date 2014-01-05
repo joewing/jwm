@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-09-21 17:00-0500\n"
+"POT-Creation-Date: 2014-01-05 08:52-0600\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -30,20 +30,20 @@ msgstr "неизвестный тип фона: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "фоновое изображение не найдено: \"%s\""
 
-#: src/client.c:879
+#: src/client.c:878
 msgid "Kill this window?"
 msgstr "Ликвидировать окно?"
 
-#: src/client.c:880
+#: src/client.c:879
 msgid "This may cause data to be lost!"
 msgstr "Это может привести к потере данных!"
 
-#: src/command.c:138 src/main.c:191
+#: src/command.c:137 src/main.c:191
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "не удалось выполнить: (%s) %s"
 
-#: src/desktop.c:304
+#: src/desktop.c:301
 msgid "empty Desktops Name tag"
 msgstr "пустой тэг Desktops Name (название рабочего стола)"
 
@@ -92,7 +92,7 @@ msgstr "не удалось прочитать структуру изображ
 msgid "error reading PNG image: %s"
 msgstr "ошибка чтения изображения PNG: %s"
 
-#: src/image.c:213
+#: src/image.c:214
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "ошибка создания структуры информации об изображении PNG: %s"
@@ -165,37 +165,41 @@ msgstr "%s[%u]: непонятный текст: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
+#: src/lex.c:445 src/parse.c:1804
+msgid "out of memory"
+msgstr ""
+
 #: src/parse.c:1093
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "недопустимое значение режима вставки: \"%s\""
 
-#: src/parse.c:1817
+#: src/parse.c:1819
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:1829
+#: src/parse.c:1831
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:1848
+#: src/parse.c:1850
 #, c-format
 msgid "invalid layer: %s"
 msgstr "недопустимое значение расположения окна: %s"
 
-#: src/parse.c:1865
+#: src/parse.c:1867
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "недопустимое значение типа статусного окна для перемещения: %s"
 
-#: src/parse.c:1874
+#: src/parse.c:1876
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:1895
+#: src/parse.c:1897
 msgid "configuration error"
 msgstr "ошибка конфигурации"
 
@@ -221,7 +225,7 @@ msgid "cannot swallow the same client multiple times"
 msgstr ""
 "нельзя использовать одно и то же микро-окно панели (swallow) несколько раз"
 
-#: src/taskbar.c:731
+#: src/taskbar.c:725
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
@@ -236,37 +240,37 @@ msgstr "не удалось загрузить иконку для кнопки 
 msgid "no icon or label for TrayButton"
 msgstr "не заданы ни иконка, ни текст кнопки запуска"
 
-#: src/traybutton.c:246
+#: src/traybutton.c:247
 #, c-format
 msgid "invalid TrayButton action: \"%s\""
 msgstr "недопустимое значение действия кнопки запуска: \"%s\""
 
-#: src/traybutton.c:431
+#: src/traybutton.c:432
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "кнопка запуска: главное меню %d не задано"
 
-#: src/tray.c:1109
+#: src/tray.c:1099
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "недопустимое значение ширины панели: %d"
 
-#: src/tray.c:1128
+#: src/tray.c:1118
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "недопустимое значение высоты панели: %d"
 
-#: src/tray.c:1157
+#: src/tray.c:1147
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "недопустимое значение расположения панели: \"%s\""
 
-#: src/tray.c:1194
+#: src/tray.c:1184
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "недопустимое значение горизонтального выравнивания панели: \"%s\""
 
-#: src/tray.c:1215
+#: src/tray.c:1205
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2013-09-21 17:00-0500\n"
+"POT-Creation-Date: 2014-01-05 08:52-0600\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -26,20 +26,20 @@ msgstr "ongeldig achtergrond-type: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Achtergrond-afbeelding niet gevonden: \"%s\""
 
-#: src/client.c:879
+#: src/client.c:878
 msgid "Kill this window?"
 msgstr "Sluiten van dit venster forceren?"
 
-#: src/client.c:880
+#: src/client.c:879
 msgid "This may cause data to be lost!"
 msgstr "Dit kan verlies van data veroorzaken!"
 
-#: src/command.c:138 src/main.c:191
+#: src/command.c:137 src/main.c:191
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "uitvoeren mislukt: (%s) %s"
 
-#: src/desktop.c:304
+#: src/desktop.c:301
 msgid "empty Desktops Name tag"
 msgstr "leeg Bureaublad-naam label"
 
@@ -88,7 +88,7 @@ msgstr "kon geen lees-structuur voor PNG afbeelding aanmaken: %s"
 msgid "error reading PNG image: %s"
 msgstr "fout bij lezen van PNG afbeelding: %s"
 
-#: src/image.c:213
+#: src/image.c:214
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "kon geen info-structuur aanmaken voor PNG afbeelding: %s"
@@ -161,37 +161,41 @@ msgstr "%s[%u]: ongeldige entiteit: \"%.8s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ongeldige entiteit: \"%.8s\""
 
+#: src/lex.c:445 src/parse.c:1804
+msgid "out of memory"
+msgstr ""
+
 #: src/parse.c:1093
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "ongeldige invoeg-modus: \"%s\""
 
-#: src/parse.c:1817
+#: src/parse.c:1819
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ongeldige instelling: %s"
 
-#: src/parse.c:1829
+#: src/parse.c:1831
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ongeldige transparantie: %s"
 
-#: src/parse.c:1848
+#: src/parse.c:1850
 #, c-format
 msgid "invalid layer: %s"
 msgstr "ongeldige laag: %s"
 
-#: src/parse.c:1865
+#: src/parse.c:1867
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "ongeldig staus-venster type: %s"
 
-#: src/parse.c:1874
+#: src/parse.c:1876
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ongeldig label in %s: %s"
 
-#: src/parse.c:1895
+#: src/parse.c:1897
 msgid "configuration error"
 msgstr "configuratie-fout"
 
@@ -216,7 +220,7 @@ msgstr ""
 msgid "cannot swallow the same client multiple times"
 msgstr ""
 
-#: src/taskbar.c:731
+#: src/taskbar.c:725
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ongeldige maximum breedte voor Taaklijst: %s"
@@ -230,37 +234,37 @@ msgstr "kon taakbalk-pictogram niet laden: \"%s\""
 msgid "no icon or label for TrayButton"
 msgstr "geen pictogram of label voor Taakbalk-knop"
 
-#: src/traybutton.c:246
+#: src/traybutton.c:247
 #, c-format
 msgid "invalid TrayButton action: \"%s\""
 msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
 
-#: src/traybutton.c:431
+#: src/traybutton.c:432
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "taakbalk-knop: root menu %d niet gedefiniëerd"
 
-#: src/tray.c:1109
+#: src/tray.c:1099
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "ongeldige taakbalk-breedte: %d"
 
-#: src/tray.c:1128
+#: src/tray.c:1118
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "ongeldige taakbalk-hoogte: %d"
 
-#: src/tray.c:1157
+#: src/tray.c:1147
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "ongeldige taakbalk lay-out: \"%s\""
 
-#: src/tray.c:1194
+#: src/tray.c:1184
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "ongeldige horizontale taakbalk uitlijning: \"%s\""
 
-#: src/tray.c:1215
+#: src/tray.c:1205
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ongeldige verticale taakbalk uitlijning: \"%s\""

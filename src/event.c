@@ -115,6 +115,9 @@ void WaitForEvent(XEvent *event)
          if(select(fd + 1, &fds, NULL, NULL, &timeout) <= 0) {
             Signal();
          }
+         if(JUNLIKELY(shouldExit)) {
+            return;
+         }
       }
 
       Signal();

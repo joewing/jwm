@@ -46,7 +46,7 @@ typedef struct {
    ClientNode *node;
 
    void (*action)(ClientNode*);
-   ClientNode *client;
+   Window client;
 
 } DialogType;
 
@@ -57,8 +57,9 @@ static DialogType *dialog = NULL;
 
 static int minWidth = 0;
 
+static void RunDialogAction(void);
 static void DestroyConfirmDialog(void);
-static void ComputeDimensions(void);
+static void ComputeDimensions(const ClientNode *np);
 static void DrawDialog(void);
 static void DrawButtons(void);
 static void ExposeConfirmDialog(void);
@@ -73,6 +74,19 @@ void ShutdownDialogs(void)
    if(dialog) {
       DestroyConfirmDialog();
       dialog = NULL;
+   }
+}
+
+/** Run the action associated with the current dialog. */
+void RunDialogAction(void)
+{
+   if(dialog->client == None) {
+      (dialog->action)(NULL);
+   } else {
+      ClientNode *np = FindClientByWindow(dialog->client);
+      if(np) {
+         (dialog->action)(np);
+      }
    }
 }
 
@@ -130,7 +144,7 @@ char HandleDialogButtonRelease(const XButtonEvent *event)
       }
 
       if(okPressed) {
-         (dialog->action)(dialog->client);
+         RunDialogAction();
       }
 
       if(cancelPressed || okPressed) {
@@ -212,7 +226,7 @@ char HandleDialogKeyPress(const XKeyEvent *event)
       KeyType key = GetKey(event);
       switch(key & 0xFF) {
       case KEY_ENTER:
-         (dialog->action)(dialog->client);
+         RunDialogAction();
          DestroyConfirmDialog();
          break;
       case KEY_ESC:
@@ -246,7 +260,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
    }
 
    dialog = Allocate(sizeof(DialogType));
-   dialog->client = np;
+   dialog->client = np ? np->window : None;
    dialog->action = action;
    dialog->buttonState = DBS_NORMAL;
 
@@ -263,7 +277,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
    }
    va_end(ap);
 
-   ComputeDimensions();
+   ComputeDimensions(np);
 
    /* Create the pixmap used for rendering. */
    dialog->pmap = JXCreatePixmap(display, rootWindow,
@@ -340,7 +354,7 @@ void DestroyConfirmDialog(void)
 }
 
 /** Compute the size of a dialog window. */
-void ComputeDimensions(void)
+void ComputeDimensions(const ClientNode *np)
 {
 
    const ScreenType *sp;
@@ -371,12 +385,10 @@ void ComputeDimensions(void)
    dialog->width += 8;
    dialog->height = (dialog->lineCount + 2) * dialog->lineHeight;
 
-   if(dialog->client) {
+   if(np) {
 
-      dialog->x = dialog->client->x
-                + (dialog->client->width - dialog->width) / 2;
-      dialog->y = dialog->client->y
-                + (dialog->client->height - dialog->height) / 2;
+      dialog->x = np->x + (np->width - dialog->width) / 2;
+      dialog->y = np->y + (np->height - dialog->height) / 2;
 
       if(dialog->x < 0) {
          dialog->x = 0;

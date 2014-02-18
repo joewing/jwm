@@ -25,9 +25,6 @@
 #  endif
 #  ifdef USE_RSVG
 #     include <librsvg/rsvg.h>
-#     ifdef USE_CAIRO
-#        include <librsvg/rsvg-cairo.h>
-#     endif
 #  endif
 #endif /* MAKE_DEPEND */
 

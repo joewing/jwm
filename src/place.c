@@ -16,6 +16,7 @@
 #include "main.h"
 #include "settings.h"
 #include "clientlist.h"
+#include "misc.h"
 
 typedef struct Strut {
    ClientNode *client;
@@ -662,6 +663,12 @@ void ConstrainSize(ClientNode *np)
 
    Assert(np);
 
+   /* First we make sure the window isn't larger than the program allows.
+    * We do this here to avoid moving the window below.
+    */
+   np->width = Min(np->width, np->maxWidth);
+   np->height = Min(np->height, np->maxHeight);
+
    /* Constrain the width if necessary. */
    sp = GetCurrentScreen(np->x, np->y);
    GetScreenBounds(sp, &box);
@@ -694,6 +701,11 @@ void ConstrainSize(ClientNode *np)
       np->y = box.y;
       np->height = box.height - (box.height % np->yinc);
    }
+
+   /* If the program has a minimum constraint, we apply that here.
+    * Note that this could cause the window to overlap something. */
+   np->width = Max(np->width, np->minWidth);
+   np->height = Max(np->height, np->minHeight);
 
    /* Fix the aspect ratio. */
    if(np->sizeFlags & PAspect) {

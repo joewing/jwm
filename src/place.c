@@ -697,19 +697,12 @@ void ConstrainSize(ClientNode *np)
 
    /* Fix the aspect ratio. */
    if(np->sizeFlags & PAspect) {
-
-      /* Fixed point with a 16-bit fraction. */
-      const int ratio = (np->width << 16) / np->height;
-      int minr, maxr;
-      minr = (np->aspect.minx << 16) / np->aspect.miny;
-      if(ratio < minr) {
-         np->height = (np->width << 16) / minr;
+      if(np->width * np->aspect.miny < np->height * np->aspect.minx) {
+         np->height = (np->width * np->aspect.miny) / np->aspect.minx;
       }
-      maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
-      if(ratio > maxr) {
-         np->width = (np->height * maxr) >> 16;
+      if(np->width * np->aspect.maxy > np->height * np->aspect.maxx) {
+         np->width = (np->height * np->aspect.maxx) / np->aspect.maxy;
       }
-
    }
 
 }
@@ -778,21 +771,12 @@ void PlaceMaximizedClient(ClientNode *np, char horiz, char vert)
    }
 
    if(np->sizeFlags & PAspect) {
-
-      /* Fixed point with a 16-bit fraction. */
-      const int ratio = (box.width << 16) / box.height;
-      int minr, maxr;
-
-      minr = (np->aspect.minx << 16) / np->aspect.miny;
-      if(ratio < minr) {
-         box.height = (box.width << 16) / minr;
+      if(box.width * np->aspect.miny < box.height * np->aspect.minx) {
+         box.height = (box.width * np->aspect.miny) / np->aspect.minx;
       }
-
-      maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
-      if(ratio > maxr) {
-         box.width = (box.height * maxr) >> 16;
+      if(box.width * np->aspect.maxy > box.height * np->aspect.maxx) {
+         box.width = (box.height * np->aspect.maxx) / np->aspect.maxy;
       }
-
    }
 
    /* If maximizing horizontally, update width. */

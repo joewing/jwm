@@ -52,7 +52,6 @@ void ResizeClient(ClientNode *np, BorderActionType action,
    int lastgwidth, lastgheight;
    int delta;
    int north, south, east, west;
-   int ratio, minr, maxr;
 
    Assert(np);
 
@@ -164,27 +163,20 @@ void ResizeClient(ClientNode *np, BorderActionType action,
             if((action & (BA_RESIZE_N | BA_RESIZE_S)) &&
                (action & (BA_RESIZE_E | BA_RESIZE_W))) {
 
-               /* Fixed point with a 16-bit fraction. */
-               ratio = (np->width << 16) / np->height;
-
-               minr = (np->aspect.minx << 16) / np->aspect.miny;
-               if(ratio < minr) {
+               if(np->width * np->aspect.miny < np->height * np->aspect.minx) {
                   delta = np->width;
-                  np->width = (np->height * minr) >> 16;
+                  np->width = (np->height * np->aspect.minx) / np->aspect.miny;
                   if(action & BA_RESIZE_W) {
                      np->x -= np->width - delta;
                   }
                }
-
-               maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
-               if(ratio > maxr) {
+               if(np->width * np->aspect.maxy > np->height * np->aspect.maxx) {
                   delta = np->height;
-                  np->height = (np->width << 16) / maxr;
+                  np->height = (np->width * np->aspect.maxy) / np->aspect.maxx;
                   if(action & BA_RESIZE_N) {
                      np->y -= np->height - delta;
                   }
                }
-
             }
          }
 
@@ -423,21 +415,12 @@ void FixWidth(ClientNode *np)
    Assert(np);
 
    if((np->sizeFlags & PAspect) && np->height > 0) {
-
-      /* Fixed point with a 16-bit fraction. */
-      const int ratio = (np->width << 16) / np->height;
-      int minr, maxr;
-
-      minr = (np->aspect.minx << 16) / np->aspect.miny;
-      if(ratio < minr) {
-         np->width = (np->height * minr) >> 16;
+      if(np->width * np->aspect.miny < np->height * np->aspect.minx) {
+         np->width = (np->height * np->aspect.minx) / np->aspect.miny;
       }
-
-      maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
-      if(ratio > maxr) {
-         np->width = (np->height * maxr) >> 16;
+      if(np->width * np->aspect.maxy > np->height * np->aspect.maxx) {
+         np->width = (np->height * np->aspect.maxx) / np->aspect.maxy;
       }
-
    }
 
 }
@@ -446,24 +429,15 @@ void FixWidth(ClientNode *np)
 void FixHeight(ClientNode *np)
 {
 
-
    Assert(np);
 
    if((np->sizeFlags & PAspect) && np->height > 0) {
-
-      const int ratio = (np->width << 16) / np->height;
-      int minr, maxr;
-
-      minr = (np->aspect.minx << 16) / np->aspect.miny;
-      if(ratio < minr) {
-         np->height = (np->width << 16) / minr;
+      if(np->width * np->aspect.miny < np->height * np->aspect.minx) {
+         np->height = (np->width * np->aspect.miny) / np->aspect.minx;
       }
-
-      maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
-      if(ratio > maxr) {
-         np->height = (np->width << 16) / maxr;
+      if(np->width * np->aspect.maxy > np->height * np->aspect.maxx) {
+         np->height = (np->width * np->aspect.maxy) / np->aspect.maxy;
       }
-
    }
 
 }

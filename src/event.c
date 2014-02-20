@@ -698,6 +698,9 @@ char HandlePropertyNotify(const XPropertyEvent *event)
          break;
       case XA_WM_NORMAL_HINTS:
          ReadWMNormalHints(np);
+         if(ConstrainSize(np)) {
+            ResetBorder(np);
+         }
          changed = 1;
          break;
       case XA_WM_HINTS:

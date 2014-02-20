@@ -67,8 +67,9 @@ void GetGravityDelta(const struct ClientNode *np, int *x, int *y);
 
 /** Constrain the size of a client.
  * @param np The client.
+ * @return 1 if the size changed, 0 otherwise.
  */
-void ConstrainSize(struct ClientNode *np);
+char ConstrainSize(struct ClientNode *np);
 
 /** Constrain the position of a client.
  * @param np The  client.

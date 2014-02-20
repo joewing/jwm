@@ -654,14 +654,14 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
 }
 
 /** Constrain the size of the client. */
-void ConstrainSize(ClientNode *np)
+char ConstrainSize(ClientNode *np)
 {
 
    BoundingBox box;
    const ScreenType *sp;
    int north, south, east, west;
-
-   Assert(np);
+   const int oldWidth = np->width;
+   const int oldHeight = np->height;
 
    /* First we make sure the window isn't larger than the program allows.
     * We do this here to avoid moving the window below.
@@ -715,6 +715,12 @@ void ConstrainSize(ClientNode *np)
       if(np->width * np->aspect.maxy > np->height * np->aspect.maxx) {
          np->width = (np->height * np->aspect.maxx) / np->aspect.maxy;
       }
+   }
+
+   if(np->width != oldWidth || np->height != oldHeight) {
+      return 1;
+   } else {
+      return 0;
    }
 
 }

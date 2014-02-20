@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-01-05 08:52-0600\n"
+"POT-Creation-Date: 2014-02-20 08:51-0600\n"
 "PO-Revision-Date: 2013-05-31 14:19+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -79,17 +79,17 @@ msgstr "nom de groupe incorrect"
 msgid "invalid group desktop: %d"
 msgstr "bureau de groupe incorrect: %d"
 
-#: src/image.c:193
+#: src/image.c:190
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr "Impossible de créer une structure de lecture pour l'image PNG: %s"
 
-#: src/image.c:206
+#: src/image.c:203
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr "Erreur de lecture de l'image PNG: %s"
 
-#: src/image.c:214
+#: src/image.c:211
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "Impossible de créer les informations de structure pour l'image PNG: %s"

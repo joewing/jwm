@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-01-05 08:52-0600\n"
+"POT-Creation-Date: 2014-02-20 08:51-0600\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -78,17 +78,17 @@ msgstr "ongeldige groepsnaam"
 msgid "invalid group desktop: %d"
 msgstr "ongeldige groep bureaublad: %d"
 
-#: src/image.c:193
+#: src/image.c:190
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr "kon geen lees-structuur voor PNG afbeelding aanmaken: %s"
 
-#: src/image.c:206
+#: src/image.c:203
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr "fout bij lezen van PNG afbeelding: %s"
 
-#: src/image.c:214
+#: src/image.c:211
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "kon geen info-structuur aanmaken voor PNG afbeelding: %s"

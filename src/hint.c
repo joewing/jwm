@@ -846,18 +846,6 @@ void ReadWMNormalHints(ClientNode *np)
       np->aspect.miny = hints.min_aspect.y;
       np->aspect.maxx = hints.max_aspect.x;
       np->aspect.maxy = hints.max_aspect.y;
-      if(np->aspect.minx < 1) {
-         np->aspect.minx = 1;
-      }
-      if(np->aspect.miny < 1) {
-         np->aspect.miny = 1;
-      }
-      if(np->aspect.maxx < 1) {
-         np->aspect.maxx = 1;
-      }
-      if(np->aspect.maxy < 1) {
-         np->aspect.maxy = 1;
-      }
    }
 
    if(np->sizeFlags & PWinGravity) {

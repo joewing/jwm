@@ -60,10 +60,11 @@ void GravitateClient(struct ClientNode *np, char negate);
 
 /** Get the x and y deltas for gravitating a client.
  * @param np The client.
+ * @param gravity The gravity to use.
  * @param x Location to store the x delta.
  * @param y Location to store the y delta.
  */
-void GetGravityDelta(const struct ClientNode *np, int *x, int *y);
+void GetGravityDelta(const struct ClientNode *np, int gravity, int *x, int *y);
 
 /** Constrain the size of a client.
  * @param np The client.

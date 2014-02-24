@@ -518,7 +518,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
       char resized = 0;
       int deltax, deltay;
 
-      GetGravityDelta(np, &deltax, &deltay);
+      GetGravityDelta(np, np->gravity, &deltax, &deltay);
       if((event->value_mask & CWWidth) && (event->width != np->width)) {
          switch(np->gravity) {
          case EastGravity:
@@ -877,31 +877,71 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
 {
 
    long flags;
-   long x, y;
-   long width, height;
+   int gravity;
+   int north, south, east, west;
    int deltax, deltay;
 
    Assert(event);
    Assert(np);
 
    flags = event->data.l[0] >> 8;
-
-   x = np->x;
-   y = np->y;
-   width = np->width;
-   height = np->height;
-
-   if(flags & (1 << 0)) {
-      x = event->data.l[1];
+   gravity = event->data.l[0] & 0xFF;
+   if(gravity == 0) {
+      gravity = np->gravity;
    }
-   if(flags & (1 << 1)) {
-      y = event->data.l[2];
-   }
+   GetGravityDelta(np, gravity, &deltax, &deltay);
+
    if(flags & (1 << 2)) {
-      width = event->data.l[3];
+      const long width = event->data.l[3];
+      switch(gravity) {
+      case EastGravity:
+      case NorthEastGravity:
+      case SouthEastGravity:
+         /* Right side should not move. */
+         np->x -= width - np->width;
+         break;
+      case WestGravity:
+      case NorthWestGravity:
+      case SouthWestGravity:
+         /* Left side should not move. */
+         break;
+      case CenterGravity:
+         /* Center of the window should not move. */
+         np->x -= (width - np->width) / 2;
+         break;
+      default:
+         break;
+      }
+      np->width = width;
    }
    if(flags & (1 << 3)) {
-      height = event->data.l[4];
+      const long height = event->data.l[4];
+      switch(gravity) {
+      case NorthGravity:
+      case NorthEastGravity:
+      case NorthWestGravity:
+         /* Top should not move. */
+         break;
+      case SouthGravity:
+      case SouthEastGravity:
+      case SouthWestGravity:
+         /* Bottom should not move. */
+         np->y -= height - np->height;
+         break;
+      case CenterGravity:
+         /* Center of the window should not move. */
+         np->y -= (height - np->height) / 2;
+         break;
+      default:
+         break;
+      }
+      np->height = height;
+   }
+   if(flags & (1 << 0)) {
+      np->x = event->data.l[1] - deltax;
+   }
+   if(flags & (1 << 1)) {
+      np->y = event->data.l[2] - deltay;
    }
 
    /* Don't let maximized clients be moved or resized. */
@@ -912,17 +952,7 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
       MaximizeClient(np, 0, 0);
    }
 
-   GetGravityDelta(np, &deltax, &deltay);
-   x -= deltax;
-   y -= deltay;
-
-   np->x = x;
-   np->y = y;
-   np->width = width;
-   np->height = height;
    ConstrainSize(np);
-
-   WriteState(np);
    ResetBorder(np);
    SendConfigureEvent(np);
    UpdatePager();

@@ -820,18 +820,12 @@ void PlaceMaximizedClient(ClientNode *np, char horiz, char vert)
 }
 
 /** Determine which way to move the client for the border. */
-void GetGravityDelta(const ClientNode *np, int *x, int  *y)
+void GetGravityDelta(const ClientNode *np, int gravity, int *x, int  *y)
 {
 
    int north, south, east, west;
-
-   Assert(np);
-   Assert(x);
-   Assert(y);
-
    GetBorderSize(&np->state, &north, &south, &east, &west);
-
-   switch(np->gravity) {
+   switch(gravity) {
    case NorthWestGravity:
       *y = -north;
       *x = -west;
@@ -881,13 +875,7 @@ void GravitateClient(ClientNode *np, char negate)
 {
 
    int deltax, deltay;
-
-   Assert(np);
-
-   deltax = 0;
-   deltay = 0;
-   GetGravityDelta(np, &deltax, &deltay);
-
+   GetGravityDelta(np, np->gravity, &deltax, &deltay);
    if(negate) {
       np->x += deltax;
       np->y += deltay;

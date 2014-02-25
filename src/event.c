@@ -878,7 +878,6 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
 
    long flags;
    int gravity;
-   int north, south, east, west;
    int deltax, deltay;
 
    Assert(event);

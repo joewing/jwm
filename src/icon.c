@@ -639,6 +639,7 @@ IconNode *CreateIconFromBinary(const unsigned long *input,
    result->image = Allocate(sizeof(ImageNode));
    result->image->width = width;
    result->image->height = height;
+   result->image->bitmap = 0;
 
    result->image->data = Allocate(4 * width * height);
    data = result->image->data;

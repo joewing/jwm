@@ -50,12 +50,13 @@ static IconNode *CreateIconFromBinary(const unsigned long *data,
 static IconNode *LoadNamedIconHelper(const char *name, const char *path,
                                      char save);
 
-#if defined(USE_PNG) || defined(USE_XPM) || defined(USE_JPEG)
+#if defined(USE_ICONS)
 static IconNode *LoadSuffixedIcon(const char *path, const char *name,
                                   const char *suffix);
 #endif
 
-static ScaledIconNode *GetScaledIcon(IconNode *icon, int width, int height);
+static ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
+                                     int width, int height);
 
 static void InsertIcon(IconNode *icon);
 static IconNode *FindIcon(const char *name);
@@ -180,8 +181,8 @@ void AddIconPath(char *path)
 }
 
 /** Draw an icon. */
-void PutIcon(IconNode *icon, Drawable d, int x, int y,
-             int width, int height)
+void PutIcon(IconNode *icon, Drawable d, long fg,
+             int x, int y, int width, int height)
 {
 
    ScaledIconNode *node;
@@ -193,8 +194,7 @@ void PutIcon(IconNode *icon, Drawable d, int x, int y,
    }
 
    /* Scale the icon. */
-   node = GetScaledIcon(icon, width, height);
-
+   node = GetScaledIcon(icon, fg, width, height);
    if(node) {
 
       const int ix = x + (width - node->width) / 2;
@@ -278,6 +278,13 @@ void LoadIcon(ClientNode *np)
          }
 #endif
 
+#ifdef USE_ICONS
+         np->icon = LoadSuffixedIcon(ip->path, np->instanceName, ".xbm");
+         if(np->icon) {
+            return;
+         }
+#endif
+
       }
    }
 
@@ -287,7 +294,7 @@ void LoadIcon(ClientNode *np)
 }
 
 /** Load an icon given a name, path, and suffix. */
-#if defined(USE_PNG) || defined(USE_XPM) || defined(USE_JPEG)
+#if defined(USE_ICONS)
 IconNode *LoadSuffixedIcon(const char *path, const char *name,
                            const char *suffix)
 {
@@ -457,7 +464,8 @@ IconNode *CreateIconFromFile(const char *fileName, char save)
 }
 
 /** Get a scaled icon. */
-ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight)
+ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
+                              int rwidth, int rheight)
 {
 
    XColor color;
@@ -465,7 +473,6 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight)
    ScaledIconNode *np;
    GC maskGC;
    int x, y;
-   int index, yindex;
    int scalex, scaley;     /* Fixed point. */
    int srcx, srcy;         /* Fixed point. */
    int ratio;              /* Fixed point. */
@@ -505,14 +512,16 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight)
       }
 #endif
       if(np->width == nwidth && np->height == nheight) {
-         return np;
+         if(!icon->image->bitmap || np->fg == fg) {
+            return np;
+         }
       }
    }
 
    /* See if we can use XRender to create the icon. */
 #ifdef USE_XRENDER
    if(haveRender) {
-      np = CreateScaledRenderIcon(icon, nwidth, nheight);
+      np = CreateScaledRenderIcon(icon, fg, nwidth, nheight);
 
       /* Don't keep the image data around after creating the icon. */
       Release(icon->image->data);
@@ -524,6 +533,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight)
 
    /* Create a new ScaledIconNode the old-fashioned way. */
    np = Allocate(sizeof(ScaledIconNode));
+   np->fg = fg;
    np->width = nwidth;
    np->height = nheight;
    np->next = icon->nodes;
@@ -551,28 +561,34 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, int rwidth, int rheight)
    data = icon->image->data;
    srcy = 0;
    for(y = 0; y < nheight; y++) {
+      const int yindex = (srcy >> 16) * icon->image->width;
       srcx = 0;
-      yindex = (srcy >> 16) * icon->image->width;
       for(x = 0; x < nwidth; x++) {
-         index = 4 * (yindex + (srcx >> 16));
-
-         color.red = data[index + 1];
-         color.red |= color.red << 8;
-         color.green = data[index + 2];
-         color.green |= color.green << 8;
-         color.blue = data[index + 3];
-         color.blue |= color.blue << 8;
-         GetColor(&color);
-
-         XPutPixel(image, x, y, color.pixel);
-
-         if(data[index] >= 128) {
-            JXDrawPoint(display, np->mask, maskGC, x, y);
+         if(icon->image->bitmap) {
+            const int index = yindex + (srcx >> 16);
+            const int offset = index >> 3;
+            const int mask = 1 << (index & 7);
+            if(data[offset] & mask) {
+               JXDrawPoint(display, np->mask, maskGC, x, y);
+               XPutPixel(image, x, y, fg);
+            }
+         } else {
+            const int yindex = (srcy >> 16) * icon->image->width;
+            const int index = 4 * (yindex + (srcx >> 16));
+            color.red = data[index + 1];
+            color.red |= color.red << 8;
+            color.green = data[index + 2];
+            color.green |= color.green << 8;
+            color.blue = data[index + 3];
+            color.blue |= color.blue << 8;
+            GetColor(&color);
+            XPutPixel(image, x, y, color.pixel);
+            if(data[index] >= 128) {
+               JXDrawPoint(display, np->mask, maskGC, x, y);
+            }
          }
-
          srcx += scalex;
       }
-
       srcy += scaley;
    }
 

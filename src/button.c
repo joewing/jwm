@@ -152,7 +152,8 @@ void DrawButton(ButtonNode *bp)
    /* Display the icon. */
    if(bp->icon) {
       yoffset = (height - iconHeight + 1) / 2;
-      PutIcon(bp->icon, drawable, x + xoffset, y + yoffset,
+      PutIcon(bp->icon, drawable, colors[fg],
+              x + xoffset, y + yoffset,
               iconWidth, iconHeight);
       xoffset += iconWidth + 2;
    }

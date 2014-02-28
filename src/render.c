@@ -78,7 +78,7 @@ void PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
 }
 
 /** Create a scaled icon. */
-ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
+ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, long fg,
                                        int width, int height) {
 
    ScaledIconNode *result = NULL;
@@ -90,8 +90,6 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
    GC maskGC;
    XImage *destImage;
    XImage *destMask;
-   unsigned long alpha;
-   int index, yindex;
    int x, y;
    int maskLine;
 
@@ -99,6 +97,7 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
    Assert(haveRender);
 
    result = Allocate(sizeof(ScaledIconNode));
+   result->fg = fg;
    result->next = icon->nodes;
    icon->nodes = result;
 
@@ -122,33 +121,46 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
 
    maskLine = 0;
    for(y = 0; y < height; y++) {
-      yindex = y * icon->image->width;
+      const int yindex = y * icon->image->width;
       for(x = 0; x < width; x++) {
+         if(icon->image->bitmap) {
 
-         index = 4 * (yindex + x);
-         alpha = icon->image->data[index];
-         color.red = icon->image->data[index + 1];
-         color.red |= color.red << 8;
-         color.green = icon->image->data[index + 2];
-         color.green |= color.green << 8;
-         color.blue = icon->image->data[index + 3];
-         color.blue |= color.blue << 8;
+            const int index = yindex + x;
+            const int offset = index >> 3;
+            const int mask = 1 << (index & 7);
+            unsigned long alpha = 0;
+            if(icon->image->data[offset] & mask) {
+               alpha = 255;
+               XPutPixel(destImage, x, y, fg);
+            }
+            destMask->data[maskLine + x] = alpha;
 
-         color.red = (color.red * alpha) >> 8;
-         color.green = (color.green * alpha) >> 8;
-         color.blue = (color.blue * alpha) >> 8;
+         } else {
 
-         GetColor(&color);
-         XPutPixel(destImage, x, y, color.pixel);
-         destMask->data[maskLine + x] = alpha;
+            const int index = 4 * (yindex + x);
+            const unsigned long alpha = icon->image->data[index];
+            color.red = icon->image->data[index + 1];
+            color.red |= color.red << 8;
+            color.green = icon->image->data[index + 2];
+            color.green |= color.green << 8;
+            color.blue = icon->image->data[index + 3];
+            color.blue |= color.blue << 8;
 
+            color.red = (color.red * alpha) >> 8;
+            color.green = (color.green * alpha) >> 8;
+            color.blue = (color.blue * alpha) >> 8;
+
+            GetColor(&color);
+            XPutPixel(destImage, x, y, color.pixel);
+            destMask->data[maskLine + x] = alpha;
+         }
       }
       maskLine += destMask->bytes_per_line;
    }
 
    /* Render the image data to the image pixmap. */
-   JXPutImage(display, result->image, rootGC, destImage, 0, 0, 0, 0,
-              width, height);
+   JXPutImage(display, result->image, rootGC, destImage,
+              0, 0, 0, 0, width, height);
    Release(destImage->data);
    destImage->data = NULL;
    JXDestroyImage(destImage);
@@ -184,4 +196,3 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon,
    return result;
 
 }
-

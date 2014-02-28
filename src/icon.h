@@ -17,6 +17,7 @@ typedef struct ScaledIconNode {
 
    int width;   /**< The scaled width of the icon. */
    int height;  /**< The scaled height of the icon. */
+   long fg;     /**< Foreground color for bitmaps. */
 
    Pixmap image;
    Pixmap mask;
@@ -63,13 +64,14 @@ void AddIconPath(char *path);
  * aspect ratio of the icon is preserved.
  * @param icon The icon to render.
  * @param d The drawable on which to place the icon.
+ * @param fg The foreground color.
  * @param x The x offset on the drawable to render the icon.
  * @param y The y offset on the drawable to render the icon.
  * @param width The width of the icon to display.
  * @param height The height of the icon to display.
  */
-void PutIcon(IconNode *icon, Drawable d, int x, int y,
-             int width, int height);
+void PutIcon(IconNode *icon, Drawable d, long fg,
+             int x, int y, int width, int height);
 
 /** Load an icon for a client.
  * @param np The client.
@@ -97,7 +99,7 @@ void DestroyIcon(IconNode *icon);
 #define ShutdownIcons()                 ICON_DUMMY_FUNCTION
 #define DestroyIcons()                  ICON_DUMMY_FUNCTION
 #define AddIconPath( a )                ICON_DUMMY_FUNCTION
-#define PutIcon( a, b, c, d, e, f )     ICON_DUMMY_FUNCTION
+#define PutIcon( a, b, c, d, e, f, g )  ICON_DUMMY_FUNCTION
 #define LoadIcon( a )                   ICON_DUMMY_FUNCTION
 #define LoadNamedIcon( a, b )           NULL
 #define DestroyIcon( a )                ICON_DUMMY_FUNCTION

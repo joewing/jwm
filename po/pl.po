@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-02-20 08:51-0600\n"
+"POT-Creation-Date: 2014-02-27 19:00-0600\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -84,17 +84,17 @@ msgstr "nieprawidłowa nazwa grupy"
 msgid "invalid group desktop: %d"
 msgstr "nieprawidłowy pulpitu grupy: %d"
 
-#: src/image.c:190
+#: src/image.c:201
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr "nie można utworzyć przeczytać struct dla obrazu PNG: %s"
 
-#: src/image.c:203
+#: src/image.c:214
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr "błąd odczytu obrazu PNG: %s"
 
-#: src/image.c:211
+#: src/image.c:222
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "nie można utworzyć struktur informacji dla obrazu PNG: %s"

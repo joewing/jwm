@@ -50,6 +50,9 @@ void DisplayCompileOptions(void)
 #if defined(USE_CAIRO) && defined(USE_RSVG)
           "svg "
 #endif
+#ifdef USE_XBM
+          "xbm "
+#endif
 #ifdef USE_XFT
           "xft "
 #endif

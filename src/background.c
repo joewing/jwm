@@ -305,7 +305,7 @@ void LoadImageBackground(BackgroundNode *bp)
    JXFillRectangle(display, bp->pixmap, rootGC, 0, 0, width, height);
 
    /* Draw the icon on the background pixmap. */
-   PutIcon(ip, bp->pixmap, 0, 0, width, height);
+   PutIcon(ip, bp->pixmap, 0, 0, 0, width, height);
 
    /* We don't need the icon anymore. */
    DestroyIcon(ip);

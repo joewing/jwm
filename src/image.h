@@ -1,7 +1,7 @@
 /**
  * @file image.h
  * @author Joe Wingbermuehle
- * @date 2005-2006
+ * @date 2005-2014
  *
  * @brief Functions to load images.
  *
@@ -16,6 +16,7 @@ typedef struct ImageNode {
    int width;               /**< Width of the image. */
    int height;              /**< Height of the image. */
    unsigned char *data;     /**< Image data. */
+   char bitmap;             /**< 1 if a bitmap, 0 otherwise. */
 
 } ImageNode;
 

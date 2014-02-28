@@ -47,6 +47,9 @@ static ImageNode *LoadPNGImage(const char *fileName);
 #ifdef USE_XPM
 static ImageNode *LoadXPMImage(const char *fileName);
 #endif
+#ifdef USE_XBM
+static ImageNode *LoadXBMImage(const char *fileName);
+#endif
 #ifdef USE_ICONS
 #ifdef USE_XPM
 static ImageNode *CreateImageFromXImages(XImage *image, XImage *shape);
@@ -99,6 +102,14 @@ ImageNode *LoadImage(const char *fileName)
    /* Attempt to load the file as an XPM image. */
 #ifdef USE_XPM
    result = LoadXPMImage(fileName);
+   if(result) {
+      return result;
+   }
+#endif
+
+   /* Attempt to load the file as an XBM image. */
+#ifdef USE_XBM
+   result = LoadXBMImage(fileName);
    if(result) {
       return result;
    }
@@ -227,6 +238,7 @@ ImageNode *LoadPNGImage(const char *fileName)
 
    result = Allocate(sizeof(ImageNode));
    result->data = NULL;
+   result->bitmap = 0;
 
    png_get_IHDR(pngData, pngInfo, &width, &height,
                 &bitDepth, &colorType, NULL, NULL, NULL);
@@ -341,6 +353,7 @@ ImageNode *LoadJPEGImage(const char *fileName)
    result->width = cinfo.image_width;
    result->height = cinfo.image_height;
    result->data = Allocate(4 * result->width * result->height);
+   result->bitmap = 0;
 
    /* Read lines. */
    outIndex = 0;
@@ -412,6 +425,7 @@ ImageNode *LoadSVGImage(const char *fileName)
    rsvg_handle_get_dimensions(rh, &dim);
 
    result = (ImageNode*)Allocate(sizeof(ImageNode));
+   result->bitmap = 0;
    result->width = dim.width;
    result->height = dim.height;
    result->data = Allocate(4 * dim.width * dim.height);
@@ -481,6 +495,31 @@ ImageNode *LoadXPMImage(const char *fileName)
 }
 #endif /* USE_XPM */
 
+/** Load an XBM image from the specified file. */
+#ifdef USE_XBM
+ImageNode *LoadXBMImage(const char *fileName)
+{
+   ImageNode *result = NULL;
+   unsigned int width, height;
+   int hotx, hoty;
+   unsigned char *data;
+   int rc;
+
+   rc = XReadBitmapFileData(fileName, &width, &height, &data, &hotx, &hoty);
+   if(rc == BitmapSuccess) {
+      result = (ImageNode*)Allocate(sizeof(ImageNode));
+      result->bitmap = 1;
+      result->width = width;
+      result->height = height;
+      result->data = Allocate((width * height) / 8);
+      memcpy(result->data, data, (width * height) / 8);
+      XFree(data);
+   }
+
+   return result;
+}
+#endif /* USE_XBM */
+
 /** Create an image from XImages giving color and shape information. */
 #ifdef USE_ICONS
 #ifdef USE_XPM
@@ -497,6 +536,7 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
    result->data = Allocate(4 * image->width * image->height);
    result->width = image->width;
    result->height = image->height;
+   result->bitmap = 0;
 
    index = 0;
    for(y = 0; y < image->height; y++) {

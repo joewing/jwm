@@ -26,11 +26,13 @@ void PutScaledRenderIcon(struct IconNode *icon, struct ScaledIconNode *node,
 
 /** Create a scaled icon.
  * @param icon The icon.
+ * @param fg The foreground color (for bitmaps).
  * @param width The width of the icon to create.
  * @param height The height of the icon to create.
  * @return The scaled icon.
  */
 struct ScaledIconNode *CreateScaledRenderIcon(struct IconNode *icon,
+                                              long fg,
                                               int width, int height);
 
 #endif /* RENDER_H */

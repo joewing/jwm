@@ -253,7 +253,6 @@ void Create(TrayComponentType *cp)
 /** Resize a dock component. */
 void Resize(TrayComponentType *cp)
 {
-   Assert(cp);
    JXResizeWindow(display, cp->window, cp->width, cp->height);
    UpdateDock();
 }
@@ -290,10 +289,8 @@ char HandleDockResizeRequest(const XResizeRequestEvent *event)
 
    for(np = dock->nodes; np; np = np->next) {
       if(np->window == event->window) {
-
          JXResizeWindow(display, np->window, event->width, event->height);
          UpdateDock();
-
          return 1;
       }
    }
@@ -475,6 +472,7 @@ char UndockWindow(Window win)
 void UpdateDock(void)
 {
 
+   XConfigureEvent event;
    DockNode *np;
    int x, y;
    int width, height;
@@ -495,6 +493,7 @@ void UpdateDock(void)
 
    x = 1;
    y = 1;
+   memset(&event, 0, sizeof(event));
    for(np = dock->nodes; np; np = np->next) {
 
       GetDockItemSize(np, &width, &height);
@@ -514,6 +513,16 @@ void UpdateDock(void)
          JXReparentWindow(display, np->window, dock->cp->window,
                           x + xoffset, y + yoffset);
       }
+
+      event.type = ConfigureNotify;
+      event.event = np->window;
+      event.window = np->window;
+      event.x = x + xoffset;
+      event.y = y + yoffset;
+      event.width = width;
+      event.height = height;
+      JXSendEvent(display, np->window, False, StructureNotifyMask,
+                  (XEvent*)&event);
 
       if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
          x += width;

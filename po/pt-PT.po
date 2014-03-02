@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-02-27 19:00-0600\n"
+"POT-Creation-Date: 2014-03-02 12:57-0600\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -43,7 +43,7 @@ msgstr "eliminar esta janela?"
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 
-#: src/command.c:137 src/main.c:191
+#: src/command.c:137 src/main.c:208
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "comando executável falhou (exec): (%s) %s"

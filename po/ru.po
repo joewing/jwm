@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-02-27 19:00-0600\n"
+"POT-Creation-Date: 2014-03-02 12:57-0600\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -38,7 +38,7 @@ msgstr "Ликвидировать окно?"
 msgid "This may cause data to be lost!"
 msgstr "Это может привести к потере данных!"
 
-#: src/command.c:137 src/main.c:191
+#: src/command.c:137 src/main.c:208
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "не удалось выполнить: (%s) %s"

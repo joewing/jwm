@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-02-27 19:00-0600\n"
+"POT-Creation-Date: 2014-03-02 12:57-0600\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -34,7 +34,7 @@ msgstr "Sluiten van dit venster forceren?"
 msgid "This may cause data to be lost!"
 msgstr "Dit kan verlies van data veroorzaken!"
 
-#: src/command.c:137 src/main.c:191
+#: src/command.c:137 src/main.c:208
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "uitvoeren mislukt: (%s) %s"

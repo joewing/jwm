@@ -101,9 +101,14 @@ char *configPath = NULL;
 /** The main entry point. */
 int main(int argc, char *argv[])
 {
-
    char *temp;
    int x;
+   enum {
+      ACTION_RUN,
+      ACTION_RESTART,
+      ACTION_EXIT,
+      ACTION_RELOAD
+   } action;
 
    StartDebug();
 
@@ -118,6 +123,7 @@ int main(int argc, char *argv[])
    }
 
    /* Parse command line options. */
+   action = ACTION_RUN;
    for(x = 1; x < argc; x++) {
       if(!strcmp(argv[x], "-v")) {
          DisplayAbout();
@@ -130,14 +136,11 @@ int main(int argc, char *argv[])
          ParseConfig(configPath);
          DoExit(0);
       } else if(!strcmp(argv[x], "-restart")) {
-         SendRestart();
-         DoExit(0);
+         action = ACTION_RESTART;
       } else if(!strcmp(argv[x], "-exit")) {
-         SendExit();
-         DoExit(0);
+         action = ACTION_EXIT;
 		} else if(!strcmp(argv[x], "-reload")) {
-			SendReload();
-			DoExit(0);
+         action = ACTION_RELOAD;
       } else if(!strcmp(argv[x], "-display") && x + 1 < argc) {
          displayString = argv[++x];
       } else {
@@ -145,6 +148,20 @@ int main(int argc, char *argv[])
          DisplayHelp();
          DoExit(1);
       }
+   }
+
+   switch(action) {
+   case ACTION_RESTART:
+      SendRestart();
+      DoExit(0);
+   case ACTION_EXIT:
+      SendExit();
+      DoExit(0);
+   case ACTION_RELOAD:
+      SendReload();
+      DoExit(0);
+   default:
+      break;
    }
 
 #if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS)

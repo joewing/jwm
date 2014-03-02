@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-02-27 19:00-0600\n"
+"POT-Creation-Date: 2014-03-02 12:57-0600\n"
 "PO-Revision-Date: 2013-06-27 15:00-0300\n"
 "Last-Translator: Víctor Martínez <vikmz@myopera.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -39,7 +39,7 @@ msgstr "¿Finalizar esta ventana?"
 msgid "This may cause data to be lost!"
 msgstr "¡Esto puede causar pérdida de datos!"
 
-#: src/command.c:137 src/main.c:191
+#: src/command.c:137 src/main.c:208
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "exec falló: (%s) %s"

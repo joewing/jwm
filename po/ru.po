@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-03-02 12:57-0600\n"
+"POT-Creation-Date: 2014-03-04 18:36-0600\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -16,16 +16,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/background.c:135
+#: src/background.c:132
 msgid "no value specified for background"
 msgstr "не задано значение для цвета фона"
 
-#: src/background.c:151
+#: src/background.c:148
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "неизвестный тип фона: \"%s\""
 
-#: src/background.c:286
+#: src/background.c:274
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "фоновое изображение не найдено: \"%s\""

@@ -45,7 +45,6 @@ static BackgroundNode *defaultBackground;
 /** The last background loaded. */
 static BackgroundNode *lastBackground;
 
-static void LoadSolidBackground(BackgroundNode *bp);
 static void LoadGradientBackground(BackgroundNode *bp);
 static void LoadImageBackground(BackgroundNode *bp);
 
@@ -68,8 +67,6 @@ void StartupBackgrounds(void)
       /* Load background data. */
       switch(bp->type) {
       case BACKGROUND_SOLID:
-         LoadSolidBackground(bp);
-         break;
       case BACKGROUND_GRADIENT:
          LoadGradientBackground(bp);
          break;
@@ -209,22 +206,6 @@ void LoadBackground(int desktop)
 
 }
 
-/** Load a solid background. */
-void LoadSolidBackground(BackgroundNode *bp)
-{
-
-   XColor c;
-
-   ParseColor(bp->value, &c);
-
-   /* Create the pixmap. */
-   bp->pixmap = JXCreatePixmap(display, rootWindow, 1, 1, rootDepth);
-
-   JXSetForeground(display, rootGC, c.pixel);
-   JXDrawPoint(display, bp->pixmap, rootGC, 0, 0);
-
-}
-
 /** Load a gradient background. */
 void LoadGradientBackground(BackgroundNode *bp)
 {
@@ -236,37 +217,44 @@ void LoadGradientBackground(BackgroundNode *bp)
    int len;
 
    sep = strchr(bp->value, ':');
-   if(!sep) {
-      bp->pixmap = None;
-      return;
+   if(sep) {
+
+      /* Gradient background. */
+
+      /* Get the first color. */
+      len = (int)(sep - bp->value);
+      temp = AllocateStack(len + 1);
+      memcpy(temp, bp->value, len);
+      temp[len] = 0;
+      ParseColor(temp, &color1);
+      ReleaseStack(temp);
+
+      /* Get the second color. */
+      len = strlen(sep + 1);
+      temp = AllocateStack(len + 1);
+      memcpy(temp, sep + 1, len);
+      temp[len] = 0;
+      ParseColor(temp, &color2);
+      ReleaseStack(temp);
+
+   } else {
+
+      /* Solid background. */
+      ParseColor(bp->value, &color1);
+      color2.pixel = color1.pixel;
+
    }
 
-   /* Get the first color. */
-   len = (int)(sep - bp->value);
-   temp = AllocateStack(len + 1);
-   memcpy(temp, bp->value, len);
-   temp[len] = 0;
-   ParseColor(temp, &color1);
-   ReleaseStack(temp);
-
-   /* Get the second color. */
-   len = strlen(sep + 1);
-   temp = AllocateStack(len + 1);
-   memcpy(temp, sep + 1, len);
-   temp[len] = 0;
-   ParseColor(temp, &color2);
-   ReleaseStack(temp);
-
-   bp->pixmap = JXCreatePixmap(display, rootWindow,
-                               rootWidth, rootHeight, rootDepth);
-
+   /* Create the background pixmap. */
    if(color1.pixel == color2.pixel) {
+      bp->pixmap = JXCreatePixmap(display, rootWindow, 1, 1, rootDepth);
       JXSetForeground(display, rootGC, color1.pixel);
-      JXFillRectangle(display, bp->pixmap, rootGC,
-                      0, 0, rootWidth, rootHeight);
+      JXDrawPoint(display, bp->pixmap, rootGC, 0, 0);
    } else {
+      bp->pixmap = JXCreatePixmap(display, rootWindow, 1, rootHeight,
+                                  rootDepth);
       DrawHorizontalGradient(bp->pixmap, rootGC, color1.pixel,
-                             color2.pixel, 0, 0, rootWidth, rootHeight);
+                             color2.pixel, 0, 0, 1, rootHeight);
    }
 
 }
@@ -311,4 +299,3 @@ void LoadImageBackground(BackgroundNode *bp)
    DestroyIcon(ip);
 
 }
-

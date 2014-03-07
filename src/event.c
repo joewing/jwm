@@ -289,6 +289,7 @@ void ProcessEvent(XEvent *event)
 void DiscardMotionEvents(XEvent *event, Window w)
 {
    XEvent temp;
+   JXSync(display, False);
    while(JXCheckTypedEvent(display, MotionNotify, &temp)) {
       UpdateTime(&temp);
       SetMousePosition(temp.xmotion.x_root, temp.xmotion.y_root,
@@ -302,6 +303,7 @@ void DiscardMotionEvents(XEvent *event, Window w)
 /** Discard key events for the specified window. */
 void DiscardKeyEvents(XEvent *event, Window w)
 {
+   JXSync(display, False);
    while(JXCheckTypedWindowEvent(display, w, KeyPress, event)) {
       UpdateTime(event);
    }

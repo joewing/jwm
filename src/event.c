@@ -1139,6 +1139,14 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
       Debug("bad _NET_WM_STATE action: %ld", event->data.l[0]);
       break;
    }
+
+   /* Update _NET_WM_STATE if needed.
+    * The state update is handled elsewhere for the other actions.
+    */
+   if(actionNolist | actionNopager | actionAbove | actionBelow) {
+      WriteState(np);
+   }
+
 }
 
 /** Handle a _NET_REQUEST_FRAME_EXTENTS request. */

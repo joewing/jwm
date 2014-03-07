@@ -70,6 +70,7 @@ static char CheckBottomValid(const RectangleType *client,
                              const RectangleType *bottom);
 
 static void SignalMove(const TimeType *now, int x, int y, Window w, void *data);
+static void UpdateDesktop(const TimeType *now);
 
 /** Callback for stopping moves. */
 void MoveController(int wasDestroyed)
@@ -92,7 +93,7 @@ void MoveController(int wasDestroyed)
 }
 
 /** Move a client window. */
-char MoveClient(ClientNode *np, int startx, int starty, int snap)
+char MoveClient(ClientNode *np, int startx, int starty)
 {
 
    XEvent event;
@@ -133,10 +134,7 @@ char MoveClient(ClientNode *np, int startx, int starty, int snap)
    starty -= north;
 
    currentClient = np;
-   atTop = 0;
-   atBottom = 0;
-   atLeft = 0;
-   atRight = 0;
+   atTop = atBottom = atLeft = atRight = 0;
    doMove = 0;
    for(;;) {
 
@@ -164,11 +162,18 @@ char MoveClient(ClientNode *np, int startx, int starty, int snap)
          np->x = event.xmotion.x_root - startx;
          np->y = event.xmotion.y_root - starty;
 
-         GetCurrentTime(&moveTime);
-         atLeft = 0;
-         atTop = 0;
-         atRight = 0;
-         atBottom = 0;
+         /* Get the move time used for desktop switching. */
+         if(!(atLeft | atTop | atRight | atBottom)) {
+            if(event.xmotion.state & Mod1Mask) {
+               moveTime.seconds = 0;
+               moveTime.ms = 0;
+            } else {
+               GetCurrentTime(&moveTime);
+            }
+         }
+
+         /* Determine if we are at a border for desktop switching. */
+         atLeft = atTop = atRight = atBottom = 0;
          if(event.xmotion.x_root == 0) {
             atLeft = 1;
          } else if(event.xmotion.x_root == rootWidth - 1) {
@@ -180,7 +185,15 @@ char MoveClient(ClientNode *np, int startx, int starty, int snap)
             atBottom = 1;
          }
 
-         if(snap) {
+         if(event.xmotion.state & Mod1Mask) {
+            /* Switch desktops immediately if alt is pressed. */
+            if(atLeft | atRight | atTop | atBottom) {
+               TimeType now;
+               GetCurrentTime(&now);
+               UpdateDesktop(&now);
+            }
+         } else {
+            /* If alt is not pressed, snap to borders. */
             DoSnap(np);
          }
 
@@ -775,15 +788,20 @@ char CheckBottomValid(const RectangleType *client,
 /** Switch desktops if appropriate. */
 void SignalMove(const TimeType *now, int x, int y, Window w, void *data)
 {
+   UpdateDesktop(now);
+}
 
+/** Switch to the specified desktop. */
+void UpdateDesktop(const TimeType *now)
+{
    if(settings.desktopDelay == 0) {
       return;
    }
    if(GetTimeDifference(now, &moveTime) < settings.desktopDelay) {
       return;
    }
-
    moveTime = *now;
+
    if(atLeft && LeftDesktop()) {
       SetClientDesktop(currentClient, currentDesktop);
       RestackClients();
@@ -797,6 +815,4 @@ void SignalMove(const TimeType *now, int x, int y, Window w, void *data)
       SetClientDesktop(currentClient, currentDesktop);
       RestackClients();
    }
-
 }
-

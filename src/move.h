@@ -16,10 +16,9 @@ struct ClientNode;
  * @param np The client to move.
  * @param startx The starting mouse x-coordinate (window relative).
  * @param starty The starting mouse y-coordinate (window relative).
- * @param snap 1 to do edge snapping, 0 otherwise.
  * @return 1 if the client moved, 0 otherwise.
  */
-char MoveClient(struct ClientNode *np, int startx, int starty, int snap);
+char MoveClient(struct ClientNode *np, int startx, int starty);
 
 /** Move a client window using the keyboard (mouse optional).
  * @param np The client to move.

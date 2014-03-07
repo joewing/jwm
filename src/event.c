@@ -348,7 +348,7 @@ void HandleButtonEvent(const XButtonEvent *event)
             RaiseClient(np);
             if(mask == Mod1Mask) {
                GetBorderSize(&np->state, &north, &south, &east, &west);
-               MoveClient(np, event->x + west, event->y + north, 0);
+               MoveClient(np, event->x + west, event->y + north);
             }
             break;
          case Button3:
@@ -1323,7 +1323,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
    /* Middle click starts a move unless it's over the maximize button. */
    action = GetBorderActionType(np, event->x, event->y);
    if(event->button == Button2 && action != BA_MAXIMIZE) {
-      MoveClient(np, event->x, event->y, (event->state & Mod1Mask) ? 0 : 1);
+      MoveClient(np, event->x, event->y);
       return;
    }
 
@@ -1357,8 +1357,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
                MaximizeClientDefault(np);
                doubleClickActive = 0;
             } else {
-               if(MoveClient(np, event->x, event->y,
-                             (event->state & Mod1Mask) ? 0 : 1)) {
+               if(MoveClient(np, event->x, event->y)) {
                   doubleClickActive = 0;
                } else {
                   doubleClickActive = 1;

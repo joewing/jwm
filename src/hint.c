@@ -298,11 +298,12 @@ void ReadClientInfo(ClientNode *np, char alreadyMapped)
    /* Read WM protocols. */
    ReadWMProtocols(np->window, &np->state);
 
-   /* Set the client to the same layer as its owner. */
+   /* Make sure this client is on at least as high of a layer
+    * as its owner. */
    if(np->owner != None) {
       pp = FindClientByWindow(np->owner);
       if(pp) {
-         np->state.layer = pp->state.layer;
+         np->state.layer = Max(pp->state.layer, np->state.layer);
       }
    }
 

@@ -244,8 +244,9 @@ void EventLoop(void)
 
    /* Loop processing events until it's time to exit. */
    while(JLIKELY(!shouldExit)) {
-      WaitForEvent(&event);
-      ProcessEvent(&event);
+      if(JLIKELY(WaitForEvent(&event))) {
+         ProcessEvent(&event);
+      }
    }
 
    /* Process events one last time. */
@@ -262,8 +263,9 @@ void EventLoop(void)
             }
          }
       }
-      WaitForEvent(&event);
-      ProcessEvent(&event);
+      if(WaitForEvent(&event)) {
+         ProcessEvent(&event);
+      }
    }
 
 }

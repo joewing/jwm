@@ -81,7 +81,7 @@ static void HandleShapeEvent(const XShapeEvent *event);
 #endif
 
 /** Wait for an event and process it. */
-void WaitForEvent(XEvent *event)
+char WaitForEvent(XEvent *event)
 {
 
    struct timeval timeout;
@@ -116,7 +116,7 @@ void WaitForEvent(XEvent *event)
             Signal();
          }
          if(JUNLIKELY(shouldExit)) {
-            return;
+            return 0;
          }
       }
 
@@ -222,6 +222,8 @@ void WaitForEvent(XEvent *event)
       }
 
    } while(handled && !shouldExit);
+
+   return !handled;
 
 }
 

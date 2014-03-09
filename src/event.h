@@ -20,8 +20,10 @@ typedef void (*SignalCallback)(const struct TimeType *now,
 /** Last event time. */
 extern Time eventTime;
 
-/** Wait for an event and process it. */
-void WaitForEvent(XEvent *event);
+/** Wait for an event and process it.
+ * @return 1 if there is an event to process, 0 otherwise.
+ */
+char WaitForEvent(XEvent *event);
 
 /** Process an event.
  * @param event The event to process.

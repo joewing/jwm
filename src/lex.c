@@ -1,7 +1,7 @@
 /**
  * @file lex.c
  * @author Joe Wingbermuehle
- * @date 2004-2006
+ * @date 2004-2014
  *
  * @brief XML lexer functions.
  *
@@ -93,9 +93,10 @@ static const char *TOKEN_MAP[] = {
    "WindowStyle"
 };
 
-static TokenNode *head, *current;
+static TokenNode *head;
 
-static TokenNode *CreateNode(TokenNode *parent, const char *file,
+static TokenNode *CreateNode(TokenNode *current,
+                             const char *file,
                              unsigned int line);
 static AttributeNode *CreateAttribute(TokenNode *np); 
 
@@ -123,8 +124,8 @@ static TokenType LookupType(const char *name, TokenNode *np);
 /** Tokenize a data. */
 TokenNode *Tokenize(const char *line, const char *fileName)
 {
-   TokenNode *np;
    AttributeNode *ap;
+   TokenNode *current;
    char *temp;
    unsigned int x;
    unsigned int offset;
@@ -138,12 +139,12 @@ TokenNode *Tokenize(const char *line, const char *fileName)
    lineNumber = 1;
 
    x = 0;
-   /* Skip any initial white space */
+   /* Skip any initial white space. */
    while(IsSpace(line[x], &lineNumber)) {
       x += 1;
    }
 
-   /* Skip any XML stuff */
+   /* Skip any XML stuff. */
    if(!strncmp(line + x, "<?", 2)) {
       while(line[x]) {
          if(line[x] == '\n') {
@@ -157,10 +158,13 @@ TokenNode *Tokenize(const char *line, const char *fileName)
       }
    }
 
+   /* Process the XML data. */
    while(line[x]) {
 
+      /* Skip comments and white space. */
       do {
 
+         /* Skip white space. */
          while(IsSpace(line[x], &lineNumber)) {
             x += 1;
          }
@@ -180,31 +184,29 @@ TokenNode *Tokenize(const char *line, const char *fileName)
                x += 1;
             }
          }
+
       } while(found);
 
       switch(line[x]) {
       case '<':
          x += 1;
          if(line[x] == '/') {
+
+            /* Close tag. */
             x += 1;
             temp = ReadElementName(line + x);
-
             if(current) {
-
                if(JLIKELY(temp)) {
-
                   if(JUNLIKELY(current->type != LookupType(temp, NULL))) {
                      Warning(_("%s[%u]: close tag \"%s\" does not "
                              "match open tag \"%s\""),
                              fileName, lineNumber, temp,
                              GetTokenName(current));
                   }
-
                } else {
                   Warning(_("%s[%u]: unexpected and invalid close tag"),
                           fileName, lineNumber);
                }
-
                current = current->parent;
             } else {
                if(temp) {
@@ -214,28 +216,30 @@ TokenNode *Tokenize(const char *line, const char *fileName)
                   Warning(_("%s[%u]: invalid close tag"), fileName, lineNumber);
                }
             }
-
             if(temp) {
                x += strlen(temp);
                Release(temp);
             }
 
          } else {
-            np = current;
-            current = NULL;
-            np = CreateNode(np, fileName, lineNumber);
+
+            /* Open tag. */
+            current = CreateNode(current, fileName, lineNumber);
             temp = ReadElementName(line + x);
             if(JLIKELY(temp)) {
                x += strlen(temp);
-               LookupType(temp, np);
+               LookupType(temp, current);
                Release(temp);
             } else {
                Warning(_("%s[%u]: invalid open tag"), fileName, lineNumber);
             }
+
          }
          inElement = 1;
          break;
       case '/':
+
+         /* End of open/close tag. */
          if(inElement) {
             x += 1;
             if(JLIKELY(line[x] == '>' && current)) {
@@ -248,14 +252,20 @@ TokenNode *Tokenize(const char *line, const char *fileName)
          } else {
             goto ReadDefault;
          }
+
          break;
       case '>':
+
+         /* End of open tag. */
          x += 1;
          inElement = 0;
          break;
+
       default:
 ReadDefault:
          if(inElement) {
+
+            /* In the open tag; read attributes. */
             ap = CreateAttribute(current);
             ap->name = ReadElementName(line + x);
             if(ap->name) {
@@ -273,7 +283,10 @@ ReadDefault:
                   x += 1;
                }
             }
+
          } else {
+
+            /* In tag body; read text. */
             temp = ReadElementValue(line + x, fileName, &offset, &lineNumber);
             x += offset;
             if(temp) {
@@ -514,7 +527,7 @@ const char *GetTokenTypeName(TokenType type) {
 }
 
 /** Create an empty XML tag node. */
-TokenNode *CreateNode(TokenNode *parent, const char *file,
+TokenNode *CreateNode(TokenNode *current, const char *file,
                       unsigned int line)
 {
    TokenNode *np;
@@ -525,7 +538,7 @@ TokenNode *CreateNode(TokenNode *parent, const char *file,
    np->attributes = NULL;
    np->subnodeHead = NULL;
    np->subnodeTail = NULL;
-   np->parent = parent;
+   np->parent = current;
    np->next = NULL;
 
    np->fileName = Allocate(strlen(file) + 1);
@@ -533,20 +546,30 @@ TokenNode *CreateNode(TokenNode *parent, const char *file,
    np->line = line;
    np->invalidName = NULL;
 
-   if(!head) {
-      head = np;
-   }
-   if(parent) {
-      if(parent->subnodeHead) {
-         parent->subnodeTail->next = np;
+   if(current) {
+
+      /* A node contained inside another node. */
+      if(current->subnodeHead) {
+         current->subnodeTail->next = np;
       } else {
-         parent->subnodeHead = np;
+         current->subnodeHead = np;
       }
-      parent->subnodeTail = np;
-   } else if(current) {
-      current->next = np;
+      current->subnodeTail = np;
+
+   } else if(!head) {
+
+      /* The top-level node. */
+      head = np;
+
+   } else {
+
+      /* A duplicate top-level node.
+       * This is probably a configuration error.
+       */
+      ReleaseTokens(np);
+      np = head->subnodeTail ? head->subnodeTail : head;
+
    }
-   current = np;
 
    return np;
 }
@@ -563,3 +586,46 @@ AttributeNode *CreateAttribute(TokenNode *np)
    return ap;
 }
 
+/** Release a token list. */
+void ReleaseTokens(TokenNode *np)
+{
+
+   AttributeNode *ap;
+   TokenNode *tp;
+
+   while(np) {
+      tp = np->next;
+
+      while(np->attributes) {
+         ap = np->attributes->next;
+         if(np->attributes->name) {
+            Release(np->attributes->name);
+         }
+         if(np->attributes->value) {
+            Release(np->attributes->value);
+         }
+         Release(np->attributes);
+         np->attributes = ap;
+      }
+
+      if(np->subnodeHead) {
+         ReleaseTokens(np->subnodeHead);
+      }
+
+      if(np->value) {
+         Release(np->value);
+      }
+
+      if(np->invalidName) {
+         Release(np->invalidName);
+      }
+
+      if(np->fileName) {
+         Release(np->fileName);
+      }
+
+      Release(np);
+      np = tp;
+   }
+
+}

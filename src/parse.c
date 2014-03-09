@@ -191,7 +191,6 @@ static void ParseFocusModel(const TokenNode *tp);
 
 static void ParseGradient(const char *value, ColorType a, ColorType b);
 static char *FindAttribute(AttributeNode *ap, const char *name);
-static void ReleaseTokens(TokenNode *np);
 static unsigned int ParseUnsigned(const TokenNode *tp, const char *str);
 static unsigned int ParseOpacity(const TokenNode *tp, const char *str);
 static WinLayerType ParseLayer(const TokenNode *tp, const char *str);
@@ -243,50 +242,6 @@ char ParseFile(const char *fileName, int depth)
    ReleaseTokens(tokens);
 
    return 1;
-
-}
-
-/** Release a token list. */
-void ReleaseTokens(TokenNode *np)
-{
-
-   AttributeNode *ap;
-   TokenNode *tp;
-
-   while(np) {
-      tp = np->next;
-
-      while(np->attributes) {
-         ap = np->attributes->next;
-         if(np->attributes->name) {
-            Release(np->attributes->name);
-         }
-         if(np->attributes->value) {
-            Release(np->attributes->value);
-         }
-         Release(np->attributes);
-         np->attributes = ap;
-      }
-
-      if(np->subnodeHead) {
-         ReleaseTokens(np->subnodeHead);
-      }
-
-      if(np->value) {
-         Release(np->value);
-      }
-
-      if(np->invalidName) {
-         Release(np->invalidName);
-      }
-
-      if(np->fileName) {
-         Release(np->fileName);
-      }
-
-      Release(np);
-      np = tp;
-   }
 
 }
 

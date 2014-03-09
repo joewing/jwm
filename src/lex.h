@@ -136,5 +136,9 @@ const char *GetTokenName(const TokenNode *tp);
  */
 const char *GetTokenTypeName(TokenType type);
 
-#endif /* LEX_H */
+/** Release token nodes.
+ * @param np The top-level token to release.
+ */
+void ReleaseTokens(TokenNode *np);
 
+#endif /* LEX_H */

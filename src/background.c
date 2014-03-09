@@ -126,6 +126,7 @@ void SetBackground(int desktop, const char *type, const char *value)
 
    BackgroundType bgType;
    BackgroundNode *bp;
+   BackgroundNode **bpp;
 
    /* Make sure we have a value. */
    if(JUNLIKELY(!value)) {
@@ -147,6 +148,22 @@ void SetBackground(int desktop, const char *type, const char *value)
    } else {
       Warning(_("invalid background type: \"%s\""), type);
       return;
+   }
+
+   /* Remove the existing background if this is a duplicate.
+    * This allows later settings to override older settings.
+    * Note that there can be at most one duplicate.
+    */
+   bpp = &backgrounds;
+   while(*bpp) {
+      bp = *bpp;
+      if(bp->desktop == desktop) {
+         *bpp = bp->next;
+         Release(bp->value);
+         Release(bp);
+         break;
+      }
+      bpp = &bp->next;
    }
 
    /* Create the background node. */

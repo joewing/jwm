@@ -314,6 +314,17 @@ void DiscardKeyEvents(XEvent *event, Window w)
 /** Process a selection clear event. */
 char HandleSelectionClear(const XSelectionClearEvent *event)
 {
+   char *name;
+   
+   if ((name = XGetAtomName(display, event->selection))) {
+      if (strncmp(name, "WM_S", 4) == 0) {
+	 /* lost WM selection - must exit */
+	 XFree(name);
+	 shouldExit = 1;
+	 return 1;
+      }
+      XFree(name);
+   }
    return HandleDockSelectionClear(event);
 }
 

@@ -299,6 +299,16 @@ void OpenConnection(void)
 
 }
 
+static Bool selectionReleased(Display *d, XEvent *e, XPointer arg)
+{
+   if (e->type == DestroyNotify) {
+      if (e->xdestroywindow.window == (Window)arg) {
+	 return True;
+      }
+   }
+   return False;
+}
+
 /** Prepare the connection. */
 void StartupConnection(void)
 {
@@ -312,6 +322,10 @@ void StartupConnection(void)
    int renderError;
 #endif
    struct sigaction sa;
+   char name[32];
+   Atom wm_sn;
+   Window wm_sn_owner, selwin;
+   XClientMessageEvent mev;
 
    initializing = 1;
    OpenConnection();
@@ -319,6 +333,41 @@ void StartupConnection(void)
 #if 0
    XSynchronize(display, True);
 #endif
+
+   snprintf(name, 32, "WM_S%d", rootScreen);
+   wm_sn = JXInternAtom(display, name, False);
+   selwin = JXCreateSimpleWindow(display, rootWindow,
+		   0, rootHeight, 1, 1, 0, 0L, 0L);
+
+   GrabServer();
+   wm_sn_owner = JXGetSelectionOwner(display, wm_sn);
+   if (wm_sn_owner != None) {
+      JXSelectInput(display, wm_sn_owner, StructureNotifyMask);
+      JXSync(display, False);
+   }
+   UngrabServer();
+
+   JXSetSelectionOwner(display, wm_sn, selwin, CurrentTime);
+
+   if (wm_sn_owner != None) {
+      XEvent event_return;
+      XIfEvent(display, &event_return, &selectionReleased,
+		(XPointer) wm_sn_owner);
+      wm_sn_owner = None;
+   }
+
+   mev.display = display;
+   mev.type = ClientMessage;
+   mev.window = rootWindow;
+   mev.message_type = JXInternAtom(display, "MANAGER", False);
+   mev.format = 32;
+   mev.data.l[0] = CurrentTime; /* FIXME: timestamp */
+   mev.data.l[1] = wm_sn;
+   mev.data.l[2] = selwin;
+   mev.data.l[3] = 2;
+   mev.data.l[4] = 0;
+   JXSendEvent(display, rootWindow, False, StructureNotifyMask, (XEvent *) &mev);
+   JXSync(display, False);
 
    JXSetErrorHandler(ErrorHandler);
 

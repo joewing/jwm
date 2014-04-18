@@ -360,7 +360,6 @@ void StartupConnection(void)
       /* Note that we need to wait for the current selection owner
        * to exit before we can expect to select SubstructureRedirectMask. */
       XIfEvent(display, &event, SelectionReleased, (XPointer)&owner);
-      usleep(500000);   /* Wait for half a second. */
       JXSync(display, False);
    }
 
@@ -440,7 +439,6 @@ void CloseConnection(void)
 /** Close the X server connection. */
 void ShutdownConnection(void)
 {
-   JXDestroyWindow(display, supportingWindow);
    CloseConnection();
 }
 

@@ -19,6 +19,8 @@ extern Colormap rootColormap;
 extern Visual *rootVisual;
 extern GC rootGC;
 extern int colormapCount;
+extern Window supportingWindow;
+extern Atom managerSelection;
 
 extern char *exitCommand;
 

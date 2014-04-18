@@ -53,6 +53,8 @@ Colormap rootColormap;
 Visual *rootVisual;
 GC rootGC;
 int colormapCount;
+Window supportingWindow;
+Atom managerSelection;
 
 char shouldExit = 0;
 char shouldRestart = 0;
@@ -84,6 +86,7 @@ static void Destroy(void);
 
 static void OpenConnection(void);
 static void CloseConnection(void);
+static Bool SelectionReleased(Display *d, XEvent *e, XPointer arg);
 static void StartupConnection(void);
 static void ShutdownConnection(void);
 static void EventLoop(void);
@@ -139,7 +142,7 @@ int main(int argc, char *argv[])
          action = ACTION_RESTART;
       } else if(!strcmp(argv[x], "-exit")) {
          action = ACTION_EXIT;
-		} else if(!strcmp(argv[x], "-reload")) {
+      } else if(!strcmp(argv[x], "-reload")) {
          action = ACTION_RELOAD;
       } else if(!strcmp(argv[x], "-display") && x + 1 < argc) {
          displayString = argv[++x];
@@ -299,11 +302,12 @@ void OpenConnection(void)
 
 }
 
-static Bool selectionReleased(Display *d, XEvent *e, XPointer arg)
+/** Predicate for XIfEvent to determine if we got the WM_Sn selection. */
+Bool SelectionReleased(Display *d, XEvent *e, XPointer arg)
 {
-   if (e->type == DestroyNotify) {
-      if (e->xdestroywindow.window == (Window)arg) {
-	 return True;
+   if(e->type == DestroyNotify) {
+      if(e->xdestroywindow.window == *(Window*)arg) {
+         return True;
       }
    }
    return False;
@@ -323,9 +327,8 @@ void StartupConnection(void)
 #endif
    struct sigaction sa;
    char name[32];
-   Atom wm_sn;
-   Window wm_sn_owner, selwin;
-   XClientMessageEvent mev;
+   Window owner;
+   XEvent event;
 
    initializing = 1;
    OpenConnection();
@@ -334,39 +337,44 @@ void StartupConnection(void)
    XSynchronize(display, True);
 #endif
 
-   snprintf(name, 32, "WM_S%d", rootScreen);
-   wm_sn = JXInternAtom(display, name, False);
-   selwin = JXCreateSimpleWindow(display, rootWindow,
-		   0, rootHeight, 1, 1, 0, 0L, 0L);
+   /* Create the supporting window used to verify JWM is running. */
+   supportingWindow = JXCreateSimpleWindow(display, rootWindow,
+                                           0, 0, 1, 1, 0, 0, 0);
 
+   /* Get the atom used for the window manager selection. */
+   snprintf(name, 32, "WM_S%d", rootScreen);
+   managerSelection = JXInternAtom(display, name, False);
+
+   /* Get the current window manager and take the selection. */
    GrabServer();
-   wm_sn_owner = JXGetSelectionOwner(display, wm_sn);
-   if (wm_sn_owner != None) {
-      JXSelectInput(display, wm_sn_owner, StructureNotifyMask);
-      JXSync(display, False);
+   owner = JXGetSelectionOwner(display, managerSelection);
+   if(owner != None) {
+      JXSelectInput(display, owner, StructureNotifyMask);
    }
+   JXSetSelectionOwner(display, managerSelection,
+                       supportingWindow, CurrentTime);
    UngrabServer();
 
-   JXSetSelectionOwner(display, wm_sn, selwin, CurrentTime);
-
-   if (wm_sn_owner != None) {
-      XEvent event_return;
-      XIfEvent(display, &event_return, &selectionReleased,
-		(XPointer) wm_sn_owner);
-      wm_sn_owner = None;
+   /* Wait for the current selection owner to give up the selection. */
+   if(owner != None) {
+      /* Note that we need to wait for the current selection owner
+       * to exit before we can expect to select SubstructureRedirectMask. */
+      XIfEvent(display, &event, SelectionReleased, (XPointer)&owner);
+      usleep(500000);   /* Wait for half a second. */
+      JXSync(display, False);
    }
 
-   mev.display = display;
-   mev.type = ClientMessage;
-   mev.window = rootWindow;
-   mev.message_type = JXInternAtom(display, "MANAGER", False);
-   mev.format = 32;
-   mev.data.l[0] = CurrentTime; /* FIXME: timestamp */
-   mev.data.l[1] = wm_sn;
-   mev.data.l[2] = selwin;
-   mev.data.l[3] = 2;
-   mev.data.l[4] = 0;
-   JXSendEvent(display, rootWindow, False, StructureNotifyMask, (XEvent *) &mev);
+   event.xclient.display = display;
+   event.xclient.type = ClientMessage;
+   event.xclient.window = rootWindow;
+   event.xclient.message_type = JXInternAtom(display, "MANAGER", False);
+   event.xclient.format = 32;
+   event.xclient.data.l[0] = CurrentTime;
+   event.xclient.data.l[1] = managerSelection;
+   event.xclient.data.l[2] = supportingWindow;
+   event.xclient.data.l[3] = 2;
+   event.xclient.data.l[4] = 0;
+   JXSendEvent(display, rootWindow, False, StructureNotifyMask, &event);
    JXSync(display, False);
 
    JXSetErrorHandler(ErrorHandler);
@@ -432,6 +440,7 @@ void CloseConnection(void)
 /** Close the X server connection. */
 void ShutdownConnection(void)
 {
+   JXDestroyWindow(display, supportingWindow);
    CloseConnection();
 }
 

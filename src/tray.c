@@ -27,7 +27,6 @@
 #define DEFAULT_TRAY_HEIGHT 32
 
 static TrayType *trays;
-static Window supportingWindow;
 static unsigned int trayCount;
 
 static void HandleTrayExpose(TrayType *tp, const XExposeEvent *event);
@@ -57,7 +56,6 @@ void InitializeTray(void)
 {
    trays = NULL;
    trayCount = 0;
-   supportingWindow = None;
 }
 
 /** Startup trays. */
@@ -190,11 +188,6 @@ void ShutdownTray(void)
       }
       JXDestroyWindow(display, tp->window);
       UnregisterCallback(SignalTray, tp);
-   }
-
-   if(supportingWindow != None) {
-      XDestroyWindow(display, supportingWindow);
-      supportingWindow = None;
    }
 
 }
@@ -1043,22 +1036,6 @@ TrayType *GetTrays(void)
 unsigned int GetTrayCount(void)
 {
    return trayCount;
-}
-
-/** Get a supporting window to use. */
-Window GetSupportingWindow(void)
-{
-
-   if(trays) {
-      return trays->window;
-   } else if(supportingWindow != None) {
-      return supportingWindow;
-   } else {
-      supportingWindow = JXCreateSimpleWindow(display, rootWindow,
-                                              0, 0, 1, 1, 0, 0, 0);
-      return supportingWindow;
-   }
-
 }
 
 /** Determine if a tray should autohide. */

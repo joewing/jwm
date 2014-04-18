@@ -210,13 +210,6 @@ TrayType *GetTrays(void);
  */
 unsigned int GetTrayCount(void);
 
-/** Get a window to use as the supporting window.
- * This is used by clients to validate that compliant window manager is
- * running.
- * @return The supporting window.
- */
-Window GetSupportingWindow(void);
-
 /** Process an event that may be for a tray.
  * @param event The event to process.
  * @return 1 if this event was for a tray, 0 otherwise.

@@ -12,7 +12,6 @@
 #include "hint.h"
 #include "client.h"
 #include "main.h"
-#include "tray.h"
 #include "desktop.h"
 #include "misc.h"
 #include "settings.h"
@@ -237,7 +236,7 @@ void StartupHints(void)
                     (unsigned char*)array, 2);
 
    /* _NET_WM_NAME */
-   win = GetSupportingWindow();
+   win = supportingWindow;
    JXChangeProperty(display, win, atoms[ATOM_NET_WM_NAME],
                     atoms[ATOM_UTF8_STRING], 8, PropModeReplace,
                     (unsigned char*)"JWM", 3);

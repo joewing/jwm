@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-03-04 18:36-0600\n"
+"POT-Creation-Date: 2014-04-17 21:40-0500\n"
 "PO-Revision-Date: 2013-05-31 14:19+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -13,16 +13,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-Language: French\n"
 
-#: src/background.c:132
+#: src/background.c:133
 msgid "no value specified for background"
 msgstr "Pas de valeur spécifiée pour le fond d'écran"
 
-#: src/background.c:148
+#: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "type de fond d'écran incorrect: \"%s\""
 
-#: src/background.c:274
+#: src/background.c:291
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "Image de fond d'écran introuvable: \"%s\""
@@ -35,7 +35,7 @@ msgstr "Éliminer la fenêtre?"
 msgid "This may cause data to be lost!"
 msgstr "Cela peut entraîner la perte de données!"
 
-#: src/command.c:137 src/main.c:208
+#: src/command.c:137 src/main.c:211
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "Échec de l'exécution: (%s) %s"
@@ -122,83 +122,83 @@ msgstr "ni touche ni code de touche spécifié"
 msgid "key binding: root menu %d not defined"
 msgstr "combinaison de touches: menu racine %d non défini"
 
-#: src/lex.c:197
+#: src/lex.c:201
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: la balise de fermeture \"%s\" ne coïncide pas avec la balise "
 "d'ouverture \"%s\""
 
-#: src/lex.c:204
+#: src/lex.c:207
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: balise de fermeture inattendue ou incorrecte"
 
-#: src/lex.c:211
+#: src/lex.c:213
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: balise de fermeture \"%s\" sans balise d'ouverture"
 
-#: src/lex.c:214
+#: src/lex.c:216
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: balise de fermeture incorrecte"
 
-#: src/lex.c:233
+#: src/lex.c:234
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: balise d'ouverture incorrecte"
 
-#: src/lex.c:246
+#: src/lex.c:250
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: balise incorrecte"
 
-#: src/lex.c:292
+#: src/lex.c:305
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: texte inattendu: \"%s\""
 
-#: src/lex.c:340
+#: src/lex.c:353
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entité incorrecte: \"%.8s\""
 
-#: src/lex.c:445 src/parse.c:1804
+#: src/lex.c:458 src/parse.c:1759
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1093
+#: src/parse.c:1048
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "Mode d'insertion incorrect: \"%s\""
 
-#: src/parse.c:1819
+#: src/parse.c:1774
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Balise incorrecte dans: %s"
 
-#: src/parse.c:1831
+#: src/parse.c:1786
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacité de menu incorrecte: %s"
 
-#: src/parse.c:1850
+#: src/parse.c:1805
 #, c-format
 msgid "invalid layer: %s"
 msgstr "plan de groupe incorrect: %s"
 
-#: src/parse.c:1867
+#: src/parse.c:1822
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "type de fond d'écran incorrect: %s"
 
-#: src/parse.c:1876
+#: src/parse.c:1831
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Balise incorrecte dans %s: %s"
 
-#: src/parse.c:1897
+#: src/parse.c:1852
 msgid "configuration error"
 msgstr "erreur de configuration"
 
@@ -247,27 +247,27 @@ msgstr "action de bouton de barre incorrect: \"%s\""
 msgid "tray button: root menu %d not defined"
 msgstr "Bouton de barre: menu racine %d non défini"
 
-#: src/tray.c:1099
+#: src/tray.c:1076
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "Largeur de barre incorrecte: %d"
 
-#: src/tray.c:1118
+#: src/tray.c:1095
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "Hauteur de barre incorrecte: %d"
 
-#: src/tray.c:1147
+#: src/tray.c:1124
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "Disposition de barre incorrecte: \"%s\""
 
-#: src/tray.c:1184
+#: src/tray.c:1161
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alignement horizontal de la barre incorrect: \"%s\""
 
-#: src/tray.c:1205
+#: src/tray.c:1182
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alignement vertical de la barre incorrect: \"%s\""

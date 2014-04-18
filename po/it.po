@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-03-04 18:36-0600\n"
+"POT-Creation-Date: 2014-04-17 21:40-0500\n"
 "PO-Revision-Date: 2013-07-25 16:40+0100\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -17,16 +17,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: src/background.c:132
+#: src/background.c:133
 msgid "no value specified for background"
 msgstr "Nessun valore specificato per lo sfondo"
 
-#: src/background.c:148
+#: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "Formato di sfondo non valido: \"%s\""
 
-#: src/background.c:274
+#: src/background.c:291
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "Immagine di sfondo non trovata: \"%s\""
@@ -39,7 +39,7 @@ msgstr "Chiudere questa finestra?"
 msgid "This may cause data to be lost!"
 msgstr "Questo può causare una perdita di dati!"
 
-#: src/command.c:137 src/main.c:208
+#: src/command.c:137 src/main.c:211
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "Esecuzione fallita: (%s) %s"
@@ -126,82 +126,82 @@ msgstr "Tasto o keycode non specificati per Key"
 msgid "key binding: root menu %d not defined"
 msgstr "Combinazione di tasti: root menu %d non definito"
 
-#: src/lex.c:197
+#: src/lex.c:201
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: tag di chiusura \"%s\" non corrisponde al tag di apertura \"%s\""
 
-#: src/lex.c:204
+#: src/lex.c:207
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: tag di chiusura inatteso e non valido"
 
-#: src/lex.c:211
+#: src/lex.c:213
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: tag di chiusura \"%s\" senza tag di apertura"
 
-#: src/lex.c:214
+#: src/lex.c:216
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: tag di chiusura non valido"
 
-#: src/lex.c:233
+#: src/lex.c:234
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: tag di apertura non valido"
 
-#: src/lex.c:246
+#: src/lex.c:250
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: tag non valido"
 
-#: src/lex.c:292
+#: src/lex.c:305
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: testo non atteso: \"%s\""
 
-#: src/lex.c:340
+#: src/lex.c:353
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entità non valida: \"%.8s\""
 
-#: src/lex.c:445 src/parse.c:1804
+#: src/lex.c:458 src/parse.c:1759
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1093
+#: src/parse.c:1048
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "Modo di inserimento non valido: \"%s\""
 
-#: src/parse.c:1819
+#: src/parse.c:1774
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Impostazione non valida: %s"
 
-#: src/parse.c:1831
+#: src/parse.c:1786
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "Opacità non valida: %s"
 
-#: src/parse.c:1850
+#: src/parse.c:1805
 #, c-format
 msgid "invalid layer: %s"
 msgstr "Layer non valido: %s"
 
-#: src/parse.c:1867
+#: src/parse.c:1822
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "Tipo di status della finestra non valido: %s"
 
-#: src/parse.c:1876
+#: src/parse.c:1831
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Tag non valido in %s: %s"
 
-#: src/parse.c:1897
+#: src/parse.c:1852
 msgid "configuration error"
 msgstr "Errore di configurazione"
 
@@ -250,27 +250,27 @@ msgstr "Azione del TrayButton non valida:  \"%s\""
 msgid "tray button: root menu %d not defined"
 msgstr "Tray button: root menu %d non definito"
 
-#: src/tray.c:1099
+#: src/tray.c:1076
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "Larghezza del vassoio non valida: %d"
 
-#: src/tray.c:1118
+#: src/tray.c:1095
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "Altezza del vassoio non valida: %d"
 
-#: src/tray.c:1147
+#: src/tray.c:1124
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "Disposizione del vassoio non valida: \"%s\""
 
-#: src/tray.c:1184
+#: src/tray.c:1161
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "Allineamento orizzontale del vassoio non valido: \"%s\""
 
-#: src/tray.c:1205
+#: src/tray.c:1182
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "Allineamento verticale del vassoio non valido: \"%s\""

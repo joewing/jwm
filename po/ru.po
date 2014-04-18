@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-03-04 18:36-0600\n"
+"POT-Creation-Date: 2014-04-17 21:40-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -16,16 +16,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/background.c:132
+#: src/background.c:133
 msgid "no value specified for background"
 msgstr "не задано значение для цвета фона"
 
-#: src/background.c:148
+#: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "неизвестный тип фона: \"%s\""
 
-#: src/background.c:274
+#: src/background.c:291
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "фоновое изображение не найдено: \"%s\""
@@ -38,7 +38,7 @@ msgstr "Ликвидировать окно?"
 msgid "This may cause data to be lost!"
 msgstr "Это может привести к потере данных!"
 
-#: src/command.c:137 src/main.c:208
+#: src/command.c:137 src/main.c:211
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "не удалось выполнить: (%s) %s"
@@ -125,81 +125,81 @@ msgstr "ни символ, ни код клавиши не заданы в тэ�
 msgid "key binding: root menu %d not defined"
 msgstr "назначение клавиши: главное меню %d не задано"
 
-#: src/lex.c:197
+#: src/lex.c:201
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: закрывающий тэг \"%s\" не соответствует открывающему \"%s\""
 
-#: src/lex.c:204
+#: src/lex.c:207
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: непонятный и неправильный закрывающий тэг"
 
-#: src/lex.c:211
+#: src/lex.c:213
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: закрывающий тэг \"%s\" без открывающего"
 
-#: src/lex.c:214
+#: src/lex.c:216
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: неправильный закрывающий тэг"
 
-#: src/lex.c:233
+#: src/lex.c:234
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: неправильный открывающий тэг"
 
-#: src/lex.c:246
+#: src/lex.c:250
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: неправильный тэг"
 
-#: src/lex.c:292
+#: src/lex.c:305
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: непонятный текст: \"%s\""
 
-#: src/lex.c:340
+#: src/lex.c:353
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
-#: src/lex.c:445 src/parse.c:1804
+#: src/lex.c:458 src/parse.c:1759
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1093
+#: src/parse.c:1048
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "недопустимое значение режима вставки: \"%s\""
 
-#: src/parse.c:1819
+#: src/parse.c:1774
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:1831
+#: src/parse.c:1786
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:1850
+#: src/parse.c:1805
 #, c-format
 msgid "invalid layer: %s"
 msgstr "недопустимое значение расположения окна: %s"
 
-#: src/parse.c:1867
+#: src/parse.c:1822
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "недопустимое значение типа статусного окна для перемещения: %s"
 
-#: src/parse.c:1876
+#: src/parse.c:1831
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:1897
+#: src/parse.c:1852
 msgid "configuration error"
 msgstr "ошибка конфигурации"
 
@@ -250,27 +250,27 @@ msgstr "недопустимое значение действия кнопки 
 msgid "tray button: root menu %d not defined"
 msgstr "кнопка запуска: главное меню %d не задано"
 
-#: src/tray.c:1099
+#: src/tray.c:1076
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "недопустимое значение ширины панели: %d"
 
-#: src/tray.c:1118
+#: src/tray.c:1095
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "недопустимое значение высоты панели: %d"
 
-#: src/tray.c:1147
+#: src/tray.c:1124
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "недопустимое значение расположения панели: \"%s\""
 
-#: src/tray.c:1184
+#: src/tray.c:1161
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "недопустимое значение горизонтального выравнивания панели: \"%s\""
 
-#: src/tray.c:1205
+#: src/tray.c:1182
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""

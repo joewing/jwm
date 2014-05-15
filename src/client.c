@@ -1245,6 +1245,11 @@ void ReparentClient(ClientNode *np, char notOwner)
       | ButtonMotionMask
       | KeyPressMask
       | KeyReleaseMask;
+   /* Make sure client doesn't muck with these. */
+   attrMask |= CWBackingStore;
+   attr.backing_store = NotUseful;
+   attrMask |= CWWinGravity;
+   attr.win_gravity = NorthWestGravity;
    JXChangeWindowAttributes(display, np->window, attrMask, &attr);
    JXSetWindowBorderWidth(display, np->window, 0);
 

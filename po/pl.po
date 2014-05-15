@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-04-17 21:40-0500\n"
+"POT-Creation-Date: 2014-05-15 12:31-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -44,6 +44,18 @@ msgstr "Może to spowodować utratę danych!"
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "exec nie powiodło się: (%s) %s"
+
+#: src/confirm.c:70
+msgid "Ok"
+msgstr ""
+
+#: src/confirm.c:75
+msgid "Cancel"
+msgstr ""
+
+#: src/confirm.c:308
+msgid "Confirm"
+msgstr ""
 
 #: src/desktop.c:301
 msgid "empty Desktops Name tag"

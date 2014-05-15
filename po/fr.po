@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-04-17 21:40-0500\n"
+"POT-Creation-Date: 2014-05-15 12:31-0500\n"
 "PO-Revision-Date: 2013-05-31 14:19+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -39,6 +39,18 @@ msgstr "Cela peut entraîner la perte de données!"
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "Échec de l'exécution: (%s) %s"
+
+#: src/confirm.c:70
+msgid "Ok"
+msgstr ""
+
+#: src/confirm.c:75
+msgid "Cancel"
+msgstr ""
+
+#: src/confirm.c:308
+msgid "Confirm"
+msgstr ""
 
 #: src/desktop.c:301
 msgid "empty Desktops Name tag"

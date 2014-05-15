@@ -50,9 +50,6 @@ typedef struct {
 
 } DialogType;
 
-static const char *OK_STRING = "Ok";
-static const char *CANCEL_STRING = "Cancel";
-
 static DialogType *dialog = NULL;
 
 static int minWidth = 0;
@@ -67,6 +64,16 @@ static char HandleDialogExpose(const XExposeEvent *event);
 static char HandleDialogButtonPress(const XButtonEvent *event);
 static char HandleDialogButtonRelease(const XButtonEvent *event);
 static char HandleDialogKeyPress(const XKeyEvent *event);
+
+static const char * const GetOkString()
+{
+   return _("Ok");
+}
+
+static const char * const GetCancelString()
+{
+   return _("Cancel");
+}
 
 /** Stop dialog processing. */
 void ShutdownDialogs(void)
@@ -298,7 +305,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
    shints.y = dialog->y;
    shints.flags = PPosition;
    JXSetWMNormalHints(display, window, &shints);
-   JXStoreName(display, window, "Confirm");
+   JXStoreName(display, window, _("Confirm"));
 
    /* Draw the dialog. */
    DrawDialog();
@@ -365,8 +372,8 @@ void ComputeDimensions(const ClientNode *np)
 
    /* Get the min width from the size of the buttons. */
    if(!minWidth) {
-      minWidth = GetStringWidth(FONT_MENU, CANCEL_STRING) * 3;
-      width = GetStringWidth(FONT_MENU, OK_STRING) * 3;
+      minWidth = GetStringWidth(FONT_MENU, GetCancelString()) * 3;
+      width = GetStringWidth(FONT_MENU, GetOkString()) * 3;
       if(width > minWidth) {
          minWidth = width;
       }
@@ -451,8 +458,8 @@ void DrawButtons(void)
 
    Assert(dialog);
 
-   dialog->buttonWidth = GetStringWidth(FONT_MENU, CANCEL_STRING);
-   temp = GetStringWidth(FONT_MENU, OK_STRING);
+   dialog->buttonWidth = GetStringWidth(FONT_MENU, GetCancelString());
+   temp = GetStringWidth(FONT_MENU, GetOkString());
    if(temp > dialog->buttonWidth) {
       dialog->buttonWidth = temp;
    }
@@ -475,7 +482,7 @@ void DrawButtons(void)
    } else {
       button.type = BUTTON_MENU;
    }
-   button.text = OK_STRING;
+   button.text = GetOkString();
    button.x = dialog->okx;
    button.y = dialog->buttony;
    DrawButton(&button);
@@ -485,7 +492,7 @@ void DrawButtons(void)
    } else {
       button.type = BUTTON_MENU;
    }
-   button.text = CANCEL_STRING;
+   button.text = GetCancelString();
    button.x = dialog->cancelx;
    button.y = dialog->buttony;
    DrawButton(&button);

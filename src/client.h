@@ -259,6 +259,13 @@ void KillClient(ClientNode *np);
  */
 void RaiseClient(ClientNode *np);
 
+/** Restack a client.
+ * @param np The client to restack.
+ * @param above A reference window (or None).
+ * @param detail The stack mode (Above, Below, etc).
+ */
+void RestackClient(ClientNode *np, Window above, int detail);
+
 /** Restack the clients.
  * This is used when a client is mapped so that the stacking order
  * remains consistent.

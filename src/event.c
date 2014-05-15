@@ -585,6 +585,16 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
          changed = 1;
       }
 
+      /* Update stacking. */
+      if((event->value_mask & CWStackMode)) {
+         Window above = None;
+         if(event->value_mask & CWSibling) {
+            above = event->above;
+         }
+         RestackClient(np, above, event->detail);
+      }
+
+      /* Return early if there's nothing to do. */
       if(!changed) {
          return;
       }

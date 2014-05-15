@@ -941,6 +941,112 @@ void RaiseClient(ClientNode *np)
 
 }
 
+/** Restack a client window. This will not affect transients. */
+void RestackClient(ClientNode *np, Window above, int detail)
+{
+
+   ClientNode *tp;
+   char inserted = 0;
+
+   /* Remove from the window list. */
+   if(np->prev) {
+      np->prev->next = np->next;
+   } else {
+      nodes[np->state.layer] = np->next;
+   }
+   if(np->next) {
+      np->next->prev = np->prev;
+   } else {
+      nodeTail[np->state.layer] = np->prev;
+   }
+
+   /* Insert back into the window list. */
+   if(above != None && above != np->window) {
+
+      /* Insert relative to some other window. */
+      char found = 0;
+      for(tp = nodes[np->state.layer]; tp; tp = tp->next) {
+         if(tp == np) {
+            found = 1;
+         } else if(tp->window == above) {
+            char insert_before = 0;
+            inserted = 1;
+            switch(detail) {
+            case Above:
+            case TopIf:
+               insert_before = 1;
+               break;
+            case Below:
+            case BottomIf:
+               insert_before = 0;
+               break;
+            case Opposite:
+               insert_before = !found;
+               break;
+            }
+            if(insert_before) {
+
+               /* Insert before this window. */
+               np->prev = tp->prev;
+               np->next = tp;
+               if(tp->prev) {
+                  tp->prev->next = np;
+               } else {
+                  nodes[np->state.layer] = np;
+               }
+               tp->prev = np;
+
+            } else {
+
+               /* Insert after this window. */
+               np->prev = tp;
+               np->next = tp->next;
+               if(tp->next) {
+                  tp->next->prev = np;
+               } else {
+                  nodeTail[np->state.layer] = np;
+               }
+               tp->next = np;
+
+            }
+            break;
+         }
+      }
+   }
+   if(!inserted) {
+
+      /* Insert absolute for the layer. */
+      if(detail == Below || detail == BottomIf) {
+
+         /* Insert to the bottom of the stack. */
+         np->next = NULL;
+         np->prev = nodeTail[np->state.layer];
+         if(nodeTail[np->state.layer]) {
+            nodeTail[np->state.layer]->next = np;
+         } else {
+            nodes[np->state.layer] = np;
+         }
+         nodeTail[np->state.layer] = np;
+
+      } else {
+
+         /* Insert at the top of the stack. */
+         np->next = nodes[np->state.layer];
+         np->prev = NULL;
+         if(nodes[np->state.layer]) {
+            nodes[np->state.layer]->prev = np;
+         } else {
+            nodeTail[np->state.layer] = np;
+         }
+         nodes[np->state.layer] = np;
+
+      }
+   }
+
+   RestackClients();
+
+}
+
 /** Restack the clients according the way we want them. */
 void RestackClients(void)
 {
@@ -1245,11 +1351,13 @@ void ReparentClient(ClientNode *np, char notOwner)
       | ButtonMotionMask
       | KeyPressMask
       | KeyReleaseMask;
+
    /* Make sure client doesn't muck with these. */
    attrMask |= CWBackingStore;
    attr.backing_store = NotUseful;
    attrMask |= CWWinGravity;
    attr.win_gravity = NorthWestGravity;
+
    JXChangeWindowAttributes(display, np->window, attrMask, &attr);
    JXSetWindowBorderWidth(display, np->window, 0);
 

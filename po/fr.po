@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
 "POT-Creation-Date: 2014-05-16 08:02-0500\n"
-"PO-Revision-Date: 2013-05-31 14:19+0100\n"
+"PO-Revision-Date: 2014-04-26 15:15+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language: fr\n"
@@ -15,17 +15,17 @@ msgstr ""
 
 #: src/background.c:133
 msgid "no value specified for background"
-msgstr "Pas de valeur spécifiée pour le fond d'écran"
+msgstr "Pas de valeur spécifiée pour l'arrière-plan"
 
 #: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
-msgstr "type de fond d'écran incorrect: \"%s\""
+msgstr "type d'arrière-plan incorrect: \"%s\""
 
 #: src/background.c:291
 #, c-format
 msgid "background image not found: \"%s\""
-msgstr "Image de fond d'écran introuvable: \"%s\""
+msgstr "Image d'arrière-plan introuvable: \"%s\""
 
 #: src/client.c:878
 msgid "Kill this window?"
@@ -58,7 +58,7 @@ msgstr "Balise de noms de bureaux vide"
 
 #: src/dock.c:151
 msgid "only one Dock allowed"
-msgstr "Un seul dock autorisé"
+msgstr "Un seul Dock autorisé"
 
 #: src/dock.c:230
 msgid "could not acquire system tray selection"
@@ -127,12 +127,12 @@ msgstr "symbole de touche incorrect: \"%s\""
 
 #: src/key.c:458
 msgid "neither key nor keycode specified for Key"
-msgstr "ni touche ni code de touche spécifié"
+msgstr "ni touche ni code de touche spécifié pour la touche"
 
 #: src/key.c:474
 #, c-format
 msgid "key binding: root menu %d not defined"
-msgstr "combinaison de touches: menu racine %d non défini"
+msgstr "Raccourci-clavier: menu racine %d non défini"
 
 #: src/lex.c:201
 #, c-format
@@ -144,7 +144,7 @@ msgstr ""
 #: src/lex.c:207
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
-msgstr "%s[%u]: balise de fermeture inattendue ou incorrecte"
+msgstr "%s[%u]: balise de fermeture inattendue et incorrecte"
 
 #: src/lex.c:213
 #, c-format
@@ -178,7 +178,7 @@ msgstr "%s[%d]: entité incorrecte: \"%.8s\""
 
 #: src/lex.c:458 src/parse.c:1759
 msgid "out of memory"
-msgstr ""
+msgstr "Mémoire insuffisante"
 
 #: src/parse.c:1048
 #, c-format
@@ -188,22 +188,22 @@ msgstr "Mode d'insertion incorrect: \"%s\""
 #: src/parse.c:1774
 #, c-format
 msgid "invalid setting: %s"
-msgstr "Balise incorrecte dans: %s"
+msgstr "paramètre incorrect: %s"
 
 #: src/parse.c:1786
 #, c-format
 msgid "invalid opacity: %s"
-msgstr "opacité de menu incorrecte: %s"
+msgstr "opacité incorrecte: %s"
 
 #: src/parse.c:1805
 #, c-format
 msgid "invalid layer: %s"
-msgstr "plan de groupe incorrect: %s"
+msgstr "disposition incorrecte: %s"
 
 #: src/parse.c:1822
 #, c-format
 msgid "invalid status window type: %s"
-msgstr "type de fond d'écran incorrect: %s"
+msgstr "Statut du type de fenêtre incorrect: %s"
 
 #: src/parse.c:1831
 #, c-format
@@ -338,15 +338,15 @@ msgstr "Coller"
 
 #: src/winmenu.c:158
 msgid "Layer"
-msgstr "Couche"
+msgstr "Plan"
 
 #: src/winmenu.c:173
 msgid "[Above]"
-msgstr "[Au-dessus]"
+msgstr "[Avant]"
 
 #: src/winmenu.c:175
 msgid "Above"
-msgstr "Au-dessus"
+msgstr "Avant"
 
 #: src/winmenu.c:178
 msgid "[Normal]"
@@ -358,11 +358,11 @@ msgstr "Normal"
 
 #: src/winmenu.c:183
 msgid "[Below]"
-msgstr "[En-dessous]"
+msgstr "[Arrière]"
 
 #: src/winmenu.c:185
 msgid "Below"
-msgstr "En-dessous"
+msgstr "Arrière"
 
 #: src/winmenu.c:205
 msgid "Send To"

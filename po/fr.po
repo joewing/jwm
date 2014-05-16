@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-05-15 12:31-0500\n"
+"POT-Creation-Date: 2014-05-16 08:02-0500\n"
 "PO-Revision-Date: 2013-05-31 14:19+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -41,7 +41,7 @@ msgid "exec failed: (%s) %s"
 msgstr "Échec de l'exécution: (%s) %s"
 
 #: src/confirm.c:70
-msgid "Ok"
+msgid "OK"
 msgstr ""
 
 #: src/confirm.c:75

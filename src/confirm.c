@@ -65,9 +65,9 @@ static char HandleDialogButtonPress(const XButtonEvent *event);
 static char HandleDialogButtonRelease(const XButtonEvent *event);
 static char HandleDialogKeyPress(const XKeyEvent *event);
 
-static const char * const GetOkString()
+static const char * const GetOKString()
 {
-   return _("Ok");
+   return _("OK");
 }
 
 static const char * const GetCancelString()
@@ -373,7 +373,7 @@ void ComputeDimensions(const ClientNode *np)
    /* Get the min width from the size of the buttons. */
    if(!minWidth) {
       minWidth = GetStringWidth(FONT_MENU, GetCancelString()) * 3;
-      width = GetStringWidth(FONT_MENU, GetOkString()) * 3;
+      width = GetStringWidth(FONT_MENU, GetOKString()) * 3;
       if(width > minWidth) {
          minWidth = width;
       }
@@ -459,7 +459,7 @@ void DrawButtons(void)
    Assert(dialog);
 
    dialog->buttonWidth = GetStringWidth(FONT_MENU, GetCancelString());
-   temp = GetStringWidth(FONT_MENU, GetOkString());
+   temp = GetStringWidth(FONT_MENU, GetOKString());
    if(temp > dialog->buttonWidth) {
       dialog->buttonWidth = temp;
    }
@@ -482,7 +482,7 @@ void DrawButtons(void)
    } else {
       button.type = BUTTON_MENU;
    }
-   button.text = GetOkString();
+   button.text = GetOKString();
    button.x = dialog->okx;
    button.y = dialog->buttony;
    DrawButton(&button);

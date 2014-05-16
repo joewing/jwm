@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-05-15 12:31-0500\n"
+"POT-Creation-Date: 2014-05-16 08:02-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -44,7 +44,7 @@ msgid "exec failed: (%s) %s"
 msgstr "не удалось выполнить: (%s) %s"
 
 #: src/confirm.c:70
-msgid "Ok"
+msgid "OK"
 msgstr ""
 
 #: src/confirm.c:75

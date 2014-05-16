@@ -285,9 +285,9 @@ void ShowDesktop(void)
       }
    }
    JXSync(display, True);
-   UngrabServer();
 
    if(showingDesktop[currentDesktop]) {
+      char first = 1;
       JXSync(display, False);
       for(layer = 0; layer < LAYER_COUNT; layer++) {
          for(np = nodes[layer]; np; np = np->next) {
@@ -296,6 +296,10 @@ void ShowDesktop(void)
             }
             if((np->state.desktop == currentDesktop) ||
                (np->state.status & STAT_STICKY)) {
+               if(first) {
+                  FocusClient(np);
+                  first = 0;
+               }
                DrawBorder(np);
             }
          }
@@ -306,6 +310,7 @@ void ShowDesktop(void)
    }
    SetCardinalAtom(rootWindow, ATOM_NET_SHOWING_DESKTOP,
                    showingDesktop[currentDesktop]);
+   UngrabServer();
 
 }
 

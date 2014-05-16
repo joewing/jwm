@@ -324,4 +324,3 @@ void RunWindowCommand(const MenuAction *action)
    }
 
 }
-

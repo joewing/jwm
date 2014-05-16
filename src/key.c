@@ -293,6 +293,10 @@ char ShouldGrab(KeyType key)
    case KEY_RESTART:
    case KEY_EXIT:
    case KEY_FULLSCREEN:
+   case KEY_SENDR:
+   case KEY_SENDL:
+   case KEY_SENDU:
+   case KEY_SENDD:
       return 1;
    default:
       return 0;

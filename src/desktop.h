@@ -19,16 +19,16 @@ void StartupDesktops(void);
 void DestroyDesktops(void);
 /*@}*/
 
-/** Switch to the desktop to the right. */
+/** Get a relative desktop. */
+unsigned int GetRightDesktop(unsigned int desktop);
+unsigned int GetLeftDesktop(unsigned int desktop);
+unsigned int GetAboveDesktop(unsigned int desktop);
+unsigned int GetBelowDesktop(unsigned int desktop);
+
+/** Switch to a relative desktop. */
 char RightDesktop(void);
-
-/** Switch to the desktop to the left. */
 char LeftDesktop(void);
-
-/** Switch to the desktop above. */
 char AboveDesktop(void);
-
-/** Switch to the desktop below. */
 char BelowDesktop(void);
 
 /** Switch to a specific desktop.
@@ -66,4 +66,3 @@ void SetDesktopName(unsigned int desktop, const char *str);
 const char *GetDesktopName(unsigned int desktop);
 
 #endif
-

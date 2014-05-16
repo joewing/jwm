@@ -494,6 +494,26 @@ void HandleKeyPress(const XKeyEvent *event)
          }
       }
       break;
+   case KEY_SENDR:
+      if(np) {
+         SetClientDesktop(np, GetRightDesktop(np->state.desktop));
+      }
+      break;
+   case KEY_SENDL:
+      if(np) {
+         SetClientDesktop(np, GetLeftDesktop(np->state.desktop));
+      }
+      break;
+   case KEY_SENDU:
+      if(np) {
+         SetClientDesktop(np, GetAboveDesktop(np->state.desktop));
+      }
+      break;
+   case KEY_SENDD:
+      if(np) {
+         SetClientDesktop(np, GetBelowDesktop(np->state.desktop));
+      }
+      break;
    default:
       break;
    }

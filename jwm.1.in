@@ -1270,6 +1270,14 @@ Close the active window. Grabbed.
 Minimize the active window. Grabbed.
 .IP \fBmaximize\fP
 Maximize the active window. Grabbed.
+.IP \fBsendl\fP
+Send the active window left. Grabbed.
+.IP \fBsendr\fP
+Send the active window right. Grabbed.
+.IP \fBsendu\fP
+Send the active window up. Grabbed.
+.IP \fBsendd\fP
+Send the active window down. Grabbed.
 .IP \fBshade\fP
 Shade the active window. Grabbed.
 .IP \fBstick\fP

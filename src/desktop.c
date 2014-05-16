@@ -69,13 +69,44 @@ void DestroyDesktops(void)
 
 }
 
+/** Get the right desktop. */
+unsigned int GetRightDesktop(unsigned int desktop)
+{
+   const int y = desktop / settings.desktopWidth;
+   const int x = (desktop + 1) % settings.desktopWidth;
+   return y * settings.desktopWidth + x;
+}
+
+/** Get the left desktop. */
+unsigned int GetLeftDesktop(unsigned int desktop)
+{
+   const int y = currentDesktop / settings.desktopWidth;
+   int x = currentDesktop % settings.desktopWidth;
+   x = x > 0 ? x - 1 : settings.desktopWidth - 1;
+   return y * settings.desktopWidth + x;
+}
+
+/** Get the above desktop. */
+unsigned int GetAboveDesktop(unsigned int desktop)
+{
+   if(currentDesktop >= settings.desktopWidth) {
+      return currentDesktop - settings.desktopWidth;
+   }
+   return currentDesktop + (settings.desktopHeight - 1) * settings.desktopWidth;
+}
+
+/** Get the below desktop. */
+unsigned int GetBelowDesktop(unsigned int desktop)
+{
+   return (currentDesktop + settings.desktopWidth) % settings.desktopCount;
+}
+
 /** Change to the desktop to the right. */
 char RightDesktop(void)
 {
    if(settings.desktopWidth > 1) {
-      const int y = currentDesktop / settings.desktopWidth;
-      const int x = (currentDesktop + 1) % settings.desktopWidth;
-      ChangeDesktop(y * settings.desktopWidth + x);
+      const unsigned int desktop = GetRightDesktop(currentDesktop);
+      ChangeDesktop(desktop);
       return 1;
    } else {
       return 0;
@@ -86,10 +117,8 @@ char RightDesktop(void)
 char LeftDesktop(void)
 {
    if(settings.desktopWidth > 1) {
-      const int y = currentDesktop / settings.desktopWidth;
-      int x = currentDesktop % settings.desktopWidth;
-      x = x > 0 ? x - 1 : settings.desktopWidth - 1;
-      ChangeDesktop(y * settings.desktopWidth + x);
+      const unsigned int desktop = GetLeftDesktop(currentDesktop);
+      ChangeDesktop(desktop);
       return 1;
    } else {
       return 0;
@@ -100,14 +129,8 @@ char LeftDesktop(void)
 char AboveDesktop(void)
 {
    if(settings.desktopHeight > 1) {
-      unsigned int next;
-      if(currentDesktop >= settings.desktopWidth) {
-         next = currentDesktop - settings.desktopWidth;
-      } else {
-         next = currentDesktop
-              + (settings.desktopHeight - 1) * settings.desktopWidth;
-      }
-      ChangeDesktop(next);
+      const int desktop = GetAboveDesktop(currentDesktop);
+      ChangeDesktop(desktop);
       return 1;
    } else {
       return 0;
@@ -118,9 +141,8 @@ char AboveDesktop(void)
 char BelowDesktop(void)
 {
    if(settings.desktopHeight > 1) {
-      unsigned int next;
-      next = (currentDesktop + settings.desktopWidth) % settings.desktopCount;
-      ChangeDesktop(next);
+      const unsigned int desktop = GetBelowDesktop(currentDesktop);
+      ChangeDesktop(desktop);
       return 1;
    } else {
       return 0;

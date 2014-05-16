@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-05-16 08:50-0500\n"
+"POT-Creation-Date: 2014-05-16 16:03-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -60,7 +60,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/desktop.c:323
+#: src/desktop.c:345
 msgid "empty Desktops Name tag"
 msgstr "etiqueta do ambiente de trabalho vazia (tag)"
 
@@ -114,30 +114,30 @@ msgstr "erro lendo imagem PNG %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "não foi possível criar estrutura de informação para imagem PNG: %s"
 
-#: src/key.c:324
+#: src/key.c:328
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr "KeySym especificado não esta defendido por nenhum Keycode"
 
-#: src/key.c:332
+#: src/key.c:336
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "modificador não foi encontrado para o Keysym 0x%0x"
 
-#: src/key.c:362
+#: src/key.c:366
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "modificador invalido: \"%c\""
 
-#: src/key.c:377
+#: src/key.c:381
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "símbolo da tecla invalido: \"%s\""
 
-#: src/key.c:458
+#: src/key.c:462
 msgid "neither key nor keycode specified for Key"
 msgstr "tecla e código de tecla não foi especificado para esta tecla"
 
-#: src/key.c:474
+#: src/key.c:478
 #, c-format
 msgid "key binding: root menu %d not defined"
 msgstr ""
@@ -186,41 +186,41 @@ msgstr "%s[%u]: texto inesperado: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entrada invalida: \"%.8s\""
 
-#: src/lex.c:458 src/parse.c:1759
+#: src/lex.c:458 src/parse.c:1763
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1048
+#: src/parse.c:1052
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "modo de inserção invalido: \"%s\""
 
-#: src/parse.c:1774
+#: src/parse.c:1778
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Configuração invalida: %s"
 
-#: src/parse.c:1786
+#: src/parse.c:1790
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "transparência invalida: %s"
 
-#: src/parse.c:1805
+#: src/parse.c:1809
 #, c-format
 msgid "invalid layer: %s"
 msgstr "camada invalida: %s"
 
-#: src/parse.c:1822
+#: src/parse.c:1826
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "tipo de fundo invalido: %s"
 
-#: src/parse.c:1831
+#: src/parse.c:1835
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta invalida dentro %s: %s"
 
-#: src/parse.c:1852
+#: src/parse.c:1856
 msgid "configuration error"
 msgstr "erro de configuração"
 

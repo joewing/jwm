@@ -263,32 +263,49 @@ void ShowDesktop(void)
    ClientNode *np;
    int layer;
 
+   GrabServer();
    for(layer = 0; layer < LAYER_COUNT; layer++) {
       for(np = nodes[layer]; np; np = np->next) {
-        if(np->state.status & STAT_NOLIST) {
-           continue;
-        }
-        if((np->state.desktop == currentDesktop) ||
-           (np->state.status & STAT_STICKY)) {
-          if(showingDesktop[currentDesktop]) {
-            if(np->state.status & STAT_SDESKTOP) {
-              RestoreClient(np, 0);
+         if(np->state.status & STAT_NOLIST) {
+            continue;
+         }
+         if((np->state.desktop == currentDesktop) ||
+            (np->state.status & STAT_STICKY)) {
+            if(showingDesktop[currentDesktop]) {
+               if(np->state.status & STAT_SDESKTOP) {
+                  RestoreClient(np, 0);
+               }
+            } else {
+               if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
+                  MinimizeClient(np, 0);
+                  np->state.status |= STAT_SDESKTOP;
+               }
             }
-          } else {
-            if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
-              MinimizeClient(np, 0);
-              np->state.status |= STAT_SDESKTOP;
-            }
-          }
-        }
+         }
       }
    }
+   JXSync(display, True);
+   UngrabServer();
 
-   showingDesktop[currentDesktop] = !showingDesktop[currentDesktop];
+   if(showingDesktop[currentDesktop]) {
+      JXSync(display, False);
+      for(layer = 0; layer < LAYER_COUNT; layer++) {
+         for(np = nodes[layer]; np; np = np->next) {
+            if(np->state.status & STAT_NOLIST) {
+               continue;
+            }
+            if((np->state.desktop == currentDesktop) ||
+               (np->state.status & STAT_STICKY)) {
+               DrawBorder(np);
+            }
+         }
+      }
+      showingDesktop[currentDesktop] = 0;
+   } else {
+      showingDesktop[currentDesktop] = 1;
+   }
    SetCardinalAtom(rootWindow, ATOM_NET_SHOWING_DESKTOP,
                    showingDesktop[currentDesktop]);
-
-   RestackClients();
 
 }
 

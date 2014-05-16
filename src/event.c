@@ -71,6 +71,8 @@ static char HandleSelectionClear(const XSelectionClearEvent *event);
 
 static void HandleNetMoveResize(const XClientMessageEvent *event,
                                 ClientNode *np);
+static void HandleNetRestack(const XClientMessageEvent *event,
+                             ClientNode *np);
 static void HandleNetWMState(const XClientMessageEvent *event,
                              ClientNode *np);
 static void HandleFrameExtentsRequest(const XClientMessageEvent *event);
@@ -838,6 +840,10 @@ void HandleClientMessage(const XClientMessageEvent *event)
 
          HandleNetMoveResize(event, np);
 
+      } else if(event->message_type == atoms[ATOM_NET_RESTACK_WINDOW]) {
+
+         HandleNetRestack(event, np);
+
       } else if(event->message_type == atoms[ATOM_NET_WM_STATE]) {
 
          HandleNetWMState(event, np);
@@ -975,6 +981,14 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
    SendConfigureEvent(np);
    UpdatePager();
 
+}
+
+/** Handle a _NET_RESTACK_WINDOW request. */
+void HandleNetRestack(const XClientMessageEvent *event, ClientNode *np)
+{
+   const Window sibling = event->data.l[1];
+   const int detail = event->data.l[2];
+   RestackClient(np, sibling, detail);
 }
 
 /** Handle a _NET_WM_STATE request. */

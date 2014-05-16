@@ -126,6 +126,7 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_ACTION_ABOVE],       "_NET_WM_ACTION_ABOVE"        },
    { &atoms[ATOM_NET_CLOSE_WINDOW],          "_NET_CLOSE_WINDOW"           },
    { &atoms[ATOM_NET_MOVERESIZE_WINDOW],     "_NET_MOVERESIZE_WINDOW"      },
+   { &atoms[ATOM_NET_RESTACK_WINDOW],        "_NET_RESTACK_WINDOW"         },
    { &atoms[ATOM_NET_REQUEST_FRAME_EXTENTS], "_NET_REQUEST_FRAME_EXTENTS"  },
    { &atoms[ATOM_NET_WM_PID],                "_NET_WM_PID"                 },
    { &atoms[ATOM_NET_WM_NAME],               "_NET_WM_NAME"                },

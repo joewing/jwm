@@ -49,11 +49,11 @@ msgstr ""
 
 #: src/confirm.c:75
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #: src/confirm.c:308
 msgid "Confirm"
-msgstr ""
+msgstr "Подтверждение"
 
 #: src/desktop.c:301
 msgid "empty Desktops Name tag"
@@ -179,7 +179,7 @@ msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
 #: src/lex.c:458 src/parse.c:1759
 msgid "out of memory"
-msgstr ""
+msgstr "недостаточно памяти"
 
 #: src/parse.c:1048
 #, c-format

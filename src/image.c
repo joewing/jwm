@@ -444,11 +444,11 @@ ImageNode *LoadSVGImage(const char *fileName)
    g_object_unref(rh);
 
    for(i = 0; i < 4 * dim.width * dim.height; i += 4) {
-      const unsigned long temp = *(unsigned long*)&result->data[i];
-      const unsigned long alpha  = (temp >> 24) & 0xFF;
-      const unsigned long red    = (temp >> 16) & 0xFF;
-      const unsigned long green  = (temp >>  8) & 0xFF;
-      const unsigned long blue   = (temp >>  0) & 0xFF;
+      const unsigned int temp = *(unsigned int*)&result->data[i];
+      const unsigned int alpha  = (temp >> 24) & 0xFF;
+      const unsigned int red    = (temp >> 16) & 0xFF;
+      const unsigned int green  = (temp >>  8) & 0xFF;
+      const unsigned int blue   = (temp >>  0) & 0xFF;
       result->data[i + 0] = alpha;
       if(alpha > 0) {
          result->data[i + 1] = (red * 255) / alpha;

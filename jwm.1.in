@@ -21,6 +21,11 @@ This option specifies the display to use; see \fBX\fP(1).
 Exit JWM by sending _JWM_EXIT to the root window.
 .RE
 .P
+\fB\-f\fP \fIfile\fP
+.RS
+Specify an alternate configuration file to use.
+.RE
+.P
 .B "-h"
 .RS
 Display a help message and exit.
@@ -52,13 +57,14 @@ Display version information and exit.
 .IP "@SYSCONF@/system.jwmrc"
 The default JWM configuration file.
 .IP "~/.jwmrc"
-Local configuration file. Copy the default configuration file to this
-location to make user-specific changes.
+Default local configuration file. Copy the default configuration file to this
+location to make user-specific changes.  See also, option \fB\-f\fP.
 
 .SH CONFIGURATION
 .B OVERVIEW
 .RS
-Configuration of JWM is done by editing ".jwmrc".  This file is XML
+Configuration of JWM is done by editing ".jwmrc" (or the configuration
+file specified with the \fB\-f\fP option).  This file is XML
 making it easy to edit, either by hand or programmatically. The
 example.jwmrc gives an example configuration file.
 Before restarting JWM, it is a good idea to run "jwm \-p" to make

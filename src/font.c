@@ -152,7 +152,8 @@ int GetStringWidth(FontType ft, const char *str)
    XGlyphInfo extents;
 #endif
 #ifdef USE_FRIBIDI
-   FriBidiChar *temp;
+   FriBidiChar *temp_i;
+   FriBidiChar *temp_o;
    FriBidiParType type = FRIBIDI_PAR_ON;
    int unicodeLength;
 #endif
@@ -164,12 +165,13 @@ int GetStringWidth(FontType ft, const char *str)
 
    /* Apply the bidi algorithm if requested. */
 #ifdef USE_FRIBIDI
-   temp = AllocateStack((len + 1) * sizeof(FriBidiChar));
+   temp_i = AllocateStack((len + 1) * sizeof(FriBidiChar));
+   temp_o = AllocateStack((len + 1) * sizeof(FriBidiChar));
    unicodeLength = fribidi_charset_to_unicode(FRIBIDI_CHAR_SET_UTF8,
-                                              (char*)str, len, temp);
-   fribidi_log2vis(temp, unicodeLength, &type, temp, NULL, NULL, NULL);
+                                              (char*)str, len, temp_i);
+   fribidi_log2vis(temp_i, unicodeLength, &type, temp_o, NULL, NULL, NULL);
    output = AllocateStack(4 * len + 1);
-   fribidi_unicode_to_charset(FRIBIDI_CHAR_SET_UTF8, temp, unicodeLength,
+   fribidi_unicode_to_charset(FRIBIDI_CHAR_SET_UTF8, temp_o, unicodeLength,
                               (char*)output);
    len = strlen(output);
 #else
@@ -187,7 +189,8 @@ int GetStringWidth(FontType ft, const char *str)
 
    /* Clean up. */
 #ifdef USE_FRIBIDI
-   ReleaseStack(temp);
+   ReleaseStack(temp_i);
+   ReleaseStack(temp_o);
    ReleaseStack(output);
 #endif
 
@@ -224,7 +227,8 @@ void RenderString(Drawable d, FontType font, ColorType color,
    int len;
    char *output;
 #ifdef USE_FRIBIDI
-   FriBidiChar *temp;
+   FriBidiChar *temp_i;
+   FriBidiChar *temp_o;
    FriBidiParType type = FRIBIDI_PAR_ON;
    int unicodeLength;
 #endif
@@ -243,12 +247,13 @@ void RenderString(Drawable d, FontType font, ColorType color,
 
    /* Apply the bidi algorithm if requested. */
 #ifdef USE_FRIBIDI
-   temp = AllocateStack((len + 1) * sizeof(FriBidiChar));
+   temp_i = AllocateStack((len + 1) * sizeof(FriBidiChar));
+   temp_o = AllocateStack((len + 1) * sizeof(FriBidiChar));
    unicodeLength = fribidi_charset_to_unicode(FRIBIDI_CHAR_SET_UTF8,
-                                              (char*)str, len, temp);
-   fribidi_log2vis(temp, unicodeLength, &type, temp, NULL, NULL, NULL);
+                                              (char*)str, len, temp_i);
+   fribidi_log2vis(temp_i, unicodeLength, &type, temp_o, NULL, NULL, NULL);
    output = AllocateStack(4 * len + 1);
-   fribidi_unicode_to_charset(FRIBIDI_CHAR_SET_UTF8, temp, unicodeLength,
+   fribidi_unicode_to_charset(FRIBIDI_CHAR_SET_UTF8, temp_o, unicodeLength,
                               (char*)output);
    len = strlen(output);
 #else
@@ -289,7 +294,8 @@ void RenderString(Drawable d, FontType font, ColorType color,
 
    /* Free any memory used for UTF conversion. */
 #ifdef USE_FRIBIDI
-   ReleaseStack(temp);
+   ReleaseStack(temp_i);
+   ReleaseStack(temp_o);
    ReleaseStack(output);
 #endif
 

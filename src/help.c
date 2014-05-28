@@ -78,7 +78,8 @@ void DisplayHelp(void)
           "  -p          Parse the configuration file and exit\n"
           "  -reload     Reload menu (send _JWM_RELOAD to the root)\n"
           "  -restart    Restart JWM (send _JWM_RESTART to the root)\n"
-          "  -v          Display version information\n");
+          "  -v          Display version information\n"
+          "  -f file     Use specified configuration file\n");
 }
 
 /** Display program usage information. */

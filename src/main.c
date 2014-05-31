@@ -110,9 +110,9 @@ int main(int argc, char *argv[])
       ACTION_RUN,
       ACTION_RESTART,
       ACTION_EXIT,
-      ACTION_RELOAD
+      ACTION_RELOAD,
+      ACTION_PARSE
    } action;
-   int parse = 0;
 
    StartDebug();
 
@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
          DisplayHelp();
          DoExit(0);
       } else if(!strcmp(argv[x], "-p")) {
-         parse = 1;
+         action = ACTION_PARSE;
       } else if(!strcmp(argv[x], "-restart")) {
          action = ACTION_RESTART;
       } else if(!strcmp(argv[x], "-exit")) {
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
       } else if(!strcmp(argv[x], "-display") && x + 1 < argc) {
          displayString = argv[++x];
       } else if(!strcmp(argv[x], "-f") && x + 1 < argc) {
-         free(configPath);
+         Release(configPath);
          configPath = CopyString(argv[++x]);
       } else {
          printf("unrecognized option: %s\n", argv[x]);
@@ -155,13 +155,11 @@ int main(int argc, char *argv[])
       }
    }
 
-   if (parse) {
+   switch(action) {
+   case ACTION_PARSE:
       Initialize();
       ParseConfig(configPath);
       DoExit(0);
-   }
-
-   switch(action) {
    case ACTION_RESTART:
       SendRestart();
       DoExit(0);

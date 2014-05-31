@@ -74,12 +74,12 @@ void DisplayHelp(void)
    DisplayUsage();
    printf("  -display X  Set the X display to use\n"
           "  -exit       Exit JWM (send _JWM_EXIT to the root)\n"
+          "  -f file     Use specified configuration file\n"
           "  -h          Display this help message\n"
           "  -p          Parse the configuration file and exit\n"
           "  -reload     Reload menu (send _JWM_RELOAD to the root)\n"
           "  -restart    Restart JWM (send _JWM_RESTART to the root)\n"
-          "  -v          Display version information\n"
-          "  -f file     Use specified configuration file\n");
+          "  -v          Display version information\n");
 }
 
 /** Display program usage information. */

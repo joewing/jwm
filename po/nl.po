@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-05-16 16:03-0500\n"
+"POT-Creation-Date: 2014-07-10 13:25-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -34,7 +34,7 @@ msgstr "Sluiten van dit venster forceren?"
 msgid "This may cause data to be lost!"
 msgstr "Dit kan verlies van data veroorzaken!"
 
-#: src/command.c:137 src/main.c:211
+#: src/command.c:137 src/main.c:217
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "uitvoeren mislukt: (%s) %s"
@@ -51,7 +51,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/desktop.c:345
+#: src/desktop.c:346
 msgid "empty Desktops Name tag"
 msgstr "leeg Bureaublad-naam label"
 
@@ -73,7 +73,7 @@ msgstr "kon dit lettertype niet laden: %s"
 msgid "could not load the default font: %s"
 msgstr "kon standaard lettertype niet laden: %s"
 
-#: src/font.c:208
+#: src/font.c:211
 msgid "empty Font tag"
 msgstr "Leeg lettertype label"
 

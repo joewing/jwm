@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-05-16 16:03-0500\n"
+"POT-Creation-Date: 2014-07-10 13:25-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -34,7 +34,7 @@ msgstr "Dieses Fenster töten?"
 msgid "This may cause data to be lost!"
 msgstr "Das kann Datenverlust verursachen!"
 
-#: src/command.c:137 src/main.c:211
+#: src/command.c:137 src/main.c:217
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "Ausführung fehlgeschlagen: (%s) %s"
@@ -51,7 +51,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/desktop.c:345
+#: src/desktop.c:346
 msgid "empty Desktops Name tag"
 msgstr ""
 
@@ -73,7 +73,7 @@ msgstr "konnte Schrift nicht laden: %s"
 msgid "could not load the default font: %s"
 msgstr "konnte Standard-Schrift nicht laden: %s"
 
-#: src/font.c:208
+#: src/font.c:211
 msgid "empty Font tag"
 msgstr ""
 

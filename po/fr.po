@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-05-16 16:03-0500\n"
+"POT-Creation-Date: 2014-07-10 13:25-0500\n"
 "PO-Revision-Date: 2014-04-26 15:15+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -35,7 +35,7 @@ msgstr "Éliminer la fenêtre?"
 msgid "This may cause data to be lost!"
 msgstr "Cela peut entraîner la perte de données!"
 
-#: src/command.c:137 src/main.c:211
+#: src/command.c:137 src/main.c:217
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "Échec de l'exécution: (%s) %s"
@@ -52,7 +52,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/desktop.c:345
+#: src/desktop.c:346
 msgid "empty Desktops Name tag"
 msgstr "Balise de noms de bureaux vide"
 
@@ -74,7 +74,7 @@ msgstr "Impossible de charger la police de caractères: %s"
 msgid "could not load the default font: %s"
 msgstr "Impossible de charger la police de caractères par défaut: %s"
 
-#: src/font.c:208
+#: src/font.c:211
 msgid "empty Font tag"
 msgstr "Balise de police de caractères vide"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-05-16 16:03-0500\n"
+"POT-Creation-Date: 2014-07-10 13:25-0500\n"
 "PO-Revision-Date: 2013-06-27 15:00-0300\n"
 "Last-Translator: Víctor Martínez <vikmz@myopera.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -39,7 +39,7 @@ msgstr "¿Finalizar esta ventana?"
 msgid "This may cause data to be lost!"
 msgstr "¡Esto puede causar pérdida de datos!"
 
-#: src/command.c:137 src/main.c:211
+#: src/command.c:137 src/main.c:217
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "exec falló: (%s) %s"
@@ -56,7 +56,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/desktop.c:345
+#: src/desktop.c:346
 msgid "empty Desktops Name tag"
 msgstr "etiqueta Nombre de Escritorio vacía"
 
@@ -78,7 +78,7 @@ msgstr "no se pudo cargar la fuente: %s"
 msgid "could not load the default font: %s"
 msgstr "no se pudo cargar la fuente predeterminada: %s"
 
-#: src/font.c:208
+#: src/font.c:211
 msgid "empty Font tag"
 msgstr "etiqueta Fuente vacía"
 

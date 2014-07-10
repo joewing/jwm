@@ -2,36 +2,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-05-16 16:03-0500\n"
+"POT-Creation-Date: 2014-07-10 13:25-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=n != 1\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Loco-Source-Locale: it_IT\n"
 "X-Generator: Loco - https://localise.biz/\n"
 "X-Loco-Parser: loco_parse_po\n"
-"X-Loco-Target-Locale: it_IT"
-
-#: src/confirm.c:70
-msgid "OK"
-msgstr "Ok"
-
-#: src/confirm.c:75
-msgid "Cancel"
-msgstr "Annulla"
-
-#: src/confirm.c:308
-msgid "Confirm"
-msgstr "Conferma"
-
-#: src/lex.c:458 src/parse.c:1763
-msgid "out of memory"
-msgstr "Memoria esaurita"
+"X-Loco-Target-Locale: it_IT\n"
 
 #: src/background.c:133
 msgid "no value specified for background"
@@ -55,12 +39,24 @@ msgstr "Chiudere questa finestra?"
 msgid "This may cause data to be lost!"
 msgstr "Questo può causare una perdita di dati!"
 
-#: src/command.c:137 src/main.c:211
+#: src/command.c:137 src/main.c:217
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "Esecuzione fallita: (%s) %s"
 
-#: src/desktop.c:345
+#: src/confirm.c:70
+msgid "OK"
+msgstr "Ok"
+
+#: src/confirm.c:75
+msgid "Cancel"
+msgstr "Annulla"
+
+#: src/confirm.c:308
+msgid "Confirm"
+msgstr "Conferma"
+
+#: src/desktop.c:346
 msgid "empty Desktops Name tag"
 msgstr "Etichetta Nome dei desktop vuoti"
 
@@ -82,7 +78,7 @@ msgstr "Impossibile caricare font: %s"
 msgid "could not load the default font: %s"
 msgstr "Impossibile caricare il font predefinito: %s"
 
-#: src/font.c:208
+#: src/font.c:211
 msgid "empty Font tag"
 msgstr "Etichetta Font vuota"
 
@@ -145,7 +141,8 @@ msgstr "Combinazione di tasti: root menu %d non definito"
 #: src/lex.c:201
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
-msgstr "%s[%u]: tag di chiusura \"%s\" non corrisponde al tag di apertura \"%s\""
+msgstr ""
+"%s[%u]: tag di chiusura \"%s\" non corrisponde al tag di apertura \"%s\""
 
 #: src/lex.c:207
 #, c-format
@@ -181,6 +178,10 @@ msgstr "%s[%u]: testo non atteso: \"%s\""
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entità non valida: \"%.8s\""
+
+#: src/lex.c:458 src/parse.c:1763
+msgid "out of memory"
+msgstr "Memoria esaurita"
 
 #: src/parse.c:1052
 #, c-format

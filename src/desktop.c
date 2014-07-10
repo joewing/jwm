@@ -20,6 +20,7 @@
 #include "misc.h"
 #include "background.h"
 #include "settings.h"
+#include "grab.h"
 
 static char **desktopNames = NULL;
 static char *showingDesktop = NULL;

@@ -14,6 +14,13 @@
 #include "color.h"
 #include "misc.h"
 
+#ifdef HAVE_LANGINFO_H
+#  include <langinfo.h>
+#endif
+#ifdef HAVE_ICONV_H
+#  include <iconv.h>
+#endif
+
 #ifdef USE_XFT
 static const char *DEFAULT_FONT = "FreeSans-9";
 #else
@@ -21,6 +28,10 @@ static const char *DEFAULT_FONT = "fixed";
 #endif
 
 static char *fontNames[FONT_COUNT];
+
+#ifdef USE_ICONV
+static iconv_t conversionDescriptor = (iconv_t)-1;
+#endif
 
 #ifdef USE_XFT
 static XftFont *fonts[FONT_COUNT];
@@ -33,11 +44,26 @@ static GC fontGC;
 /** Initialize font data. */
 void InitializeFonts(void)
 {
+#ifdef USE_ICONV
+   const char *codeset;
+#endif
    unsigned int x;
+
    for(x = 0; x < FONT_COUNT; x++) {
       fonts[x] = NULL;
       fontNames[x] = NULL;
    }
+
+   /* Allocate a conversion descriptor if we're not using UTF-8. */
+#ifdef USE_ICONV
+   codeset = nl_langinfo(CODESET);
+   if(strcmp(codeset, "UTF-8")) {
+      conversionDescriptor = iconv_open("UTF-8", codeset);
+   } else {
+      conversionDescriptor = (iconv_t)-1;
+   }
+#endif
+
 }
 
 /** Startup font support. */
@@ -143,6 +169,52 @@ void DestroyFonts(void)
          fontNames[x] = NULL;
       }
    }
+#ifdef USE_ICONV
+   if(conversionDescriptor != (iconv_t)-1) {
+      iconv_close(conversionDescriptor);
+   }
+#endif
+}
+
+/** Convert a string to UTF-8. */
+char *GetUTF8String(const char *str)
+{
+   char *utf8String;
+#ifdef USE_ICONV
+   if(conversionDescriptor == (iconv_t)-1) {
+      utf8String = (char*)str;
+   } else {
+      char *inBuf = (char*)str;
+      char *outBuf;
+      size_t inLeft = strlen(str);
+      size_t outLeft = 4 * inLeft;
+      size_t rc;
+      utf8String = AllocateStack(outLeft + 1);
+      outBuf = utf8String;
+      rc = iconv(conversionDescriptor, &inBuf, &inLeft, &outBuf, &outLeft);
+      if(rc == (size_t)-1) {
+         Warning("iconv failed");
+         iconv_close(conversionDescriptor);
+         conversionDescriptor = (iconv_t)-1;
+         utf8String = (char*)str;
+      } else {
+         *outBuf = 0;
+      }
+   }
+#else
+   utf8String = (char*)str;
+#endif
+   return utf8String;
+}
+
+/** Release a UTF-8 string. */
+void ReleaseUTF8String(char *utf8String)
+{
+#ifdef USE_ICONV
+   if(conversionDescriptor != (iconv_t)-1) {
+      ReleaseStack(utf8String);
+   }
+#endif
 }
 
 /** Get the width of a string. */
@@ -160,22 +232,27 @@ int GetStringWidth(FontType ft, const char *str)
    int len;
    char *output;
    int result;
+   char *utf8String;
 
-   len = strlen(str);
+   /* Convert to UTF-8 if necessary. */
+   utf8String = GetUTF8String(str);
+
+   /* Length of the UTF-8 string. */
+   len = strlen(utf8String);
 
    /* Apply the bidi algorithm if requested. */
 #ifdef USE_FRIBIDI
    temp_i = AllocateStack((len + 1) * sizeof(FriBidiChar));
    temp_o = AllocateStack((len + 1) * sizeof(FriBidiChar));
    unicodeLength = fribidi_charset_to_unicode(FRIBIDI_CHAR_SET_UTF8,
-                                              (char*)str, len, temp_i);
+                                              utf8String, len, temp_i);
    fribidi_log2vis(temp_i, unicodeLength, &type, temp_o, NULL, NULL, NULL);
    output = AllocateStack(4 * len + 1);
    fribidi_unicode_to_charset(FRIBIDI_CHAR_SET_UTF8, temp_o, unicodeLength,
                               (char*)output);
    len = strlen(output);
 #else
-   output = (char*)str;
+   output = utf8String;
 #endif
 
    /* Get the width of the string. */
@@ -193,6 +270,7 @@ int GetStringWidth(FontType ft, const char *str)
    ReleaseStack(temp_o);
    ReleaseStack(output);
 #endif
+   ReleaseUTF8String(utf8String);
 
    return result;
 }
@@ -222,6 +300,9 @@ void RenderString(Drawable d, FontType font, ColorType color,
                   int x, int y, int width, const char *str)
 {
 
+#ifdef USE_ICONV
+   static char isUTF8 = -1;
+#endif
    XRectangle rect;
    Region renderRegion;
    int len;
@@ -235,29 +316,32 @@ void RenderString(Drawable d, FontType font, ColorType color,
 #ifdef USE_XFT
    XGlyphInfo extents;
 #endif
+   char *utf8String;
 
-   if(!str) {
+   /* Early return for empty strings. */
+   if(!str || !str[0]) {
       return;
    }
 
-   len = strlen(str);
-   if(len == 0) {
-      return;
-   }
+   /* Convert to UTF-8 if necessary. */
+   utf8String = GetUTF8String(str);
+
+   /* Get the length of the UTF-8 string. */
+   len = strlen(utf8String);
 
    /* Apply the bidi algorithm if requested. */
 #ifdef USE_FRIBIDI
    temp_i = AllocateStack((len + 1) * sizeof(FriBidiChar));
    temp_o = AllocateStack((len + 1) * sizeof(FriBidiChar));
    unicodeLength = fribidi_charset_to_unicode(FRIBIDI_CHAR_SET_UTF8,
-                                              (char*)str, len, temp_i);
+                                              utf8String, len, temp_i);
    fribidi_log2vis(temp_i, unicodeLength, &type, temp_o, NULL, NULL, NULL);
    output = AllocateStack(4 * len + 1);
    fribidi_unicode_to_charset(FRIBIDI_CHAR_SET_UTF8, temp_o, unicodeLength,
                               (char*)output);
    len = strlen(output);
 #else
-   output = (char*)str;
+   output = utf8String;
 #endif
 
    /* Get the bounds for the string based on the specified width. */
@@ -298,8 +382,8 @@ void RenderString(Drawable d, FontType font, ColorType color,
    ReleaseStack(temp_o);
    ReleaseStack(output);
 #endif
+   ReleaseUTF8String(utf8String);
 
    XDestroyRegion(renderRegion);
 
 }
-

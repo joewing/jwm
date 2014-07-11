@@ -95,5 +95,3 @@ const char *GetTimeString(const char *format, const char *zone)
    return str;
 
 }
-
-

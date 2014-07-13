@@ -27,6 +27,9 @@ static const char *DEFAULT_FONT = "FreeSans-9";
 static const char *DEFAULT_FONT = "fixed";
 #endif
 
+static char *GetUTF8String(const char *str);
+static void ReleaseUTF8String(char *utf8String);
+
 static char *fontNames[FONT_COUNT];
 
 #ifdef USE_ICONV

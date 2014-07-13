@@ -686,13 +686,9 @@ void ReadWMName(ClientNode *np)
    Atom realType;
    int realFormat;
    unsigned char *name;
-#ifdef USE_XUTF8
-#endif
-
-   Assert(np);
 
    if(np->name) {
-      JXFree(np->name);
+      Release(np->name);
    }
 
    status = JXGetWindowProperty(display, np->window,

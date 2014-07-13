@@ -1207,7 +1207,7 @@ void RemoveClient(ClientNode *np)
    }
 
    if(np->name) {
-      JXFree(np->name);
+      Release(np->name);
    }
    if(np->instanceName) {
       JXFree(np->instanceName);

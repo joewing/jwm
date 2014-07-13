@@ -192,7 +192,7 @@ char *GetUTF8String(const char *str)
       size_t inLeft = strlen(str);
       size_t outLeft = 4 * inLeft;
       size_t rc;
-      utf8String = AllocateStack(outLeft + 1);
+      utf8String = Allocate(outLeft + 1);
       outBuf = utf8String;
       rc = iconv(conversionDescriptor, &inBuf, &inLeft, &outBuf, &outLeft);
       if(rc == (size_t)-1) {
@@ -215,7 +215,7 @@ void ReleaseUTF8String(char *utf8String)
 {
 #ifdef USE_ICONV
    if(conversionDescriptor != (iconv_t)-1) {
-      ReleaseStack(utf8String);
+      Release(utf8String);
    }
 #endif
 }

@@ -60,5 +60,11 @@ int GetStringWidth(FontType ft, const char *str);
  */
 int GetStringHeight(FontType ft);
 
+/** Convert a string from UTF-8.
+ * Note that the string passed into this function is freed via Release
+ * if the same string is not returned from the function.
+ */
+char *ConvertFromUTF8(char *str);
+
 #endif /* FONT_H */
 

@@ -14,6 +14,7 @@
 #include "main.h"
 #include "desktop.h"
 #include "misc.h"
+#include "font.h"
 #include "settings.h"
 
 /* MWM Defines */
@@ -686,9 +687,6 @@ void ReadWMName(ClientNode *np)
    int realFormat;
    unsigned char *name;
 #ifdef USE_XUTF8
-   XTextProperty tprop;
-   char **text_list;
-   int tcount;
 #endif
 
    Assert(np);
@@ -704,7 +702,11 @@ void ReadWMName(ClientNode *np)
    if(status != Success || realFormat == 0) {
       np->name = NULL;
    } else {
-      np->name = (char*)name;
+      const size_t size = strlen(name) + 1;
+      np->name = Allocate(size);
+      memcpy(np->name, name, size);
+      JXFree(name);
+      np->name = ConvertFromUTF8(np->name);
    }
 
 #ifdef USE_XUTF8
@@ -715,16 +717,19 @@ void ReadWMName(ClientNode *np)
                                    &realType, &realFormat, &count,
                                    &extra, &name);
       if(status == Success && realFormat == 8) {
+         char **tlist;
+         XTextProperty tprop;
+         int tcount;
          tprop.value = name;
          tprop.encoding = atoms[ATOM_COMPOUND_TEXT];
          tprop.format = realFormat;
-         tprop.nitems = strlen((char *)name);
-         if(Xutf8TextPropertyToTextList(display, &tprop, &text_list, &tcount)
+         tprop.nitems = strlen((char*)name);
+         if(XmbTextPropertyToTextList(display, &tprop, &tlist, &tcount)
             == Success && tcount > 0) {
-            const size_t len = strlen(text_list[0]) + 1;
-            np->name = Xmalloc(len);
-            memcpy(np->name, text_list[0], len);
-            XFreeStringList(text_list);
+            const size_t len = strlen(tlist[0]) + 1;
+            np->name = Allocate(len);
+            memcpy(np->name, tlist[0], len);
+            XFreeStringList(tlist);
          }
          JXFree(name);
       }

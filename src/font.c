@@ -14,11 +14,13 @@
 #include "color.h"
 #include "misc.h"
 
-#ifdef HAVE_LANGINFO_H
-#  include <langinfo.h>
-#endif
-#ifdef HAVE_ICONV_H
-#  include <iconv.h>
+#ifdef USE_ICONV
+#  ifdef HAVE_LANGINFO_H
+#     include <langinfo.h>
+#  endif
+#  ifdef HAVE_ICONV_H
+#     include <iconv.h>
+#  endif
 #endif
 
 #ifdef USE_XFT
@@ -33,7 +35,9 @@ static void ReleaseUTF8String(char *utf8String);
 static char *fontNames[FONT_COUNT];
 
 #ifdef USE_ICONV
-static iconv_t conversionDescriptor = (iconv_t)-1;
+static const char *UTF8_CODESET = "UTF-8";
+static iconv_t fromUTF8 = (iconv_t)-1;
+static iconv_t toUTF8 = (iconv_t)-1;
 #endif
 
 #ifdef USE_XFT
@@ -60,10 +64,12 @@ void InitializeFonts(void)
    /* Allocate a conversion descriptor if we're not using UTF-8. */
 #ifdef USE_ICONV
    codeset = nl_langinfo(CODESET);
-   if(strcmp(codeset, "UTF-8")) {
-      conversionDescriptor = iconv_open("UTF-8", codeset);
+   if(strcmp(codeset, UTF8_CODESET)) {
+      toUTF8 = iconv_open(UTF8_CODESET, codeset);
+      fromUTF8 = iconv_open(codeset, UTF8_CODESET);
    } else {
-      conversionDescriptor = (iconv_t)-1;
+      toUTF8 = (iconv_t)-1;
+      fromUTF8 = (iconv_t)-1;
    }
 #endif
 
@@ -173,10 +179,41 @@ void DestroyFonts(void)
       }
    }
 #ifdef USE_ICONV
-   if(conversionDescriptor != (iconv_t)-1) {
-      iconv_close(conversionDescriptor);
+   if(fromUTF8 != (iconv_t)-1) {
+      iconv_close(fromUTF8);
+   }
+   if(toUTF8 != (iconv_t)-1) {
+      iconv_close(toUTF8);
    }
 #endif
+}
+
+/** Convert a string from UTF-8. */
+char *ConvertFromUTF8(char *str)
+{
+   char *result = (char*)str;
+#ifdef USE_ICONV
+   if(fromUTF8 == (iconv_t)-1) {
+      char *inBuf = (char*)str;
+      char *outBuf;
+      size_t inLeft = strlen(str);
+      size_t outLeft = 4 * inLeft;
+      size_t rc;
+      result = Allocate(outLeft + 1);
+      outBuf = result;
+      rc = iconv(fromUTF8, &inBuf, &inLeft, &outBuf, &outLeft);
+      if(rc == (size_t)-1) {
+         Warning("iconv conversion from UTF-8 failed");
+         iconv_close(fromUTF8);
+         fromUTF8 = (iconv_t)-1;
+         Release(result);
+         result = (char*)str;
+      } else {
+         *outBuf = 0;
+      }
+   }
+#endif
+   return result;
 }
 
 /** Convert a string to UTF-8. */
@@ -184,7 +221,7 @@ char *GetUTF8String(const char *str)
 {
    char *utf8String;
 #ifdef USE_ICONV
-   if(conversionDescriptor == (iconv_t)-1) {
+   if(toUTF8 == (iconv_t)-1) {
       utf8String = (char*)str;
    } else {
       char *inBuf = (char*)str;
@@ -194,11 +231,12 @@ char *GetUTF8String(const char *str)
       size_t rc;
       utf8String = Allocate(outLeft + 1);
       outBuf = utf8String;
-      rc = iconv(conversionDescriptor, &inBuf, &inLeft, &outBuf, &outLeft);
+      rc = iconv(toUTF8, &inBuf, &inLeft, &outBuf, &outLeft);
       if(rc == (size_t)-1) {
-         Warning("iconv failed");
-         iconv_close(conversionDescriptor);
-         conversionDescriptor = (iconv_t)-1;
+         Warning("iconv conversion to UTF-8 failed");
+         iconv_close(toUTF8);
+         toUTF8 = (iconv_t)-1;
+         Release(utf8String);
          utf8String = (char*)str;
       } else {
          *outBuf = 0;
@@ -214,7 +252,7 @@ char *GetUTF8String(const char *str)
 void ReleaseUTF8String(char *utf8String)
 {
 #ifdef USE_ICONV
-   if(conversionDescriptor != (iconv_t)-1) {
+   if(toUTF8 != (iconv_t)-1) {
       Release(utf8String);
    }
 #endif

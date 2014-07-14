@@ -193,7 +193,7 @@ char *ConvertFromUTF8(char *str)
 {
    char *result = (char*)str;
 #ifdef USE_ICONV
-   if(fromUTF8 == (iconv_t)-1) {
+   if(fromUTF8 != (iconv_t)-1) {
       char *inBuf = (char*)str;
       char *outBuf;
       size_t inLeft = strlen(str);
@@ -219,11 +219,9 @@ char *ConvertFromUTF8(char *str)
 /** Convert a string to UTF-8. */
 char *GetUTF8String(const char *str)
 {
-   char *utf8String;
+   char *utf8String = (char*)str;
 #ifdef USE_ICONV
-   if(toUTF8 == (iconv_t)-1) {
-      utf8String = (char*)str;
-   } else {
+   if(toUTF8 != (iconv_t)-1) {
       char *inBuf = (char*)str;
       char *outBuf;
       size_t inLeft = strlen(str);
@@ -238,12 +236,8 @@ char *GetUTF8String(const char *str)
          toUTF8 = (iconv_t)-1;
          Release(utf8String);
          utf8String = (char*)str;
-      } else {
-         *outBuf = 0;
       }
    }
-#else
-   utf8String = (char*)str;
 #endif
    return utf8String;
 }

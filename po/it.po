@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-07-10 13:25-0500\n"
+"POT-Creation-Date: 2014-08-13 18:13-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -68,17 +68,17 @@ msgstr "Permesso un solo Dock"
 msgid "could not acquire system tray selection"
 msgstr "Impossibile acquisire la selezione del vassoio di sistema"
 
-#: src/font.c:76 src/font.c:95
+#: src/font.c:111 src/font.c:130
 #, c-format
 msgid "could not load font: %s"
 msgstr "Impossibile caricare font: %s"
 
-#: src/font.c:83 src/font.c:102
+#: src/font.c:118 src/font.c:137
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "Impossibile caricare il font predefinito: %s"
 
-#: src/font.c:211
+#: src/font.c:324
 msgid "empty Font tag"
 msgstr "Etichetta Font vuota"
 

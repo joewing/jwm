@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-07-10 13:25-0500\n"
+"POT-Creation-Date: 2014-08-13 18:13-0500\n"
 "PO-Revision-Date: 2014-04-26 15:15+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -64,17 +64,17 @@ msgstr "Un seul Dock autorisé"
 msgid "could not acquire system tray selection"
 msgstr "Impossible d'obtenir la sélection de la barre système"
 
-#: src/font.c:76 src/font.c:95
+#: src/font.c:111 src/font.c:130
 #, c-format
 msgid "could not load font: %s"
 msgstr "Impossible de charger la police de caractères: %s"
 
-#: src/font.c:83 src/font.c:102
+#: src/font.c:118 src/font.c:137
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "Impossible de charger la police de caractères par défaut: %s"
 
-#: src/font.c:211
+#: src/font.c:324
 msgid "empty Font tag"
 msgstr "Balise de police de caractères vide"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-07-10 13:25-0500\n"
+"POT-Creation-Date: 2014-08-13 18:13-0500\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -68,17 +68,17 @@ msgstr "solo se permite un Dock"
 msgid "could not acquire system tray selection"
 msgstr "no se pudo adquirir selección de bandeja de sistema"
 
-#: src/font.c:76 src/font.c:95
+#: src/font.c:111 src/font.c:130
 #, c-format
 msgid "could not load font: %s"
 msgstr "no se pudo cargar el tipo de letra: %s"
 
-#: src/font.c:83 src/font.c:102
+#: src/font.c:118 src/font.c:137
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "no se pudo cargar el tipo de letra por omición: %s"
 
-#: src/font.c:211
+#: src/font.c:324
 msgid "empty Font tag"
 msgstr "etiqueta de Tipo de letra vacía"
 

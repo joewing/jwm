@@ -8,28 +8,28 @@ msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
 "POT-Creation-Date: 2014-07-10 13:25-0500\n"
-"PO-Revision-Date: 2013-06-27 15:00-0300\n"
-"Last-Translator: Víctor Martínez <vikmz@myopera.com>\n"
+"PO-Revision-Date: 2014-08-13 03:07-0400\n"
+"Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Spanish\n"
+"X-Generator: Poedit 1.6.5\n"
 
 #: src/background.c:133
 msgid "no value specified for background"
-msgstr "no hay valor especificado para fondo"
+msgstr "no hay valor especificado para fondo de pantalla"
 
 #: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
-msgstr "tipo de fondo no válido: \"%s\""
+msgstr "tipo de fondo de pantalla no válido: «%s»"
 
 #: src/background.c:291
 #, c-format
 msgid "background image not found: \"%s\""
-msgstr "imagen de fondo no encontrada: \"%s\""
+msgstr "imagen de fondo de pantalla no encontrada: «%s»"
 
 #: src/client.c:878
 msgid "Kill this window?"
@@ -42,19 +42,19 @@ msgstr "¡Esto puede causar pérdida de datos!"
 #: src/command.c:137 src/main.c:217
 #, c-format
 msgid "exec failed: (%s) %s"
-msgstr "exec falló: (%s) %s"
+msgstr "Ha fallado «exec»: (%s) %s"
 
 #: src/confirm.c:70
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: src/confirm.c:75
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: src/confirm.c:308
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #: src/desktop.c:346
 msgid "empty Desktops Name tag"
@@ -71,16 +71,16 @@ msgstr "no se pudo adquirir selección de bandeja de sistema"
 #: src/font.c:76 src/font.c:95
 #, c-format
 msgid "could not load font: %s"
-msgstr "no se pudo cargar la fuente: %s"
+msgstr "no se pudo cargar el tipo de letra: %s"
 
 #: src/font.c:83 src/font.c:102
 #, c-format
 msgid "could not load the default font: %s"
-msgstr "no se pudo cargar la fuente predeterminada: %s"
+msgstr "no se pudo cargar el tipo de letra por omición: %s"
 
 #: src/font.c:211
 msgid "empty Font tag"
-msgstr "etiqueta Fuente vacía"
+msgstr "etiqueta de Tipo de letra vacía"
 
 #: src/group.c:114
 msgid "invalid group class"
@@ -98,7 +98,7 @@ msgstr "escritorio de grupo no válido: %d"
 #: src/image.c:201
 #, c-format
 msgid "could not create read struct for PNG image: %s"
-msgstr "no se pudo crear estruct. de lectura para imagen PNG: %s"
+msgstr "no se pudo crear estructura de lectura para imagen PNG: %s"
 
 #: src/image.c:214
 #, c-format
@@ -113,12 +113,13 @@ msgstr "no se pudo crear estruct. de infor. para imagen PNG: %s"
 #: src/key.c:328
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr ""
-"Símbolo de Tecla especificado no está definido para cualquier Código de Tecla"
+"El símbolo de tecla especificado no está definido para cualquier código de "
+"tecla"
 
 #: src/key.c:336
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
-msgstr "modificador no encontrado para símbolo de tecla 0x%0x"
+msgstr "modificador no encontrado para el símbolo de tecla 0x%0x"
 
 #: src/key.c:366
 #, c-format
@@ -132,38 +133,38 @@ msgstr "símbolo de tecla no válido: \"%s\""
 
 #: src/key.c:462
 msgid "neither key nor keycode specified for Key"
-msgstr "ni tecla ni código especificado para Tecla"
+msgstr "ni tecla ni código especificados para Tecla"
 
 #: src/key.c:478
 #, c-format
 msgid "key binding: root menu %d not defined"
-msgstr "atajo de teclado: menú root %d no definido"
+msgstr "atajo de teclado: menú raíz %d no definido"
 
 #: src/lex.c:201
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
-"%s[%u]: etiqueta de cerrar \"%s\" no coincide con etiqueta de abrir \"%s\""
+"%s[%u]: etiqueta de cierre «%s» no coincide con etiqueta de apertura «%s»"
 
 #: src/lex.c:207
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
-msgstr "%s[%u]: etiqueta de cerrar inesperada y no válida"
+msgstr "%s[%u]: etiqueta de cierre inesperada y no válida"
 
 #: src/lex.c:213
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
-msgstr "%s[%u]: etiqueta de cerrar \"%s\" sin etiqueta de abrir"
+msgstr "%s[%u]: etiqueta de cierre \"%s\" sin etiqueta de apertura"
 
 #: src/lex.c:216
 #, c-format
 msgid "%s[%u]: invalid close tag"
-msgstr "%s[%u]: etiqueta de cerrar no válida"
+msgstr "%s[%u]: etiqueta de cierre no válida"
 
 #: src/lex.c:234
 #, c-format
 msgid "%s[%u]: invalid open tag"
-msgstr "%s[%u]: etiqueta de abrir no válida"
+msgstr "%s[%u]: etiqueta de apertura no válida"
 
 #: src/lex.c:250
 #, c-format
@@ -173,21 +174,21 @@ msgstr "%s[%u]: etiqueta no válida"
 #: src/lex.c:305
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
-msgstr "%s[%u]: texto inesperado: \"%s\""
+msgstr "%s[%u]: texto inesperado: «%s»"
 
 #: src/lex.c:353
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
-msgstr "%s[%d]: entidad no válida: \"%.8s\""
+msgstr "%s[%d]: entidad no válida: «%.8s»"
 
 #: src/lex.c:458 src/parse.c:1763
 msgid "out of memory"
-msgstr ""
+msgstr "Sin memoria"
 
 #: src/parse.c:1052
 #, c-format
 msgid "invalid insert mode: \"%s\""
-msgstr "modo de insertar no válido: \"%s\""
+msgstr "modo de insertar no válido: «%s»"
 
 #: src/parse.c:1778
 #, c-format
@@ -221,7 +222,7 @@ msgstr "error de configuración"
 #: src/root.c:102
 #, c-format
 msgid "invalid root menu specified: \"%c\""
-msgstr "menú root especificado no válido: \"%c\""
+msgstr "menú root especificado no válido: «%c»"
 
 #: src/root.c:232
 msgid "Exit JWM"
@@ -247,7 +248,7 @@ msgstr "ancho máx. no válido para Lista de Tareas: %s"
 #: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
-msgstr "no se pudo cargar el icono de bandeja: \"%s\""
+msgstr "no se pudo cargar el icono de bandeja: «%s»"
 
 #: src/traybutton.c:136
 msgid "no icon or label for TrayButton"
@@ -256,7 +257,7 @@ msgstr "no hay icono o etiqueta para el Botón de Bandeja"
 #: src/traybutton.c:247
 #, c-format
 msgid "invalid TrayButton action: \"%s\""
-msgstr "acción no válida para Botón de Bandeja: \"%s\""
+msgstr "acción no válida para Botón de Bandeja: «%s»"
 
 #: src/traybutton.c:432
 #, c-format
@@ -276,17 +277,17 @@ msgstr "alto de bandeja no válido: %d"
 #: src/tray.c:1124
 #, c-format
 msgid "invalid tray layout: \"%s\""
-msgstr "forma no válida para bandeja: \"%s\""
+msgstr "forma no válida para bandeja: «%s»"
 
 #: src/tray.c:1161
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "alineación horizontal no válida para bandeja: \"%s\""
+msgstr "alineación horizontal no válida para bandeja: «%s»"
 
 #: src/tray.c:1182
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
-msgstr "alineación vertical no válida para bandeja: \"%s\""
+msgstr "alineación vertical no válida para bandeja: «%s»"
 
 #: src/winmenu.c:80
 msgid "Close"

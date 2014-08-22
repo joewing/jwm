@@ -99,11 +99,10 @@ typedef enum {
    ATOM_NET_CLIENT_LIST_STACKING,
 
    ATOM_NET_WM_STRUT_PARTIAL,
+   ATOM_NET_WM_WINDOW_OPACITY,
    ATOM_NET_WM_STRUT,
 
    ATOM_NET_SYSTEM_TRAY_OPCODE,
-
-   ATOM_NET_WM_WINDOW_OPACITY,
 
    /* MWM atoms */
    ATOM_MOTIF_WM_HINTS,
@@ -212,6 +211,11 @@ ClientState ReadWindowState(Window win, char alreadyMapped);
  */
 void ReadWMHints(Window win, ClientState *state, char alreadyMapped);
 
+/** Read opacity.
+ * @param np The client.
+ */
+void ReadWMOpacity(struct ClientNode *np);
+
 /** Set the state of a client window.
  * @param np The client.
  */
@@ -220,8 +224,9 @@ void WriteState(struct ClientNode *np);
 /** Set the opacity of a client window.
  * @param np The client.
  * @param opacity The opacity to set.
+ * @param force Set the opacity even if it hasn't changed.
  */
-void SetOpacity(struct ClientNode *np, unsigned int opacity);
+void SetOpacity(struct ClientNode *np, unsigned int opacity, char force);
 
 /** Set the frame extents of a window.
  * @param win The window.

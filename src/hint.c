@@ -153,8 +153,8 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_CLIENT_LIST_STACKING],  "_NET_CLIENT_LIST_STACKING"   },
    { &atoms[ATOM_NET_WM_STRUT_PARTIAL],      "_NET_WM_STRUT_PARTIAL"       },
    { &atoms[ATOM_NET_WM_STRUT],              "_NET_WM_STRUT"               },
-   { &atoms[ATOM_NET_SYSTEM_TRAY_OPCODE],    "_NET_SYSTEM_TRAY_OPCODE"     },
    { &atoms[ATOM_NET_WM_WINDOW_OPACITY],     &opacityAtom[0]               },
+   { &atoms[ATOM_NET_SYSTEM_TRAY_OPCODE],    "_NET_SYSTEM_TRAY_OPCODE"     },
 
    { &atoms[ATOM_MOTIF_WM_HINTS],            "_MOTIF_WM_HINTS"             },
 
@@ -299,6 +299,8 @@ void ReadClientInfo(ClientNode *np, char alreadyMapped)
    /* Read WM protocols. */
    ReadWMProtocols(np->window, &np->state);
 
+   ReadWMOpacity(np);
+
    /* Make sure this client is on at least as high of a layer
     * as its owner. */
    if(np->owner != None) {
@@ -343,17 +345,15 @@ void WriteState(ClientNode *np)
 }
 
 /** Set the opacity of a client. */
-void SetOpacity(struct ClientNode *np, unsigned int opacity)
+void SetOpacity(ClientNode *np, unsigned int opacity, char force)
 {
 
-   /* Just return if there's nothing to do. */
-   if(np->state.opacity == opacity) {
+   if(np->state.opacity == opacity && !force) {
       return;
    }
 
-   /* Update the opacity. */
    np->state.opacity = opacity;
-   if(opacity == UINT_MAX) {
+   if(opacity == 0xFFFFFFFF) {
       JXDeleteProperty(display, np->parent, atoms[ATOM_NET_WM_WINDOW_OPACITY]);
    } else {
       SetCardinalAtom(np->parent, ATOM_NET_WM_WINDOW_OPACITY, opacity);
@@ -669,9 +669,6 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
       result.status |= STAT_SHAPED;
    }
 
-   /* Note that since we set _NET_WM_WINDOW_OPACITY, we don't
-    * bother reading it. */
-
    return result;
 
 }
@@ -969,6 +966,17 @@ void ReadWMHints(Window win, ClientState *state, char alreadyMapped)
       JXFree(wmhints);
    }
 
+}
+
+/** Read _NET_WM_WINDOW_OPACITY. */
+void ReadWMOpacity(ClientNode *np) {
+   unsigned long card;
+   if(GetCardinalAtom(np->window, ATOM_NET_WM_WINDOW_OPACITY, &card)) {
+      np->state.status |= STAT_OPACITY;
+   } else {
+      card = UINT_MAX;
+   }
+   np->state.opacity = (unsigned int)card;
 }
 
 /** Read _MOTIF_WM_HINTS */

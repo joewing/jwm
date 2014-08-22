@@ -212,6 +212,9 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
 
    clientCount += 1;
 
+   if(np->state.status & STAT_OPACITY) {
+      SetOpacity(np, np->state.opacity, 1);
+   }
    if(np->state.status & STAT_STICKY) {
       SetCardinalAtom(np->window, ATOM_NET_WM_DESKTOP, ~0UL);
    } else {
@@ -800,12 +803,16 @@ void FocusClient(ClientNode *np)
 
       if(activeClient) {
          activeClient->state.status &= ~STAT_ACTIVE;
-         SetOpacity(activeClient, settings.inactiveClientOpacity);
+         if(!(activeClient->state.status & STAT_OPACITY)) {
+            SetOpacity(activeClient, settings.inactiveClientOpacity, 0);
+         }
          DrawBorder(activeClient);
       }
       np->state.status |= STAT_ACTIVE;
       activeClient = np;
-      SetOpacity(np, settings.activeClientOpacity);
+      if(!(np->state.status & STAT_OPACITY)) {
+         SetOpacity(np, settings.activeClientOpacity, 0);
+      }
 
       DrawBorder(np);
       UpdatePager();

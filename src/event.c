@@ -779,6 +779,9 @@ char HandlePropertyNotify(const XPropertyEvent *event)
             UpdateState(np);
             WriteState(np);
             ResetBorder(np);
+         } else if(event->atom == atoms[ATOM_NET_WM_WINDOW_OPACITY]) {
+            ReadWMOpacity(np);
+            SetOpacity(np, np->state.opacity, 1);
          }
          break;
       }

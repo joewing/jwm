@@ -698,7 +698,7 @@ void ReadWMName(ClientNode *np)
    if(status != Success || realFormat == 0) {
       np->name = NULL;
    } else {
-      const size_t size = strlen(name) + 1;
+      const size_t size = strlen((char*)name) + 1;
       np->name = Allocate(size);
       memcpy(np->name, name, size);
       JXFree(name);
@@ -733,8 +733,12 @@ void ReadWMName(ClientNode *np)
 #endif
 
    if(!np->name) {
-      if(JXFetchName(display, np->window, &np->name) == 0) {
-         np->name = NULL;
+      char *temp = NULL;
+      if(JXFetchName(display, np->window, &temp)) {
+         const size_t len = strlen(temp) + 1;
+         np->name = Allocate(len);
+         memcpy(np->name, temp, len);
+         JXFree(temp);
       }
    }
 

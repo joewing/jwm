@@ -42,10 +42,8 @@ static iconv_t toUTF8 = (iconv_t)-1;
 
 #ifdef USE_XFT
 static XftFont *fonts[FONT_COUNT];
-static XftDraw *xd;
 #else
 static XFontStruct *fonts[FONT_COUNT];
-static GC fontGC;
 #endif
 
 /** Initialize font data. */
@@ -79,10 +77,6 @@ void InitializeFonts(void)
 void StartupFonts(void)
 {
 
-#ifndef USE_XFT
-   XGCValues gcValues;
-   unsigned long gcMask;
-#endif
    unsigned int x;
 
    /* Inherit unset fonts from the tray for tray items. */
@@ -119,8 +113,6 @@ void StartupFonts(void)
       }
    }
 
-   xd = XftDrawCreate(display, rootWindow, rootVisual, rootColormap);
-
 #else /* USE_XFT */
 
    for(x = 0; x < FONT_COUNT; x++) {
@@ -137,10 +129,6 @@ void StartupFonts(void)
          FatalError(_("could not load the default font: %s"), DEFAULT_FONT);
       }
    }
-
-   gcMask = GCGraphicsExposures;
-   gcValues.graphics_exposures = False;
-   fontGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
 
 #endif /* USE_XFT */
 
@@ -160,12 +148,6 @@ void ShutdownFonts(void)
          fonts[x] = NULL;
       }
    }
-
-#ifdef USE_XFT
-   XftDrawDestroy(xd);
-#else
-   JXFreeGC(display, fontGC);
-#endif
 }
 
 /** Destroy font data. */
@@ -331,7 +313,8 @@ void SetFont(FontType type, const char *value)
 }
 
 /** Display a string. */
-void RenderString(Drawable d, FontType font, ColorType color,
+void RenderString(const VisualData *visual, Drawable d,
+                  FontType font, ColorType color,
                   int x, int y, int width, const char *str)
 {
 
@@ -349,7 +332,12 @@ void RenderString(Drawable d, FontType font, ColorType color,
    int unicodeLength;
 #endif
 #ifdef USE_XFT
+   XftDraw *xd;
    XGlyphInfo extents;
+#else
+   XGCValues gcValues;
+   unsigned long gcMask;
+   GC gc;
 #endif
    char *utf8String;
 
@@ -363,6 +351,15 @@ void RenderString(Drawable d, FontType font, ColorType color,
 
    /* Get the length of the UTF-8 string. */
    len = strlen(utf8String);
+
+#ifdef USE_XFT
+   xd = XftDrawCreate(display, d, visual->visual, rootColormap);
+#else
+   gcMask = GCGraphicsExposures;
+   gcValues.graphics_exposures = False;
+   gc = JXCreateGC(display, d, gcMask, &gcValues);
+#endif
+
 
    /* Apply the bidi algorithm if requested. */
 #ifdef USE_FRIBIDI
@@ -398,17 +395,16 @@ void RenderString(Drawable d, FontType font, ColorType color,
 
    /* Display the string. */
 #ifdef USE_XFT
-   JXftDrawChange(xd, d);
    JXftDrawSetClip(xd, renderRegion);
    JXftDrawStringUtf8(xd, GetXftColor(color), fonts[font],
                       x, y + fonts[font]->ascent,
                       (const unsigned char*)output, len);
    JXftDrawChange(xd, rootWindow);
 #else
-   JXSetForeground(display, fontGC, colors[color]);
-   JXSetRegion(display, fontGC, renderRegion);
-   JXSetFont(display, fontGC, fonts[font]->fid);
-   JXDrawString(display, d, fontGC, x, y + fonts[font]->ascent, output, len);
+   JXSetForeground(display, gc, colors[color]);
+   JXSetRegion(display, gc, renderRegion);
+   JXSetFont(display, gc, fonts[font]->fid);
+   JXDrawString(display, d, gc, x, y + fonts[font]->ascent, output, len);
 #endif
 
    /* Free any memory used for UTF conversion. */
@@ -420,5 +416,11 @@ void RenderString(Drawable d, FontType font, ColorType color,
    ReleaseUTF8String(utf8String);
 
    XDestroyRegion(renderRegion);
+
+#ifdef USE_XFT
+   XftDrawDestroy(xd);
+#else
+   JXFreeGC(display, gc);
+#endif
 
 }

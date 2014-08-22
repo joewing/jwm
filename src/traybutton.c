@@ -253,7 +253,7 @@ void Create(TrayComponentType *cp)
    }
 
    cp->pixmap = JXCreatePixmap(display, rootWindow,
-                               cp->width, cp->height, rootDepth);
+                               cp->width, cp->height, rootVisual.depth);
 
    Draw(cp, 0);
 
@@ -284,7 +284,7 @@ void Draw(TrayComponentType *cp, int active)
    bp = (TrayButtonType*)cp->object;
 
    ClearTrayDrawable(cp);
-   ResetButton(&button, cp->pixmap, rootGC);
+   ResetButton(&button, cp->pixmap, &rootVisual);
    if(active) {
       button.type = BUTTON_TRAY_ACTIVE;
    } else {

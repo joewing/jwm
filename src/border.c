@@ -18,18 +18,22 @@
 #include "grab.h"
 #include "button.h"
 
-static GC borderGC;
 static char *buttonNames[BI_COUNT];
 static IconNode *buttonIcons[BI_COUNT];
 
 static void DrawBorderHelper(const ClientNode *np);
-static void DrawBorderButtons(const ClientNode *np, Pixmap canvas);
+static void DrawBorderButtons(const ClientNode *np,
+                              Pixmap canvas, GC gc);
 static char DrawBorderIcon(BorderIconType t, unsigned int offset,
-                           Pixmap canvas);
-static void DrawCloseButton(unsigned int offset, Pixmap canvas);
-static void DrawMaxIButton(unsigned int offset, Pixmap canvas);
-static void DrawMaxAButton(unsigned int offset, Pixmap canvas);
-static void DrawMinButton(unsigned int offset, Pixmap canvas);
+                           const VisualData *visual, Pixmap canvas);
+static void DrawCloseButton(unsigned int offset, const VisualData *visual,
+                            Pixmap canvas, GC gc);
+static void DrawMaxIButton(unsigned int offset, const VisualData *visual,
+                           Pixmap canvas, GC gc);
+static void DrawMaxAButton(unsigned int offset, const VisualData *visual,
+                           Pixmap canvas, GC gc);
+static void DrawMinButton(unsigned int offset, const VisualData *visual,
+                          Pixmap canvas, GC gc);
 static unsigned int GetButtonCount(const ClientNode *np);
 
 #ifdef USE_SHAPE
@@ -46,14 +50,7 @@ void InitializeBorders(void)
 /** Initialize server resources. */
 void StartupBorders(void)
 {
-
-   XGCValues gcValues;
-   unsigned long gcMask;
    unsigned int i;
-
-   gcMask = GCGraphicsExposures;
-   gcValues.graphics_exposures = False;
-   borderGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
 
    for(i = 0; i < BI_COUNT; i++) {
       if(buttonNames[i]) {
@@ -69,7 +66,6 @@ void StartupBorders(void)
 /** Release server resources. */
 void ShutdownBorders(void)
 {
-   JXFreeGC(display, borderGC);
 }
 
 /** Get the size of the icon to display on a window. */
@@ -335,6 +331,7 @@ void DrawBorderHelper(const ClientNode *np)
    unsigned int buttonCount;
    int titleWidth;
    Pixmap canvas;
+   GC gc;
 
    Assert(np);
 
@@ -363,11 +360,13 @@ void DrawBorderHelper(const ClientNode *np)
    /* Set parent background to reduce flicker. */
    JXSetWindowBackground(display, np->parent, titleColor2);
 
-   canvas = JXCreatePixmap(display, np->parent, width, north, rootDepth);
+   canvas = JXCreatePixmap(display, np->parent, width, north,
+                           np->visual.depth);
+   gc = JXCreateGC(display, canvas, 0, NULL);
 
    /* Clear the window with the right color. */
-   JXSetForeground(display, borderGC, titleColor2);
-   JXFillRectangle(display, canvas, borderGC, 0, 0, width, north);
+   JXSetForeground(display, gc, titleColor2);
+   JXFillRectangle(display, canvas, gc, 0, 0, width, north);
 
    /* Determine how many pixels may be used for the title. */
    buttonCount = GetButtonCount(np);
@@ -380,31 +379,31 @@ void DrawBorderHelper(const ClientNode *np)
       settings.titleHeight > settings.borderWidth) {
 
       /* Draw a title bar. */
-      DrawHorizontalGradient(canvas, borderGC, titleColor1, titleColor2,
+      DrawHorizontalGradient(canvas, gc, titleColor1, titleColor2,
                              1, 1, width - 2, settings.titleHeight - 2);
 
       /* Draw the icon. */
       if(np->icon && np->width >= settings.titleHeight) {
-         PutIcon(np->icon, canvas, colors[borderTextColor],
+         PutIcon(&np->visual, np->icon, canvas, colors[borderTextColor],
                  6, (settings.titleHeight - iconSize) / 2,
                  iconSize, iconSize);
       }
 
       if(np->name && np->name[0] && titleWidth > 0) {
          const int sheight = GetStringHeight(FONT_BORDER);
-         RenderString(canvas, FONT_BORDER, borderTextColor,
+         RenderString(&np->visual, canvas, FONT_BORDER, borderTextColor,
                       iconSize + 6 + 4,
                       (settings.titleHeight - sheight) / 2,
                       titleWidth, np->name);
       }
 
-      DrawBorderButtons(np, canvas);
+      DrawBorderButtons(np, canvas, gc);
 
    }
 
 
    /* Copy the title bar to the window. */
-   JXCopyArea(display, canvas, np->parent, borderGC, 1, 1,
+   JXCopyArea(display, canvas, np->parent, gc, 1, 1,
               width - 2, north - 1, 1, 1);
 
    /* Window outline.
@@ -412,19 +411,20 @@ void DrawBorderHelper(const ClientNode *np)
     */
    JXClearArea(display, np->parent, 1, north,
                width - 2, height - north - 1, False);
-   JXSetForeground(display, borderGC, outlineColor);
+   JXSetForeground(display, gc, outlineColor);
    if(np->state.status & STAT_SHADED) {
-      DrawRoundedRectangle(np->parent, borderGC, 0, 0, width - 1, north - 1,
+      DrawRoundedRectangle(np->parent, gc, 0, 0, width - 1, north - 1,
                            CORNER_RADIUS);
    } else if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
-      JXDrawRectangle(display, np->parent, borderGC, 0, 0,
+      JXDrawRectangle(display, np->parent, gc, 0, 0,
                       width - 1, height - 1);
    } else {
-      DrawRoundedRectangle(np->parent, borderGC, 0, 0, width - 1, height - 1,
+      DrawRoundedRectangle(np->parent, gc, 0, 0, width - 1, height - 1,
                            CORNER_RADIUS);
    }
 
    JXFreePixmap(display, canvas);
+   JXFreeGC(display, gc);
 
 }
 
@@ -475,7 +475,7 @@ unsigned int GetButtonCount(const ClientNode *np)
 }
 
 /** Draw the buttons on a client frame. */
-void DrawBorderButtons(const ClientNode *np, Pixmap canvas)
+void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
 {
 
    long color;
@@ -496,11 +496,11 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas)
    } else {
       color = colors[COLOR_TITLE_FG];
    }
-   JXSetForeground(display, borderGC, color);
+   JXSetForeground(display, gc, color);
 
    /* Close button. */
    if(np->state.border & BORDER_CLOSE) {
-      DrawCloseButton(offset, canvas);
+      DrawCloseButton(offset, &np->visual, canvas, gc);
       offset -= settings.titleHeight;
       if(offset <= settings.titleHeight) {
          return;
@@ -510,9 +510,9 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas)
    /* Maximize button. */
    if(np->state.border & BORDER_MAX) {
       if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
-         DrawMaxAButton(offset, canvas);
+         DrawMaxAButton(offset, &np->visual, canvas, gc);
       } else {
-         DrawMaxIButton(offset, canvas);
+         DrawMaxIButton(offset, &np->visual, canvas, gc);
       }
       offset -= settings.titleHeight;
       if(offset <= settings.titleHeight) {
@@ -522,17 +522,18 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas)
 
    /* Minimize button. */
    if(np->state.border & BORDER_MIN) {
-      DrawMinButton(offset, canvas);
+      DrawMinButton(offset, &np->visual, canvas, gc);
    }
 
 }
 
 /** Attempt to draw a border icon. */
-char DrawBorderIcon(BorderIconType t, unsigned int offset, Pixmap canvas)
+char DrawBorderIcon(BorderIconType t, unsigned int offset,
+                    const VisualData *visual, Pixmap canvas)
 {
    if(buttonIcons[t]) {
       ButtonNode button;
-      ResetButton(&button, canvas, borderGC);
+      ResetButton(&button, canvas, visual);
       button.x       = offset;
       button.y       = 0;
       button.width   = settings.titleHeight;
@@ -547,14 +548,15 @@ char DrawBorderIcon(BorderIconType t, unsigned int offset, Pixmap canvas)
 }
 
 /** Draw a close button. */
-void DrawCloseButton(unsigned int offset, Pixmap canvas)
+void DrawCloseButton(unsigned int offset, const VisualData *visual,
+                     Pixmap canvas, GC gc)
 {
    XSegment segments[2];
    unsigned int size;
    unsigned int x1, y1;
    unsigned int x2, y2;
 
-   if(DrawBorderIcon(BI_CLOSE, offset, canvas)) {
+   if(DrawBorderIcon(BI_CLOSE, offset, visual, canvas)) {
       return;
    }
 
@@ -574,16 +576,17 @@ void DrawCloseButton(unsigned int offset, Pixmap canvas)
    segments[1].x2 = x1;
    segments[1].y2 = y2;
 
-   JXSetLineAttributes(display, borderGC, 2, LineSolid,
+   JXSetLineAttributes(display, gc, 2, LineSolid,
                        CapProjecting, JoinBevel);
-   JXDrawSegments(display, canvas, borderGC, segments, 2);
-   JXSetLineAttributes(display, borderGC, 1, LineSolid,
+   JXDrawSegments(display, canvas, gc, segments, 2);
+   JXSetLineAttributes(display, gc, 1, LineSolid,
                        CapNotLast, JoinMiter);
 
 }
 
 /** Draw an inactive maximize button. */
-void DrawMaxIButton(unsigned int offset, Pixmap canvas)
+void DrawMaxIButton(unsigned int offset, const VisualData *visual,
+                    Pixmap canvas, GC gc)
 {
 
    XSegment segments[5];
@@ -591,7 +594,7 @@ void DrawMaxIButton(unsigned int offset, Pixmap canvas)
    unsigned int x1, y1;
    unsigned int x2, y2;
 
-   if(DrawBorderIcon(BI_MAX, offset, canvas)) {
+   if(DrawBorderIcon(BI_MAX, offset, visual, canvas)) {
       return;
    }
 
@@ -626,16 +629,17 @@ void DrawMaxIButton(unsigned int offset, Pixmap canvas)
    segments[4].x2 = x2;
    segments[4].y2 = y2;
 
-   JXSetLineAttributes(display, borderGC, 1, LineSolid,
+   JXSetLineAttributes(display, gc, 1, LineSolid,
                        CapProjecting, JoinMiter);
-   JXDrawSegments(display, canvas, borderGC, segments, 5);
-   JXSetLineAttributes(display, borderGC, 1, LineSolid,
+   JXDrawSegments(display, canvas, gc, segments, 5);
+   JXSetLineAttributes(display, gc, 1, LineSolid,
                        CapButt, JoinMiter);
 
 }
 
 /** Draw an active maximize button. */
-void DrawMaxAButton(unsigned int offset, Pixmap canvas)
+void DrawMaxAButton(unsigned int offset, const VisualData *visual,
+                    Pixmap canvas, GC gc)
 {
    XSegment segments[8];
    unsigned int size;
@@ -643,7 +647,7 @@ void DrawMaxAButton(unsigned int offset, Pixmap canvas)
    unsigned int x2, y2;
    unsigned int x3, y3;
 
-   if(DrawBorderIcon(BI_MAX_ACTIVE, offset, canvas)) {
+   if(DrawBorderIcon(BI_MAX_ACTIVE, offset, visual, canvas)) {
       return;
    }
 
@@ -695,22 +699,23 @@ void DrawMaxAButton(unsigned int offset, Pixmap canvas)
    segments[7].x2 = x3;
    segments[7].y2 = y2;
 
-   JXSetLineAttributes(display, borderGC, 1, LineSolid,
+   JXSetLineAttributes(display, gc, 1, LineSolid,
                        CapProjecting, JoinMiter);
-   JXDrawSegments(display, canvas, borderGC, segments, 8);
-   JXSetLineAttributes(display, borderGC, 1, LineSolid,
+   JXDrawSegments(display, canvas, gc, segments, 8);
+   JXSetLineAttributes(display, gc, 1, LineSolid,
                        CapButt, JoinMiter);
 }
 
 /** Draw a minimize button. */
-void DrawMinButton(unsigned int offset, Pixmap canvas)
+void DrawMinButton(unsigned int offset, const VisualData *visual,
+                   Pixmap canvas, GC gc)
 {
 
    unsigned int size;
    unsigned int x1, y1;
    unsigned int x2, y2;
 
-   if(DrawBorderIcon(BI_MIN, offset, canvas)) {
+   if(DrawBorderIcon(BI_MIN, offset, visual, canvas)) {
       return;
    }
 
@@ -719,10 +724,10 @@ void DrawMinButton(unsigned int offset, Pixmap canvas)
    y1 = settings.titleHeight / 2 - size / 2;
    x2 = x1 + size;
    y2 = y1 + size;
-   JXSetLineAttributes(display, borderGC, 2, LineSolid,
+   JXSetLineAttributes(display, gc, 2, LineSolid,
                        CapProjecting, JoinMiter);
-   JXDrawLine(display, canvas, borderGC, x1, y2, x2, y2);
-   JXSetLineAttributes(display, borderGC, 1, LineSolid, CapButt, JoinMiter);
+   JXDrawLine(display, canvas, gc, x1, y2, x2, y2);
+   JXSetLineAttributes(display, gc, 1, LineSolid, CapButt, JoinMiter);
 
 }
 

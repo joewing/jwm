@@ -40,11 +40,11 @@ void DrawButton(ButtonNode *bp)
    Assert(bp);
 
    drawable = bp->drawable;
-   gc = bp->gc;
    x = bp->x;
    y = bp->y;
    width = bp->width;
    height = bp->height;
+   gc = JXCreateGC(display, drawable, 0, NULL);
 
    /* Determine the colors to use. */
    switch(bp->type) {
@@ -152,7 +152,7 @@ void DrawButton(ButtonNode *bp)
    /* Display the icon. */
    if(bp->icon) {
       yoffset = (height - iconHeight + 1) / 2;
-      PutIcon(bp->icon, drawable, colors[fg],
+      PutIcon(bp->visual, bp->icon, drawable, colors[fg],
               x + xoffset, y + yoffset,
               iconWidth, iconHeight);
       xoffset += iconWidth + 2;
@@ -161,21 +161,24 @@ void DrawButton(ButtonNode *bp)
    /* Display the label. */
    if(bp->text && textWidth) {
       yoffset = (height - textHeight + 1) / 2;
-      RenderString(drawable, bp->font, fg, x + xoffset, y + yoffset,
+      RenderString(bp->visual, drawable, bp->font, fg,
+                   x + xoffset, y + yoffset,
                    textWidth, bp->text);
    }
+
+   JXFreeGC(display, gc);
 
 }
 
 /** Reset a button node with default values. */
-void ResetButton(ButtonNode *bp, Drawable d, GC g)
+void ResetButton(ButtonNode *bp, Drawable d, const VisualData *visual)
 {
 
    Assert(bp);
 
    bp->type = BUTTON_MENU;
+   bp->visual = visual;
    bp->drawable = d;
-   bp->gc = g;
    bp->font = FONT_TRAY;
    bp->alignment = ALIGN_LEFT;
    bp->x = 0;

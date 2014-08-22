@@ -47,10 +47,9 @@
 Display *display = NULL;
 Window rootWindow;
 int rootWidth, rootHeight;
-int rootDepth;
 int rootScreen;
 Colormap rootColormap;
-Visual *rootVisual;
+VisualData rootVisual;
 GC rootGC;
 int colormapCount;
 Window supportingWindow;
@@ -297,9 +296,9 @@ void OpenConnection(void)
    rootWindow = RootWindow(display, rootScreen);
    rootWidth = DisplayWidth(display, rootScreen);
    rootHeight = DisplayHeight(display, rootScreen);
-   rootDepth = DefaultDepth(display, rootScreen);
+   rootVisual.depth = DefaultDepth(display, rootScreen);
+   rootVisual.visual = DefaultVisual(display, rootScreen);
    rootColormap = DefaultColormap(display, rootScreen);
-   rootVisual = DefaultVisual(display, rootScreen);
    rootGC = DefaultGC(display, rootScreen);
    colormapCount = MaxCmapsOfScreen(ScreenOfDisplay(display, rootScreen));
 
@@ -339,7 +338,7 @@ void StartupConnection(void)
    initializing = 1;
    OpenConnection();
 
-#if 0
+#if 1
    XSynchronize(display, True);
 #endif
 

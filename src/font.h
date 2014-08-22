@@ -12,6 +12,8 @@
 
 #include "color.h"
 
+struct VisualData;
+
 /** Enumeration of different components that use fonts. */
 typedef unsigned char FontType;
 #define FONT_BORDER     0
@@ -36,6 +38,7 @@ void DestroyFonts(void);
 void SetFont(FontType type, const char *value);
 
 /** Render a string.
+ * @param visual The visual and depth.
  * @param d The drawable on which to render the string.
  * @param font The font to use.
  * @param color The text color to use.
@@ -44,7 +47,8 @@ void SetFont(FontType type, const char *value);
  * @param width The maximum width allowed.
  * @param str The string to render.
  */
-void RenderString(Drawable d, FontType font, ColorType color,
+void RenderString(const struct VisualData *visual, Drawable d,
+                  FontType font, ColorType color,
                   int x, int y, int width, const char *str);
 
 /** Get the width of a string.

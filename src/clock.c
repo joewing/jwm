@@ -171,7 +171,7 @@ void Create(TrayComponentType *cp)
    Assert(cp);
 
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
-                               rootDepth);
+                               rootVisual.depth);
 
 }
 
@@ -195,7 +195,7 @@ void Resize(TrayComponentType *cp)
    }
 
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
-                               rootDepth);
+                               rootVisual.depth);
 
    clk->shortTime[0] = 0;
 
@@ -305,7 +305,7 @@ void DrawClock(ClockType *clk, const TimeType *now, int x, int y)
    if(rwidth == clk->cp->requestedWidth || clk->userWidth) {
 
       /* Draw the clock. */
-      RenderString(cp->pixmap, FONT_CLOCK, COLOR_CLOCK_FG,
+      RenderString(&rootVisual, cp->pixmap, FONT_CLOCK, COLOR_CLOCK_FG,
                    (cp->width - width) / 2,
                    (cp->height - GetStringHeight(FONT_CLOCK)) / 2,
                    cp->width, shortTime);

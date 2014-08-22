@@ -99,6 +99,7 @@ int ErrorHandler(Display *d, XErrorEvent *e) {
 #if 1
    ShowCheckpoint();
 #endif
+abort();
 
 #endif
 

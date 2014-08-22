@@ -155,13 +155,12 @@ void StartupColors(void)
    XColor c;
 
    /* Determine how to convert between RGB triples and pixels. */
-   Assert(rootVisual);
-   switch(rootVisual->class) {
+   switch(rootVisual.visual->class) {
    case DirectColor:
    case TrueColor:
-      ComputeShiftMask(rootVisual->red_mask, &redShift, &redMask);
-      ComputeShiftMask(rootVisual->green_mask, &greenShift, &greenMask);
-      ComputeShiftMask(rootVisual->blue_mask, &blueShift, &blueMask);
+      ComputeShiftMask(rootVisual.visual->red_mask, &redShift, &redMask);
+      ComputeShiftMask(rootVisual.visual->green_mask, &greenShift, &greenMask);
+      ComputeShiftMask(rootVisual.visual->blue_mask, &blueShift, &blueMask);
       map = NULL;
       break;
    default:
@@ -267,7 +266,7 @@ void ShutdownColors(void)
 
    for(x = 0; x < COLOR_COUNT; x++) {
       if(xftColors[x]) {
-         JXftColorFree(display, rootVisual, rootColormap, xftColors[x]);
+         JXftColorFree(display, rootVisual.visual, rootColormap, xftColors[x]);
          Release(xftColors[x]);
          xftColors[x] = NULL;
       }
@@ -619,8 +618,7 @@ void GetMappedPixel(XColor *c)
 void GetColor(XColor *c)
 {
    Assert(c);
-   Assert(rootVisual);
-   switch(rootVisual->class) {
+   switch(rootVisual.visual->class) {
    case DirectColor:
    case TrueColor:
       GetDirectPixel(c);
@@ -636,7 +634,7 @@ void GetColorFromPixel(XColor *c)
 {
 
    Assert(c);
-	switch(rootVisual->class) {
+	switch(rootVisual.visual->class) {
 	case DirectColor:
 	case TrueColor:
 		/* Nothing to do. */
@@ -673,7 +671,7 @@ XftColor *GetXftColor(ColorType type)
       rcolor.red = ((rgb >> 16) & 0xFF) * 257;
       rcolor.green = ((rgb >> 8) & 0xFF) * 257;
       rcolor.blue = (rgb & 0xFF) * 257;
-      JXftColorAllocValue(display, rootVisual, rootColormap, &rcolor,
+      JXftColorAllocValue(display, rootVisual.visual, rootColormap, &rcolor,
                           xftColors[type]);
    }
 

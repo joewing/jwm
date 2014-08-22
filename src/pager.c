@@ -139,7 +139,7 @@ void Create(TrayComponentType *cp)
    Assert(cp->height > 0);
 
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width,
-                               cp->height, rootDepth);
+                               cp->height, rootVisual.depth);
    pp->buffer = cp->pixmap;
 
 }
@@ -550,8 +550,8 @@ void UpdatePager(void)
                if(textWidth < deskWidth) {
                   xc = dx * (deskWidth + 1) + (deskWidth - textWidth) / 2;
                   yc = dy * (deskHeight + 1) + (deskHeight - textHeight) / 2;
-                  RenderString(buffer, FONT_PAGER, COLOR_PAGER_TEXT, xc, yc,
-                               deskWidth, name);
+                  RenderString(&rootVisual, buffer, FONT_PAGER,
+                               COLOR_PAGER_TEXT, xc, yc, deskWidth, name);
                }
             }
          }

@@ -371,7 +371,7 @@ void CreateMenu(Menu *menu, int x, int y)
                                  CopyFromParent, InputOutput,
                                  CopyFromParent, attrMask, &attr);
    menu->pixmap = JXCreatePixmap(display, menu->window,
-                                 menu->width, menu->height, rootDepth);
+                                 menu->width, menu->height, rootVisual.depth);
 
    if(settings.menuOpacity < UINT_MAX) {
       SetCardinalAtom(menu->window, ATOM_NET_WM_WINDOW_OPACITY,
@@ -617,7 +617,7 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
 
    if(!item) {
       if(index == -1 && menu->label) {
-         ResetButton(&button, menu->pixmap, rootGC);
+         ResetButton(&button, menu->pixmap, &rootVisual);
          button.x = MENU_BORDER_SIZE;
          button.y = 0;
          button.width = menu->width - 2 * MENU_BORDER_SIZE - 1;
@@ -634,7 +634,7 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
    if(item->type != MENU_ITEM_SEPARATOR) {
       ColorType fg;
 
-      ResetButton(&button, menu->pixmap, rootGC);
+      ResetButton(&button, menu->pixmap, &rootVisual);
       if(menu->currentIndex == index) {
          button.type = BUTTON_MENU_ACTIVE;
          fg = COLOR_MENU_ACTIVE_FG;

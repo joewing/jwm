@@ -16,8 +16,8 @@
 #include "error.h"
 
 /** Draw a scaled icon. */
-void PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
-                         int x, int y)
+void PutScaledRenderIcon(const VisualData *visual, IconNode *icon,
+                         ScaledIconNode *node, Drawable d, int x, int y)
 {
 
 #ifdef USE_XRENDER
@@ -36,7 +36,8 @@ void PutScaledRenderIcon(IconNode *icon, ScaledIconNode *node, Drawable d,
       int xscale, yscale;
       Picture dest;
       Picture alpha = node->alphaPicture;
-      XRenderPictFormat *fp = JXRenderFindVisualFormat(display, rootVisual);
+      XRenderPictFormat *fp = JXRenderFindVisualFormat(display,
+                                                       visual->visual);
       Assert(fp);
 
       pa.subwindow_mode = IncludeInferiors;
@@ -109,14 +110,14 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, long fg,
    result->mask = JXCreatePixmap(display, rootWindow, width, height, 8);
    maskGC = JXCreateGC(display, result->mask, 0, NULL);
    result->image = JXCreatePixmap(display, rootWindow, width, height,
-                                  rootDepth);
+                                  rootVisual.depth);
 
-   destImage = JXCreateImage(display, rootVisual, rootDepth, ZPixmap, 0,
-                             NULL, width, height, 8, 0);
+   destImage = JXCreateImage(display, rootVisual.visual, rootVisual.depth,
+                             ZPixmap, 0, NULL, width, height, 8, 0);
    destImage->data = Allocate(sizeof(unsigned long) * width * height);
 
-   destMask = JXCreateImage(display, rootVisual, 8, ZPixmap, 0,
-                            NULL, width, height, 8, 0);
+   destMask = JXCreateImage(display, rootVisual.visual, 8, ZPixmap,
+                            0, NULL, width, height, 8, 0);
    destMask->data = Allocate(width * height);
 
    maskLine = 0;
@@ -180,7 +181,7 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, long fg,
                                                 0, NULL);
    
    /* Create the render picture. */
-   fp = JXRenderFindVisualFormat(display, rootVisual);
+   fp = JXRenderFindVisualFormat(display, rootVisual.visual);
    Assert(fp);
    result->imagePicture = JXRenderCreatePicture(display, result->image, fp,
                                                 0, NULL);

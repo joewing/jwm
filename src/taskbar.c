@@ -185,7 +185,7 @@ void Create(TrayComponentType *cp)
    Assert(cp->height > 0);
 
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
-                               rootDepth);
+                               rootVisual.depth);
    tp->buffer = cp->pixmap;
 
    ClearTrayDrawable(cp);
@@ -218,7 +218,7 @@ void Resize(TrayComponentType *cp)
    Assert(cp->height > 0);
 
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
-                               rootDepth);
+                               rootVisual.depth);
    tp->buffer = cp->pixmap;
 
    ClearTrayDrawable(cp);
@@ -470,7 +470,7 @@ void Render(const TaskBarType *bp)
       remainder = 0;
    }
 
-   ResetButton(&button, buffer, gc);
+   ResetButton(&button, buffer, &rootVisual);
    button.font = FONT_TASK;
 
    for(tp = taskBarNodes; tp; tp = tp->next) {

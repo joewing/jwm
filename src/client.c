@@ -34,8 +34,7 @@ static ClientNode *activeClient;
 unsigned int clientCount;
 
 static void LoadFocus(void);
-static void ReparentClient(ClientNode *np, char notOwner,
-                           const XWindowAttributes *cattr);
+static void ReparentClient(ClientNode *np, char notOwner);
 static void MinimizeTransients(ClientNode *np, char lower);
 static void RestoreTransients(ClientNode *np, char raise);
 static void KillClientHandler(ClientNode *np);
@@ -153,6 +152,8 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    np->y = attr.y;
    np->width = attr.width;
    np->height = attr.height;
+   np->visual.depth = attr.depth;
+   np->visual.visual = attr.visual;
    np->cmap = attr.colormap;
    np->colormaps = NULL;
    np->state.status = STAT_NONE;
@@ -186,7 +187,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    nodes[np->state.layer] = np;
 
    SetDefaultCursor(np->window);
-   ReparentClient(np, notOwner, &attr);
+   ReparentClient(np, notOwner);
    PlaceClient(np, alreadyMapped);
 
    if(!(np->state.status & (STAT_FULLSCREEN | STAT_VMAX | STAT_HMAX))) {
@@ -1281,8 +1282,7 @@ ClientNode *FindClientByParent(Window p)
 }
 
 /** Reparent a client window. */
-void ReparentClient(ClientNode *np, char notOwner,
-                    const XWindowAttributes *cattr)
+void ReparentClient(ClientNode *np, char notOwner)
 {
 
    XSetWindowAttributes attr;
@@ -1312,9 +1312,6 @@ void ReparentClient(ClientNode *np, char notOwner,
 
    attrMask = 0;
 
-   attrMask |= CWBackPixmap;
-   attr.background_pixmap = ParentRelative;
-
    /* We can't use PointerMotionHint mask here since the exact location
     * of the mouse on the frame is important. */
    attrMask |= CWEventMask;
@@ -1336,6 +1333,12 @@ void ReparentClient(ClientNode *np, char notOwner,
    attrMask |= CWBackPixel;
    attr.background_pixel = colors[COLOR_TITLE_BG2];
 
+   attrMask |= CWBorderPixel;
+   attr.border_pixel = 0;
+
+   attrMask |= CWColormap;
+   attr.colormap = np->cmap;
+
    x = np->x;
    y = np->y;
    width = np->width;
@@ -1348,8 +1351,8 @@ void ReparentClient(ClientNode *np, char notOwner,
 
    /* Create the frame window. */
    np->parent = JXCreateWindow(display, rootWindow, x, y, width, height,
-                               0, cattr->depth, InputOutput,
-                               cattr->visual, attrMask, &attr);
+                               0, np->visual.depth, InputOutput,
+                               np->visual.visual, attrMask, &attr);
  
    /* Update the window to get only the events we want. */
    attrMask = CWDontPropagate;

@@ -99,8 +99,8 @@ void StartupTray(void)
 
       tp->window = JXCreateWindow(display, rootWindow,
                                   tp->x, tp->y, tp->width, tp->height,
-                                  0, rootDepth, InputOutput, rootVisual,
-                                  attrMask, &attr);
+                                  0, rootVisual.depth, InputOutput,
+                                  rootVisual.visual, attrMask, &attr);
 
       if(settings.trayOpacity < UINT_MAX) {
          /* Can't use atoms yet as it hasn't been initialized. */

@@ -59,7 +59,7 @@ void SetSize(TrayComponentType *cp, int width, int height)
 void Create(TrayComponentType *cp)
 {
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
-                               rootDepth);
+                               rootVisual.depth);
    ClearTrayDrawable(cp);
 }
 
@@ -70,7 +70,7 @@ void Resize(TrayComponentType *cp)
       JXFreePixmap(display, cp->pixmap);
    }
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
-                               rootDepth);
+                               rootVisual.depth);
    ClearTrayDrawable(cp);
 }
 

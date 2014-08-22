@@ -13,6 +13,7 @@
 #include "font.h"
 
 struct IconNode;
+struct VisualData;
 
 /** Button types. */
 typedef unsigned char ButtonType;
@@ -37,8 +38,8 @@ typedef struct {
    FontType font;             /**< The font for button text. */
    char border;               /**< Determine if we should have a border. */
 
+   const struct VisualData *visual;  /**< Visual and depth to use. */
    Drawable drawable;         /**< The place to put the button. */
-   GC gc;                     /**< Graphics context used for drawing. */
 
    int x, y;                  /**< The coordinates to render the button. */
    int width, height;         /**< The size of the button. */
@@ -58,7 +59,8 @@ void DrawButton(ButtonNode *bp);
  * @param d The drawable to use.
  * @param g The graphics context to use.
  */
-void ResetButton(ButtonNode *bp, Drawable d, GC g);
+void ResetButton(ButtonNode *bp, Drawable d,
+                 const struct VisualData *visual);
 
 #endif /* BUTTON_H */
 

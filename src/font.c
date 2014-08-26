@@ -317,10 +317,6 @@ void RenderString(const VisualData *visual, Drawable d,
                   FontType font, ColorType color,
                   int x, int y, int width, const char *str)
 {
-
-#ifdef USE_ICONV
-   static char isUTF8 = -1;
-#endif
    XRectangle rect;
    Region renderRegion;
    int len;

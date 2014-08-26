@@ -229,7 +229,6 @@ void RunKeyCommand(const XKeyEvent *event)
 
    KeyNode *np;
    unsigned int state;
-   XEvent dummy;
 
    /* Remove the lock key modifiers. */
    state = event->state & ~lockMask;
@@ -237,8 +236,6 @@ void RunKeyCommand(const XKeyEvent *event)
    for(np = bindings; np; np = np->next) {
       if(np->state == state && np->code == event->keycode) {
          RunCommand(np->command);
-         JXSync(display, False);
-         while (JXCheckMaskEvent(display, EnterWindowMask, &dummy)) ;
          return;
       }
    }

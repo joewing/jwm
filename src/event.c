@@ -77,6 +77,7 @@ static void HandleNetWMState(const XClientMessageEvent *event,
                              ClientNode *np);
 static void HandleFrameExtentsRequest(const XClientMessageEvent *event);
 static void UpdateState(ClientNode *np);
+static void DiscardEnterEvents();
 
 #ifdef USE_SHAPE
 static void HandleShapeEvent(const XShapeEvent *event);
@@ -313,6 +314,18 @@ void DiscardKeyEvents(XEvent *event, Window w)
    }
 }
 
+/** Discard enter notify events. */
+void DiscardEnterEvents()
+{
+   XEvent event;
+   JXSync(display, False);
+   while(JXCheckMaskEvent(display, EnterWindowMask, &event)) {
+      UpdateTime(&event);
+      SetMousePosition(event.xmotion.x_root, event.xmotion.y_root,
+                       event.xmotion.window);
+   }
+}
+
 /** Process a selection clear event. */
 char HandleSelectionClear(const XSelectionClearEvent *event)
 {
@@ -517,6 +530,7 @@ void HandleKeyPress(const XKeyEvent *event)
    default:
       break;
    }
+   DiscardEnterEvents();
 }
 
 /** Handle a key release event. */
@@ -1479,6 +1493,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
    default:
       break;
    }
+   DiscardEnterEvents();
 }
 
 /** Update window state information. */

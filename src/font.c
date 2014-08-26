@@ -218,6 +218,8 @@ char *GetUTF8String(const char *str)
          toUTF8 = (iconv_t)-1;
          Release(utf8String);
          utf8String = (char*)str;
+      } else {
+         *outBuf = 0;
       }
    }
 #endif

@@ -163,9 +163,11 @@ void DestroyFonts(void)
 #ifdef USE_ICONV
    if(fromUTF8 != (iconv_t)-1) {
       iconv_close(fromUTF8);
+      fromUTF8 = (iconv_t)-1;
    }
    if(toUTF8 != (iconv_t)-1) {
       iconv_close(toUTF8);
+      toUTF8 = (iconv_t)-1;
    }
 #endif
 }

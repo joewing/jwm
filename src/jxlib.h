@@ -109,6 +109,9 @@
 #define JXDrawPoint( a, b, c, d, e ) \
    ( SetCheckpoint(), XDrawPoint( a, b, c, d, e ) )
 
+#define JXDrawPoints( a, b, c, d, e, f ) \
+   ( SetCheckpoint(), XDrawPoints( a, b, c, d, e, f ) )
+
 #define JXDrawLine( a, b, c, d, e, f, g ) \
    ( SetCheckpoint(), XDrawLine( a, b, c, d, e, f, g ) )
 

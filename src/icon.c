@@ -470,6 +470,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
 
    XColor color;
    XImage *image;
+   XPoint *points;
    ScaledIconNode *np;
    GC maskGC;
    int x, y;
@@ -558,10 +559,12 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
    scalex = (icon->image->width << 16) / nwidth;
    scaley = (icon->image->height << 16) / nheight;
 
+   points = Allocate(sizeof(XPoint) * nwidth);
    data = icon->image->data;
    srcy = 0;
    for(y = 0; y < nheight; y++) {
       const int yindex = (srcy >> 16) * icon->image->width;
+      int pindex = 0;
       srcx = 0;
       for(x = 0; x < nwidth; x++) {
          if(icon->image->bitmap) {
@@ -569,8 +572,10 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
             const int offset = index >> 3;
             const int mask = 1 << (index & 7);
             if(data[offset] & mask) {
-               JXDrawPoint(display, np->mask, maskGC, x, y);
+               points[pindex].x = x;
+               points[pindex].y = y;
                XPutPixel(image, x, y, fg);
+               pindex += 1;
             }
          } else {
             const int yindex = (srcy >> 16) * icon->image->width;
@@ -584,13 +589,17 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
             GetColor(&color);
             XPutPixel(image, x, y, color.pixel);
             if(data[index] >= 128) {
-               JXDrawPoint(display, np->mask, maskGC, x, y);
+               points[pindex].x = x;
+               points[pindex].y = y;
+               pindex += 1;
             }
          }
          srcx += scalex;
       }
+      JXDrawPoints(display, np->mask, maskGC, points, pindex, CoordModeOrigin);
       srcy += scaley;
    }
+   Release(points);
 
    /* Release the mask GC. */
    JXFreeGC(display, maskGC);

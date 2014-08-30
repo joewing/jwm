@@ -364,7 +364,7 @@ void SetOpacity(ClientNode *np, unsigned int opacity, char force)
 void WriteNetState(ClientNode *np)
 {
 
-   unsigned long values[8];
+   unsigned long values[10];
    int index;
 
    Assert(np);
@@ -377,6 +377,10 @@ void WriteNetState(ClientNode *np)
    } 
 
    index = 0;
+   if(np->state.status & STAT_MINIMIZED) {
+      values[index++] = atoms[ATOM_NET_WM_STATE_HIDDEN];
+   }
+
    if(np->state.status & STAT_HMAX) {
       values[index++] = atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ];
    }

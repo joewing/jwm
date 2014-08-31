@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-08-13 18:13-0500\n"
+"POT-Creation-Date: 2014-08-31 06:32-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -27,20 +27,20 @@ msgstr "nie określono wartości dla tła"
 msgid "invalid background type: \"%s\""
 msgstr "nieprawidłowy typ tła: \"%s\""
 
-#: src/background.c:291
+#: src/background.c:292
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "nie znaleziono obrazu tła: \"%s\""
 
-#: src/client.c:878
+#: src/client.c:887
 msgid "Kill this window?"
 msgstr "Zabić to okno?"
 
-#: src/client.c:879
+#: src/client.c:888
 msgid "This may cause data to be lost!"
 msgstr "Może to spowodować utratę danych!"
 
-#: src/command.c:137 src/main.c:217
+#: src/command.c:137 src/main.c:216
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "exec nie powiodło się: (%s) %s"
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: src/confirm.c:308
+#: src/confirm.c:309
 msgid "Confirm"
 msgstr ""
 
@@ -69,17 +69,17 @@ msgstr "tylko jeden dozwolony Dock"
 msgid "could not acquire system tray selection"
 msgstr "nie można nabyć wyboru w zasobniku systemowym"
 
-#: src/font.c:111 src/font.c:130
+#: src/font.c:105 src/font.c:122
 #, c-format
 msgid "could not load font: %s"
 msgstr "nie można załadować czcionki: %s"
 
-#: src/font.c:118 src/font.c:137
+#: src/font.c:112 src/font.c:129
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "nie można załadować domyślnej czcionki: %s"
 
-#: src/font.c:324
+#: src/font.c:310
 msgid "empty Font tag"
 msgstr "pusty znacznik czcionki"
 

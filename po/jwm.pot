@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.2\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-08-13 18:13-0500\n"
+"POT-Creation-Date: 2014-08-31 06:32-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,20 +26,20 @@ msgstr ""
 msgid "invalid background type: \"%s\""
 msgstr ""
 
-#: src/background.c:291
+#: src/background.c:292
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr ""
 
-#: src/client.c:878
+#: src/client.c:887
 msgid "Kill this window?"
 msgstr ""
 
-#: src/client.c:879
+#: src/client.c:888
 msgid "This may cause data to be lost!"
 msgstr ""
 
-#: src/command.c:137 src/main.c:217
+#: src/command.c:137 src/main.c:216
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr ""
@@ -52,7 +52,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: src/confirm.c:308
+#: src/confirm.c:309
 msgid "Confirm"
 msgstr ""
 
@@ -68,17 +68,17 @@ msgstr ""
 msgid "could not acquire system tray selection"
 msgstr ""
 
-#: src/font.c:111 src/font.c:130
+#: src/font.c:105 src/font.c:122
 #, c-format
 msgid "could not load font: %s"
 msgstr ""
 
-#: src/font.c:118 src/font.c:137
+#: src/font.c:112 src/font.c:129
 #, c-format
 msgid "could not load the default font: %s"
 msgstr ""
 
-#: src/font.c:324
+#: src/font.c:310
 msgid "empty Font tag"
 msgstr ""
 

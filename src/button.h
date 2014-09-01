@@ -36,7 +36,7 @@ typedef struct {
    ButtonType type;           /**< The type of button to draw. */
    AlignmentType alignment;   /**< Alignment of the button content. */
    FontType font;             /**< The font for button text. */
-   char border;               /**< Determine if we should have a border. */
+   char fill;                 /**< Determine if we should fill. */
 
    const struct VisualData *visual;  /**< Visual and depth to use. */
    Drawable drawable;         /**< The place to put the button. */

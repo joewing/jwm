@@ -32,7 +32,6 @@ typedef struct TaskBarType {
 
    int itemHeight;
    LayoutType layout;
-   char border;
 
    Pixmap buffer;
 
@@ -51,8 +50,6 @@ typedef struct Node {
    struct Node *next;
    struct Node *prev;
 } Node;
-
-static const int TASK_SPACER = 2;
 
 static TaskBarType *bars;
 static Node *taskBarNodes;
@@ -105,7 +102,7 @@ void DestroyTaskBar(void)
 }
 
 /** Create a new task bar tray component. */
-TrayComponentType *CreateTaskBar(char border)
+TrayComponentType *CreateTaskBar()
 {
 
    TrayComponentType *cp;
@@ -121,7 +118,6 @@ TrayComponentType *CreateTaskBar(char border)
    tp->mouseTime.seconds = 0;
    tp->mouseTime.ms = 0;
    tp->maxItemWidth = 0;
-   tp->border = border;
 
    cp = CreateTrayComponent();
    cp->object = tp;
@@ -176,7 +172,7 @@ void Create(TrayComponentType *cp)
    Assert(tp);
 
    if(tp->layout == LAYOUT_HORIZONTAL) {
-      tp->itemHeight = cp->height - TASK_SPACER;
+      tp->itemHeight = cp->height;
    } else {
       tp->itemHeight = GetStringHeight(FONT_TASK) + 12;
    }
@@ -209,7 +205,7 @@ void Resize(TrayComponentType *cp)
    }
 
    if(tp->layout == LAYOUT_HORIZONTAL) {
-      tp->itemHeight = cp->height - TASK_SPACER;
+      tp->itemHeight = cp->height;
    } else {
       tp->itemHeight = GetStringHeight(FONT_TASK) + 12;
    }
@@ -451,9 +447,9 @@ void Render(const TaskBarType *bp)
    buffer = bp->cp->pixmap;
    gc = rootGC;
 
-   x = TASK_SPACER;
+   x = 0;
    width -= x;
-   y = 1;
+   y = 0;
 
    ClearTrayDrawable(bp->cp);
 
@@ -480,18 +476,16 @@ void Render(const TaskBarType *bp)
 
          if(tp->client->state.status & (STAT_ACTIVE | STAT_FLASH)) {
             button.type = BUTTON_TASK_ACTIVE;
-            button.border = 1;
          } else {
-            button.border = bp->border;
             button.type = BUTTON_TASK;
          }
 
          if(remainder) {
-            button.width = itemWidth - TASK_SPACER;
+            button.width = itemWidth;
          } else {
-            button.width = itemWidth - TASK_SPACER - 1;
+            button.width = itemWidth - 1;
          }
-         button.height = bp->itemHeight - 1;
+         button.height = bp->itemHeight;
          button.x = x;
          button.y = y;
          button.icon = tp->client->icon;
@@ -626,7 +620,7 @@ Node *GetNode(TaskBarType *bar, int x)
    Node *tp;
    int index, stop;
 
-   index = TASK_SPACER;
+   index = 0;
    if(bar->layout == LAYOUT_HORIZONTAL) {
 
       const int width = bar->cp->width - index; 
@@ -691,7 +685,7 @@ unsigned int GetItemWidth(const TaskBarType *bp, unsigned int itemCount)
 
    unsigned int itemWidth;
 
-   itemWidth = bp->cp->width - TASK_SPACER;
+   itemWidth = bp->cp->width;
 
    if(!itemCount) {
       return itemWidth;

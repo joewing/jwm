@@ -541,7 +541,7 @@ char DrawBorderIcon(BorderIconType t, unsigned int offset,
       button.width   = settings.titleHeight;
       button.height  = settings.titleHeight;
       button.icon    = buttonIcons[t];
-      button.border  = 0;
+      button.fill    = 0;
       DrawButton(&button);
       return 1;
    } else {

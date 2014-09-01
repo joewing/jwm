@@ -20,10 +20,8 @@ void ShutdownTaskBar(void);
 void DestroyTaskBar(void);
 /*@}*/
 
-/** Create a new task bar tray component.
- * @param border 1 if the buttons should have a border, 0 otherwise.
- */
-struct TrayComponentType *CreateTaskBar(char border);
+/** Create a new task bar tray component. */
+struct TrayComponentType *CreateTaskBar();
 
 /** Add a client to the task bar(s).
  * @param np The client to add.

@@ -57,15 +57,9 @@ typedef unsigned char ColorType;
 #define COLOR_CLOCK_BG1             42
 #define COLOR_CLOCK_BG2             43
          /* Colors below this point are calculated from the above values. */
-#define COLOR_TRAY_UP               44
-#define COLOR_TRAY_DOWN             45
-#define COLOR_TASK_DOWN             46
-#define COLOR_TASK_ACTIVE_UP        47
-#define COLOR_MENU_UP               48
-#define COLOR_MENU_DOWN             49
-#define COLOR_TRAYBUTTON_DOWN       50
-#define COLOR_TRAYBUTTON_ACTIVE_UP  51
-#define COLOR_COUNT                 52
+#define COLOR_MENU_UP               44
+#define COLOR_MENU_DOWN             45
+#define COLOR_COUNT                 46
 
 extern unsigned long colors[COLOR_COUNT];
 

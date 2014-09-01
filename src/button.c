@@ -24,7 +24,6 @@ static void GetScaledIconSize(IconNode *ip, int maxsize,
 void DrawButton(ButtonNode *bp)
 {
 
-   long outlinePixel;
    ColorType fg;
    long bg1, bg2;
 
@@ -52,65 +51,53 @@ void DrawButton(ButtonNode *bp)
       fg = COLOR_MENU_FG;
       bg1 = colors[COLOR_MENU_BG];
       bg2 = colors[COLOR_MENU_BG];
-      outlinePixel = colors[COLOR_MENU_BG];
       break;
    case BUTTON_MENU_ACTIVE:
       fg = COLOR_MENU_ACTIVE_FG;
       bg1 = colors[COLOR_MENU_ACTIVE_BG1];
       bg2 = colors[COLOR_MENU_ACTIVE_BG2];
-      outlinePixel = colors[COLOR_MENU_ACTIVE_OL];
       break;
    case BUTTON_TRAY:
       fg = COLOR_TRAYBUTTON_FG;
       bg1 = colors[COLOR_TRAYBUTTON_BG1];
       bg2 = colors[COLOR_TRAYBUTTON_BG2];
-      outlinePixel = colors[COLOR_TRAYBUTTON_DOWN];
       break;
    case BUTTON_TRAY_ACTIVE:
       fg = COLOR_TRAYBUTTON_ACTIVE_FG;
       bg1 = colors[COLOR_TRAYBUTTON_ACTIVE_BG1];
       bg2 = colors[COLOR_TRAYBUTTON_ACTIVE_BG2];
-      outlinePixel = colors[COLOR_TRAYBUTTON_ACTIVE_UP];
       break;
    case BUTTON_TASK:
       fg = COLOR_TASK_FG;
       bg1 = colors[COLOR_TASK_BG1];
       bg2 = colors[COLOR_TASK_BG2];
-      outlinePixel = colors[COLOR_TASK_DOWN];
       break;
    case BUTTON_TASK_ACTIVE:
       fg = COLOR_TASK_ACTIVE_FG;
       bg1 = colors[COLOR_TASK_ACTIVE_BG1];
       bg2 = colors[COLOR_TASK_ACTIVE_BG2];
-      outlinePixel = colors[COLOR_TASK_ACTIVE_UP];
       break;
    case BUTTON_MENU:
    default:
       fg = COLOR_MENU_FG;
       bg1 = colors[COLOR_MENU_BG];
       bg2 = colors[COLOR_MENU_BG];
-      outlinePixel = colors[COLOR_MENU_DOWN];
       break;
    }
 
    /* Draw the background. */
-   if(bp->border) {
+   if(bp->fill) {
 
       /* Draw the button background. */
       JXSetForeground(display, gc, bg1);
       if(bg1 == bg2) {
          /* single color */
-         JXFillRectangle(display, drawable, gc,
-                         x + 1, y + 1, width - 1, height - 1);
+         JXFillRectangle(display, drawable, gc, x, y, width, height);
       } else {
          /* gradient */
          DrawHorizontalGradient(drawable, gc, bg1, bg2,
-                                x + 1, y + 1, width - 2, height - 1);
+                                x, y, width, height);
       }
-
-      /* Draw the outline. */
-      JXSetForeground(display, gc, outlinePixel);
-      DrawRoundedRectangle(drawable, gc, x, y, width, height, 3);
 
    }
 
@@ -187,7 +174,7 @@ void ResetButton(ButtonNode *bp, Drawable d, const VisualData *visual)
    bp->height = 1;
    bp->icon = NULL;
    bp->text = NULL;
-   bp->border = 1;
+   bp->fill = 1;
 
 }
 

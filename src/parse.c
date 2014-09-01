@@ -121,7 +121,6 @@ static const char *Y_ATTRIBUTE = "y";
 static const char *WIDTH_ATTRIBUTE = "width";
 static const char *HEIGHT_ATTRIBUTE = "height";
 static const char *NAME_ATTRIBUTE = "name";
-static const char *BORDER_ATTRIBUTE = "border";
 static const char *DISTANCE_ATTRIBUTE = "distance";
 static const char *INSERT_ATTRIBUTE = "insert";
 static const char *MAX_WIDTH_ATTRIBUTE = "maxwidth";
@@ -1168,11 +1167,6 @@ void ParseTray(const TokenNode *tp) {
       SetTrayLayer(tray, layer);
    }
 
-   attr = FindAttribute(tp->attributes, BORDER_ATTRIBUTE);
-   if(attr) {
-      tray->border = ParseUnsigned(tp, attr);
-   }
-
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_PAGER:
@@ -1229,19 +1223,11 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray) {
 
    TrayComponentType *cp;
    const char *temp;
-   char border;
 
    Assert(tp);
    Assert(tray);
 
-   temp = FindAttribute(tp->attributes, BORDER_ATTRIBUTE);
-   if(temp && !strcmp(temp, FALSE_VALUE)) {
-      border = 0;
-   } else {
-      border = 1;
-   }
-
-   cp = CreateTaskBar(border);
+   cp = CreateTaskBar();
    AddTrayComponent(tray, cp);
 
    temp = FindAttribute(tp->attributes, MAX_WIDTH_ATTRIBUTE);
@@ -1297,7 +1283,6 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
    const char *popup;
    const char *temp;
    unsigned int width, height;
-   char border;
 
    Assert(tp);
    Assert(tray);
@@ -1305,13 +1290,6 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
    icon = FindAttribute(tp->attributes, ICON_ATTRIBUTE);
    label = FindAttribute(tp->attributes, LABEL_ATTRIBUTE);
    popup = FindAttribute(tp->attributes, POPUP_ATTRIBUTE);
-
-   temp = FindAttribute(tp->attributes, BORDER_ATTRIBUTE);
-   if(temp && !strcmp(temp, FALSE_VALUE)) {
-      border = 0;
-   } else {
-      border = 1;
-   }
 
    temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
    if(temp) {
@@ -1327,7 +1305,7 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
       height = 0;
    }
 
-   cp = CreateTrayButton(icon, label, tp->value, popup, width, height, border);
+   cp = CreateTrayButton(icon, label, tp->value, popup, width, height);
    if(JLIKELY(cp)) {
       AddTrayComponent(tray, cp);
    }

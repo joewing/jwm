@@ -39,7 +39,6 @@ typedef struct TrayButtonType {
    char *iconName;
    IconNode *icon;
    char *action;
-   char border;
 
    int mousex;
    int mousey;
@@ -124,8 +123,7 @@ TrayComponentType *CreateTrayButton(const char *iconName,
                                     const char *action,
                                     const char *popup,
                                     unsigned int width,
-                                    unsigned int height,
-                                    char border)
+                                    unsigned int height)
 {
 
    TrayButtonType *bp;
@@ -146,7 +144,6 @@ TrayComponentType *CreateTrayButton(const char *iconName,
    bp->label = CopyString(label);
    bp->action = CopyString(action);
    bp->popup = CopyString(popup);
-   bp->border = border;
 
    cp = CreateTrayComponent();
    cp->object = bp;
@@ -288,13 +285,12 @@ void Draw(TrayComponentType *cp, int active)
    if(active) {
       button.type = BUTTON_TRAY_ACTIVE;
    } else {
-      button.border = bp->border;
       button.type = BUTTON_TRAY;
    }
-   button.width = cp->width - 3;
-   button.height = cp->height - 3;
-   button.x = 1;
-   button.y = 1;
+   button.width = cp->width;
+   button.height = cp->height;
+   button.x = 0;
+   button.y = 0;
    button.font = FONT_TRAYBUTTON;
    button.text = bp->label;
    button.icon = bp->icon;

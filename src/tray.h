@@ -117,7 +117,6 @@ typedef struct TrayType {
    int width;     /**< Actual width of the tray. */
    int height;    /**< Actual height of the tray. */
 
-   int border;                /**< Border size in pixels. */
    WinLayerType layer;        /**< Layer. */
    LayoutType layout;         /**< Layout. */
    TrayAlignmentType valign;  /**< Vertical alignment. */

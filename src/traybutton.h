@@ -27,7 +27,6 @@ void DestroyTrayButtons(void);
  * @param popup Text to display in a popup window.
  * @param width The width to use for the button (0 for default).
  * @param height The height to use for the button (0 for default).
- * @param border Set to show a border, 0 for no border.
  * @return A new tray button component.
  */
 struct TrayComponentType *CreateTrayButton(const char *iconName,
@@ -35,8 +34,7 @@ struct TrayComponentType *CreateTrayButton(const char *iconName,
                                            const char *action,
                                            const char *popup,
                                            unsigned int width,
-                                           unsigned int height,
-                                           char border);
+                                           unsigned int height);
 
 /** Validate the tray buttons and print a warning if something is wrong.
  * This is called after parsing the configuration file(s) to determine

@@ -412,12 +412,6 @@ optimal height depending on what it contains and the layout. 0 is the
 default.
 .RE
 .P
-\fBborder\fP \fIint\fP
-.RS
-The width of the border. The default is 1. Valid values are between 0 and 32
-inclusive.
-.RE
-.P
 \fBlayer\fP { \fBbelow\fP | \fBnormal\fP | \fBabove\fP }
 .RS
 The layer of the tray. The default is \fBabove\fP.
@@ -549,11 +543,6 @@ the default.
 Add a task list to the tray.
 This tag supports the following attributes:
 .P
-\fBborder\fP \fIbool\fP
-.RS
-Determines if items in the task list have a border. Default is true.
-.RE
-.P
 \fBmaxwidth\fP \fIint\fP
 .RS
 The maximum width of an item in the task list. 0 indicates no maximum.
@@ -583,11 +572,6 @@ Minimize all windows on the current desktop.
 .RE
 .P
 This tag supports the following attributes:
-.P
-\fBborder\fP \fIbool\fP
-.RS
-Determines if a the button has a border. Default is true.
-.RE
 .P
 \fBlabel\fP \fIstring\fP
 .RS

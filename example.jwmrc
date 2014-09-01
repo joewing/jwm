@@ -47,7 +47,7 @@
     </Group>
 
     <!-- Tray at the bottom. -->
-    <Tray x="0" y="-1" height="32" autohide="false">
+    <Tray x="0" y="-1" autohide="false">
 
         <TrayButton label="JWM">root:1</TrayButton>
         <TrayButton label="_">showdesktop</TrayButton>
@@ -65,51 +65,51 @@
     <WindowStyle>
         <Font>FreeSans-9:bold</Font>
         <Width>4</Width>
-        <Height>20</Height>
+        <Height>21</Height>
+        <Radius>4</Radius>
         <Active>
             <Text>#FFFFFF</Text>
-            <Title>#CC7700:#884400</Title>
+            <Title>#0077CC</Title>
             <Outline>#000000</Outline>
             <Opacity>1.0</Opacity>
         </Active>
         <Inactive>
             <Text>#FFFFFF</Text>
-            <Title>#333333:#111111</Title>
+            <Title>#333333</Title>
             <Outline>#000000</Outline>
             <Opacity>0.5:0.9:0.1</Opacity>
         </Inactive>
     </WindowStyle>
     <TrayStyle>
-        <Font>FreeSans-12:bold</Font>
+        <Font>FreeSans-9</Font>
         <Background>#111111</Background>
         <Foreground>#FFFFFF</Foreground>
         <Opacity>0.75</Opacity>
     </TrayStyle>
     <TaskListStyle>
-        <Font>FreeSans-12:bold</Font>
         <ActiveForeground>#FFFFFF</ActiveForeground>
-        <ActiveBackground>#111111:#333333</ActiveBackground>
+        <ActiveBackground>#333333</ActiveBackground>
         <Foreground>#FFFFFF</Foreground>
-        <Background>#333333:#111111</Background>
+        <Background>#111111</Background>
     </TaskListStyle>
     <PagerStyle>
         <Outline>#000000</Outline>
         <Text>#FFFFFF</Text>
         <Foreground>#444444</Foreground>
         <Background>#111111</Background>
-        <ActiveForeground>#CC7700</ActiveForeground>
-        <ActiveBackground>#884400</ActiveBackground>
+        <ActiveForeground>#0077CC</ActiveForeground>
+        <ActiveBackground>#333333</ActiveBackground>
     </PagerStyle>
     <MenuStyle>
-        <Font>FreeSans-11</Font>
+        <Font>FreeSans-9</Font>
         <Foreground>#FFFFFF</Foreground>
         <Background>#333333</Background>
         <ActiveForeground>#FFFFFF</ActiveForeground>
-        <ActiveBackground>#CC7700:#884400</ActiveBackground>
+        <ActiveBackground>#0077CC</ActiveBackground>
         <Opacity>0.85</Opacity>
     </MenuStyle>
     <PopupStyle>
-        <Font>FreeSans-10</Font>
+        <Font>FreeSans-9</Font>
         <Outline>#000000</Outline>
         <Foreground>#000000</Foreground>
         <Background>#999999</Background>
@@ -130,7 +130,7 @@
               contained within a Desktop tag to give a specific background
               for that desktop.
          -->
-        <Background type="image">$HOME/images/bg.jpg</Background>
+        <Background type="solid">#222222</Background>
     </Desktops>
 
     <!-- Double click speed (in milliseconds) -->

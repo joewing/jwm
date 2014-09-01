@@ -861,6 +861,9 @@ void ParseWindowStyle(const TokenNode *tp) {
       case TOK_HEIGHT:
          settings.titleHeight = ParseUnsigned(np, np->value);
          break;
+      case TOK_RADIUS:
+         settings.cornerRadius = ParseUnsigned(np, np->value);
+         break;
       case TOK_ACTIVE:
          ParseActiveWindowStyle(np);
          break;

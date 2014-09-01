@@ -59,6 +59,7 @@ typedef struct {
    unsigned int desktopCount;
    unsigned int menuOpacity;
    unsigned int desktopDelay;
+   unsigned int cornerRadius;
    SnapModeType snapMode;
    MoveModeType moveMode;
    StatusWindowType moveStatusType;

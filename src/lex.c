@@ -67,6 +67,7 @@ static const char *TOKEN_MAP[] = {
    "Popup",
    "PopupStyle",
    "Program",
+   "Radius",
    "Resize",
    "ResizeMode",
    "Restart",

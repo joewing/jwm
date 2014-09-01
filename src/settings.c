@@ -35,17 +35,20 @@ void InitializeSettings(void)
    settings.activeClientOpacity = UINT_MAX;
    settings.inactiveClientOpacity = (unsigned int)(0.75 * UINT_MAX);
    settings.borderWidth = 4;
-   settings.titleHeight = 20;
+   settings.titleHeight = 22;
    settings.desktopWidth = 4;
    settings.desktopHeight = 1;
    settings.menuOpacity = UINT_MAX;
    settings.taskInsertMode = INSERT_RIGHT;
    settings.exitConfirmation = 1;
+   settings.cornerRadius = 4;
 }
 
 /** Make sure settings are reasonable. */
 void StartupSettings(void)
 {
+
+   FixRange(&settings.cornerRadius, 0, 5, 4);
 
    FixRange(&settings.borderWidth, 1, 128, 4);
    FixRange(&settings.titleHeight, 2, 256, 20);
@@ -81,4 +84,3 @@ void FixRange(unsigned int *value,
       *value = def_value;
    }
 }
-

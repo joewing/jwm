@@ -126,9 +126,6 @@
 
 #define SHELL_NAME "/bin/sh"
 
-/** Fixed radius of 4x4 */
-#define CORNER_RADIUS 4
-
 #ifdef __GNUC__
 #  if __GNUC__ >= 3
 #     define JLIKELY(x)   __builtin_expect(!!(x), 1)

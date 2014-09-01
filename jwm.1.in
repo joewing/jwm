@@ -818,6 +818,13 @@ The height of window title bars in pixels. The default is 20, the minimum
 is 2, and the maximum is 256.
 .RE
 .P
+.B Radius
+.RS
+The radius of the window border (for rounded window borders).
+The default is 4, the minimum is 0 (for rectangular windows), and the
+maximum is 5 (most rounded).
+.RE
+.P
 .P
 .B Active
 .RS

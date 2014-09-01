@@ -223,61 +223,63 @@ void ResetBorder(const ClientNode *np)
                       width, height);
 
 #ifdef USE_SHAPE
+   if(settings.cornerRadius > 0) {
 
-   /* First set the shape to the window border. */
-   shapePixmap = JXCreatePixmap(display, np->parent, width, height, 1);
-   shapeGC = JXCreateGC(display, shapePixmap, 0, NULL);
+      /* First set the shape to the window border. */
+      shapePixmap = JXCreatePixmap(display, np->parent, width, height, 1);
+      shapeGC = JXCreateGC(display, shapePixmap, 0, NULL);
 
-   /* Make the whole area transparent. */
-   JXSetForeground(display, shapeGC, 0);
-   JXFillRectangle(display, shapePixmap, shapeGC, 0, 0, width, height);
-
-   /* Draw the window area without the corners. */
-   /* Corner bound radius -1 to allow slightly better outline drawing */
-   JXSetForeground(display, shapeGC, 1);
-   if((np->state.status & (STAT_HMAX | STAT_VMAX)) &&
-      !(np->state.status & (STAT_SHADED))) {
-      JXFillRectangle(display, shapePixmap, shapeGC, 0, 0, width, height);
-   } else {
-      FillRoundedRectangle(shapePixmap, shapeGC, 0, 0, width, height,
-                           CORNER_RADIUS - 1);
-   }
-
-   /* Apply the client window. */
-   if(!(np->state.status & STAT_SHADED) && (np->state.status & STAT_SHAPED)) {
-
-      XRectangle *rects;
-      int count;
-      int ordering;
-
-      /* Cut out an area for the client window. */
+      /* Make the whole area transparent. */
       JXSetForeground(display, shapeGC, 0);
-      JXFillRectangle(display, shapePixmap, shapeGC, west, north,
-                      np->width, np->height);
+      JXFillRectangle(display, shapePixmap, shapeGC, 0, 0, width, height);
 
-      /* Fill in the visible area. */
-      rects = JXShapeGetRectangles(display, np->window, ShapeBounding,
-                                   &count, &ordering);
-      if(JLIKELY(rects)) {
-         int i;
-         for(i = 0; i < count; i++) {
-            rects[i].x += east;
-            rects[i].y += north;
-         }
-         JXSetForeground(display, shapeGC, 1);
-         JXFillRectangles(display, shapePixmap, shapeGC, rects, count);
-         JXFree(rects);
+      /* Draw the window area without the corners. */
+      /* Corner bound radius -1 to allow slightly better outline drawing */
+      JXSetForeground(display, shapeGC, 1);
+      if((np->state.status & (STAT_HMAX | STAT_VMAX)) &&
+         !(np->state.status & (STAT_SHADED))) {
+         JXFillRectangle(display, shapePixmap, shapeGC, 0, 0, width, height);
+      } else {
+         FillRoundedRectangle(shapePixmap, shapeGC, 0, 0, width, height,
+                              settings.cornerRadius - 1);
       }
 
+      /* Apply the client window. */
+      if(!(np->state.status & STAT_SHADED) &&
+          (np->state.status & STAT_SHAPED)) {
+
+         XRectangle *rects;
+         int count;
+         int ordering;
+
+         /* Cut out an area for the client window. */
+         JXSetForeground(display, shapeGC, 0);
+         JXFillRectangle(display, shapePixmap, shapeGC, west, north,
+                         np->width, np->height);
+
+         /* Fill in the visible area. */
+         rects = JXShapeGetRectangles(display, np->window, ShapeBounding,
+                                      &count, &ordering);
+         if(JLIKELY(rects)) {
+            int i;
+            for(i = 0; i < count; i++) {
+               rects[i].x += east;
+               rects[i].y += north;
+            }
+            JXSetForeground(display, shapeGC, 1);
+            JXFillRectangles(display, shapePixmap, shapeGC, rects, count);
+            JXFree(rects);
+         }
+
+      }
+
+      /* Set the shape. */
+      JXShapeCombineMask(display, np->parent, ShapeBounding, 0, 0,
+                         shapePixmap, ShapeSet);
+
+      JXFreeGC(display, shapeGC);
+      JXFreePixmap(display, shapePixmap);
    }
-
-   /* Set the shape. */
-   JXShapeCombineMask(display, np->parent, ShapeBounding, 0, 0,
-                      shapePixmap, ShapeSet);
-
-   JXFreeGC(display, shapeGC);
-   JXFreePixmap(display, shapePixmap);
-
 #endif
 
    UngrabServer();
@@ -414,13 +416,13 @@ void DrawBorderHelper(const ClientNode *np)
    JXSetForeground(display, gc, outlineColor);
    if(np->state.status & STAT_SHADED) {
       DrawRoundedRectangle(np->parent, gc, 0, 0, width - 1, north - 1,
-                           CORNER_RADIUS);
+                           settings.cornerRadius);
    } else if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
       JXDrawRectangle(display, np->parent, gc, 0, 0,
                       width - 1, height - 1);
    } else {
       DrawRoundedRectangle(np->parent, gc, 0, 0, width - 1, height - 1,
-                           CORNER_RADIUS);
+                           settings.cornerRadius);
    }
 
    JXFreePixmap(display, canvas);
@@ -811,49 +813,57 @@ void DrawRoundedRectangle(Drawable d, GC gc, int x, int y,
 #ifdef USE_SHAPE
 #ifdef USE_XMU
 
-   XmuDrawRoundedRectangle(display, d, gc, x, y, width, height,
-                           radius, radius);
+   if(radius > 0) {
+      XmuDrawRoundedRectangle(display, d, gc, x, y, width, height,
+                              radius, radius);
+   } else {
+      JXDrawRectangle(display, d, gc, x, y, width, height);
+   }
 
 #else
 
-   XSegment segments[4];
-   XArc     arcs[4];
+   if(radius > 0) {
+      XSegment segments[4];
+      XArc     arcs[4];
 
-   segments[0].x1 = x + radius;           segments[0].y1 = y;
-   segments[0].x2 = x + width - radius;   segments[0].y2 = y;
-   segments[1].x1 = x + radius;           segments[1].y1 = y + height;
-   segments[1].x2 = x + width - radius;   segments[1].y2 = y + height;
-   segments[2].x1 = x;                    segments[2].y1 = y + radius;
-   segments[2].x2 = x;                    segments[2].y2 = y + height - radius;
-   segments[3].x1 = x + width;            segments[3].y1 = y + radius;
-   segments[3].x2 = x + width;            segments[3].y2 = y + height - radius;
-   JXDrawSegments(display, d, gc, segments, 4);
+      segments[0].x1 = x + radius;         segments[0].y1 = y;
+      segments[0].x2 = x + width - radius; segments[0].y2 = y;
+      segments[1].x1 = x + radius;         segments[1].y1 = y + height;
+      segments[1].x2 = x + width - radius; segments[1].y2 = y + height;
+      segments[2].x1 = x;                  segments[2].y1 = y + radius;
+      segments[2].x2 = x;                  segments[2].y2 = y + height - radius;
+      segments[3].x1 = x + width;          segments[3].y1 = y + radius;
+      segments[3].x2 = x + width;          segments[3].y2 = y + height - radius;
+      JXDrawSegments(display, d, gc, segments, 4);
 
-   arcs[0].x = x;
-   arcs[0].y = y;
-   arcs[0].width = radius * 2;
-   arcs[0].height = radius * 2;
-   arcs[0].angle1 = 90 * 64;
-   arcs[0].angle2 = 90 * 64;
-   arcs[1].x = x + width - radius * 2;
-   arcs[1].y = y;
-   arcs[1].width  = radius * 2;
-   arcs[1].height = radius * 2;
-   arcs[1].angle1 = 0 * 64;
-   arcs[1].angle2 = 90 * 64;
-   arcs[2].x = x;
-   arcs[2].y = y + height - radius * 2;
-   arcs[2].width  = radius * 2;
-   arcs[2].height = radius * 2;
-   arcs[2].angle1 = 180 * 64;
-   arcs[2].angle2 = 90 * 64;
-   arcs[3].x = x + width - radius * 2;
-   arcs[3].y = y + height - radius * 2;
-   arcs[3].width  = radius * 2;
-   arcs[3].height = radius * 2;
-   arcs[3].angle1 = 270 * 64;
-   arcs[3].angle2 = 90 * 64;
-   JXDrawArcs(display, d, gc, arcs, 4);
+      arcs[0].x = x;
+      arcs[0].y = y;
+      arcs[0].width = radius * 2;
+      arcs[0].height = radius * 2;
+      arcs[0].angle1 = 90 * 64;
+      arcs[0].angle2 = 90 * 64;
+      arcs[1].x = x + width - radius * 2;
+      arcs[1].y = y;
+      arcs[1].width  = radius * 2;
+      arcs[1].height = radius * 2;
+      arcs[1].angle1 = 0 * 64;
+      arcs[1].angle2 = 90 * 64;
+      arcs[2].x = x;
+      arcs[2].y = y + height - radius * 2;
+      arcs[2].width  = radius * 2;
+      arcs[2].height = radius * 2;
+      arcs[2].angle1 = 180 * 64;
+      arcs[2].angle2 = 90 * 64;
+      arcs[3].x = x + width - radius * 2;
+      arcs[3].y = y + height - radius * 2;
+      arcs[3].width  = radius * 2;
+      arcs[3].height = radius * 2;
+      arcs[3].angle1 = 270 * 64;
+      arcs[3].angle2 = 90 * 64;
+      JXDrawArcs(display, d, gc, arcs, 4);
+   } else {
+      JXDrawRectangle(display, d, gc, x, y, width, height);
+   }
 
 #endif
 #else

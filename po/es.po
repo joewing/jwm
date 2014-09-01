@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-08-31 06:32-0500\n"
+"POT-Creation-Date: 2014-09-01 13:05-0500\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -140,82 +140,82 @@ msgstr "ni tecla ni código especificados para Tecla"
 msgid "key binding: root menu %d not defined"
 msgstr "atajo de teclado: menú raíz %d no definido"
 
-#: src/lex.c:201
+#: src/lex.c:202
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: etiqueta de cierre «%s» no coincide con etiqueta de apertura «%s»"
 
-#: src/lex.c:207
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: etiqueta de cierre inesperada y no válida"
 
-#: src/lex.c:213
+#: src/lex.c:214
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: etiqueta de cierre \"%s\" sin etiqueta de apertura"
 
-#: src/lex.c:216
+#: src/lex.c:217
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: etiqueta de cierre no válida"
 
-#: src/lex.c:234
+#: src/lex.c:235
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: etiqueta de apertura no válida"
 
-#: src/lex.c:250
+#: src/lex.c:251
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: etiqueta no válida"
 
-#: src/lex.c:305
+#: src/lex.c:306
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: texto inesperado: «%s»"
 
-#: src/lex.c:353
+#: src/lex.c:354
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entidad no válida: «%.8s»"
 
-#: src/lex.c:458 src/parse.c:1763
+#: src/lex.c:459 src/parse.c:1741
 msgid "out of memory"
 msgstr "Sin memoria"
 
-#: src/parse.c:1052
+#: src/parse.c:1054
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "modo de insertar no válido: «%s»"
 
-#: src/parse.c:1778
+#: src/parse.c:1756
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ajuste no válido: %s"
 
-#: src/parse.c:1790
+#: src/parse.c:1768
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacidad no válida: %s"
 
-#: src/parse.c:1809
+#: src/parse.c:1787
 #, c-format
 msgid "invalid layer: %s"
 msgstr "capa no válida: %s"
 
-#: src/parse.c:1826
+#: src/parse.c:1804
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "tipo de ventana de estado no válido: %s"
 
-#: src/parse.c:1835
+#: src/parse.c:1813
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta no válida en %s: %s"
 
-#: src/parse.c:1856
+#: src/parse.c:1834
 msgid "configuration error"
 msgstr "error de configuración"
 
@@ -240,51 +240,51 @@ msgstr "no se puede mostrar un cliente sin nombre"
 msgid "cannot swallow the same client multiple times"
 msgstr "no se puede mostrar el mismo cliente varias veces"
 
-#: src/taskbar.c:725
+#: src/taskbar.c:719
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ancho máx. no válido para Lista de Tareas: %s"
 
-#: src/traybutton.c:89
+#: src/traybutton.c:88
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "no se pudo cargar el icono de bandeja: «%s»"
 
-#: src/traybutton.c:136
+#: src/traybutton.c:134
 msgid "no icon or label for TrayButton"
 msgstr "no hay icono o etiqueta para el Botón de Bandeja"
 
-#: src/traybutton.c:247
+#: src/traybutton.c:244
 #, c-format
 msgid "invalid TrayButton action: \"%s\""
 msgstr "acción no válida para Botón de Bandeja: «%s»"
 
-#: src/traybutton.c:432
+#: src/traybutton.c:428
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "botón de bandeja: menú root %d no definido"
 
-#: src/tray.c:1076
+#: src/tray.c:1047
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "ancho de bandeja no válido: %d"
 
-#: src/tray.c:1095
+#: src/tray.c:1066
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "alto de bandeja no válido: %d"
 
-#: src/tray.c:1124
+#: src/tray.c:1095
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "forma no válida para bandeja: «%s»"
 
-#: src/tray.c:1161
+#: src/tray.c:1132
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alineación horizontal no válida para bandeja: «%s»"
 
-#: src/tray.c:1182
+#: src/tray.c:1153
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alineación vertical no válida para bandeja: «%s»"

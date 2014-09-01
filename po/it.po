@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-08-31 06:32-0500\n"
+"POT-Creation-Date: 2014-09-01 13:05-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -138,82 +138,82 @@ msgstr "Tasto o keycode non specificati per Key"
 msgid "key binding: root menu %d not defined"
 msgstr "Combinazione di tasti: root menu %d non definito"
 
-#: src/lex.c:201
+#: src/lex.c:202
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: tag di chiusura \"%s\" non corrisponde al tag di apertura \"%s\""
 
-#: src/lex.c:207
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: tag di chiusura inatteso e non valido"
 
-#: src/lex.c:213
+#: src/lex.c:214
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: tag di chiusura \"%s\" senza tag di apertura"
 
-#: src/lex.c:216
+#: src/lex.c:217
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: tag di chiusura non valido"
 
-#: src/lex.c:234
+#: src/lex.c:235
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: tag di apertura non valido"
 
-#: src/lex.c:250
+#: src/lex.c:251
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: tag non valido"
 
-#: src/lex.c:305
+#: src/lex.c:306
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: testo non atteso: \"%s\""
 
-#: src/lex.c:353
+#: src/lex.c:354
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entità non valida: \"%.8s\""
 
-#: src/lex.c:458 src/parse.c:1763
+#: src/lex.c:459 src/parse.c:1741
 msgid "out of memory"
 msgstr "Memoria esaurita"
 
-#: src/parse.c:1052
+#: src/parse.c:1054
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "Modo di inserimento non valido: \"%s\""
 
-#: src/parse.c:1778
+#: src/parse.c:1756
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Impostazione non valida: %s"
 
-#: src/parse.c:1790
+#: src/parse.c:1768
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "Opacità non valida: %s"
 
-#: src/parse.c:1809
+#: src/parse.c:1787
 #, c-format
 msgid "invalid layer: %s"
 msgstr "Layer non valido: %s"
 
-#: src/parse.c:1826
+#: src/parse.c:1804
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "Tipo di status della finestra non valido: %s"
 
-#: src/parse.c:1835
+#: src/parse.c:1813
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Tag non valido in %s: %s"
 
-#: src/parse.c:1856
+#: src/parse.c:1834
 msgid "configuration error"
 msgstr "Errore di configurazione"
 
@@ -238,51 +238,51 @@ msgstr "Impossibile includere un client senza nome"
 msgid "cannot swallow the same client multiple times"
 msgstr "Impossibile includere più volte lo stesso client"
 
-#: src/taskbar.c:725
+#: src/taskbar.c:719
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "Larghezza massima per TaskList non valida: %s"
 
-#: src/traybutton.c:89
+#: src/traybutton.c:88
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "Impossibile caricare icona del vassoio: \"%s"
 
-#: src/traybutton.c:136
+#: src/traybutton.c:134
 msgid "no icon or label for TrayButton"
 msgstr "Nessuna icona o etichetta per il TrayButton"
 
-#: src/traybutton.c:247
+#: src/traybutton.c:244
 #, c-format
 msgid "invalid TrayButton action: \"%s\""
 msgstr "Azione del TrayButton non valida:  \"%s\""
 
-#: src/traybutton.c:432
+#: src/traybutton.c:428
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "Tray button: root menu %d non definito"
 
-#: src/tray.c:1076
+#: src/tray.c:1047
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "Larghezza del vassoio non valida: %d"
 
-#: src/tray.c:1095
+#: src/tray.c:1066
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "Altezza del vassoio non valida: %d"
 
-#: src/tray.c:1124
+#: src/tray.c:1095
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "Disposizione del vassoio non valida: \"%s\""
 
-#: src/tray.c:1161
+#: src/tray.c:1132
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "Allineamento orizzontale del vassoio non valido: \"%s\""
 
-#: src/tray.c:1182
+#: src/tray.c:1153
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "Allineamento verticale del vassoio non valido: \"%s\""

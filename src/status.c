@@ -103,11 +103,6 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type)
    /* Clear the background. */
    JXClearWindow(display, statusWindow);
 
-   /* Draw a border. */
-   JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
-   JXDrawRectangle(display, statusWindow, rootGC, 0, 0,
-                   statusWindowWidth - 1, statusWindowHeight - 1);
-
 }
 
 /** Destroy the status window. */

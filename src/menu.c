@@ -23,7 +23,6 @@
 #include "root.h"
 #include "settings.h"
 
-#define MENU_BORDER_SIZE   1
 #define BASE_ICON_OFFSET   3
 
 typedef unsigned char MenuSelectionType;
@@ -105,7 +104,7 @@ void InitializeMenu(Menu *menu)
       }
    }
 
-   menu->height = MENU_BORDER_SIZE;
+   menu->height = 0;
    if(menu->label) {
       menu->height += menu->itemHeight;
    }
@@ -141,9 +140,7 @@ void InitializeMenu(Menu *menu)
       }
    }
    menu->width += hasSubmenu + menu->textOffset;
-   menu->width += 2 * MENU_BORDER_SIZE;
    menu->width += 7;
-   menu->height += MENU_BORDER_SIZE;
 
 }
 
@@ -168,7 +165,7 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y)
       return;
    }
 
-   ShowSubmenu(menu, NULL, x - MENU_BORDER_SIZE, y - MENU_BORDER_SIZE);
+   ShowSubmenu(menu, NULL, x, y);
 
    JXUngrabKeyboard(display, CurrentTime);
    JXUngrabPointer(display, CurrentTime);
@@ -338,7 +335,7 @@ void CreateMenu(Menu *menu, int x, int y)
 
    if(x + menu->width > rootWidth) {
       if(menu->parent) {
-         x = menu->parent->x - menu->width + MENU_BORDER_SIZE;
+         x = menu->parent->x - menu->width;
       } else {
          x = rootWidth - menu->width;
       }
@@ -399,9 +396,6 @@ void DrawMenu(Menu *menu)
    JXSetForeground(display, rootGC, colors[COLOR_MENU_BG]);
    JXFillRectangle(display, menu->pixmap, rootGC, 0, 0,
                    menu->width, menu->height);
-   JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
-   JXDrawRectangle(display, menu->pixmap, rootGC, 0, 0,
-                   menu->width - 1, menu->height - 1);
 
    if(menu->label) {
       DrawMenuItem(menu, NULL, -1);
@@ -568,7 +562,7 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
    ip = GetMenuItem(menu, menu->currentIndex);
    if(ip && IsMenuValid(ip->submenu)) {
       if(ShowSubmenu(ip->submenu, menu,
-                     menu->x + menu->width - MENU_BORDER_SIZE,
+                     menu->x + menu->width,
                      menu->y + menu->offsets[menu->currentIndex])) {
 
          /* Item selected; destroy the menu tree. */
@@ -618,9 +612,9 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
    if(!item) {
       if(index == -1 && menu->label) {
          ResetButton(&button, menu->pixmap, &rootVisual);
-         button.x = MENU_BORDER_SIZE;
+         button.x = 0;
          button.y = 0;
-         button.width = menu->width - 2 * MENU_BORDER_SIZE - 1;
+         button.width = menu->width - 1;
          button.height = menu->itemHeight - 1;
          button.font = FONT_MENU;
          button.type = BUTTON_LABEL;
@@ -643,11 +637,11 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
          fg = COLOR_MENU_FG;
       }
 
-      button.x = MENU_BORDER_SIZE;
+      button.x = 0;
       button.y = menu->offsets[index];
       button.font = FONT_MENU;
-      button.width = menu->width - 2 * MENU_BORDER_SIZE - 1;
-      button.height = menu->itemHeight - 1;
+      button.width = menu->width;
+      button.height = menu->itemHeight;
       button.text = item->name;
       button.icon = item->icon;
       DrawButton(&button);
@@ -671,16 +665,10 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
       }
 
    } else {
-
-      JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
+      JXSetForeground(display, rootGC, colors[COLOR_MENU_ACTIVE_FG]);
       JXDrawLine(display, menu->pixmap, rootGC, 4,
                  menu->offsets[index] + 2, menu->width - 6,
                  menu->offsets[index] + 2);
-      JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
-      JXDrawLine(display, menu->pixmap, rootGC, 4,
-                 menu->offsets[index] + 3, menu->width - 6,
-                 menu->offsets[index] + 3);
-
    }
 
 }

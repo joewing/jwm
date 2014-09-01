@@ -138,13 +138,9 @@ static void SetDefaultColor(ColorType type);
 static unsigned long ReadHex(const char *hex);
 
 static unsigned long GetRGBFromXColor(const XColor *c);
-static XColor GetXColorFromRGB(unsigned long rgb);
 
 static int GetColorByName(const char *str, XColor *c);
 static void InitializeNames(void);
-
-static void LightenColor(ColorType oldColor, ColorType newColor);
-static void DarkenColor(ColorType oldColor, ColorType newColor);
 
 /** Startup color support. */
 void StartupColors(void)
@@ -225,14 +221,6 @@ void StartupColors(void)
          SetDefaultColor(x);
       }
    }
-
-   /* If not explicity set, select an outline for active menu items. */
-   if(!names || !names[COLOR_MENU_ACTIVE_OL]) {
-      DarkenColor(COLOR_MENU_ACTIVE_BG1, COLOR_MENU_ACTIVE_OL);
-   }
-
-   LightenColor(COLOR_MENU_BG, COLOR_MENU_UP);
-   DarkenColor(COLOR_MENU_BG, COLOR_MENU_DOWN);
 
    if(names) {
       for(x = 0; x < COLOR_COUNT; x++) {
@@ -335,21 +323,6 @@ unsigned long GetRGBFromXColor(const XColor *c)
    rgb |= (unsigned long)blue;
 
    return rgb;
-
-}
-
-/** Convert an RGB value to an XColor. */
-XColor GetXColorFromRGB(unsigned long rgb)
-{
-
-   XColor ret = { 0 };
-
-   ret.flags = DoRed | DoGreen | DoBlue;
-   ret.red = (unsigned short)(((rgb >> 16) & 0xFF) * 257);
-   ret.green = (unsigned short)(((rgb >> 8) & 0xFF) * 257);
-   ret.blue = (unsigned short)((rgb & 0xFF) * 257);
-
-   return ret;
 
 }
 
@@ -457,79 +430,6 @@ unsigned long ReadHex(const char *hex)
    }
 
    return value;
-
-}
-
-/** Compute a color lighter than the input. */
-void LightenColor(ColorType oldColor, ColorType newColor)
-{
-
-   XColor temp;
-   int red, green, blue;
-
-   temp = GetXColorFromRGB(rgbColors[oldColor]);
-
-   /* Convert to 0.0 to 1.0 in fixed point with 8 bits for the fraction. */
-   red   = temp.red   >> 8;
-   green = temp.green >> 8;
-   blue  = temp.blue  >> 8;
-
-   /* Multiply by 1.45 which is 371. */
-   red   = (red   * 371) >> 8;
-   green = (green * 371) >> 8;
-   blue  = (blue  * 371) >> 8;
-
-   /* Convert back to 0-65535. */
-   red   |= red << 8;
-   green |= green << 8;
-   blue  |= blue << 8;
-
-   /* Cap at 65535. */
-   red   = Min(65535, red);
-   green = Min(65535, green);
-   blue  = Min(65535, blue);
-
-   temp.red = red;
-   temp.green = green;
-   temp.blue = blue;
-
-   GetColor(&temp);
-   colors[newColor] = temp.pixel;
-   rgbColors[newColor] = GetRGBFromXColor(&temp);
-
-}
-
-/** Compute a color darker than the input. */
-void DarkenColor(ColorType oldColor, ColorType newColor)
-{
-
-   XColor temp;
-   int red, green, blue;
-
-   temp = GetXColorFromRGB(rgbColors[oldColor]);
-
-   /* Convert to 0.0 to 1.0 in fixed point with 8 bits for the fraction. */
-   red   = temp.red   >> 8;
-   green = temp.green >> 8;
-   blue  = temp.blue  >> 8;
-
-   /* Multiply by 0.55 which is 141. */
-   red   = (red   * 141) >> 8;
-   green = (green * 141) >> 8;
-   blue  = (blue  * 141) >> 8;
-
-   /* Convert back to 0-65535. */
-   red   |= red << 8;
-   green |= green << 8;
-   blue  |= blue << 8;
-
-   temp.red = red;
-   temp.green = green;
-   temp.blue = blue;
-
-   GetColor(&temp);
-   colors[newColor] = temp.pixel;
-   rgbColors[newColor] = GetRGBFromXColor(&temp);
 
 }
 

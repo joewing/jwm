@@ -524,22 +524,21 @@ void GetColorFromPixel(XColor *c)
 {
 
    Assert(c);
-	switch(rootVisual.visual->class) {
-	case DirectColor:
-	case TrueColor:
-		/* Nothing to do. */
-		break;
-	default:
-   	/* Convert from a pixel value to a linear RGB space. */
-   	c->pixel = rmap[c->pixel & 255];
-		break;
-	}
+   switch(rootVisual.visual->class) {
+   case DirectColor:
+   case TrueColor:
+      /* Nothing to do. */
+      break;
+   default:
+      /* Convert from a pixel value to a linear RGB space. */
+      c->pixel = rmap[c->pixel & 255];
+      break;
+   }
 
    /* Extract the RGB components from the linear RGB pixel value. */
    GetColorFromIndex(c);
 
 }
-
 
 /** Get an RGB pixel value from RGB components. */
 void GetColorIndex(XColor *c)
@@ -569,4 +568,3 @@ XftColor *GetXftColor(ColorType type)
 
 }
 #endif
-

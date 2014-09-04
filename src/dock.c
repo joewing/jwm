@@ -386,10 +386,10 @@ void DockWindow(Window win)
 
    DockNode *np;
 
-	/* If no dock is running, just return. */
-	if(!dock) {
-		return;
-	}
+   /* If no dock is running, just return. */
+   if(!dock) {
+      return;
+   }
 
    /* Make sure we have a valid window to add. */
    if(JUNLIKELY(win == None)) {
@@ -436,10 +436,10 @@ char UndockWindow(Window win)
    DockNode *np;
    DockNode *last;
 
-	/* If no dock is running, just return. */
-	if(!dock) {
-		return 0;
-	}
+   /* If no dock is running, just return. */
+   if(!dock) {
+      return 0;
+   }
 
    last = NULL;
    for(np = dock->nodes; np; np = np->next) {

@@ -634,19 +634,19 @@ void Destroy(void)
 /** Send _JWM_RESTART to the root window. */
 void SendRestart(void)
 {
-	SendJWMMessage(jwmRestart);
+   SendJWMMessage(jwmRestart);
 }
 
 /** Send _JWM_EXIT to the root window. */
 void SendExit(void)
 {
-	SendJWMMessage(jwmExit);
+   SendJWMMessage(jwmExit);
 }
 
 /** Send _JWM_RELOAD to the root window. */
 void SendReload(void)
 {
-	SendJWMMessage(jwmReload);
+   SendJWMMessage(jwmReload);
 }
 
 /** Send a JWM message to the root window. */

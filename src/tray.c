@@ -629,8 +629,9 @@ void HideTray(TrayType *tp)
 
    }
 
-   /* Move it. */
+   /* Move and redraw. */
    JXMoveWindow(display, tp->window, x, y);
+   DrawSpecificTray(tp);
 
 }
 
@@ -798,7 +799,13 @@ void DrawSpecificTray(const TrayType *tp)
 
    TrayComponentType *cp;
 
-   Assert(tp);
+   /* If the tray is hidden, draw only the background. */
+   if(tp->hidden) {
+      JXSetForeground(display, rootGC, colors[COLOR_TRAY_BG1]);
+      JXFillRectangle(display, tp->window, rootGC, 0, 0,
+                      tp->width, tp->height);
+      return;
+   }
 
    /* Draw components. */
    for(cp = tp->components; cp; cp = cp->next) {

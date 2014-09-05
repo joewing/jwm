@@ -236,7 +236,7 @@ void ResetBorder(const ClientNode *np)
       /* Draw the window area without the corners. */
       /* Corner bound radius -1 to allow slightly better outline drawing */
       JXSetForeground(display, shapeGC, 1);
-      if((np->state.status & (STAT_HMAX | STAT_VMAX)) &&
+      if((np->state.status & (STAT_HMAX | STAT_VMAX | STAT_FULLSCREEN)) &&
          !(np->state.status & (STAT_SHADED))) {
          JXFillRectangle(display, shapePixmap, shapeGC, 0, 0, width, height);
       } else {

@@ -799,14 +799,6 @@ void DrawSpecificTray(const TrayType *tp)
 
    TrayComponentType *cp;
 
-   /* If the tray is hidden, draw only the background. */
-   if(tp->hidden) {
-      JXSetForeground(display, rootGC, colors[COLOR_TRAY_BG1]);
-      JXFillRectangle(display, tp->window, rootGC, 0, 0,
-                      tp->width, tp->height);
-      return;
-   }
-
    /* Draw components. */
    for(cp = tp->components; cp; cp = cp->next) {
       UpdateSpecificTray(tp, cp);
@@ -839,7 +831,16 @@ void LowerTrays(void)
 void UpdateSpecificTray(const TrayType *tp, const TrayComponentType *cp)
 {
 
-   if(cp->pixmap != None && !shouldExit) {
+   if(JUNLIKELY(shouldExit)) {
+      return;
+   }
+
+   /* If the tray is hidden, draw only the background. */
+   if(tp->hidden) {
+      JXSetForeground(display, rootGC, colors[COLOR_TRAY_BG1]);
+      JXFillRectangle(display, tp->window, rootGC, 0, 0,
+                      tp->width, tp->height);
+   } else if(cp->pixmap != None) {
       JXCopyArea(display, cp->pixmap, tp->window, rootGC, 0, 0,
                  cp->width, cp->height, cp->x, cp->y);
    }

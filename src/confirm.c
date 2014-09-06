@@ -468,6 +468,7 @@ void DrawButtons(void)
    dialog->buttonHeight = dialog->lineHeight + 4;
 
    ResetButton(&button, dialog->pmap, &rootVisual);
+   button.border = 1;
    button.font = FONT_MENU;
    button.width = dialog->buttonWidth;
    button.height = dialog->buttonHeight;

@@ -101,6 +101,12 @@ void DrawButton(ButtonNode *bp)
 
    }
 
+   /* Draw the border. */
+   if(bp->border) {
+      JXSetForeground(display, gc, colors[fg]);
+      JXDrawRectangle(display, drawable, gc, x, y, width, height);
+   }
+
    /* Determine the size of the icon (if any) to display. */
    iconWidth = 0;
    iconHeight = 0;
@@ -175,6 +181,7 @@ void ResetButton(ButtonNode *bp, Drawable d, const VisualData *visual)
    bp->icon = NULL;
    bp->text = NULL;
    bp->fill = 1;
+   bp->border = 0;
 
 }
 

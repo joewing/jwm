@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-09-06 06:35-0500\n"
+"POT-Creation-Date: 2014-09-06 07:23-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -243,46 +243,46 @@ msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 "недопустимое значение макс. ширины кнопки в панели задач (TaskList): %s"
 
-#: src/traybutton.c:87
+#: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "не удалось загрузить иконку для кнопки запуска: \"%s\""
 
-#: src/traybutton.c:131
+#: src/traybutton.c:133
 msgid "no icon or label for TrayButton"
 msgstr "не заданы ни иконка, ни текст кнопки запуска"
 
-#: src/traybutton.c:241
+#: src/traybutton.c:243
 #, c-format
 msgid "invalid TrayButton action: \"%s\""
 msgstr "недопустимое значение действия кнопки запуска: \"%s\""
 
-#: src/traybutton.c:425
+#: src/traybutton.c:427
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "кнопка запуска: главное меню %d не задано"
 
-#: src/tray.c:1055
+#: src/tray.c:1056
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "недопустимое значение ширины панели: %d"
 
-#: src/tray.c:1074
+#: src/tray.c:1075
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "недопустимое значение высоты панели: %d"
 
-#: src/tray.c:1103
+#: src/tray.c:1104
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "недопустимое значение расположения панели: \"%s\""
 
-#: src/tray.c:1140
+#: src/tray.c:1141
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "недопустимое значение горизонтального выравнивания панели: \"%s\""
 
-#: src/tray.c:1161
+#: src/tray.c:1162
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""

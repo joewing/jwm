@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.2\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-09-05 16:06-0500\n"
+"POT-Creation-Date: 2014-09-06 06:35-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -242,46 +242,46 @@ msgstr ""
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 
-#: src/traybutton.c:88
+#: src/traybutton.c:87
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr ""
 
-#: src/traybutton.c:134
+#: src/traybutton.c:131
 msgid "no icon or label for TrayButton"
 msgstr ""
 
-#: src/traybutton.c:244
+#: src/traybutton.c:241
 #, c-format
 msgid "invalid TrayButton action: \"%s\""
 msgstr ""
 
-#: src/traybutton.c:428
+#: src/traybutton.c:425
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr ""
 
-#: src/tray.c:1054
+#: src/tray.c:1055
 #, c-format
 msgid "invalid tray width: %d"
 msgstr ""
 
-#: src/tray.c:1073
+#: src/tray.c:1074
 #, c-format
 msgid "invalid tray height: %d"
 msgstr ""
 
-#: src/tray.c:1102
+#: src/tray.c:1103
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr ""
 
-#: src/tray.c:1139
+#: src/tray.c:1140
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr ""
 
-#: src/tray.c:1160
+#: src/tray.c:1161
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr ""

@@ -22,6 +22,7 @@
 #include "event.h"
 #include "gradient.h"
 #include "client.h"
+#include "misc.h"
 
 #define DEFAULT_TRAY_WIDTH 32
 #define DEFAULT_TRAY_HEIGHT 32
@@ -139,8 +140,8 @@ void StartupTray(void)
                   }
                }
             }
-            cp->width = width;
-            cp->height = height;
+            cp->width = Max(1, width);
+            cp->height = Max(1, height);
             (cp->Create)(cp);
          }
 

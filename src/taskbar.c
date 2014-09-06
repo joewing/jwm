@@ -377,7 +377,7 @@ void UpdateTaskBar(void)
 {
 
    TaskBarType *bp;
-   int lastHeight;
+   int lastHeight = -1;
 
    if(JUNLIKELY(shouldExit)) {
       return;

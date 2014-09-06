@@ -16,9 +16,7 @@
 #include "icon.h"
 #include "image.h"
 #include "gradient.h"
-
-static void GetScaledIconSize(IconNode *ip, int maxsize,
-                              int *width, int *height);
+#include "misc.h"
 
 /** Draw a button. */
 void DrawButton(ButtonNode *bp)
@@ -111,10 +109,22 @@ void DrawButton(ButtonNode *bp)
    iconWidth = 0;
    iconHeight = 0;
    if(bp->icon) {
-      if(width < height) {
-         GetScaledIconSize(bp->icon, width - 5, &iconWidth, &iconHeight);
+      if(bp->icon == &emptyIcon) {
+         iconWidth = Min(width - 4, height - 4);
+         iconHeight = iconWidth;
       } else {
-         GetScaledIconSize(bp->icon, height - 5, &iconWidth, &iconHeight);
+         const int ratio = (bp->icon->image->width << 16)
+                         / bp->icon->image->height;
+         iconHeight = bp->icon->image->height;
+         iconWidth = bp->icon->image->width;
+         if(iconWidth > width - 4) {
+            iconWidth = width - 4;
+            iconHeight = (iconWidth << 16) / ratio;
+         }
+         if(iconHeight > height - 4) {
+            iconHeight = height - 4;
+            iconWidth = (iconHeight * ratio) >> 16;
+         }
       }
    }
 
@@ -139,7 +149,7 @@ void DrawButton(ButtonNode *bp)
          xoffset = 0;
       }
    } else {
-      xoffset = 3;
+      xoffset = 2;
    }
 
    /* Display the icon. */
@@ -184,42 +194,3 @@ void ResetButton(ButtonNode *bp, Drawable d, const VisualData *visual)
    bp->border = 0;
 
 }
-
-/** Get the scaled size of an icon for a button. */
-void GetScaledIconSize(IconNode *ip, int maxsize,
-                       int *width, int *height)
-{
-
-   int ratio;
-
-   Assert(ip);
-   Assert(width);
-   Assert(height);
-
-   if(ip == &emptyIcon) {
-      *width = maxsize;
-      *height = maxsize;
-      return;
-   }
-
-   Assert(ip->image->height > 0);
-
-   /* Fixed point with 16-bit fraction. */
-   ratio = (ip->image->width << 16) / ip->image->height;
-
-   if(ip->image->width > ip->image->height) {
-
-      /* Compute size wrt width */
-      *width = maxsize;
-      *height = (*width << 16) / ratio;
-
-   } else {
-
-      /* Compute size wrt height */
-      *height = maxsize;
-      *width = (*height * ratio) >> 16;
-
-   }
-
-}
-

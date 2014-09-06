@@ -28,8 +28,6 @@
 #include "settings.h"
 #include "event.h"
 
-#define BUTTON_SIZE 4
-
 typedef struct TrayButtonType {
 
    TrayComponentType *cp;
@@ -73,8 +71,7 @@ void StartupTrayButtons(void)
       if(bp->label) {
          bp->cp->requestedWidth
             = GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
-         bp->cp->requestedHeight
-            = GetStringHeight(FONT_TRAYBUTTON);
+         bp->cp->requestedHeight = GetStringHeight(FONT_TRAYBUTTON);
       } else {
          bp->cp->requestedWidth = 0;
          bp->cp->requestedHeight = 0;
@@ -82,14 +79,14 @@ void StartupTrayButtons(void)
       if(bp->iconName) {
          bp->icon = LoadNamedIcon(bp->iconName, 1);
          if(JLIKELY(bp->icon)) {
-            bp->cp->requestedWidth += bp->icon->image->width;
-            bp->cp->requestedHeight += bp->icon->image->height;
+            bp->cp->requestedWidth
+               = Max(bp->icon->image->width + 4, bp->cp->requestedWidth);
+            bp->cp->requestedHeight
+               = Max(bp->icon->image->height + 4, bp->cp->requestedHeight);
          } else {
             Warning(_("could not load tray icon: \"%s\""), bp->iconName);
          }
       }
-      bp->cp->requestedWidth += 2 * BUTTON_SIZE;
-      bp->cp->requestedHeight += 2 * BUTTON_SIZE;
    }
 }
 
@@ -186,11 +183,11 @@ void SetSize(TrayComponentType *cp, int width, int height)
       int ratio;
 
       if(bp->label) {
-         labelWidth = GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
-         labelHeight = GetStringHeight(FONT_TRAYBUTTON);
+         labelWidth = GetStringWidth(FONT_TRAYBUTTON, bp->label) + 6;
+         labelHeight = GetStringHeight(FONT_TRAYBUTTON) + 6;
       } else {
-         labelWidth = 0;
-         labelHeight = 0;
+         labelWidth = 4;
+         labelHeight = 4;
       }
 
       iconWidth = bp->icon->image->width;
@@ -202,16 +199,16 @@ void SetSize(TrayComponentType *cp, int width, int height)
       if(width > 0) {
 
          /* Compute height from width. */
-         iconWidth = width - labelWidth - 2 * BUTTON_SIZE;
+         iconWidth = width - labelWidth - 4;
          iconHeight = (iconWidth << 16) / ratio;
-         height = Max(iconHeight, labelHeight) + 2 * BUTTON_SIZE;
+         height = Max(iconHeight, labelHeight);
 
       } else if(height > 0) {
 
          /* Compute width from height. */
-         iconHeight = height - 2 * BUTTON_SIZE;
+         iconHeight = height - 4;
          iconWidth = (iconHeight * ratio) >> 16;
-         width = iconWidth + labelWidth + 2 * BUTTON_SIZE;
+         width = iconWidth + labelWidth;
 
       }
 

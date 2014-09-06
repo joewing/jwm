@@ -134,8 +134,8 @@ void DrawButton(ButtonNode *bp)
    if(bp->text) {
       textWidth = GetStringWidth(bp->font, bp->text);
       textHeight = GetStringHeight(bp->font);
-      if(textWidth + iconWidth + 8 > width) {
-         textWidth = width - iconWidth - 8;
+      if(textWidth + iconWidth + 4 > width) {
+         textWidth = width - iconWidth - 4;
          if(textWidth < 0) {
             textWidth = 0;
          }

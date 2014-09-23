@@ -112,7 +112,9 @@ static const ColorInheritNode INHERIT_COLORS[] = {
    { COLOR_TRAYBUTTON_ACTIVE_BG2,   COLOR_TRAY_ACTIVE_BG2   },
    { COLOR_CLOCK_FG,                COLOR_TRAY_FG           },
    { COLOR_CLOCK_BG1,               COLOR_TRAY_BG1          },
-   { COLOR_CLOCK_BG2,               COLOR_TRAY_BG2          }
+   { COLOR_CLOCK_BG2,               COLOR_TRAY_BG2          },
+   { COLOR_TRAY_BORDER,             COLOR_TRAY_BG1          },
+   { COLOR_MENU_BORDER,             COLOR_MENU_BG           }
 };
 static const unsigned int INHERIT_COUNT
    = sizeof(INHERIT_COLORS) / sizeof(INHERIT_COLORS[0]);

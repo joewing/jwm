@@ -745,6 +745,7 @@ char HandlePropertyNotify(const XPropertyEvent *event)
 {
    ClientNode *np = FindClientByWindow(event->window);
    if(np) {
+      //GrabServer();
       char changed = 0;
       switch(event->atom) {
       case XA_WM_NAME:
@@ -799,6 +800,7 @@ char HandlePropertyNotify(const XPropertyEvent *event)
          }
          break;
       }
+      //UngrabServer();
 
       if(changed) {
          DrawBorder(np);
@@ -1613,4 +1615,3 @@ void UnregisterCallback(SignalCallback callback, void *data)
    }
    Assert(0);
 }
-

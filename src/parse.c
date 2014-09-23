@@ -1106,6 +1106,9 @@ void ParseTrayStyle(const TokenNode *tp) {
       case TOK_OPACITY:
          settings.trayOpacity = ParseOpacity(np, np->value);
          break;
+      case TOK_BORDER:
+         SetColor(COLOR_TRAY_BORDER, np->value);
+         break;
       default:
          InvalidTag(np, TOK_TRAYSTYLE);
          break;
@@ -1521,6 +1524,9 @@ void ParseMenuStyle(const TokenNode *tp) {
          break;
       case TOK_OPACITY:
          settings.menuOpacity = ParseOpacity(np, np->value);
+         break;
+      case TOK_BORDER:
+         SetColor(COLOR_MENU_BORDER, np->value);
          break;
       default:
          InvalidTag(np, TOK_MENUSTYLE);

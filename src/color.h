@@ -116,4 +116,3 @@ XftColor *GetXftColor(ColorType type);
 #endif
 
 #endif /* COLOR_H */
-

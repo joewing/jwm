@@ -24,6 +24,7 @@
 #include "settings.h"
 
 #define BASE_ICON_OFFSET   3
+#define MENU_BORDER_SIZE   1
 
 typedef unsigned char MenuSelectionType;
 #define MENU_NOSELECTION   0
@@ -363,8 +364,12 @@ void CreateMenu(Menu *menu, int x, int y)
    attrMask |= CWSaveUnder;
    attr.save_under = True;
 
+   attrMask |= CWBorderPixel;
+   attr.border_pixel = colors[COLOR_MENU_BORDER];
+
    menu->window = JXCreateWindow(display, rootWindow, x, y,
-                                 menu->width, menu->height, 0,
+                                 menu->width, menu->height,
+                                 MENU_BORDER_SIZE,
                                  CopyFromParent, InputOutput,
                                  CopyFromParent, attrMask, &attr);
    menu->pixmap = JXCreatePixmap(display, menu->window,
@@ -562,7 +567,7 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
    ip = GetMenuItem(menu, menu->currentIndex);
    if(ip && IsMenuValid(ip->submenu)) {
       if(ShowSubmenu(ip->submenu, menu,
-                     menu->x + menu->width,
+                     menu->x + menu->width + MENU_BORDER_SIZE,
                      menu->y + menu->offsets[menu->currentIndex])) {
 
          /* Item selected; destroy the menu tree. */

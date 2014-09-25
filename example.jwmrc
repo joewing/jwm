@@ -63,7 +63,7 @@
 
     <!-- Visual Styles -->
     <WindowStyle>
-        <Font>FreeSans-9:bold</Font>
+        <Font>Sans-9:bold</Font>
         <Width>4</Width>
         <Height>21</Height>
         <Radius>4</Radius>
@@ -81,7 +81,7 @@
         </Inactive>
     </WindowStyle>
     <TrayStyle>
-        <Font>FreeSans-9</Font>
+        <Font>Sans-9</Font>
         <Background>#111111</Background>
         <Foreground>#FFFFFF</Foreground>
         <Opacity>0.75</Opacity>
@@ -101,7 +101,7 @@
         <ActiveBackground>#333333</ActiveBackground>
     </PagerStyle>
     <MenuStyle>
-        <Font>FreeSans-9</Font>
+        <Font>Sans-9</Font>
         <Foreground>#FFFFFF</Foreground>
         <Background>#333333</Background>
         <ActiveForeground>#FFFFFF</ActiveForeground>
@@ -109,7 +109,7 @@
         <Opacity>0.85</Opacity>
     </MenuStyle>
     <PopupStyle>
-        <Font>FreeSans-9</Font>
+        <Font>Sans-9</Font>
         <Outline>#000000</Outline>
         <Foreground>#000000</Foreground>
         <Background>#999999</Background>

@@ -61,6 +61,7 @@ void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type)
 {
 
    XSetWindowAttributes attrs;
+   long attrMask;
 
    if(type == SW_OFF) {
       return;
@@ -71,16 +72,25 @@ void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type)
 
    GetMoveResizeCoordinates(np, type, &statusWindowX, &statusWindowY);
 
+   attrMask = 0;
+
+   attrMask |= CWBackPixel;
    attrs.background_pixel = colors[COLOR_MENU_BG];
+
+   attrMask |= CWSaveUnder;
    attrs.save_under = True;
+
+   attrMask |= CWOverrideRedirect;
    attrs.override_redirect = True;
+
+   attrMask |= CWBorderPixel;
+   attrs.border_pixel = colors[COLOR_MENU_BORDER];
 
    statusWindow = JXCreateWindow(display, rootWindow,
       statusWindowX, statusWindowY,
-      statusWindowWidth, statusWindowHeight, 0,
+      statusWindowWidth, statusWindowHeight, 1,
       CopyFromParent, InputOutput, CopyFromParent,
-      CWBackPixel | CWOverrideRedirect | CWSaveUnder,
-      &attrs);
+      attrMask, &attrs);
 
    JXMapRaised(display, statusWindow);
 
@@ -175,4 +185,3 @@ void DestroyResizeWindow(void)
 {
    DestroyMoveResizeWindow();
 }
-

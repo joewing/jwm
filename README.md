@@ -10,21 +10,21 @@ To build JWM you will need a C compiler (gcc works), X11, and the
 If available and not disabled at compile time, JWM will also use
 the following libraries:
 
- - libcairo and librsvg for SVG icons and backgrounds.
- - libfribidi for bi-directional text support.
+ - cairo and librsvg2 for SVG icons and backgrounds.
+ - fribidi for bi-directional text support.
  - libjpeg for JPEG icons and backgrounds.
  - libpng for PNG icons and backgrounds.
  - libXext for the shape extension.
- - libXext for the render extension.
+ - libXrender for the render extension.
  - libXmu for rounded corners.
- - libxft for antialiased and true type fonts.
+ - libXft for anti-aliased and true type fonts.
  - libXinerama for multiple head support.
  - libXpm for XPM icons and backgrounds.
 
 Installation
 ------------------------------------------------------------------------------
 
- 0. If building from the git repository, run autoreconf to generate configure.
+ 0. For building from the git repository, run autoreconf to generate configure.
  1. Run "./configure --help" for configuration options.
  2. Run "./configure [options]"
  3. Run "make" to build JWM.
@@ -36,4 +36,3 @@ License
 See LICENSE for license information.
 
 For more information see http://joewing.net/projects/jwm/
-

@@ -154,6 +154,7 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_STRUT_PARTIAL],      "_NET_WM_STRUT_PARTIAL"       },
    { &atoms[ATOM_NET_WM_STRUT],              "_NET_WM_STRUT"               },
    { &atoms[ATOM_NET_WM_WINDOW_OPACITY],     &opacityAtom[0]               },
+   { &atoms[ATOM_NET_WM_MOVERESIZE],         "_NET_WM_MOVERESIZE"          },
    { &atoms[ATOM_NET_SYSTEM_TRAY_OPCODE],    "_NET_SYSTEM_TRAY_OPCODE"     },
 
    { &atoms[ATOM_MOTIF_WM_HINTS],            "_MOTIF_WM_HINTS"             },

@@ -71,6 +71,8 @@ static char HandleSelectionClear(const XSelectionClearEvent *event);
 
 static void HandleNetMoveResize(const XClientMessageEvent *event,
                                 ClientNode *np);
+static void HandleNetWMMoveResize(const XClientMessageEvent *evnet,
+                                  ClientNode *np);
 static void HandleNetRestack(const XClientMessageEvent *event,
                              ClientNode *np);
 static void HandleNetWMState(const XClientMessageEvent *event,
@@ -879,6 +881,10 @@ void HandleClientMessage(const XClientMessageEvent *event)
 
          HandleNetMoveResize(event, np);
 
+      } else if(event->message_type == atoms[ATOM_NET_WM_MOVERESIZE]) {
+
+         HandleNetWMMoveResize(event, np);
+
       } else if(event->message_type == atoms[ATOM_NET_RESTACK_WINDOW]) {
 
          HandleNetRestack(event, np);
@@ -1019,6 +1025,59 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
    ResetBorder(np);
    SendConfigureEvent(np);
    UpdatePager();
+
+}
+
+/** Handle a _NET_WM_MOVERESIZE request. */
+void HandleNetWMMoveResize(const XClientMessageEvent *event, ClientNode *np)
+{
+
+   const long x = event->data.l[0] - np->x;
+   const long y = event->data.l[1] - np->y;
+   const long direction = event->data.l[2];
+
+   switch(direction) {
+   case 0:  /* top-left */
+      ResizeClient(np, BA_RESIZE | BA_RESIZE_N | BA_RESIZE_W, x, y);
+      break;
+   case 1:  /* top */
+      ResizeClient(np, BA_RESIZE | BA_RESIZE_N, x, y);
+      break;
+   case 2:  /* top-right */
+      ResizeClient(np, BA_RESIZE | BA_RESIZE_N | BA_RESIZE_E, x, y);
+      break;
+   case 3:  /* right */
+      ResizeClient(np, BA_RESIZE | BA_RESIZE_E, x, y);
+      break;
+   case 4:  /* bottom-right */
+      ResizeClient(np, BA_RESIZE | BA_RESIZE_S | BA_RESIZE_E, x, y);
+      break;
+   case 5:  /* bottom */
+      ResizeClient(np, BA_RESIZE | BA_RESIZE_S, x, y);
+      break;
+   case 6:  /* bottom-left */
+      ResizeClient(np, BA_RESIZE | BA_RESIZE_S | BA_RESIZE_W, x, y);
+      break;
+   case 7:  /* left */
+      ResizeClient(np, BA_RESIZE | BA_RESIZE_W, x, y);
+      break;
+   case 8:  /* move */
+      MoveClient(np, x, y);
+      break;
+   case 9:  /* resize-keyboard */
+      ResizeClientKeyboard(np);
+      break;
+   case 10: /* move-keyboard */
+      MoveClientKeyboard(np);
+      break;
+   case 11: /* cancel */
+      if(np->controller) {
+         (np->controller)(0);
+      }
+      break;
+   default:
+      break;
+   }
 
 }
 

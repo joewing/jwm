@@ -134,12 +134,12 @@ void DrawButton(ButtonNode *bp)
    if(bp->text) {
       textWidth = GetStringWidth(bp->font, bp->text);
       textHeight = GetStringHeight(bp->font);
-      if(textWidth + iconWidth + 4 > width) {
-         textWidth = width - iconWidth - 4;
-         if(textWidth < 0) {
-            textWidth = 0;
-         }
+      if(iconWidth > 0 && textWidth + iconWidth + 6 > width) {
+         textWidth = width - iconWidth - 6;
+      } else if(iconWidth == 0 && textWidth + 4 > width) {
+         textWidth = width - 4;
       }
+      textWidth = textWidth < 0 ? 0 : textWidth;
    }
 
    /* Determine the offset of the text in the button. */
@@ -162,7 +162,7 @@ void DrawButton(ButtonNode *bp)
    }
 
    /* Display the label. */
-   if(bp->text && textWidth) {
+   if(textWidth > 0) {
       yoffset = (height - textHeight + 1) / 2;
       RenderString(bp->visual, drawable, bp->font, fg,
                    x + xoffset, y + yoffset,

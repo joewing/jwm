@@ -303,6 +303,9 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
       case OPTION_CONSTRAIN:
          np->state.border |= BORDER_CONSTRAIN;
          break;
+      case OPTION_FULLSCREEN:
+         np->state.status |= STAT_FULLSCREEN;
+         break;
       default:
          Debug("invalid option: %d", lp->option);
          break;

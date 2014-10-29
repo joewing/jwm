@@ -483,7 +483,7 @@ void Render(const TaskBarType *bp)
          if(remainder) {
             button.width = itemWidth;
          } else {
-            button.width = itemWidth;
+            button.width = itemWidth - 1;
          }
          button.height = bp->itemHeight;
          button.x = x;

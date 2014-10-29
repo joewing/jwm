@@ -815,13 +815,13 @@ maximum is 5 (most rounded).
 The colors/opacity used for the active window. See the \fBCOLORS\fP section for
 more information on colors. The following tags are supported:
 .P
-.B Text
+.B Foreground
 .RS
-The color of text on the title bar.
+The color of the text and buttons in the title bar.
 The default is white.
 .RE
 .P
-.B Title
+.B Background
 .RS
 The color of the title bar (gradients are supported).
 The default is #CC7700:#884400.
@@ -841,20 +841,15 @@ The default is black.
 .RE
 .RE
 .P
-.B Inactive
+.B Foreground
 .RS
-The colors used for inactive windows. See the \fBCOLORS\fP section for
-more information on colors. The following tags are supported:
-.P
-.B Text
-.RS
-The color of text on the title bar.
+The color of text and buttons in the title bar of inactive windows.
 The default is white.
 .RE
 .P
-.B Title
+.B Background
 .RS
-The color of the title bar (gradients are supported).
+The color of the title bar (gradients are supported) of inactive windows.
 The default is #333333:#111111.
 .RE
 .P
@@ -867,16 +862,15 @@ xcompmgr, is required for this.
 .P
 .B Outline
 .RS
-The color of the window outline.
+The color of the window outline for inactive windows.
 The default is black.
-.RE
 .RE
 .RE
 
 .B "TRAY STYLE"
 .RS
 The \fBTrayStyle\fP tag controls the look of trays.
-Within this tag the following tag is supported:
+Within this tag the following tags are supported:
 .P
 .B Font
 .RS
@@ -896,22 +890,28 @@ The default background color. See the \fBCOLORS\fP section for
 more information.
 .RE
 .P
-.B ActiveForeground
-.RS
-The default foreground color for active items.
-See the \fBCOLORS\fP section for more information.
-.RE
-.P
-.B ActiveBackground
-.RS
-The default background color for active items.
-See the \fBCOLORS\fP section for more information.
-.RE
-.P
 .B Opacity
 .RS
 The opacity of trays. This is a floating point value between 0.0 and 1.0.
 Note that a composite manager, such as xcompmgr, is required for this.
+.RE
+.P
+.P
+.B Active
+.RS
+The default colors for active items on the tray.
+See the \fBCOLORS\fP section for more information.
+The following tags are supported:
+.P
+.B Foreground
+.RS
+The default foreground color for active items.
+.RE
+.P
+.B Background
+.RS
+The default background color for active items.
+.RE
 .RE
 .RE
 
@@ -949,19 +949,23 @@ Inherited from \fBTrayStyle\fP by default.
 See the \fBCOLORS\fP section for more information.
 .RE
 .P
-.B ActiveForeground
+.P
+.B Active
 .RS
-The foreground color of an active item on the task list.
+The colors used for active items in the task list.
 Inherited from \fBTrayStyle\fP by default.
 See the \fBCOLORS\fP section for more information.
+.P
+.B Foreground
+.RS
+The foreground color of an active item on the task list.
 .RE
 .P
-.B ActiveBackground
+.B Background
 .RS
 The background color of an active item on the task list
 (gradients are supported).
-Inherited from \fBTrayStyle\fP by default.
-See the \fBCOLORS\fP section for more information.
+.RE
 .RE
 .RE
 
@@ -990,17 +994,23 @@ The background color for tray buttons (gradients are supported).
 Inherited from \fBTrayStyle\fP by default.
 See the \fBCOLORS\fP section for more information.
 .RE
-.B ActiveForeground
+.P
+.P
+.B Active
+.RS
+The colors used for pressed tray buttons.
+Inherited from \fBTrayStyle\fP by default.
+See the \fBCOLORS\fP section for more information.
+The following tags are supported:
+.P
+.B Foreground
 .RS
 The foreground color for pressed tray buttons.
-Inherited from \fBTrayStyle\fP by default.
-See the \fBCOLORS\fP section for more information.
 .RE
-.B ActiveBackground
+.B Background
 .RS
 The background color for pressed tray buttons (gradients are supported).
-Inherited from \fBTrayStyle\fP by default.
-See the \fBCOLORS\fP section for more information.
+.RE
 .RE
 .RE
 
@@ -1054,16 +1064,22 @@ The background color of inactive desktops shown in the pager. See the
 \fBCOLORS\fP section for more information.
 .RE
 .P
-.B ActiveForeground
+.P
+.B Active
 .RS
-The color of active windows shown in the pager. See the \fBCOLORS\fP section
-for more information.
+The colors used for active items in the pager.
+See the \fBCOLORS\fP section for more information.
+The following tags are supported:
+.P
+.B Foreground
+.RS
+The color of active windows shown in the pager.
 .RE
 .P
-.B ActiveBackground
+.B Background
 .RS
-The background color of active desktops shown in the pager. See the \fBCOLORS\fP
-section for more information.
+The background color of active desktops shown in the pager.
+.RE
 .RE
 .P
 .B Text
@@ -1102,16 +1118,23 @@ The background color of inactive menu items. See the \fBCOLORS\fPsection for
 more information.
 .RE
 .P
-.B ActiveForeground
+.P
+.B Active
+.P
+.RS
+The colors used for active menu items.
+See the \fBCOLORS\fP section for more information.
+The following tags are supported:
+.P
+.B Foreground
 .RS
 The text color of active menu items.
-See the \fBCOLORS\fP section for more information.
 .RE
 .P
-.B ActiveBackground
+.B Background
 .RS
 Text background color of active menu items (gradients are supported).
-See the \fBCOLORS\fP section for more information.
+.RE
 .RE
 .P
 .B Opacity

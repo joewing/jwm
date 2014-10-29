@@ -67,18 +67,16 @@
         <Width>4</Width>
         <Height>21</Height>
         <Radius>4</Radius>
+        <Foreground>#FFFFFF</Foreground>
+        <Background>#333333</Background>
+        <Outline>#000000</Outline>
+        <Opacity>0.5:0.9:0.1</Opacity>
         <Active>
-            <Text>#FFFFFF</Text>
-            <Title>#0077CC</Title>
+            <Foreground>#FFFFFF</Foreground>
+            <Background>#0077CC</Background>
             <Outline>#000000</Outline>
             <Opacity>1.0</Opacity>
         </Active>
-        <Inactive>
-            <Text>#FFFFFF</Text>
-            <Title>#333333</Title>
-            <Outline>#000000</Outline>
-            <Opacity>0.5:0.9:0.1</Opacity>
-        </Inactive>
     </WindowStyle>
     <TrayStyle>
         <Font>Sans-9</Font>
@@ -87,25 +85,31 @@
         <Opacity>0.75</Opacity>
     </TrayStyle>
     <TaskListStyle>
-        <ActiveForeground>#FFFFFF</ActiveForeground>
-        <ActiveBackground>#333333</ActiveBackground>
         <Foreground>#FFFFFF</Foreground>
         <Background>#111111</Background>
+        <Active>
+            <Foreground>#FFFFFF</Foreground>
+            <Background>#333333</Background>
+        </Active>
     </TaskListStyle>
     <PagerStyle>
         <Outline>#000000</Outline>
         <Text>#FFFFFF</Text>
         <Foreground>#444444</Foreground>
         <Background>#111111</Background>
-        <ActiveForeground>#0077CC</ActiveForeground>
-        <ActiveBackground>#333333</ActiveBackground>
+        <Active>
+            <Foreground>#0077CC</Foreground>
+            <Background>#333333</Background>
+        </Active>
     </PagerStyle>
     <MenuStyle>
         <Font>Sans-9</Font>
         <Foreground>#FFFFFF</Foreground>
         <Background>#333333</Background>
-        <ActiveForeground>#FFFFFF</ActiveForeground>
-        <ActiveBackground>#0077CC</ActiveBackground>
+        <Active>
+            <Foreground>#FFFFFF</Foreground>
+            <Background>#0077CC</Background>
+        </Active>
         <Opacity>0.85</Opacity>
     </MenuStyle>
     <PopupStyle>

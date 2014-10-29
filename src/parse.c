@@ -104,6 +104,7 @@ static const OptionMapType OPTION_MAP[] = {
    { "centered",           OPTION_CENTERED      },
    { "tiled",              OPTION_TILED         },
    { "constrain",          OPTION_CONSTRAIN     },
+   { "fullscreen",         OPTION_FULLSCREEN    },
    { NULL,                 OPTION_INVALID       }
 };
 

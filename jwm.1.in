@@ -654,6 +654,12 @@ The desktop on which windows in this group will be started.
 .RE
 
 .P
+.B fullscreen
+.RS
+Make windows in this group initially fullscreen.
+.RE
+
+.P
 .B hmax
 .RS
 Make windows in this group maximize horizontally.

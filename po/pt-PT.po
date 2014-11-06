@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-09-06 07:23-0500\n"
+"POT-Creation-Date: 2014-11-06 11:11-0600\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -144,83 +144,83 @@ msgstr ""
 "teclas de atalho: não foram especificadas para o menu root %d não esta "
 "definido"
 
-#: src/lex.c:202
+#: src/lex.c:198
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: terminação da etiqueta (tag) \"%s\" não corresponde à abertura da "
 "etiqueta (tag) \"%s\""
 
-#: src/lex.c:208
+#: src/lex.c:204
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: terminação da etiqueta (tag) inesperada e invalida"
 
-#: src/lex.c:214
+#: src/lex.c:210
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: terminação da etiqueta (tag) \"%s\" sem etiqueta de abertura"
 
-#: src/lex.c:217
+#: src/lex.c:213
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: terminação de etiqueta (tag) invalida"
 
-#: src/lex.c:235
+#: src/lex.c:231
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: abertura de etiqueta (tag) invalida"
 
-#: src/lex.c:251
+#: src/lex.c:247
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: etiqueta invalida (tag)"
 
-#: src/lex.c:306
+#: src/lex.c:302
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: texto inesperado: \"%s\""
 
-#: src/lex.c:354
+#: src/lex.c:350
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entrada invalida: \"%.8s\""
 
-#: src/lex.c:459 src/parse.c:1741
+#: src/lex.c:455 src/parse.c:1820
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1054
+#: src/parse.c:1040
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "modo de inserção invalido: \"%s\""
 
-#: src/parse.c:1756
+#: src/parse.c:1835
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Configuração invalida: %s"
 
-#: src/parse.c:1768
+#: src/parse.c:1847
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "transparência invalida: %s"
 
-#: src/parse.c:1787
+#: src/parse.c:1866
 #, c-format
 msgid "invalid layer: %s"
 msgstr "camada invalida: %s"
 
-#: src/parse.c:1804
+#: src/parse.c:1883
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "tipo de fundo invalido: %s"
 
-#: src/parse.c:1813
+#: src/parse.c:1892
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta invalida dentro %s: %s"
 
-#: src/parse.c:1834
+#: src/parse.c:1913
 msgid "configuration error"
 msgstr "erro de configuração"
 
@@ -269,27 +269,27 @@ msgstr "ação do Traybutton invalida: \"%s\""
 msgid "tray button: root menu %d not defined"
 msgstr "botão do tabuleiro: menu root %d não esta definida"
 
-#: src/tray.c:1056
+#: src/tray.c:1067
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "largura do tabuleiro invalida: %d"
 
-#: src/tray.c:1075
+#: src/tray.c:1086
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "altura do tabuleiro invalida: %d"
 
-#: src/tray.c:1104
+#: src/tray.c:1115
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "layout do tabuleiro invalido: \"%s\""
 
-#: src/tray.c:1141
+#: src/tray.c:1152
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alinhamento do tabuleiro invalido: \"%s\""
 
-#: src/tray.c:1162
+#: src/tray.c:1173
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""

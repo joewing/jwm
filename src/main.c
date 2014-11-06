@@ -430,6 +430,9 @@ void StartupConnection(void)
    }
 #endif
 
+   /* Make sure we have input focus. */
+   JXSetInputFocus(display, rootWindow, RevertToParent, CurrentTime);
+
    initializing = 0;
 
 }

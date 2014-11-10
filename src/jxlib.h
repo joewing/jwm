@@ -326,6 +326,9 @@
 #define JXSetForeground( a, b, c ) \
    ( SetCheckpoint(), XSetForeground( a, b, c ) )
 
+#define JXGetInputFocus( a, b, c ) \
+   ( SetCheckpoint(), XGetInputFocus( a, b, c ) )
+
 #define JXSetInputFocus( a, b, c, d ) \
    ( SetCheckpoint(), XSetInputFocus( a, b, c, d ) )
 

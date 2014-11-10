@@ -332,8 +332,9 @@ void StartupConnection(void)
 #endif
    struct sigaction sa;
    char name[32];
-   Window owner;
+   Window win;
    XEvent event;
+   int revert;
 
    initializing = 1;
    OpenConnection();
@@ -352,19 +353,19 @@ void StartupConnection(void)
 
    /* Get the current window manager and take the selection. */
    GrabServer();
-   owner = JXGetSelectionOwner(display, managerSelection);
-   if(owner != None) {
-      JXSelectInput(display, owner, StructureNotifyMask);
+   win = JXGetSelectionOwner(display, managerSelection);
+   if(win != None) {
+      JXSelectInput(display, win, StructureNotifyMask);
    }
    JXSetSelectionOwner(display, managerSelection,
                        supportingWindow, CurrentTime);
    UngrabServer();
 
    /* Wait for the current selection owner to give up the selection. */
-   if(owner != None) {
+   if(win != None) {
       /* Note that we need to wait for the current selection owner
        * to exit before we can expect to select SubstructureRedirectMask. */
-      XIfEvent(display, &event, SelectionReleased, (XPointer)&owner);
+      XIfEvent(display, &event, SelectionReleased, (XPointer)&win);
       JXSync(display, False);
    }
 
@@ -431,7 +432,11 @@ void StartupConnection(void)
 #endif
 
    /* Make sure we have input focus. */
-   JXSetInputFocus(display, rootWindow, RevertToParent, CurrentTime);
+   win = None;
+   JXGetInputFocus(display, &win, &revert);
+   if(win == None) {
+      JXSetInputFocus(display, rootWindow, RevertToParent, CurrentTime);
+   }
 
    initializing = 0;
 

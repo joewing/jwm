@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-11-06 11:11-0600\n"
+"POT-Creation-Date: 2015-01-02 13:59-0600\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -17,16 +17,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.6.5\n"
 
-#: src/background.c:133
+#: src/background.c:135
 msgid "no value specified for background"
 msgstr "no hay valor especificado para fondo de pantalla"
 
-#: src/background.c:149
+#: src/background.c:153
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "tipo de fondo de pantalla no válido: «%s»"
 
-#: src/background.c:292
+#: src/background.c:302
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "imagen de fondo de pantalla no encontrada: «%s»"
@@ -181,41 +181,41 @@ msgstr "%s[%u]: texto inesperado: «%s»"
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entidad no válida: «%.8s»"
 
-#: src/lex.c:455 src/parse.c:1820
+#: src/lex.c:455 src/parse.c:1819
 msgid "out of memory"
 msgstr "Sin memoria"
 
-#: src/parse.c:1040
+#: src/parse.c:1039
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "modo de insertar no válido: «%s»"
 
-#: src/parse.c:1835
+#: src/parse.c:1834
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ajuste no válido: %s"
 
-#: src/parse.c:1847
+#: src/parse.c:1846
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacidad no válida: %s"
 
-#: src/parse.c:1866
+#: src/parse.c:1865
 #, c-format
 msgid "invalid layer: %s"
 msgstr "capa no válida: %s"
 
-#: src/parse.c:1883
+#: src/parse.c:1882
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "tipo de ventana de estado no válido: %s"
 
-#: src/parse.c:1892
+#: src/parse.c:1891
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta no válida en %s: %s"
 
-#: src/parse.c:1913
+#: src/parse.c:1912
 msgid "configuration error"
 msgstr "error de configuración"
 

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-11-06 11:11-0600\n"
+"POT-Creation-Date: 2015-01-02 13:59-0600\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -17,16 +17,16 @@ msgstr ""
 "X-Loco-Parser: loco_parse_po\n"
 "X-Loco-Target-Locale: it_IT\n"
 
-#: src/background.c:133
+#: src/background.c:135
 msgid "no value specified for background"
 msgstr "Nessun valore specificato per lo sfondo"
 
-#: src/background.c:149
+#: src/background.c:153
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "Formato di sfondo non valido: \"%s\""
 
-#: src/background.c:292
+#: src/background.c:302
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "Immagine di sfondo non trovata: \"%s\""
@@ -179,41 +179,41 @@ msgstr "%s[%u]: testo non atteso: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entità non valida: \"%.8s\""
 
-#: src/lex.c:455 src/parse.c:1820
+#: src/lex.c:455 src/parse.c:1819
 msgid "out of memory"
 msgstr "Memoria esaurita"
 
-#: src/parse.c:1040
+#: src/parse.c:1039
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "Modo di inserimento non valido: \"%s\""
 
-#: src/parse.c:1835
+#: src/parse.c:1834
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Impostazione non valida: %s"
 
-#: src/parse.c:1847
+#: src/parse.c:1846
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "Opacità non valida: %s"
 
-#: src/parse.c:1866
+#: src/parse.c:1865
 #, c-format
 msgid "invalid layer: %s"
 msgstr "Layer non valido: %s"
 
-#: src/parse.c:1883
+#: src/parse.c:1882
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "Tipo di status della finestra non valido: %s"
 
-#: src/parse.c:1892
+#: src/parse.c:1891
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Tag non valido in %s: %s"
 
-#: src/parse.c:1913
+#: src/parse.c:1912
 msgid "configuration error"
 msgstr "Errore di configurazione"
 

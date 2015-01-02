@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-11-06 11:11-0600\n"
+"POT-Creation-Date: 2015-01-02 13:59-0600\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -16,16 +16,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/background.c:133
+#: src/background.c:135
 msgid "no value specified for background"
 msgstr "не задано значение для цвета фона"
 
-#: src/background.c:149
+#: src/background.c:153
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "неизвестный тип фона: \"%s\""
 
-#: src/background.c:292
+#: src/background.c:302
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "фоновое изображение не найдено: \"%s\""
@@ -177,41 +177,41 @@ msgstr "%s[%u]: непонятный текст: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
-#: src/lex.c:455 src/parse.c:1820
+#: src/lex.c:455 src/parse.c:1819
 msgid "out of memory"
 msgstr "недостаточно памяти"
 
-#: src/parse.c:1040
+#: src/parse.c:1039
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "недопустимое значение режима вставки: \"%s\""
 
-#: src/parse.c:1835
+#: src/parse.c:1834
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:1847
+#: src/parse.c:1846
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:1866
+#: src/parse.c:1865
 #, c-format
 msgid "invalid layer: %s"
 msgstr "недопустимое значение расположения окна: %s"
 
-#: src/parse.c:1883
+#: src/parse.c:1882
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "недопустимое значение типа статусного окна для перемещения: %s"
 
-#: src/parse.c:1892
+#: src/parse.c:1891
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:1913
+#: src/parse.c:1912
 msgid "configuration error"
 msgstr "ошибка конфигурации"
 

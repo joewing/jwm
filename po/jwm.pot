@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.2\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-11-06 11:11-0600\n"
+"POT-Creation-Date: 2015-01-02 13:59-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,16 +17,16 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/background.c:133
+#: src/background.c:135
 msgid "no value specified for background"
 msgstr ""
 
-#: src/background.c:149
+#: src/background.c:153
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr ""
 
-#: src/background.c:292
+#: src/background.c:302
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr ""
@@ -178,41 +178,41 @@ msgstr ""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/lex.c:455 src/parse.c:1820
+#: src/lex.c:455 src/parse.c:1819
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1040
+#: src/parse.c:1039
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr ""
 
-#: src/parse.c:1835
+#: src/parse.c:1834
 #, c-format
 msgid "invalid setting: %s"
 msgstr ""
 
-#: src/parse.c:1847
+#: src/parse.c:1846
 #, c-format
 msgid "invalid opacity: %s"
 msgstr ""
 
-#: src/parse.c:1866
+#: src/parse.c:1865
 #, c-format
 msgid "invalid layer: %s"
 msgstr ""
 
-#: src/parse.c:1883
+#: src/parse.c:1882
 #, c-format
 msgid "invalid status window type: %s"
 msgstr ""
 
-#: src/parse.c:1892
+#: src/parse.c:1891
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr ""
 
-#: src/parse.c:1913
+#: src/parse.c:1912
 msgid "configuration error"
 msgstr ""
 

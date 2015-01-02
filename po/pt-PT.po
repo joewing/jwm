@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2014-11-06 11:11-0600\n"
+"POT-Creation-Date: 2015-01-02 13:59-0600\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -21,16 +21,16 @@ msgstr ""
 "X-Poedit-Country: PORTUGAL\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: src/background.c:133
+#: src/background.c:135
 msgid "no value specified for background"
 msgstr "nenhum valor foi especificado para o fundo (background)"
 
-#: src/background.c:149
+#: src/background.c:153
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "tipo de fundo invalido: \"%s\""
 
-#: src/background.c:292
+#: src/background.c:302
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""
@@ -186,41 +186,41 @@ msgstr "%s[%u]: texto inesperado: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entrada invalida: \"%.8s\""
 
-#: src/lex.c:455 src/parse.c:1820
+#: src/lex.c:455 src/parse.c:1819
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1040
+#: src/parse.c:1039
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "modo de inserção invalido: \"%s\""
 
-#: src/parse.c:1835
+#: src/parse.c:1834
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Configuração invalida: %s"
 
-#: src/parse.c:1847
+#: src/parse.c:1846
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "transparência invalida: %s"
 
-#: src/parse.c:1866
+#: src/parse.c:1865
 #, c-format
 msgid "invalid layer: %s"
 msgstr "camada invalida: %s"
 
-#: src/parse.c:1883
+#: src/parse.c:1882
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "tipo de fundo invalido: %s"
 
-#: src/parse.c:1892
+#: src/parse.c:1891
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta invalida dentro %s: %s"
 
-#: src/parse.c:1913
+#: src/parse.c:1912
 msgid "configuration error"
 msgstr "erro de configuração"
 

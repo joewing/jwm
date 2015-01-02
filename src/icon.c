@@ -44,11 +44,12 @@ static void ReadNetWMIcon(ClientNode *np);
 static IconNode *CreateIcon(void);
 static IconNode *GetDefaultIcon(void);
 static IconNode *CreateIconFromData(const char *name, char **data);
-static IconNode *CreateIconFromFile(const char *fileName, char save);
+static IconNode *CreateIconFromFile(const char *fileName,
+                                    char save, char preserveAspect);
 static IconNode *CreateIconFromBinary(const unsigned long *data,
                                       unsigned int length);
 static IconNode *LoadNamedIconHelper(const char *name, const char *path,
-                                     char save);
+                                     char save, char preserveAspect);
 
 #if defined(USE_ICONS)
 static IconNode *LoadSuffixedIcon(const char *path, const char *name,
@@ -336,7 +337,7 @@ IconNode *LoadSuffixedIcon(const char *path, const char *name,
 #endif /* defined(USE_PNG) || defined(USE_XPM) || defined(USE_JPEG) */
 
 /** Load an icon from a file. */
-IconNode *LoadNamedIcon(const char *name, char save)
+IconNode *LoadNamedIcon(const char *name, char save, char preserveAspect)
 {
 
    IconPathNode *ip;
@@ -347,10 +348,10 @@ IconNode *LoadNamedIcon(const char *name, char save)
    SetIconSize();
 
    if(name[0] == '/') {
-      return CreateIconFromFile(name, save);
+      return CreateIconFromFile(name, save, preserveAspect);
    } else {
       for(ip = iconPaths; ip; ip = ip->next) {
-         icon = LoadNamedIconHelper(name, ip->path, save);
+         icon = LoadNamedIconHelper(name, ip->path, save, preserveAspect);
          if(icon) {
             return icon;
          }
@@ -361,7 +362,8 @@ IconNode *LoadNamedIcon(const char *name, char save)
 }
 
 /** Helper for loading icons by name. */
-IconNode *LoadNamedIconHelper(const char *name, const char *path, char save)
+IconNode *LoadNamedIconHelper(const char *name, const char *path,
+                              char save, char preserveAspect)
 {
 
    IconNode *result;
@@ -370,7 +372,7 @@ IconNode *LoadNamedIconHelper(const char *name, const char *path, char save)
    temp = AllocateStack(strlen(name) + strlen(path) + 1);
    strcpy(temp, path);
    strcat(temp, name);
-   result = CreateIconFromFile(temp, save);
+   result = CreateIconFromFile(temp, save, preserveAspect);
    ReleaseStack(temp);
 
    return result;
@@ -432,7 +434,8 @@ IconNode *CreateIconFromData(const char *name, char **data)
 }
 
 /** Create an icon from the specified file. */
-IconNode *CreateIconFromFile(const char *fileName, char save)
+IconNode *CreateIconFromFile(const char *fileName,
+                             char save, char preserveAspect)
 {
 
    ImageNode *image;
@@ -451,6 +454,7 @@ IconNode *CreateIconFromFile(const char *fileName, char save)
    image = LoadImage(fileName);
    if(image) {
       result = CreateIcon();
+      result->preserveAspect = preserveAspect;
       result->image = image;
       if(save) {
          result->name = CopyString(fileName);
@@ -490,10 +494,15 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
       rheight = icon->image->height;
    }
 
-   ratio = (icon->image->width << 16) / icon->image->height;
-   nwidth = Min(rwidth, (rheight * ratio) >> 16);
-   nheight = Min(rheight, (nwidth << 16) / ratio);
-   nwidth = (nheight * ratio) >> 16;
+   if(icon->preserveAspect) {
+      ratio = (icon->image->width << 16) / icon->image->height;
+      nwidth = Min(rwidth, (rheight * ratio) >> 16);
+      nheight = Min(rheight, (nwidth << 16) / ratio);
+      nwidth = (nheight * ratio) >> 16;
+   } else {
+      nheight = rheight;
+      nwidth = rwidth;
+   }
    if(nwidth < 1) {
       nwidth = 1;
    }
@@ -679,6 +688,7 @@ IconNode *CreateIcon(void)
    icon->nodes = NULL;
    icon->next = NULL;
    icon->prev = NULL;
+   icon->preserveAspect = 1;
    return icon;
 }
 

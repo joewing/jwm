@@ -41,6 +41,9 @@ typedef struct IconNode {
    struct IconNode *next;         /**< The next icon in the list. */
    struct IconNode *prev;         /**< The previous icon in the list. */
 
+   char preserveAspect;           /**< Set to preserve the aspect ratio
+                                   *   of the icon when scaling. */
+
 } IconNode;
 
 extern IconNode emptyIcon;
@@ -83,9 +86,10 @@ void LoadIcon(struct ClientNode *np);
 /** Load an icon.
  * @param name The name of the icon to load.
  * @param save Set if this icon should be saved in the icon hash.
+ * @param preserveAspect Set to preserve the aspect ratio when scaling.
  * @return A pointer to the icon (NULL if not found).
  */
-IconNode *LoadNamedIcon(const char *name, char save);
+IconNode *LoadNamedIcon(const char *name, char save, char preserveAspect);
 
 /** Destroy an icon.
  * @param icon The icon to destroy.

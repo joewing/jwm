@@ -54,7 +54,7 @@ void StartupBorders(void)
 
    for(i = 0; i < BI_COUNT; i++) {
       if(buttonNames[i]) {
-         buttonIcons[i] = LoadNamedIcon(buttonNames[i], 1);
+         buttonIcons[i] = LoadNamedIcon(buttonNames[i], 1, 1);
          Release(buttonNames[i]);
       } else {
          buttonIcons[i] = NULL;

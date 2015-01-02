@@ -1432,6 +1432,11 @@ for XPM, PNG, and JPEG images must be compiled in and icon support is required.
 .RS
 A tiled image. Like \fIimage\fP, but the image is tiled instead of stretched.
 .RE
+.B scale
+.RS
+A scaled image. Like \fIimage\fP, but the aspect ratio of the image is
+preserved.
+.RE
 .B command
 .RS
 A command to run for setting the background.

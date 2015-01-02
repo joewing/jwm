@@ -26,6 +26,7 @@ typedef unsigned char BackgroundType;
 #define BACKGROUND_COMMAND    2  /**< Command to run. */
 #define BACKGROUND_STRETCH    3  /**< Stretched image. */
 #define BACKGROUND_TILE       4  /**< Tiled image. */
+#define BACKGROUND_SCALE      5  /**< Scaled image. */
 
 /** Structure to represent a background for one or more desktops. */
 typedef struct BackgroundNode {
@@ -75,6 +76,7 @@ void StartupBackgrounds(void)
          break;
       case BACKGROUND_STRETCH:
       case BACKGROUND_TILE:
+      case BACKGROUND_SCALE:
          LoadImageBackground(bp);
          break;
       default:
@@ -145,6 +147,8 @@ void SetBackground(int desktop, const char *type, const char *value)
       bgType = BACKGROUND_STRETCH;
    } else if(!strcmp(type, "tile")) {
       bgType = BACKGROUND_TILE;
+   } else if(!strcmp(type, "scale")) {
+      bgType = BACKGROUND_SCALE;
    } else {
       Warning(_("invalid background type: \"%s\""), type);
       return;
@@ -283,10 +287,16 @@ void LoadImageBackground(BackgroundNode *bp)
 
    IconNode *ip;
    int width, height;
+   char preserveAspect;
 
    /* Load the icon. */
+   if(bp->type == BACKGROUND_SCALE) {
+      preserveAspect = 1;
+   } else {
+      preserveAspect = 0;
+   }
    ExpandPath(&bp->value);
-   ip = LoadNamedIcon(bp->value, 0);
+   ip = LoadNamedIcon(bp->value, 0, preserveAspect);
    if(JUNLIKELY(!ip)) {
       bp->pixmap = None;
       Warning(_("background image not found: \"%s\""), bp->value);

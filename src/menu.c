@@ -75,7 +75,7 @@ void InitializeMenu(Menu *menu)
    menu->itemHeight = GetStringHeight(FONT_MENU);
    for(np = menu->items; np; np = np->next) {
       if(np->iconName) {
-         np->icon = LoadNamedIcon(np->iconName, 1);
+         np->icon = LoadNamedIcon(np->iconName, 1, 1);
          if(np->icon) {
             hasIcon = 1;
          }

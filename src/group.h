@@ -41,6 +41,11 @@ typedef unsigned char OptionType;
 #define OPTION_NOTURGENT   23    /**< Ignore the urgency hint. */
 #define OPTION_CONSTRAIN   24    /**< Constrain the window to the screen. */
 #define OPTION_FULLSCREEN  25    /**< Start fullscreen. */
+#define OPTION_NOMIN       26    /**< Disallow minimization. */
+#define OPTION_NOMAX       27    /**< Disallow maximization. */
+#define OPTION_NOCLOSE     28    /**< Disallow closing (from title bar). */
+#define OPTION_NOMOVE      29    /**< Disallow moving. */
+#define OPTION_NORESIZE    30    /**< Disallow resizing. */
 
 /*@{*/
 #define InitializeGroups() (void)(0)

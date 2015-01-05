@@ -291,6 +291,21 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
       case OPTION_NOSHADE:
          np->state.border &= ~BORDER_SHADE;
          break;
+      case OPTION_NOMIN:
+         np->state.border &= ~BORDER_MIN;
+         break;
+      case OPTION_NOMAX:
+         np->state.border &= ~BORDER_MAX;
+         break;
+      case OPTION_NOCLOSE:
+         np->state.border &= ~BORDER_CLOSE;
+         break;
+      case OPTION_NOMOVE:
+         np->state.border &= ~BORDER_MOVE;
+         break;
+      case OPTION_NORESIZE:
+         np->state.border &= ~BORDER_RESIZE;
+         break;
       case OPTION_CENTERED:
          np->state.status |= STAT_CENTERED;
          break;

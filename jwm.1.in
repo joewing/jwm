@@ -727,6 +727,36 @@ Prevent windows in this group from being shaded.
 .RE
 
 .P
+.B nomin
+.RS
+Prevent windows in this group from being minimized.
+.RE
+
+.P
+.B nomax
+.RS
+Prevent windows in this group from being maximized.
+.RE
+
+.P
+.B noclose
+.RS
+Prevent windows in this group from being closed.
+.RE
+
+.P
+.B nomove
+.RS
+Prevent windows in this group from being moved.
+.RE
+
+.P
+.B noresize
+.RS
+Prevent windows in this group from being resized.
+.RE
+
+.P
 .B notitle
 .RS
 Causes windows in this group to be displayed without a title bar.

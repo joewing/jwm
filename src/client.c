@@ -828,7 +828,7 @@ void FocusClient(ClientNode *np)
       if(np->state.status & STAT_CANFOCUS) {
          JXSetInputFocus(display, np->window, RevertToParent, eventTime);
       } else {
-         JXSetInputFocus(display, rootWindow, RevertToParent, eventTime);
+         JXSetInputFocus(display, np->parent, RevertToParent, eventTime);
       }
       if(np->state.status & STAT_TAKEFOCUS) {
          SendClientMessage(np->window, ATOM_WM_PROTOCOLS, ATOM_WM_TAKE_FOCUS);

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-05 13:43-0600\n"
+"POT-Creation-Date: 2015-01-08 08:53-0600\n"
 "PO-Revision-Date: 2014-11-06 10:23+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -27,32 +27,32 @@ msgstr "type d'arrière-plan incorrect: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Image d'arrière-plan introuvable: \"%s\""
 
-#: src/client.c:887
+#: src/client.c:884
 msgid "Kill this window?"
 msgstr "Éliminer la fenêtre?"
 
-#: src/client.c:888
+#: src/client.c:885
 msgid "This may cause data to be lost!"
 msgstr "Cela peut entraîner la perte de données!"
 
-#: src/command.c:137 src/main.c:216
+#: src/command.c:137 src/main.c:214
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "Échec de l'exécution: (%s) %s"
 
-#: src/confirm.c:70
+#: src/confirm.c:68
 msgid "OK"
 msgstr "Valider"
 
-#: src/confirm.c:75
+#: src/confirm.c:73
 msgid "Cancel"
 msgstr "Annuler"
 
-#: src/confirm.c:309
+#: src/confirm.c:307
 msgid "Confirm"
 msgstr "Confirmer"
 
-#: src/desktop.c:346
+#: src/desktop.c:344
 msgid "empty Desktops Name tag"
 msgstr "Balise de noms de bureaux vide"
 
@@ -64,29 +64,29 @@ msgstr "Un seul Dock autorisé"
 msgid "could not acquire system tray selection"
 msgstr "Impossible d'obtenir la sélection de la barre système"
 
-#: src/font.c:105 src/font.c:122
+#: src/font.c:104 src/font.c:121
 #, c-format
 msgid "could not load font: %s"
 msgstr "Impossible de charger la police de caractères: %s"
 
-#: src/font.c:112 src/font.c:129
+#: src/font.c:111 src/font.c:128
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "Impossible de charger la police de caractères par défaut: %s"
 
-#: src/font.c:310
+#: src/font.c:309
 msgid "empty Font tag"
 msgstr "Balise de police de caractères vide"
 
-#: src/group.c:114
+#: src/group.c:112
 msgid "invalid group class"
 msgstr "classe de groupe incorrecte"
 
-#: src/group.c:125
+#: src/group.c:123
 msgid "invalid group name"
 msgstr "nom de groupe incorrect"
 
-#: src/group.c:256
+#: src/group.c:254
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr "bureau de groupe incorrect: %d"
@@ -106,30 +106,30 @@ msgstr "Erreur de lecture de l'image PNG: %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "Impossible de créer les informations de structure pour l'image PNG: %s"
 
-#: src/key.c:328
+#: src/key.c:327
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr "Le symbole de touche spécifié n'est défini pour aucun code de touche"
 
-#: src/key.c:336
+#: src/key.c:335
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "modificateur pour le symbole de touche 0x%0x introuvable"
 
-#: src/key.c:366
+#: src/key.c:365
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "modificateur incorrect: \"%c\""
 
-#: src/key.c:381
+#: src/key.c:380
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "symbole de touche incorrect: \"%s\""
 
-#: src/key.c:462
+#: src/key.c:461
 msgid "neither key nor keycode specified for Key"
 msgstr "ni touche ni code de touche spécifié pour la touche"
 
-#: src/key.c:478
+#: src/key.c:477
 #, c-format
 msgid "key binding: root menu %d not defined"
 msgstr "Raccourci-clavier: menu racine %d non défini"
@@ -176,194 +176,194 @@ msgstr "%s[%u]: texte inattendu: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entité incorrecte: \"%.8s\""
 
-#: src/lex.c:455 src/parse.c:1824
+#: src/lex.c:455 src/parse.c:1823
 msgid "out of memory"
 msgstr "Mémoire insuffisante"
 
-#: src/parse.c:1044
+#: src/parse.c:1043
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "Mode d'insertion incorrect: \"%s\""
 
-#: src/parse.c:1839
+#: src/parse.c:1838
 #, c-format
 msgid "invalid setting: %s"
 msgstr "paramètre incorrect: %s"
 
-#: src/parse.c:1851
+#: src/parse.c:1850
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacité incorrecte: %s"
 
-#: src/parse.c:1870
+#: src/parse.c:1869
 #, c-format
 msgid "invalid layer: %s"
 msgstr "disposition incorrecte: %s"
 
-#: src/parse.c:1887
+#: src/parse.c:1886
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "Statut du type de fenêtre incorrect: %s"
 
-#: src/parse.c:1896
+#: src/parse.c:1895
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Balise incorrecte dans %s: %s"
 
-#: src/parse.c:1917
+#: src/parse.c:1916
 msgid "configuration error"
 msgstr "erreur de configuration"
 
-#: src/root.c:102
+#: src/root.c:101
 #, c-format
 msgid "invalid root menu specified: \"%c\""
 msgstr "menu racine spécifié incorrect: \"%c\""
 
-#: src/root.c:232
+#: src/root.c:231
 msgid "Exit JWM"
 msgstr "Quitter JWM"
 
-#: src/root.c:233
+#: src/root.c:232
 msgid "Are you sure?"
 msgstr "En êtes-vous certain?"
 
-#: src/swallow.c:86
+#: src/swallow.c:85
 msgid "cannot swallow a client with no name"
 msgstr "Impossible d'afficher un client sans nom"
 
-#: src/swallow.c:93
+#: src/swallow.c:92
 msgid "cannot swallow the same client multiple times"
 msgstr "Impossible d'afficher le même client plusieurs fois"
 
-#: src/taskbar.c:719
+#: src/taskbar.c:718
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largeur maximale de la liste des tâches incorrecte: %s"
 
-#: src/traybutton.c:89
+#: src/traybutton.c:88
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "Impossible de charger l'icône de la barre: \"%s\""
 
-#: src/traybutton.c:133
+#: src/traybutton.c:132
 msgid "no icon or label for TrayButton"
 msgstr "aucune icône ou étiquette pour le bouton de barre"
 
-#: src/traybutton.c:243
+#: src/traybutton.c:242
 #, c-format
 msgid "invalid TrayButton action: \"%s\""
 msgstr "action de bouton de barre incorrect: \"%s\""
 
-#: src/traybutton.c:427
+#: src/traybutton.c:426
 #, c-format
 msgid "tray button: root menu %d not defined"
 msgstr "Bouton de barre: menu racine %d non défini"
 
-#: src/tray.c:1067
+#: src/tray.c:1066
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "Largeur de barre incorrecte: %d"
 
-#: src/tray.c:1086
+#: src/tray.c:1085
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "Hauteur de barre incorrecte: %d"
 
-#: src/tray.c:1115
+#: src/tray.c:1114
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "Disposition de barre incorrecte: \"%s\""
 
-#: src/tray.c:1152
+#: src/tray.c:1151
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alignement horizontal de la barre incorrect: \"%s\""
 
-#: src/tray.c:1173
+#: src/tray.c:1172
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alignement vertical de la barre incorrect: \"%s\""
 
-#: src/winmenu.c:80
+#: src/winmenu.c:78
 msgid "Close"
 msgstr "Fermer"
 
-#: src/winmenu.c:81
+#: src/winmenu.c:79
 msgid "Kill"
 msgstr "Éliminer"
 
-#: src/winmenu.c:90
+#: src/winmenu.c:88
 msgid "Resize"
 msgstr "Redimensionner"
 
-#: src/winmenu.c:93
+#: src/winmenu.c:91
 msgid "Move"
 msgstr "Déplacer"
 
-#: src/winmenu.c:99 src/winmenu.c:119
+#: src/winmenu.c:97 src/winmenu.c:117
 msgid "Restore"
 msgstr "Restaurer"
 
-#: src/winmenu.c:101
+#: src/winmenu.c:99
 msgid "Minimize"
 msgstr "Réduire"
 
-#: src/winmenu.c:106
+#: src/winmenu.c:104
 msgid "Unshade"
 msgstr "Déplier"
 
-#: src/winmenu.c:108
+#: src/winmenu.c:106
 msgid "Shade"
 msgstr "Replier"
 
-#: src/winmenu.c:113
+#: src/winmenu.c:111
 msgid "Maximize-y"
 msgstr "Maximiser-y"
 
-#: src/winmenu.c:116
+#: src/winmenu.c:114
 msgid "Maximize-x"
 msgstr "Maximiser-x"
 
-#: src/winmenu.c:121
+#: src/winmenu.c:119
 msgid "Maximize"
 msgstr "Maximiser"
 
-#: src/winmenu.c:130
+#: src/winmenu.c:128
 msgid "Unstick"
 msgstr "Décoller"
 
-#: src/winmenu.c:132
+#: src/winmenu.c:130
 msgid "Stick"
 msgstr "Coller"
 
-#: src/winmenu.c:158
+#: src/winmenu.c:156
 msgid "Layer"
 msgstr "Plan"
 
-#: src/winmenu.c:173
+#: src/winmenu.c:171
 msgid "[Above]"
 msgstr "[Avant]"
 
-#: src/winmenu.c:175
+#: src/winmenu.c:173
 msgid "Above"
 msgstr "Avant"
 
-#: src/winmenu.c:178
+#: src/winmenu.c:176
 msgid "[Normal]"
 msgstr "[Normal]"
 
-#: src/winmenu.c:180
+#: src/winmenu.c:178
 msgid "Normal"
 msgstr "Normal"
 
-#: src/winmenu.c:183
+#: src/winmenu.c:181
 msgid "[Below]"
 msgstr "[Arrière]"
 
-#: src/winmenu.c:185
+#: src/winmenu.c:183
 msgid "Below"
 msgstr "Arrière"
 
-#: src/winmenu.c:205
+#: src/winmenu.c:203
 msgid "Send To"
 msgstr "Envoyer vers"

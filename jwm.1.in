@@ -926,6 +926,12 @@ The default background color. See the \fBCOLORS\fP section for
 more information.
 .RE
 .P
+.B Border
+.RS
+The color of the border. See the \fBCOLORS\fP section for
+more information.
+.RE
+.P
 .B Opacity
 .RS
 The opacity of trays. This is a floating point value between 0.0 and 1.0.
@@ -1151,6 +1157,12 @@ information.
 .B Background
 .RS
 The background color of inactive menu items. See the \fBCOLORS\fPsection for
+more information.
+.RE
+.P
+.B Border
+.RS
+The color of the border. See the \fBCOLORS\fP section for
 more information.
 .RE
 .P

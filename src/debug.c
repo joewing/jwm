@@ -8,6 +8,9 @@
  */
 
 #include "debug.h"
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
 
 /** Emit a message (if compiled with -DDEBUG). */
 void Debug(const char *str, ...)

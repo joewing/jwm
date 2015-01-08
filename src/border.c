@@ -1,6 +1,9 @@
 /**
- * Functions for dealing with window borders.
- * Copyright (C) 2004 Joe Wingbermuehle
+ * @file border.c
+ * @author Joe Wingbermuehle
+ * @date 2004-2015
+ *
+ * @brief Functions for dealing with window borders.
  * 
  */
 
@@ -9,10 +12,8 @@
 #include "client.h"
 #include "clientlist.h"
 #include "color.h"
-#include "main.h"
 #include "icon.h"
 #include "font.h"
-#include "error.h"
 #include "misc.h"
 #include "settings.h"
 #include "grab.h"

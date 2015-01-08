@@ -15,7 +15,6 @@
 #include "error.h"
 #include "root.h"
 #include "main.h"
-#include "color.h"
 #include "font.h"
 #include "button.h"
 #include "misc.h"

@@ -10,7 +10,6 @@
 #include "jwm.h"
 #include "cursor.h"
 #include "main.h"
-#include "error.h"
 
 /** Cursor types. */
 typedef enum {

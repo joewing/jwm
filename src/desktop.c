@@ -12,8 +12,6 @@
 #include "main.h"
 #include "client.h"
 #include "clientlist.h"
-#include "hint.h"
-#include "pager.h"
 #include "taskbar.h"
 #include "error.h"
 #include "menu.h"

@@ -16,13 +16,11 @@
 #include "cursor.h"
 #include "desktop.h"
 #include "event.h"
-#include "main.h"
 #include "tray.h"
 #include "timing.h"
 #include "popup.h"
 #include "font.h"
 #include "settings.h"
-#include "event.h"
 
 /** Structure to represent a pager tray component. */
 typedef struct PagerType {

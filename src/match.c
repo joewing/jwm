@@ -10,7 +10,6 @@
 #include "jwm.h"
 #include "match.h"
 
-#include <sys/types.h>
 #include <regex.h>
 
 /** Determine if expression matches pattern. */

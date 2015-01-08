@@ -11,7 +11,6 @@
 #include "font.h"
 #include "main.h"
 #include "error.h"
-#include "color.h"
 #include "misc.h"
 
 #ifdef USE_ICONV

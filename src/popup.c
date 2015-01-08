@@ -14,7 +14,6 @@
 #include "font.h"
 #include "screen.h"
 #include "cursor.h"
-#include "error.h"
 #include "timing.h"
 #include "misc.h"
 #include "settings.h"

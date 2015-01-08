@@ -186,7 +186,7 @@ void StartupColors(void)
                c.flags = DoRed | DoGreen | DoBlue;
                JXAllocColor(display, rootColormap, &c);
                map[x] = c.pixel;
-               ++x;
+               x += 1;
             }
          }
       }

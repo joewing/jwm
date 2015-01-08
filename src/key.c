@@ -14,7 +14,6 @@
 #include "clientlist.h"
 #include "command.h"
 #include "error.h"
-#include "main.h"
 #include "misc.h"
 #include "root.h"
 #include "tray.h"

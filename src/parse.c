@@ -22,7 +22,6 @@
 #include "key.h"
 #include "main.h"
 #include "font.h"
-#include "color.h"
 #include "icon.h"
 #include "command.h"
 #include "taskbar.h"

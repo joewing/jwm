@@ -10,8 +10,6 @@
 #include "jwm.h"
 #include "winmenu.h"
 #include "client.h"
-#include "menu.h"
-#include "main.h"
 #include "desktop.h"
 #include "move.h"
 #include "resize.h"

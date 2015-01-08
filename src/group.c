@@ -13,8 +13,6 @@
 #include "icon.h"
 #include "error.h"
 #include "match.h"
-#include "desktop.h"
-#include "main.h"
 #include "misc.h"
 #include "settings.h"
 

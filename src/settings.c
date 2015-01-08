@@ -6,7 +6,6 @@
 
 #include "jwm.h"
 #include "settings.h"
-#include "debug.h"
 #include "misc.h"
 
 Settings settings;

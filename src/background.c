@@ -187,7 +187,7 @@ void LoadBackground(int desktop)
 {
 
    XSetWindowAttributes attr;
-   long attrValues;
+   unsigned long attrValues;
    BackgroundNode *bp;
 
    /* Determine the background to load. */

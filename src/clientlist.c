@@ -10,7 +10,6 @@
 #include "jwm.h"
 #include "clientlist.h"
 #include "client.h"
-#include "main.h"
 #include "key.h"
 #include "event.h"
 #include "tray.h"

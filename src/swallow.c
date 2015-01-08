@@ -15,7 +15,6 @@
 #include "command.h"
 #include "color.h"
 #include "client.h"
-#include "event.h"
 #include "misc.h"
 
 typedef struct SwallowNode {
@@ -181,8 +180,8 @@ void Resize(TrayComponentType *cp)
    SwallowNode *np = (SwallowNode*)cp->object;
 
    if(cp->window != None) {
-      const int width = cp->width - np->border * 2;
-      const int height = cp->height - np->border * 2;
+      const unsigned int width = cp->width - np->border * 2;
+      const unsigned int height = cp->height - np->border * 2;
       JXResizeWindow(display, cp->window, width, height);
    }
 

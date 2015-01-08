@@ -9,7 +9,6 @@
 
 #include "jwm.h"
 #include "main.h"
-#include "lex.h"
 #include "parse.h"
 #include "help.h"
 #include "error.h"
@@ -22,7 +21,6 @@
 #include "cursor.h"
 #include "confirm.h"
 #include "font.h"
-#include "hint.h"
 #include "group.h"
 #include "key.h"
 #include "icon.h"

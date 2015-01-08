@@ -11,7 +11,6 @@
 #include "root.h"
 #include "menu.h"
 #include "client.h"
-#include "main.h"
 #include "error.h"
 #include "confirm.h"
 #include "desktop.h"

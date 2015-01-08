@@ -20,7 +20,6 @@
 #include "misc.h"
 #include "settings.h"
 #include "event.h"
-#include "gradient.h"
 
 /** Structure to respresent a clock tray component. */
 typedef struct ClockType {

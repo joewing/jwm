@@ -11,7 +11,6 @@
 #include "jwm.h"
 #include "hint.h"
 #include "client.h"
-#include "main.h"
 #include "desktop.h"
 #include "misc.h"
 #include "font.h"

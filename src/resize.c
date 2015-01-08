@@ -11,14 +11,12 @@
 #include "resize.h"
 #include "client.h"
 #include "outline.h"
-#include "main.h"
 #include "cursor.h"
 #include "misc.h"
 #include "pager.h"
 #include "status.h"
 #include "key.h"
 #include "event.h"
-#include "border.h"
 #include "settings.h"
 
 static char shouldStopResize;

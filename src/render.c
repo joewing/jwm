@@ -13,7 +13,6 @@
 #include "image.h"
 #include "main.h"
 #include "color.h"
-#include "error.h"
 
 /** Draw a scaled icon. */
 void PutScaledRenderIcon(const VisualData *visual, IconNode *icon,

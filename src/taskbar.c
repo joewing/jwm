@@ -20,7 +20,6 @@
 #include "cursor.h"
 #include "icon.h"
 #include "error.h"
-#include "font.h"
 #include "winmenu.h"
 #include "screen.h"
 #include "settings.h"

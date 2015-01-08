@@ -20,7 +20,6 @@
 #include "screen.h"
 #include "settings.h"
 #include "event.h"
-#include "gradient.h"
 #include "client.h"
 #include "misc.h"
 

@@ -10,12 +10,9 @@
 #include "jwm.h"
 #include "button.h"
 #include "border.h"
-#include "font.h"
-#include "color.h"
 #include "main.h"
 #include "icon.h"
 #include "image.h"
-#include "gradient.h"
 #include "misc.h"
 
 /** Draw a button. */

@@ -1,4 +1,3 @@
-
 CC = @CC@
 CFLAGS = @CFLAGS@
 CPPFLAGS = @CPPFLAGS@
@@ -22,6 +21,10 @@ EXE = jwm
 all: $(EXE)
 
 install: all
+	install -d $(BINDIR)
+	install $(EXE) $(BINDIR)/$(EXE)
+
+install-strip: all
 	install -d $(BINDIR)
 	install $(EXE) $(BINDIR)/$(EXE)
 	strip $(BINDIR)/$(EXE)

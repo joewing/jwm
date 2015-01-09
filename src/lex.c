@@ -23,7 +23,6 @@ static const char *TOKEN_MAP[] = {
    "[invalid]",
    "Active",
    "Background",
-   "Border",
    "ButtonClose",
    "ButtonMax",
    "ButtonMaxActive",

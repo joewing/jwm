@@ -94,8 +94,8 @@ static const DefaultColorNode DEFAULT_COLORS[] = {
    { COLOR_CLOCK_BG1,               0x111111    },
    { COLOR_CLOCK_BG2,               0x111111    },
 
-   { COLOR_TRAY_BORDER,             0x000000    },
-   { COLOR_MENU_BORDER,             0x000000    }
+   { COLOR_TRAY_OUTLINE,            0x000000    },
+   { COLOR_MENU_OUTLINE,            0x000000    }
 
 };
 static const unsigned int DEFAULT_COUNT

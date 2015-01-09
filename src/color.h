@@ -26,7 +26,7 @@ typedef unsigned char ColorType;
 #define COLOR_TRAY_ACTIVE_FG        11
 #define COLOR_TRAY_ACTIVE_BG1       12
 #define COLOR_TRAY_ACTIVE_BG2       13
-#define COLOR_TRAY_BORDER           14
+#define COLOR_TRAY_OUTLINE          14
 #define COLOR_TASK_FG               15
 #define COLOR_TASK_BG1              16
 #define COLOR_TASK_BG2              17
@@ -45,7 +45,7 @@ typedef unsigned char ColorType;
 #define COLOR_MENU_ACTIVE_BG1       30
 #define COLOR_MENU_ACTIVE_BG2       31
 #define COLOR_MENU_ACTIVE_FG        32
-#define COLOR_MENU_BORDER           33
+#define COLOR_MENU_OUTLINE          33
 #define COLOR_POPUP_BG              34
 #define COLOR_POPUP_FG              35
 #define COLOR_POPUP_OUTLINE         36

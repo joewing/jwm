@@ -361,7 +361,7 @@ void CreateMenu(Menu *menu, int x, int y)
    attr.save_under = True;
 
    attrMask |= CWBorderPixel;
-   attr.border_pixel = colors[COLOR_MENU_BORDER];
+   attr.border_pixel = colors[COLOR_MENU_OUTLINE];
 
    menu->window = JXCreateWindow(display, rootWindow, x, y,
                                  menu->width, menu->height,

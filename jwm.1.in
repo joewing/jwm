@@ -926,9 +926,9 @@ The default background color. See the \fBCOLORS\fP section for
 more information.
 .RE
 .P
-.B Border
+.B Outline
 .RS
-The color of the border. See the \fBCOLORS\fP section for
+The color of the outline. See the \fBCOLORS\fP section for
 more information.
 .RE
 .P
@@ -1160,9 +1160,9 @@ The background color of inactive menu items. See the \fBCOLORS\fPsection for
 more information.
 .RE
 .P
-.B Border
+.B Outline
 .RS
-The color of the border. See the \fBCOLORS\fP section for
+The color of the outline. See the \fBCOLORS\fP section for
 more information.
 .RE
 .P

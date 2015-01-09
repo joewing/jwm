@@ -844,7 +844,7 @@ void UpdateSpecificTray(const TrayType *tp, const TrayComponentType *cp)
    }
 
    /* If the tray is hidden, draw only the background. */
-  JXSetForeground(display, rootGC, colors[COLOR_TRAY_BORDER]);
+  JXSetForeground(display, rootGC, colors[COLOR_TRAY_OUTLINE]);
    if(tp->hidden) {
       const int width = tp->width + 2 * TRAY_BORDER_SIZE;
       const int height = tp->height + 2 * TRAY_BORDER_SIZE;

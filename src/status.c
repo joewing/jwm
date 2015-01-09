@@ -82,7 +82,7 @@ void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type)
    attrs.override_redirect = True;
 
    attrMask |= CWBorderPixel;
-   attrs.border_pixel = colors[COLOR_MENU_BORDER];
+   attrs.border_pixel = colors[COLOR_MENU_OUTLINE];
 
    statusWindow = JXCreateWindow(display, rootWindow,
       statusWindowX, statusWindowY,

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-08 08:53-0600\n"
+"POT-Creation-Date: 2015-01-08 18:14-0600\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -137,47 +137,47 @@ msgstr "ни символ, ни код клавиши не заданы в тэ�
 msgid "key binding: root menu %d not defined"
 msgstr "назначение клавиши: главное меню %d не задано"
 
-#: src/lex.c:198
+#: src/lex.c:197
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: закрывающий тэг \"%s\" не соответствует открывающему \"%s\""
 
-#: src/lex.c:204
+#: src/lex.c:203
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: непонятный и неправильный закрывающий тэг"
 
-#: src/lex.c:210
+#: src/lex.c:209
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: закрывающий тэг \"%s\" без открывающего"
 
-#: src/lex.c:213
+#: src/lex.c:212
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: неправильный закрывающий тэг"
 
-#: src/lex.c:231
+#: src/lex.c:230
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: неправильный открывающий тэг"
 
-#: src/lex.c:247
+#: src/lex.c:246
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: неправильный тэг"
 
-#: src/lex.c:302
+#: src/lex.c:301
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: непонятный текст: \"%s\""
 
-#: src/lex.c:350
+#: src/lex.c:349
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
-#: src/lex.c:455 src/parse.c:1823
+#: src/lex.c:454 src/parse.c:1823
 msgid "out of memory"
 msgstr "недостаточно памяти"
 

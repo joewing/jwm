@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-08 08:53-0600\n"
+"POT-Creation-Date: 2015-01-08 18:14-0600\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -139,47 +139,47 @@ msgstr "ani klucza ani keycode określony dla Key"
 msgid "key binding: root menu %d not defined"
 msgstr "klucz wiązania: menu główne %d nie zdefiniowano"
 
-#: src/lex.c:198
+#: src/lex.c:197
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: zamknij znacznik \"%s\" nie pasuje otwarty znacznik \"%s\""
 
-#: src/lex.c:204
+#: src/lex.c:203
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: nieoczekiwany i nieprawidłowo zamknięty znacznik"
 
-#: src/lex.c:210
+#: src/lex.c:209
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: zamknij znacznik \"%s\" bez otwartego znacznika"
 
-#: src/lex.c:213
+#: src/lex.c:212
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: nieprawidłowo zamknięty znacznik"
 
-#: src/lex.c:231
+#: src/lex.c:230
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: nieprawidłowo otwarty znacznik"
 
-#: src/lex.c:247
+#: src/lex.c:246
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: nieprawidłowy znacznik"
 
-#: src/lex.c:302
+#: src/lex.c:301
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: nieoczekiwany tekst: \"%s\""
 
-#: src/lex.c:350
+#: src/lex.c:349
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: nieprawidłowa jednostka: \"%.8s\""
 
-#: src/lex.c:455 src/parse.c:1823
+#: src/lex.c:454 src/parse.c:1823
 msgid "out of memory"
 msgstr ""
 

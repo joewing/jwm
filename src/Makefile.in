@@ -24,13 +24,11 @@ install: all
 	install -d $(BINDIR)
 	install $(EXE) $(BINDIR)/$(EXE)
 
-install-strip: all
-	install -d $(BINDIR)
-	install $(EXE) $(BINDIR)/$(EXE)
+install-strip: install
 	strip $(BINDIR)/$(EXE)
 
-depend:
-	makedepend -m -DMAKE_DEPEND -- $(CFLAGS) -- *.c
+uninstall:
+	rm -f $(BINDIR)/$(EXE)
 
 $(EXE): $(OBJECTS)
 	$(CC) -o $(EXE) $(OBJECTS) $(LDFLAGS)

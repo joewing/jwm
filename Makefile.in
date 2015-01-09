@@ -16,8 +16,19 @@ install: all
 	install -d -m 0755 $(MANDIR)/man1
 	install -m 644 jwm.1 $(MANDIR)/man1/jwm.1
 
-depend:
-	cd src ; $(MAKE) depend
+install-strip: all install-conf
+	cd src ; $(MAKE) install-strip ; cd ..
+	cd po ; $(MAKE) install-strip ; cd ..
+	install -d -m 0755 $(SYSCONF)
+	install -m 644 example.jwmrc $(SYSCONF)/system.jwmrc
+	install -d -m 0755 $(MANDIR)/man1
+	install -m 644 jwm.1 $(MANDIR)/man1/jwm.1
+
+uninstall:
+	cd src ; $(MAKE) uninstall ; cd ..
+	cd po ; $(MAKE) uninstall ; cd ..
+	rm -f $(SYSCONF)/system.jwmrc
+	rm -f $(MANDIR)/man1/jwm.1
 
 tarball:
 	rm -f ../jwm-$(VERSION).tar.xz ;

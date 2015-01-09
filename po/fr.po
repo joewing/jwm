@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-08 08:53-0600\n"
+"POT-Creation-Date: 2015-01-08 18:14-0600\n"
 "PO-Revision-Date: 2014-11-06 10:23+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -134,49 +134,49 @@ msgstr "ni touche ni code de touche spécifié pour la touche"
 msgid "key binding: root menu %d not defined"
 msgstr "Raccourci-clavier: menu racine %d non défini"
 
-#: src/lex.c:198
+#: src/lex.c:197
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: la balise de fermeture \"%s\" ne coïncide pas avec la balise "
 "d'ouverture \"%s\""
 
-#: src/lex.c:204
+#: src/lex.c:203
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: balise de fermeture inattendue et incorrecte"
 
-#: src/lex.c:210
+#: src/lex.c:209
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: balise de fermeture \"%s\" sans balise d'ouverture"
 
-#: src/lex.c:213
+#: src/lex.c:212
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: balise de fermeture incorrecte"
 
-#: src/lex.c:231
+#: src/lex.c:230
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: balise d'ouverture incorrecte"
 
-#: src/lex.c:247
+#: src/lex.c:246
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: balise incorrecte"
 
-#: src/lex.c:302
+#: src/lex.c:301
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: texte inattendu: \"%s\""
 
-#: src/lex.c:350
+#: src/lex.c:349
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entité incorrecte: \"%.8s\""
 
-#: src/lex.c:455 src/parse.c:1823
+#: src/lex.c:454 src/parse.c:1823
 msgid "out of memory"
 msgstr "Mémoire insuffisante"
 

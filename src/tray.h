@@ -108,6 +108,9 @@ typedef struct TrayComponentType {
 /** Structure to represent a tray. */
 typedef struct TrayType {
 
+   int requestedX;      /**< The user-requested x-coordinate of the tray. */
+   int requestedY;      /**< The user-requested y-coordinate of the tray. */
+
    int x;   /**< The x-coordinate of the tray. */
    int y;   /**< The y-coordinate of the tray. */
 

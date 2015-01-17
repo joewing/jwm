@@ -86,14 +86,6 @@ TrayComponentType *CreateSwallow(const char *name, const char *command,
       return NULL;
    }
 
-   /* Make sure this name isn't already used. */
-   for(np = pendingNodes; np; np = np->next) {
-      if(JUNLIKELY(!strcmp(np->name, name))) {
-         Warning(_("cannot swallow the same client multiple times"));
-         return NULL;
-      }
-   }
-
    np = Allocate(sizeof(SwallowNode));
    np->name = CopyString(name);
    np->command = CopyString(command);

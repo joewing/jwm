@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-17 08:06-0600\n"
+"POT-Creation-Date: 2015-01-17 16:30-0600\n"
 "PO-Revision-Date: 2014-11-06 10:23+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -231,10 +231,6 @@ msgstr "En êtes-vous certain?"
 msgid "cannot swallow a client with no name"
 msgstr "Impossible d'afficher un client sans nom"
 
-#: src/swallow.c:92
-msgid "cannot swallow the same client multiple times"
-msgstr "Impossible d'afficher le même client plusieurs fois"
-
 #: src/taskbar.c:718
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
@@ -367,3 +363,6 @@ msgstr "Arrière"
 #: src/winmenu.c:203
 msgid "Send To"
 msgstr "Envoyer vers"
+
+#~ msgid "cannot swallow the same client multiple times"
+#~ msgstr "Impossible d'afficher le même client plusieurs fois"

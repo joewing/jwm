@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-17 08:06-0600\n"
+"POT-Creation-Date: 2015-01-17 16:30-0600\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -241,10 +241,6 @@ msgstr "Tem a certeza?"
 msgid "cannot swallow a client with no name"
 msgstr "não podes inserir um cliente no swallow sem nome"
 
-#: src/swallow.c:92
-msgid "cannot swallow the same client multiple times"
-msgstr "não podes inserir um cliente no swallow mais que uma vez"
-
 #: src/taskbar.c:718
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
@@ -377,6 +373,9 @@ msgstr "Abaixo"
 #: src/winmenu.c:203
 msgid "Send To"
 msgstr "Enviar Para"
+
+#~ msgid "cannot swallow the same client multiple times"
+#~ msgstr "não podes inserir um cliente no swallow mais que uma vez"
 
 #~ msgid "Fullscreen state will be shaped!"
 #~ msgstr "Estado do ecrã expandido será moldado!"

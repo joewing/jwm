@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-17 08:06-0600\n"
+"POT-Creation-Date: 2015-01-17 16:30-0600\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -232,11 +232,6 @@ msgstr "Вы уверены?"
 msgid "cannot swallow a client with no name"
 msgstr "нельзя использовать микро-окно панели (swallow) без имени"
 
-#: src/swallow.c:92
-msgid "cannot swallow the same client multiple times"
-msgstr ""
-"нельзя использовать одно и то же микро-окно панели (swallow) несколько раз"
-
 #: src/taskbar.c:718
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
@@ -370,6 +365,10 @@ msgstr "Всегда позади"
 #: src/winmenu.c:203
 msgid "Send To"
 msgstr "Переместить на рабочий стол"
+
+#~ msgid "cannot swallow the same client multiple times"
+#~ msgstr ""
+#~ "нельзя использовать одно и то же микро-окно панели (swallow) несколько раз"
 
 #~ msgid "Fullscreen state will be shaped!"
 #~ msgstr "Применено оформление в полноэкранном режиме!"

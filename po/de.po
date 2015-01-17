@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-17 08:06-0600\n"
+"POT-Creation-Date: 2015-01-17 16:30-0600\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -226,10 +226,6 @@ msgstr "Sicher?"
 
 #: src/swallow.c:85
 msgid "cannot swallow a client with no name"
-msgstr ""
-
-#: src/swallow.c:92
-msgid "cannot swallow the same client multiple times"
 msgstr ""
 
 #: src/taskbar.c:718

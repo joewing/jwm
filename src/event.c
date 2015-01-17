@@ -1476,8 +1476,8 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
       if(event->button == Button1) {
          if(event->type == ButtonPress) {
             if(doubleClickActive
-               && abs(event->time - lastClickTime) > 0
-               && abs(event->time - lastClickTime) <= settings.doubleClickSpeed
+               && event->time != lastClickTime
+               && event->time - lastClickTime <= settings.doubleClickSpeed
                && abs(event->x - lastX) <= settings.doubleClickDelta
                && abs(event->y - lastY) <= settings.doubleClickDelta) {
                MaximizeClientDefault(np);

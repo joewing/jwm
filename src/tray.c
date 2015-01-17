@@ -813,14 +813,8 @@ void DrawSpecificTray(const TrayType *tp)
 
    TrayComponentType *cp;
 
-   if(tp->hidden) {
-      JXSetForeground(display, rootGC, colors[COLOR_TRAY_OUTLINE]);
-      JXFillRectangle(display, tp->window, rootGC, 0, 0,
-                      tp->width, tp->height);
-   } else {
-      for(cp = tp->components; cp; cp = cp->next) {
-         UpdateSpecificTray(tp, cp);
-      }
+   for(cp = tp->components; cp; cp = cp->next) {
+      UpdateSpecificTray(tp, cp);
    }
 
 }

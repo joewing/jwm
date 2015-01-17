@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-13 19:34-0600\n"
+"POT-Creation-Date: 2015-01-17 08:06-0600\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -264,27 +264,27 @@ msgstr "acción no válida para Botón de Bandeja: «%s»"
 msgid "tray button: root menu %d not defined"
 msgstr "botón de bandeja: menú root %d no definido"
 
-#: src/tray.c:1070
+#: src/tray.c:1064
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "ancho de bandeja no válido: %d"
 
-#: src/tray.c:1089
+#: src/tray.c:1083
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "alto de bandeja no válido: %d"
 
-#: src/tray.c:1118
+#: src/tray.c:1112
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "forma no válida para bandeja: «%s»"
 
-#: src/tray.c:1155
+#: src/tray.c:1149
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alineación horizontal no válida para bandeja: «%s»"
 
-#: src/tray.c:1176
+#: src/tray.c:1170
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alineación vertical no válida para bandeja: «%s»"

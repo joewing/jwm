@@ -1044,7 +1044,7 @@ void SetTrayX(TrayType *tp, const char *str)
 {
    Assert(tp);
    Assert(str);
-   tp->x = atoi(str);
+   tp->requestedX = atoi(str);
 }
 
 /** Set the y-coordinate of a tray. */
@@ -1052,7 +1052,7 @@ void SetTrayY(TrayType *tp, const char *str)
 {
    Assert(tp);
    Assert(str);
-   tp->y = atoi(str);
+   tp->requestedY = atoi(str);
 }
 
 /** Set the width of a tray. */

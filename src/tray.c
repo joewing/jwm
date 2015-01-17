@@ -625,9 +625,9 @@ void HideTray(TrayType *tp)
       x = tp->x;
 
       if(tp->y >= sp->y + (sp->height / 2)) {
-         y = sp->y + sp->height;
+         y = sp->y + sp->height - TRAY_BORDER_SIZE;
       } else {
-         y = sp->y - tp->height;
+         y = sp->y - tp->height - TRAY_BORDER_SIZE;
       }
 
    } else {
@@ -635,9 +635,9 @@ void HideTray(TrayType *tp)
       y = tp->y;
 
       if(tp->x >= sp->x + (sp->width / 2)) {
-         x = sp->x + sp->width;
+         x = sp->x + sp->width - TRAY_BORDER_SIZE;
       } else {
-         x = sp->x - tp->width;
+         x = sp->x - tp->width - TRAY_BORDER_SIZE;
       }
 
    }

@@ -381,9 +381,11 @@ Note that confirm dialogs can be disabled completely at the compile-time.
 One or more trays may be created via the \fBTray\fP tag.
 This tag supports the following attributes:
 .P
-\fBautohide\fP \fIbool\fP
+\fBautohide\fP \fIstring\fP
 .RS
-Allows this tray to hide itself when not activated. Default is false.
+Specifies the location to hide the tray when not activated. Default is "off"
+to disable hiding.
+Possible values are "left", "right", "top", "bottom", and "off".
 .RE
 .P
 \fBx\fP \fIint\fP

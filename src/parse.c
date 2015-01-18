@@ -1147,17 +1147,30 @@ void ParseTray(const TokenNode *tp)
    const TokenNode *np;
    const char *attr;
    TrayType *tray;
+   TrayAutoHideType autohide;
 
    Assert(tp);
 
    tray = CreateTray();
 
+   autohide = THIDE_OFF;
    attr = FindAttribute(tp->attributes, AUTOHIDE_ATTRIBUTE);
-   if(attr && !strcmp(attr, TRUE_VALUE)) {
-      SetAutoHideTray(tray, 1);
-   } else {
-      SetAutoHideTray(tray, 0);
+   if(attr) {
+      if(!strcmp(attr, "off")) {
+         autohide = THIDE_OFF;
+      } else if(!strcmp(attr, "bottom")) {
+         autohide = THIDE_BOTTOM;
+      } else if(!strcmp(attr, "top")) {
+         autohide = THIDE_TOP;
+      } else if(!strcmp(attr, "left")) {
+         autohide = THIDE_LEFT;
+      } else if(!strcmp(attr, "right")) {
+         autohide = THIDE_RIGHT;
+      } else {
+         ParseError(tp, "invalid autohide setting: \"%s\"", attr);
+      }
    }
+   SetAutoHideTray(tray, autohide);
 
    attr = FindAttribute(tp->attributes, X_ATTRIBUTE);
    if(attr) {

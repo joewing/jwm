@@ -26,6 +26,15 @@ typedef unsigned char TrayAlignmentType;
 #define TALIGN_RIGHT    4 /**< Right aligned. */
 #define TALIGN_BOTTOM   5 /**< Bottom aligned. */
 
+/** Enumeration of tray autohide values. */
+typedef unsigned char TrayAutoHideType;
+#define THIDE_OFF       0 /**< No autohide. */
+#define THIDE_LEFT      1 /**< Hide on the left. */
+#define THIDE_RIGHT     2 /**< Hide on the right. */
+#define THIDE_TOP       3 /**< Hide on the top. */
+#define THIDE_BOTTOM    4 /**< Hide on the bottom. */
+#define THIDE_RAISED    8 /**< Mask to indicate the tray is raised. */
+
 /** Structure to hold common tray component data.
  * Sizing is handled as follows:
  *  - The component is created via a factory method. It sets its
@@ -125,8 +134,8 @@ typedef struct TrayType {
    TrayAlignmentType valign;  /**< Vertical alignment. */
    TrayAlignmentType halign;  /**< Horizontal alignment. */
 
-   char autoHide;    /**< 1 for autohide, 0 otherwise. */
-   char hidden;      /**< 1 if hidden (due to autohide), 0 otherwise. */
+   TrayAutoHideType  autoHide;
+   char hidden;     /**< 1 if hidden (due to autohide), 0 otherwise. */
 
    Window window; /**< The tray window. */
 
@@ -220,9 +229,9 @@ char ProcessTrayEvent(const XEvent *event);
 
 /** Set whether auto hide is enabled for a tray.
  * @param tp The tray.
- * @param v 1 to enable, 0 to disable.
+ * @param autohide The auto hide setting.
  */
-void SetAutoHideTray(TrayType *tp, char v);
+void SetAutoHideTray(TrayType *tp, TrayAutoHideType autohide);
 
 /** Set the tray x-coordinate.
  * @param tp The tray.

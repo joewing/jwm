@@ -240,7 +240,7 @@ TrayType *CreateTray(void)
    tp->valign = TALIGN_FIXED;
    tp->halign = TALIGN_FIXED;
 
-   tp->autoHide = 0;
+   tp->autoHide = THIDE_OFF;
    tp->hidden = 0;
 
    tp->window = None;
@@ -620,26 +620,26 @@ void HideTray(TrayType *tp)
 
    /* Determine where to move the tray. */
    sp = GetCurrentScreen(tp->x, tp->y);
-   if(tp->layout == LAYOUT_HORIZONTAL) {
-
-      x = tp->x;
-
-      if(tp->y >= sp->y + (sp->height / 2)) {
-         y = sp->y + sp->height - TRAY_BORDER_SIZE;
-      } else {
-         y = sp->y - tp->height - TRAY_BORDER_SIZE;
-      }
-
-   } else {
-
+   switch(tp->autoHide) {
+   case THIDE_LEFT:
+      x = sp->y - tp->width - TRAY_BORDER_SIZE;
       y = tp->y;
-
-      if(tp->x >= sp->x + (sp->width / 2)) {
-         x = sp->x + sp->width - TRAY_BORDER_SIZE;
-      } else {
-         x = sp->x - tp->width - TRAY_BORDER_SIZE;
-      }
-
+      break;
+   case THIDE_RIGHT:
+      x = sp->y + sp->width - TRAY_BORDER_SIZE;
+      y = tp->y;
+      break;
+   case THIDE_TOP:
+      x = tp->x;
+      y = sp->y - tp->height - TRAY_BORDER_SIZE;
+      break;
+   case THIDE_BOTTOM:
+      x = tp->x;
+      y = sp->y + sp->height - TRAY_BORDER_SIZE;
+      break;
+   default:
+      Assert(0);
+      break;
    }
 
    /* Move and redraw. */
@@ -686,7 +686,7 @@ char ProcessTrayEvent(const XEvent *event)
 void SignalTray(const TimeType *now, int x, int y, Window w, void *data)
 {
    TrayType *tp = (TrayType*)data;
-   if(tp->autoHide == 1 && !tp->hidden && !menuShown) {
+   if(tp->autoHide != THIDE_OFF && !tp->hidden && !menuShown) {
       if(x < tp->x || x >= tp->x + tp->width
          || y < tp->y || y >= tp->y + tp->height) {
          HideTray(tp);
@@ -824,7 +824,7 @@ void RaiseTrays(void)
 {
    TrayType *tp;
    for(tp = trays; tp; tp = tp->next) {
-      tp->autoHide |= 2;
+      tp->autoHide |= THIDE_RAISED;
       ShowTray(tp);
       JXRaiseWindow(display, tp->window);
    }
@@ -835,7 +835,7 @@ void LowerTrays(void)
 {
    TrayType *tp;
    for(tp = trays; tp; tp = tp->next) {
-      tp->autoHide &= ~2;
+      tp->autoHide &= ~THIDE_RAISED;
    }
    RestackClients();
 }
@@ -1027,10 +1027,10 @@ unsigned int GetTrayCount(void)
 }
 
 /** Determine if a tray should autohide. */
-void SetAutoHideTray(TrayType *tp, char v)
+void SetAutoHideTray(TrayType *tp, TrayAutoHideType autohide)
 {
    Assert(tp);
-   tp->autoHide = v;
+   tp->autoHide = autohide;
 }
 
 /** Set the x-coordinate of a tray. */

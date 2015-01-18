@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-17 16:30-0600\n"
+"POT-Creation-Date: 2015-01-18 13:37-0600\n"
 "PO-Revision-Date: 2014-11-06 10:23+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -176,7 +176,7 @@ msgstr "%s[%u]: texte inattendu: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entité incorrecte: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1823
+#: src/lex.c:454 src/parse.c:1836
 msgid "out of memory"
 msgstr "Mémoire insuffisante"
 
@@ -185,32 +185,32 @@ msgstr "Mémoire insuffisante"
 msgid "invalid insert mode: \"%s\""
 msgstr "Mode d'insertion incorrect: \"%s\""
 
-#: src/parse.c:1838
+#: src/parse.c:1851
 #, c-format
 msgid "invalid setting: %s"
 msgstr "paramètre incorrect: %s"
 
-#: src/parse.c:1850
+#: src/parse.c:1863
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacité incorrecte: %s"
 
-#: src/parse.c:1869
+#: src/parse.c:1882
 #, c-format
 msgid "invalid layer: %s"
 msgstr "disposition incorrecte: %s"
 
-#: src/parse.c:1886
+#: src/parse.c:1899
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "Statut du type de fenêtre incorrect: %s"
 
-#: src/parse.c:1895
+#: src/parse.c:1908
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Balise incorrecte dans %s: %s"
 
-#: src/parse.c:1916
+#: src/parse.c:1929
 msgid "configuration error"
 msgstr "erreur de configuration"
 

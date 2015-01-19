@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-18 13:37-0600\n"
+"POT-Creation-Date: 2015-01-19 07:24-0600\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -258,27 +258,27 @@ msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 msgid "tray button: root menu %d not defined"
 msgstr "przycisk zasobnika: menu głównym %d nie zdefiniowano"
 
-#: src/tray.c:1064
+#: src/tray.c:1069
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "nieprawidłowa szerokość zasobnika: %d"
 
-#: src/tray.c:1083
+#: src/tray.c:1088
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "nieprawidłowa wysokość zasobnika: %d"
 
-#: src/tray.c:1112
+#: src/tray.c:1117
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "nieprawidłowy układ zasobnika: \"%s\""
 
-#: src/tray.c:1149
+#: src/tray.c:1154
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "nieprawidłowe wypoziomowanie zasobnika: \"%s\""
 
-#: src/tray.c:1170
+#: src/tray.c:1175
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""

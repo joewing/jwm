@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-18 13:37-0600\n"
+"POT-Creation-Date: 2015-01-19 07:24-0600\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -252,27 +252,27 @@ msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
 msgid "tray button: root menu %d not defined"
 msgstr "taakbalk-knop: root menu %d niet gedefiniëerd"
 
-#: src/tray.c:1064
+#: src/tray.c:1069
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "ongeldige taakbalk-breedte: %d"
 
-#: src/tray.c:1083
+#: src/tray.c:1088
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "ongeldige taakbalk-hoogte: %d"
 
-#: src/tray.c:1112
+#: src/tray.c:1117
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "ongeldige taakbalk lay-out: \"%s\""
 
-#: src/tray.c:1149
+#: src/tray.c:1154
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "ongeldige horizontale taakbalk uitlijning: \"%s\""
 
-#: src/tray.c:1170
+#: src/tray.c:1175
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ongeldige verticale taakbalk uitlijning: \"%s\""

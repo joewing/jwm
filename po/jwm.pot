@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-18 13:37-0600\n"
+"POT-Creation-Date: 2015-01-19 07:24-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -257,27 +257,27 @@ msgstr ""
 msgid "tray button: root menu %d not defined"
 msgstr ""
 
-#: src/tray.c:1064
+#: src/tray.c:1069
 #, c-format
 msgid "invalid tray width: %d"
 msgstr ""
 
-#: src/tray.c:1083
+#: src/tray.c:1088
 #, c-format
 msgid "invalid tray height: %d"
 msgstr ""
 
-#: src/tray.c:1112
+#: src/tray.c:1117
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr ""
 
-#: src/tray.c:1149
+#: src/tray.c:1154
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr ""
 
-#: src/tray.c:1170
+#: src/tray.c:1175
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr ""

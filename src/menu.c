@@ -18,6 +18,8 @@
 #include "event.h"
 #include "root.h"
 #include "settings.h"
+#include "desktop.h"
+#include "parse.h"
 
 #define BASE_ICON_OFFSET   3
 #define MENU_BORDER_SIZE   1
@@ -27,14 +29,20 @@ typedef unsigned char MenuSelectionType;
 #define MENU_LEAVE         1
 #define MENU_SUBSELECT     2
 
-static char ShowSubmenu(Menu *menu, Menu *parent, int x, int y);
+static char ShowSubmenu(Menu *menu, Menu *parent,
+                        RunMenuCommandType runner,
+                        int x, int y);
 
+static void PatchMenu(Menu *menu);
+static void UnpatchMenu(Menu *menu);
 static void CreateMenu(Menu *menu, int x, int y);
 static void HideMenu(Menu *menu);
 static void DrawMenu(Menu *menu);
 
-static char MenuLoop(Menu *menu);
-static MenuSelectionType UpdateMotion(Menu *menu, XEvent *event);
+static char MenuLoop(Menu *menu, RunMenuCommandType runner);
+static MenuSelectionType UpdateMotion(Menu *menu,
+                                      RunMenuCommandType runner,
+                                      XEvent *event);
 
 static void UpdateMenu(Menu *menu);
 static void DrawMenuItem(Menu *menu, MenuItem *item, int index);
@@ -44,8 +52,6 @@ static int GetPreviousMenuIndex(Menu *menu);
 static int GetMenuIndex(Menu *menu, int index);
 static void SetPosition(Menu *tp, int index);
 static char IsMenuValid(const Menu *menu);
-
-static MenuAction *menuAction = NULL;
 
 int menuShown = 0;
 
@@ -162,16 +168,11 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y)
       return;
    }
 
-   ShowSubmenu(menu, NULL, x, y);
+   ShowSubmenu(menu, NULL, runner, x, y);
 
    JXUngrabKeyboard(display, CurrentTime);
    JXUngrabPointer(display, CurrentTime);
    RefocusClient();
-
-   if(menuAction) {
-      (runner)(menuAction);
-      menuAction = NULL;
-   }
 
    if(shouldReload) {
       ReloadMenu();
@@ -192,6 +193,7 @@ void DestroyMenu(Menu *menu)
          switch(menu->items->action.type) {
          case MA_EXECUTE:
          case MA_EXIT:
+         case MA_DYNAMIC:
             if(menu->items->action.data.str) {
                Release(menu->items->action.data.str);
             }
@@ -219,28 +221,78 @@ void DestroyMenu(Menu *menu)
 }
 
 /** Show a submenu. */
-char ShowSubmenu(Menu *menu, Menu *parent, int x, int y)
+char ShowSubmenu(Menu *menu, Menu *parent,
+                 RunMenuCommandType runner,
+                 int x, int y)
 {
 
    char status;
 
+   PatchMenu(menu);
    menu->parent = parent;
    CreateMenu(menu, x, y);
 
    menuShown += 1;
-   status = MenuLoop(menu);
+   status = MenuLoop(menu, runner);
    menuShown -= 1;
 
    HideMenu(menu);
+   UnpatchMenu(menu);
 
    return status;
 
 }
 
+/** Prepare a menu to be shown. */
+void PatchMenu(Menu *menu)
+{
+   MenuItem *item;
+   for(item = menu->items; item; item = item->next) {
+      Menu *submenu = NULL;
+      switch(item->action.type) {
+      case MA_DESKTOP:
+         submenu = CreateDesktopMenu(1 << currentDesktop);
+         break;
+      case MA_SENDTO:
+         submenu = CreateSendtoMenu();
+         break;
+      case MA_DYNAMIC:
+         submenu = ParseDynamicMenu(item->action.data.str);
+         break;
+      default:
+         break;
+      }
+      if(submenu) {
+         InitializeMenu(submenu);
+         item->submenu = submenu;
+      }
+   }
+}
+
+/** Remove temporary items from a menu. */
+void UnpatchMenu(Menu *menu)
+{
+   MenuItem *item;
+   for(item = menu->items; item; item = item->next) {
+      switch(item->action.type) {
+      case MA_DESKTOP:
+      case MA_SENDTO:
+      case MA_DYNAMIC:
+         if(item->submenu) {
+            DestroyMenu(item->submenu);
+            item->submenu = NULL;
+         }
+         break;
+      default:
+         break;
+      }
+   }
+}
+
 /** Menu process loop.
  * Returns 0 if no selection was made or 1 if a selection was made.
  */
-char MenuLoop(Menu *menu)
+char MenuLoop(Menu *menu, RunMenuCommandType runner)
 {
 
    XEvent event;
@@ -279,7 +331,7 @@ char MenuLoop(Menu *menu)
       case KeyPress:
       case MotionNotify:
          hadMotion = 1;
-         switch(UpdateMotion(menu, &event)) {
+         switch(UpdateMotion(menu, runner, &event)) {
          case MENU_NOSELECTION: /* no selection */
             break;
          case MENU_LEAVE: /* mouse left the menu */
@@ -309,7 +361,7 @@ char MenuLoop(Menu *menu)
             
          ip = GetMenuItem(menu, menu->currentIndex);
          if(ip != NULL) {
-            menuAction = &ip->action;
+            (runner)(&ip->action);
          }
          return 1;
       default:
@@ -413,7 +465,9 @@ void DrawMenu(Menu *menu)
 }
 
 /** Determine the action to take given an event. */
-MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
+MenuSelectionType UpdateMotion(Menu *menu,
+                               RunMenuCommandType runner,
+                               XEvent *event)
 {
 
    MenuItem *ip;
@@ -487,7 +541,7 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
       case KEY_ENTER:
          ip = GetMenuItem(menu, tp->currentIndex);
          if(ip != NULL) {
-            menuAction = &ip->action;
+            (runner)(&ip->action);
          }
          return MENU_SUBSELECT;
       default:
@@ -562,7 +616,7 @@ MenuSelectionType UpdateMotion(Menu *menu, XEvent *event)
    /* If the selected item is a submenu, show it. */
    ip = GetMenuItem(menu, menu->currentIndex);
    if(ip && IsMenuValid(ip->submenu)) {
-      if(ShowSubmenu(ip->submenu, menu,
+      if(ShowSubmenu(ip->submenu, menu, runner,
                      menu->x + menu->width + MENU_BORDER_SIZE,
                      menu->y + menu->offsets[menu->currentIndex])) {
 

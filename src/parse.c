@@ -155,11 +155,10 @@ static void ParseDesktop(int desktop, const TokenNode *tp);
 static void ParseDesktopBackground(int desktop, const TokenNode *tp);
 
 /* Menus. */
+static Menu *ParseMenu(const TokenNode *start);
 static void ParseRootMenu(const TokenNode *start);
 static MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
                                MenuItem *last);
-static MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
-                                  MenuItem *last);
 static MenuItem *InsertMenuItem(MenuItem *last);
 
 /* Tray. */
@@ -471,9 +470,9 @@ void ParseResizeMode(const TokenNode *tp) {
 
 }
 
-/** Parse a root menu. */
-void ParseRootMenu(const TokenNode *start) {
-
+/** Parse a menu. */
+Menu *ParseMenu(const TokenNode *start)
+{
    const char *value;
    Menu *menu;
 
@@ -500,12 +499,24 @@ void ParseRootMenu(const TokenNode *start) {
    menu->items = NULL;
    ParseMenuItem(start->subnodeHead, menu, NULL);
 
-   value = FindAttribute(start->attributes, ONROOT_ATTRIBUTE);
-   if(!value) {
-      value = "123";
+   return menu;
+
+}
+
+/** Parse a root menu. */
+void ParseRootMenu(const TokenNode *start)
+{
+   Menu *menu;
+   char *onroot;
+
+   menu = ParseMenu(start);
+
+   onroot = FindAttribute(start->attributes, ONROOT_ATTRIBUTE);
+   if(!onroot) {
+      onroot = "123";
    }
 
-   SetRootMenu(value, menu);
+   SetRootMenu(onroot, menu);
 
 }
 
@@ -543,11 +554,6 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
    menu->offsets = NULL;
    while(start) {
       switch(start->type) {
-      case TOK_INCLUDE:
-
-         last = ParseMenuInclude(start, menu, last);
-
-         break;
       case TOK_MENU:
 
          last = InsertMenuItem(last);
@@ -627,6 +633,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
       case TOK_KILL:
       case TOK_CLOSE:
       case TOK_SENDTO:
+      case TOK_INCLUDE:
 
          last = InsertMenuItem(last);
          if(!menu->items) {
@@ -672,6 +679,10 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
             break;
          case TOK_SENDTO:
             last->action.type = MA_SENDTO;
+            break;
+         case TOK_INCLUDE:
+            last->action.type = MA_DYNAMIC;
+            last->action.data.str = CopyString(start->value);
             break;
          default:
             break;
@@ -735,21 +746,20 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
 
 }
 
-/** Parse a menu include. */
-MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
-   MenuItem *last) {
-
+/** Parse a dynamic menu (called from menu code). */
+Menu *ParseDynamicMenu(const char *command)
+{
    FILE *fd;
    char *path;
-   char *buffer = NULL;
+   char *buffer;
    TokenNode *start;
+   Menu *menu;
 
-   Assert(tp);
+   buffer = NULL;
+   if(!strncmp(command, "exec:", 5)) {
 
-   if(!strncmp(tp->value, "exec:", 5)) {
-
-      path = Allocate(strlen(tp->value) - 5 + 1);
-      strcpy(path, tp->value + 5);
+      path = Allocate(strlen(command) - 5 + 1);
+      strcpy(path, command + 5);
       ExpandPath(&path);
 
       fd = popen(path, "r");
@@ -757,12 +767,12 @@ MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
          buffer = ReadFile(fd);
          pclose(fd);
       } else {
-         ParseError(tp, "could not execute included program: %s", path);
+         ParseError(NULL, "could not execute included program: %s", path);
       }
 
    } else {
 
-      path = CopyString(tp->value);
+      path = CopyString(command);
       ExpandPath(&path);
 
       fd = fopen(path, "r");
@@ -770,14 +780,14 @@ MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
          buffer = ReadFile(fd);
          fclose(fd);
       } else {
-         ParseError(tp, "could not open include: %s", path);
+         ParseError(NULL, "could not open include: %s", path);
       }
 
    }
 
    if(!buffer) {
       Release(path);
-      return last;
+      return NULL;
    }
 
    start = Tokenize(buffer, path);
@@ -785,17 +795,16 @@ MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
    Release(path);
 
    if(JUNLIKELY(!start || start->type != TOK_JWM)) {
-      ParseError(tp, "invalid included menu: %s", tp->value);
-   } else {
-      last = ParseMenuItem(start->subnodeHead, menu, last);
+      ParseError(NULL, "invalid include: %s", command);
+      if(start) {
+         ReleaseTokens(start);
+      }
+      return NULL;
    }
 
-   if(start) {
-      ReleaseTokens(start);
-   }
-
-   return last;
-
+   menu = ParseMenu(start);
+   ReleaseTokens(start);
+   return menu;
 }
 
 /** Parse a key binding. */
@@ -1040,7 +1049,7 @@ void ParseTaskListStyle(const TokenNode *tp) {
       } else if(!strcmp(temp, "left")) {
          settings.taskInsertMode = INSERT_LEFT;
       } else {
-         ParseError(tp, _("invalid insert mode: \"%s\""), temp);
+         ParseError(tp, "invalid insert mode: \"%s\"", temp);
          settings.taskInsertMode = INSERT_RIGHT;
       }
    }

@@ -117,7 +117,7 @@ static int ParseEntity(const char *entity, char *ch,
                        const char *file, unsigned int line);
 static TokenType LookupType(const char *name, TokenNode *np);
 
-/** Tokenize a data. */
+/** Tokenize data. */
 TokenNode *Tokenize(const char *line, const char *fileName)
 {
    AttributeNode *ap;

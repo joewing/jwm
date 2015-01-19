@@ -13,12 +13,12 @@
 #include "client.h"
 #include "error.h"
 #include "confirm.h"
-#include "desktop.h"
 #include "misc.h"
 #include "winmenu.h"
 #include "command.h"
 #include "parse.h"
 #include "settings.h"
+#include "desktop.h"
 
 /** Number of root menus to support. */
 #define ROOT_MENU_COUNT 10
@@ -26,8 +26,6 @@
 static Menu *rootMenu[ROOT_MENU_COUNT];
 
 static void ExitHandler(ClientNode *np);
-static void PatchRootMenu(Menu *menu);
-static void UnpatchRootMenu(Menu *menu);
 
 static void RunRootCommand(const MenuAction *action);
 
@@ -145,11 +143,8 @@ void GetRootMenuSize(int index, int *width, int *height)
       *height = 0;
       return;
    }
-
-   PatchRootMenu(rootMenu[index]);
    *width = rootMenu[index]->width;
    *height = rootMenu[index]->height;
-   UnpatchRootMenu(rootMenu[index]);
 
 }
 
@@ -160,53 +155,8 @@ char ShowRootMenu(int index, int x, int y)
    if(!rootMenu[index]) {
       return 0;
    }
-
-   PatchRootMenu(rootMenu[index]);
    ShowMenu(rootMenu[index], RunRootCommand, x, y);
-   UnpatchRootMenu(rootMenu[index]);
-
    return 1;
-
-}
-
-/** Prepare a root menu to be shown. */
-void PatchRootMenu(Menu *menu)
-{
-
-   MenuItem *item;
-
-   for(item = menu->items; item; item = item->next) {
-      if(item->submenu) {
-         PatchRootMenu(item->submenu);
-      }
-      if(item->action.type == MA_DESKTOP) {
-         item->submenu = CreateDesktopMenu(1 << currentDesktop);
-         InitializeMenu(item->submenu);
-      }
-      if(item->action.type == MA_SENDTO) {
-         item->submenu = CreateSendtoMenu();
-         InitializeMenu(item->submenu);
-      }
-   }
-
-}
-
-/** Remove temporary items from a root menu. */
-void UnpatchRootMenu(Menu *menu) {
-
-   MenuItem *item;
-
-   for(item = menu->items; item; item = item->next) {
-      if(item->action.type == MA_DESKTOP) {
-         DestroyMenu(item->submenu);
-         item->submenu = NULL;
-      } else if(item->action.type == MA_SENDTO) {
-         DestroyMenu(item->submenu);
-         item->submenu = NULL;
-      } else if(item->submenu) {
-         UnpatchRootMenu(item->submenu);
-      }
-   }
 
 }
 

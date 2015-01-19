@@ -250,10 +250,10 @@ void PatchMenu(Menu *menu)
    for(item = menu->items; item; item = item->next) {
       Menu *submenu = NULL;
       switch(item->action.type) {
-      case MA_DESKTOP:
+      case MA_DESKTOP_MENU:
          submenu = CreateDesktopMenu(1 << currentDesktop);
          break;
-      case MA_SENDTO:
+      case MA_SENDTO_MENU:
          submenu = CreateSendtoMenu();
          break;
       case MA_DYNAMIC:
@@ -275,8 +275,8 @@ void UnpatchMenu(Menu *menu)
    MenuItem *item;
    for(item = menu->items; item; item = item->next) {
       switch(item->action.type) {
-      case MA_DESKTOP:
-      case MA_SENDTO:
+      case MA_DESKTOP_MENU:
+      case MA_SENDTO_MENU:
       case MA_DYNAMIC:
          if(item->submenu) {
             DestroyMenu(item->submenu);

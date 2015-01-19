@@ -31,6 +31,8 @@ typedef unsigned char MenuActionType;
 #define MA_EXIT         16
 #define MA_RESTART      17
 #define MA_DYNAMIC      18
+#define MA_SENDTO_MENU  19
+#define MA_DESKTOP_MENU 20
 
 /** Structure to represent a menu action for callbacks. */
 typedef struct MenuAction {

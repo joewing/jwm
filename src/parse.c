@@ -651,7 +651,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
 
          switch(start->type) {
          case TOK_DESKTOPS:
-            last->action.type = MA_DESKTOP;
+            last->action.type = MA_DESKTOP_MENU;
             break;
          case TOK_STICK:
             last->action.type = MA_STICK;
@@ -678,7 +678,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
             last->action.type = MA_CLOSE;
             break;
          case TOK_SENDTO:
-            last->action.type = MA_SENDTO;
+            last->action.type = MA_SENDTO_MENU;
             break;
          case TOK_INCLUDE:
             last->action.type = MA_DYNAMIC;

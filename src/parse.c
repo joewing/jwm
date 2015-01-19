@@ -1818,7 +1818,7 @@ char *FindAttribute(AttributeNode *ap, const char *name)
 char *ReadFile(FILE *fd)
 {
 
-   const int BLOCK_SIZE = 1 << 14;  // Start at 16k.
+   const int BLOCK_SIZE = 1024;  // Start at 1k.
 
    char *buffer;
    int len, max;
@@ -1829,21 +1829,19 @@ char *ReadFile(FILE *fd)
    buffer = Allocate(max + 1);
 
    for(;;) {
-      ch = fgetc(fd);
-      if(JUNLIKELY(ch == EOF || ch == 0)) {
+      const size_t count = fread(&buffer[len], 1, max - len, fd);
+      len += count;
+      if(len < max) {
          break;
       }
-      buffer[len++] = ch;
-      if(JUNLIKELY(len >= max)) {
-         max *= 2;
-         if(JUNLIKELY(max < 0)) {
-            /* File is too big. */
-            break;
-         }
-         buffer = Reallocate(buffer, max + 1);
-         if(JUNLIKELY(buffer == NULL)) {
-            FatalError(_("out of memory"));
-         }
+      max *= 2;
+      if(JUNLIKELY(max < 0)) {
+         /* File is too big. */
+         break;
+      }
+      buffer = Reallocate(buffer, max + 1);
+      if(JUNLIKELY(buffer == NULL)) {
+         FatalError(_("out of memory"));
       }
    }
    buffer[len] = 0;

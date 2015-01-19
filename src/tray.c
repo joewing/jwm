@@ -616,6 +616,11 @@ void HideTray(TrayType *tp)
    const ScreenType *sp;
    int x, y;
 
+   /* Don't hide if the tray is raised. */
+   if(tp->autoHide & THIDE_RAISED) {
+      return;
+   }
+
    tp->hidden = 1;
 
    /* Determine where to move the tray. */

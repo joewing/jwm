@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-19 07:24-0600\n"
+"POT-Creation-Date: 2015-01-19 15:50-0600\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -173,54 +173,54 @@ msgstr ""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/lex.c:454 src/parse.c:1836
+#: src/lex.c:454 src/parse.c:1845
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1043
+#: src/parse.c:1052
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "ungültiger EInfügungsmodus: \"%s\""
 
-#: src/parse.c:1851
+#: src/parse.c:1860
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ungültige Einstellung %s"
 
-#: src/parse.c:1863
+#: src/parse.c:1872
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ungültige Opazität: \"%s\""
 
-#: src/parse.c:1882
+#: src/parse.c:1891
 #, c-format
 msgid "invalid layer: %s"
 msgstr "ungültige Ebene %s"
 
-#: src/parse.c:1899
+#: src/parse.c:1908
 #, c-format
 msgid "invalid status window type: %s"
 msgstr ""
 
-#: src/parse.c:1908
+#: src/parse.c:1917
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ungültiger tag in %s: %s"
 
-#: src/parse.c:1929
+#: src/parse.c:1938
 msgid "configuration error"
 msgstr "Konfigurationsfehler"
 
-#: src/root.c:101
+#: src/root.c:99
 #, c-format
 msgid "invalid root menu specified: \"%c\""
 msgstr "ungültiges root Menü spezifiziert: \"%c\""
 
-#: src/root.c:231
+#: src/root.c:181
 msgid "Exit JWM"
 msgstr "JWM beenden"
 
-#: src/root.c:232
+#: src/root.c:182
 msgid "Are you sure?"
 msgstr "Sicher?"
 

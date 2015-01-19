@@ -1049,7 +1049,7 @@ void ParseTaskListStyle(const TokenNode *tp) {
       } else if(!strcmp(temp, "left")) {
          settings.taskInsertMode = INSERT_LEFT;
       } else {
-         ParseError(tp, "invalid insert mode: \"%s\"", temp);
+         ParseError(tp, _("invalid insert mode: \"%s\""), temp);
          settings.taskInsertMode = INSERT_RIGHT;
       }
    }

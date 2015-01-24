@@ -36,7 +36,7 @@ typedef struct MemoryType {
    const char *file;
    unsigned int line;
    size_t size;
-   void *pointer;
+   char *pointer;
    struct MemoryType *next;
 } MemoryType;
 
@@ -113,7 +113,7 @@ void *DEBUG_Allocate(size_t size, const char *file, unsigned int line)
    mp->file = file;
    mp->line = line;
    mp->size = size;
-   mp->pointer = malloc(size + sizeof(char));
+   mp->pointer = malloc(size + sizeof(char) + 8);
    if(!mp->pointer) {
       Debug("MEMORY: %s[%u]: Memory allocation failed (%d bytes)",
             file, line, (int)size);
@@ -123,12 +123,13 @@ void *DEBUG_Allocate(size_t size, const char *file, unsigned int line)
    /* Make uninitialized accesses easy to find. */
    memset(mp->pointer, 85, size);
 
-   /* Canary value for buffer overflow checking. */
-   ((char*)mp->pointer)[size] = 42;
+   /* Canary value for buffer underflow/overflow checking. */
+   mp->pointer[7] = 42;
+   mp->pointer[size + 8] = 42;
 
    mp->next = allocations;
    allocations = mp;
-   return mp->pointer;
+   return mp->pointer + 8;
 }
 
 /** Reallocate memory and log. */
@@ -142,22 +143,29 @@ void *DEBUG_Reallocate(void *ptr, size_t size,
             "Calling Allocate...", file, line);
       return DEBUG_Allocate(size, file, line);
    } else {
+      char *cptr = (char*)ptr - 8;
       for(mp = allocations; mp; mp = mp->next) {
-         if(mp->pointer == ptr) {
-            if(((char*)ptr)[mp->size] != 42) {
-               Debug("MEMORY: %s[%u]: The canary is dead.", file, line);
+         if(mp->pointer == cptr) {
+            if(cptr[mp->size + 8] != 42) {
+               Debug("MEMORY: %s[%u]: The canary is dead (overflow).",
+                     file, line);
+            }
+            if(cptr[7] != 42) {
+               Debug("MEMORY: %s[%u]: The canary is dead (underflow).",
+                     file, line);
             }
             mp->file = file;
             mp->line = line;
             mp->size = size;
-            mp->pointer = realloc(ptr, size + sizeof(char));
+            mp->pointer = realloc(cptr, size + sizeof(char) + 8);
             if(!mp->pointer) {
                Debug("MEMORY: %s[%u]: Failed to reallocate %d bytes.",
                      file, line, (int)size);
                Assert(0);
             }
-            ((char*)mp->pointer)[size] = 42;
-            return mp->pointer;
+            mp->pointer[7] = 42;
+            mp->pointer[size + 8] = 42;
+            return mp->pointer + 8;
          }
       }
 
@@ -168,17 +176,18 @@ void *DEBUG_Reallocate(void *ptr, size_t size,
       mp->file = file;
       mp->line = line;
       mp->size = size;
-      mp->pointer = malloc(size + sizeof(char));
+      mp->pointer = malloc(size + sizeof(char) + 8);
       if(!mp->pointer) {
          Debug("MEMORY: %s[%u]: Failed to reallocate %d bytes.",
                file, line, (int)size);
          Assert(0);
       }
       memset(mp->pointer, 85, size);
-      ((char*)mp->pointer)[size] = 42;
+      mp->pointer[7] = 42;
+      mp->pointer[size + 8] = 42;
       mp->next = allocations;
       allocations = mp;
-      return mp->pointer;
+      return mp->pointer + 8;
    }
 }
 
@@ -192,22 +201,28 @@ void DEBUG_Release(void **ptr, const char *file, unsigned int line)
       Debug("MEMORY: %s[%u]: Attempt to delete NULL pointer",
             file, line);
    } else {
+      char *cptr = (char*)*ptr - 8;
       last = NULL;
       for(mp = allocations; mp; mp = mp->next) {
-         if(mp->pointer == *ptr) {
+         if(mp->pointer == cptr) {
             if(last) {
                last->next = mp->next;
             } else {
                allocations = mp->next;
             }
 
-            if(((char*)*ptr)[mp->size] != 42) {
-               Debug("MEMORY: %s[%u]: The canary is dead.", file, line);
+            if(cptr[mp->size + 8] != 42) {
+               Debug("MEMORY: %s[%u]: The canary is dead (overflow).",
+                     file, line);
+            }
+            if(cptr[7] != 42) {
+               Debug("MEMORY: %s[%u]: The canary is dead (underflow).",
+                     file, line);
             }
 
-            memset(*ptr, 0xFF, mp->size);
+            memset(cptr, 0xFF, mp->size + 8 + sizeof(char));
             free(mp);
-            free(*ptr);
+            free(cptr);
             *ptr = NULL;
             return;
          }

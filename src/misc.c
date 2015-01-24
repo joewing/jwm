@@ -7,12 +7,15 @@
  *
  */
 
-#include "jwm.h"
 #include "misc.h"
+#include "debug.h"
+#include <stdlib.h>
+#include <string.h>
 
 static char IsSymbolic(char ch);
 static char *GetSymbolName(const char *str);
-static void ReplaceSymbol(char **str, const char *name, const char *value);
+static void ReplaceSymbol(char **str, unsigned int offset,
+                          const char *name, const char *value);
 
 /** Determine if a character is a space character. */
 char IsSpace(char ch, unsigned int *lineNumber)
@@ -68,27 +71,29 @@ char *GetSymbolName(const char *str)
 
 }
 
-/** Replace "name" with "value" in str (reallocates if needed). */
-void ReplaceSymbol(char **str, const char *name, const char *value)
+/** Replace "name" with "value" at offset in str (reallocates if needed). */
+void ReplaceSymbol(char **str, unsigned int offset,
+                   const char *name, const char *value)
 {
 
    char *temp;
    int strLength;
    int nameLength;
    int valueLength;
-   int x;
 
    Assert(str);
    Assert(name);
 
+   /* Determine string lengths. */
    strLength = strlen(*str);
-   nameLength = strlen(name) + 1;
+   nameLength = strlen(name) + 1; /* Account for the '$'. */
    if(value) {
       valueLength = strlen(value);
    } else {
       valueLength = 0;
    }
 
+   /* Allocate extra space if necessary. */
    if(valueLength > nameLength) {
       temp = Allocate(strLength - nameLength + valueLength + 1);
       strcpy(temp, *str);
@@ -96,27 +101,22 @@ void ReplaceSymbol(char **str, const char *name, const char *value)
       *str = temp;
    }
 
-   temp = strstr(*str, name);
-   Assert(temp);
-   temp -= 1; /* Account for the "$" */
+   /* Offset to '$'. */
+   temp = *str + offset;
 
    if(nameLength > valueLength) {
 
       /* Move left */
-      for(x = 0; temp[x]; x++) {
-         temp[x] = temp[x + nameLength - valueLength];
-      }
-      temp[x] = temp[x + nameLength - valueLength];
+      memmove(temp, temp + nameLength - valueLength,
+              strLength - offset - nameLength + valueLength + 1);
 
    } else if(nameLength < valueLength) {
 
       /* Move right */
-      for(x = strlen(temp); x >= 0; x--) {
-         temp[x + valueLength - nameLength] = temp[x];
-      }
+      memmove(temp + valueLength, temp + nameLength,
+              strLength + - nameLength - offset + 1);
 
    }
-
 
    if(value) {
       memcpy(temp, value, valueLength);
@@ -139,7 +139,7 @@ void ExpandPath(char **path)
       if((*path)[x] == '$') {
          name = GetSymbolName(*path + x + 1);
          value = getenv(name);
-         ReplaceSymbol(path, name, value);
+         ReplaceSymbol(path, x, name, value);
          Release(name);
          if(value) {
             x += strlen(value) - 1;

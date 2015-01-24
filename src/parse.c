@@ -1822,7 +1822,6 @@ char *ReadFile(FILE *fd)
 
    char *buffer;
    int len, max;
-   int ch;
 
    len = 0;
    max = BLOCK_SIZE;

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-19 17:43-0600\n"
+"POT-Creation-Date: 2015-01-24 17:25-0600\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -179,7 +179,7 @@ msgstr "%s[%u]: testo non atteso: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entità non valida: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1844
+#: src/lex.c:454 src/parse.c:1843
 msgid "out of memory"
 msgstr "Memoria esaurita"
 
@@ -188,32 +188,32 @@ msgstr "Memoria esaurita"
 msgid "invalid insert mode: \"%s\""
 msgstr "Modo di inserimento non valido: \"%s\""
 
-#: src/parse.c:1858
+#: src/parse.c:1857
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Impostazione non valida: %s"
 
-#: src/parse.c:1870
+#: src/parse.c:1869
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "Opacità non valida: %s"
 
-#: src/parse.c:1889
+#: src/parse.c:1888
 #, c-format
 msgid "invalid layer: %s"
 msgstr "Layer non valido: %s"
 
-#: src/parse.c:1906
+#: src/parse.c:1905
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "Tipo di status della finestra non valido: %s"
 
-#: src/parse.c:1915
+#: src/parse.c:1914
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Tag non valido in %s: %s"
 
-#: src/parse.c:1936
+#: src/parse.c:1935
 msgid "configuration error"
 msgstr "Errore di configurazione"
 

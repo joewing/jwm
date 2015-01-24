@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-19 17:43-0600\n"
+"POT-Creation-Date: 2015-01-24 17:25-0600\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -179,7 +179,7 @@ msgstr "%s[%u]: nieoczekiwany tekst: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: nieprawidłowa jednostka: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1844
+#: src/lex.c:454 src/parse.c:1843
 msgid "out of memory"
 msgstr ""
 
@@ -188,32 +188,32 @@ msgstr ""
 msgid "invalid insert mode: \"%s\""
 msgstr "nieprawidłowy tryb edycji: \"%s\""
 
-#: src/parse.c:1858
+#: src/parse.c:1857
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nieprawidłowy znacznik w: %s"
 
-#: src/parse.c:1870
+#: src/parse.c:1869
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "nieprawidłowa nieprzezroczystość menu: %s"
 
-#: src/parse.c:1889
+#: src/parse.c:1888
 #, c-format
 msgid "invalid layer: %s"
 msgstr "nieprawidłowa warstwa grupy: %s"
 
-#: src/parse.c:1906
+#: src/parse.c:1905
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "nieprawidłowy typ tła: %s"
 
-#: src/parse.c:1915
+#: src/parse.c:1914
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:1936
+#: src/parse.c:1935
 msgid "configuration error"
 msgstr "błąd konfiguracji"
 

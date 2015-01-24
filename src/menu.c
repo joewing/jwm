@@ -169,6 +169,7 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y)
    }
 
    ShowSubmenu(menu, NULL, runner, x, y);
+   UnpatchMenu(menu);
 
    JXUngrabKeyboard(display, CurrentTime);
    JXUngrabPointer(display, CurrentTime);
@@ -237,7 +238,6 @@ char ShowSubmenu(Menu *menu, Menu *parent,
    menuShown -= 1;
 
    HideMenu(menu);
-   UnpatchMenu(menu);
 
    return status;
 
@@ -257,7 +257,9 @@ void PatchMenu(Menu *menu)
          submenu = CreateSendtoMenu();
          break;
       case MA_DYNAMIC:
-         submenu = ParseDynamicMenu(item->action.data.str);
+         if(!item->submenu) {
+            submenu = ParseDynamicMenu(item->action.data.str);
+         }
          break;
       default:
          break;
@@ -274,17 +276,18 @@ void UnpatchMenu(Menu *menu)
 {
    MenuItem *item;
    for(item = menu->items; item; item = item->next) {
-      switch(item->action.type) {
-      case MA_DESKTOP_MENU:
-      case MA_SENDTO_MENU:
-      case MA_DYNAMIC:
-         if(item->submenu) {
+      if(item->submenu) {
+         UnpatchMenu(item->submenu);
+         switch(item->action.type) {
+         case MA_DESKTOP_MENU:
+         case MA_SENDTO_MENU:
+         case MA_DYNAMIC:
             DestroyMenu(item->submenu);
             item->submenu = NULL;
+            break;
+         default:
+            break;
          }
-         break;
-      default:
-         break;
       }
    }
 }

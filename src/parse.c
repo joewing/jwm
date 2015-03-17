@@ -109,7 +109,8 @@ static const OptionMapType OPTION_MAP[] = {
    { "tiled",              OPTION_TILED         },
    { "constrain",          OPTION_CONSTRAIN     },
    { "fullscreen",         OPTION_FULLSCREEN    },
-   { NULL,                 OPTION_INVALID       }
+   { "kiosk",              OPTION_KIOSK         },
+   { NULL,                 OPTION_INVALID       },
 };
 
 static const char *DEFAULT_TITLE = "JWM";

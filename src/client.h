@@ -47,6 +47,14 @@ typedef unsigned short BorderFlags;
       | BORDER_MAX_H    \
       | BORDER_SHADE    )
 
+#define BORDER_KIOSK ( \
+        BORDER_OUTLINE  \
+      | BORDER_TITLE    \
+      | BORDER_CLOSE    \
+      | BORDER_MAX_V    \
+      | BORDER_MAX_H    \
+      | BORDER_SHADE    )
+
 /** Window status flags.
  * We use an unsigned int for storing these, so we get 32 on
  * reasonable architectures.
@@ -79,6 +87,7 @@ typedef unsigned int StatusFlags;
 #define STAT_NOPAGER    (1 << 23)   /**< Don't show in pager. */
 #define STAT_SHAPED     (1 << 24)   /**< This window is shaped. */
 #define STAT_FLASH      (1 << 25)   /**< Flashing for urgency. */
+#define STAT_KIOSK      (1 << 26)   /**< Kiosk mode. */
 
 /** Colormap window linked list. */
 typedef struct ColormapNode {

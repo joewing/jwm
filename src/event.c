@@ -1516,6 +1516,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
       if(event->type == ButtonRelease
          && (event->button == Button1 || event->button == Button3)) {
          DeleteClient(np);
+         if(np->state.status & STAT_KIOSK) {
+            shouldExit = 1;
+         }
       }
       break;
    case BA_MAXIMIZE: /* Maximize button */

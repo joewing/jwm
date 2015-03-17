@@ -46,6 +46,7 @@ typedef unsigned char OptionType;
 #define OPTION_NOCLOSE     28    /**< Disallow closing (from title bar). */
 #define OPTION_NOMOVE      29    /**< Disallow moving. */
 #define OPTION_NORESIZE    30    /**< Disallow resizing. */
+#define OPTION_KIOSK       31    /**< Kiosk mode. */
 
 /*@{*/
 #define InitializeGroups() (void)(0)

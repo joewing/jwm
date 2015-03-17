@@ -173,6 +173,10 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
 
    ApplyGroups(np);
 
+   if(np->state.status & STAT_KIOSK) {
+       np->state.border = BORDER_KIOSK;
+   }
+
    /* We now know the layer, so insert */
    np->prev = NULL;
    np->next = nodes[np->state.layer];
@@ -665,8 +669,10 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
    if(np->state.status & STAT_FULLSCREEN) {
       return;
    }
+   if(!(np->state.status & STAT_KIOSK)) {
    if(!(np->state.border & BORDER_MAX)) {
       return;
+   }
    }
 
    if(np->state.status & STAT_SHADED) {

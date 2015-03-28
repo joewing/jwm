@@ -216,29 +216,35 @@ float ParseFloat(const char *str)
    return result;
 }
 
-/** Perform binary search. */
-int BinarySearch(int (*func)(const void *, int), const void *item, int count)
+/** Find a value in a string mapping. */
+int FindValue(const StringMappingType *mapping, int count, const char *key)
 {
    int left = 0;
-   int right = count;
-   for(;;) {
+   int right = count - 1;
+   while(right >= left) {
       const int x = (left + right) / 2;
       Assert(x >= 0);
       Assert(x < count);
-      const int rc = (func)(item, x);
+      const int rc = strcmp(key, mapping[x].key);
       if(rc < 0) {
-         if(right == x) {
-            break;
-         }
-         right = x;
+         right = x - 1;
       } else if(rc > 0) {
-         if(left == x) {
-            break;
-         }
-         left = x;
+         left = x + 1;
       } else {
-         return x;
+         return mapping[x].value;
       }
    }
    return -1;
+}
+
+/** Find a key in a string mapping. */
+const char *FindKey(const StringMappingType *mapping, int count, int value)
+{
+   int x;
+   for(x = 0; x < count; x++) {
+      if(mapping[x].value == value) {
+         return mapping[x].key;
+      }
+   }
+   return NULL;
 }

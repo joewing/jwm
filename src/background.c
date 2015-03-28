@@ -125,6 +125,14 @@ void DestroyBackgrounds(void)
 /** Set the background to use for the specified desktops. */
 void SetBackground(int desktop, const char *type, const char *value)
 {
+   static const StringMappingType mapping[] = {
+      { "command",   BACKGROUND_COMMAND   },
+      { "gradient",  BACKGROUND_GRADIENT  },
+      { "image",     BACKGROUND_STRETCH   },
+      { "scale",     BACKGROUND_SCALE     },
+      { "solid",     BACKGROUND_SOLID     },
+      { "tile",      BACKGROUND_TILE      }
+   };
 
    BackgroundType bgType;
    BackgroundNode *bp;
@@ -137,21 +145,16 @@ void SetBackground(int desktop, const char *type, const char *value)
    }
 
    /* Parse the background type. */
-   if(!type || !strcmp(type, "solid")) {
+   if(type == NULL) {
       bgType = BACKGROUND_SOLID;
-   } else if(!strcmp(type, "gradient")) {
-      bgType = BACKGROUND_GRADIENT;
-   } else if(!strcmp(type, "command")) {
-      bgType = BACKGROUND_COMMAND;
-   } else if(!strcmp(type, "image")) {
-      bgType = BACKGROUND_STRETCH;
-   } else if(!strcmp(type, "tile")) {
-      bgType = BACKGROUND_TILE;
-   } else if(!strcmp(type, "scale")) {
-      bgType = BACKGROUND_SCALE;
    } else {
-      Warning(_("invalid background type: \"%s\""), type);
-      return;
+      const int x = FindValue(mapping, ARRAY_LENGTH(mapping), type);
+      if(x >= 0) {
+         bgType = x;
+      } else {
+         Warning(_("invalid background type: \"%s\""), type);
+         return;
+      }
    }
 
    /* Remove the existing background if this is a duplicate.

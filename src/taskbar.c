@@ -84,7 +84,6 @@ void ShutdownTaskBar(void)
 {
    TaskBarType *bp;
    for(bp = bars; bp; bp = bp->next) {
-      UnregisterCallback(SignalTaskbar, bp);
       JXFreePixmap(display, bp->buffer);
    }
 }
@@ -95,6 +94,7 @@ void DestroyTaskBar(void)
    TaskBarType *bp;
    while(bars) {
       bp = bars->next;
+      UnregisterCallback(SignalTaskbar, bars);
       Release(bars);
       bars = bp;
    }

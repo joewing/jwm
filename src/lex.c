@@ -15,78 +15,76 @@
 /** Amount to increase allocations by when reading text. */
 static const int BLOCK_SIZE = 16;
 
-/** Literal names for tokens.
- * These must be sorted and must match the order of the enumeration
- * in lex.h.
+/** Mapping between token names and tokens.
+ * These must be sorted.
  */
-static const char *TOKEN_MAP[] = {
-   "[invalid]",
-   "Active",
-   "Background",
-   "ButtonClose",
-   "ButtonMax",
-   "ButtonMaxActive",
-   "ButtonMin",
-   "Class",
-   "Clock",
-   "ClockStyle",
-   "Close",
-   "Desktop",
-   "Desktops",
-   "Dock",
-   "DoubleClickDelta",
-   "DoubleClickSpeed",
-   "Exit",
-   "FocusModel",
-   "Font",
-   "Foreground",
-   "Group",
-   "Height",
-   "IconPath",
-   "Include",
-   "JWM",
-   "Key",
-   "Kill",
-   "Layer",
-   "Maximize",
-   "Menu",
-   "MenuStyle",
-   "Minimize",
-   "Move",
-   "MoveMode",
-   "Name",
-   "Opacity",
-   "Option",
-   "Outline",
-   "Pager",
-   "PagerStyle",
-   "Popup",
-   "PopupStyle",
-   "Program",
-   "Radius",
-   "Resize",
-   "ResizeMode",
-   "Restart",
-   "RestartCommand",
-   "RootMenu",
-   "SendTo",
-   "Separator",
-   "Shade",
-   "ShutdownCommand",
-   "SnapMode",
-   "Spacer",
-   "StartupCommand",
-   "Stick",
-   "Swallow",
-   "TaskList",
-   "TaskListStyle",
-   "Text",
-   "Tray",
-   "TrayButton",
-   "TrayButtonStyle",
-   "TrayStyle",
-   "Width",
-   "WindowStyle"
+static const StringMappingType TOKEN_MAP[] = {
+   { "Active",             TOK_ACTIVE           },
+   { "Background",         TOK_BACKGROUND       },
+   { "ButtonClose",        TOK_BUTTONCLOSE      },
+   { "ButtonMax",          TOK_BUTTONMAX        },
+   { "ButtonMaxActive",    TOK_BUTTONMAXACTIVE  },
+   { "ButtonMin",          TOK_BUTTONMIN        },
+   { "Class",              TOK_CLASS            },
+   { "Clock",              TOK_CLOCK            },
+   { "ClockStyle",         TOK_CLOCKSTYLE       },
+   { "Close",              TOK_CLOSE            },
+   { "Desktop",            TOK_DESKTOP          },
+   { "Desktops",           TOK_DESKTOPS         },
+   { "Dock",               TOK_DOCK             },
+   { "DoubleClickDelta",   TOK_DOUBLECLICKDELTA },
+   { "DoubleClickSpeed",   TOK_DOUBLECLICKSPEED },
+   { "Exit",               TOK_EXIT             },
+   { "FocusModel",         TOK_FOCUSMODEL       },
+   { "Font",               TOK_FONT             },
+   { "Foreground",         TOK_FOREGROUND       },
+   { "Group",              TOK_GROUP            },
+   { "Height",             TOK_HEIGHT           },
+   { "IconPath",           TOK_ICONPATH         },
+   { "Include",            TOK_INCLUDE          },
+   { "JWM",                TOK_JWM              },
+   { "Key",                TOK_KEY              },
+   { "Kill",               TOK_KILL             },
+   { "Layer",              TOK_LAYER            },
+   { "Maximize",           TOK_MAXIMIZE         },
+   { "Menu",               TOK_MENU             },
+   { "MenuStyle",          TOK_MENUSTYLE        },
+   { "Minimize",           TOK_MINIMIZE         },
+   { "Move",               TOK_MOVE             },
+   { "MoveMode",           TOK_MOVEMODE         },
+   { "Name",               TOK_NAME             },
+   { "Opacity",            TOK_OPACITY          },
+   { "Option",             TOK_OPTION           },
+   { "Outline",            TOK_OUTLINE          },
+   { "Pager",              TOK_PAGER            },
+   { "PagerStyle",         TOK_PAGERSTYLE       },
+   { "Popup",              TOK_POPUP            },
+   { "PopupStyle",         TOK_POPUPSTYLE       },
+   { "Program",            TOK_PROGRAM          },
+   { "Radius",             TOK_RADIUS           },
+   { "Resize",             TOK_RESIZE           },
+   { "ResizeMode",         TOK_RESIZEMODE       },
+   { "Restart",            TOK_RESTART          },
+   { "RestartCommand",     TOK_RESTARTCOMMAND   },
+   { "RootMenu",           TOK_ROOTMENU         },
+   { "SendTo",             TOK_SENDTO           },
+   { "Separator",          TOK_SEPARATOR        },
+   { "Shade",              TOK_SHADE            },
+   { "ShutdownCommand",    TOK_SHUTDOWNCOMMAND  },
+   { "SnapMode",           TOK_SNAPMODE         },
+   { "Spacer",             TOK_SPACER           },
+   { "StartupCommand",     TOK_STARTUPCOMMAND   },
+   { "Stick",              TOK_STICK            },
+   { "Swallow",            TOK_SWALLOW          },
+   { "TaskList",           TOK_TASKLIST         },
+   { "TaskListStyle",      TOK_TASKLISTSTYLE    },
+   { "Text",               TOK_TEXT             },
+   { "Tray",               TOK_TRAY             },
+   { "TrayButton",         TOK_TRAYBUTTON       },
+   { "TrayButtonStyle",    TOK_TRAYBUTTONSTYLE  },
+   { "TrayStyle",          TOK_TRAYSTYLE        },
+   { "Width",              TOK_WIDTH            },
+   { "WindowStyle",        TOK_WINDOWSTYLE      }
 };
 static const unsigned int TOKEN_MAP_COUNT
    = sizeof(TOKEN_MAP) / sizeof(TOKEN_MAP[0]);
@@ -482,15 +480,10 @@ char *ReadAttributeValue(const char *line,
    return ReadValue(line, file, IsAttributeEnd, offset, lineNumber);
 }
 
-static int TokenNameComparator(const void *item, int x)
-{
-   return strcmp((const char*)item, TOKEN_MAP[x]);
-}
-
 /** Get the token for a tag name. */
 TokenType LookupType(const char *name, TokenNode *np)
 {
-   const int x = BinarySearch(TokenNameComparator, name, TOKEN_MAP_COUNT);
+   const int x = FindValue(TOKEN_MAP, TOKEN_MAP_COUNT, name);
    if(x >= 0) {
       if(np) {
          np->type = x;
@@ -512,16 +505,15 @@ const char *GetTokenName(const TokenNode *tp)
 {
    if(tp->invalidName) {
       return tp->invalidName;
-   } else if(tp->type >= TOKEN_MAP_COUNT) {
-      return "[invalid]";
    } else {
-      return TOKEN_MAP[tp->type];
+      return GetTokenTypeName(tp->type);
    }
 }
 
 /** Get the string representation of a token. */
 const char *GetTokenTypeName(TokenType type) {
-   return TOKEN_MAP[type];
+   const char *key = FindKey(TOKEN_MAP, TOKEN_MAP_COUNT, type);
+   return key ? key : "[invalid]";
 }
 
 /** Create an empty XML tag node. */

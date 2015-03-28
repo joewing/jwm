@@ -10,6 +10,18 @@
 #ifndef MISC_H
 #define MISC_H
 
+/** Mapping between a string and integer.
+ * This is used with FindValue and FindKey.
+ * Note that mappings must be sorted.
+ */
+typedef struct {
+    const char *key;
+    int value;
+} StringMappingType;
+
+/** Get the length of an array. */
+#define ARRAY_LENGTH( a ) (sizeof(a) / sizeof(a[0]))
+
 /** Return the minimum of two values. */
 #define Min( x, y ) ( (x) > (y) ? (y) : (x) )
 
@@ -45,12 +57,22 @@ char *CopyString(const char *str);
  */
 float ParseFloat(const char *str);
 
-/** Perform binary search.
- * @param func The comparator.
- * @param item The item to find.
- * @param count The number of data elements.
- * @return The index of the item or -1 if not found.
+/** Find a value in a string mapping.
+ * This uses binary search.
+ * @param mapping The mapping.
+ * @param key The item to find.
+ * @param count The number of items in the mapping.
+ * @return The value or -1 if not found.
  */
-int BinarySearch(int (*func)(const void*, int), const void *item, int count);
+int FindValue(const StringMappingType *mapping, int count, const char *key);
+
+/** Find a key in a string mapping.
+ * This uses linear search.
+ * @param mapping The mapping.
+ * @param value The value to find.
+ * @param count The number of items in the mapping.
+ * @return The key or NULL if not found.
+ */
+const char *FindKey(const StringMappingType *mapping, int count, int value);
 
 #endif /* MISC_H */

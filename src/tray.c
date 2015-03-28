@@ -192,7 +192,6 @@ void ShutdownTray(void)
          }
       }
       JXDestroyWindow(display, tp->window);
-      UnregisterCallback(SignalTray, tp);
    }
 
 }
@@ -206,7 +205,7 @@ void DestroyTray(void)
 
    while(trays) {
       tp = trays->next;
-
+      UnregisterCallback(SignalTray, trays);
       while(trays->components) {
          cp = trays->components->next;
          Release(trays->components);
@@ -1139,41 +1138,45 @@ void SetTrayLayer(TrayType *tp, WinLayerType layer)
 /** Set the horizontal tray alignment. */
 void SetTrayHorizontalAlignment(TrayType *tp, const char *str)
 {
+   static const StringMappingType mapping[] = {
+      { "center",    TALIGN_CENTER  },
+      { "fixed",     TALIGN_FIXED   },
+      { "left",      TALIGN_LEFT    },
+      { "right",     TALIGN_RIGHT   }
+   };
 
-   Assert(tp);
-
-   if(!str || !strcmp(str, "fixed")) {
+   if(!str) {
       tp->halign = TALIGN_FIXED;
-   } else if(!strcmp(str, "left")) {
-      tp->halign = TALIGN_LEFT;
-   } else if(!strcmp(str, "right")) {
-      tp->halign = TALIGN_RIGHT;
-   } else if(!strcmp(str, "center")) {
-      tp->halign = TALIGN_CENTER;
    } else {
-      Warning(_("invalid tray horizontal alignment: \"%s\""), str);
-      tp->halign = TALIGN_FIXED;
+      const int x = FindValue(mapping, ARRAY_LENGTH(mapping), str);
+      if(JLIKELY(x >= 0)) {
+         tp->halign = x;
+      } else {
+         Warning(_("invalid tray horizontal alignment: \"%s\""), str);
+         tp->halign = TALIGN_FIXED;
+      }
    }
-
 }
 
 /** Set the vertical tray alignment. */
 void SetTrayVerticalAlignment(TrayType *tp, const char *str)
 {
+   static const StringMappingType mapping[] = {
+      { "bottom",    TALIGN_BOTTOM  },
+      { "center",    TALIGN_CENTER  },
+      { "fixed",     TALIGN_FIXED   },
+      { "top",       TALIGN_TOP     }
+   };
 
-   Assert(tp);
-
-   if(!str || !strcmp(str, "fixed")) {
+   if(!str) {
       tp->valign = TALIGN_FIXED;
-   } else if(!strcmp(str, "top")) {
-      tp->valign = TALIGN_TOP;
-   } else if(!strcmp(str, "bottom")) {
-      tp->valign = TALIGN_BOTTOM;
-   } else if(!strcmp(str, "center")) {
-      tp->valign = TALIGN_CENTER;
    } else {
-      Warning(_("invalid tray vertical alignment: \"%s\""), str);
-      tp->valign = TALIGN_FIXED;
+      const int x = FindValue(mapping, ARRAY_LENGTH(mapping), str);
+      if(JLIKELY(x >= 0)) {
+         tp->valign = x;
+      } else {
+         Warning(_("invalid tray vertical alignment: \"%s\""), str);
+         tp->valign = TALIGN_FIXED;
+      }
    }
-
 }

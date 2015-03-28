@@ -10,10 +10,7 @@
 #ifndef LEX_H
 #define LEX_H
 
-/** Tokens.
- * Note that any change made to this typedef must be reflected in
- * TOKEN_MAP in lex.c, which must remain sorted.
- */
+/** Tokens.  */
 typedef enum {
 
    TOK_INVALID,

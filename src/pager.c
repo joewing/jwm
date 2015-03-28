@@ -77,7 +77,6 @@ void ShutdownPager(void)
    PagerType *pp;
    for(pp = pagers; pp; pp = pp->next) {
       JXFreePixmap(display, pp->buffer);
-      UnregisterCallback(SignalPager, pp);
    }
 }
 
@@ -86,6 +85,7 @@ void DestroyPager(void)
 {
    PagerType *pp;
    while(pagers) {
+      UnregisterCallback(SignalPager, pagers);
       pp = pagers->next;
       Release(pagers);
       pagers = pp;

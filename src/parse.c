@@ -33,16 +33,10 @@
 #include "desktop.h"
 #include "border.h"
 
-/** Structure to map key names to key types. */
-typedef struct KeyMapType {
-   const char *name;
-   KeyType key;
-} KeyMapType;
-
 /** Mapping of key names to key types.
  * Note that this mapping must be sorted.
  */
-static const KeyMapType KEY_MAP[] = {
+static const StringMappingType KEY_MAP[] = {
    { "close",                 KEY_CLOSE         },
    { "ddesktop",              KEY_DDESKTOP      },
    { "desktop#",              KEY_DESKTOP       },
@@ -76,19 +70,12 @@ static const KeyMapType KEY_MAP[] = {
    { "up",                    KEY_UP            },
    { "window",                KEY_WIN           }
 };
-static const unsigned int KEY_MAP_COUNT
-   = sizeof(KEY_MAP) / sizeof(KEY_MAP[0]);
-
-/** Structure to map names to group options. */
-typedef struct OptionMapType {
-   const char *name;
-   OptionType option;
-} OptionMapType;
+static const unsigned int KEY_MAP_COUNT = ARRAY_LENGTH(KEY_MAP);
 
 /** Mapping of names to group options.
  * Note that this mapping must be sorted.
  */
-static const OptionMapType OPTION_MAP[] = {
+static const StringMappingType OPTION_MAP[] = {
    { "border",             OPTION_BORDER        },
    { "centered",           OPTION_CENTERED      },
    { "constrain",          OPTION_CONSTRAIN     },
@@ -115,8 +102,7 @@ static const OptionMapType OPTION_MAP[] = {
    { "title",              OPTION_TITLE         },
    { "vmax",               OPTION_MAX_V         }
 };
-static const unsigned int OPTION_MAP_COUNT
-   = sizeof(OPTION_MAP) / sizeof(OPTION_MAP[0]);
+static const unsigned int OPTION_MAP_COUNT = ARRAY_LENGTH(OPTION_MAP);
 
 static const char *DEFAULT_TITLE = "JWM";
 static const char *LABEL_ATTRIBUTE = "label";
@@ -124,31 +110,13 @@ static const char *ICON_ATTRIBUTE = "icon";
 static const char *CONFIRM_ATTRIBUTE = "confirm";
 static const char *LABELED_ATTRIBUTE = "labeled";
 static const char *ONROOT_ATTRIBUTE = "onroot";
-static const char *LAYER_ATTRIBUTE = "layer";
-static const char *LAYOUT_ATTRIBUTE = "layout";
-static const char *AUTOHIDE_ATTRIBUTE = "autohide";
 static const char *X_ATTRIBUTE = "x";
 static const char *Y_ATTRIBUTE = "y";
 static const char *WIDTH_ATTRIBUTE = "width";
 static const char *HEIGHT_ATTRIBUTE = "height";
-static const char *NAME_ATTRIBUTE = "name";
-static const char *DISTANCE_ATTRIBUTE = "distance";
-static const char *INSERT_ATTRIBUTE = "insert";
-static const char *MAX_WIDTH_ATTRIBUTE = "maxwidth";
-static const char *FORMAT_ATTRIBUTE = "format";
-static const char *ZONE_ATTRIBUTE = "zone";
-static const char *VALIGN_ATTRIBUTE = "valign";
-static const char *HALIGN_ATTRIBUTE = "halign";
-static const char *POPUP_ATTRIBUTE = "popup";
-static const char *DELAY_ATTRIBUTE = "delay";
-static const char *ENABLED_ATTRIBUTE = "enabled";
-static const char *COORDINATES_ATTRIBUTE = "coordinates";
-static const char *TYPE_ATTRIBUTE = "type";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
-static const char *OUTLINE_VALUE = "outline";
-static const char *OPAQUE_VALUE = "opaque";
 
 static char ParseFile(const char *fileName, int depth);
 static char *ReadFile(FILE *fd);
@@ -208,11 +176,15 @@ static void ParseFocusModel(const TokenNode *tp);
 
 static void ParseGradient(const char *value, ColorType a, ColorType b);
 static char *FindAttribute(AttributeNode *ap, const char *name);
+static int ParseTokenValue(const StringMappingType *mapping, int count,
+                           const TokenNode *tp, int def);
+static int ParseAttribute(const StringMappingType *mapping, int count,
+                          const TokenNode *tp, const char *attr,
+                          int def);
 static unsigned int ParseUnsigned(const TokenNode *tp, const char *str);
 static unsigned int ParseOpacity(const TokenNode *tp, const char *str);
 static WinLayerType ParseLayer(const TokenNode *tp, const char *str);
-static StatusWindowType ParseStatusWindowType(const TokenNode *tp,
-                                              const char *str);
+static StatusWindowType ParseStatusWindowType(const TokenNode *tp);
 static void InvalidTag(const TokenNode *tp, TokenType parent);
 static void ParseError(const TokenNode *tp, const char *str, ...);
 
@@ -385,95 +357,61 @@ void Parse(const TokenNode *start, int depth)
 
 /** Parse focus model. */
 void ParseFocusModel(const TokenNode *tp) {
-   if(JLIKELY(tp->value)) {
-      if(!strcmp(tp->value, "sloppy")) {
-         settings.focusModel = FOCUS_SLOPPY;
-      } else if(!strcmp(tp->value, "click")) {
-         settings.focusModel = FOCUS_CLICK;
-      } else {
-         ParseError(tp, "invalid focus model: \"%s\"", tp->value);
-      }
-   } else {
-      ParseError(tp, "focus model not specified");
-   }
+   static const StringMappingType mapping[] = {
+      { "click",     FOCUS_CLICK    },
+      { "sloppy",    FOCUS_SLOPPY   }
+   };
+   settings.focusModel = ParseTokenValue(mapping, ARRAY_LENGTH(mapping), tp,
+                                         settings.focusModel);
 }
 
 /** Parse snap mode for moving windows. */
-void ParseSnapMode(const TokenNode *tp) {
-
+void ParseSnapMode(const TokenNode *tp)
+{
    const char *distance;
+   static const StringMappingType mapping[] = {
+      { "border", SNAP_BORDER },
+      { "none",   SNAP_NONE   },
+      { "screen", SNAP_SCREEN }
+   };
 
-   distance = FindAttribute(tp->attributes, DISTANCE_ATTRIBUTE);
+   distance = FindAttribute(tp->attributes, "distance");
    if(distance) {
       settings.snapDistance = ParseUnsigned(tp, distance);
    }
-
-   if(JLIKELY(tp->value)) {
-      if(!strcmp(tp->value, "none")) {
-         settings.snapMode = SNAP_NONE;
-      } else if(!strcmp(tp->value, "screen")) {
-         settings.snapMode = SNAP_SCREEN;
-      } else if(!strcmp(tp->value, "border")) {
-         settings.snapMode = SNAP_BORDER;
-      } else {
-         ParseError(tp, "invalid snap mode: %s", tp->value);
-      }
-   } else {
-      ParseError(tp, "snap mode not specified");
-   }
+   settings.snapMode = ParseTokenValue(mapping, ARRAY_LENGTH(mapping), tp,
+                                       settings.snapMode);
 }
 
 /** Parse move mode. */
-void ParseMoveMode(const TokenNode *tp) {
-
+void ParseMoveMode(const TokenNode *tp)
+{
    const char *str;
+   static const StringMappingType mapping[] = {
+      { "opaque",    MOVE_OPAQUE    },
+      { "outline",   MOVE_OUTLINE   }
+   };
 
-   str = FindAttribute(tp->attributes, COORDINATES_ATTRIBUTE);
-   if(str) {
-      settings.moveStatusType = ParseStatusWindowType(tp, str);
-   }
-
-   str = FindAttribute(tp->attributes, DELAY_ATTRIBUTE);
+   str = FindAttribute(tp->attributes, "delay");
    if(str) {
       settings.desktopDelay = ParseUnsigned(tp, str);
    }
 
-   if(JLIKELY(tp->value)) {
-      if(!strcmp(tp->value, OUTLINE_VALUE)) {
-         settings.moveMode = MOVE_OUTLINE;
-      } else if(!strcmp(tp->value, OPAQUE_VALUE)) {
-         settings.moveMode = MOVE_OPAQUE;
-      } else {
-         ParseError(tp, "invalid move mode: %s", tp->value);
-      }
-   } else {
-      ParseError(tp, "move mode not specified");
-   }
-
+   settings.moveStatusType = ParseStatusWindowType(tp);
+   settings.moveMode = ParseTokenValue(mapping, ARRAY_LENGTH(mapping), tp,
+                                       settings.moveMode);
 }
 
 /** Parse resize mode. */
-void ParseResizeMode(const TokenNode *tp) {
-
-   const char *str;
-
-   str = FindAttribute(tp->attributes, COORDINATES_ATTRIBUTE);
-   if(str) {
-      settings.resizeStatusType = ParseStatusWindowType(tp, str);
-   }
-
-   if(JLIKELY(tp->value)) {
-      if(!strcmp(tp->value, OUTLINE_VALUE)) {
-         settings.resizeMode = RESIZE_OUTLINE;
-      } else if(!strcmp(tp->value, OPAQUE_VALUE)) {
-         settings.resizeMode = RESIZE_OPAQUE;
-      } else {
-         ParseError(tp, "invalid resize mode: %s", tp->value);
-      }
-   } else {
-      ParseError(tp, "resize mode not specified");
-   }
-
+void ParseResizeMode(const TokenNode *tp)
+{
+   static const StringMappingType mapping[] = {
+      { "opaque",    RESIZE_OPAQUE  },
+      { "outline",   RESIZE_OUTLINE }
+   };
+   settings.resizeStatusType = ParseStatusWindowType(tp);
+   settings.resizeMode = ParseTokenValue(mapping, ARRAY_LENGTH(mapping), tp,
+                                         settings.resizeMode);
 }
 
 /** Parse a menu. */
@@ -813,11 +751,6 @@ Menu *ParseDynamicMenu(const char *command)
    return menu;
 }
 
-static int KeyBindingComparator(const void *item, int x)
-{
-   return strcmp((const char*)item, KEY_MAP[x].name);
-}
-
 /** Parse a key binding. */
 void ParseKey(const TokenNode *tp) {
 
@@ -850,9 +783,9 @@ void ParseKey(const TokenNode *tp) {
       command = action + 5;
    } else {
       /* Look up the option in the key map using binary search. */
-      int x = BinarySearch(KeyBindingComparator, action, KEY_MAP_COUNT);
+      const int x = FindValue(KEY_MAP, KEY_MAP_COUNT, action);
       if(x >= 0) {
-         k = KEY_MAP[x].key;
+         k = (KeyType)x;
       }
    }
 
@@ -1017,7 +950,7 @@ void ParseDesktop(int desktop, const TokenNode *tp) {
    TokenNode *np;
    const char *attr;
 
-   attr = FindAttribute(tp->attributes, NAME_ATTRIBUTE);
+   attr = FindAttribute(tp->attributes, "name");
    if(attr) {
       SetDesktopName(desktop, attr);
    }
@@ -1036,32 +969,23 @@ void ParseDesktop(int desktop, const TokenNode *tp) {
 }
 
 /** Parse a background for a desktop. */
-void ParseDesktopBackground(int desktop, const TokenNode *tp) {
-
-   const char *type;
-
-   type = FindAttribute(tp->attributes, TYPE_ATTRIBUTE);
+void ParseDesktopBackground(int desktop, const TokenNode *tp)
+{
+   const char *type = FindAttribute(tp->attributes, "type");
    SetBackground(desktop, type, tp->value);
-
 }
 
 /** Parse task list style. */
-void ParseTaskListStyle(const TokenNode *tp) {
-
-   const char *temp;
+void ParseTaskListStyle(const TokenNode *tp)
+{
+   static const StringMappingType mapping[] = {
+      { "right",  INSERT_RIGHT   },
+      { "left",   INSERT_LEFT    }
+   };
    TokenNode *np;
 
-   temp = FindAttribute(tp->attributes, INSERT_ATTRIBUTE);
-   if(temp) {
-      if(!strcmp(temp, "right")) {
-         settings.taskInsertMode = INSERT_RIGHT;
-      } else if(!strcmp(temp, "left")) {
-         settings.taskInsertMode = INSERT_LEFT;
-      } else {
-         ParseError(tp, _("invalid insert mode: \"%s\""), temp);
-         settings.taskInsertMode = INSERT_RIGHT;
-      }
-   }
+   settings.taskInsertMode = ParseAttribute(mapping, ARRAY_LENGTH(mapping),
+      tp, "insert", settings.taskInsertMode);
 
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
@@ -1161,7 +1085,13 @@ void ParseActiveTrayStyle(const TokenNode *tp)
 /** Parse tray. */
 void ParseTray(const TokenNode *tp)
 {
-
+   static const StringMappingType mapping[] = {
+      { "bottom",    THIDE_BOTTOM   },
+      { "left",      THIDE_LEFT     },
+      { "off",       THIDE_OFF      },
+      { "right",     THIDE_RIGHT    },
+      { "top",       THIDE_TOP      }
+   };
    const TokenNode *np;
    const char *attr;
    TrayType *tray;
@@ -1171,23 +1101,8 @@ void ParseTray(const TokenNode *tp)
 
    tray = CreateTray();
 
-   autohide = THIDE_OFF;
-   attr = FindAttribute(tp->attributes, AUTOHIDE_ATTRIBUTE);
-   if(attr) {
-      if(!strcmp(attr, "off")) {
-         autohide = THIDE_OFF;
-      } else if(!strcmp(attr, "bottom")) {
-         autohide = THIDE_BOTTOM;
-      } else if(!strcmp(attr, "top")) {
-         autohide = THIDE_TOP;
-      } else if(!strcmp(attr, "left")) {
-         autohide = THIDE_LEFT;
-      } else if(!strcmp(attr, "right")) {
-         autohide = THIDE_RIGHT;
-      } else {
-         ParseError(tp, "invalid autohide setting: \"%s\"", attr);
-      }
-   }
+   autohide = ParseAttribute(mapping, ARRAY_LENGTH(mapping), tp,
+                             "autohide", THIDE_OFF);
    SetAutoHideTray(tray, autohide);
 
    attr = FindAttribute(tp->attributes, X_ATTRIBUTE);
@@ -1210,19 +1125,18 @@ void ParseTray(const TokenNode *tp)
       SetTrayHeight(tray, attr);
    }
 
-   attr = FindAttribute(tp->attributes, VALIGN_ATTRIBUTE);
+   attr = FindAttribute(tp->attributes, "valign");
    SetTrayVerticalAlignment(tray, attr);
 
-   attr = FindAttribute(tp->attributes, HALIGN_ATTRIBUTE);
+   attr = FindAttribute(tp->attributes, "halign");
    SetTrayHorizontalAlignment(tray, attr);
 
-   attr = FindAttribute(tp->attributes, LAYOUT_ATTRIBUTE);
+   attr = FindAttribute(tp->attributes, "layout");
    SetTrayLayout(tray, attr);
 
-   attr = FindAttribute(tp->attributes, LAYER_ATTRIBUTE);
+   attr = FindAttribute(tp->attributes, "layer");
    if(attr) {
-      const WinLayerType layer = ParseLayer(tp, attr);
-      SetTrayLayer(tray, layer);
+      SetTrayLayer(tray, ParseLayer(tp, attr));
    }
 
    for(np = tp->subnodeHead; np; np = np->next) {
@@ -1257,7 +1171,8 @@ void ParseTray(const TokenNode *tp)
 }
 
 /** Parse a pager tray component. */
-void ParsePager(const TokenNode *tp, TrayType *tray) {
+void ParsePager(const TokenNode *tp, TrayType *tray)
+{
 
    TrayComponentType *cp;
    const char *temp;
@@ -1277,7 +1192,8 @@ void ParsePager(const TokenNode *tp, TrayType *tray) {
 }
 
 /** Parse a task list tray component. */
-void ParseTaskList(const TokenNode *tp, TrayType *tray) {
+void ParseTaskList(const TokenNode *tp, TrayType *tray)
+{
 
    TrayComponentType *cp;
    const char *temp;
@@ -1288,7 +1204,7 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray) {
    cp = CreateTaskBar();
    AddTrayComponent(tray, cp);
 
-   temp = FindAttribute(tp->attributes, MAX_WIDTH_ATTRIBUTE);
+   temp = FindAttribute(tp->attributes, "maxwidth");
    if(temp) {
       SetMaxTaskBarItemWidth(cp, temp);
    }
@@ -1296,7 +1212,8 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray) {
 }
 
 /** Parse a swallow tray component. */
-void ParseSwallow(const TokenNode *tp, TrayType *tray) {
+void ParseSwallow(const TokenNode *tp, TrayType *tray)
+{
 
    TrayComponentType *cp;
    const char *name;
@@ -1306,7 +1223,7 @@ void ParseSwallow(const TokenNode *tp, TrayType *tray) {
    Assert(tp);
    Assert(tray);
 
-   name = FindAttribute(tp->attributes, NAME_ATTRIBUTE);
+   name = FindAttribute(tp->attributes, "name");
    if(name == NULL) {
       name = tp->value;
    }
@@ -1333,7 +1250,8 @@ void ParseSwallow(const TokenNode *tp, TrayType *tray) {
 }
 
 /** Parse a button tray component. */
-void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
+void ParseTrayButton(const TokenNode *tp, TrayType *tray)
+{
 
    TrayComponentType *cp;
    const char *icon;
@@ -1347,7 +1265,7 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray) {
 
    icon = FindAttribute(tp->attributes, ICON_ATTRIBUTE);
    label = FindAttribute(tp->attributes, LABEL_ATTRIBUTE);
-   popup = FindAttribute(tp->attributes, POPUP_ATTRIBUTE);
+   popup = FindAttribute(tp->attributes, "popup");
 
    temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
    if(temp) {
@@ -1383,9 +1301,9 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
    Assert(tp);
    Assert(tray);
 
-   format = FindAttribute(tp->attributes, FORMAT_ATTRIBUTE);
+   format = FindAttribute(tp->attributes, "format");
 
-   zone = FindAttribute(tp->attributes, ZONE_ATTRIBUTE);
+   zone = FindAttribute(tp->attributes, "zone");
 
    if(tp->value && strlen(tp->value) > 0) {
       command = tp->value;
@@ -1537,14 +1455,14 @@ void ParsePopupStyle(const TokenNode *tp)
 
    Assert(tp);
 
-   str = FindAttribute(tp->attributes, ENABLED_ATTRIBUTE);
+   str = FindAttribute(tp->attributes, "enabled");
    if(str && !strcmp(str, FALSE_VALUE)) {
       settings.popupEnabled = 0;
    } else {
       settings.popupEnabled = 1;
    }
 
-   str = FindAttribute(tp->attributes, DELAY_ATTRIBUTE);
+   str = FindAttribute(tp->attributes, "delay");
    if(str) {
       settings.popupDelay = ParseUnsigned(tp, str);
    }
@@ -1733,11 +1651,6 @@ void ParseGroup(const TokenNode *tp)
 
 }
 
-static int GroupOptionComparator(const void *item, int x)
-{
-   return strcmp((const char*)item, OPTION_MAP[x].name);
-}
-
 /** Parse a option group option. */
 void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
                       const char *option)
@@ -1749,9 +1662,9 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
    }
 
    /* Look up the option in the option map using binary search. */
-   x = BinarySearch(GroupOptionComparator, option, OPTION_MAP_COUNT);
+   x = FindValue(OPTION_MAP, OPTION_MAP_COUNT, option);
    if(x >= 0) {
-      AddGroupOption(group, OPTION_MAP[x].option);
+      AddGroupOption(group, (OptionType)x);
       return;
    }
 
@@ -1816,15 +1729,49 @@ void ParseGradient(const char *value, ColorType a, ColorType b)
 /** Find an attribute in a list of attributes. */
 char *FindAttribute(AttributeNode *ap, const char *name)
 {
-
    while(ap) {
       if(!strcmp(name, ap->name)) {
          return ap->value;
       }
       ap = ap->next;
    }
-
    return NULL;
+}
+
+/** Parse a token value using a string mapping. */
+int ParseTokenValue(const StringMappingType *mapping, int count,
+                    const TokenNode *tp, int def)
+{
+   if(JUNLIKELY(tp->value == NULL)) {
+      ParseError(tp, "%s is empty", GetTokenName(tp));
+      return def;
+   } else {
+      const int x = FindValue(mapping, count, tp->value);
+      if(JLIKELY(x >= 0)) {
+         return x;
+      } else {
+         ParseError(tp, "invalid %s: \"%s\"", GetTokenName(tp), tp->value);
+         return def;
+      }
+   }
+}
+
+/** Parse a string using a string mapping. */
+int ParseAttribute(const StringMappingType *mapping, int count,
+                   const TokenNode *tp, const char *attr, int def)
+{
+   const char *str = FindAttribute(tp->attributes, attr);
+   if(str == NULL) {
+      return def;
+   } else {
+      const int x = FindValue(mapping, count, str);
+      if(JLIKELY(x >= 0)) {
+         return x;
+      } else {
+         ParseError(tp, "invalid value for %s: \"%s\"", attr, str);
+         return def;
+      }
+   }
 }
 
 /** Read a file. */
@@ -1891,42 +1838,38 @@ unsigned int ParseOpacity(const TokenNode *tp, const char *str)
 /** Parse layer. */
 WinLayerType ParseLayer(const TokenNode *tp, const char *str)
 {
-   if(!strcmp(str, "below")) {
-      return LAYER_BELOW;
-   } else if(!strcmp(str, "normal")) {
-      return LAYER_NORMAL;
-   } else if(!strcmp(str, "above")) {
-      return LAYER_ABOVE;
-   } else {
-      ParseError(tp, _("invalid layer: %s"), str);
+   static const StringMappingType mapping[] = {
+      { "above",  LAYER_ABOVE    },
+      { "below",  LAYER_BELOW    },
+      { "normal", LAYER_NORMAL   }
+   };
+   const int x = FindValue(mapping, ARRAY_LENGTH(mapping), str);
+   if(JLIKELY(x >= 0)) {
+      return x;
+   }  else {
+      ParseError(tp, "invalid layer: %s", str);
       return LAYER_NORMAL;
    }
 }
 
 /** Parse status window type. */
-StatusWindowType ParseStatusWindowType(const TokenNode *tp, const char *str)
+StatusWindowType ParseStatusWindowType(const TokenNode *tp)
 {
-   if(!strcmp(str, "off")) {
-      return SW_OFF;
-   } else if(!strcmp(str, "screen")) {
-      return SW_SCREEN;
-   } else if(!strcmp(str, "window")) {
-      return SW_WINDOW;
-   } else if(!strcmp(str, "corner")) {
-      return SW_CORNER;
-   } else {
-      ParseError(tp, _("invalid status window type: %s"), str);
-      return SW_SCREEN;
-   }
+   static const StringMappingType mapping[] = {
+      { "corner",    SW_CORNER   },
+      { "off",       SW_OFF      },
+      { "screen",    SW_SCREEN   },
+      { "window",    SW_WINDOW   }
+   };
+   return ParseAttribute(mapping, ARRAY_LENGTH(mapping), tp,
+                         "coordinates", SW_SCREEN);
 }
 
 /** Display an invalid tag error message. */
 void InvalidTag(const TokenNode *tp, TokenType parent)
 {
-
    ParseError(tp, _("invalid tag in %s: %s"),
               GetTokenTypeName(parent), GetTokenName(tp));
-
 }
 
 /** Display a parser error. */
@@ -1955,4 +1898,3 @@ void ParseError(const TokenNode *tp, const char *str, ...)
    va_end(ap);
 
 }
-

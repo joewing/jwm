@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-03-28 11:52-0500\n"
+"POT-Creation-Date: 2015-03-28 13:59-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -17,16 +17,16 @@ msgstr ""
 "X-Loco-Parser: loco_parse_po\n"
 "X-Loco-Target-Locale: it_IT\n"
 
-#: src/background.c:135
+#: src/background.c:143
 msgid "no value specified for background"
 msgstr "Nessun valore specificato per lo sfondo"
 
-#: src/background.c:153
+#: src/background.c:155
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "Formato di sfondo non valido: \"%s\""
 
-#: src/background.c:302
+#: src/background.c:305
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "Immagine di sfondo non trovata: \"%s\""
@@ -138,82 +138,67 @@ msgstr "Tasto o keycode non specificati per Key"
 msgid "key binding: root menu %d not defined"
 msgstr "Combinazione di tasti: root menu %d non definito"
 
-#: src/lex.c:199
+#: src/lex.c:197
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: tag di chiusura \"%s\" non corrisponde al tag di apertura \"%s\""
 
-#: src/lex.c:205
+#: src/lex.c:203
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: tag di chiusura inatteso e non valido"
 
-#: src/lex.c:211
+#: src/lex.c:209
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: tag di chiusura \"%s\" senza tag di apertura"
 
-#: src/lex.c:214
+#: src/lex.c:212
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: tag di chiusura non valido"
 
-#: src/lex.c:232
+#: src/lex.c:230
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: tag di apertura non valido"
 
-#: src/lex.c:248
+#: src/lex.c:246
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: tag non valido"
 
-#: src/lex.c:303
+#: src/lex.c:301
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: testo non atteso: \"%s\""
 
-#: src/lex.c:351
+#: src/lex.c:349
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entità non valida: \"%.8s\""
 
-#: src/lex.c:456 src/parse.c:1856
+#: src/lex.c:454 src/parse.c:1803
 msgid "out of memory"
 msgstr "Memoria esaurita"
 
-#: src/parse.c:1061
-#, c-format
-msgid "invalid insert mode: \"%s\""
-msgstr "Modo di inserimento non valido: \"%s\""
-
-#: src/parse.c:1870
+#: src/parse.c:1817
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Impostazione non valida: %s"
 
-#: src/parse.c:1882
+#: src/parse.c:1829
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "Opacità non valida: %s"
 
-#: src/parse.c:1901
-#, c-format
-msgid "invalid layer: %s"
-msgstr "Layer non valido: %s"
-
-#: src/parse.c:1918
-#, c-format
-msgid "invalid status window type: %s"
-msgstr "Tipo di status della finestra non valido: %s"
-
-#: src/parse.c:1927
+#: src/parse.c:1871
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Tag non valido in %s: %s"
 
-#: src/parse.c:1948
+#: src/parse.c:1891
 msgid "configuration error"
 msgstr "Errore di configurazione"
 
@@ -258,27 +243,27 @@ msgstr "Azione del TrayButton non valida:  \"%s\""
 msgid "tray button: root menu %d not defined"
 msgstr "Tray button: root menu %d non definito"
 
-#: src/tray.c:1069
+#: src/tray.c:1068
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "Larghezza del vassoio non valida: %d"
 
-#: src/tray.c:1088
+#: src/tray.c:1087
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "Altezza del vassoio non valida: %d"
 
-#: src/tray.c:1117
+#: src/tray.c:1116
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "Disposizione del vassoio non valida: \"%s\""
 
-#: src/tray.c:1154
+#: src/tray.c:1155
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "Allineamento orizzontale del vassoio non valido: \"%s\""
 
-#: src/tray.c:1175
+#: src/tray.c:1178
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "Allineamento verticale del vassoio non valido: \"%s\""
@@ -366,6 +351,15 @@ msgstr "Sotto"
 #: src/winmenu.c:203
 msgid "Send To"
 msgstr "Manda A"
+
+#~ msgid "invalid insert mode: \"%s\""
+#~ msgstr "Modo di inserimento non valido: \"%s\""
+
+#~ msgid "invalid layer: %s"
+#~ msgstr "Layer non valido: %s"
+
+#~ msgid "invalid status window type: %s"
+#~ msgstr "Tipo di status della finestra non valido: %s"
 
 #~ msgid "cannot swallow the same client multiple times"
 #~ msgstr "Impossibile includere più volte lo stesso client"

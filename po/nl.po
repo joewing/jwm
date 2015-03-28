@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-03-28 11:52-0500\n"
+"POT-Creation-Date: 2015-03-28 13:59-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -12,16 +12,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/background.c:135
+#: src/background.c:143
 msgid "no value specified for background"
 msgstr "Geen warde opgegeven voor achtergrond"
 
-#: src/background.c:153
+#: src/background.c:155
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "ongeldig achtergrond-type: \"%s\""
 
-#: src/background.c:302
+#: src/background.c:305
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "Achtergrond-afbeelding niet gevonden: \"%s\""
@@ -133,81 +133,66 @@ msgstr "Toets en Toetscode niet opgegeven voor Toets"
 msgid "key binding: root menu %d not defined"
 msgstr "Sneltoets: root menu %d niet gedefiniëerd"
 
-#: src/lex.c:199
+#: src/lex.c:197
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: sluiten-label \"%s\" komt niet overeen met openen-label \"%s\""
 
-#: src/lex.c:205
+#: src/lex.c:203
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: onverwacht en ongeldig sluiten-label "
 
-#: src/lex.c:211
+#: src/lex.c:209
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: sluiten-label \"%s\" zonder openen-label"
 
-#: src/lex.c:214
+#: src/lex.c:212
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: ongeldig sluiten-label"
 
-#: src/lex.c:232
+#: src/lex.c:230
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: ongeldig openen-label"
 
-#: src/lex.c:248
+#: src/lex.c:246
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: ongeldig label"
 
-#: src/lex.c:303
+#: src/lex.c:301
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: ongeldige entiteit: \"%.8s\""
 
-#: src/lex.c:351
+#: src/lex.c:349
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ongeldige entiteit: \"%.8s\""
 
-#: src/lex.c:456 src/parse.c:1856
+#: src/lex.c:454 src/parse.c:1803
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1061
-#, c-format
-msgid "invalid insert mode: \"%s\""
-msgstr "ongeldige invoeg-modus: \"%s\""
-
-#: src/parse.c:1870
+#: src/parse.c:1817
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ongeldige instelling: %s"
 
-#: src/parse.c:1882
+#: src/parse.c:1829
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ongeldige transparantie: %s"
 
-#: src/parse.c:1901
-#, c-format
-msgid "invalid layer: %s"
-msgstr "ongeldige laag: %s"
-
-#: src/parse.c:1918
-#, c-format
-msgid "invalid status window type: %s"
-msgstr "ongeldig staus-venster type: %s"
-
-#: src/parse.c:1927
+#: src/parse.c:1871
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ongeldig label in %s: %s"
 
-#: src/parse.c:1948
+#: src/parse.c:1891
 msgid "configuration error"
 msgstr "configuratie-fout"
 
@@ -252,27 +237,27 @@ msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
 msgid "tray button: root menu %d not defined"
 msgstr "taakbalk-knop: root menu %d niet gedefiniëerd"
 
-#: src/tray.c:1069
+#: src/tray.c:1068
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "ongeldige taakbalk-breedte: %d"
 
-#: src/tray.c:1088
+#: src/tray.c:1087
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "ongeldige taakbalk-hoogte: %d"
 
-#: src/tray.c:1117
+#: src/tray.c:1116
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "ongeldige taakbalk lay-out: \"%s\""
 
-#: src/tray.c:1154
+#: src/tray.c:1155
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "ongeldige horizontale taakbalk uitlijning: \"%s\""
 
-#: src/tray.c:1175
+#: src/tray.c:1178
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ongeldige verticale taakbalk uitlijning: \"%s\""
@@ -360,6 +345,15 @@ msgstr "Onder"
 #: src/winmenu.c:203
 msgid "Send To"
 msgstr "Zend naar"
+
+#~ msgid "invalid insert mode: \"%s\""
+#~ msgstr "ongeldige invoeg-modus: \"%s\""
+
+#~ msgid "invalid layer: %s"
+#~ msgstr "ongeldige laag: %s"
+
+#~ msgid "invalid status window type: %s"
+#~ msgstr "ongeldig staus-venster type: %s"
 
 #~ msgid "Fullscreen state will be shaped!"
 #~ msgstr "Volledige scherm-status zal gevormd worden!"

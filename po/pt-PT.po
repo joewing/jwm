@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-24 17:25-0600\n"
+"POT-Creation-Date: 2015-03-28 11:03-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -35,11 +35,11 @@ msgstr "tipo de fundo invalido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""
 
-#: src/client.c:884
+#: src/client.c:885
 msgid "Kill this window?"
 msgstr "eliminar esta janela?"
 
-#: src/client.c:885
+#: src/client.c:886
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 

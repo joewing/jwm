@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-01-24 17:25-0600\n"
+"POT-Creation-Date: 2015-03-28 11:03-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -32,11 +32,11 @@ msgstr "nieprawidłowy typ tła: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "nie znaleziono obrazu tła: \"%s\""
 
-#: src/client.c:884
+#: src/client.c:885
 msgid "Kill this window?"
 msgstr "Zabić to okno?"
 
-#: src/client.c:885
+#: src/client.c:886
 msgid "This may cause data to be lost!"
 msgstr "Może to spowodować utratę danych!"
 

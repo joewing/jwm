@@ -32,6 +32,7 @@ unsigned int clientCount;
 
 static void LoadFocus(void);
 static void ReparentClient(ClientNode *np, char notOwner);
+static void RestackTransients(const ClientNode *np);
 static void MinimizeTransients(ClientNode *np, char lower);
 static void RestoreTransients(ClientNode *np, char raise);
 static void KillClientHandler(ClientNode *np);
@@ -886,17 +887,53 @@ void KillClient(ClientNode *np)
       NULL);
 }
 
+/** Place transients on top of the owner. */
+void RestackTransients(const ClientNode *np)
+{
+   ClientNode *tp;
+   unsigned int layer;
+
+   /* Place any transient windows on top of the owner */
+   for(layer = 0; layer < LAYER_COUNT; layer++) {
+      for(tp = nodes[layer]; tp; tp = tp->next) {
+         if(tp->owner == np->window && tp->prev) {
+
+            ClientNode *next = tp->next;
+
+            tp->prev->next = tp->next;
+            if(tp->next) {
+               tp->next->prev = tp->prev;
+            } else {
+               nodeTail[tp->state.layer] = tp->prev;
+            }
+            tp->next = nodes[tp->state.layer];
+            nodes[tp->state.layer]->prev = tp;
+            tp->prev = NULL;
+            nodes[tp->state.layer] = tp;
+
+            tp = next;
+
+         }
+
+         /* tp will be tp->next if the above code is executed. */
+         /* Thus, if it is NULL, we are done with this layer. */
+         if(!tp) {
+            break;
+         }
+      }
+   }
+}
+
 /** Raise the client. This will affect transients. */
 void RaiseClient(ClientNode *np)
 {
 
    ClientNode *tp, *next;
+   unsigned int x;
 
    Assert(np);
 
    if(nodes[np->state.layer] != np) {
-
-      unsigned int x;
 
       /* Raise the window */
       Assert(np->prev);
@@ -911,39 +948,10 @@ void RaiseClient(ClientNode *np)
       np->prev = NULL;
       nodes[np->state.layer] = np;
 
-      /* Place any transient windows on top of the owner */
-      for(x = 0; x < LAYER_COUNT; x++) {
-         for(tp = nodes[x]; tp; tp = tp->next) {
-            if(tp->owner == np->window && tp->prev) {
-
-               next = tp->next;
-
-               tp->prev->next = tp->next;
-               if(tp->next) {
-                  tp->next->prev = tp->prev;
-               } else {
-                  nodeTail[tp->state.layer] = tp->prev;
-               }
-               tp->next = nodes[tp->state.layer];
-               nodes[tp->state.layer]->prev = tp;
-               tp->prev = NULL;
-               nodes[tp->state.layer] = tp;
-
-               tp = next;
-
-            }
-
-            /* tp will be tp->next if the above code is executed. */
-            /* Thus, if it is NULL, we are done with this layer. */
-            if(!tp) {
-               break;
-            }
-         }
-      }
-
-      RestackClients();
-
    }
+
+   RestackTransients(np);
+   RestackClients();
 
 }
 
@@ -952,6 +960,7 @@ void RestackClient(ClientNode *np, Window above, int detail)
 {
 
    ClientNode *tp;
+   unsigned int layer;
    char inserted = 0;
 
    /* Remove from the window list. */
@@ -1049,6 +1058,7 @@ void RestackClient(ClientNode *np, Window above, int detail)
       }
    }
 
+   RestackTransients(np);
    RestackClients();
 
 }

@@ -45,5 +45,12 @@ char *CopyString(const char *str);
  */
 float ParseFloat(const char *str);
 
-#endif /* MISC_H */
+/** Perform binary search.
+ * @param func The comparator.
+ * @param item The item to find.
+ * @param count The number of data elements.
+ * @return The index of the item or -1 if not found.
+ */
+int BinarySearch(int (*func)(const void*, int), const void *item, int count);
 
+#endif /* MISC_H */

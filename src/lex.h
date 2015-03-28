@@ -12,7 +12,7 @@
 
 /** Tokens.
  * Note that any change made to this typedef must be reflected in
- * TOKEN_MAP in lex.c.
+ * TOKEN_MAP in lex.c, which must remain sorted.
  */
 typedef enum {
 
@@ -28,11 +28,11 @@ typedef enum {
    TOK_CLOCK,
    TOK_CLOCKSTYLE,
    TOK_CLOSE,
-   TOK_DESKTOPS,
    TOK_DESKTOP,
+   TOK_DESKTOPS,
    TOK_DOCK,
-   TOK_DOUBLECLICKSPEED,
    TOK_DOUBLECLICKDELTA,
+   TOK_DOUBLECLICKSPEED,
    TOK_EXIT,
    TOK_FOCUSMODEL,
    TOK_FONT,
@@ -75,8 +75,8 @@ typedef enum {
    TOK_STARTUPCOMMAND,
    TOK_STICK,
    TOK_SWALLOW,
-   TOK_TASKLISTSTYLE,
    TOK_TASKLIST,
+   TOK_TASKLISTSTYLE,
    TOK_TEXT,
    TOK_TRAY,
    TOK_TRAYBUTTON,

@@ -39,42 +39,45 @@ typedef struct KeyMapType {
    KeyType key;
 } KeyMapType;
 
-/** Mapping of key names to key types. */
+/** Mapping of key names to key types.
+ * Note that this mapping must be sorted.
+ */
 static const KeyMapType KEY_MAP[] = {
-   { "up",                    KEY_UP            },
+   { "close",                 KEY_CLOSE         },
+   { "ddesktop",              KEY_DDESKTOP      },
+   { "desktop#",              KEY_DESKTOP       },
    { "down",                  KEY_DOWN          },
-   { "right",                 KEY_RIGHT         },
-   { "left",                  KEY_LEFT          },
    { "escape",                KEY_ESC           },
-   { "select",                KEY_ENTER         },
+   { "exit",                  KEY_EXIT          },
+   { "fullscreen",            KEY_FULLSCREEN    },
+   { "ldesktop",              KEY_LDESKTOP      },
+   { "left",                  KEY_LEFT          },
+   { "maximize",              KEY_MAX           },
+   { "minimize",              KEY_MIN           },
+   { "move",                  KEY_MOVE          },
    { "next",                  KEY_NEXT          },
    { "nextstacked",           KEY_NEXTSTACK     },
    { "prev",                  KEY_PREV          },
    { "prevstacked",           KEY_PREVSTACK     },
-   { "close",                 KEY_CLOSE         },
-   { "minimize",              KEY_MIN           },
-   { "maximize",              KEY_MAX           },
-   { "shade",                 KEY_SHADE         },
-   { "stick",                 KEY_STICK         },
-   { "move",                  KEY_MOVE          },
-   { "resize",                KEY_RESIZE        },
-   { "window",                KEY_WIN           },
-   { "restart",               KEY_RESTART       },
-   { "exit",                  KEY_EXIT          },
-   { "desktop#",              KEY_DESKTOP       },
    { "rdesktop",              KEY_RDESKTOP      },
-   { "ldesktop",              KEY_LDESKTOP      },
-   { "udesktop",              KEY_UDESKTOP      },
-   { "ddesktop",              KEY_DDESKTOP      },
+   { "resize",                KEY_RESIZE        },
+   { "restart",               KEY_RESTART       },
+   { "right",                 KEY_RIGHT         },
+   { "select",                KEY_ENTER         },
+   { "sendd",                 KEY_SENDD         },
+   { "sendl",                 KEY_SENDL         },
+   { "sendr",                 KEY_SENDR         },
+   { "sendu",                 KEY_SENDU         },
+   { "shade",                 KEY_SHADE         },
    { "showdesktop",           KEY_SHOWDESK      },
    { "showtray",              KEY_SHOWTRAY      },
-   { "fullscreen",            KEY_FULLSCREEN    },
-   { "sendr",                 KEY_SENDR         },
-   { "sendl",                 KEY_SENDL         },
-   { "sendu",                 KEY_SENDU         },
-   { "sendd",                 KEY_SENDD         },
-   { NULL,                    KEY_NONE          }
+   { "stick",                 KEY_STICK         },
+   { "udesktop",              KEY_UDESKTOP      },
+   { "up",                    KEY_UP            },
+   { "window",                KEY_WIN           }
 };
+static const unsigned int KEY_MAP_COUNT
+   = sizeof(KEY_MAP) / sizeof(KEY_MAP[0]);
 
 /** Structure to map names to group options. */
 typedef struct OptionMapType {
@@ -82,35 +85,38 @@ typedef struct OptionMapType {
    OptionType option;
 } OptionMapType;
 
-/** Mapping of names to group options. */
+/** Mapping of names to group options.
+ * Note that this mapping must be sorted.
+ */
 static const OptionMapType OPTION_MAP[] = {
-   { "sticky",             OPTION_STICKY        },
-   { "nolist",             OPTION_NOLIST        },
-   { "nopager",            OPTION_NOPAGER       },
    { "border",             OPTION_BORDER        },
-   { "noborder",           OPTION_NOBORDER      },
-   { "title",              OPTION_TITLE         },
-   { "notitle",            OPTION_NOTITLE       },
-   { "pignore",            OPTION_PIGNORE       },
+   { "centered",           OPTION_CENTERED      },
+   { "constrain",          OPTION_CONSTRAIN     },
+   { "fullscreen",         OPTION_FULLSCREEN    },
+   { "hmax",               OPTION_MAX_H         },
    { "iignore",            OPTION_IIGNORE       },
    { "maximized",          OPTION_MAXIMIZED     },
    { "minimized",          OPTION_MINIMIZED     },
-   { "hmax",               OPTION_MAX_H         },
-   { "vmax",               OPTION_MAX_V         },
-   { "nofocus",            OPTION_NOFOCUS       },
-   { "noshade",            OPTION_NOSHADE       },
-   { "nomin",              OPTION_NOMIN         },
-   { "nomax",              OPTION_NOMAX         },
+   { "noborder",           OPTION_NOBORDER      },
    { "noclose",            OPTION_NOCLOSE       },
+   { "nofocus",            OPTION_NOFOCUS       },
+   { "nolist",             OPTION_NOLIST        },
+   { "nomax",              OPTION_NOMAX         },
+   { "nomin",              OPTION_NOMIN         },
    { "nomove",             OPTION_NOMOVE        },
+   { "nopager",            OPTION_NOPAGER       },
    { "noresize",           OPTION_NORESIZE      },
+   { "noshade",            OPTION_NOSHADE       },
+   { "notitle",            OPTION_NOTITLE       },
    { "noturgent",          OPTION_NOTURGENT     },
-   { "centered",           OPTION_CENTERED      },
+   { "pignore",            OPTION_PIGNORE       },
+   { "sticky",             OPTION_STICKY        },
    { "tiled",              OPTION_TILED         },
-   { "constrain",          OPTION_CONSTRAIN     },
-   { "fullscreen",         OPTION_FULLSCREEN    },
-   { NULL,                 OPTION_INVALID       }
+   { "title",              OPTION_TITLE         },
+   { "vmax",               OPTION_MAX_V         }
 };
+static const unsigned int OPTION_MAP_COUNT
+   = sizeof(OPTION_MAP) / sizeof(OPTION_MAP[0]);
 
 static const char *DEFAULT_TITLE = "JWM";
 static const char *LABEL_ATTRIBUTE = "label";
@@ -807,6 +813,11 @@ Menu *ParseDynamicMenu(const char *command)
    return menu;
 }
 
+static int KeyBindingComparator(const void *item, int x)
+{
+   return strcmp((const char*)item, KEY_MAP[x].name);
+}
+
 /** Parse a key binding. */
 void ParseKey(const TokenNode *tp) {
 
@@ -838,12 +849,10 @@ void ParseKey(const TokenNode *tp) {
       k = KEY_ROOT;
       command = action + 5;
    } else {
-      int x;
-      for(x = 0; KEY_MAP[x].name; x++) {
-         if(!strcmp(action, KEY_MAP[x].name)) {
-            k = KEY_MAP[x].key;
-            break;
-         }
+      /* Look up the option in the key map using binary search. */
+      int x = BinarySearch(KeyBindingComparator, action, KEY_MAP_COUNT);
+      if(x >= 0) {
+         k = KEY_MAP[x].key;
       }
    }
 
@@ -1724,22 +1733,26 @@ void ParseGroup(const TokenNode *tp)
 
 }
 
+static int GroupOptionComparator(const void *item, int x)
+{
+   return strcmp((const char*)item, OPTION_MAP[x].name);
+}
+
 /** Parse a option group option. */
 void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
                       const char *option)
 {
-
    int x;
 
    if(!option) {
       return;
    }
 
-   for(x = 0; OPTION_MAP[x].name; x++) {
-      if(!strcmp(option, OPTION_MAP[x].name)) {
-         AddGroupOption(group, OPTION_MAP[x].option);
-         return;
-      }
+   /* Look up the option in the option map using binary search. */
+   x = BinarySearch(GroupOptionComparator, option, OPTION_MAP_COUNT);
+   if(x >= 0) {
+      AddGroupOption(group, OPTION_MAP[x].option);
+      return;
    }
 
    /* These options have arguments and so we handled them separately. */

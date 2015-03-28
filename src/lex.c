@@ -16,7 +16,7 @@
 static const int BLOCK_SIZE = 16;
 
 /** Literal names for tokens.
- * This order is important. It must match the order of the enumeration
+ * These must be sorted and must match the order of the enumeration
  * in lex.h.
  */
 static const char *TOKEN_MAP[] = {
@@ -31,11 +31,11 @@ static const char *TOKEN_MAP[] = {
    "Clock",
    "ClockStyle",
    "Close",
-   "Desktops",
    "Desktop",
+   "Desktops",
    "Dock",
-   "DoubleClickSpeed",
    "DoubleClickDelta",
+   "DoubleClickSpeed",
    "Exit",
    "FocusModel",
    "Font",
@@ -78,8 +78,8 @@ static const char *TOKEN_MAP[] = {
    "StartupCommand",
    "Stick",
    "Swallow",
-   "TaskListStyle",
    "TaskList",
+   "TaskListStyle",
    "Text",
    "Tray",
    "TrayButton",
@@ -88,6 +88,8 @@ static const char *TOKEN_MAP[] = {
    "Width",
    "WindowStyle"
 };
+static const unsigned int TOKEN_MAP_COUNT
+   = sizeof(TOKEN_MAP) / sizeof(TOKEN_MAP[0]);
 
 static TokenNode *head;
 
@@ -480,20 +482,20 @@ char *ReadAttributeValue(const char *line,
    return ReadValue(line, file, IsAttributeEnd, offset, lineNumber);
 }
 
+static int TokenNameComparator(const void *item, int x)
+{
+   return strcmp((const char*)item, TOKEN_MAP[x]);
+}
+
 /** Get the token for a tag name. */
 TokenType LookupType(const char *name, TokenNode *np)
 {
-   unsigned int x;
-
-   Assert(name);
-
-   for(x = 0; x < sizeof(TOKEN_MAP) / sizeof(char*); x++) {
-      if(!strcmp(name, TOKEN_MAP[x])) {
-         if(np) {
-            np->type = x;
-         }
-         return x;
+   const int x = BinarySearch(TokenNameComparator, name, TOKEN_MAP_COUNT);
+   if(x >= 0) {
+      if(np) {
+         np->type = x;
       }
+      return x;
    }
 
    if(JUNLIKELY(np)) {
@@ -510,7 +512,7 @@ const char *GetTokenName(const TokenNode *tp)
 {
    if(tp->invalidName) {
       return tp->invalidName;
-   } else if(tp->type >= sizeof(TOKEN_MAP) / sizeof(const char*)) {
+   } else if(tp->type >= TOKEN_MAP_COUNT) {
       return "[invalid]";
    } else {
       return TOKEN_MAP[tp->type];

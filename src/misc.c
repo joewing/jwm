@@ -216,3 +216,29 @@ float ParseFloat(const char *str)
    return result;
 }
 
+/** Perform binary search. */
+int BinarySearch(int (*func)(const void *, int), const void *item, int count)
+{
+   int left = 0;
+   int right = count;
+   for(;;) {
+      const int x = (left + right) / 2;
+      Assert(x >= 0);
+      Assert(x < count);
+      const int rc = (func)(item, x);
+      if(rc < 0) {
+         if(right == x) {
+            break;
+         }
+         right = x;
+      } else if(rc > 0) {
+         if(left == x) {
+            break;
+         }
+         left = x;
+      } else {
+         return x;
+      }
+   }
+   return -1;
+}

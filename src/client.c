@@ -928,9 +928,6 @@ void RestackTransients(const ClientNode *np)
 void RaiseClient(ClientNode *np)
 {
 
-   ClientNode *tp, *next;
-   unsigned int x;
-
    Assert(np);
 
    if(nodes[np->state.layer] != np) {
@@ -960,7 +957,6 @@ void RestackClient(ClientNode *np, Window above, int detail)
 {
 
    ClientNode *tp;
-   unsigned int layer;
    char inserted = 0;
 
    /* Remove from the window list. */

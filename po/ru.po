@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-03-28 11:03-0500\n"
+"POT-Creation-Date: 2015-03-28 11:52-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -137,81 +137,81 @@ msgstr "ни символ, ни код клавиши не заданы в тэ�
 msgid "key binding: root menu %d not defined"
 msgstr "назначение клавиши: главное меню %d не задано"
 
-#: src/lex.c:197
+#: src/lex.c:199
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: закрывающий тэг \"%s\" не соответствует открывающему \"%s\""
 
-#: src/lex.c:203
+#: src/lex.c:205
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: непонятный и неправильный закрывающий тэг"
 
-#: src/lex.c:209
+#: src/lex.c:211
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: закрывающий тэг \"%s\" без открывающего"
 
-#: src/lex.c:212
+#: src/lex.c:214
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: неправильный закрывающий тэг"
 
-#: src/lex.c:230
+#: src/lex.c:232
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: неправильный открывающий тэг"
 
-#: src/lex.c:246
+#: src/lex.c:248
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: неправильный тэг"
 
-#: src/lex.c:301
+#: src/lex.c:303
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: непонятный текст: \"%s\""
 
-#: src/lex.c:349
+#: src/lex.c:351
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1843
+#: src/lex.c:456 src/parse.c:1856
 msgid "out of memory"
 msgstr "недостаточно памяти"
 
-#: src/parse.c:1052
+#: src/parse.c:1061
 #, c-format
 msgid "invalid insert mode: \"%s\""
 msgstr "недопустимое значение режима вставки: \"%s\""
 
-#: src/parse.c:1857
+#: src/parse.c:1870
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:1869
+#: src/parse.c:1882
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:1888
+#: src/parse.c:1901
 #, c-format
 msgid "invalid layer: %s"
 msgstr "недопустимое значение расположения окна: %s"
 
-#: src/parse.c:1905
+#: src/parse.c:1918
 #, c-format
 msgid "invalid status window type: %s"
 msgstr "недопустимое значение типа статусного окна для перемещения: %s"
 
-#: src/parse.c:1914
+#: src/parse.c:1927
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:1935
+#: src/parse.c:1948
 msgid "configuration error"
 msgstr "ошибка конфигурации"
 

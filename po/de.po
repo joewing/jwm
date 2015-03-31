@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-03-28 13:59-0500\n"
+"POT-Creation-Date: 2015-03-30 20:32-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -26,11 +26,11 @@ msgstr "ungültiger Typ für Hintergrund: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Hintergrundbild nicht gefunden: \"%s\""
 
-#: src/client.c:885
+#: src/client.c:892
 msgid "Kill this window?"
 msgstr "Dieses Fenster töten?"
 
-#: src/client.c:886
+#: src/client.c:893
 msgid "This may cause data to be lost!"
 msgstr "Das kann Datenverlust verursachen!"
 
@@ -105,30 +105,30 @@ msgstr ""
 msgid "could not create info struct for PNG image: %s"
 msgstr ""
 
-#: src/key.c:327
+#: src/key.c:331
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr ""
 
-#: src/key.c:335
+#: src/key.c:339
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr ""
 
-#: src/key.c:365
+#: src/key.c:369
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "ungültiger Modifizierer: \"%c\""
 
-#: src/key.c:380
+#: src/key.c:384
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "ungültiges Tastensymbol: \"%s\""
 
-#: src/key.c:461
+#: src/key.c:465
 msgid "neither key nor keycode specified for Key"
 msgstr ""
 
-#: src/key.c:477
+#: src/key.c:481
 #, c-format
 msgid "key binding: root menu %d not defined"
 msgstr ""
@@ -173,26 +173,26 @@ msgstr ""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/lex.c:454 src/parse.c:1803
+#: src/lex.c:454 src/parse.c:1807
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1817
+#: src/parse.c:1821
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ungültige Einstellung %s"
 
-#: src/parse.c:1829
+#: src/parse.c:1833
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ungültige Opazität: \"%s\""
 
-#: src/parse.c:1871
+#: src/parse.c:1875
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ungültiger tag in %s: %s"
 
-#: src/parse.c:1891
+#: src/parse.c:1895
 msgid "configuration error"
 msgstr "Konfigurationsfehler"
 
@@ -216,25 +216,6 @@ msgstr ""
 #: src/taskbar.c:718
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
-msgstr ""
-
-#: src/traybutton.c:88
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "konnte Leistensymbol nicht laden: %s"
-
-#: src/traybutton.c:132
-msgid "no icon or label for TrayButton"
-msgstr ""
-
-#: src/traybutton.c:242
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr ""
-
-#: src/traybutton.c:426
-#, c-format
-msgid "tray button: root menu %d not defined"
 msgstr ""
 
 #: src/tray.c:1068
@@ -262,6 +243,25 @@ msgstr "ungültige Horizontalausrichtung für Leiste: \"%s\""
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ungültige Vertikalausrichtung für Leiste: \"%s\""
 
+#: src/traybutton.c:88
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "konnte Leistensymbol nicht laden: %s"
+
+#: src/traybutton.c:132
+msgid "no icon or label for TrayButton"
+msgstr ""
+
+#: src/traybutton.c:242
+#, c-format
+msgid "invalid TrayButton action: \"%s\""
+msgstr ""
+
+#: src/traybutton.c:426
+#, c-format
+msgid "tray button: root menu %d not defined"
+msgstr ""
+
 #: src/winmenu.c:78
 msgid "Close"
 msgstr "Schließen"
@@ -270,79 +270,79 @@ msgstr "Schließen"
 msgid "Kill"
 msgstr "Töten"
 
-#: src/winmenu.c:88
+#: src/winmenu.c:87
 msgid "Resize"
 msgstr "Größe ändern"
 
-#: src/winmenu.c:91
+#: src/winmenu.c:90
 msgid "Move"
 msgstr "Verschieben"
 
-#: src/winmenu.c:97 src/winmenu.c:117
+#: src/winmenu.c:96 src/winmenu.c:116
 msgid "Restore"
 msgstr "Wiedereinlesen"
 
-#: src/winmenu.c:99
+#: src/winmenu.c:98
 msgid "Minimize"
 msgstr "Minimieren"
 
-#: src/winmenu.c:104
+#: src/winmenu.c:103
 msgid "Unshade"
 msgstr "Entschattieren"
 
-#: src/winmenu.c:106
+#: src/winmenu.c:105
 msgid "Shade"
 msgstr "Schattieren"
 
-#: src/winmenu.c:111
+#: src/winmenu.c:110
 msgid "Maximize-y"
 msgstr "Maximieren-y"
 
-#: src/winmenu.c:114
+#: src/winmenu.c:113
 msgid "Maximize-x"
 msgstr "Maximieren-x"
 
-#: src/winmenu.c:119
+#: src/winmenu.c:118
 msgid "Maximize"
 msgstr "Maximieren"
 
-#: src/winmenu.c:128
+#: src/winmenu.c:127
 msgid "Unstick"
 msgstr "Abkleben"
 
-#: src/winmenu.c:130
+#: src/winmenu.c:129
 msgid "Stick"
 msgstr "Ankleben"
 
-#: src/winmenu.c:156
+#: src/winmenu.c:155
 msgid "Layer"
 msgstr "Ebene"
 
-#: src/winmenu.c:171
+#: src/winmenu.c:170
 msgid "[Above]"
 msgstr "[Darüber]"
 
-#: src/winmenu.c:173
+#: src/winmenu.c:172
 msgid "Above"
 msgstr "Darüber"
 
-#: src/winmenu.c:176
+#: src/winmenu.c:175
 msgid "[Normal]"
 msgstr "[Normal]"
 
-#: src/winmenu.c:178
+#: src/winmenu.c:177
 msgid "Normal"
 msgstr "Normal"
 
-#: src/winmenu.c:181
+#: src/winmenu.c:180
 msgid "[Below]"
 msgstr "[Darunter]"
 
-#: src/winmenu.c:183
+#: src/winmenu.c:182
 msgid "Below"
 msgstr "Darunter"
 
-#: src/winmenu.c:203
+#: src/winmenu.c:202
 msgid "Send To"
 msgstr "Senden an"
 

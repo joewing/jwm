@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-03-28 13:59-0500\n"
+"POT-Creation-Date: 2015-03-30 20:32-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -35,11 +35,11 @@ msgstr "tipo de fundo invalido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""
 
-#: src/client.c:885
+#: src/client.c:892
 msgid "Kill this window?"
 msgstr "eliminar esta janela?"
 
-#: src/client.c:886
+#: src/client.c:893
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 
@@ -114,30 +114,30 @@ msgstr "erro lendo imagem PNG %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "não foi possível criar estrutura de informação para imagem PNG: %s"
 
-#: src/key.c:327
+#: src/key.c:331
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr "KeySym especificado não esta defendido por nenhum Keycode"
 
-#: src/key.c:335
+#: src/key.c:339
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "modificador não foi encontrado para o Keysym 0x%0x"
 
-#: src/key.c:365
+#: src/key.c:369
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "modificador invalido: \"%c\""
 
-#: src/key.c:380
+#: src/key.c:384
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "símbolo da tecla invalido: \"%s\""
 
-#: src/key.c:461
+#: src/key.c:465
 msgid "neither key nor keycode specified for Key"
 msgstr "tecla e código de tecla não foi especificado para esta tecla"
 
-#: src/key.c:477
+#: src/key.c:481
 #, c-format
 msgid "key binding: root menu %d not defined"
 msgstr ""
@@ -186,26 +186,26 @@ msgstr "%s[%u]: texto inesperado: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entrada invalida: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1803
+#: src/lex.c:454 src/parse.c:1807
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1817
+#: src/parse.c:1821
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Configuração invalida: %s"
 
-#: src/parse.c:1829
+#: src/parse.c:1833
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "transparência invalida: %s"
 
-#: src/parse.c:1871
+#: src/parse.c:1875
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta invalida dentro %s: %s"
 
-#: src/parse.c:1891
+#: src/parse.c:1895
 msgid "configuration error"
 msgstr "erro de configuração"
 
@@ -230,25 +230,6 @@ msgstr "não podes inserir um cliente no swallow sem nome"
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largura máxima (maxwidth) invalida para o Tasklist: %s"
-
-#: src/traybutton.c:88
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
-
-#: src/traybutton.c:132
-msgid "no icon or label for TrayButton"
-msgstr "ícone ou nome não esta definido no TrayButton"
-
-#: src/traybutton.c:242
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "ação do Traybutton invalida: \"%s\""
-
-#: src/traybutton.c:426
-#, c-format
-msgid "tray button: root menu %d not defined"
-msgstr "botão do tabuleiro: menu root %d não esta definida"
 
 #: src/tray.c:1068
 #, c-format
@@ -275,6 +256,25 @@ msgstr "alinhamento do tabuleiro invalido: \"%s\""
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
 
+#: src/traybutton.c:88
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
+
+#: src/traybutton.c:132
+msgid "no icon or label for TrayButton"
+msgstr "ícone ou nome não esta definido no TrayButton"
+
+#: src/traybutton.c:242
+#, c-format
+msgid "invalid TrayButton action: \"%s\""
+msgstr "ação do Traybutton invalida: \"%s\""
+
+#: src/traybutton.c:426
+#, c-format
+msgid "tray button: root menu %d not defined"
+msgstr "botão do tabuleiro: menu root %d não esta definida"
+
 #: src/winmenu.c:78
 msgid "Close"
 msgstr "Fechar"
@@ -283,79 +283,79 @@ msgstr "Fechar"
 msgid "Kill"
 msgstr "Terminar"
 
-#: src/winmenu.c:88
+#: src/winmenu.c:87
 msgid "Resize"
 msgstr "Redimensionar"
 
-#: src/winmenu.c:91
+#: src/winmenu.c:90
 msgid "Move"
 msgstr "Mover"
 
-#: src/winmenu.c:97 src/winmenu.c:117
+#: src/winmenu.c:96 src/winmenu.c:116
 msgid "Restore"
 msgstr "Restaurar"
 
-#: src/winmenu.c:99
+#: src/winmenu.c:98
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: src/winmenu.c:104
+#: src/winmenu.c:103
 msgid "Unshade"
 msgstr "Desligar Sombra"
 
-#: src/winmenu.c:106
+#: src/winmenu.c:105
 msgid "Shade"
 msgstr "Ligar Sombra"
 
-#: src/winmenu.c:111
+#: src/winmenu.c:110
 msgid "Maximize-y"
 msgstr "Maximizar-y"
 
-#: src/winmenu.c:114
+#: src/winmenu.c:113
 msgid "Maximize-x"
 msgstr "Maximizar-x"
 
-#: src/winmenu.c:119
+#: src/winmenu.c:118
 msgid "Maximize"
 msgstr "Maximizar"
 
-#: src/winmenu.c:128
+#: src/winmenu.c:127
 msgid "Unstick"
 msgstr "Descolar"
 
-#: src/winmenu.c:130
+#: src/winmenu.c:129
 msgid "Stick"
 msgstr "Colar"
 
-#: src/winmenu.c:156
+#: src/winmenu.c:155
 msgid "Layer"
 msgstr "Camada"
 
-#: src/winmenu.c:171
+#: src/winmenu.c:170
 msgid "[Above]"
 msgstr "[Acima]"
 
-#: src/winmenu.c:173
+#: src/winmenu.c:172
 msgid "Above"
 msgstr "Acima"
 
-#: src/winmenu.c:176
+#: src/winmenu.c:175
 msgid "[Normal]"
 msgstr "[Normal]"
 
-#: src/winmenu.c:178
+#: src/winmenu.c:177
 msgid "Normal"
 msgstr "Normal"
 
-#: src/winmenu.c:181
+#: src/winmenu.c:180
 msgid "[Below]"
 msgstr "[Abaixo]"
 
-#: src/winmenu.c:183
+#: src/winmenu.c:182
 msgid "Below"
 msgstr "Abaixo"
 
-#: src/winmenu.c:203
+#: src/winmenu.c:202
 msgid "Send To"
 msgstr "Enviar Para"
 

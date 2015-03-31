@@ -192,6 +192,7 @@ char *ConvertFromUTF8(char *str)
          Release(result);
          result = (char*)str;
       } else {
+         Release(str);
          *outBuf = 0;
       }
    }

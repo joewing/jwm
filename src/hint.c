@@ -381,10 +381,10 @@ void WriteNetState(ClientNode *np)
       values[index++] = atoms[ATOM_NET_WM_STATE_HIDDEN];
    }
 
-   if(np->state.status & STAT_HMAX) {
+   if(np->state.maxFlags & MAX_HORIZ) {
       values[index++] = atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ];
    }
-   if(np->state.status & STAT_VMAX) {
+   if(np->state.maxFlags & MAX_VERT) {
       values[index++] = atoms[ATOM_NET_WM_STATE_MAXIMIZED_VERT];
    }
 
@@ -572,9 +572,9 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_SHADED]) {
                result.status |= STAT_SHADED;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_MAXIMIZED_VERT]) {
-               result.status |= STAT_VMAX;
+               result.maxFlags |= MAX_VERT;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ]) {
-               result.status |= STAT_HMAX;
+               result.maxFlags |= MAX_HORIZ;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_FULLSCREEN]) {
                result.status |= STAT_FULLSCREEN;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_HIDDEN]) {

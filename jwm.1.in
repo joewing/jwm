@@ -1340,6 +1340,14 @@ Close the active window. Grabbed.
 Minimize the active window. Grabbed.
 .IP \fBmaximize\fP
 Maximize the active window. Grabbed.
+.IP \fBmaxtop\fP
+Maximize the active window to the top of the screen. Grabbed.
+.IP \fBmaxbottom\fP
+Maximize the active window to the bottom of the screen. Grabbed.
+.IP \fBmaxleft\fP
+Maximize the active window to the left of the screen. Grabbed.
+.IP \fBmaxright\fP
+Maximize the active window to the right of the screen. Grabbed.
 .IP \fBsendl\fP
 Send the active window left. Grabbed.
 .IP \fBsendr\fP

@@ -80,9 +80,8 @@ Menu *CreateWindowMenu(void)
       AddWindowMenuItem(menu, NULL, MA_NONE, 0);
    }
 
-   if(!(client->state.status & (STAT_FULLSCREEN |
-                                STAT_MINIMIZED |
-                                STAT_VMAX | STAT_HMAX))) {
+   if(!(client->state.status & (STAT_FULLSCREEN | STAT_MINIMIZED)
+        || client->state.maxFlags)) {
       if(client->state.status & (STAT_MAPPED | STAT_SHADED)) {
          if(client->state.border & BORDER_RESIZE) {
             AddWindowMenuItem(menu, _("Resize"), MA_RESIZE, 0);
@@ -107,13 +106,13 @@ Menu *CreateWindowMenu(void)
       }
       if((client->state.border & BORDER_MAX) &&
          (client->state.status & (STAT_MAPPED | STAT_SHADED))) {
-         if(!(client->state.status & (STAT_HMAX | STAT_VMAX))) {
+         if(!(client->state.maxFlags & MAX_VERT)) {
             AddWindowMenuItem(menu, _("Maximize-y"), MA_MAXIMIZE_V, 0);
          }
-         if(!(client->state.status & (STAT_HMAX | STAT_VMAX))) {
+         if(!(client->state.maxFlags & MAX_HORIZ)) {
             AddWindowMenuItem(menu, _("Maximize-x"), MA_MAXIMIZE_H, 0);
          }
-         if((client->state.status & (STAT_HMAX | STAT_VMAX))) {
+         if(client->state.maxFlags) {
             AddWindowMenuItem(menu, _("Restore"), MA_MAXIMIZE, 0);
          } else {
             AddWindowMenuItem(menu, _("Maximize"), MA_MAXIMIZE, 0);
@@ -276,13 +275,17 @@ void RunWindowCommand(const MenuAction *action)
       }
       break;
    case MA_MAXIMIZE:
-      MaximizeClient(client, 1, 1);
+      if(client->state.maxFlags) {
+         MaximizeClient(client, MAX_NONE);
+      } else {
+         MaximizeClient(client, MAX_VERT | MAX_HORIZ);
+      }
       break;
    case MA_MAXIMIZE_H:
-      MaximizeClient(client, 1, 0);
+      MaximizeClient(client, MAX_HORIZ);
       break;
    case MA_MAXIMIZE_V:
-      MaximizeClient(client, 0, 1);
+      MaximizeClient(client, MAX_VERT);
       break;
    case MA_MINIMIZE:
       MinimizeClient(client, 1);

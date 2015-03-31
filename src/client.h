@@ -55,30 +55,38 @@ typedef unsigned int StatusFlags;
 #define STAT_NONE       0
 #define STAT_ACTIVE     (1 << 0)    /**< Has focus. */
 #define STAT_MAPPED     (1 << 1)    /**< Shown (on some desktop). */
-#define STAT_HMAX       (1 << 2)    /**< Maximized horizonatally. */
-#define STAT_VMAX       (1 << 3)    /**< Maximized vertically. */
-#define STAT_HIDDEN     (1 << 4)    /**< Not on the current desktop. */
-#define STAT_STICKY     (1 << 5)    /**< This client is on all desktops. */
-#define STAT_NOLIST     (1 << 6)    /**< Skip this client in the task list. */
-#define STAT_MINIMIZED  (1 << 7)    /**< Minimized. */
-#define STAT_SHADED     (1 << 8)    /**< Shaded. */
-#define STAT_WMDIALOG   (1 << 9)    /**< This is a JWM dialog window. */
-#define STAT_PIGNORE    (1 << 10)   /**< Ignore the program-position. */
-#define STAT_SDESKTOP   (1 << 11)   /**< Minimized to show desktop. */
-#define STAT_FULLSCREEN (1 << 12)   /**< Full screen. */
-#define STAT_OPACITY    (1 << 13)   /**< Fixed opacity. */
-#define STAT_NOFOCUS    (1 << 14)   /**< Don't focus on map. */
-#define STAT_CANFOCUS   (1 << 15)   /**< Client accepts input focus. */
-#define STAT_DELETE     (1 << 16)   /**< Client accepts WM_DELETE. */
-#define STAT_TAKEFOCUS  (1 << 17)   /**< Client uses WM_TAKE_FOCUS. */
-#define STAT_URGENT     (1 << 18)   /**< Urgency hint is set. */
-#define STAT_NOTURGENT  (1 << 19)   /**< Ignore the urgency hint. */
-#define STAT_CENTERED   (1 << 20)   /**< Use centered window placement. */
-#define STAT_TILED      (1 << 21)   /**< Use tiled window placement. */
-#define STAT_IIGNORE    (1 << 22)   /**< Ignore increment when maximized. */
-#define STAT_NOPAGER    (1 << 23)   /**< Don't show in pager. */
-#define STAT_SHAPED     (1 << 24)   /**< This window is shaped. */
-#define STAT_FLASH      (1 << 25)   /**< Flashing for urgency. */
+#define STAT_HIDDEN     (1 << 2)    /**< Not on the current desktop. */
+#define STAT_STICKY     (1 << 3)    /**< This client is on all desktops. */
+#define STAT_NOLIST     (1 << 4)    /**< Skip this client in the task list. */
+#define STAT_MINIMIZED  (1 << 5)    /**< Minimized. */
+#define STAT_SHADED     (1 << 6)    /**< Shaded. */
+#define STAT_WMDIALOG   (1 << 7)    /**< This is a JWM dialog window. */
+#define STAT_PIGNORE    (1 << 8)    /**< Ignore the program-position. */
+#define STAT_SDESKTOP   (1 << 9)    /**< Minimized to show desktop. */
+#define STAT_FULLSCREEN (1 << 10)   /**< Full screen. */
+#define STAT_OPACITY    (1 << 11)   /**< Fixed opacity. */
+#define STAT_NOFOCUS    (1 << 12)   /**< Don't focus on map. */
+#define STAT_CANFOCUS   (1 << 13)   /**< Client accepts input focus. */
+#define STAT_DELETE     (1 << 14)   /**< Client accepts WM_DELETE. */
+#define STAT_TAKEFOCUS  (1 << 15)   /**< Client uses WM_TAKE_FOCUS. */
+#define STAT_URGENT     (1 << 16)   /**< Urgency hint is set. */
+#define STAT_NOTURGENT  (1 << 17)   /**< Ignore the urgency hint. */
+#define STAT_CENTERED   (1 << 18)   /**< Use centered window placement. */
+#define STAT_TILED      (1 << 19)   /**< Use tiled window placement. */
+#define STAT_IIGNORE    (1 << 20)   /**< Ignore increment when maximized. */
+#define STAT_NOPAGER    (1 << 21)   /**< Don't show in pager. */
+#define STAT_SHAPED     (1 << 22)   /**< This window is shaped. */
+#define STAT_FLASH      (1 << 23)   /**< Flashing for urgency. */
+
+/** Maximization flags. */
+typedef unsigned char MaxFlags;
+#define MAX_NONE     0           /**< Don't maximize. */
+#define MAX_HORIZ    (1 << 0)    /**< Horizontal maximization. */
+#define MAX_VERT     (1 << 1)    /**< Vertical maximization. */
+#define MAX_LEFT     (1 << 2)    /**< Maximize on left. */
+#define MAX_RIGHT    (1 << 3)    /**< Maximize on right. */
+#define MAX_TOP      (1 << 4)    /**< Maximize on top. */
+#define MAX_BOTTOM   (1 << 5)    /**< Maximize on bottom. */
 
 /** Colormap window linked list. */
 typedef struct ColormapNode {
@@ -221,11 +229,10 @@ void SetClientWithdrawn(ClientNode *np);
 void RestoreClient(ClientNode *np, char raise);
 
 /** Maximize a client.
- * @param np The client to maximize.
- * @param horiz Set to maximize the client horizontally.
- * @param vert Set to maximize the client vertically.
+ * @param np The client to maximize (NULL is allowed).
+ * @param flags The type of maximization to perform.
  */
-void MaximizeClient(ClientNode *np, char horiz, char vert);
+void MaximizeClient(ClientNode *np, MaxFlags flags);
 
 /** Maximize a client using the default maximize settings.
  * @param np The client to maximize.

@@ -296,6 +296,10 @@ char ShouldGrab(KeyType key)
    case KEY_SENDL:
    case KEY_SENDU:
    case KEY_SENDD:
+   case KEY_MAXTOP:
+   case KEY_MAXBOTTOM:
+   case KEY_MAXLEFT:
+   case KEY_MAXRIGHT:
       return 1;
    default:
       return 0;

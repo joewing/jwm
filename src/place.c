@@ -750,7 +750,7 @@ void ConstrainPosition(ClientNode *np)
 }
 
 /** Place a maximized client on the screen. */
-void PlaceMaximizedClient(ClientNode *np, char horiz, char vert)
+void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
 {
 
    BoundingBox box;
@@ -790,24 +790,48 @@ void PlaceMaximizedClient(ClientNode *np, char horiz, char vert)
    }
 
    /* If maximizing horizontally, update width. */
-   if(horiz) {
+   if(flags & MAX_HORIZ) {
       np->x = box.x;
       np->width = box.width;
       if(!(np->state.status & STAT_IIGNORE)) {
          np->width -= ((box.width - np->baseWidth) % np->xinc);
       }
-      np->state.status |= STAT_HMAX;
+   } else if(flags & MAX_LEFT) {
+      np->x = box.x;
+      np->width = box.width / 2 - west;
+      if(!(np->state.status & STAT_IIGNORE)) {
+         np->width -= ((box.width - np->baseWidth) % np->xinc);
+      }
+   } else if(flags & MAX_RIGHT) {
+      np->x = box.x + box.width / 2 + west;
+      np->width = box.width / 2 - east;
+      if(!(np->state.status & STAT_IIGNORE)) {
+         np->width -= ((box.width - np->baseWidth) % np->xinc);
+      }
    }
 
    /* If maximizing vertically, update height. */
-   if(vert) {
+   if(flags & MAX_VERT) {
       np->y = box.y;
       np->height = box.height;
       if(!(np->state.status & STAT_IIGNORE)) {
          np->height -= ((box.height - np->baseHeight) % np->yinc);
       }
-      np->state.status |= STAT_VMAX;
+   } else if(flags & MAX_TOP) {
+      np->y = box.y;
+      np->height = box.height / 2 - north;
+      if(!(np->state.status & STAT_IIGNORE)) {
+         np->height -= ((box.height - np->baseHeight) % np->yinc);
+      }
+   } else if(flags & MAX_BOTTOM) {
+      np->y = box.y + box.height / 2 + south;
+      np->height = box.height / 2 - south;
+      if(!(np->state.status & STAT_IIGNORE)) {
+         np->height -= ((box.height - np->baseHeight) % np->yinc);
+      }
    }
+
+   np->state.maxFlags = flags;
 
 }
 

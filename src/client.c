@@ -188,7 +188,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    ReparentClient(np, notOwner);
    PlaceClient(np, alreadyMapped);
 
-   if(!(np->state.status & (STAT_FULLSCREEN | STAT_VMAX | STAT_HMAX))) {
+   if(!((np->state.status & STAT_FULLSCREEN) || np->state.maxFlags)) {
       int north, south, east, west;
       GetBorderSize(&np->state, &north, &south, &east, &west);
       JXMoveResizeWindow(display, np->parent, np->x - west, np->y - north,
@@ -234,11 +234,10 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    }
 
    /* Maximize the client if requested. */
-   if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
-      const char hmax = (np->state.status & STAT_HMAX) ? 1 : 0;
-      const char vmax = (np->state.status & STAT_VMAX) ? 1 : 0;
-      np->state.status &= ~(STAT_HMAX | STAT_VMAX);
-      MaximizeClient(np, hmax, vmax);
+   if(np->state.maxFlags) {
+      const MaxFlags flags = np->state.maxFlags;
+      np->state.maxFlags = MAX_NONE;
+      MaximizeClient(np, flags);
    }
 
    if(np->state.status & STAT_URGENT) {
@@ -441,7 +440,6 @@ void RestoreTransients(ClientNode *np, char raise)
    }
    np->state.status &= ~STAT_MINIMIZED;
    np->state.status &= ~STAT_SDESKTOP;
-
 
    /* Restore transient windows. */
    for(x = 0; x < LAYER_COUNT; x++) {
@@ -657,10 +655,13 @@ void ShowClient(ClientNode *np)
 }
 
 /** Maximize a client window. */
-void MaximizeClient(ClientNode *np, char horiz, char vert)
+void MaximizeClient(ClientNode *np, MaxFlags flags)
 {
 
-   Assert(np);
+    /* Return if we don't have a client. */
+    if(np == NULL) {
+        return;
+    }
 
    /* Don't allow maximization of full-screen clients. */
    if(np->state.status & STAT_FULLSCREEN) {
@@ -674,14 +675,17 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
       UnshadeClient(np);
    }
 
-   if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
+   if(np->state.maxFlags) {
+      /* Undo existing maximization. */
       np->x = np->oldx;
       np->y = np->oldy;
       np->width = np->oldWidth;
       np->height = np->oldHeight;
-      np->state.status &= ~(STAT_HMAX | STAT_VMAX);
-   } else {
-      PlaceMaximizedClient(np, horiz, vert);
+      np->state.maxFlags = MAX_NONE;
+   }
+   if(flags != MAX_NONE) {
+      /* Maximize if requested. */
+      PlaceMaximizedClient(np, flags);
    }
 
    WriteState(np);
@@ -696,14 +700,20 @@ void MaximizeClient(ClientNode *np, char horiz, char vert)
 void MaximizeClientDefault(ClientNode *np)
 {
 
-   char hmax, vmax;
+   MaxFlags flags = MAX_NONE;
 
    Assert(np);
 
-   hmax = (np->state.border & BORDER_MAX_H) ? 1 : 0;
-   vmax = (np->state.border & BORDER_MAX_V) ? 1 : 0;
+   if(np->state.maxFlags == MAX_NONE) {
+      if(np->state.border & BORDER_MAX_H) {
+         flags |= MAX_HORIZ;
+      }
+      if(np->state.border & BORDER_MAX_V) {
+         flags |= MAX_VERT;
+      }
+   }
 
-   MaximizeClient(np, hmax, vmax);
+   MaximizeClient(np, flags);
 
 }
 
@@ -731,7 +741,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
 
       np->state.status |= STAT_FULLSCREEN;
 
-      if(!(np->state.status & (STAT_HMAX | STAT_VMAX))) {
+      if(!(np->state.maxFlags)) {
          np->oldx = np->x;
          np->oldy = np->y;
          np->oldWidth = np->width;
@@ -754,7 +764,6 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
       ResetBorder(np);
 
    } else {
-      char vmax, hmax;
 
       np->state.status &= ~STAT_FULLSCREEN;
 
@@ -765,10 +774,8 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
       ConstrainSize(np);
       ConstrainPosition(np);
 
-      hmax = (np->state.status & STAT_HMAX) ? 1 : 0;
-      vmax = (np->state.status & STAT_VMAX) ? 1 : 0;
-      if(vmax || hmax) {
-         PlaceMaximizedClient(np, hmax, vmax);
+      if(np->state.maxFlags != MAX_NONE) {
+         PlaceMaximizedClient(np, np->state.maxFlags);
       }
 
       ResetBorder(np);
@@ -1195,7 +1202,7 @@ void RemoveClient(ClientNode *np)
    /* If the window manager is exiting (ie, not the client), then
     * reparent etc. */
    if(shouldExit && !(np->state.status & STAT_WMDIALOG)) {
-      if(np->state.status & (STAT_VMAX | STAT_HMAX)) {
+      if(np->state.maxFlags) {
          np->x = np->oldx;
          np->y = np->oldy;
          np->width = np->oldWidth;

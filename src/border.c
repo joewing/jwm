@@ -150,10 +150,10 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
    resizeMask = BA_RESIZE_S | BA_RESIZE_N
               | BA_RESIZE_E | BA_RESIZE_W
               | BA_RESIZE;
-   if(np->state.status & STAT_HMAX) {
+   if(np->state.maxFlags & MAX_HORIZ) {
       resizeMask &= ~(BA_RESIZE_E | BA_RESIZE_W);
    }
-   if(np->state.status & STAT_VMAX) {
+   if(np->state.maxFlags & MAX_VERT) {
       resizeMask &= ~(BA_RESIZE_N | BA_RESIZE_S);
    }
    if(np->state.status & STAT_SHADED) {
@@ -237,7 +237,7 @@ void ResetBorder(const ClientNode *np)
       /* Draw the window area without the corners. */
       /* Corner bound radius -1 to allow slightly better outline drawing */
       JXSetForeground(display, shapeGC, 1);
-      if((np->state.status & (STAT_HMAX | STAT_VMAX | STAT_FULLSCREEN)) &&
+      if(((np->state.status & STAT_FULLSCREEN) || np->state.maxFlags) &&
          !(np->state.status & (STAT_SHADED))) {
          JXFillRectangle(display, shapePixmap, shapeGC, 0, 0, width, height);
       } else {
@@ -418,7 +418,7 @@ void DrawBorderHelper(const ClientNode *np)
    if(np->state.status & STAT_SHADED) {
       DrawRoundedRectangle(np->parent, gc, 0, 0, width - 1, north - 1,
                            settings.cornerRadius);
-   } else if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
+   } else if(np->state.maxFlags) {
       JXDrawRectangle(display, np->parent, gc, 0, 0,
                       width - 1, height - 1);
    } else {
@@ -512,7 +512,7 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
 
    /* Maximize button. */
    if(np->state.border & BORDER_MAX) {
-      if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
+      if(np->state.maxFlags) {
          DrawMaxAButton(offset, &np->visual, canvas, gc);
       } else {
          DrawMaxIButton(offset, &np->visual, canvas, gc);
@@ -797,11 +797,11 @@ void GetBorderSize(const ClientState *state,
    if(state->status & STAT_SHADED) {
       *south = 0;
    }
-   if(state->status & STAT_HMAX) {
+   if(state->maxFlags & MAX_HORIZ) {
       *east = 0;
       *west = 0;
    }
-   if(state->status & STAT_VMAX) {
+   if(state->maxFlags & MAX_VERT) {
       *south = 0;
    }
 

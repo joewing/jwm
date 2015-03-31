@@ -40,7 +40,7 @@ static ClientNode *currentClient;
 static TimeType moveTime;
 
 static void StopMove(ClientNode *np, int doMove,
-                     int oldx, int oldy, int hmax, int vmax);
+                     int oldx, int oldy, MaxFlags maxFlags);
 static void MoveController(int wasDestroyed);
 
 static void DoSnap(ClientNode *np);
@@ -99,7 +99,7 @@ char MoveClient(ClientNode *np, int startx, int starty)
    int doMove;
    int north, south, east, west;
    int height;
-   int hmax, vmax;
+   MaxFlags maxFlags;
 
    Assert(np);
 
@@ -118,11 +118,10 @@ char MoveClient(ClientNode *np, int startx, int starty)
 
    oldx = np->x;
    oldy = np->y;
-   vmax = 0;
-   hmax = 0;
+   maxFlags = np->state.maxFlags;
 
    if(!(GetMouseMask() & (Button1Mask | Button2Mask))) {
-      StopMove(np, 0, oldx, oldy, 0, 0);
+      StopMove(np, 0, oldx, oldy, MAX_NONE);
       return 0;
    }
 
@@ -149,7 +148,7 @@ char MoveClient(ClientNode *np, int startx, int starty)
       case ButtonRelease:
          if(event.xbutton.button == Button1
             || event.xbutton.button == Button2) {
-            StopMove(np, doMove, oldx, oldy, hmax, vmax);
+            StopMove(np, doMove, oldx, oldy, maxFlags);
             return doMove;
          }
          break;
@@ -198,14 +197,8 @@ char MoveClient(ClientNode *np, int startx, int starty)
          if(!doMove && (abs(np->x - oldx) > MOVE_DELTA
             || abs(np->y - oldy) > MOVE_DELTA)) {
 
-            if(np->state.status & (STAT_HMAX | STAT_VMAX)) {
-               if(np->state.status & STAT_HMAX) {
-                  hmax = 1;
-               }
-               if(np->state.status & STAT_VMAX) {
-                  vmax = 1;
-               }
-               MaximizeClient(np, 0, 0);
+            if(np->state.maxFlags) {
+               MaximizeClient(np, MAX_NONE);
                startx = np->width / 2;
                starty = -north / 2;
                MoveMouse(np->parent, startx, starty);
@@ -250,7 +243,7 @@ char MoveClientKeyboard(ClientNode *np)
    int moved;
    int height;
    int north, south, east, west;
-   int hmax, vmax;
+   MaxFlags maxFlags;
 
    Assert(np);
 
@@ -261,16 +254,9 @@ char MoveClientKeyboard(ClientNode *np)
       return 0;
    }
 
-   hmax = 0;
-   if(np->state.status & STAT_HMAX) {
-      hmax = 1;
-   }
-   vmax = 0;
-   if(np->state.status & STAT_VMAX) {
-      vmax = 1;
-   }
-   if(vmax || hmax) {
-      MaximizeClient(np, 0, 0);
+   maxFlags = np->state.maxFlags;
+   if(np->state.maxFlags != MAX_NONE) {
+      MaximizeClient(np, MAX_NONE);
    }
 
    if(JUNLIKELY(JXGrabKeyboard(display, np->parent, True, GrabModeAsync,
@@ -339,7 +325,7 @@ char MoveClientKeyboard(ClientNode *np)
             }
             break;
          default:
-            StopMove(np, 1, oldx, oldy, hmax, vmax);
+            StopMove(np, 1, oldx, oldy, maxFlags);
             return 1;
          }
 
@@ -359,7 +345,7 @@ char MoveClientKeyboard(ClientNode *np)
 
       } else if(event.type == ButtonRelease) {
 
-         StopMove(np, 1, oldx, oldy, hmax, vmax);
+         StopMove(np, 1, oldx, oldy, maxFlags);
          return 1;
 
       }
@@ -386,7 +372,7 @@ char MoveClientKeyboard(ClientNode *np)
 
 /** Stop move. */
 void StopMove(ClientNode *np, int doMove,
-              int oldx, int oldy, int hmax, int vmax)
+              int oldx, int oldy, MaxFlags maxFlags)
 {
 
    int north, south, east, west;
@@ -406,11 +392,10 @@ void StopMove(ClientNode *np, int doMove,
       np->x = oldx;
       np->y = oldy;
 
-      /* Restore maximized status if only maximized in one direction. */
-      if((hmax || vmax) && !(hmax && vmax)) {
-         MaximizeClient(np, hmax, vmax);
+      /* Restore maximized status. */
+      if(maxFlags) {
+         MaximizeClient(np, maxFlags);
       }
-
       return;
 
    }
@@ -421,8 +406,8 @@ void StopMove(ClientNode *np, int doMove,
    SendConfigureEvent(np);
 
    /* Restore maximized status. */
-   if((hmax || vmax) && !(hmax && vmax)) {
-      MaximizeClient(np, hmax, vmax);
+   if(maxFlags) {
+      MaximizeClient(np, maxFlags);
    }
 
 }

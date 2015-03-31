@@ -56,7 +56,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
    if(!(np->state.border & BORDER_RESIZE)) {
       return;
    }
-   if(np->state.status & (STAT_VMAX | STAT_HMAX | STAT_FULLSCREEN)) {
+   if((np->state.status & STAT_FULLSCREEN) || np->state.maxFlags) {
       return;
    }
 
@@ -231,7 +231,7 @@ void ResizeClientKeyboard(ClientNode *np)
    if(!(np->state.border & BORDER_RESIZE)) {
       return;
    }
-   if(np->state.status & (STAT_VMAX | STAT_HMAX | STAT_FULLSCREEN)) {
+   if((np->state.status & STAT_FULLSCREEN) || np->state.maxFlags) {
       return;
    }
 
@@ -383,11 +383,11 @@ void StopResize(ClientNode *np)
 
    /* Set the old width/height if maximized so the window
     * is restored to the new size. */
-   if(np->state.status & STAT_VMAX) {
+   if(np->state.maxFlags & MAX_VERT) {
       np->oldWidth = np->width;
       np->oldx = np->x;
    }
-   if(np->state.status & STAT_HMAX) {
+   if(np->state.maxFlags & MAX_HORIZ) {
       np->oldHeight = np->height;
       np->oldy = np->y;
    }

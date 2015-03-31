@@ -206,11 +206,11 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
       JXMapWindow(display, np->parent);
    }
 
+   clientCount += 1;
+
    if(!alreadyMapped) {
       RaiseClient(np);
    }
-
-   clientCount += 1;
 
    if(np->state.status & STAT_OPACITY) {
       SetOpacity(np, np->state.opacity, 1);

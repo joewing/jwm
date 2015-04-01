@@ -383,7 +383,7 @@ void DrawBorderHelper(const ClientNode *np)
 
       /* Draw a title bar. */
       DrawHorizontalGradient(canvas, gc, titleColor1, titleColor2,
-                             1, 1, width - 2, settings.titleHeight - 2);
+                             0, 1, width, settings.titleHeight - 2);
 
       /* Draw the icon. */
       if(np->icon && np->width >= settings.titleHeight) {
@@ -406,21 +406,36 @@ void DrawBorderHelper(const ClientNode *np)
 
 
    /* Copy the title bar to the window. */
-   JXCopyArea(display, canvas, np->parent, gc, 1, 1,
-              width - 2, north - 1, 1, 1);
+   JXCopyArea(display, canvas, np->parent, gc, 0, 1,
+              width, north - 1, 0, 1);
 
    /* Window outline.
     * These are drawn directly to the window.
     */
-   JXClearArea(display, np->parent, 1, north,
-               width - 2, height - north - 1, False);
+   JXClearArea(display, np->parent, 0, north,
+               width, height - north, False);
    JXSetForeground(display, gc, outlineColor);
    if(np->state.status & STAT_SHADED) {
       DrawRoundedRectangle(np->parent, gc, 0, 0, width - 1, north - 1,
                            settings.cornerRadius);
-   } else if(np->state.maxFlags) {
-      JXDrawRectangle(display, np->parent, gc, 0, 0,
-                      width - 1, height - 1);
+   } else if(np->state.maxFlags & MAX_HORIZ) {
+      if(!(np->state.maxFlags & (MAX_TOP | MAX_VERT))) {
+         /* Top */
+         JXDrawLine(display, np->parent, gc, 0, 0, width, 0);
+      }
+      if(!(np->state.maxFlags & (MAX_BOTTOM | MAX_VERT))) {
+         /* Bottom */
+         JXDrawLine(display, np->parent, gc, 0, height - 1, width, height - 1);
+      }
+   } else if(np->state.maxFlags & MAX_VERT) {
+      if(!(np->state.maxFlags & (MAX_LEFT | MAX_HORIZ))) {
+         /* Left */
+         JXDrawLine(display, np->parent, gc, 0, 0, 0, height);
+      }
+      if(!(np->state.maxFlags & (MAX_RIGHT | MAX_HORIZ))) {
+         /* Right */
+         JXDrawLine(display, np->parent, gc, width - 1, 0, width - 1, height);
+      }
    } else {
       DrawRoundedRectangle(np->parent, gc, 0, 0, width - 1, height - 1,
                            settings.cornerRadius);

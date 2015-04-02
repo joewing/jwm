@@ -350,8 +350,16 @@ void SubtractTrayBounds(const TrayType *tp, BoundingBox *box,
 
          src.x = tp->x;
          src.y = tp->y;
-         src.width = tp->width;
-         src.height = tp->height;
+         src.width = tp->width + 2 * TRAY_BORDER_SIZE;
+         src.height = tp->height + 2 * TRAY_BORDER_SIZE;
+         if(src.x < 0) {
+            src.width += src.x;
+            src.x = 0;
+         }
+         if(src.y < 0) {
+            src.height += src.y;
+            src.y = 0;
+         }
 
          last = *box;
          SubtractBounds(&src, box);
@@ -767,11 +775,16 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
    sp = GetCurrentScreen(np->x + (east + west + np->width) / 2,
                          np->y + (north + south + np->height) / 2);
    GetScreenBounds(sp, &box);
+   if(!(flags & (MAX_HORIZ | MAX_LEFT | MAX_RIGHT))) {
+      box.x = np->x + west;
+      box.width = np->width + east + west;
+   }
+   if(!(flags & (MAX_VERT | MAX_TOP | MAX_BOTTOM))) {
+      box.y = np->y + north;
+      box.height = np->height + north + south;
+   }
    SubtractTrayBounds(GetTrays(), &box, np->state.layer);
    SubtractStrutBounds(&box, np);
-
-   box.y += north;
-   box.height -= north;
 
    if(box.width > np->maxWidth) {
       box.width = np->maxWidth;
@@ -812,20 +825,20 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
 
    /* If maximizing vertically, update height. */
    if(flags & MAX_VERT) {
-      np->y = box.y;
-      np->height = box.height;
+      np->y = box.y + north;
+      np->height = box.height - north;
       if(!(np->state.status & STAT_IIGNORE)) {
          np->height -= ((box.height - np->baseHeight) % np->yinc);
       }
    } else if(flags & MAX_TOP) {
-      np->y = box.y;
-      np->height = box.height / 2 - north;
+      np->y = box.y + north;
+      np->height = box.height / 2 - north - south;
       if(!(np->state.status & STAT_IIGNORE)) {
          np->height -= ((box.height - np->baseHeight) % np->yinc);
       }
    } else if(flags & MAX_BOTTOM) {
-      np->y = box.y + box.height / 2 + south;
-      np->height = box.height / 2 - south;
+      np->y = box.y + box.height / 2 + north;
+      np->height = box.height / 2 - north - south;
       if(!(np->state.status & STAT_IIGNORE)) {
          np->height -= ((box.height - np->baseHeight) % np->yinc);
       }

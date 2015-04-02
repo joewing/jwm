@@ -25,7 +25,6 @@
 
 #define DEFAULT_TRAY_WIDTH 32
 #define DEFAULT_TRAY_HEIGHT 32
-#define TRAY_BORDER_SIZE 1
 
 static TrayType *trays;
 static unsigned int trayCount;

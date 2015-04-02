@@ -12,6 +12,9 @@
 
 #include "hint.h"
 
+/* Size of the tray border. */
+#define TRAY_BORDER_SIZE   1
+
 /** Enumeration of tray layouts. */
 typedef unsigned char LayoutType;
 #define LAYOUT_HORIZONTAL  0  /**< Left-to-right. */

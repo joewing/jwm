@@ -776,11 +776,11 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
                          np->y + (north + south + np->height) / 2);
    GetScreenBounds(sp, &box);
    if(!(flags & (MAX_HORIZ | MAX_LEFT | MAX_RIGHT))) {
-      box.x = np->x + west;
+      box.x = np->x - west;
       box.width = np->width + east + west;
    }
    if(!(flags & (MAX_VERT | MAX_TOP | MAX_BOTTOM))) {
-      box.y = np->y + north;
+      box.y = np->y - north;
       box.height = np->height + north + south;
    }
    SubtractTrayBounds(GetTrays(), &box, np->state.layer);

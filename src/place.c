@@ -802,6 +802,16 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
       }
    }
 
+   /* Remove window outlines. */
+   if(flags & (MAX_HORIZ | MAX_TOP | MAX_BOTTOM)) {
+      east = Max(0, east - 1);
+      west = Max(0, west - 1);
+   }
+   if(flags & (MAX_VERT | MAX_LEFT | MAX_RIGHT)) {
+      north = Max(0, north - 1);
+      south = Max(0, south - 1);
+   }
+
    /* If maximizing horizontally, update width. */
    if(flags & MAX_HORIZ) {
       np->x = box.x;

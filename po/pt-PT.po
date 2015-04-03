@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-02 19:15-0500\n"
+"POT-Creation-Date: 2015-04-02 20:01-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -114,30 +114,30 @@ msgstr "erro lendo imagem PNG %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "não foi possível criar estrutura de informação para imagem PNG: %s"
 
-#: src/key.c:331
+#: src/key.c:333
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr "KeySym especificado não esta defendido por nenhum Keycode"
 
-#: src/key.c:339
+#: src/key.c:341
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "modificador não foi encontrado para o Keysym 0x%0x"
 
-#: src/key.c:369
+#: src/key.c:371
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "modificador invalido: \"%c\""
 
-#: src/key.c:384
+#: src/key.c:386
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "símbolo da tecla invalido: \"%s\""
 
-#: src/key.c:465
+#: src/key.c:467
 msgid "neither key nor keycode specified for Key"
 msgstr "tecla e código de tecla não foi especificado para esta tecla"
 
-#: src/key.c:481
+#: src/key.c:483
 #, c-format
 msgid "key binding: root menu %d not defined"
 msgstr ""
@@ -186,26 +186,26 @@ msgstr "%s[%u]: texto inesperado: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entrada invalida: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1808
+#: src/lex.c:454 src/parse.c:1810
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1822
+#: src/parse.c:1824
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Configuração invalida: %s"
 
-#: src/parse.c:1834
+#: src/parse.c:1836
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "transparência invalida: %s"
 
-#: src/parse.c:1876
+#: src/parse.c:1878
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta invalida dentro %s: %s"
 
-#: src/parse.c:1896
+#: src/parse.c:1898
 msgid "configuration error"
 msgstr "erro de configuração"
 
@@ -231,6 +231,25 @@ msgstr "não podes inserir um cliente no swallow sem nome"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largura máxima (maxwidth) invalida para o Tasklist: %s"
 
+#: src/traybutton.c:88
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
+
+#: src/traybutton.c:132
+msgid "no icon or label for TrayButton"
+msgstr "ícone ou nome não esta definido no TrayButton"
+
+#: src/traybutton.c:242
+#, c-format
+msgid "invalid TrayButton action: \"%s\""
+msgstr "ação do Traybutton invalida: \"%s\""
+
+#: src/traybutton.c:426
+#, c-format
+msgid "tray button: root menu %d not defined"
+msgstr "botão do tabuleiro: menu root %d não esta definida"
+
 #: src/tray.c:1067
 #, c-format
 msgid "invalid tray width: %d"
@@ -255,25 +274,6 @@ msgstr "alinhamento do tabuleiro invalido: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
-
-#: src/traybutton.c:88
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
-
-#: src/traybutton.c:132
-msgid "no icon or label for TrayButton"
-msgstr "ícone ou nome não esta definido no TrayButton"
-
-#: src/traybutton.c:242
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "ação do Traybutton invalida: \"%s\""
-
-#: src/traybutton.c:426
-#, c-format
-msgid "tray button: root menu %d not defined"
-msgstr "botão do tabuleiro: menu root %d não esta definida"
 
 #: src/winmenu.c:78
 msgid "Close"

@@ -33,19 +33,21 @@ typedef unsigned short BorderFlags;
 #define BORDER_MAX_H       (1 << 8)    /**< Maximize horizontally. */
 #define BORDER_SHADE       (1 << 9)    /**< Allow shading. */
 #define BORDER_CONSTRAIN   (1 << 10)   /**< Constrain to the screen. */
+#define BORDER_FULLSCREEN  (1 << 11)   /**< Allow fullscreen. */
 
 /** The default border flags. */
-#define BORDER_DEFAULT ( \
-        BORDER_OUTLINE  \
-      | BORDER_TITLE    \
-      | BORDER_MIN      \
-      | BORDER_MAX      \
-      | BORDER_CLOSE    \
-      | BORDER_RESIZE   \
-      | BORDER_MOVE     \
-      | BORDER_MAX_V    \
-      | BORDER_MAX_H    \
-      | BORDER_SHADE    )
+#define BORDER_DEFAULT (   \
+        BORDER_OUTLINE     \
+      | BORDER_TITLE       \
+      | BORDER_MIN         \
+      | BORDER_MAX         \
+      | BORDER_CLOSE       \
+      | BORDER_RESIZE      \
+      | BORDER_MOVE        \
+      | BORDER_MAX_V       \
+      | BORDER_MAX_H       \
+      | BORDER_SHADE       \
+      | BORDER_FULLSCREEN  )
 
 /** Window status flags.
  * We use an unsigned int for storing these, so we get 32 on

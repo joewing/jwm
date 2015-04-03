@@ -319,6 +319,9 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
       case OPTION_FULLSCREEN:
          np->state.status |= STAT_FULLSCREEN;
          break;
+      case OPTION_NOFULLSCREEN:
+         np->state.border &= ~BORDER_FULLSCREEN;
+         break;
       default:
          Debug("invalid option: %d", lp->option);
          break;

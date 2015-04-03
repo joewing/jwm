@@ -15,37 +15,38 @@ struct GroupType;
 
 /** Enumeration of group options. */
 typedef unsigned char OptionType;
-#define OPTION_INVALID     0
-#define OPTION_STICKY      1     /**< Start in the sticky state. */
-#define OPTION_LAYER       2     /**< Start on a specific layer. */
-#define OPTION_DESKTOP     3     /**< Start on a specific desktop. */
-#define OPTION_ICON        4     /**< Set the icon to use. */
-#define OPTION_NOLIST      5     /**< Don't display in the task list. */
-#define OPTION_BORDER      6     /**< Force a window border. */
-#define OPTION_NOBORDER    7     /**< Don't draw a window border. */
-#define OPTION_TITLE       8     /**< Force a window title bar. */
-#define OPTION_NOTITLE     9     /**< Don't draw a window title bar. */
-#define OPTION_PIGNORE     10    /**< Ignore program-specified location. */
-#define OPTION_MAXIMIZED   11    /**< Start maximized. */
-#define OPTION_MINIMIZED   12    /**< Start minimized. */
-#define OPTION_SHADED      13    /**< Start shaded. */
-#define OPTION_OPACITY     14    /**< Set the opacity. */
-#define OPTION_MAX_H       15    /**< Use horizontal maximization. */
-#define OPTION_MAX_V       16    /**< Use vertical maximization. */
-#define OPTION_NOFOCUS     17    /**< Don't focus on map. */
-#define OPTION_NOSHADE     18    /**< Don't allow shading. */
-#define OPTION_CENTERED    19    /**< Centered placement. */
-#define OPTION_TILED       20    /**< Tiled placement. */
-#define OPTION_IIGNORE     21    /**< Ignore increment when maximized. */
-#define OPTION_NOPAGER     22    /**< Do not show in pager. */
-#define OPTION_NOTURGENT   23    /**< Ignore the urgency hint. */
-#define OPTION_CONSTRAIN   24    /**< Constrain the window to the screen. */
-#define OPTION_FULLSCREEN  25    /**< Start fullscreen. */
-#define OPTION_NOMIN       26    /**< Disallow minimization. */
-#define OPTION_NOMAX       27    /**< Disallow maximization. */
-#define OPTION_NOCLOSE     28    /**< Disallow closing (from title bar). */
-#define OPTION_NOMOVE      29    /**< Disallow moving. */
-#define OPTION_NORESIZE    30    /**< Disallow resizing. */
+#define OPTION_INVALID        0
+#define OPTION_STICKY         1     /**< Start in the sticky state. */
+#define OPTION_LAYER          2     /**< Start on a specific layer. */
+#define OPTION_DESKTOP        3     /**< Start on a specific desktop. */
+#define OPTION_ICON           4     /**< Set the icon to use. */
+#define OPTION_NOLIST         5     /**< Don't display in the task list. */
+#define OPTION_BORDER         6     /**< Force a window border. */
+#define OPTION_NOBORDER       7     /**< Don't draw a window border. */
+#define OPTION_TITLE          8     /**< Force a window title bar. */
+#define OPTION_NOTITLE        9     /**< Don't draw a window title bar. */
+#define OPTION_PIGNORE        10    /**< Ignore program-specified location. */
+#define OPTION_MAXIMIZED      11    /**< Start maximized. */
+#define OPTION_MINIMIZED      12    /**< Start minimized. */
+#define OPTION_SHADED         13    /**< Start shaded. */
+#define OPTION_OPACITY        14    /**< Set the opacity. */
+#define OPTION_MAX_H          15    /**< Use horizontal maximization. */
+#define OPTION_MAX_V          16    /**< Use vertical maximization. */
+#define OPTION_NOFOCUS        17    /**< Don't focus on map. */
+#define OPTION_NOSHADE        18    /**< Don't allow shading. */
+#define OPTION_CENTERED       19    /**< Centered placement. */
+#define OPTION_TILED          20    /**< Tiled placement. */
+#define OPTION_IIGNORE        21    /**< Ignore increment when maximized. */
+#define OPTION_NOPAGER        22    /**< Do not show in pager. */
+#define OPTION_NOTURGENT      23    /**< Ignore the urgency hint. */
+#define OPTION_CONSTRAIN      24    /**< Constrain the window to the screen. */
+#define OPTION_FULLSCREEN     25    /**< Start fullscreen. */
+#define OPTION_NOMIN          26    /**< Disallow minimization. */
+#define OPTION_NOMAX          27    /**< Disallow maximization. */
+#define OPTION_NOCLOSE        28    /**< Disallow closing (from title bar). */
+#define OPTION_NOMOVE         29    /**< Disallow moving. */
+#define OPTION_NORESIZE       30    /**< Disallow resizing. */
+#define OPTION_NOFULLSCREEN   31    /**< Disallow fullscreen. */
 
 /*@{*/
 #define InitializeGroups() (void)(0)

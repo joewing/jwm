@@ -732,6 +732,9 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
    if(!fullScreen == !(np->state.status & STAT_FULLSCREEN)) {
       return;
    }
+   if(!(np->state.border & BORDER_FULLSCREEN)) {
+      return;
+   }
 
    if(np->state.status & STAT_SHADED) {
       UnshadeClient(np);

@@ -160,7 +160,15 @@ static const AtomNode atomList[] = {
 
    { &atoms[ATOM_JWM_RESTART],               &jwmRestart[0]                },
    { &atoms[ATOM_JWM_EXIT],                  &jwmExit[0]                   },
-   { &atoms[ATOM_JWM_RELOAD],                &jwmReload[0]                 }
+   { &atoms[ATOM_JWM_RELOAD],                &jwmReload[0]                 },
+   { &atoms[ATOM_JWM_WM_STATE_MAXIMIZED_TOP],
+      "_JWM_WM_STATE_MAXIMIZED_TOP" },
+   { &atoms[ATOM_JWM_WM_STATE_MAXIMIZED_BOTTOM],
+      "_JWM_WM_STATE_MAXIMIZED_BOTTOM" },
+   { &atoms[ATOM_JWM_WM_STATE_MAXIMIZED_LEFT],
+      "_JWM_WM_STATE_MAXIMIZED_LEFT" },
+   { &atoms[ATOM_JWM_WM_STATE_MAXIMIZED_RIGHT],
+      "_JWM_WM_STATE_MAXIMIZED_RIGHT" }
 
 };
 
@@ -364,7 +372,7 @@ void SetOpacity(ClientNode *np, unsigned int opacity, char force)
 void WriteNetState(ClientNode *np)
 {
 
-   unsigned long values[10];
+   unsigned long values[16];
    int index;
 
    Assert(np);
@@ -386,6 +394,18 @@ void WriteNetState(ClientNode *np)
    }
    if(np->state.maxFlags & MAX_VERT) {
       values[index++] = atoms[ATOM_NET_WM_STATE_MAXIMIZED_VERT];
+   }
+   if(np->state.maxFlags & MAX_TOP) {
+      values[index++] = atoms[ATOM_JWM_WM_STATE_MAXIMIZED_TOP];
+   }
+   if(np->state.maxFlags & MAX_BOTTOM) {
+      values[index++] = atoms[ATOM_JWM_WM_STATE_MAXIMIZED_BOTTOM];
+   }
+   if(np->state.maxFlags & MAX_LEFT) {
+      values[index++] = atoms[ATOM_JWM_WM_STATE_MAXIMIZED_LEFT];
+   }
+   if(np->state.maxFlags & MAX_RIGHT) {
+      values[index++] = atoms[ATOM_JWM_WM_STATE_MAXIMIZED_RIGHT];
    }
 
    if(np->state.status & STAT_SHADED) {
@@ -575,6 +595,14 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
                result.maxFlags |= MAX_VERT;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_MAXIMIZED_HORZ]) {
                result.maxFlags |= MAX_HORIZ;
+            } else if(state[x] == atoms[ATOM_JWM_WM_STATE_MAXIMIZED_TOP]) {
+               result.maxFlags |= MAX_TOP;
+            } else if(state[x] == atoms[ATOM_JWM_WM_STATE_MAXIMIZED_BOTTOM]) {
+               result.maxFlags |= MAX_BOTTOM;
+            } else if(state[x] == atoms[ATOM_JWM_WM_STATE_MAXIMIZED_LEFT]) {
+               result.maxFlags |= MAX_LEFT;
+            } else if(state[x] == atoms[ATOM_JWM_WM_STATE_MAXIMIZED_RIGHT]) {
+               result.maxFlags |= MAX_RIGHT;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_FULLSCREEN]) {
                result.status |= STAT_FULLSCREEN;
             } else if(state[x] == atoms[ATOM_NET_WM_STATE_HIDDEN]) {

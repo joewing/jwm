@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-03-30 20:32-0500\n"
+"POT-Creation-Date: 2015-04-02 19:15-0500\n"
 "PO-Revision-Date: 2014-11-06 10:23+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -27,11 +27,11 @@ msgstr "type d'arrière-plan incorrect: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Image d'arrière-plan introuvable: \"%s\""
 
-#: src/client.c:892
+#: src/client.c:895
 msgid "Kill this window?"
 msgstr "Éliminer la fenêtre?"
 
-#: src/client.c:893
+#: src/client.c:896
 msgid "This may cause data to be lost!"
 msgstr "Cela peut entraîner la perte de données!"
 
@@ -74,7 +74,7 @@ msgstr "Impossible de charger la police de caractères: %s"
 msgid "could not load the default font: %s"
 msgstr "Impossible de charger la police de caractères par défaut: %s"
 
-#: src/font.c:309
+#: src/font.c:310
 msgid "empty Font tag"
 msgstr "Balise de police de caractères vide"
 
@@ -176,26 +176,26 @@ msgstr "%s[%u]: texte inattendu: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entité incorrecte: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1807
+#: src/lex.c:454 src/parse.c:1808
 msgid "out of memory"
 msgstr "Mémoire insuffisante"
 
-#: src/parse.c:1821
+#: src/parse.c:1822
 #, c-format
 msgid "invalid setting: %s"
 msgstr "paramètre incorrect: %s"
 
-#: src/parse.c:1833
+#: src/parse.c:1834
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacité incorrecte: %s"
 
-#: src/parse.c:1875
+#: src/parse.c:1876
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Balise incorrecte dans %s: %s"
 
-#: src/parse.c:1895
+#: src/parse.c:1896
 msgid "configuration error"
 msgstr "erreur de configuration"
 
@@ -221,27 +221,27 @@ msgstr "Impossible d'afficher un client sans nom"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largeur maximale de la liste des tâches incorrecte: %s"
 
-#: src/tray.c:1068
+#: src/tray.c:1067
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "Largeur de barre incorrecte: %d"
 
-#: src/tray.c:1087
+#: src/tray.c:1086
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "Hauteur de barre incorrecte: %d"
 
-#: src/tray.c:1116
+#: src/tray.c:1115
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "Disposition de barre incorrecte: \"%s\""
 
-#: src/tray.c:1155
+#: src/tray.c:1154
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alignement horizontal de la barre incorrect: \"%s\""
 
-#: src/tray.c:1178
+#: src/tray.c:1177
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alignement vertical de la barre incorrect: \"%s\""

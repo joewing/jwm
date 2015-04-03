@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-03-30 20:32-0500\n"
+"POT-Creation-Date: 2015-04-02 19:15-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -31,11 +31,11 @@ msgstr "Formato di sfondo non valido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Immagine di sfondo non trovata: \"%s\""
 
-#: src/client.c:892
+#: src/client.c:895
 msgid "Kill this window?"
 msgstr "Chiudere questa finestra?"
 
-#: src/client.c:893
+#: src/client.c:896
 msgid "This may cause data to be lost!"
 msgstr "Questo può causare una perdita di dati!"
 
@@ -78,7 +78,7 @@ msgstr "Impossibile caricare font: %s"
 msgid "could not load the default font: %s"
 msgstr "Impossibile caricare il font predefinito: %s"
 
-#: src/font.c:309
+#: src/font.c:310
 msgid "empty Font tag"
 msgstr "Etichetta Font vuota"
 
@@ -179,26 +179,26 @@ msgstr "%s[%u]: testo non atteso: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entità non valida: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1807
+#: src/lex.c:454 src/parse.c:1808
 msgid "out of memory"
 msgstr "Memoria esaurita"
 
-#: src/parse.c:1821
+#: src/parse.c:1822
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Impostazione non valida: %s"
 
-#: src/parse.c:1833
+#: src/parse.c:1834
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "Opacità non valida: %s"
 
-#: src/parse.c:1875
+#: src/parse.c:1876
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Tag non valido in %s: %s"
 
-#: src/parse.c:1895
+#: src/parse.c:1896
 msgid "configuration error"
 msgstr "Errore di configurazione"
 
@@ -224,27 +224,27 @@ msgstr "Impossibile includere un client senza nome"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "Larghezza massima per TaskList non valida: %s"
 
-#: src/tray.c:1068
+#: src/tray.c:1067
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "Larghezza del vassoio non valida: %d"
 
-#: src/tray.c:1087
+#: src/tray.c:1086
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "Altezza del vassoio non valida: %d"
 
-#: src/tray.c:1116
+#: src/tray.c:1115
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "Disposizione del vassoio non valida: \"%s\""
 
-#: src/tray.c:1155
+#: src/tray.c:1154
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "Allineamento orizzontale del vassoio non valido: \"%s\""
 
-#: src/tray.c:1178
+#: src/tray.c:1177
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "Allineamento verticale del vassoio non valido: \"%s\""

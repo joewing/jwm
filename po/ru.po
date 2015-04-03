@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-03-30 20:32-0500\n"
+"POT-Creation-Date: 2015-04-02 19:15-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -30,11 +30,11 @@ msgstr "неизвестный тип фона: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "фоновое изображение не найдено: \"%s\""
 
-#: src/client.c:892
+#: src/client.c:895
 msgid "Kill this window?"
 msgstr "Ликвидировать окно?"
 
-#: src/client.c:893
+#: src/client.c:896
 msgid "This may cause data to be lost!"
 msgstr "Это может привести к потере данных!"
 
@@ -77,7 +77,7 @@ msgstr "не удалось загрузить шрифт: %s"
 msgid "could not load the default font: %s"
 msgstr "не удалось загрузить шрифт по-умолчанию: %s"
 
-#: src/font.c:309
+#: src/font.c:310
 msgid "empty Font tag"
 msgstr "пустой тэг Font"
 
@@ -177,26 +177,26 @@ msgstr "%s[%u]: непонятный текст: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1807
+#: src/lex.c:454 src/parse.c:1808
 msgid "out of memory"
 msgstr "недостаточно памяти"
 
-#: src/parse.c:1821
+#: src/parse.c:1822
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:1833
+#: src/parse.c:1834
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:1875
+#: src/parse.c:1876
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:1895
+#: src/parse.c:1896
 msgid "configuration error"
 msgstr "ошибка конфигурации"
 
@@ -223,27 +223,27 @@ msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 "недопустимое значение макс. ширины кнопки в панели задач (TaskList): %s"
 
-#: src/tray.c:1068
+#: src/tray.c:1067
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "недопустимое значение ширины панели: %d"
 
-#: src/tray.c:1087
+#: src/tray.c:1086
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "недопустимое значение высоты панели: %d"
 
-#: src/tray.c:1116
+#: src/tray.c:1115
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "недопустимое значение расположения панели: \"%s\""
 
-#: src/tray.c:1155
+#: src/tray.c:1154
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "недопустимое значение горизонтального выравнивания панели: \"%s\""
 
-#: src/tray.c:1178
+#: src/tray.c:1177
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""

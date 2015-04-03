@@ -513,6 +513,20 @@ void HandleKeyPress(const XKeyEvent *event)
          MaximizeClient(np, MAX_RIGHT | MAX_VERT);
       }
       break;
+   case KEY_MAXV:
+      if(np->state.maxFlags == MAX_VERT) {
+         MaximizeClient(np, MAX_NONE);
+      } else {
+         MaximizeClient(np, MAX_VERT);
+      }
+      break;
+   case KEY_MAXH:
+      if(np->state.maxFlags == MAX_HORIZ) {
+         MaximizeClient(np, MAX_NONE);
+      } else {
+         MaximizeClient(np, MAX_HORIZ);
+      }
+      break;
    case KEY_ROOT:
       ShowKeyMenu(event);
       break;

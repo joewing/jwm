@@ -300,6 +300,8 @@ char ShouldGrab(KeyType key)
    case KEY_MAXBOTTOM:
    case KEY_MAXLEFT:
    case KEY_MAXRIGHT:
+   case KEY_MAXV:
+   case KEY_MAXH:
       return 1;
    default:
       return 0;

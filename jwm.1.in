@@ -1346,6 +1346,10 @@ Close the active window. Grabbed.
 Minimize the active window. Grabbed.
 .IP \fBmaximize\fP
 Maximize the active window. Grabbed.
+.IP \fBmaxv\fP
+Maximize the active window vertically. Grabbed.
+.IP \fBmaxh\fP
+Maximize the active window horizontally. Grabbed.
 .IP \fBmaxtop\fP
 Maximize the active window to the top of the screen. Grabbed.
 .IP \fBmaxbottom\fP

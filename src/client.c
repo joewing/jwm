@@ -155,6 +155,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    np->cmap = attr.colormap;
    np->colormaps = NULL;
    np->state.status = STAT_NONE;
+   np->state.maxFlags = MAX_NONE;
    np->state.layer = LAYER_NORMAL;
    np->state.defaultLayer = LAYER_NORMAL;
 

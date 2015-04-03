@@ -558,6 +558,7 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
    Assert(win != None);
 
    result.status = STAT_MAPPED;
+   result.maxFlags = MAX_NONE;
    result.border = BORDER_DEFAULT;
    result.layer = LAYER_NORMAL;
    result.defaultLayer = LAYER_NORMAL;

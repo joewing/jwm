@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-02 20:01-0500\n"
+"POT-Creation-Date: 2015-04-05 08:53-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -31,11 +31,11 @@ msgstr "Formato di sfondo non valido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Immagine di sfondo non trovata: \"%s\""
 
-#: src/client.c:895
+#: src/client.c:896
 msgid "Kill this window?"
 msgstr "Chiudere questa finestra?"
 
-#: src/client.c:896
+#: src/client.c:897
 msgid "This may cause data to be lost!"
 msgstr "Questo può causare una perdita di dati!"
 

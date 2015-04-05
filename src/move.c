@@ -121,7 +121,7 @@ char MoveClient(ClientNode *np, int startx, int starty)
    maxFlags = np->state.maxFlags;
 
    if(!(GetMouseMask() & (Button1Mask | Button2Mask))) {
-      StopMove(np, 0, oldx, oldy, MAX_NONE);
+      StopMove(np, 0, oldx, oldy, maxFlags);
       return 0;
    }
 

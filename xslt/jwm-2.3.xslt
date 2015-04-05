@@ -10,6 +10,7 @@
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:output method="xml" indent="yes"/>
 
     <!-- Copy everything by default. -->
     <xsl:template match="@*|node()">
@@ -18,7 +19,7 @@
         </xsl:copy>
     </xsl:template>
 
-    <!-- Convert hidden attribute for Tray elements. -->
+    <!-- Convert autohide attribute for Tray elements. -->
     <xsl:template match="@autohide">
         <xsl:attribute name="autohide">
             <xsl:choose>
@@ -28,6 +29,14 @@
                 <xsl:otherwise><xsl:text>off</xsl:text></xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>
+    </xsl:template>
+
+    <!-- Move the contents of WindowStyle/Inactive to WindowStyle. -->
+    <xsl:template match="WindowStyle">
+        <xsl:copy>
+            <xsl:apply-templates select="Inactive/node()"/>
+            <xsl:apply-templates select="child::node()[not(self::Inactive)]"/>
+        </xsl:copy>
     </xsl:template>
 
     <!-- Move ActiveBackground/ActiveForeground to Active. -->

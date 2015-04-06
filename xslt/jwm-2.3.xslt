@@ -31,6 +31,16 @@
         </xsl:attribute>
     </xsl:template>
 
+    <!-- Rename Text to Foreground. -->
+    <xsl:template match="Text">
+        <Foreground><xsl:value-of select="."/></Foreground>
+    </xsl:template>
+
+    <!-- Rename Title to Background. -->
+    <xsl:template match="Title">
+        <Background><xsl:value-of select="."/></Background>
+    </xsl:template>
+
     <!-- Move the contents of WindowStyle/Inactive to WindowStyle. -->
     <xsl:template match="WindowStyle">
         <xsl:copy>

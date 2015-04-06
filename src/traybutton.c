@@ -356,7 +356,9 @@ void ProcessButtonRelease(TrayComponentType *cp, int x, int y, int mask)
 
    TrayButtonType *bp = (TrayButtonType*)cp->object;
 
-   Assert(bp);
+   if(mask == Button4 || mask == Button5) {
+      return;
+   }
 
    Draw(cp, 0);
    UpdateSpecificTray(cp->tray, cp);

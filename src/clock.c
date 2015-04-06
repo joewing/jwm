@@ -154,7 +154,7 @@ TrayComponentType *CreateClock(const char *format, const char *zone,
    cp->Create = Create;
    cp->Resize = Resize;
    cp->Destroy = Destroy;
-   cp->ProcessButtonPress = ProcessClockButtonEvent;
+   cp->ProcessButtonRelease = ProcessClockButtonEvent;
    cp->ProcessMotionEvent = ProcessClockMotionEvent;
 
    RegisterCallback(Min(900, settings.popupDelay / 2), SignalClock, clk);
@@ -217,13 +217,11 @@ void Destroy(TrayComponentType *cp)
 void ProcessClockButtonEvent(TrayComponentType *cp, int x, int y, int mask)
 {
 
-   ClockType *clk;
+   ClockType *clk = (ClockType*)cp->object;
 
-   Assert(cp);
-
-   clk = (ClockType*)cp->object;
-
-   Assert(clk);
+   if(mask == Button4 || mask == Button5) {
+      return;
+   }
 
    if(clk->command) {
       RunCommand(clk->command);

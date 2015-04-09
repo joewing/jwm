@@ -676,6 +676,7 @@ void MaximizeClient(ClientNode *np, MaxFlags flags)
       UnshadeClient(np);
    }
 
+   RaiseClient(np);
    if(np->state.maxFlags) {
       /* Undo existing maximization. */
       np->x = np->oldx;

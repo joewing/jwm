@@ -21,24 +21,31 @@
 #include "settings.h"
 #include "event.h"
 
+/** Structure to represent clock actions. */
+typedef struct ClockActionType {
+   char *action;
+   struct ClockActionType *next;
+   int mask;
+} ClockActionType;
+
 /** Structure to respresent a clock tray component. */
 typedef struct ClockType {
 
-   TrayComponentType *cp;   /**< Common component data. */
+   TrayComponentType *cp;     /**< Common component data. */
 
-   char *format;            /**< The time format to use. */
-   char *zone;              /**< The time zone to use (NULL = local). */
-   char *command;           /**< A command to run when clicked. */
-   char shortTime[80];      /**< Currently displayed time. */
+   char *format;              /**< The time format to use. */
+   char *zone;                /**< The time zone to use (NULL = local). */
+   ClockActionType *actions;  /**< Actions */
+   char shortTime[80];        /**< Currently displayed time. */
 
    /* The following are used to control popups. */
-   int mousex;              /**< Last mouse x-coordinate. */
-   int mousey;              /**< Last mouse y-coordinate. */
-   TimeType mouseTime;      /**< Time of the last mouse motion. */
+   int mousex;                /**< Last mouse x-coordinate. */
+   int mousey;                /**< Last mouse y-coordinate. */
+   TimeType mouseTime;        /**< Time of the last mouse motion. */
 
-   int userWidth;           /**< User-specified clock width (or 0). */
+   int userWidth;             /**< User-specified clock width (or 0). */
 
-   struct ClockType *next;  /**< Next clock in the list. */
+   struct ClockType *next;    /**< Next clock in the list. */
 
 } ClockType;
 
@@ -51,7 +58,7 @@ static void Create(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
 static void ProcessClockButtonEvent(TrayComponentType *cp,
-                                    int x, int y, int mask);
+                                    int x, int y, int button);
 static void ProcessClockMotionEvent(TrayComponentType *cp,
                                     int x, int y, int mask);
 
@@ -70,9 +77,7 @@ void InitializeClock(void)
 /** Start clock(s). */
 void StartupClock(void)
 {
-
    ClockType *clk;
-
    for(clk = clocks; clk; clk = clk->next) {
       if(clk->cp->requestedWidth == 0) {
          clk->cp->requestedWidth = 1;
@@ -81,17 +86,13 @@ void StartupClock(void)
          clk->cp->requestedHeight = GetStringHeight(FONT_CLOCK) + 4;
       }
    }
-
 }
 
 /** Destroy clock(s). */
 void DestroyClock(void)
 {
-
-   ClockType *cp;
-
    while(clocks) {
-      cp = clocks->next;
+      ClockType *cp = clocks->next;
 
       if(clocks->format) {
          Release(clocks->format);
@@ -99,20 +100,22 @@ void DestroyClock(void)
       if(clocks->zone) {
          Release(clocks->zone);
       }
-      if(clocks->command) {
-         Release(clocks->command);
+      while(clocks->actions) {
+         ClockActionType *ap = clocks->actions->next;
+         Release(clocks->actions->action);
+         Release(clocks->actions);
+         clocks->actions = ap;
       }
       UnregisterCallback(SignalClock, clocks);
 
       Release(clocks);
       clocks = cp;
    }
-
 }
 
 /** Create a clock tray component. */
 TrayComponentType *CreateClock(const char *format, const char *zone,
-                               const char *command, int width, int height)
+                               int width, int height)
 {
 
    TrayComponentType *cp;
@@ -132,11 +135,8 @@ TrayComponentType *CreateClock(const char *format, const char *zone,
       format = DEFAULT_FORMAT;
    }
    clk->format = CopyString(format);
-
    clk->zone = CopyString(zone);
-
-   clk->command = CopyString(command);
-
+   clk->actions = NULL;
    clk->shortTime[0] = 0;
 
    cp = CreateTrayComponent();
@@ -160,18 +160,26 @@ TrayComponentType *CreateClock(const char *format, const char *zone,
    RegisterCallback(Min(900, settings.popupDelay / 2), SignalClock, clk);
 
    return cp;
+}
 
+/** Add an action to a clock. */
+void AddClockAction(TrayComponentType *cp,
+                    const char *action,
+                    int mask)
+{
+   ClockType *clock = (ClockType*)cp->object;
+   ClockActionType *ap = (ClockActionType*)Allocate(sizeof(ClockActionType));
+   ap->action = CopyString(action);
+   ap->mask = mask;
+   ap->next = clock->actions;
+   clock->actions = ap;
 }
 
 /** Initialize a clock tray component. */
 void Create(TrayComponentType *cp)
 {
-
-   Assert(cp);
-
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
                                rootVisual.depth);
-
 }
 
 /** Resize a clock tray component. */
@@ -214,35 +222,29 @@ void Destroy(TrayComponentType *cp)
 }
 
 /** Process a click event on a clock tray component. */
-void ProcessClockButtonEvent(TrayComponentType *cp, int x, int y, int mask)
+void ProcessClockButtonEvent(TrayComponentType *cp, int x, int y, int button)
 {
-
-   ClockType *clk = (ClockType*)cp->object;
-
-   if(mask == Button4 || mask == Button5) {
-      return;
+   const ClockType *clk = (ClockType*)cp->object;
+   const ClockActionType *ap;
+   const int mask = 1 << button;
+   for(ap = clk->actions; ap; ap = ap->next) {
+      if(ap->mask & mask) {
+         if(ap->action) {
+            RunCommand(ap->action);
+         }
+         break;
+      }
    }
-
-   if(clk->command) {
-      RunCommand(clk->command);
-   }
-
 }
 
 /** Process a motion event on a clock tray component. */
 void ProcessClockMotionEvent(TrayComponentType *cp,
                              int x, int y, int mask)
 {
-
-   ClockType *clk;
-
-   Assert(cp);
-
-   clk = (ClockType*)cp->object;
+   ClockType *clk = (ClockType*)cp->object;
    clk->mousex = cp->screenx + x;
    clk->mousey = cp->screeny + y;
    GetCurrentTime(&clk->mouseTime);
-
 }
 
 /** Update a clock tray component. */
@@ -318,4 +320,3 @@ void DrawClock(ClockType *clk, const TimeType *now, int x, int y)
    }
 
 }
-

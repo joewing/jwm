@@ -335,7 +335,7 @@ void ProcessButtonPress(TrayComponentType *cp, int x, int y, int button)
    menu = -1;
    for(ap = bp->actions; ap; ap = ap->next) {
       if(ap->mask & mask) {
-         if(ap->action && strlen(ap->action) > 0) {
+         if(ap->action && ap->action[0]) {
             if(strncmp(ap->action, "root:", 5)) {
                GrabMouse(cp->tray->window);
                cp->grabbed = 1;

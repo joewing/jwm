@@ -143,13 +143,16 @@ static MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
 static MenuItem *InsertMenuItem(MenuItem *last);
 
 /* Tray. */
+typedef void (*AddTrayActionFunc)(TrayComponentType*, const char*, int);
 static void ParseTray(const TokenNode *tp);
 static void ParsePager(const TokenNode *tp, TrayType *tray);
 static void ParseTaskList(const TokenNode *tp, TrayType *tray);
 static void ParseSwallow(const TokenNode *tp, TrayType *tray);
 static void ParseTrayButton(const TokenNode *tp, TrayType *tray);
-static void ParseTrayButtonActions(const TokenNode *tp, TrayComponentType *cp);
 static void ParseClock(const TokenNode *tp, TrayType *tray);
+static void ParseTrayComponentActions(const TokenNode *tp,
+                                      TrayComponentType *cp,
+                                      AddTrayActionFunc func);
 static void ParseDock(const TokenNode *tp, TrayType *tray);
 static void ParseSpacer(const TokenNode *tp, TrayType *tray);
 
@@ -1292,52 +1295,17 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray)
    cp = CreateTrayButton(icon, label, popup, width, height);
    if(JLIKELY(cp)) {
       AddTrayComponent(tray, cp);
-      ParseTrayButtonActions(tp, cp);
+      ParseTrayComponentActions(tp, cp, AddTrayButtonAction);
    }
 
-}
-
-/** Parse tray button actions. */
-void ParseTrayButtonActions(const TokenNode *tp, TrayComponentType *cp)
-{
-   const TokenNode *np;
-   const char *mask_str;
-   const int default_mask = (1 << 1) | (1 << 2) | (1 << 3);
-   int mask;
-
-   if(tp->value) {
-      AddTrayButtonAction(cp, tp->value, default_mask);
-   }
-
-   for(np = tp->subnodeHead; np; np = np->next) {
-      switch(np->type) {
-      case TOK_BUTTON:
-         mask_str = FindAttribute(np->attributes, "mask");
-         if(mask_str) {
-            int i;
-            mask = 0;
-            for(i = 0; mask_str[i]; i++) {
-               mask |= 1 << (mask_str[i] - '0');
-            }
-         } else {
-            mask = default_mask;
-         }
-         AddTrayButtonAction(cp, np->value, mask);
-         break;
-      default:
-         InvalidTag(np, TOK_TRAYBUTTON);
-         break;
-      }
-   }
 }
 
 /** Parse a clock tray component. */
-void ParseClock(const TokenNode *tp, TrayType *tray) {
-
+void ParseClock(const TokenNode *tp, TrayType *tray)
+{
    TrayComponentType *cp;
    const char *format;
    const char *zone;
-   const char *command;
    const char *temp;
    int width, height;
 
@@ -1345,14 +1313,7 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
    Assert(tray);
 
    format = FindAttribute(tp->attributes, "format");
-
    zone = FindAttribute(tp->attributes, "zone");
-
-   if(tp->value && strlen(tp->value) > 0) {
-      command = tp->value;
-   } else {
-      command = NULL;
-   }
 
    temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
    if(temp) {
@@ -1368,12 +1329,49 @@ void ParseClock(const TokenNode *tp, TrayType *tray) {
       height = 0;
    }
 
-   cp = CreateClock(format, zone, command, width, height);
+   cp = CreateClock(format, zone, width, height);
    if(JLIKELY(cp)) {
+      ParseTrayComponentActions(tp, cp, AddClockAction);
       AddTrayComponent(tray, cp);
    }
 
 }
+
+/** Parse tray component actions. */
+void ParseTrayComponentActions(const TokenNode *tp, TrayComponentType *cp,
+                               AddTrayActionFunc func)
+{
+   const TokenNode *np;
+   const char *mask_str;
+   const int default_mask = (1 << 1) | (1 << 2) | (1 << 3);
+   int mask;
+
+   if(tp->value) {
+      (func)(cp, tp->value, default_mask);
+   }
+
+   for(np = tp->subnodeHead; np; np = np->next) {
+      switch(np->type) {
+      case TOK_BUTTON:
+         mask_str = FindAttribute(np->attributes, "mask");
+         if(mask_str) {
+            int i;
+            mask = 0;
+            for(i = 0; mask_str[i]; i++) {
+               mask |= 1 << (mask_str[i] - '0');
+            }
+         } else {
+            mask = default_mask;
+         }
+         (func)(cp, np->value, mask);
+         break;
+      default:
+         InvalidTag(np, tp->type);
+         break;
+      }
+   }
+}
+
 
 /** Parse a dock tray component. */
 void ParseDock(const TokenNode *tp, TrayType *tray) {

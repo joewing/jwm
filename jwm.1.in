@@ -439,7 +439,10 @@ Within this tag the following tags are supported:
 .B Clock
 .RS
 Add a clock to the tray. The text of this tag is a command to run
-when the clock is clicked. This tag supports the following attributes:
+when the clock is clicked.  Optionally, one or more \fBButton\fP tags
+may be specified to bind actions to specific mouse buttons specified via the
+\fBmask\fP attribute.  By default, the button mask is "123".
+The following actions are supported:
 .P
 \fBformat\fP \fIstring\fP
 .RS

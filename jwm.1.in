@@ -555,7 +555,10 @@ The default is 0.
 .B TrayButton
 .RS
 Add a button to the tray. The text of this tag determines what action to
-take when the button is clicked. The following actions are supported:
+take when the button is clicked. Optionally, one or more \fBButton\fP tags
+may be specified to bind actions to specific mouse buttons specified via the
+\fBmask\fP attribute.  By default, the button mask is "123".
+The following actions are supported:
 .P
 \fBroot:\fP\fIn\fP
 .RS

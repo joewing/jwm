@@ -27,6 +27,12 @@
 #include "settings.h"
 #include "event.h"
 
+typedef struct TrayButtonActionType {
+   char *action;
+   int mask;
+   struct TrayButtonActionType *next;
+} TrayButtonActionType;
+
 typedef struct TrayButtonType {
 
    TrayComponentType *cp;
@@ -35,12 +41,12 @@ typedef struct TrayButtonType {
    char *popup;
    char *iconName;
    IconNode *icon;
-   char *action;
 
    int mousex;
    int mousey;
    TimeType mouseTime;
 
+   struct TrayButtonActionType *actions;
    struct TrayButtonType *next;
 
 } TrayButtonType;
@@ -54,9 +60,9 @@ static void Resize(TrayComponentType *cp);
 static void Draw(TrayComponentType *cp, int active);
 
 static void ProcessButtonPress(TrayComponentType *cp,
-                               int x, int y, int mask);
+                               int x, int y, int button);
 static void ProcessButtonRelease(TrayComponentType *cp,
-                                 int x, int y, int mask);
+                                 int x, int y, int button);
 static void ProcessMotionEvent(TrayComponentType *cp,
                                int x, int y, int mask);
 static void SignalTrayButton(const TimeType *now,
@@ -104,8 +110,11 @@ void DestroyTrayButtons(void)
       if(buttons->iconName) {
          Release(buttons->iconName);
       }
-      if(buttons->action) {
-         Release(buttons->action);
+      while(buttons->actions) {
+         TrayButtonActionType *ap = buttons->actions->next;
+         Release(buttons->actions->action);
+         Release(buttons->actions);
+         buttons->actions = ap;
       }
       if(buttons->popup) {
          Release(buttons->popup);
@@ -118,7 +127,6 @@ void DestroyTrayButtons(void)
 /** Create a button tray component. */
 TrayComponentType *CreateTrayButton(const char *iconName,
                                     const char *label,
-                                    const char *action,
                                     const char *popup,
                                     unsigned int width,
                                     unsigned int height)
@@ -140,7 +148,7 @@ TrayComponentType *CreateTrayButton(const char *iconName,
    bp->icon = NULL;
    bp->iconName = CopyString(iconName);
    bp->label = CopyString(label);
-   bp->action = CopyString(action);
+   bp->actions = NULL;
    bp->popup = CopyString(popup);
 
    cp = CreateTrayComponent();
@@ -167,6 +175,20 @@ TrayComponentType *CreateTrayButton(const char *iconName,
 
    return cp;
 
+}
+
+/** Add a action to a tray button. */
+void AddTrayButtonAction(TrayComponentType *cp,
+                         const char *action,
+                         int mask)
+{
+   TrayButtonType *bp = (TrayButtonType*)cp->object;
+   TrayButtonActionType *ap
+      = (TrayButtonActionType*)Allocate(sizeof(TrayButtonActionType));
+   ap->action = CopyString(action);
+   ap->mask = mask;
+   ap->next = bp->actions;
+   bp->actions = ap;
 }
 
 /** Set the size of a button tray component. */
@@ -225,26 +247,29 @@ void Create(TrayComponentType *cp)
 {
 
    TrayButtonType *bp;
+   TrayButtonActionType *ap;
 
    bp = (TrayButtonType*)cp->object;
 
-   /* Validate the action for this tray button. */
-   if(bp->action && strlen(bp->action) > 0) {
-      if(!strncmp(bp->action, "exec:", 5)) {
-         /* Valid. */
-      } else if(!strncmp(bp->action, "root:", 5)) {
-         /* Valid. However, the specified root menu may not exist.
+   /* Validate the action(s) for this tray button. */
+   for(ap = bp->actions; ap; ap = ap->next) {
+      if(ap->action && strlen(ap->action) > 0) {
+         if(!strncmp(ap->action, "exec:", 5)) {
+            /* Valid. */
+         } else if(!strncmp(ap->action, "root:", 5)) {
+            /* Valid. However, the specified root menu may not exist.
+             * This case is handled in ValidateTrayButtons.
+             */
+         } else if(!strcmp(ap->action, "showdesktop")) {
+            /* Valid. */
+         } else {
+            Warning(_("invalid TrayButton action: \"%s\""), ap->action);
+         }
+      } else {
+         /* Valid. However, root menu 1 may not exist.
           * This case is handled in ValidateTrayButtons.
           */
-      } else if(!strcmp(bp->action, "showdesktop")) {
-         /* Valid. */
-      } else {
-         Warning(_("invalid TrayButton action: \"%s\""), bp->action);
       }
-   } else {
-      /* Valid. However, root menu 1 may not exist.
-       * This case is handled in ValidateTrayButtons.
-       */
    }
 
    cp->pixmap = JXCreatePixmap(display, rootWindow,
@@ -297,35 +322,40 @@ void Draw(TrayComponentType *cp, int active)
 }
 
 /** Process a button press. */
-void ProcessButtonPress(TrayComponentType *cp, int x, int y, int mask)
+void ProcessButtonPress(TrayComponentType *cp, int x, int y, int button)
 {
 
+   const TrayButtonType *bp = (TrayButtonType*)cp->object;
    const ScreenType *sp;
+   const TrayButtonActionType *ap;
+   const int mask = 1 << button;
    int mwidth, mheight;
-   int button;
+   int menu;
 
-   TrayButtonType *bp = (TrayButtonType*)cp->object;
-
-   Assert(bp);
-
-   if(bp->action && strlen(bp->action) > 0) {
-      if(strncmp(bp->action, "root:", 5)) {
-         GrabMouse(cp->tray->window);
-         cp->grabbed = 1;
-         Draw(cp, 1);
-         UpdateSpecificTray(cp->tray, cp);
-         return;
-      } else {
-         button = atoi(bp->action + 5);
+   menu = -1;
+   for(ap = bp->actions; ap; ap = ap->next) {
+      if(ap->mask & mask) {
+         if(ap->action && strlen(ap->action) > 0) {
+            if(strncmp(ap->action, "root:", 5)) {
+               GrabMouse(cp->tray->window);
+               cp->grabbed = 1;
+               Draw(cp, 1);
+               UpdateSpecificTray(cp->tray, cp);
+               return;
+            } else {
+               menu = atoi(ap->action + 5);
+            }
+         } else {
+            menu = 1;
+         }
       }
-   } else {
-      button = 1;
+   }
+   if(menu < 0) {
+      return;
    }
 
-   GetRootMenuSize(button, &mwidth, &mheight);
-
+   GetRootMenuSize(menu, &mwidth, &mheight);
    sp = GetCurrentScreen(cp->screenx, cp->screeny);
-
    if(cp->tray->layout == LAYOUT_HORIZONTAL) {
       x = cp->screenx;
       if(cp->screeny + cp->height / 2 < sp->y + sp->height / 2) {
@@ -344,21 +374,19 @@ void ProcessButtonPress(TrayComponentType *cp, int x, int y, int mask)
 
    Draw(cp, 1);
    UpdateSpecificTray(cp->tray, cp);
-   ShowRootMenu(button, x, y);
+   ShowRootMenu(menu, x, y);
    Draw(cp, 0);
    UpdateSpecificTray(cp->tray, cp);
 
 }
 
 /** Process a button release. */
-void ProcessButtonRelease(TrayComponentType *cp, int x, int y, int mask)
+void ProcessButtonRelease(TrayComponentType *cp, int x, int y, int button)
 {
 
-   TrayButtonType *bp = (TrayButtonType*)cp->object;
-
-   if(mask == Button4 || mask == Button5) {
-      return;
-   }
+   const TrayButtonType *bp = (TrayButtonType*)cp->object;
+   const TrayButtonActionType *ap;
+   const int mask = 1 << button;
 
    Draw(cp, 0);
    UpdateSpecificTray(cp->tray, cp);
@@ -373,16 +401,17 @@ void ProcessButtonRelease(TrayComponentType *cp, int x, int y, int mask)
    }
 
    // Run the tray button action (if any).
-   if(bp->action && strlen(bp->action) > 0) {
-      if(!strncmp(bp->action, "exec:", 5)) {
-         RunCommand(bp->action + 5);
-         return;
-      } else if(!strcmp(bp->action, "showdesktop")) {
-         ShowDesktop();
-         return;
+   for(ap = bp->actions; ap; ap = ap->next) {
+      if(ap->mask & mask) {
+         if(ap->action && strlen(ap->action) > 0) {
+            if(!strncmp(ap->action, "exec:", 5)) {
+               RunCommand(ap->action + 5);
+            } else if(!strcmp(ap->action, "showdesktop")) {
+               ShowDesktop();
+            }
+         }
       }
    }
-
 }
 
 /** Process a motion event. */
@@ -419,13 +448,15 @@ void SignalTrayButton(const TimeType *now, int x, int y, Window w, void *data)
 /** Validate tray buttons. */
 void ValidateTrayButtons(void)
 {
-   TrayButtonType *bp;
-   int bindex;
+   const TrayButtonType *bp;
    for(bp = buttons; bp; bp = bp->next) {
-      if(bp->action && !strncmp(bp->action, "root:", 5)) {
-         bindex = atoi(bp->action + 5);
-         if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
-            Warning(_("tray button: root menu %d not defined"), bindex);
+      const TrayButtonActionType *ap;
+      for(ap = bp->actions; ap; ap = ap->next) {
+         if(ap->action && !strncmp(ap->action, "root:", 5)) {
+            const int bindex = atoi(ap->action + 5);
+            if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
+               Warning(_("tray button: root menu %d not defined"), bindex);
+            }
          }
       }
    }

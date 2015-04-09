@@ -21,6 +21,7 @@ static const int BLOCK_SIZE = 16;
 static const StringMappingType TOKEN_MAP[] = {
    { "Active",             TOK_ACTIVE           },
    { "Background",         TOK_BACKGROUND       },
+   { "Button",             TOK_BUTTON           },
    { "ButtonClose",        TOK_BUTTONCLOSE      },
    { "ButtonMax",          TOK_BUTTONMAX        },
    { "ButtonMaxActive",    TOK_BUTTONMAXACTIVE  },

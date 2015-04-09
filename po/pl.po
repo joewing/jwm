@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-05 08:53-0500\n"
+"POT-Creation-Date: 2015-04-08 20:21-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -32,11 +32,11 @@ msgstr "nieprawidłowy typ tła: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "nie znaleziono obrazu tła: \"%s\""
 
-#: src/client.c:896
+#: src/client.c:897
 msgid "Kill this window?"
 msgstr "Zabić to okno?"
 
-#: src/client.c:897
+#: src/client.c:898
 msgid "This may cause data to be lost!"
 msgstr "Może to spowodować utratę danych!"
 
@@ -139,66 +139,66 @@ msgstr "ani klucza ani keycode określony dla Key"
 msgid "key binding: root menu %d not defined"
 msgstr "klucz wiązania: menu główne %d nie zdefiniowano"
 
-#: src/lex.c:197
+#: src/lex.c:198
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: zamknij znacznik \"%s\" nie pasuje otwarty znacznik \"%s\""
 
-#: src/lex.c:203
+#: src/lex.c:204
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: nieoczekiwany i nieprawidłowo zamknięty znacznik"
 
-#: src/lex.c:209
+#: src/lex.c:210
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: zamknij znacznik \"%s\" bez otwartego znacznika"
 
-#: src/lex.c:212
+#: src/lex.c:213
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: nieprawidłowo zamknięty znacznik"
 
-#: src/lex.c:230
+#: src/lex.c:231
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: nieprawidłowo otwarty znacznik"
 
-#: src/lex.c:246
+#: src/lex.c:247
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: nieprawidłowy znacznik"
 
-#: src/lex.c:301
+#: src/lex.c:302
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: nieoczekiwany tekst: \"%s\""
 
-#: src/lex.c:349
+#: src/lex.c:350
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: nieprawidłowa jednostka: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1810
+#: src/lex.c:455 src/parse.c:1846
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1824
+#: src/parse.c:1860
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nieprawidłowy znacznik w: %s"
 
-#: src/parse.c:1836
+#: src/parse.c:1872
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "nieprawidłowa nieprzezroczystość menu: %s"
 
-#: src/parse.c:1878
+#: src/parse.c:1914
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:1898
+#: src/parse.c:1934
 msgid "configuration error"
 msgstr "błąd konfiguracji"
 
@@ -224,25 +224,6 @@ msgstr "nie może połknąć klienta bez nazwy"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
 
-#: src/traybutton.c:88
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "nie można załadować ikon w zasobniku: \"%s\""
-
-#: src/traybutton.c:132
-msgid "no icon or label for TrayButton"
-msgstr "brak ikony lub etykiety dla TrayButton"
-
-#: src/traybutton.c:242
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "nieprawidłowa akcja TrayButton: \"%s\""
-
-#: src/traybutton.c:426
-#, c-format
-msgid "tray button: root menu %d not defined"
-msgstr "przycisk zasobnika: menu głównym %d nie zdefiniowano"
-
 #: src/tray.c:1067
 #, c-format
 msgid "invalid tray width: %d"
@@ -267,6 +248,25 @@ msgstr "nieprawidłowe wypoziomowanie zasobnika: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""
+
+#: src/traybutton.c:94
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "nie można załadować ikon w zasobniku: \"%s\""
+
+#: src/traybutton.c:140
+msgid "no icon or label for TrayButton"
+msgstr "brak ikony lub etykiety dla TrayButton"
+
+#: src/traybutton.c:266
+#, c-format
+msgid "invalid TrayButton action: \"%s\""
+msgstr "nieprawidłowa akcja TrayButton: \"%s\""
+
+#: src/traybutton.c:458
+#, c-format
+msgid "tray button: root menu %d not defined"
+msgstr "przycisk zasobnika: menu głównym %d nie zdefiniowano"
 
 #: src/winmenu.c:78
 msgid "Close"

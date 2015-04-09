@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-05 08:53-0500\n"
+"POT-Creation-Date: 2015-04-08 20:21-0500\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -31,11 +31,11 @@ msgstr "tipo de fondo de pantalla no válido: «%s»"
 msgid "background image not found: \"%s\""
 msgstr "imagen de fondo de pantalla no encontrada: «%s»"
 
-#: src/client.c:896
+#: src/client.c:897
 msgid "Kill this window?"
 msgstr "¿Finalizar esta ventana?"
 
-#: src/client.c:897
+#: src/client.c:898
 msgid "This may cause data to be lost!"
 msgstr "¡Esto puede causar pérdida de datos!"
 
@@ -140,67 +140,67 @@ msgstr "ni tecla ni código especificados para Tecla"
 msgid "key binding: root menu %d not defined"
 msgstr "atajo de teclado: menú raíz %d no definido"
 
-#: src/lex.c:197
+#: src/lex.c:198
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: etiqueta de cierre «%s» no coincide con etiqueta de apertura «%s»"
 
-#: src/lex.c:203
+#: src/lex.c:204
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: etiqueta de cierre inesperada y no válida"
 
-#: src/lex.c:209
+#: src/lex.c:210
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: etiqueta de cierre \"%s\" sin etiqueta de apertura"
 
-#: src/lex.c:212
+#: src/lex.c:213
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: etiqueta de cierre no válida"
 
-#: src/lex.c:230
+#: src/lex.c:231
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: etiqueta de apertura no válida"
 
-#: src/lex.c:246
+#: src/lex.c:247
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: etiqueta no válida"
 
-#: src/lex.c:301
+#: src/lex.c:302
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: texto inesperado: «%s»"
 
-#: src/lex.c:349
+#: src/lex.c:350
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entidad no válida: «%.8s»"
 
-#: src/lex.c:454 src/parse.c:1810
+#: src/lex.c:455 src/parse.c:1846
 msgid "out of memory"
 msgstr "Sin memoria"
 
-#: src/parse.c:1824
+#: src/parse.c:1860
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ajuste no válido: %s"
 
-#: src/parse.c:1836
+#: src/parse.c:1872
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacidad no válida: %s"
 
-#: src/parse.c:1878
+#: src/parse.c:1914
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta no válida en %s: %s"
 
-#: src/parse.c:1898
+#: src/parse.c:1934
 msgid "configuration error"
 msgstr "error de configuración"
 
@@ -226,25 +226,6 @@ msgstr "no se puede mostrar un cliente sin nombre"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ancho máx. no válido para Lista de Tareas: %s"
 
-#: src/traybutton.c:88
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "no se pudo cargar el icono de bandeja: «%s»"
-
-#: src/traybutton.c:132
-msgid "no icon or label for TrayButton"
-msgstr "no hay icono o etiqueta para el Botón de Bandeja"
-
-#: src/traybutton.c:242
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "acción no válida para Botón de Bandeja: «%s»"
-
-#: src/traybutton.c:426
-#, c-format
-msgid "tray button: root menu %d not defined"
-msgstr "botón de bandeja: menú root %d no definido"
-
 #: src/tray.c:1067
 #, c-format
 msgid "invalid tray width: %d"
@@ -269,6 +250,25 @@ msgstr "alineación horizontal no válida para bandeja: «%s»"
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alineación vertical no válida para bandeja: «%s»"
+
+#: src/traybutton.c:94
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "no se pudo cargar el icono de bandeja: «%s»"
+
+#: src/traybutton.c:140
+msgid "no icon or label for TrayButton"
+msgstr "no hay icono o etiqueta para el Botón de Bandeja"
+
+#: src/traybutton.c:266
+#, c-format
+msgid "invalid TrayButton action: \"%s\""
+msgstr "acción no válida para Botón de Bandeja: «%s»"
+
+#: src/traybutton.c:458
+#, c-format
+msgid "tray button: root menu %d not defined"
+msgstr "botón de bandeja: menú root %d no definido"
 
 #: src/winmenu.c:78
 msgid "Close"

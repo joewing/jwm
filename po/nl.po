@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-05 08:53-0500\n"
+"POT-Creation-Date: 2015-04-08 20:21-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -26,11 +26,11 @@ msgstr "ongeldig achtergrond-type: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Achtergrond-afbeelding niet gevonden: \"%s\""
 
-#: src/client.c:896
+#: src/client.c:897
 msgid "Kill this window?"
 msgstr "Sluiten van dit venster forceren?"
 
-#: src/client.c:897
+#: src/client.c:898
 msgid "This may cause data to be lost!"
 msgstr "Dit kan verlies van data veroorzaken!"
 
@@ -133,66 +133,66 @@ msgstr "Toets en Toetscode niet opgegeven voor Toets"
 msgid "key binding: root menu %d not defined"
 msgstr "Sneltoets: root menu %d niet gedefiniëerd"
 
-#: src/lex.c:197
+#: src/lex.c:198
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: sluiten-label \"%s\" komt niet overeen met openen-label \"%s\""
 
-#: src/lex.c:203
+#: src/lex.c:204
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: onverwacht en ongeldig sluiten-label "
 
-#: src/lex.c:209
+#: src/lex.c:210
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: sluiten-label \"%s\" zonder openen-label"
 
-#: src/lex.c:212
+#: src/lex.c:213
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: ongeldig sluiten-label"
 
-#: src/lex.c:230
+#: src/lex.c:231
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: ongeldig openen-label"
 
-#: src/lex.c:246
+#: src/lex.c:247
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: ongeldig label"
 
-#: src/lex.c:301
+#: src/lex.c:302
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: ongeldige entiteit: \"%.8s\""
 
-#: src/lex.c:349
+#: src/lex.c:350
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ongeldige entiteit: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1810
+#: src/lex.c:455 src/parse.c:1846
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1824
+#: src/parse.c:1860
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ongeldige instelling: %s"
 
-#: src/parse.c:1836
+#: src/parse.c:1872
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ongeldige transparantie: %s"
 
-#: src/parse.c:1878
+#: src/parse.c:1914
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ongeldig label in %s: %s"
 
-#: src/parse.c:1898
+#: src/parse.c:1934
 msgid "configuration error"
 msgstr "configuratie-fout"
 
@@ -218,25 +218,6 @@ msgstr ""
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ongeldige maximum breedte voor Taaklijst: %s"
 
-#: src/traybutton.c:88
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "kon taakbalk-pictogram niet laden: \"%s\""
-
-#: src/traybutton.c:132
-msgid "no icon or label for TrayButton"
-msgstr "geen pictogram of label voor Taakbalk-knop"
-
-#: src/traybutton.c:242
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
-
-#: src/traybutton.c:426
-#, c-format
-msgid "tray button: root menu %d not defined"
-msgstr "taakbalk-knop: root menu %d niet gedefiniëerd"
-
 #: src/tray.c:1067
 #, c-format
 msgid "invalid tray width: %d"
@@ -261,6 +242,25 @@ msgstr "ongeldige horizontale taakbalk uitlijning: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ongeldige verticale taakbalk uitlijning: \"%s\""
+
+#: src/traybutton.c:94
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "kon taakbalk-pictogram niet laden: \"%s\""
+
+#: src/traybutton.c:140
+msgid "no icon or label for TrayButton"
+msgstr "geen pictogram of label voor Taakbalk-knop"
+
+#: src/traybutton.c:266
+#, c-format
+msgid "invalid TrayButton action: \"%s\""
+msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
+
+#: src/traybutton.c:458
+#, c-format
+msgid "tray button: root menu %d not defined"
+msgstr "taakbalk-knop: root menu %d niet gedefiniëerd"
 
 #: src/winmenu.c:78
 msgid "Close"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-05 08:53-0500\n"
+"POT-Creation-Date: 2015-04-08 20:21-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -35,11 +35,11 @@ msgstr "tipo de fundo invalido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""
 
-#: src/client.c:896
+#: src/client.c:897
 msgid "Kill this window?"
 msgstr "eliminar esta janela?"
 
-#: src/client.c:897
+#: src/client.c:898
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 
@@ -144,68 +144,68 @@ msgstr ""
 "teclas de atalho: não foram especificadas para o menu root %d não esta "
 "definido"
 
-#: src/lex.c:197
+#: src/lex.c:198
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: terminação da etiqueta (tag) \"%s\" não corresponde à abertura da "
 "etiqueta (tag) \"%s\""
 
-#: src/lex.c:203
+#: src/lex.c:204
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: terminação da etiqueta (tag) inesperada e invalida"
 
-#: src/lex.c:209
+#: src/lex.c:210
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: terminação da etiqueta (tag) \"%s\" sem etiqueta de abertura"
 
-#: src/lex.c:212
+#: src/lex.c:213
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: terminação de etiqueta (tag) invalida"
 
-#: src/lex.c:230
+#: src/lex.c:231
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: abertura de etiqueta (tag) invalida"
 
-#: src/lex.c:246
+#: src/lex.c:247
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: etiqueta invalida (tag)"
 
-#: src/lex.c:301
+#: src/lex.c:302
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: texto inesperado: \"%s\""
 
-#: src/lex.c:349
+#: src/lex.c:350
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entrada invalida: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1810
+#: src/lex.c:455 src/parse.c:1846
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1824
+#: src/parse.c:1860
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Configuração invalida: %s"
 
-#: src/parse.c:1836
+#: src/parse.c:1872
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "transparência invalida: %s"
 
-#: src/parse.c:1878
+#: src/parse.c:1914
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta invalida dentro %s: %s"
 
-#: src/parse.c:1898
+#: src/parse.c:1934
 msgid "configuration error"
 msgstr "erro de configuração"
 
@@ -231,25 +231,6 @@ msgstr "não podes inserir um cliente no swallow sem nome"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largura máxima (maxwidth) invalida para o Tasklist: %s"
 
-#: src/traybutton.c:88
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
-
-#: src/traybutton.c:132
-msgid "no icon or label for TrayButton"
-msgstr "ícone ou nome não esta definido no TrayButton"
-
-#: src/traybutton.c:242
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "ação do Traybutton invalida: \"%s\""
-
-#: src/traybutton.c:426
-#, c-format
-msgid "tray button: root menu %d not defined"
-msgstr "botão do tabuleiro: menu root %d não esta definida"
-
 #: src/tray.c:1067
 #, c-format
 msgid "invalid tray width: %d"
@@ -274,6 +255,25 @@ msgstr "alinhamento do tabuleiro invalido: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
+
+#: src/traybutton.c:94
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
+
+#: src/traybutton.c:140
+msgid "no icon or label for TrayButton"
+msgstr "ícone ou nome não esta definido no TrayButton"
+
+#: src/traybutton.c:266
+#, c-format
+msgid "invalid TrayButton action: \"%s\""
+msgstr "ação do Traybutton invalida: \"%s\""
+
+#: src/traybutton.c:458
+#, c-format
+msgid "tray button: root menu %d not defined"
+msgstr "botão do tabuleiro: menu root %d não esta definida"
 
 #: src/winmenu.c:78
 msgid "Close"

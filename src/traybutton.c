@@ -348,6 +348,7 @@ void ProcessButtonPress(TrayComponentType *cp, int x, int y, int button)
          } else {
             menu = 1;
          }
+         break;
       }
    }
    if(menu < 0) {
@@ -410,6 +411,7 @@ void ProcessButtonRelease(TrayComponentType *cp, int x, int y, int button)
                ShowDesktop();
             }
          }
+         return;
       }
    }
 }

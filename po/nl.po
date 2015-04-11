@@ -207,7 +207,7 @@ msgstr "JWM afsluiten"
 
 #: src/root.c:182
 msgid "Are you sure?"
-msgstr "Wet je het zeker?"
+msgstr "Weet je het zeker?"
 
 #: src/swallow.c:85
 msgid "cannot swallow a client with no name"

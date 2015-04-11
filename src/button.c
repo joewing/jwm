@@ -112,15 +112,11 @@ void DrawButton(ButtonNode *bp)
       } else {
          const int ratio = (bp->icon->image->width << 16)
                          / bp->icon->image->height;
-         iconHeight = bp->icon->image->height;
-         iconWidth = bp->icon->image->width;
+         iconHeight = height - 4;
+         iconWidth = (iconHeight * ratio) >> 16;
          if(iconWidth > width - 4) {
             iconWidth = width - 4;
             iconHeight = (iconWidth << 16) / ratio;
-         }
-         if(iconHeight > height - 4) {
-            iconHeight = height - 4;
-            iconWidth = (iconHeight * ratio) >> 16;
          }
       }
    }

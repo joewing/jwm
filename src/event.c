@@ -674,15 +674,12 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
       }
 
       /* Return early if there's nothing to do. */
-      if(!changed) {
+      if(!changed || np->state.maxFlags != MAX_NONE) {
          return;
       }
 
       if(np->controller) {
          (np->controller)(0);
-      }
-      if(np->state.maxFlags) {
-         MaximizeClient(np, MAX_NONE);
       }
 
       if(np->state.border & BORDER_CONSTRAIN) {

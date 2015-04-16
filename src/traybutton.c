@@ -343,7 +343,7 @@ void ProcessButtonPress(TrayComponentType *cp, int x, int y, int button)
                UpdateSpecificTray(cp->tray, cp);
                return;
             } else {
-               menu = atoi(ap->action + 5);
+               menu = GetRootMenuIndexFromString(&ap->action[5]);
             }
          } else {
             menu = 1;
@@ -455,9 +455,10 @@ void ValidateTrayButtons(void)
       const TrayButtonActionType *ap;
       for(ap = bp->actions; ap; ap = ap->next) {
          if(ap->action && !strncmp(ap->action, "root:", 5)) {
-            const int bindex = atoi(ap->action + 5);
+            const int bindex = GetRootMenuIndexFromString(&ap->action[5]);
             if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
-               Warning(_("tray button: root menu %d not defined"), bindex);
+               Warning(_("tray button: root menu \"%s\" not defined"),
+                       &ap->action[5]);
             }
          }
       }

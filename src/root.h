@@ -25,6 +25,16 @@ void DestroyRootMenu(void);
  */
 void SetRootMenu(const char *indexes, struct Menu *m);
 
+/** Get the index for a root menu character.
+ * @return The menu index, -1 if not found.
+ */
+int GetRootMenuIndex(char ch);
+
+/** Get the index for a root menu string.
+ * @return The menu index, -1 if not found.
+ */
+int GetRootMenuIndexFromString(const char *str);
+
 /** Determine if a root menu is defined for the specified index.
  * @return 1 if it is defined, 0 if not.
  */

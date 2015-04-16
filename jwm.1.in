@@ -84,8 +84,10 @@ supported:
 Determine which buttons on the root window activate the menu.
 This is a list of integers specifying buttons. The default is "123".
 Note that multiple root menus may be specified by using different
-buttons for different menus. The range of possible button values is
-\fB0\fP to \fB9\fP inclusive.
+buttons for different menus. The range of possible values is
+\fB0\fP to \fB9\fP inclusive as well as \fBa\fP to \fBz\fP inclusive,
+providing for up to 36 menus.  Note that only the numeric values
+map to mouse buttons.
 .RE
 .P
 \fBheight\fP \fIint\fP

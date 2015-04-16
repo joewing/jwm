@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-08 20:21-0500\n"
+"POT-Creation-Date: 2015-04-15 19:12-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,11 +31,11 @@ msgstr ""
 msgid "background image not found: \"%s\""
 msgstr ""
 
-#: src/client.c:897
+#: src/client.c:898
 msgid "Kill this window?"
 msgstr ""
 
-#: src/client.c:898
+#: src/client.c:899
 msgid "This may cause data to be lost!"
 msgstr ""
 
@@ -178,26 +178,26 @@ msgstr ""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/lex.c:455 src/parse.c:1846
+#: src/lex.c:455 src/parse.c:1844
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1860
+#: src/parse.c:1858
 #, c-format
 msgid "invalid setting: %s"
 msgstr ""
 
-#: src/parse.c:1872
+#: src/parse.c:1870
 #, c-format
 msgid "invalid opacity: %s"
 msgstr ""
 
-#: src/parse.c:1914
+#: src/parse.c:1912
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr ""
 
-#: src/parse.c:1934
+#: src/parse.c:1932
 msgid "configuration error"
 msgstr ""
 
@@ -223,6 +223,25 @@ msgstr ""
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 
+#: src/traybutton.c:94
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr ""
+
+#: src/traybutton.c:140
+msgid "no icon or label for TrayButton"
+msgstr ""
+
+#: src/traybutton.c:266
+#, c-format
+msgid "invalid TrayButton action: \"%s\""
+msgstr ""
+
+#: src/traybutton.c:460
+#, c-format
+msgid "tray button: root menu %d not defined"
+msgstr ""
+
 #: src/tray.c:1067
 #, c-format
 msgid "invalid tray width: %d"
@@ -246,25 +265,6 @@ msgstr ""
 #: src/tray.c:1177
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
-msgstr ""
-
-#: src/traybutton.c:94
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr ""
-
-#: src/traybutton.c:140
-msgid "no icon or label for TrayButton"
-msgstr ""
-
-#: src/traybutton.c:266
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr ""
-
-#: src/traybutton.c:458
-#, c-format
-msgid "tray button: root menu %d not defined"
 msgstr ""
 
 #: src/winmenu.c:78

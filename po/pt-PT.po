@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-08 20:21-0500\n"
+"POT-Creation-Date: 2015-04-15 19:12-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -35,11 +35,11 @@ msgstr "tipo de fundo invalido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""
 
-#: src/client.c:897
+#: src/client.c:898
 msgid "Kill this window?"
 msgstr "eliminar esta janela?"
 
-#: src/client.c:898
+#: src/client.c:899
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 
@@ -186,26 +186,26 @@ msgstr "%s[%u]: texto inesperado: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entrada invalida: \"%.8s\""
 
-#: src/lex.c:455 src/parse.c:1846
+#: src/lex.c:455 src/parse.c:1844
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1860
+#: src/parse.c:1858
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Configuração invalida: %s"
 
-#: src/parse.c:1872
+#: src/parse.c:1870
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "transparência invalida: %s"
 
-#: src/parse.c:1914
+#: src/parse.c:1912
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta invalida dentro %s: %s"
 
-#: src/parse.c:1934
+#: src/parse.c:1932
 msgid "configuration error"
 msgstr "erro de configuração"
 
@@ -231,6 +231,25 @@ msgstr "não podes inserir um cliente no swallow sem nome"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largura máxima (maxwidth) invalida para o Tasklist: %s"
 
+#: src/traybutton.c:94
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
+
+#: src/traybutton.c:140
+msgid "no icon or label for TrayButton"
+msgstr "ícone ou nome não esta definido no TrayButton"
+
+#: src/traybutton.c:266
+#, c-format
+msgid "invalid TrayButton action: \"%s\""
+msgstr "ação do Traybutton invalida: \"%s\""
+
+#: src/traybutton.c:460
+#, c-format
+msgid "tray button: root menu %d not defined"
+msgstr "botão do tabuleiro: menu root %d não esta definida"
+
 #: src/tray.c:1067
 #, c-format
 msgid "invalid tray width: %d"
@@ -255,25 +274,6 @@ msgstr "alinhamento do tabuleiro invalido: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
-
-#: src/traybutton.c:94
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
-
-#: src/traybutton.c:140
-msgid "no icon or label for TrayButton"
-msgstr "ícone ou nome não esta definido no TrayButton"
-
-#: src/traybutton.c:266
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "ação do Traybutton invalida: \"%s\""
-
-#: src/traybutton.c:458
-#, c-format
-msgid "tray button: root menu %d not defined"
-msgstr "botão do tabuleiro: menu root %d não esta definida"
 
 #: src/winmenu.c:78
 msgid "Close"

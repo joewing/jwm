@@ -103,6 +103,9 @@ int GetRootMenuIndexFromString(const char *str)
    while(*str && IsSpace(*str, &temp)) {
       str += 1;
    }
+   if(JUNLIKELY(!*str)) {
+      return -1;
+   }
    const int result = GetRootMenuIndex(*str);
    str += 1;
    while(*str && IsSpace(*str, &temp)) {

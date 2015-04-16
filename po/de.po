@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-08 20:21-0500\n"
+"POT-Creation-Date: 2015-04-15 19:12-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -26,11 +26,11 @@ msgstr "ungültiger Typ für Hintergrund: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Hintergrundbild nicht gefunden: \"%s\""
 
-#: src/client.c:897
+#: src/client.c:898
 msgid "Kill this window?"
 msgstr "Dieses Fenster töten?"
 
-#: src/client.c:898
+#: src/client.c:899
 msgid "This may cause data to be lost!"
 msgstr "Das kann Datenverlust verursachen!"
 
@@ -173,26 +173,26 @@ msgstr ""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/lex.c:455 src/parse.c:1846
+#: src/lex.c:455 src/parse.c:1844
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1860
+#: src/parse.c:1858
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ungültige Einstellung %s"
 
-#: src/parse.c:1872
+#: src/parse.c:1870
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ungültige Opazität: \"%s\""
 
-#: src/parse.c:1914
+#: src/parse.c:1912
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ungültiger tag in %s: %s"
 
-#: src/parse.c:1934
+#: src/parse.c:1932
 msgid "configuration error"
 msgstr "Konfigurationsfehler"
 
@@ -216,6 +216,25 @@ msgstr ""
 #: src/taskbar.c:718
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
+msgstr ""
+
+#: src/traybutton.c:94
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "konnte Leistensymbol nicht laden: %s"
+
+#: src/traybutton.c:140
+msgid "no icon or label for TrayButton"
+msgstr ""
+
+#: src/traybutton.c:266
+#, c-format
+msgid "invalid TrayButton action: \"%s\""
+msgstr ""
+
+#: src/traybutton.c:460
+#, c-format
+msgid "tray button: root menu %d not defined"
 msgstr ""
 
 #: src/tray.c:1067
@@ -242,25 +261,6 @@ msgstr "ungültige Horizontalausrichtung für Leiste: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ungültige Vertikalausrichtung für Leiste: \"%s\""
-
-#: src/traybutton.c:94
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "konnte Leistensymbol nicht laden: %s"
-
-#: src/traybutton.c:140
-msgid "no icon or label for TrayButton"
-msgstr ""
-
-#: src/traybutton.c:266
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr ""
-
-#: src/traybutton.c:458
-#, c-format
-msgid "tray button: root menu %d not defined"
-msgstr ""
 
 #: src/winmenu.c:78
 msgid "Close"

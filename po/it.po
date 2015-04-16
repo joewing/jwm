@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-08 20:21-0500\n"
+"POT-Creation-Date: 2015-04-15 19:12-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -31,11 +31,11 @@ msgstr "Formato di sfondo non valido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Immagine di sfondo non trovata: \"%s\""
 
-#: src/client.c:897
+#: src/client.c:898
 msgid "Kill this window?"
 msgstr "Chiudere questa finestra?"
 
-#: src/client.c:898
+#: src/client.c:899
 msgid "This may cause data to be lost!"
 msgstr "Questo può causare una perdita di dati!"
 
@@ -179,26 +179,26 @@ msgstr "%s[%u]: testo non atteso: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entità non valida: \"%.8s\""
 
-#: src/lex.c:455 src/parse.c:1846
+#: src/lex.c:455 src/parse.c:1844
 msgid "out of memory"
 msgstr "Memoria esaurita"
 
-#: src/parse.c:1860
+#: src/parse.c:1858
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Impostazione non valida: %s"
 
-#: src/parse.c:1872
+#: src/parse.c:1870
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "Opacità non valida: %s"
 
-#: src/parse.c:1914
+#: src/parse.c:1912
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Tag non valido in %s: %s"
 
-#: src/parse.c:1934
+#: src/parse.c:1932
 msgid "configuration error"
 msgstr "Errore di configurazione"
 
@@ -224,6 +224,25 @@ msgstr "Impossibile includere un client senza nome"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "Larghezza massima per TaskList non valida: %s"
 
+#: src/traybutton.c:94
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "Impossibile caricare icona del vassoio: \"%s"
+
+#: src/traybutton.c:140
+msgid "no icon or label for TrayButton"
+msgstr "Nessuna icona o etichetta per il TrayButton"
+
+#: src/traybutton.c:266
+#, c-format
+msgid "invalid TrayButton action: \"%s\""
+msgstr "Azione del TrayButton non valida:  \"%s\""
+
+#: src/traybutton.c:460
+#, c-format
+msgid "tray button: root menu %d not defined"
+msgstr "Tray button: root menu %d non definito"
+
 #: src/tray.c:1067
 #, c-format
 msgid "invalid tray width: %d"
@@ -248,25 +267,6 @@ msgstr "Allineamento orizzontale del vassoio non valido: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "Allineamento verticale del vassoio non valido: \"%s\""
-
-#: src/traybutton.c:94
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "Impossibile caricare icona del vassoio: \"%s"
-
-#: src/traybutton.c:140
-msgid "no icon or label for TrayButton"
-msgstr "Nessuna icona o etichetta per il TrayButton"
-
-#: src/traybutton.c:266
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "Azione del TrayButton non valida:  \"%s\""
-
-#: src/traybutton.c:458
-#, c-format
-msgid "tray button: root menu %d not defined"
-msgstr "Tray button: root menu %d non definito"
 
 #: src/winmenu.c:78
 msgid "Close"

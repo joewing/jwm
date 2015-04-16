@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-15 19:12-0500\n"
+"POT-Creation-Date: 2015-04-16 06:49-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -110,32 +110,32 @@ msgstr "Errore durante la lettura dell'immagine PNG: %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "Impossibile creare struttura di info per immagine PNG: %s"
 
-#: src/key.c:333
+#: src/key.c:332
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr "Il KeySym specificato non è definito per alcun KeyCode"
 
-#: src/key.c:341
+#: src/key.c:340
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "Modificatore non trovato per il KeySym 0x%0x"
 
-#: src/key.c:371
+#: src/key.c:370
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "Modificatore non valido: \"%c\""
 
-#: src/key.c:386
+#: src/key.c:385
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "Key symbol non valido: \"%s\""
 
-#: src/key.c:467
+#: src/key.c:466
 msgid "neither key nor keycode specified for Key"
 msgstr "Tasto o keycode non specificati per Key"
 
-#: src/key.c:483
-#, c-format
-msgid "key binding: root menu %d not defined"
+#: src/key.c:481
+#, fuzzy, c-format
+msgid "key binding: root menu \"%s\" not defined"
 msgstr "Combinazione di tasti: root menu %d non definito"
 
 #: src/lex.c:198
@@ -202,16 +202,16 @@ msgstr "Tag non valido in %s: %s"
 msgid "configuration error"
 msgstr "Errore di configurazione"
 
-#: src/root.c:99
+#: src/root.c:131
 #, c-format
 msgid "invalid root menu specified: \"%c\""
 msgstr "Root menu specificato non valido: \"%c\""
 
-#: src/root.c:181
+#: src/root.c:213
 msgid "Exit JWM"
 msgstr "Termina JWM"
 
-#: src/root.c:182
+#: src/root.c:214
 msgid "Are you sure?"
 msgstr "Sei sicuro?"
 
@@ -239,8 +239,8 @@ msgid "invalid TrayButton action: \"%s\""
 msgstr "Azione del TrayButton non valida:  \"%s\""
 
 #: src/traybutton.c:460
-#, c-format
-msgid "tray button: root menu %d not defined"
+#, fuzzy, c-format
+msgid "tray button: root menu \"%s\" not defined"
 msgstr "Tray button: root menu %d non definito"
 
 #: src/tray.c:1067

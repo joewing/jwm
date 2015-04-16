@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-15 19:12-0500\n"
+"POT-Creation-Date: 2015-04-16 06:49-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -111,32 +111,32 @@ msgstr "błąd odczytu obrazu PNG: %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "nie można utworzyć struktur informacji dla obrazu PNG: %s"
 
-#: src/key.c:333
+#: src/key.c:332
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr "Określony KeySym nie jest zdefiniowany dla żadego KeyCode"
 
-#: src/key.c:341
+#: src/key.c:340
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "nie znaleziono modyfikatora dla keysym 0x%0x"
 
-#: src/key.c:371
+#: src/key.c:370
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "nieprawidłowy modyfikator: \"%c\""
 
-#: src/key.c:386
+#: src/key.c:385
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "nieprawidłowy symbol klucza: \"%s\""
 
-#: src/key.c:467
+#: src/key.c:466
 msgid "neither key nor keycode specified for Key"
 msgstr "ani klucza ani keycode określony dla Key"
 
-#: src/key.c:483
-#, c-format
-msgid "key binding: root menu %d not defined"
+#: src/key.c:481
+#, fuzzy, c-format
+msgid "key binding: root menu \"%s\" not defined"
 msgstr "klucz wiązania: menu główne %d nie zdefiniowano"
 
 #: src/lex.c:198
@@ -202,16 +202,16 @@ msgstr "nieprawidłowy znacznik w %s: %s"
 msgid "configuration error"
 msgstr "błąd konfiguracji"
 
-#: src/root.c:99
+#: src/root.c:131
 #, c-format
 msgid "invalid root menu specified: \"%c\""
 msgstr "nieprawidłowo określono menu główne: \"%c\""
 
-#: src/root.c:181
+#: src/root.c:213
 msgid "Exit JWM"
 msgstr "Zakończ JWM"
 
-#: src/root.c:182
+#: src/root.c:214
 msgid "Are you sure?"
 msgstr "Czy jesteś pewien?"
 
@@ -239,8 +239,8 @@ msgid "invalid TrayButton action: \"%s\""
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
 #: src/traybutton.c:460
-#, c-format
-msgid "tray button: root menu %d not defined"
+#, fuzzy, c-format
+msgid "tray button: root menu \"%s\" not defined"
 msgstr "przycisk zasobnika: menu głównym %d nie zdefiniowano"
 
 #: src/tray.c:1067

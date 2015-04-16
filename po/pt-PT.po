@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-15 19:12-0500\n"
+"POT-Creation-Date: 2015-04-16 06:49-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -114,32 +114,32 @@ msgstr "erro lendo imagem PNG %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "não foi possível criar estrutura de informação para imagem PNG: %s"
 
-#: src/key.c:333
+#: src/key.c:332
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr "KeySym especificado não esta defendido por nenhum Keycode"
 
-#: src/key.c:341
+#: src/key.c:340
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "modificador não foi encontrado para o Keysym 0x%0x"
 
-#: src/key.c:371
+#: src/key.c:370
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "modificador invalido: \"%c\""
 
-#: src/key.c:386
+#: src/key.c:385
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "símbolo da tecla invalido: \"%s\""
 
-#: src/key.c:467
+#: src/key.c:466
 msgid "neither key nor keycode specified for Key"
 msgstr "tecla e código de tecla não foi especificado para esta tecla"
 
-#: src/key.c:483
-#, c-format
-msgid "key binding: root menu %d not defined"
+#: src/key.c:481
+#, fuzzy, c-format
+msgid "key binding: root menu \"%s\" not defined"
 msgstr ""
 "teclas de atalho: não foram especificadas para o menu root %d não esta "
 "definido"
@@ -209,16 +209,16 @@ msgstr "etiqueta invalida dentro %s: %s"
 msgid "configuration error"
 msgstr "erro de configuração"
 
-#: src/root.c:99
+#: src/root.c:131
 #, c-format
 msgid "invalid root menu specified: \"%c\""
 msgstr "menu root especificado invalido: \"%c\""
 
-#: src/root.c:181
+#: src/root.c:213
 msgid "Exit JWM"
 msgstr "Sair do JWM?"
 
-#: src/root.c:182
+#: src/root.c:214
 msgid "Are you sure?"
 msgstr "Tem a certeza?"
 
@@ -246,8 +246,8 @@ msgid "invalid TrayButton action: \"%s\""
 msgstr "ação do Traybutton invalida: \"%s\""
 
 #: src/traybutton.c:460
-#, c-format
-msgid "tray button: root menu %d not defined"
+#, fuzzy, c-format
+msgid "tray button: root menu \"%s\" not defined"
 msgstr "botão do tabuleiro: menu root %d não esta definida"
 
 #: src/tray.c:1067

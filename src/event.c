@@ -602,9 +602,9 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
    np = FindClientByWindow(event->window);
    if(np) {
 
+      int deltax, deltay;
       char changed = 0;
       char resized = 0;
-      int deltax, deltay;
 
       GetGravityDelta(np, np->gravity, &deltax, &deltay);
       if((event->value_mask & CWWidth) && (event->width != np->width)) {
@@ -674,12 +674,15 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
       }
 
       /* Return early if there's nothing to do. */
-      if(!changed || np->state.maxFlags != MAX_NONE) {
+      if(!changed) {
          return;
       }
 
       if(np->controller) {
          (np->controller)(0);
+      }
+      if(np->state.maxFlags) {
+         MaximizeClient(np, MAX_NONE);
       }
 
       if(np->state.border & BORDER_CONSTRAIN) {
@@ -694,6 +697,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
          GetBorderSize(&np->state, &north, &south, &east, &west);
          JXMoveWindow(display, np->parent, np->x - west, np->y - north);
       }
+
       SendConfigureEvent(np);
       UpdatePager();
 

@@ -100,6 +100,8 @@ void StartupTray(void)
       attrMask |= CWBorderPixel;
       attr.border_pixel = colors[COLOR_TRAY_OUTLINE];
 
+      Assert(tp->width > 0);
+      Assert(tp->height > 0);
       tp->window = JXCreateWindow(display, rootWindow,
                                   tp->x, tp->y, tp->width, tp->height,
                                   TRAY_BORDER_SIZE,
@@ -926,6 +928,9 @@ void LayoutTray(TrayType *tp, int *variableSize, int *variableRemainder)
          tp->height -= height;
       }
    }
+
+   tp->width = Max(1, tp->width);
+   tp->height = Max(1, tp->height);
 
 }
 

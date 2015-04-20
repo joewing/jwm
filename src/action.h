@@ -44,4 +44,9 @@ void ProcessActionRelease(struct ActionType *actions,
                           struct TrayComponentType *cp,
                           int x, int y, int button);
 
+/** Validate actions.
+ * @param actions The action list to validate.
+ */
+void ValidateActions(const struct ActionType *actions);
+
 #endif /* ACTION_H */

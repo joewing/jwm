@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-08 20:21-0500\n"
+"POT-Creation-Date: 2015-04-16 06:49-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -32,11 +32,11 @@ msgstr "nieprawidłowy typ tła: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "nie znaleziono obrazu tła: \"%s\""
 
-#: src/client.c:897
+#: src/client.c:898
 msgid "Kill this window?"
 msgstr "Zabić to okno?"
 
-#: src/client.c:898
+#: src/client.c:899
 msgid "This may cause data to be lost!"
 msgstr "Może to spowodować utratę danych!"
 
@@ -111,32 +111,32 @@ msgstr "błąd odczytu obrazu PNG: %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "nie można utworzyć struktur informacji dla obrazu PNG: %s"
 
-#: src/key.c:333
+#: src/key.c:332
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr "Określony KeySym nie jest zdefiniowany dla żadego KeyCode"
 
-#: src/key.c:341
+#: src/key.c:340
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "nie znaleziono modyfikatora dla keysym 0x%0x"
 
-#: src/key.c:371
+#: src/key.c:370
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "nieprawidłowy modyfikator: \"%c\""
 
-#: src/key.c:386
+#: src/key.c:385
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "nieprawidłowy symbol klucza: \"%s\""
 
-#: src/key.c:467
+#: src/key.c:466
 msgid "neither key nor keycode specified for Key"
 msgstr "ani klucza ani keycode określony dla Key"
 
-#: src/key.c:483
-#, c-format
-msgid "key binding: root menu %d not defined"
+#: src/key.c:481
+#, fuzzy, c-format
+msgid "key binding: root menu \"%s\" not defined"
 msgstr "klucz wiązania: menu główne %d nie zdefiniowano"
 
 #: src/lex.c:198
@@ -179,39 +179,39 @@ msgstr "%s[%u]: nieoczekiwany tekst: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: nieprawidłowa jednostka: \"%.8s\""
 
-#: src/lex.c:455 src/parse.c:1846
+#: src/lex.c:455 src/parse.c:1844
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1860
+#: src/parse.c:1858
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nieprawidłowy znacznik w: %s"
 
-#: src/parse.c:1872
+#: src/parse.c:1870
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "nieprawidłowa nieprzezroczystość menu: %s"
 
-#: src/parse.c:1914
+#: src/parse.c:1912
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:1934
+#: src/parse.c:1932
 msgid "configuration error"
 msgstr "błąd konfiguracji"
 
-#: src/root.c:99
+#: src/root.c:131
 #, c-format
 msgid "invalid root menu specified: \"%c\""
 msgstr "nieprawidłowo określono menu główne: \"%c\""
 
-#: src/root.c:181
+#: src/root.c:213
 msgid "Exit JWM"
 msgstr "Zakończ JWM"
 
-#: src/root.c:182
+#: src/root.c:214
 msgid "Are you sure?"
 msgstr "Czy jesteś pewien?"
 
@@ -223,6 +223,25 @@ msgstr "nie może połknąć klienta bez nazwy"
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
+
+#: src/traybutton.c:94
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "nie można załadować ikon w zasobniku: \"%s\""
+
+#: src/traybutton.c:140
+msgid "no icon or label for TrayButton"
+msgstr "brak ikony lub etykiety dla TrayButton"
+
+#: src/traybutton.c:266
+#, c-format
+msgid "invalid TrayButton action: \"%s\""
+msgstr "nieprawidłowa akcja TrayButton: \"%s\""
+
+#: src/traybutton.c:460
+#, fuzzy, c-format
+msgid "tray button: root menu \"%s\" not defined"
+msgstr "przycisk zasobnika: menu głównym %d nie zdefiniowano"
 
 #: src/tray.c:1067
 #, c-format
@@ -248,25 +267,6 @@ msgstr "nieprawidłowe wypoziomowanie zasobnika: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""
-
-#: src/traybutton.c:94
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "nie można załadować ikon w zasobniku: \"%s\""
-
-#: src/traybutton.c:140
-msgid "no icon or label for TrayButton"
-msgstr "brak ikony lub etykiety dla TrayButton"
-
-#: src/traybutton.c:266
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "nieprawidłowa akcja TrayButton: \"%s\""
-
-#: src/traybutton.c:458
-#, c-format
-msgid "tray button: root menu %d not defined"
-msgstr "przycisk zasobnika: menu głównym %d nie zdefiniowano"
 
 #: src/winmenu.c:78
 msgid "Close"

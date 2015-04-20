@@ -246,7 +246,6 @@ void ShowKeyMenu(const XKeyEvent *event)
 {
 
    KeyNode *np;
-   unsigned int button;
    unsigned int state;
 
    /* Remove the lock key modifiers. */
@@ -254,8 +253,8 @@ void ShowKeyMenu(const XKeyEvent *event)
 
    for(np = bindings; np; np = np->next) {
       if(np->state == state && np->code == event->keycode) {
-         button = (unsigned int)atoi(np->command);
-         if(JLIKELY(button <= 9)) {
+         const int button = GetRootMenuIndexFromString(np->command);
+         if(JLIKELY(button >= 0)) {
             ShowRootMenu(button, 0, 0);
          }
          return;
@@ -475,12 +474,12 @@ void InsertBinding(KeyType key, const char *modifiers,
 void ValidateKeys(void)
 {
    KeyNode *kp;
-   int bindex;
    for(kp = bindings; kp; kp = kp->next) {
       if((kp->key & 0xFF) == KEY_ROOT && kp->command) {
-         bindex = atoi(kp->command);
+         const int bindex = GetRootMenuIndexFromString(kp->command);
          if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
-            Warning(_("key binding: root menu %d not defined"), bindex);
+            Warning(_("key binding: root menu \"%s\" not defined"),
+                    kp->command);
          }
       }
    }

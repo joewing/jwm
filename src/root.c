@@ -21,7 +21,7 @@
 #include "desktop.h"
 
 /** Number of root menus to support. */
-#define ROOT_MENU_COUNT 10
+#define ROOT_MENU_COUNT 36
 
 static Menu *rootMenu[ROOT_MENU_COUNT];
 
@@ -82,6 +82,38 @@ void DestroyRootMenu(void)
 
 }
 
+/** Get the index for a root menu character. */
+int GetRootMenuIndex(char ch)
+{
+   if(ch >= '0' && ch <= '9') {
+      return ch - '0';
+   } else if(ch >= 'A' && ch <= 'Z') {
+      return ch - 'A' + 10;
+   } else if(ch >= 'a' && ch <= 'z') {
+      return ch - 'a' + 10;
+   } else {
+      return -1;
+   }
+}
+
+/** Get the index for a root menu string. */
+int GetRootMenuIndexFromString(const char *str)
+{
+   unsigned int temp = 0;
+   while(*str && IsSpace(*str, &temp)) {
+      str += 1;
+   }
+   if(JUNLIKELY(!*str)) {
+      return -1;
+   }
+   const int result = GetRootMenuIndex(*str);
+   str += 1;
+   while(*str && IsSpace(*str, &temp)) {
+      str += 1;
+   }
+   return *str ? -1 : result;
+}
+
 /** Set a root menu. */
 void SetRootMenu(const char *indexes, Menu *m)
 {
@@ -94,8 +126,8 @@ void SetRootMenu(const char *indexes, Menu *m)
    for(x = 0; indexes[x]; x++) {
 
       /* Get the index and make sure it's in range. */
-      index = indexes[x] - '0';
-      if(JUNLIKELY(index < 0 || index >= ROOT_MENU_COUNT)) {
+      index = GetRootMenuIndex(indexes[x]);
+      if(JUNLIKELY(index < 0)) {
          Warning(_("invalid root menu specified: \"%c\""), indexes[x]);
          continue;
       }

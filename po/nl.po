@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-08 20:21-0500\n"
+"POT-Creation-Date: 2015-04-16 06:49-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -26,11 +26,11 @@ msgstr "ongeldig achtergrond-type: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Achtergrond-afbeelding niet gevonden: \"%s\""
 
-#: src/client.c:897
+#: src/client.c:898
 msgid "Kill this window?"
 msgstr "Sluiten van dit venster forceren?"
 
-#: src/client.c:898
+#: src/client.c:899
 msgid "This may cause data to be lost!"
 msgstr "Dit kan verlies van data veroorzaken!"
 
@@ -105,32 +105,32 @@ msgstr "fout bij lezen van PNG afbeelding: %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "kon geen info-structuur aanmaken voor PNG afbeelding: %s"
 
-#: src/key.c:333
+#: src/key.c:332
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr "Opgegeven Toets-Sym is voor geen enkele ToetsCode bepaald"
 
-#: src/key.c:341
+#: src/key.c:340
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "Aanpassing voor toets-sym 0x%0x niet gevonden"
 
-#: src/key.c:371
+#: src/key.c:370
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "ongeldige aanpassing: \"%c\""
 
-#: src/key.c:386
+#: src/key.c:385
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "ongeldig toets-symbool: \"%s\""
 
-#: src/key.c:467
+#: src/key.c:466
 msgid "neither key nor keycode specified for Key"
 msgstr "Toets en Toetscode niet opgegeven voor Toets"
 
-#: src/key.c:483
-#, c-format
-msgid "key binding: root menu %d not defined"
+#: src/key.c:481
+#, fuzzy, c-format
+msgid "key binding: root menu \"%s\" not defined"
 msgstr "Sneltoets: root menu %d niet gedefiniëerd"
 
 #: src/lex.c:198
@@ -173,39 +173,39 @@ msgstr "%s[%u]: ongeldige entiteit: \"%.8s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ongeldige entiteit: \"%.8s\""
 
-#: src/lex.c:455 src/parse.c:1846
+#: src/lex.c:455 src/parse.c:1844
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1860
+#: src/parse.c:1858
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ongeldige instelling: %s"
 
-#: src/parse.c:1872
+#: src/parse.c:1870
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ongeldige transparantie: %s"
 
-#: src/parse.c:1914
+#: src/parse.c:1912
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ongeldig label in %s: %s"
 
-#: src/parse.c:1934
+#: src/parse.c:1932
 msgid "configuration error"
 msgstr "configuratie-fout"
 
-#: src/root.c:99
+#: src/root.c:131
 #, c-format
 msgid "invalid root menu specified: \"%c\""
 msgstr "opgegeven root menu ongeldig: \"%c\""
 
-#: src/root.c:181
+#: src/root.c:213
 msgid "Exit JWM"
 msgstr "JWM afsluiten"
 
-#: src/root.c:182
+#: src/root.c:214
 msgid "Are you sure?"
 msgstr "Weet je het zeker?"
 
@@ -217,6 +217,25 @@ msgstr ""
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ongeldige maximum breedte voor Taaklijst: %s"
+
+#: src/traybutton.c:94
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "kon taakbalk-pictogram niet laden: \"%s\""
+
+#: src/traybutton.c:140
+msgid "no icon or label for TrayButton"
+msgstr "geen pictogram of label voor Taakbalk-knop"
+
+#: src/traybutton.c:266
+#, c-format
+msgid "invalid TrayButton action: \"%s\""
+msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
+
+#: src/traybutton.c:460
+#, fuzzy, c-format
+msgid "tray button: root menu \"%s\" not defined"
+msgstr "taakbalk-knop: root menu %d niet gedefiniëerd"
 
 #: src/tray.c:1067
 #, c-format
@@ -242,25 +261,6 @@ msgstr "ongeldige horizontale taakbalk uitlijning: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ongeldige verticale taakbalk uitlijning: \"%s\""
-
-#: src/traybutton.c:94
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "kon taakbalk-pictogram niet laden: \"%s\""
-
-#: src/traybutton.c:140
-msgid "no icon or label for TrayButton"
-msgstr "geen pictogram of label voor Taakbalk-knop"
-
-#: src/traybutton.c:266
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
-
-#: src/traybutton.c:458
-#, c-format
-msgid "tray button: root menu %d not defined"
-msgstr "taakbalk-knop: root menu %d niet gedefiniëerd"
 
 #: src/winmenu.c:78
 msgid "Close"

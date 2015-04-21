@@ -52,7 +52,7 @@ static void Create(TrayComponentType *cp);
 static void Destroy(TrayComponentType *cp);
 static void SetSize(TrayComponentType *cp, int width, int height);
 static void Resize(TrayComponentType *cp);
-static void Draw(TrayComponentType *cp, int active);
+static void Draw(TrayComponentType *cp);
 
 static void ProcessButtonPress(TrayComponentType *cp,
                                int x, int y, int button);
@@ -154,6 +154,7 @@ TrayComponentType *CreateTrayButton(const char *iconName,
    cp->Destroy = Destroy;
    cp->SetSize = SetSize;
    cp->Resize = Resize;
+   cp->Redraw = Draw;
 
    cp->ProcessButtonPress = ProcessButtonPress;
    cp->ProcessButtonRelease = ProcessButtonRelease;
@@ -232,7 +233,7 @@ void Create(TrayComponentType *cp)
 {
    cp->pixmap = JXCreatePixmap(display, rootWindow,
                                cp->width, cp->height, rootVisual.depth);
-   Draw(cp, 0);
+   Draw(cp);
 }
 
 /** Resize a button tray component. */
@@ -251,7 +252,7 @@ void Destroy(TrayComponentType *cp)
 }
 
 /** Draw a tray button. */
-void Draw(TrayComponentType *cp, int active)
+void Draw(TrayComponentType *cp)
 {
 
    ButtonNode button;
@@ -261,7 +262,7 @@ void Draw(TrayComponentType *cp, int active)
 
    ClearTrayDrawable(cp);
    ResetButton(&button, cp->pixmap, &rootVisual);
-   if(active) {
+   if(cp->grabbed) {
       button.type = BUTTON_TRAY_ACTIVE;
    } else {
       button.type = BUTTON_TRAY;

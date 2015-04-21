@@ -5,11 +5,16 @@
  * @brief Tray component actions.
  */
 
+#include "jwm.h"
 #include "action.h"
 #include "tray.h"
 #include "root.h"
 #include "screen.h"
 #include "misc.h"
+#include "error.h"
+#include "cursor.h"
+#include "command.h"
+#include "desktop.h"
 
 typedef struct ActionType {
    char *action;
@@ -25,13 +30,13 @@ void AddAction(ActionType **actions, const char *action, int mask)
    /* Make sure we actually have an action. */
    if(action == NULL || action[0] == 0 || mask == 0) {
       /* Valid (root menu 1). */
-   } else if(!strncmp(ap->action, "exec:", 5)) {
+   } else if(!strncmp(action, "exec:", 5)) {
       /* Valid. */
-   } else if(!strncmp(ap->action, "root:", 5)) {
+   } else if(!strncmp(action, "root:", 5)) {
       /* Valid. However, the specified root menu may not exist.
        * This case is handled in ValidateTrayButtons.
        */
-   } else if(!strcmp(ap->action, "showdesktop")) {
+   } else if(!strcmp(action, "showdesktop")) {
       /* Valid. */
    } else {
       /* Invalid; don't add the action. */
@@ -44,23 +49,6 @@ void AddAction(ActionType **actions, const char *action, int mask)
    ap->mask = mask;
    ap->next = *actions;
    *actions = ap;
-      if(ap->action && strlen(ap->action) > 0) {
-         if(!strncmp(ap->action, "exec:", 5)) {
-            /* Valid. */
-         } else if(!strncmp(ap->action, "root:", 5)) {
-            /* Valid. However, the specified root menu may not exist.
-             * This case is handled in ValidateTrayButtons.
-             */
-         } else if(!strcmp(ap->action, "showdesktop")) {
-            /* Valid. */
-         } else {
-            Warning(_("invalid TrayButton action: \"%s\""), ap->action);
-         }
-      } else {
-         /* Valid. However, root menu 1 may not exist.
-          * This case is handled in ValidateTrayButtons.
-          */
-      }
 }
 
 /** Destroy an action list. */
@@ -95,7 +83,7 @@ void ProcessActionPress(struct ActionType *actions,
                /* Show the button being pressed. */
                GrabMouse(cp->tray->window);
                cp->grabbed = 1;
-               Draw(cp, 1);
+               (cp->Redraw)(cp);
                UpdateSpecificTray(cp->tray, cp);
                return;
 
@@ -130,10 +118,12 @@ void ProcessActionPress(struct ActionType *actions,
       }
    }
 
-   Draw(cp, 1);
+   cp->grabbed = 1;
+   (cp->Redraw)(cp);
    UpdateSpecificTray(cp->tray, cp);
    ShowRootMenu(menu, x, y);
-   Draw(cp, 0);
+   cp->grabbed = 0;
+   (cp->Redraw)(cp);
    UpdateSpecificTray(cp->tray, cp);
 }
 
@@ -145,7 +135,8 @@ void ProcessActionRelease(struct ActionType *actions,
    const ActionType *ap;
    const int mask = 1 << button;
 
-   Draw(cp, 0);
+   cp->grabbed = 0;
+   (cp->Redraw)(cp);
    UpdateSpecificTray(cp->tray, cp);
 
    // Since we grab the mouse, make sure the mouse is actually over the button.

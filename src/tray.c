@@ -288,6 +288,7 @@ TrayComponentType *CreateTrayComponent(void)
    cp->ProcessButtonPress = NULL;
    cp->ProcessButtonRelease = NULL;
    cp->ProcessMotionEvent = NULL;
+   cp->Redraw = NULL;
 
    cp->next = NULL;
 

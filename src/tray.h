@@ -112,6 +112,11 @@ typedef struct TrayComponentType {
    void (*ProcessMotionEvent)(struct TrayComponentType *cp,
                               int x, int y, int mask);
 
+   /** Callback to redraw the component contents.
+    * This is only needed for components that use actions.
+    */
+   void (*Redraw)(struct TrayComponentType *cp);
+
    /** The next component in the tray. */
    struct TrayComponentType *next;
 

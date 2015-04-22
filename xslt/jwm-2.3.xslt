@@ -31,6 +31,14 @@
         </xsl:attribute>
     </xsl:template>
 
+    <!-- Prefix the contents of Clock tags with exec within a Button tag. -->
+    <xsl:template match="Clock">
+        <Clock>
+            <xsl:apply-templates select="@*"/>
+            <Button mask="123">exec:<xsl:value-of select="."/></Button>
+        </Clock>
+    </xsl:template>
+
     <!-- Rename Text to Foreground. -->
     <xsl:template match="Text">
         <Foreground><xsl:value-of select="."/></Foreground>

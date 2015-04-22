@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-
 <JWM>
 
     <!-- The root menu. -->
@@ -57,7 +56,7 @@
         <TaskList maxwidth="256"/>
 
         <Dock/>
-        <Clock>xclock</Clock>
+        <Clock><Button mask="123">exec:xclock</Button></Clock>
 
     </Tray>
 
@@ -94,7 +93,7 @@
     </TaskListStyle>
     <PagerStyle>
         <Outline>#000000</Outline>
-        <Text>#FFFFFF</Text>
+        <Foreground>#FFFFFF</Foreground>
         <Foreground>#444444</Foreground>
         <Background>#111111</Background>
         <Active>

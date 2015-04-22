@@ -440,11 +440,29 @@ Within this tag the following tags are supported:
 .P
 .B Clock
 .RS
-Add a clock to the tray. The text of this tag is a command to run
-when the clock is clicked.  Optionally, one or more \fBButton\fP tags
+Add a clock to the tray. The text of this tag determines what action to
+take when the clock is clicked.  Optionally, one or more \fBButton\fP tags
 may be specified to bind actions to specific mouse buttons specified via the
 \fBmask\fP attribute.  By default, the button mask is "123".
 The following actions are supported:
+.P
+\fBroot:\fP\fIn\fP
+.RS
+Show root menu \fIn\fP.
+Note that the default TrayButton action is \fBroot:1\fP.
+.RE
+.P
+\fBexec:\fP \fIstring\fP
+.RS
+Execute a command.
+.RE
+.P
+\fBshowdesktop\fP
+.RS
+Minimize all windows on the current desktop.
+.RE
+.P
+This tag supports the following attributes:
 .P
 \fBformat\fP \fIstring\fP
 .RS

@@ -83,8 +83,10 @@ void ProcessActionPress(struct ActionType *actions,
                /* Show the button being pressed. */
                GrabMouse(cp->tray->window);
                cp->grabbed = 1;
-               (cp->Redraw)(cp);
-               UpdateSpecificTray(cp->tray, cp);
+               if(cp->Redraw) {
+                  (cp->Redraw)(cp);
+                  UpdateSpecificTray(cp->tray, cp);
+               }
                return;
 
             } else {
@@ -119,12 +121,16 @@ void ProcessActionPress(struct ActionType *actions,
    }
 
    cp->grabbed = 1;
-   (cp->Redraw)(cp);
-   UpdateSpecificTray(cp->tray, cp);
+   if(cp->Redraw) {
+      (cp->Redraw)(cp);
+      UpdateSpecificTray(cp->tray, cp);
+   }
    ShowRootMenu(menu, x, y);
    cp->grabbed = 0;
-   (cp->Redraw)(cp);
-   UpdateSpecificTray(cp->tray, cp);
+   if(cp->Redraw) {
+      (cp->Redraw)(cp);
+      UpdateSpecificTray(cp->tray, cp);
+   }
 }
 
 /** Process a button release. */
@@ -136,8 +142,10 @@ void ProcessActionRelease(struct ActionType *actions,
    const int mask = 1 << button;
 
    cp->grabbed = 0;
-   (cp->Redraw)(cp);
-   UpdateSpecificTray(cp->tray, cp);
+   if(cp->Redraw) {
+      (cp->Redraw)(cp);
+      UpdateSpecificTray(cp->tray, cp);
+   }
 
    // Since we grab the mouse, make sure the mouse is actually over the button.
    if(x < 0 || x >= cp->width) {

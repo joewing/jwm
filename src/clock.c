@@ -30,7 +30,7 @@ typedef struct ClockType {
    char *format;                 /**< The time format to use. */
    char *zone;                   /**< The time zone to use (NULL = local). */
    struct ActionType *actions;   /**< Actions */
-   char shortTime[80];           /**< Currently displayed time. */
+   TimeType lastTime;            /**< Currently displayed time. */
 
    /* The following are used to control popups. */
    int mousex;                /**< Last mouse x-coordinate. */
@@ -58,7 +58,7 @@ static void ProcessClockButtonRelease(TrayComponentType *cp,
 static void ProcessClockMotionEvent(TrayComponentType *cp,
                                     int x, int y, int mask);
 
-static void DrawClock(ClockType *clk, const TimeType *now, int x, int y);
+static void DrawClock(ClockType *clk, const TimeType *now);
 
 static void SignalClock(const struct TimeType *now, int x, int y, Window w,
                         void *data);
@@ -128,7 +128,7 @@ TrayComponentType *CreateClock(const char *format, const char *zone,
    clk->format = CopyString(format);
    clk->zone = CopyString(zone);
    clk->actions = NULL;
-   clk->shortTime[0] = 0;
+   memset(&clk->lastTime, 0, sizeof(clk->lastTime));
 
    cp = CreateTrayComponent();
    cp->object = clk;
@@ -176,8 +176,6 @@ void Resize(TrayComponentType *cp)
 
    ClockType *clk;
    TimeType now;
-   Window w;
-   int x, y;
 
    Assert(cp);
 
@@ -192,11 +190,10 @@ void Resize(TrayComponentType *cp)
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
                                rootVisual.depth);
 
-   clk->shortTime[0] = 0;
+   memset(&clk->lastTime, 0, sizeof(clk->lastTime));
 
    GetCurrentTime(&now);
-   GetMousePosition(&x, &y, &w);
-   DrawClock(clk, &now, x, y);
+   DrawClock(clk, &now);
 
 }
 
@@ -239,7 +236,7 @@ void SignalClock(const TimeType *now, int x, int y, Window w, void *data)
    ClockType *cp = (ClockType*)data;
    const char *longTime;
 
-   DrawClock(cp, now, x, y);
+   DrawClock(cp, now);
    if(cp->cp->tray->window == w &&
       abs(cp->mousex - x) < settings.doubleClickDelta &&
       abs(cp->mousey - y) < settings.doubleClickDelta) {
@@ -252,27 +249,21 @@ void SignalClock(const TimeType *now, int x, int y, Window w, void *data)
 }
 
 /** Draw a clock tray component. */
-void DrawClock(ClockType *clk, const TimeType *now, int x, int y)
+void DrawClock(ClockType *clk, const TimeType *now)
 {
 
    TrayComponentType *cp;
-   const char *shortTime;
+   const char *timeString;
    int width;
    int rwidth;
 
-   Assert(clk);
-   Assert(now);
-
-   /* Only draw if the label changed. */
-   shortTime = GetTimeString(clk->format, clk->zone);
-   if(!strcmp(clk->shortTime, shortTime)) {
+   /* Only draw if the time changed. */
+   if(now->seconds == clk->lastTime.seconds) {
       return;
    }
-   strcpy(clk->shortTime, shortTime);
-
-   cp = clk->cp;
 
    /* Clear the area. */
+   cp = clk->cp;
    if(colors[COLOR_CLOCK_BG1] == colors[COLOR_CLOCK_BG2]) {
       JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG1]);
       JXFillRectangle(display, cp->pixmap, rootGC, 0, 0,
@@ -284,7 +275,8 @@ void DrawClock(ClockType *clk, const TimeType *now, int x, int y)
    }
 
    /* Determine if the clock is the right size. */
-   width = GetStringWidth(FONT_CLOCK, shortTime);
+   timeString = GetTimeString(clk->format, clk->zone);
+   width = GetStringWidth(FONT_CLOCK, timeString);
    rwidth = width + 4;
    if(rwidth == clk->cp->requestedWidth || clk->userWidth) {
 
@@ -292,7 +284,7 @@ void DrawClock(ClockType *clk, const TimeType *now, int x, int y)
       RenderString(&rootVisual, cp->pixmap, FONT_CLOCK, COLOR_CLOCK_FG,
                    (cp->width - width) / 2,
                    (cp->height - GetStringHeight(FONT_CLOCK)) / 2,
-                   cp->width, shortTime);
+                   cp->width, timeString);
 
       UpdateSpecificTray(clk->cp->tray, clk->cp);
 

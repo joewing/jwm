@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-16 06:49-0500\n"
+"POT-Creation-Date: 2015-04-21 19:35-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -16,6 +16,16 @@ msgstr ""
 "X-Generator: Loco - https://localise.biz/\n"
 "X-Loco-Parser: loco_parse_po\n"
 "X-Loco-Target-Locale: it_IT\n"
+
+#: src/action.c:43
+#, fuzzy, c-format
+msgid "invalid action: \"%s\""
+msgstr "Azione del TrayButton non valida:  \"%s\""
+
+#: src/action.c:181
+#, fuzzy, c-format
+msgid "action: root menu \"%s\" not defined"
+msgstr "Tray button: root menu %d non definito"
 
 #: src/background.c:143
 msgid "no value specified for background"
@@ -224,46 +234,36 @@ msgstr "Impossibile includere un client senza nome"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "Larghezza massima per TaskList non valida: %s"
 
-#: src/traybutton.c:94
+#: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "Impossibile caricare icona del vassoio: \"%s"
 
-#: src/traybutton.c:140
+#: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
 msgstr "Nessuna icona o etichetta per il TrayButton"
 
-#: src/traybutton.c:266
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "Azione del TrayButton non valida:  \"%s\""
-
-#: src/traybutton.c:460
-#, fuzzy, c-format
-msgid "tray button: root menu \"%s\" not defined"
-msgstr "Tray button: root menu %d non definito"
-
-#: src/tray.c:1067
+#: src/tray.c:1073
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "Larghezza del vassoio non valida: %d"
 
-#: src/tray.c:1086
+#: src/tray.c:1092
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "Altezza del vassoio non valida: %d"
 
-#: src/tray.c:1115
+#: src/tray.c:1121
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "Disposizione del vassoio non valida: \"%s\""
 
-#: src/tray.c:1154
+#: src/tray.c:1160
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "Allineamento orizzontale del vassoio non valido: \"%s\""
 
-#: src/tray.c:1177
+#: src/tray.c:1183
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "Allineamento verticale del vassoio non valido: \"%s\""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-16 06:49-0500\n"
+"POT-Creation-Date: 2015-04-21 19:35-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -20,6 +20,16 @@ msgstr ""
 "X-Poedit-Language: Portuguese\n"
 "X-Poedit-Country: PORTUGAL\n"
 "X-Poedit-SourceCharset: utf-8\n"
+
+#: src/action.c:43
+#, fuzzy, c-format
+msgid "invalid action: \"%s\""
+msgstr "ação do Traybutton invalida: \"%s\""
+
+#: src/action.c:181
+#, fuzzy, c-format
+msgid "action: root menu \"%s\" not defined"
+msgstr "botão do tabuleiro: menu root %d não esta definida"
 
 #: src/background.c:143
 msgid "no value specified for background"
@@ -231,46 +241,36 @@ msgstr "não podes inserir um cliente no swallow sem nome"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largura máxima (maxwidth) invalida para o Tasklist: %s"
 
-#: src/traybutton.c:94
+#: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
 
-#: src/traybutton.c:140
+#: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
 msgstr "ícone ou nome não esta definido no TrayButton"
 
-#: src/traybutton.c:266
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "ação do Traybutton invalida: \"%s\""
-
-#: src/traybutton.c:460
-#, fuzzy, c-format
-msgid "tray button: root menu \"%s\" not defined"
-msgstr "botão do tabuleiro: menu root %d não esta definida"
-
-#: src/tray.c:1067
+#: src/tray.c:1073
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "largura do tabuleiro invalida: %d"
 
-#: src/tray.c:1086
+#: src/tray.c:1092
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "altura do tabuleiro invalida: %d"
 
-#: src/tray.c:1115
+#: src/tray.c:1121
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "layout do tabuleiro invalido: \"%s\""
 
-#: src/tray.c:1154
+#: src/tray.c:1160
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alinhamento do tabuleiro invalido: \"%s\""
 
-#: src/tray.c:1177
+#: src/tray.c:1183
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""

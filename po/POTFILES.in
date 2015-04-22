@@ -1,3 +1,4 @@
+src/action.c
 src/background.c
 src/border.c
 src/button.c

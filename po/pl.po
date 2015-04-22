@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-16 06:49-0500\n"
+"POT-Creation-Date: 2015-04-21 19:35-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -17,6 +17,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
+
+#: src/action.c:43
+#, fuzzy, c-format
+msgid "invalid action: \"%s\""
+msgstr "nieprawidłowa akcja TrayButton: \"%s\""
+
+#: src/action.c:181
+#, fuzzy, c-format
+msgid "action: root menu \"%s\" not defined"
+msgstr "przycisk zasobnika: menu głównym %d nie zdefiniowano"
 
 #: src/background.c:143
 msgid "no value specified for background"
@@ -224,46 +234,36 @@ msgstr "nie może połknąć klienta bez nazwy"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
 
-#: src/traybutton.c:94
+#: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "nie można załadować ikon w zasobniku: \"%s\""
 
-#: src/traybutton.c:140
+#: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
 msgstr "brak ikony lub etykiety dla TrayButton"
 
-#: src/traybutton.c:266
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "nieprawidłowa akcja TrayButton: \"%s\""
-
-#: src/traybutton.c:460
-#, fuzzy, c-format
-msgid "tray button: root menu \"%s\" not defined"
-msgstr "przycisk zasobnika: menu głównym %d nie zdefiniowano"
-
-#: src/tray.c:1067
+#: src/tray.c:1073
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "nieprawidłowa szerokość zasobnika: %d"
 
-#: src/tray.c:1086
+#: src/tray.c:1092
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "nieprawidłowa wysokość zasobnika: %d"
 
-#: src/tray.c:1115
+#: src/tray.c:1121
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "nieprawidłowy układ zasobnika: \"%s\""
 
-#: src/tray.c:1154
+#: src/tray.c:1160
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "nieprawidłowe wypoziomowanie zasobnika: \"%s\""
 
-#: src/tray.c:1177
+#: src/tray.c:1183
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""

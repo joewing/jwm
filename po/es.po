@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-16 06:49-0500\n"
+"POT-Creation-Date: 2015-04-21 19:35-0500\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -16,6 +16,16 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.6.5\n"
+
+#: src/action.c:43
+#, fuzzy, c-format
+msgid "invalid action: \"%s\""
+msgstr "acción no válida para Botón de Bandeja: «%s»"
+
+#: src/action.c:181
+#, fuzzy, c-format
+msgid "action: root menu \"%s\" not defined"
+msgstr "botón de bandeja: menú root %d no definido"
 
 #: src/background.c:143
 msgid "no value specified for background"
@@ -226,46 +236,36 @@ msgstr "no se puede mostrar un cliente sin nombre"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ancho máx. no válido para Lista de Tareas: %s"
 
-#: src/traybutton.c:94
+#: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "no se pudo cargar el icono de bandeja: «%s»"
 
-#: src/traybutton.c:140
+#: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
 msgstr "no hay icono o etiqueta para el Botón de Bandeja"
 
-#: src/traybutton.c:266
-#, c-format
-msgid "invalid TrayButton action: \"%s\""
-msgstr "acción no válida para Botón de Bandeja: «%s»"
-
-#: src/traybutton.c:460
-#, fuzzy, c-format
-msgid "tray button: root menu \"%s\" not defined"
-msgstr "botón de bandeja: menú root %d no definido"
-
-#: src/tray.c:1067
+#: src/tray.c:1073
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "ancho de bandeja no válido: %d"
 
-#: src/tray.c:1086
+#: src/tray.c:1092
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "alto de bandeja no válido: %d"
 
-#: src/tray.c:1115
+#: src/tray.c:1121
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "forma no válida para bandeja: «%s»"
 
-#: src/tray.c:1154
+#: src/tray.c:1160
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alineación horizontal no válida para bandeja: «%s»"
 
-#: src/tray.c:1177
+#: src/tray.c:1183
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alineación vertical no válida para bandeja: «%s»"

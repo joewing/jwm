@@ -10,13 +10,17 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+struct ScaledIconNode;
+
 /** Structure to represent an image. */
 typedef struct ImageNode {
 
-   int width;               /**< Width of the image. */
-   int height;              /**< Height of the image. */
-   unsigned char *data;     /**< Image data. */
-   char bitmap;             /**< 1 if a bitmap, 0 otherwise. */
+   struct ImageNode *next;       /**< Next image node (if multiple sizes). */
+   struct ScaledIconNode *nodes; /**< Icons associated with this image. */
+   unsigned char *data;          /**< Image data. */
+   int width;                    /**< Width of the image. */
+   int height;                   /**< Height of the image. */
+   char bitmap;                  /**< 1 if a bitmap, 0 otherwise. */
 
 } ImageNode;
 
@@ -32,6 +36,14 @@ ImageNode *LoadImage(const char *fileName);
  * @return A new image node (NULL if there were errors.
  */
 ImageNode *LoadImageFromData(char **data);
+
+/** Create an image node.
+ * @param width The image width.
+ * @param height The image height.
+ * @param bitmap 1 if a bitmap, 0 otherwise.
+ * @return A newly allocated image node.
+ */
+ImageNode *CreateImage(unsigned int width, unsigned int height, char bitmap);
 
 /** Destroy an image node.
  * @param image The image to destroy.

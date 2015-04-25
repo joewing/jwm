@@ -79,12 +79,12 @@ void StartupTrayButtons(void)
       if(bp->iconName) {
          bp->icon = LoadNamedIcon(bp->iconName, 1, 1);
          if(JLIKELY(bp->icon)) {
-            bp->cp->requestedWidth += bp->icon->image->width + 4;
+            bp->cp->requestedWidth += bp->icon->images->width + 4;
             if(bp->label) {
                bp->cp->requestedWidth -= 2;
             }
             bp->cp->requestedHeight
-               = Max(bp->icon->image->height + 4, bp->cp->requestedHeight);
+               = Max(bp->icon->images->height + 4, bp->cp->requestedHeight);
          } else {
             Warning(_("could not load tray icon: \"%s\""), bp->iconName);
          }
@@ -199,8 +199,8 @@ void SetSize(TrayComponentType *cp, int width, int height)
          labelHeight = 4;
       }
 
-      iconWidth = bp->icon->image->width;
-      iconHeight = bp->icon->image->height;
+      iconWidth = bp->icon->images->width;
+      iconHeight = bp->icon->images->height;
 
       /* Fixed point with 16 bit fraction. */
       ratio = (iconWidth << 16) / iconHeight;

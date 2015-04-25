@@ -15,15 +15,16 @@
 #include "color.h"
 
 /** Draw a scaled icon. */
-void PutScaledRenderIcon(const VisualData *visual, IconNode *icon,
-                         ScaledIconNode *node, Drawable d, int x, int y)
+void PutScaledRenderIcon(const VisualData *visual, const ImageNode *image,
+                         Drawable d, int x, int y)
 {
 
 #ifdef USE_XRENDER
 
    Picture source;
+   const ScaledIconNode *node = image->nodes;
 
-   Assert(icon);
+   Assert(image);
    Assert(haveRender);
 
    source = node->imagePicture;
@@ -43,18 +44,18 @@ void PutScaledRenderIcon(const VisualData *visual, IconNode *icon,
       dest = JXRenderCreatePicture(display, d, fp, CPSubwindowMode, &pa);
 
       if(node->width == 0) {
-         width = icon->image->width;
+         width = image->width;
          xscale = 65536;
       } else {
          width = node->width;
-         xscale = (icon->image->width << 16) / width;
+         xscale = (image->width << 16) / width;
       }
       if(node->height == 0) {
-         height = icon->image->height;
+         height = image->height;
          yscale = 65536;
       } else {
          height = node->height;
-         yscale = (icon->image->height << 16) / height;
+         yscale = (image->height << 16) / height;
       }
 
       memset(&xf, 0, sizeof(xf));
@@ -78,8 +79,8 @@ void PutScaledRenderIcon(const VisualData *visual, IconNode *icon,
 }
 
 /** Create a scaled icon. */
-ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, long fg,
-                                       int width, int height) {
+ScaledIconNode *CreateScaledRenderIcon(ImageNode *image, long fg)
+{
 
    ScaledIconNode *result = NULL;
 
@@ -90,21 +91,17 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, long fg,
    GC maskGC;
    XImage *destImage;
    XImage *destMask;
+   const unsigned int width = image->width;
+   const unsigned int height = image->height;
    int x, y;
    int maskLine;
 
-   Assert(icon);
    Assert(haveRender);
 
    result = Allocate(sizeof(ScaledIconNode));
    result->fg = fg;
-   result->next = icon->nodes;
-   icon->nodes = result;
-
-   result->width = width;
-   result->height = height;
-   width = icon->image->width;
-   height = icon->image->height;
+   result->next = image->nodes;
+   image->nodes = result;
 
    result->mask = JXCreatePixmap(display, rootWindow, width, height, 8);
    maskGC = JXCreateGC(display, result->mask, 0, NULL);
@@ -121,15 +118,15 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, long fg,
 
    maskLine = 0;
    for(y = 0; y < height; y++) {
-      const int yindex = y * icon->image->width;
+      const int yindex = y * image->width;
       for(x = 0; x < width; x++) {
-         if(icon->image->bitmap) {
+         if(image->bitmap) {
 
             const int index = yindex + x;
             const int offset = index >> 3;
             const int mask = 1 << (index & 7);
             unsigned long alpha = 0;
-            if(icon->image->data[offset] & mask) {
+            if(image->data[offset] & mask) {
                alpha = 255;
                XPutPixel(destImage, x, y, fg);
             }
@@ -138,12 +135,12 @@ ScaledIconNode *CreateScaledRenderIcon(IconNode *icon, long fg,
          } else {
 
             const int index = 4 * (yindex + x);
-            const unsigned long alpha = icon->image->data[index];
-            color.red = icon->image->data[index + 1];
+            const unsigned long alpha = image->data[index];
+            color.red = image->data[index + 1];
             color.red |= color.red << 8;
-            color.green = icon->image->data[index + 2];
+            color.green = image->data[index + 2];
             color.green |= color.green << 8;
-            color.blue = icon->image->data[index + 3];
+            color.blue = image->data[index + 3];
             color.blue |= color.blue << 8;
 
             color.red = (color.red * alpha) >> 8;

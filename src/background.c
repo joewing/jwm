@@ -308,8 +308,8 @@ void LoadImageBackground(BackgroundNode *bp)
 
    /* Determine the size of the background pixmap. */
    if(bp->type == BACKGROUND_TILE) {
-      width = ip->image->width;
-      height = ip->image->height;
+      width = ip->images->width;
+      height = ip->images->height;
    } else {
       width = rootWidth;
       height = rootHeight;

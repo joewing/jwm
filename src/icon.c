@@ -56,8 +56,9 @@ static IconNode *LoadSuffixedIcon(const char *path, const char *name,
                                   const char *suffix);
 #endif
 
-static ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
-                                     int width, int height);
+static ImageNode *GetBestImage(IconNode *icon, int rwidth, int rheight);
+static ScaledIconNode *GetScaledIcon(IconNode *icon, ImageNode *iconImage,
+                                     long fg, int rwidth, int rheight);
 
 static void InsertIcon(IconNode *icon);
 static IconNode *FindIcon(const char *name);
@@ -185,7 +186,7 @@ void AddIconPath(char *path)
 void PutIcon(const VisualData *visual, IconNode *icon, Drawable d, long fg,
              int x, int y, int width, int height)
 {
-
+   ImageNode *imageNode;
    ScaledIconNode *node;
 
    Assert(icon);
@@ -195,7 +196,8 @@ void PutIcon(const VisualData *visual, IconNode *icon, Drawable d, long fg,
    }
 
    /* Scale the icon. */
-   node = GetScaledIcon(icon, fg, width, height);
+   imageNode = GetBestImage(icon, width, height);
+   node = GetScaledIcon(icon, imageNode, fg, width, height);
    if(node) {
 
       const int ix = x + (width - node->width) / 2;
@@ -204,7 +206,7 @@ void PutIcon(const VisualData *visual, IconNode *icon, Drawable d, long fg,
       /* If we support xrender, use it. */
 #ifdef USE_XRENDER
       if(haveRender) {
-         PutScaledRenderIcon(visual, icon, node, d, ix, iy);
+         PutScaledRenderIcon(visual, imageNode, d, ix, iy);
          return;
       }
 #endif
@@ -325,7 +327,7 @@ IconNode *LoadSuffixedIcon(const char *path, const char *name,
    if(image) {
       result = CreateIcon();
       result->name = iconName;
-      result->image = image;
+      result->images = image;
       InsertIcon(result);
       return result;
    } else {
@@ -382,6 +384,7 @@ IconNode *LoadNamedIconHelper(const char *name, const char *path,
 /** Read the icon property from a client. */
 void ReadNetWMIcon(ClientNode *np)
 {
+   static const long MAX_LENGTH = 1 << 20;
    unsigned long count;
    int status;
    unsigned long extra;
@@ -389,7 +392,7 @@ void ReadNetWMIcon(ClientNode *np)
    int realFormat;
    unsigned char *data;
    status = JXGetWindowProperty(display, np->window, atoms[ATOM_NET_WM_ICON],
-                                0, 256 * 256 * 4, False, XA_CARDINAL,
+                                0, MAX_LENGTH, False, XA_CARDINAL,
                                 &realType, &realFormat, &count, &extra, &data);
    if(status == Success && realFormat != 0 && data) {
       np->icon = CreateIconFromBinary((unsigned long*)data, count);
@@ -424,7 +427,7 @@ IconNode *CreateIconFromData(const char *name, char **data)
    if(image) {
       result = CreateIcon();
       result->name = CopyString(name);
-      result->image = image;
+      result->images = image;
       InsertIcon(result);
       return result;
    } else {
@@ -455,7 +458,7 @@ IconNode *CreateIconFromFile(const char *fileName,
    if(image) {
       result = CreateIcon();
       result->preserveAspect = preserveAspect;
-      result->image = image;
+      result->images = image;
       if(save) {
          result->name = CopyString(fileName);
          InsertIcon(result);
@@ -467,9 +470,51 @@ IconNode *CreateIconFromFile(const char *fileName,
 
 }
 
+/** Get the best image for the requested size. */
+ImageNode *GetBestImage(IconNode *icon, int rwidth, int rheight)
+{
+   /* Find the best image to use.
+    * Select the smallest image to completely cover the
+    * requested size.  If no image completely covers the
+    * requested size, select the one that overlaps the most area.
+    * If no size is specified, use the largest. */
+   ImageNode *best = icon->images;
+   ImageNode *ip = icon->images->next;
+   while(ip) {
+      const int best_area = best->width * best->height;
+      const int other_area = ip->width * ip->height;
+      int best_overlap;
+      int other_overlap;
+      if(rwidth == 0 && rheight == 0) {
+         best_overlap = 0;
+         other_overlap = 0;
+      } else if(rwidth == 0) {
+         best_overlap = Min(best->height, rheight);
+         other_overlap = Min(ip->height, rheight);
+      } else if(rheight == 0) {
+         best_overlap = Min(best->width, rwidth);
+         other_overlap = Min(ip->width, rwidth);
+      } else {
+         best_overlap = Min(best->width, rwidth)
+                      * Min(best->height, rheight);
+         other_overlap = Min(ip->width, rwidth)
+                       * Min(ip->height, rheight);
+      }
+      if(other_overlap > best_overlap) {
+         best = ip;
+      } else if(other_overlap == best_overlap) {
+         if(other_area < best_area) {
+            best = ip;
+         }
+      }
+      ip = ip->next;
+   }
+   return best;
+}
+
 /** Get a scaled icon. */
-ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
-                              int rwidth, int rheight)
+ScaledIconNode *GetScaledIcon(IconNode *icon, ImageNode *iconImage,
+                              long fg, int rwidth, int rheight)
 {
 
    XColor color;
@@ -484,18 +529,15 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
    int nwidth, nheight;
    unsigned char *data;
 
-   Assert(icon);
-   Assert(icon->image);
-
    if(rwidth == 0) {
-      rwidth = icon->image->width;
+      rwidth = iconImage->width;
    }
    if(rheight == 0) {
-      rheight = icon->image->height;
+      rheight = iconImage->height;
    }
 
    if(icon->preserveAspect) {
-      ratio = (icon->image->width << 16) / icon->image->height;
+      ratio = (iconImage->width << 16) / iconImage->height;
       nwidth = Min(rwidth, (rheight * ratio) >> 16);
       nheight = Min(rheight, (nwidth << 16) / ratio);
       nwidth = (nheight * ratio) >> 16;
@@ -513,7 +555,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
    /* Check if this size already exists.
     * Note that XRender scales on the fly.
     */
-   for(np = icon->nodes; np; np = np->next) {
+   for(np = iconImage->nodes; np; np = np->next) {
 #ifdef USE_XRENDER
       if(np->imagePicture != None) {
          np->width = nwidth;
@@ -522,7 +564,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
       }
 #endif
       if(np->width == nwidth && np->height == nheight) {
-         if(!icon->image->bitmap || np->fg == fg) {
+         if(!iconImage->bitmap || np->fg == fg) {
             return np;
          }
       }
@@ -531,11 +573,14 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
    /* See if we can use XRender to create the icon. */
 #ifdef USE_XRENDER
    if(haveRender) {
-      np = CreateScaledRenderIcon(icon, fg, nwidth, nheight);
+      np = CreateScaledRenderIcon(iconImage, fg);
 
       /* Don't keep the image data around after creating the icon. */
-      Release(icon->image->data);
-      icon->image->data = NULL;
+      Release(iconImage->data);
+      iconImage->data = NULL;
+
+      np->width = nwidth;
+      np->height = nheight;
 
       return np;
    }
@@ -546,11 +591,11 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
    np->fg = fg;
    np->width = nwidth;
    np->height = nheight;
-   np->next = icon->nodes;
+   np->next = iconImage->nodes;
 #ifdef USE_XRENDER
    np->imagePicture = None;
 #endif
-   icon->nodes = np;
+   iconImage->nodes = np;
 
    /* Create a mask. */
    np->mask = JXCreatePixmap(display, rootWindow, nwidth, nheight, 1);
@@ -565,18 +610,18 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
    image->data = Allocate(sizeof(unsigned long) * nwidth * nheight);
 
    /* Determine the scale factor. */
-   scalex = (icon->image->width << 16) / nwidth;
-   scaley = (icon->image->height << 16) / nheight;
+   scalex = (iconImage->width << 16) / nwidth;
+   scaley = (iconImage->height << 16) / nheight;
 
    points = Allocate(sizeof(XPoint) * nwidth);
-   data = icon->image->data;
+   data = iconImage->data;
    srcy = 0;
    for(y = 0; y < nheight; y++) {
-      const int yindex = (srcy >> 16) * icon->image->width;
+      const int yindex = (srcy >> 16) * iconImage->width;
       int pindex = 0;
       srcx = 0;
       for(x = 0; x < nwidth; x++) {
-         if(icon->image->bitmap) {
+         if(iconImage->bitmap) {
             const int index = yindex + (srcx >> 16);
             const int offset = index >> 3;
             const int mask = 1 << (index & 7);
@@ -587,7 +632,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
                pindex += 1;
             }
          } else {
-            const int yindex = (srcy >> 16) * icon->image->width;
+            const int yindex = (srcy >> 16) * iconImage->width;
             const int index = 4 * (yindex + (srcx >> 16));
             color.red = data[index + 1];
             color.red |= color.red << 8;
@@ -632,50 +677,56 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
 IconNode *CreateIconFromBinary(const unsigned long *input,
                                unsigned int length)
 {
-
-   unsigned long height, width;
-   IconNode *result;
-   unsigned char *data;
-   unsigned int x, index;
+   IconNode *result = NULL;
+   unsigned int offset = 0;
 
    if(!input) {
       return NULL;
    }
 
-   width = input[0];
-   height = input[1];
+   while(offset < length) {
 
-   if(JUNLIKELY(width * height + 2 > length)) {
-      Debug("invalid image size: %d x %d + 2 > %d", width, height, length);
-      return NULL;
-   } else if(JUNLIKELY(width == 0 || height == 0)) {
-      Debug("invalid image size: %d x %d", width, height);
-      return NULL;
+      const unsigned int width = input[offset + 0];
+      const unsigned int height = input[offset + 1];
+      unsigned char *data;
+      ImageNode *image;
+      unsigned int x, index;
+
+      if(JUNLIKELY(width * height + 2 > length - offset)) {
+         Debug("invalid image size: %d x %d + 2 > %d",
+               width, height, length - offset);
+         return result;
+      } else if(JUNLIKELY(width == 0 || height == 0)) {
+         Debug("invalid image size: %d x %d", width, height);
+         return result;
+      }
+
+      if(result == NULL) {
+         result = CreateIcon();
+      }
+
+      image = CreateImage(width, height, 0);
+      image->next = result->images;
+      result->images = image;
+      data = image->data;
+
+      /* Note: the data types here might be of different sizes. */
+      index = 0;
+      for(x = 0; x < width * height; x++) {
+         data[index++] = (input[offset + x + 2] >> 24) & 0xFF;
+         data[index++] = (input[offset + x + 2] >> 16) & 0xFF;
+         data[index++] = (input[offset + x + 2] >>  8) & 0xFF;
+         data[index++] = (input[offset + x + 2] >>  0) & 0xFF;
+      }
+
+      /* Move to the next size. */
+      offset += 2 + width * height;
+
+      /* Don't insert this icon into the hash since it is transient. */
+
    }
-
-   result = CreateIcon();
-
-   result->image = Allocate(sizeof(ImageNode));
-   result->image->width = width;
-   result->image->height = height;
-   result->image->bitmap = 0;
-
-   result->image->data = Allocate(4 * width * height);
-   data = result->image->data;
-
-   /* Note: the data types here might be of different sizes. */
-   index = 0;
-   for(x = 0; x < width * height; x++) {
-      data[index++] = input[x + 2] >> 24;
-      data[index++] = (input[x + 2] >> 16) & 0xFF;
-      data[index++] = (input[x + 2] >> 8) & 0xFF;
-      data[index++] = input[x + 2] & 0xFF;
-   }
-
-   /* Don't insert this icon since it is transient. */
 
    return result;
-
 }
 
 /** Create an empty icon node. */
@@ -684,8 +735,7 @@ IconNode *CreateIcon(void)
    IconNode *icon;
    icon = Allocate(sizeof(IconNode));
    icon->name = NULL;
-   icon->image = NULL;
-   icon->nodes = NULL;
+   icon->images = NULL;
    icon->next = NULL;
    icon->prev = NULL;
    icon->preserveAspect = 1;
@@ -695,35 +745,37 @@ IconNode *CreateIcon(void)
 /** Helper method for destroy icons. */
 void DoDestroyIcon(int index, IconNode *icon)
 {
-   ScaledIconNode *np;
    if(icon) {
-      while(icon->nodes) {
-         np = icon->nodes->next;
+      ImageNode *image = icon->images;
+      while(image) {
+         ScaledIconNode *np = image->nodes;
+         while(np) {
+            ScaledIconNode *next_node = np->next;
 
 #ifdef USE_XRENDER
-         if(icon->nodes->imagePicture != None) {
-            JXRenderFreePicture(display, icon->nodes->imagePicture);
-         }
-         if(icon->nodes->alphaPicture != None) {
-            JXRenderFreePicture(display, icon->nodes->alphaPicture);
-         }
+            if(np->imagePicture != None) {
+               JXRenderFreePicture(display, np->imagePicture);
+            }
+            if(np->alphaPicture != None) {
+               JXRenderFreePicture(display, np->alphaPicture);
+            }
 #endif
+            if(np->image != None) {
+               JXFreePixmap(display, np->image);
+            }
+            if(np->mask != None) {
+               JXFreePixmap(display, np->mask);
+            }
 
-         if(icon->nodes->image != None) {
-            JXFreePixmap(display, icon->nodes->image);
+            Release(np);
+            np = next_node;
          }
-         if(icon->nodes->mask != None) {
-            JXFreePixmap(display, icon->nodes->mask);
-         }
-
-         Release(icon->nodes);
-         icon->nodes = np;
+         image = image->next;
       }
-
       if(icon->name) {
          Release(icon->name);
       }
-      DestroyImage(icon->image);
+      DestroyImage(icon->images);
 
       if(icon->prev) {
          icon->prev->next = icon->next;

@@ -236,14 +236,9 @@ ImageNode *LoadPNGImage(const char *fileName)
 
    png_read_info(pngData, pngInfo);
 
-   result = Allocate(sizeof(ImageNode));
-   result->data = NULL;
-   result->bitmap = 0;
-
    png_get_IHDR(pngData, pngInfo, &width, &height,
                 &bitDepth, &colorType, NULL, NULL, NULL);
-   result->width = (int)width;
-   result->height = (int)height;
+   result = CreateImage(width, height, 0);
 
    png_set_expand(pngData);
 
@@ -264,8 +259,6 @@ ImageNode *LoadPNGImage(const char *fileName)
    png_read_update_info(pngData, pngInfo);
 
    rowBytes = png_get_rowbytes(pngData, pngInfo);
-   result->data = Allocate(rowBytes * result->height);
-
    rows = AllocateStack(result->height * sizeof(result->data));
    y = 0;
    for(x = 0; x < result->height; x++) {
@@ -349,11 +342,8 @@ ImageNode *LoadJPEGImage(const char *fileName)
    buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr)&cinfo,
                                        JPOOL_IMAGE, rowStride, 1);
 
-   result = Allocate(sizeof(ImageNode));
-   result->width = cinfo.image_width;
-   result->height = cinfo.image_height;
+   result = CreateImage(cinfo.image_width, cinfo.image_height, 0);
    result->data = Allocate(4 * result->width * result->height);
-   result->bitmap = 0;
 
    /* Read lines. */
    outIndex = 0;
@@ -424,12 +414,7 @@ ImageNode *LoadSVGImage(const char *fileName)
 
    rsvg_handle_get_dimensions(rh, &dim);
 
-   result = (ImageNode*)Allocate(sizeof(ImageNode));
-   result->bitmap = 0;
-   result->width = dim.width;
-   result->height = dim.height;
-   result->data = Allocate(4 * dim.width * dim.height);
-   memset(result->data, 0, 4 * dim.width * dim.height);
+   result = CreateImage(dim.width, dim.height, 0);
 
    /* Create the target surface. */
    stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, dim.width);
@@ -507,12 +492,7 @@ ImageNode *LoadXBMImage(const char *fileName)
 
    rc = XReadBitmapFileData(fileName, &width, &height, &data, &hotx, &hoty);
    if(rc == BitmapSuccess) {
-      result = (ImageNode*)Allocate(sizeof(ImageNode));
-      result->bitmap = 1;
-      result->width = width;
-      result->height = height;
-      result->data = Allocate((width * height) / 8);
-      memcpy(result->data, data, (width * height) / 8);
+      result = CreateImage(width, height, 1);
       XFree(data);
    }
 
@@ -532,12 +512,7 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
    int index;
    int x, y;
 
-   result = Allocate(sizeof(ImageNode));
-   result->data = Allocate(4 * image->width * image->height);
-   result->width = image->width;
-   result->height = image->height;
-   result->bitmap = 0;
-
+   result = CreateImage(image->width, image->height, 0);
    index = 0;
    for(y = 0; y < image->height; y++) {
       for(x = 0; x < image->width; x++) {
@@ -568,13 +543,33 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
 #endif /* USE_XPM */
 #endif /* USE_ICONS */
 
+ImageNode *CreateImage(unsigned int width, unsigned int height, char bitmap)
+{
+   unsigned int image_size;
+   if(bitmap) {
+      image_size = (width * height + 7) / 8;
+   } else {
+      image_size = 4 * width * height;
+   }
+   ImageNode *image = Allocate(sizeof(ImageNode));
+   image->data = Allocate(image_size);
+   image->next = NULL;
+   image->nodes = NULL;
+   image->bitmap = 0;
+   image->width = width;
+   image->height = height;
+   return image;
+}
+
 /** Destroy an image node. */
 void DestroyImage(ImageNode *image) {
-   if(image) {
+   while(image) {
+      ImageNode *next = image->next;
       if(image->data) {
          Release(image->data);
       }
       Release(image);
+      image = next;
    }
 }
 

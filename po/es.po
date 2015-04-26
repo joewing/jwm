@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-25 21:43-0500\n"
+"POT-Creation-Date: 2015-04-26 08:53-0500\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -36,7 +36,7 @@ msgstr "no hay valor especificado para fondo de pantalla"
 msgid "invalid background type: \"%s\""
 msgstr "tipo de fondo de pantalla no válido: «%s»"
 
-#: src/background.c:305
+#: src/background.c:299
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "imagen de fondo de pantalla no encontrada: «%s»"

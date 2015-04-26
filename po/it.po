@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-25 21:43-0500\n"
+"POT-Creation-Date: 2015-04-26 08:53-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -36,7 +36,7 @@ msgstr "Nessun valore specificato per lo sfondo"
 msgid "invalid background type: \"%s\""
 msgstr "Formato di sfondo non valido: \"%s\""
 
-#: src/background.c:305
+#: src/background.c:299
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "Immagine di sfondo non trovata: \"%s\""

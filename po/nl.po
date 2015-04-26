@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-25 21:43-0500\n"
+"POT-Creation-Date: 2015-04-26 08:53-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -31,7 +31,7 @@ msgstr "Geen warde opgegeven voor achtergrond"
 msgid "invalid background type: \"%s\""
 msgstr "ongeldig achtergrond-type: \"%s\""
 
-#: src/background.c:305
+#: src/background.c:299
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "Achtergrond-afbeelding niet gevonden: \"%s\""

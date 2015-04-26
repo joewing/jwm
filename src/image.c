@@ -153,6 +153,27 @@ ImageNode *LoadImageFromData(char **data)
 
 }
 
+/** Load an image from a pixmap. */
+ImageNode *LoadImageFromPixmap(Pixmap pmap, Pixmap mask)
+{
+   XImage *mask_image = NULL;
+   XImage *icon_image;
+   Window rwindow;
+   int x, y;
+   unsigned int width, height;
+   unsigned int border_width;
+   unsigned int depth;
+
+   JXGetGeometry(display, pmap, &rwindow, &x, &y, &width, &height,
+                 &border_width, &depth);
+   icon_image = JXGetImage(display, pmap, 0, 0, width, height,
+                           (1 << depth) - 1, ZPixmap);
+   if(mask != None) {
+      mask_image = JXGetImage(display, mask, 0, 0, width, height, 1, ZPixmap);
+   }
+   return CreateImageFromXImages(icon_image, mask_image);
+}
+
 /** Load a PNG image from the given file name.
  * Since libpng uses longjmp, this function is not reentrant to simplify
  * the issues surrounding longjmp and local variables.
@@ -601,4 +622,3 @@ int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
    return 1;
 }
 #endif /* USE_XPM */
-

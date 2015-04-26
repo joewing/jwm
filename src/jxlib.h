@@ -405,6 +405,9 @@
 #define JXSetRegion( a, b, c ) \
    ( SetCheckpoint(), XSetRegion( a, b, c ) )
 
+#define JXGetGeometry( a, b, c, d, e, f, g, h, i ) \
+   ( SetCheckpoint(), XGetGeometry( a, b, c, d, e, f, g, h, i ) )
+
 /* XFT */
 
 #define JXftFontOpenName( a, b, c ) \

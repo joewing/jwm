@@ -33,9 +33,16 @@ ImageNode *LoadImage(const char *fileName);
 /** Load an image from data.
  * The data must be in the format from the EWMH spec.
  * @param data The image data.
- * @return A new image node (NULL if there were errors.
+ * @return A new image node (NULL if there were errors).
  */
 ImageNode *LoadImageFromData(char **data);
+
+/** Load an image from a Pixmap.
+ * @param pmap The pixmap.
+ * @param mask The mask (may be None).
+ * @return a new image node (NULL if there were errors).
+ */
+ImageNode *LoadImageFromPixmap(Pixmap pmap, Pixmap mask);
 
 /** Create an image node.
  * @param width The image width.

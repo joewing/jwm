@@ -32,18 +32,20 @@ typedef struct IconPathNode {
    struct IconPathNode *next;
 } IconPathNode;
 
-static int iconSize = 0;
 static IconNode **iconHash;
 static IconPathNode *iconPaths;
 static IconPathNode *iconPathsTail;
 static GC iconGC;
+static char iconSizeSet = 0;
 
 static void SetIconSize(void);
 static void DoDestroyIcon(int index, IconNode *icon);
 static void ReadNetWMIcon(ClientNode *np);
+static void ReadWMHintIcon(ClientNode *np);
 static IconNode *CreateIcon(void);
 static IconNode *GetDefaultIcon(void);
 static IconNode *CreateIconFromData(const char *name, char **data);
+static IconNode *CreateIconFromPixmap(Pixmap pmap, Pixmap mask);
 static IconNode *CreateIconFromFile(const char *fileName,
                                     char save, char preserveAspect);
 static IconNode *CreateIconFromBinary(const unsigned long *data,
@@ -77,6 +79,7 @@ void InitializeIcons(void)
       iconHash[x] = NULL;
    }
    memset(&emptyIcon, 0, sizeof(emptyIcon));
+   iconSizeSet = 0;
 }
 
 /** Startup icon support. */
@@ -121,13 +124,11 @@ void DestroyIcons(void)
 /** Set the preferred icon sizes on the root window. */
 void SetIconSize(void)
 {
-
    XIconSize size;
 
-   if(!iconSize) {
+   if(!iconSizeSet) {
 
-      /* FIXME: compute values based on the sizes we can actually use. */
-      iconSize = 32;
+      int iconSize = 32;
 
       size.min_width = iconSize;
       size.min_height = iconSize;
@@ -138,6 +139,7 @@ void SetIconSize(void)
 
       JXSetIconSizes(display, rootWindow, &size, 1);
 
+      iconSizeSet = 1;
    }
 
 }
@@ -250,8 +252,14 @@ void LoadIcon(ClientNode *np)
    DestroyIcon(np->icon);
    np->icon = NULL;
 
-   /* Attempt to read _NET_WM_ICON for an icon */
+   /* Attempt to read _NET_WM_ICON for an icon. */
    ReadNetWMIcon(np);
+   if(np->icon) {
+      return;
+   }
+
+   /* Attempt to read an icon from XWMHints. */
+   ReadWMHintIcon(np);
    if(np->icon) {
       return;
    }
@@ -400,6 +408,23 @@ void ReadNetWMIcon(ClientNode *np)
    }
 }
 
+/** Read the icon WMHint property from a client. */
+void ReadWMHintIcon(ClientNode *np)
+{
+   XWMHints *hints;
+   hints = JXGetWMHints(display, np->window);
+   if(hints) {
+      if(hints->flags & IconPixmapHint) {
+         const Pixmap pmap = hints->icon_pixmap;
+         Pixmap mask = None;
+         if(hints->flags & IconMaskHint) {
+            mask = hints->icon_mask;
+         }
+         np->icon = CreateIconFromPixmap(pmap, mask);
+      }
+      JXFree(hints);
+   }
+}
 
 /** Create the default icon. */
 IconNode *GetDefaultIcon(void)
@@ -434,6 +459,20 @@ IconNode *CreateIconFromData(const char *name, char **data)
       return NULL;
    }
 
+}
+
+IconNode *CreateIconFromPixmap(Pixmap pmap, Pixmap mask)
+{
+   ImageNode *image;
+
+   image = LoadImageFromPixmap(pmap, mask);
+   if(image) {
+      IconNode *result = CreateIcon();
+      result->images = image;
+      return result;
+   } else {
+      return NULL;
+   }
 }
 
 /** Create an icon from the specified file. */
@@ -545,12 +584,8 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, ImageNode *iconImage,
       nheight = rheight;
       nwidth = rwidth;
    }
-   if(nwidth < 1) {
-      nwidth = 1;
-   }
-   if(nheight < 1) {
-      nheight = 1;
-   }
+   nwidth = Max(1, nwidth);
+   nheight = Max(1, nheight);
 
    /* Check if this size already exists.
     * Note that XRender scales on the fly.

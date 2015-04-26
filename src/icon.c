@@ -16,6 +16,7 @@
 #include "misc.h"
 #include "hint.h"
 #include "color.h"
+#include "settings.h"
 
 IconNode emptyIcon;
 
@@ -38,14 +39,13 @@ static IconPathNode *iconPathsTail;
 static GC iconGC;
 static char iconSizeSet = 0;
 
-static void SetIconSize(void);
 static void DoDestroyIcon(int index, IconNode *icon);
 static void ReadNetWMIcon(ClientNode *np);
 static void ReadWMHintIcon(ClientNode *np);
 static IconNode *CreateIcon(void);
 static IconNode *GetDefaultIcon(void);
 static IconNode *CreateIconFromData(const char *name, char **data);
-static IconNode *CreateIconFromPixmap(Pixmap pmap, Pixmap mask);
+static IconNode *CreateIconFromDrawable(Drawable d, Pixmap mask);
 static IconNode *CreateIconFromFile(const char *fileName,
                                     char save, char preserveAspect);
 static IconNode *CreateIconFromBinary(const unsigned long *data,
@@ -86,10 +86,19 @@ void InitializeIcons(void)
 void StartupIcons(void)
 {
    XGCValues gcValues;
+   XIconSize iconSize;
    unsigned long gcMask;
    gcMask = GCGraphicsExposures;
    gcValues.graphics_exposures = False;
    iconGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
+
+   iconSize.min_width = settings.titleHeight - 4;
+   iconSize.min_height = settings.titleHeight - 4;
+   iconSize.max_width = iconSize.min_width;
+   iconSize.max_height = iconSize.min_height;
+   iconSize.width_inc = 1;
+   iconSize.height_inc = 1;
+   JXSetIconSizes(display, rootWindow, &iconSize, 1);
 }
 
 /** Shutdown icon support. */
@@ -119,29 +128,6 @@ void DestroyIcons(void)
       Release(iconHash);
       iconHash = NULL;
    }
-}
-
-/** Set the preferred icon sizes on the root window. */
-void SetIconSize(void)
-{
-   XIconSize size;
-
-   if(!iconSizeSet) {
-
-      int iconSize = 32;
-
-      size.min_width = iconSize;
-      size.min_height = iconSize;
-      size.max_width = iconSize;
-      size.max_height = iconSize;
-      size.width_inc = iconSize;
-      size.height_inc = iconSize;
-
-      JXSetIconSizes(display, rootWindow, &size, 1);
-
-      iconSizeSet = 1;
-   }
-
 }
 
 /** Add an icon search path. */
@@ -245,8 +231,6 @@ void LoadIcon(ClientNode *np)
    IconPathNode *ip;
 
    Assert(np);
-
-   SetIconSize();
 
    /* If client already has an icon, destroy it first. */
    DestroyIcon(np->icon);
@@ -355,8 +339,6 @@ IconNode *LoadNamedIcon(const char *name, char save, char preserveAspect)
 
    Assert(name);
 
-   SetIconSize();
-
    if(name[0] == '/') {
       return CreateIconFromFile(name, save, preserveAspect);
    } else {
@@ -414,13 +396,16 @@ void ReadWMHintIcon(ClientNode *np)
    XWMHints *hints;
    hints = JXGetWMHints(display, np->window);
    if(hints) {
+      Drawable d = None;
+      Pixmap mask = None;
+      if(hints->flags & IconMaskHint) {
+         mask = hints->icon_mask;
+      }
       if(hints->flags & IconPixmapHint) {
-         const Pixmap pmap = hints->icon_pixmap;
-         Pixmap mask = None;
-         if(hints->flags & IconMaskHint) {
-            mask = hints->icon_mask;
-         }
-         np->icon = CreateIconFromPixmap(pmap, mask);
+         d = hints->icon_pixmap;
+      }
+      if(d != None) {
+         np->icon = CreateIconFromDrawable(d, mask);
       }
       JXFree(hints);
    }
@@ -461,11 +446,11 @@ IconNode *CreateIconFromData(const char *name, char **data)
 
 }
 
-IconNode *CreateIconFromPixmap(Pixmap pmap, Pixmap mask)
+IconNode *CreateIconFromDrawable(Drawable d, Pixmap mask)
 {
    ImageNode *image;
 
-   image = LoadImageFromPixmap(pmap, mask);
+   image = LoadImageFromDrawable(d, mask);
    if(image) {
       IconNode *result = CreateIcon();
       result->images = image;

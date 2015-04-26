@@ -154,7 +154,7 @@ ImageNode *LoadImageFromData(char **data)
 }
 
 /** Load an image from a pixmap. */
-ImageNode *LoadImageFromPixmap(Pixmap pmap, Pixmap mask)
+ImageNode *LoadImageFromDrawable(Drawable pmap, Pixmap mask)
 {
    XImage *mask_image = NULL;
    XImage *icon_image;
@@ -167,7 +167,7 @@ ImageNode *LoadImageFromPixmap(Pixmap pmap, Pixmap mask)
    JXGetGeometry(display, pmap, &rwindow, &x, &y, &width, &height,
                  &border_width, &depth);
    icon_image = JXGetImage(display, pmap, 0, 0, width, height,
-                           (1 << depth) - 1, ZPixmap);
+                           AllPlanes, ZPixmap);
    if(mask != None) {
       mask_image = JXGetImage(display, mask, 0, 0, width, height, 1, ZPixmap);
    }

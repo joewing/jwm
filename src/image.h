@@ -37,12 +37,12 @@ ImageNode *LoadImage(const char *fileName);
  */
 ImageNode *LoadImageFromData(char **data);
 
-/** Load an image from a Pixmap.
- * @param pmap The pixmap.
+/** Load an image from a Drawable.
+ * @param pmap The drawable.
  * @param mask The mask (may be None).
  * @return a new image node (NULL if there were errors).
  */
-ImageNode *LoadImageFromPixmap(Pixmap pmap, Pixmap mask);
+ImageNode *LoadImageFromDrawable(Drawable pmap, Pixmap mask);
 
 /** Create an image node.
  * @param width The image width.

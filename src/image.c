@@ -51,9 +51,7 @@ static ImageNode *LoadXPMImage(const char *fileName);
 static ImageNode *LoadXBMImage(const char *fileName);
 #endif
 #ifdef USE_ICONS
-#ifdef USE_XPM
 static ImageNode *CreateImageFromXImages(XImage *image, XImage *shape);
-#endif
 #endif
 
 #ifdef USE_XPM
@@ -154,6 +152,7 @@ ImageNode *LoadImageFromData(char **data)
 }
 
 /** Load an image from a pixmap. */
+#ifdef USE_ICONS
 ImageNode *LoadImageFromDrawable(Drawable pmap, Pixmap mask)
 {
    XImage *mask_image = NULL;
@@ -173,6 +172,7 @@ ImageNode *LoadImageFromDrawable(Drawable pmap, Pixmap mask)
    }
    return CreateImageFromXImages(icon_image, mask_image);
 }
+#endif
 
 /** Load a PNG image from the given file name.
  * Since libpng uses longjmp, this function is not reentrant to simplify
@@ -523,7 +523,6 @@ ImageNode *LoadXBMImage(const char *fileName)
 
 /** Create an image from XImages giving color and shape information. */
 #ifdef USE_ICONS
-#ifdef USE_XPM
 ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
 {
 
@@ -561,7 +560,6 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
    return result;
 
 }
-#endif /* USE_XPM */
 #endif /* USE_ICONS */
 
 ImageNode *CreateImage(unsigned int width, unsigned int height, char bitmap)

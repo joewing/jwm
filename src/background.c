@@ -290,16 +290,10 @@ void LoadImageBackground(BackgroundNode *bp)
 
    IconNode *ip;
    int width, height;
-   char preserveAspect;
 
    /* Load the icon. */
-   if(bp->type == BACKGROUND_SCALE) {
-      preserveAspect = 1;
-   } else {
-      preserveAspect = 0;
-   }
    ExpandPath(&bp->value);
-   ip = LoadNamedIcon(bp->value, 0, preserveAspect);
+   ip = LoadNamedIcon(bp->value, 0, bp->type == BACKGROUND_SCALE);
    if(JUNLIKELY(!ip)) {
       bp->pixmap = None;
       Warning(_("background image not found: \"%s\""), bp->value);

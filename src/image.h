@@ -58,4 +58,3 @@ ImageNode *CreateImage(unsigned int width, unsigned int height, char bitmap);
 void DestroyImage(ImageNode *image);
 
 #endif /* IMAGE_H */
-

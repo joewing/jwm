@@ -210,7 +210,7 @@ void SetSize(TrayComponentType *cp, int width, int height)
          /* Compute height from width. */
          iconWidth = width - labelWidth;
          iconHeight = (iconWidth << 16) / ratio;
-         height = labelHeight;
+         height = Max(labelHeight, iconHeight + 4);
 
       } else if(height > 0) {
 

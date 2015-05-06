@@ -436,6 +436,7 @@ ImageNode *LoadSVGImage(const char *fileName)
    rsvg_handle_get_dimensions(rh, &dim);
 
    result = CreateImage(dim.width, dim.height, 0);
+   memset(result->data, 0, dim.width * dim.height * 4);
 
    /* Create the target surface. */
    stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, dim.width);

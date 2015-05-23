@@ -60,6 +60,7 @@ static char HandleDestroyNotify(const XDestroyWindowEvent *event);
 static void HandleMapRequest(const XMapEvent *event);
 static void HandleUnmapNotify(const XUnmapEvent *event);
 static void HandleButtonEvent(const XButtonEvent *event);
+static void ToggleMaximized(ClientNode *np, MaxFlags flags);
 static void HandleKeyPress(const XKeyEvent *event);
 static void HandleKeyRelease(const XKeyEvent *event);
 static void HandleEnterNotify(const XCrossingEvent *event);
@@ -392,6 +393,18 @@ void HandleButtonEvent(const XButtonEvent *event)
 
 }
 
+/** Toggle maximized state. */
+void ToggleMaximized(ClientNode *np, MaxFlags flags)
+{
+   if(np) {
+      if(np->state.maxFlags == flags) {
+         MaximizeClient(np, MAX_NONE);
+      } else {
+         MaximizeClient(np, flags);
+      }
+   }
+}
+
 /** Process a key press event. */
 void HandleKeyPress(const XKeyEvent *event)
 {
@@ -479,53 +492,31 @@ void HandleKeyPress(const XKeyEvent *event)
       }
       break;
    case KEY_MAX:
-      if(np->state.maxFlags) {
-         MaximizeClient(np, MAX_NONE);
-      } else {
-         MaximizeClient(np, MAX_HORIZ | MAX_VERT);
+      if(np) {
+         if(np->state.maxFlags) {
+            MaximizeClient(np, MAX_NONE);
+         } else {
+            MaximizeClient(np, MAX_HORIZ | MAX_VERT);
+         }
       }
       break;
    case KEY_MAXTOP:
-      if(np->state.maxFlags == (MAX_TOP | MAX_HORIZ)) {
-         MaximizeClient(np, MAX_NONE);
-      } else {
-         MaximizeClient(np, MAX_TOP | MAX_HORIZ);
-      }
+      ToggleMaximized(np, MAX_TOP | MAX_HORIZ);
       break;
    case KEY_MAXBOTTOM:
-      if(np->state.maxFlags == (MAX_BOTTOM | MAX_HORIZ)) {
-         MaximizeClient(np, MAX_NONE);
-      } else {
-         MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
-      }
+      ToggleMaximized(np, MAX_BOTTOM | MAX_HORIZ);
       break;
    case KEY_MAXLEFT:
-      if(np->state.maxFlags == (MAX_LEFT | MAX_VERT)) {
-         MaximizeClient(np, MAX_NONE);
-      } else {
-         MaximizeClient(np, MAX_LEFT | MAX_VERT);
-      }
+      ToggleMaximized(np, MAX_LEFT | MAX_VERT);
       break;
    case KEY_MAXRIGHT:
-      if(np->state.maxFlags == (MAX_RIGHT | MAX_VERT)) {
-         MaximizeClient(np, MAX_NONE);
-      } else {
-         MaximizeClient(np, MAX_RIGHT | MAX_VERT);
-      }
+      ToggleMaximized(np, MAX_RIGHT | MAX_VERT);
       break;
    case KEY_MAXV:
-      if(np->state.maxFlags == MAX_VERT) {
-         MaximizeClient(np, MAX_NONE);
-      } else {
-         MaximizeClient(np, MAX_VERT);
-      }
+      ToggleMaximized(np, MAX_VERT);
       break;
    case KEY_MAXH:
-      if(np->state.maxFlags == MAX_HORIZ) {
-         MaximizeClient(np, MAX_NONE);
-      } else {
-         MaximizeClient(np, MAX_HORIZ);
-      }
+      ToggleMaximized(np, MAX_HORIZ);
       break;
    case KEY_ROOT:
       ShowKeyMenu(event);

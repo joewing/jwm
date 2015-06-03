@@ -107,6 +107,7 @@ TrayComponentType *CreatePager(char labeled)
    pp->mousey = -settings.doubleClickDelta;
    pp->mouseTime.seconds = 0;
    pp->mouseTime.ms = 0;
+   pp->buffer = None;
 
    cp = CreateTrayComponent();
    cp->object = pp;
@@ -146,13 +147,7 @@ void Create(TrayComponentType *cp)
 void SetSize(TrayComponentType *cp, int width, int height)
 {
 
-   PagerType *pp;
-
-   Assert(cp);
-
-   pp = (PagerType*)cp->object;
-
-   Assert(pp);
+   PagerType *pp = (PagerType*)cp->object;
 
    if(width) {
 
@@ -178,6 +173,13 @@ void SetSize(TrayComponentType *cp, int width, int height)
 
    } else {
       Assert(0);
+   }
+
+   if(pp->buffer != None) {
+      JXFreePixmap(display, pp->buffer);
+      pp->buffer = JXCreatePixmap(display, rootWindow, cp->width,
+                                  cp->height, rootVisual.depth);
+      cp->pixmap = pp->buffer;
    }
 
    pp->scalex = ((pp->deskWidth - 2) << 16) / rootWidth;

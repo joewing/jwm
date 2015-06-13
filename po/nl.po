@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-26 08:53-0500\n"
+"POT-Creation-Date: 2015-06-13 18:25-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -36,11 +36,11 @@ msgstr "ongeldig achtergrond-type: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Achtergrond-afbeelding niet gevonden: \"%s\""
 
-#: src/client.c:898
+#: src/client.c:901
 msgid "Kill this window?"
 msgstr "Sluiten van dit venster forceren?"
 
-#: src/client.c:899
+#: src/client.c:902
 msgid "This may cause data to be lost!"
 msgstr "Dit kan verlies van data veroorzaken!"
 
@@ -228,15 +228,6 @@ msgstr ""
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ongeldige maximum breedte voor Taaklijst: %s"
 
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "kon taakbalk-pictogram niet laden: \"%s\""
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "geen pictogram of label voor Taakbalk-knop"
-
 #: src/tray.c:1073
 #, c-format
 msgid "invalid tray width: %d"
@@ -261,6 +252,15 @@ msgstr "ongeldige horizontale taakbalk uitlijning: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ongeldige verticale taakbalk uitlijning: \"%s\""
+
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "kon taakbalk-pictogram niet laden: \"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "geen pictogram of label voor Taakbalk-knop"
 
 #: src/winmenu.c:78
 msgid "Close"

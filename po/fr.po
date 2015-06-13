@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-04-26 08:53-0500\n"
+"POT-Creation-Date: 2015-06-13 18:25-0500\n"
 "PO-Revision-Date: 2014-11-06 10:23+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -37,11 +37,11 @@ msgstr "type d'arrière-plan incorrect: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Image d'arrière-plan introuvable: \"%s\""
 
-#: src/client.c:898
+#: src/client.c:901
 msgid "Kill this window?"
 msgstr "Éliminer la fenêtre?"
 
-#: src/client.c:899
+#: src/client.c:902
 msgid "This may cause data to be lost!"
 msgstr "Cela peut entraîner la perte de données!"
 
@@ -231,15 +231,6 @@ msgstr "Impossible d'afficher un client sans nom"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largeur maximale de la liste des tâches incorrecte: %s"
 
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "Impossible de charger l'icône de la barre: \"%s\""
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "aucune icône ou étiquette pour le bouton de barre"
-
 #: src/tray.c:1073
 #, c-format
 msgid "invalid tray width: %d"
@@ -264,6 +255,15 @@ msgstr "alignement horizontal de la barre incorrect: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alignement vertical de la barre incorrect: \"%s\""
+
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "Impossible de charger l'icône de la barre: \"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "aucune icône ou étiquette pour le bouton de barre"
 
 #: src/winmenu.c:78
 msgid "Close"

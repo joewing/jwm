@@ -65,6 +65,8 @@ static void StopPagerMove(ClientNode *np,
 
 static void PagerMoveController(int wasDestroyed);
 
+static void DrawPager(const PagerType *pp);
+
 static void DrawPagerClient(const PagerType *pp, const ClientNode *np);
 
 static void SignalPager(const TimeType *now, int x, int y, Window w,
@@ -180,6 +182,7 @@ void SetSize(TrayComponentType *cp, int width, int height)
       pp->buffer = JXCreatePixmap(display, rootWindow, cp->width,
                                   cp->height, rootVisual.depth);
       cp->pixmap = pp->buffer;
+      DrawPager(pp);
    }
 
    pp->scalex = ((pp->deskWidth - 2) << 16) / rootWidth;
@@ -492,11 +495,9 @@ void PagerMoveController(int wasDestroyed)
 
 }
 
-/** Update the pager. */
-void UpdatePager(void)
+/** Draw a pager. */
+void DrawPager(const PagerType *pp)
 {
-
-   PagerType *pp;
    ClientNode *np;
    Pixmap buffer;
    int width, height;
@@ -507,68 +508,79 @@ void UpdatePager(void)
    int textWidth, textHeight;
    int dx, dy;
 
+   buffer = pp->cp->pixmap;
+   width = pp->cp->width;
+   height = pp->cp->height;
+   deskWidth = pp->deskWidth;
+   deskHeight = pp->deskHeight;
+
+   /* Draw the background. */
+   JXSetForeground(display, rootGC, colors[COLOR_PAGER_BG]);
+   JXFillRectangle(display, buffer, rootGC, 0, 0, width, height);
+
+   /* Highlight the current desktop. */
+   JXSetForeground(display, rootGC, colors[COLOR_PAGER_ACTIVE_BG]);
+   dx = currentDesktop % settings.desktopWidth;
+   dy = currentDesktop / settings.desktopWidth;
+   JXFillRectangle(display, buffer, rootGC,
+                   dx * (deskWidth + 1), dy * (deskHeight + 1),
+                   deskWidth, deskHeight);
+
+   /* Draw the labels. */
+   if(pp->labeled) {
+      textHeight = GetStringHeight(FONT_PAGER);
+      if(textHeight < deskHeight) {
+         for(x = 0; x < settings.desktopCount; x++) {
+            dx = x % settings.desktopWidth;
+            dy = x / settings.desktopWidth;
+            name = GetDesktopName(x);
+            textWidth = GetStringWidth(FONT_PAGER, name);
+            if(textWidth < deskWidth) {
+               xc = dx * (deskWidth + 1) + (deskWidth - textWidth) / 2;
+               yc = dy * (deskHeight + 1) + (deskHeight - textHeight) / 2;
+               RenderString(&rootVisual, buffer, FONT_PAGER,
+                            COLOR_PAGER_TEXT, xc, yc, deskWidth, name);
+            }
+         }
+      }
+   }
+
+   /* Draw the clients. */
+   for(x = FIRST_LAYER; x <= LAST_LAYER; x++) {
+      for(np = nodeTail[x]; np; np = np->prev) {
+         DrawPagerClient(pp, np);
+      }
+   }
+
+   /* Draw the desktop dividers. */
+   JXSetForeground(display, rootGC, colors[COLOR_PAGER_FG]);
+   for(x = 1; x < settings.desktopHeight; x++) {
+      JXDrawLine(display, buffer, rootGC,
+                 0, (deskHeight + 1) * x - 1,
+                 width, (deskHeight + 1) * x - 1);
+   }
+   for(x = 1; x < settings.desktopWidth; x++) {
+      JXDrawLine(display, buffer, rootGC,
+                 (deskWidth + 1) * x - 1, 0,
+                 (deskWidth + 1) * x - 1, height);
+   }
+
+}
+
+/** Update the pager. */
+void UpdatePager(void)
+{
+
+   PagerType *pp;
+
    if(JUNLIKELY(shouldExit)) {
       return;
    }
 
    for(pp = pagers; pp; pp = pp->next) {
 
-      buffer = pp->cp->pixmap;
-      width = pp->cp->width;
-      height = pp->cp->height;
-      deskWidth = pp->deskWidth;
-      deskHeight = pp->deskHeight;
-
-      /* Draw the background. */
-      JXSetForeground(display, rootGC, colors[COLOR_PAGER_BG]);
-      JXFillRectangle(display, buffer, rootGC, 0, 0, width, height);
-
-      /* Highlight the current desktop. */
-      JXSetForeground(display, rootGC, colors[COLOR_PAGER_ACTIVE_BG]);
-      dx = currentDesktop % settings.desktopWidth;
-      dy = currentDesktop / settings.desktopWidth;
-      JXFillRectangle(display, buffer, rootGC,
-                      dx * (deskWidth + 1), dy * (deskHeight + 1),
-                      deskWidth, deskHeight);
-
-      /* Draw the labels. */
-      if(pp->labeled) {
-         textHeight = GetStringHeight(FONT_PAGER);
-         if(textHeight < deskHeight) {
-            for(x = 0; x < settings.desktopCount; x++) {
-               dx = x % settings.desktopWidth;
-               dy = x / settings.desktopWidth;
-               name = GetDesktopName(x);
-               textWidth = GetStringWidth(FONT_PAGER, name);
-               if(textWidth < deskWidth) {
-                  xc = dx * (deskWidth + 1) + (deskWidth - textWidth) / 2;
-                  yc = dy * (deskHeight + 1) + (deskHeight - textHeight) / 2;
-                  RenderString(&rootVisual, buffer, FONT_PAGER,
-                               COLOR_PAGER_TEXT, xc, yc, deskWidth, name);
-               }
-            }
-         }
-      }
-
-      /* Draw the clients. */
-      for(x = FIRST_LAYER; x <= LAST_LAYER; x++) {
-         for(np = nodeTail[x]; np; np = np->prev) {
-            DrawPagerClient(pp, np);
-         }
-      }
-
-      /* Draw the desktop dividers. */
-      JXSetForeground(display, rootGC, colors[COLOR_PAGER_FG]);
-      for(x = 1; x < settings.desktopHeight; x++) {
-         JXDrawLine(display, buffer, rootGC,
-                    0, (deskHeight + 1) * x - 1,
-                    width, (deskHeight + 1) * x - 1);
-      }
-      for(x = 1; x < settings.desktopWidth; x++) {
-         JXDrawLine(display, buffer, rootGC,
-                    (deskWidth + 1) * x - 1, 0,
-                    (deskWidth + 1) * x - 1, height);
-      }
+      /* Draw the pager. */
+      DrawPager(pp);
 
       /* Tell the tray to redraw. */
       UpdateSpecificTray(pp->cp->tray, pp->cp);

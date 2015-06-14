@@ -208,7 +208,6 @@ Menu *CreateDesktopMenu(unsigned int mask)
 {
 
    Menu *menu;
-   MenuItem *item;
    int x;
 
    menu = Allocate(sizeof(Menu));
@@ -218,10 +217,7 @@ Menu *CreateDesktopMenu(unsigned int mask)
 
    for(x = settings.desktopCount - 1; x >= 0; x--) {
 
-      item = Allocate(sizeof(MenuItem));
-      item->type = MENU_ITEM_NORMAL;
-      item->iconName = NULL;
-      item->submenu = NULL;
+      MenuItem *item = CreateMenuItem(MENU_ITEM_NORMAL);
       item->next = menu->items;
       menu->items = item;
 
@@ -250,7 +246,6 @@ Menu *CreateSendtoMenu(void)
 {
 
    Menu *menu;
-   MenuItem *item;
    int x;
 
    menu = Allocate(sizeof(Menu));
@@ -260,10 +255,7 @@ Menu *CreateSendtoMenu(void)
 
    for(x = settings.desktopCount - 1; x >= 0; x--) {
 
-      item = Allocate(sizeof(MenuItem));
-      item->type = MENU_ITEM_NORMAL;
-      item->iconName = NULL;
-      item->submenu = NULL;
+      MenuItem *item = CreateMenuItem(MENU_ITEM_NORMAL);
       item->next = menu->items;
       menu->items = item;
 

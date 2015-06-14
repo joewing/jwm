@@ -43,6 +43,7 @@ typedef struct MenuAction {
    union {
       int i;
       char *str;
+      struct ClientNode *client;
    } data;
 
 } MenuAction;
@@ -64,7 +65,7 @@ typedef struct MenuItem {
    struct MenuItem *next;  /**< Next item in the menu. */
 
    /** An icon for this menu item.
-    * This field is handled by menu.c */
+    * This field is handled by menu.c if iconName is set. */
    struct IconNode *icon;  /**< Icon to display. */
 
 } MenuItem;
@@ -95,6 +96,9 @@ typedef struct Menu {
 } Menu;
 
 typedef void (*RunMenuCommandType)(const MenuAction *action);
+
+/** Create an empty menu item. */
+MenuItem *CreateMenuItem(MenuItemType type);
 
 /** Initialize a menu structure to be shown.
  * @param menu The menu to initialize.

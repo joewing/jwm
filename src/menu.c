@@ -55,6 +55,20 @@ static char IsMenuValid(const Menu *menu);
 
 int menuShown = 0;
 
+/** Create an empty menu item. */
+MenuItem *CreateMenuItem(MenuItemType type)
+{
+   MenuItem *item = Allocate(sizeof(MenuItem));
+   item->type = type;
+   item->name = NULL;
+   item->action.type = MA_NONE;
+   item->iconName = NULL;
+   item->submenu = NULL;
+   item->next = NULL;
+   item->icon = NULL;
+   return item;
+}
+
 /** Initialize a menu. */
 void InitializeMenu(Menu *menu)
 {
@@ -81,8 +95,8 @@ void InitializeMenu(Menu *menu)
          if(np->icon) {
             hasIcon = 1;
          }
-      } else {
-         np->icon = NULL;
+      } else if(np->icon) {
+         hasIcon = 1;
       }
       menu->itemCount += 1;
    }

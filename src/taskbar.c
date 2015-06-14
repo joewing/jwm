@@ -24,12 +24,14 @@
 #include "screen.h"
 #include "settings.h"
 #include "event.h"
+#include "misc.h"
 
 typedef struct TaskBarType {
 
    TrayComponentType *cp;
 
    int itemHeight;
+   int itemWidth;
    LayoutType layout;
 
    Pixmap buffer;
@@ -37,35 +39,40 @@ typedef struct TaskBarType {
    TimeType mouseTime;
    int mousex, mousey;
 
-   unsigned int maxItemWidth;
-
    struct TaskBarType *next;
 
 } TaskBarType;
 
-typedef struct Node {
+typedef struct ClientEntry {
    ClientNode *client;
-   int y;
-   struct Node *next;
-   struct Node *prev;
-} Node;
+   struct ClientEntry *next;
+   struct ClientEntry *prev;
+} ClientEntry;
 
+typedef struct TaskEntry {
+   ClientEntry *clients;
+   struct TaskEntry *next;
+   struct TaskEntry *prev;
+} TaskEntry;
+
+static TaskEntry *selectedEntry;
 static TaskBarType *bars;
-static Node *taskBarNodes;
-static Node *taskBarNodesTail;
+static TaskEntry *taskEntries;
+static TaskEntry *taskEntriesTail;
 
-static Node *GetNode(TaskBarType *bar, int x);
-static unsigned int GetItemCount(void);
-static unsigned int GetItemWidth(const TaskBarType *bp,
-                                 unsigned int itemCount);
+static char ShouldShowEntry(const TaskEntry *tp);
+static TaskEntry *GetEntry(TaskBarType *bar, int x, int y);
 static void Render(const TaskBarType *bp);
-static void ShowTaskWindowMenu(TaskBarType *bar, Node *np);
+static void ShowClientList(TaskBarType *bar, TaskEntry *tp);
+static void RunTaskBarCommand(const MenuAction *action);
 
 static void SetSize(TrayComponentType *cp, int width, int height);
 static void Create(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 static void ProcessTaskButtonEvent(TrayComponentType *cp,
                                    int x, int y, int mask);
+static void MinimizeGroup(const TaskEntry *tp);
+static void FocusGroup(const TaskEntry *tp);
 static void ProcessTaskMotionEvent(TrayComponentType *cp,
                                    int x, int y, int mask);
 static void SignalTaskbar(const TimeType *now, int x, int y, Window w,
@@ -75,8 +82,8 @@ static void SignalTaskbar(const TimeType *now, int x, int y, Window w,
 void InitializeTaskBar(void)
 {
    bars = NULL;
-   taskBarNodes = NULL;
-   taskBarNodesTail = NULL;
+   taskEntries = NULL;
+   taskEntriesTail = NULL;
 }
 
 /** Shutdown the task bar. */
@@ -116,7 +123,6 @@ TrayComponentType *CreateTaskBar()
    tp->mousey = -settings.doubleClickDelta;
    tp->mouseTime.seconds = 0;
    tp->mouseTime.ms = 0;
-   tp->maxItemWidth = 0;
 
    cp = CreateTrayComponent();
    cp->object = tp;
@@ -162,22 +168,15 @@ void SetSize(TrayComponentType *cp, int width, int height)
 void Create(TrayComponentType *cp)
 {
 
-   TaskBarType *tp;
-
-   Assert(cp);
-
-   tp = (TaskBarType*)cp->object;
-
-   Assert(tp);
+   TaskBarType *tp = (TaskBarType*)cp->object;
 
    if(tp->layout == LAYOUT_HORIZONTAL) {
       tp->itemHeight = cp->height;
+      tp->itemWidth = cp->height;
    } else {
-      tp->itemHeight = GetStringHeight(FONT_TASK) + 12;
+      tp->itemHeight = cp->width;
+      tp->itemWidth = cp->width;
    }
-
-   Assert(cp->width > 0);
-   Assert(cp->height > 0);
 
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
                                rootVisual.depth);
@@ -190,14 +189,7 @@ void Create(TrayComponentType *cp)
 /** Resize a task bar tray component. */
 void Resize(TrayComponentType *cp)
 {
-
-   TaskBarType *tp;
-
-   Assert(cp);
-
-   tp = (TaskBarType*)cp->object;
-
-   Assert(tp);
+   TaskBarType *tp = (TaskBarType*)cp->object;
 
    if(tp->buffer != None) {
       JXFreePixmap(display, tp->buffer);
@@ -205,12 +197,11 @@ void Resize(TrayComponentType *cp)
 
    if(tp->layout == LAYOUT_HORIZONTAL) {
       tp->itemHeight = cp->height;
+      tp->itemWidth = cp->height;
    } else {
-      tp->itemHeight = GetStringHeight(FONT_TASK) + 12;
+      tp->itemHeight = cp->width;
+      tp->itemWidth = cp->width;
    }
-
-   Assert(cp->width > 0);
-   Assert(cp->height > 0);
 
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
                                rootVisual.depth);
@@ -224,41 +215,87 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
 {
 
    TaskBarType *bar = (TaskBarType*)cp->object;
-   Node *np;
+   TaskEntry *entry = GetEntry(bar, x, y);
 
-   Assert(bar);
+   if(entry) {
+      ClientEntry *cp;
+      char hasActive = 0;
 
-   if(bar->layout == LAYOUT_HORIZONTAL) {
-      np = GetNode(bar, x);
-   } else {
-      np = GetNode(bar, y);
-   }
-
-   if(np) {
       switch(mask) {
-      case Button1:
-         if((np->client->state.status & STAT_ACTIVE) &&
-            !(np->client->state.status & STAT_MINIMIZED)) {
-            MinimizeClient(np->client, 1);
+      case Button1:  /* Raise or minimize items in this group. */
+         for(cp = entry->clients; cp; cp = cp->next)  {
+            if(!ShouldFocus(cp->client)) {
+               continue;
+            }
+            if(cp->client->state.status & STAT_ACTIVE &&
+               !(cp->client->state.status & STAT_MINIMIZED)) {
+               hasActive = 1;
+               break;
+            }
+         }
+         if(hasActive) {
+            MinimizeGroup(entry);
          } else {
-            RestoreClient(np->client, 1);
-            FocusClient(np->client);
+            FocusGroup(entry);
          }
          break;
       case Button3:
-         ShowTaskWindowMenu(bar, np);
-         break;
-      case Button4:
-         FocusPrevious();
-         break;
-      case Button5:
-         FocusNext();
+         ShowClientList(bar, entry);
          break;
       default:
          break;
       }
    }
 
+}
+
+/** Minimize all clients in a group. */
+void MinimizeGroup(const TaskEntry *tp)
+{
+   ClientEntry *cp;
+   for(cp = tp->clients; cp; cp = cp->next) {
+      if(ShouldFocus(cp->client)) {
+         MinimizeClient(cp->client, 0);
+      }
+   }
+}
+
+/** Raise all clients in a group and focus the top-most. */
+void FocusGroup(const TaskEntry *tp)
+{
+   const char *className = tp->clients->client->className;
+   ClientNode **toRestore;
+   unsigned restoreCount;
+   int i;
+
+   /* If there is no class name, then there will only be one client. */
+   if(!className) {
+      RestoreClient(tp->clients->client, 1);
+      FocusClient(tp->clients->client);
+      return;
+   }
+
+   /* Build up the list of clients to restore in correct order. */
+   toRestore = AllocateStack(sizeof(ClientNode*) * clientCount);
+   restoreCount = 0;
+   for(i = 0; i < LAYER_COUNT; i++) {
+      ClientNode *np;
+      for(np = nodes[i]; np; np = np->next) {
+         if(!ShouldFocus(np)) {
+            continue;
+         }
+         if(np->className && !strcmp(np->className, className)) {
+            toRestore[restoreCount] = np;
+            restoreCount += 1;
+         }
+      }
+   }
+   Assert(restoreCount <= clientCount);
+   for(i = restoreCount - 1; i >= 0; i--) {
+      RestoreClient(toRestore[i], 1);
+   }
+   FocusClient(toRestore[0]);
+   ReleaseStack(toRestore);
 }
 
 /** Process a task list motion event. */
@@ -271,70 +308,175 @@ void ProcessTaskMotionEvent(TrayComponentType *cp, int x, int y, int mask)
 }
 
 /** Show the menu associated with a task list item. */
-void ShowTaskWindowMenu(TaskBarType *bar, Node *np)
+void ShowClientList(TaskBarType *bar, TaskEntry *tp)
 {
+   Menu *menu;
+   MenuItem *item;
+   ClientEntry *cp;
 
-   int x, y;
-   int mwidth, mheight;
    const ScreenType *sp;
+   int x, y;
    Window w;
 
-   GetWindowMenuSize(np->client, &mwidth, &mheight);
+   selectedEntry = tp;
 
+   menu = Allocate(sizeof(Menu));
+   menu->itemHeight = 0;
+   menu->items = NULL;
+   menu->label = NULL;
+
+   item = CreateMenuItem(MENU_ITEM_SUBMENU);
+   item->name = CopyString(_("Close"));
+   item->action.type = MA_CLOSE;
+   item->next = menu->items;
+   menu->items = item;
+
+   item = CreateMenuItem(MENU_ITEM_SUBMENU);
+   item->name = CopyString(_("Minimize"));
+   item->action.type = MA_MINIMIZE;
+   item->next = menu->items;
+   menu->items = item;
+
+   item = CreateMenuItem(MENU_ITEM_SUBMENU);
+   item->name = CopyString(_("Restore"));
+   item->action.type = MA_RESTORE;
+   item->next = menu->items;
+   menu->items = item;
+
+   item = CreateMenuItem(MENU_ITEM_SUBMENU);
+   item->name = CopyString(_("Send To"));
+   item->action.type = MA_SENDTO_MENU;
+   item->next = menu->items;
+   menu->items = item;
+
+   /* Load the separator and group actions. */
+   item = CreateMenuItem(MENU_ITEM_SEPARATOR);
+   item->next = menu->items;
+   menu->items = item;
+
+   /* Load the clients into the menu. */
+   for(cp = tp->clients; cp; cp = cp->next) {
+      if(!ShouldFocus(cp->client)) {
+         continue;
+      }
+      item = CreateMenuItem(MENU_ITEM_NORMAL);
+      if(cp->client->state.status & STAT_MINIMIZED) {
+         size_t len = 0;
+         if(cp->client->name) {
+            len = strlen(cp->client->name);
+         }
+         item->name = Allocate(len + 3);
+         item->name[0] = '[';
+         memcpy(&item->name[1], cp->client->name, len);
+         item->name[len + 1] = ']';
+         item->name[len + 2] = 0;
+      } else {
+         item->name = CopyString(cp->client->name);
+      }
+      item->icon = cp->client->icon;
+      item->action.data.client = cp->client;
+      item->next = menu->items;
+      menu->items = item;
+   }
+
+   /* Initialize and position the menu. */
+   InitializeMenu(menu);
    sp = GetCurrentScreen(bar->cp->screenx, bar->cp->screeny);
-
+   GetMousePosition(&x, &y, &w);
    if(bar->layout == LAYOUT_HORIZONTAL) {
-      GetMousePosition(&x, &y, &w);
       if(bar->cp->screeny + bar->cp->height / 2 < sp->y + sp->height / 2) {
          y = bar->cp->screeny + bar->cp->height;
       } else {
-         y = bar->cp->screeny - mheight;
+         y = bar->cp->screeny - menu->height;
       }
-      x -= mwidth / 2;
+      x -= menu->width / 2;
+      x = Max(x, 0);
    } else {
       if(bar->cp->screenx + bar->cp->width / 2 < sp->x + sp->width / 2) {
          x = bar->cp->screenx + bar->cp->width;
       } else {
-         x = bar->cp->screenx - mwidth;
+         x = bar->cp->screenx - menu->width;
       }
-      y = bar->cp->screeny + np->y;
+      y -= menu->height / 2;
+      y = Max(y, 0);
    }
 
-   ShowWindowMenu(np->client, x, y);
+   ShowMenu(menu, RunTaskBarCommand, x, y);
 
+   DestroyMenu(menu);
+
+}
+
+/** Run a menu action. */
+void RunTaskBarCommand(const MenuAction *action)
+{
+   ClientEntry *cp;
+
+   /* Check if the program entry was clicked. */
+   if(action->type == MA_NONE) {
+      RestoreClient(action->data.client, 1);
+      FocusClient(action->data.client);
+      return;
+   }
+
+   /* Apply the specified action to all clients in the group. */
+   for(cp = selectedEntry->clients; cp; cp = cp->next) {
+      if(!ShouldFocus(cp->client)) {
+         continue;
+      }
+      switch(action->type) {
+      case MA_SENDTO:
+         SetClientDesktop(cp->client, action->data.i);
+         break;
+      case MA_CLOSE:
+         DeleteClient(cp->client);
+         break;
+      case MA_RESTORE:
+         RestoreClient(cp->client, 0);
+         break;
+      case MA_MINIMIZE:
+         MinimizeClient(cp->client, 0);
+         break;
+      default:
+         break;
+      }
+   }
 }
 
 /** Add a client to the task bar. */
 void AddClientToTaskBar(ClientNode *np)
 {
+   TaskEntry *tp = NULL;
+   ClientEntry *cp = Allocate(sizeof(ClientEntry));
+   cp->client = np;
 
-   Node *tp;
-
-   Assert(np);
-
-   tp = Allocate(sizeof(Node));
-   tp->client = np;
-
-   if(settings.taskInsertMode == INSERT_RIGHT) {
-      tp->next = NULL;
-      tp->prev = taskBarNodesTail;
-      if(taskBarNodesTail) {
-         taskBarNodesTail->next = tp;
-      } else {
-         taskBarNodes = tp;
-      }
-      taskBarNodesTail = tp;
-   } else {
-      tp->prev = NULL;
-      tp->next = taskBarNodes;
-      if(taskBarNodes) {
-         taskBarNodes->prev = tp;
-      }
-      taskBarNodes = tp;
-      if(!taskBarNodesTail) {
-         taskBarNodesTail = tp;
+   if(np->className) {
+      for(tp = taskEntries; tp; tp = tp->next) {
+         const char *className = tp->clients->client->className;
+         if(className && !strcmp(np->className, className)) {
+            break;
+         }
       }
    }
+   if(tp == NULL) {
+      tp = Allocate(sizeof(TaskEntry));
+      tp->clients = NULL;
+      tp->next = NULL;
+      tp->prev = taskEntriesTail;
+      if(taskEntriesTail) {
+         taskEntriesTail->next = tp;
+      } else {
+         taskEntries = tp;
+      }
+      taskEntriesTail = tp;
+   }
+
+   cp->next = tp->clients;
+   if(tp->clients) {
+      tp->clients->prev = cp;
+   }
+   cp->prev = NULL;
+   tp->clients = cp;
 
    UpdateTaskBar();
    UpdateNetClientList();
@@ -344,37 +486,44 @@ void AddClientToTaskBar(ClientNode *np)
 /** Remove a client from the task bar. */
 void RemoveClientFromTaskBar(ClientNode *np)
 {
-
-   Node *tp;
-
-   Assert(np);
-
-   for(tp = taskBarNodes; tp; tp = tp->next) {
-      if(tp->client == np) {
-         if(tp->prev) {
-            tp->prev->next = tp->next;
-         } else {
-            taskBarNodes = tp->next;
+   TaskEntry *tp;
+   for(tp = taskEntries; tp; tp = tp->next) {
+      ClientEntry *cp;
+      for(cp = tp->clients; cp; cp = cp->next) {
+         if(cp->client == np) {
+            if(cp->prev) {
+               cp->prev->next = cp->next;
+            } else {
+               tp->clients = cp->next;
+            }
+            if(cp->next) {
+               cp->next->prev = cp->prev;
+            }
+            Release(cp);
+            if(!tp->clients) {
+               if(tp->prev) {
+                  tp->prev->next = tp->next;
+               } else {
+                  taskEntries = tp->next;
+               }
+               if(tp->next) {
+                  tp->next->prev = tp->prev;
+               } else {
+                  taskEntriesTail = tp->prev;
+               }
+               Release(tp);
+            }
+            UpdateTaskBar();
+            UpdateNetClientList();
+            return;
          }
-         if(tp->next) {
-            tp->next->prev = tp->prev;
-         } else {
-            taskBarNodesTail = tp->prev;
-         }
-         Release(tp);
-         break;
       }
    }
-
-   UpdateTaskBar();
-   UpdateNetClientList();
-
 }
 
 /** Update all task bars. */
 void UpdateTaskBar(void)
 {
-
    TaskBarType *bp;
    int lastHeight = -1;
 
@@ -384,17 +533,18 @@ void UpdateTaskBar(void)
 
    for(bp = bars; bp; bp = bp->next) {
       if(bp->layout == LAYOUT_VERTICAL) {
+         TaskEntry *tp;
          lastHeight = bp->cp->requestedHeight;
-         bp->cp->requestedHeight = GetStringHeight(FONT_TASK) + 12;
-         bp->cp->requestedHeight *= GetItemCount();
-         bp->cp->requestedHeight += 2;
+         bp->cp->requestedHeight = 2;
+         for(; tp; tp = tp->next) {
+            bp->cp->requestedHeight += bp->cp->width;
+         }
          if(lastHeight != bp->cp->requestedHeight) {
             ResizeTray(bp->cp->tray);
          }
       }
       Render(bp);
    }
-
 }
 
 /** Signal task bar (for popups). */
@@ -402,19 +552,15 @@ void SignalTaskbar(const TimeType *now, int x, int y, Window w, void *data)
 {
 
    TaskBarType *bp = (TaskBarType*)data;
-   Node *np;
+   TaskEntry *ep;
 
    if(w == bp->cp->tray->window &&
       abs(bp->mousex - x) < settings.doubleClickDelta &&
       abs(bp->mousey - y) < settings.doubleClickDelta) {
       if(GetTimeDifference(now, &bp->mouseTime) >= settings.popupDelay) {
-         if(bp->layout == LAYOUT_HORIZONTAL) {
-            np = GetNode(bp, x - bp->cp->screenx);
-         } else {
-            np = GetNode(bp, y - bp->cp->screeny);
-         }
-         if(np && np->client->name) {
-            ShowPopup(x, y, np->client->name);
+         ep = GetEntry(bp, x - bp->cp->screenx, y - bp->cp->screeny);
+         if(ep && ep->clients->client->className) {
+            ShowPopup(x, y, ep->clients->client->className);
          }
       }
    }
@@ -424,113 +570,52 @@ void SignalTaskbar(const TimeType *now, int x, int y, Window w, void *data)
 /** Draw a specific task bar. */
 void Render(const TaskBarType *bp)
 {
-
-   Node *tp;
+   TaskEntry *tp;
    ButtonNode button;
    int x, y;
-   int remainder;
-   int itemWidth, itemCount;
-   int width;
-   Pixmap buffer;
-   GC gc;
-   char *minimizedName;
 
    if(JUNLIKELY(shouldExit)) {
       return;
    }
 
-   Assert(bp);
-   Assert(bp->cp);
-
-   width = bp->cp->width;
-   buffer = bp->cp->pixmap;
-   gc = rootGC;
-
-   x = 0;
-   width -= x;
-   y = 0;
-
    ClearTrayDrawable(bp->cp);
-
-   itemCount = GetItemCount();
-   if(!itemCount) {
+   if(!taskEntries) {
       UpdateSpecificTray(bp->cp->tray, bp->cp);
       return;
    }
-   if(bp->layout == LAYOUT_HORIZONTAL) {
-      itemWidth = GetItemWidth(bp, itemCount);
-      remainder = width - itemWidth * itemCount;
-   } else {
-      itemWidth = width;
-      remainder = 0;
-   }
 
-   ResetButton(&button, buffer, &rootVisual);
+   ResetButton(&button, bp->cp->pixmap, &rootVisual);
    button.font = FONT_TASK;
+   button.height = bp->itemHeight;
+   button.width = bp->itemWidth;
+   button.text = NULL;
 
-   for(tp = taskBarNodes; tp; tp = tp->next) {
-      if(ShouldFocus(tp->client)) {
+   x = 0;
+   y = 0;
+   for(tp = taskEntries; tp; tp = tp->next) {
 
-         tp->y = y;
+      if(!ShouldShowEntry(tp)) {
+         continue;
+      }
 
-         if(tp->client->state.status & (STAT_ACTIVE | STAT_FLASH)) {
+      /* Check for an active or urgent window. */
+      ClientEntry *cp;
+      button.type = BUTTON_TASK;
+      for(cp = tp->clients; cp; cp = cp->next) {
+         if(cp->client->state.status & (STAT_ACTIVE | STAT_FLASH)) {
             button.type = BUTTON_TASK_ACTIVE;
-         } else {
-            button.type = BUTTON_TASK;
+            break;
          }
+      }
+      button.x = x;
+      button.y = y;
+      button.icon = tp->clients->client->icon;
+      DrawButton(&button);
 
-         if(remainder) {
-            button.width = itemWidth;
-         } else {
-            button.width = itemWidth - 1;
-         }
-         button.height = bp->itemHeight;
-         button.x = x;
-         button.y = y;
-         button.icon = tp->client->icon;
-
-         if(tp->client->state.status & STAT_MINIMIZED) {
-            if(tp->client->name) {
-               minimizedName = AllocateStack(strlen(tp->client->name) + 3);
-               sprintf(minimizedName, "[%s]", tp->client->name);
-               button.text = minimizedName;
-               DrawButton(&button);
-               ReleaseStack(minimizedName);
-            } else {
-               button.text = "[]";
-               DrawButton(&button);
-            }
-         } else {
-            button.text = tp->client->name;
-            DrawButton(&button);
-         }
-
-         if(tp->client->state.status & STAT_MINIMIZED) {
-            const int isize = (bp->itemHeight + 7) / 8;
-            int i;
-            JXSetForeground(display, gc, colors[COLOR_TASK_FG]);
-            for(i = 0; i <= isize; i++) {
-               const int xc = x + i + 3;
-               const int y1 = bp->itemHeight - 3 - isize + i;
-               const int y2 = bp->itemHeight - 3;
-               JXDrawLine(display, buffer, gc, xc, y1, xc, y2);
-            }
-         }
-
-         if(bp->layout == LAYOUT_HORIZONTAL) {
-            x += itemWidth;
-            if(remainder) {
-               x += 1;
-               remainder -= 1;
-            }
-         } else {
-            y += bp->itemHeight;
-            if(remainder) {
-               y += 1;
-               remainder -= 1;
-            }
-         }
-
+      if(bp->layout == LAYOUT_HORIZONTAL) {
+         x += bp->itemWidth;
+      } else {
+         y += bp->itemHeight;
       }
    }
 
@@ -541,16 +626,33 @@ void Render(const TaskBarType *bp)
 /** Focus the next client in the task bar. */
 void FocusNext(void)
 {
+#if 0
+   TaskEntry *tp;
+   ClientEntry *cp;
 
-   Node *tp;
-
-   for(tp = taskBarNodes; tp; tp = tp->next) {
-      if(ShouldFocus(tp->client)) {
-         if(tp->client->state.status & STAT_ACTIVE) {
-            tp = tp->next;
-            break;
+   /* Find the current entry. */
+   for(tp = taskEntries; tp; tp = tp->next) {
+      for(cp = tp->clients; cp; cp = cp->next) {
+         if(ShouldFocus(cp->client)) {
+            if(cp->client->state.status & STAT_ACTIVE) {
+               cp = cp->next;
+               goto ClientFound;
+            }
          }
       }
+   }
+ClientFound:
+   if(!cp && tp) {
+      tp = tp->next;
+      if(tp) {
+         cp = tp->clients;
+      }
+   }
+   if(!tp) {
+      tp = taskEntries;
+      
+   } else if(!cp) {
+      
    }
 
    if(!tp) {
@@ -572,12 +674,14 @@ void FocusNext(void)
       RestoreClient(tp->client, 1);
       FocusClient(tp->client);
    }
+#endif
 
 }
 
 /** Focus the previous client in the task bar. */
 void FocusPrevious(void)
 {
+#if 0
 
    Node *tp;
 
@@ -609,105 +713,53 @@ void FocusPrevious(void)
       RestoreClient(tp->client, 1);
       FocusClient(tp->client);
    }
-
+#endif
 }
 
-/** Get the item associated with an x-coordinate on the task bar. */
-Node *GetNode(TaskBarType *bar, int x)
+/** Determine if there is anything to show for the specified entry. */
+char ShouldShowEntry(const TaskEntry *tp)
 {
+   const ClientEntry *cp;
+   for(cp = tp->clients; cp; cp = cp->next) {
+      if(ShouldFocus(cp->client)) {
+         return 1;
+      }
+   }
+   return 0;
+}
 
-   Node *tp;
-   int index, stop;
+/** Get the item associated with a coordinate on the task bar. */
+TaskEntry *GetEntry(TaskBarType *bar, int x, int y)
+{
+   TaskEntry *tp;
+   int offset;
 
-   index = 0;
-   if(bar->layout == LAYOUT_HORIZONTAL) {
-
-      const int width = bar->cp->width - index; 
-      const unsigned int itemCount = GetItemCount();
-      const int itemWidth = GetItemWidth(bar, itemCount);
-      int remainder = width - itemWidth * itemCount;
-
-      for(tp = taskBarNodes; tp; tp = tp->next) {
-         if(ShouldFocus(tp->client)) {
-            if(remainder) {
-               stop = index + itemWidth + 1;
-               remainder -= 1;
-            } else {
-               stop = index + itemWidth;
-            }
-            if(x >= index && x < stop) {
-               return tp;
-            }
-            index = stop;
+   offset = 0;
+   for(tp = taskEntries; tp; tp = tp->next) {
+      if(!ShouldShowEntry(tp)) {
+         continue;
+      }
+      offset += bar->itemWidth;
+      if(bar->layout == LAYOUT_HORIZONTAL) {
+         if(x < offset) {
+            return tp;
+         }
+      } else {
+         offset += bar->itemHeight;
+         if(y < offset) {
+            return tp;
          }
       }
-
-   } else {
-
-      for(tp = taskBarNodes; tp; tp = tp->next) {
-         if(ShouldFocus(tp->client)) {
-            stop = index + bar->itemHeight;
-            if(x >= index && x < stop) {
-               return tp;
-            }
-            index = stop;
-         }
-      }
-
    }
 
    return NULL;
-
-}
-
-/** Get the number of items on the task bar. */
-unsigned int GetItemCount(void)
-{
-
-   Node *tp;
-   unsigned int count;
-
-   count = 0;
-   for(tp = taskBarNodes; tp; tp = tp->next) {
-      if(ShouldFocus(tp->client)) {
-         count += 1;
-      }
-   }
-
-   return count;
-
-}
-
-/** Get the width of an item in the task bar. */
-unsigned int GetItemWidth(const TaskBarType *bp, unsigned int itemCount)
-{
-
-   unsigned int itemWidth;
-
-   itemWidth = bp->cp->width;
-
-   if(!itemCount) {
-      return itemWidth;
-   }
-
-   itemWidth /= itemCount;
-   if(!itemWidth) {
-      itemWidth = 1;
-   }
-
-   if(bp->maxItemWidth > 0 && itemWidth > bp->maxItemWidth) {
-      itemWidth = bp->maxItemWidth;
-   }
-
-   return itemWidth;
-
 }
 
 /** Set the maximum width of an item in the task bar. */
 void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value)
 {
-
-   TaskBarType *bp;
+#if 0
+   TaskBarType *bp = (TaskBarType*)cp->object;
    int temp;
 
    Assert(cp);
@@ -718,16 +770,15 @@ void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value)
       Warning(_("invalid maxwidth for TaskList: %s"), value);
       return;
    }
-   bp = (TaskBarType*)cp->object;
    bp->maxItemWidth = temp;
+#endif
 
 }
 
 /** Maintain the _NET_CLIENT_LIST[_STACKING] properties on the root. */
 void UpdateNetClientList(void)
 {
-
-   Node *np;
+   TaskEntry *tp;
    ClientNode *client;
    Window *windows;
    unsigned int count;
@@ -742,10 +793,14 @@ void UpdateNetClientList(void)
 
    /* Set _NET_CLIENT_LIST */
    count = 0;
-   for(np = taskBarNodes; np; np = np->next) {
-      windows[count] = np->client->window;
-      count += 1;
+   for(tp = taskEntries; tp; tp = tp->next) {
+      ClientEntry *cp;
+      for(cp = tp->clients; cp; cp = cp->next) {
+         windows[count] = cp->client->window;
+         count += 1;
+      }
    }
+   Assert(count <= clientCount);
    JXChangeProperty(display, rootWindow, atoms[ATOM_NET_CLIENT_LIST],
                     XA_WINDOW, 32, PropModeReplace,
                     (unsigned char*)windows, count);

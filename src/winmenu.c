@@ -150,13 +150,9 @@ void CreateWindowLayerMenu(Menu *menu)
    Menu *submenu;
    MenuItem *item;
 
-   item = Allocate(sizeof(MenuItem));
-   item->type = MENU_ITEM_SUBMENU;
+   item = CreateMenuItem(MENU_ITEM_SUBMENU);
    item->name = CopyString(_("Layer"));
    item->action.type = MA_NONE;
-   item->action.data.str = NULL;
-   item->iconName = NULL;
-
    item->next = menu->items;
    menu->items = item;
 
@@ -213,18 +209,10 @@ void AddWindowMenuItem(Menu *menu, const char *name,
 
    MenuItem *item;
 
-   item = Allocate(sizeof(MenuItem));
-   if(name) {
-      item->type = MENU_ITEM_NORMAL;
-   } else {
-      item->type = MENU_ITEM_SEPARATOR;
-   }
+   item = CreateMenuItem(name ? MENU_ITEM_NORMAL : MENU_ITEM_SEPARATOR);
    item->name = CopyString(name);
    item->action.type = type;
    item->action.data.i = value;
-   item->iconName = NULL;
-   item->submenu = NULL;
-
    item->next = menu->items;
    menu->items = item;
 

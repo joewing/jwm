@@ -476,30 +476,18 @@ void ParseRootMenu(const TokenNode *start)
 }
 
 /** Insert a new menu item into a menu. */
-MenuItem *InsertMenuItem(MenuItem *last) {
-
-   MenuItem *item;
-
-   item = Allocate(sizeof(MenuItem));
-   item->name = NULL;
-   item->type = MENU_ITEM_NORMAL;
-   item->iconName = NULL;
-   item->action.type = MA_NONE;
-   item->action.data.str = NULL;
-   item->submenu = NULL;
-
-   item->next = NULL;
+MenuItem *InsertMenuItem(MenuItem *last)
+{
+   MenuItem *item = CreateMenuItem(MENU_ITEM_NORMAL);
    if(last) {
       last->next = item;
    }
-
    return item;
-
 }
 
 /** Parse a menu item. */
-MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
-   MenuItem *last) {
+MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
+{
 
    Menu *child;
    const char *value;

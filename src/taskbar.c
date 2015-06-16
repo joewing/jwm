@@ -30,6 +30,7 @@ typedef struct TaskBarType {
 
    TrayComponentType *cp;
 
+   int maxItemWidth;
    int itemHeight;
    int itemWidth;
    LayoutType layout;
@@ -59,6 +60,7 @@ static TaskBarType *bars;
 static TaskEntry *taskEntries;
 static TaskEntry *taskEntriesTail;
 
+static void ComputeItemSize(TaskBarType *tp);
 static char ShouldShowEntry(const TaskEntry *tp);
 static TaskEntry *GetEntry(TaskBarType *bar, int x, int y);
 static void Render(const TaskBarType *bp);
@@ -166,47 +168,55 @@ void SetSize(TrayComponentType *cp, int width, int height)
 /** Initialize a task bar tray component. */
 void Create(TrayComponentType *cp)
 {
-
    TaskBarType *tp = (TaskBarType*)cp->object;
-
-   if(tp->layout == LAYOUT_HORIZONTAL) {
-      tp->itemHeight = cp->height;
-      tp->itemWidth = cp->height;
-   } else {
-      tp->itemHeight = cp->width;
-      tp->itemWidth = cp->width;
-   }
-
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
                                rootVisual.depth);
    tp->buffer = cp->pixmap;
-
    ClearTrayDrawable(cp);
-
 }
 
 /** Resize a task bar tray component. */
 void Resize(TrayComponentType *cp)
 {
    TaskBarType *tp = (TaskBarType*)cp->object;
-
    if(tp->buffer != None) {
       JXFreePixmap(display, tp->buffer);
    }
-
-   if(tp->layout == LAYOUT_HORIZONTAL) {
-      tp->itemHeight = cp->height;
-      tp->itemWidth = cp->height;
-   } else {
-      tp->itemHeight = cp->width;
-      tp->itemWidth = cp->width;
-   }
-
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
                                rootVisual.depth);
    tp->buffer = cp->pixmap;
-
    ClearTrayDrawable(cp);
+}
+
+/** Determine the size of items in the task bar. */
+void ComputeItemSize(TaskBarType *tp)
+{
+   TrayComponentType *cp = tp->cp;
+   if(tp->layout == LAYOUT_VERTICAL) {
+
+      tp->itemHeight = GetStringHeight(FONT_TASK) + 12;
+      tp->itemWidth = cp->width;
+
+   } else {
+
+      TaskEntry *ep;
+      unsigned itemCount = 0;
+
+      tp->itemHeight = cp->height;
+      for(ep = taskEntries; ep; ep = ep->next) {
+         if(ShouldShowEntry(ep)) {
+            itemCount += 1;
+         }
+      }
+      if(itemCount == 0) {
+         return;
+      }
+
+      tp->itemWidth = Max(1, cp->width / itemCount);
+      if(tp->maxItemWidth > 0) {
+         tp->itemWidth = Min(tp->maxItemWidth, tp->itemWidth);
+      }
+   }
 }
 
 /** Process a task list button event. */
@@ -541,14 +551,18 @@ void UpdateTaskBar(void)
       if(bp->layout == LAYOUT_VERTICAL) {
          TaskEntry *tp;
          lastHeight = bp->cp->requestedHeight;
+         bp->itemHeight = GetStringHeight(FONT_TASK) + 12;
          bp->cp->requestedHeight = 2;
-         for(; tp; tp = tp->next) {
-            bp->cp->requestedHeight += bp->cp->width;
+         for(tp = taskEntries; tp; tp = tp->next) {
+            if(ShouldShowEntry(tp)) {
+               bp->cp->requestedHeight += bp->itemHeight;
+            }
          }
          if(lastHeight != bp->cp->requestedHeight) {
             ResizeTray(bp->cp->tray);
          }
       }
+      ComputeItemSize(bp);
       Render(bp);
    }
 }
@@ -616,6 +630,11 @@ void Render(const TaskBarType *bp)
       button.x = x;
       button.y = y;
       button.icon = tp->clients->client->icon;
+      if(tp->clients->client->className) {
+         button.text = tp->clients->client->className;
+      } else {
+         button.text = tp->clients->client->name;
+      }
       DrawButton(&button);
 
       if(bp->layout == LAYOUT_HORIZONTAL) {
@@ -732,8 +751,8 @@ TaskEntry *GetEntry(TaskBarType *bar, int x, int y)
       if(!ShouldShowEntry(tp)) {
          continue;
       }
-      offset += bar->itemWidth;
       if(bar->layout == LAYOUT_HORIZONTAL) {
+         offset += bar->itemWidth;
          if(x < offset) {
             return tp;
          }
@@ -751,7 +770,6 @@ TaskEntry *GetEntry(TaskBarType *bar, int x, int y)
 /** Set the maximum width of an item in the task bar. */
 void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value)
 {
-#if 0
    TaskBarType *bp = (TaskBarType*)cp->object;
    int temp;
 
@@ -764,8 +782,6 @@ void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value)
       return;
    }
    bp->maxItemWidth = temp;
-#endif
-
 }
 
 /** Maintain the _NET_CLIENT_LIST[_STACKING] properties on the root. */

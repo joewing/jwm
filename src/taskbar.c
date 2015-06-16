@@ -55,7 +55,6 @@ typedef struct TaskEntry {
    struct TaskEntry *prev;
 } TaskEntry;
 
-static TaskEntry *selectedEntry;
 static TaskBarType *bars;
 static TaskEntry *taskEntries;
 static TaskEntry *taskEntriesTail;
@@ -64,7 +63,7 @@ static char ShouldShowEntry(const TaskEntry *tp);
 static TaskEntry *GetEntry(TaskBarType *bar, int x, int y);
 static void Render(const TaskBarType *bp);
 static void ShowClientList(TaskBarType *bar, TaskEntry *tp);
-static void RunTaskBarCommand(const MenuAction *action);
+static void RunTaskBarCommand(MenuAction *action);
 
 static void SetSize(TrayComponentType *cp, int width, int height);
 static void Create(TrayComponentType *cp);
@@ -318,8 +317,6 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
    int x, y;
    Window w;
 
-   selectedEntry = tp;
-
    menu = Allocate(sizeof(Menu));
    menu->itemHeight = 0;
    menu->items = NULL;
@@ -327,25 +324,29 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
 
    item = CreateMenuItem(MENU_ITEM_SUBMENU);
    item->name = CopyString(_("Close"));
-   item->action.type = MA_CLOSE;
+   item->action.type = MA_CLOSE | MA_GROUP_MASK;
+   item->action.context = tp;
    item->next = menu->items;
    menu->items = item;
 
    item = CreateMenuItem(MENU_ITEM_SUBMENU);
    item->name = CopyString(_("Minimize"));
-   item->action.type = MA_MINIMIZE;
+   item->action.type = MA_MINIMIZE | MA_GROUP_MASK;
+   item->action.context = tp;
    item->next = menu->items;
    menu->items = item;
 
    item = CreateMenuItem(MENU_ITEM_SUBMENU);
    item->name = CopyString(_("Restore"));
-   item->action.type = MA_RESTORE;
+   item->action.type = MA_RESTORE | MA_GROUP_MASK;
+   item->action.context = tp;
    item->next = menu->items;
    menu->items = item;
 
    item = CreateMenuItem(MENU_ITEM_SUBMENU);
    item->name = CopyString(_("Send To"));
-   item->action.type = MA_SENDTO_MENU;
+   item->action.type = MA_SENDTO_MENU | MA_GROUP_MASK;
+   item->action.context = tp;
    item->next = menu->items;
    menu->items = item;
 
@@ -374,7 +375,8 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
          item->name = CopyString(cp->client->name);
       }
       item->icon = cp->client->icon;
-      item->action.data.client = cp->client;
+      item->action.type = MA_WINDOW_MENU;
+      item->action.context = cp->client;
       item->next = menu->items;
       menu->items = item;
    }
@@ -408,38 +410,42 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
 }
 
 /** Run a menu action. */
-void RunTaskBarCommand(const MenuAction *action)
+void RunTaskBarCommand(MenuAction *action)
 {
    ClientEntry *cp;
 
    /* Check if the program entry was clicked. */
-   if(action->type == MA_NONE) {
-      RestoreClient(action->data.client, 1);
-      FocusClient(action->data.client);
+   if(action->type == MA_TOGGLE_STATE) {
+      RestoreClient(action->context, 1);
+      FocusClient(action->context);
       return;
    }
 
-   /* Apply the specified action to all clients in the group. */
-   for(cp = selectedEntry->clients; cp; cp = cp->next) {
-      if(!ShouldFocus(cp->client)) {
-         continue;
+   if(action->type & MA_GROUP_MASK) {
+      TaskEntry *tp = action->context;
+      for(cp = tp->clients; cp; cp = cp->next) {
+         if(!ShouldFocus(cp->client)) {
+            continue;
+         }
+         switch(action->type & ~MA_GROUP_MASK) {
+         case MA_SENDTO:
+            SetClientDesktop(cp->client, action->data.i);
+            break;
+         case MA_CLOSE:
+            DeleteClient(cp->client);
+            break;
+         case MA_RESTORE:
+            RestoreClient(cp->client, 0);
+            break;
+         case MA_MINIMIZE:
+            MinimizeClient(cp->client, 0);
+            break;
+         default:
+            break;
+         }
       }
-      switch(action->type) {
-      case MA_SENDTO:
-         SetClientDesktop(cp->client, action->data.i);
-         break;
-      case MA_CLOSE:
-         DeleteClient(cp->client);
-         break;
-      case MA_RESTORE:
-         RestoreClient(cp->client, 0);
-         break;
-      case MA_MINIMIZE:
-         MinimizeClient(cp->client, 0);
-         break;
-      default:
-         break;
-      }
+   } else {
+      RunWindowCommand(action);
    }
 }
 
@@ -626,12 +632,11 @@ void Render(const TaskBarType *bp)
 /** Focus the next client in the task bar. */
 void FocusNext(void)
 {
-#if 0
    TaskEntry *tp;
-   ClientEntry *cp;
 
    /* Find the current entry. */
    for(tp = taskEntries; tp; tp = tp->next) {
+      ClientEntry *cp;
       for(cp = tp->clients; cp; cp = cp->next) {
          if(ShouldFocus(cp->client)) {
             if(cp->client->state.status & STAT_ACTIVE) {
@@ -642,78 +647,66 @@ void FocusNext(void)
       }
    }
 ClientFound:
-   if(!cp && tp) {
-      tp = tp->next;
-      if(tp) {
-         cp = tp->clients;
-      }
-   }
-   if(!tp) {
-      tp = taskEntries;
-      
-   } else if(!cp) {
-      
-   }
 
-   if(!tp) {
-      tp = taskBarNodes;
-   }
-
-   while(tp && !ShouldFocus(tp->client)) {
-      tp = tp->next;
-   }
-
-   if(!tp) {
-      tp = taskBarNodes;
-      while(tp && !ShouldFocus(tp->client)) {
-         tp = tp->next;
-      }
-   }
-
+   /* Move to the next group. */
    if(tp) {
-      RestoreClient(tp->client, 1);
-      FocusClient(tp->client);
+      do {
+         tp = tp->next;
+      } while(tp && !ShouldShowEntry(tp));
    }
-#endif
-
-}
-
-/** Focus the previous client in the task bar. */
-void FocusPrevious(void)
-{
-#if 0
-
-   Node *tp;
-
-   for(tp = taskBarNodesTail; tp; tp = tp->prev) {
-      if(ShouldFocus(tp->client)) {
-         if(tp->client->state.status & STAT_ACTIVE) {
-            tp = tp->prev;
+   if(!tp) {
+      /* Wrap around; start at the beginning. */
+      for(tp = taskEntries; tp; tp = tp->next) {
+         if(ShouldShowEntry(tp)) {
             break;
          }
       }
    }
 
-   if(!tp) {
-      tp = taskBarNodesTail;
+   /* Focus the group if one exists. */
+   if(tp) {
+      FocusGroup(tp);
    }
+}
 
-   while(tp && !ShouldFocus(tp->client)) {
-      tp = tp->prev;
+/** Focus the previous client in the task bar. */
+void FocusPrevious(void)
+{
+   TaskEntry *tp;
+
+   /* Find the current entry. */
+   for(tp = taskEntries; tp; tp = tp->next) {
+      ClientEntry *cp;
+      for(cp = tp->clients; cp; cp = cp->next) {
+         if(ShouldFocus(cp->client)) {
+            if(cp->client->state.status & STAT_ACTIVE) {
+               cp = cp->next;
+               goto ClientFound;
+            }
+         }
+      }
    }
+ClientFound:
 
-   if(!tp) {
-      tp = taskBarNodesTail;
-      while(tp && !ShouldFocus(tp->client)) {
+   /* Move to the previous group. */
+   if(tp) {
+      do {
          tp = tp->prev;
+      } while(tp && !ShouldShowEntry(tp));
+   }
+   if(!tp) {
+      /* Wrap around; start at the end. */
+      for(tp = taskEntriesTail; tp; tp = tp->prev) {
+         if(ShouldShowEntry(tp)) {
+            break;
+         }
       }
    }
 
+   /* Focus the group if one exists. */
    if(tp) {
-      RestoreClient(tp->client, 1);
-      FocusClient(tp->client);
+      FocusGroup(tp);
    }
-#endif
 }
 
 /** Determine if there is anything to show for the specified entry. */

@@ -20,6 +20,7 @@
 #include "settings.h"
 #include "desktop.h"
 #include "parse.h"
+#include "winmenu.h"
 
 #define BASE_ICON_OFFSET   3
 #define MENU_BORDER_SIZE   1
@@ -59,13 +60,8 @@ int menuShown = 0;
 MenuItem *CreateMenuItem(MenuItemType type)
 {
    MenuItem *item = Allocate(sizeof(MenuItem));
+   memset(item, 0, sizeof(MenuItem));
    item->type = type;
-   item->name = NULL;
-   item->action.type = MA_NONE;
-   item->iconName = NULL;
-   item->submenu = NULL;
-   item->next = NULL;
-   item->icon = NULL;
    return item;
 }
 
@@ -205,7 +201,7 @@ void DestroyMenu(Menu *menu)
          if(menu->items->name) {
             Release(menu->items->name);
          }
-         switch(menu->items->action.type) {
+         switch(menu->items->action.type & MA_ACTION_MASK) {
          case MA_EXECUTE:
          case MA_EXIT:
          case MA_DYNAMIC:
@@ -263,12 +259,18 @@ void PatchMenu(Menu *menu)
    MenuItem *item;
    for(item = menu->items; item; item = item->next) {
       Menu *submenu = NULL;
-      switch(item->action.type) {
+      switch(item->action.type & MA_ACTION_MASK) {
       case MA_DESKTOP_MENU:
-         submenu = CreateDesktopMenu(1 << currentDesktop);
+         submenu = CreateDesktopMenu(1 << currentDesktop,
+                                     item->action.context);
          break;
       case MA_SENDTO_MENU:
-         submenu = CreateSendtoMenu();
+         submenu = CreateSendtoMenu(
+            item->action.type & ~MA_ACTION_MASK,
+            item->action.context);
+         break;
+      case MA_WINDOW_MENU:
+         submenu = CreateWindowMenu(item->action.context);
          break;
       case MA_DYNAMIC:
          if(!item->submenu) {
@@ -292,9 +294,10 @@ void UnpatchMenu(Menu *menu)
    for(item = menu->items; item; item = item->next) {
       if(item->submenu) {
          UnpatchMenu(item->submenu);
-         switch(item->action.type) {
+         switch(item->action.type & MA_ACTION_MASK) {
          case MA_DESKTOP_MENU:
          case MA_SENDTO_MENU:
+         case MA_WINDOW_MENU:
          case MA_DYNAMIC:
             DestroyMenu(item->submenu);
             item->submenu = NULL;

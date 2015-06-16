@@ -14,12 +14,8 @@
 
 struct ClientNode;
 
-/** Get the size of a window menu.
- * @param np The client for the window menu.
- * @param width The width return.
- * @param height The height return.
- */
-void GetWindowMenuSize(struct ClientNode *np, int *width, int *height);
+/** Create a window menu. */
+Menu *CreateWindowMenu(struct ClientNode *np);
 
 /** Show a window menu.
  * @param np The client for the window menu.
@@ -31,7 +27,9 @@ void ShowWindowMenu(struct ClientNode *np, int x, int y);
 /** Grab the mouse to select a window.
  * @param action The action to perform when a window is selected.
  */
-void ChooseWindow(const MenuAction *action); 
+void ChooseWindow(MenuAction *action);
+
+/** Run a menu action for selected client. */
+void RunWindowCommand(MenuAction *action);
 
 #endif /* WINMENU_H */
-

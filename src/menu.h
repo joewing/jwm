@@ -12,38 +12,42 @@
 
 /** Enumeration of menu action types. */
 typedef unsigned char MenuActionType;
-#define MA_NONE         0
-#define MA_EXECUTE      1
-#define MA_DESKTOP      2
-#define MA_SENDTO       3
-#define MA_LAYER        4
-#define MA_STICK        5
-#define MA_MAXIMIZE     6
-#define MA_MAXIMIZE_H   7
-#define MA_MAXIMIZE_V   8
-#define MA_MINIMIZE     9
-#define MA_RESTORE      10
-#define MA_SHADE        11
-#define MA_MOVE         12
-#define MA_RESIZE       13
-#define MA_KILL         14
-#define MA_CLOSE        15
-#define MA_EXIT         16
-#define MA_RESTART      17
-#define MA_DYNAMIC      18
-#define MA_SENDTO_MENU  19
-#define MA_DESKTOP_MENU 20
+#define MA_NONE               0
+#define MA_EXECUTE            1
+#define MA_DESKTOP            2
+#define MA_SENDTO             3
+#define MA_LAYER              4
+#define MA_STICK              5
+#define MA_MAXIMIZE           6
+#define MA_MAXIMIZE_H         7
+#define MA_MAXIMIZE_V         8
+#define MA_MINIMIZE           9
+#define MA_RESTORE            10
+#define MA_SHADE              11
+#define MA_MOVE               12
+#define MA_RESIZE             13
+#define MA_KILL               14
+#define MA_CLOSE              15
+#define MA_EXIT               16
+#define MA_RESTART            17
+#define MA_DYNAMIC            18
+#define MA_SENDTO_MENU        19
+#define MA_DESKTOP_MENU       20
+#define MA_WINDOW_MENU        21
+#define MA_TOGGLE_STATE       22
+#define MA_ACTION_MASK        0x7F
+#define MA_GROUP_MASK         0x80
 
 /** Structure to represent a menu action for callbacks. */
 typedef struct MenuAction {
 
-   MenuActionType type;    /**< Type of action. */
+   MenuActionType type;          /**< Type of action. */
+   void *context;
 
    /** Extra data for the action. */
    union {
       int i;
       char *str;
-      struct ClientNode *client;
    } data;
 
 } MenuAction;
@@ -95,7 +99,7 @@ typedef struct Menu {
 
 } Menu;
 
-typedef void (*RunMenuCommandType)(const MenuAction *action);
+typedef void (*RunMenuCommandType)(MenuAction *action);
 
 /** Create an empty menu item. */
 MenuItem *CreateMenuItem(MenuItemType type);

@@ -43,14 +43,17 @@ void ShowDesktop(void);
 
 /** Create a menu containing a list of desktops.
  * @param mask A bit mask of desktops to highlight.
+ * @param context Context to pass the action handler.
  * @return A menu containing all the desktops.
  */
-struct Menu *CreateDesktopMenu(unsigned int mask);
+struct Menu *CreateDesktopMenu(unsigned int mask, void *context);
 
 /** Create a menu containing a list of desktops.
+ * @param mask Mask to OR onto the action.
+ * @param context Context to pass the action handler.
  * @return A menu containing all the desktops.
  */
-struct Menu *CreateSendtoMenu(void);
+struct Menu *CreateSendtoMenu(unsigned char mask, void *context);
 
 /** Set the name of a desktop.
  * This is called before startup.

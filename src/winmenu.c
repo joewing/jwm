@@ -19,50 +19,23 @@
 #include "root.h"
 #include "settings.h"
 
-static Menu *CreateWindowMenu(void);
-static void RunWindowCommand(const MenuAction *action);
-
-static void CreateWindowLayerMenu(Menu *menu);
-static void CreateWindowSendToMenu(Menu *menu);
+static void CreateWindowLayerMenu(Menu *menu, ClientNode *np);
+static void CreateWindowSendToMenu(Menu *menu, ClientNode *np);
 static void AddWindowMenuItem(Menu *menu, const char *name,
-                              MenuActionType type, int value);
-
-static ClientNode *client = NULL;
-
-/** Get the size of a window menu. */
-void GetWindowMenuSize(ClientNode *np, int *width, int *height)
-{
-
-   Menu *menu;
-
-   client = np;
-   menu = CreateWindowMenu();
-   InitializeMenu(menu);
-   *width = menu->width;
-   *height = menu->height;
-   DestroyMenu(menu);
-
-}
+                              MenuActionType type,
+                              ClientNode *np, int value);
 
 /** Show a window menu. */
 void ShowWindowMenu(ClientNode *np, int x, int y)
 {
-
-   Menu *menu;
-
-   client = np;
-   menu = CreateWindowMenu();
-
+   Menu *menu = CreateWindowMenu(np);
    InitializeMenu(menu);
-
    ShowMenu(menu, RunWindowCommand, x, y);
-
    DestroyMenu(menu);
-
 }
 
 /** Create a new window menu. */
-Menu *CreateWindowMenu(void)
+Menu *CreateWindowMenu(ClientNode *np)
 {
 
    Menu *menu;
@@ -74,67 +47,67 @@ Menu *CreateWindowMenu(void)
 
    /* Note that items are added in reverse order of display. */
 
-   if(!(client->state.status & STAT_WMDIALOG)) {
-      AddWindowMenuItem(menu, _("Close"), MA_CLOSE, 0);
-      AddWindowMenuItem(menu, _("Kill"), MA_KILL, 0);
-      AddWindowMenuItem(menu, NULL, MA_NONE, 0);
+   if(!(np->state.status & STAT_WMDIALOG)) {
+      AddWindowMenuItem(menu, _("Close"), MA_CLOSE, np, 0);
+      AddWindowMenuItem(menu, _("Kill"), MA_KILL, np, 0);
+      AddWindowMenuItem(menu, NULL, MA_NONE, np, 0);
    }
 
-   if(!(client->state.status & (STAT_FULLSCREEN | STAT_MINIMIZED)
-        || client->state.maxFlags)) {
-      if(client->state.status & (STAT_MAPPED | STAT_SHADED)) {
-         if(client->state.border & BORDER_RESIZE) {
-            AddWindowMenuItem(menu, _("Resize"), MA_RESIZE, 0);
+   if(!(np->state.status & (STAT_FULLSCREEN | STAT_MINIMIZED)
+        || np->state.maxFlags)) {
+      if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
+         if(np->state.border & BORDER_RESIZE) {
+            AddWindowMenuItem(menu, _("Resize"), MA_RESIZE, np, 0);
          }
-         if(client->state.border & BORDER_MOVE) {
-            AddWindowMenuItem(menu, _("Move"), MA_MOVE, 0);
+         if(np->state.border & BORDER_MOVE) {
+            AddWindowMenuItem(menu, _("Move"), MA_MOVE, np, 0);
          }
       }
    }
 
-   if(client->state.status & STAT_MINIMIZED) {
-      AddWindowMenuItem(menu, _("Restore"), MA_RESTORE, 0);
-   } else if(client->state.border & BORDER_MIN) {
-      AddWindowMenuItem(menu, _("Minimize"), MA_MINIMIZE, 0);
+   if(np->state.status & STAT_MINIMIZED) {
+      AddWindowMenuItem(menu, _("Restore"), MA_RESTORE, np, 0);
+   } else if(np->state.border & BORDER_MIN) {
+      AddWindowMenuItem(menu, _("Minimize"), MA_MINIMIZE, np, 0);
    }
 
-   if(!(client->state.status & STAT_FULLSCREEN)) {
-      if(client->state.status & STAT_SHADED) {
-         AddWindowMenuItem(menu, _("Unshade"), MA_SHADE, 0);
-      } else if(client->state.border & BORDER_SHADE) {
-         AddWindowMenuItem(menu, _("Shade"), MA_SHADE, 0);
+   if(!(np->state.status & STAT_FULLSCREEN)) {
+      if(np->state.status & STAT_SHADED) {
+         AddWindowMenuItem(menu, _("Unshade"), MA_SHADE, np, 0);
+      } else if(np->state.border & BORDER_SHADE) {
+         AddWindowMenuItem(menu, _("Shade"), MA_SHADE, np, 0);
       }
-      if((client->state.border & BORDER_MAX) &&
-         (client->state.status & (STAT_MAPPED | STAT_SHADED))) {
-         if(!(client->state.maxFlags & MAX_VERT)) {
-            AddWindowMenuItem(menu, _("Maximize-y"), MA_MAXIMIZE_V, 0);
+      if((np->state.border & BORDER_MAX) &&
+         (np->state.status & (STAT_MAPPED | STAT_SHADED))) {
+         if(!(np->state.maxFlags & MAX_VERT)) {
+            AddWindowMenuItem(menu, _("Maximize-y"), MA_MAXIMIZE_V, np, 0);
          }
-         if(!(client->state.maxFlags & MAX_HORIZ)) {
-            AddWindowMenuItem(menu, _("Maximize-x"), MA_MAXIMIZE_H, 0);
+         if(!(np->state.maxFlags & MAX_HORIZ)) {
+            AddWindowMenuItem(menu, _("Maximize-x"), MA_MAXIMIZE_H, np, 0);
          }
-         if(client->state.maxFlags) {
-            AddWindowMenuItem(menu, _("Restore"), MA_MAXIMIZE, 0);
+         if(np->state.maxFlags) {
+            AddWindowMenuItem(menu, _("Restore"), MA_MAXIMIZE, np, 0);
          } else {
-            AddWindowMenuItem(menu, _("Maximize"), MA_MAXIMIZE, 0);
+            AddWindowMenuItem(menu, _("Maximize"), MA_MAXIMIZE, np, 0);
          }
       }
    }
 
-   if(!(client->state.status & STAT_WMDIALOG)) {
+   if(!(np->state.status & STAT_WMDIALOG)) {
 
       if(settings.desktopCount > 1) {
-         if(client->state.status & STAT_STICKY) {
-            AddWindowMenuItem(menu, _("Unstick"), MA_STICK, 0);
+         if(np->state.status & STAT_STICKY) {
+            AddWindowMenuItem(menu, _("Unstick"), MA_STICK, np, 0);
          } else {
-            AddWindowMenuItem(menu, _("Stick"), MA_STICK, 0);
+            AddWindowMenuItem(menu, _("Stick"), MA_STICK, np, 0);
          }
       }
 
-      CreateWindowLayerMenu(menu);
+      CreateWindowLayerMenu(menu, np);
 
       if(settings.desktopCount > 1) {
-         if(!(client->state.status & STAT_STICKY)) {
-            CreateWindowSendToMenu(menu);
+         if(!(np->state.status & STAT_STICKY)) {
+            CreateWindowSendToMenu(menu, np);
          }
       }
 
@@ -144,7 +117,7 @@ Menu *CreateWindowMenu(void)
 }
 
 /** Create a window layer submenu. */
-void CreateWindowLayerMenu(Menu *menu)
+void CreateWindowLayerMenu(Menu *menu, ClientNode *np)
 {
 
    Menu *submenu;
@@ -162,26 +135,26 @@ void CreateWindowLayerMenu(Menu *menu)
    submenu->items = NULL;
    submenu->label = NULL;
 
-   if(client->state.layer == LAYER_ABOVE) {
-      AddWindowMenuItem(submenu, _("[Above]"), MA_LAYER, LAYER_ABOVE);
+   if(np->state.layer == LAYER_ABOVE) {
+      AddWindowMenuItem(submenu, _("[Above]"), MA_LAYER, np, LAYER_ABOVE);
    } else {
-      AddWindowMenuItem(submenu, _("Above"), MA_LAYER, LAYER_ABOVE);
+      AddWindowMenuItem(submenu, _("Above"), MA_LAYER, np, LAYER_ABOVE);
    }
-   if(client->state.layer == LAYER_NORMAL) {
-      AddWindowMenuItem(submenu, _("[Normal]"), MA_LAYER, LAYER_NORMAL);
+   if(np->state.layer == LAYER_NORMAL) {
+      AddWindowMenuItem(submenu, _("[Normal]"), MA_LAYER, np, LAYER_NORMAL);
    } else {
-      AddWindowMenuItem(submenu, _("Normal"), MA_LAYER, LAYER_NORMAL);
+      AddWindowMenuItem(submenu, _("Normal"), MA_LAYER, np, LAYER_NORMAL);
    }
-   if(client->state.layer == LAYER_BELOW) {
-      AddWindowMenuItem(submenu, _("[Below]"), MA_LAYER, LAYER_BELOW);
+   if(np->state.layer == LAYER_BELOW) {
+      AddWindowMenuItem(submenu, _("[Below]"), MA_LAYER, np, LAYER_BELOW);
    } else {
-      AddWindowMenuItem(submenu, _("Below"), MA_LAYER, LAYER_BELOW);
+      AddWindowMenuItem(submenu, _("Below"), MA_LAYER, np, LAYER_BELOW);
    }
 
 }
 
 /** Create a send to submenu. */
-void CreateWindowSendToMenu(Menu *menu)
+void CreateWindowSendToMenu(Menu *menu, ClientNode *np)
 {
 
    unsigned int mask;
@@ -189,22 +162,21 @@ void CreateWindowSendToMenu(Menu *menu)
 
    mask = 0;
    for(x = 0; x < settings.desktopCount; x++) {
-      if(client->state.desktop == x
-         || (client->state.status & STAT_STICKY)) {
+      if(np->state.desktop == x || (np->state.status & STAT_STICKY)) {
          mask |= 1 << x;
       }
    }
 
-   AddWindowMenuItem(menu, _("Send To"), MA_NONE, 0);
+   AddWindowMenuItem(menu, _("Send To"), MA_NONE, np, 0);
 
    /* Now the first item in the menu is for the desktop list. */
-   menu->items->submenu = CreateDesktopMenu(mask);
+   menu->items->submenu = CreateDesktopMenu(mask, np);
 
 }
 
 /** Add an item to the current window menu. */
-void AddWindowMenuItem(Menu *menu, const char *name,
-                       MenuActionType type, int value)
+void AddWindowMenuItem(Menu *menu, const char *name, MenuActionType type,
+                       ClientNode *np, int value)
 {
 
    MenuItem *item;
@@ -212,6 +184,7 @@ void AddWindowMenuItem(Menu *menu, const char *name,
    item = CreateMenuItem(name ? MENU_ITEM_NORMAL : MENU_ITEM_SEPARATOR);
    item->name = CopyString(name);
    item->action.type = type;
+   item->action.context = np;
    item->action.data.i = value;
    item->next = menu->items;
    menu->items = item;
@@ -219,7 +192,7 @@ void AddWindowMenuItem(Menu *menu, const char *name,
 }
 
 /** Select a window for performing an action. */
-void ChooseWindow(const MenuAction *action)
+void ChooseWindow(MenuAction *action)
 {
 
    XEvent event;
@@ -235,7 +208,7 @@ void ChooseWindow(const MenuAction *action)
          if(event.xbutton.button == Button1) {
             np = FindClient(event.xbutton.subwindow);
             if(np) {
-               client = np;
+               action->context = np;
                RunWindowCommand(action);
             }
          }
@@ -251,9 +224,9 @@ void ChooseWindow(const MenuAction *action)
 }
 
 /** Window menu action callback. */
-void RunWindowCommand(const MenuAction *action)
+void RunWindowCommand(MenuAction *action)
 {
-
+   ClientNode *client = action->context;
    switch(action->type) {
    case MA_STICK:
       if(client->state.status & STAT_STICKY) {

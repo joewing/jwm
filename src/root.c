@@ -27,7 +27,7 @@ static Menu *rootMenu[ROOT_MENU_COUNT];
 
 static void ExitHandler(ClientNode *np);
 
-static void RunRootCommand(const MenuAction *action);
+static void RunRootCommand(MenuAction *action);
 
 /** Initialize root menu data. */
 void InitializeRootMenu(void)
@@ -233,7 +233,7 @@ void ReloadMenu(void)
 }
 
 /** Root menu callback. */
-void RunRootCommand(const MenuAction *action)
+void RunRootCommand(MenuAction *action)
 {
 
    switch(action->type) {

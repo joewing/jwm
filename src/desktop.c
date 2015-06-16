@@ -204,7 +204,7 @@ void ChangeDesktop(unsigned int desktop)
 }
 
 /** Create a desktop menu. */
-Menu *CreateDesktopMenu(unsigned int mask)
+Menu *CreateDesktopMenu(unsigned int mask, void *context)
 {
 
    Menu *menu;
@@ -216,25 +216,20 @@ Menu *CreateDesktopMenu(unsigned int mask)
    menu->label = NULL;
 
    for(x = settings.desktopCount - 1; x >= 0; x--) {
-
+      const size_t len = strlen(desktopNames[x]);
       MenuItem *item = CreateMenuItem(MENU_ITEM_NORMAL);
       item->next = menu->items;
       menu->items = item;
 
       item->action.type = MA_DESKTOP;
+      item->action.context = context;
       item->action.data.i = x;
 
-      item->name = Allocate(strlen(desktopNames[x]) + 3);
-      if(mask & (1 << x)) {
-         strcpy(item->name, "[");
-         strcat(item->name, desktopNames[x]);
-         strcat(item->name, "]");
-      } else {
-         strcpy(item->name, " ");
-         strcat(item->name, desktopNames[x]);
-         strcat(item->name, " ");
-      }
-
+      item->name = Allocate(len + 3);
+      item->name[0] = (mask & (1 << x)) ? '[' : ' ';
+      memcpy(&item->name[1], desktopNames[x], len);
+      item->name[len + 1] = (mask & (1 << x)) ? ']' : ' ';
+      item->name[len + 2] = 0;
    }
 
    return menu;
@@ -242,7 +237,7 @@ Menu *CreateDesktopMenu(unsigned int mask)
 }
 
 /** Create a sendto menu. */
-Menu *CreateSendtoMenu(void)
+Menu *CreateSendtoMenu(MenuActionType mask, void *context)
 {
 
    Menu *menu;
@@ -254,16 +249,20 @@ Menu *CreateSendtoMenu(void)
    menu->label = NULL;
 
    for(x = settings.desktopCount - 1; x >= 0; x--) {
-
+      const size_t len = strlen(desktopNames[x]);
       MenuItem *item = CreateMenuItem(MENU_ITEM_NORMAL);
       item->next = menu->items;
       menu->items = item;
 
-      item->action.type = MA_SENDTO;
+      item->action.type = MA_SENDTO | mask;
+      item->action.context = context;
       item->action.data.i = x;
 
-      item->name = Allocate(strlen(desktopNames[x]) + 1);
-      strcpy(item->name, desktopNames[x]);
+      item->name = Allocate(len + 3);
+      item->name[0] = (x == currentDesktop) ? '[' : ' ';
+      memcpy(&item->name[1], desktopNames[x], len);
+      item->name[len + 1] = (x == currentDesktop) ? ']' : ' ';
+      item->name[len + 2] = 0;
    }
 
    return menu;

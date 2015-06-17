@@ -34,7 +34,6 @@ typedef unsigned char MenuActionType;
 #define MA_SENDTO_MENU        19
 #define MA_DESKTOP_MENU       20
 #define MA_WINDOW_MENU        21
-#define MA_TOGGLE_STATE       22
 #define MA_ACTION_MASK        0x7F
 #define MA_GROUP_MASK         0x80
 

@@ -432,13 +432,6 @@ void RunTaskBarCommand(MenuAction *action)
 {
    ClientEntry *cp;
 
-   /* Check if the program entry was clicked. */
-   if(action->type == MA_TOGGLE_STATE) {
-      RestoreClient(action->context, 1);
-      FocusClient(action->context);
-      return;
-   }
-
    if(action->type & MA_GROUP_MASK) {
       TaskEntry *tp = action->context;
       for(cp = tp->clients; cp; cp = cp->next) {

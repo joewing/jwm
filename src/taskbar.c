@@ -405,20 +405,24 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
    GetMousePosition(&x, &y, &w);
    if(bar->layout == LAYOUT_HORIZONTAL) {
       if(bar->cp->screeny + bar->cp->height / 2 < sp->y + sp->height / 2) {
+         /* Bottom of the screen: menus go up. */
          y = bar->cp->screeny + bar->cp->height;
       } else {
+         /* Top of the screen: menus go down. */
          y = bar->cp->screeny - menu->height;
       }
       x -= menu->width / 2;
-      x = Max(x, 0);
+      x = Max(x, sp->x);
    } else {
       if(bar->cp->screenx + bar->cp->width / 2 < sp->x + sp->width / 2) {
+         /* Left side: menus go right. */
          x = bar->cp->screenx + bar->cp->width;
       } else {
+         /* Right side: menus go left. */
          x = bar->cp->screenx - menu->width;
       }
       y -= menu->height / 2;
-      y = Max(y, 0);
+      y = Max(y, sp->y);
    }
 
    ShowMenu(menu, RunTaskBarCommand, x, y);

@@ -227,18 +227,26 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
    TaskEntry *entry = GetEntry(bar, x, y);
 
    if(entry) {
-      ClientEntry *cp;
       char hasActive = 0;
+      int layer;
 
       switch(mask) {
       case Button1:  /* Raise or minimize items in this group. */
-         for(cp = entry->clients; cp; cp = cp->next)  {
-            if(!ShouldFocus(cp->client)) {
-               continue;
-            }
-            if(cp->client->state.status & STAT_ACTIVE &&
-               !(cp->client->state.status & STAT_MINIMIZED)) {
-               hasActive = 1;
+         for(layer = LAST_LAYER; layer >= FIRST_LAYER; layer--) {
+            ClientNode *np;
+            for(np = nodes[layer]; np; np = np->next) {
+               ClientEntry *cp;
+               if(np->state.status & STAT_MINIMIZED) {
+                  continue;
+               } else if(!ShouldFocus(np)) {
+                  continue;
+               }
+               for(cp = entry->clients; cp; cp = cp->next) {
+                  if(cp->client == np) {
+                     hasActive = 1;
+                     break;
+                  }
+               }
                break;
             }
          }

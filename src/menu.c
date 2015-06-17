@@ -378,7 +378,7 @@ char MenuLoop(Menu *menu, RunMenuCommandType runner)
                break;
             }
          }
-            
+
          ip = GetMenuItem(menu, menu->currentIndex);
          if(ip != NULL) {
             (runner)(&ip->action);

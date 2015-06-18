@@ -238,6 +238,8 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
                ClientEntry *cp;
                if(np->state.status & STAT_MINIMIZED) {
                   continue;
+               } else if(!(np->state.status & STAT_ACTIVE)) {
+                  continue;
                } else if(!ShouldFocus(np)) {
                   continue;
                }

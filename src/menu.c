@@ -386,6 +386,7 @@ char MenuLoop(Menu *menu, RunMenuCommandType runner)
             ip = GetMenuItem(menu, menu->currentIndex);
          }
          if(ip != NULL) {
+            ip->action.button = event.xbutton.button;
             (runner)(&ip->action);
          }
          return 1;
@@ -570,6 +571,7 @@ MenuSelectionType UpdateMotion(Menu *menu,
       case KEY_ENTER:
          ip = GetMenuItem(tp, tp->currentIndex);
          if(ip != NULL) {
+            ip->action.button = 0;
             (runner)(&ip->action);
          }
          return MENU_SUBSELECT;

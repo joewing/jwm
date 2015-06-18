@@ -393,7 +393,7 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
          item->name = CopyString(cp->client->name);
       }
       item->icon = cp->client->icon;
-      item->action.type = MA_WINDOW_MENU;
+      item->action.type = MA_NONE;
       item->action.context = cp->client;
       item->next = menu->items;
       menu->items = item;
@@ -459,8 +459,15 @@ void RunTaskBarCommand(MenuAction *action)
             break;
          }
       }
-   } else if(action->type == MA_WINDOW_MENU) {
-      RestoreClient(action->context, 1);
+   } else if(action->type == MA_NONE) {
+      if(action->button == Button3) {
+         Window w;
+         int x, y;
+         GetMousePosition(&x, &y, &w);
+         ShowWindowMenu(action->context, x, y);
+      } else {
+         RestoreClient(action->context, 1);
+      }
    } else {
       RunWindowCommand(action);
    }

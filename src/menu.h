@@ -44,6 +44,7 @@ typedef struct MenuAction {
 
    MenuActionType type;          /**< Type of action. */
    void *context;
+   unsigned button;
 
    /** Extra data for the action. */
    union {

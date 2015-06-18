@@ -380,7 +380,11 @@ char MenuLoop(Menu *menu, RunMenuCommandType runner)
             }
          }
 
-         ip = GetMenuItem(menu, menu->currentIndex);
+         if(menu->parent && menu->currentIndex < 0) {
+            ip = GetMenuItem(menu->parent, menu->parent->currentIndex);
+         } else {
+            ip = GetMenuItem(menu, menu->currentIndex);
+         }
          if(ip != NULL) {
             (runner)(&ip->action);
          }
@@ -564,7 +568,7 @@ MenuSelectionType UpdateMotion(Menu *menu,
       case KEY_ESC:
          return MENU_SUBSELECT;
       case KEY_ENTER:
-         ip = GetMenuItem(menu, tp->currentIndex);
+         ip = GetMenuItem(tp, tp->currentIndex);
          if(ip != NULL) {
             (runner)(&ip->action);
          }

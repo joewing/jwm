@@ -237,7 +237,6 @@ void RunRootCommand(MenuAction *action)
 {
 
    switch(action->type) {
-
    case MA_EXECUTE:
       RunCommand(action->data.str);
       break;
@@ -269,7 +268,6 @@ void RunRootCommand(MenuAction *action)
       break;
 
    default:
-      Debug("invalid RunRootCommand action: %d", action->type);
       break;
    }
 

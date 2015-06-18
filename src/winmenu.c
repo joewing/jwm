@@ -291,7 +291,6 @@ void RunWindowCommand(MenuAction *action)
       SetClientLayer(client, action->data.i);
       break;
    default:
-      Debug("unknown window command: %d", action->type);
       break;
    }
 

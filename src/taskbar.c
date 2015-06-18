@@ -459,6 +459,8 @@ void RunTaskBarCommand(MenuAction *action)
             break;
          }
       }
+   } else if(action->type == MA_WINDOW_MENU) {
+      RestoreClient(action->context, 1);
    } else {
       RunWindowCommand(action);
    }

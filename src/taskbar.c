@@ -395,7 +395,7 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
          item->name = CopyString(cp->client->name);
       }
       item->icon = cp->client->icon;
-      item->action.type = MA_NONE;
+      item->action.type = MA_EXECUTE;
       item->action.context = cp->client;
       item->next = menu->items;
       menu->items = item;
@@ -461,7 +461,7 @@ void RunTaskBarCommand(MenuAction *action)
             break;
          }
       }
-   } else if(action->type == MA_NONE) {
+   } else if(action->type == MA_EXECUTE) {
       if(action->button == Button3) {
          Window w;
          int x, y;

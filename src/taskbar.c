@@ -468,7 +468,10 @@ void RunTaskBarCommand(MenuAction *action)
          GetMousePosition(&x, &y, &w);
          ShowWindowMenu(action->context, x, y);
       } else {
-         RestoreClient(action->context, 1);
+         ClientNode *np = action->context;
+         RestoreClient(np, 1);
+         FocusClient(np);
+         MoveMouse(np->window, np->width / 2, np->height / 2);
       }
    } else {
       RunWindowCommand(action);

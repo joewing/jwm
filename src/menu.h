@@ -10,6 +10,8 @@
 #ifndef MENU_H
 #define MENU_H
 
+struct ScreenType;
+
 /** Enumeration of menu action types. */
 typedef unsigned char MenuActionType;
 #define MA_NONE               0
@@ -95,6 +97,7 @@ typedef struct Menu {
    int textOffset;         /**< x-offset of text in the menu. */
    int *offsets;           /**< y-offsets of menu items. */
    struct Menu *parent;    /**< The parent menu (or NULL). */
+   const struct ScreenType *screen;
 
 } Menu;
 

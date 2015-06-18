@@ -396,7 +396,6 @@ char MenuLoop(Menu *menu, RunMenuCommandType runner)
 void CreateMenu(Menu *menu, int x, int y)
 {
 
-   const ScreenType *sp = GetCurrentScreen(x, y);
    XSetWindowAttributes attr;
    unsigned long attrMask;
    int temp;
@@ -404,16 +403,21 @@ void CreateMenu(Menu *menu, int x, int y)
    menu->lastIndex = -1;
    menu->currentIndex = -1;
 
-   if(x + menu->width > sp->x + sp->width) {
+   if(menu->parent) {
+      menu->screen = menu->parent->screen;
+   } else {
+      menu->screen = GetCurrentScreen(x, y);
+   }
+   if(x + menu->width > menu->screen->x + menu->screen->width) {
       if(menu->parent) {
          x = menu->parent->x - menu->width;
       } else {
-         x = sp->x + sp->width - menu->width;
+         x = menu->screen->x + menu->screen->width - menu->width;
       }
    }
    temp = y;
-   if(y + menu->height > sp->y + sp->height) {
-      y = sp->y + sp->height - menu->height;
+   if(y + menu->height > menu->screen->y + menu->screen->height) {
+      y = menu->screen->y + menu->screen->height - menu->height;
    }
    if(y < 0) {
       y = 0;
@@ -491,7 +495,6 @@ MenuSelectionType UpdateMotion(Menu *menu,
                                RunMenuCommandType runner,
                                XEvent *event)
 {
-   const ScreenType *sp = GetCurrentScreen(menu->x, menu->y);
    MenuItem *ip;
    Menu *tp;
    Window subwindow;
@@ -610,7 +613,7 @@ MenuSelectionType UpdateMotion(Menu *menu,
    }
 
    /* Move the menu if needed. */
-   if(menu->height > sp->height && menu->currentIndex >= 0) {
+   if(menu->height > menu->screen->height && menu->currentIndex >= 0) {
 
       /* If near the top, shift down. */
       if(y + menu->y <= 0) {
@@ -621,7 +624,8 @@ MenuSelectionType UpdateMotion(Menu *menu,
       }
 
       /* If near the bottom, shift up. */
-      if(y + menu->y + menu->itemHeight / 2 >= sp->y + sp->height) {
+      if(y + menu->y + menu->itemHeight / 2
+            >= menu->screen->y + menu->screen->height) {
          if(menu->currentIndex + 1 < menu->itemCount) {
             menu->currentIndex += 1;
             SetPosition(menu, menu->currentIndex);
@@ -828,16 +832,15 @@ MenuItem *GetMenuItem(Menu *menu, int index)
 /** Set the active menu item. */
 void SetPosition(Menu *tp, int index)
 {
-   const ScreenType *sp = GetCurrentScreen(tp->x, tp->y);
    int y = tp->offsets[index] + tp->itemHeight / 2;
-   if(tp->height > sp->height) {
+   if(tp->height > tp->screen->height) {
 
       int updated = 0;
       while(y + tp->y < tp->itemHeight / 2) {
          tp->y += tp->itemHeight;
          updated = tp->itemHeight;
       }
-      while(y + tp->y >= sp->y + sp->height) {
+      while(y + tp->y >= tp->screen->y + tp->screen->height) {
          tp->y -= tp->itemHeight;
          updated = -tp->itemHeight;
       }

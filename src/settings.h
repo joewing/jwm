@@ -70,6 +70,7 @@ typedef struct {
    char popupEnabled;
    char exitConfirmation;
    char handles;
+   char groupTasks;
 } Settings;
 
 extern Settings settings;

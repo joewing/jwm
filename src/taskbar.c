@@ -288,7 +288,7 @@ void FocusGroup(const TaskEntry *tp)
    int i;
 
    /* If there is no class name, then there will only be one client. */
-   if(!className) {
+   if(!className || !settings.groupTasks) {
       RestoreClient(tp->clients->client, 1);
       FocusClient(tp->clients->client);
       return;
@@ -337,68 +337,74 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
    int x, y;
    Window w;
 
-   menu = Allocate(sizeof(Menu));
-   menu->itemHeight = 0;
-   menu->items = NULL;
-   menu->label = NULL;
+   if(settings.groupTasks) {
 
-   item = CreateMenuItem(MENU_ITEM_SUBMENU);
-   item->name = CopyString(_("Close"));
-   item->action.type = MA_CLOSE | MA_GROUP_MASK;
-   item->action.context = tp;
-   item->next = menu->items;
-   menu->items = item;
+      menu = Allocate(sizeof(Menu));
+      menu->itemHeight = 0;
+      menu->items = NULL;
+      menu->label = NULL;
 
-   item = CreateMenuItem(MENU_ITEM_SUBMENU);
-   item->name = CopyString(_("Minimize"));
-   item->action.type = MA_MINIMIZE | MA_GROUP_MASK;
-   item->action.context = tp;
-   item->next = menu->items;
-   menu->items = item;
-
-   item = CreateMenuItem(MENU_ITEM_SUBMENU);
-   item->name = CopyString(_("Restore"));
-   item->action.type = MA_RESTORE | MA_GROUP_MASK;
-   item->action.context = tp;
-   item->next = menu->items;
-   menu->items = item;
-
-   item = CreateMenuItem(MENU_ITEM_SUBMENU);
-   item->name = CopyString(_("Send To"));
-   item->action.type = MA_SENDTO_MENU | MA_GROUP_MASK;
-   item->action.context = tp;
-   item->next = menu->items;
-   menu->items = item;
-
-   /* Load the separator and group actions. */
-   item = CreateMenuItem(MENU_ITEM_SEPARATOR);
-   item->next = menu->items;
-   menu->items = item;
-
-   /* Load the clients into the menu. */
-   for(cp = tp->clients; cp; cp = cp->next) {
-      if(!ShouldFocus(cp->client)) {
-         continue;
-      }
-      item = CreateMenuItem(MENU_ITEM_NORMAL);
-      if(cp->client->state.status & STAT_MINIMIZED) {
-         size_t len = 0;
-         if(cp->client->name) {
-            len = strlen(cp->client->name);
-         }
-         item->name = Allocate(len + 3);
-         item->name[0] = '[';
-         memcpy(&item->name[1], cp->client->name, len);
-         item->name[len + 1] = ']';
-         item->name[len + 2] = 0;
-      } else {
-         item->name = CopyString(cp->client->name);
-      }
-      item->icon = cp->client->icon;
-      item->action.type = MA_EXECUTE;
-      item->action.context = cp->client;
+      item = CreateMenuItem(MENU_ITEM_SUBMENU);
+      item->name = CopyString(_("Close"));
+      item->action.type = MA_CLOSE | MA_GROUP_MASK;
+      item->action.context = tp;
       item->next = menu->items;
       menu->items = item;
+
+      item = CreateMenuItem(MENU_ITEM_SUBMENU);
+      item->name = CopyString(_("Minimize"));
+      item->action.type = MA_MINIMIZE | MA_GROUP_MASK;
+      item->action.context = tp;
+      item->next = menu->items;
+      menu->items = item;
+
+      item = CreateMenuItem(MENU_ITEM_SUBMENU);
+      item->name = CopyString(_("Restore"));
+      item->action.type = MA_RESTORE | MA_GROUP_MASK;
+      item->action.context = tp;
+      item->next = menu->items;
+      menu->items = item;
+
+      item = CreateMenuItem(MENU_ITEM_SUBMENU);
+      item->name = CopyString(_("Send To"));
+      item->action.type = MA_SENDTO_MENU | MA_GROUP_MASK;
+      item->action.context = tp;
+      item->next = menu->items;
+      menu->items = item;
+
+      /* Load the separator and group actions. */
+      item = CreateMenuItem(MENU_ITEM_SEPARATOR);
+      item->next = menu->items;
+      menu->items = item;
+
+      /* Load the clients into the menu. */
+      for(cp = tp->clients; cp; cp = cp->next) {
+         if(!ShouldFocus(cp->client)) {
+            continue;
+         }
+         item = CreateMenuItem(MENU_ITEM_NORMAL);
+         if(cp->client->state.status & STAT_MINIMIZED) {
+            size_t len = 0;
+            if(cp->client->name) {
+               len = strlen(cp->client->name);
+            }
+            item->name = Allocate(len + 3);
+            item->name[0] = '[';
+            memcpy(&item->name[1], cp->client->name, len);
+            item->name[len + 1] = ']';
+            item->name[len + 2] = 0;
+         } else {
+            item->name = CopyString(cp->client->name);
+         }
+         item->icon = cp->client->icon;
+         item->action.type = MA_EXECUTE;
+         item->action.context = cp->client;
+         item->next = menu->items;
+         menu->items = item;
+      }
+   } else {
+      /* Not grouping clients. */
+      menu = CreateWindowMenu(tp->clients->client);
    }
 
    /* Initialize and position the menu. */
@@ -485,7 +491,7 @@ void AddClientToTaskBar(ClientNode *np)
    ClientEntry *cp = Allocate(sizeof(ClientEntry));
    cp->client = np;
 
-   if(np->className) {
+   if(np->className && settings.groupTasks) {
       for(tp = taskEntries; tp; tp = tp->next) {
          const char *className = tp->clients->client->className;
          if(className && !strcmp(np->className, className)) {
@@ -598,8 +604,14 @@ void SignalTaskbar(const TimeType *now, int x, int y, Window w, void *data)
       abs(bp->mousey - y) < settings.doubleClickDelta) {
       if(GetTimeDifference(now, &bp->mouseTime) >= settings.popupDelay) {
          ep = GetEntry(bp, x - bp->cp->screenx, y - bp->cp->screeny);
-         if(ep && ep->clients->client->className) {
-            ShowPopup(x, y, ep->clients->client->className);
+         if(settings.groupTasks) {
+            if(ep && ep->clients->client->className) {
+               ShowPopup(x, y, ep->clients->client->className);
+            }
+         } else {
+            if(ep && ep->clients->client->name) {
+               ShowPopup(x, y, ep->clients->client->name);
+            }
          }
       }
    }
@@ -649,7 +661,7 @@ void Render(const TaskBarType *bp)
       button.x = x;
       button.y = y;
       button.icon = tp->clients->client->icon;
-      if(tp->clients->client->className) {
+      if(tp->clients->client->className && settings.groupTasks) {
          button.text = tp->clients->client->className;
       } else {
          button.text = tp->clients->client->name;

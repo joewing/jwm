@@ -1042,8 +1042,13 @@ void ParseActiveTaskListStyle(const TokenNode *tp)
 /** Parse tray style. */
 void ParseTrayStyle(const TokenNode *tp)
 {
-
    const TokenNode *np;
+   const char *temp;
+
+   temp = FindAttribute(tp->attributes, "group");
+   if(temp) {
+      settings.groupTasks = !strcmp(temp, TRUE_VALUE);
+   }
 
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
@@ -1205,7 +1210,6 @@ void ParsePager(const TokenNode *tp, TrayType *tray)
 /** Parse a task list tray component. */
 void ParseTaskList(const TokenNode *tp, TrayType *tray)
 {
-
    TrayComponentType *cp;
    const char *temp;
 

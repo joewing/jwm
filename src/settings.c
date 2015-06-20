@@ -42,6 +42,7 @@ void InitializeSettings(void)
    settings.exitConfirmation = 1;
    settings.cornerRadius = 4;
    settings.handles = 0;
+   settings.groupTasks = 1;
 }
 
 /** Make sure settings are reasonable. */

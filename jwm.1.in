@@ -948,6 +948,15 @@ The default is black.
 .B "TRAY STYLE"
 .RS
 The \fBTrayStyle\fP tag controls the look of trays.
+The following attribute is supported:
+.P
+.B group
+.RS
+Determines if windows are grouped when shown in task bars.
+Possible values are \fBtrue\fP and \fBfalse\fP. The default
+is \fBtrue\fP.
+.RE
+.P
 Within this tag the following tags are supported:
 .P
 .B Font

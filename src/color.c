@@ -147,6 +147,10 @@ static unsigned long GetRGBFromXColor(const XColor *c);
 static int GetColorByName(const char *str, XColor *c);
 static void InitializeNames(void);
 
+static XColor GetXColorFromRGB(unsigned long rgb);
+static void LightenColor(ColorType oldColor, ColorType newColor);
+static void DarkenColor(ColorType oldColor, ColorType newColor);
+
 /** Startup color support. */
 void StartupColors(void)
 {
@@ -226,6 +230,12 @@ void StartupColors(void)
          SetDefaultColor(x);
       }
    }
+
+   LightenColor(COLOR_TITLE_BG1, COLOR_TITLE_UP);
+   DarkenColor(COLOR_TITLE_BG1, COLOR_TITLE_DOWN);
+
+   LightenColor(COLOR_TITLE_ACTIVE_BG1, COLOR_TITLE_ACTIVE_UP);
+   DarkenColor(COLOR_TITLE_ACTIVE_BG1, COLOR_TITLE_ACTIVE_DOWN);
 
    if(names) {
       for(x = 0; x < COLOR_COUNT; x++) {
@@ -573,3 +583,89 @@ XftColor *GetXftColor(ColorType type)
 
 }
 #endif
+
+/** Convert an RGB value to an XColor. */
+XColor GetXColorFromRGB(unsigned long rgb)
+{
+   XColor ret = { 0 };
+
+   ret.flags = DoRed | DoGreen | DoBlue;
+   ret.red = (unsigned short)(((rgb >> 16) & 0xFF) * 257);
+   ret.green = (unsigned short)(((rgb >> 8) & 0xFF) * 257);
+   ret.blue = (unsigned short)((rgb & 0xFF) * 257);
+
+   return ret;
+}
+
+/** Compute a color lighter than the input. */
+void LightenColor(ColorType oldColor, ColorType newColor)
+{
+
+   XColor temp;
+   int red, green, blue;
+
+   temp = GetXColorFromRGB(rgbColors[oldColor]);
+
+   /* Convert to 0.0 to 1.0 in fixed point with 8 bits for the fraction. */
+   red   = temp.red   >> 8;
+   green = temp.green >> 8;
+   blue  = temp.blue  >> 8;
+
+   /* Multiply by 1.45 which is 371. */
+   red   = (red   * 371) >> 8;
+   green = (green * 371) >> 8;
+   blue  = (blue  * 371) >> 8;
+
+   /* Convert back to 0-65535. */
+   red   |= red << 8;
+   green |= green << 8;
+   blue  |= blue << 8;
+
+   /* Cap at 65535. */
+   red   = Min(65535, red);
+   green = Min(65535, green);
+   blue  = Min(65535, blue);
+
+   temp.red = red;
+   temp.green = green;
+   temp.blue = blue;
+
+   GetColor(&temp);
+   colors[newColor] = temp.pixel;
+   rgbColors[newColor] = GetRGBFromXColor(&temp);
+
+}
+
+/** Compute a color darker than the input. */
+void DarkenColor(ColorType oldColor, ColorType newColor)
+{
+
+   XColor temp;
+   int red, green, blue;
+
+   temp = GetXColorFromRGB(rgbColors[oldColor]);
+
+   /* Convert to 0.0 to 1.0 in fixed point with 8 bits for the fraction. */
+   red   = temp.red   >> 8;
+   green = temp.green >> 8;
+   blue  = temp.blue  >> 8;
+
+   /* Multiply by 0.55 which is 141. */
+   red   = (red   * 141) >> 8;
+   green = (green * 141) >> 8;
+   blue  = (blue  * 141) >> 8;
+
+   /* Convert back to 0-65535. */
+   red   |= red << 8;
+   green |= green << 8;
+   blue  |= blue << 8;
+
+   temp.red = red;
+   temp.green = green;
+   temp.blue = blue;
+
+   GetColor(&temp);
+   colors[newColor] = temp.pixel;
+   rgbColors[newColor] = GetRGBFromXColor(&temp);
+
+}

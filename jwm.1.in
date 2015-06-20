@@ -853,6 +853,14 @@ Make windows in this group maximize vertically.
 .B "WINDOW STYLE"
 .RS
 The \fBWindowStyle\fP tag controls the look of window borders.
+This tag supports the following attribute:
+.P
+.B decorations
+.RS
+The window decorations to use. Valid options are \fBflat\fP and
+\fBmotif\fP. \fBflat\fP is the default.
+.RE
+.P
 Within this tag, the following tags are supported:
 .P
 .B Font

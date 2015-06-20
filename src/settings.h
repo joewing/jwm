@@ -69,6 +69,7 @@ typedef struct {
    InsertModeType taskInsertMode;
    char popupEnabled;
    char exitConfirmation;
+   char handles;
 } Settings;
 
 extern Settings settings;

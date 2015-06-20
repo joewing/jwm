@@ -33,7 +33,7 @@ void InitializeSettings(void)
    settings.popupEnabled = 1;
    settings.activeClientOpacity = UINT_MAX;
    settings.inactiveClientOpacity = (unsigned int)(0.75 * UINT_MAX);
-   settings.borderWidth = 4;
+   settings.borderWidth = 5;
    settings.titleHeight = 22;
    settings.desktopWidth = 4;
    settings.desktopHeight = 1;
@@ -41,6 +41,7 @@ void InitializeSettings(void)
    settings.taskInsertMode = INSERT_RIGHT;
    settings.exitConfirmation = 1;
    settings.cornerRadius = 4;
+   settings.handles = 0;
 }
 
 /** Make sure settings are reasonable. */

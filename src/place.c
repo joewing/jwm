@@ -769,6 +769,7 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
    np->oldy = np->y;
    np->oldWidth = np->width;
    np->oldHeight = np->height;
+   np->state.maxFlags = flags;
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
 
@@ -857,8 +858,6 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
          np->height -= ((box.height - np->baseHeight) % np->yinc);
       }
    }
-
-   np->state.maxFlags = flags;
 
 }
 

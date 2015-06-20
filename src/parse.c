@@ -802,11 +802,23 @@ void ParseKey(const TokenNode *tp) {
 }
 
 /** Parse window style. */
-void ParseWindowStyle(const TokenNode *tp) {
-
+void ParseWindowStyle(const TokenNode *tp)
+{
    const TokenNode *np;
+   const char *decorations;
 
-   Assert(tp);
+   decorations = FindAttribute(tp->attributes, "decorations");
+   if(decorations) {
+      if(!strcmp(decorations, "motif")) {
+         settings.handles = 1;
+      } else if(!strcmp(decorations, "flat")) {
+         settings.handles = 0;
+      } else {
+         ParseError(tp, "invalid WindowStyle decorations: %s\n", decorations);
+      }
+   } else {
+      settings.handles = 0;
+   }
 
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
@@ -842,11 +854,11 @@ void ParseWindowStyle(const TokenNode *tp) {
          break;
       }
    }
-
 }
 
 /** Parse active window style information. */
-void ParseActiveWindowStyle(const TokenNode *tp) {
+void ParseActiveWindowStyle(const TokenNode *tp)
+{
 
    const TokenNode *np;
 

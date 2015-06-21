@@ -555,9 +555,9 @@ void DrawBorderHandles(const ClientNode *np, GC gc)
 
    /* Bottom title border. */
    segments[offset].x1 = west + 1;
-   segments[offset].y1 = settings.titleHeight + settings.borderWidth - 1;
+   segments[offset].y1 = north - 1;
    segments[offset].x2 = width - east - 1;
-   segments[offset].y2 = settings.titleHeight + settings.borderWidth - 1;
+   segments[offset].y2 = north - 1;
    offset += 1;
 
    if(!(np->state.maxFlags & MAX_HORIZ)) {

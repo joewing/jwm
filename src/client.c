@@ -811,9 +811,6 @@ void FocusClient(ClientNode *np)
    if(np->state.status & STAT_HIDDEN) {
       return;
    }
-   if(!(np->state.status & STAT_CANFOCUS)) {
-      return;
-   }
 
    if(activeClient != np || !(np->state.status & STAT_ACTIVE)) {
 
@@ -834,6 +831,10 @@ void FocusClient(ClientNode *np)
       UpdatePager();
       UpdateTaskBar();
 
+   }
+
+   if(!(np->state.status & STAT_CANFOCUS)) {
+      return;
    }
 
    if(np->state.status & STAT_MAPPED) {

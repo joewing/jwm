@@ -41,7 +41,7 @@ static void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
 static void DrawMinButton(unsigned xoffset, unsigned yoffset,
                           const VisualData *visual,
                           Pixmap canvas, GC gc);
-static unsigned int GetButtonCount(const ClientNode *np);
+static unsigned GetButtonCount(const ClientNode *np);
 
 #ifdef USE_SHAPE
 static void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
@@ -381,9 +381,9 @@ void DrawBorderHelper(const ClientNode *np)
 
    /* Determine how many pixels may be used for the title. */
    buttonCount = GetButtonCount(np);
-   titleWidth = width;
-   titleWidth -= settings.titleHeight * buttonCount;
-   titleWidth -= iconSize + 7 + 6;
+   titleWidth = width - east - west - 5;
+   titleWidth -= settings.titleHeight * (buttonCount + 1);
+   titleWidth -= settings.handles ? (buttonCount + 1) : 0;
 
    /* Draw the top part (either a title or north border). */
    if((np->state.border & BORDER_TITLE) &&
@@ -439,7 +439,8 @@ void DrawBorderHelper(const ClientNode *np)
          }
          if(!(np->state.maxFlags & (MAX_BOTTOM | MAX_VERT))) {
             /* Bottom */
-            JXDrawLine(display, np->parent, gc, 0, height - 1, width, height - 1);
+            JXDrawLine(display, np->parent, gc,
+                       0, height - 1, width, height - 1);
          }
       } else if(np->state.maxFlags & MAX_VERT) {
          if(!(np->state.maxFlags & (MAX_LEFT | MAX_HORIZ))) {
@@ -448,7 +449,8 @@ void DrawBorderHelper(const ClientNode *np)
          }
          if(!(np->state.maxFlags & (MAX_RIGHT | MAX_HORIZ))) {
             /* Right */
-            JXDrawLine(display, np->parent, gc, width - 1, 0, width - 1, height);
+            JXDrawLine(display, np->parent, gc,
+                       width - 1, 0, width - 1, height);
          }
       } else {
          DrawRoundedRectangle(np->parent, gc, 0, 0, width - 1, height - 1,
@@ -717,12 +719,13 @@ void DrawBorderHandles(const ClientNode *np, GC gc)
 }
 
 /** Determine the number of buttons to be displayed for a client. */
-unsigned int GetButtonCount(const ClientNode *np)
+unsigned GetButtonCount(const ClientNode *np)
 {
 
    int north, south, east, west;
-   unsigned int count;
-   int offset;
+   unsigned count;
+   unsigned buttonWidth;
+   int available;
 
    if(!(np->state.border & BORDER_TITLE)) {
       return 0;
@@ -731,25 +734,29 @@ unsigned int GetButtonCount(const ClientNode *np)
       return 0;
    }
 
+   buttonWidth = settings.titleHeight;
+   buttonWidth += settings.handles ? 1 : 0;
+
    GetBorderSize(&np->state, &north, &south, &east, &west);
 
-   offset = np->width + west;
-   if(offset <= 2 * settings.titleHeight) {
-      return 0;
+   count = 0;
+   available = np->width + buttonWidth;
+   if(available < buttonWidth) {
+      return count;
    }
 
-   count = 0;
    if(np->state.border & BORDER_CLOSE) {
       count += 1;
-      if(offset <= 2 * settings.titleHeight) {
+      available -= buttonWidth;
+      if(available < buttonWidth) {
          return count;
       }
-      offset -= settings.titleHeight;
    }
 
    if(np->state.border & BORDER_MAX) {
       count += 1;
-      if(offset < 2 * settings.titleHeight) {
+      available -= buttonWidth;
+      if(available < settings.titleHeight) {
          return count;
       }
    }
@@ -790,27 +797,6 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
    }
 
    if(settings.handles) {
-      JXSetForeground(display, gc, pixelDown);
-      JXDrawLine(display, canvas, gc,
-                      west + settings.titleHeight - 1,
-                      south,
-                      west + settings.titleHeight - 1,
-                      south + settings.titleHeight);
-      JXDrawLine(display, canvas, gc, xoffset - 1,
-                 south, xoffset - 1,
-                 south + settings.titleHeight);
-      JXSetForeground(display, gc, pixelUp);
-      JXDrawLine(display, canvas, gc,
-                 east + settings.titleHeight,
-                 south,
-                 east + settings.titleHeight,
-                 south + settings.titleHeight);
-      JXDrawLine(display, canvas, gc, xoffset,
-                 south, xoffset, south + settings.titleHeight);
-      xoffset -= 1;
-   }
-
-   if(settings.handles) {
       yoffset = south - 1;
    } else {
       yoffset = 0;
@@ -818,12 +804,9 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
 
    /* Close button. */
    if(np->state.border & BORDER_CLOSE) {
+
       JXSetForeground(display, gc, color);
       DrawCloseButton(xoffset, yoffset, &np->visual, canvas, gc);
-      xoffset -= settings.titleHeight;
-      if(xoffset <= minx) {
-         return;
-      }
 
       if(settings.handles) {
          JXSetForeground(display, gc, pixelDown);
@@ -845,20 +828,22 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
                     south, xoffset, south + settings.titleHeight);
          xoffset -= 1;
       }
+
+      xoffset -= settings.titleHeight;
+      if(xoffset <= minx) {
+         return;
+      }
    }
 
    /* Maximize button. */
    if(np->state.border & BORDER_MAX) {
+
       JXSetForeground(display, gc, color);
       if(np->state.maxFlags) {
          DrawMaxAButton(xoffset, yoffset, &np->visual, canvas, gc);
       } else {
          DrawMaxIButton(xoffset, yoffset, &np->visual, canvas, gc);
       }
-      xoffset -= settings.titleHeight;
-      if(xoffset <= minx) {
-         return;
-      }
 
       if(settings.handles) {
          JXSetForeground(display, gc, pixelDown);
@@ -880,12 +865,39 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
                     south, xoffset, south + settings.titleHeight);
          xoffset -= 1;
       }
+
+      xoffset -= settings.titleHeight;
+      if(xoffset <= minx) {
+         return;
+      }
    }
 
    /* Minimize button. */
    if(np->state.border & BORDER_MIN) {
+
       JXSetForeground(display, gc, color);
       DrawMinButton(xoffset, yoffset, &np->visual, canvas, gc);
+
+      if(settings.handles) {
+         JXSetForeground(display, gc, pixelDown);
+         JXDrawLine(display, canvas, gc,
+                         west + settings.titleHeight - 1,
+                         south,
+                         west + settings.titleHeight - 1,
+                         south + settings.titleHeight);
+         JXDrawLine(display, canvas, gc, xoffset - 1,
+                    south, xoffset - 1,
+                    south + settings.titleHeight);
+         JXSetForeground(display, gc, pixelUp);
+         JXDrawLine(display, canvas, gc,
+                    east + settings.titleHeight,
+                    south,
+                    east + settings.titleHeight,
+                    south + settings.titleHeight);
+         JXDrawLine(display, canvas, gc, xoffset,
+                    south, xoffset, south + settings.titleHeight);
+         xoffset -= 1;
+      }
    }
 }
 

@@ -141,6 +141,10 @@ static void ParseRootMenu(const TokenNode *start);
 static MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu,
                                MenuItem *last);
 static MenuItem *InsertMenuItem(MenuItem *last);
+static MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
+                                  MenuItem *last);
+static TokenNode *ParseMenuIncludeHelper(const TokenNode *tp,
+                                         const char *command);
 
 /* Tray. */
 typedef void (*AddTrayActionFunc)(TrayComponentType*, const char*, int);
@@ -566,6 +570,9 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
          }
 
          break;
+      case TOK_INCLUDE:
+         last = ParseMenuInclude(start, menu, last);
+         break;
       case TOK_DESKTOPS:
       case TOK_STICK:
       case TOK_MAXIMIZE:
@@ -576,7 +583,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
       case TOK_KILL:
       case TOK_CLOSE:
       case TOK_SENDTO:
-      case TOK_INCLUDE:
+      case TOK_DYNAMIC:
 
          last = InsertMenuItem(last);
          if(!menu->items) {
@@ -623,7 +630,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
          case TOK_SENDTO:
             last->action.type = MA_SENDTO_MENU;
             break;
-         case TOK_INCLUDE:
+         case TOK_DYNAMIC:
             last->action.type = MA_DYNAMIC;
             last->action.data.str = CopyString(start->value);
             break;
@@ -689,14 +696,13 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
 
 }
 
-/** Parse a dynamic menu (called from menu code). */
-Menu *ParseDynamicMenu(const char *command)
+/** Get tokens from a menu include (either dynamic or static). */
+TokenNode *ParseMenuIncludeHelper(const TokenNode *tp, const char *command)
 {
    FILE *fd;
    char *path;
    char *buffer;
    TokenNode *start;
-   Menu *menu;
 
    buffer = NULL;
    if(!strncmp(command, "exec:", 5)) {
@@ -710,7 +716,7 @@ Menu *ParseDynamicMenu(const char *command)
          buffer = ReadFile(fd);
          pclose(fd);
       } else {
-         ParseError(NULL, "could not execute included program: %s", path);
+         ParseError(tp, "could not execute included program: %s", path);
       }
 
    } else {
@@ -728,7 +734,7 @@ Menu *ParseDynamicMenu(const char *command)
 
    }
 
-   if(!buffer) {
+   if(JUNLIKELY(!buffer)) {
       Release(path);
       return NULL;
    }
@@ -737,16 +743,37 @@ Menu *ParseDynamicMenu(const char *command)
    Release(buffer);
    Release(path);
 
-   if(JUNLIKELY(!start || start->type != TOK_JWM)) {
-      ParseError(NULL, "invalid include: %s", command);
-      if(start) {
-         ReleaseTokens(start);
-      }
+   if(JUNLIKELY(!start || start->type != TOK_JWM))
+   {
+      ParseError(tp, "invalid include: %s", command);
+      ReleaseTokens(start);
       return NULL;
    }
 
-   menu = ParseMenu(start);
-   ReleaseTokens(start);
+   return start;
+}
+
+/** Parse a menu include. */
+MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
+                           MenuItem *last)
+{
+   TokenNode *start = ParseMenuIncludeHelper(tp, tp->value);
+   if(JLIKELY(start)) {
+      last = ParseMenuItem(start->subnodeHead, menu, last);
+      ReleaseTokens(start);
+   }
+   return last;
+}
+
+/** Parse a dynamic menu (called from menu code). */
+Menu *ParseDynamicMenu(const char *command)
+{
+   Menu *menu = NULL;
+   TokenNode *start = ParseMenuIncludeHelper(NULL, command);
+   if(JLIKELY(start)) {
+      menu = ParseMenu(start);
+      ReleaseTokens(start);
+   }
    return menu;
 }
 

@@ -36,6 +36,7 @@ static const StringMappingType TOKEN_MAP[] = {
    { "Dock",               TOK_DOCK             },
    { "DoubleClickDelta",   TOK_DOUBLECLICKDELTA },
    { "DoubleClickSpeed",   TOK_DOUBLECLICKSPEED },
+   { "Dynamic",            TOK_DYNAMIC          },
    { "Exit",               TOK_EXIT             },
    { "FocusModel",         TOK_FOCUSMODEL       },
    { "Font",               TOK_FONT             },

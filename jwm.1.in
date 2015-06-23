@@ -136,6 +136,14 @@ Determines if a label appears at the top of the menu. Default is false.
 .RE
 .RE
 .P
+.B Dynamic
+.RS
+Dynamically include the contents of a file or executable into a submenu.
+The file must start with a "JWM" tag. The file is specified by the text
+of the tag. If the text starts with "exec:" then the output of a program
+is used. This tag supports the same attributes as \fBMenu\fP.
+.RE
+.P
 .B Include
 .RS
 Include the contents of a file into the menu structure. The file must

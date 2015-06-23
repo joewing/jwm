@@ -740,7 +740,7 @@ unsigned GetButtonCount(const ClientNode *np)
    GetBorderSize(&np->state, &north, &south, &east, &west);
 
    count = 0;
-   available = np->width + buttonWidth;
+   available = np->width - buttonWidth;
    if(available < buttonWidth) {
       return count;
    }
@@ -766,7 +766,6 @@ unsigned GetButtonCount(const ClientNode *np)
    }
 
    return count;
-
 }
 
 /** Draw the buttons on a client frame. */
@@ -796,13 +795,8 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
       pixelDown = colors[COLOR_TITLE_DOWN];
    }
 
-   if(settings.handles) {
-      yoffset = south - 1;
-   } else {
-      yoffset = 0;
-   }
-
    /* Close button. */
+   yoffset = settings.handles ? (south - 1) : 0;
    if(np->state.border & BORDER_CLOSE) {
 
       JXSetForeground(display, gc, color);

@@ -411,7 +411,8 @@ void CreateMenu(Menu *menu, int x, int y)
    if(menu->parent) {
       menu->screen = menu->parent->screen;
    } else {
-      menu->screen = GetCurrentScreen(x, y);
+      menu->screen = GetCurrentScreen(x + menu->width / 2,
+                                      y + menu->height / 2);
    }
    if(x + menu->width > menu->screen->x + menu->screen->width) {
       if(menu->parent) {

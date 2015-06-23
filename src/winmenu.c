@@ -39,7 +39,6 @@ Menu *CreateWindowMenu(ClientNode *np)
 {
 
    Menu *menu;
-   MenuItem *item;
 
    menu = Allocate(sizeof(Menu));
    menu->itemHeight = 0;
@@ -113,15 +112,6 @@ Menu *CreateWindowMenu(ClientNode *np)
       }
 
    }
-
-   AddWindowMenuItem(menu, NULL, MA_NONE, np, 0);
-   item = CreateMenuItem(MENU_ITEM_NORMAL);
-   item->name = CopyString(np->instanceName);
-   item->icon = np->icon;
-   item->action.type = MA_RESTORE;
-   item->action.context = np;
-   item->next = menu->items;
-   menu->items = item;
 
    return menu;
 }

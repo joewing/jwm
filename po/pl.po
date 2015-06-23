@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-06-18 19:02-0500\n"
+"POT-Creation-Date: 2015-06-22 22:01-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -42,11 +42,11 @@ msgstr "nieprawidłowy typ tła: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "nie znaleziono obrazu tła: \"%s\""
 
-#: src/client.c:901
+#: src/client.c:902
 msgid "Kill this window?"
 msgstr "Zabić to okno?"
 
-#: src/client.c:902
+#: src/client.c:903
 msgid "This may cause data to be lost!"
 msgstr "Może to spowodować utratę danych!"
 
@@ -149,66 +149,66 @@ msgstr "ani klucza ani keycode określony dla Key"
 msgid "key binding: root menu \"%s\" not defined"
 msgstr "klucz wiązania: menu główne %d nie zdefiniowano"
 
-#: src/lex.c:198
+#: src/lex.c:199
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: zamknij znacznik \"%s\" nie pasuje otwarty znacznik \"%s\""
 
-#: src/lex.c:204
+#: src/lex.c:205
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: nieoczekiwany i nieprawidłowo zamknięty znacznik"
 
-#: src/lex.c:210
+#: src/lex.c:211
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: zamknij znacznik \"%s\" bez otwartego znacznika"
 
-#: src/lex.c:213
+#: src/lex.c:214
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: nieprawidłowo zamknięty znacznik"
 
-#: src/lex.c:231
+#: src/lex.c:232
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: nieprawidłowo otwarty znacznik"
 
-#: src/lex.c:247
+#: src/lex.c:248
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: nieprawidłowy znacznik"
 
-#: src/lex.c:302
+#: src/lex.c:303
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: nieoczekiwany tekst: \"%s\""
 
-#: src/lex.c:350
+#: src/lex.c:351
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: nieprawidłowa jednostka: \"%.8s\""
 
-#: src/lex.c:455 src/parse.c:1832
+#: src/lex.c:456 src/parse.c:1875
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1846
+#: src/parse.c:1889
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nieprawidłowy znacznik w: %s"
 
-#: src/parse.c:1858
+#: src/parse.c:1901
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "nieprawidłowa nieprzezroczystość menu: %s"
 
-#: src/parse.c:1900
+#: src/parse.c:1943
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:1920
+#: src/parse.c:1963
 msgid "configuration error"
 msgstr "błąd konfiguracji"
 
@@ -229,23 +229,23 @@ msgstr "Czy jesteś pewien?"
 msgid "cannot swallow a client with no name"
 msgstr "nie może połknąć klienta bez nazwy"
 
-#: src/taskbar.c:346 src/winmenu.c:52
+#: src/taskbar.c:348 src/winmenu.c:51
 msgid "Close"
 msgstr "Zamknij"
 
-#: src/taskbar.c:353 src/winmenu.c:72
+#: src/taskbar.c:355 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Zminimalizuj"
 
-#: src/taskbar.c:360 src/winmenu.c:70 src/winmenu.c:90
+#: src/taskbar.c:362 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Przywróć"
 
-#: src/taskbar.c:367 src/winmenu.c:180
+#: src/taskbar.c:369 src/winmenu.c:170
 msgid "Send To"
 msgstr "Wyślij do"
 
-#: src/taskbar.c:800
+#: src/taskbar.c:812
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
@@ -284,71 +284,71 @@ msgstr "nie można załadować ikon w zasobniku: \"%s\""
 msgid "no icon or label for TrayButton"
 msgstr "brak ikony lub etykiety dla TrayButton"
 
-#: src/winmenu.c:53
+#: src/winmenu.c:52
 msgid "Kill"
 msgstr "Zabij"
 
-#: src/winmenu.c:61
+#: src/winmenu.c:60
 msgid "Resize"
 msgstr "Zmień rozmiar"
 
-#: src/winmenu.c:64
+#: src/winmenu.c:63
 msgid "Move"
 msgstr "Przenieś"
 
-#: src/winmenu.c:77
+#: src/winmenu.c:76
 msgid "Unshade"
 msgstr "Rozwiń"
 
-#: src/winmenu.c:79
+#: src/winmenu.c:78
 msgid "Shade"
 msgstr "Zwiń"
 
-#: src/winmenu.c:84
+#: src/winmenu.c:83
 msgid "Maximize-y"
 msgstr "Zmaksymalizuj pio."
 
-#: src/winmenu.c:87
+#: src/winmenu.c:86
 msgid "Maximize-x"
 msgstr "Zmaksymalizuj poz."
 
-#: src/winmenu.c:92
+#: src/winmenu.c:91
 msgid "Maximize"
 msgstr "Zmaksymalizuj"
 
-#: src/winmenu.c:101
+#: src/winmenu.c:100
 msgid "Unstick"
 msgstr "Odepnij"
 
-#: src/winmenu.c:103
+#: src/winmenu.c:102
 msgid "Stick"
 msgstr "Przypnij"
 
-#: src/winmenu.c:137
+#: src/winmenu.c:127
 msgid "Layer"
 msgstr "Warstwa"
 
-#: src/winmenu.c:149
+#: src/winmenu.c:139
 msgid "[Above]"
 msgstr ""
 
-#: src/winmenu.c:151
+#: src/winmenu.c:141
 msgid "Above"
 msgstr ""
 
-#: src/winmenu.c:154
+#: src/winmenu.c:144
 msgid "[Normal]"
 msgstr "[Normalny]"
 
-#: src/winmenu.c:156
+#: src/winmenu.c:146
 msgid "Normal"
 msgstr "Normalny"
 
-#: src/winmenu.c:159
+#: src/winmenu.c:149
 msgid "[Below]"
 msgstr ""
 
-#: src/winmenu.c:161
+#: src/winmenu.c:151
 msgid "Below"
 msgstr ""
 

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-06-18 19:02-0500\n"
+"POT-Creation-Date: 2015-06-22 22:01-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -36,11 +36,11 @@ msgstr "ungültiger Typ für Hintergrund: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Hintergrundbild nicht gefunden: \"%s\""
 
-#: src/client.c:901
+#: src/client.c:902
 msgid "Kill this window?"
 msgstr "Dieses Fenster töten?"
 
-#: src/client.c:902
+#: src/client.c:903
 msgid "This may cause data to be lost!"
 msgstr "Das kann Datenverlust verursachen!"
 
@@ -143,66 +143,66 @@ msgstr ""
 msgid "key binding: root menu \"%s\" not defined"
 msgstr ""
 
-#: src/lex.c:198
+#: src/lex.c:199
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 
-#: src/lex.c:204
+#: src/lex.c:205
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr ""
 
-#: src/lex.c:210
+#: src/lex.c:211
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr ""
 
-#: src/lex.c:213
+#: src/lex.c:214
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr ""
 
-#: src/lex.c:231
+#: src/lex.c:232
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr ""
 
-#: src/lex.c:247
+#: src/lex.c:248
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr ""
 
-#: src/lex.c:302
+#: src/lex.c:303
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr ""
 
-#: src/lex.c:350
+#: src/lex.c:351
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/lex.c:455 src/parse.c:1832
+#: src/lex.c:456 src/parse.c:1875
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1846
+#: src/parse.c:1889
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ungültige Einstellung %s"
 
-#: src/parse.c:1858
+#: src/parse.c:1901
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ungültige Opazität: \"%s\""
 
-#: src/parse.c:1900
+#: src/parse.c:1943
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ungültiger tag in %s: %s"
 
-#: src/parse.c:1920
+#: src/parse.c:1963
 msgid "configuration error"
 msgstr "Konfigurationsfehler"
 
@@ -223,23 +223,23 @@ msgstr "Sicher?"
 msgid "cannot swallow a client with no name"
 msgstr ""
 
-#: src/taskbar.c:346 src/winmenu.c:52
+#: src/taskbar.c:348 src/winmenu.c:51
 msgid "Close"
 msgstr "Schließen"
 
-#: src/taskbar.c:353 src/winmenu.c:72
+#: src/taskbar.c:355 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Minimieren"
 
-#: src/taskbar.c:360 src/winmenu.c:70 src/winmenu.c:90
+#: src/taskbar.c:362 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Wiedereinlesen"
 
-#: src/taskbar.c:367 src/winmenu.c:180
+#: src/taskbar.c:369 src/winmenu.c:170
 msgid "Send To"
 msgstr "Senden an"
 
-#: src/taskbar.c:800
+#: src/taskbar.c:812
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
@@ -278,71 +278,71 @@ msgstr "konnte Leistensymbol nicht laden: %s"
 msgid "no icon or label for TrayButton"
 msgstr ""
 
-#: src/winmenu.c:53
+#: src/winmenu.c:52
 msgid "Kill"
 msgstr "Töten"
 
-#: src/winmenu.c:61
+#: src/winmenu.c:60
 msgid "Resize"
 msgstr "Größe ändern"
 
-#: src/winmenu.c:64
+#: src/winmenu.c:63
 msgid "Move"
 msgstr "Verschieben"
 
-#: src/winmenu.c:77
+#: src/winmenu.c:76
 msgid "Unshade"
 msgstr "Entschattieren"
 
-#: src/winmenu.c:79
+#: src/winmenu.c:78
 msgid "Shade"
 msgstr "Schattieren"
 
-#: src/winmenu.c:84
+#: src/winmenu.c:83
 msgid "Maximize-y"
 msgstr "Maximieren-y"
 
-#: src/winmenu.c:87
+#: src/winmenu.c:86
 msgid "Maximize-x"
 msgstr "Maximieren-x"
 
-#: src/winmenu.c:92
+#: src/winmenu.c:91
 msgid "Maximize"
 msgstr "Maximieren"
 
-#: src/winmenu.c:101
+#: src/winmenu.c:100
 msgid "Unstick"
 msgstr "Abkleben"
 
-#: src/winmenu.c:103
+#: src/winmenu.c:102
 msgid "Stick"
 msgstr "Ankleben"
 
-#: src/winmenu.c:137
+#: src/winmenu.c:127
 msgid "Layer"
 msgstr "Ebene"
 
-#: src/winmenu.c:149
+#: src/winmenu.c:139
 msgid "[Above]"
 msgstr "[Darüber]"
 
-#: src/winmenu.c:151
+#: src/winmenu.c:141
 msgid "Above"
 msgstr "Darüber"
 
-#: src/winmenu.c:154
+#: src/winmenu.c:144
 msgid "[Normal]"
 msgstr "[Normal]"
 
-#: src/winmenu.c:156
+#: src/winmenu.c:146
 msgid "Normal"
 msgstr "Normal"
 
-#: src/winmenu.c:159
+#: src/winmenu.c:149
 msgid "[Below]"
 msgstr "[Darunter]"
 
-#: src/winmenu.c:161
+#: src/winmenu.c:151
 msgid "Below"
 msgstr "Darunter"
 

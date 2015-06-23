@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-06-18 19:02-0500\n"
+"POT-Creation-Date: 2015-06-22 22:01-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -41,11 +41,11 @@ msgstr "Formato di sfondo non valido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Immagine di sfondo non trovata: \"%s\""
 
-#: src/client.c:901
+#: src/client.c:902
 msgid "Kill this window?"
 msgstr "Chiudere questa finestra?"
 
-#: src/client.c:902
+#: src/client.c:903
 msgid "This may cause data to be lost!"
 msgstr "Questo può causare una perdita di dati!"
 
@@ -148,67 +148,67 @@ msgstr "Tasto o keycode non specificati per Key"
 msgid "key binding: root menu \"%s\" not defined"
 msgstr "Combinazione di tasti: root menu %d non definito"
 
-#: src/lex.c:198
+#: src/lex.c:199
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: tag di chiusura \"%s\" non corrisponde al tag di apertura \"%s\""
 
-#: src/lex.c:204
+#: src/lex.c:205
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: tag di chiusura inatteso e non valido"
 
-#: src/lex.c:210
+#: src/lex.c:211
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: tag di chiusura \"%s\" senza tag di apertura"
 
-#: src/lex.c:213
+#: src/lex.c:214
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: tag di chiusura non valido"
 
-#: src/lex.c:231
+#: src/lex.c:232
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: tag di apertura non valido"
 
-#: src/lex.c:247
+#: src/lex.c:248
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: tag non valido"
 
-#: src/lex.c:302
+#: src/lex.c:303
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: testo non atteso: \"%s\""
 
-#: src/lex.c:350
+#: src/lex.c:351
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entità non valida: \"%.8s\""
 
-#: src/lex.c:455 src/parse.c:1832
+#: src/lex.c:456 src/parse.c:1875
 msgid "out of memory"
 msgstr "Memoria esaurita"
 
-#: src/parse.c:1846
+#: src/parse.c:1889
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Impostazione non valida: %s"
 
-#: src/parse.c:1858
+#: src/parse.c:1901
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "Opacità non valida: %s"
 
-#: src/parse.c:1900
+#: src/parse.c:1943
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Tag non valido in %s: %s"
 
-#: src/parse.c:1920
+#: src/parse.c:1963
 msgid "configuration error"
 msgstr "Errore di configurazione"
 
@@ -229,23 +229,23 @@ msgstr "Sei sicuro?"
 msgid "cannot swallow a client with no name"
 msgstr "Impossibile includere un client senza nome"
 
-#: src/taskbar.c:346 src/winmenu.c:52
+#: src/taskbar.c:348 src/winmenu.c:51
 msgid "Close"
 msgstr "Chiudi"
 
-#: src/taskbar.c:353 src/winmenu.c:72
+#: src/taskbar.c:355 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Riduci"
 
-#: src/taskbar.c:360 src/winmenu.c:70 src/winmenu.c:90
+#: src/taskbar.c:362 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Ripristina"
 
-#: src/taskbar.c:367 src/winmenu.c:180
+#: src/taskbar.c:369 src/winmenu.c:170
 msgid "Send To"
 msgstr "Manda A"
 
-#: src/taskbar.c:800
+#: src/taskbar.c:812
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "Larghezza massima per TaskList non valida: %s"
@@ -284,71 +284,71 @@ msgstr "Impossibile caricare icona del vassoio: \"%s"
 msgid "no icon or label for TrayButton"
 msgstr "Nessuna icona o etichetta per il TrayButton"
 
-#: src/winmenu.c:53
+#: src/winmenu.c:52
 msgid "Kill"
 msgstr "Termina"
 
-#: src/winmenu.c:61
+#: src/winmenu.c:60
 msgid "Resize"
 msgstr "Ridimensiona"
 
-#: src/winmenu.c:64
+#: src/winmenu.c:63
 msgid "Move"
 msgstr "Sposta"
 
-#: src/winmenu.c:77
+#: src/winmenu.c:76
 msgid "Unshade"
 msgstr "Srotola"
 
-#: src/winmenu.c:79
+#: src/winmenu.c:78
 msgid "Shade"
 msgstr "Arrotola"
 
-#: src/winmenu.c:84
+#: src/winmenu.c:83
 msgid "Maximize-y"
 msgstr "Ingrandisci-y"
 
-#: src/winmenu.c:87
+#: src/winmenu.c:86
 msgid "Maximize-x"
 msgstr "Ingrandisci-x"
 
-#: src/winmenu.c:92
+#: src/winmenu.c:91
 msgid "Maximize"
 msgstr "Ingrandisci"
 
-#: src/winmenu.c:101
+#: src/winmenu.c:100
 msgid "Unstick"
 msgstr "Sgancia"
 
-#: src/winmenu.c:103
+#: src/winmenu.c:102
 msgid "Stick"
 msgstr "Aggancia"
 
-#: src/winmenu.c:137
+#: src/winmenu.c:127
 msgid "Layer"
 msgstr "Layer"
 
-#: src/winmenu.c:149
+#: src/winmenu.c:139
 msgid "[Above]"
 msgstr "[Sopra]"
 
-#: src/winmenu.c:151
+#: src/winmenu.c:141
 msgid "Above"
 msgstr "Sopra"
 
-#: src/winmenu.c:154
+#: src/winmenu.c:144
 msgid "[Normal]"
 msgstr "[Normale]"
 
-#: src/winmenu.c:156
+#: src/winmenu.c:146
 msgid "Normal"
 msgstr "Normale"
 
-#: src/winmenu.c:159
+#: src/winmenu.c:149
 msgid "[Below]"
 msgstr "[Sotto]"
 
-#: src/winmenu.c:161
+#: src/winmenu.c:151
 msgid "Below"
 msgstr "Sotto"
 

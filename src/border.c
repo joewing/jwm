@@ -756,7 +756,7 @@ unsigned GetButtonCount(const ClientNode *np)
    if(np->state.border & BORDER_MAX) {
       count += 1;
       available -= buttonWidth;
-      if(available < settings.titleHeight) {
+      if(available < buttonWidth) {
          return count;
       }
    }

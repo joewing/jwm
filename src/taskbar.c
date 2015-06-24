@@ -301,9 +301,6 @@ void FocusGroup(const TaskEntry *tp)
    for(i = 0; i < LAYER_COUNT; i++) {
       ClientNode *np;
       for(np = nodes[i]; np; np = np->next) {
-         if(!(np->state.status & STAT_CANFOCUS)) {
-            continue;
-         }
          if(!ShouldFocus(np)) {
             continue;
          }
@@ -317,7 +314,12 @@ void FocusGroup(const TaskEntry *tp)
    for(i = restoreCount - 1; i >= 0; i--) {
       RestoreClient(toRestore[i], 1);
    }
-   FocusClient(toRestore[0]);
+   for(i = 0; i < restoreCount; i++) {
+      if(toRestore[i]->state.status & STAT_CANFOCUS) {
+         FocusClient(toRestore[i]);
+         break;
+      }
+   }
    ReleaseStack(toRestore);
 }
 

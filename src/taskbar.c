@@ -62,6 +62,7 @@ static TaskEntry *taskEntriesTail;
 
 static void ComputeItemSize(TaskBarType *tp);
 static char ShouldShowEntry(const TaskEntry *tp);
+static char ShouldFocusEntry(const TaskEntry *tp);
 static TaskEntry *GetEntry(TaskBarType *bar, int x, int y);
 static void Render(const TaskBarType *bp);
 static void ShowClientList(TaskBarType *bar, TaskEntry *tp);
@@ -300,6 +301,9 @@ void FocusGroup(const TaskEntry *tp)
    for(i = 0; i < LAYER_COUNT; i++) {
       ClientNode *np;
       for(np = nodes[i]; np; np = np->next) {
+         if(!(np->state.status & STAT_CANFOCUS)) {
+            continue;
+         }
          if(!ShouldFocus(np)) {
             continue;
          }
@@ -688,10 +692,12 @@ void FocusNext(void)
    for(tp = taskEntries; tp; tp = tp->next) {
       ClientEntry *cp;
       for(cp = tp->clients; cp; cp = cp->next) {
-         if(ShouldFocus(cp->client)) {
-            if(cp->client->state.status & STAT_ACTIVE) {
-               cp = cp->next;
-               goto ClientFound;
+         if(cp->client->state.status & STAT_CANFOCUS) {
+            if(ShouldFocus(cp->client)) {
+               if(cp->client->state.status & STAT_ACTIVE) {
+                  cp = cp->next;
+                  goto ClientFound;
+               }
             }
          }
       }
@@ -702,12 +708,12 @@ ClientFound:
    if(tp) {
       do {
          tp = tp->next;
-      } while(tp && !ShouldShowEntry(tp));
+      } while(tp && !ShouldFocusEntry(tp));
    }
    if(!tp) {
       /* Wrap around; start at the beginning. */
       for(tp = taskEntries; tp; tp = tp->next) {
-         if(ShouldShowEntry(tp)) {
+         if(ShouldFocusEntry(tp)) {
             break;
          }
       }
@@ -728,10 +734,12 @@ void FocusPrevious(void)
    for(tp = taskEntries; tp; tp = tp->next) {
       ClientEntry *cp;
       for(cp = tp->clients; cp; cp = cp->next) {
-         if(ShouldFocus(cp->client)) {
-            if(cp->client->state.status & STAT_ACTIVE) {
-               cp = cp->next;
-               goto ClientFound;
+         if(cp->client->state.status & STAT_CANFOCUS) {
+            if(ShouldFocus(cp->client)) {
+               if(cp->client->state.status & STAT_ACTIVE) {
+                  cp = cp->next;
+                  goto ClientFound;
+               }
             }
          }
       }
@@ -742,12 +750,12 @@ ClientFound:
    if(tp) {
       do {
          tp = tp->prev;
-      } while(tp && !ShouldShowEntry(tp));
+      } while(tp && !ShouldFocusEntry(tp));
    }
    if(!tp) {
       /* Wrap around; start at the end. */
       for(tp = taskEntriesTail; tp; tp = tp->prev) {
-         if(ShouldShowEntry(tp)) {
+         if(ShouldFocusEntry(tp)) {
             break;
          }
       }
@@ -766,6 +774,20 @@ char ShouldShowEntry(const TaskEntry *tp)
    for(cp = tp->clients; cp; cp = cp->next) {
       if(ShouldFocus(cp->client)) {
          return 1;
+      }
+   }
+   return 0;
+}
+
+/** Determine if we should attempt to focus an entry. */
+char ShouldFocusEntry(const TaskEntry *tp)
+{
+   const ClientEntry *cp;
+   for(cp = tp->clients; cp; cp = cp->next) {
+      if(cp->client->state.status & STAT_CANFOCUS) {
+         if(ShouldFocus(cp->client)) {
+            return 1;
+         }
       }
    }
    return 0;

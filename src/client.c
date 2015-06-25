@@ -142,9 +142,6 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    np->window = w;
    np->owner = None;
    np->state.desktop = currentDesktop;
-   np->controller = NULL;
-   np->name = NULL;
-   np->colormaps = NULL;
 
    np->x = attr.x;
    np->y = attr.y;
@@ -153,7 +150,6 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    np->visual.depth = attr.depth;
    np->visual.visual = attr.visual;
    np->cmap = attr.colormap;
-   np->colormaps = NULL;
    np->state.status = STAT_NONE;
    np->state.maxFlags = MAX_NONE;
    np->state.layer = LAYER_NORMAL;
@@ -171,9 +167,10 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
       np->state.defaultLayer = LAYER_ABOVE;
    }
 
-   LoadIcon(np);
-
    ApplyGroups(np);
+   if(np->icon == NULL) {
+      LoadIcon(np);
+   }
 
    /* We now know the layer, so insert */
    np->prev = NULL;

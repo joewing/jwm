@@ -443,7 +443,7 @@ ClientFound:
          np->y = oldy;
          JXMoveWindow(display, np->parent, np->x - west, np->y - north);
          SendConfigureEvent(np);
-         UpdatePager();
+         RequirePagerUpdate();
 
          break;
 
@@ -481,7 +481,7 @@ void StopPagerMove(ClientNode *np,
    }
 
    /* Redraw the pager. */
-   UpdatePager();
+   RequirePagerUpdate();
 
 }
 

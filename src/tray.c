@@ -174,8 +174,8 @@ void StartupTray(void)
 
    }
 
-   UpdatePager();
-   UpdateTaskBar();
+   RequirePagerUpdate();
+   RequireTaskUpdate();
 
 }
 
@@ -843,7 +843,7 @@ void LowerTrays(void)
    for(tp = trays; tp; tp = tp->next) {
       tp->autoHide &= ~THIDE_RAISED;
    }
-   RestackClients();
+   RequireRestack();
 }
 
 /** Update a specific component on a tray. */
@@ -1000,7 +1000,7 @@ void ResizeTray(TrayType *tp)
    JXMoveResizeWindow(display, tp->window, tp->x, tp->y,
                       tp->width, tp->height);
 
-   UpdateTaskBar();
+   RequireTaskUpdate();
    DrawSpecificTray(tp);
 
    if(tp->hidden) {

@@ -60,5 +60,14 @@ void RegisterCallback(int freq, SignalCallback callback, void *data);
  */
 void UnregisterCallback(SignalCallback callback, void *data);
 
+/** Restack clients before waiting for an event. */
+void RequireRestack();
+
+/** Update the task bar before waiting for an event. */
+void RequireTaskUpdate();
+
+/** Update the pager before waiting for an event. */
+void RequirePagerUpdate();
+
 #endif /* EVENT_H */
 

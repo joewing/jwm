@@ -74,8 +74,8 @@ void StartupClients(void)
 
    LoadFocus();
 
-   UpdateTaskBar();
-   UpdatePager();
+   RequireTaskUpdate();
+   RequirePagerUpdate();
 
 }
 
@@ -280,8 +280,8 @@ void MinimizeClient(ClientNode *np, char lower)
 {
    Assert(np);
    MinimizeTransients(np, lower);
-   RestackClients();
-   UpdateTaskBar();
+   RequireRestack();
+   RequireTaskUpdate();
 }
 
 /** Minimize all transients as well as the specified client. */
@@ -356,7 +356,7 @@ void ShadeClient(ClientNode *np)
 
    WriteState(np);
    ResetBorder(np);
-   UpdatePager();
+   RequirePagerUpdate();
 
 }
 
@@ -379,7 +379,7 @@ void UnshadeClient(ClientNode *np)
    WriteState(np);
    ResetBorder(np);
    RefocusClient();
-   UpdatePager();
+   RequirePagerUpdate();
 
 }
 
@@ -409,8 +409,8 @@ void SetClientWithdrawn(ClientNode *np)
    np->state.status &= ~STAT_SDESKTOP;
 
    WriteState(np);
-   UpdateTaskBar();
-   UpdatePager();
+   RequireTaskUpdate();
+   RequirePagerUpdate();
 
 }
 
@@ -459,14 +459,9 @@ void RestoreTransients(ClientNode *np, char raise)
 /** Restore a client window and its transients. */
 void RestoreClient(ClientNode *np, char raise)
 {
-
-   Assert(np);
-
    RestoreTransients(np, raise);
-
-   RestackClients();
-   UpdateTaskBar();
-
+   RequireRestack();
+   RequireTaskUpdate();
 }
 
 /** Set the client layer. This will affect transients. */
@@ -519,7 +514,7 @@ void SetClientLayer(ClientNode *np, unsigned int layer)
          }
       }
 
-      RestackClients();
+      RequireRestack();
 
    }
 
@@ -610,8 +605,8 @@ void SetClientDesktop(ClientNode *np, unsigned int desktop)
             }
          }
       }
-      UpdatePager();
-      UpdateTaskBar();
+      RequirePagerUpdate();
+      RequireTaskUpdate();
    }
 
 }
@@ -692,7 +687,7 @@ void MaximizeClient(ClientNode *np, MaxFlags flags)
    ResetBorder(np);
    DrawBorder(np);
    SendConfigureEvent(np);
-   UpdatePager();
+   RequirePagerUpdate();
 
 }
 
@@ -795,7 +790,7 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
 
    WriteState(np);
    SendConfigureEvent(np);
-   RestackClients();
+   RequireRestack();
 
 }
 
@@ -828,8 +823,8 @@ void FocusClient(ClientNode *np)
       }
 
       DrawBorder(np);
-      UpdatePager();
-      UpdateTaskBar();
+      RequirePagerUpdate();
+      RequireTaskUpdate();
 
    }
 
@@ -961,7 +956,7 @@ void RaiseClient(ClientNode *np)
    }
 
    RestackTransients(np);
-   RestackClients();
+   RequireRestack();
 
 }
 
@@ -1068,7 +1063,7 @@ void RestackClient(ClientNode *np, Window above, int detail)
    }
 
    RestackTransients(np);
-   RestackClients();
+   RequireRestack();
 
 }
 
@@ -1137,7 +1132,7 @@ void RestackClients(void)
 
    ReleaseStack(stack);
    UpdateNetClientList();
-   UpdatePager();
+   RequirePagerUpdate();
 
 }
 
@@ -1254,7 +1249,7 @@ void RemoveClient(ClientNode *np)
 
    Release(np);
 
-   RestackClients();
+   RequireRestack();
 
 }
 
@@ -1473,8 +1468,8 @@ void SignalUrgent(const TimeType *now, int x, int y, Window w, void *data)
       np->state.status |= STAT_FLASH;
    }
    DrawBorder(np);
-   UpdateTaskBar();
-   UpdatePager();
+   RequireTaskUpdate();
+   RequirePagerUpdate();
 
 }
 

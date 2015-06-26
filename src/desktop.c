@@ -19,6 +19,7 @@
 #include "background.h"
 #include "settings.h"
 #include "grab.h"
+#include "event.h"
 
 static char **desktopNames = NULL;
 static char *showingDesktop = NULL;
@@ -196,8 +197,8 @@ void ChangeDesktop(unsigned int desktop)
    SetCardinalAtom(rootWindow, ATOM_NET_SHOWING_DESKTOP,
                    showingDesktop[currentDesktop]);
 
-   RestackClients();
-   UpdateTaskBar();
+   RequireRestack();
+   RequireTaskUpdate();
 
    LoadBackground(desktop);
 
@@ -296,6 +297,8 @@ void ShowDesktop(void)
          }
       }
    }
+   RequireRestack();
+   RequireTaskUpdate();
    JXSync(display, True);
 
    if(showingDesktop[currentDesktop]) {

@@ -224,7 +224,7 @@ char MoveClient(ClientNode *np, int startx, int starty)
                SendConfigureEvent(np);
             }
             UpdateMoveWindow(np);
-            UpdatePager();
+            RequirePagerUpdate();
          }
 
          break;
@@ -362,7 +362,7 @@ char MoveClientKeyboard(ClientNode *np)
          }
 
          UpdateMoveWindow(np);
-         UpdatePager();
+         RequirePagerUpdate();
 
       }
 
@@ -787,15 +787,15 @@ void UpdateDesktop(const TimeType *now)
 
    if(atLeft && LeftDesktop()) {
       SetClientDesktop(currentClient, currentDesktop);
-      RestackClients();
+      RequireRestack();
    } else if(atRight && RightDesktop()) {
       SetClientDesktop(currentClient, currentDesktop);
-      RestackClients();
+      RequireRestack();
    } else if(atTop && AboveDesktop()) {
       SetClientDesktop(currentClient, currentDesktop);
-      RestackClients();
+      RequireRestack();
    } else if(atBottom && BelowDesktop()) {
       SetClientDesktop(currentClient, currentDesktop);
-      RestackClients();
+      RequireRestack();
    }
 }

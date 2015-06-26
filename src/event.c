@@ -46,6 +46,10 @@ typedef struct CallbackNode {
 
 static CallbackNode *callbacks = NULL;
 
+static char restack_pending = 0;
+static char task_update_pending = 0;
+static char pager_update_pending = 0;
+
 static void Signal(void);
 static void DispatchBorderButtonEvent(const XButtonEvent *event,
                                       ClientNode *np);
@@ -109,6 +113,17 @@ char WaitForEvent(XEvent *event)
    }
 
    do {
+
+      if(restack_pending) {
+         RestackClients();
+         restack_pending = 0;
+      }
+      if(task_update_pending) {
+         UpdateTaskBar();
+      }
+      if(pager_update_pending) {
+         UpdatePager();
+      }
 
       while(JXPending(display) == 0) {
          FD_ZERO(&fds);
@@ -690,7 +705,7 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
       }
 
       SendConfigureEvent(np);
-      UpdatePager();
+      RequirePagerUpdate();
 
    } else {
 
@@ -780,7 +795,6 @@ char HandlePropertyNotify(const XPropertyEvent *event)
 {
    ClientNode *np = FindClientByWindow(event->window);
    if(np) {
-      //GrabServer();
       char changed = 0;
       switch(event->atom) {
       case XA_WM_NAME:
@@ -835,12 +849,11 @@ char HandlePropertyNotify(const XPropertyEvent *event)
          }
          break;
       }
-      //UngrabServer();
 
       if(changed) {
          DrawBorder(np);
-         UpdateTaskBar();
-         UpdatePager();
+         RequireTaskUpdate();
+         RequirePagerUpdate();
       }
       if(np->state.status & STAT_WMDIALOG) {
          return 0;
@@ -1057,7 +1070,7 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
    ConstrainSize(np);
    ResetBorder(np);
    SendConfigureEvent(np);
-   UpdatePager();
+   RequirePagerUpdate();
 
 }
 
@@ -1201,11 +1214,11 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
       }
       if(actionNolist) {
          np->state.status &= ~STAT_NOLIST;
-         UpdateTaskBar();
+         RequireTaskUpdate();
       }
       if(actionNopager) {
          np->state.status &= ~STAT_NOPAGER;
-         UpdatePager();
+         RequirePagerUpdate();
       }
       if(actionBelow && np->state.layer == LAYER_BELOW) {
          SetClientLayer(np, np->state.defaultLayer);
@@ -1232,11 +1245,11 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
       }
       if(actionNolist) {
          np->state.status |= STAT_NOLIST;
-         UpdateTaskBar();
+         RequireTaskUpdate();
       }
       if(actionNopager) {
          np->state.status |= STAT_NOPAGER;
-         UpdatePager();
+         RequirePagerUpdate();
       }
       if(actionBelow) {
          SetClientLayer(np, LAYER_BELOW);
@@ -1288,11 +1301,11 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
        * recommendations. */
       if(actionNolist) {
          np->state.status ^= STAT_NOLIST;
-         UpdateTaskBar();
+         RequireTaskUpdate();
       }
       if(actionNopager) {
          np->state.status ^= STAT_NOPAGER;
-         UpdatePager();
+         RequirePagerUpdate();
       }
       break;
    default:
@@ -1401,11 +1414,11 @@ void HandleMapRequest(const XMapEvent *event)
             RaiseClient(np);
          }
          WriteState(np);
-         UpdateTaskBar();
-         UpdatePager();
+         RequireTaskUpdate();
+         RequirePagerUpdate();
       }
    }
-   RestackClients();
+   RequireRestack();
 }
 
 /** Handle an unmap notify event. */
@@ -1702,4 +1715,22 @@ void UnregisterCallback(SignalCallback callback, void *data)
       }
    }
    Assert(0);
+}
+
+/** Restack clients before waiting for an event. */
+void RequireRestack()
+{
+   restack_pending = 1;
+}
+
+/** Update the task bar before waiting for an event. */
+void RequireTaskUpdate()
+{
+   task_update_pending = 1;
+}
+
+/** Update the pager before waiting for an event. */
+void RequirePagerUpdate()
+{
+   pager_update_pending = 1;
 }

@@ -203,7 +203,7 @@ void ResizeClient(ClientNode *np, BorderActionType action,
                SendConfigureEvent(np);
             }
 
-            UpdatePager();
+            RequirePagerUpdate();
 
          }
 
@@ -367,7 +367,7 @@ void ResizeClientKeyboard(ClientNode *np)
             SendConfigureEvent(np);
          }
 
-         UpdatePager();
+         RequirePagerUpdate();
 
       }
 

@@ -523,7 +523,7 @@ void AddClientToTaskBar(ClientNode *np)
    cp->prev = NULL;
    tp->clients = cp;
 
-   UpdateTaskBar();
+   RequireTaskUpdate();
    UpdateNetClientList();
 
 }

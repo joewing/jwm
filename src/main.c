@@ -540,7 +540,7 @@ void Startup(void)
    ReadCurrentDesktop();
    JXFlush(display);
 
-   RestackClients();
+   RequireRestack();
 
    /* Allow clients to do their thing. */
    JXSync(display, True);

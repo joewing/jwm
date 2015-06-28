@@ -405,10 +405,11 @@ void DrawBorderHelper(const ClientNode *np)
 
       if(np->name && np->name[0] && titleWidth > 0) {
          const int sheight = GetStringHeight(FONT_BORDER);
+         const unsigned titlex = startx + settings.titleHeight
+                               + (settings.handles ? 4 : 0);
+         const unsigned titley = starty + (settings.titleHeight - sheight) / 2;
          RenderString(&np->visual, canvas, FONT_BORDER, borderTextColor,
-                      startx + settings.titleHeight + 4,
-                      starty + (settings.titleHeight - sheight) / 2,
-                      titleWidth, np->name);
+                      titlex, titley, titleWidth, np->name);
       }
 
       DrawBorderButtons(np, canvas, gc);

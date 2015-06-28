@@ -506,14 +506,25 @@ void AddClientToTaskBar(ClientNode *np)
    if(tp == NULL) {
       tp = Allocate(sizeof(TaskEntry));
       tp->clients = NULL;
-      tp->next = NULL;
-      tp->prev = taskEntriesTail;
-      if(taskEntriesTail) {
-         taskEntriesTail->next = tp;
-      } else {
+      if(settings.taskInsertMode == INSERT_LEFT) {
+         tp->prev = NULL;
+         tp->next = taskEntries;
+         if(taskEntries) {
+            taskEntries->prev = tp;
+         } else {
+            taskEntriesTail = tp;
+         }
          taskEntries = tp;
+      } else {
+         tp->next = NULL;
+         tp->prev = taskEntriesTail;
+         if(taskEntriesTail) {
+            taskEntriesTail->next = tp;
+         } else {
+            taskEntries = tp;
+         }
+         taskEntriesTail = tp;
       }
-      taskEntriesTail = tp;
    }
 
    cp->next = tp->clients;

@@ -1017,8 +1017,8 @@ void ParseDesktopBackground(int desktop, const TokenNode *tp)
 void ParseTaskListStyle(const TokenNode *tp)
 {
    static const StringMappingType mapping[] = {
-      { "right",  INSERT_RIGHT   },
-      { "left",   INSERT_LEFT    }
+      { "left",   INSERT_LEFT    },
+      { "right",  INSERT_RIGHT   }
    };
    TokenNode *np;
 

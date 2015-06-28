@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-06-22 22:01-0500\n"
+"POT-Creation-Date: 2015-06-28 07:47-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -36,11 +36,11 @@ msgstr "ungültiger Typ für Hintergrund: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Hintergrundbild nicht gefunden: \"%s\""
 
-#: src/client.c:902
+#: src/client.c:893
 msgid "Kill this window?"
 msgstr "Dieses Fenster töten?"
 
-#: src/client.c:903
+#: src/client.c:894
 msgid "This may cause data to be lost!"
 msgstr "Das kann Datenverlust verursachen!"
 
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/desktop.c:335
+#: src/desktop.c:338
 msgid "empty Desktops Name tag"
 msgstr ""
 
@@ -223,23 +223,23 @@ msgstr "Sicher?"
 msgid "cannot swallow a client with no name"
 msgstr ""
 
-#: src/taskbar.c:348 src/winmenu.c:51
+#: src/taskbar.c:352 src/winmenu.c:51
 msgid "Close"
 msgstr "Schließen"
 
-#: src/taskbar.c:355 src/winmenu.c:71
+#: src/taskbar.c:359 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Minimieren"
 
-#: src/taskbar.c:362 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:366 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Wiedereinlesen"
 
-#: src/taskbar.c:369 src/winmenu.c:170
+#: src/taskbar.c:373 src/winmenu.c:170
 msgid "Send To"
 msgstr "Senden an"
 
-#: src/taskbar.c:812
+#: src/taskbar.c:845
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""

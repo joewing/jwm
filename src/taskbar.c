@@ -260,6 +260,12 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
       case Button3:
          ShowClientList(bar, entry);
          break;
+      case Button4:
+         FocusPrevious();
+         break;
+      case Button5:
+         FocusNext();
+         break;
       default:
          break;
       }

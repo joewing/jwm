@@ -147,7 +147,8 @@ void ProcessActionRelease(struct ActionType *actions,
       UpdateSpecificTray(cp->tray, cp);
    }
 
-   // Since we grab the mouse, make sure the mouse is actually over the button.
+   /* Since we grab the mouse, make sure the mouse is actually over
+    * the button. */
    if(x < 0 || x >= cp->width) {
       return;
    }
@@ -155,7 +156,7 @@ void ProcessActionRelease(struct ActionType *actions,
       return;
    }
 
-   // Run the action (if any).
+   /* Run the action (if any). */
    for(ap = actions; ap; ap = ap->next) {
       if(ap->mask & mask) {
          if(ap->action && strlen(ap->action) > 0) {

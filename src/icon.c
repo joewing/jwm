@@ -339,7 +339,9 @@ IconNode *LoadNamedIcon(const char *name, char save, char preserveAspect)
 
    Assert(name);
 
-   if(name[0] == '/') {
+   if(name[0] == 0) {
+      return &emptyIcon;
+   } else if(name[0] == '/') {
       return CreateIconFromFile(name, save, preserveAspect);
    } else {
       for(ip = iconPaths; ip; ip = ip->next) {
@@ -765,7 +767,7 @@ IconNode *CreateIcon(void)
 /** Helper method for destroy icons. */
 void DoDestroyIcon(int index, IconNode *icon)
 {
-   if(icon) {
+   if(icon && icon != &emptyIcon) {
       ImageNode *image = icon->images;
       while(image) {
          ScaledIconNode *np = image->nodes;

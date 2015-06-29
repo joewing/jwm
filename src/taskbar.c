@@ -675,7 +675,11 @@ void Render(const TaskBarType *bp)
       }
       button.x = x;
       button.y = y;
-      button.icon = tp->clients->client->icon;
+      if(tp->clients->client->icon == &emptyIcon) {
+         button.icon = NULL;
+      } else {
+         button.icon = tp->clients->client->icon;
+      }
       if(tp->clients->client->className && settings.groupTasks) {
          button.text = tp->clients->client->className;
       } else {

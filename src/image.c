@@ -32,6 +32,7 @@
 #include "main.h"
 #include "error.h"
 #include "color.h"
+#include "misc.h"
 
 #ifdef USE_CAIRO
 #ifdef USE_RSVG
@@ -64,52 +65,64 @@ static int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
 /** Load an image from the specified file. */
 ImageNode *LoadImage(const char *fileName)
 {
-
+   const unsigned nameLength = strlen(fileName);
    ImageNode *result = NULL;
-
    if(!fileName) {
       return result;
    }
 
    /* Attempt to load the file as a PNG image. */
 #ifdef USE_PNG
-   result = LoadPNGImage(fileName);
-   if(result) {
-      return result;
+   if(nameLength >= 4 && !StrCmpNoCase(&fileName[nameLength - 4], ".png")) {
+      result = LoadPNGImage(fileName);
+      if(result) {
+         return result;
+      }
    }
 #endif
 
    /* Attempt to load the file as a JPEG image. */
 #ifdef USE_JPEG
-   result = LoadJPEGImage(fileName);
-   if(result) {
-      return result;
+   if(   (nameLength >= 4
+            && !StrCmpNoCase(&fileName[nameLength - 4], ".jpg"))
+      || (nameLength >= 5
+            && !StrCmpNoCase(&fileName[nameLength - 5], ".jpeg"))) {
+      result = LoadJPEGImage(fileName);
+      if(result) {
+         return result;
+      }
    }
 #endif
 
    /* Attempt to load the file as an SVG image. */
 #ifdef USE_CAIRO
 #ifdef USE_RSVG
-   result = LoadSVGImage(fileName);
-   if(result) {
-      return result;
+   if(nameLength >= 4 && !StrCmpNoCase(&fileName[nameLength - 4], ".svg")) {
+      result = LoadSVGImage(fileName);
+      if(result) {
+         return result;
+      }
    }
 #endif
 #endif
 
    /* Attempt to load the file as an XPM image. */
 #ifdef USE_XPM
-   result = LoadXPMImage(fileName);
-   if(result) {
-      return result;
+   if(nameLength >= 4 && !StrCmpNoCase(&fileName[nameLength - 4], ".xpm")) {
+      result = LoadXPMImage(fileName);
+      if(result) {
+         return result;
+      }
    }
 #endif
 
    /* Attempt to load the file as an XBM image. */
 #ifdef USE_XBM
-   result = LoadXBMImage(fileName);
-   if(result) {
-      return result;
+   if(nameLength >= 4 && !StrCmpNoCase(&fileName[nameLength - 4], ".xbm")) {
+      result = LoadXBMImage(fileName);
+      if(result) {
+         return result;
+      }
    }
 #endif
 
@@ -120,7 +133,6 @@ ImageNode *LoadImage(const char *fileName)
 /** Load an image from the specified XPM data. */
 ImageNode *LoadImageFromData(char **data)
 {
-
    ImageNode *result = NULL;
 
 #ifdef USE_XPM

@@ -75,4 +75,7 @@ int FindValue(const StringMappingType *mapping, int count, const char *key);
  */
 const char *FindKey(const StringMappingType *mapping, int count, int value);
 
+/** Case insensitive string compare. */
+int StrCmpNoCase(const char *a, const char *b);
+
 #endif /* MISC_H */

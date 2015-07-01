@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+static char ToLower(char ch);
 static char IsSymbolic(char ch);
 static char *GetSymbolName(const char *str);
 static void ReplaceSymbol(char **str, unsigned int offset,
@@ -33,12 +34,34 @@ char IsSpace(char ch, unsigned int *lineNumber)
    }
 }
 
+/** Convert to lower case. */
+char ToLower(char ch)
+{
+   /* This should work in either ASCII or EBCDIC. */
+   if(   (ch >= 'A' && ch <= 'I')
+      || (ch >= 'J' && ch <= 'R')
+      || (ch >= 'S' && ch <= 'Z')) {
+      return ch - 'A' + 'a';
+   } else {
+      return ch;
+   }
+}
+
 /** Determine if a character is a valid for a shell variable. */
 char IsSymbolic(char ch)
 {
-   if(ch >= 'A' && ch <= 'Z') {
+   /* This should work in either ASCII or EBCDIC. */
+   if(ch >= 'A' && ch <= 'I') {
       return 1;
-   } else if(ch >= 'a' && ch <= 'z') {
+   } else if(ch >= 'J' && ch <= 'R') {
+      return 1;
+   } else if(ch >= 'S' && ch <= 'Z') {
+      return 1;
+   } else if(ch >= 'a' && ch <= 'i') {
+      return 1;
+   } else if(ch >= 'j' && ch <= 'r') {
+      return 1;
+   } else if(ch >= 's' && ch <= 'z') {
       return 1;
    } else if(ch >= '0' && ch <= '9') {
       return 1;
@@ -247,4 +270,14 @@ const char *FindKey(const StringMappingType *mapping, int count, int value)
       }
    }
    return NULL;
+}
+
+/** Case insensitive string compare. */
+int StrCmpNoCase(const char *a, const char *b)
+{
+   while(*a && *b && ToLower(*a) == ToLower(*b)) {
+      a += 1;
+      b += 1;
+   }
+   return *b - *a;
 }

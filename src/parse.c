@@ -501,6 +501,30 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
    menu->offsets = NULL;
    while(start) {
       switch(start->type) {
+      case TOK_DYNAMIC:
+
+         last = InsertMenuItem(last);
+         if(!menu->items) {
+            menu->items = last;
+         }
+
+         value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
+         last->name = CopyString(value);
+
+         value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
+         last->iconName = CopyString(value);
+
+         last->action.type = MA_DYNAMIC;
+         last->action.str = CopyString(start->value);
+
+         value = FindAttribute(start->attributes, HEIGHT_ATTRIBUTE);
+         if(value) {
+            last->action.value = ParseUnsigned(start, value);
+         } else {
+            last->action.value = menu->itemHeight;
+         }
+
+         break;
       case TOK_MENU:
 
          last = InsertMenuItem(last);
@@ -558,7 +582,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
          last->iconName = CopyString(value);
 
          last->action.type = MA_EXECUTE;
-         last->action.data.str = CopyString(start->value);
+         last->action.str = CopyString(start->value);
 
          break;
       case TOK_SEPARATOR:
@@ -583,7 +607,6 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
       case TOK_KILL:
       case TOK_CLOSE:
       case TOK_SENDTO:
-      case TOK_DYNAMIC:
 
          last = InsertMenuItem(last);
          if(!menu->items) {
@@ -630,10 +653,6 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
          case TOK_SENDTO:
             last->action.type = MA_SENDTO_MENU;
             break;
-         case TOK_DYNAMIC:
-            last->action.type = MA_DYNAMIC;
-            last->action.data.str = CopyString(start->value);
-            break;
          default:
             break;
          }
@@ -663,7 +682,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
          last->iconName = CopyString(value);
 
          last->action.type = MA_EXIT;
-         last->action.data.str = CopyString(start->value);
+         last->action.str = CopyString(start->value);
 
          break;
       case TOK_RESTART:

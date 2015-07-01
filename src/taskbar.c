@@ -66,7 +66,7 @@ static char ShouldFocusEntry(const TaskEntry *tp);
 static TaskEntry *GetEntry(TaskBarType *bar, int x, int y);
 static void Render(const TaskBarType *bp);
 static void ShowClientList(TaskBarType *bar, TaskEntry *tp);
-static void RunTaskBarCommand(MenuAction *action);
+static void RunTaskBarCommand(MenuAction *action, unsigned button);
 
 static void SetSize(TrayComponentType *cp, int width, int height);
 static void Create(TrayComponentType *cp);
@@ -450,7 +450,7 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
 }
 
 /** Run a menu action. */
-void RunTaskBarCommand(MenuAction *action)
+void RunTaskBarCommand(MenuAction *action, unsigned button)
 {
    ClientEntry *cp;
 
@@ -462,7 +462,7 @@ void RunTaskBarCommand(MenuAction *action)
          }
          switch(action->type & ~MA_GROUP_MASK) {
          case MA_SENDTO:
-            SetClientDesktop(cp->client, action->data.i);
+            SetClientDesktop(cp->client, action->value);
             break;
          case MA_CLOSE:
             DeleteClient(cp->client);
@@ -478,7 +478,7 @@ void RunTaskBarCommand(MenuAction *action)
          }
       }
    } else if(action->type == MA_EXECUTE) {
-      if(action->button == Button3) {
+      if(button == Button3) {
          Window w;
          int x, y;
          GetMousePosition(&x, &y, &w);
@@ -490,7 +490,7 @@ void RunTaskBarCommand(MenuAction *action)
          MoveMouse(np->window, np->width / 2, np->height / 2);
       }
    } else {
-      RunWindowCommand(action);
+      RunWindowCommand(action, button);
    }
 }
 

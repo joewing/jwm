@@ -30,6 +30,6 @@ void ShowWindowMenu(struct ClientNode *np, int x, int y);
 void ChooseWindow(MenuAction *action);
 
 /** Run a menu action for selected client. */
-void RunWindowCommand(MenuAction *action);
+void RunWindowCommand(MenuAction *action, unsigned button);
 
 #endif /* WINMENU_H */

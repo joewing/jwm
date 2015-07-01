@@ -185,7 +185,7 @@ void AddWindowMenuItem(Menu *menu, const char *name, MenuActionType type,
    item->name = CopyString(name);
    item->action.type = type;
    item->action.context = np;
-   item->action.data.i = value;
+   item->action.value = value;
    item->next = menu->items;
    menu->items = item;
 
@@ -209,7 +209,7 @@ void ChooseWindow(MenuAction *action)
             np = FindClient(event.xbutton.subwindow);
             if(np) {
                action->context = np;
-               RunWindowCommand(action);
+               RunWindowCommand(action, event.xbutton.button);
             }
          }
          break;
@@ -224,7 +224,7 @@ void ChooseWindow(MenuAction *action)
 }
 
 /** Window menu action callback. */
-void RunWindowCommand(MenuAction *action)
+void RunWindowCommand(MenuAction *action, unsigned button)
 {
    ClientNode *client = action->context;
    switch(action->type) {
@@ -259,7 +259,7 @@ void RunWindowCommand(MenuAction *action)
       break;
    case MA_SENDTO:
    case MA_DESKTOP:
-      SetClientDesktop(client, action->data.i);
+      SetClientDesktop(client, action->value);
       break;
    case MA_SHADE:
       if(client->state.status & STAT_SHADED) {
@@ -278,7 +278,7 @@ void RunWindowCommand(MenuAction *action)
       KillClient(client);
       break;
    case MA_LAYER:
-      SetClientLayer(client, action->data.i);
+      SetClientLayer(client, action->value);
       break;
    default:
       break;

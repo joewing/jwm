@@ -224,7 +224,7 @@ Menu *CreateDesktopMenu(unsigned int mask, void *context)
 
       item->action.type = MA_DESKTOP;
       item->action.context = context;
-      item->action.data.i = x;
+      item->action.value = x;
 
       item->name = Allocate(len + 3);
       item->name[0] = (mask & (1 << x)) ? '[' : ' ';
@@ -257,7 +257,7 @@ Menu *CreateSendtoMenu(MenuActionType mask, void *context)
 
       item->action.type = MA_SENDTO | mask;
       item->action.context = context;
-      item->action.data.i = x;
+      item->action.value = x;
 
       item->name = Allocate(len + 3);
       item->name[0] = (x == currentDesktop) ? '[' : ' ';

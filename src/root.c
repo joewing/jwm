@@ -27,7 +27,7 @@ static Menu *rootMenu[ROOT_MENU_COUNT];
 
 static void ExitHandler(ClientNode *np);
 
-static void RunRootCommand(MenuAction *action);
+static void RunRootCommand(MenuAction *action, unsigned button);
 
 /** Initialize root menu data. */
 void InitializeRootMenu(void)
@@ -233,12 +233,12 @@ void ReloadMenu(void)
 }
 
 /** Root menu callback. */
-void RunRootCommand(MenuAction *action)
+void RunRootCommand(MenuAction *action, unsigned button)
 {
 
    switch(action->type) {
    case MA_EXECUTE:
-      RunCommand(action->data.str);
+      RunCommand(action->str);
       break;
    case MA_RESTART:
       Restart();
@@ -247,11 +247,11 @@ void RunRootCommand(MenuAction *action)
       if(exitCommand) {
          Release(exitCommand);
       }
-      exitCommand = CopyString(action->data.str);
+      exitCommand = CopyString(action->str);
       Exit();
       break;
    case MA_DESKTOP:
-      ChangeDesktop(action->data.i);
+      ChangeDesktop(action->value);
       break;
 
    case MA_SENDTO:

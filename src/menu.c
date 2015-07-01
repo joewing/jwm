@@ -206,8 +206,8 @@ void DestroyMenu(Menu *menu)
          case MA_EXECUTE:
          case MA_EXIT:
          case MA_DYNAMIC:
-            if(menu->items->action.data.str) {
-               Release(menu->items->action.data.str);
+            if(menu->items->action.str) {
+               Release(menu->items->action.str);
             }
             break;
          default:
@@ -275,7 +275,8 @@ void PatchMenu(Menu *menu)
          break;
       case MA_DYNAMIC:
          if(!item->submenu) {
-            submenu = ParseDynamicMenu(item->action.data.str);
+            submenu = ParseDynamicMenu(item->action.str);
+            submenu->itemHeight = item->action.value;
          }
          break;
       default:
@@ -386,8 +387,7 @@ char MenuLoop(Menu *menu, RunMenuCommandType runner)
             ip = GetMenuItem(menu, menu->currentIndex);
          }
          if(ip != NULL) {
-            ip->action.button = event.xbutton.button;
-            (runner)(&ip->action);
+            (runner)(&ip->action, event.xbutton.button);
          }
          return 1;
       default:
@@ -572,8 +572,7 @@ MenuSelectionType UpdateMotion(Menu *menu,
       case KEY_ENTER:
          ip = GetMenuItem(tp, tp->currentIndex);
          if(ip != NULL) {
-            ip->action.button = 0;
-            (runner)(&ip->action);
+            (runner)(&ip->action, 0);
          }
          return MENU_SUBSELECT;
       default:

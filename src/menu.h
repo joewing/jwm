@@ -42,15 +42,13 @@ typedef unsigned char MenuActionType;
 /** Structure to represent a menu action for callbacks. */
 typedef struct MenuAction {
 
-   MenuActionType type;          /**< Type of action. */
-   void *context;
-   unsigned button;
+   void *context;                /**< Action context (client, etc.). */
 
-   /** Extra data for the action. */
-   union {
-      int i;
-      char *str;
-   } data;
+   /* Extra data for the action. */
+   char *str;
+   unsigned value;
+
+   MenuActionType type;          /**< Type of action. */
 
 } MenuAction;
 
@@ -102,7 +100,7 @@ typedef struct Menu {
 
 } Menu;
 
-typedef void (*RunMenuCommandType)(MenuAction *action);
+typedef void (*RunMenuCommandType)(MenuAction *action, unsigned button);
 
 /** Create an empty menu item. */
 MenuItem *CreateMenuItem(MenuItemType type);

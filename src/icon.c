@@ -82,11 +82,6 @@ static IconNode *CreateIconFromBinary(const unsigned long *data,
 static IconNode *LoadNamedIconHelper(const char *name, const char *path,
                                      char save, char preserveAspect);
 
-#if defined(USE_ICONS)
-static IconNode *LoadSuffixedIcon(const char *path, const char *name,
-                                  const char *suffix);
-#endif
-
 static ImageNode *GetBestImage(IconNode *icon, int rwidth, int rheight);
 static ScaledIconNode *GetScaledIcon(IconNode *icon, ImageNode *iconImage,
                                      long fg, int rwidth, int rheight);
@@ -256,11 +251,6 @@ void PutIcon(const VisualData *visual, IconNode *icon, Drawable d, long fg,
 /** Load the icon for a client. */
 void LoadIcon(ClientNode *np)
 {
-
-   IconPathNode *ip;
-
-   Assert(np);
-
    /* If client already has an icon, destroy it first. */
    DestroyIcon(np->icon);
    np->icon = NULL;
@@ -277,87 +267,9 @@ void LoadIcon(ClientNode *np)
       return;
    }
 
-   /* Attempt to find an icon for this program in the icon directory */
-   if(np->instanceName) {
-      for(ip = iconPaths; ip; ip = ip->next) {
-
-#ifdef USE_PNG
-         np->icon = LoadSuffixedIcon(ip->path, np->instanceName, ".png");
-         if(np->icon) {
-            return;
-         }
-#endif
-
-#ifdef USE_XPM
-         np->icon = LoadSuffixedIcon(ip->path, np->instanceName, ".xpm");
-         if(np->icon) {
-            return;
-         }
-#endif
-
-#ifdef USE_JPEG
-         np->icon = LoadSuffixedIcon(ip->path, np->instanceName, ".jpg");
-         if(np->icon) {
-            return;
-         }
-#endif
-
-#ifdef USE_ICONS
-         np->icon = LoadSuffixedIcon(ip->path, np->instanceName, ".xbm");
-         if(np->icon) {
-            return;
-         }
-#endif
-
-      }
-   }
-
    /* Load the default icon */
    np->icon = GetDefaultIcon();
-
 }
-
-/** Load an icon given a name, path, and suffix. */
-#if defined(USE_ICONS)
-IconNode *LoadSuffixedIcon(const char *path, const char *name,
-                           const char *suffix)
-{
-
-   IconNode *result;
-   ImageNode *image;
-   char *iconName;
-   unsigned int len;
-
-   Assert(path);
-   Assert(name);
-   Assert(suffix);
-
-   len = strlen(name) + strlen(path) + strlen(suffix);
-   iconName = Allocate(len + 1);
-   strcpy(iconName, path);
-   strcat(iconName, name);
-   strcat(iconName, suffix);
-
-   result = FindIcon(iconName);
-   if(result) {
-      Release(iconName);
-      return result;
-   }
-
-   image = LoadImage(iconName);
-   if(image) {
-      result = CreateIcon();
-      result->name = iconName;
-      result->images = image;
-      InsertIcon(result);
-      return result;
-   } else {
-      Release(iconName);
-      return NULL;
-   }
-
-}
-#endif /* defined(USE_PNG) || defined(USE_XPM) || defined(USE_JPEG) */
 
 /** Load an icon from a file. */
 IconNode *LoadNamedIcon(const char *name, char save, char preserveAspect)

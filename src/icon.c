@@ -33,6 +33,35 @@ typedef struct IconPathNode {
    struct IconPathNode *next;
 } IconPathNode;
 
+/* These extensions are appended to icon names during search. */
+const char *ICON_EXTENSIONS[] = {
+   "",
+#ifdef USE_PNG
+   ".png",
+   ".PNG",
+#endif
+#if defined(USE_CAIRO) && defined(USE_RSVG)
+   ".svg",
+   ".SVG",
+#endif
+#ifdef USE_XPM
+   ".xpm",
+   ".XPM",
+#endif
+#ifdef USE_JPEG
+   ".jpg",
+   ".JPG",
+   ".jpeg",
+   ".JPEG",
+#endif
+#ifdef USE_XBM
+   ".xbm",
+   ".XBM",
+#endif
+};
+static const unsigned EXTENSION_COUNT = ARRAY_LENGTH(ICON_EXTENSIONS);
+static const unsigned MAX_EXTENSION_LENGTH = 5;
+
 static IconNode **iconHash;
 static IconPathNode *iconPaths;
 static IconPathNode *iconPathsTail;
@@ -359,18 +388,27 @@ IconNode *LoadNamedIcon(const char *name, char save, char preserveAspect)
 IconNode *LoadNamedIconHelper(const char *name, const char *path,
                               char save, char preserveAspect)
 {
-
    IconNode *result;
    char *temp;
+   const unsigned nameLength = strlen(name);
+   const unsigned pathLength = strlen(path);
+   unsigned i;
 
-   temp = AllocateStack(strlen(name) + strlen(path) + 1);
-   strcpy(temp, path);
-   strcat(temp, name);
-   result = CreateIconFromFile(temp, save, preserveAspect);
+   temp = AllocateStack(nameLength + pathLength + MAX_EXTENSION_LENGTH + 1);
+   memcpy(&temp[0], path, pathLength);
+   memcpy(&temp[pathLength], name, nameLength);
+
+   result = NULL;
+   for(i = 0; i < EXTENSION_COUNT; i++) {
+      strcpy(&temp[pathLength + nameLength], ICON_EXTENSIONS[i]);
+      result = CreateIconFromFile(temp, save, preserveAspect);
+      if(result) {
+         break;
+      }
+   }
    ReleaseStack(temp);
 
    return result;
-
 }
 
 /** Read the icon property from a client. */

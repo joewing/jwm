@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-06-28 07:47-0500\n"
+"POT-Creation-Date: 2015-07-04 08:41-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "invalid action: \"%s\""
 msgstr "недопустимое значение действия кнопки запуска: \"%s\""
 
-#: src/action.c:181
+#: src/action.c:182
 #, fuzzy, c-format
 msgid "action: root menu \"%s\" not defined"
 msgstr "кнопка запуска: главное меню %d не задано"
@@ -104,17 +104,17 @@ msgstr "недопустимое значение названия группы"
 msgid "invalid group desktop: %d"
 msgstr "недопустимое значение рабочего стола группы: %d"
 
-#: src/image.c:222
+#: src/image.c:234
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr "не удалось прочитать структуру изображения PNG: %s"
 
-#: src/image.c:235
+#: src/image.c:247
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr "ошибка чтения изображения PNG: %s"
 
-#: src/image.c:243
+#: src/image.c:255
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "ошибка создания структуры информации об изображении PNG: %s"
@@ -187,26 +187,26 @@ msgstr "%s[%u]: непонятный текст: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
-#: src/lex.c:456 src/parse.c:1875
+#: src/lex.c:456 src/parse.c:1894
 msgid "out of memory"
 msgstr "недостаточно памяти"
 
-#: src/parse.c:1889
+#: src/parse.c:1908
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:1901
+#: src/parse.c:1920
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:1943
+#: src/parse.c:1962
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:1963
+#: src/parse.c:1982
 msgid "configuration error"
 msgstr "ошибка конфигурации"
 
@@ -227,23 +227,23 @@ msgstr "Вы уверены?"
 msgid "cannot swallow a client with no name"
 msgstr "нельзя использовать микро-окно панели (swallow) без имени"
 
-#: src/taskbar.c:352 src/winmenu.c:51
+#: src/taskbar.c:358 src/winmenu.c:51
 msgid "Close"
 msgstr "Закрыть"
 
-#: src/taskbar.c:359 src/winmenu.c:71
+#: src/taskbar.c:365 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Свернуть"
 
-#: src/taskbar.c:366 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:372 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Восстановить"
 
-#: src/taskbar.c:373 src/winmenu.c:170
+#: src/taskbar.c:379 src/winmenu.c:170
 msgid "Send To"
 msgstr "Переместить на рабочий стол"
 
-#: src/taskbar.c:845
+#: src/taskbar.c:858
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""

@@ -675,8 +675,11 @@ void Render(const TaskBarType *bp)
       button.type = BUTTON_TASK;
       for(cp = tp->clients; cp; cp = cp->next) {
          if(cp->client->state.status & (STAT_ACTIVE | STAT_FLASH)) {
-            button.type = BUTTON_TASK_ACTIVE;
-            break;
+            if(button.type == BUTTON_TASK) {
+               button.type = BUTTON_TASK_ACTIVE;
+            } else {
+               button.type = BUTTON_TASK;
+            }
          }
       }
       button.x = x;

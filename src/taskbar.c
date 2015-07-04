@@ -195,7 +195,7 @@ void ComputeItemSize(TaskBarType *tp)
    TrayComponentType *cp = tp->cp;
    if(tp->layout == LAYOUT_VERTICAL) {
 
-      tp->itemHeight = GetStringHeight(FONT_TASK) + 12;
+      tp->itemHeight = GetStringHeight(FONT_TRAY) + 12;
       tp->itemWidth = cp->width;
 
    } else {
@@ -512,25 +512,14 @@ void AddClientToTaskBar(ClientNode *np)
    if(tp == NULL) {
       tp = Allocate(sizeof(TaskEntry));
       tp->clients = NULL;
-      if(settings.taskInsertMode == INSERT_LEFT) {
-         tp->prev = NULL;
-         tp->next = taskEntries;
-         if(taskEntries) {
-            taskEntries->prev = tp;
-         } else {
-            taskEntriesTail = tp;
-         }
-         taskEntries = tp;
+      tp->next = NULL;
+      tp->prev = taskEntriesTail;
+      if(taskEntriesTail) {
+         taskEntriesTail->next = tp;
       } else {
-         tp->next = NULL;
-         tp->prev = taskEntriesTail;
-         if(taskEntriesTail) {
-            taskEntriesTail->next = tp;
-         } else {
-            taskEntries = tp;
-         }
-         taskEntriesTail = tp;
+         taskEntries = tp;
       }
+      taskEntriesTail = tp;
    }
 
    cp->next = tp->clients;
@@ -597,7 +586,7 @@ void UpdateTaskBar(void)
       if(bp->layout == LAYOUT_VERTICAL) {
          TaskEntry *tp;
          lastHeight = bp->cp->requestedHeight;
-         bp->itemHeight = GetStringHeight(FONT_TASK) + 12;
+         bp->itemHeight = GetStringHeight(FONT_TRAY) + 12;
          bp->cp->requestedHeight = 2;
          for(tp = taskEntries; tp; tp = tp->next) {
             if(ShouldShowEntry(tp)) {
@@ -657,7 +646,7 @@ void Render(const TaskBarType *bp)
    }
 
    ResetButton(&button, bp->cp->pixmap, &rootVisual);
-   button.font = FONT_TASK;
+   button.font = FONT_TRAY;
    button.height = bp->itemHeight;
    button.width = bp->itemWidth;
    button.text = NULL;
@@ -908,4 +897,3 @@ void UpdateNetClientList(void)
    }
    
 }
-

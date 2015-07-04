@@ -79,9 +79,6 @@ void StartupFonts(void)
    unsigned int x;
 
    /* Inherit unset fonts from the tray for tray items. */
-   if(!fontNames[FONT_TASK]) {
-      fontNames[FONT_TASK] = CopyString(fontNames[FONT_TRAY]);
-   }
    if(!fontNames[FONT_PAGER]) {
       fontNames[FONT_PAGER] = CopyString(fontNames[FONT_TRAY]);
    }

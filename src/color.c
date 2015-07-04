@@ -58,14 +58,6 @@ static const DefaultColorNode DEFAULT_COLORS[] = {
    { COLOR_TRAY_ACTIVE_BG1,         0x333333    },
    { COLOR_TRAY_ACTIVE_BG2,         0x333333    },
 
-   { COLOR_TASK_FG,                 0xFFFFFF    },
-   { COLOR_TASK_BG1,                0x111111    },
-   { COLOR_TASK_BG2,                0x111111    },
-   { COLOR_TASK_BORDER,             0x000000    },
-   { COLOR_TASK_ACTIVE_FG,          0xFFFFFF    },
-   { COLOR_TASK_ACTIVE_BG1,         0x333333    },
-   { COLOR_TASK_ACTIVE_BG2,         0x333333    },
-
    { COLOR_PAGER_BG,                0x111111    },
    { COLOR_PAGER_FG,                0x444444    },
    { COLOR_PAGER_ACTIVE_BG,         0x333333    },
@@ -89,18 +81,6 @@ static const DefaultColorNode DEFAULT_COLORS[] = {
 };
 static const unsigned int DEFAULT_COUNT
    = sizeof(DEFAULT_COLORS) / sizeof(DEFAULT_COLORS[0]);
-
-static const ColorInheritNode INHERIT_COLORS[] = {
-   { COLOR_TASK_FG,                 COLOR_TRAY_FG           },
-   { COLOR_TASK_BG1,                COLOR_TRAY_BG1          },
-   { COLOR_TASK_BG2,                COLOR_TRAY_BG2          },
-   { COLOR_TASK_ACTIVE_FG,          COLOR_TRAY_ACTIVE_FG    },
-   { COLOR_TASK_ACTIVE_BG1,         COLOR_TRAY_ACTIVE_BG1   },
-   { COLOR_TASK_ACTIVE_BG2,         COLOR_TRAY_ACTIVE_BG2   },
-   { COLOR_TASK_BORDER,             COLOR_TASK_FG           }
-};
-static const unsigned int INHERIT_COUNT
-   = sizeof(INHERIT_COLORS) / sizeof(INHERIT_COLORS[0]);
 
 static char **names = NULL;
 
@@ -185,16 +165,6 @@ void StartupColors(void)
       }
 
       break;
-   }
-
-   /* Inherit unset colors. */
-   if(names) {
-      for(x = 0; x < INHERIT_COUNT; x++) {
-         if(!names[INHERIT_COLORS[x].dest]) {
-            names[INHERIT_COLORS[x].dest]
-               = CopyString(names[INHERIT_COLORS[x].src]);
-         }
-      }
    }
 
    /* Get color information used for JWM stuff. */

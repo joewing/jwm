@@ -1016,60 +1016,6 @@ The default background color for active items.
 .RE
 .RE
 
-.B "TASK LIST STYLE"
-.RS
-The \fBTaskListStyle\fP tag controls the look of task lists.
-This tag supports the following attribute:
-.P
-\fBinsert\fP \fImode\fP
-.RS
-This determines how new items are added to the task list. Valid options
-are \fBleft\fP and \fBright\fP. The default is \fBright\fP.
-.RE
-.P
-Within this tag the following tags are supported:
-.P
-.B Font
-.RS
-The font used for program names.
-Inherited from \fBTrayStyle\fP by default.
-See the \fBFONTS\fP section for more information.
-.RE
-.P
-.B Foreground
-.RS
-The foreground color of the task list items.
-Inherited from \fBTrayStyle\fP by default.
-See the \fBCOLORS\fP section for more information.
-.RE
-.P
-.B Background
-.RS
-The background color of the task list items (gradients are supported).
-Inherited from \fBTrayStyle\fP by default.
-See the \fBCOLORS\fP section for more information.
-.RE
-.P
-.P
-.B Active
-.RS
-The colors used for active items in the task list.
-Inherited from \fBTrayStyle\fP by default.
-See the \fBCOLORS\fP section for more information.
-.P
-.B Foreground
-.RS
-The foreground color of an active item on the task list.
-.RE
-.P
-.B Background
-.RS
-The background color of an active item on the task list
-(gradients are supported).
-.RE
-.RE
-.RE
-
 .B "PAGER STYLE"
 .RS
 The \fBPagerStyle\fP tag controls the look of pagers.

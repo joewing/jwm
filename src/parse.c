@@ -169,8 +169,6 @@ static void ParseGroupOption(const TokenNode *tp,
 /* Style. */
 static void ParseWindowStyle(const TokenNode *tp);
 static void ParseActiveWindowStyle(const TokenNode *tp);
-static void ParseTaskListStyle(const TokenNode *tp);
-static void ParseActiveTaskListStyle(const TokenNode *tp);
 static void ParseTrayStyle(const TokenNode *tp);
 static void ParseActiveTrayStyle(const TokenNode *tp);
 static void ParsePagerStyle(const TokenNode *tp);
@@ -324,9 +322,6 @@ void Parse(const TokenNode *start, int depth)
                break;
             case TOK_STARTUPCOMMAND:
                AddStartupCommand(tp->value);
-               break;
-            case TOK_TASKLISTSTYLE:
-               ParseTaskListStyle(tp);
                break;
             case TOK_TRAY:
                ParseTray(tp);
@@ -1021,59 +1016,6 @@ void ParseDesktopBackground(int desktop, const TokenNode *tp)
 {
    const char *type = FindAttribute(tp->attributes, "type");
    SetBackground(desktop, type, tp->value);
-}
-
-/** Parse task list style. */
-void ParseTaskListStyle(const TokenNode *tp)
-{
-   static const StringMappingType mapping[] = {
-      { "left",   INSERT_LEFT    },
-      { "right",  INSERT_RIGHT   }
-   };
-   TokenNode *np;
-
-   settings.taskInsertMode = ParseAttribute(mapping, ARRAY_LENGTH(mapping),
-      tp, "insert", settings.taskInsertMode);
-
-   for(np = tp->subnodeHead; np; np = np->next) {
-      switch(np->type) {
-      case TOK_FONT:
-         SetFont(FONT_TASK, np->value);
-         break;
-      case TOK_ACTIVE:
-         ParseActiveTaskListStyle(np);
-         break;
-      case TOK_FOREGROUND:
-         SetColor(COLOR_TASK_FG, np->value);
-         break;
-      case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_TASK_BG1, COLOR_TASK_BG2);
-         break;
-      default:
-         InvalidTag(np, TOK_TASKLISTSTYLE);
-         break;
-      }
-   }
-
-}
-
-/** Parse active task list style. */
-void ParseActiveTaskListStyle(const TokenNode *tp)
-{
-   TokenNode *np;
-   for(np = tp->subnodeHead; np; np = np->next) {
-      switch(np->type) {
-      case TOK_FOREGROUND:
-         SetColor(COLOR_TASK_ACTIVE_FG, np->value);
-         break;
-      case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_TASK_ACTIVE_BG1, COLOR_TASK_ACTIVE_BG2);
-         break;
-      default:
-         InvalidTag(np, TOK_ACTIVE);
-         break;
-      }
-   }
 }
 
 /** Parse tray style. */

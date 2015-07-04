@@ -38,7 +38,6 @@ void InitializeSettings(void)
    settings.desktopWidth = 4;
    settings.desktopHeight = 1;
    settings.menuOpacity = UINT_MAX;
-   settings.taskInsertMode = INSERT_RIGHT;
    settings.exitConfirmation = 1;
    settings.cornerRadius = 4;
    settings.handles = 0;

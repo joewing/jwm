@@ -53,24 +53,16 @@ void DrawButton(ButtonNode *bp)
       bg2 = colors[COLOR_MENU_ACTIVE_BG2];
       break;
    case BUTTON_TRAY:
+   case BUTTON_TASK:
       fg = COLOR_TRAY_FG;
       bg1 = colors[COLOR_TRAY_BG1];
       bg2 = colors[COLOR_TRAY_BG2];
       break;
    case BUTTON_TRAY_ACTIVE:
+   case BUTTON_TASK_ACTIVE:
       fg = COLOR_TRAY_ACTIVE_FG;
       bg1 = colors[COLOR_TRAY_ACTIVE_BG1];
       bg2 = colors[COLOR_TRAY_ACTIVE_BG2];
-      break;
-   case BUTTON_TASK:
-      fg = COLOR_TASK_FG;
-      bg1 = colors[COLOR_TASK_BG1];
-      bg2 = colors[COLOR_TASK_BG2];
-      break;
-   case BUTTON_TASK_ACTIVE:
-      fg = COLOR_TASK_ACTIVE_FG;
-      bg1 = colors[COLOR_TASK_ACTIVE_BG1];
-      bg2 = colors[COLOR_TASK_ACTIVE_BG2];
       break;
    case BUTTON_MENU:
    default:

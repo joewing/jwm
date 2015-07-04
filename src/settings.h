@@ -38,11 +38,6 @@ typedef unsigned char FocusModelType;
 #define FOCUS_SLOPPY 0
 #define FOCUS_CLICK  1
 
-/** Taskbar insert modes. */
-typedef unsigned char InsertModeType;
-#define INSERT_LEFT  0
-#define INSERT_RIGHT 1
-
 /** Settings. */
 typedef struct {
    unsigned int doubleClickSpeed;
@@ -66,7 +61,6 @@ typedef struct {
    StatusWindowType resizeStatusType;
    FocusModelType focusModel;
    ResizeModeType resizeMode;
-   InsertModeType taskInsertMode;
    char popupEnabled;
    char exitConfirmation;
    char handles;

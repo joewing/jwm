@@ -18,11 +18,10 @@ struct VisualData;
 typedef unsigned char FontType;
 #define FONT_BORDER     0
 #define FONT_MENU       1
-#define FONT_TASK       2
-#define FONT_POPUP      3
-#define FONT_TRAY       4
-#define FONT_PAGER      5
-#define FONT_COUNT      6
+#define FONT_POPUP      2
+#define FONT_TRAY       3
+#define FONT_PAGER      4
+#define FONT_COUNT      5
 
 void InitializeFonts(void);
 void StartupFonts(void);

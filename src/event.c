@@ -816,6 +816,7 @@ char HandlePropertyNotify(const XPropertyEvent *event)
          if(np->state.status & STAT_URGENT) {
             RegisterCallback(URGENCY_DELAY, SignalUrgent, np);
          }
+         WriteState(np);
          break;
       case XA_WM_TRANSIENT_FOR:
          JXGetTransientForHint(display, np->window, &np->owner);

@@ -70,8 +70,8 @@ void StartupTrayButtons(void)
    for(bp = buttons; bp; bp = bp->next) {
       if(bp->label) {
          bp->cp->requestedWidth
-            = GetStringWidth(FONT_TRAYBUTTON, bp->label) + 4;
-         bp->cp->requestedHeight = GetStringHeight(FONT_TRAYBUTTON);
+            = GetStringWidth(FONT_TRAY, bp->label) + 4;
+         bp->cp->requestedHeight = GetStringHeight(FONT_TRAY);
       } else {
          bp->cp->requestedWidth = 0;
          bp->cp->requestedHeight = 0;
@@ -192,8 +192,8 @@ void SetSize(TrayComponentType *cp, int width, int height)
       int ratio;
 
       if(bp->label) {
-         labelWidth = GetStringWidth(FONT_TRAYBUTTON, bp->label) + 6;
-         labelHeight = GetStringHeight(FONT_TRAYBUTTON) + 6;
+         labelWidth = GetStringWidth(FONT_TRAY, bp->label) + 6;
+         labelHeight = GetStringHeight(FONT_TRAY) + 6;
       } else {
          labelWidth = 4;
          labelHeight = 4;
@@ -271,7 +271,7 @@ void Draw(TrayComponentType *cp)
    button.height = cp->height;
    button.x = 0;
    button.y = 0;
-   button.font = FONT_TRAYBUTTON;
+   button.font = FONT_TRAY;
    button.text = bp->label;
    button.icon = bp->icon;
    DrawButton(&button);

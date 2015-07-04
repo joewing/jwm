@@ -83,13 +83,6 @@ static const DefaultColorNode DEFAULT_COLORS[] = {
    { COLOR_POPUP_FG,                0x000000    },
    { COLOR_POPUP_OUTLINE,           0x000000    },
 
-   { COLOR_TRAYBUTTON_FG,           0xFFFFFF    },
-   { COLOR_TRAYBUTTON_BG1,          0x111111    },
-   { COLOR_TRAYBUTTON_BG2,          0x111111    },
-   { COLOR_TRAYBUTTON_ACTIVE_FG,    0xFFFFFF    },
-   { COLOR_TRAYBUTTON_ACTIVE_BG1,   0x333333    },
-   { COLOR_TRAYBUTTON_ACTIVE_BG2,   0x333333    },
-
    { COLOR_TRAY_OUTLINE,            0x000000    },
    { COLOR_MENU_OUTLINE,            0x000000    }
 
@@ -104,12 +97,6 @@ static const ColorInheritNode INHERIT_COLORS[] = {
    { COLOR_TASK_ACTIVE_FG,          COLOR_TRAY_ACTIVE_FG    },
    { COLOR_TASK_ACTIVE_BG1,         COLOR_TRAY_ACTIVE_BG1   },
    { COLOR_TASK_ACTIVE_BG2,         COLOR_TRAY_ACTIVE_BG2   },
-   { COLOR_TRAYBUTTON_FG,           COLOR_TRAY_FG           },
-   { COLOR_TRAYBUTTON_BG1,          COLOR_TRAY_BG1          },
-   { COLOR_TRAYBUTTON_BG2,          COLOR_TRAY_BG2,         },
-   { COLOR_TRAYBUTTON_ACTIVE_FG,    COLOR_TRAY_ACTIVE_FG    },
-   { COLOR_TRAYBUTTON_ACTIVE_BG1,   COLOR_TRAY_ACTIVE_BG1   },
-   { COLOR_TRAYBUTTON_ACTIVE_BG2,   COLOR_TRAY_ACTIVE_BG2   },
    { COLOR_TASK_BORDER,             COLOR_TASK_FG           }
 };
 static const unsigned int INHERIT_COUNT

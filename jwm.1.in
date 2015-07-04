@@ -1070,51 +1070,6 @@ The background color of an active item on the task list
 .RE
 .RE
 
-.B "TRAY BUTTON STYLE"
-.RS
-The \fBTrayButtonStyle\fP tag controls the look of tray buttons.
-Within this tag, the following tags are supported.
-.P
-.B Font
-.RS
-The font used for tray buttons.
-Inherited from \fBTrayStyle\fP by default.
-See the \fBFONTS\fP section for more information.
-.RE
-.P
-.B Foreground
-.RS
-The foreground color for tray buttons.  
-Inherited from \fBTrayStyle\fP by default.
-See the \fBCOLORS\fP section for more information.
-.RE
-.P
-.B Background
-.RS
-The background color for tray buttons (gradients are supported).
-Inherited from \fBTrayStyle\fP by default.
-See the \fBCOLORS\fP section for more information.
-.RE
-.P
-.P
-.B Active
-.RS
-The colors used for pressed tray buttons.
-Inherited from \fBTrayStyle\fP by default.
-See the \fBCOLORS\fP section for more information.
-The following tags are supported:
-.P
-.B Foreground
-.RS
-The foreground color for pressed tray buttons.
-.RE
-.B Background
-.RS
-The background color for pressed tray buttons (gradients are supported).
-.RE
-.RE
-.RE
-
 .B "PAGER STYLE"
 .RS
 The \fBPagerStyle\fP tag controls the look of pagers.

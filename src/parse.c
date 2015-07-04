@@ -178,8 +178,6 @@ static void ParseActivePagerStyle(const TokenNode *tp);
 static void ParseMenuStyle(const TokenNode *tp);
 static void ParseActiveMenuStyle(const TokenNode *tp);
 static void ParsePopupStyle(const TokenNode *tp);
-static void ParseTrayButtonStyle(const TokenNode *tp);
-static void ParseActiveTrayButtonStyle(const TokenNode *tp);
 
 /* Feel. */
 static void ParseKey(const TokenNode *tp);
@@ -335,9 +333,6 @@ void Parse(const TokenNode *start, int depth)
                break;
             case TOK_TRAYSTYLE:
                ParseTrayStyle(tp);
-               break;
-            case TOK_TRAYBUTTONSTYLE:
-               ParseTrayButtonStyle(tp);
                break;
             case TOK_WINDOWSTYLE:
                ParseWindowStyle(tp);
@@ -1626,56 +1621,6 @@ void ParseActiveMenuStyle(const TokenNode *tp)
          break;
       default:
          InvalidTag(np, TOK_ACTIVE);
-         break;
-      }
-   }
-}
-
-/** Parse tray button style. */
-void ParseTrayButtonStyle(const TokenNode *tp)
-{
-
-   const TokenNode *np;
-
-   Assert(tp);
-
-   for(np = tp->subnodeHead; np; np = np->next) {
-      switch(np->type) {
-      case TOK_FONT:
-         SetFont(FONT_TRAYBUTTON, np->value);
-         break;
-      case TOK_FOREGROUND:
-         SetColor(COLOR_TRAYBUTTON_FG, np->value);
-         break;
-      case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_TRAYBUTTON_BG1, COLOR_TRAYBUTTON_BG2);
-         break;
-      case TOK_ACTIVE:
-         ParseActiveTrayButtonStyle(np);
-         break;
-      default:
-         InvalidTag(np, TOK_TRAYBUTTONSTYLE);
-         break;
-      }
-   }
-
-}
-
-/** Parse active tray button style. */
-void ParseActiveTrayButtonStyle(const TokenNode *tp)
-{
-   const TokenNode *np;
-   for(np = tp->subnodeHead; np; np = np->next) {
-      switch(np->type) {
-      case TOK_FOREGROUND:
-         SetColor(COLOR_TRAYBUTTON_ACTIVE_FG, np->value);
-         break;
-      case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_TRAYBUTTON_ACTIVE_BG1,
-                       COLOR_TRAYBUTTON_ACTIVE_BG2);
-         break;
-      default:
-         InvalidTag(np, TOK_INVALID);
          break;
       }
    }

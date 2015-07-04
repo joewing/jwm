@@ -21,9 +21,8 @@ typedef unsigned char FontType;
 #define FONT_TASK       2
 #define FONT_POPUP      3
 #define FONT_TRAY       4
-#define FONT_TRAYBUTTON 5
-#define FONT_PAGER      6
-#define FONT_COUNT      7
+#define FONT_PAGER      5
+#define FONT_COUNT      6
 
 void InitializeFonts(void);
 void StartupFonts(void);

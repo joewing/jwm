@@ -1115,33 +1115,6 @@ The background color for pressed tray buttons (gradients are supported).
 .RE
 .RE
 
-.B "CLOCK STYLE"
-.RS
-The \fBClockStyle\fP tag controls the look of clocks.
-Within this tag, the following tags are supported.
-.P
-.B Font
-.RS
-The font used for clocks.
-Inherited from \fBTrayStyle\fP by default.
-See the \fBFONTS\fP section for more information.
-.RE
-.P
-.B Foreground
-.RS
-The color of the text.
-Inherited from \fBTrayStyle\fP by default.
-See the \fBCOLORS\fP section for more information.
-.RE
-.P
-.B Background
-.RS
-The background color.
-Inherited from \fBTrayStyle\fP by default.
-See the \fBCOLORS\fP section for more information.
-.RE
-.RE
-
 .B "PAGER STYLE"
 .RS
 The \fBPagerStyle\fP tag controls the look of pagers.

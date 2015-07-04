@@ -178,7 +178,6 @@ static void ParseActivePagerStyle(const TokenNode *tp);
 static void ParseMenuStyle(const TokenNode *tp);
 static void ParseActiveMenuStyle(const TokenNode *tp);
 static void ParsePopupStyle(const TokenNode *tp);
-static void ParseClockStyle(const TokenNode *tp);
 static void ParseTrayButtonStyle(const TokenNode *tp);
 static void ParseActiveTrayButtonStyle(const TokenNode *tp);
 
@@ -339,9 +338,6 @@ void Parse(const TokenNode *start, int depth)
                break;
             case TOK_TRAYBUTTONSTYLE:
                ParseTrayButtonStyle(tp);
-               break;
-            case TOK_CLOCKSTYLE:
-               ParseClockStyle(tp);
                break;
             case TOK_WINDOWSTYLE:
                ParseWindowStyle(tp);
@@ -1633,33 +1629,6 @@ void ParseActiveMenuStyle(const TokenNode *tp)
          break;
       }
    }
-}
-
-/** Parse clock style. */
-void ParseClockStyle(const TokenNode *tp)
-{
-
-   const TokenNode *np;
-
-   Assert(tp);
-
-   for(np = tp->subnodeHead; np; np = np->next) {
-      switch(np->type) {
-      case TOK_FONT:
-         SetFont(FONT_CLOCK, np->value);
-         break;
-      case TOK_FOREGROUND:
-         SetColor(COLOR_CLOCK_FG, np->value);
-         break;
-      case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_CLOCK_BG1, COLOR_CLOCK_BG2);
-         break;
-      default:
-         InvalidTag(np, TOK_CLOCKSTYLE);
-         break;
-      }
-   }
-
 }
 
 /** Parse tray button style. */

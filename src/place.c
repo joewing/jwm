@@ -350,8 +350,8 @@ void SubtractTrayBounds(const TrayType *tp, BoundingBox *box,
 
          src.x = tp->x;
          src.y = tp->y;
-         src.width = tp->width + 2 * TRAY_BORDER_SIZE;
-         src.height = tp->height + 2 * TRAY_BORDER_SIZE;
+         src.width = tp->width;
+         src.height = tp->height;
          if(src.x < 0) {
             src.width += src.x;
             src.x = 0;

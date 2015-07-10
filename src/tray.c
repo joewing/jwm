@@ -26,6 +26,8 @@
 #define DEFAULT_TRAY_WIDTH 32
 #define DEFAULT_TRAY_HEIGHT 32
 
+#define TRAY_BORDER_SIZE   1
+
 static TrayType *trays;
 static unsigned int trayCount;
 
@@ -97,14 +99,10 @@ void StartupTray(void)
       attrMask |= CWBackPixel;
       attr.background_pixel = colors[COLOR_TRAY_BG2];
 
-      attrMask |= CWBorderPixel;
-      attr.border_pixel = colors[COLOR_TRAY_OUTLINE];
-
       Assert(tp->width > 0);
       Assert(tp->height > 0);
       tp->window = JXCreateWindow(display, rootWindow,
-                                  tp->x, tp->y, tp->width, tp->height,
-                                  TRAY_BORDER_SIZE,
+                                  tp->x, tp->y, tp->width, tp->height, 0,
                                   rootVisual.depth, InputOutput,
                                   rootVisual.visual, attrMask, &attr);
 
@@ -119,8 +117,8 @@ void StartupTray(void)
       SetDefaultCursor(tp->window);
 
       /* Create and layout items on the tray. */
-      xoffset = 0;
-      yoffset = 0;
+      xoffset = TRAY_BORDER_SIZE;
+      yoffset = TRAY_BORDER_SIZE;
       for(cp = tp->components; cp; cp = cp->next) {
 
          if(cp->Create) {
@@ -435,7 +433,7 @@ void ComputeTraySize(TrayType *tp)
    if(tp->layout == LAYOUT_HORIZONTAL) {
 
       if(tp->height == 0) {
-         tp->height = ComputeMaxHeight(tp);
+         tp->height = ComputeMaxHeight(tp) + TRAY_BORDER_SIZE * 2;
       }
       if(tp->height == 0) {
          tp->height = DEFAULT_TRAY_HEIGHT;
@@ -444,7 +442,7 @@ void ComputeTraySize(TrayType *tp)
    } else {
 
       if(tp->width == 0) {
-         tp->width = ComputeMaxWidth(tp);
+         tp->width = ComputeMaxWidth(tp) + TRAY_BORDER_SIZE * 2;
       }
       if(tp->width == 0) {
          tp->width = DEFAULT_TRAY_WIDTH;
@@ -456,9 +454,9 @@ void ComputeTraySize(TrayType *tp)
    for(cp = tp->components; cp; cp = cp->next) {
       if(cp->SetSize) {
          if(tp->layout == LAYOUT_HORIZONTAL) {
-            (cp->SetSize)(cp, 0, tp->height);
+            (cp->SetSize)(cp, 0, tp->height - TRAY_BORDER_SIZE * 2);
          } else {
-            (cp->SetSize)(cp, tp->width, 0);
+            (cp->SetSize)(cp, tp->width - TRAY_BORDER_SIZE * 2, 0);
          }
       }
    }
@@ -534,38 +532,34 @@ void ComputeTraySize(TrayType *tp)
    /* Compute the tray location. */
    switch(tp->valign) {
    case TALIGN_TOP:
-      tp->y = sp->y - TRAY_BORDER_SIZE;
+      tp->y = sp->y;
       break;
    case TALIGN_BOTTOM:
-      tp->y = sp->y + sp->height - tp->height + TRAY_BORDER_SIZE;
+      tp->y = sp->y + sp->height - tp->height;
       break;
    case TALIGN_CENTER:
       tp->y = sp->y + (sp->height - tp->height) / 2;
       break;
    default:
       if(tp->y < 0) {
-         tp->y = sp->y + sp->height - tp->height + TRAY_BORDER_SIZE;
-      } else {
-         tp->y -= TRAY_BORDER_SIZE;
+         tp->y = sp->y + sp->height - tp->height;
       }
       break;
    }
 
    switch(tp->halign) {
    case TALIGN_LEFT:
-      tp->x = sp->x - TRAY_BORDER_SIZE;
+      tp->x = sp->x;
       break;
    case TALIGN_RIGHT:
-      tp->x = sp->x + sp->width - tp->width + TRAY_BORDER_SIZE;
+      tp->x = sp->x + sp->width - tp->width;
       break;
    case TALIGN_CENTER:
       tp->x = sp->x + (sp->width - tp->width) / 2;
       break;
    default:
       if(tp->x < 0) {
-         tp->x = sp->x + sp->width - tp->width + TRAY_BORDER_SIZE;
-      } else {
-         tp->x -= TRAY_BORDER_SIZE;
+         tp->x = sp->x + sp->width - tp->width;
       }
       break;
    }
@@ -628,20 +622,20 @@ void HideTray(TrayType *tp)
    sp = GetCurrentScreen(tp->x, tp->y);
    switch(tp->autoHide) {
    case THIDE_LEFT:
-      x = sp->y - tp->width - TRAY_BORDER_SIZE;
+      x = sp->y - tp->width;
       y = tp->y;
       break;
    case THIDE_RIGHT:
-      x = sp->y + sp->width - TRAY_BORDER_SIZE;
+      x = sp->y + sp->width;
       y = tp->y;
       break;
    case THIDE_TOP:
       x = tp->x;
-      y = sp->y - tp->height - TRAY_BORDER_SIZE;
+      y = sp->y - tp->height;
       break;
    case THIDE_BOTTOM:
       x = tp->x;
-      y = sp->y + sp->height - TRAY_BORDER_SIZE;
+      y = sp->y + sp->height;
       break;
    default:
       Assert(0);
@@ -823,6 +817,16 @@ void DrawSpecificTray(const TrayType *tp)
       UpdateSpecificTray(tp, cp);
    }
 
+   JXSetForeground(display, rootGC, colors[COLOR_TRAY_UP]);
+   JXDrawLine(display, tp->window, rootGC, 0, 0, tp->width - 1, 0);
+   JXDrawLine(display, tp->window, rootGC, 0, tp->height - 1, 0, 0);
+
+   JXSetForeground(display, rootGC, colors[COLOR_TRAY_DOWN]);
+   JXDrawLine(display, tp->window, rootGC, 0, tp->height - 1,
+              tp->width - 1, tp->height - 1);
+   JXDrawLine(display, tp->window, rootGC, tp->width - 1, 0,
+              tp->width - 1, tp->height - 1);
+
 }
 
 /** Raise tray windows. */
@@ -875,16 +879,24 @@ void LayoutTray(TrayType *tp, int *variableSize, int *variableRemainder)
    tp->height = tp->requestedHeight;
 
    for(cp = tp->components; cp; cp = cp->next) {
-      cp->width = cp->requestedWidth;
-      cp->height = cp->requestedHeight;
+      if(cp->requestedWidth != 0) {
+         cp->width = cp->requestedWidth + TRAY_BORDER_SIZE * 2;
+      } else {
+         cp->width = 0;
+      }
+      if(cp->requestedHeight != 0) {
+         cp->height = cp->requestedHeight + TRAY_BORDER_SIZE * 2;
+      } else {
+         cp->height = 0;
+      }
    }
 
    ComputeTraySize(tp);
 
    /* Get the remaining size after setting fixed size components. */
    /* Also, keep track of the number of variable size components. */
-   width = tp->width;
-   height = tp->height;
+   width = tp->width - TRAY_BORDER_SIZE * 2;
+   height = tp->height - TRAY_BORDER_SIZE * 2;
    variableCount = 0;
    for(cp = tp->components; cp; cp = cp->next) {
       if(tp->layout == LAYOUT_HORIZONTAL) {
@@ -950,8 +962,8 @@ void ResizeTray(TrayType *tp)
    LayoutTray(tp, &variableSize, &variableRemainder);
 
    /* Reposition items on the tray. */
-   xoffset = 0;
-   yoffset = 0;
+   xoffset = TRAY_BORDER_SIZE;
+   yoffset = TRAY_BORDER_SIZE;
    for(cp = tp->components; cp; cp = cp->next) {
 
       cp->x = xoffset;
@@ -961,7 +973,7 @@ void ResizeTray(TrayType *tp)
 
       if(cp->Resize) {
          if(tp->layout == LAYOUT_HORIZONTAL) {
-            height = tp->height;
+            height = tp->height - TRAY_BORDER_SIZE * 2;
             width = cp->width;
             if(width == 0) {
                width = variableSize;
@@ -971,7 +983,7 @@ void ResizeTray(TrayType *tp)
                }
             }
          } else {
-            width = tp->width;
+            width = tp->width - TRAY_BORDER_SIZE * 2;
             height = cp->height;
             if(height == 0) {
                height = variableSize;

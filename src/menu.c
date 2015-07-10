@@ -118,7 +118,7 @@ void InitializeMenu(Menu *menu)
       }
    }
 
-   menu->height = 0;
+   menu->height = MENU_BORDER_SIZE;
    if(menu->label) {
       menu->height += menu->itemHeight;
    }
@@ -135,7 +135,7 @@ void InitializeMenu(Menu *menu)
    for(np = menu->items; np; np = np->next) {
       menu->offsets[index++] = menu->height;
       if(np->type == MENU_ITEM_SEPARATOR) {
-         menu->height += 5;
+         menu->height += 6;
       } else {
          menu->height += menu->itemHeight;
       }
@@ -154,7 +154,8 @@ void InitializeMenu(Menu *menu)
       }
    }
    menu->width += hasSubmenu + menu->textOffset;
-   menu->width += 7;
+   menu->width += 7 + 2 * MENU_BORDER_SIZE;
+   menu->height += MENU_BORDER_SIZE;
 
 }
 
@@ -444,12 +445,8 @@ void CreateMenu(Menu *menu, int x, int y)
    attrMask |= CWSaveUnder;
    attr.save_under = True;
 
-   attrMask |= CWBorderPixel;
-   attr.border_pixel = colors[COLOR_MENU_OUTLINE];
-
    menu->window = JXCreateWindow(display, rootWindow, x, y,
-                                 menu->width, menu->height,
-                                 MENU_BORDER_SIZE,
+                                 menu->width, menu->height, 0,
                                  CopyFromParent, InputOutput,
                                  CopyFromParent, attrMask, &attr);
    menu->pixmap = JXCreatePixmap(display, menu->window,
@@ -481,6 +478,18 @@ void DrawMenu(Menu *menu)
    JXSetForeground(display, rootGC, colors[COLOR_MENU_BG]);
    JXFillRectangle(display, menu->pixmap, rootGC, 0, 0,
                    menu->width, menu->height);
+
+   JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
+   JXDrawLine(display, menu->pixmap, rootGC,
+              0, 0, menu->width, 0);
+   JXDrawLine(display, menu->pixmap, rootGC,
+              0, 0, 0, menu->height);
+
+   JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
+   JXDrawLine(display, menu->pixmap, rootGC,
+              0, menu->height - 1, menu->width, menu->height - 1);
+   JXDrawLine(display, menu->pixmap, rootGC,
+              menu->width - 1, 0, menu->width - 1, menu->height);
 
    if(menu->label) {
       DrawMenuItem(menu, NULL, -1);
@@ -649,7 +658,7 @@ MenuSelectionType UpdateMotion(Menu *menu,
    ip = GetMenuItem(menu, menu->currentIndex);
    if(ip && IsMenuValid(ip->submenu)) {
       if(ShowSubmenu(ip->submenu, menu, runner,
-                     menu->x + menu->width + MENU_BORDER_SIZE,
+                     menu->x + menu->width,
                      menu->y + menu->offsets[menu->currentIndex])) {
 
          /* Item selected; destroy the menu tree. */
@@ -699,9 +708,9 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
    if(!item) {
       if(index == -1 && menu->label) {
          ResetButton(&button, menu->pixmap, &rootVisual);
-         button.x = 0;
-         button.y = 0;
-         button.width = menu->width - 1;
+         button.x = MENU_BORDER_SIZE;
+         button.y = MENU_BORDER_SIZE;
+         button.width = menu->width - MENU_BORDER_SIZE * 2;
          button.height = menu->itemHeight - 1;
          button.font = FONT_MENU;
          button.type = BUTTON_LABEL;
@@ -724,10 +733,10 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
          fg = COLOR_MENU_FG;
       }
 
-      button.x = 0;
+      button.x = MENU_BORDER_SIZE;
       button.y = menu->offsets[index];
       button.font = FONT_MENU;
-      button.width = menu->width;
+      button.width = menu->width - MENU_BORDER_SIZE * 2;
       button.height = menu->itemHeight;
       button.text = item->name;
       button.icon = item->icon;
@@ -752,10 +761,14 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
       }
 
    } else {
-      JXSetForeground(display, rootGC, colors[COLOR_MENU_ACTIVE_FG]);
+      JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
       JXDrawLine(display, menu->pixmap, rootGC, 4,
                  menu->offsets[index] + 2, menu->width - 6,
                  menu->offsets[index] + 2);
+      JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
+      JXDrawLine(display, menu->pixmap, rootGC, 4,
+                 menu->offsets[index] + 3, menu->width - 6,
+                 menu->offsets[index] + 3);
    }
 
 }

@@ -21,6 +21,7 @@ void DrawButton(ButtonNode *bp)
 
    ColorType fg;
    long bg1, bg2;
+   long up, down;
 
    Drawable drawable;
    GC gc;
@@ -46,29 +47,39 @@ void DrawButton(ButtonNode *bp)
       fg = COLOR_MENU_FG;
       bg1 = colors[COLOR_MENU_BG];
       bg2 = colors[COLOR_MENU_BG];
+      up = colors[COLOR_MENU_UP];
+      down = colors[COLOR_MENU_DOWN];
       break;
    case BUTTON_MENU_ACTIVE:
       fg = COLOR_MENU_ACTIVE_FG;
       bg1 = colors[COLOR_MENU_ACTIVE_BG1];
       bg2 = colors[COLOR_MENU_ACTIVE_BG2];
+      up = colors[COLOR_MENU_ACTIVE_UP];
+      down = colors[COLOR_MENU_ACTIVE_DOWN];
       break;
    case BUTTON_TRAY:
    case BUTTON_TASK:
       fg = COLOR_TRAY_FG;
       bg1 = colors[COLOR_TRAY_BG1];
       bg2 = colors[COLOR_TRAY_BG2];
+      up = colors[COLOR_TRAY_UP];
+      down = colors[COLOR_TRAY_DOWN];
       break;
    case BUTTON_TRAY_ACTIVE:
    case BUTTON_TASK_ACTIVE:
       fg = COLOR_TRAY_ACTIVE_FG;
       bg1 = colors[COLOR_TRAY_ACTIVE_BG1];
       bg2 = colors[COLOR_TRAY_ACTIVE_BG2];
+      down = colors[COLOR_TRAY_ACTIVE_UP];
+      up = colors[COLOR_TRAY_ACTIVE_DOWN];
       break;
    case BUTTON_MENU:
    default:
       fg = COLOR_MENU_FG;
       bg1 = colors[COLOR_MENU_BG];
       bg2 = colors[COLOR_MENU_BG];
+      up = colors[COLOR_MENU_UP];
+      down = colors[COLOR_MENU_DOWN];
       break;
    }
 
@@ -90,8 +101,14 @@ void DrawButton(ButtonNode *bp)
 
    /* Draw the border. */
    if(bp->border) {
-      JXSetForeground(display, gc, colors[fg]);
-      JXDrawRectangle(display, drawable, gc, x, y, width, height);
+      JXSetForeground(display, gc, up);
+      JXDrawLine(display, drawable, gc, x, y, x + width - 1, y);
+      JXDrawLine(display, drawable, gc, x, y, x, y + height - 1);
+      JXSetForeground(display, gc, down);
+      JXDrawLine(display, drawable, gc, x, y + height - 1,
+                 x + width - 1, y + height - 1);
+      JXDrawLine(display, drawable, gc, x + width - 1, y,
+                 x + width - 1, y + height - 1);
    }
 
    /* Determine the size of the icon (if any) to display. */

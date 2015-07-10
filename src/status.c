@@ -65,8 +65,8 @@ void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type)
       return;
    }
 
-   statusWindowHeight = GetStringHeight(FONT_MENU) + 8;
-   statusWindowWidth = GetStringWidth(FONT_MENU, " 00000 x 00000 ");
+   statusWindowHeight = GetStringHeight(FONT_MENU) + 10;
+   statusWindowWidth = GetStringWidth(FONT_MENU, " 00000 x 00000 ") + 2;
 
    GetMoveResizeCoordinates(np, type, &statusWindowX, &statusWindowY);
 
@@ -81,12 +81,9 @@ void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type)
    attrMask |= CWOverrideRedirect;
    attrs.override_redirect = True;
 
-   attrMask |= CWBorderPixel;
-   attrs.border_pixel = colors[COLOR_MENU_OUTLINE];
-
    statusWindow = JXCreateWindow(display, rootWindow,
       statusWindowX, statusWindowY,
-      statusWindowWidth, statusWindowHeight, 1,
+      statusWindowWidth, statusWindowHeight, 0,
       CopyFromParent, InputOutput, CopyFromParent,
       attrMask, &attrs);
 
@@ -110,6 +107,18 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type)
 
    /* Clear the background. */
    JXClearWindow(display, statusWindow);
+
+   /* Draw the border. */
+   JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
+   JXDrawLine(display, statusWindow, rootGC,
+              0, 0, statusWindowWidth, 0);
+   JXDrawLine(display, statusWindow, rootGC,
+              0, 0, 0, statusWindowHeight);
+   JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
+   JXDrawLine(display, statusWindow, rootGC, 0, statusWindowHeight - 1,
+              statusWindowWidth, statusWindowHeight - 1);
+   JXDrawLine(display, statusWindow, rootGC, statusWindowWidth - 1, 0,
+              statusWindowWidth - 1, statusWindowHeight);
 
 }
 
@@ -143,7 +152,7 @@ void UpdateMoveWindow(ClientNode *np)
    snprintf(str, sizeof(str), "(%d, %d)", np->x, np->y);
    width = GetStringWidth(FONT_MENU, str);
    RenderString(&rootVisual, statusWindow, FONT_MENU, COLOR_MENU_FG,
-                (statusWindowWidth - width) / 2, 4, rootWidth, str);
+                (statusWindowWidth - width) / 2, 5, rootWidth, str);
 }
 
 /** Destroy the move status window. */
@@ -174,7 +183,7 @@ void UpdateResizeWindow(ClientNode *np, int gwidth, int gheight)
    snprintf(str, sizeof(str), "%d x %d", gwidth, gheight);
    fontWidth = GetStringWidth(FONT_MENU, str);
    RenderString(&rootVisual, statusWindow, FONT_MENU, COLOR_MENU_FG,
-                (statusWindowWidth - fontWidth) / 2, 4, rootWidth, str);
+                (statusWindowWidth - fontWidth) / 2, 5, rootWidth, str);
 
 }
 

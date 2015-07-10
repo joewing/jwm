@@ -73,14 +73,24 @@ static const DefaultColorNode DEFAULT_COLORS[] = {
 
    { COLOR_POPUP_BG,                0x999999    },
    { COLOR_POPUP_FG,                0x000000    },
-   { COLOR_POPUP_OUTLINE,           0x000000    },
-
-   { COLOR_TRAY_OUTLINE,            0x000000    },
-   { COLOR_MENU_OUTLINE,            0x000000    }
+   { COLOR_POPUP_OUTLINE,           0x000000    }
 
 };
-static const unsigned int DEFAULT_COUNT
-   = sizeof(DEFAULT_COLORS) / sizeof(DEFAULT_COLORS[0]);
+static const unsigned DEFAULT_COUNT = ARRAY_LENGTH(DEFAULT_COLORS);
+
+static struct {
+   ColorType base;
+   ColorType up;
+   ColorType down;
+} DERIVED_COLORS[] = {
+   { COLOR_TITLE_BG1,        COLOR_TITLE_UP,        COLOR_TITLE_DOWN        },
+   { COLOR_TITLE_ACTIVE_BG1, COLOR_TITLE_ACTIVE_UP, COLOR_TITLE_ACTIVE_DOWN },
+   { COLOR_TRAY_BG1,         COLOR_TRAY_UP,         COLOR_TRAY_DOWN         },
+   { COLOR_TRAY_ACTIVE_BG1,  COLOR_TRAY_ACTIVE_UP,  COLOR_TRAY_ACTIVE_DOWN  },
+   { COLOR_MENU_BG,          COLOR_MENU_UP,         COLOR_MENU_DOWN         },
+   { COLOR_MENU_ACTIVE_BG1,  COLOR_MENU_ACTIVE_UP,  COLOR_MENU_ACTIVE_DOWN  }
+};
+static const unsigned DERIVED_COUNT = ARRAY_LENGTH(DERIVED_COLORS);
 
 static char **names = NULL;
 
@@ -181,11 +191,11 @@ void StartupColors(void)
       }
    }
 
-   LightenColor(COLOR_TITLE_BG1, COLOR_TITLE_UP);
-   DarkenColor(COLOR_TITLE_BG1, COLOR_TITLE_DOWN);
-
-   LightenColor(COLOR_TITLE_ACTIVE_BG1, COLOR_TITLE_ACTIVE_UP);
-   DarkenColor(COLOR_TITLE_ACTIVE_BG1, COLOR_TITLE_ACTIVE_DOWN);
+   /* Derive colors. */
+   for(x = 0; x < DERIVED_COUNT; x++) {
+      LightenColor(DERIVED_COLORS[x].base, DERIVED_COLORS[x].up);
+      DarkenColor(DERIVED_COLORS[x].base, DERIVED_COLORS[x].down);
+   }
 
    if(names) {
       for(x = 0; x < COLOR_COUNT; x++) {

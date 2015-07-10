@@ -54,8 +54,8 @@ void DrawButton(ButtonNode *bp)
       fg = COLOR_MENU_ACTIVE_FG;
       bg1 = colors[COLOR_MENU_ACTIVE_BG1];
       bg2 = colors[COLOR_MENU_ACTIVE_BG2];
-      up = colors[COLOR_MENU_ACTIVE_UP];
-      down = colors[COLOR_MENU_ACTIVE_DOWN];
+      down = colors[COLOR_MENU_ACTIVE_UP];
+      up = colors[COLOR_MENU_ACTIVE_DOWN];
       break;
    case BUTTON_TRAY:
    case BUTTON_TASK:

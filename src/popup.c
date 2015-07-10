@@ -152,7 +152,7 @@ void ShowPopup(int x, int y, const char *text)
    JXSetForeground(display, rootGC, colors[COLOR_POPUP_BG]);
    JXFillRectangle(display, popup.pmap, rootGC, 0, 0,
                    popup.width - 1, popup.height - 1);
-   JXSetForeground(display, rootGC, colors[COLOR_POPUP_OUTLINE]);
+   JXSetForeground(display, rootGC, colors[COLOR_POPUP_FG]);
    JXDrawRectangle(display, popup.pmap, rootGC, 0, 0,
                    popup.width - 1, popup.height - 1);
    RenderString(&rootVisual, popup.pmap, FONT_POPUP, COLOR_POPUP_FG, 4, 1,

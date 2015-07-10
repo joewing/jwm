@@ -43,37 +43,36 @@ static const DefaultColorNode DEFAULT_COLORS[] = {
    { COLOR_TITLE_FG,                0xFFFFFF    },
    { COLOR_TITLE_ACTIVE_FG,         0xFFFFFF    },
 
-   { COLOR_TITLE_BG1,               0x333333    },
-   { COLOR_TITLE_BG2,               0x333333    },
+   { COLOR_TITLE_BG1,               0x555555    },
+   { COLOR_TITLE_BG2,               0x555555    },
    { COLOR_TITLE_ACTIVE_BG1,        0x0077CC    },
    { COLOR_TITLE_ACTIVE_BG2,        0x0077CC    },
 
    { COLOR_BORDER_LINE,             0x000000    },
    { COLOR_BORDER_ACTIVE_LINE,      0x000000    },
 
-   { COLOR_TRAY_FG,                 0xFFFFFF    },
-   { COLOR_TRAY_BG1,                0x111111    },
-   { COLOR_TRAY_BG2,                0x111111    },
-   { COLOR_TRAY_ACTIVE_FG,          0xFFFFFF    },
-   { COLOR_TRAY_ACTIVE_BG1,         0x333333    },
-   { COLOR_TRAY_ACTIVE_BG2,         0x333333    },
+   { COLOR_TRAY_FG,                 0x000000    },
+   { COLOR_TRAY_BG1,                0x999999    },
+   { COLOR_TRAY_BG2,                0x999999    },
+   { COLOR_TRAY_ACTIVE_FG,          0x000000    },
+   { COLOR_TRAY_ACTIVE_BG1,         0x999999    },
+   { COLOR_TRAY_ACTIVE_BG2,         0x999999    },
 
-   { COLOR_PAGER_BG,                0x111111    },
-   { COLOR_PAGER_FG,                0x444444    },
-   { COLOR_PAGER_ACTIVE_BG,         0x333333    },
+   { COLOR_PAGER_BG,                0x999999    },
+   { COLOR_PAGER_FG,                0x333333    },
+   { COLOR_PAGER_ACTIVE_BG,         0x555555    },
    { COLOR_PAGER_ACTIVE_FG,         0x0077CC    },
    { COLOR_PAGER_OUTLINE,           0x000000    },
-   { COLOR_PAGER_TEXT,              0xFFFFFF    },
+   { COLOR_PAGER_TEXT,              0x000000    },
 
-   { COLOR_MENU_BG,                 0x333333    },
-   { COLOR_MENU_FG,                 0xFFFFFF    },
+   { COLOR_MENU_BG,                 0x999999    },
+   { COLOR_MENU_FG,                 0x000000    },
    { COLOR_MENU_ACTIVE_BG1,         0x0077CC    },
    { COLOR_MENU_ACTIVE_BG2,         0x0077CC    },
-   { COLOR_MENU_ACTIVE_FG,          0xFFFFFF    },
+   { COLOR_MENU_ACTIVE_FG,          0x000000    },
 
    { COLOR_POPUP_BG,                0x999999    },
-   { COLOR_POPUP_FG,                0x000000    },
-   { COLOR_POPUP_OUTLINE,           0x000000    }
+   { COLOR_POPUP_FG,                0x000000    }
 
 };
 static const unsigned DEFAULT_COUNT = ARRAY_LENGTH(DEFAULT_COLORS);

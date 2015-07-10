@@ -1493,9 +1493,6 @@ void ParsePopupStyle(const TokenNode *tp)
       case TOK_FONT:
          SetFont(FONT_POPUP, np->value);
          break;
-      case TOK_OUTLINE:
-         SetColor(COLOR_POPUP_OUTLINE, np->value);
-         break;
       case TOK_FOREGROUND:
          SetColor(COLOR_POPUP_FG, np->value);
          break;

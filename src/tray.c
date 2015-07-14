@@ -622,20 +622,20 @@ void HideTray(TrayType *tp)
    sp = GetCurrentScreen(tp->x, tp->y);
    switch(tp->autoHide) {
    case THIDE_LEFT:
-      x = sp->y - tp->width;
+      x = sp->y - tp->width + 1;
       y = tp->y;
       break;
    case THIDE_RIGHT:
-      x = sp->y + sp->width;
+      x = sp->y + sp->width - 1;
       y = tp->y;
       break;
    case THIDE_TOP:
       x = tp->x;
-      y = sp->y - tp->height;
+      y = sp->y - tp->height + 1;
       break;
    case THIDE_BOTTOM:
       x = tp->x;
-      y = sp->y + sp->height;
+      y = sp->y + sp->height - 1;
       break;
    default:
       Assert(0);

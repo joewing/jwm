@@ -323,10 +323,7 @@ void ReadClientInfo(ClientNode *np, char alreadyMapped)
 /** Write the window state hint for a client. */
 void WriteState(ClientNode *np)
 {
-
-   unsigned int data[2];
-
-   Assert(np);
+   unsigned long data[2];
 
    if(np->state.status & STAT_MAPPED) {
       data[0] = NormalState;
@@ -349,7 +346,6 @@ void WriteState(ClientNode *np)
 
    WriteNetState(np);
    WriteNetAllowed(np);
-
 }
 
 /** Set the opacity of a client. */
@@ -942,13 +938,13 @@ void ReadWMState(Window win, ClientState *state)
    unsigned long extra;
    Atom realType;
    int realFormat;
-   unsigned int *temp;
+   unsigned long *temp;
 
    status = JXGetWindowProperty(display, win, atoms[ATOM_WM_STATE], 0, 2,
                                 False, atoms[ATOM_WM_STATE],
                                 &realType, &realFormat,
                                 &count, &extra, (unsigned char**)&temp);
-   if(JLIKELY(status == Success && realFormat != 0 && count == 2)) {
+   if(JLIKELY(status == Success && realFormat == 32 && count == 2)) {
       switch(temp[0]) {
       case IconicState:
          state->status |= STAT_MINIMIZED;

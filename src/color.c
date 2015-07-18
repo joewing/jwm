@@ -34,6 +34,11 @@ static unsigned long *map;
 /* Map 8-bit pixel values to a 24-bit linear RGB space. */
 static unsigned long *rmap;
 
+/* Number of JWM-specific colors allocated. */
+static const unsigned BASE_COLORS = 64;
+static const unsigned MAX_COLORS = 128;
+static unsigned extraColors;
+
 #ifdef USE_XFT
 static XftColor *xftColors[COLOR_COUNT] = { NULL };
 #endif
@@ -105,7 +110,7 @@ static void ComputeShiftMask(unsigned long maskIn,
                              unsigned long *maskOut);
 
 static void GetDirectPixel(XColor *c);
-static void GetMappedPixel(XColor *c);
+static void GetMappedPixel(XColor *c, char alloc);
 
 static void SetDefaultColor(ColorType type); 
 
@@ -139,22 +144,23 @@ void StartupColors(void)
       break;
    default:
 
-      /* Attempt to get 256 colors, pretend it worked. */
-      redMask = 0xE0;
-      greenMask = 0x1C;
+      /* Attempt to get 64 colors, pretend it worked. */
+      /* RGB: 2, 2, 2 */
+      extraColors = 0;
+      redMask = 0x03;
+      greenMask = 0x0C;
       blueMask = 0x03;
       ComputeShiftMask(redMask, &redShift, &redMask);
       ComputeShiftMask(greenMask, &greenShift, &greenMask);
       ComputeShiftMask(blueMask, &blueShift, &blueMask);
-      map = Allocate(sizeof(unsigned long) * 256);
+      map = Allocate(sizeof(unsigned long) * MAX_COLORS);
 
-      /* RGB: 3, 3, 2 */
       x = 0;
-      for(red = 0; red < 8; red++) {
-         for(green = 0; green < 8; green++) {
+      for(red = 0; red < 4; red++) {
+         for(green = 0; green < 4; green++) {
             for(blue = 0; blue < 4; blue++) {
-               c.red = (unsigned short)(74898 * red / 8);
-               c.green = (unsigned short)(74898 * green / 8);
+               c.red = (unsigned short)(87381 * red / 4);
+               c.green = (unsigned short)(87381 * green / 4);
                c.blue = (unsigned short)(87381 * blue / 4);
                c.flags = DoRed | DoGreen | DoBlue;
                JXAllocColor(display, rootColormap, &c);
@@ -165,8 +171,8 @@ void StartupColors(void)
       }
 
       /* Compute the reverse pixel mapping (pixel -> 24-bit RGB). */
-      rmap = Allocate(sizeof(unsigned long) * 256);
-      for(x = 0; x < 256; x++) {
+      rmap = Allocate(sizeof(unsigned long) * BASE_COLORS);
+      for(x = 0; x < BASE_COLORS; x++) {
          c.pixel = x;
          JXQueryColor(display, rootColormap, &c);
          GetDirectPixel(&c);
@@ -227,7 +233,8 @@ void ShutdownColors(void)
 #endif
 
    if(map != NULL) {
-      JXFreeColors(display, rootColormap, map, 256, 0);
+      JXFreeColors(display, rootColormap, map, BASE_COLORS + extraColors, 0);
+      extraColors = 0;
       Release(map);
       map = NULL;
       Release(rmap);
@@ -334,7 +341,7 @@ char ParseColor(const char *value, XColor *c)
       c->green = ((rgb >> 8) & 0xFF) * 257;
       c->blue = (rgb & 0xFF) * 257;
       c->flags = DoRed | DoGreen | DoBlue;
-      GetColor(c);
+      GetColor(c, 1);
    } else {
       if(JUNLIKELY(!GetColorByName(value, c))) {
          Warning("bad color: \"%s\"", value);
@@ -360,7 +367,7 @@ void SetDefaultColor(ColorType type)
          c.green = ((rgb >> 8) & 0xFF) * 257;
          c.blue = (rgb & 0xFF) * 257;
          c.flags = DoRed | DoGreen | DoBlue;
-         GetColor(&c);
+         GetColor(&c, 1);
          colors[type] = c.pixel;
          rgbColors[type] = rgb;
          return;
@@ -418,7 +425,7 @@ int GetColorByName(const char *str, XColor *c)
       return 0;
    }
 
-   GetColor(c);
+   GetColor(c, 1);
 
    return 1;
 
@@ -470,16 +477,20 @@ void GetDirectPixel(XColor *c)
 }
 
 /** Compute the pixel value from RGB components. */
-void GetMappedPixel(XColor *c)
+void GetMappedPixel(XColor *c, char alloc)
 {
-   Assert(c);
-   Assert(map);
-   GetDirectPixel(c);
-   c->pixel = map[c->pixel];
+   if(alloc && BASE_COLORS + extraColors < MAX_COLORS) {
+      JXAllocColor(display, rootColormap, c);
+      map[extraColors] = c->pixel;
+      extraColors += 1;
+   } else {
+      GetDirectPixel(c);
+      c->pixel = map[c->pixel];
+   }
 }
 
 /** Compute the pixel value from RGB components. */
-void GetColor(XColor *c)
+void GetColor(XColor *c, char alloc)
 {
    Assert(c);
    switch(rootVisual.visual->class) {
@@ -488,7 +499,7 @@ void GetColor(XColor *c)
       GetDirectPixel(c);
       return;
    default:
-      GetMappedPixel(c);
+      GetMappedPixel(c, alloc);
       return;
    }
 }
@@ -505,7 +516,7 @@ void GetColorFromPixel(XColor *c)
       break;
    default:
       /* Convert from a pixel value to a linear RGB space. */
-      c->pixel = rmap[c->pixel & 255];
+      c->pixel = rmap[c->pixel & (BASE_COLORS - 1)];
       break;
    }
 
@@ -589,7 +600,7 @@ void LightenColor(ColorType oldColor, ColorType newColor)
    temp.green = green;
    temp.blue = blue;
 
-   GetColor(&temp);
+   GetColor(&temp, 1);
    colors[newColor] = temp.pixel;
    rgbColors[newColor] = GetRGBFromXColor(&temp);
 
@@ -623,7 +634,7 @@ void DarkenColor(ColorType oldColor, ColorType newColor)
    temp.green = green;
    temp.blue = blue;
 
-   GetColor(&temp);
+   GetColor(&temp, 1);
    colors[newColor] = temp.pixel;
    rgbColors[newColor] = GetRGBFromXColor(&temp);
 

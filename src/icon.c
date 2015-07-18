@@ -612,7 +612,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, ImageNode *iconImage,
             color.green |= color.green << 8;
             color.blue = data[index + 3];
             color.blue |= color.blue << 8;
-            GetColor(&color);
+            GetColor(&color, 0);
             XPutPixel(image, x, y, color.pixel);
             if(data[index] >= 128) {
                points[pindex].x = x;

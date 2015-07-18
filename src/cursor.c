@@ -142,7 +142,7 @@ char GrabMouseForResize(BorderActionType action)
    unsigned int mask;
 
    cur = GetFrameCursor(action);
-   mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+   mask = ButtonPressMask | ButtonReleaseMask;
    result = JXGrabPointer(display, rootWindow, False, mask,
                           GrabModeAsync, GrabModeAsync, None,
                           cur, CurrentTime);

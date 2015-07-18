@@ -147,7 +147,7 @@ void StartupColors(void)
       /* Attempt to get 64 colors, pretend it worked. */
       /* RGB: 2, 2, 2 */
       extraColors = 0;
-      redMask = 0x03;
+      redMask = 0x30;
       greenMask = 0x0C;
       blueMask = 0x03;
       ComputeShiftMask(redMask, &redShift, &redMask);
@@ -481,7 +481,7 @@ void GetMappedPixel(XColor *c, char alloc)
 {
    if(alloc && BASE_COLORS + extraColors < MAX_COLORS) {
       JXAllocColor(display, rootColormap, c);
-      map[extraColors] = c->pixel;
+      map[BASE_COLORS + extraColors] = c->pixel;
       extraColors += 1;
    } else {
       GetDirectPixel(c);

@@ -324,7 +324,7 @@ void ReadClientInfo(ClientNode *np, char alreadyMapped)
 void WriteState(ClientNode *np)
 {
 
-   unsigned long data[2];
+   unsigned int data[2];
 
    Assert(np);
 

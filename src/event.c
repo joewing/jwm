@@ -305,6 +305,17 @@ void ProcessEvent(XEvent *event)
    }
 }
 
+/** Discard button events for the specified windows. */
+void DiscardButtonEvents()
+{
+   XEvent event;
+   JXSync(display, False);
+   while(JXCheckMaskEvent(display, ButtonPressMask | ButtonReleaseMask,
+			  &event)) {
+      UpdateTime(&event);
+   }
+}
+
 /** Discard motion events for the specified window. */
 void DiscardMotionEvents(XEvent *event, Window w)
 {

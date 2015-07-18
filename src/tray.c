@@ -744,6 +744,8 @@ void HandleTrayButtonPress(TrayType *tp, const XButtonEvent *event)
       const int x = event->x - cp->x;
       const int y = event->y - cp->y;
       const int mask = event->button;
+      XEvent event;
+      DiscardButtonEvents(&event, tp->window);
       (cp->ProcessButtonPress)(cp, x, y, mask);
    }
 }

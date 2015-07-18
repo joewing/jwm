@@ -162,7 +162,6 @@ void InitializeMenu(Menu *menu)
 /** Show a menu. */
 void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y)
 {
-
    int mouseStatus, keyboardStatus;
 
    /* Don't show the menu if there isn't anything to show. */

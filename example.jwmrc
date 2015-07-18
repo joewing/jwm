@@ -67,53 +67,41 @@
         <Height>21</Height>
         <Corner>4</Corner>
         <Foreground>#FFFFFF</Foreground>
-        <Background>#333333</Background>
-        <Outline>#000000</Outline>
+        <Background>#555555</Background>
         <Opacity>0.5:0.9:0.1</Opacity>
         <Active>
             <Foreground>#FFFFFF</Foreground>
             <Background>#0077CC</Background>
-            <Outline>#000000</Outline>
             <Opacity>1.0</Opacity>
         </Active>
     </WindowStyle>
     <TrayStyle>
         <Font>Sans-9</Font>
-        <Background>#111111</Background>
-        <Foreground>#FFFFFF</Foreground>
+        <Background>#999999</Background>
+        <Foreground>#000000</Foreground>
         <Opacity>0.75</Opacity>
     </TrayStyle>
-    <TaskListStyle>
-        <Foreground>#FFFFFF</Foreground>
-        <Background>#111111</Background>
-        <Active>
-            <Foreground>#FFFFFF</Foreground>
-            <Background>#333333</Background>
-        </Active>
-    </TaskListStyle>
     <PagerStyle>
         <Outline>#000000</Outline>
-        <Foreground>#FFFFFF</Foreground>
-        <Foreground>#444444</Foreground>
-        <Background>#111111</Background>
+        <Foreground>#333333</Foreground>
+        <Background>#999999</Background>
         <Active>
             <Foreground>#0077CC</Foreground>
-            <Background>#333333</Background>
+            <Background>#555555</Background>
         </Active>
     </PagerStyle>
     <MenuStyle>
         <Font>Sans-9</Font>
-        <Foreground>#FFFFFF</Foreground>
-        <Background>#333333</Background>
+        <Foreground>#000000</Foreground>
+        <Background>#999999</Background>
         <Active>
-            <Foreground>#FFFFFF</Foreground>
+            <Foreground>#000000</Foreground>
             <Background>#0077CC</Background>
         </Active>
         <Opacity>0.85</Opacity>
     </MenuStyle>
     <PopupStyle>
         <Font>Sans-9</Font>
-        <Outline>#000000</Outline>
         <Foreground>#000000</Foreground>
         <Background>#999999</Background>
     </PopupStyle>

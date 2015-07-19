@@ -551,12 +551,16 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
       for(x = 0; x < image->width; x++) {
 
          color.pixel = XGetPixel(image, x, y);
-         GetColorFromIndex(&color);
-
-         red = (unsigned char)(color.red >> 8);
-         green = (unsigned char)(color.green >> 8);
-         blue = (unsigned char)(color.blue >> 8);
-
+         if(image->depth == 1) {
+            red = color.pixel ? 0 : 255;
+            green = red;
+            blue = red;
+         } else {
+            GetColorFromIndex(&color);
+            red = (unsigned char)(color.red >> 8);
+            green = (unsigned char)(color.green >> 8);
+            blue = (unsigned char)(color.blue >> 8);
+         }
          alpha = 0;
          if(!shape || XGetPixel(shape, x, y)) {
             alpha = 255;

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-04 08:41-0500\n"
+"POT-Creation-Date: 2015-07-18 19:47-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -82,17 +82,17 @@ msgstr "só um tabuleiro e permitido"
 msgid "could not acquire system tray selection"
 msgstr "não pode adquirir a seleção da bandeja do sistema"
 
-#: src/font.c:104 src/font.c:121
+#: src/font.c:95 src/font.c:112
 #, c-format
 msgid "could not load font: %s"
 msgstr "impossível carregar fonte %s"
 
-#: src/font.c:111 src/font.c:128
+#: src/font.c:102 src/font.c:119
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "Não foi possível carregar a fonte padrão %s"
 
-#: src/font.c:310
+#: src/font.c:301
 msgid "empty Font tag"
 msgstr "etiqueta da fonte vazia (tag)"
 
@@ -154,68 +154,68 @@ msgstr ""
 "teclas de atalho: não foram especificadas para o menu root %d não esta "
 "definido"
 
-#: src/lex.c:199
+#: src/lex.c:196
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: terminação da etiqueta (tag) \"%s\" não corresponde à abertura da "
 "etiqueta (tag) \"%s\""
 
-#: src/lex.c:205
+#: src/lex.c:202
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: terminação da etiqueta (tag) inesperada e invalida"
 
-#: src/lex.c:211
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: terminação da etiqueta (tag) \"%s\" sem etiqueta de abertura"
 
-#: src/lex.c:214
+#: src/lex.c:211
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: terminação de etiqueta (tag) invalida"
 
-#: src/lex.c:232
+#: src/lex.c:229
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: abertura de etiqueta (tag) invalida"
 
-#: src/lex.c:248
+#: src/lex.c:245
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: etiqueta invalida (tag)"
 
-#: src/lex.c:303
+#: src/lex.c:300
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: texto inesperado: \"%s\""
 
-#: src/lex.c:351
+#: src/lex.c:348
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entrada invalida: \"%.8s\""
 
-#: src/lex.c:456 src/parse.c:1894
+#: src/lex.c:453 src/parse.c:1741
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1908
+#: src/parse.c:1755
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Configuração invalida: %s"
 
-#: src/parse.c:1920
+#: src/parse.c:1767
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "transparência invalida: %s"
 
-#: src/parse.c:1962
+#: src/parse.c:1809
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta invalida dentro %s: %s"
 
-#: src/parse.c:1982
+#: src/parse.c:1829
 msgid "configuration error"
 msgstr "erro de configuração"
 
@@ -252,35 +252,10 @@ msgstr "Restaurar"
 msgid "Send To"
 msgstr "Enviar Para"
 
-#: src/taskbar.c:858
+#: src/taskbar.c:848
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largura máxima (maxwidth) invalida para o Tasklist: %s"
-
-#: src/tray.c:1073
-#, c-format
-msgid "invalid tray width: %d"
-msgstr "largura do tabuleiro invalida: %d"
-
-#: src/tray.c:1092
-#, c-format
-msgid "invalid tray height: %d"
-msgstr "altura do tabuleiro invalida: %d"
-
-#: src/tray.c:1121
-#, c-format
-msgid "invalid tray layout: \"%s\""
-msgstr "layout do tabuleiro invalido: \"%s\""
-
-#: src/tray.c:1160
-#, c-format
-msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "alinhamento do tabuleiro invalido: \"%s\""
-
-#: src/tray.c:1183
-#, c-format
-msgid "invalid tray vertical alignment: \"%s\""
-msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
 
 #: src/traybutton.c:89
 #, c-format
@@ -290,6 +265,31 @@ msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
 #: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
 msgstr "ícone ou nome não esta definido no TrayButton"
+
+#: src/tray.c:1087
+#, c-format
+msgid "invalid tray width: %d"
+msgstr "largura do tabuleiro invalida: %d"
+
+#: src/tray.c:1106
+#, c-format
+msgid "invalid tray height: %d"
+msgstr "altura do tabuleiro invalida: %d"
+
+#: src/tray.c:1135
+#, c-format
+msgid "invalid tray layout: \"%s\""
+msgstr "layout do tabuleiro invalido: \"%s\""
+
+#: src/tray.c:1174
+#, c-format
+msgid "invalid tray horizontal alignment: \"%s\""
+msgstr "alinhamento do tabuleiro invalido: \"%s\""
+
+#: src/tray.c:1197
+#, c-format
+msgid "invalid tray vertical alignment: \"%s\""
+msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
 
 #: src/winmenu.c:52
 msgid "Kill"

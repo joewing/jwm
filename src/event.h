@@ -31,7 +31,7 @@ char WaitForEvent(XEvent *event);
 void ProcessEvent(XEvent *event);
 
 /** Descard excess button events. */
-void DiscardButtonEvents();
+void DiscardButtonEvents(void);
 
 /** Discard excess motion events.
  * @param event The event to return.

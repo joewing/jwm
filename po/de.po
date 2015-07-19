@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-18 19:47-0500\n"
+"POT-Creation-Date: 2015-07-19 17:42-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/desktop.c:338
+#: src/desktop.c:342
 msgid "empty Desktops Name tag"
 msgstr ""
 
@@ -244,6 +244,31 @@ msgstr "Senden an"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 
+#: src/tray.c:1086
+#, c-format
+msgid "invalid tray width: %d"
+msgstr "ungültige Leistenbreite: %d"
+
+#: src/tray.c:1105
+#, c-format
+msgid "invalid tray height: %d"
+msgstr "ungültige Leistenhöhe: %d"
+
+#: src/tray.c:1134
+#, c-format
+msgid "invalid tray layout: \"%s\""
+msgstr "ungültiges Leistenlayout: \"%s\""
+
+#: src/tray.c:1173
+#, c-format
+msgid "invalid tray horizontal alignment: \"%s\""
+msgstr "ungültige Horizontalausrichtung für Leiste: \"%s\""
+
+#: src/tray.c:1196
+#, c-format
+msgid "invalid tray vertical alignment: \"%s\""
+msgstr "ungültige Vertikalausrichtung für Leiste: \"%s\""
+
 #: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
@@ -252,31 +277,6 @@ msgstr "konnte Leistensymbol nicht laden: %s"
 #: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
 msgstr ""
-
-#: src/tray.c:1087
-#, c-format
-msgid "invalid tray width: %d"
-msgstr "ungültige Leistenbreite: %d"
-
-#: src/tray.c:1106
-#, c-format
-msgid "invalid tray height: %d"
-msgstr "ungültige Leistenhöhe: %d"
-
-#: src/tray.c:1135
-#, c-format
-msgid "invalid tray layout: \"%s\""
-msgstr "ungültiges Leistenlayout: \"%s\""
-
-#: src/tray.c:1174
-#, c-format
-msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "ungültige Horizontalausrichtung für Leiste: \"%s\""
-
-#: src/tray.c:1197
-#, c-format
-msgid "invalid tray vertical alignment: \"%s\""
-msgstr "ungültige Vertikalausrichtung für Leiste: \"%s\""
 
 #: src/winmenu.c:52
 msgid "Kill"

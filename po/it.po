@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-04 08:41-0500\n"
+"POT-Creation-Date: 2015-07-18 19:47-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -78,17 +78,17 @@ msgstr "Permesso un solo Dock"
 msgid "could not acquire system tray selection"
 msgstr "Impossibile acquisire la selezione del vassoio di sistema"
 
-#: src/font.c:104 src/font.c:121
+#: src/font.c:95 src/font.c:112
 #, c-format
 msgid "could not load font: %s"
 msgstr "Impossibile caricare font: %s"
 
-#: src/font.c:111 src/font.c:128
+#: src/font.c:102 src/font.c:119
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "Impossibile caricare il font predefinito: %s"
 
-#: src/font.c:310
+#: src/font.c:301
 msgid "empty Font tag"
 msgstr "Etichetta Font vuota"
 
@@ -148,67 +148,67 @@ msgstr "Tasto o keycode non specificati per Key"
 msgid "key binding: root menu \"%s\" not defined"
 msgstr "Combinazione di tasti: root menu %d non definito"
 
-#: src/lex.c:199
+#: src/lex.c:196
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: tag di chiusura \"%s\" non corrisponde al tag di apertura \"%s\""
 
-#: src/lex.c:205
+#: src/lex.c:202
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: tag di chiusura inatteso e non valido"
 
-#: src/lex.c:211
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: tag di chiusura \"%s\" senza tag di apertura"
 
-#: src/lex.c:214
+#: src/lex.c:211
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: tag di chiusura non valido"
 
-#: src/lex.c:232
+#: src/lex.c:229
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: tag di apertura non valido"
 
-#: src/lex.c:248
+#: src/lex.c:245
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: tag non valido"
 
-#: src/lex.c:303
+#: src/lex.c:300
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: testo non atteso: \"%s\""
 
-#: src/lex.c:351
+#: src/lex.c:348
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entità non valida: \"%.8s\""
 
-#: src/lex.c:456 src/parse.c:1894
+#: src/lex.c:453 src/parse.c:1741
 msgid "out of memory"
 msgstr "Memoria esaurita"
 
-#: src/parse.c:1908
+#: src/parse.c:1755
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Impostazione non valida: %s"
 
-#: src/parse.c:1920
+#: src/parse.c:1767
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "Opacità non valida: %s"
 
-#: src/parse.c:1962
+#: src/parse.c:1809
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Tag non valido in %s: %s"
 
-#: src/parse.c:1982
+#: src/parse.c:1829
 msgid "configuration error"
 msgstr "Errore di configurazione"
 
@@ -245,35 +245,10 @@ msgstr "Ripristina"
 msgid "Send To"
 msgstr "Manda A"
 
-#: src/taskbar.c:858
+#: src/taskbar.c:848
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "Larghezza massima per TaskList non valida: %s"
-
-#: src/tray.c:1073
-#, c-format
-msgid "invalid tray width: %d"
-msgstr "Larghezza del vassoio non valida: %d"
-
-#: src/tray.c:1092
-#, c-format
-msgid "invalid tray height: %d"
-msgstr "Altezza del vassoio non valida: %d"
-
-#: src/tray.c:1121
-#, c-format
-msgid "invalid tray layout: \"%s\""
-msgstr "Disposizione del vassoio non valida: \"%s\""
-
-#: src/tray.c:1160
-#, c-format
-msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "Allineamento orizzontale del vassoio non valido: \"%s\""
-
-#: src/tray.c:1183
-#, c-format
-msgid "invalid tray vertical alignment: \"%s\""
-msgstr "Allineamento verticale del vassoio non valido: \"%s\""
 
 #: src/traybutton.c:89
 #, c-format
@@ -283,6 +258,31 @@ msgstr "Impossibile caricare icona del vassoio: \"%s"
 #: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
 msgstr "Nessuna icona o etichetta per il TrayButton"
+
+#: src/tray.c:1087
+#, c-format
+msgid "invalid tray width: %d"
+msgstr "Larghezza del vassoio non valida: %d"
+
+#: src/tray.c:1106
+#, c-format
+msgid "invalid tray height: %d"
+msgstr "Altezza del vassoio non valida: %d"
+
+#: src/tray.c:1135
+#, c-format
+msgid "invalid tray layout: \"%s\""
+msgstr "Disposizione del vassoio non valida: \"%s\""
+
+#: src/tray.c:1174
+#, c-format
+msgid "invalid tray horizontal alignment: \"%s\""
+msgstr "Allineamento orizzontale del vassoio non valido: \"%s\""
+
+#: src/tray.c:1197
+#, c-format
+msgid "invalid tray vertical alignment: \"%s\""
+msgstr "Allineamento verticale del vassoio non valido: \"%s\""
 
 #: src/winmenu.c:52
 msgid "Kill"

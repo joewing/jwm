@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-04 08:41-0500\n"
+"POT-Creation-Date: 2015-07-18 19:47-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -77,17 +77,17 @@ msgstr "можно использовать только один Dock (обла
 msgid "could not acquire system tray selection"
 msgstr "не удалось получить активное приложение в панели задач"
 
-#: src/font.c:104 src/font.c:121
+#: src/font.c:95 src/font.c:112
 #, c-format
 msgid "could not load font: %s"
 msgstr "не удалось загрузить шрифт: %s"
 
-#: src/font.c:111 src/font.c:128
+#: src/font.c:102 src/font.c:119
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "не удалось загрузить шрифт по-умолчанию: %s"
 
-#: src/font.c:310
+#: src/font.c:301
 msgid "empty Font tag"
 msgstr "пустой тэг Font"
 
@@ -147,66 +147,66 @@ msgstr "ни символ, ни код клавиши не заданы в тэ�
 msgid "key binding: root menu \"%s\" not defined"
 msgstr "назначение клавиши: главное меню %d не задано"
 
-#: src/lex.c:199
+#: src/lex.c:196
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: закрывающий тэг \"%s\" не соответствует открывающему \"%s\""
 
-#: src/lex.c:205
+#: src/lex.c:202
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: непонятный и неправильный закрывающий тэг"
 
-#: src/lex.c:211
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: закрывающий тэг \"%s\" без открывающего"
 
-#: src/lex.c:214
+#: src/lex.c:211
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: неправильный закрывающий тэг"
 
-#: src/lex.c:232
+#: src/lex.c:229
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: неправильный открывающий тэг"
 
-#: src/lex.c:248
+#: src/lex.c:245
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: неправильный тэг"
 
-#: src/lex.c:303
+#: src/lex.c:300
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: непонятный текст: \"%s\""
 
-#: src/lex.c:351
+#: src/lex.c:348
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
-#: src/lex.c:456 src/parse.c:1894
+#: src/lex.c:453 src/parse.c:1741
 msgid "out of memory"
 msgstr "недостаточно памяти"
 
-#: src/parse.c:1908
+#: src/parse.c:1755
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:1920
+#: src/parse.c:1767
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:1962
+#: src/parse.c:1809
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:1982
+#: src/parse.c:1829
 msgid "configuration error"
 msgstr "ошибка конфигурации"
 
@@ -243,36 +243,11 @@ msgstr "Восстановить"
 msgid "Send To"
 msgstr "Переместить на рабочий стол"
 
-#: src/taskbar.c:858
+#: src/taskbar.c:848
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 "недопустимое значение макс. ширины кнопки в панели задач (TaskList): %s"
-
-#: src/tray.c:1073
-#, c-format
-msgid "invalid tray width: %d"
-msgstr "недопустимое значение ширины панели: %d"
-
-#: src/tray.c:1092
-#, c-format
-msgid "invalid tray height: %d"
-msgstr "недопустимое значение высоты панели: %d"
-
-#: src/tray.c:1121
-#, c-format
-msgid "invalid tray layout: \"%s\""
-msgstr "недопустимое значение расположения панели: \"%s\""
-
-#: src/tray.c:1160
-#, c-format
-msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "недопустимое значение горизонтального выравнивания панели: \"%s\""
-
-#: src/tray.c:1183
-#, c-format
-msgid "invalid tray vertical alignment: \"%s\""
-msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""
 
 #: src/traybutton.c:89
 #, c-format
@@ -282,6 +257,31 @@ msgstr "не удалось загрузить иконку для кнопки 
 #: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
 msgstr "не заданы ни иконка, ни текст кнопки запуска"
+
+#: src/tray.c:1087
+#, c-format
+msgid "invalid tray width: %d"
+msgstr "недопустимое значение ширины панели: %d"
+
+#: src/tray.c:1106
+#, c-format
+msgid "invalid tray height: %d"
+msgstr "недопустимое значение высоты панели: %d"
+
+#: src/tray.c:1135
+#, c-format
+msgid "invalid tray layout: \"%s\""
+msgstr "недопустимое значение расположения панели: \"%s\""
+
+#: src/tray.c:1174
+#, c-format
+msgid "invalid tray horizontal alignment: \"%s\""
+msgstr "недопустимое значение горизонтального выравнивания панели: \"%s\""
+
+#: src/tray.c:1197
+#, c-format
+msgid "invalid tray vertical alignment: \"%s\""
+msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""
 
 #: src/winmenu.c:52
 msgid "Kill"

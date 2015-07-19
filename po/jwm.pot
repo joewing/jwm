@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: jwm 2.3.2\n"
+"Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-04 08:41-0500\n"
+"POT-Creation-Date: 2015-07-18 19:47-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -78,17 +78,17 @@ msgstr ""
 msgid "could not acquire system tray selection"
 msgstr ""
 
-#: src/font.c:104 src/font.c:121
+#: src/font.c:95 src/font.c:112
 #, c-format
 msgid "could not load font: %s"
 msgstr ""
 
-#: src/font.c:111 src/font.c:128
+#: src/font.c:102 src/font.c:119
 #, c-format
 msgid "could not load the default font: %s"
 msgstr ""
 
-#: src/font.c:310
+#: src/font.c:301
 msgid "empty Font tag"
 msgstr ""
 
@@ -148,66 +148,66 @@ msgstr ""
 msgid "key binding: root menu \"%s\" not defined"
 msgstr ""
 
-#: src/lex.c:199
+#: src/lex.c:196
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 
-#: src/lex.c:205
+#: src/lex.c:202
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr ""
 
-#: src/lex.c:211
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr ""
 
-#: src/lex.c:214
+#: src/lex.c:211
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr ""
 
-#: src/lex.c:232
+#: src/lex.c:229
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr ""
 
-#: src/lex.c:248
+#: src/lex.c:245
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr ""
 
-#: src/lex.c:303
+#: src/lex.c:300
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr ""
 
-#: src/lex.c:351
+#: src/lex.c:348
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/lex.c:456 src/parse.c:1894
+#: src/lex.c:453 src/parse.c:1741
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1908
+#: src/parse.c:1755
 #, c-format
 msgid "invalid setting: %s"
 msgstr ""
 
-#: src/parse.c:1920
+#: src/parse.c:1767
 #, c-format
 msgid "invalid opacity: %s"
 msgstr ""
 
-#: src/parse.c:1962
+#: src/parse.c:1809
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr ""
 
-#: src/parse.c:1982
+#: src/parse.c:1829
 msgid "configuration error"
 msgstr ""
 
@@ -244,34 +244,9 @@ msgstr ""
 msgid "Send To"
 msgstr ""
 
-#: src/taskbar.c:858
+#: src/taskbar.c:848
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
-msgstr ""
-
-#: src/tray.c:1073
-#, c-format
-msgid "invalid tray width: %d"
-msgstr ""
-
-#: src/tray.c:1092
-#, c-format
-msgid "invalid tray height: %d"
-msgstr ""
-
-#: src/tray.c:1121
-#, c-format
-msgid "invalid tray layout: \"%s\""
-msgstr ""
-
-#: src/tray.c:1160
-#, c-format
-msgid "invalid tray horizontal alignment: \"%s\""
-msgstr ""
-
-#: src/tray.c:1183
-#, c-format
-msgid "invalid tray vertical alignment: \"%s\""
 msgstr ""
 
 #: src/traybutton.c:89
@@ -281,6 +256,31 @@ msgstr ""
 
 #: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
+msgstr ""
+
+#: src/tray.c:1087
+#, c-format
+msgid "invalid tray width: %d"
+msgstr ""
+
+#: src/tray.c:1106
+#, c-format
+msgid "invalid tray height: %d"
+msgstr ""
+
+#: src/tray.c:1135
+#, c-format
+msgid "invalid tray layout: \"%s\""
+msgstr ""
+
+#: src/tray.c:1174
+#, c-format
+msgid "invalid tray horizontal alignment: \"%s\""
+msgstr ""
+
+#: src/tray.c:1197
+#, c-format
+msgid "invalid tray vertical alignment: \"%s\""
 msgstr ""
 
 #: src/winmenu.c:52

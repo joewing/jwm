@@ -397,7 +397,7 @@ void StartupConnection(void)
       | ColormapChangeMask
       | ButtonPressMask
       | ButtonReleaseMask
-      | PointerMotionMask;
+      | PointerMotionMask | PointerMotionHintMask;
    JXChangeWindowAttributes(display, rootWindow, CWEventMask, &attr);
 
    memset(&sa, 0, sizeof(sa));

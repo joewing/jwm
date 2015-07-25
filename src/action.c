@@ -73,6 +73,13 @@ void ProcessActionPress(struct ActionType *actions,
    int mwidth, mheight;
    int menu;
 
+   if (x < 0 || x >= cp->width) {
+      return;
+   }
+   if (y < 0 || y >= cp->height) {
+      return;
+   }
+
    menu = -1;
    for(ap = actions; ap; ap = ap->next) {
       if(ap->mask & mask) {

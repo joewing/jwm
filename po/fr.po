@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-19 17:42-0500\n"
+"POT-Creation-Date: 2015-07-25 08:57-0500\n"
 "PO-Revision-Date: 2014-11-06 10:23+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 msgid "invalid action: \"%s\""
 msgstr "action de bouton de barre incorrect: \"%s\""
 
-#: src/action.c:182
+#: src/action.c:189
 #, fuzzy, c-format
 msgid "action: root menu \"%s\" not defined"
 msgstr "Bouton de barre: menu racine %d non défini"
@@ -242,7 +242,7 @@ msgstr "Restaurer"
 msgid "Send To"
 msgstr "Envoyer vers"
 
-#: src/taskbar.c:848
+#: src/taskbar.c:863
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largeur maximale de la liste des tâches incorrecte: %s"

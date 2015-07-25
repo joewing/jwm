@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-19 17:42-0500\n"
+"POT-Creation-Date: 2015-07-25 08:57-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid "invalid action: \"%s\""
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/action.c:182
+#: src/action.c:189
 #, fuzzy, c-format
 msgid "action: root menu \"%s\" not defined"
 msgstr "przycisk zasobnika: menu głównym %d nie zdefiniowano"
@@ -245,7 +245,7 @@ msgstr "Przywróć"
 msgid "Send To"
 msgstr "Wyślij do"
 
-#: src/taskbar.c:848
+#: src/taskbar.c:863
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"

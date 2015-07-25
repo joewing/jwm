@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-19 17:42-0500\n"
+"POT-Creation-Date: 2015-07-25 08:57-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "invalid action: \"%s\""
 msgstr "ação do Traybutton invalida: \"%s\""
 
-#: src/action.c:182
+#: src/action.c:189
 #, fuzzy, c-format
 msgid "action: root menu \"%s\" not defined"
 msgstr "botão do tabuleiro: menu root %d não esta definida"
@@ -252,7 +252,7 @@ msgstr "Restaurar"
 msgid "Send To"
 msgstr "Enviar Para"
 
-#: src/taskbar.c:848
+#: src/taskbar.c:863
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largura máxima (maxwidth) invalida para o Tasklist: %s"

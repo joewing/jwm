@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-19 17:42-0500\n"
+"POT-Creation-Date: 2015-07-25 08:57-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -17,7 +17,7 @@ msgstr ""
 msgid "invalid action: \"%s\""
 msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
 
-#: src/action.c:182
+#: src/action.c:189
 #, fuzzy, c-format
 msgid "action: root menu \"%s\" not defined"
 msgstr "taakbalk-knop: root menu %d niet gedefiniëerd"
@@ -239,7 +239,7 @@ msgstr "Herstellen"
 msgid "Send To"
 msgstr "Zend naar"
 
-#: src/taskbar.c:848
+#: src/taskbar.c:863
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ongeldige maximum breedte voor Taaklijst: %s"

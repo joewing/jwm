@@ -177,7 +177,7 @@ void AddIconPath(char *path)
 
    ip = Allocate(sizeof(IconPathNode));
    ip->path = Allocate(length + addSep + 1);
-   strcpy(ip->path, path);
+   memcpy(ip->path, path, length + 1);
    if(addSep) {
       ip->path[length] = '/';
       ip->path[length + 1] = 0;
@@ -312,7 +312,8 @@ IconNode *LoadNamedIconHelper(const char *name, const char *path,
 
    result = NULL;
    for(i = 0; i < EXTENSION_COUNT; i++) {
-      strcpy(&temp[pathLength + nameLength], ICON_EXTENSIONS[i]);
+      const unsigned len = strlen(ICON_EXTENSIONS[i]);
+      memcpy(&temp[pathLength + nameLength], ICON_EXTENSIONS[i], len + 1);
       result = CreateIconFromFile(temp, save, preserveAspect);
       if(result) {
          break;

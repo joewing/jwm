@@ -224,8 +224,10 @@ void StartupHints(void)
    /* _NET_DESKTOP_NAMES */
    count = 0;
    for(x = 0; x < settings.desktopCount; x++) {
-      strcpy(data + count, GetDesktopName(x));
-      count += strlen(GetDesktopName(x)) + 1;
+      const char *name = GetDesktopName(x);
+      const unsigned len = strlen(name);
+      memcpy(&data[count], name, len + 1);
+      count += len + 1;
    }
    JXChangeProperty(display, rootWindow, atoms[ATOM_NET_DESKTOP_NAMES],
                     atoms[ATOM_UTF8_STRING], 8, PropModeReplace,

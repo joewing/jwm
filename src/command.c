@@ -128,8 +128,9 @@ void RunCommand(const char *command)
    if(!fork()) {
       close(ConnectionNumber(display));
       if(displayString && displayString[0]) {
-         char *str = malloc(strlen(displayString) + 9);
-         sprintf(str, "DISPLAY=%s", displayString);
+         const size_t var_len = strlen(displayString) + 9;
+         char *str = malloc(var_len);
+         snprintf(str, var_len, "DISPLAY=%s", displayString);
          putenv(str);
       }
       setsid();

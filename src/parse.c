@@ -712,8 +712,7 @@ TokenNode *ParseMenuIncludeHelper(const TokenNode *tp, const char *command)
    buffer = NULL;
    if(!strncmp(command, "exec:", 5)) {
 
-      path = Allocate(strlen(command) - 5 + 1);
-      strcpy(path, command + 5);
+		path = CopyString(command + 5);
       ExpandPath(&path);
 
       fd = popen(path, "r");
@@ -1816,15 +1815,16 @@ void ParseError(const TokenNode *tp, const char *str, ...)
 
    va_list ap;
 
-   static const char *FILE_MESSAGE = "%s[%u]";
+   static const char FILE_MESSAGE[] = "%s[%u]";
 
    char *msg;
 
    va_start(ap, str);
 
    if(tp) {
-      msg = Allocate(strlen(FILE_MESSAGE) + strlen(tp->fileName) + 1);
-      sprintf(msg, FILE_MESSAGE, tp->fileName, tp->line);
+      const size_t msg_len = sizeof(FILE_MESSAGE) + strlen(tp->fileName) + 1;
+      msg = Allocate(msg_len);
+      snprintf(msg, msg_len, FILE_MESSAGE, tp->fileName, tp->line);
    } else {
       msg = CopyString(_("configuration error"));
    }

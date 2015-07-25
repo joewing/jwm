@@ -86,7 +86,8 @@ void StartupDock(void)
 
       /* Get the selection atom. */
       selectionName = AllocateStack(sizeof(BASE_SELECTION_NAME));
-      sprintf(selectionName, BASE_SELECTION_NAME, rootScreen);
+      snprintf(selectionName, sizeof(BASE_SELECTION_NAME),
+               BASE_SELECTION_NAME, rootScreen);
       dockAtom = JXInternAtom(display, selectionName, False);
       ReleaseStack(selectionName);
 

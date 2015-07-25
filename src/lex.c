@@ -287,10 +287,11 @@ ReadDefault:
             if(temp) {
                if(current) {
                   if(current->value) {
+                     const unsigned value_len = strlen(current->value);
+                     const unsigned temp_len = strlen(temp);
                      current->value = Reallocate(current->value,
-                                                 strlen(current->value) +
-                                                 strlen(temp) + 1);
-                     strcat(current->value, temp);
+                                                 value_len + temp_len + 1);
+                     memcpy(&current->value[value_len], temp, temp_len + 1);
                      Release(temp);
                   } else {
                      current->value = temp;
@@ -520,6 +521,7 @@ TokenNode *CreateNode(TokenNode *current, const char *file,
                       unsigned int line)
 {
    TokenNode *np;
+   size_t len;
 
    np = Allocate(sizeof(TokenNode));
    np->type = TOK_INVALID;
@@ -530,8 +532,9 @@ TokenNode *CreateNode(TokenNode *current, const char *file,
    np->parent = current;
    np->next = NULL;
 
-   np->fileName = Allocate(strlen(file) + 1);
-   strcpy(np->fileName, file);
+   len = strlen(file);
+   np->fileName = Allocate(len + 1);
+   memcpy(np->fileName, file, len + 1);
    np->line = line;
    np->invalidName = NULL;
 

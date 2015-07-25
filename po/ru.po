@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-18 19:47-0500\n"
+"POT-Creation-Date: 2015-07-19 17:42-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -65,7 +65,7 @@ msgstr "Отмена"
 msgid "Confirm"
 msgstr "Подтверждение"
 
-#: src/desktop.c:338
+#: src/desktop.c:342
 msgid "empty Desktops Name tag"
 msgstr "пустой тэг Desktops Name (название рабочего стола)"
 
@@ -249,6 +249,31 @@ msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 "недопустимое значение макс. ширины кнопки в панели задач (TaskList): %s"
 
+#: src/tray.c:1086
+#, c-format
+msgid "invalid tray width: %d"
+msgstr "недопустимое значение ширины панели: %d"
+
+#: src/tray.c:1105
+#, c-format
+msgid "invalid tray height: %d"
+msgstr "недопустимое значение высоты панели: %d"
+
+#: src/tray.c:1134
+#, c-format
+msgid "invalid tray layout: \"%s\""
+msgstr "недопустимое значение расположения панели: \"%s\""
+
+#: src/tray.c:1173
+#, c-format
+msgid "invalid tray horizontal alignment: \"%s\""
+msgstr "недопустимое значение горизонтального выравнивания панели: \"%s\""
+
+#: src/tray.c:1196
+#, c-format
+msgid "invalid tray vertical alignment: \"%s\""
+msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""
+
 #: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
@@ -257,31 +282,6 @@ msgstr "не удалось загрузить иконку для кнопки 
 #: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
 msgstr "не заданы ни иконка, ни текст кнопки запуска"
-
-#: src/tray.c:1087
-#, c-format
-msgid "invalid tray width: %d"
-msgstr "недопустимое значение ширины панели: %d"
-
-#: src/tray.c:1106
-#, c-format
-msgid "invalid tray height: %d"
-msgstr "недопустимое значение высоты панели: %d"
-
-#: src/tray.c:1135
-#, c-format
-msgid "invalid tray layout: \"%s\""
-msgstr "недопустимое значение расположения панели: \"%s\""
-
-#: src/tray.c:1174
-#, c-format
-msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "недопустимое значение горизонтального выравнивания панели: \"%s\""
-
-#: src/tray.c:1197
-#, c-format
-msgid "invalid tray vertical alignment: \"%s\""
-msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""
 
 #: src/winmenu.c:52
 msgid "Kill"

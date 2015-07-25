@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-06-13 18:25-0500\n"
+"POT-Creation-Date: 2015-07-19 17:42-0500\n"
 "PO-Revision-Date: 2015-06-22 13:19+0000\n"
 "Last-Translator: Mihaly Horvath <hermitsoft@users.sourceforge.net>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid "invalid action: \"%s\""
 msgstr "nem támogatott művelet: \"%s\""
 
-#: src/action.c:181
+#: src/action.c:182
 #, c-format
 msgid "action: root menu \"%s\" not defined"
 msgstr "művelet: a \"%s\" gyökérmenü nincs definiálva"
@@ -42,11 +42,11 @@ msgstr "nem támogatott háttérkép-típus: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "a háttérkép nem található: \"%s\""
 
-#: src/client.c:901
+#: src/client.c:893
 msgid "Kill this window?"
 msgstr "Ablak erőszakos bezárása?"
 
-#: src/client.c:902
+#: src/client.c:894
 msgid "This may cause data to be lost!"
 msgstr "Ez adatvesztéshez vezethet!"
 
@@ -67,7 +67,7 @@ msgstr "Visszavonás"
 msgid "Confirm"
 msgstr "Megerősítés"
 
-#: src/desktop.c:344
+#: src/desktop.c:342
 msgid "empty Desktops Name tag"
 msgstr "üres Asztal-név (Desktops Name) xml tag"
 
@@ -79,17 +79,17 @@ msgstr "csak egy Dock engedélyezett"
 msgid "could not acquire system tray selection"
 msgstr "nem sikerült betölteni az értesítési terület (tray/dock) kijelölést"
 
-#: src/font.c:104 src/font.c:121
+#: src/font.c:95 src/font.c:112
 #, c-format
 msgid "could not load font: %s"
 msgstr "nem sikerült a betűtípus betöltése: %s"
 
-#: src/font.c:111 src/font.c:128
+#: src/font.c:102 src/font.c:119
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "nem sikerült az alapértelmezett betűtípus betöltése: %s"
 
-#: src/font.c:310
+#: src/font.c:301
 msgid "empty Font tag"
 msgstr "üres betűtípus (Font) xml tag"
 
@@ -106,17 +106,18 @@ msgstr "nem támogatott csoportnév"
 msgid "invalid group desktop: %d"
 msgstr "érvénytelen csoport asztal: %d"
 
-#: src/image.c:222
+#: src/image.c:234
 #, c-format
 msgid "could not create read struct for PNG image: %s"
-msgstr "nem sikerült az olvasási ('read') struktúra létrehozása a PNG képhez: %s"
+msgstr ""
+"nem sikerült az olvasási ('read') struktúra létrehozása a PNG képhez: %s"
 
-#: src/image.c:235
+#: src/image.c:247
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr "hiba a PNG kép beolvasása során: %s"
 
-#: src/image.c:243
+#: src/image.c:255
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "nem sikerült az 'info' struktúra létrehozása a PNG képhez: %s"
@@ -149,66 +150,66 @@ msgstr "se billentyű, sem billentyűkód nincs megadva a billentyűhöz"
 msgid "key binding: root menu \"%s\" not defined"
 msgstr "billentyű-társítás: gyökérmenü \"%s\" nincs definiálva"
 
-#: src/lex.c:198
+#: src/lex.c:196
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: az xml záró tag \"%s\" nem egyezik a nyitótaggal \"%s\""
 
-#: src/lex.c:204
+#: src/lex.c:202
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: váratlan és érvénytelen xml zárótag"
 
-#: src/lex.c:210
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: xml zárótag \"%s\" nyitótag nélkül"
 
-#: src/lex.c:213
+#: src/lex.c:211
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: érvénytelen xml zárótag (címke)"
 
-#: src/lex.c:231
+#: src/lex.c:229
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: érvénytelen xml nyitótag (címke)"
 
-#: src/lex.c:247
+#: src/lex.c:245
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: érvénytelen xml tag (címke)"
 
-#: src/lex.c:302
+#: src/lex.c:300
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: váratlan szöveg: \"%s\""
 
-#: src/lex.c:350
+#: src/lex.c:348
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: érvénytelen entitás: \"%.8s\""
 
-#: src/lex.c:455 src/parse.c:1844
+#: src/lex.c:453 src/parse.c:1741
 msgid "out of memory"
 msgstr "megtelt a memória"
 
-#: src/parse.c:1858
+#: src/parse.c:1755
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nem támogatott beállítás: %s"
 
-#: src/parse.c:1870
+#: src/parse.c:1767
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "érvénytelen átlátszóssági (opacity) érték: %s"
 
-#: src/parse.c:1912
+#: src/parse.c:1809
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "érvéytelen xml tag %s-ben: %s"
 
-#: src/parse.c:1932
+#: src/parse.c:1829
 msgid "configuration error"
 msgstr "konfigurációs hiba"
 
@@ -229,32 +230,48 @@ msgstr "Biztosan folytatja?"
 msgid "cannot swallow a client with no name"
 msgstr "név nélküli kliens nem építhető be a tálcába"
 
-#: src/taskbar.c:718
+#: src/taskbar.c:358 src/winmenu.c:51
+msgid "Close"
+msgstr "Bezárás"
+
+#: src/taskbar.c:365 src/winmenu.c:71
+msgid "Minimize"
+msgstr "Lerakás tálcára"
+
+#: src/taskbar.c:372 src/winmenu.c:69 src/winmenu.c:89
+msgid "Restore"
+msgstr "Visszaállítás"
+
+#: src/taskbar.c:379 src/winmenu.c:170
+msgid "Send To"
+msgstr "Küldés"
+
+#: src/taskbar.c:848
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "érvénytelen maximális hosszúság van megadva a feladatlistához: %s"
 
-#: src/tray.c:1073
+#: src/tray.c:1086
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "érvénytelen tálca-szélesség: %d"
 
-#: src/tray.c:1092
+#: src/tray.c:1105
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "érvénytelen tálca-magasság: %d"
 
-#: src/tray.c:1121
+#: src/tray.c:1134
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "érvénytelen tálca-elrendezés: \"%s\""
 
-#: src/tray.c:1160
+#: src/tray.c:1173
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "érvénytelen vízszintes igazítási érték a tálcához: \"%s\""
 
-#: src/tray.c:1183
+#: src/tray.c:1196
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "érvénytelen függőleges igazítási érték a tálcához: \"%s\""
@@ -268,86 +285,70 @@ msgstr "nem sikerült betölteni a gyorsindító tálcaikont: \"%s\""
 msgid "no icon or label for TrayButton"
 msgstr "nincs ikon vagy címke megadva a gyorsindító tálcaikonhoz"
 
-#: src/winmenu.c:78
-msgid "Close"
-msgstr "Bezárás"
-
-#: src/winmenu.c:79
+#: src/winmenu.c:52
 msgid "Kill"
 msgstr "Erőszakos bezárás"
 
-#: src/winmenu.c:87
+#: src/winmenu.c:60
 msgid "Resize"
 msgstr "Átméretezés"
 
-#: src/winmenu.c:90
+#: src/winmenu.c:63
 msgid "Move"
 msgstr "Mozgatás"
 
-#: src/winmenu.c:96 src/winmenu.c:116
-msgid "Restore"
-msgstr "Visszaállítás"
-
-#: src/winmenu.c:98
-msgid "Minimize"
-msgstr "Lerakás tálcára"
-
-#: src/winmenu.c:103
+#: src/winmenu.c:76
 msgid "Unshade"
 msgstr "Előtérbe helyezés"
 
-#: src/winmenu.c:105
+#: src/winmenu.c:78
 msgid "Shade"
 msgstr "Háttérbe helyezés"
 
-#: src/winmenu.c:110
+#: src/winmenu.c:83
 msgid "Maximize-y"
 msgstr "Max. függőleges méret"
 
-#: src/winmenu.c:113
+#: src/winmenu.c:86
 msgid "Maximize-x"
 msgstr "Max. vízszintes méret"
 
-#: src/winmenu.c:118
+#: src/winmenu.c:91
 msgid "Maximize"
 msgstr "Maximális méret"
 
-#: src/winmenu.c:127
+#: src/winmenu.c:100
 msgid "Unstick"
 msgstr "Feloldás"
 
-#: src/winmenu.c:129
+#: src/winmenu.c:102
 msgid "Stick"
 msgstr "Rögzítés"
 
-#: src/winmenu.c:155
+#: src/winmenu.c:127
 msgid "Layer"
 msgstr "Réteg"
 
-#: src/winmenu.c:170
+#: src/winmenu.c:139
 msgid "[Above]"
 msgstr "[Fölött]"
 
-#: src/winmenu.c:172
+#: src/winmenu.c:141
 msgid "Above"
 msgstr "Fölé"
 
-#: src/winmenu.c:175
+#: src/winmenu.c:144
 msgid "[Normal]"
 msgstr "[Normál]"
 
-#: src/winmenu.c:177
+#: src/winmenu.c:146
 msgid "Normal"
 msgstr "Normál"
 
-#: src/winmenu.c:180
+#: src/winmenu.c:149
 msgid "[Below]"
 msgstr "[Alatt]"
 
-#: src/winmenu.c:182
+#: src/winmenu.c:151
 msgid "Below"
 msgstr "Alá"
-
-#: src/winmenu.c:202
-msgid "Send To"
-msgstr "Küldés"

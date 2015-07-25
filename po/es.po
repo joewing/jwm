@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-18 19:47-0500\n"
+"POT-Creation-Date: 2015-07-19 17:42-0500\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -66,7 +66,7 @@ msgstr "Cancelar"
 msgid "Confirm"
 msgstr "Confirmar"
 
-#: src/desktop.c:338
+#: src/desktop.c:342
 msgid "empty Desktops Name tag"
 msgstr "etiqueta Nombre de Escritorio vacía"
 
@@ -252,6 +252,31 @@ msgstr "Enviar A"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ancho máx. no válido para Lista de Tareas: %s"
 
+#: src/tray.c:1086
+#, c-format
+msgid "invalid tray width: %d"
+msgstr "ancho de bandeja no válido: %d"
+
+#: src/tray.c:1105
+#, c-format
+msgid "invalid tray height: %d"
+msgstr "alto de bandeja no válido: %d"
+
+#: src/tray.c:1134
+#, c-format
+msgid "invalid tray layout: \"%s\""
+msgstr "forma no válida para bandeja: «%s»"
+
+#: src/tray.c:1173
+#, c-format
+msgid "invalid tray horizontal alignment: \"%s\""
+msgstr "alineación horizontal no válida para bandeja: «%s»"
+
+#: src/tray.c:1196
+#, c-format
+msgid "invalid tray vertical alignment: \"%s\""
+msgstr "alineación vertical no válida para bandeja: «%s»"
+
 #: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
@@ -260,31 +285,6 @@ msgstr "no se pudo cargar el icono de bandeja: «%s»"
 #: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
 msgstr "no hay icono o etiqueta para el Botón de Bandeja"
-
-#: src/tray.c:1087
-#, c-format
-msgid "invalid tray width: %d"
-msgstr "ancho de bandeja no válido: %d"
-
-#: src/tray.c:1106
-#, c-format
-msgid "invalid tray height: %d"
-msgstr "alto de bandeja no válido: %d"
-
-#: src/tray.c:1135
-#, c-format
-msgid "invalid tray layout: \"%s\""
-msgstr "forma no válida para bandeja: «%s»"
-
-#: src/tray.c:1174
-#, c-format
-msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "alineación horizontal no válida para bandeja: «%s»"
-
-#: src/tray.c:1197
-#, c-format
-msgid "invalid tray vertical alignment: \"%s\""
-msgstr "alineación vertical no válida para bandeja: «%s»"
 
 #: src/winmenu.c:52
 msgid "Kill"

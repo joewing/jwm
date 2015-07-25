@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-18 19:47-0500\n"
+"POT-Creation-Date: 2015-07-19 17:42-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/desktop.c:338
+#: src/desktop.c:342
 msgid "empty Desktops Name tag"
 msgstr "etiqueta do ambiente de trabalho vazia (tag)"
 
@@ -257,6 +257,31 @@ msgstr "Enviar Para"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largura máxima (maxwidth) invalida para o Tasklist: %s"
 
+#: src/tray.c:1086
+#, c-format
+msgid "invalid tray width: %d"
+msgstr "largura do tabuleiro invalida: %d"
+
+#: src/tray.c:1105
+#, c-format
+msgid "invalid tray height: %d"
+msgstr "altura do tabuleiro invalida: %d"
+
+#: src/tray.c:1134
+#, c-format
+msgid "invalid tray layout: \"%s\""
+msgstr "layout do tabuleiro invalido: \"%s\""
+
+#: src/tray.c:1173
+#, c-format
+msgid "invalid tray horizontal alignment: \"%s\""
+msgstr "alinhamento do tabuleiro invalido: \"%s\""
+
+#: src/tray.c:1196
+#, c-format
+msgid "invalid tray vertical alignment: \"%s\""
+msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
+
 #: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
@@ -265,31 +290,6 @@ msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
 #: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
 msgstr "ícone ou nome não esta definido no TrayButton"
-
-#: src/tray.c:1087
-#, c-format
-msgid "invalid tray width: %d"
-msgstr "largura do tabuleiro invalida: %d"
-
-#: src/tray.c:1106
-#, c-format
-msgid "invalid tray height: %d"
-msgstr "altura do tabuleiro invalida: %d"
-
-#: src/tray.c:1135
-#, c-format
-msgid "invalid tray layout: \"%s\""
-msgstr "layout do tabuleiro invalido: \"%s\""
-
-#: src/tray.c:1174
-#, c-format
-msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "alinhamento do tabuleiro invalido: \"%s\""
-
-#: src/tray.c:1197
-#, c-format
-msgid "invalid tray vertical alignment: \"%s\""
-msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
 
 #: src/winmenu.c:52
 msgid "Kill"

@@ -120,8 +120,10 @@ char WaitForEvent(XEvent *event)
       }
       if(task_update_pending) {
          UpdateTaskBar();
+         task_update_pending = 0;
       }
       if(pager_update_pending) {
+         pager_update_pending = 0;
          UpdatePager();
       }
 

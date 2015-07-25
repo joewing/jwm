@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-25 08:57-0500\n"
+"POT-Creation-Date: 2015-07-25 11:56-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -49,7 +49,7 @@ msgstr "Chiudere questa finestra?"
 msgid "This may cause data to be lost!"
 msgstr "Questo può causare una perdita di dati!"
 
-#: src/command.c:137 src/main.c:214
+#: src/command.c:138 src/main.c:216
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "Esecuzione fallita: (%s) %s"
@@ -70,11 +70,11 @@ msgstr "Conferma"
 msgid "empty Desktops Name tag"
 msgstr "Etichetta Nome dei desktop vuoti"
 
-#: src/dock.c:151
+#: src/dock.c:152
 msgid "only one Dock allowed"
 msgstr "Permesso un solo Dock"
 
-#: src/dock.c:230
+#: src/dock.c:231
 msgid "could not acquire system tray selection"
 msgstr "Impossibile acquisire la selezione del vassoio di sistema"
 
@@ -179,31 +179,31 @@ msgstr "%s[%u]: tag di apertura non valido"
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: tag non valido"
 
-#: src/lex.c:300
+#: src/lex.c:301
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: testo non atteso: \"%s\""
 
-#: src/lex.c:348
+#: src/lex.c:349
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entità non valida: \"%.8s\""
 
-#: src/lex.c:453 src/parse.c:1741
+#: src/lex.c:454 src/parse.c:1740
 msgid "out of memory"
 msgstr "Memoria esaurita"
 
-#: src/parse.c:1755
+#: src/parse.c:1754
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Impostazione non valida: %s"
 
-#: src/parse.c:1767
+#: src/parse.c:1766
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "Opacità non valida: %s"
 
-#: src/parse.c:1809
+#: src/parse.c:1808
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Tag non valido in %s: %s"

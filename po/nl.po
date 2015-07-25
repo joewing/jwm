@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-25 08:57-0500\n"
+"POT-Creation-Date: 2015-07-25 11:56-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -44,7 +44,7 @@ msgstr "Sluiten van dit venster forceren?"
 msgid "This may cause data to be lost!"
 msgstr "Dit kan verlies van data veroorzaken!"
 
-#: src/command.c:137 src/main.c:214
+#: src/command.c:138 src/main.c:216
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "uitvoeren mislukt: (%s) %s"
@@ -65,11 +65,11 @@ msgstr ""
 msgid "empty Desktops Name tag"
 msgstr "leeg Bureaublad-naam label"
 
-#: src/dock.c:151
+#: src/dock.c:152
 msgid "only one Dock allowed"
 msgstr "Slechts één Paneel toegelaten"
 
-#: src/dock.c:230
+#: src/dock.c:231
 msgid "could not acquire system tray selection"
 msgstr "kan de systeem taakbalk keuze niet verkrijgen"
 
@@ -173,31 +173,31 @@ msgstr "%s[%u]: ongeldig openen-label"
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: ongeldig label"
 
-#: src/lex.c:300
+#: src/lex.c:301
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: ongeldige entiteit: \"%.8s\""
 
-#: src/lex.c:348
+#: src/lex.c:349
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ongeldige entiteit: \"%.8s\""
 
-#: src/lex.c:453 src/parse.c:1741
+#: src/lex.c:454 src/parse.c:1740
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1755
+#: src/parse.c:1754
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ongeldige instelling: %s"
 
-#: src/parse.c:1767
+#: src/parse.c:1766
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ongeldige transparantie: %s"
 
-#: src/parse.c:1809
+#: src/parse.c:1808
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ongeldig label in %s: %s"

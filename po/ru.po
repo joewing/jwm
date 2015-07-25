@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-25 08:57-0500\n"
+"POT-Creation-Date: 2015-07-25 11:56-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -48,7 +48,7 @@ msgstr "Ликвидировать окно?"
 msgid "This may cause data to be lost!"
 msgstr "Это может привести к потере данных!"
 
-#: src/command.c:137 src/main.c:214
+#: src/command.c:138 src/main.c:216
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "не удалось выполнить: (%s) %s"
@@ -69,11 +69,11 @@ msgstr "Подтверждение"
 msgid "empty Desktops Name tag"
 msgstr "пустой тэг Desktops Name (название рабочего стола)"
 
-#: src/dock.c:151
+#: src/dock.c:152
 msgid "only one Dock allowed"
 msgstr "можно использовать только один Dock (область уведомлений)"
 
-#: src/dock.c:230
+#: src/dock.c:231
 msgid "could not acquire system tray selection"
 msgstr "не удалось получить активное приложение в панели задач"
 
@@ -177,31 +177,31 @@ msgstr "%s[%u]: неправильный открывающий тэг"
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: неправильный тэг"
 
-#: src/lex.c:300
+#: src/lex.c:301
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: непонятный текст: \"%s\""
 
-#: src/lex.c:348
+#: src/lex.c:349
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
-#: src/lex.c:453 src/parse.c:1741
+#: src/lex.c:454 src/parse.c:1740
 msgid "out of memory"
 msgstr "недостаточно памяти"
 
-#: src/parse.c:1755
+#: src/parse.c:1754
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:1767
+#: src/parse.c:1766
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:1809
+#: src/parse.c:1808
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"

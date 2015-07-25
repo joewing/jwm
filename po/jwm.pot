@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-25 08:57-0500\n"
+"POT-Creation-Date: 2015-07-25 11:56-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,7 +49,7 @@ msgstr ""
 msgid "This may cause data to be lost!"
 msgstr ""
 
-#: src/command.c:137 src/main.c:214
+#: src/command.c:138 src/main.c:216
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr ""
@@ -70,11 +70,11 @@ msgstr ""
 msgid "empty Desktops Name tag"
 msgstr ""
 
-#: src/dock.c:151
+#: src/dock.c:152
 msgid "only one Dock allowed"
 msgstr ""
 
-#: src/dock.c:230
+#: src/dock.c:231
 msgid "could not acquire system tray selection"
 msgstr ""
 
@@ -178,31 +178,31 @@ msgstr ""
 msgid "%s[%u]: invalid tag"
 msgstr ""
 
-#: src/lex.c:300
+#: src/lex.c:301
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr ""
 
-#: src/lex.c:348
+#: src/lex.c:349
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/lex.c:453 src/parse.c:1741
+#: src/lex.c:454 src/parse.c:1740
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1755
+#: src/parse.c:1754
 #, c-format
 msgid "invalid setting: %s"
 msgstr ""
 
-#: src/parse.c:1767
+#: src/parse.c:1766
 #, c-format
 msgid "invalid opacity: %s"
 msgstr ""
 
-#: src/parse.c:1809
+#: src/parse.c:1808
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr ""

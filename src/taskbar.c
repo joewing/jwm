@@ -632,6 +632,7 @@ void SignalTaskbar(const TimeType *now, int x, int y, Window w, void *data)
 void Render(const TaskBarType *bp)
 {
    TaskEntry *tp;
+   char *displayName;
    ButtonNode button;
    int x, y;
 
@@ -660,8 +661,9 @@ void Render(const TaskBarType *bp)
          continue;
       }
 
-      /* Check for an active or urgent window. */
+      /* Check for an active or urgent window and count clients. */
       ClientEntry *cp;
+      unsigned clientCount = 0;
       button.type = BUTTON_TASK;
       for(cp = tp->clients; cp; cp = cp->next) {
          if(cp->client->state.status & (STAT_ACTIVE | STAT_FLASH)) {
@@ -671,6 +673,7 @@ void Render(const TaskBarType *bp)
                button.type = BUTTON_TASK;
             }
          }
+         clientCount += 1;
       }
       button.x = x;
       button.y = y;
@@ -679,12 +682,24 @@ void Render(const TaskBarType *bp)
       } else {
          button.icon = tp->clients->client->icon;
       }
+      displayName = NULL;
       if(tp->clients->client->className && settings.groupTasks) {
-         button.text = tp->clients->client->className;
+         if(clientCount != 1) {
+            const size_t len = strlen(tp->clients->client->className) + 16;
+            displayName = Allocate(len);
+            snprintf(displayName, len, "%s (%u)",
+                     tp->clients->client->className, clientCount);
+            button.text = displayName;
+         } else {
+            button.text = tp->clients->client->className;
+         }
       } else {
          button.text = tp->clients->client->name;
       }
       DrawButton(&button);
+      if(displayName) {
+         Release(displayName);
+      }
 
       if(bp->layout == LAYOUT_HORIZONTAL) {
          x += bp->itemWidth;

@@ -59,9 +59,9 @@ static const DefaultColorNode DEFAULT_COLORS[] = {
    { COLOR_TRAY_FG,                 0x000000    },
    { COLOR_TRAY_BG1,                0x999999    },
    { COLOR_TRAY_BG2,                0x999999    },
-   { COLOR_TRAY_ACTIVE_FG,          0x000000    },
-   { COLOR_TRAY_ACTIVE_BG1,         0x999999    },
-   { COLOR_TRAY_ACTIVE_BG2,         0x999999    },
+   { COLOR_TRAY_ACTIVE_FG,          0xFFFFFF    },
+   { COLOR_TRAY_ACTIVE_BG1,         0x555555    },
+   { COLOR_TRAY_ACTIVE_BG2,         0x555555    },
 
    { COLOR_PAGER_BG,                0x999999    },
    { COLOR_PAGER_FG,                0x333333    },

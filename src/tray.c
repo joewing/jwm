@@ -818,15 +818,21 @@ void DrawSpecificTray(const TrayType *tp)
       UpdateSpecificTray(tp, cp);
    }
 
-   JXSetForeground(display, rootGC, colors[COLOR_TRAY_UP]);
-   JXDrawLine(display, tp->window, rootGC, 0, 0, tp->width - 1, 0);
-   JXDrawLine(display, tp->window, rootGC, 0, tp->height - 1, 0, 0);
+   if(settings.handles) {
+      JXSetForeground(display, rootGC, colors[COLOR_TRAY_UP]);
+      JXDrawLine(display, tp->window, rootGC, 0, 0, tp->width - 1, 0);
+      JXDrawLine(display, tp->window, rootGC, 0, tp->height - 1, 0, 0);
 
-   JXSetForeground(display, rootGC, colors[COLOR_TRAY_DOWN]);
-   JXDrawLine(display, tp->window, rootGC, 0, tp->height - 1,
-              tp->width - 1, tp->height - 1);
-   JXDrawLine(display, tp->window, rootGC, tp->width - 1, 0,
-              tp->width - 1, tp->height - 1);
+      JXSetForeground(display, rootGC, colors[COLOR_TRAY_DOWN]);
+      JXDrawLine(display, tp->window, rootGC, 0, tp->height - 1,
+                 tp->width - 1, tp->height - 1);
+      JXDrawLine(display, tp->window, rootGC, tp->width - 1, 0,
+                 tp->width - 1, tp->height - 1);
+   } else {
+      JXSetForeground(display, rootGC, colors[COLOR_TRAY_FG]);
+      JXDrawRectangle(display, tp->window, rootGC, 0, 0,
+                      tp->width - 1, tp->height - 1);
+   }
 
 }
 

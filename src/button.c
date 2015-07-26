@@ -14,6 +14,7 @@
 #include "icon.h"
 #include "image.h"
 #include "misc.h"
+#include "settings.h"
 
 /** Draw a button. */
 void DrawButton(ButtonNode *bp)
@@ -101,14 +102,19 @@ void DrawButton(ButtonNode *bp)
 
    /* Draw the border. */
    if(bp->border) {
-      JXSetForeground(display, gc, up);
-      JXDrawLine(display, drawable, gc, x, y, x + width - 1, y);
-      JXDrawLine(display, drawable, gc, x, y, x, y + height - 1);
-      JXSetForeground(display, gc, down);
-      JXDrawLine(display, drawable, gc, x, y + height - 1,
-                 x + width - 1, y + height - 1);
-      JXDrawLine(display, drawable, gc, x + width - 1, y,
-                 x + width - 1, y + height - 1);
+      if(settings.handles) {
+         JXSetForeground(display, gc, up);
+         JXDrawLine(display, drawable, gc, x, y, x + width - 1, y);
+         JXDrawLine(display, drawable, gc, x, y, x, y + height - 1);
+         JXSetForeground(display, gc, down);
+         JXDrawLine(display, drawable, gc, x, y + height - 1,
+                    x + width - 1, y + height - 1);
+         JXDrawLine(display, drawable, gc, x + width - 1, y,
+                    x + width - 1, y + height - 1);
+      } else {
+         JXSetForeground(display, gc, down);
+         JXDrawRectangle(display, drawable, gc, x, y, width - 1, height - 1);
+      }
    }
 
    /* Determine the size of the icon (if any) to display. */

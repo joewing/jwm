@@ -109,16 +109,22 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type)
    JXClearWindow(display, statusWindow);
 
    /* Draw the border. */
-   JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
-   JXDrawLine(display, statusWindow, rootGC,
-              0, 0, statusWindowWidth, 0);
-   JXDrawLine(display, statusWindow, rootGC,
-              0, 0, 0, statusWindowHeight);
-   JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
-   JXDrawLine(display, statusWindow, rootGC, 0, statusWindowHeight - 1,
-              statusWindowWidth, statusWindowHeight - 1);
-   JXDrawLine(display, statusWindow, rootGC, statusWindowWidth - 1, 0,
-              statusWindowWidth - 1, statusWindowHeight);
+   if(settings.handles) {
+      JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
+      JXDrawLine(display, statusWindow, rootGC,
+                 0, 0, statusWindowWidth, 0);
+      JXDrawLine(display, statusWindow, rootGC,
+                 0, 0, 0, statusWindowHeight);
+      JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
+      JXDrawLine(display, statusWindow, rootGC, 0, statusWindowHeight - 1,
+                 statusWindowWidth, statusWindowHeight - 1);
+      JXDrawLine(display, statusWindow, rootGC, statusWindowWidth - 1, 0,
+                 statusWindowWidth - 1, statusWindowHeight);
+   } else {
+      JXSetForeground(display, rootGC, colors[COLOR_MENU_FG]);
+      JXDrawRectangle(display, statusWindow, rootGC, 0, 0,
+                      statusWindowWidth - 1, statusWindowHeight - 1);
+   }
 
 }
 

@@ -666,14 +666,16 @@ void Render(const TaskBarType *bp)
       unsigned clientCount = 0;
       button.type = BUTTON_TASK;
       for(cp = tp->clients; cp; cp = cp->next) {
-         if(cp->client->state.status & (STAT_ACTIVE | STAT_FLASH)) {
-            if(button.type == BUTTON_TASK) {
-               button.type = BUTTON_TASK_ACTIVE;
-            } else {
-               button.type = BUTTON_TASK;
+         if(ShouldFocus(cp->client)) {
+            if(cp->client->state.status & (STAT_ACTIVE | STAT_FLASH)) {
+               if(button.type == BUTTON_TASK) {
+                  button.type = BUTTON_TASK_ACTIVE;
+               } else {
+                  button.type = BUTTON_TASK;
+               }
             }
+            clientCount += 1;
          }
-         clientCount += 1;
       }
       button.x = x;
       button.y = y;

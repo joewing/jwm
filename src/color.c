@@ -12,6 +12,7 @@
 #include "color.h"
 #include "error.h"
 #include "misc.h"
+#include "settings.h"
 
 /** Mapping between color types and default values. */
 typedef struct {
@@ -197,9 +198,11 @@ void StartupColors(void)
    }
 
    /* Derive colors. */
-   for(x = 0; x < DERIVED_COUNT; x++) {
-      LightenColor(DERIVED_COLORS[x].base, DERIVED_COLORS[x].up);
-      DarkenColor(DERIVED_COLORS[x].base, DERIVED_COLORS[x].down);
+   if(settings.handles) {
+      for(x = 0; x < DERIVED_COUNT; x++) {
+         LightenColor(DERIVED_COLORS[x].base, DERIVED_COLORS[x].up);
+         DarkenColor(DERIVED_COLORS[x].base, DERIVED_COLORS[x].down);
+      }
    }
 
    if(names) {

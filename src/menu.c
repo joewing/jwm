@@ -478,17 +478,23 @@ void DrawMenu(Menu *menu)
    JXFillRectangle(display, menu->pixmap, rootGC, 0, 0,
                    menu->width, menu->height);
 
-   JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
-   JXDrawLine(display, menu->pixmap, rootGC,
-              0, 0, menu->width, 0);
-   JXDrawLine(display, menu->pixmap, rootGC,
-              0, 0, 0, menu->height);
+   if(settings.handles) {
+      JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
+      JXDrawLine(display, menu->pixmap, rootGC,
+                 0, 0, menu->width, 0);
+      JXDrawLine(display, menu->pixmap, rootGC,
+                 0, 0, 0, menu->height);
 
-   JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
-   JXDrawLine(display, menu->pixmap, rootGC,
-              0, menu->height - 1, menu->width, menu->height - 1);
-   JXDrawLine(display, menu->pixmap, rootGC,
-              menu->width - 1, 0, menu->width - 1, menu->height);
+      JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
+      JXDrawLine(display, menu->pixmap, rootGC,
+                 0, menu->height - 1, menu->width, menu->height - 1);
+      JXDrawLine(display, menu->pixmap, rootGC,
+                 menu->width - 1, 0, menu->width - 1, menu->height);
+   } else {
+      JXSetForeground(display, rootGC, colors[COLOR_MENU_FG]);
+      JXDrawRectangle(display, menu->pixmap, rootGC,
+                      0, 0, menu->width - 1, menu->height - 1);
+   }
 
    if(menu->label) {
       DrawMenuItem(menu, NULL, -1);
@@ -656,8 +662,8 @@ MenuSelectionType UpdateMotion(Menu *menu,
    /* If the selected item is a submenu, show it. */
    ip = GetMenuItem(menu, menu->currentIndex);
    if(ip && IsMenuValid(ip->submenu)) {
-      if(ShowSubmenu(ip->submenu, menu, runner,
-                     menu->x + menu->width,
+      const int x = menu->x + menu->width - (settings.handles ? 0 : 1);
+      if(ShowSubmenu(ip->submenu, menu, runner, x,
                      menu->y + menu->offsets[menu->currentIndex])) {
 
          /* Item selected; destroy the menu tree. */
@@ -760,14 +766,21 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
       }
 
    } else {
-      JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
-      JXDrawLine(display, menu->pixmap, rootGC, 4,
-                 menu->offsets[index] + 2, menu->width - 6,
-                 menu->offsets[index] + 2);
-      JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
-      JXDrawLine(display, menu->pixmap, rootGC, 4,
-                 menu->offsets[index] + 3, menu->width - 6,
-                 menu->offsets[index] + 3);
+      if(settings.handles) {
+         JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
+         JXDrawLine(display, menu->pixmap, rootGC, 4,
+                    menu->offsets[index] + 2, menu->width - 6,
+                    menu->offsets[index] + 2);
+         JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
+         JXDrawLine(display, menu->pixmap, rootGC, 4,
+                    menu->offsets[index] + 3, menu->width - 6,
+                    menu->offsets[index] + 3);
+      } else {
+         JXSetForeground(display, rootGC, colors[COLOR_MENU_FG]);
+         JXDrawLine(display, menu->pixmap, rootGC, 4,
+                    menu->offsets[index] + 2, menu->width - 6,
+                    menu->offsets[index] + 2);
+      }
    }
 
 }

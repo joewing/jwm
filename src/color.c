@@ -480,7 +480,10 @@ void GetDirectPixel(XColor *c)
 void GetMappedPixel(XColor *c, char alloc)
 {
    if(alloc && BASE_COLORS + extraColors < MAX_COLORS) {
-      JXAllocColor(display, rootColormap, c);
+      if(JXAllocColor(display, rootColormap, c) == 0) {
+         /* Unable to allocate the entry. */
+         GetDirectPixel(c);
+      }
       map[BASE_COLORS + extraColors] = c->pixel;
       extraColors += 1;
    } else {

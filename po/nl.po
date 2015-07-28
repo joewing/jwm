@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-25 11:56-0500\n"
+"POT-Creation-Date: 2015-07-27 19:02-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -183,26 +183,26 @@ msgstr "%s[%u]: ongeldige entiteit: \"%.8s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ongeldige entiteit: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1740
+#: src/lex.c:454 src/parse.c:1746
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1754
+#: src/parse.c:1760
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ongeldige instelling: %s"
 
-#: src/parse.c:1766
+#: src/parse.c:1772
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ongeldige transparantie: %s"
 
-#: src/parse.c:1808
+#: src/parse.c:1814
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ongeldig label in %s: %s"
 
-#: src/parse.c:1829
+#: src/parse.c:1835
 msgid "configuration error"
 msgstr "configuratie-fout"
 
@@ -239,32 +239,32 @@ msgstr "Herstellen"
 msgid "Send To"
 msgstr "Zend naar"
 
-#: src/taskbar.c:863
+#: src/taskbar.c:865
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ongeldige maximum breedte voor Taaklijst: %s"
 
-#: src/tray.c:1086
+#: src/tray.c:1092
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "ongeldige taakbalk-breedte: %d"
 
-#: src/tray.c:1105
+#: src/tray.c:1111
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "ongeldige taakbalk-hoogte: %d"
 
-#: src/tray.c:1134
+#: src/tray.c:1140
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "ongeldige taakbalk lay-out: \"%s\""
 
-#: src/tray.c:1173
+#: src/tray.c:1179
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "ongeldige horizontale taakbalk uitlijning: \"%s\""
 
-#: src/tray.c:1196
+#: src/tray.c:1202
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ongeldige verticale taakbalk uitlijning: \"%s\""

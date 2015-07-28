@@ -45,15 +45,16 @@ typedef unsigned char ColorType;
 #define COLOR_MENU_OUTLINE          30
 #define COLOR_POPUP_BG              31
 #define COLOR_POPUP_FG              32
-#define COLOR_TITLE_UP              33
-#define COLOR_TITLE_DOWN            34
-#define COLOR_TITLE_ACTIVE_UP       35
-#define COLOR_TITLE_ACTIVE_DOWN     36
-#define COLOR_TRAY_UP               37
-#define COLOR_TRAY_DOWN             38
-#define COLOR_TRAY_ACTIVE_UP        39
-#define COLOR_TRAY_ACTIVE_DOWN      40
-#define COLOR_COUNT                 41
+#define COLOR_POPUP_OUTLINE         33
+#define COLOR_TITLE_UP              34
+#define COLOR_TITLE_DOWN            35
+#define COLOR_TITLE_ACTIVE_UP       36
+#define COLOR_TITLE_ACTIVE_DOWN     37
+#define COLOR_TRAY_UP               38
+#define COLOR_TRAY_DOWN             39
+#define COLOR_TRAY_ACTIVE_UP        40
+#define COLOR_TRAY_ACTIVE_DOWN      41
+#define COLOR_COUNT                 42
 
 extern unsigned long colors[COLOR_COUNT];
 

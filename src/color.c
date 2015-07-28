@@ -80,7 +80,8 @@ static const DefaultColorNode DEFAULT_COLORS[] = {
    { COLOR_MENU_OUTLINE,            0x000000    },
 
    { COLOR_POPUP_BG,                0x999999    },
-   { COLOR_POPUP_FG,                0x000000    }
+   { COLOR_POPUP_FG,                0x000000    },
+   { COLOR_POPUP_OUTLINE,           0x000000    }
 
 };
 static const unsigned DEFAULT_COUNT = ARRAY_LENGTH(DEFAULT_COLORS);

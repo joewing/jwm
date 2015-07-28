@@ -1490,6 +1490,9 @@ void ParsePopupStyle(const TokenNode *tp)
       case TOK_BACKGROUND:
          SetColor(COLOR_POPUP_BG, np->value);
          break;
+      case TOK_OUTLINE:
+         SetColor(COLOR_POPUP_OUTLINE, np->value);
+         break;
       default:
          InvalidTag(np, TOK_POPUPSTYLE);
          break;

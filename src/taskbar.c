@@ -647,7 +647,7 @@ void Render(const TaskBarType *bp)
    }
 
    ResetButton(&button, bp->cp->pixmap, &rootVisual);
-   button.border = settings.handles;
+   button.border = settings.trayDecorations == DECO_MOTIF;
    button.font = FONT_TRAY;
    button.height = bp->itemHeight;
    button.width = bp->itemWidth;

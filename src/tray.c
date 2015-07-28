@@ -818,7 +818,7 @@ void DrawSpecificTray(const TrayType *tp)
       UpdateSpecificTray(tp, cp);
    }
 
-   if(settings.handles) {
+   if(settings.trayDecorations == DECO_MOTIF) {
       JXSetForeground(display, rootGC, colors[COLOR_TRAY_UP]);
       JXDrawLine(display, tp->window, rootGC, 0, 0, tp->width - 1, 0);
       JXDrawLine(display, tp->window, rootGC, 0, tp->height - 1, 0, 0);

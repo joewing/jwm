@@ -78,7 +78,7 @@ void ShutdownBorders(void)
 /** Get the size of the icon to display on a window. */
 int GetBorderIconSize(void)
 {
-   if(settings.handles) {
+   if(settings.windowDecorations == DECO_MOTIF) {
       return settings.titleHeight - 4;
    } else {
       return settings.titleHeight - 6;
@@ -383,14 +383,16 @@ void DrawBorderHelper(const ClientNode *np)
    buttonCount = GetButtonCount(np);
    titleWidth = width - east - west - 5;
    titleWidth -= settings.titleHeight * (buttonCount + 1);
-   titleWidth -= settings.handles ? (buttonCount + 1) : 0;
+   titleWidth -= settings.windowDecorations == DECO_MOTIF
+               ? (buttonCount + 1) : 0;
 
    /* Draw the top part (either a title or north border). */
    if((np->state.border & BORDER_TITLE) &&
       settings.titleHeight > settings.borderWidth) {
 
       const unsigned startx = west + 1;
-      const unsigned starty = settings.handles ? (south - 1) : 0;
+      const unsigned starty = settings.windowDecorations == DECO_MOTIF
+                            ? (south - 1) : 0;
 
       /* Draw a title bar. */
       DrawHorizontalGradient(canvas, gc, titleColor1, titleColor2,
@@ -406,7 +408,7 @@ void DrawBorderHelper(const ClientNode *np)
       if(np->name && np->name[0] && titleWidth > 0) {
          const int sheight = GetStringHeight(FONT_BORDER);
          const unsigned titlex = startx + settings.titleHeight
-                               + (settings.handles ? 4 : 0);
+            + (settings.windowDecorations == DECO_MOTIF ? 4 : 0);
          const unsigned titley = starty + (settings.titleHeight - sheight) / 2;
          RenderString(&np->visual, canvas, FONT_BORDER, borderTextColor,
                       titlex, titley, titleWidth, np->name);
@@ -426,7 +428,7 @@ void DrawBorderHelper(const ClientNode *np)
     */
    JXClearArea(display, np->parent, 0, north,
                width, height - north, False);
-   if(settings.handles) {
+   if(settings.windowDecorations == DECO_MOTIF) {
       DrawBorderHandles(np, gc);
    } else {
       JXSetForeground(display, gc, outlineColor);
@@ -736,7 +738,7 @@ unsigned GetButtonCount(const ClientNode *np)
    }
 
    buttonWidth = settings.titleHeight;
-   buttonWidth += settings.handles ? 1 : 0;
+   buttonWidth += settings.windowDecorations == DECO_MOTIF ? 1 : 0;
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
 
@@ -797,13 +799,13 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
    }
 
    /* Close button. */
-   yoffset = settings.handles ? (south - 1) : 0;
+   yoffset = settings.windowDecorations == DECO_MOTIF ? (south - 1) : 0;
    if(np->state.border & BORDER_CLOSE) {
 
       JXSetForeground(display, gc, color);
       DrawCloseButton(xoffset, yoffset, &np->visual, canvas, gc);
 
-      if(settings.handles) {
+      if(settings.windowDecorations == DECO_MOTIF) {
          JXSetForeground(display, gc, pixelDown);
          JXDrawLine(display, canvas, gc,
                          west + settings.titleHeight - 1,
@@ -840,7 +842,7 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
          DrawMaxIButton(xoffset, yoffset, &np->visual, canvas, gc);
       }
 
-      if(settings.handles) {
+      if(settings.windowDecorations == DECO_MOTIF) {
          JXSetForeground(display, gc, pixelDown);
          JXDrawLine(display, canvas, gc,
                          west + settings.titleHeight - 1,
@@ -873,7 +875,7 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
       JXSetForeground(display, gc, color);
       DrawMinButton(xoffset, yoffset, &np->visual, canvas, gc);
 
-      if(settings.handles) {
+      if(settings.windowDecorations == DECO_MOTIF) {
          JXSetForeground(display, gc, pixelDown);
          JXDrawLine(display, canvas, gc,
                          west + settings.titleHeight - 1,
@@ -1156,7 +1158,7 @@ void GetBorderSize(const ClientState *state,
       if(state->maxFlags & MAX_VERT) {
          *south = 0;
       } else {
-         if(settings.handles) {
+         if(settings.windowDecorations == DECO_MOTIF) {
             *north += settings.borderWidth;
             *south = settings.borderWidth;
          } else {

@@ -478,7 +478,7 @@ void DrawMenu(Menu *menu)
    JXFillRectangle(display, menu->pixmap, rootGC, 0, 0,
                    menu->width, menu->height);
 
-   if(settings.handles) {
+   if(settings.menuDecorations == DECO_MOTIF) {
       JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
       JXDrawLine(display, menu->pixmap, rootGC,
                  0, 0, menu->width, 0);
@@ -662,7 +662,8 @@ MenuSelectionType UpdateMotion(Menu *menu,
    /* If the selected item is a submenu, show it. */
    ip = GetMenuItem(menu, menu->currentIndex);
    if(ip && IsMenuValid(ip->submenu)) {
-      const int x = menu->x + menu->width - (settings.handles ? 0 : 1);
+      const int x = menu->x + menu->width
+                  - (settings.menuDecorations == DECO_MOTIF ? 0 : 1);
       if(ShowSubmenu(ip->submenu, menu, runner, x,
                      menu->y + menu->offsets[menu->currentIndex])) {
 
@@ -766,7 +767,7 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
       }
 
    } else {
-      if(settings.handles) {
+      if(settings.menuDecorations == DECO_MOTIF) {
          JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
          JXDrawLine(display, menu->pixmap, rootGC, 4,
                     menu->offsets[index] + 2, menu->width - 6,

@@ -23,6 +23,7 @@ void DrawButton(ButtonNode *bp)
    ColorType fg;
    long bg1, bg2;
    long up, down;
+   DecorationsType decorations;
 
    Drawable drawable;
    GC gc;
@@ -50,6 +51,7 @@ void DrawButton(ButtonNode *bp)
       bg2 = colors[COLOR_MENU_BG];
       up = colors[COLOR_MENU_UP];
       down = colors[COLOR_MENU_DOWN];
+      decorations = settings.menuDecorations;
       break;
    case BUTTON_MENU_ACTIVE:
       fg = COLOR_MENU_ACTIVE_FG;
@@ -57,6 +59,7 @@ void DrawButton(ButtonNode *bp)
       bg2 = colors[COLOR_MENU_ACTIVE_BG2];
       down = colors[COLOR_MENU_ACTIVE_UP];
       up = colors[COLOR_MENU_ACTIVE_DOWN];
+      decorations = settings.menuDecorations;
       break;
    case BUTTON_TRAY:
    case BUTTON_TASK:
@@ -65,6 +68,7 @@ void DrawButton(ButtonNode *bp)
       bg2 = colors[COLOR_TRAY_BG2];
       up = colors[COLOR_TRAY_UP];
       down = colors[COLOR_TRAY_DOWN];
+      decorations = settings.trayDecorations;
       break;
    case BUTTON_TRAY_ACTIVE:
    case BUTTON_TASK_ACTIVE:
@@ -73,6 +77,7 @@ void DrawButton(ButtonNode *bp)
       bg2 = colors[COLOR_TRAY_ACTIVE_BG2];
       down = colors[COLOR_TRAY_ACTIVE_UP];
       up = colors[COLOR_TRAY_ACTIVE_DOWN];
+      decorations = settings.trayDecorations;
       break;
    case BUTTON_MENU:
    default:
@@ -81,6 +86,7 @@ void DrawButton(ButtonNode *bp)
       bg2 = colors[COLOR_MENU_BG];
       up = colors[COLOR_MENU_UP];
       down = colors[COLOR_MENU_DOWN];
+      decorations = settings.menuDecorations;
       break;
    }
 
@@ -102,7 +108,7 @@ void DrawButton(ButtonNode *bp)
 
    /* Draw the border. */
    if(bp->border) {
-      if(settings.handles) {
+      if(decorations == DECO_MOTIF) {
          JXSetForeground(display, gc, up);
          JXDrawLine(display, drawable, gc, x, y, x + width - 1, y);
          JXDrawLine(display, drawable, gc, x, y, x, y + height - 1);

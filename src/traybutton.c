@@ -269,7 +269,7 @@ void Draw(TrayComponentType *cp)
    }
    button.width = cp->width;
    button.height = cp->height;
-   button.border = settings.handles;
+   button.border = settings.trayDecorations == DECO_MOTIF;
    button.x = 0;
    button.y = 0;
    button.font = FONT_TRAY;

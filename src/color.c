@@ -63,6 +63,7 @@ static const DefaultColorNode DEFAULT_COLORS[] = {
    { COLOR_TRAY_ACTIVE_FG,          0xFFFFFF    },
    { COLOR_TRAY_ACTIVE_BG1,         0x555555    },
    { COLOR_TRAY_ACTIVE_BG2,         0x555555    },
+   { COLOR_TRAY_OUTLINE,            0x000000    },
 
    { COLOR_PAGER_BG,                0x999999    },
    { COLOR_PAGER_FG,                0x333333    },
@@ -76,6 +77,7 @@ static const DefaultColorNode DEFAULT_COLORS[] = {
    { COLOR_MENU_ACTIVE_BG1,         0x0077CC    },
    { COLOR_MENU_ACTIVE_BG2,         0x0077CC    },
    { COLOR_MENU_ACTIVE_FG,          0x000000    },
+   { COLOR_MENU_OUTLINE,            0x000000    },
 
    { COLOR_POPUP_BG,                0x999999    },
    { COLOR_POPUP_FG,                0x000000    }
@@ -198,11 +200,9 @@ void StartupColors(void)
    }
 
    /* Derive colors. */
-   if(settings.handles) {
-      for(x = 0; x < DERIVED_COUNT; x++) {
-         LightenColor(DERIVED_COLORS[x].base, DERIVED_COLORS[x].up);
-         DarkenColor(DERIVED_COLORS[x].base, DERIVED_COLORS[x].down);
-      }
+   for(x = 0; x < DERIVED_COUNT; x++) {
+      LightenColor(DERIVED_COLORS[x].base, DERIVED_COLORS[x].up);
+      DarkenColor(DERIVED_COLORS[x].base, DERIVED_COLORS[x].down);
    }
 
    if(names) {

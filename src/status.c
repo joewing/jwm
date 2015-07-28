@@ -109,7 +109,7 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type)
    JXClearWindow(display, statusWindow);
 
    /* Draw the border. */
-   if(settings.handles) {
+   if(settings.menuDecorations == DECO_MOTIF) {
       JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
       JXDrawLine(display, statusWindow, rootGC,
                  0, 0, statusWindowWidth, 0);

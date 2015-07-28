@@ -38,6 +38,11 @@ typedef unsigned char FocusModelType;
 #define FOCUS_SLOPPY 0
 #define FOCUS_CLICK  1
 
+/** Decorations. */
+typedef unsigned char DecorationsType;
+#define DECO_FLAT    0
+#define DECO_MOTIF   1
+
 /** Settings. */
 typedef struct {
    unsigned int doubleClickSpeed;
@@ -61,9 +66,11 @@ typedef struct {
    StatusWindowType resizeStatusType;
    FocusModelType focusModel;
    ResizeModeType resizeMode;
+   DecorationsType windowDecorations;
+   DecorationsType trayDecorations;
+   DecorationsType menuDecorations;
    char popupEnabled;
    char exitConfirmation;
-   char handles;
    char groupTasks;
 } Settings;
 

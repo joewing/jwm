@@ -184,6 +184,7 @@ static void ParseMoveMode(const TokenNode *tp);
 static void ParseResizeMode(const TokenNode *tp);
 static void ParseFocusModel(const TokenNode *tp);
 
+static DecorationsType ParseDecorations(const TokenNode *tp);
 static void ParseGradient(const char *value, ColorType a, ColorType b);
 static char *FindAttribute(AttributeNode *ap, const char *name);
 static int ParseTokenValue(const StringMappingType *mapping, int count,
@@ -836,21 +837,8 @@ void ParseKey(const TokenNode *tp) {
 void ParseWindowStyle(const TokenNode *tp)
 {
    const TokenNode *np;
-   const char *decorations;
 
-   decorations = FindAttribute(tp->attributes, "decorations");
-   if(decorations) {
-      if(!strcmp(decorations, "motif")) {
-         settings.handles = 1;
-      } else if(!strcmp(decorations, "flat")) {
-         settings.handles = 0;
-      } else {
-         ParseError(tp, "invalid WindowStyle decorations: %s\n", decorations);
-      }
-   } else {
-      settings.handles = 0;
-   }
-
+   settings.windowDecorations = ParseDecorations(tp);
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FONT:
@@ -1023,6 +1011,7 @@ void ParseTrayStyle(const TokenNode *tp)
    const TokenNode *np;
    const char *temp;
 
+   settings.trayDecorations = ParseDecorations(tp);
    temp = FindAttribute(tp->attributes, "group");
    if(temp) {
       settings.groupTasks = !strcmp(temp, TRUE_VALUE);
@@ -1041,6 +1030,9 @@ void ParseTrayStyle(const TokenNode *tp)
          break;
       case TOK_FOREGROUND:
          SetColor(COLOR_TRAY_FG, np->value);
+         break;
+      case TOK_OUTLINE:
+         SetColor(COLOR_TRAY_OUTLINE, np->value);
          break;
       case TOK_OPACITY:
          settings.trayOpacity = ParseOpacity(np, np->value);
@@ -1509,11 +1501,9 @@ void ParsePopupStyle(const TokenNode *tp)
 /** Parse menu style. */
 void ParseMenuStyle(const TokenNode *tp)
 {
-
    const TokenNode *np;
 
-   Assert(tp);
-
+   settings.menuDecorations = ParseDecorations(tp);
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FONT:
@@ -1621,6 +1611,22 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
       ParseError(tp, "invalid Group Option: %s", option);
    }
 
+}
+
+/** Parse decorations type. */
+DecorationsType ParseDecorations(const TokenNode *tp)
+{
+   const char *str = FindAttribute(tp->attributes, "decorations");
+   if(str) {
+      if(!strcmp(str, "motif")) {
+         return DECO_MOTIF;
+      } else if(!strcmp(str, "flat")) {
+         return DECO_FLAT;
+      } else {
+         ParseError(tp, "invalid decorations: %s\n", str);
+      }
+   }
+   return DECO_FLAT;
 }
 
 /** Parse a color which may be a gradient. */

@@ -967,9 +967,9 @@ is \fBflat\fP.
 .P
 .B group
 .RS
-Determines if windows are grouped when shown in task bars.
+Determines if windows are grouped by class when shown in task bars.
 Possible values are \fBtrue\fP and \fBfalse\fP. The default
-is \fBtrue\fP.
+is \fBfalse\fP.
 .RE
 .P
 Within this tag the following tags are supported:

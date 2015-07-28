@@ -1518,6 +1518,9 @@ void ParseMenuStyle(const TokenNode *tp)
       case TOK_ACTIVE:
          ParseActiveMenuStyle(np);
          break;
+      case TOK_OUTLINE:
+         SetColor(COLOR_MENU_OUTLINE, np->value);
+         break;
       case TOK_OPACITY:
          settings.menuOpacity = ParseOpacity(np, np->value);
          break;

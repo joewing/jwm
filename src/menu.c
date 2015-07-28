@@ -491,7 +491,7 @@ void DrawMenu(Menu *menu)
       JXDrawLine(display, menu->pixmap, rootGC,
                  menu->width - 1, 0, menu->width - 1, menu->height);
    } else {
-      JXSetForeground(display, rootGC, colors[COLOR_MENU_FG]);
+      JXSetForeground(display, rootGC, colors[COLOR_MENU_OUTLINE]);
       JXDrawRectangle(display, menu->pixmap, rootGC,
                       0, 0, menu->width - 1, menu->height - 1);
    }
@@ -777,7 +777,7 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
                     menu->offsets[index] + 3, menu->width - 6,
                     menu->offsets[index] + 3);
       } else {
-         JXSetForeground(display, rootGC, colors[COLOR_MENU_OUTLINE]);
+         JXSetForeground(display, rootGC, colors[COLOR_MENU_FG]);
          JXDrawLine(display, menu->pixmap, rootGC, 4,
                     menu->offsets[index] + 2, menu->width - 6,
                     menu->offsets[index] + 2);

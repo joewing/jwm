@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-27 19:02-0500\n"
+"POT-Creation-Date: 2015-07-28 17:54-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -188,26 +188,26 @@ msgstr ""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/lex.c:454 src/parse.c:1746
+#: src/lex.c:454 src/parse.c:1752
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1760
+#: src/parse.c:1766
 #, c-format
 msgid "invalid setting: %s"
 msgstr ""
 
-#: src/parse.c:1772
+#: src/parse.c:1778
 #, c-format
 msgid "invalid opacity: %s"
 msgstr ""
 
-#: src/parse.c:1814
+#: src/parse.c:1820
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr ""
 
-#: src/parse.c:1835
+#: src/parse.c:1841
 msgid "configuration error"
 msgstr ""
 

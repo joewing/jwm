@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-27 19:02-0500\n"
+"POT-Creation-Date: 2015-07-28 17:54-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -183,26 +183,26 @@ msgstr "%s[%u]: ongeldige entiteit: \"%.8s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ongeldige entiteit: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1746
+#: src/lex.c:454 src/parse.c:1752
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1760
+#: src/parse.c:1766
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ongeldige instelling: %s"
 
-#: src/parse.c:1772
+#: src/parse.c:1778
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ongeldige transparantie: %s"
 
-#: src/parse.c:1814
+#: src/parse.c:1820
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ongeldig label in %s: %s"
 
-#: src/parse.c:1835
+#: src/parse.c:1841
 msgid "configuration error"
 msgstr "configuratie-fout"
 

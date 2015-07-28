@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-27 19:02-0500\n"
+"POT-Creation-Date: 2015-07-28 17:54-0500\n"
 "PO-Revision-Date: 2015-06-22 13:19+0000\n"
 "Last-Translator: Mihaly Horvath <hermitsoft@users.sourceforge.net>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -190,26 +190,26 @@ msgstr "%s[%u]: váratlan szöveg: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: érvénytelen entitás: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1746
+#: src/lex.c:454 src/parse.c:1752
 msgid "out of memory"
 msgstr "megtelt a memória"
 
-#: src/parse.c:1760
+#: src/parse.c:1766
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nem támogatott beállítás: %s"
 
-#: src/parse.c:1772
+#: src/parse.c:1778
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "érvénytelen átlátszóssági (opacity) érték: %s"
 
-#: src/parse.c:1814
+#: src/parse.c:1820
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "érvéytelen xml tag %s-ben: %s"
 
-#: src/parse.c:1835
+#: src/parse.c:1841
 msgid "configuration error"
 msgstr "konfigurációs hiba"
 

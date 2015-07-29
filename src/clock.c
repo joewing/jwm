@@ -242,7 +242,7 @@ void SignalClock(const TimeType *now, int x, int y, Window w, void *data)
       abs(cp->mousey - y) < settings.doubleClickDelta) {
       if(GetTimeDifference(now, &cp->mouseTime) >= settings.popupDelay) {
          longTime = GetTimeString("%c", cp->zone);
-         ShowPopup(x, y, longTime);
+         ShowPopup(x, y, longTime, POPUP_CLOCK);
       }
    }
 

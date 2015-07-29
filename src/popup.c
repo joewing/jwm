@@ -58,14 +58,15 @@ void ShutdownPopup(void)
 }
 
 /** Show a popup window. */
-void ShowPopup(int x, int y, const char *text)
+void ShowPopup(int x, int y, const char *text,
+               const PopupMaskType context)
 {
 
    const ScreenType *sp;
 
    Assert(text);
 
-   if(!settings.popupEnabled) {
+   if(!(settings.popupMask & context)) {
       return;
    }
 

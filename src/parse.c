@@ -1461,17 +1461,32 @@ void ParseActivePagerStyle(const TokenNode *tp)
 /** Parse popup style. */
 void ParsePopupStyle(const TokenNode *tp)
 {
-
+   static const StringMappingType enable_mapping[] = {
+      { "button", POPUP_BUTTON   },
+      { "clock",  POPUP_CLOCK    },
+      { "false",  POPUP_NONE     },
+      { "pager",  POPUP_PAGER    },
+      { "task",   POPUP_TASK     },
+      { "true",   POPUP_ALL      }
+   };
    const TokenNode *np;
    const char *str;
+   char *tok;
 
-   Assert(tp);
-
-   str = FindAttribute(tp->attributes, "enabled");
-   if(str && !strcmp(str, FALSE_VALUE)) {
-      settings.popupEnabled = 0;
-   } else {
-      settings.popupEnabled = 1;
+   tok = FindAttribute(tp->attributes, "enabled");
+   if(tok) {
+      settings.popupMask = POPUP_NONE;
+      tok = strtok(tok, ",");
+      while(tok) {
+         const int x = FindValue(enable_mapping,
+                                 ARRAY_LENGTH(enable_mapping), tok);
+         if(JLIKELY(x >= 0)) {
+            settings.popupMask |= x;
+         } else {
+            ParseError(tp, "invalid value for 'enabled': \"%s\"", tok);
+         }
+         tok = strtok(NULL, ",");
+      }
    }
 
    str = FindAttribute(tp->attributes, "delay");

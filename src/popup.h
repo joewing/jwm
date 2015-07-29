@@ -10,6 +10,8 @@
 #ifndef POPUP_H
 #define POPUP_H
 
+#include "settings.h"
+
 /*@{*/
 #define InitializePopup()  (void)(0)
 void StartupPopup(void);
@@ -21,9 +23,11 @@ void ShutdownPopup(void);
  * @param w The window under the mouse.
  * @param x The x coordinate of the left edge of the popup window.
  * @param y The y coordinate of the bottom edge of the popup window.
+ * @param context The popup context.
  * @param text The text to display in the popup.
  */
-void ShowPopup(int x, int y, const char *text);
+void ShowPopup(int x, int y, const char *text,
+               const PopupMaskType context);
 
 /** Process a popup event.
  * @param event The event to process.

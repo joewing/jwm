@@ -616,11 +616,11 @@ void SignalTaskbar(const TimeType *now, int x, int y, Window w, void *data)
          ep = GetEntry(bp, x - bp->cp->screenx, y - bp->cp->screeny);
          if(settings.groupTasks) {
             if(ep && ep->clients->client->className) {
-               ShowPopup(x, y, ep->clients->client->className);
+               ShowPopup(x, y, ep->clients->client->className, POPUP_TASK);
             }
          } else {
             if(ep && ep->clients->client->name) {
-               ShowPopup(x, y, ep->clients->client->name);
+               ShowPopup(x, y, ep->clients->client->name, POPUP_TASK);
             }
          }
       }

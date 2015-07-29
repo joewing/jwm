@@ -43,6 +43,15 @@ typedef unsigned char DecorationsType;
 #define DECO_FLAT    0
 #define DECO_MOTIF   1
 
+/** Popup mask. */
+typedef unsigned char PopupMaskType;
+#define POPUP_NONE   0
+#define POPUP_TASK   1
+#define POPUP_PAGER  2
+#define POPUP_BUTTON 4
+#define POPUP_CLOCK  8
+#define POPUP_ALL    255
+
 /** Settings. */
 typedef struct {
    unsigned int doubleClickSpeed;
@@ -69,7 +78,7 @@ typedef struct {
    DecorationsType windowDecorations;
    DecorationsType trayDecorations;
    DecorationsType menuDecorations;
-   char popupEnabled;
+   PopupMaskType popupMask;
    char exitConfirmation;
    char groupTasks;
 } Settings;

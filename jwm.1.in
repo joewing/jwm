@@ -1152,9 +1152,13 @@ The delay in milliseconds before popups activate.
 The default is 600.
 .RE
 .P
-\fBenabled\fP \fIbool\fP
+\fBenabled\fP \fIstring\fP
 .RS
-Determine if popups are shown. Default is true.
+Determine if popups are shown. This is a comma-separated list of one
+or more of the following: \fBtrue\fP (all enabled), \fBfalse\fP
+(no popups enabled), \fBbutton\fP (tray buttons), \fBclock\fP (clocks),
+\fBpager\fP (pagers), and \fBtask\fP (task list items).
+The default is \fBtrue\fP.
 .RE
 .P
 Within this tag the following tags are supported:

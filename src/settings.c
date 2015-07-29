@@ -30,7 +30,7 @@ void InitializeSettings(void)
    settings.popupDelay = 600;
    settings.desktopDelay = 1000;
    settings.trayOpacity = UINT_MAX;
-   settings.popupEnabled = 1;
+   settings.popupMask = POPUP_ALL;
    settings.activeClientOpacity = UINT_MAX;
    settings.inactiveClientOpacity = (unsigned int)(0.75 * UINT_MAX);
    settings.borderWidth = 5;

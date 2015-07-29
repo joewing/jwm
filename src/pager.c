@@ -602,7 +602,7 @@ void SignalPager(const TimeType *now, int x, int y, Window w, void *data)
          if(desktop >= 0 && desktop < settings.desktopCount) {
             const char *desktopName = GetDesktopName(desktop);
             if(desktopName) {
-               ShowPopup(x, y, desktopName);
+               ShowPopup(x, y, desktopName, POPUP_PAGER);
             }
          }
 

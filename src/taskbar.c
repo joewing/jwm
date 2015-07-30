@@ -244,8 +244,11 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
                }
                for(cp = entry->clients; cp; cp = cp->next) {
                   if(cp->client == np) {
-                     hasActive = 1;
-                     break;
+                     if(!(cp->client->state.status & STAT_CANFOCUS)
+                        || (cp->client->state.status & STAT_ACTIVE)) {
+                        hasActive = 1;
+                        break;
+                     }
                   }
                }
                break;

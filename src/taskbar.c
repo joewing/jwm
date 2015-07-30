@@ -228,33 +228,42 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
    TaskEntry *entry = GetEntry(bar, x, y);
 
    if(entry) {
+      ClientEntry *cp;
+      char onTop = 0;
       char hasActive = 0;
-      int layer;
 
       switch(mask) {
       case Button1:  /* Raise or minimize items in this group. */
-         for(layer = LAST_LAYER; layer >= FIRST_LAYER; layer--) {
-            ClientNode *np;
-            for(np = nodes[layer]; np; np = np->next) {
-               ClientEntry *cp;
-               if(np->state.status & STAT_MINIMIZED) {
-                  continue;
-               } else if(!ShouldFocus(np)) {
-                  continue;
-               }
-               for(cp = entry->clients; cp; cp = cp->next) {
-                  if(cp->client == np) {
+         for(cp = entry->clients; cp; cp = cp->next) {
+            int layer;
+            char foundTop = 0;
+            if(cp->client->state.status & STAT_MINIMIZED) {
+               continue;
+            } else if(!ShouldFocus(cp->client)) {
+               continue;
+            }
+            for(layer = LAST_LAYER; layer >= FIRST_LAYER; layer--) {
+               ClientNode *np;
+               for(np = nodes[layer]; np; np = np->next) {
+                  if(np->state.status & STAT_MINIMIZED) {
+                     continue;
+                  } else if(!ShouldFocus(np)) {
+                     continue;
+                  }
+                  if(np == cp->client) {
+                     onTop = onTop || !foundTop;
                      if(!(cp->client->state.status & STAT_CANFOCUS)
                         || (cp->client->state.status & STAT_ACTIVE)) {
                         hasActive = 1;
-                        break;
+                        goto FoundActive;
                      }
                   }
+                  foundTop = 1;
                }
-               break;
             }
          }
-         if(hasActive) {
+FoundActive:
+         if(hasActive && onTop) {
             MinimizeGroup(entry);
          } else {
             FocusGroup(entry);

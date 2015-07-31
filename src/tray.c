@@ -829,7 +829,7 @@ void DrawSpecificTray(const TrayType *tp)
       JXDrawLine(display, tp->window, rootGC, tp->width - 1, 0,
                  tp->width - 1, tp->height - 1);
    } else {
-      JXSetForeground(display, rootGC, colors[COLOR_TRAY_OUTLINE]);
+      JXSetForeground(display, rootGC, colors[COLOR_TRAY_DOWN]);
       JXDrawRectangle(display, tp->window, rootGC, 0, 0,
                       tp->width - 1, tp->height - 1);
    }

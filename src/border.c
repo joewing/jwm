@@ -357,14 +357,14 @@ void DrawBorderHelper(const ClientNode *np)
       borderTextColor = COLOR_TITLE_ACTIVE_FG;
       titleColor1 = colors[COLOR_TITLE_ACTIVE_BG1];
       titleColor2 = colors[COLOR_TITLE_ACTIVE_BG2];
-      outlineColor = colors[COLOR_BORDER_ACTIVE_LINE];
+      outlineColor = colors[COLOR_TITLE_ACTIVE_DOWN];
 
    } else {
 
       borderTextColor = COLOR_TITLE_FG;
       titleColor1 = colors[COLOR_TITLE_BG1];
       titleColor2 = colors[COLOR_TITLE_BG2];
-      outlineColor = colors[COLOR_BORDER_LINE];
+      outlineColor = colors[COLOR_TITLE_DOWN];
 
    }
 

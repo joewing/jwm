@@ -863,7 +863,7 @@ void ParseWindowStyle(const TokenNode *tp)
          ParseGradient(np->value, COLOR_TITLE_BG1, COLOR_TITLE_BG2);
          break;
       case TOK_OUTLINE:
-         SetColor(COLOR_BORDER_LINE, np->value);
+         ParseGradient(np->value, COLOR_TITLE_DOWN, COLOR_TITLE_UP);
          break;
       case TOK_OPACITY:
          settings.inactiveClientOpacity = ParseOpacity(tp, np->value);
@@ -893,7 +893,8 @@ void ParseActiveWindowStyle(const TokenNode *tp)
             COLOR_TITLE_ACTIVE_BG1, COLOR_TITLE_ACTIVE_BG2);
          break;
       case TOK_OUTLINE:
-         SetColor(COLOR_BORDER_ACTIVE_LINE, np->value);
+         ParseGradient(np->value, COLOR_TITLE_ACTIVE_DOWN,
+                       COLOR_TITLE_ACTIVE_UP);
          break;
       case TOK_OPACITY:
          settings.activeClientOpacity = ParseOpacity(np, np->value);
@@ -1032,7 +1033,7 @@ void ParseTrayStyle(const TokenNode *tp)
          SetColor(COLOR_TRAY_FG, np->value);
          break;
       case TOK_OUTLINE:
-         SetColor(COLOR_TRAY_OUTLINE, np->value);
+         ParseGradient(np->value, COLOR_TRAY_DOWN, COLOR_TRAY_UP);
          break;
       case TOK_OPACITY:
          settings.trayOpacity = ParseOpacity(np, np->value);
@@ -1537,7 +1538,7 @@ void ParseMenuStyle(const TokenNode *tp)
          ParseActiveMenuStyle(np);
          break;
       case TOK_OUTLINE:
-         SetColor(COLOR_MENU_OUTLINE, np->value);
+         ParseGradient(np->value, COLOR_MENU_DOWN, COLOR_MENU_UP);
          break;
       case TOK_OPACITY:
          settings.menuOpacity = ParseOpacity(np, np->value);

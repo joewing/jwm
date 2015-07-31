@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-28 22:09-0500\n"
+"POT-Creation-Date: 2015-07-30 19:27-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -188,26 +188,26 @@ msgstr ""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/lex.c:454 src/parse.c:1767
+#: src/lex.c:454 src/parse.c:1768
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1781
+#: src/parse.c:1782
 #, c-format
 msgid "invalid setting: %s"
 msgstr ""
 
-#: src/parse.c:1793
+#: src/parse.c:1794
 #, c-format
 msgid "invalid opacity: %s"
 msgstr ""
 
-#: src/parse.c:1835
+#: src/parse.c:1836
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr ""
 
-#: src/parse.c:1856
+#: src/parse.c:1857
 msgid "configuration error"
 msgstr ""
 
@@ -228,23 +228,23 @@ msgstr ""
 msgid "cannot swallow a client with no name"
 msgstr ""
 
-#: src/taskbar.c:358 src/winmenu.c:51
+#: src/taskbar.c:370 src/winmenu.c:51
 msgid "Close"
 msgstr ""
 
-#: src/taskbar.c:365 src/winmenu.c:71
+#: src/taskbar.c:377 src/winmenu.c:71
 msgid "Minimize"
 msgstr ""
 
-#: src/taskbar.c:372 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:384 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr ""
 
-#: src/taskbar.c:379 src/winmenu.c:170
+#: src/taskbar.c:391 src/winmenu.c:170
 msgid "Send To"
 msgstr ""
 
-#: src/taskbar.c:865
+#: src/taskbar.c:877
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""

@@ -923,7 +923,9 @@ Note that a composite manager, such as xcompmgr, is required for this.
 .B Outline
 .RS
 The color of the window outline.
-The default is black.
+The default is a darkened version of the window background.
+If \fBmotif\fP window decorations are specified, two colors may be
+given separated by a ':' to set the down and up colors respectively.
 .RE
 .RE
 .P
@@ -949,7 +951,9 @@ xcompmgr, is required for this.
 .B Outline
 .RS
 The color of the window outline for inactive windows.
-The default is black.
+The default is a darkened version of the window background.
+If \fBmotif\fP window decorations are specified, two colors may be
+given separated by a ':' to set the down and up colors respetively.
 .RE
 .RE
 
@@ -994,8 +998,12 @@ more information.
 .P
 .B Outline
 .RS
-The color of the outline. See the \fBCOLORS\fP section for
+The color of the tray outline. See the \fBCOLORS\fP section for
 more information.
+The default is a darkened version of the tray background.
+If \fBmotif\fP tray decorations are specified, this may be given as
+two colors separated by a ':' to indicate the down and up colors
+respectively.
 .RE
 .P
 .B Opacity
@@ -1110,8 +1118,11 @@ more information.
 .P
 .B Outline
 .RS
-The color of the outline. See the \fBCOLORS\fP section for
+The color of the menu outline. See the \fBCOLORS\fP section for
 more information.
+The default is a darkened version of the menu background.
+If \fBmotif\fP decorations are used, this may be given as two colors
+separated by a ':' to indicate the down and up colors respectively.
 .RE
 .P
 .P
@@ -1172,6 +1183,7 @@ The font to use. See the \fBFONTS\fP section for more information.
 .RS
 The color of the window outline. See the \fBCOLORS\fP section for more
 information.
+The default is black.
 .RE
 .P
 .B Foreground

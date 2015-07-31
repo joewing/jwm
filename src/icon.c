@@ -17,6 +17,7 @@
 #include "hint.h"
 #include "color.h"
 #include "settings.h"
+#include "border.h"
 
 IconNode emptyIcon;
 
@@ -116,8 +117,8 @@ void StartupIcons(void)
    gcValues.graphics_exposures = False;
    iconGC = JXCreateGC(display, rootWindow, gcMask, &gcValues);
 
-   iconSize.min_width = settings.titleHeight - 4;
-   iconSize.min_height = settings.titleHeight - 4;
+   iconSize.min_width = GetBorderIconSize();
+   iconSize.min_height = GetBorderIconSize();
    iconSize.max_width = iconSize.min_width;
    iconSize.max_height = iconSize.min_height;
    iconSize.width_inc = 1;

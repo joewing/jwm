@@ -229,6 +229,7 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
 
    if(entry) {
       ClientEntry *cp;
+      ClientNode *focused = NULL;
       char onTop = 0;
       char hasActive = 0;
 
@@ -252,6 +253,9 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
                   }
                   if(np == cp->client) {
                      onTop = onTop || !foundTop;
+                     if(np->state.status & STAT_ACTIVE) {
+                        focused = np;
+                     }
                      if(!(cp->client->state.status & STAT_CANFOCUS)
                         || (cp->client->state.status & STAT_ACTIVE)) {
                         hasActive = 1;
@@ -267,6 +271,9 @@ FoundActive:
             MinimizeGroup(entry);
          } else {
             FocusGroup(entry);
+            if(focused) {
+               FocusClient(focused);
+            }
          }
          break;
       case Button3:

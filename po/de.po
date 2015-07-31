@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-30 19:33-0500\n"
+"POT-Creation-Date: 2015-07-30 20:10-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -223,23 +223,23 @@ msgstr "Sicher?"
 msgid "cannot swallow a client with no name"
 msgstr ""
 
-#: src/taskbar.c:377 src/winmenu.c:51
+#: src/taskbar.c:375 src/winmenu.c:51
 msgid "Close"
 msgstr "Schließen"
 
-#: src/taskbar.c:384 src/winmenu.c:71
+#: src/taskbar.c:382 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Minimieren"
 
-#: src/taskbar.c:391 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:389 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Wiedereinlesen"
 
-#: src/taskbar.c:398 src/winmenu.c:170
+#: src/taskbar.c:396 src/winmenu.c:170
 msgid "Send To"
 msgstr "Senden an"
 
-#: src/taskbar.c:884
+#: src/taskbar.c:882
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""

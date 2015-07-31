@@ -121,7 +121,7 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type)
       JXDrawLine(display, statusWindow, rootGC, statusWindowWidth - 1, 0,
                  statusWindowWidth - 1, statusWindowHeight);
    } else {
-      JXSetForeground(display, rootGC, colors[COLOR_MENU_FG]);
+      JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
       JXDrawRectangle(display, statusWindow, rootGC, 0, 0,
                       statusWindowWidth - 1, statusWindowHeight - 1);
    }

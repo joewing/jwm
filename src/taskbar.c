@@ -259,14 +259,12 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
                      if(!(cp->client->state.status & STAT_CANFOCUS)
                         || (cp->client->state.status & STAT_ACTIVE)) {
                         hasActive = 1;
-                        goto FoundActive;
                      }
                   }
                   foundTop = 1;
                }
             }
          }
-FoundActive:
          if(hasActive && onTop) {
             MinimizeGroup(entry);
          } else {

@@ -51,9 +51,10 @@ void GetRootMenuSize(int index, int *width, int *height);
  * @param index The root menu index.
  * @param x The x-coordinate.
  * @param y The y-coordinate.
+ * @param keyboard Set if this request came from a key binding.
  * @return 1 if a menu was displayed, 0 if not.
  */
-char ShowRootMenu(int index, int x, int y);
+char ShowRootMenu(int index, int x, int y, char keyboard);
 
 /** Restart the window manager. */
 void Restart(void);

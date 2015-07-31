@@ -115,8 +115,10 @@ void InitializeMenu(Menu *menu);
  * @param runner Callback executed when an item is selected.
  * @param x The x-coordinate of the menu.
  * @param y The y-coordinate of the menu.
+ * @param keyboard Set if the request came from a key binding.
  */
-void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y);
+void ShowMenu(Menu *menu, RunMenuCommandType runner,
+              int x, int y, char keyboard);
 
 /** Destroy a menu structure.
  * @param menu The menu to destroy.

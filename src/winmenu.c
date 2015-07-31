@@ -26,11 +26,11 @@ static void AddWindowMenuItem(Menu *menu, const char *name,
                               ClientNode *np, int value);
 
 /** Show a window menu. */
-void ShowWindowMenu(ClientNode *np, int x, int y)
+void ShowWindowMenu(ClientNode *np, int x, int y, char keyboard)
 {
    Menu *menu = CreateWindowMenu(np);
    InitializeMenu(menu);
-   ShowMenu(menu, RunWindowCommand, x, y);
+   ShowMenu(menu, RunWindowCommand, x, y, keyboard);
    DestroyMenu(menu);
 }
 

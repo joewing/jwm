@@ -255,7 +255,7 @@ void ShowKeyMenu(const XKeyEvent *event)
       if(np->state == state && np->code == event->keycode) {
          const int button = GetRootMenuIndexFromString(np->command);
          if(JLIKELY(button >= 0)) {
-            ShowRootMenu(button, 0, 0);
+            ShowRootMenu(button, 0, 0, 1);
          }
          return;
       }

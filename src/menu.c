@@ -33,11 +33,11 @@ typedef unsigned char MenuSelectionType;
 
 static char ShowSubmenu(Menu *menu, Menu *parent,
                         RunMenuCommandType runner,
-                        int x, int y);
+                        int x, int y, char keyboard);
 
 static void PatchMenu(Menu *menu);
 static void UnpatchMenu(Menu *menu);
-static void CreateMenu(Menu *menu, int x, int y);
+static void CreateMenu(Menu *menu, int x, int y, char keyboard);
 static void HideMenu(Menu *menu);
 static void DrawMenu(Menu *menu);
 
@@ -160,7 +160,8 @@ void InitializeMenu(Menu *menu)
 }
 
 /** Show a menu. */
-void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y)
+void ShowMenu(Menu *menu, RunMenuCommandType runner,
+              int x, int y, char keyboard)
 {
    int mouseStatus, keyboardStatus;
 
@@ -179,7 +180,7 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner, int x, int y)
       return;
    }
 
-   ShowSubmenu(menu, NULL, runner, x, y);
+   ShowSubmenu(menu, NULL, runner, x, y, keyboard);
    UnpatchMenu(menu);
 
    JXUngrabKeyboard(display, CurrentTime);
@@ -235,14 +236,14 @@ void DestroyMenu(Menu *menu)
 /** Show a submenu. */
 char ShowSubmenu(Menu *menu, Menu *parent,
                  RunMenuCommandType runner,
-                 int x, int y)
+                 int x, int y, char keyboard)
 {
 
    char status;
 
    PatchMenu(menu);
    menu->parent = parent;
-   CreateMenu(menu, x, y);
+   CreateMenu(menu, x, y, keyboard);
 
    menuShown += 1;
    status = MenuLoop(menu, runner);
@@ -398,15 +399,11 @@ char MenuLoop(Menu *menu, RunMenuCommandType runner)
 }
 
 /** Create and map a menu. */
-void CreateMenu(Menu *menu, int x, int y)
+void CreateMenu(Menu *menu, int x, int y, char keyboard)
 {
-
    XSetWindowAttributes attr;
    unsigned long attrMask;
    int temp;
-
-   menu->lastIndex = -1;
-   menu->currentIndex = -1;
 
    if(menu->parent) {
       menu->screen = menu->parent->screen;
@@ -457,6 +454,16 @@ void CreateMenu(Menu *menu, int x, int y)
    }
 
    JXMapRaised(display, menu->window); 
+
+   if(keyboard && menu->itemCount != 0) {
+      const int y = menu->offsets[0] + menu->itemHeight / 2;
+      menu->lastIndex = 0;
+      menu->currentIndex = 0;
+      MoveMouse(menu->window, 6, y);
+   } else {
+      menu->lastIndex = -1;
+      menu->currentIndex = -1;
+   }
 
 }
 
@@ -664,8 +671,8 @@ MenuSelectionType UpdateMotion(Menu *menu,
    if(ip && IsMenuValid(ip->submenu)) {
       const int x = menu->x + menu->width
                   - (settings.menuDecorations == DECO_MOTIF ? 0 : 1);
-      if(ShowSubmenu(ip->submenu, menu, runner, x,
-                     menu->y + menu->offsets[menu->currentIndex])) {
+      const int y = menu->y + menu->offsets[menu->currentIndex];
+      if(ShowSubmenu(ip->submenu, menu, runner, x, y, 0)) {
 
          /* Item selected; destroy the menu tree. */
          return MENU_SUBSELECT;

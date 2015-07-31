@@ -181,13 +181,13 @@ void GetRootMenuSize(int index, int *width, int *height)
 }
 
 /** Show a root menu. */
-char ShowRootMenu(int index, int x, int y)
+char ShowRootMenu(int index, int x, int y, char keyboard)
 {
 
    if(!rootMenu[index]) {
       return 0;
    }
-   ShowMenu(rootMenu[index], RunRootCommand, x, y);
+   ShowMenu(rootMenu[index], RunRootCommand, x, y, keyboard);
    return 1;
 
 }

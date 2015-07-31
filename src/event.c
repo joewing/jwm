@@ -380,7 +380,7 @@ void HandleButtonEvent(const XButtonEvent *event)
       }
       DispatchBorderButtonEvent(event, np);
    } else if(event->window == rootWindow && event->type == ButtonPress) {
-      if(!ShowRootMenu(event->button, event->x, event->y)) {
+      if(!ShowRootMenu(event->button, event->x, event->y, 0)) {
          if(event->button == Button4) {
             LeftDesktop();
          } else if(event->button == Button5) {
@@ -551,7 +551,8 @@ void HandleKeyPress(const XKeyEvent *event)
       break;
    case KEY_WIN:
       if(np) {
-         ShowWindowMenu(np, np->x, np->y);
+         RaiseClient(np);
+         ShowWindowMenu(np, np->x, np->y, 1);
       }
       break;
    case KEY_RESTART:
@@ -1526,8 +1527,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
          if(event->button == Button1) {
             ResizeClient(np, action, event->x, event->y);
          } else if(event->button == Button3) {
-            ShowWindowMenu(np, np->x + event->x - bsize,
-                           np->y + event->y - settings.titleHeight - bsize);
+            const int x = np->x + event->x - bsize;
+            const int y = np->y + event->y - settings.titleHeight - bsize;
+            ShowWindowMenu(np, x, y, 0);
          }
       }
       break;
@@ -1553,8 +1555,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
             }
          }
       } else if(event->button == Button3) {
-         ShowWindowMenu(np, np->x + event->x - bsize,
-                        np->y + event->y - settings.titleHeight - bsize);
+         const int x = np->x + event->x - bsize;
+         const int y = np->y + event->y - settings.titleHeight - bsize;
+         ShowWindowMenu(np, x, y, 0);
       } else if(event->button == Button4) {
          ShadeClient(np);
       } else if(event->button == Button5) {
@@ -1567,8 +1570,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
       } else if(event->button == Button5) {
          UnshadeClient(np);
       } else if(event->type == ButtonPress) {
-         ShowWindowMenu(np, np->x + event->x - bsize,
-                        np->y + event->y - settings.titleHeight - bsize);
+         const int x = np->x + event->x - bsize;
+         const int y = np->y - event->y - settings.titleHeight - bsize;
+         ShowWindowMenu(np, x, y, 0);
       }
       break;
    case BA_CLOSE: /* Close button */

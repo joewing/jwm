@@ -21,8 +21,9 @@ Menu *CreateWindowMenu(struct ClientNode *np);
  * @param np The client for the window menu.
  * @param x The x-coordinate of the menu (root relative).
  * @param y The y-coordinate of the menu (root relative).
+ * @param keyboard Set if this request came from a key binding.
  */
-void ShowWindowMenu(struct ClientNode *np, int x, int y);
+void ShowWindowMenu(struct ClientNode *np, int x, int y, char keyboard);
 
 /** Grab the mouse to select a window.
  * @param action The action to perform when a window is selected.

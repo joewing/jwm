@@ -460,7 +460,7 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
       y = Max(y, sp->y);
    }
 
-   ShowMenu(menu, RunTaskBarCommand, x, y);
+   ShowMenu(menu, RunTaskBarCommand, x, y, 0);
 
    DestroyMenu(menu);
 
@@ -499,7 +499,7 @@ void RunTaskBarCommand(MenuAction *action, unsigned button)
          Window w;
          int x, y;
          GetMousePosition(&x, &y, &w);
-         ShowWindowMenu(action->context, x, y);
+         ShowWindowMenu(action->context, x, y, 0);
       } else {
          ClientNode *np = action->context;
          RestoreClient(np, 1);

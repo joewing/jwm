@@ -176,7 +176,7 @@ char GrabMouse(Window w)
 {
    int result;
    unsigned int mask;
-   mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+   mask = ButtonPressMask | ButtonReleaseMask;
    result = JXGrabPointer(display, w, False, mask,
                           GrabModeAsync, GrabModeAsync, None,
                           cursors[CURSOR_DEFAULT], CurrentTime);
@@ -193,7 +193,7 @@ char GrabMouseForChoose(void)
 {
    int result;
    unsigned int mask;
-   mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
+   mask = ButtonPressMask | ButtonReleaseMask;
    result = JXGrabPointer(display, rootWindow, False, mask,
                           GrabModeAsync, GrabModeAsync, None,
                           cursors[CURSOR_CHOOSE], CurrentTime);
@@ -233,8 +233,6 @@ void SetMousePosition(int x, int y, Window w)
 /** Get the current mouse position. */
 void GetMousePosition(int *x, int *y, Window *w)
 {
-   Assert(x);
-   Assert(y);
    *x = mousex;
    *y = mousey;
    *w = mousew;
@@ -250,4 +248,3 @@ unsigned int GetMouseMask(void)
                   &mousex, &mousey, &winx, &winy, &mask);
    return mask;
 }
-

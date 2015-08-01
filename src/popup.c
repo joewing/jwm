@@ -121,8 +121,7 @@ void ShowPopup(int x, int y, const char *text,
 
       attrMask |= CWEventMask;
       attr.event_mask = ExposureMask
-                      | PointerMotionMask
-                      | PointerMotionHintMask;
+                      | PointerMotionMask | PointerMotionHintMask;
 
       attrMask |= CWSaveUnder;
       attr.save_under = True;

@@ -249,7 +249,6 @@ void ShutdownColors(void)
 /** Release color data. */
 void DestroyColors(void)
 {
-
    if(names) {
       unsigned int x;
       for(x = 0; x < COLOR_COUNT; x++) {
@@ -260,7 +259,6 @@ void DestroyColors(void)
       Release(names);
       names = NULL;
    }
-
 }
 
 /** Compute the mask for computing colors in a linear RGB colormap. */
@@ -382,7 +380,6 @@ void SetDefaultColor(ColorType type)
 /** Initialize color names to NULL. */
 void InitializeNames(void)
 {
-
    if(names == NULL) {
       unsigned int x;
       names = Allocate(sizeof(char*) * COLOR_COUNT);
@@ -390,17 +387,13 @@ void InitializeNames(void)
          names[x] = NULL;
       }
    }
-
 }
 
 /** Convert a hex value to an unsigned long. */
 unsigned long ReadHex(const char *hex)
 {
-
    unsigned long value = 0;
    unsigned int x;
-
-   Assert(hex);
 
    for(x = 0; hex[x]; x++) {
       value *= 16;
@@ -414,60 +407,35 @@ unsigned long ReadHex(const char *hex)
    }
 
    return value;
-
 }
 
 /** Look up a color by name. */
 int GetColorByName(const char *str, XColor *c)
 {
-
-   Assert(str);
-   Assert(c);
-
    if(!JXParseColor(display, rootColormap, str, c)) {
       return 0;
    }
-
    GetColor(c, 1);
-
    return 1;
-
 }
 
 /** Compute the RGB components from an index into our RGB colormap. */
 void GetColorFromIndex(XColor *c)
 {
-
-   unsigned long red;
-   unsigned long green;
-   unsigned long blue;
-
-   Assert(c);
-
-   red = (c->pixel & redMask) << redShift;
-   green = (c->pixel & greenMask) << greenShift;
-   blue = (c->pixel & blueMask) << blueShift;
-
+   const unsigned long red = (c->pixel & redMask) << redShift;
+   const unsigned long green = (c->pixel & greenMask) << greenShift;
+   const unsigned long blue = (c->pixel & blueMask) << blueShift;
    c->red = red >> 16;
    c->green = green >> 16;
    c->blue = blue >> 16;
-
 }
 
 /** Compute the pixel value from RGB components. */
 void GetDirectPixel(XColor *c)
 {
-
-   unsigned long red;
-   unsigned long green;
-   unsigned long blue;
-
-   Assert(c);
-
-   /* Normalize. */
-   red = c->red << 16;
-   green = c->green << 16;
-   blue = c->blue << 16;
+   unsigned long red = c->red << 16;
+   unsigned long green = c->green << 16;
+   unsigned long blue = c->blue << 16;
 
    /* Shift to the correct offsets and mask. */
    red = (red >> redShift) & redMask;
@@ -476,7 +444,6 @@ void GetDirectPixel(XColor *c)
 
    /* Combine. */
    c->pixel = red | green | blue;
-
 }
 
 /** Compute the pixel value from RGB components. */
@@ -498,7 +465,6 @@ void GetMappedPixel(XColor *c, char alloc)
 /** Compute the pixel value from RGB components. */
 void GetColor(XColor *c, char alloc)
 {
-   Assert(c);
    switch(rootVisual.visual->class) {
    case DirectColor:
    case TrueColor:
@@ -513,8 +479,6 @@ void GetColor(XColor *c, char alloc)
 /** Get the RGB components from a pixel value. */
 void GetColorFromPixel(XColor *c)
 {
-
-   Assert(c);
    switch(rootVisual.visual->class) {
    case DirectColor:
    case TrueColor:
@@ -528,13 +492,11 @@ void GetColorFromPixel(XColor *c)
 
    /* Extract the RGB components from the linear RGB pixel value. */
    GetColorFromIndex(c);
-
 }
 
 /** Get an RGB pixel value from RGB components. */
 void GetColorIndex(XColor *c)
 {
-   Assert(c);
    GetDirectPixel(c);
 }
 

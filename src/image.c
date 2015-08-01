@@ -538,39 +538,34 @@ ImageNode *LoadXBMImage(const char *fileName)
 #ifdef USE_ICONS
 ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
 {
-
    ImageNode *result;
-   XColor color;
-   unsigned char red, green, blue, alpha;
-   int index;
+   unsigned char *dest;
    int x, y;
 
    result = CreateImage(image->width, image->height, 0);
-   index = 0;
+   dest = result->data;
    for(y = 0; y < image->height; y++) {
       for(x = 0; x < image->width; x++) {
+         XColor color;
+
+         if(!shape || XGetPixel(shape, x, y)) {
+            *dest++ = 255;
+         } else {
+            *dest++ = 0;
+         }
 
          color.pixel = XGetPixel(image, x, y);
          if(image->depth == 1) {
-            red = color.pixel ? 0 : 255;
-            green = red;
-            blue = red;
+            const unsigned char value =  color.pixel ? 0 : 255;
+            *dest++ = value;
+            *dest++ = value;
+            *dest++ = value;
          } else {
             GetColorFromIndex(&color);
-            red = (unsigned char)(color.red >> 8);
-            green = (unsigned char)(color.green >> 8);
-            blue = (unsigned char)(color.blue >> 8);
+            *dest++ = (unsigned char)(color.red >> 8);
+            *dest++ = (unsigned char)(color.green >> 8);
+            *dest++ = (unsigned char)(color.blue >> 8);
          }
-         alpha = 0;
-         if(!shape || XGetPixel(shape, x, y)) {
-            alpha = 255;
-         }
-
-         result->data[index++] = alpha;
-         result->data[index++] = red;
-         result->data[index++] = green;
-         result->data[index++] = blue;
-
       }
    }
 

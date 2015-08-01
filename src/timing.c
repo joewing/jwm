@@ -45,7 +45,7 @@ unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2)
       deltaMs = t2->ms - t1->ms;
    }
 
-   if(deltaSeconds > MAX_TIME_SECONDS) {
+   if(JUNLIKELY(deltaSeconds > MAX_TIME_SECONDS)) {
       return MAX_TIME_SECONDS * 1000;
    } else {
       return deltaSeconds * 1000 + deltaMs;
@@ -56,16 +56,12 @@ unsigned long GetTimeDifference(const TimeType *t1, const TimeType *t2)
 /** Get the current time. */
 const char *GetTimeString(const char *format, const char *zone)
 {
-
    static char saveTZ[256];
    static char newTZ[256];
    static char str[80];
    time_t t;
 
-   Assert(format);
-
    time(&t);
-
    if(zone) {
       const char *oldTZ = getenv("TZ");
       if(oldTZ) {
@@ -93,5 +89,4 @@ const char *GetTimeString(const char *format, const char *zone)
    }
 
    return str;
-
 }

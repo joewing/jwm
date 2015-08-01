@@ -90,7 +90,6 @@ static void HandleShapeEvent(const XShapeEvent *event);
 /** Wait for an event and process it. */
 char WaitForEvent(XEvent *event)
 {
-
    struct timeval timeout;
    CallbackNode *cp;
    fd_set fds;
@@ -123,8 +122,8 @@ char WaitForEvent(XEvent *event)
          task_update_pending = 0;
       }
       if(pager_update_pending) {
-         pager_update_pending = 0;
          UpdatePager();
+         pager_update_pending = 0;
       }
 
       while(JXPending(display) == 0) {
@@ -241,7 +240,7 @@ char WaitForEvent(XEvent *event)
          handled = ProcessPopupEvent(event);
       }
 
-   } while(handled && !shouldExit);
+   } while(handled && JLIKELY(!shouldExit));
 
    return !handled;
 
@@ -250,7 +249,6 @@ char WaitForEvent(XEvent *event)
 /** Wake up components that need to run at certain times. */
 void Signal(void)
 {
-
    static TimeType last = ZERO_TIME;
 
    CallbackNode *cp;   
@@ -271,7 +269,6 @@ void Signal(void)
          (cp->callback)(&now, x, y, w, cp->data);
       }
    }
-
 }
 
 /** Process an event. */
@@ -600,11 +597,9 @@ void HandleKeyPress(const XKeyEvent *event)
 void HandleKeyRelease(const XKeyEvent *event)
 {
    KeyType key;
-   key = GetKey(event);
-   if(((key & 0xFF) != KEY_NEXTSTACK) &&
-      ((key & 0xFF) != KEY_NEXT) &&
-      ((key & 0xFF) != KEY_PREV) &&
-      ((key & 0xFF) != KEY_PREVSTACK)) {
+   key = GetKey(event) & 0xFF;
+   if(   key != KEY_NEXTSTACK && key != KEY_NEXT
+      && key != KEY_PREV      && key != KEY_PREVSTACK) {
       StopWindowWalk();
    }
 }

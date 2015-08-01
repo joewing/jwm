@@ -261,10 +261,14 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
                         hasActive = 1;
                      }
                   }
+                  if(hasActive && onTop) {
+                     goto FoundActiveAndTop;
+                  }
                   foundTop = 1;
                }
             }
          }
+FoundActiveAndTop:
          if(hasActive && onTop) {
             MinimizeGroup(entry);
          } else {

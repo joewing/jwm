@@ -660,11 +660,11 @@ IconNode *CreateIconFromBinary(const unsigned long *input,
 
    while(offset < length) {
 
-      const unsigned int width = input[offset + 0];
-      const unsigned int height = input[offset + 1];
+      const unsigned width = input[offset + 0];
+      const unsigned height = input[offset + 1];
       unsigned char *data;
       ImageNode *image;
-      unsigned int x, index;
+      unsigned x;
 
       if(JUNLIKELY(width * height + 2 > length - offset)) {
          Debug("invalid image size: %d x %d + 2 > %d",
@@ -685,16 +685,14 @@ IconNode *CreateIconFromBinary(const unsigned long *input,
       data = image->data;
 
       /* Note: the data types here might be of different sizes. */
-      index = 0;
+      offset += 2;
       for(x = 0; x < width * height; x++) {
-         data[index++] = (input[offset + x + 2] >> 24) & 0xFF;
-         data[index++] = (input[offset + x + 2] >> 16) & 0xFF;
-         data[index++] = (input[offset + x + 2] >>  8) & 0xFF;
-         data[index++] = (input[offset + x + 2] >>  0) & 0xFF;
+         *data++ = (input[offset] >> 24) & 0xFF;
+         *data++ = (input[offset] >> 16) & 0xFF;
+         *data++ = (input[offset] >>  8) & 0xFF;
+         *data++ = (input[offset] >>  0) & 0xFF;
+         offset += 1;
       }
-
-      /* Move to the next size. */
-      offset += 2 + width * height;
 
       /* Don't insert this icon into the hash since it is transient. */
 
@@ -817,4 +815,3 @@ unsigned int GetHash(const char *str)
 }
 
 #endif /* USE_ICONS */
-

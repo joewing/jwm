@@ -176,7 +176,7 @@ char GrabMouse(Window w)
 {
    int result;
    unsigned int mask;
-   mask = ButtonPressMask | ButtonReleaseMask;
+   mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
    result = JXGrabPointer(display, w, False, mask,
                           GrabModeAsync, GrabModeAsync, None,
                           cursors[CURSOR_DEFAULT], CurrentTime);

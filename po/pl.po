@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-30 20:10-0500\n"
+"POT-Creation-Date: 2015-08-02 18:15-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -229,23 +229,23 @@ msgstr "Czy jesteś pewien?"
 msgid "cannot swallow a client with no name"
 msgstr "nie może połknąć klienta bez nazwy"
 
-#: src/taskbar.c:375 src/winmenu.c:51
+#: src/taskbar.c:379 src/winmenu.c:51
 msgid "Close"
 msgstr "Zamknij"
 
-#: src/taskbar.c:382 src/winmenu.c:71
+#: src/taskbar.c:386 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Zminimalizuj"
 
-#: src/taskbar.c:389 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:393 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Przywróć"
 
-#: src/taskbar.c:396 src/winmenu.c:170
+#: src/taskbar.c:400 src/winmenu.c:170
 msgid "Send To"
 msgstr "Wyślij do"
 
-#: src/taskbar.c:882
+#: src/taskbar.c:886
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-30 20:10-0500\n"
+"POT-Creation-Date: 2015-08-02 18:15-0500\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -231,23 +231,23 @@ msgstr "¿Está seguro?"
 msgid "cannot swallow a client with no name"
 msgstr "no se puede mostrar un cliente sin nombre"
 
-#: src/taskbar.c:375 src/winmenu.c:51
+#: src/taskbar.c:379 src/winmenu.c:51
 msgid "Close"
 msgstr "Cerrar"
 
-#: src/taskbar.c:382 src/winmenu.c:71
+#: src/taskbar.c:386 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: src/taskbar.c:389 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:393 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Restaurar"
 
-#: src/taskbar.c:396 src/winmenu.c:170
+#: src/taskbar.c:400 src/winmenu.c:170
 msgid "Send To"
 msgstr "Enviar A"
 
-#: src/taskbar.c:882
+#: src/taskbar.c:886
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ancho máx. no válido para Lista de Tareas: %s"

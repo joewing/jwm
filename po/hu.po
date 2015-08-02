@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-07-30 20:10-0500\n"
+"POT-Creation-Date: 2015-08-02 18:15-0500\n"
 "PO-Revision-Date: 2015-06-22 13:19+0000\n"
 "Last-Translator: Mihaly Horvath <hermitsoft@users.sourceforge.net>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -230,23 +230,23 @@ msgstr "Biztosan folytatja?"
 msgid "cannot swallow a client with no name"
 msgstr "név nélküli kliens nem építhető be a tálcába"
 
-#: src/taskbar.c:375 src/winmenu.c:51
+#: src/taskbar.c:379 src/winmenu.c:51
 msgid "Close"
 msgstr "Bezárás"
 
-#: src/taskbar.c:382 src/winmenu.c:71
+#: src/taskbar.c:386 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Lerakás tálcára"
 
-#: src/taskbar.c:389 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:393 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Visszaállítás"
 
-#: src/taskbar.c:396 src/winmenu.c:170
+#: src/taskbar.c:400 src/winmenu.c:170
 msgid "Send To"
 msgstr "Küldés"
 
-#: src/taskbar.c:882
+#: src/taskbar.c:886
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "érvénytelen maximális hosszúság van megadva a feladatlistához: %s"

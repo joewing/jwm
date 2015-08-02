@@ -232,7 +232,7 @@ void ResetBorder(const ClientNode *np)
                       width, height);
 
 #ifdef USE_SHAPE
-   if(settings.cornerRadius > 0) {
+   if(settings.cornerRadius > 0 || (np->state.status & STAT_SHAPED)) {
 
       /* First set the shape to the window border. */
       shapePixmap = JXCreatePixmap(display, np->parent, width, height, 1);

@@ -23,7 +23,8 @@ static char *buttonNames[BI_COUNT];
 static IconNode *buttonIcons[BI_COUNT];
 
 static void DrawBorderHelper(const ClientNode *np);
-static void DrawBorderHandles(const ClientNode *np, GC gc);
+static void DrawBorderHandles(const ClientNode *np,
+                              Pixmap canvas, GC gc);
 static void DrawBorderButtons(const ClientNode *np,
                               Pixmap canvas, GC gc);
 static char DrawBorderIcon(BorderIconType t,
@@ -371,13 +372,13 @@ void DrawBorderHelper(const ClientNode *np)
    /* Set parent background to reduce flicker. */
    JXSetWindowBackground(display, np->parent, titleColor2);
 
-   canvas = JXCreatePixmap(display, np->parent, width, north,
+   canvas = JXCreatePixmap(display, np->parent, width, height,
                            np->visual.depth);
    gc = JXCreateGC(display, canvas, 0, NULL);
 
    /* Clear the window with the right color. */
    JXSetForeground(display, gc, titleColor2);
-   JXFillRectangle(display, canvas, gc, 0, 0, width, north);
+   JXFillRectangle(display, canvas, gc, 0, 0, width, height);
 
    /* Determine how many pixels may be used for the title. */
    buttonCount = GetButtonCount(np);
@@ -418,48 +419,41 @@ void DrawBorderHelper(const ClientNode *np)
 
    }
 
-
-   /* Copy the title bar to the window. */
-   JXCopyArea(display, canvas, np->parent, gc, 0, 1,
-              width, north - 1, 0, 1);
-
-   /* Window outline.
-    * These are drawn directly to the window.
-    */
-   JXClearArea(display, np->parent, 0, north,
-               width, height - north, False);
+   /* Window outline. */
    if(settings.windowDecorations == DECO_MOTIF) {
-      DrawBorderHandles(np, gc);
+      DrawBorderHandles(np, canvas, gc);
    } else {
       JXSetForeground(display, gc, outlineColor);
       if(np->state.status & STAT_SHADED) {
-         DrawRoundedRectangle(np->parent, gc, 0, 0, width - 1, north - 1,
+         DrawRoundedRectangle(canvas, gc, 0, 0, width - 1, north - 1,
                               settings.cornerRadius);
       } else if(np->state.maxFlags & MAX_HORIZ) {
          if(!(np->state.maxFlags & (MAX_TOP | MAX_VERT))) {
             /* Top */
-            JXDrawLine(display, np->parent, gc, 0, 0, width, 0);
+            JXDrawLine(display, canvas, gc, 0, 0, width, 0);
          }
          if(!(np->state.maxFlags & (MAX_BOTTOM | MAX_VERT))) {
             /* Bottom */
-            JXDrawLine(display, np->parent, gc,
+            JXDrawLine(display, canvas, gc,
                        0, height - 1, width, height - 1);
          }
       } else if(np->state.maxFlags & MAX_VERT) {
          if(!(np->state.maxFlags & (MAX_LEFT | MAX_HORIZ))) {
             /* Left */
-            JXDrawLine(display, np->parent, gc, 0, 0, 0, height);
+            JXDrawLine(display, canvas, gc, 0, 0, 0, height);
          }
          if(!(np->state.maxFlags & (MAX_RIGHT | MAX_HORIZ))) {
             /* Right */
-            JXDrawLine(display, np->parent, gc,
-                       width - 1, 0, width - 1, height);
+            JXDrawLine(display, canvas, gc, width - 1, 0, width - 1, height);
          }
       } else {
-         DrawRoundedRectangle(np->parent, gc, 0, 0, width - 1, height - 1,
+         DrawRoundedRectangle(canvas, gc, 0, 0, width - 1, height - 1,
                               settings.cornerRadius);
       }
    }
+
+   /* Copy the pixmap to the window. */
+   JXCopyArea(display, canvas, np->parent, gc, 0, 0, width, height, 0, 0);
 
    JXFreePixmap(display, canvas);
    JXFreeGC(display, gc);
@@ -467,7 +461,7 @@ void DrawBorderHelper(const ClientNode *np)
 }
 
 /** Draw window handles. */
-void DrawBorderHandles(const ClientNode *np, GC gc)
+void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
 {
    XSegment segments[8];
    long pixelUp, pixelDown;
@@ -555,7 +549,7 @@ void DrawBorderHandles(const ClientNode *np, GC gc)
 
    /* Draw pixel-up segments. */
    JXSetForeground(display, gc, pixelUp);
-   JXDrawSegments(display, np->parent, gc, segments, offset);
+   JXDrawSegments(display, canvas, gc, segments, offset);
    offset = 0;
 
    /* Bottom title border. */
@@ -622,7 +616,7 @@ void DrawBorderHandles(const ClientNode *np, GC gc)
 
    /* Draw pixel-down segments. */
    JXSetForeground(display, gc, pixelDown);
-   JXDrawSegments(display, np->parent, gc, segments, offset);
+   JXDrawSegments(display, canvas, gc, segments, offset);
    offset = 0;
 
    /* Draw marks */
@@ -672,7 +666,7 @@ void DrawBorderHandles(const ClientNode *np, GC gc)
 
       /* Draw pixel-down segments. */
       JXSetForeground(display, gc, pixelDown);
-      JXDrawSegments(display, np->parent, gc, segments, 8);
+      JXDrawSegments(display, canvas, gc, segments, 8);
 
       /* Upper left */
       segments[0].x1 = settings.titleHeight + settings.borderWidth;
@@ -716,7 +710,7 @@ void DrawBorderHandles(const ClientNode *np, GC gc)
 
       /* Draw pixel-up segments. */
       JXSetForeground(display, gc, pixelUp);
-      JXDrawSegments(display, np->parent, gc, segments, 8);
+      JXDrawSegments(display, canvas, gc, segments, 8);
 
    }
 }

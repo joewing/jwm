@@ -1370,7 +1370,7 @@ void ReparentClient(ClientNode *np, char notOwner)
    attr.do_not_propagate_mask
       = ButtonPressMask
       | ButtonReleaseMask
-      | PointerMotionMask | PointerMotionHintMask
+      | PointerMotionMask
       | KeyPressMask
       | KeyReleaseMask;
 

@@ -256,7 +256,8 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
                      if(np->state.status & STAT_ACTIVE) {
                         focused = np;
                      }
-                     if(!(cp->client->state.status & STAT_CANFOCUS)
+                     if(!(cp->client->state.status
+                           & (STAT_CANFOCUS | STAT_TAKEFOCUS))
                         || (cp->client->state.status & STAT_ACTIVE)) {
                         hasActive = 1;
                      }
@@ -340,7 +341,7 @@ void FocusGroup(const TaskEntry *tp)
       RestoreClient(toRestore[i], 1);
    }
    for(i = 0; i < restoreCount; i++) {
-      if(toRestore[i]->state.status & STAT_CANFOCUS) {
+      if(toRestore[i]->state.status & (STAT_CANFOCUS | STAT_TAKEFOCUS)) {
          FocusClient(toRestore[i]);
          break;
       }
@@ -744,7 +745,7 @@ void FocusNext(void)
    for(tp = taskEntries; tp; tp = tp->next) {
       ClientEntry *cp;
       for(cp = tp->clients; cp; cp = cp->next) {
-         if(cp->client->state.status & STAT_CANFOCUS) {
+         if(cp->client->state.status & (STAT_CANFOCUS | STAT_TAKEFOCUS)) {
             if(ShouldFocus(cp->client)) {
                if(cp->client->state.status & STAT_ACTIVE) {
                   cp = cp->next;
@@ -786,7 +787,7 @@ void FocusPrevious(void)
    for(tp = taskEntries; tp; tp = tp->next) {
       ClientEntry *cp;
       for(cp = tp->clients; cp; cp = cp->next) {
-         if(cp->client->state.status & STAT_CANFOCUS) {
+         if(cp->client->state.status & (STAT_CANFOCUS | STAT_TAKEFOCUS)) {
             if(ShouldFocus(cp->client)) {
                if(cp->client->state.status & STAT_ACTIVE) {
                   cp = cp->next;
@@ -836,7 +837,7 @@ char ShouldFocusEntry(const TaskEntry *tp)
 {
    const ClientEntry *cp;
    for(cp = tp->clients; cp; cp = cp->next) {
-      if(cp->client->state.status & STAT_CANFOCUS) {
+      if(cp->client->state.status & (STAT_CANFOCUS | STAT_TAKEFOCUS)) {
          if(ShouldFocus(cp->client)) {
             return 1;
          }

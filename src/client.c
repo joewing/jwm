@@ -803,7 +803,7 @@ void FocusClient(ClientNode *np)
    if(np->state.status & STAT_HIDDEN) {
       return;
    }
-   if(!(np->state.status & STAT_CANFOCUS)) {
+   if(!(np->state.status & (STAT_CANFOCUS | STAT_TAKEFOCUS))) {
       return;
    }
 

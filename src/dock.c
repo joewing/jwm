@@ -484,16 +484,16 @@ void UpdateDock(void)
 
    /* Determine the size of items in the dock. */
    if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-      itemSize = dock->cp->height - 2;
+      itemSize = dock->cp->height;
    } else {
-      itemSize = dock->cp->width - 2;
+      itemSize = dock->cp->width;
    }
    if(dock->itemSize > 0 && itemSize > dock->itemSize) {
       itemSize = dock->itemSize;
    }
 
-   x = 1;
-   y = 1;
+   x = 0;
+   y = 0;
    memset(&event, 0, sizeof(event));
    for(np = dock->nodes; np; np = np->next) {
 
@@ -542,9 +542,9 @@ void GetDockItemSize(DockNode *np, int *width, int *height)
 
    /* Determine the default size of items in the dock. */
    if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-      itemSize = dock->cp->height - 2;
+      itemSize = dock->cp->height;
    } else {
-      itemSize = dock->cp->width - 2;
+      itemSize = dock->cp->width;
    }
    if(dock->itemSize > 0 && itemSize > dock->itemSize) {
       itemSize = dock->itemSize;

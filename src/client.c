@@ -14,7 +14,6 @@
 #include "group.h"
 #include "tray.h"
 #include "confirm.h"
-#include "key.h"
 #include "cursor.h"
 #include "taskbar.h"
 #include "screen.h"
@@ -1319,7 +1318,6 @@ void ReparentClient(ClientNode *np, char notOwner)
    }
    JXGrabButton(display, AnyButton, AnyModifier, np->window, True,
                 ButtonPressMask, GrabModeSync, GrabModeAsync, None, None);
-   GrabKeys(np);
 
    attrMask = 0;
 

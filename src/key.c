@@ -307,20 +307,6 @@ char ShouldGrab(KeyType key)
    }
 }
 
-/** Grab keys on a client window. */
-void GrabKeys(ClientNode *np)
-{
-
-   KeyNode *kp;
-
-   for(kp = bindings; kp; kp = kp->next) {
-      if(ShouldGrab(kp->key)) {
-         GrabKey(kp, np->window);
-      }
-   }
-
-}
-
 /** Get the modifier mask for a key. */
 unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key) {
 

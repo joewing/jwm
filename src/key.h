@@ -10,8 +10,6 @@
 #ifndef KEY_H
 #define KEY_H
 
-struct ClientNode;
-
 /** Enumeration of key binding types.
  * Note that we use the high bits to store additional information
  * for some key types (for example the desktop number).
@@ -71,11 +69,6 @@ extern unsigned int lockMask;
  * @param event The event.
  */
 KeyType GetKey(const XKeyEvent *event);
-
-/** Grab keys on a client window.
- * @param np The client.
- */
-void GrabKeys(struct ClientNode *np);
 
 /** Insert a key binding.
  * @param key The key binding type.

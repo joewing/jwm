@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-05 17:54-0500\n"
+"POT-Creation-Date: 2015-08-08 11:10-0500\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -41,11 +41,11 @@ msgstr "tipo de fondo de pantalla no válido: «%s»"
 msgid "background image not found: \"%s\""
 msgstr "imagen de fondo de pantalla no encontrada: «%s»"
 
-#: src/client.c:893
+#: src/client.c:892
 msgid "Kill this window?"
 msgstr "¿Finalizar esta ventana?"
 
-#: src/client.c:894
+#: src/client.c:893
 msgid "This may cause data to be lost!"
 msgstr "¡Esto puede causar pérdida de datos!"
 
@@ -120,32 +120,32 @@ msgstr "error leyendo imagen PNG: %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "no se pudo crear estruct. de infor. para imagen PNG: %s"
 
-#: src/key.c:332
+#: src/key.c:318
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr ""
 "El símbolo de tecla especificado no está definido para cualquier código de "
 "tecla"
 
-#: src/key.c:340
+#: src/key.c:326
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "modificador no encontrado para el símbolo de tecla 0x%0x"
 
-#: src/key.c:370
+#: src/key.c:356
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "modificador no válido: \"%c\""
 
-#: src/key.c:385
+#: src/key.c:371
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "símbolo de tecla no válido: \"%s\""
 
-#: src/key.c:466
+#: src/key.c:452
 msgid "neither key nor keycode specified for Key"
 msgstr "ni tecla ni código especificados para Tecla"
 
-#: src/key.c:481
+#: src/key.c:467
 #, fuzzy, c-format
 msgid "key binding: root menu \"%s\" not defined"
 msgstr "atajo de teclado: menú raíz %d no definido"

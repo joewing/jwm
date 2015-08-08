@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-05 17:54-0500\n"
+"POT-Creation-Date: 2015-08-08 11:10-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -41,11 +41,11 @@ msgstr "Formato di sfondo non valido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Immagine di sfondo non trovata: \"%s\""
 
-#: src/client.c:893
+#: src/client.c:892
 msgid "Kill this window?"
 msgstr "Chiudere questa finestra?"
 
-#: src/client.c:894
+#: src/client.c:893
 msgid "This may cause data to be lost!"
 msgstr "Questo può causare una perdita di dati!"
 
@@ -120,30 +120,30 @@ msgstr "Errore durante la lettura dell'immagine PNG: %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "Impossibile creare struttura di info per immagine PNG: %s"
 
-#: src/key.c:332
+#: src/key.c:318
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr "Il KeySym specificato non è definito per alcun KeyCode"
 
-#: src/key.c:340
+#: src/key.c:326
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "Modificatore non trovato per il KeySym 0x%0x"
 
-#: src/key.c:370
+#: src/key.c:356
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "Modificatore non valido: \"%c\""
 
-#: src/key.c:385
+#: src/key.c:371
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "Key symbol non valido: \"%s\""
 
-#: src/key.c:466
+#: src/key.c:452
 msgid "neither key nor keycode specified for Key"
 msgstr "Tasto o keycode non specificati per Key"
 
-#: src/key.c:481
+#: src/key.c:467
 #, fuzzy, c-format
 msgid "key binding: root menu \"%s\" not defined"
 msgstr "Combinazione di tasti: root menu %d non definito"

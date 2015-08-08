@@ -1,3 +1,9 @@
 
-<!--#include virtual="/tail.shtml"-->
-
+<hr class="footer"/>
+<p>
+   <a href="../../../index.shtml">joewing.net</a> /
+   <a href="../../index.shtml">Projects</a> /
+   <a href="../index.shtml">JWM</a>
+</p>
+</body>
+</html>

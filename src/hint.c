@@ -979,9 +979,6 @@ void ReadWMHints(Window win, ClientState *state, char alreadyMapped)
          case IconicState:
             state->status |= STAT_MINIMIZED;
             break;
-         case WithdrawnState:
-            state->status &= ~STAT_MAPPED;
-            break;
          default:
             break;
          }

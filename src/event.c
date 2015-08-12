@@ -435,6 +435,8 @@ void HandleKeyPress(const XKeyEvent *event)
 {
    ClientNode *np;
    KeyType key;
+
+   SetMousePosition(event->x_root, event->y_root, event->window);
    key = GetKey(event);
    np = GetActiveClient();
    switch(key & 0xFF) {

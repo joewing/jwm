@@ -173,6 +173,13 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner,
       return;
    }
 
+   if(x < 0 && y < 0) {
+      Window w;
+      GetMousePosition(&x, &y, &w);
+      x -= menu->itemHeight / 2;
+      y -= menu->itemHeight / 2 + menu->offsets[0];
+   }
+
    mouseStatus = GrabMouse(rootWindow);
    keyboardStatus = JXGrabKeyboard(display, rootWindow, False,
                                    GrabModeAsync, GrabModeAsync, CurrentTime);
@@ -459,7 +466,7 @@ void CreateMenu(Menu *menu, int x, int y, char keyboard)
       const int y = menu->offsets[0] + menu->itemHeight / 2;
       menu->lastIndex = 0;
       menu->currentIndex = 0;
-      MoveMouse(menu->window, 6, y);
+      MoveMouse(menu->window, menu->itemHeight / 2, y);
    } else {
       menu->lastIndex = -1;
       menu->currentIndex = -1;
@@ -892,8 +899,8 @@ void SetPosition(Menu *tp, int index)
 
    /* We need to do this twice so the event gets registered
     * on the submenu if one exists. */
-   MoveMouse(tp->window, 6, y);
-   MoveMouse(tp->window, 6, y);
+   MoveMouse(tp->window, tp->itemHeight / 2, y);
+   MoveMouse(tp->window, tp->itemHeight / 2, y);
 
 }
 

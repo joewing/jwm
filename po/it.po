@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-08 11:10-0500\n"
+"POT-Creation-Date: 2015-08-12 20:19-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -27,16 +27,16 @@ msgstr "Azione del TrayButton non valida:  \"%s\""
 msgid "action: root menu \"%s\" not defined"
 msgstr "Tray button: root menu %d non definito"
 
-#: src/background.c:143
+#: src/background.c:137
 msgid "no value specified for background"
 msgstr "Nessun valore specificato per lo sfondo"
 
-#: src/background.c:155
+#: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "Formato di sfondo non valido: \"%s\""
 
-#: src/background.c:299
+#: src/background.c:294
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "Immagine di sfondo non trovata: \"%s\""

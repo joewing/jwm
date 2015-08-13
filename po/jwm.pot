@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-08 11:10-0500\n"
+"POT-Creation-Date: 2015-08-12 20:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,16 +27,16 @@ msgstr ""
 msgid "action: root menu \"%s\" not defined"
 msgstr ""
 
-#: src/background.c:143
+#: src/background.c:137
 msgid "no value specified for background"
 msgstr ""
 
-#: src/background.c:155
+#: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr ""
 
-#: src/background.c:299
+#: src/background.c:294
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr ""

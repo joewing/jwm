@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-08 11:10-0500\n"
+"POT-Creation-Date: 2015-08-12 20:19-0500\n"
 "PO-Revision-Date: 2013-05-02 07:20+0100\n"
 "Last-Translator: Vito Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -31,16 +31,16 @@ msgstr "ação do Traybutton invalida: \"%s\""
 msgid "action: root menu \"%s\" not defined"
 msgstr "botão do tabuleiro: menu root %d não esta definida"
 
-#: src/background.c:143
+#: src/background.c:137
 msgid "no value specified for background"
 msgstr "nenhum valor foi especificado para o fundo (background)"
 
-#: src/background.c:155
+#: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "tipo de fundo invalido: \"%s\""
 
-#: src/background.c:299
+#: src/background.c:294
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-08 11:10-0500\n"
+"POT-Creation-Date: 2015-08-12 20:19-0500\n"
 "PO-Revision-Date: 2014-11-06 10:23+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -23,16 +23,16 @@ msgstr "action de bouton de barre incorrect: \"%s\""
 msgid "action: root menu \"%s\" not defined"
 msgstr "Bouton de barre: menu racine %d non défini"
 
-#: src/background.c:143
+#: src/background.c:137
 msgid "no value specified for background"
 msgstr "Pas de valeur spécifiée pour l'arrière-plan"
 
-#: src/background.c:155
+#: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "type d'arrière-plan incorrect: \"%s\""
 
-#: src/background.c:299
+#: src/background.c:294
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "Image d'arrière-plan introuvable: \"%s\""

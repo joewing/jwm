@@ -95,31 +95,25 @@ void StartupBackgrounds(void)
 /** Shutdown background support. */
 void ShutdownBackgrounds(void)
 {
-
    BackgroundNode *bp;
-
    for(bp = backgrounds; bp; bp = bp->next) {
       if(bp->pixmap != None) {
          JXFreePixmap(display, bp->pixmap);
          bp->pixmap = None;
       }
    }
-
 }
 
 /** Release any data needed for background support. */
 void DestroyBackgrounds(void)
 {
-
    BackgroundNode *bp;
-
    while(backgrounds) {
       bp = backgrounds->next;
       Release(backgrounds->value);
       Release(backgrounds);
       backgrounds = bp;
    }
-
 }
 
 /** Set the background to use for the specified desktops. */
@@ -178,6 +172,7 @@ void SetBackground(int desktop, const char *type, const char *value)
    bp->desktop = desktop;
    bp->type = bgType;
    bp->value = CopyString(value);
+   bp->pixmap = None;
 
    /* Insert the node into the list. */
    bp->next = backgrounds;

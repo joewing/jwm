@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-12 20:19-0500\n"
+"POT-Creation-Date: 2015-08-13 19:10-0500\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -105,17 +105,17 @@ msgstr "nombre de grupo no válido"
 msgid "invalid group desktop: %d"
 msgstr "escritorio de grupo no válido: %d"
 
-#: src/image.c:234
+#: src/image.c:242
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr "no se pudo crear estructura de lectura para imagen PNG: %s"
 
-#: src/image.c:247
+#: src/image.c:255
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr "error leyendo imagen PNG: %s"
 
-#: src/image.c:255
+#: src/image.c:263
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "no se pudo crear estruct. de infor. para imagen PNG: %s"

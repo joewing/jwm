@@ -167,8 +167,9 @@ ImageNode *LoadImageFromData(char **data)
 #ifdef USE_ICONS
 ImageNode *LoadImageFromDrawable(Drawable pmap, Pixmap mask)
 {
+   ImageNode *result = NULL;
    XImage *mask_image = NULL;
-   XImage *icon_image;
+   XImage *icon_image = NULL;
    Window rwindow;
    int x, y;
    unsigned int width, height;
@@ -182,7 +183,14 @@ ImageNode *LoadImageFromDrawable(Drawable pmap, Pixmap mask)
    if(mask != None) {
       mask_image = JXGetImage(display, mask, 0, 0, width, height, 1, ZPixmap);
    }
-   return CreateImageFromXImages(icon_image, mask_image);
+   result = CreateImageFromXImages(icon_image, mask_image);
+   if(icon_image) {
+      JXDestroyImage(icon_image);
+   }
+   if(mask_image) {
+      JXDestroyImage(mask_image);
+   }
+   return result;
 }
 #endif
 

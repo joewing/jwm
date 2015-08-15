@@ -372,13 +372,13 @@ void DrawBorderHelper(const ClientNode *np)
    /* Set parent background to reduce flicker. */
    JXSetWindowBackground(display, np->parent, titleColor2);
 
-   canvas = JXCreatePixmap(display, np->parent, width, height,
+   canvas = JXCreatePixmap(display, np->parent, width, north,
                            np->visual.depth);
    gc = JXCreateGC(display, canvas, 0, NULL);
 
    /* Clear the window with the right color. */
    JXSetForeground(display, gc, titleColor2);
-   JXFillRectangle(display, canvas, gc, 0, 0, width, height);
+   JXFillRectangle(display, canvas, gc, 0, 0, width, north);
 
    /* Determine how many pixels may be used for the title. */
    buttonCount = GetButtonCount(np);
@@ -419,41 +419,55 @@ void DrawBorderHelper(const ClientNode *np)
 
    }
 
+   /* Copy the pixmap (for the title bar) to the window. */
+
+   /* Copy the pixmap for the title bar and clear the part of
+    * the window to be drawn directly. */
+   if(settings.windowDecorations == DECO_MOTIF) {
+      JXCopyArea(display, canvas, np->parent, gc, 2, 2,
+         width - 4, north - 2, 2, 2);
+      JXClearArea(display, np->parent,
+         2, north, width - 4, height - north - 2, False);
+   } else {
+      JXCopyArea(display, canvas, np->parent, gc, 1, 1,
+         width - 2, north - 1, 1, 1);
+      JXClearArea(display, np->parent,
+         1, north, width - 2, height - north - 1, False);
+   }
+
    /* Window outline. */
    if(settings.windowDecorations == DECO_MOTIF) {
-      DrawBorderHandles(np, canvas, gc);
+      DrawBorderHandles(np, np->parent, gc);
    } else {
       JXSetForeground(display, gc, outlineColor);
       if(np->state.status & STAT_SHADED) {
-         DrawRoundedRectangle(canvas, gc, 0, 0, width - 1, north - 1,
+         DrawRoundedRectangle(np->parent, gc, 0, 0, width - 1, north - 1,
                               settings.cornerRadius);
       } else if(np->state.maxFlags & MAX_HORIZ) {
          if(!(np->state.maxFlags & (MAX_TOP | MAX_VERT))) {
             /* Top */
-            JXDrawLine(display, canvas, gc, 0, 0, width, 0);
+            JXDrawLine(display, np->parent, gc, 0, 0, width, 0);
          }
          if(!(np->state.maxFlags & (MAX_BOTTOM | MAX_VERT))) {
             /* Bottom */
-            JXDrawLine(display, canvas, gc,
+            JXDrawLine(display, np->parent, gc,
                        0, height - 1, width, height - 1);
          }
       } else if(np->state.maxFlags & MAX_VERT) {
          if(!(np->state.maxFlags & (MAX_LEFT | MAX_HORIZ))) {
             /* Left */
-            JXDrawLine(display, canvas, gc, 0, 0, 0, height);
+            JXDrawLine(display, np->parent, gc, 0, 0, 0, height);
          }
          if(!(np->state.maxFlags & (MAX_RIGHT | MAX_HORIZ))) {
             /* Right */
-            JXDrawLine(display, canvas, gc, width - 1, 0, width - 1, height);
+            JXDrawLine(display, np->parent, gc, width - 1, 0,
+               width - 1, height);
          }
       } else {
-         DrawRoundedRectangle(canvas, gc, 0, 0, width - 1, height - 1,
+         DrawRoundedRectangle(np->parent, gc, 0, 0, width - 1, height - 1,
                               settings.cornerRadius);
       }
    }
-
-   /* Copy the pixmap to the window. */
-   JXCopyArea(display, canvas, np->parent, gc, 0, 0, width, height, 0, 0);
 
    JXFreePixmap(display, canvas);
    JXFreeGC(display, gc);

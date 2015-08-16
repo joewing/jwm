@@ -83,18 +83,12 @@
         </TrayStyle>
     </xsl:template>
 
-    <!-- Handle TaskListStyle -->
+    <!-- Remove TaskListStyle -->
     <xsl:template match="TaskListStyle">
-        <TaskListStyle>
-            <xsl:call-template name="Active"/>
-        </TaskListStyle>
     </xsl:template>
 
-    <!-- Handle TrayButtonStyle -->
+    <!-- Remove TrayButtonStyle -->
     <xsl:template match="TrayButtonStyle">
-        <TrayButtonStyle>
-            <xsl:call-template name="Active"/>
-        </TrayButtonStyle>
     </xsl:template>
 
     <!-- Handle PagerStyle -->

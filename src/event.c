@@ -1568,7 +1568,7 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
          UnshadeClient(np);
       } else if(event->type == ButtonPress) {
          const int x = np->x + event->x - bsize;
-         const int y = np->y - event->y - settings.titleHeight - bsize;
+         const int y = np->y + event->y - settings.titleHeight - bsize;
          ShowWindowMenu(np, x, y, 0);
       }
       break;

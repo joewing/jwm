@@ -91,6 +91,10 @@
     <xsl:template match="TrayButtonStyle">
     </xsl:template>
 
+    <!-- Remove ClockStyle -->
+    <xsl:template match="ClockStyle">
+    </xsl:template>
+
     <!-- Handle PagerStyle -->
     <xsl:template match="PagerStyle">
         <PagerStyle>

@@ -200,6 +200,15 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner,
 
 }
 
+/** Hide a menu. */
+void HideMenu(Menu *menu)
+{
+   Menu *mp;
+   for(mp = menu; mp; mp = mp->parent) {
+      JXUnmapWindow(display, mp->window);
+   }
+}
+
 /** Destroy a menu. */
 void DestroyMenu(Menu *menu)
 {
@@ -256,7 +265,8 @@ char ShowSubmenu(Menu *menu, Menu *parent,
    status = MenuLoop(menu, runner);
    menuShown -= 1;
 
-   HideMenu(menu);
+   JXDestroyWindow(display, menu->window);
+   JXFreePixmap(display, menu->pixmap);
 
    return status;
 
@@ -395,6 +405,7 @@ char MenuLoop(Menu *menu, RunMenuCommandType runner)
             ip = GetMenuItem(menu, menu->currentIndex);
          }
          if(ip != NULL) {
+            HideMenu(menu);
             (runner)(&ip->action, event.xbutton.button);
          }
          return 1;
@@ -472,13 +483,6 @@ void CreateMenu(Menu *menu, int x, int y, char keyboard)
       menu->currentIndex = -1;
    }
 
-}
-
-/** Hide a menu. */
-void HideMenu(Menu *menu)
-{
-   JXDestroyWindow(display, menu->window);
-   JXFreePixmap(display, menu->pixmap);
 }
 
 /** Draw a menu. */
@@ -600,6 +604,7 @@ MenuSelectionType UpdateMotion(Menu *menu,
       case KEY_ENTER:
          ip = GetMenuItem(tp, tp->currentIndex);
          if(ip != NULL) {
+            HideMenu(menu);
             (runner)(&ip->action, 0);
          }
          return MENU_SUBSELECT;

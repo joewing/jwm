@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
 "POT-Creation-Date: 2015-08-19 13:11+0100\n"
-"PO-Revision-Date: 2015-08-19 13:12+0100\n"
+"PO-Revision-Date: 2015-08-19 14:22+0100\n"
 "Last-Translator: Vitor Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
 "Language: pt\n"
@@ -25,9 +25,9 @@ msgid "invalid action: \"%s\""
 msgstr "Açao do Traybutton invalida: \"%s\""
 
 #: src/action.c:189
-#, fuzzy, c-format
+#, c-format
 msgid "action: root menu \"%s\" not defined"
-msgstr "botão do tabuleiro: menu root %d não esta definida"
+msgstr "botão do tabuleiro root \"%s\" não esta definido"
 
 #: src/background.c:143
 msgid "no value specified for background"
@@ -118,9 +118,9 @@ msgid "error reading PNG image: %s"
 msgstr "erro lendo imagem PNG %s"
 
 #: src/image.c:255
-#, fuzzy, c-format
+#, c-format
 msgid "could not create info struct for PNG image: %s"
-msgstr "could not create info struct for PNG image: %s"
+msgstr "não foi possível criar estrutura de informação para imagem PNG %s"
 
 #: src/key.c:318
 msgid "Specified KeySym is not defined for any KeyCode"
@@ -146,10 +146,10 @@ msgid "neither key nor keycode specified for Key"
 msgstr "tecla e código de tecla não foi especificado para esta tecla"
 
 #: src/key.c:467
-#, fuzzy, c-format
+#, c-format
 msgid "key binding: root menu \"%s\" not defined"
 msgstr ""
-"teclas de atalho: não foram especificadas para o menu root %d não esta "
+"teclas de atalho: não foram especificadas para o menu root \"%s\" não esta "
 "definido"
 
 #: src/lex.c:196

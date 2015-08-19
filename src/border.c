@@ -806,6 +806,21 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
       pixelDown = colors[COLOR_TITLE_DOWN];
    }
 
+   if(settings.windowDecorations == DECO_MOTIF) {
+      JXSetForeground(display, gc, pixelDown);
+      JXDrawLine(display, canvas, gc,
+                      west + settings.titleHeight - 1,
+                      south,
+                      west + settings.titleHeight - 1,
+                      south + settings.titleHeight);
+      JXSetForeground(display, gc, pixelUp);
+      JXDrawLine(display, canvas, gc,
+                 west + settings.titleHeight,
+                 south,
+                 west + settings.titleHeight,
+                 south + settings.titleHeight);
+   }
+
    /* Close button. */
    yoffset = settings.windowDecorations == DECO_MOTIF ? (south - 1) : 0;
    if(np->state.border & BORDER_CLOSE) {
@@ -815,20 +830,10 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
 
       if(settings.windowDecorations == DECO_MOTIF) {
          JXSetForeground(display, gc, pixelDown);
-         JXDrawLine(display, canvas, gc,
-                         west + settings.titleHeight - 1,
-                         south,
-                         west + settings.titleHeight - 1,
-                         south + settings.titleHeight);
          JXDrawLine(display, canvas, gc, xoffset - 1,
                     south, xoffset - 1,
                     south + settings.titleHeight);
          JXSetForeground(display, gc, pixelUp);
-         JXDrawLine(display, canvas, gc,
-                    east + settings.titleHeight,
-                    south,
-                    east + settings.titleHeight,
-                    south + settings.titleHeight);
          JXDrawLine(display, canvas, gc, xoffset,
                     south, xoffset, south + settings.titleHeight);
          xoffset -= 1;
@@ -852,20 +857,10 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
 
       if(settings.windowDecorations == DECO_MOTIF) {
          JXSetForeground(display, gc, pixelDown);
-         JXDrawLine(display, canvas, gc,
-                         west + settings.titleHeight - 1,
-                         south,
-                         west + settings.titleHeight - 1,
-                         south + settings.titleHeight);
          JXDrawLine(display, canvas, gc, xoffset - 1,
                     south, xoffset - 1,
                     south + settings.titleHeight);
          JXSetForeground(display, gc, pixelUp);
-         JXDrawLine(display, canvas, gc,
-                    east + settings.titleHeight,
-                    south,
-                    east + settings.titleHeight,
-                    south + settings.titleHeight);
          JXDrawLine(display, canvas, gc, xoffset,
                     south, xoffset, south + settings.titleHeight);
          xoffset -= 1;
@@ -885,20 +880,10 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
 
       if(settings.windowDecorations == DECO_MOTIF) {
          JXSetForeground(display, gc, pixelDown);
-         JXDrawLine(display, canvas, gc,
-                         west + settings.titleHeight - 1,
-                         south,
-                         west + settings.titleHeight - 1,
-                         south + settings.titleHeight);
          JXDrawLine(display, canvas, gc, xoffset - 1,
                     south, xoffset - 1,
                     south + settings.titleHeight);
          JXSetForeground(display, gc, pixelUp);
-         JXDrawLine(display, canvas, gc,
-                    east + settings.titleHeight,
-                    south,
-                    east + settings.titleHeight,
-                    south + settings.titleHeight);
          JXDrawLine(display, canvas, gc, xoffset,
                     south, xoffset, south + settings.titleHeight);
          xoffset -= 1;

@@ -64,6 +64,7 @@ void StartupBorders(void)
       if(buttonNames[i]) {
          buttonIcons[i] = LoadNamedIcon(buttonNames[i], 1, 1);
          Release(buttonNames[i]);
+         buttonNames[i] = NULL;
       } else {
          buttonIcons[i] = NULL;
       }
@@ -71,9 +72,17 @@ void StartupBorders(void)
 
 }
 
-/** Release server resources. */
-void ShutdownBorders(void)
+/** Destroy structures. */
+void DestroyBorders(void)
 {
+   unsigned i;
+   for(i = 0; i < BI_COUNT; i++)
+   {
+      if(buttonNames[i]) {
+         Release(buttonNames[i]);
+         buttonNames[i] = NULL;
+      }
+   }
 }
 
 /** Get the size of the icon to display on a window. */

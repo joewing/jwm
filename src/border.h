@@ -40,8 +40,8 @@ typedef unsigned char BorderActionType;
 /*@{*/
 void InitializeBorders(void);
 void StartupBorders(void);
-void ShutdownBorders(void);
-#define DestroyBorders()      (void)(0)
+#define ShutdownBorders()      (void)(0)
+void DestroyBorders(void);
 /*@}*/
 
 /** Determine the action to take for a client.

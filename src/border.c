@@ -1321,6 +1321,9 @@ void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
 /** Set the icon to use for a button. */
 void SetBorderIcon(BorderIconType t, const char *name)
 {
+   if(buttonNames[t]) {
+      Release(buttonNames[t]);
+   }
    buttonNames[t] = CopyString(name);
 }
  

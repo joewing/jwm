@@ -146,8 +146,12 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    np->y = attr.y;
    np->width = attr.width;
    np->height = attr.height;
-   np->visual.depth = attr.depth;
-   np->visual.visual = attr.visual;
+   if(rootVisual.depth > attr.depth) {
+      np->visual = rootVisual;
+   } else {
+      np->visual.depth = attr.depth;
+      np->visual.visual = attr.visual;
+   }
    np->cmap = attr.colormap;
    np->state.status = STAT_NONE;
    np->state.maxFlags = MAX_NONE;
@@ -1342,9 +1346,6 @@ void ReparentClient(ClientNode *np, char notOwner)
 
    attrMask |= CWBorderPixel;
    attr.border_pixel = 0;
-
-   attrMask |= CWColormap;
-   attr.colormap = np->cmap;
 
    x = np->x;
    y = np->y;

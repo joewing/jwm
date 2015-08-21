@@ -218,9 +218,10 @@ ClientState ReadWindowState(Window win, char alreadyMapped);
 void ReadWMHints(Window win, ClientState *state, char alreadyMapped);
 
 /** Read opacity.
- * @param np The client.
+ * @param win The window.
+ * @param state The state hints to update.
  */
-void ReadWMOpacity(struct ClientNode *np);
+void ReadWMOpacity(Window win, ClientState *state);
 
 /** Set the state of a client window.
  * @param np The client.

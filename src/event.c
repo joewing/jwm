@@ -855,8 +855,9 @@ char HandlePropertyNotify(const XPropertyEvent *event)
             UpdateState(np);
             WriteState(np);
             ResetBorder(np);
+            changed = 1;
          } else if(event->atom == atoms[ATOM_NET_WM_WINDOW_OPACITY]) {
-            ReadWMOpacity(np);
+            ReadWMOpacity(np->window, &np->state);
             SetOpacity(np, np->state.opacity, 1);
          }
          break;
@@ -1617,7 +1618,8 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
 /** Update window state information. */
 void UpdateState(ClientNode *np)
 {
-   char alreadyMapped;
+   const char alreadyMapped = (np->state.status & STAT_MAPPED) ? 1 : 0;
+   const char active = (np->state.status & STAT_ACTIVE) ? 1 : 0;
 
    /* Remove from the layer list. */
    if(np->prev != NULL) {
@@ -1634,7 +1636,6 @@ void UpdateState(ClientNode *np)
    }
 
    /* Read the state (and new layer). */
-   alreadyMapped = (np->state.status & STAT_MAPPED) ? 1 : 0;
    if(np->state.status & STAT_URGENT) {
       UnregisterCallback(SignalUrgent, np);
    }
@@ -1657,6 +1658,10 @@ void UpdateState(ClientNode *np)
       np->next->prev = np;
    }
    nodes[np->state.layer] = np;
+
+   if(active) {
+      FocusClient(np);
+   }
 
 }
 

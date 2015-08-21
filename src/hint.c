@@ -306,11 +306,6 @@ void ReadClientInfo(ClientNode *np, char alreadyMapped)
       np->state.border &= ~BORDER_RESIZE;
    }
 
-   /* Read WM protocols. */
-   ReadWMProtocols(np->window, &np->state);
-
-   ReadWMOpacity(np);
-
    /* Make sure this client is on at least as high of a layer
     * as its owner. */
    if(np->owner != None) {
@@ -563,9 +558,11 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
    result.desktop = currentDesktop;
    result.opacity = UINT_MAX;
 
+   ReadWMProtocols(win, &result);
    ReadWMHints(win, &result, alreadyMapped);
    ReadWMState(win, &result);
    ReadMotifHints(win, &result);
+   ReadWMOpacity(win, &result);
 
    /* _NET_WM_DESKTOP */
    if(GetCardinalAtom(win, ATOM_NET_WM_DESKTOP, &card)) {
@@ -997,14 +994,15 @@ void ReadWMHints(Window win, ClientState *state, char alreadyMapped)
 }
 
 /** Read _NET_WM_WINDOW_OPACITY. */
-void ReadWMOpacity(ClientNode *np) {
+void ReadWMOpacity(Window win, ClientState *state)
+{
    unsigned long card;
-   if(GetCardinalAtom(np->window, ATOM_NET_WM_WINDOW_OPACITY, &card)) {
-      np->state.status |= STAT_OPACITY;
+   if(GetCardinalAtom(win, ATOM_NET_WM_WINDOW_OPACITY, &card)) {
+      state->status |= STAT_OPACITY;
    } else {
       card = UINT_MAX;
    }
-   np->state.opacity = (unsigned int)card;
+   state->opacity = (unsigned int)card;
 }
 
 /** Read _MOTIF_WM_HINTS */

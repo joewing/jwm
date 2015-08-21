@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-19 13:11+0100\n"
+"POT-Creation-Date: 2015-08-21 08:54-0500\n"
 "PO-Revision-Date: 2015-08-19 14:22+0100\n"
 "Last-Translator: Vitor Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -29,25 +29,25 @@ msgstr "Açao do Traybutton invalida: \"%s\""
 msgid "action: root menu \"%s\" not defined"
 msgstr "botão do tabuleiro root \"%s\" não esta definido"
 
-#: src/background.c:143
+#: src/background.c:137
 msgid "no value specified for background"
 msgstr "nenhum valor foi especificado para o fundo (background)"
 
-#: src/background.c:155
+#: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
 msgstr "tipo de fundo invalido: \"%s\""
 
-#: src/background.c:299
+#: src/background.c:294
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""
 
-#: src/client.c:892
+#: src/client.c:890
 msgid "Kill this window?"
 msgstr "Matar janela?"
 
-#: src/client.c:893
+#: src/client.c:891
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 
@@ -107,17 +107,17 @@ msgstr "nome do grupo invalido"
 msgid "invalid group desktop: %d"
 msgstr "grupo invalido desktop %d"
 
-#: src/image.c:234
+#: src/image.c:242
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr "não foi possível criar ou ler a estrutura para imagens PNG: %s"
 
-#: src/image.c:247
+#: src/image.c:255
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr "erro lendo imagem PNG %s"
 
-#: src/image.c:255
+#: src/image.c:263
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "não foi possível criar estrutura de informação para imagem PNG %s"

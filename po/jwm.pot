@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-13 19:10-0500\n"
+"POT-Creation-Date: 2015-08-21 08:54-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,11 +41,11 @@ msgstr ""
 msgid "background image not found: \"%s\""
 msgstr ""
 
-#: src/client.c:892
+#: src/client.c:890
 msgid "Kill this window?"
 msgstr ""
 
-#: src/client.c:893
+#: src/client.c:891
 msgid "This may cause data to be lost!"
 msgstr ""
 

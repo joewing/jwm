@@ -516,7 +516,7 @@ void UpdateDock(void)
       }
 
       event.type = ConfigureNotify;
-      event.event = np->window;
+      event.event = dock->window;
       event.window = np->window;
       event.x = x + xoffset;
       event.y = y + yoffset;

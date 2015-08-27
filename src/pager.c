@@ -140,7 +140,7 @@ void Create(TrayComponentType *cp)
    Assert(cp->height > 0);
 
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width,
-                               cp->height, rootVisual.depth);
+                               cp->height, rootDepth);
    pp->buffer = cp->pixmap;
 
 }
@@ -180,7 +180,7 @@ void SetSize(TrayComponentType *cp, int width, int height)
    if(pp->buffer != None) {
       JXFreePixmap(display, pp->buffer);
       pp->buffer = JXCreatePixmap(display, rootWindow, cp->width,
-                                  cp->height, rootVisual.depth);
+                                  cp->height, rootDepth);
       cp->pixmap = pp->buffer;
       DrawPager(pp);
    }
@@ -538,7 +538,7 @@ void DrawPager(const PagerType *pp)
             if(textWidth < deskWidth) {
                xc = dx * (deskWidth + 1) + (deskWidth - textWidth) / 2;
                yc = dy * (deskHeight + 1) + (deskHeight - textHeight) / 2;
-               RenderString(&rootVisual, buffer, FONT_PAGER,
+               RenderString(buffer, FONT_PAGER,
                             COLOR_PAGER_TEXT, xc, yc, deskWidth, name);
             }
          }

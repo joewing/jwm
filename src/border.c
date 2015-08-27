@@ -29,18 +29,14 @@ static void DrawBorderButtons(const ClientNode *np,
                               Pixmap canvas, GC gc);
 static char DrawBorderIcon(BorderIconType t,
                            unsigned xoffset, unsigned yoffset,
-                           const VisualData *visual, Pixmap canvas);
+                           Pixmap canvas);
 static void DrawCloseButton(unsigned xoffset, unsigned yoffset,
-                            const VisualData *visual,
                             Pixmap canvas, GC gc);
 static void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
-                           const VisualData *visual,
                            Pixmap canvas, GC gc);
 static void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
-                           const VisualData *visual,
                            Pixmap canvas, GC gc);
 static void DrawMinButton(unsigned xoffset, unsigned yoffset,
-                          const VisualData *visual,
                           Pixmap canvas, GC gc);
 static unsigned GetButtonCount(const ClientNode *np);
 
@@ -381,8 +377,7 @@ void DrawBorderHelper(const ClientNode *np)
    /* Set parent background to reduce flicker. */
    JXSetWindowBackground(display, np->parent, titleColor2);
 
-   canvas = JXCreatePixmap(display, np->parent, width, north,
-                           np->visual.depth);
+   canvas = JXCreatePixmap(display, np->parent, width, north, rootDepth);
    gc = JXCreateGC(display, canvas, 0, NULL);
 
    /* Clear the window with the right color. */
@@ -410,7 +405,7 @@ void DrawBorderHelper(const ClientNode *np)
 
       /* Draw the icon. */
       if(np->icon && np->width >= settings.titleHeight) {
-         PutIcon(&np->visual, np->icon, canvas, colors[borderTextColor],
+         PutIcon(np->icon, canvas, colors[borderTextColor],
                  startx, starty + (settings.titleHeight - iconSize) / 2,
                  iconSize, iconSize);
       }
@@ -420,7 +415,7 @@ void DrawBorderHelper(const ClientNode *np)
          const unsigned titlex = startx + settings.titleHeight
             + (settings.windowDecorations == DECO_MOTIF ? 4 : 0);
          const unsigned titley = starty + (settings.titleHeight - sheight) / 2;
-         RenderString(&np->visual, canvas, FONT_BORDER, borderTextColor,
+         RenderString(canvas, FONT_BORDER, borderTextColor,
                       titlex, titley, titleWidth, np->name);
       }
 
@@ -835,7 +830,7 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
    if(np->state.border & BORDER_CLOSE) {
 
       JXSetForeground(display, gc, color);
-      DrawCloseButton(xoffset, yoffset, &np->visual, canvas, gc);
+      DrawCloseButton(xoffset, yoffset, canvas, gc);
 
       if(settings.windowDecorations == DECO_MOTIF) {
          JXSetForeground(display, gc, pixelDown);
@@ -859,9 +854,9 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
 
       JXSetForeground(display, gc, color);
       if(np->state.maxFlags) {
-         DrawMaxAButton(xoffset, yoffset, &np->visual, canvas, gc);
+         DrawMaxAButton(xoffset, yoffset, canvas, gc);
       } else {
-         DrawMaxIButton(xoffset, yoffset, &np->visual, canvas, gc);
+         DrawMaxIButton(xoffset, yoffset, canvas, gc);
       }
 
       if(settings.windowDecorations == DECO_MOTIF) {
@@ -885,7 +880,7 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
    if(np->state.border & BORDER_MIN) {
 
       JXSetForeground(display, gc, color);
-      DrawMinButton(xoffset, yoffset, &np->visual, canvas, gc);
+      DrawMinButton(xoffset, yoffset, canvas, gc);
 
       if(settings.windowDecorations == DECO_MOTIF) {
          JXSetForeground(display, gc, pixelDown);
@@ -903,11 +898,11 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
 /** Attempt to draw a border icon. */
 char DrawBorderIcon(BorderIconType t,
                     unsigned xoffset, unsigned yoffset,
-                    const VisualData *visual, Pixmap canvas)
+                    Pixmap canvas)
 {
    if(buttonIcons[t]) {
       ButtonNode button;
-      ResetButton(&button, canvas, visual);
+      ResetButton(&button, canvas);
       button.x       = xoffset;
       button.y       = yoffset;
       button.width   = settings.titleHeight;
@@ -923,7 +918,6 @@ char DrawBorderIcon(BorderIconType t,
 
 /** Draw a close button. */
 void DrawCloseButton(unsigned xoffset, unsigned yoffset,
-                     const VisualData *visual,
                      Pixmap canvas, GC gc)
 {
    XSegment segments[2];
@@ -931,7 +925,7 @@ void DrawCloseButton(unsigned xoffset, unsigned yoffset,
    unsigned x1, y1;
    unsigned x2, y2;
 
-   if(DrawBorderIcon(BI_CLOSE, xoffset, yoffset, visual, canvas)) {
+   if(DrawBorderIcon(BI_CLOSE, xoffset, yoffset, canvas)) {
       return;
    }
 
@@ -961,7 +955,6 @@ void DrawCloseButton(unsigned xoffset, unsigned yoffset,
 
 /** Draw an inactive maximize button. */
 void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
-                    const VisualData *visual,
                     Pixmap canvas, GC gc)
 {
 
@@ -970,7 +963,7 @@ void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
    unsigned int x1, y1;
    unsigned int x2, y2;
 
-   if(DrawBorderIcon(BI_MAX, xoffset, yoffset, visual, canvas)) {
+   if(DrawBorderIcon(BI_MAX, xoffset, yoffset, canvas)) {
       return;
    }
 
@@ -1015,7 +1008,6 @@ void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
 
 /** Draw an active maximize button. */
 void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
-                    const VisualData *visual,
                     Pixmap canvas, GC gc)
 {
    XSegment segments[8];
@@ -1024,7 +1016,7 @@ void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
    unsigned x2, y2;
    unsigned x3, y3;
 
-   if(DrawBorderIcon(BI_MAX_ACTIVE, xoffset, yoffset, visual, canvas)) {
+   if(DrawBorderIcon(BI_MAX_ACTIVE, xoffset, yoffset, canvas)) {
       return;
    }
 
@@ -1085,7 +1077,6 @@ void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
 
 /** Draw a minimize button. */
 void DrawMinButton(unsigned xoffset, unsigned yoffset,
-                   const VisualData *visual,
                    Pixmap canvas, GC gc)
 {
 
@@ -1093,7 +1084,7 @@ void DrawMinButton(unsigned xoffset, unsigned yoffset,
    unsigned int x1, y1;
    unsigned int x2, y2;
 
-   if(DrawBorderIcon(BI_MIN, xoffset, yoffset, visual, canvas)) {
+   if(DrawBorderIcon(BI_MIN, xoffset, yoffset, canvas)) {
       return;
    }
 

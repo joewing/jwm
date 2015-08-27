@@ -196,7 +196,7 @@ void AddIconPath(char *path)
 }
 
 /** Draw an icon. */
-void PutIcon(const VisualData *visual, IconNode *icon, Drawable d, long fg,
+void PutIcon(IconNode *icon, Drawable d, long fg,
              int x, int y, int width, int height)
 {
    ImageNode *imageNode;
@@ -219,7 +219,7 @@ void PutIcon(const VisualData *visual, IconNode *icon, Drawable d, long fg,
       /* If we support xrender, use it. */
 #ifdef USE_XRENDER
       if(haveRender) {
-         PutScaledRenderIcon(visual, imageNode, d, ix, iy);
+         PutScaledRenderIcon(imageNode, d, ix, iy);
          return;
       }
 #endif
@@ -579,7 +579,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, ImageNode *iconImage,
    JXSetForeground(display, maskGC, 1);
 
    /* Create a temporary XImage for scaling. */
-   image = JXCreateImage(display, rootVisual.visual, rootVisual.depth,
+   image = JXCreateImage(display, rootVisual, rootDepth,
                          ZPixmap, 0, NULL, nwidth, nheight, 8, 0);
    image->data = Allocate(sizeof(unsigned long) * nwidth * nheight);
 
@@ -634,7 +634,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, ImageNode *iconImage,
  
    /* Create the color data pixmap. */
    np->image = JXCreatePixmap(display, rootWindow, nwidth, nheight,
-                              rootVisual.depth);
+                              rootDepth);
 
    /* Render the image to the color data pixmap. */
    JXPutImage(display, np->image, rootGC, image, 0, 0, 0, 0, nwidth, nheight);   

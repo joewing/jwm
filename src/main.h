@@ -10,17 +10,13 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-typedef struct VisualData {
-   Visual *visual;
-   int depth;
-} VisualData;
-
 extern Display *display;
 extern Window rootWindow;
 extern int rootWidth, rootHeight;
 extern int rootScreen;
 extern Colormap rootColormap;
-extern VisualData rootVisual;
+extern Visual *rootVisual;
+extern int rootDepth;
 extern GC rootGC;
 extern int colormapCount;
 extern Window supportingWindow;

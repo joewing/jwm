@@ -11,7 +11,6 @@
 #define ICON_H
 
 struct ClientNode;
-struct VisualData;
 
 /** Structure to hold a scaled icon. */
 typedef struct ScaledIconNode {
@@ -65,7 +64,6 @@ void AddIconPath(char *path);
 /** Render an icon.
  * This will scale an icon if necessary to fit the requested size. The
  * aspect ratio of the icon is preserved.
- * @param visual Visual data to use.
  * @param icon The icon to render.
  * @param d The drawable on which to place the icon.
  * @param fg The foreground color.
@@ -74,7 +72,7 @@ void AddIconPath(char *path);
  * @param width The width of the icon to display.
  * @param height The height of the icon to display.
  */
-void PutIcon(const struct VisualData *visual, IconNode *icon, Drawable d,
+void PutIcon(IconNode *icon, Drawable d,
              long fg, int x, int y, int width, int height);
 
 /** Load an icon for a client.

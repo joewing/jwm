@@ -13,7 +13,6 @@
 struct IconNode;
 struct ImageNode;
 struct ScaledIconNode;
-struct VisualData;
 
 /** Put a scaled icon.
  * @param image The image to display.
@@ -22,8 +21,7 @@ struct VisualData;
  * @param y The y-coordinate to place the icon.
  * @return 1 if the icon was successfully rendered, 0 otherwise.
  */
-void PutScaledRenderIcon(const struct VisualData *visual,
-                         const struct ImageNode *image,
+void PutScaledRenderIcon(const struct ImageNode *image,
                          Drawable d, int x, int y);
 
 /** Create a scaled icon.

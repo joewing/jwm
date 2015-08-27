@@ -308,8 +308,7 @@ void SetFont(FontType type, const char *value)
 }
 
 /** Display a string. */
-void RenderString(const VisualData *visual, Drawable d,
-                  FontType font, ColorType color,
+void RenderString(Drawable d, FontType font, ColorType color,
                   int x, int y, int width, const char *str)
 {
    XRectangle rect;
@@ -344,7 +343,7 @@ void RenderString(const VisualData *visual, Drawable d,
    len = strlen(utf8String);
 
 #ifdef USE_XFT
-   xd = XftDrawCreate(display, d, visual->visual, rootColormap);
+   xd = XftDrawCreate(display, d, rootVisual, rootColormap);
 #else
    gcMask = GCGraphicsExposures;
    gcValues.graphics_exposures = False;

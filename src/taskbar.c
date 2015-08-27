@@ -171,7 +171,7 @@ void Create(TrayComponentType *cp)
 {
    TaskBarType *tp = (TaskBarType*)cp->object;
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
-                               rootVisual.depth);
+                               rootDepth);
    tp->buffer = cp->pixmap;
    ClearTrayDrawable(cp);
 }
@@ -184,7 +184,7 @@ void Resize(TrayComponentType *cp)
       JXFreePixmap(display, tp->buffer);
    }
    cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
-                               rootVisual.depth);
+                               rootDepth);
    tp->buffer = cp->pixmap;
    ClearTrayDrawable(cp);
 }
@@ -668,7 +668,7 @@ void Render(const TaskBarType *bp)
       return;
    }
 
-   ResetButton(&button, bp->cp->pixmap, &rootVisual);
+   ResetButton(&button, bp->cp->pixmap);
    button.border = settings.trayDecorations == DECO_MOTIF;
    button.font = FONT_TRAY;
    button.height = bp->itemHeight;

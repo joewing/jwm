@@ -287,7 +287,7 @@ void ShowConfirmDialog(ClientNode *np, void (*action)(ClientNode*), ...)
    /* Create the pixmap used for rendering. */
    dialog->pmap = JXCreatePixmap(display, rootWindow,
                                  dialog->width, dialog->height,
-                                 rootVisual.depth);
+                                 rootDepth);
 
    /* Create the window. */
    attrs.background_pixel = colors[COLOR_MENU_BG];
@@ -438,7 +438,7 @@ void DrawDialog(void)
    /* Draw the message. */
    yoffset = 4;
    for(x = 0; x < dialog->lineCount; x++) {
-      RenderString(&rootVisual, dialog->pmap, FONT_MENU, COLOR_MENU_FG,
+      RenderString(dialog->pmap, FONT_MENU, COLOR_MENU_FG,
                    4, yoffset, dialog->width, dialog->message[x]);
       yoffset += dialog->lineHeight;
    }
@@ -465,7 +465,7 @@ void DrawButtons(void)
    dialog->buttonWidth += 16;
    dialog->buttonHeight = dialog->lineHeight + 4;
 
-   ResetButton(&button, dialog->pmap, &rootVisual);
+   ResetButton(&button, dialog->pmap);
    button.border = 1;
    button.font = FONT_MENU;
    button.width = dialog->buttonWidth;

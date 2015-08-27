@@ -157,7 +157,7 @@ void UpdateMoveWindow(ClientNode *np)
 
    snprintf(str, sizeof(str), "(%d, %d)", np->x, np->y);
    width = GetStringWidth(FONT_MENU, str);
-   RenderString(&rootVisual, statusWindow, FONT_MENU, COLOR_MENU_FG,
+   RenderString(statusWindow, FONT_MENU, COLOR_MENU_FG,
                 (statusWindowWidth - width) / 2, 5, rootWidth, str);
 }
 
@@ -188,7 +188,7 @@ void UpdateResizeWindow(ClientNode *np, int gwidth, int gheight)
 
    snprintf(str, sizeof(str), "%d x %d", gwidth, gheight);
    fontWidth = GetStringWidth(FONT_MENU, str);
-   RenderString(&rootVisual, statusWindow, FONT_MENU, COLOR_MENU_FG,
+   RenderString(statusWindow, FONT_MENU, COLOR_MENU_FG,
                 (statusWindowWidth - fontWidth) / 2, 5, rootWidth, str);
 
 }

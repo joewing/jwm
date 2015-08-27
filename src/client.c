@@ -146,12 +146,6 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    np->y = attr.y;
    np->width = attr.width;
    np->height = attr.height;
-   if(rootVisual.depth > attr.depth) {
-      np->visual = rootVisual;
-   } else {
-      np->visual.depth = attr.depth;
-      np->visual.visual = attr.visual;
-   }
    np->cmap = attr.colormap;
    np->state.status = STAT_NONE;
    np->state.maxFlags = MAX_NONE;
@@ -1359,8 +1353,8 @@ void ReparentClient(ClientNode *np, char notOwner)
 
    /* Create the frame window. */
    np->parent = JXCreateWindow(display, rootWindow, x, y, width, height,
-                               0, np->visual.depth, InputOutput,
-                               np->visual.visual, attrMask, &attr);
+                               0, rootDepth, InputOutput,
+                               rootVisual, attrMask, &attr);
  
    /* Update the window to get only the events we want. */
    attrMask = CWDontPropagate;

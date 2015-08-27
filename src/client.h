@@ -107,7 +107,6 @@ typedef struct AspectRatio {
 /** Struture to store information about a client window. */
 typedef struct ClientNode {
 
-   VisualData visual;         /**< Client visual and depth. */
    Window window;             /**< The client window. */
    Window parent;             /**< The frame window. */
 

@@ -169,7 +169,7 @@ void DrawButton(ButtonNode *bp)
    /* Display the icon. */
    if(bp->icon) {
       yoffset = (height - iconHeight + 1) / 2;
-      PutIcon(bp->visual, bp->icon, drawable, colors[fg],
+      PutIcon(bp->icon, drawable, colors[fg],
               x + xoffset, y + yoffset,
               iconWidth, iconHeight);
       xoffset += iconWidth + 2;
@@ -178,7 +178,7 @@ void DrawButton(ButtonNode *bp)
    /* Display the label. */
    if(textWidth > 0) {
       yoffset = (height - textHeight + 1) / 2;
-      RenderString(bp->visual, drawable, bp->font, fg,
+      RenderString(drawable, bp->font, fg,
                    x + xoffset, y + yoffset,
                    textWidth, bp->text);
    }
@@ -188,13 +188,12 @@ void DrawButton(ButtonNode *bp)
 }
 
 /** Reset a button node with default values. */
-void ResetButton(ButtonNode *bp, Drawable d, const VisualData *visual)
+void ResetButton(ButtonNode *bp, Drawable d)
 {
 
    Assert(bp);
 
    bp->type = BUTTON_MENU;
-   bp->visual = visual;
    bp->drawable = d;
    bp->font = FONT_TRAY;
    bp->alignment = ALIGN_LEFT;

@@ -147,7 +147,7 @@ void ShowPopup(int x, int y, const char *text,
 
    popup.pmap = JXCreatePixmap(display, popup.window,
                                popup.width, popup.height,
-                               rootVisual.depth);
+                               rootDepth);
 
    JXSetForeground(display, rootGC, colors[COLOR_POPUP_BG]);
    JXFillRectangle(display, popup.pmap, rootGC, 0, 0,
@@ -155,7 +155,7 @@ void ShowPopup(int x, int y, const char *text,
    JXSetForeground(display, rootGC, colors[COLOR_POPUP_OUTLINE]);
    JXDrawRectangle(display, popup.pmap, rootGC, 0, 0,
                    popup.width - 1, popup.height - 1);
-   RenderString(&rootVisual, popup.pmap, FONT_POPUP, COLOR_POPUP_FG, 4, 1,
+   RenderString(popup.pmap, FONT_POPUP, COLOR_POPUP_FG, 4, 1,
                 popup.width, popup.text);
    JXCopyArea(display, popup.pmap, popup.window, rootGC,
               0, 0, popup.width, popup.height, 0, 0);

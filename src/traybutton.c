@@ -232,7 +232,7 @@ void SetSize(TrayComponentType *cp, int width, int height)
 void Create(TrayComponentType *cp)
 {
    cp->pixmap = JXCreatePixmap(display, rootWindow,
-                               cp->width, cp->height, rootVisual.depth);
+                               cp->width, cp->height, rootDepth);
    Draw(cp);
 }
 
@@ -261,7 +261,7 @@ void Draw(TrayComponentType *cp)
    bp = (TrayButtonType*)cp->object;
 
    ClearTrayDrawable(cp);
-   ResetButton(&button, cp->pixmap, &rootVisual);
+   ResetButton(&button, cp->pixmap);
    if(cp->grabbed) {
       button.type = BUTTON_TRAY_ACTIVE;
    } else {

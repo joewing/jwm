@@ -267,12 +267,12 @@ void LoadGradientBackground(BackgroundNode *bp)
    /* Create the background pixmap. */
    if(color1.pixel == color2.pixel) {
       bp->pixmap = JXCreatePixmap(display, rootWindow, 1, 1,
-                                  rootVisual.depth);
+                                  rootDepth);
       JXSetForeground(display, rootGC, color1.pixel);
       JXDrawPoint(display, bp->pixmap, rootGC, 0, 0);
    } else {
       bp->pixmap = JXCreatePixmap(display, rootWindow, 1, rootHeight,
-                                  rootVisual.depth);
+                                  rootDepth);
       DrawHorizontalGradient(bp->pixmap, rootGC, color1.pixel,
                              color2.pixel, 0, 0, 1, rootHeight);
    }
@@ -305,15 +305,14 @@ void LoadImageBackground(BackgroundNode *bp)
    }
 
    /* Create the pixmap. */
-   bp->pixmap = JXCreatePixmap(display, rootWindow,
-                               width, height, rootVisual.depth);
+   bp->pixmap = JXCreatePixmap(display, rootWindow, width, height, rootDepth);
 
    /* Clear the pixmap in case it is too small. */
    JXSetForeground(display, rootGC, 0);
    JXFillRectangle(display, bp->pixmap, rootGC, 0, 0, width, height);
 
    /* Draw the icon on the background pixmap. */
-   PutIcon(&rootVisual, ip, bp->pixmap, 0, 0, 0, width, height);
+   PutIcon(ip, bp->pixmap, 0, 0, 0, width, height);
 
    /* We don't need the icon anymore. */
    DestroyIcon(ip);

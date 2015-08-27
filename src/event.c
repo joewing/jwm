@@ -861,8 +861,10 @@ char HandlePropertyNotify(const XPropertyEvent *event)
             ResetBorder(np);
             changed = 1;
          } else if(event->atom == atoms[ATOM_NET_WM_WINDOW_OPACITY]) {
-            ReadWMOpacity(np->window, &np->state);
-            SetOpacity(np, np->state.opacity, 1);
+            ReadWMOpacity(np->window, &np->state.opacity);
+            if(np->parent != None) {
+               SetOpacity(np, np->state.opacity, 1);
+            }
          }
          break;
       }
@@ -1470,13 +1472,15 @@ void HandleUnmapNotify(const XUnmapEvent *event)
          UpdateTime(&e);
          RemoveClient(np);
       } else if((np->state.status & STAT_MAPPED) || event->send_event) {
-         np->state.status &= ~STAT_MAPPED;
-         JXUngrabButton(display, AnyButton, AnyModifier, np->window);
-         GravitateClient(np, 1);
-         JXReparentWindow(display, np->window, rootWindow, np->x, np->y);
-         WriteState(np);
-         JXRemoveFromSaveSet(display, np->window);
-         RemoveClient(np);
+         if(!(np->state.status & STAT_HIDDEN)) {
+            np->state.status &= ~STAT_MAPPED;
+            JXUngrabButton(display, AnyButton, AnyModifier, np->window);
+            GravitateClient(np, 1);
+            JXReparentWindow(display, np->window, rootWindow, np->x, np->y);
+            WriteState(np);
+            JXRemoveFromSaveSet(display, np->window);
+            RemoveClient(np);
+         }
       }
       UngrabServer();
 

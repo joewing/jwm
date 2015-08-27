@@ -563,7 +563,7 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
    ReadWMHints(win, &result, alreadyMapped);
    ReadWMState(win, &result);
    ReadMotifHints(win, &result);
-   ReadWMOpacity(win, &result);
+   ReadWMOpacity(win, &result.opacity);
 
    /* _NET_WM_DESKTOP */
    if(GetCardinalAtom(win, ATOM_NET_WM_DESKTOP, &card)) {
@@ -995,13 +995,14 @@ void ReadWMHints(Window win, ClientState *state, char alreadyMapped)
 }
 
 /** Read _NET_WM_WINDOW_OPACITY. */
-void ReadWMOpacity(Window win, ClientState *state)
+void ReadWMOpacity(Window win, unsigned *opacity)
 {
    unsigned long card;
-   if(!GetCardinalAtom(win, ATOM_NET_WM_WINDOW_OPACITY, &card)) {
-      card = UINT_MAX;
+   if(GetCardinalAtom(win, ATOM_NET_WM_WINDOW_OPACITY, &card)) {
+      *opacity = card;
+   } else {
+      *opacity = UINT_MAX;
    }
-   state->opacity = (unsigned int)card;
 }
 
 /** Read _MOTIF_WM_HINTS */

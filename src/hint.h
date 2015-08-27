@@ -219,9 +219,9 @@ void ReadWMHints(Window win, ClientState *state, char alreadyMapped);
 
 /** Read opacity.
  * @param win The window.
- * @param state The state hints to update.
+ * @param opacity The opacity to update.
  */
-void ReadWMOpacity(Window win, ClientState *state);
+void ReadWMOpacity(Window win, unsigned *opacity);
 
 /** Set the state of a client window.
  * @param np The client.

@@ -219,6 +219,8 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
 
    if(np->state.status & STAT_OPACITY) {
       SetOpacity(np, np->state.opacity, 1);
+   } else {
+      SetOpacity(np, settings.inactiveClientOpacity, 1);
    }
    if(np->state.status & STAT_STICKY) {
       SetCardinalAtom(np->window, ATOM_NET_WM_DESKTOP, ~0UL);
@@ -406,10 +408,14 @@ void SetClientWithdrawn(ClientNode *np)
 
    if(np->state.status & STAT_MAPPED) {
       UnmapClient(np);
-      JXUnmapWindow(display, np->parent);
+      if(np->parent != None) {
+         JXUnmapWindow(display, np->parent);
+      }
    } else if(np->state.status & STAT_SHADED) {
       if(!(np->state.status & STAT_MINIMIZED)) {
-         JXUnmapWindow(display, np->parent);
+         if(np->parent != None) {
+            JXUnmapWindow(display, np->parent);
+         }
       }
    }
 
@@ -438,7 +444,9 @@ void RestoreTransients(ClientNode *np, char raise)
    /* Restore this window. */
    if(!(np->state.status & STAT_MAPPED)) {
       if(np->state.status & STAT_SHADED) {
-         JXMapWindow(display, np->parent);
+         if(np->parent != None) {
+            JXMapWindow(display, np->parent);
+         }
       } else {
          JXMapWindow(display, np->window);
          if(np->parent != None) {
@@ -625,37 +633,37 @@ void SetClientDesktop(ClientNode *np, unsigned int desktop)
 /** Hide a client without unmapping. This will not update transients. */
 void HideClient(ClientNode *np)
 {
-
-   Assert(np);
-
    if(activeClient == np) {
       activeClient = NULL;
    }
    np->state.status |= STAT_HIDDEN;
    if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
-      JXUnmapWindow(display, np->parent);
+      if(np->parent != None) {
+         JXUnmapWindow(display, np->parent);
+      } else {
+         JXUnmapWindow(display, np->window);
+      }
    }
-
 }
 
 /** Show a hidden client. This will not update transients. */
 void ShowClient(ClientNode *np)
 {
-
-   Assert(np);
-
    if(np->state.status & STAT_HIDDEN) {
       np->state.status &= ~STAT_HIDDEN;
       if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
          if(!(np->state.status & STAT_MINIMIZED)) {
-            JXMapWindow(display, np->parent);
+            if(np->parent != None) {
+               JXMapWindow(display, np->parent);
+            } else {
+               JXMapWindow(display, np->window);
+            }
             if(np->state.status & STAT_ACTIVE) {
                FocusClient(np);
             }
          }
       }
    }
-
 }
 
 /** Maximize a client window. */

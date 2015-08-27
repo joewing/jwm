@@ -208,7 +208,9 @@ char GrabMouseForChoose(void)
 /** Set the default cursor for a window. */
 void SetDefaultCursor(Window w)
 {
-   JXDefineCursor(display, w, cursors[CURSOR_DEFAULT]);
+   if(JLIKELY(w != None)) {
+      JXDefineCursor(display, w, cursors[CURSOR_DEFAULT]);
+   }
 }
 
 /** Move the mouse to the specified coordinates on a window. */

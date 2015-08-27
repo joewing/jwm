@@ -348,16 +348,17 @@ void WriteState(ClientNode *np)
 /** Set the opacity of a client. */
 void SetOpacity(ClientNode *np, unsigned int opacity, char force)
 {
-
+   Window w;
    if(np->state.opacity == opacity && !force) {
       return;
    }
 
+   w = np->parent != None ? np->parent : np->window;
    np->state.opacity = opacity;
    if(opacity == 0xFFFFFFFF) {
-      JXDeleteProperty(display, np->parent, atoms[ATOM_NET_WM_WINDOW_OPACITY]);
+      JXDeleteProperty(display, w, atoms[ATOM_NET_WM_WINDOW_OPACITY]);
    } else {
-      SetCardinalAtom(np->parent, ATOM_NET_WM_WINDOW_OPACITY, opacity);
+      SetCardinalAtom(w, ATOM_NET_WM_WINDOW_OPACITY, opacity);
    }
 }
 
@@ -997,9 +998,7 @@ void ReadWMHints(Window win, ClientState *state, char alreadyMapped)
 void ReadWMOpacity(Window win, ClientState *state)
 {
    unsigned long card;
-   if(GetCardinalAtom(win, ATOM_NET_WM_WINDOW_OPACITY, &card)) {
-      state->status |= STAT_OPACITY;
-   } else {
+   if(!GetCardinalAtom(win, ATOM_NET_WM_WINDOW_OPACITY, &card)) {
       card = UINT_MAX;
    }
    state->opacity = (unsigned int)card;

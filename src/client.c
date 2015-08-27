@@ -186,19 +186,29 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    if(!((np->state.status & STAT_FULLSCREEN) || np->state.maxFlags)) {
       int north, south, east, west;
       GetBorderSize(&np->state, &north, &south, &east, &west);
-      JXMoveResizeWindow(display, np->parent, np->x - west, np->y - north,
-                         np->width + east + west, np->height + north + south);
-      JXMoveResizeWindow(display, np->window, west, north,
-                         np->width, np->height);
+      if(np->parent != None) {
+         JXMoveResizeWindow(display, np->parent, np->x - west, np->y - north,
+                            np->width + east + west,
+                            np->height + north + south);
+         JXMoveResizeWindow(display, np->window, west, north,
+                            np->width, np->height);
+      } else {
+         JXMoveResizeWindow(display, np->window, np->x, np->y,
+                            np->width, np->height);
+      }
    }
 
    /* If one of these fails we are SOL, so who cares. */
    XSaveContext(display, np->window, clientContext, (void*)np);
-   XSaveContext(display, np->parent, frameContext, (void*)np);
+   if(np->parent != None) {
+      XSaveContext(display, np->parent, frameContext, (void*)np);
+   }
 
    if(np->state.status & STAT_MAPPED) {
       JXMapWindow(display, np->window);
-      JXMapWindow(display, np->parent);
+      if(np->parent != None) {
+         JXMapWindow(display, np->parent);
+      }
    }
 
    clientCount += 1;
@@ -293,7 +303,9 @@ void MinimizeTransients(ClientNode *np, char lower)
    /* Unmap the window and update its state. */
    if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
       UnmapClient(np);
-      JXUnmapWindow(display, np->parent);
+      if(np->parent != None) {
+         JXUnmapWindow(display, np->parent);
+      }
    }
    np->state.status |= STAT_MINIMIZED;
 
@@ -429,7 +441,9 @@ void RestoreTransients(ClientNode *np, char raise)
          JXMapWindow(display, np->parent);
       } else {
          JXMapWindow(display, np->window);
-         JXMapWindow(display, np->parent);
+         if(np->parent != None) {
+            JXMapWindow(display, np->parent);
+         }
          np->state.status |= STAT_MAPPED;
       }
    }
@@ -794,9 +808,6 @@ void SetClientFullScreen(ClientNode *np, char fullScreen)
 /** Set the active client. */
 void FocusClient(ClientNode *np)
 {
-
-   Assert(np);
-
    if(np->state.status & STAT_HIDDEN) {
       return;
    }
@@ -1088,11 +1099,19 @@ void RestackClients(void)
       fw = activeClient->window;
       for(np = nodes[activeClient->state.layer]; np; np = np->next) {
          if(np->owner == fw) {
-            stack[index] = np->parent;
+            if(np->parent != None) {
+               stack[index] = np->parent;
+            } else {
+               stack[index] = np->window;
+            }
             index += 1;
          }
       }
-      stack[index] = activeClient->parent;
+      if(activeClient->parent != None) {
+         stack[index] = activeClient->parent;
+      } else {
+         stack[index] = activeClient->window;
+      }
       index += 1;
    }
    layer = LAST_LAYER;
@@ -1104,7 +1123,11 @@ void RestackClients(void)
             if(fw != None && (np->window == fw || np->owner == fw)) {
                continue;
             }
-            stack[index] = np->parent;
+            if(np->parent != None) {
+               stack[index] = np->parent;
+            } else {
+               stack[index] = np->window;
+            }
             index += 1;
          }
       }
@@ -1161,7 +1184,6 @@ void RemoveClient(ClientNode *np)
 
    Assert(np);
    Assert(np->window != None);
-   Assert(np->parent != None);
 
    /* Remove this client from the client list */
    if(np->next) {
@@ -1176,7 +1198,9 @@ void RemoveClient(ClientNode *np)
    }
    clientCount -= 1;
    XDeleteContext(display, np->window, clientContext);
-   XDeleteContext(display, np->parent, frameContext);
+   if(np->parent != None) {
+      XDeleteContext(display, np->parent, frameContext);
+   }
 
    if(np->state.status & STAT_URGENT) {
       UnregisterCallback(SignalUrgent, np);
@@ -1314,6 +1338,9 @@ void ReparentClient(ClientNode *np, char notOwner)
    }
    JXGrabButton(display, AnyButton, AnyModifier, np->window, True,
                 ButtonPressMask, GrabModeSync, GrabModeAsync, None, None);
+   if((np->state.border & (BORDER_TITLE | BORDER_OUTLINE)) == 0) {
+      return;
+   }
 
    attrMask = 0;
 

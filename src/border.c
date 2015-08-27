@@ -218,6 +218,12 @@ void ResetBorder(const ClientNode *np)
    int north, south, east, west;
    int width, height;
 
+   if(np->parent == None) {
+      JXMoveResizeWindow(display, np->window, np->x, np->y,
+                         np->width, np->height);
+      return;
+   }
+
    GrabServer();
 
    /* Determine the size of the window. */

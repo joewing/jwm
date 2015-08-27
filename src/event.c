@@ -712,7 +712,11 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
       } else {
          int north, south, east, west;
          GetBorderSize(&np->state, &north, &south, &east, &west);
-         JXMoveWindow(display, np->parent, np->x - west, np->y - north);
+         if(np->parent != None) {
+            JXMoveWindow(display, np->parent, np->x - west, np->y - north);
+         } else {
+            JXMoveWindow(display, np->window, np->x, np->y);
+         }
       }
 
       SendConfigureEvent(np);
@@ -1418,7 +1422,9 @@ void HandleMapRequest(const XMapEvent *event)
          UpdateState(np);
          np->state.status |= STAT_MAPPED;
          XMapWindow(display, np->window);
-         XMapWindow(display, np->parent);
+         if(np->parent != None) {
+            XMapWindow(display, np->parent);
+         }
          if(!(np->state.status & STAT_STICKY)) {
             np->state.desktop = currentDesktop;
          }

@@ -201,7 +201,11 @@ char MoveClient(ClientNode *np, int startx, int starty)
                MaximizeClient(np, MAX_NONE);
                startx = np->width / 2;
                starty = -north / 2;
-               MoveMouse(np->parent, startx, starty);
+               if(np->parent != None) {
+                  MoveMouse(np->parent, startx, starty);
+               } else {
+                  MoveMouse(np->window, startx, starty);
+               }
             }
 
             CreateMoveWindow(np);
@@ -219,8 +223,12 @@ char MoveClient(ClientNode *np, int startx, int starty)
                DrawOutline(np->x - west, np->y - north,
                            np->width + west + east, height);
             } else {
-               JXMoveWindow(display, np->parent, np->x - west,
-                            np->y - north);
+               if(np->parent != None) {
+                  JXMoveWindow(display, np->parent, np->x - west,
+                               np->y - north);
+               } else {
+                  JXMoveWindow(display, np->window, np->x, np->y);
+               }
                SendConfigureEvent(np);
             }
             UpdateMoveWindow(np);
@@ -244,6 +252,7 @@ char MoveClientKeyboard(ClientNode *np)
    int height;
    int north, south, east, west;
    MaxFlags maxFlags;
+   Window win;
 
    Assert(np);
 
@@ -259,7 +268,8 @@ char MoveClientKeyboard(ClientNode *np)
       MaximizeClient(np, MAX_NONE);
    }
 
-   if(JUNLIKELY(JXGrabKeyboard(display, np->parent, True, GrabModeAsync,
+   win = np->parent != None ? np->parent : np->window;
+   if(JUNLIKELY(JXGrabKeyboard(display, win, True, GrabModeAsync,
                                GrabModeAsync, CurrentTime))) {
       Debug("MoveClient: could not grab keyboard");
       return 0;
@@ -357,7 +367,7 @@ char MoveClientKeyboard(ClientNode *np)
             DrawOutline(np->x - west, np->y - west,
                         np->width + west + east, height + north + west);
          } else {
-            JXMoveWindow(display, np->parent, np->x - west, np->y - north);
+            JXMoveWindow(display, win, np->x - west, np->y - north);
             SendConfigureEvent(np);
          }
 
@@ -402,7 +412,11 @@ void StopMove(ClientNode *np, int doMove,
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
 
-   JXMoveWindow(display, np->parent, np->x - west, np->y - north);
+   if(np->parent != None) {
+      JXMoveWindow(display, np->parent, np->x - west, np->y - north);
+   } else {
+      JXMoveWindow(display, np->window, np->x - west, np->y - north);
+   }
    SendConfigureEvent(np);
 
    /* Restore maximized status. */

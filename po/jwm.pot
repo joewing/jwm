@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-28 18:14-0500\n"
+"POT-Creation-Date: 2015-08-28 18:54-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "invalid action: \"%s\""
 msgstr ""
 
-#: src/action.c:189
+#: src/action.c:192
 #, c-format
 msgid "action: root menu \"%s\" not defined"
 msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-28 18:14-0500\n"
+"POT-Creation-Date: 2015-08-28 18:54-0500\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "invalid action: \"%s\""
 msgstr "acción no válida para Botón de Bandeja: «%s»"
 
-#: src/action.c:189
+#: src/action.c:192
 #, fuzzy, c-format
 msgid "action: root menu \"%s\" not defined"
 msgstr "botón de bandeja: menú root %d no definido"

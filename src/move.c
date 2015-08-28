@@ -110,7 +110,9 @@ char MoveClient(ClientNode *np, int startx, int starty)
       return 0;
    }
 
-   GrabMouseForMove();
+   if(!GrabMouseForMove()) {
+      return 0;
+   }
 
    RegisterCallback(0, SignalMove, NULL);
    np->controller = MoveController;
@@ -274,7 +276,10 @@ char MoveClientKeyboard(ClientNode *np)
       Debug("MoveClient: could not grab keyboard");
       return 0;
    }
-   GrabMouseForMove();
+   if(!GrabMouseForMove()) {
+      JXUngrabKeyboard(display, CurrentTime);
+      return 0;
+   }
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
 

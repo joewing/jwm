@@ -87,8 +87,11 @@ void ProcessActionPress(struct ActionType *actions,
 
             if(strncmp(ap->action, "root:", 5) != 0) {
 
+               if(!GrabMouse(cp->tray->window)) {
+                  return;
+               }
+
                /* Show the button being pressed. */
-               GrabMouse(cp->tray->window);
                cp->grabbed = 1;
                if(cp->Redraw) {
                   (cp->Redraw)(cp);

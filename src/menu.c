@@ -163,8 +163,6 @@ void InitializeMenu(Menu *menu)
 void ShowMenu(Menu *menu, RunMenuCommandType runner,
               int x, int y, char keyboard)
 {
-   int mouseStatus, keyboardStatus;
-
    /* Don't show the menu if there isn't anything to show. */
    if(JUNLIKELY(!IsMenuValid(menu))) {
       return;
@@ -180,10 +178,12 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner,
       y -= menu->itemHeight / 2 + menu->offsets[0];
    }
 
-   mouseStatus = GrabMouse(rootWindow);
-   keyboardStatus = JXGrabKeyboard(display, rootWindow, False,
-                                   GrabModeAsync, GrabModeAsync, CurrentTime);
-   if(JUNLIKELY(!mouseStatus || keyboardStatus != GrabSuccess)) {
+   if(!GrabMouse(rootWindow)) {
+      return;
+   }
+   if(JXGrabKeyboard(display, rootWindow, False, GrabModeAsync,
+                     GrabModeAsync, CurrentTime) != GrabSuccess) {
+      JXUngrabPointer(display, CurrentTime);
       return;
    }
 

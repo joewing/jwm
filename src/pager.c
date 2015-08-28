@@ -355,6 +355,11 @@ ClientFound:
       return;
    }
 
+   /* Start the move. */
+   if(!GrabMouseForMove()) {
+      return;
+   }
+
    /* If the client is maximized, unmaximize it. */
    maxFlags = np->state.maxFlags;
    if(np->state.maxFlags) {
@@ -362,9 +367,6 @@ ClientFound:
    }
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
-
-   /* Start the move. */
-   GrabMouseForMove();
 
    np->controller = PagerMoveController;
    shouldStopMove = 0;

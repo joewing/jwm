@@ -1097,9 +1097,14 @@ void HandleNetMoveResize(const XClientMessageEvent *event, ClientNode *np)
 void HandleNetWMMoveResize(const XClientMessageEvent *event, ClientNode *np)
 {
 
-   const long x = event->data.l[0] - np->x;
-   const long y = event->data.l[1] - np->y;
+   long x = event->data.l[0] - np->x;
+   long y = event->data.l[1] - np->y;
    const long direction = event->data.l[2];
+   int deltax, deltay;
+
+   GetGravityDelta(np, np->gravity, &deltax, &deltay);
+   x -= deltax;
+   y -= deltay;
 
    switch(direction) {
    case 0:  /* top-left */

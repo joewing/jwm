@@ -30,7 +30,6 @@ static ClientNode *activeClient;
 unsigned int clientCount;
 
 static void LoadFocus(void);
-static void ReparentClient(ClientNode *np, char notOwner);
 static void RestackTransients(const ClientNode *np);
 static void MinimizeTransients(ClientNode *np, char lower);
 static void RestoreTransients(ClientNode *np, char raise);
@@ -139,6 +138,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    memset(np, 0, sizeof(ClientNode));
 
    np->window = w;
+   np->parent = None;
    np->owner = None;
    np->state.desktop = currentDesktop;
 
@@ -180,35 +180,33 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    nodes[np->state.layer] = np;
 
    SetDefaultCursor(np->window);
-   ReparentClient(np, notOwner);
+
+   if(notOwner) {
+      XSetWindowAttributes sattr;
+      JXAddToSaveSet(display, np->window);
+      sattr.event_mask
+         = EnterWindowMask
+         | ColormapChangeMask
+         | PropertyChangeMask
+         | KeyReleaseMask
+         | StructureNotifyMask;
+      sattr.do_not_propagate_mask = ButtonPressMask
+                                  | ButtonReleaseMask
+                                  | PointerMotionMask
+                                  | KeyPressMask
+                                  | KeyReleaseMask;
+      JXChangeWindowAttributes(display, np->window,
+                               CWEventMask | CWDontPropagate, &sattr);
+   }
+   JXGrabButton(display, AnyButton, AnyModifier, np->window, True,
+                ButtonPressMask, GrabModeSync, GrabModeAsync, None, None);
+
+   ReparentClient(np);
    PlaceClient(np, alreadyMapped);
-
-   if(!((np->state.status & STAT_FULLSCREEN) || np->state.maxFlags)) {
-      int north, south, east, west;
-      GetBorderSize(&np->state, &north, &south, &east, &west);
-      if(np->parent != None) {
-         JXMoveResizeWindow(display, np->parent, np->x - west, np->y - north,
-                            np->width + east + west,
-                            np->height + north + south);
-         JXMoveResizeWindow(display, np->window, west, north,
-                            np->width, np->height);
-      } else {
-         JXMoveResizeWindow(display, np->window, np->x, np->y,
-                            np->width, np->height);
-      }
-   }
-
-   /* If one of these fails we are SOL, so who cares. */
    XSaveContext(display, np->window, clientContext, (void*)np);
-   if(np->parent != None) {
-      XSaveContext(display, np->parent, frameContext, (void*)np);
-   }
 
    if(np->state.status & STAT_MAPPED) {
       JXMapWindow(display, np->window);
-      if(np->parent != None) {
-         JXMapWindow(display, np->parent);
-      }
    }
 
    clientCount += 1;
@@ -1320,97 +1318,88 @@ ClientNode *FindClientByParent(Window p)
 }
 
 /** Reparent a client window. */
-void ReparentClient(ClientNode *np, char notOwner)
+void ReparentClient(ClientNode *np)
 {
-
    XSetWindowAttributes attr;
    int attrMask;
    int x, y, width, height;
    int north, south, east, west;
 
-   Assert(np);
-
-   if(notOwner) {
-      JXAddToSaveSet(display, np->window);
-
-      attr.event_mask
-         = EnterWindowMask
-         | ColormapChangeMask
-         | PropertyChangeMask
-         | KeyReleaseMask
-         | StructureNotifyMask;
-      attr.do_not_propagate_mask = NoEventMask;
-      JXChangeWindowAttributes(display, np->window,
-                               CWEventMask | CWDontPropagate, &attr);
-
-   }
-   JXGrabButton(display, AnyButton, AnyModifier, np->window, True,
-                ButtonPressMask, GrabModeSync, GrabModeAsync, None, None);
    if((np->state.border & (BORDER_TITLE | BORDER_OUTLINE)) == 0) {
-      return;
+
+      if(np->parent == None) {
+         return;
+      }
+
+      GrabServer();
+      JXReparentWindow(display, np->window, rootWindow, np->x, np->y);
+      JXSync(display, True);
+      UngrabServer();
+
+      XDeleteContext(display, np->parent, frameContext);
+      JXDestroyWindow(display, np->parent);
+      np->parent = None;
+
+   } else {
+
+      if(np->parent != None) {
+         return;
+      }
+
+      attrMask = 0;
+
+      /* We can't use PointerMotionHint mask here since the exact location
+       * of the mouse on the frame is important. */
+      attrMask |= CWEventMask;
+      attr.event_mask
+         = ButtonPressMask
+         | ButtonReleaseMask
+         | ExposureMask
+         | PointerMotionMask
+         | SubstructureRedirectMask
+         | SubstructureNotifyMask
+         | EnterWindowMask
+         | LeaveWindowMask
+         | KeyPressMask
+         | KeyReleaseMask;
+
+      attrMask |= CWDontPropagate;
+      attr.do_not_propagate_mask = ButtonPressMask | ButtonReleaseMask;
+
+      attrMask |= CWBackPixel;
+      attr.background_pixel = colors[COLOR_TITLE_BG2];
+
+      attrMask |= CWBorderPixel;
+      attr.border_pixel = 0;
+
+      x = np->x;
+      y = np->y;
+      width = np->width;
+      height = np->height;
+      GetBorderSize(&np->state, &north, &south, &east, &west);
+      x -= west;
+      y -= north;
+      width += east + west;
+      height += north + south;
+
+      /* Create the frame window. */
+      np->parent = JXCreateWindow(display, rootWindow, x, y, width, height,
+                                  0, rootDepth, InputOutput,
+                                  rootVisual, attrMask, &attr);
+      XSaveContext(display, np->parent, frameContext, (void*)np);
+
+      JXSetWindowBorderWidth(display, np->window, 0);
+
+      /* Reparent the client window. */
+      GrabServer();
+      JXReparentWindow(display, np->window, np->parent, west, north);
+      JXSync(display, True);
+      UngrabServer();
+
+      if(np->state.status & STAT_MAPPED) {
+         JXMapWindow(display, np->parent);
+      }
    }
-
-   attrMask = 0;
-
-   /* We can't use PointerMotionHint mask here since the exact location
-    * of the mouse on the frame is important. */
-   attrMask |= CWEventMask;
-   attr.event_mask
-      = ButtonPressMask
-      | ButtonReleaseMask
-      | ExposureMask
-      | PointerMotionMask
-      | SubstructureRedirectMask
-      | SubstructureNotifyMask
-      | EnterWindowMask
-      | LeaveWindowMask
-      | KeyPressMask
-      | KeyReleaseMask;
-
-   attrMask |= CWDontPropagate;
-   attr.do_not_propagate_mask = ButtonPressMask | ButtonReleaseMask;
-
-   attrMask |= CWBackPixel;
-   attr.background_pixel = colors[COLOR_TITLE_BG2];
-
-   attrMask |= CWBorderPixel;
-   attr.border_pixel = 0;
-
-   x = np->x;
-   y = np->y;
-   width = np->width;
-   height = np->height;
-   GetBorderSize(&np->state, &north, &south, &east, &west);
-   x -= west;
-   y -= north;
-   width += east + west;
-   height += north + south;
-
-   /* Create the frame window. */
-   np->parent = JXCreateWindow(display, rootWindow, x, y, width, height,
-                               0, rootDepth, InputOutput,
-                               rootVisual, attrMask, &attr);
- 
-   /* Update the window to get only the events we want. */
-   attrMask = CWDontPropagate;
-   attr.do_not_propagate_mask
-      = ButtonPressMask
-      | ButtonReleaseMask
-      | PointerMotionMask
-      | KeyPressMask
-      | KeyReleaseMask;
-
-   /* Make sure client doesn't muck with these. */
-   attrMask |= CWBackingStore;
-   attr.backing_store = NotUseful;
-   attrMask |= CWWinGravity;
-   attr.win_gravity = NorthWestGravity;
-
-   JXChangeWindowAttributes(display, np->window, attrMask, &attr);
-   JXSetWindowBorderWidth(display, np->window, 0);
-
-   /* Reparent the client window. */
-   JXReparentWindow(display, np->window, np->parent, west, north);
 
 }
 

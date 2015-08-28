@@ -318,6 +318,13 @@ void ShowClient(ClientNode *np);
  */
 void UpdateClientColormap(ClientNode *np);
 
+/** Reparent a client.
+ * This will create a window for a frame (or destroy it) depending on
+ * whether a client needs a frame.
+ * @param np The client.
+ */
+void ReparentClient(ClientNode *np);
+
 /** Send a configure event to a client.
  * This will send updated location and size information to a client.
  * @param np The client to get the event.

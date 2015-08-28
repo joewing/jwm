@@ -308,7 +308,7 @@ void ResetBorder(const ClientNode *np)
 }
 
 /** Draw a client border. */
-void DrawBorder(const ClientNode *np)
+void DrawBorder(ClientNode *np)
 {
 
    Assert(np);
@@ -328,8 +328,11 @@ void DrawBorder(const ClientNode *np)
       return;
    }
 
+   /* Create the frame if needed. */
+   ReparentClient(np);
+
    /* Return if there is no border. */
-   if(!(np->state.border & (BORDER_TITLE | BORDER_OUTLINE))) {
+   if(np->parent == None) {
       return;
    }
 

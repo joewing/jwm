@@ -60,7 +60,7 @@ void ResetBorder(const struct ClientNode *np);
 /** Draw a window border.
  * @param np The client whose frame to draw.
  */
-void DrawBorder(const struct ClientNode *np);
+void DrawBorder(struct ClientNode *np);
 
 /** Get the size of a border icon.
  * @return The size in pixels (note that icons are square).

@@ -5,28 +5,28 @@ VERSION ?= @VERSION@
 USE_NLS = @USE_NLS@
 
 all:
-	cd src ; $(MAKE) all ; cd ..
-	cd po ; $(MAKE) all ; cd ..
+	$(MAKE) -C src all
+	$(MAKE) -C po all
 
 install: all
-	cd src ; $(MAKE) install ; cd ..
-	cd po ; $(MAKE) install ; cd ..
+	$(MAKE) -C src install
+	$(MAKE) -C po install
 	install -d -m 0755 $(SYSCONF)
 	install -m 644 example.jwmrc $(SYSCONF)/system.jwmrc
 	install -d -m 0755 $(MANDIR)/man1
 	install -m 644 jwm.1 $(MANDIR)/man1/jwm.1
 
 install-strip: all install-conf
-	cd src ; $(MAKE) install-strip ; cd ..
-	cd po ; $(MAKE) install-strip ; cd ..
+	$(MAKE) -C src install-strip
+	$(MAKE) -C po install-strip
 	install -d -m 0755 $(SYSCONF)
 	install -m 644 example.jwmrc $(SYSCONF)/system.jwmrc
 	install -d -m 0755 $(MANDIR)/man1
 	install -m 644 jwm.1 $(MANDIR)/man1/jwm.1
 
 uninstall:
-	cd src ; $(MAKE) uninstall ; cd ..
-	cd po ; $(MAKE) uninstall ; cd ..
+	$(MAKE) -C src uninstall
+	$(MAKE) -C po uninstall
 	rm -f $(SYSCONF)/system.jwmrc
 	rm -f $(MANDIR)/man1/jwm.1
 

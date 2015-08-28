@@ -822,19 +822,19 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
       np->x = box.x;
       np->width = box.width;
       if(!(np->state.status & STAT_IIGNORE)) {
-         np->width -= ((box.width - np->baseWidth) % np->xinc);
+         np->width -= ((np->width - np->baseWidth) % np->xinc);
       }
    } else if(flags & MAX_LEFT) {
       np->x = box.x;
       np->width = box.width / 2 - west;
       if(!(np->state.status & STAT_IIGNORE)) {
-         np->width -= ((box.width - np->baseWidth) % np->xinc);
+         np->width -= ((np->width - np->baseWidth) % np->xinc);
       }
    } else if(flags & MAX_RIGHT) {
       np->x = box.x + box.width / 2 + west;
       np->width = box.width / 2 - east;
       if(!(np->state.status & STAT_IIGNORE)) {
-         np->width -= ((box.width - np->baseWidth) % np->xinc);
+         np->width -= ((np->width - np->baseWidth) % np->xinc);
       }
    }
 
@@ -843,19 +843,19 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
       np->y = box.y + north;
       np->height = box.height - north;
       if(!(np->state.status & STAT_IIGNORE)) {
-         np->height -= ((box.height - np->baseHeight) % np->yinc);
+         np->height -= ((np->height - np->baseHeight) % np->yinc);
       }
    } else if(flags & MAX_TOP) {
       np->y = box.y + north;
       np->height = box.height / 2 - north - south;
       if(!(np->state.status & STAT_IIGNORE)) {
-         np->height -= ((box.height - np->baseHeight) % np->yinc);
+         np->height -= ((np->height - np->baseHeight) % np->yinc);
       }
    } else if(flags & MAX_BOTTOM) {
       np->y = box.y + box.height / 2 + north;
       np->height = box.height / 2 - north - south;
       if(!(np->state.status & STAT_IIGNORE)) {
-         np->height -= ((box.height - np->baseHeight) % np->yinc);
+         np->height -= ((np->height - np->baseHeight) % np->yinc);
       }
    }
 

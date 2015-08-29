@@ -201,8 +201,8 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    JXGrabButton(display, AnyButton, AnyModifier, np->window, True,
                 ButtonPressMask, GrabModeSync, GrabModeAsync, None, None);
 
-   ReparentClient(np);
    PlaceClient(np, alreadyMapped);
+   ReparentClient(np);
    XSaveContext(display, np->window, clientContext, (void*)np);
 
    if(np->state.status & STAT_MAPPED) {

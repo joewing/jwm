@@ -866,7 +866,7 @@ void UpdateSpecificTray(const TrayType *tp, const TrayComponentType *cp)
    }
 
    /* If the tray is hidden, draw only the background. */
-   if(!tp->hidden && cp->pixmap != None) {
+   if(cp->pixmap != None) {
       JXCopyArea(display, cp->pixmap, tp->window, rootGC, 0, 0,
                  cp->width, cp->height, cp->x, cp->y);
    }

@@ -1321,6 +1321,7 @@ ClientNode *FindClientByParent(Window p)
 void ReparentClient(ClientNode *np)
 {
    XSetWindowAttributes attr;
+   XEvent event;
    int attrMask;
    int x, y, width, height;
    int north, south, east, west;
@@ -1331,11 +1332,7 @@ void ReparentClient(ClientNode *np)
          return;
       }
 
-      GrabServer();
       JXReparentWindow(display, np->window, rootWindow, np->x, np->y);
-      JXSync(display, True);
-      UngrabServer();
-
       XDeleteContext(display, np->parent, frameContext);
       JXDestroyWindow(display, np->parent);
       np->parent = None;
@@ -1391,15 +1388,15 @@ void ReparentClient(ClientNode *np)
       JXSetWindowBorderWidth(display, np->window, 0);
 
       /* Reparent the client window. */
-      GrabServer();
       JXReparentWindow(display, np->window, np->parent, west, north);
-      JXSync(display, True);
-      UngrabServer();
 
       if(np->state.status & STAT_MAPPED) {
          JXMapWindow(display, np->parent);
       }
    }
+
+   JXSync(display, False);
+   JXCheckTypedWindowEvent(display, np->window, UnmapNotify, &event);
 
 }
 

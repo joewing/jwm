@@ -168,7 +168,7 @@ char *ConvertFromUTF8(char *str)
    char *result = (char*)str;
 #ifdef USE_ICONV
    if(fromUTF8 != (iconv_t)-1) {
-      char *inBuf = (char*)str;
+      ICONV_CONST char *inBuf = (ICONV_CONST char*)str;
       char *outBuf;
       size_t inLeft = strlen(str);
       size_t outLeft = 4 * inLeft;
@@ -197,7 +197,7 @@ char *GetUTF8String(const char *str)
    char *utf8String = (char*)str;
 #ifdef USE_ICONV
    if(toUTF8 != (iconv_t)-1) {
-      char *inBuf = (char*)str;
+      ICONV_CONST char *inBuf = (ICONV_CONST char*)str;
       char *outBuf;
       size_t inLeft = strlen(str);
       size_t outLeft = 4 * inLeft;

@@ -396,7 +396,8 @@ if test "$enable_iconv" != "no" ; then
    AC_CHECK_FUNC(iconv,
         [ AC_DEFINE(USE_ICONV, 1, [Enable iconv support])
           enable_iconv="yes" ],
-        [ AC_MSG_WARN([iconv not found]) ])
+        [ enable_iconv="no"
+          AC_MSG_WARN([iconv not found]) ])
 fi
 
 ############################################################################

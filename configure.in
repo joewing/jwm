@@ -72,7 +72,7 @@ AC_CHECK_HEADERS([sys/select.h signal.h unistd.h time.h sys/wait.h sys/time.h])
 
 AC_CHECK_HEADERS([langinfo.h iconv.h])
 
-AC_CHECK_HEADERS([alloca.h locale.h libintl.h])
+AC_CHECK_HEADERS([locale.h libintl.h])
 
 AC_CHECK_HEADERS([X11/Xlib.h], [],
    [ AC_MSG_ERROR([Xlib.h could not be found]) ])
@@ -84,6 +84,7 @@ AC_CHECK_HEADERS([X11/Xutil.h X11/cursorfont.h X11/Xproto.h \
    ])
 
 AC_CHECK_FUNCS([unsetenv putenv setlocale])
+AC_FUNC_ALLOCA()
 
 ############################################################################
 # Check for pkg-config.
@@ -160,27 +161,28 @@ fi
 AC_ARG_ENABLE(png,
    AC_HELP_STRING([--disable-png], [disable PNG images]) )
 if test "$enable_png" != "no" ; then
-
    if test "$use_pkgconfig_png" = "yes" ; then
       PNG_CFLAGS=`$PKGCONFIG --cflags libpng`
       PNG_LDFLAGS=`$PKGCONFIG --libs libpng`
+      enable_png="yes"
    elif which libpng-config >/dev/null ; then
       PNG_CFLAGS=`libpng-config --cflags`
       PNG_LDFLAGS=`libpng-config --libs`
+      enable_png="yes"
    else
+      PNG_CFLAGS=""
       PNG_LDFLAGS="-lpng -lz -lm"
+      AC_CHECK_LIB(png, png_read_image,
+         [ enable_png="yes" ],
+         [ enable_png="no"
+           AC_MSG_WARN([unable to use libpng, PNG support disabled]) ],
+         [ $PNG_LDFLAGS ])
    fi
-
-fi
-if test "$enable_png" != "no" ; then
-   AC_CHECK_LIB(png, png_read_image,
-      [ LDFLAGS="$LDFLAGS $PNG_LDFLAGS"
-        CFLAGS="$CFLAGS $PNG_CFLAGS"
-        enable_png="yes"
-        AC_DEFINE(USE_PNG, 1, [Define to use libpng]) ],
-      [ enable_png="no"
-        AC_MSG_WARN([unable to use libpng, PNG support disabled]) ],
-      [ $PNG_LDFLAGS ])
+   if test "$enable_png" = "yes" ; then
+      CFLAGS="$CFLAGS $PNG_CFLAGS"
+      LDFLAGS="$LDFLAGS $PNG_LDFLAGS"
+      AC_DEFINE(USE_PNG, 1, [Define to use libpng])
+   fi
 fi
 
 ############################################################################
@@ -189,24 +191,22 @@ fi
 AC_ARG_ENABLE(cairo,
    AC_HELP_STRING([--disable-cairo], [disable Cairo support]) )
 if test "$enable_cairo" != "no" ; then
-
    if test "$use_pkgconfig_cairo" = "yes" ; then
       CAIRO_CFLAGS=`$PKGCONFIG --cflags cairo`
       CAIRO_LDFLAGS=`$PKGCONFIG --libs cairo`
+      enable_cairo="yes"
    elif which cairo-config >/dev/null ; then
       CAIRO_CFLAGS=`cairo-config --cflags`
       CAIRO_LDFLAGS=`cairo-config --libs`
+      enable_cairo="yes"
    else
       CAIRO_LDFLAGS="-lcairo"
+      AC_CHECK_LIB(cairo, cairo_create,
+         [ enable_cairo="yes" ],
+         [ enable_cairo="no"
+           AC_MSG_WARN([unable to use Cairo, Cairo support disabled]) ],
+         [ $CAIRO_LDFLAGS ])
    fi
-
-fi
-if test "$enable_cairo" != "no" ; then
-   AC_CHECK_LIB(cairo, cairo_create,
-      [ enable_cairo="yes" ],
-      [ enable_cairo="no"
-        AC_MSG_WARN([unable to use Cairo, Cairo support disabled]) ],
-      [ $CAIRO_LDFLAGS ])
 fi
 if test "$enable_cairo" = "no" ; then
    if test "$enable_rsvg" != "no" ; then
@@ -221,24 +221,18 @@ fi
 AC_ARG_ENABLE(rsvg,
    AC_HELP_STRING([--disable-rsvg], [disable rsvg support]) )
 if test "$enable_rsvg" != "no" ; then
-
    if test "$use_pkgconfig_rsvg" = "yes" ; then
       RSVG_CFLAGS=`$PKGCONFIG --cflags librsvg-2.0`
       RSVG_LDFLAGS=`$PKGCONFIG --libs librsvg-2.0`
+      enable_rsvg="yes"
    else
       RSVG_LDFLAGS="-lrsvg-2.0"
+      AC_CHECK_LIB(rsvg-2, rsvg_handle_render_cairo,
+         [ enable_rsvg="yes" ],
+         [ enable_rsvg="no"
+           AC_MSG_WARN([unable to use rsvg, rsvg support disabled]) ],
+         [ $RSVG_LDFLAGS ])
    fi
-
-fi
-if test "$enable_rsvg" != "no" ; then
-   AC_CHECK_LIB(rsvg-2, rsvg_handle_render_cairo,
-      [ LDFLAGS="$LDFLAGS $RSVG_LDFLAGS"
-        CFLAGS="$CFLAGS $RSVG_CFLAGS"
-        enable_rsvg="yes"
-        AC_DEFINE(USE_RSVG, 1, [Define to use rsvg]) ],
-      [ enable_rsvg="no"
-        AC_MSG_WARN([unable to use rsvg, rsvg support disabled]) ],
-      [ $RSVG_LDFLAGS ])
 fi
 if test "$enable_rsvg" = "no" ; then
    if test "$enable_cairo" != "no" ; then
@@ -247,9 +241,10 @@ if test "$enable_rsvg" = "no" ; then
    fi
 fi
 if test "$enable_rsvg" = "yes" ; then
-   LDFLAGS="$LDFLAGS $CAIRO_LDFLAGS"
-   CFLAGS="$CFLAGS $CAIRO_CFLAGS"
+   LDFLAGS="$LDFLAGS $RSVG_LDFLAGS $CAIRO_LDFLAGS"
+   CFLAGS="$CFLAGS $CAIRO_CFLAGS $CAIRO_CFLAGS"
    AC_DEFINE(USE_CAIRO, 1, [Define to use Cairo])
+   AC_DEFINE(USE_RSVG, 1, [Define to use rsvg])
 fi
 
 ############################################################################
@@ -261,19 +256,26 @@ if test "$enable_jpeg" != "no" ; then
    if test "$use_pkgconfig_jpeg" = "yes" ; then
       JPEG_CFLAGS=`$PKGCONFIG --cflags libjpeg`
       JPEG_LDFLAGS=`$PKGCONFIG --libs libjpeg`
+      enable_jpeg="yes"
    else
       JPEG_LDFLAGS="-ljpeg"
+      AC_CHECK_HEADERS([jpeglib.h], [],
+         [ enable_jpeg="no"
+           AC_MSG_WARN([unable to include jpeglib.h, JPEG support disabled])
+         ])
+      if test "$enable_jpeg" != "no" ; then
+         AC_CHECK_LIB(jpeg, jpeg_start_decompress,
+            [ enable_jpeg="yes" ],
+            [ enable_jpeg="no"
+              AC_MSG_WARN([unable to use libjpeg, JPEG support disabled]) ],
+            [ $JPEG_LDFLAGS ])
+      fi
    fi
 fi
-if test "$enable_jpeg" != "no" ; then
-   AC_CHECK_LIB(jpeg, jpeg_start_decompress,
-      [ LDFLAGS="$LDFLAGS $JPEG_LDFLAGS"
-        CFLAGS="$CFLAGS $JPEG_CFLAGS"
-        enable_jpeg="yes"
-        AC_DEFINE(USE_JPEG, 1, [Define to use libjpeg]) ],
-      [ enable_jpeg="no"
-        AC_MSG_WARN([unable to use libjpeg, JPEG support disabled]) ],
-      [ $JPEG_LDFLAGS ])
+if test "$enable_jpeg" = "yes" ; then
+   LDFLAGS="$LDFLAGS $JPEG_LDFLAGS"
+   CFLAGS="$CFLAGS $JPEG_CFLAGS"
+   AC_DEFINE(USE_JPEG, 1, [Define to use libjpeg])
 fi
 
 ############################################################################
@@ -361,27 +363,27 @@ AC_ARG_ENABLE(fribidi,
    AC_HELP_STRING([--disable-fribidi],
       [disable bi-directional unicode support]) )
 if test "$enable_fribidi" != "no" ; then
-
    if test "$use_pkgconfig_fribidi" = "yes" ; then
       FRIBIDI_CFLAGS=`$PKGCONFIG --cflags fribidi`
       FRIBIDI_LDFLAGS=`$PKGCONFIG --libs fribidi`
+      enable_fribidi="yes"
    elif which fribidi-config >/dev/null ; then
       FRIBIDI_CFLAGS=`fribidi-config --cflags`
       FRIBIDI_LDFLAGS=`fribidi-config --libs`
+      enable_fribidi="yes"
    else
       FRIBIDI_LDFLAGS="-lfribidi"
+      AC_CHECK_LIB(fribidi, fribidi_charset_to_unicode,
+         [ enable_fribidi="yes" ],
+         [ enable_fribidi="no"
+           AC_MSG_WARN([unable to use FriBidi]) ],
+         [ $FRIBIDI_LDFLAGS ])
    fi
-
 fi
-if test "$enable_fribidi" != "no" ; then
-   AC_CHECK_LIB(fribidi, fribidi_charset_to_unicode,
-      [ LDFLAGS="$LDFLAGS $FRIBIDI_LDFLAGS"
-        CFLAGS="$CFLAGS $FRIBIDI_CFLAGS"
-        enable_fribidi="yes"
-        AC_DEFINE(USE_FRIBIDI, 1, [Define to use FriBidi]) ],
-      [ enable_fribidi="no"
-        AC_MSG_WARN([unable to use FriBidi]) ],
-      [ $FRIBIDI_LDFLAGS ])
+if test "$enable_fribidi" = "yes" ; then
+   LDFLAGS="$LDFLAGS $FRIBIDI_LDFLAGS"
+   CFLAGS="$CFLAGS $FRIBIDI_CFLAGS"
+   AC_DEFINE(USE_FRIBIDI, 1, [Define to use FriBidi])
 fi
 
 ############################################################################

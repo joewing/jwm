@@ -27,6 +27,8 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
+#include "../config.h"
+
 #ifndef MAKE_DEPEND
 #   include <stdlib.h>
 #   ifdef HAVE_ALLOCA_H

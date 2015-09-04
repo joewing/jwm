@@ -7,10 +7,9 @@
  *
  */
 
+#include "jwm.h"
 #include "misc.h"
 #include "debug.h"
-#include <stdlib.h>
-#include <string.h>
 
 static char ToLower(char ch);
 static char IsSymbolic(char ch);

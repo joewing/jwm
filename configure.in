@@ -242,7 +242,7 @@ if test "$enable_rsvg" = "no" ; then
 fi
 if test "$enable_rsvg" = "yes" ; then
    LDFLAGS="$LDFLAGS $RSVG_LDFLAGS $CAIRO_LDFLAGS"
-   CFLAGS="$CFLAGS $CAIRO_CFLAGS $CAIRO_CFLAGS"
+   CFLAGS="$CFLAGS $RSVG_CFLAGS $CAIRO_CFLAGS"
    AC_DEFINE(USE_CAIRO, 1, [Define to use Cairo])
    AC_DEFINE(USE_RSVG, 1, [Define to use rsvg])
 fi

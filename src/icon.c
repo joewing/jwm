@@ -268,6 +268,14 @@ void LoadIcon(ClientNode *np)
       return;
    }
 
+   /* Attempt to read an icon based on the window name. */
+   if(np->instanceName) {
+      np->icon = LoadNamedIcon(np->instanceName, 1, 1);
+      if(np->icon) {
+         return;
+      }
+   }
+
    /* Load the default icon */
    np->icon = GetDefaultIcon();
 }

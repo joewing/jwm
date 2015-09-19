@@ -1148,3 +1148,10 @@ void SetPixmapAtom(Window window, AtomType atom, Pixmap value)
                     PropModeReplace, (unsigned char*)&value, 1);
 }
 
+/** Set an atom atom. */
+void SetAtomAtom(Window window, AtomType atom, AtomType value)
+{
+   Assert(window != None);
+   JXChangeProperty(display, window, atoms[atom], XA_ATOM, 32,
+                    PropModeReplace, (unsigned char*)&atoms[value], 1);
+}

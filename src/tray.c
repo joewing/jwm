@@ -22,6 +22,7 @@
 #include "event.h"
 #include "client.h"
 #include "misc.h"
+#include "hint.h"
 
 #define DEFAULT_TRAY_WIDTH 32
 #define DEFAULT_TRAY_HEIGHT 32
@@ -105,6 +106,8 @@ void StartupTray(void)
                                   tp->x, tp->y, tp->width, tp->height, 0,
                                   rootDepth, InputOutput,
                                   rootVisual, attrMask, &attr);
+      SetAtomAtom(tp->window, ATOM_NET_WM_WINDOW_TYPE,
+                  ATOM_NET_WM_WINDOW_TYPE_DOCK);
 
       if(settings.trayOpacity < UINT_MAX) {
          /* Can't use atoms yet as it hasn't been initialized. */

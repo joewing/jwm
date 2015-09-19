@@ -14,6 +14,7 @@
 #include "main.h"
 #include "client.h"
 #include "settings.h"
+#include "hint.h"
 
 static Window statusWindow;
 static unsigned int statusWindowHeight;
@@ -86,6 +87,8 @@ void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type)
       statusWindowWidth, statusWindowHeight, 0,
       CopyFromParent, InputOutput, CopyFromParent,
       attrMask, &attrs);
+   SetAtomAtom(statusWindow, ATOM_NET_WM_WINDOW_TYPE,
+               ATOM_NET_WM_WINDOW_TYPE_NOTIFICATION);
 
    JXMapRaised(display, statusWindow);
 

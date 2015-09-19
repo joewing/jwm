@@ -278,5 +278,12 @@ void SetWindowAtom(Window window, AtomType atom, unsigned long value);
  */
 void SetPixmapAtom(Window window, AtomType atom, Pixmap value);
 
+/** Set an atom atom.
+ * @param window The window.
+ * @param atom The atom to set.
+ * @param value The value.
+ */
+void SetAtomAtom(Window window, AtomType atom, AtomType value);
+
 #endif /* HINT_H */
 

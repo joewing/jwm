@@ -22,6 +22,7 @@
 #include "parse.h"
 #include "winmenu.h"
 #include "screen.h"
+#include "hint.h"
 
 #define BASE_ICON_OFFSET   3
 #define MENU_BORDER_SIZE   1
@@ -463,6 +464,8 @@ void CreateMenu(Menu *menu, int x, int y, char keyboard)
                                  menu->width, menu->height, 0,
                                  CopyFromParent, InputOutput,
                                  CopyFromParent, attrMask, &attr);
+   SetAtomAtom(menu->window, ATOM_NET_WM_WINDOW_TYPE,
+               ATOM_NET_WM_WINDOW_TYPE_MENU);
    menu->pixmap = JXCreatePixmap(display, menu->window,
                                  menu->width, menu->height, rootDepth);
 

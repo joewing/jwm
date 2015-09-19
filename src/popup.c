@@ -18,6 +18,7 @@
 #include "misc.h"
 #include "settings.h"
 #include "event.h"
+#include "hint.h"
 
 typedef struct PopupType {
    int x, y;   /* The coordinates of the upper-left corner of the popup. */
@@ -135,6 +136,8 @@ void ShowPopup(int x, int y, const char *text,
                                     popup.width, popup.height, 0,
                                     CopyFromParent, InputOutput,
                                     CopyFromParent, attrMask, &attr);
+      SetAtomAtom(popup.window, ATOM_NET_WM_WINDOW_TYPE,
+                  ATOM_NET_WM_WINDOW_TYPE_NOTIFICATION);
       JXMapRaised(display, popup.window);
 
    } else {

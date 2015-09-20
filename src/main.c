@@ -523,11 +523,11 @@ void Startup(void)
    StartupClock();
    StartupTaskBar();
    StartupTrayButtons();
+   StartupDesktops();
+   StartupHints();
    StartupDock();
    StartupTray();
    StartupKeys();
-   StartupDesktops();
-   StartupHints();
    StartupBorders();
    StartupPlacement();
    StartupClients();

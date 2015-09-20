@@ -66,7 +66,6 @@ void StartupTray(void)
 {
 
    XSetWindowAttributes attr;
-   Atom atom;
    unsigned long attrMask;
    TrayType *tp;
    TrayComponentType *cp;
@@ -110,11 +109,8 @@ void StartupTray(void)
                   ATOM_NET_WM_WINDOW_TYPE_DOCK);
 
       if(settings.trayOpacity < UINT_MAX) {
-         /* Can't use atoms yet as it hasn't been initialized. */
-         atom = JXInternAtom(display, opacityAtom, False);
-         JXChangeProperty(display, tp->window, atom, XA_CARDINAL, 32,
-                          PropModeReplace,
-                          (unsigned char*)&settings.trayOpacity, 1);
+         SetCardinalAtom(tp->window, ATOM_NET_WM_WINDOW_OPACITY,
+                         settings.trayOpacity);
       }
 
       SetDefaultCursor(tp->window);

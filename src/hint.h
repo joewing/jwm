@@ -104,6 +104,7 @@ typedef enum {
    ATOM_NET_WM_MOVERESIZE,
 
    ATOM_NET_SYSTEM_TRAY_OPCODE,
+   ATOM_NET_SYSTEM_TRAY_ORIENTATION,
 
    /* MWM atoms */
    ATOM_MOTIF_WM_HINTS,
@@ -123,7 +124,6 @@ typedef enum {
 extern const char jwmRestart[];
 extern const char jwmExit[];
 extern const char jwmReload[];
-extern const char opacityAtom[];
 
 #define FIRST_NET_ATOM ATOM_NET_SUPPORTED
 #define LAST_NET_ATOM  ATOM_NET_WM_STRUT

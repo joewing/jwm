@@ -69,7 +69,6 @@ Atom atoms[ATOM_COUNT];
 const char jwmRestart[]    = "_JWM_RESTART";
 const char jwmExit[]       = "_JWM_EXIT";
 const char jwmReload[]     = "_JWM_RELOAD";
-const char opacityAtom[]   = "_NET_WM_WINDOW_OPACITY";
 
 static const AtomNode atomList[] = {
 
@@ -145,16 +144,18 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_WINDOW_TYPE_NORMAL], "_NET_WM_WINDOW_TYPE_NORMAL"  },
    { &atoms[ATOM_NET_WM_WINDOW_TYPE_MENU],   "_NET_WM_WINDOW_TYPE_MENU"    },
    { &atoms[ATOM_NET_WM_WINDOW_TYPE_NOTIFICATION],
-      "_NET_WM_WINDOW_TYPE_NOTIFICATION"},
+      "_NET_WM_WINDOW_TYPE_NOTIFICATION" },
    { &atoms[ATOM_NET_WM_WINDOW_TYPE_TOOLBAR], "_NET_WM_WINDOW_TYPE_TOOLBAR"},
    { &atoms[ATOM_NET_WM_WINDOW_TYPE_UTILITY], "_NET_WM_WINDOW_TYPE_UTILITY"},
    { &atoms[ATOM_NET_CLIENT_LIST],           "_NET_CLIENT_LIST"            },
    { &atoms[ATOM_NET_CLIENT_LIST_STACKING],  "_NET_CLIENT_LIST_STACKING"   },
    { &atoms[ATOM_NET_WM_STRUT_PARTIAL],      "_NET_WM_STRUT_PARTIAL"       },
    { &atoms[ATOM_NET_WM_STRUT],              "_NET_WM_STRUT"               },
-   { &atoms[ATOM_NET_WM_WINDOW_OPACITY],     &opacityAtom[0]               },
+   { &atoms[ATOM_NET_WM_WINDOW_OPACITY],     "_NET_WM_WINDOW_OPACITY"      },
    { &atoms[ATOM_NET_WM_MOVERESIZE],         "_NET_WM_MOVERESIZE"          },
    { &atoms[ATOM_NET_SYSTEM_TRAY_OPCODE],    "_NET_SYSTEM_TRAY_OPCODE"     },
+   { &atoms[ATOM_NET_SYSTEM_TRAY_ORIENTATION],
+      "_NET_SYSTEM_TRAY_ORIENTATION" },
 
    { &atoms[ATOM_MOTIF_WM_HINTS],            "_MOTIF_WM_HINTS"             },
 

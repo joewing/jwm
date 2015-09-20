@@ -45,7 +45,6 @@ typedef struct DockType {
 } DockType;
 
 static const char BASE_SELECTION_NAME[] = "_NET_SYSTEM_TRAY_S%d";
-static const char ORIENTATION_ATOM[] = "_NET_SYSTEM_TRAY_ORIENTATION";
 
 static DockType *dock = NULL;
 static char owner;
@@ -200,7 +199,6 @@ void Create(TrayComponentType *cp)
 {
 
    XEvent event;
-   Atom orientationAtom;
 
    Assert(cp);
 
@@ -211,10 +209,8 @@ void Create(TrayComponentType *cp)
    }
 
    /* Set the orientation atom. */
-   orientationAtom = JXInternAtom(display, ORIENTATION_ATOM, False);
-   JXChangeProperty(display, dock->cp->window, orientationAtom,
-                    XA_CARDINAL, 32, PropModeReplace,
-                    (unsigned char*)&orientation, 1);
+   SetCardinalAtom(dock->cp->window, ATOM_NET_SYSTEM_TRAY_ORIENTATION,
+                   orientation);
 
    /* Get the selection if we don't already own it.
     * If we did already own it, getting it again would cause problems

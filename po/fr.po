@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-28 18:54-0500\n"
+"POT-Creation-Date: 2015-09-20 17:31-0500\n"
 "PO-Revision-Date: 2014-11-06 10:23+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -66,11 +66,11 @@ msgstr "Confirmer"
 msgid "empty Desktops Name tag"
 msgstr "Balise de noms de bureaux vide"
 
-#: src/dock.c:152
+#: src/dock.c:151
 msgid "only one Dock allowed"
 msgstr "Un seul Dock autorisé"
 
-#: src/dock.c:231
+#: src/dock.c:227
 msgid "could not acquire system tray selection"
 msgstr "Impossible d'obtenir la sélection de la barre système"
 
@@ -247,27 +247,27 @@ msgstr "Envoyer vers"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largeur maximale de la liste des tâches incorrecte: %s"
 
-#: src/tray.c:1092
+#: src/tray.c:1091
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "Largeur de barre incorrecte: %d"
 
-#: src/tray.c:1111
+#: src/tray.c:1110
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "Hauteur de barre incorrecte: %d"
 
-#: src/tray.c:1140
+#: src/tray.c:1139
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "Disposition de barre incorrecte: \"%s\""
 
-#: src/tray.c:1179
+#: src/tray.c:1178
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alignement horizontal de la barre incorrect: \"%s\""
 
-#: src/tray.c:1202
+#: src/tray.c:1201
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alignement vertical de la barre incorrect: \"%s\""

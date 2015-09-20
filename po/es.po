@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-28 18:54-0500\n"
+"POT-Creation-Date: 2015-09-20 17:31-0500\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -70,11 +70,11 @@ msgstr "Confirmar"
 msgid "empty Desktops Name tag"
 msgstr "etiqueta Nombre de Escritorio vacía"
 
-#: src/dock.c:152
+#: src/dock.c:151
 msgid "only one Dock allowed"
 msgstr "solo se permite un Dock"
 
-#: src/dock.c:231
+#: src/dock.c:227
 msgid "could not acquire system tray selection"
 msgstr "no se pudo adquirir selección de bandeja de sistema"
 
@@ -252,27 +252,27 @@ msgstr "Enviar A"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ancho máx. no válido para Lista de Tareas: %s"
 
-#: src/tray.c:1092
+#: src/tray.c:1091
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "ancho de bandeja no válido: %d"
 
-#: src/tray.c:1111
+#: src/tray.c:1110
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "alto de bandeja no válido: %d"
 
-#: src/tray.c:1140
+#: src/tray.c:1139
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "forma no válida para bandeja: «%s»"
 
-#: src/tray.c:1179
+#: src/tray.c:1178
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alineación horizontal no válida para bandeja: «%s»"
 
-#: src/tray.c:1202
+#: src/tray.c:1201
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alineación vertical no válida para bandeja: «%s»"

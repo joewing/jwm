@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-28 18:54-0500\n"
+"POT-Creation-Date: 2015-09-20 17:31-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -65,11 +65,11 @@ msgstr ""
 msgid "empty Desktops Name tag"
 msgstr "leeg Bureaublad-naam label"
 
-#: src/dock.c:152
+#: src/dock.c:151
 msgid "only one Dock allowed"
 msgstr "Slechts één Paneel toegelaten"
 
-#: src/dock.c:231
+#: src/dock.c:227
 msgid "could not acquire system tray selection"
 msgstr "kan de systeem taakbalk keuze niet verkrijgen"
 
@@ -244,27 +244,27 @@ msgstr "Zend naar"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ongeldige maximum breedte voor Taaklijst: %s"
 
-#: src/tray.c:1092
+#: src/tray.c:1091
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "ongeldige taakbalk-breedte: %d"
 
-#: src/tray.c:1111
+#: src/tray.c:1110
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "ongeldige taakbalk-hoogte: %d"
 
-#: src/tray.c:1140
+#: src/tray.c:1139
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "ongeldige taakbalk lay-out: \"%s\""
 
-#: src/tray.c:1179
+#: src/tray.c:1178
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "ongeldige horizontale taakbalk uitlijning: \"%s\""
 
-#: src/tray.c:1202
+#: src/tray.c:1201
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ongeldige verticale taakbalk uitlijning: \"%s\""

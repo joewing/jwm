@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-28 18:54-0500\n"
+"POT-Creation-Date: 2015-09-20 17:31-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -65,11 +65,11 @@ msgstr ""
 msgid "empty Desktops Name tag"
 msgstr ""
 
-#: src/dock.c:152
+#: src/dock.c:151
 msgid "only one Dock allowed"
 msgstr ""
 
-#: src/dock.c:231
+#: src/dock.c:227
 msgid "could not acquire system tray selection"
 msgstr ""
 
@@ -244,27 +244,27 @@ msgstr "Senden an"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 
-#: src/tray.c:1092
+#: src/tray.c:1091
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "ungültige Leistenbreite: %d"
 
-#: src/tray.c:1111
+#: src/tray.c:1110
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "ungültige Leistenhöhe: %d"
 
-#: src/tray.c:1140
+#: src/tray.c:1139
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "ungültiges Leistenlayout: \"%s\""
 
-#: src/tray.c:1179
+#: src/tray.c:1178
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "ungültige Horizontalausrichtung für Leiste: \"%s\""
 
-#: src/tray.c:1202
+#: src/tray.c:1201
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ungültige Vertikalausrichtung für Leiste: \"%s\""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-28 18:54-0500\n"
+"POT-Creation-Date: 2015-09-20 17:31-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -69,11 +69,11 @@ msgstr "Подтверждение"
 msgid "empty Desktops Name tag"
 msgstr "пустой тэг Desktops Name (название рабочего стола)"
 
-#: src/dock.c:152
+#: src/dock.c:151
 msgid "only one Dock allowed"
 msgstr "можно использовать только один Dock (область уведомлений)"
 
-#: src/dock.c:231
+#: src/dock.c:227
 msgid "could not acquire system tray selection"
 msgstr "не удалось получить активное приложение в панели задач"
 
@@ -249,27 +249,27 @@ msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 "недопустимое значение макс. ширины кнопки в панели задач (TaskList): %s"
 
-#: src/tray.c:1092
+#: src/tray.c:1091
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "недопустимое значение ширины панели: %d"
 
-#: src/tray.c:1111
+#: src/tray.c:1110
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "недопустимое значение высоты панели: %d"
 
-#: src/tray.c:1140
+#: src/tray.c:1139
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "недопустимое значение расположения панели: \"%s\""
 
-#: src/tray.c:1179
+#: src/tray.c:1178
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "недопустимое значение горизонтального выравнивания панели: \"%s\""
 
-#: src/tray.c:1202
+#: src/tray.c:1201
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-08-28 18:54-0500\n"
+"POT-Creation-Date: 2015-09-20 17:31-0500\n"
 "PO-Revision-Date: 2015-08-19 14:22+0100\n"
 "Last-Translator: Vitor Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -72,11 +72,11 @@ msgstr "Comfirmar"
 msgid "empty Desktops Name tag"
 msgstr "etiqueta Desktops vazia"
 
-#: src/dock.c:152
+#: src/dock.c:151
 msgid "only one Dock allowed"
 msgstr "só um tabuleiro e permitido"
 
-#: src/dock.c:231
+#: src/dock.c:227
 msgid "could not acquire system tray selection"
 msgstr "não pode adquirir a seleção da bandeja do sistema"
 
@@ -256,27 +256,27 @@ msgstr "Enviar Para"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largura máxima invalida para etiqueta a Tasklist: %s"
 
-#: src/tray.c:1092
+#: src/tray.c:1091
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "largura do tabuleiro invalida: %d"
 
-#: src/tray.c:1111
+#: src/tray.c:1110
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "altura do tabuleiro invalida: %d"
 
-#: src/tray.c:1140
+#: src/tray.c:1139
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "layout do tabuleiro invalido: \"%s\""
 
-#: src/tray.c:1179
+#: src/tray.c:1178
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alinhamento horizontal do tabuleiro invalido: \"%s\""
 
-#: src/tray.c:1202
+#: src/tray.c:1201
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""

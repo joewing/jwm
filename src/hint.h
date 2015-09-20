@@ -19,6 +19,7 @@ typedef enum {
    ATOM_COMPOUND_TEXT,
    ATOM_UTF8_STRING,
    ATOM_XROOTPMAP_ID,
+   ATOM_MANAGER,
 
    /* Standard atoms */
    ATOM_WM_STATE,

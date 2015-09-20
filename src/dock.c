@@ -231,7 +231,7 @@ void Create(TrayComponentType *cp)
          memset(&event, 0, sizeof(event));
          event.xclient.type = ClientMessage;
          event.xclient.window = rootWindow;
-         event.xclient.message_type = JXInternAtom(display, "MANAGER", False);
+         event.xclient.message_type = atoms[ATOM_MANAGER];
          event.xclient.format = 32;
          event.xclient.data.l[0] = CurrentTime;
          event.xclient.data.l[1] = dockAtom;

@@ -373,7 +373,7 @@ void StartupConnection(void)
    event.xclient.display = display;
    event.xclient.type = ClientMessage;
    event.xclient.window = rootWindow;
-   event.xclient.message_type = JXInternAtom(display, "MANAGER", False);
+   event.xclient.message_type = JXInternAtom(display, managerProperty, False);
    event.xclient.format = 32;
    event.xclient.data.l[0] = CurrentTime;
    event.xclient.data.l[1] = managerSelection;

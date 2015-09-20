@@ -66,16 +66,17 @@ typedef struct {
 
 Atom atoms[ATOM_COUNT];
 
-const char jwmRestart[]    = "_JWM_RESTART";
-const char jwmExit[]       = "_JWM_EXIT";
-const char jwmReload[]     = "_JWM_RELOAD";
+const char jwmRestart[]       = "_JWM_RESTART";
+const char jwmExit[]          = "_JWM_EXIT";
+const char jwmReload[]        = "_JWM_RELOAD";
+const char managerProperty[]  = "MANAGER";
 
 static const AtomNode atomList[] = {
 
    { &atoms[ATOM_COMPOUND_TEXT],             "COMPOUND_TEXT"               },
    { &atoms[ATOM_UTF8_STRING],               "UTF8_STRING"                 },
    { &atoms[ATOM_XROOTPMAP_ID],              "_XROOTPMAP_ID"               },
-   { &atoms[ATOM_MANAGER],                   "MANAGER"                     },
+   { &atoms[ATOM_MANAGER],                   &managerProperty[0]           },
 
    { &atoms[ATOM_WM_STATE],                  "WM_STATE"                    },
    { &atoms[ATOM_WM_PROTOCOLS],              "WM_PROTOCOLS"                },

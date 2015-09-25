@@ -171,7 +171,7 @@ if test "$enable_png" != "no" ; then
       enable_png="yes"
    elif which libpng-config >/dev/null ; then
       PNG_CFLAGS=`libpng-config --cflags`
-      PNG_LDFLAGS=`libpng-config --libs`
+      PNG_LDFLAGS=`libpng-config --ldflags`
       enable_png="yes"
    else
       PNG_CFLAGS=""

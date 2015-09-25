@@ -1,20 +1,20 @@
-# 
+#
 # Translators:
 # Christopher Meng <i@cicku.me>, 2014-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-09-23 13:35+0800\n"
+"POT-Creation-Date: 2015-09-20 17:31-0500\n"
 "PO-Revision-Date: 2015-09-24 16:11+0800\n"
+"Last-Translator: Christopher Meng <i@cicku.me>\n"
 "Language-Team: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.4\n"
-"Last-Translator: Christopher Meng <i@cicku.me>\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language: zh_CN\n"
 
 #: src/action.c:43
 #, c-format
@@ -69,11 +69,11 @@ msgstr "确认操作"
 msgid "empty Desktops Name tag"
 msgstr "空的 Desktops Name 标签"
 
-#: src/dock.c:152
+#: src/dock.c:151
 msgid "only one Dock allowed"
 msgstr "仅允许一个 Dock"
 
-#: src/dock.c:231
+#: src/dock.c:227
 msgid "could not acquire system tray selection"
 msgstr "无法获取系统托盘选择"
 
@@ -248,27 +248,27 @@ msgstr "发送到桌面"
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "无效的任务列表最大宽度：%s"
 
-#: src/tray.c:1092
+#: src/tray.c:1091
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "无效的托盘宽度：%d"
 
-#: src/tray.c:1111
+#: src/tray.c:1110
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "无效的托盘高度：%d"
 
-#: src/tray.c:1140
+#: src/tray.c:1139
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "无效的托盘样式：\"%s\""
 
-#: src/tray.c:1179
+#: src/tray.c:1178
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "无效的托盘水平对齐：\"%s\""
 
-#: src/tray.c:1202
+#: src/tray.c:1201
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "无效的托盘垂直对齐：\"%s\""

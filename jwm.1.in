@@ -576,6 +576,12 @@ the default.
 Add a task list to the tray.
 This tag supports the following attributes:
 .P
+\fBheight\fP \fIint\fP
+.RS
+The height of an item in the task list. 0 if unspecified.
+The default is 0.
+.RE
+.P
 \fBmaxwidth\fP \fIint\fP
 .RS
 The maximum width of an item in the task list. 0 indicates no maximum.

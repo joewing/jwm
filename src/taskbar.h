@@ -48,6 +48,12 @@ void FocusPrevious(void);
  */
 void SetMaxTaskBarItemWidth(struct TrayComponentType *cp, const char *value);
 
+/** Set the preferred height of task bar items.
+ * @param cp The task bar component.
+ * @param value The height.
+ */
+void SetTaskBarHeight(struct TrayComponentType *cp, const char *value);
+
 /** Update the _NET_CLIENT_LIST property. */
 void UpdateNetClientList(void);
 

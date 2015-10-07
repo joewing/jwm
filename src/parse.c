@@ -1192,6 +1192,10 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray)
       SetMaxTaskBarItemWidth(cp, temp);
    }
 
+   temp = FindAttribute(tp->attributes, "height");
+   if(temp) {
+      SetTaskBarHeight(cp, temp);
+   }
 }
 
 /** Parse a swallow tray component. */

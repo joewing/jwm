@@ -31,6 +31,7 @@ typedef struct TaskBarType {
    TrayComponentType *cp;
 
    int maxItemWidth;
+   int userHeight;
    int itemHeight;
    int itemWidth;
    LayoutType layout;
@@ -120,6 +121,9 @@ TrayComponentType *CreateTaskBar()
    tp->next = bars;
    bars = tp;
    tp->itemHeight = 0;
+   tp->itemWidth = 0;
+   tp->userHeight = 0;
+   tp->maxItemWidth = 0;
    tp->layout = LAYOUT_HORIZONTAL;
    tp->mousex = -settings.doubleClickDelta;
    tp->mousey = -settings.doubleClickDelta;
@@ -195,7 +199,11 @@ void ComputeItemSize(TaskBarType *tp)
    TrayComponentType *cp = tp->cp;
    if(tp->layout == LAYOUT_VERTICAL) {
 
-      tp->itemHeight = GetStringHeight(FONT_TRAY) + 12;
+      if(tp->userHeight > 0) {
+         tp->itemHeight = tp->userHeight;
+      } else {
+         tp->itemHeight = GetStringHeight(FONT_TRAY) + 12;
+      }
       tp->itemWidth = cp->width;
 
    } else {
@@ -586,7 +594,7 @@ void RemoveClientFromTaskBar(ClientNode *np)
                }
                Release(tp);
             }
-            UpdateTaskBar();
+            RequireTaskUpdate();
             UpdateNetClientList();
             return;
          }
@@ -608,8 +616,12 @@ void UpdateTaskBar(void)
       if(bp->layout == LAYOUT_VERTICAL) {
          TaskEntry *tp;
          lastHeight = bp->cp->requestedHeight;
-         bp->itemHeight = GetStringHeight(FONT_TRAY) + 12;
-         bp->cp->requestedHeight = 2;
+         if(bp->userHeight > 0) {
+            bp->itemHeight = bp->userHeight;
+         } else {
+            bp->itemHeight = GetStringHeight(FONT_TRAY) + 12;
+         }
+         bp->cp->requestedHeight = 0;
          for(tp = taskEntries; tp; tp = tp->next) {
             if(ShouldShowEntry(tp)) {
                bp->cp->requestedHeight += bp->itemHeight;
@@ -888,6 +900,20 @@ void SetMaxTaskBarItemWidth(TrayComponentType *cp, const char *value)
       return;
    }
    bp->maxItemWidth = temp;
+}
+
+/** Set the preferred height of the specified task bar. */
+void SetTaskBarHeight(TrayComponentType *cp, const char *value)
+{
+   TaskBarType *bp = (TaskBarType*)cp->object;
+   int temp;
+
+   temp = atoi(value);
+   if(JUNLIKELY(temp < 0)) {
+      Warning(_("invalid height for TaskList: %s"), value);
+      return;
+   }
+   bp->userHeight = temp;
 }
 
 /** Maintain the _NET_CLIENT_LIST[_STACKING] properties on the root. */

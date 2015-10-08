@@ -627,6 +627,7 @@ void UpdateTaskBar(void)
                bp->cp->requestedHeight += bp->itemHeight;
             }
          }
+         bp->cp->requestedHeight = Max(1, bp->cp->requestedHeight);
          if(lastHeight != bp->cp->requestedHeight) {
             ResizeTray(bp->cp->tray);
          }

@@ -322,7 +322,7 @@ int ComputeTotalWidth(TrayType *tp)
    TrayComponentType *cp;
    int result;
 
-   result = 0;
+   result = 2 * TRAY_BORDER_SIZE;
    for(cp = tp->components; cp; cp = cp->next) {
       result += cp->width;
    }
@@ -356,7 +356,7 @@ int ComputeTotalHeight(TrayType *tp)
    TrayComponentType *cp;
    int result;
 
-   result = 0;
+   result = 2 * TRAY_BORDER_SIZE;
    for(cp = tp->components; cp; cp = cp->next) {
       result += cp->height;
    }
@@ -835,12 +835,12 @@ void LayoutTray(TrayType *tp, int *variableSize, int *variableRemainder)
 
    for(cp = tp->components; cp; cp = cp->next) {
       if(cp->requestedWidth != 0) {
-         cp->width = cp->requestedWidth + TRAY_BORDER_SIZE * 2;
+         cp->width = cp->requestedWidth;
       } else {
          cp->width = 0;
       }
       if(cp->requestedHeight != 0) {
-         cp->height = cp->requestedHeight + TRAY_BORDER_SIZE * 2;
+         cp->height = cp->requestedHeight;
       } else {
          cp->height = 0;
       }

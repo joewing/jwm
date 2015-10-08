@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-09-20 17:31-0500\n"
+"POT-Creation-Date: 2015-10-07 21:00-0500\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -191,26 +191,26 @@ msgstr "%s[%u]: texto inesperado: «%s»"
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entidad no válida: «%.8s»"
 
-#: src/lex.c:454 src/parse.c:1768
+#: src/lex.c:454 src/parse.c:1772
 msgid "out of memory"
 msgstr "Sin memoria"
 
-#: src/parse.c:1782
+#: src/parse.c:1786
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ajuste no válido: %s"
 
-#: src/parse.c:1794
+#: src/parse.c:1798
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacidad no válida: %s"
 
-#: src/parse.c:1836
+#: src/parse.c:1840
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta no válida en %s: %s"
 
-#: src/parse.c:1857
+#: src/parse.c:1861
 msgid "configuration error"
 msgstr "error de configuración"
 
@@ -231,48 +231,53 @@ msgstr "¿Está seguro?"
 msgid "cannot swallow a client with no name"
 msgstr "no se puede mostrar un cliente sin nombre"
 
-#: src/taskbar.c:380 src/winmenu.c:51
+#: src/taskbar.c:388 src/winmenu.c:51
 msgid "Close"
 msgstr "Cerrar"
 
-#: src/taskbar.c:387 src/winmenu.c:71
+#: src/taskbar.c:395 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: src/taskbar.c:394 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:402 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Restaurar"
 
-#: src/taskbar.c:401 src/winmenu.c:170
+#: src/taskbar.c:409 src/winmenu.c:170
 msgid "Send To"
 msgstr "Enviar A"
 
-#: src/taskbar.c:887
+#: src/taskbar.c:899
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ancho máx. no válido para Lista de Tareas: %s"
 
-#: src/tray.c:1091
+#: src/taskbar.c:913
+#, fuzzy, c-format
+msgid "invalid height for TaskList: %s"
+msgstr "ancho máx. no válido para Lista de Tareas: %s"
+
+#: src/tray.c:1030
 #, c-format
 msgid "invalid tray width: %d"
 msgstr "ancho de bandeja no válido: %d"
 
-#: src/tray.c:1110
+#: src/tray.c:1041
 #, c-format
 msgid "invalid tray height: %d"
 msgstr "alto de bandeja no válido: %d"
 
-#: src/tray.c:1139
+#: src/tray.c:1066
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "forma no válida para bandeja: «%s»"
 
-#: src/tray.c:1178
+#: src/tray.c:1104
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alineación horizontal no válida para bandeja: «%s»"
 
-#: src/tray.c:1201
+#: src/tray.c:1127
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alineación vertical no válida para bandeja: «%s»"

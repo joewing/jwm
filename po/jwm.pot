@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.2\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-10-07 21:00-0500\n"
+"POT-Creation-Date: 2015-10-07 21:15-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -244,12 +244,12 @@ msgstr ""
 msgid "Send To"
 msgstr ""
 
-#: src/taskbar.c:899
+#: src/taskbar.c:900
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 
-#: src/taskbar.c:913
+#: src/taskbar.c:914
 #, c-format
 msgid "invalid height for TaskList: %s"
 msgstr ""

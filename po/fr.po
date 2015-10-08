@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-10-07 21:00-0500\n"
+"POT-Creation-Date: 2015-10-07 21:15-0500\n"
 "PO-Revision-Date: 2014-11-06 10:23+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -242,12 +242,12 @@ msgstr "Restaurer"
 msgid "Send To"
 msgstr "Envoyer vers"
 
-#: src/taskbar.c:899
+#: src/taskbar.c:900
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largeur maximale de la liste des tâches incorrecte: %s"
 
-#: src/taskbar.c:913
+#: src/taskbar.c:914
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "largeur maximale de la liste des tâches incorrecte: %s"

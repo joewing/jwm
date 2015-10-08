@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-10-07 21:00-0500\n"
+"POT-Creation-Date: 2015-10-07 21:15-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -239,12 +239,12 @@ msgstr "Herstellen"
 msgid "Send To"
 msgstr "Zend naar"
 
-#: src/taskbar.c:899
+#: src/taskbar.c:900
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ongeldige maximum breedte voor Taaklijst: %s"
 
-#: src/taskbar.c:913
+#: src/taskbar.c:914
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "ongeldige maximum breedte voor Taaklijst: %s"

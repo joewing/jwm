@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-10-07 21:00-0500\n"
+"POT-Creation-Date: 2015-10-07 21:15-0500\n"
 "PO-Revision-Date: 2015-09-24 16:11+0800\n"
 "Last-Translator: Christopher Meng <i@cicku.me>\n"
 "Language-Team: \n"
@@ -243,12 +243,12 @@ msgstr "恢复"
 msgid "Send To"
 msgstr "发送到桌面"
 
-#: src/taskbar.c:899
+#: src/taskbar.c:900
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "无效的任务列表最大宽度：%s"
 
-#: src/taskbar.c:913
+#: src/taskbar.c:914
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "无效的任务列表最大宽度：%s"

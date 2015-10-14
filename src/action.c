@@ -84,18 +84,28 @@ void ProcessActionPress(struct ActionType *actions,
    for(ap = actions; ap; ap = ap->next) {
       if(ap->mask & mask) {
          if(ap->action && ap->action[0]) {
-
             if(strncmp(ap->action, "root:", 5) != 0) {
+               if(button == Button4 || button == Button5) {
 
-               if(!GrabMouse(cp->tray->window)) {
-                  return;
-               }
+                  /* Don't wait for a release if the scroll wheel is used. */
+                  if(!strncmp(ap->action, "exec:", 5)) {
+                     RunCommand(ap->action + 5);
+                  } else if(!strcmp(ap->action, "showdesktop")) {
+                     ShowDesktop();
+                  }
 
-               /* Show the button being pressed. */
-               cp->grabbed = 1;
-               if(cp->Redraw) {
-                  (cp->Redraw)(cp);
-                  UpdateSpecificTray(cp->tray, cp);
+               } else {
+
+                  if(!GrabMouse(cp->tray->window)) {
+                     return;
+                  }
+
+                  /* Show the button being pressed. */
+                  cp->grabbed = 1;
+                  if(cp->Redraw) {
+                     (cp->Redraw)(cp);
+                     UpdateSpecificTray(cp->tray, cp);
+                  }
                }
                return;
 

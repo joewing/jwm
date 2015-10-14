@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-10-07 21:15-0500\n"
+"POT-Creation-Date: 2015-10-13 19:14-0500\n"
 "PO-Revision-Date: 2015-09-24 16:11+0800\n"
 "Last-Translator: Christopher Meng <i@cicku.me>\n"
 "Language-Team: \n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "invalid action: \"%s\""
 msgstr "无效操作：\"%s\""
 
-#: src/action.c:192
+#: src/action.c:202
 #, c-format
 msgid "action: root menu \"%s\" not defined"
 msgstr "操作：主菜单 \"%s\" 未定义"

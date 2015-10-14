@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-10-07 21:15-0500\n"
+"POT-Creation-Date: 2015-10-13 19:14-0500\n"
 "PO-Revision-Date: 2015-08-19 14:22+0100\n"
 "Last-Translator: Vitor Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -24,7 +24,7 @@ msgstr ""
 msgid "invalid action: \"%s\""
 msgstr "Açao do Traybutton invalida: \"%s\""
 
-#: src/action.c:192
+#: src/action.c:202
 #, c-format
 msgid "action: root menu \"%s\" not defined"
 msgstr "botão do tabuleiro root \"%s\" não esta definido"

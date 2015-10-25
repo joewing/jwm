@@ -56,6 +56,7 @@ typedef unsigned short KeyType;
 #define KEY_MAXRIGHT        38
 #define KEY_MAXV            39
 #define KEY_MAXH            40
+#define KEY_RESTORE         41
 
 void InitializeKeys(void);
 void StartupKeys(void);

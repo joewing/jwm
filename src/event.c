@@ -527,6 +527,15 @@ void HandleKeyPress(const XKeyEvent *event)
          }
       }
       break;
+   case KEY_RESTORE:
+      if(np) {
+         if(np->state.maxFlags) {
+            MaximizeClient(np, MAX_NONE);
+         } else {
+            MinimizeClient(np, 1);
+         }
+      }
+      break;
    case KEY_MAXTOP:
       ToggleMaximized(np, MAX_TOP | MAX_HORIZ);
       break;

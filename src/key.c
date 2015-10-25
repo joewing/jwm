@@ -301,6 +301,7 @@ char ShouldGrab(KeyType key)
    case KEY_MAXRIGHT:
    case KEY_MAXV:
    case KEY_MAXH:
+   case KEY_RESTORE:
       return 1;
    default:
       return 0;

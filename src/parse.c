@@ -62,6 +62,7 @@ static const StringMappingType KEY_MAP[] = {
    { "rdesktop",              KEY_RDESKTOP      },
    { "resize",                KEY_RESIZE        },
    { "restart",               KEY_RESTART       },
+   { "restore",               KEY_RESTORE       },
    { "right",                 KEY_RIGHT         },
    { "select",                KEY_ENTER         },
    { "sendd",                 KEY_SENDD         },

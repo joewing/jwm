@@ -578,8 +578,8 @@ This tag supports the following attributes:
 .P
 \fBheight\fP \fIint\fP
 .RS
-The height of an item in the task list. 0 if unspecified.
-The default is 0.
+The height of an item in the task list. 0 indicates that the height
+should be taken from the tray.  The default is 0.
 .RE
 .P
 \fBmaxwidth\fP \fIint\fP
@@ -1281,91 +1281,91 @@ expect (for example, the escape key is called "Escape").
 Valid actions for a key binding are:
 .RS
 .IP \fBup\fP
-Move up. Not grabbed.
+Move up.
 .IP \fBdown\fP
-Move down. Not grabbed.
+Move down.
 .IP \fBright\fP
-Move right. Not grabbed.
+Move right.
 .IP \fBleft\fP
-Move left. Not grabbed.
+Move left.
 .IP \fBescape\fP
-Stop a move/resize, exit a menu, or cancel an action. Not grabbed.
+Stop a move/resize, exit a menu, or cancel an action.
 .IP \fBfullscreen\fP
-Toggle between fullscreen and not fullscreen. Grabbed.
+Toggle between fullscreen and not fullscreen.
 .IP \fBselect\fP
-Make a menu selection or confirm an action. Not grabbed.
+Make a menu selection or confirm an action.
 .IP \fBnext\fP
-Move to the next window in the task list. Grabbed.
+Move to the next window in the task list.
 .IP \fBnextstacked\fP
-Move to the next window in the stacking order. Grabbed.
+Move to the next window in the stacking order.
 .IP \fBprev\fP
-Move to the previous window in the task list. Grabbed.
+Move to the previous window in the task list.
 .IP \fBprevstacked\fP
-Move to the previous window in the stacking order. Grabbed.
+Move to the previous window in the stacking order.
 .IP \fBclose\fP
-Close the active window. Grabbed.
+Close the active window.
 .IP \fBminimize\fP
-Minimize the active window. Grabbed.
+Minimize the active window.
 .IP \fBmaximize\fP
-Maximize the active window. Grabbed.
+Maximize the active window.
 .IP \fBmaxv\fP
-Maximize the active window vertically. Grabbed.
+Maximize the active window vertically.
 .IP \fBmaxh\fP
-Maximize the active window horizontally. Grabbed.
+Maximize the active window horizontally.
 .IP \fBmaxtop\fP
-Maximize the active window to the top of the screen. Grabbed.
+Maximize the active window to the top of the screen.
 .IP \fBmaxbottom\fP
-Maximize the active window to the bottom of the screen. Grabbed.
+Maximize the active window to the bottom of the screen.
 .IP \fBmaxleft\fP
-Maximize the active window to the left of the screen. Grabbed.
+Maximize the active window to the left of the screen.
 .IP \fBmaxright\fP
-Maximize the active window to the right of the screen. Grabbed.
+Maximize the active window to the right of the screen.
+.IP \fBrestore\fP
+Restore a maximized window.
 .IP \fBsendl\fP
-Send the active window left. Grabbed.
+Send the active window left.
 .IP \fBsendr\fP
-Send the active window right. Grabbed.
+Send the active window right.
 .IP \fBsendu\fP
-Send the active window up. Grabbed.
+Send the active window up.
 .IP \fBsendd\fP
-Send the active window down. Grabbed.
+Send the active window down.
 .IP \fBshade\fP
-Shade the active window. Grabbed.
+Shade the active window.
 .IP \fBstick\fP
-Stick/unstick the active window. Grabbed.
+Stick/unstick the active window.
 .IP \fBmove\fP
-Move the active window. Grabbed.
+Move the active window.
 .IP \fBresize\fP
-Resize the active window. Grabbed.
+Resize the active window.
 .IP \fBroot:\fP\fIn\fP
-Show root menu \fIn\fP. Grabbed.
+Show root menu \fIn\fP.
 .IP \fBwindow\fP
-Show the window menu for the active window. Grabbed.
+Show the window menu for the active window.
 .IP \fBdesktop#\fP
 Switch to a specific desktop. To use this, "#" must be specified in
 the key section. The number 1 to the number of desktops configured
-are then substituted for "#". Grabbed.
+are then substituted for "#".
 .IP \fBrdesktop\fP
-Move one desktop to the right. Grabbed.
+Move one desktop to the right.
 .IP \fBldesktop\fP
-Move one desktop to the left. Grabbed.
+Move one desktop to the left.
 .IP \fBudesktop\fP
-Move up one desktop. Grabbed.
+Move up one desktop.
 .IP \fBddesktop\fP
-Move down one desktop. Grabbed.
+Move down one desktop.
 .IP \fBshowdesktop\fP
-Show/hide the desktop (maximize/minimize all windows). Grabbed.
+Show/hide the desktop (maximize/minimize all windows).
 .IP \fBshowtray\fP
-Unhide the tray (when using autohide). Grabbed.
+Unhide the tray (when using autohide).
 .IP \fBexec:\fP\fIcommand\fP
-Execute \fIcommand\fP. Grabbed.
+Execute \fIcommand\fP.
 .IP \fBrestart\fP
-Restart JWM. Grabbed.
+Restart JWM.
 .RE
 .P
-Note that keys that are grabbed will not be available to applications other
-than JWM since JWM will interpret these. Also note that there are no
-default key bindings. Finally, it is possible to bind multiple key
-combinations to the same action.
+Note that there are no default key bindings.
+It is possible to bind multiple key combinations to the same action.
 .RE
 
 .B "MOUSE BINDINGS"
@@ -1384,6 +1384,8 @@ Over the menu button, clicking shows the menu.
 Over the minimize button, clicking minimizes the window.
 Over the maximize button, clicking toggles between maximized and normal.
 Over the close button, clicking closes the window.
+Over a task bar, restores or minimizes the window.
+Over a pager, switches the active desktop.
 .RE
 .P
 Button 2 (typically the middle button):
@@ -1392,6 +1394,8 @@ Over the maximize button, clicking toggles between vertically maximized
 and normal.
 Anywhere else on a window frame, dragging while holding button 2 will
 move the window.
+Over a task bar, closes the window.
+Over a pager, switches the active desktop.
 .RE
 .P
 Button 3 (typically the right button):
@@ -1401,7 +1405,8 @@ On the minimize button, clicking toggles between shaded and unshaded.
 On the maximize button, clicking toggles between horizontally maximized
 and normal.
 On the close button, clicking closes the window.
-Over the pager, dragging while holding button 3 will move a window.
+Over a task bar, shows the window menu.
+Over a pager, dragging while holding button 3 will move a window.
 .RE
 .RE
 .P

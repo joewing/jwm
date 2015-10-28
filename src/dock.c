@@ -189,8 +189,13 @@ void SetSize(TrayComponentType *cp, int width, int height)
    cp->width = width;
    cp->height = height;
    GetDockSize(&cp->width, &cp->height);
-   cp->requestedWidth = cp->width;
-   cp->requestedHeight = cp->height;
+   if(width == 0) {
+      cp->requestedWidth = cp->width;
+      cp->requestedHeight = 0;
+   } else {
+      cp->requestedWidth = 0;
+      cp->requestedHeight = cp->height;
+   }
 
 }
 

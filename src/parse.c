@@ -115,6 +115,7 @@ static const unsigned int OPTION_MAP_COUNT = ARRAY_LENGTH(OPTION_MAP);
 static const char *DEFAULT_TITLE = "JWM";
 static const char *LABEL_ATTRIBUTE = "label";
 static const char *ICON_ATTRIBUTE = "icon";
+static const char *TOOLTIP_ATTRIBUTE = "tooltip";
 static const char *CONFIRM_ATTRIBUTE = "confirm";
 static const char *LABELED_ATTRIBUTE = "labeled";
 static const char *ONROOT_ATTRIBUTE = "onroot";
@@ -502,6 +503,9 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
          value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
          last->iconName = CopyString(value);
 
+         value = FindAttribute(start->attributes, TOOLTIP_ATTRIBUTE);
+         last->tooltip = CopyString(value);
+
          last->action.type = MA_DYNAMIC;
          last->action.str = CopyString(start->value);
 
@@ -526,6 +530,9 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
 
          value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
          last->iconName = CopyString(value);
+
+         value = FindAttribute(start->attributes, TOOLTIP_ATTRIBUTE);
+         last->tooltip = CopyString(value);
 
          last->submenu = Allocate(sizeof(Menu));
          child = last->submenu;
@@ -565,6 +572,9 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
          } else if(start->value) {
             last->name = CopyString(start->value);
          }
+
+         value = FindAttribute(start->attributes, TOOLTIP_ATTRIBUTE);
+         last->tooltip = CopyString(value);
 
          value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
          last->iconName = CopyString(value);
@@ -606,6 +616,9 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
             value = GetTokenName(start);
          }
          last->name = CopyString(value);
+
+         value = FindAttribute(start->attributes, TOOLTIP_ATTRIBUTE);
+         last->tooltip = CopyString(value);
 
          value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
          last->iconName = CopyString(value);
@@ -666,6 +679,9 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
          }
          last->name = CopyString(value);
 
+         value = FindAttribute(start->attributes, TOOLTIP_ATTRIBUTE);
+         last->tooltip = CopyString(value);
+
          value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
          last->iconName = CopyString(value);
 
@@ -685,6 +701,9 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
             value = GetTokenName(start);
          }
          last->name = CopyString(value);
+
+         value = FindAttribute(start->attributes, TOOLTIP_ATTRIBUTE);
+         last->tooltip = CopyString(value);
 
          value = FindAttribute(start->attributes, ICON_ATTRIBUTE);
          last->iconName = CopyString(value);
@@ -1471,6 +1490,7 @@ void ParsePopupStyle(const TokenNode *tp)
       { "button", POPUP_BUTTON   },
       { "clock",  POPUP_CLOCK    },
       { "false",  POPUP_NONE     },
+      { "menu",   POPUP_MENU     },
       { "pager",  POPUP_PAGER    },
       { "task",   POPUP_TASK     },
       { "true",   POPUP_ALL      }

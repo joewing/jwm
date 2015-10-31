@@ -125,6 +125,11 @@ will determine the height. The default is inherited from the parent menu.
 The label to use. No default.
 .RE
 .P
+\fBtooltip\fP \fIstring\fP
+.RS
+A tooltip to display. No default.
+.RE
+.P
 \fBicon\fP \fIstring\fP
 .RS
 The icon to use for this menu. No default.
@@ -162,6 +167,11 @@ The following attributes are supported:
 The label to display. Default is the text of the tag.
 .RE
 .P
+\fBtooltip\fP \fIstring\fP
+.RS
+A tooltip to display. No default.
+.RE
+.P
 \fBicon\fP \fIstring\fP
 .RS
 The icon to use. No default.
@@ -185,6 +195,11 @@ The following attributes are supported:
 The label to use for the menu. The default is "Desktops".
 .RE
 .P
+\fBtooltip\fP \fIstring\fP
+.RS
+A tooltip to display. No default.
+.RE
+.P
 \fBicon\fP \fIstring\fP
 .RS
 The icon to use for this item. No default.
@@ -200,6 +215,11 @@ The following attributes are supported:
 \fBlabel\fP \fIstring\fP
 .RS
 The label to use. The default is "SendTo".
+.RE
+.P
+\fBtooltip\fP \fIstring\fP
+.RS
+A tooltip to display. No default.
 .RE
 .P
 \fBicon\fP \fIstring\fP
@@ -219,6 +239,11 @@ The following attributes are supported:
 The label to use. The default is "Stick".
 .RE
 .P
+\fBtooltip\fP \fIstring\fP
+.RS
+A tooltip to display. No default.
+.RE
+.P
 \fBicon\fP \fIstring\fP
 .RS
 The icon to use for this item. No default.
@@ -234,6 +259,11 @@ The following attributes are supported:
 \fBlabel\fP \fIstring\fP
 .RS
 The label to use. The default is "Maximize".
+.RE
+.P
+\fBtooltip\fP \fIstring\fP
+.RS
+A tooltip to display. No default.
 .RE
 .P
 \fBicon\fP \fIstring\fP
@@ -253,6 +283,11 @@ The following attributes are supported:
 The label to use. The default is "Minimize".
 .RE
 .P
+\fBtooltip\fP \fIstring\fP
+.RS
+A tooltip to display. No default.
+.RE
+.P
 \fBicon\fP \fIstring\fP
 .RS
 The icon to use for this item. No default.
@@ -268,6 +303,11 @@ The following attributes are supported:
 \fBlabel\fP \fIstring\fP
 .RS
 The label to use. The default is "Shade".
+.RE
+.P
+\fBtooltip\fP \fIstring\fP
+.RS
+A tooltip to display. No default.
 .RE
 .P
 \fBicon\fP \fIstring\fP
@@ -287,6 +327,11 @@ The following attributes are supported:
 The label to use. The default is "Move".
 .RE
 .P
+\fBtooltip\fP \fIstring\fP
+.RS
+A tooltip to display. No default.
+.RE
+.P
 \fBicon\fP \fIstring\fP
 .RS
 The icon to use for this item. No default.
@@ -302,6 +347,11 @@ The following attributes are supported:
 \fBlabel\fP \fIstring\fP
 .RS
 The label to use. The default is "Resize".
+.RE
+.P
+\fBtooltip\fP \fIstring\fP
+.RS
+A tooltip to display. No default.
 .RE
 .P
 \fBicon\fP \fIstring\fP
@@ -321,6 +371,11 @@ The following attributes are supported:
 The label to use. The default is "Kill".
 .RE
 .P
+\fBtooltip\fP \fIstring\fP
+.RS
+A tooltip to display. No default.
+.RE
+.P
 \fBicon\fP \fIstring\fP
 .RS
 The icon to use for this item. No default.
@@ -336,6 +391,11 @@ The following attributes are supported:
 \fBlabel\fP \fIstring\fP
 .RS
 The label to use. The default is "Close".
+.RE
+.P
+\fBtooltip\fP \fIstring\fP
+.RS
+A tooltip to display. No default.
 .RE
 .P
 \fBicon\fP \fIstring\fP
@@ -354,6 +414,11 @@ The following attributes are supported:
 The label to use. The default is "Restart".
 .RE
 .P
+\fBtooltip\fP \fIstring\fP
+.RS
+A tooltip to display. No default.
+.RE
+.P
 \fBicon\fP \fIstring\fP
 .RS
 The icon to use. No default.
@@ -370,6 +435,11 @@ The following attributes are supported:
 \fBlabel\fP \fIstring\fP
 .RS
 The label to use. The default is "Exit".
+.RE
+.P
+\fBtooltip\fP \fIstring\fP
+.RS
+A tooltip to display. No default.
 .RE
 .P
 \fBicon\fP \fIstring\fP
@@ -1174,7 +1244,7 @@ The default is 600.
 Determine if popups are shown. This is a comma-separated list of one
 or more of the following: \fBtrue\fP (all enabled), \fBfalse\fP
 (no popups enabled), \fBbutton\fP (tray buttons), \fBclock\fP (clocks),
-\fBpager\fP (pagers), and \fBtask\fP (task list items).
+\fBmenu\fP (menus), \fBpager\fP (pagers), and \fBtask\fP (task list items).
 The default is \fBtrue\fP.
 .RE
 .P

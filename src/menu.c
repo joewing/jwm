@@ -23,6 +23,8 @@
 #include "winmenu.h"
 #include "screen.h"
 #include "hint.h"
+#include "misc.h"
+#include "popup.h"
 
 #define BASE_ICON_OFFSET   3
 #define MENU_BORDER_SIZE   1
@@ -43,6 +45,8 @@ static void HideMenu(Menu *menu);
 static void DrawMenu(Menu *menu);
 
 static char MenuLoop(Menu *menu, RunMenuCommandType runner);
+static void MenuCallback(const TimeType *now, int x, int y,
+                         Window w, void *data);
 static MenuSelectionType UpdateMotion(Menu *menu,
                                       RunMenuCommandType runner,
                                       XEvent *event);
@@ -188,7 +192,9 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner,
       return;
    }
 
+   RegisterCallback(100, MenuCallback, menu);
    ShowSubmenu(menu, NULL, runner, x, y, keyboard);
+   UnregisterCallback(MenuCallback, menu);
    UnpatchMenu(menu);
 
    JXUngrabKeyboard(display, CurrentTime);
@@ -219,6 +225,9 @@ void DestroyMenu(Menu *menu)
          np = menu->items->next;
          if(menu->items->name) {
             Release(menu->items->name);
+         }
+         if(menu->items->tooltip) {
+            Release(menu->items->tooltip);
          }
          switch(menu->items->action.type & MA_ACTION_MASK) {
          case MA_EXECUTE:
@@ -415,6 +424,60 @@ char MenuLoop(Menu *menu, RunMenuCommandType runner)
       }
 
    }
+}
+
+/** Signal for showing popups. */
+void MenuCallback(const TimeType *now, int x, int y, Window w, void *data)
+{
+   Menu *menu = data;
+   MenuItem *item;
+   int i;
+
+   /* Check if the mouse moved (and reset if it did). */
+   if(   abs(menu->mousex - x) > settings.doubleClickDelta
+      || abs(menu->mousey - y) > settings.doubleClickDelta) {
+      menu->mousex = x;
+      menu->mousey = y;
+      menu->lastTime = *now;
+      return;
+   }
+
+   /* See if enough time has passed. */
+   const unsigned long diff = GetTimeDifference(now, &menu->lastTime);
+   if(diff < settings.popupDelay) {
+      return;
+   }
+
+   /* Locate the active menu item. */
+   while(menu) {
+      if(x > menu->x && x < menu->x + menu->width) {
+         if(y > menu->y && y < menu->y + menu->height) {
+            break;
+         }
+      }
+      if(menu->currentIndex < 0) {
+         return;
+      }
+      item = menu->items;
+      for(i = 0; i < menu->currentIndex; i++) {
+         item = item->next;
+      }
+      if(item->type != MENU_ITEM_SUBMENU) {
+         return;
+      }
+      menu = item->submenu;
+   }
+   if(menu->currentIndex < 0) {
+      return;
+   }
+   item = menu->items;
+   for(i = 0; i < menu->currentIndex; i++) {
+      item = item->next;
+   }
+   if(item->tooltip) {
+      ShowPopup(x, y, item->tooltip, POPUP_MENU);
+   }
+
 }
 
 /** Create and map a menu. */

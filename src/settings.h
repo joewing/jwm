@@ -50,6 +50,7 @@ typedef unsigned char PopupMaskType;
 #define POPUP_PAGER  2
 #define POPUP_BUTTON 4
 #define POPUP_CLOCK  8
+#define POPUP_MENU   16
 #define POPUP_ALL    255
 
 /** Settings. */

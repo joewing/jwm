@@ -10,6 +10,8 @@
 #ifndef MENU_H
 #define MENU_H
 
+#include "timing.h"
+
 struct ScreenType;
 
 /** Enumeration of menu action types. */
@@ -63,6 +65,7 @@ typedef struct MenuItem {
 
    MenuItemType type;      /**< The menu item type. */
    char *name;             /**< Name to display (or NULL). */
+   char *tooltip;          /**< Tooltip to display (or NULL). */
    MenuAction action;      /**< Action to take if selected (or NULL). */
    char *iconName;         /**< Name of an icon to show (or NULL). */
    struct Menu *submenu;   /**< Submenu (or NULL). */
@@ -97,6 +100,8 @@ typedef struct Menu {
    int *offsets;           /**< y-offsets of menu items. */
    struct Menu *parent;    /**< The parent menu (or NULL). */
    const struct ScreenType *screen;
+   int mousex, mousey;
+   TimeType lastTime;
 
 } Menu;
 

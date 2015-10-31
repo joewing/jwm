@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-10-25 11:43-0500\n"
+"POT-Creation-Date: 2015-10-31 13:00-0500\n"
 "PO-Revision-Date: 2015-09-24 16:11+0800\n"
 "Last-Translator: Christopher Meng <i@cicku.me>\n"
 "Language-Team: \n"
@@ -73,7 +73,7 @@ msgstr "空的 Desktops Name 标签"
 msgid "only one Dock allowed"
 msgstr "仅允许一个 Dock"
 
-#: src/dock.c:227
+#: src/dock.c:232
 msgid "could not acquire system tray selection"
 msgstr "无法获取系统托盘选择"
 
@@ -187,26 +187,26 @@ msgstr "%s[%u]：未预料的文字：\"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]：无效的实体：\"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1773
+#: src/lex.c:454 src/parse.c:1793
 msgid "out of memory"
 msgstr "内存不足"
 
-#: src/parse.c:1787
+#: src/parse.c:1807
 #, c-format
 msgid "invalid setting: %s"
 msgstr "无效的设置：\"%s\""
 
-#: src/parse.c:1799
+#: src/parse.c:1819
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "无效的透明度：\"%s\""
 
-#: src/parse.c:1841
+#: src/parse.c:1861
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "%s 含无效标签：%s"
 
-#: src/parse.c:1862
+#: src/parse.c:1882
 msgid "configuration error"
 msgstr "配置文件错误"
 

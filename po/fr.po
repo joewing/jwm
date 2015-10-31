@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-10-25 11:43-0500\n"
+"POT-Creation-Date: 2015-10-31 13:00-0500\n"
 "PO-Revision-Date: 2014-11-06 10:23+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -70,7 +70,7 @@ msgstr "Balise de noms de bureaux vide"
 msgid "only one Dock allowed"
 msgstr "Un seul Dock autorisé"
 
-#: src/dock.c:227
+#: src/dock.c:232
 msgid "could not acquire system tray selection"
 msgstr "Impossible d'obtenir la sélection de la barre système"
 
@@ -186,26 +186,26 @@ msgstr "%s[%u]: texte inattendu: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entité incorrecte: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1773
+#: src/lex.c:454 src/parse.c:1793
 msgid "out of memory"
 msgstr "Mémoire insuffisante"
 
-#: src/parse.c:1787
+#: src/parse.c:1807
 #, c-format
 msgid "invalid setting: %s"
 msgstr "paramètre incorrect: %s"
 
-#: src/parse.c:1799
+#: src/parse.c:1819
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacité incorrecte: %s"
 
-#: src/parse.c:1841
+#: src/parse.c:1861
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Balise incorrecte dans %s: %s"
 
-#: src/parse.c:1862
+#: src/parse.c:1882
 msgid "configuration error"
 msgstr "erreur de configuration"
 

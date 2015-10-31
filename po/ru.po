@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-10-25 11:43-0500\n"
+"POT-Creation-Date: 2015-10-31 13:00-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -73,7 +73,7 @@ msgstr "пустой тэг Desktops Name (название рабочего с�
 msgid "only one Dock allowed"
 msgstr "можно использовать только один Dock (область уведомлений)"
 
-#: src/dock.c:227
+#: src/dock.c:232
 msgid "could not acquire system tray selection"
 msgstr "не удалось получить активное приложение в панели задач"
 
@@ -187,26 +187,26 @@ msgstr "%s[%u]: непонятный текст: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1773
+#: src/lex.c:454 src/parse.c:1793
 msgid "out of memory"
 msgstr "недостаточно памяти"
 
-#: src/parse.c:1787
+#: src/parse.c:1807
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:1799
+#: src/parse.c:1819
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:1841
+#: src/parse.c:1861
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:1862
+#: src/parse.c:1882
 msgid "configuration error"
 msgstr "ошибка конфигурации"
 

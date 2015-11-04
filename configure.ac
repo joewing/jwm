@@ -163,11 +163,11 @@ AC_ARG_ENABLE(png,
 if test "$enable_png" != "no" ; then
    if test "$use_pkgconfig_png" = "yes" ; then
       PNG_CFLAGS=`$PKGCONFIG --cflags libpng`
-      PNG_LDFLAGS="`$PKGCONFIG --libs libpng` -lz -lm"
+      PNG_LDFLAGS=`$PKGCONFIG --libs libpng`
       enable_png="yes"
    elif which libpng-config >/dev/null ; then
       PNG_CFLAGS=`libpng-config --cflags`
-      PNG_LDFLAGS="`libpng-config --libs` -lz -lm"
+      PNG_LDFLAGS=`libpng-config --libs`
       enable_png="yes"
    else
       PNG_CFLAGS=""

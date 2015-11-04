@@ -1,373 +1,378 @@
-# Polish translations for jwm package.
-# Copyright (C) 2012 Free Software Foundation, Inc.
-# This file is distributed under the same license as the jwm package.
-# Miś Uszatek <adres.email@ymail.com>, 2012
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# Translation of JWM 2.3.0 in Portuguese of the Brasil (Brasil)
+# This file is distributed under the same license as the PACKAGE package.
+# Holmes Linux <holmes_holmes@live.com>, 2015.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.1.0+svn579-1\n"
+"Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
 "POT-Creation-Date: 2015-11-03 19:12-0600\n"
-"PO-Revision-Date: 2012-09-14 16:59+0100\n"
-"Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
-"Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
-"Language: pl\n"
+"PO-Revision-Date: 2015-08-19 14:22+0100\n"
+"Last-Translator: Holmes Linux <holmes_holmes@live.com>\n"
+"Language-Team: Portuguese Brazil <holmes_holmes@live.com>\n"
+"Language: pt-br\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 1.8.4\n"
 
 #: src/action.c:43
-#, fuzzy, c-format
+#, c-format
 msgid "invalid action: \"%s\""
-msgstr "nieprawidłowa akcja TrayButton: \"%s\""
+msgstr "Ação do Traybutton inválida: \"%s\""
 
 #: src/action.c:202
-#, fuzzy, c-format
+#, c-format
 msgid "action: root menu \"%s\" not defined"
-msgstr "przycisk zasobnika: menu głównym %d nie zdefiniowano"
+msgstr "botão do menu root \"%s\" não está definido"
 
 #: src/background.c:137
 msgid "no value specified for background"
-msgstr "nie określono wartości dla tła"
+msgstr "nenhum valor foi especificado para o papel de parede"
 
 #: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
-msgstr "nieprawidłowy typ tła: \"%s\""
+msgstr "tipo de papel de parede inválido: \"%s\""
 
 #: src/background.c:294
 #, c-format
 msgid "background image not found: \"%s\""
-msgstr "nie znaleziono obrazu tła: \"%s\""
+msgstr "imagem de papel de parede não encontrado: \"%s\""
 
 #: src/client.c:905
 msgid "Kill this window?"
-msgstr "Zabić to okno?"
+msgstr "Matar janela?"
 
 #: src/client.c:906
 msgid "This may cause data to be lost!"
-msgstr "Może to spowodować utratę danych!"
+msgstr "esta ação pode causar perda de dados!"
 
 #: src/command.c:138 src/main.c:217
 #, c-format
 msgid "exec failed: (%s) %s"
-msgstr "exec nie powiodło się: (%s) %s"
+msgstr "comando executável exec falhou (%s) %s"
 
 #: src/confirm.c:68
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: src/confirm.c:73
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: src/confirm.c:307
 msgid "Confirm"
-msgstr ""
+msgstr "Comfirmar"
 
 #: src/desktop.c:342
 msgid "empty Desktops Name tag"
-msgstr "pusty znacznik Nazwa Pulpitów"
+msgstr "variável Desktops vazia"
 
 #: src/dock.c:151
 msgid "only one Dock allowed"
-msgstr "tylko jeden dozwolony Dock"
+msgstr "só um dock é permitido"
 
 #: src/dock.c:232
 msgid "could not acquire system tray selection"
-msgstr "nie można nabyć wyboru w zasobniku systemowym"
+msgstr "não pode adquirir a seleção da área de notificação"
 
 #: src/font.c:95 src/font.c:112
 #, c-format
 msgid "could not load font: %s"
-msgstr "nie można załadować czcionki: %s"
+msgstr "impossível carregar fonte %s"
 
 #: src/font.c:102 src/font.c:119
 #, c-format
 msgid "could not load the default font: %s"
-msgstr "nie można załadować domyślnej czcionki: %s"
+msgstr "Não foi possível carregar a fonte padrão %s"
 
 #: src/font.c:301
 msgid "empty Font tag"
-msgstr "pusty znacznik czcionki"
+msgstr "variável Font vazia"
 
 #: src/group.c:112
 msgid "invalid group class"
-msgstr "nieprawidłowa klasa grupy"
+msgstr "classe do grupo inválida"
 
 #: src/group.c:123
 msgid "invalid group name"
-msgstr "nieprawidłowa nazwa grupy"
+msgstr "nome do grupo inválido"
 
 #: src/group.c:254
 #, c-format
 msgid "invalid group desktop: %d"
-msgstr "nieprawidłowy pulpitu grupy: %d"
+msgstr "grupo inválido desktop %d"
 
 #: src/image.c:242
 #, c-format
 msgid "could not create read struct for PNG image: %s"
-msgstr "nie można utworzyć przeczytać struct dla obrazu PNG: %s"
+msgstr "não foi possível criar ou ler a estrutura para imagem PNG: %s"
 
 #: src/image.c:255
 #, c-format
 msgid "error reading PNG image: %s"
-msgstr "błąd odczytu obrazu PNG: %s"
+msgstr "erro lendo imagem PNG %s"
 
 #: src/image.c:263
 #, c-format
 msgid "could not create info struct for PNG image: %s"
-msgstr "nie można utworzyć struktur informacji dla obrazu PNG: %s"
+msgstr "não foi possível criar estrutura de informação para imagem PNG %s"
 
 #: src/key.c:319
 msgid "Specified KeySym is not defined for any KeyCode"
-msgstr "Określony KeySym nie jest zdefiniowany dla żadego KeyCode"
+msgstr "KeySym especificado não está defendido por nenhum Keycode"
 
 #: src/key.c:327
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
-msgstr "nie znaleziono modyfikatora dla keysym 0x%0x"
+msgstr "modificador não foi encontrado para o Keysym 0x%0x"
 
 #: src/key.c:357
 #, c-format
 msgid "invalid modifier: \"%c\""
-msgstr "nieprawidłowy modyfikator: \"%c\""
+msgstr "modificador inválido: \"%c\""
 
 #: src/key.c:372
 #, c-format
 msgid "invalid key symbol: \"%s\""
-msgstr "nieprawidłowy symbol klucza: \"%s\""
+msgstr "símbolo de tecla inválido: \"%s\""
 
 #: src/key.c:453
 msgid "neither key nor keycode specified for Key"
-msgstr "ani klucza ani keycode określony dla Key"
+msgstr "tecla e código de tecla não foram especificados para esta tecla"
 
 #: src/key.c:468
-#, fuzzy, c-format
+#, c-format
 msgid "key binding: root menu \"%s\" not defined"
-msgstr "klucz wiązania: menu główne %d nie zdefiniowano"
+msgstr ""
+"teclas de atalho: não foram especificadas para o menu root \"%s\" não está "
+"definido"
 
 #: src/lex.c:196
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
-msgstr "%s[%u]: zamknij znacznik \"%s\" nie pasuje otwarty znacznik \"%s\""
+msgstr ""
+"%s[%u]: terminação da variável \"%s\" não corresponde à abertura da variável "
+"\"%s\""
 
 #: src/lex.c:202
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
-msgstr "%s[%u]: nieoczekiwany i nieprawidłowo zamknięty znacznik"
+msgstr "%s[%u]: terminação da variável inesperada e inválida"
 
 #: src/lex.c:208
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
-msgstr "%s[%u]: zamknij znacznik \"%s\" bez otwartego znacznika"
+msgstr "%s[%u]: terminação da variável \"%s\" sem variável de abertura"
 
 #: src/lex.c:211
 #, c-format
 msgid "%s[%u]: invalid close tag"
-msgstr "%s[%u]: nieprawidłowo zamknięty znacznik"
+msgstr "%s[%u]: terminação da variável inválida"
 
 #: src/lex.c:229
 #, c-format
 msgid "%s[%u]: invalid open tag"
-msgstr "%s[%u]: nieprawidłowo otwarty znacznik"
+msgstr "%s[%u]: abertura da variável inválida"
 
 #: src/lex.c:245
 #, c-format
 msgid "%s[%u]: invalid tag"
-msgstr "%s[%u]: nieprawidłowy znacznik"
+msgstr "%s[%u]: variável inválida"
 
 #: src/lex.c:301
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
-msgstr "%s[%u]: nieoczekiwany tekst: \"%s\""
+msgstr "%s[%u]: texto inesperado: \"%s\""
 
 #: src/lex.c:349
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
-msgstr "%s[%d]: nieprawidłowa jednostka: \"%.8s\""
+msgstr "%s[%d]: entrada inválida: \"%.8s\""
 
 #: src/lex.c:454 src/parse.c:1793
 msgid "out of memory"
-msgstr ""
+msgstr "Memória insuficiente"
 
 #: src/parse.c:1807
 #, c-format
 msgid "invalid setting: %s"
-msgstr "nieprawidłowy znacznik w: %s"
+msgstr "Configuração inválida: %s"
 
 #: src/parse.c:1819
 #, c-format
 msgid "invalid opacity: %s"
-msgstr "nieprawidłowa nieprzezroczystość menu: %s"
+msgstr "Transparência inválida: %s"
 
 #: src/parse.c:1861
 #, c-format
 msgid "invalid tag in %s: %s"
-msgstr "nieprawidłowy znacznik w %s: %s"
+msgstr "variável inválida dentro de %s: %s"
 
 #: src/parse.c:1882
 msgid "configuration error"
-msgstr "błąd konfiguracji"
+msgstr "Erro de configuração"
 
 #: src/root.c:131
 #, c-format
 msgid "invalid root menu specified: \"%c\""
-msgstr "nieprawidłowo określono menu główne: \"%c\""
+msgstr "menu root especificado é inválido: \"%c\""
 
 #: src/root.c:213
 msgid "Exit JWM"
-msgstr "Zakończ JWM"
+msgstr "Sair do JWM?"
 
 #: src/root.c:214
 msgid "Are you sure?"
-msgstr "Czy jesteś pewien?"
+msgstr "Tem certeza?"
 
 #: src/swallow.c:85
 msgid "cannot swallow a client with no name"
-msgstr "nie może połknąć klienta bez nazwy"
+msgstr "não pode inserir um cliente na variável swallow sem especificar o nome"
 
 #: src/taskbar.c:395 src/winmenu.c:51
 msgid "Close"
-msgstr "Zamknij"
+msgstr "Fechar"
 
 #: src/taskbar.c:402 src/winmenu.c:71
 msgid "Minimize"
-msgstr "Zminimalizuj"
+msgstr "Minimizar"
 
 #: src/taskbar.c:409 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
-msgstr "Przywróć"
+msgstr "Restaurar"
 
 #: src/taskbar.c:416 src/winmenu.c:170
 msgid "Send To"
-msgstr "Wyślij do"
+msgstr "Enviar para"
 
 #: src/taskbar.c:907
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
-msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
+msgstr "largura máxima inválida para variável Tasklist: %s"
 
 #: src/taskbar.c:921
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
-msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
+msgstr "largura máxima inválida para variável Tasklist: %s"
 
 #: src/tray.c:1030
 #, c-format
 msgid "invalid tray width: %d"
-msgstr "nieprawidłowa szerokość zasobnika: %d"
+msgstr "largura do painel inválida: %d"
 
 #: src/tray.c:1041
 #, c-format
 msgid "invalid tray height: %d"
-msgstr "nieprawidłowa wysokość zasobnika: %d"
+msgstr "altura do painel inválida: %d"
 
 #: src/tray.c:1066
 #, c-format
 msgid "invalid tray layout: \"%s\""
-msgstr "nieprawidłowy układ zasobnika: \"%s\""
+msgstr "layout do painel inválido: \"%s\""
 
 #: src/tray.c:1104
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "nieprawidłowe wypoziomowanie zasobnika: \"%s\""
+msgstr "alinhamento horizontal do painel inválido: \"%s\""
 
 #: src/tray.c:1127
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
-msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""
+msgstr "alinhamento vertical do painel inválido: \"%s\""
 
 #: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
-msgstr "nie można załadować ikon w zasobniku: \"%s\""
+msgstr "não foi possível carregar o ícone no painel: \"%s\""
 
 #: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
-msgstr "brak ikony lub etykiety dla TrayButton"
+msgstr "ícone e nome não estão definidos na variável TrayButton"
 
 #: src/winmenu.c:52
 msgid "Kill"
-msgstr "Zabij"
+msgstr "Terminar"
 
 #: src/winmenu.c:60
 msgid "Resize"
-msgstr "Zmień rozmiar"
+msgstr "Redimensionar"
 
 #: src/winmenu.c:63
 msgid "Move"
-msgstr "Przenieś"
+msgstr "Mover"
 
 #: src/winmenu.c:76
 msgid "Unshade"
-msgstr "Rozwiń"
+msgstr "Desativar sombra"
 
 #: src/winmenu.c:78
 msgid "Shade"
-msgstr "Zwiń"
+msgstr "Ativar sombra"
 
 #: src/winmenu.c:83
 msgid "Maximize-y"
-msgstr "Zmaksymalizuj pio."
+msgstr "Maximizar-y"
 
 #: src/winmenu.c:86
 msgid "Maximize-x"
-msgstr "Zmaksymalizuj poz."
+msgstr "Maximizar-x"
 
 #: src/winmenu.c:91
 msgid "Maximize"
-msgstr "Zmaksymalizuj"
+msgstr "Maximizar"
 
 #: src/winmenu.c:100
 msgid "Unstick"
-msgstr "Odepnij"
+msgstr "Descolar"
 
 #: src/winmenu.c:102
 msgid "Stick"
-msgstr "Przypnij"
+msgstr "Colar"
 
 #: src/winmenu.c:127
 msgid "Layer"
-msgstr "Warstwa"
+msgstr "Camada"
 
 #: src/winmenu.c:139
 msgid "[Above]"
-msgstr ""
+msgstr "[Acima]"
 
 #: src/winmenu.c:141
 msgid "Above"
-msgstr ""
+msgstr "Acima"
 
 #: src/winmenu.c:144
 msgid "[Normal]"
-msgstr "[Normalny]"
+msgstr "[Normal]"
 
 #: src/winmenu.c:146
 msgid "Normal"
-msgstr "Normalny"
+msgstr "Normal"
 
 #: src/winmenu.c:149
 msgid "[Below]"
-msgstr ""
+msgstr "[Abaixo]"
 
 #: src/winmenu.c:151
 msgid "Below"
-msgstr ""
+msgstr "Abaixo"
 
 #~ msgid "invalid insert mode: \"%s\""
-#~ msgstr "nieprawidłowy tryb edycji: \"%s\""
+#~ msgstr "modo de inserção inválido: \"%s\""
 
 #~ msgid "invalid layer: %s"
-#~ msgstr "nieprawidłowa warstwa grupy: %s"
+#~ msgstr "camada inválida: %s"
 
 #~ msgid "invalid status window type: %s"
-#~ msgstr "nieprawidłowy typ tła: %s"
+#~ msgstr "tipo de fundo inválido: %s"
 
 #~ msgid "cannot swallow the same client multiple times"
-#~ msgstr "nie można połknąć tego samego klienta, wiele razy"
+#~ msgstr "não pode inserir um cliente no swallow mais que uma vez"
 
 #~ msgid "Fullscreen state will be shaped!"
-#~ msgstr "Pełnoekranowy stan będzie kształtowany!"
+#~ msgstr "Estado do ecrã expandido será moldado!"

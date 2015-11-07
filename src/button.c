@@ -144,7 +144,7 @@ void DrawButton(ButtonNode *bp)
    /* Determine how much room is left for text. */
    textWidth = 0;
    textHeight = 0;
-   if(bp->text) {
+   if(bp->text && (width > height || !bp->icon)) {
       textWidth = GetStringWidth(bp->font, bp->text);
       textHeight = GetStringHeight(bp->font);
       if(iconWidth > 0 && textWidth + iconWidth + 7 > width) {

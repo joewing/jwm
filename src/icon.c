@@ -209,19 +209,19 @@ void PutIcon(IconNode *icon, Drawable d, long fg,
    node = GetScaledIcon(icon, fg, width, height);
    if(node) {
 
-      const int ix = x + (width - node->width) / 2;
-      const int iy = y + (height - node->height) / 2;
-
       /* If we support xrender, use it. */
 #ifdef USE_XRENDER
       if(haveRender) {
-         PutScaledRenderIcon(icon, node, d, ix, iy);
+         PutScaledRenderIcon(icon, node, d, x, y, width, height);
          return;
       }
 #endif
 
       /* Draw the icon the old way. */
       if(node->image != None) {
+
+         const int ix = x + (width - node->width) / 2;
+         const int iy = y + (height - node->height) / 2;
 
          /* Set the clip mask. */
          if(node->mask != None) {
@@ -478,8 +478,7 @@ ImageNode *GetBestImage(IconNode *icon, int rwidth, int rheight)
     * requested size, select the one that overlaps the most area.
     * If no size is specified, use the largest. */
    best = icon->images;
-   ip = icon->images->next;
-   while(ip) {
+   for(ip = icon->images->next; ip; ip = ip->next) {
       const int best_area = best->width * best->height;
       const int other_area = ip->width * ip->height;
       int best_overlap;
@@ -506,7 +505,6 @@ ImageNode *GetBestImage(IconNode *icon, int rwidth, int rheight)
             best = ip;
          }
       }
-      ip = ip->next;
    }
    return best;
 }
@@ -548,22 +546,18 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
    nwidth = Max(1, nwidth);
    nheight = Max(1, nheight);
 
-   /* Check if this size already exists.
-    * Note that XRender scales on the fly.
-    */
+   /* Check if this size already exists. */
    for(np = icon->nodes; np; np = np->next) {
-      if(icon->bitmap && np->fg != fg) {
-         continue;
-      }
+      if(!icon->bitmap || np->fg == fg) {
 #ifdef USE_XRENDER
-      if(np->imagePicture != None) {
-         np->width = nwidth;
-         np->height = nheight;
-         return np;
-      }
+         /* Render images scale on the fly. */
+         if(np->imagePicture != None) {
+            return np;
+         }
 #endif
-      if(np->width == nwidth && np->height == nheight) {
-         return np;
+         if(np->width == nwidth && np->height == nheight) {
+            return np;
+         }
       }
    }
 
@@ -577,8 +571,6 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
 #ifdef USE_XRENDER
    if(haveRender) {
       np = CreateScaledRenderIcon(imageNode, fg);
-      np->width = nwidth;
-      np->height = nheight;
       np->next = icon->nodes;
       icon->nodes = np;
 
@@ -596,11 +588,11 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
    np->fg = fg;
    np->width = nwidth;
    np->height = nheight;
-   np->next = icon->nodes;
 #ifdef USE_XRENDER
    np->imagePicture = None;
    np->alphaPicture = None;
 #endif
+   np->next = icon->nodes;
    icon->nodes = np;
 
    /* Create a mask. */

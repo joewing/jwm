@@ -17,7 +17,7 @@
 /** Draw a scaled icon. */
 void PutScaledRenderIcon(const IconNode *icon,
                          const ScaledIconNode *node,
-                         Drawable d, int x, int y)
+                         Drawable d, int x, int y, int width, int height)
 {
 
 #ifdef USE_XRENDER
@@ -32,7 +32,6 @@ void PutScaledRenderIcon(const IconNode *icon,
 
       XRenderPictureAttributes pa;
       XTransform xf;
-      int width, height;
       int xscale, yscale;
       Picture dest;
       Picture alpha = node->alphaPicture;
@@ -42,20 +41,10 @@ void PutScaledRenderIcon(const IconNode *icon,
       pa.subwindow_mode = IncludeInferiors;
       dest = JXRenderCreatePicture(display, d, fp, CPSubwindowMode, &pa);
 
-      if(node->width == 0) {
-         width = icon->width;
-         xscale = 65536;
-      } else {
-         width = node->width;
-         xscale = (icon->width << 16) / width;
-      }
-      if(node->height == 0) {
-         height = icon->height;
-         yscale = 65536;
-      } else {
-         height = node->height;
-         yscale = (icon->height << 16) / height;
-      }
+      width = width == 0 ? node->width : width;
+      height = height == 0 ? node->height : height;
+      xscale = (node->width << 16) / width;
+      yscale = (node->height << 16) / height;
 
       memset(&xf, 0, sizeof(xf));
       xf.matrix[0][0] = xscale;
@@ -99,6 +88,8 @@ ScaledIconNode *CreateScaledRenderIcon(ImageNode *image, long fg)
 
    result = Allocate(sizeof(ScaledIconNode));
    result->fg = fg;
+   result->width = width;
+   result->height = height;
 
    result->mask = JXCreatePixmap(display, rootWindow, width, height, 8);
    maskGC = JXCreateGC(display, result->mask, 0, NULL);

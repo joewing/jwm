@@ -17,7 +17,6 @@
 #include "misc.h"
 #include "settings.h"
 #include "grab.h"
-#include "button.h"
 
 static char *buttonNames[BI_COUNT];
 static IconNode *buttonIcons[BI_COUNT];
@@ -29,15 +28,15 @@ static void DrawBorderButtons(const ClientNode *np,
                               Pixmap canvas, GC gc);
 static char DrawBorderIcon(BorderIconType t,
                            unsigned xoffset, unsigned yoffset,
-                           Pixmap canvas);
+                           Pixmap canvas, long fg);
 static void DrawCloseButton(unsigned xoffset, unsigned yoffset,
-                            Pixmap canvas, GC gc);
+                            Pixmap canvas, GC gc, long fg);
 static void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
-                           Pixmap canvas, GC gc);
+                           Pixmap canvas, GC gc, long fg);
 static void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
-                           Pixmap canvas, GC gc);
+                           Pixmap canvas, GC gc, long fg);
 static void DrawMinButton(unsigned xoffset, unsigned yoffset,
-                          Pixmap canvas, GC gc);
+                          Pixmap canvas, GC gc, long fg);
 static unsigned GetButtonCount(const ClientNode *np);
 
 #ifdef USE_SHAPE
@@ -839,7 +838,7 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
    if(np->state.border & BORDER_CLOSE) {
 
       JXSetForeground(display, gc, color);
-      DrawCloseButton(xoffset, yoffset, canvas, gc);
+      DrawCloseButton(xoffset, yoffset, canvas, gc, color);
 
       if(settings.windowDecorations == DECO_MOTIF) {
          JXSetForeground(display, gc, pixelDown);
@@ -863,9 +862,9 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
 
       JXSetForeground(display, gc, color);
       if(np->state.maxFlags) {
-         DrawMaxAButton(xoffset, yoffset, canvas, gc);
+         DrawMaxAButton(xoffset, yoffset, canvas, gc, color);
       } else {
-         DrawMaxIButton(xoffset, yoffset, canvas, gc);
+         DrawMaxIButton(xoffset, yoffset, canvas, gc, color);
       }
 
       if(settings.windowDecorations == DECO_MOTIF) {
@@ -889,7 +888,7 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
    if(np->state.border & BORDER_MIN) {
 
       JXSetForeground(display, gc, color);
-      DrawMinButton(xoffset, yoffset, canvas, gc);
+      DrawMinButton(xoffset, yoffset, canvas, gc, color);
 
       if(settings.windowDecorations == DECO_MOTIF) {
          JXSetForeground(display, gc, pixelDown);
@@ -907,18 +906,11 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
 /** Attempt to draw a border icon. */
 char DrawBorderIcon(BorderIconType t,
                     unsigned xoffset, unsigned yoffset,
-                    Pixmap canvas)
+                    Pixmap canvas, long fg)
 {
    if(buttonIcons[t]) {
-      ButtonNode button;
-      ResetButton(&button, canvas);
-      button.x       = xoffset;
-      button.y       = yoffset;
-      button.width   = settings.titleHeight;
-      button.height  = settings.titleHeight;
-      button.icon    = buttonIcons[t];
-      button.fill    = 0;
-      DrawButton(&button);
+      PutIcon(buttonIcons[t], canvas, fg, xoffset + 2, yoffset + 2,
+              settings.titleHeight - 4, settings.titleHeight - 4);
       return 1;
    } else {
       return 0;
@@ -927,14 +919,14 @@ char DrawBorderIcon(BorderIconType t,
 
 /** Draw a close button. */
 void DrawCloseButton(unsigned xoffset, unsigned yoffset,
-                     Pixmap canvas, GC gc)
+                     Pixmap canvas, GC gc, long fg)
 {
    XSegment segments[2];
    unsigned size;
    unsigned x1, y1;
    unsigned x2, y2;
 
-   if(DrawBorderIcon(BI_CLOSE, xoffset, yoffset, canvas)) {
+   if(DrawBorderIcon(BI_CLOSE, xoffset, yoffset, canvas, fg)) {
       return;
    }
 
@@ -964,7 +956,7 @@ void DrawCloseButton(unsigned xoffset, unsigned yoffset,
 
 /** Draw an inactive maximize button. */
 void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
-                    Pixmap canvas, GC gc)
+                    Pixmap canvas, GC gc, long fg)
 {
 
    XSegment segments[5];
@@ -972,7 +964,7 @@ void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
    unsigned int x1, y1;
    unsigned int x2, y2;
 
-   if(DrawBorderIcon(BI_MAX, xoffset, yoffset, canvas)) {
+   if(DrawBorderIcon(BI_MAX, xoffset, yoffset, canvas, fg)) {
       return;
    }
 
@@ -1017,7 +1009,7 @@ void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
 
 /** Draw an active maximize button. */
 void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
-                    Pixmap canvas, GC gc)
+                    Pixmap canvas, GC gc, long fg)
 {
    XSegment segments[8];
    unsigned size;
@@ -1025,7 +1017,7 @@ void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
    unsigned x2, y2;
    unsigned x3, y3;
 
-   if(DrawBorderIcon(BI_MAX_ACTIVE, xoffset, yoffset, canvas)) {
+   if(DrawBorderIcon(BI_MAX_ACTIVE, xoffset, yoffset, canvas, fg)) {
       return;
    }
 
@@ -1086,14 +1078,14 @@ void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
 
 /** Draw a minimize button. */
 void DrawMinButton(unsigned xoffset, unsigned yoffset,
-                   Pixmap canvas, GC gc)
+                   Pixmap canvas, GC gc, long fg)
 {
 
    unsigned int size;
    unsigned int x1, y1;
    unsigned int x2, y2;
 
-   if(DrawBorderIcon(BI_MIN, xoffset, yoffset, canvas)) {
+   if(DrawBorderIcon(BI_MIN, xoffset, yoffset, canvas, fg)) {
       return;
    }
 

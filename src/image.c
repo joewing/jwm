@@ -526,11 +526,20 @@ ImageNode *LoadXPMImage(const char *fileName)
 #ifdef USE_XBM
 ImageNode *LoadXBMImage(const char *fileName)
 {
-   ImageNode *result = CreateImage(0,0,1);
-   int dummy1, dummy2, rc;
-   rc = XReadBitmapFileData(fileName,&result->width,&result->height,
-                            &(result->data),&dummy1,&dummy2);
-   return (rc == BitmapSuccess)?result:NULL;
+   ImageNode *result = NULL;
+   unsigned char *data;
+   unsigned width, height;
+   int xhot, yhot;
+   int rc;
+
+   rc = XReadBitmapFileData(fileName, &width, &height, &data, &xhot, &yhot);
+   if(rc == BitmapSuccess) {
+      result = CreateImage(width, height, 1);
+      memcpy(result->data, data, (width * height + 7) / 8);
+      XFree(data);
+   }
+
+   return result;
 }
 #endif /* USE_XBM */
 

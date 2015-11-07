@@ -324,8 +324,8 @@ IconNode *LoadNamedIcon(const char *name, char save, char preserveAspect)
       }
    }
 
-   /* Use an empty icon. */
-   return &emptyIcon;
+   /* The default icon. */
+   return NULL;
 }
 
 /** Helper for loading icons by name. */

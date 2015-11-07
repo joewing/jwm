@@ -576,6 +576,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, ImageNode *iconImage,
    np->next = iconImage->nodes;
 #ifdef USE_XRENDER
    np->imagePicture = None;
+   np->alphaPicture = None;
 #endif
    iconImage->nodes = np;
 

@@ -16,12 +16,14 @@ struct ScaledIconNode;
 
 /** Put a scaled icon.
  * @param image The image to display.
+ * @param node The rendered image to display.
  * @param d The drawable on which to render the icon.
  * @param x The x-coordinate to place the icon.
  * @param y The y-coordinate to place the icon.
  * @return 1 if the icon was successfully rendered, 0 otherwise.
  */
 void PutScaledRenderIcon(const struct ImageNode *image,
+                         const struct ScaledIconNode *node,
                          Drawable d, int x, int y);
 
 /** Create a scaled icon.

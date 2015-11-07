@@ -16,13 +16,13 @@
 
 /** Draw a scaled icon. */
 void PutScaledRenderIcon(const ImageNode *image,
+                         const ScaledIconNode *node,
                          Drawable d, int x, int y)
 {
 
 #ifdef USE_XRENDER
 
    Picture source;
-   const ScaledIconNode *node = image->nodes;
 
    Assert(image);
    Assert(haveRender);

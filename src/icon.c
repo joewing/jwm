@@ -219,7 +219,7 @@ void PutIcon(IconNode *icon, Drawable d, long fg,
       /* If we support xrender, use it. */
 #ifdef USE_XRENDER
       if(haveRender) {
-         PutScaledRenderIcon(imageNode, d, ix, iy);
+         PutScaledRenderIcon(imageNode, node, d, ix, iy);
          return;
       }
 #endif
@@ -538,6 +538,9 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, ImageNode *iconImage,
     * Note that XRender scales on the fly.
     */
    for(np = iconImage->nodes; np; np = np->next) {
+      if(iconImage->bitmap && np->fg != fg) {
+         continue;
+      }
 #ifdef USE_XRENDER
       if(np->imagePicture != None) {
          np->width = nwidth;
@@ -546,9 +549,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, ImageNode *iconImage,
       }
 #endif
       if(np->width == nwidth && np->height == nheight) {
-         if(!iconImage->bitmap || np->fg == fg) {
-            return np;
-         }
+         return np;
       }
    }
 
@@ -558,8 +559,10 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, ImageNode *iconImage,
       np = CreateScaledRenderIcon(iconImage, fg);
 
       /* Don't keep the image data around after creating the icon. */
-      Release(iconImage->data);
-      iconImage->data = NULL;
+      if(!iconImage->bitmap) {
+         Release(iconImage->data);
+         iconImage->data = NULL;
+      }
 
       np->width = nwidth;
       np->height = nheight;

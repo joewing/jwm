@@ -35,12 +35,17 @@ typedef struct IconNode {
 
    char *name;                    /**< The name of the icon. */
    struct ImageNode *images;      /**< Images associated with this icon. */
+   struct ScaledIconNode *nodes;  /**< Scaled icons. */
+   int width;                     /**< Natural width. */
+   int height;                    /**< Natural height. */
 
    struct IconNode *next;         /**< The next icon in the list. */
    struct IconNode *prev;         /**< The previous icon in the list. */
 
    char preserveAspect;           /**< Set to preserve the aspect ratio
                                    *   of the icon when scaling. */
+   char bitmap;                   /**< Set if this is a bitmap. */
+   char transient;                /**< Set if this icon is transient. */
 
 } IconNode;
 

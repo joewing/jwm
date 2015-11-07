@@ -10,13 +10,10 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-struct ScaledIconNode;
-
 /** Structure to represent an image. */
 typedef struct ImageNode {
 
    struct ImageNode *next;       /**< Next image node (if multiple sizes). */
-   struct ScaledIconNode *nodes; /**< Icons associated with this image. */
    unsigned char *data;          /**< Image data. */
    int width;                    /**< Width of the image. */
    int height;                   /**< Height of the image. */

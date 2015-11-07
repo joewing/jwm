@@ -22,7 +22,7 @@ struct ScaledIconNode;
  * @param y The y-coordinate to place the icon.
  * @return 1 if the icon was successfully rendered, 0 otherwise.
  */
-void PutScaledRenderIcon(const struct ImageNode *image,
+void PutScaledRenderIcon(const struct IconNode *image,
                          const struct ScaledIconNode *node,
                          Drawable d, int x, int y);
 

@@ -15,7 +15,7 @@
 #include "color.h"
 
 /** Draw a scaled icon. */
-void PutScaledRenderIcon(const ImageNode *image,
+void PutScaledRenderIcon(const IconNode *icon,
                          const ScaledIconNode *node,
                          Drawable d, int x, int y)
 {
@@ -24,7 +24,7 @@ void PutScaledRenderIcon(const ImageNode *image,
 
    Picture source;
 
-   Assert(image);
+   Assert(icon);
    Assert(haveRender);
 
    source = node->imagePicture;
@@ -43,18 +43,18 @@ void PutScaledRenderIcon(const ImageNode *image,
       dest = JXRenderCreatePicture(display, d, fp, CPSubwindowMode, &pa);
 
       if(node->width == 0) {
-         width = image->width;
+         width = icon->width;
          xscale = 65536;
       } else {
          width = node->width;
-         xscale = (image->width << 16) / width;
+         xscale = (icon->width << 16) / width;
       }
       if(node->height == 0) {
-         height = image->height;
+         height = icon->height;
          yscale = 65536;
       } else {
          height = node->height;
-         yscale = (image->height << 16) / height;
+         yscale = (icon->height << 16) / height;
       }
 
       memset(&xf, 0, sizeof(xf));
@@ -99,8 +99,6 @@ ScaledIconNode *CreateScaledRenderIcon(ImageNode *image, long fg)
 
    result = Allocate(sizeof(ScaledIconNode));
    result->fg = fg;
-   result->next = image->nodes;
-   image->nodes = result;
 
    result->mask = JXCreatePixmap(display, rootWindow, width, height, 8);
    maskGC = JXCreateGC(display, result->mask, 0, NULL);

@@ -594,7 +594,6 @@ ImageNode *CreateImage(unsigned int width, unsigned int height, char bitmap)
    ImageNode *image = Allocate(sizeof(ImageNode));
    image->data = Allocate(image_size);
    image->next = NULL;
-   image->nodes = NULL;
    image->bitmap = bitmap;
    image->width = width;
    image->height = height;

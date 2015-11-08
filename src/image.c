@@ -65,15 +65,21 @@ static int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
 /** Load an image from the specified file. */
 ImageNode *LoadImage(const char *fileName)
 {
-   const unsigned nameLength = strlen(fileName);
+   unsigned nameLength;
    ImageNode *result = NULL;
    if(!fileName) {
       return result;
    }
 
+   nameLength = strlen(fileName);
+   if(JUNLIKELY(nameLength == 0)) {
+      return result;
+   }
+
    /* Attempt to load the file as a PNG image. */
 #ifdef USE_PNG
-   if(nameLength >= 4 && !StrCmpNoCase(&fileName[nameLength - 4], ".png")) {
+   if(nameLength >= 4
+      && !StrCmpNoCase(&fileName[nameLength - 4], ".png")) {
       result = LoadPNGImage(fileName);
       if(result) {
          return result;
@@ -97,7 +103,8 @@ ImageNode *LoadImage(const char *fileName)
    /* Attempt to load the file as an SVG image. */
 #ifdef USE_CAIRO
 #ifdef USE_RSVG
-   if(nameLength >= 4 && !StrCmpNoCase(&fileName[nameLength - 4], ".svg")) {
+   if(nameLength >= 4
+      && !StrCmpNoCase(&fileName[nameLength - 4], ".svg")) {
       result = LoadSVGImage(fileName);
       if(result) {
          return result;
@@ -108,7 +115,8 @@ ImageNode *LoadImage(const char *fileName)
 
    /* Attempt to load the file as an XPM image. */
 #ifdef USE_XPM
-   if(nameLength >= 4 && !StrCmpNoCase(&fileName[nameLength - 4], ".xpm")) {
+   if(nameLength >= 4
+      && !StrCmpNoCase(&fileName[nameLength - 4], ".xpm")) {
       result = LoadXPMImage(fileName);
       if(result) {
          return result;
@@ -118,7 +126,8 @@ ImageNode *LoadImage(const char *fileName)
 
    /* Attempt to load the file as an XBM image. */
 #ifdef USE_XBM
-   if(nameLength >= 4 && !StrCmpNoCase(&fileName[nameLength - 4], ".xbm")) {
+   if(nameLength >= 4
+      && !StrCmpNoCase(&fileName[nameLength - 4], ".xbm")) {
       result = LoadXBMImage(fileName);
       if(result) {
          return result;

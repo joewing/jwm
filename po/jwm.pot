@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: jwm 2.3.3\n"
+"Project-Id-Version: jwm 2.3.2\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-11-03 19:12-0600\n"
+"POT-Creation-Date: 2015-11-08 15:40-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -105,17 +105,17 @@ msgstr ""
 msgid "invalid group desktop: %d"
 msgstr ""
 
-#: src/image.c:242
+#: src/image.c:209
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr ""
 
-#: src/image.c:255
+#: src/image.c:222
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr ""
 
-#: src/image.c:263
+#: src/image.c:230
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr ""

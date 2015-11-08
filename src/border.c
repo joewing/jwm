@@ -351,7 +351,6 @@ void DrawBorderHelper(const ClientNode *np)
 
    int north, south, east, west;
    unsigned int width, height;
-   int iconSize;
 
    unsigned int buttonCount;
    int titleWidth;
@@ -360,7 +359,6 @@ void DrawBorderHelper(const ClientNode *np)
 
    Assert(np);
 
-   iconSize = GetBorderIconSize();
    GetBorderSize(&np->state, &north, &south, &east, &west);
    width = np->width + east + west;
    height = np->height + north + south;
@@ -412,11 +410,14 @@ void DrawBorderHelper(const ClientNode *np)
                              0, 1, width, settings.titleHeight - 2);
 
       /* Draw the icon. */
+#ifdef USE_ICONS
       if(np->icon && np->width >= settings.titleHeight) {
+         const int iconSize = GetBorderIconSize();
          PutIcon(np->icon, canvas, colors[borderTextColor],
                  startx, starty + (settings.titleHeight - iconSize) / 2,
                  iconSize, iconSize);
       }
+#endif
 
       if(np->name && np->name[0] && titleWidth > 0) {
          const int sheight = GetStringHeight(FONT_BORDER);

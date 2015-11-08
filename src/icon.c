@@ -549,12 +549,6 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
    /* Check if this size already exists. */
    for(np = icon->nodes; np; np = np->next) {
       if(!icon->bitmap || np->fg == fg) {
-#ifdef USE_XRENDER
-         /* Render images scale on the fly. */
-         if(np->imagePicture != None) {
-            return np;
-         }
-#endif
          if(np->width == nwidth && np->height == nheight) {
             return np;
          }

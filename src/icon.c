@@ -23,8 +23,6 @@ IconNode emptyIcon;
 
 #ifdef USE_ICONS
 
-#include "x.xpm"
-
 /* Must be a power of two. */
 #define HASH_SIZE 128
 
@@ -72,9 +70,8 @@ static char iconSizeSet = 0;
 static void DoDestroyIcon(int index, IconNode *icon);
 static IconNode *ReadNetWMIcon(Window win);
 static IconNode *ReadWMHintIcon(Window win);
-static IconNode *CreateIcon(void);
+static IconNode *CreateIcon(const ImageNode *image);
 static IconNode *GetDefaultIcon(void);
-static IconNode *CreateIconFromData(const char *name, char **data);
 static IconNode *CreateIconFromDrawable(Drawable d, Pixmap mask);
 static IconNode *CreateIconFromBinary(const unsigned long *data,
                                       unsigned int length);
@@ -211,7 +208,7 @@ void PutIcon(IconNode *icon, Drawable d, long fg,
 
       /* If we support xrender, use it. */
 #ifdef USE_XRENDER
-      if(haveRender) {
+      if(icon->render) {
          PutScaledRenderIcon(icon, node, d, x, y, width, height);
          return;
       }
@@ -312,10 +309,7 @@ IconNode *LoadNamedIcon(const char *name, char save, char preserveAspect)
    if(name[0] == '/') {
       ImageNode *image = LoadImage(name);
       if(image) {
-         icon = CreateIcon();
-         icon->width = image->width;
-         icon->height = image->height;
-         icon->bitmap = image->bitmap;
+         icon = CreateIcon(image);
          icon->preserveAspect = preserveAspect;
          icon->name = CopyString(name);
          if(save) {
@@ -360,10 +354,7 @@ IconNode *LoadNamedIconHelper(const char *name, const char *path,
       memcpy(&temp[pathLength + nameLength], ICON_EXTENSIONS[i], len + 1);
       ImageNode *image = LoadImage(temp);
       if(image) {
-         result = CreateIcon();
-         result->width = image->width;
-         result->height = image->height;
-         result->bitmap = image->bitmap;
+         result = CreateIcon(image);
          result->preserveAspect = preserveAspect;
          result->name = CopyString(temp);
          if(save) {
@@ -421,21 +412,17 @@ IconNode *ReadWMHintIcon(Window win)
    return icon;
 }
 
-/** Create the default icon. */
+/** Create an icon from XPM image data. */
 IconNode *GetDefaultIcon(void)
 {
-   return CreateIconFromData("default", x_xpm);
-}
-
-/** Create an icon from XPM image data. */
-IconNode *CreateIconFromData(const char *name, char **data)
-{
-
+   static const char * const name = "default";
+   const unsigned width = 8;
+   const unsigned height = 8;
+   const unsigned border = 1;
    ImageNode *image;
    IconNode *result;
-
-   Assert(name);
-   Assert(data);
+   unsigned bytes;
+   unsigned x, y;
 
    /* Check if this icon has already been loaded */
    result = FindIcon(name);
@@ -443,20 +430,43 @@ IconNode *CreateIconFromData(const char *name, char **data)
       return result;
    }
 
-   image = LoadImageFromData(data);
-   if(image) {
-      result = CreateIcon();
-      result->width = image->width;
-      result->height = image->height;
-      result->bitmap = image->bitmap;
-      result->name = CopyString(name);
-      result->images = image;
-      InsertIcon(result);
-      return result;
-   } else {
-      return NULL;
+   /* Allocate image data. */
+   bytes = (width * height + 7) / 8;
+   image = CreateImage(width, height, 1);
+   memset(image->data, 0, bytes);
+#ifdef USE_XRENDER
+   image->render = 0;
+#endif
+
+   /* Allocate the icon node. */
+   result = CreateIcon(image);
+   result->name = CopyString(name);
+   result->images = image;
+   InsertIcon(result);
+
+   /* Draw the icon. */
+   for(y = border; y < height - border; y++) {
+      const unsigned pixel_left = y * width + border;
+      const unsigned pixel_right = y * width + width - 1 - border;
+      const unsigned offset_left = pixel_left / 8;
+      const unsigned mask_left = 1 << (pixel_left % 8);
+      const unsigned offset_right = pixel_right / 8;
+      const unsigned mask_right = 1 << (pixel_right % 8);
+      image->data[offset_left] |= mask_left;
+      image->data[offset_right] |= mask_right;
+   }
+   for(x = border; x < width - border; x++) {
+      const unsigned pixel_top = x + border * width;
+      const unsigned pixel_bottom = x + width * (height - 1 - border);
+      const unsigned offset_top = pixel_top / 8;
+      const unsigned mask_top = 1 << (pixel_top % 8);
+      const unsigned offset_bottom = pixel_bottom / 8;
+      const unsigned mask_bottom = 1 << (pixel_bottom % 8);
+      image->data[offset_top] |= mask_top;
+      image->data[offset_bottom] |= mask_bottom;
    }
 
+   return result;
 }
 
 IconNode *CreateIconFromDrawable(Drawable d, Pixmap mask)
@@ -465,10 +475,7 @@ IconNode *CreateIconFromDrawable(Drawable d, Pixmap mask)
 
    image = LoadImageFromDrawable(d, mask);
    if(image) {
-      IconNode *result = CreateIcon();
-      result->width = image->width;
-      result->height = image->height;
-      result->bitmap = image->bitmap;
+      IconNode *result = CreateIcon(image);
       result->images = image;
       return result;
    } else {
@@ -567,7 +574,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
 #ifdef USE_XRENDER
          /* If we are using xrender and only have one image size
           * available, we can simply scale the existing icon. */
-         if(np->imagePicture != None) {
+         if(icon->render) {
             if(icon->images == NULL || icon->images->next == NULL) {
                return np;
             }
@@ -587,7 +594,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
 
    /* See if we can use XRender to create the icon. */
 #ifdef USE_XRENDER
-   if(haveRender) {
+   if(icon->render) {
       np = CreateScaledRenderIcon(imageNode, fg);
       np->next = icon->nodes;
       icon->nodes = np;
@@ -606,10 +613,6 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
    np->fg = fg;
    np->width = nwidth;
    np->height = nheight;
-#ifdef USE_XRENDER
-   np->imagePicture = None;
-   np->alphaPicture = None;
-#endif
    np->next = icon->nodes;
    icon->nodes = np;
 
@@ -721,13 +724,10 @@ IconNode *CreateIconFromBinary(const unsigned long *input,
          return result;
       }
 
-      if(result == NULL) {
-         result = CreateIcon();
-         result->width = width;
-         result->height = height;
-      }
-
       image = CreateImage(width, height, 0);
+      if(result == NULL) {
+         result = CreateIcon(image);
+      }
       image->next = result->images;
       result->images = image;
       data = image->data;
@@ -750,7 +750,7 @@ IconNode *CreateIconFromBinary(const unsigned long *input,
 }
 
 /** Create an empty icon node. */
-IconNode *CreateIcon(void)
+IconNode *CreateIcon(const ImageNode *image)
 {
    IconNode *icon;
    icon = Allocate(sizeof(IconNode));
@@ -759,9 +759,12 @@ IconNode *CreateIcon(void)
    icon->images = NULL;
    icon->next = NULL;
    icon->prev = NULL;
-   icon->width = 0;
-   icon->height = 0;
-   icon->bitmap = 0;
+   icon->width = image->width;
+   icon->height = image->height;
+   icon->bitmap = image->bitmap;
+#ifdef USE_XRENDER
+   icon->render = image->render;
+#endif
    icon->preserveAspect = 1;
    icon->transient = 1;
    return icon;
@@ -774,18 +777,23 @@ void DoDestroyIcon(int index, IconNode *icon)
       while(icon->nodes) {
          ScaledIconNode *np = icon->nodes;
 #ifdef USE_XRENDER
-         if(np->imagePicture != None) {
-            JXRenderFreePicture(display, np->imagePicture);
-         }
-         if(np->alphaPicture != None) {
-            JXRenderFreePicture(display, np->alphaPicture);
-         }
+         if(icon->render) {
+            if(np->image != None) {
+               JXRenderFreePicture(display, np->image);
+            }
+            if(np->mask != None) {
+               JXRenderFreePicture(display, np->mask);
+            }
+#else
+         if(0) {
 #endif
-         if(np->image != None) {
-            JXFreePixmap(display, np->image);
-         }
-         if(np->mask != None) {
-            JXFreePixmap(display, np->mask);
+         } else {
+            if(np->image != None) {
+               JXFreePixmap(display, np->image);
+            }
+            if(np->mask != None) {
+               JXFreePixmap(display, np->mask);
+            }
          }
          icon->nodes = np->next;
          Release(np);

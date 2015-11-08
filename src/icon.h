@@ -19,12 +19,8 @@ typedef struct ScaledIconNode {
    int height;  /**< The scaled height of the icon. */
    long fg;     /**< Foreground color for bitmaps. */
 
-   Pixmap image;
-   Pixmap mask;
-#ifdef USE_XRENDER
-   Picture imagePicture;
-   Picture alphaPicture;
-#endif
+   XID image;
+   XID mask;
 
    struct ScaledIconNode *next;
 
@@ -46,6 +42,9 @@ typedef struct IconNode {
                                    *   of the icon when scaling. */
    char bitmap;                   /**< Set if this is a bitmap. */
    char transient;                /**< Set if this icon is transient. */
+#ifdef USE_XRENDER
+   char render;                   /**< Set to use render. */
+#endif
 
 } IconNode;
 

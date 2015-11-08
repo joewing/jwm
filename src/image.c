@@ -130,39 +130,6 @@ ImageNode *LoadImage(const char *fileName)
 
 }
 
-/** Load an image from the specified XPM data. */
-ImageNode *LoadImageFromData(char **data)
-{
-   ImageNode *result = NULL;
-
-#ifdef USE_XPM
-
-   XpmAttributes attr;
-   XImage *image;
-   XImage *shape;
-   int rc;
-
-   Assert(data);
-
-   attr.valuemask = XpmAllocColor | XpmFreeColors | XpmColorClosure;
-   attr.alloc_color = AllocateColor;
-   attr.free_colors = FreeColors;
-   attr.color_closure = NULL;
-   rc = XpmCreateImageFromData(display, data, &image, &shape, &attr);
-   if(rc == XpmSuccess) {
-      result = CreateImageFromXImages(image, shape);
-      JXDestroyImage(image);
-      if(shape) {
-         JXDestroyImage(shape);
-      }
-   }
-
-#endif
-
-   return result;
-
-}
-
 /** Load an image from a pixmap. */
 #ifdef USE_ICONS
 ImageNode *LoadImageFromDrawable(Drawable pmap, Pixmap mask)
@@ -583,9 +550,9 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
 }
 #endif /* USE_ICONS */
 
-ImageNode *CreateImage(unsigned int width, unsigned int height, char bitmap)
+ImageNode *CreateImage(unsigned width, unsigned height, char bitmap)
 {
-   unsigned int image_size;
+   unsigned image_size;
    if(bitmap) {
       image_size = (width * height + 7) / 8;
    } else {
@@ -597,6 +564,9 @@ ImageNode *CreateImage(unsigned int width, unsigned int height, char bitmap)
    image->bitmap = bitmap;
    image->width = width;
    image->height = height;
+#ifdef USE_XRENDER
+   image->render = haveRender;
+#endif
    return image;
 }
 

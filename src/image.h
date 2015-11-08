@@ -18,6 +18,9 @@ typedef struct ImageNode {
    int width;                    /**< Width of the image. */
    int height;                   /**< Height of the image. */
    char bitmap;                  /**< 1 if a bitmap, 0 otherwise. */
+#ifdef USE_XRENDER
+   char render;                  /**< 1 to use render, 0 otherwise. */
+#endif
 
 } ImageNode;
 
@@ -26,13 +29,6 @@ typedef struct ImageNode {
  * @return A new image node (NULL if the image could not be loaded).
  */
 ImageNode *LoadImage(const char *fileName);
-
-/** Load an image from data.
- * The data must be in the format from the EWMH spec.
- * @param data The image data.
- * @return A new image node (NULL if there were errors).
- */
-ImageNode *LoadImageFromData(char **data);
 
 /** Load an image from a Drawable.
  * @param pmap The drawable.

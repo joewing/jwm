@@ -27,14 +27,14 @@ void PutScaledRenderIcon(const IconNode *icon,
    Assert(icon);
    Assert(haveRender);
 
-   source = node->imagePicture;
+   source = node->image;
    if(source != None) {
 
       XRenderPictureAttributes pa;
       XTransform xf;
       int xscale, yscale;
       Picture dest;
-      Picture alpha = node->alphaPicture;
+      Picture alpha = node->mask;
       XRenderPictFormat *fp = JXRenderFindVisualFormat(display, rootVisual);
       Assert(fp);
 
@@ -79,6 +79,7 @@ ScaledIconNode *CreateScaledRenderIcon(ImageNode *image, long fg)
    GC maskGC;
    XImage *destImage;
    XImage *destMask;
+   Pixmap pmap, mask;
    const unsigned int width = image->width;
    const unsigned int height = image->height;
    int x, y;
@@ -91,10 +92,9 @@ ScaledIconNode *CreateScaledRenderIcon(ImageNode *image, long fg)
    result->width = width;
    result->height = height;
 
-   result->mask = JXCreatePixmap(display, rootWindow, width, height, 8);
-   maskGC = JXCreateGC(display, result->mask, 0, NULL);
-   result->image = JXCreatePixmap(display, rootWindow, width, height,
-                                  rootDepth);
+   mask = JXCreatePixmap(display, rootWindow, width, height, 8);
+   maskGC = JXCreateGC(display, mask, 0, NULL);
+   pmap = JXCreatePixmap(display, rootWindow, width, height, rootDepth);
 
    destImage = JXCreateImage(display, rootVisual, rootDepth,
                              ZPixmap, 0, NULL, width, height, 8, 0);
@@ -144,15 +144,13 @@ ScaledIconNode *CreateScaledRenderIcon(ImageNode *image, long fg)
    }
 
    /* Render the image data to the image pixmap. */
-   JXPutImage(display, result->image, rootGC, destImage,
-              0, 0, 0, 0, width, height);
+   JXPutImage(display, pmap, rootGC, destImage, 0, 0, 0, 0, width, height);
    Release(destImage->data);
    destImage->data = NULL;
    JXDestroyImage(destImage);
 
    /* Render the alpha data to the mask pixmap. */
-   JXPutImage(display, result->mask, maskGC, destMask, 0, 0, 0, 0,
-              width, height);
+   JXPutImage(display, mask, maskGC, destMask, 0, 0, 0, 0, width, height);
    Release(destMask->data);
    destMask->data = NULL;
    JXDestroyImage(destMask);
@@ -161,20 +159,14 @@ ScaledIconNode *CreateScaledRenderIcon(ImageNode *image, long fg)
    /* Create the alpha picture. */
    fp = JXRenderFindStandardFormat(display, PictStandardA8);
    Assert(fp);
-   result->alphaPicture = JXRenderCreatePicture(display, result->mask, fp,
-                                                0, NULL);
-   
+   result->mask = JXRenderCreatePicture(display, mask, fp, 0, NULL);
+   JXFreePixmap(display, mask);
+
    /* Create the render picture. */
    fp = JXRenderFindVisualFormat(display, rootVisual);
    Assert(fp);
-   result->imagePicture = JXRenderCreatePicture(display, result->image, fp,
-                                                0, NULL);
-
-   /* Free unneeded pixmaps. */
-   JXFreePixmap(display, result->image);
-   result->image = None;
-   JXFreePixmap(display, result->mask);
-   result->mask = None;
+   result->image = JXRenderCreatePicture(display, pmap, fp, 0, NULL);
+   JXFreePixmap(display, pmap);
 
 #endif
 

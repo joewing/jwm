@@ -70,8 +70,8 @@ static GC iconGC;
 static char iconSizeSet = 0;
 
 static void DoDestroyIcon(int index, IconNode *icon);
-static void ReadNetWMIcon(ClientNode *np);
-static void ReadWMHintIcon(ClientNode *np);
+static IconNode *ReadNetWMIcon(Window win);
+static IconNode *ReadWMHintIcon(Window win);
 static IconNode *CreateIcon(void);
 static IconNode *GetDefaultIcon(void);
 static IconNode *CreateIconFromData(const char *name, char **data);
@@ -253,15 +253,27 @@ void LoadIcon(ClientNode *np)
    np->icon = NULL;
 
    /* Attempt to read _NET_WM_ICON for an icon. */
-   ReadNetWMIcon(np);
+   np->icon = ReadNetWMIcon(np->window);
    if(np->icon) {
       return;
    }
+   if(np->owner != None) {
+      np->icon = ReadNetWMIcon(np->owner);
+      if(np->icon) {
+         return;
+      }
+   }
 
    /* Attempt to read an icon from XWMHints. */
-   ReadWMHintIcon(np);
+   np->icon = ReadWMHintIcon(np->window);
    if(np->icon) {
       return;
+   }
+   if(np->owner != None) {
+      np->icon = ReadNetWMIcon(np->owner);
+      if(np->icon) {
+         return;
+      }
    }
 
    /* Attempt to read an icon based on the window name. */
@@ -367,29 +379,31 @@ IconNode *LoadNamedIconHelper(const char *name, const char *path,
 }
 
 /** Read the icon property from a client. */
-void ReadNetWMIcon(ClientNode *np)
+IconNode *ReadNetWMIcon(Window win)
 {
    static const long MAX_LENGTH = 1 << 20;
+   IconNode *icon = NULL;
    unsigned long count;
    int status;
    unsigned long extra;
    Atom realType;
    int realFormat;
    unsigned char *data;
-   status = JXGetWindowProperty(display, np->window, atoms[ATOM_NET_WM_ICON],
+   status = JXGetWindowProperty(display, win, atoms[ATOM_NET_WM_ICON],
                                 0, MAX_LENGTH, False, XA_CARDINAL,
                                 &realType, &realFormat, &count, &extra, &data);
    if(status == Success && realFormat != 0 && data) {
-      np->icon = CreateIconFromBinary((unsigned long*)data, count);
+      icon = CreateIconFromBinary((unsigned long*)data, count);
       JXFree(data);
    }
+   return icon;
 }
 
 /** Read the icon WMHint property from a client. */
-void ReadWMHintIcon(ClientNode *np)
+IconNode *ReadWMHintIcon(Window win)
 {
-   XWMHints *hints;
-   hints = JXGetWMHints(display, np->window);
+   IconNode *icon = NULL;
+   XWMHints *hints = JXGetWMHints(display, win);
    if(hints) {
       Drawable d = None;
       Pixmap mask = None;
@@ -400,10 +414,11 @@ void ReadWMHintIcon(ClientNode *np)
          d = hints->icon_pixmap;
       }
       if(d != None) {
-         np->icon = CreateIconFromDrawable(d, mask);
+         icon = CreateIconFromDrawable(d, mask);
       }
       JXFree(hints);
    }
+   return icon;
 }
 
 /** Create the default icon. */

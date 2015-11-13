@@ -156,7 +156,7 @@ void DrawButton(ButtonNode *bp)
    }
 
    /* Determine the offset of the text in the button. */
-   if(bp->alignment == ALIGN_CENTER) {
+   if(bp->alignment == ALIGN_CENTER || width <= height) {
       xoffset = (width - iconWidth - textWidth + 1) / 2;
       if(xoffset < 0) {
          xoffset = 0;

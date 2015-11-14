@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-11-08 15:40-0600\n"
+"POT-Creation-Date: 2015-11-13 18:35-0600\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -104,17 +104,17 @@ msgstr "недопустимое значение названия группы"
 msgid "invalid group desktop: %d"
 msgstr "недопустимое значение рабочего стола группы: %d"
 
-#: src/image.c:209
+#: src/image.c:218
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr "не удалось прочитать структуру изображения PNG: %s"
 
-#: src/image.c:222
+#: src/image.c:231
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr "ошибка чтения изображения PNG: %s"
 
-#: src/image.c:230
+#: src/image.c:239
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "ошибка создания структуры информации об изображении PNG: %s"

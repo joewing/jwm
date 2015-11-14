@@ -653,6 +653,7 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DIALOG]) {
             result.border &= ~BORDER_MIN;
+            result.border &= ~BORDER_MAX;
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_MENU]) {
             result.border       &= ~BORDER_MAX;

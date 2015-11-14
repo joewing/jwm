@@ -308,6 +308,7 @@ void ReadClientInfo(ClientNode *np, char alreadyMapped)
    if(np->minWidth == np->maxWidth && np->minHeight == np->maxHeight) {
       np->state.border &= ~BORDER_RESIZE;
       np->state.border &= ~BORDER_MAX;
+      np->state.border &= ~BORDER_MIN;
    }
 
    /* Make sure this client is on at least as high of a layer
@@ -653,6 +654,7 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DIALOG]) {
             result.border &= ~BORDER_MIN;
+            result.border &= ~BORDER_MAX;
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_MENU]) {
             result.border       &= ~BORDER_MAX;

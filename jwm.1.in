@@ -483,15 +483,15 @@ from the bottom of the screen.
 \fBwidth\fP \fIint\fP
 .RS
 The width of the tray. 0 indicates that the tray should compute an
-optimal width depending on what it contains and the layout. 0 is the
-default.
+optimal width depending on what it contains and the layout. A negative
+value subtracts from with screen width. 0 is the default.
 .RE
 .P
 \fBheight\fP \fIint\fP
 .RS
 The height of the tray. 0 indicates that the tray should compute an
-optimal height depending on what it contains and the layout. 0 is the
-default.
+optimal height depending on what it contains and the layout. A negative
+value subtracts from the screen height. 0 is the default.
 .RE
 .P
 \fBlayer\fP { \fBbelow\fP | \fBnormal\fP | \fBabove\fP }

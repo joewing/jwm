@@ -830,8 +830,16 @@ void LayoutTray(TrayType *tp, int *variableSize, int *variableRemainder)
    int width, height;
    int temp;
 
-   tp->width = tp->requestedWidth;
-   tp->height = tp->requestedHeight;
+   if(tp->requestedWidth >= 0) {
+      tp->width = tp->requestedWidth;
+   } else {
+      tp->width = rootWidth + tp->requestedWidth;
+   }
+   if(tp->requestedHeight >= 0) {
+      tp->height = tp->requestedHeight;
+   } else {
+      tp->height = rootHeight + tp->requestedHeight;
+   }
 
    for(cp = tp->components; cp; cp = cp->next) {
       if(cp->requestedWidth != 0) {
@@ -1025,23 +1033,13 @@ void SetTrayY(TrayType *tp, const char *str)
 /** Set the width of a tray. */
 void SetTrayWidth(TrayType *tp, const char *str)
 {
-   const int width = atoi(str);
-   if(JUNLIKELY(width < 0)) {
-      Warning(_("invalid tray width: %d"), width);
-   } else {
-      tp->requestedWidth = width;
-   }
+   tp->requestedWidth = atoi(str);
 }
 
 /** Set the height of a tray. */
 void SetTrayHeight(TrayType *tp, const char *str)
 {
-   const int height = atoi(str);
-   if(JUNLIKELY(height < 0)) {
-      Warning(_("invalid tray height: %d"), height);
-   } else {
-      tp->requestedHeight = height;
-   }
+   tp->requestedHeight = atoi(str);
 }
 
 

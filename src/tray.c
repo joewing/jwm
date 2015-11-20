@@ -833,12 +833,12 @@ void LayoutTray(TrayType *tp, int *variableSize, int *variableRemainder)
    if(tp->requestedWidth >= 0) {
       tp->width = tp->requestedWidth;
    } else {
-      tp->width = rootWidth + tp->requestedWidth;
+      tp->width = rootWidth + tp->requestedWidth - tp->x;
    }
    if(tp->requestedHeight >= 0) {
       tp->height = tp->requestedHeight;
    } else {
-      tp->height = rootHeight + tp->requestedHeight;
+      tp->height = rootHeight + tp->requestedHeight - tp->y;
    }
 
    for(cp = tp->components; cp; cp = cp->next) {

@@ -307,7 +307,7 @@ IconNode *LoadNamedIcon(const char *name, char save, char preserveAspect)
 
    /* Check for an absolute file name. */
    if(name[0] == '/') {
-      ImageNode *image = LoadImage(name);
+      ImageNode *image = LoadImage(name, 0, 0);
       if(image) {
          icon = CreateIcon(image);
          icon->preserveAspect = preserveAspect;
@@ -352,7 +352,7 @@ IconNode *LoadNamedIconHelper(const char *name, const char *path,
    for(i = 0; i < EXTENSION_COUNT; i++) {
       const unsigned len = strlen(ICON_EXTENSIONS[i]);
       memcpy(&temp[pathLength + nameLength], ICON_EXTENSIONS[i], len + 1);
-      ImageNode *image = LoadImage(temp);
+      ImageNode *image = LoadImage(temp, 0, 0);
       if(image) {
          result = CreateIcon(image);
          result->preserveAspect = preserveAspect;
@@ -491,7 +491,7 @@ ImageNode *GetBestImage(IconNode *icon, int rwidth, int rheight)
 
    /* If we don't have an image loaded, load one. */
    if(icon->images == NULL) {
-      return LoadImage(icon->name);
+      return LoadImage(icon->name, rwidth, rheight);
    }
 
    /* Find the best image to use.

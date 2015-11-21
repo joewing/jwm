@@ -36,11 +36,11 @@
 
 #ifdef USE_CAIRO
 #ifdef USE_RSVG
-static ImageNode *LoadSVGImage(const char *fileName);
+static ImageNode *LoadSVGImage(const char *fileName, int width, int height);
 #endif
 #endif
 #ifdef USE_JPEG
-static ImageNode *LoadJPEGImage(const char *fileName);
+static ImageNode *LoadJPEGImage(const char *fileName, int width, int height);
 #endif
 #ifdef USE_PNG
 static ImageNode *LoadPNGImage(const char *fileName);
@@ -63,7 +63,7 @@ static int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
 #endif
 
 /** Load an image from the specified file. */
-ImageNode *LoadImage(const char *fileName)
+ImageNode *LoadImage(const char *fileName, int width, int height)
 {
    unsigned nameLength;
    ImageNode *result = NULL;
@@ -93,7 +93,7 @@ ImageNode *LoadImage(const char *fileName)
             && !StrCmpNoCase(&fileName[nameLength - 4], ".jpg"))
       || (nameLength >= 5
             && !StrCmpNoCase(&fileName[nameLength - 5], ".jpeg"))) {
-      result = LoadJPEGImage(fileName);
+      result = LoadJPEGImage(fileName, width, height);
       if(result) {
          return result;
       }
@@ -105,7 +105,7 @@ ImageNode *LoadImage(const char *fileName)
 #ifdef USE_RSVG
    if(nameLength >= 4
       && !StrCmpNoCase(&fileName[nameLength - 4], ".svg")) {
-      result = LoadSVGImage(fileName);
+      result = LoadSVGImage(fileName, width, height);
       if(result) {
          return result;
       }
@@ -311,9 +311,8 @@ static void JPEGErrorHandler(j_common_ptr cinfo) {
    longjmp(es->jbuffer, 1);
 }
 
-ImageNode *LoadJPEGImage(const char *fileName)
+ImageNode *LoadJPEGImage(const char *fileName, int width, int height)
 {
-
    static ImageNode *result;
    static struct jpeg_decompress_struct cinfo;
    static FILE *fd;
@@ -323,6 +322,7 @@ ImageNode *LoadJPEGImage(const char *fileName)
    int rowStride;
    int x;
    int inIndex, outIndex;
+   int xscale, yscale;
 
    /* Open the file. */
    fd = fopen(fileName, "rb");
@@ -353,13 +353,30 @@ ImageNode *LoadJPEGImage(const char *fileName)
    /* Check the header. */
    jpeg_read_header(&cinfo, TRUE);
 
+   /* Pick an appropriate scale for the image.
+    * We scale the image by the scale value for the dimension with
+    * the smallest absolute change.
+    */
+   jpeg_calc_output_dimensions(&cinfo);
+   if(width != 0 && height != 0) {
+      /* Scale using n/8 with n in [1..8]. */
+      int ratio;
+      if(abs(cinfo.output_width - width) < abs(cinfo.output_height - height)) {
+         ratio = (width << 4) / cinfo.output_width;
+      } else {
+         ratio = (height << 4) / cinfo.output_height;
+      }
+      cinfo.scale_num = Max(1, Min(8, (ratio >> 2)));
+      cinfo.scale_denom = 8;
+   }
+
    /* Start decompression. */
    jpeg_start_decompress(&cinfo);
    rowStride = cinfo.output_width * cinfo.output_components;
    buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr)&cinfo,
                                        JPOOL_IMAGE, rowStride, 1);
 
-   result = CreateImage(cinfo.image_width, cinfo.image_height, 0);
+   result = CreateImage(cinfo.output_width, cinfo.output_height, 0);
    result->data = Allocate(4 * result->width * result->height);
 
    /* Read lines. */
@@ -398,7 +415,7 @@ ImageNode *LoadJPEGImage(const char *fileName)
 
 #ifdef USE_CAIRO
 #ifdef USE_RSVG
-ImageNode *LoadSVGImage(const char *fileName)
+ImageNode *LoadSVGImage(const char *fileName, int width, int height)
 {
 
 #if !GLIB_CHECK_VERSION(2, 35, 0)

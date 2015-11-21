@@ -26,9 +26,11 @@ typedef struct ImageNode {
 
 /** Load an image from a file.
  * @param fileName The file containing the image.
+ * @param width The preferred width.
+ * @param height The preferred height.
  * @return A new image node (NULL if the image could not be loaded).
  */
-ImageNode *LoadImage(const char *fileName);
+ImageNode *LoadImage(const char *fileName, int width, int height);
 
 /** Load an image from a Drawable.
  * @param pmap The drawable.

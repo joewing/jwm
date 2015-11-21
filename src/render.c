@@ -13,6 +13,7 @@
 #include "image.h"
 #include "main.h"
 #include "color.h"
+#include "misc.h"
 
 /** Draw a scaled icon. */
 void PutScaledRenderIcon(const IconNode *icon,
@@ -33,6 +34,7 @@ void PutScaledRenderIcon(const IconNode *icon,
       XRenderPictureAttributes pa;
       XTransform xf;
       int xscale, yscale;
+      int nwidth, nheight;
       Picture dest;
       Picture alpha = node->mask;
       XRenderPictFormat *fp = JXRenderFindVisualFormat(display, rootVisual);
@@ -43,8 +45,21 @@ void PutScaledRenderIcon(const IconNode *icon,
 
       width = width == 0 ? node->width : width;
       height = height == 0 ? node->height : height;
-      xscale = (node->width << 16) / width;
-      yscale = (node->height << 16) / height;
+      if(icon->preserveAspect) {
+         const int ratio = (icon->width << 16) / icon->height;
+         nwidth = Min(width, (height * ratio) >> 16);
+         nheight = Min(height, (nwidth << 16) / ratio);
+         nwidth = (nheight * ratio) >> 16;
+         nwidth = Max(1, nwidth);
+         nheight = Max(1, nheight);
+         x += (width - nwidth) / 2;
+         y += (height - nheight) / 2;
+      } else {
+         nwidth = width;
+         nheight = height;
+      }
+      xscale = (node->width << 16) / nwidth;
+      yscale = (node->height << 16) / nheight;
 
       memset(&xf, 0, sizeof(xf));
       xf.matrix[0][0] = xscale;

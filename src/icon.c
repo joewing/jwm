@@ -545,7 +545,6 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
    int x, y;
    int scalex, scaley;     /* Fixed point. */
    int srcx, srcy;         /* Fixed point. */
-   int ratio;              /* Fixed point. */
    int nwidth, nheight;
    unsigned char *data;
 
@@ -557,7 +556,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
    }
 
    if(icon->preserveAspect) {
-      ratio = (icon->width << 16) / icon->height;
+      const int ratio = (icon->width << 16) / icon->height;
       nwidth = Min(rwidth, (rheight * ratio) >> 16);
       nheight = Min(rheight, (nwidth << 16) / ratio);
       nwidth = (nheight * ratio) >> 16;

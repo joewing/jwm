@@ -421,6 +421,7 @@ void DockWindow(Window win)
    JXAddToSaveSet(display, win);
    JXSelectInput(display, win,
         StructureNotifyMask
+      | EnterWindowMask
       | ResizeRedirectMask
       | PointerMotionMask | PointerMotionHintMask);
    JXReparentWindow(display, win, dock->cp->window, 0, 0);

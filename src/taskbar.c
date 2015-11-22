@@ -350,7 +350,7 @@ void FocusGroup(const TaskEntry *tp)
    for(i = 0; i < LAYER_COUNT; i++) {
       ClientNode *np;
       for(np = nodes[i]; np; np = np->next) {
-         if(!ShouldFocus(np, 0)) {
+         if(!ShouldFocus(np, 1)) {
             continue;
          }
          if(np->className && !strcmp(np->className, className)) {

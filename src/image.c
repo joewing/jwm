@@ -429,6 +429,7 @@ ImageNode *LoadSVGImage(const char *fileName, int width, int height)
    cairo_t *context;
    int stride;
    int i;
+   float scale;
 
    Assert(fileName);
 
@@ -447,23 +448,37 @@ ImageNode *LoadSVGImage(const char *fileName, int width, int height)
    }
 
    rsvg_handle_get_dimensions(rh, &dim);
+   if(width == 0 || height == 0) {
+      width = dim.width;
+      height = dim.height;
+      scale = 1.0;
+   } else {
+      if(abs(dim.width - width) < abs(dim.height - height)) {
+         scale = (float)width / dim.width;
+         height = dim.height * scale;
+      } else {
+         scale = (float)height / dim.height;
+         width = dim.width * scale;
+      }
+   }
 
-   result = CreateImage(dim.width, dim.height, 0);
-   memset(result->data, 0, dim.width * dim.height * 4);
+   result = CreateImage(width, height, 0);
+   memset(result->data, 0, width * height * 4);
 
    /* Create the target surface. */
-   stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, dim.width);
+   stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, width);
    target = cairo_image_surface_create_for_data(result->data,
                                                 CAIRO_FORMAT_ARGB32,
-                                                dim.width, dim.height, stride);
+                                                width, height, stride);
    context = cairo_create(target);
+   cairo_scale(context, scale, scale);
    cairo_paint_with_alpha(context, 0.0);
    rsvg_handle_render_cairo(rh, context);
    cairo_destroy(context);
    cairo_surface_destroy(target);
    g_object_unref(rh);
 
-   for(i = 0; i < 4 * dim.width * dim.height; i += 4) {
+   for(i = 0; i < 4 * width * height; i += 4) {
       const unsigned int temp = *(unsigned int*)&result->data[i];
       const unsigned int alpha  = (temp >> 24) & 0xFF;
       const unsigned int red    = (temp >> 16) & 0xFF;

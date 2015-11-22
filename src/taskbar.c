@@ -318,7 +318,7 @@ void MinimizeGroup(const TaskEntry *tp)
 {
    ClientEntry *cp;
    for(cp = tp->clients; cp; cp = cp->next) {
-      if(ShouldFocus(cp->client, 0)) {
+      if(ShouldFocus(cp->client, 1)) {
          MinimizeClient(cp->client, 0);
       }
    }
@@ -329,19 +329,46 @@ void FocusGroup(const TaskEntry *tp)
 {
    const char *className = tp->clients->client->className;
    ClientNode **toRestore;
+   const ClientEntry *cp;
    unsigned restoreCount;
    int i;
-
-   /* Switch desktops if desired. */
-   if(!(tp->clients->client->state.status & STAT_STICKY)) {
-      ChangeDesktop(tp->clients->client->state.desktop);
-   }
+   char shouldSwitch;
 
    /* If there is no class name, then there will only be one client. */
    if(!className || !settings.groupTasks) {
+      if(!(tp->clients->client->state.status & STAT_STICKY)) {
+         ChangeDesktop(tp->clients->client->state.desktop);
+      }
       RestoreClient(tp->clients->client, 1);
       FocusClient(tp->clients->client);
       return;
+   }
+
+   /* If there is a client in the group on this desktop,
+    * then we remain on the same desktop. */
+   shouldSwitch = 1;
+   for(cp = tp->clients; cp; cp = cp->next) {
+      if(IsClientOnCurrentDesktop(cp->client)) {
+         shouldSwitch = 0;
+         break;
+      }
+   }
+
+   /* Switch to the desktop of the top-most client in the group. */
+   if(shouldSwitch) {
+      for(i = 0; i < LAYER_COUNT; i++) {
+         ClientNode *np;
+         for(np = nodes[i]; np; np = np->next) {
+            if(np->className && !strcmp(np->className, className)) {
+               if(ShouldFocus(np, 0)) {
+                  if(!(np->state.status & STAT_STICKY)) {
+                     ChangeDesktop(np->state.desktop);
+                  }
+                  break;
+               }
+            }
+         }
+      }
    }
 
    /* Build up the list of clients to restore in correct order. */

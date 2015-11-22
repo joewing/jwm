@@ -384,8 +384,7 @@ void SubtractStrutBounds(BoundingBox *box, const ClientNode *np)
       if(np != NULL && sp->client == np) {
          continue;
       }
-      if(sp->client->state.desktop == currentDesktop
-         || (sp->client->state.status & STAT_STICKY)) {
+      if(IsClientOnCurrentDesktop(sp->client)) {
          last = *box;
          SubtractBounds(&sp->box, box);
          if(box->width * box->height <= 0) {
@@ -441,10 +440,8 @@ char TryTileClient(const BoundingBox *box, ClientNode *np, int x, int y)
       for(tp = nodes[layer]; tp; tp = tp->next) {
 
          /* Skip clients that aren't visible. */
-         if(tp->state.desktop != currentDesktop) {
-            if(!(tp->state.status & STAT_STICKY)) {
-               continue;
-            }
+         if(!IsClientOnCurrentDesktop(tp)) {
+            continue;
          }
          if(!(tp->state.status & STAT_MAPPED)) {
             continue;
@@ -493,10 +490,8 @@ char TileClient(const BoundingBox *box, ClientNode *np)
    count = 1;
    for(layer = np->state.layer; layer < LAYER_COUNT; layer++) {
       for(tp = nodes[layer]; tp; tp = tp->next) {
-         if(tp->state.desktop != currentDesktop) {
-            if(!(tp->state.status & STAT_STICKY)) {
-               continue;
-            }
+         if(!IsClientOnCurrentDesktop(tp)) {
+            continue;
          }
          if(!(tp->state.status & STAT_MAPPED)) {
             continue;
@@ -518,10 +513,8 @@ char TileClient(const BoundingBox *box, ClientNode *np)
    count = 1;
    for(layer = np->state.layer; layer < LAYER_COUNT; layer++) {
       for(tp = nodes[layer]; tp; tp = tp->next) {
-         if(tp->state.desktop != currentDesktop) {
-            if(!(tp->state.status & STAT_STICKY)) {
-               continue;
-            }
+         if(!IsClientOnCurrentDesktop(tp)) {
+            continue;
          }
          if(!(tp->state.status & STAT_MAPPED)) {
             continue;

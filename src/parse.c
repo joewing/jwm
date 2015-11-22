@@ -1038,6 +1038,11 @@ void ParseTrayStyle(const TokenNode *tp)
       settings.groupTasks = !strcmp(temp, TRUE_VALUE);
    }
 
+   temp = FindAttribute(tp->attributes, "list");
+   if(temp) {
+      settings.listAllTasks = !strcmp(temp, "all");
+   }
+
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FONT:

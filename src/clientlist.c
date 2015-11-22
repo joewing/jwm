@@ -13,6 +13,7 @@
 #include "key.h"
 #include "event.h"
 #include "tray.h"
+#include "settings.h"
 
 ClientNode *nodes[LAYER_COUNT];
 ClientNode *nodeTail[LAYER_COUNT];
@@ -23,13 +24,14 @@ static int windowStackCurrent = 0;  /**< Current location in the image. */
 static char walkingWindows = 0;     /**< Are we walking windows? */
 
 /** Determine if a client is allowed focus. */
-char ShouldFocus(const ClientNode *np)
+char ShouldFocus(const ClientNode *np, char current)
 {
 
    /* Only display clients on the current desktop or clients that are sticky. */
-   if(np->state.desktop != currentDesktop
-      && !(np->state.status & STAT_STICKY)) {
-      return 0;
+   if(!settings.listAllTasks || current) {
+      if(!IsClientOnCurrentDesktop(np)) {
+         return 0;
+      }
    }
 
    /* Don't display a client if it doesn't want to be displayed. */
@@ -81,7 +83,7 @@ void StartWindowStackWalk(void)
    count = 0;
    for(layer = LAST_LAYER; layer >= FIRST_LAYER; layer--) {
       for(np = nodes[layer]; np; np = np->next) {
-         if(ShouldFocus(np)) {
+         if(ShouldFocus(np, 1)) {
             ++count;
          }
       }
@@ -99,7 +101,7 @@ void StartWindowStackWalk(void)
    windowStackSize = 0;
    for(layer = LAST_LAYER; layer >= FIRST_LAYER; layer--) {
       for(np = nodes[layer]; np; np = np->next) {
-         if(ShouldFocus(np)) {
+         if(ShouldFocus(np, 1)) {
             windowStack[windowStackSize++] = np->window;
          }
       }
@@ -146,7 +148,7 @@ void WalkWindowStack(char forward)
          /* Skip this window if it no longer exists or is currently in
           * a state that doesn't allow focus.
           */
-         if(np == NULL || !ShouldFocus(np)) {
+         if(np == NULL || !ShouldFocus(np, 1)) {
             continue;
          }
 

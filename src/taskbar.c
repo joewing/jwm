@@ -25,6 +25,7 @@
 #include "settings.h"
 #include "event.h"
 #include "misc.h"
+#include "desktop.h"
 
 typedef struct TaskBarType {
 
@@ -248,7 +249,7 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
             char foundTop = 0;
             if(cp->client->state.status & STAT_MINIMIZED) {
                continue;
-            } else if(!ShouldFocus(cp->client)) {
+            } else if(!ShouldFocus(cp->client, 0)) {
                continue;
             }
             for(layer = LAST_LAYER; layer >= FIRST_LAYER; layer--) {
@@ -256,17 +257,19 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
                for(np = nodes[layer]; np; np = np->next) {
                   if(np->state.status & STAT_MINIMIZED) {
                      continue;
-                  } else if(!ShouldFocus(np)) {
+                  } else if(!ShouldFocus(np, 0)) {
                      continue;
                   }
                   if(np == cp->client) {
+                     const char isActive = (np->state.status & STAT_ACTIVE)
+                                         && IsClientOnCurrentDesktop(np);
                      onTop = onTop || !foundTop;
-                     if(np->state.status & STAT_ACTIVE) {
+                     if(isActive) {
                         focused = np;
                      }
                      if(!(cp->client->state.status
                            & (STAT_CANFOCUS | STAT_TAKEFOCUS))
-                        || (cp->client->state.status & STAT_ACTIVE)) {
+                        || isActive) {
                         hasActive = 1;
                      }
                   }
@@ -315,7 +318,7 @@ void MinimizeGroup(const TaskEntry *tp)
 {
    ClientEntry *cp;
    for(cp = tp->clients; cp; cp = cp->next) {
-      if(ShouldFocus(cp->client)) {
+      if(ShouldFocus(cp->client, 0)) {
          MinimizeClient(cp->client, 0);
       }
    }
@@ -328,6 +331,9 @@ void FocusGroup(const TaskEntry *tp)
    ClientNode **toRestore;
    unsigned restoreCount;
    int i;
+
+   /* Switch desktops if desired. */
+   ChangeDesktop(tp->clients->client->state.desktop);
 
    /* If there is no class name, then there will only be one client. */
    if(!className || !settings.groupTasks) {
@@ -342,7 +348,7 @@ void FocusGroup(const TaskEntry *tp)
    for(i = 0; i < LAYER_COUNT; i++) {
       ClientNode *np;
       for(np = nodes[i]; np; np = np->next) {
-         if(!ShouldFocus(np)) {
+         if(!ShouldFocus(np, 0)) {
             continue;
          }
          if(np->className && !strcmp(np->className, className)) {
@@ -426,7 +432,7 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
 
       /* Load the clients into the menu. */
       for(cp = tp->clients; cp; cp = cp->next) {
-         if(!ShouldFocus(cp->client)) {
+         if(!ShouldFocus(cp->client, 0)) {
             continue;
          }
          item = CreateMenuItem(MENU_ITEM_NORMAL);
@@ -494,7 +500,7 @@ void RunTaskBarCommand(MenuAction *action, unsigned button)
    if(action->type & MA_GROUP_MASK) {
       TaskEntry *tp = action->context;
       for(cp = tp->clients; cp; cp = cp->next) {
-         if(!ShouldFocus(cp->client)) {
+         if(!ShouldFocus(cp->client, 0)) {
             continue;
          }
          switch(action->type & ~MA_GROUP_MASK) {
@@ -708,8 +714,11 @@ void Render(const TaskBarType *bp)
       unsigned clientCount = 0;
       button.type = BUTTON_TASK;
       for(cp = tp->clients; cp; cp = cp->next) {
-         if(ShouldFocus(cp->client)) {
-            if(cp->client->state.status & (STAT_ACTIVE | STAT_FLASH)) {
+         if(ShouldFocus(cp->client, 0)) {
+            const char flash = cp->client->state.status & STAT_FLASH;
+            const char active = (cp->client->state.status & STAT_ACTIVE)
+               && IsClientOnCurrentDesktop(cp->client);
+            if(flash || active) {
                if(button.type == BUTTON_TASK) {
                   button.type = BUTTON_TASK_ACTIVE;
                } else {
@@ -766,7 +775,7 @@ void FocusNext(void)
       ClientEntry *cp;
       for(cp = tp->clients; cp; cp = cp->next) {
          if(cp->client->state.status & (STAT_CANFOCUS | STAT_TAKEFOCUS)) {
-            if(ShouldFocus(cp->client)) {
+            if(ShouldFocus(cp->client, 1)) {
                if(cp->client->state.status & STAT_ACTIVE) {
                   cp = cp->next;
                   goto ClientFound;
@@ -808,7 +817,7 @@ void FocusPrevious(void)
       ClientEntry *cp;
       for(cp = tp->clients; cp; cp = cp->next) {
          if(cp->client->state.status & (STAT_CANFOCUS | STAT_TAKEFOCUS)) {
-            if(ShouldFocus(cp->client)) {
+            if(ShouldFocus(cp->client, 1)) {
                if(cp->client->state.status & STAT_ACTIVE) {
                   cp = cp->next;
                   goto ClientFound;
@@ -845,7 +854,7 @@ char ShouldShowEntry(const TaskEntry *tp)
 {
    const ClientEntry *cp;
    for(cp = tp->clients; cp; cp = cp->next) {
-      if(ShouldFocus(cp->client)) {
+      if(ShouldFocus(cp->client, 0)) {
          return 1;
       }
    }
@@ -858,7 +867,7 @@ char ShouldFocusEntry(const TaskEntry *tp)
    const ClientEntry *cp;
    for(cp = tp->clients; cp; cp = cp->next) {
       if(cp->client->state.status & (STAT_CANFOCUS | STAT_TAKEFOCUS)) {
-         if(ShouldFocus(cp->client)) {
+         if(ShouldFocus(cp->client, 1)) {
             return 1;
          }
       }

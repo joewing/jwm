@@ -82,6 +82,7 @@ typedef struct {
    PopupMaskType popupMask;
    char exitConfirmation;
    char groupTasks;
+   char listAllTasks;
 } Settings;
 
 extern Settings settings;

@@ -1147,8 +1147,10 @@ void GetBorderSize(const ClientState *state,
 
       if(state->border & BORDER_TITLE) {
          *north = settings.titleHeight;
-      } else {
+      } else if(settings.windowDecorations == DECO_MOTIF) {
          *north = 0;
+      } else {
+         *north = settings.borderWidth;
       }
       if(state->maxFlags & MAX_VERT) {
          *south = 0;

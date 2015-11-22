@@ -86,6 +86,7 @@ static const StringMappingType OPTION_MAP[] = {
    { "border",             OPTION_BORDER        },
    { "centered",           OPTION_CENTERED      },
    { "constrain",          OPTION_CONSTRAIN     },
+   { "drag",               OPTION_DRAG          },
    { "fullscreen",         OPTION_FULLSCREEN    },
    { "hmax",               OPTION_MAX_H         },
    { "iignore",            OPTION_IIGNORE       },

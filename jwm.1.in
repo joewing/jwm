@@ -766,6 +766,13 @@ The desktop on which windows in this group will be started.
 .RE
 
 .P
+.B drag
+.RS
+Do not pass mouse events to the window.  Instead, use the mouse to
+move/resize the window.
+.RE
+
+.P
 .B fullscreen
 .RS
 Make windows in this group initially fullscreen.

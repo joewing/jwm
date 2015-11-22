@@ -389,7 +389,7 @@ void HandleButtonEvent(const XButtonEvent *event)
       np = FindClientByWindow(event->window);
       if(np) {
          const char move_resize = (mask == Mod1Mask)
-            || !(np->state.status & (STAT_CANFOCUS | STAT_TAKEFOCUS));
+            || (np->state.status & STAT_DRAG);
          switch(event->button) {
          case Button1:
          case Button2:

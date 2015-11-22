@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-11-13 18:35-0600\n"
+"POT-Creation-Date: 2015-11-21 19:28-0600\n"
 "PO-Revision-Date: 2014-11-06 10:23+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -252,27 +252,17 @@ msgstr "largeur maximale de la liste des tâches incorrecte: %s"
 msgid "invalid height for TaskList: %s"
 msgstr "largeur maximale de la liste des tâches incorrecte: %s"
 
-#: src/tray.c:1030
-#, c-format
-msgid "invalid tray width: %d"
-msgstr "Largeur de barre incorrecte: %d"
-
-#: src/tray.c:1041
-#, c-format
-msgid "invalid tray height: %d"
-msgstr "Hauteur de barre incorrecte: %d"
-
-#: src/tray.c:1066
+#: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "Disposition de barre incorrecte: \"%s\""
 
-#: src/tray.c:1104
+#: src/tray.c:1102
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "alignement horizontal de la barre incorrect: \"%s\""
 
-#: src/tray.c:1127
+#: src/tray.c:1125
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alignement vertical de la barre incorrect: \"%s\""
@@ -353,6 +343,12 @@ msgstr "[Arrière]"
 #: src/winmenu.c:151
 msgid "Below"
 msgstr "Arrière"
+
+#~ msgid "invalid tray width: %d"
+#~ msgstr "Largeur de barre incorrecte: %d"
+
+#~ msgid "invalid tray height: %d"
+#~ msgstr "Hauteur de barre incorrecte: %d"
 
 #~ msgid "invalid insert mode: \"%s\""
 #~ msgstr "Mode d'insertion incorrect: \"%s\""

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-11-13 18:35-0600\n"
+"POT-Creation-Date: 2015-11-21 19:28-0600\n"
 "PO-Revision-Date: 2015-09-24 16:11+0800\n"
 "Last-Translator: Christopher Meng <i@cicku.me>\n"
 "Language-Team: \n"
@@ -253,27 +253,17 @@ msgstr "无效的任务列表最大宽度：%s"
 msgid "invalid height for TaskList: %s"
 msgstr "无效的任务列表最大宽度：%s"
 
-#: src/tray.c:1030
-#, c-format
-msgid "invalid tray width: %d"
-msgstr "无效的托盘宽度：%d"
-
-#: src/tray.c:1041
-#, c-format
-msgid "invalid tray height: %d"
-msgstr "无效的托盘高度：%d"
-
-#: src/tray.c:1066
+#: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "无效的托盘样式：\"%s\""
 
-#: src/tray.c:1104
+#: src/tray.c:1102
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "无效的托盘水平对齐：\"%s\""
 
-#: src/tray.c:1127
+#: src/tray.c:1125
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "无效的托盘垂直对齐：\"%s\""
@@ -354,3 +344,9 @@ msgstr "[当前：置底]"
 #: src/winmenu.c:151
 msgid "Below"
 msgstr "置底"
+
+#~ msgid "invalid tray width: %d"
+#~ msgstr "无效的托盘宽度：%d"
+
+#~ msgid "invalid tray height: %d"
+#~ msgstr "无效的托盘高度：%d"

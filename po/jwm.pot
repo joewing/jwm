@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: jwm 2.3.3\n"
+"Project-Id-Version: jwm 2.3.4\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-11-13 18:35-0600\n"
+"POT-Creation-Date: 2015-11-21 19:28-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -254,27 +254,17 @@ msgstr ""
 msgid "invalid height for TaskList: %s"
 msgstr ""
 
-#: src/tray.c:1030
-#, c-format
-msgid "invalid tray width: %d"
-msgstr ""
-
-#: src/tray.c:1041
-#, c-format
-msgid "invalid tray height: %d"
-msgstr ""
-
-#: src/tray.c:1066
+#: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr ""
 
-#: src/tray.c:1104
+#: src/tray.c:1102
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr ""
 
-#: src/tray.c:1127
+#: src/tray.c:1125
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr ""

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-11-13 18:35-0600\n"
+"POT-Creation-Date: 2015-11-21 19:28-0600\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -255,27 +255,17 @@ msgstr "Larghezza massima per TaskList non valida: %s"
 msgid "invalid height for TaskList: %s"
 msgstr "Larghezza massima per TaskList non valida: %s"
 
-#: src/tray.c:1030
-#, c-format
-msgid "invalid tray width: %d"
-msgstr "Larghezza del vassoio non valida: %d"
-
-#: src/tray.c:1041
-#, c-format
-msgid "invalid tray height: %d"
-msgstr "Altezza del vassoio non valida: %d"
-
-#: src/tray.c:1066
+#: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "Disposizione del vassoio non valida: \"%s\""
 
-#: src/tray.c:1104
+#: src/tray.c:1102
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "Allineamento orizzontale del vassoio non valido: \"%s\""
 
-#: src/tray.c:1127
+#: src/tray.c:1125
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "Allineamento verticale del vassoio non valido: \"%s\""
@@ -356,6 +346,12 @@ msgstr "[Sotto]"
 #: src/winmenu.c:151
 msgid "Below"
 msgstr "Sotto"
+
+#~ msgid "invalid tray width: %d"
+#~ msgstr "Larghezza del vassoio non valida: %d"
+
+#~ msgid "invalid tray height: %d"
+#~ msgstr "Altezza del vassoio non valida: %d"
 
 #~ msgid "invalid insert mode: \"%s\""
 #~ msgstr "Modo di inserimento non valido: \"%s\""

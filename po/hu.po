@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-11-13 18:35-0600\n"
+"POT-Creation-Date: 2015-11-21 19:28-0600\n"
 "PO-Revision-Date: 2015-06-22 13:19+0000\n"
 "Last-Translator: Mihaly Horvath <hermitsoft@users.sourceforge.net>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -256,27 +256,17 @@ msgstr "érvénytelen maximális hosszúság van megadva a feladatlistához: %s"
 msgid "invalid height for TaskList: %s"
 msgstr "érvénytelen maximális hosszúság van megadva a feladatlistához: %s"
 
-#: src/tray.c:1030
-#, c-format
-msgid "invalid tray width: %d"
-msgstr "érvénytelen tálca-szélesség: %d"
-
-#: src/tray.c:1041
-#, c-format
-msgid "invalid tray height: %d"
-msgstr "érvénytelen tálca-magasság: %d"
-
-#: src/tray.c:1066
+#: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "érvénytelen tálca-elrendezés: \"%s\""
 
-#: src/tray.c:1104
+#: src/tray.c:1102
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "érvénytelen vízszintes igazítási érték a tálcához: \"%s\""
 
-#: src/tray.c:1127
+#: src/tray.c:1125
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "érvénytelen függőleges igazítási érték a tálcához: \"%s\""
@@ -357,3 +347,9 @@ msgstr "[Alatt]"
 #: src/winmenu.c:151
 msgid "Below"
 msgstr "Alá"
+
+#~ msgid "invalid tray width: %d"
+#~ msgstr "érvénytelen tálca-szélesség: %d"
+
+#~ msgid "invalid tray height: %d"
+#~ msgstr "érvénytelen tálca-magasság: %d"

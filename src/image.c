@@ -322,7 +322,6 @@ ImageNode *LoadJPEGImage(const char *fileName, int width, int height)
    int rowStride;
    int x;
    int inIndex, outIndex;
-   int xscale, yscale;
 
    /* Open the file. */
    fd = fopen(fileName, "rb");

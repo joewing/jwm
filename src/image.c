@@ -376,7 +376,6 @@ ImageNode *LoadJPEGImage(const char *fileName, int width, int height)
                                        JPOOL_IMAGE, rowStride, 1);
 
    result = CreateImage(cinfo.output_width, cinfo.output_height, 0);
-   result->data = Allocate(4 * result->width * result->height);
 
    /* Read lines. */
    outIndex = 0;

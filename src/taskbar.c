@@ -333,7 +333,9 @@ void FocusGroup(const TaskEntry *tp)
    int i;
 
    /* Switch desktops if desired. */
-   ChangeDesktop(tp->clients->client->state.desktop);
+   if(!(tp->clients->client->state.status & STAT_STICKY)) {
+      ChangeDesktop(tp->clients->client->state.desktop);
+   }
 
    /* If there is no class name, then there will only be one client. */
    if(!className || !settings.groupTasks) {

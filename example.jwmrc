@@ -8,7 +8,8 @@
             <Program icon="music.png" label="Audacious">audacious</Program>
             <Program icon="calculator.png" label="Calculator">xcalc</Program>
             <Program icon="gimp.png" label="Gimp">gimp</Program>
-            <Program icon="www.png" label="Iceweasel">iceweasel</Program>
+            <Program icon="chat.png" label="Pidgin">pidgin</Program>
+            <Program icon="www.png" label="Firefox">firefox</Program>
             <Program icon="editor.png" label="XEdit">xedit</Program>
         </Menu>
         <Menu icon="folder.png" label="Utilities">
@@ -16,10 +17,13 @@
             <Program icon="window.png" label="Window Properties">
                 xprop | xmessage -file -
             </Program>
+            <Program icon="window.png" label="Window Information">
+                xwininfo | xmessage -file -
+            </Program>
         </Menu>
         <Separator/>
         <Program icon="lock.png" label="Lock">
-            xscreensaver-command -lock
+            xlock -mode blank
         </Program>
         <Separator/>
         <Restart label="Restart" icon="restart.png"/>
@@ -34,22 +38,20 @@
     <Group>
         <Name>xterm</Name>
         <Option>vmax</Option>
-        <Option>icon:terminal.png</Option>
     </Group>
     <Group>
-        <Name>xedit</Name>
-        <Option>icon:editor.png</Option>
-    </Group>
-    <Group>
-        <Name>xcalc</Name>
-        <Option>icon:calculator.png</Option>
+        <Name>xclock</Name>
+        <Option>drag</Option>
+        <Option>notitle</Option>
     </Group>
 
     <!-- Tray at the bottom. -->
     <Tray x="0" y="-1" autohide="off">
 
         <TrayButton label="JWM">root:1</TrayButton>
+        <Spacer width="2"/>
         <TrayButton label="_">showdesktop</TrayButton>
+        <Spacer width="2"/>
 
         <Pager labeled="true"/>
 
@@ -65,26 +67,30 @@
         <Font>Sans-9:bold</Font>
         <Width>4</Width>
         <Height>21</Height>
-        <Corner>4</Corner>
+        <Corner>3</Corner>
         <Foreground>#FFFFFF</Foreground>
         <Background>#555555</Background>
+        <Outline>#000000</Outline>
         <Opacity>0.5:0.9:0.1</Opacity>
         <Active>
             <Foreground>#FFFFFF</Foreground>
             <Background>#0077CC</Background>
+            <Outline>#000000</Outline>
             <Opacity>1.0</Opacity>
         </Active>
     </WindowStyle>
-    <TrayStyle>
+    <TrayStyle group="true" list="all">
         <Font>Sans-9</Font>
-        <Background>#999999</Background>
-        <Foreground>#000000</Foreground>
+        <Background>#333333</Background>
+        <Foreground>#FFFFFF</Foreground>
+        <Outline>#000000</Outline>
         <Opacity>0.75</Opacity>
     </TrayStyle>
     <PagerStyle>
         <Outline>#000000</Outline>
-        <Foreground>#333333</Foreground>
-        <Background>#999999</Background>
+        <Foreground>#555555</Foreground>
+        <Background>#333333</Background>
+        <Text>#FFFFFF</Text>
         <Active>
             <Foreground>#0077CC</Foreground>
             <Background>#555555</Background>
@@ -92,10 +98,11 @@
     </PagerStyle>
     <MenuStyle>
         <Font>Sans-9</Font>
-        <Foreground>#000000</Foreground>
-        <Background>#999999</Background>
+        <Foreground>#FFFFFF</Foreground>
+        <Background>#333333</Background>
+        <Outline>#000000</Outline>
         <Active>
-            <Foreground>#000000</Foreground>
+            <Foreground>#FFFFFF</Foreground>
             <Background>#0077CC</Background>
         </Active>
         <Opacity>0.85</Opacity>
@@ -111,17 +118,17 @@
          for icons in multiple paths.
       -->
     <IconPath>
-        /usr/share/icons/wm-icons/32x32-gant
+        /usr/share/icons/wm-icons/32x32-aquafusion
     </IconPath>
 
     <!-- Virtual Desktops -->
     <!-- Desktop tags can be contained within Desktops for desktop names. -->
-    <Desktops width="2" height="1">
+    <Desktops width="4" height="1">
         <!-- Default background. Note that a Background tag can be
               contained within a Desktop tag to give a specific background
               for that desktop.
          -->
-        <Background type="solid">#222222</Background>
+        <Background type="solid">#111111</Background>
     </Desktops>
 
     <!-- Double click speed (in milliseconds) -->

@@ -28,9 +28,11 @@ typedef struct ImageNode {
  * @param fileName The file containing the image.
  * @param width The preferred width.
  * @param height The preferred height.
+ * @param preserveAspect Set to preserve image aspect when scaling.
  * @return A new image node (NULL if the image could not be loaded).
  */
-ImageNode *LoadImage(const char *fileName, int width, int height);
+ImageNode *LoadImage(const char *fileName, int width, int height,
+                     char preserveAspect);
 
 /** Load an image from a Drawable.
  * @param pmap The drawable.

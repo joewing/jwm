@@ -36,7 +36,8 @@
 
 #ifdef USE_CAIRO
 #ifdef USE_RSVG
-static ImageNode *LoadSVGImage(const char *fileName, int width, int height);
+static ImageNode *LoadSVGImage(const char *fileName, int width, int height,
+                               char preserveAspect);
 #endif
 #endif
 #ifdef USE_JPEG
@@ -63,7 +64,8 @@ static int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
 #endif
 
 /** Load an image from the specified file. */
-ImageNode *LoadImage(const char *fileName, int width, int height)
+ImageNode *LoadImage(const char *fileName, int width, int height,
+                     char preserveAspect)
 {
    unsigned nameLength;
    ImageNode *result = NULL;
@@ -105,7 +107,7 @@ ImageNode *LoadImage(const char *fileName, int width, int height)
 #ifdef USE_RSVG
    if(nameLength >= 4
       && !StrCmpNoCase(&fileName[nameLength - 4], ".svg")) {
-      result = LoadSVGImage(fileName, width, height);
+      result = LoadSVGImage(fileName, width, height, preserveAspect);
       if(result) {
          return result;
       }
@@ -413,7 +415,8 @@ ImageNode *LoadJPEGImage(const char *fileName, int width, int height)
 
 #ifdef USE_CAIRO
 #ifdef USE_RSVG
-ImageNode *LoadSVGImage(const char *fileName, int width, int height)
+ImageNode *LoadSVGImage(const char *fileName, int width, int height,
+                        char preserveAspect)
 {
 
 #if !GLIB_CHECK_VERSION(2, 35, 0)
@@ -427,7 +430,7 @@ ImageNode *LoadSVGImage(const char *fileName, int width, int height)
    cairo_t *context;
    int stride;
    int i;
-   float scale;
+   float xscale, yscale;
 
    Assert(fileName);
 
@@ -449,15 +452,20 @@ ImageNode *LoadSVGImage(const char *fileName, int width, int height)
    if(width == 0 || height == 0) {
       width = dim.width;
       height = dim.height;
-      scale = 1.0;
-   } else {
+      xscale = 1.0;
+      yscale = 1.0;
+   } else if(preserveAspect) {
       if(abs(dim.width - width) < abs(dim.height - height)) {
-         scale = (float)width / dim.width;
-         height = dim.height * scale;
+         xscale = (float)width / dim.width;
+         height = dim.height * xscale;
       } else {
-         scale = (float)height / dim.height;
-         width = dim.width * scale;
+         xscale = (float)height / dim.height;
+         width = dim.width * xscale;
       }
+      yscale = xscale;
+   } else {
+      xscale = (float)width / dim.width;
+      yscale = (float)height / dim.height;
    }
 
    result = CreateImage(width, height, 0);
@@ -469,7 +477,7 @@ ImageNode *LoadSVGImage(const char *fileName, int width, int height)
                                                 CAIRO_FORMAT_ARGB32,
                                                 width, height, stride);
    context = cairo_create(target);
-   cairo_scale(context, scale, scale);
+   cairo_scale(context, xscale, yscale);
    cairo_paint_with_alpha(context, 0.0);
    rsvg_handle_render_cairo(rh, context);
    cairo_destroy(context);

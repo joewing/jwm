@@ -362,7 +362,8 @@ ImageNode *LoadJPEGImage(const char *fileName, int width, int height)
    if(width != 0 && height != 0) {
       /* Scale using n/8 with n in [1..8]. */
       int ratio;
-      if(abs(cinfo.output_width - width) < abs(cinfo.output_height - height)) {
+      if(abs((int)cinfo.output_width - width)
+            < abs((int)cinfo.output_height - height)) {
          ratio = (width << 4) / cinfo.output_width;
       } else {
          ratio = (height << 4) / cinfo.output_height;

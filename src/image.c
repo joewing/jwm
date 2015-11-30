@@ -19,12 +19,22 @@
 #  ifdef USE_JPEG
 #     include <jpeglib.h>
 #  endif
-#  ifdef USE_CAIRO
+#  ifdef USE_RSVG
 #     include <cairo.h>
 #     include <cairo-svg.h>
-#  endif
-#  ifdef USE_RSVG
 #     include <librsvg/rsvg.h>
+#  endif
+#  ifdef USE_STB_IMAGE
+#    define STBI_NO_HDR
+#    define STBI_NO_LINEAR
+#    define STB_IMAGE_IMPLEMENTATION
+#    include "stb_image.h"
+#  endif
+#  ifdef USE_NANOSVG
+#    define NANOSVG_IMPLEMENTATION
+#    include "nanosvg.h"
+#    define NANOSVGRAST_IMPLEMENTATION
+#    include "nanosvgrast.h"
 #  endif
 #endif /* MAKE_DEPEND */
 
@@ -34,11 +44,12 @@
 #include "color.h"
 #include "misc.h"
 
-#ifdef USE_CAIRO
-#ifdef USE_RSVG
+#ifdef USE_STB_IMAGE
+static ImageNode *LoadstbImage(const char *fileName);
+#endif
+#if defined USE_RSVG || defined USE_NANOSVG
 static ImageNode *LoadSVGImage(const char *fileName, int width, int height,
                                char preserveAspect);
-#endif
 #endif
 #ifdef USE_JPEG
 static ImageNode *LoadJPEGImage(const char *fileName, int width, int height);
@@ -103,8 +114,7 @@ ImageNode *LoadImage(const char *fileName, int width, int height,
 #endif
 
    /* Attempt to load the file as an SVG image. */
-#ifdef USE_CAIRO
-#ifdef USE_RSVG
+#if defined USE_RSVG || defined USE_NANOSVG 
    if(nameLength >= 4
       && !StrCmpNoCase(&fileName[nameLength - 4], ".svg")) {
       result = LoadSVGImage(fileName, width, height, preserveAspect);
@@ -112,7 +122,6 @@ ImageNode *LoadImage(const char *fileName, int width, int height,
          return result;
       }
    }
-#endif
 #endif
 
    /* Attempt to load the file as an XPM image. */
@@ -135,6 +144,11 @@ ImageNode *LoadImage(const char *fileName, int width, int height,
          return result;
       }
    }
+#endif
+
+   /* Attempt to load a PNG, JPEG, GIf, TGA, BMP, PNM, PSD or PIC image. */
+#ifdef USE_STB_IMAGE
+   result = LoadstbImage(fileName);
 #endif
 
    return result;
@@ -414,12 +428,12 @@ ImageNode *LoadJPEGImage(const char *fileName, int width, int height)
 }
 #endif /* USE_JPEG */
 
-#ifdef USE_CAIRO
+/** Load an SVG image from the specified file. */
+#if defined USE_RSVG || defined USE_NANOSVG 
 #ifdef USE_RSVG
-ImageNode *LoadSVGImage(const char *fileName, int width, int height,
+static ImageNode *LoadSVGImage(const char *fileName, int width, int height,
                         char preserveAspect)
 {
-
 #if !GLIB_CHECK_VERSION(2, 35, 0)
    static char initialized = 0;
 #endif
@@ -500,10 +514,33 @@ ImageNode *LoadSVGImage(const char *fileName, int width, int height,
    }
 
    return result;
-
+}
+#else /* USE_NANOSVG */
+static ImageNode *LoadSVGImage(const char *fileName, int width, int height,
+                        char preserveAspect)
+{
+	NSVGimage *shapes = nsvgParseFromFile(fileName, "px", 96.0f);
+	ImageNode *image = NULL;
+	if (shapes) {
+		int w = shapes->width, h=shapes->height;
+		image = CreateImage(w,h,0);
+		NSVGrasterizer *rast = nsvgCreateRasterizer();
+		nsvgRasterize(rast, shapes, 0,0,1, image->data, w, h, w*4);
+        nsvgDeleteRasterizer(rast);
+        nsvgDelete(shapes);
+		if (image->data) {
+			unsigned *dp = (unsigned *)image->data;
+			size_t i, len = image->width*image->height;
+			for(i=0;i<len;i++)
+				dp[i]= (dp[i]<<8)|(dp[i]>>24);
+		}else {
+			DestroyImage(image);
+		}
+	}
+   return image;
 }
 #endif /* USE_RSVG */
-#endif /* USE_CAIRO */
+#endif
 
 /** Load an XPM image from the specified file. */
 #ifdef USE_XPM
@@ -557,6 +594,23 @@ ImageNode *LoadXBMImage(const char *fileName)
    return result;
 }
 #endif /* USE_XBM */
+
+/** Load a PNG, JPEG, GIF, BMP, TGA, PSD or PIC image from specified file. */
+#ifdef USE_STB_IMAGE
+ImageNode *LoadstbImage(const char *fileName){
+	int n=4; /* depth in bytes 4 = 32bpp */
+	ImageNode *image = CreateImage(0,0,0);
+	image->data = 
+		stbi_load(fileName, &image->width, &image->height, &n, 4);
+	if (image->data) {
+		unsigned *dp = (unsigned *)image->data;
+		size_t i, len = image->width*image->height;
+		for(i=0;i<len;i++)
+			dp[i]= (dp[i]<<8)|(dp[i]>>24);
+		return image;
+	}
+}
+#endif
 
 /** Create an image from XImages giving color and shape information. */
 #ifdef USE_ICONS

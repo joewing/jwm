@@ -35,11 +35,11 @@ typedef struct IconPathNode {
 /* These extensions are appended to icon names during search. */
 const char *ICON_EXTENSIONS[] = {
    "",
-#ifdef USE_PNG
+#if defined (USE_PNG) || defined (USE_STB_IMAGE) && ! defined (STBI_NO_PNG)
    ".png",
    ".PNG",
 #endif
-#if defined(USE_CAIRO) && defined(USE_RSVG)
+#if defined(USE_RSVG) || defined (USE_NANOSVG)
    ".svg",
    ".SVG",
 #endif
@@ -47,7 +47,7 @@ const char *ICON_EXTENSIONS[] = {
    ".xpm",
    ".XPM",
 #endif
-#ifdef USE_JPEG
+#if defined USE_JPEG || defined USE_STB_IMAGE && ! defined STBI_NO_JPEG
    ".jpg",
    ".JPG",
    ".jpeg",
@@ -56,6 +56,40 @@ const char *ICON_EXTENSIONS[] = {
 #ifdef USE_XBM
    ".xbm",
    ".XBM",
+#endif
+#ifdef USE_STB_IMAGE
+  #ifndef STBI_NO_GIF
+	".gif",
+	".GIF",
+  #endif
+  #ifndef STBI_NO_TGA  
+	".tga",
+	".TGA",
+  #endif
+  #ifndef STBI_NO_BMP
+	".bmp",
+	".BMP",
+  #endif
+  #ifndef STBI_NO_PNM
+  	".pnm",
+	".PNM",
+	".ppm",
+	".PPM",
+	".pgm",
+	".PGM",
+  #endif
+  #ifndef STBI_NO_PIC
+	".pic",
+	".PIC",
+  #endif
+  #ifndef STBI_NO_PSD
+	".psd",
+	".PSD",
+  #endif
+  #ifndef STBI_NO_HDR
+	".hdr",
+	".HDR",
+  #endif
 #endif
 };
 static const unsigned EXTENSION_COUNT = ARRAY_LENGTH(ICON_EXTENSIONS);
@@ -342,27 +376,35 @@ IconNode *LoadNamedIconHelper(const char *name, const char *path,
    char *temp;
    const unsigned nameLength = strlen(name);
    const unsigned pathLength = strlen(path);
-   unsigned i;
+   unsigned i, has_extension = 0;
+   ImageNode *image;
 
    temp = AllocateStack(nameLength + pathLength + MAX_EXTENSION_LENGTH + 1);
    memcpy(&temp[0], path, pathLength);
-   memcpy(&temp[pathLength], name, nameLength);
+   memcpy(&temp[pathLength], name, nameLength+1);
 
    result = NULL;
-   for(i = 0; i < EXTENSION_COUNT; i++) {
-      const unsigned len = strlen(ICON_EXTENSIONS[i]);
-      memcpy(&temp[pathLength + nameLength], ICON_EXTENSIONS[i], len + 1);
-      ImageNode *image = LoadImage(temp, 0, 0, 1);
-      if(image) {
-         result = CreateIcon(image);
-         result->preserveAspect = preserveAspect;
-         result->name = CopyString(temp);
-         if(save) {
-            InsertIcon(result);
-         }
-         DestroyImage(image);
-         break;
+   size_t templen = pathLength + nameLength;
+   for(i = 1; i < EXTENSION_COUNT; i++){
+      if (!strcmp(ICON_EXTENSIONS[i],temp+templen-strlen(ICON_EXTENSIONS[i]))){ 
+         has_extension = 1;
+         break; 
       }
+   }
+   if (has_extension){
+      image = LoadImage(temp, 0, 0, 1);
+   }else for(i = 0; i < EXTENSION_COUNT; i++) {
+      const unsigned len = strlen(ICON_EXTENSIONS[i]);
+      memcpy(&temp[templen], ICON_EXTENSIONS[i], len + 1);
+      image = LoadImage(temp, 0, 0, 1);
+      if (image) break;
+   }
+   if (image) {
+      result = CreateIcon(image);
+      result->preserveAspect = preserveAspect;
+      result->name = CopyString(temp);
+      if (save) InsertIcon(result);
+      DestroyImage(image);
    }
    ReleaseStack(temp);
 

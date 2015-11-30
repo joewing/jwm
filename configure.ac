@@ -153,6 +153,36 @@ else
    enable_rsvg="no"
    enable_cairo="no"
    enable_jpeg="no"
+   enable_stb_image="no"
+   enable_nanosvg="no"
+fi
+
+############################################################################
+# Check if stb_image should be used.
+############################################################################
+AC_ARG_ENABLE(stb_image,
+   AC_HELP_STRING([--enable-stb_image], [enable stb_image]) )
+if test "$enable_stb_image" != "no" ; then
+	if test "$enable_stb_image" = "yes" ; then
+	   LDFLAGS="$LDFLAGS -lm"
+	   AC_DEFINE(USE_STB_IMAGE, 1, [Define to enable stb_image])
+	else
+	   enable_stb_image="no"
+	fi
+fi
+
+############################################################################
+# Check if nanosvg should be used.
+############################################################################
+AC_ARG_ENABLE(nanosvg,
+   AC_HELP_STRING([--enable-nanosvg], [enable nanosvg]) )
+if test "$enable_nanosvg" != "no" ; then
+	if test "$enable_nanosvg" = "yes" ; then
+	   LDFLAGS="$LDFLAGS -lm"
+	   AC_DEFINE(USE_NANOSVG, 1, [Define to enable nanosvg])
+	else
+	   enable_nanosvg="no"
+	fi
 fi
 
 ############################################################################
@@ -586,6 +616,8 @@ echo
 echo "    Confirm:  $enable_confirm"
 echo "    Icon:     $enable_icons"
 echo "    Iconv:    $enable_iconv"
+echo "    STBImage: $enable_stb_image"
+echo "    Nanosvg:  $enable_nanosvg"
 echo "    Cairo:    $enable_cairo"
 echo "    RSVG:     $enable_rsvg"
 echo "    PNG:      $enable_png"

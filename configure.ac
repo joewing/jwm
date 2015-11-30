@@ -162,7 +162,7 @@ fi
 ############################################################################
 AC_ARG_ENABLE(stb_image,
    AC_HELP_STRING([--enable-stb_image], [enable stb_image]) )
-if test "$enable_stb_image" != "no" ; then
+if test "$enable_icons" != "no" ; then
 	if test "$enable_stb_image" = "yes" ; then
 	   LDFLAGS="$LDFLAGS -lm"
 	   AC_DEFINE(USE_STB_IMAGE, 1, [Define to enable stb_image])
@@ -170,6 +170,117 @@ if test "$enable_stb_image" != "no" ; then
 	   enable_stb_image="no"
 	fi
 fi
+
+############################################################################
+# Check if stb_image should load png images.
+############################################################################
+AC_ARG_ENABLE(stb_image_png,
+   AC_HELP_STRING([--disable-stb_image_png], [disable stb_image png loading]) )
+if test "$enable_stb_image" != "no" ; then
+	if test "$enable_stb_image_png" = "no" ; then
+	   AC_DEFINE(STBI_NO_PNG, 1, [Define to disable stb_image PNG loading])
+	else
+		enable_stb_image_png="yes"
+	fi
+fi
+
+############################################################################
+# Check if stb_image should load jpeg images.
+############################################################################
+AC_ARG_ENABLE(stb_image_jpeg,
+   AC_HELP_STRING([--disable-stb_image_jpg], [disable stb_image jpeg loading]) )
+if test "$enable_stb_image" != "no" ; then
+	if test "$enable_stb_image_jpg" = "no" ; then
+		AC_DEFINE(STBI_NO_JPEG, 1, [Define to disable stb_image jpeg loading])
+	else
+		enable_stb_image_jpg="yes"
+	fi
+fi
+
+############################################################################
+# Check if stb_image should load gif images.
+############################################################################
+AC_ARG_ENABLE(stb_image_gif,
+   AC_HELP_STRING([--enable-stb_image_gif], [enable stb_image gif loading]) )
+if test "$enable_stb_image" != "no" ; then
+	if test "$enable_stb_image_gif" != "yes" ; then
+	   AC_DEFINE(STBI_NO_GIF, 1, [Define to disable stb_image gif loading])
+	   enable_stb_image_gif="no"
+	fi
+fi
+
+############################################################################
+# Check if stb_image should load tga images.
+############################################################################
+AC_ARG_ENABLE(stb_image_tga,
+   AC_HELP_STRING([--enable-stb_image_tga], [enable stb_image tga loading]) )
+if test "$enable_stb_image" != "no" ; then
+	if test "$enable_stb_image_tga" != "yes" ; then
+		AC_DEFINE(STBI_NO_TGA, 1, [Define to disable stb_image tga loading])
+		enable_stb_image_tga="no"
+	fi
+fi
+
+############################################################################
+# Check if stb_image should load bmp images.
+############################################################################
+AC_ARG_ENABLE(stb_image_bmp,
+   AC_HELP_STRING([--enable-stb_image_bmp], [enable stb_image bmp loading]) )
+if test "$enable_stb_image" != "no" ; then
+	if test "$enable_stb_image_bmp" != "yes" ; then
+		AC_DEFINE(STBI_NO_BMP, 1, [Define to disable stb_image bmp loading])
+		enable_stb_image_bmp="no"
+	fi
+fi
+
+############################################################################
+# Check if stb_image should load pnm images.
+############################################################################
+AC_ARG_ENABLE(stb_image_pnm,
+   AC_HELP_STRING([--enable-stb_image_pnm], [enable stb_image pnm loading]) )
+if test "$enable_stb_image" != "no" ; then
+	if test "$enable_stb_image_pnm" != "yes" ; then
+		AC_DEFINE(STBI_NO_PNM, 1, [Define to disable stb_image pnm loading])
+		enable_stb_image_pnm="no"
+	fi
+fi
+
+############################################################################
+# Check if stb_image should load pic images.
+############################################################################
+AC_ARG_ENABLE(stb_image_pic,
+   AC_HELP_STRING([--enable-stb_image_pic], [enable stb_image pic loading]) )
+if test "$enable_stb_image" != "no" ; then
+	if test "$enable_stb_image_pic" != "yes" ; then
+		AC_DEFINE(STBI_NO_PIC, 1, [Define to disable stb_image pic loading])
+		enable_stb_image_pic="no"
+	fi
+fi
+
+############################################################################
+# Check if stb_image should load psd images.
+############################################################################
+AC_ARG_ENABLE(stb_image_psd,
+   AC_HELP_STRING([--enable-stb_image_psd], [enable stb_image psd loading]) )
+if test "$enable_stb_image" != "no" ; then
+	if test "$enable_stb_image_psd" != "yes" ; then
+		AC_DEFINE(STBI_NO_PSD, 1, [Define to disable stb_image psd loading])
+		enable_stb_image_psd="no"
+	fi
+fi
+
+############################################################################
+# Check if stb_image should load hdr images.
+############################################################################
+AC_ARG_ENABLE(stb_image_hdr,
+   AC_HELP_STRING([--enable-stb_image_hdr], [enable stb_image hdr loading]) )
+if test "$enable_stb_image" != "no" ; then
+	if test "$enable_stb_image_hdr" != "yes" ; then
+		AC_DEFINE(STBI_NO_HDR, 1, [Define to disable stb_image hdr loading])
+		enable_stb_image_hdr="no"
+	fi
+fi
+
 
 ############################################################################
 # Check if nanosvg should be used.
@@ -617,6 +728,16 @@ echo "    Confirm:  $enable_confirm"
 echo "    Icon:     $enable_icons"
 echo "    Iconv:    $enable_iconv"
 echo "    STBImage: $enable_stb_image"
+if test "$enable_stb_image" = "yes" ; then
+echo "         jpg: $enable_stb_image_jpg"
+echo "         png: $enable_stb_image_png"
+echo "         gif: $enable_stb_image_gif"
+echo "         hdr: $enable_stb_image_hdr"
+echo "         pic: $enable_stb_image_pic"
+echo "         pnm: $enable_stb_image_pnm"
+echo "         psd: $enable_stb_image_psd"
+echo "         tga: $enable_stb_image_tga"
+fi
 echo "    Nanosvg:  $enable_nanosvg"
 echo "    Cairo:    $enable_cairo"
 echo "    RSVG:     $enable_rsvg"

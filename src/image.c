@@ -25,16 +25,15 @@
 #     include <librsvg/rsvg.h>
 #  endif
 #  ifdef USE_STB_IMAGE
-#    define STBI_NO_HDR
 #    define STBI_NO_LINEAR
 #    define STB_IMAGE_IMPLEMENTATION
-#    include "stb_image.h"
+#    include <stb_image.h>
 #  endif
 #  ifdef USE_NANOSVG
 #    define NANOSVG_IMPLEMENTATION
-#    include "nanosvg.h"
+#    include <nanosvg.h>
 #    define NANOSVGRAST_IMPLEMENTATION
-#    include "nanosvgrast.h"
+#    include <nanosvgrast.h>
 #  endif
 #endif /* MAKE_DEPEND */
 

@@ -516,7 +516,7 @@ static ImageNode *LoadSVGImage(const char *fileName, int width, int height,
 }
 #else /* USE_NANOSVG */
 static ImageNode *LoadSVGImage(const char *fileName, int width, int height,
-                        char preserveAspect)
+                                char preserveAspect)
 {
 	NSVGimage *shapes = nsvgParseFromFile(fileName, "px", 96.0f);
 	ImageNode *image = NULL;

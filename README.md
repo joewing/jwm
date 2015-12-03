@@ -11,9 +11,12 @@ If available and not disabled at compile time, JWM will also use
 the following libraries:
 
  - cairo and librsvg2 for SVG icons and backgrounds.
+  - alternatively you can use nanosvg for limited svg support
  - fribidi for bi-directional text support.
  - libjpeg for JPEG icons and backgrounds.
+  - alternatively you can use stb_image for limited jpeg support
  - libpng for PNG icons and backgrounds.
+   - alternatively you can use stb_image for limited png support
  - libXext for the shape extension.
  - libXrender for the render extension.
  - libXmu for rounded corners.
@@ -24,8 +27,7 @@ the following libraries:
 Installation
 ------------------------------------------------------------------------------
 
- 0. For building from the git repository, run "automake -a" followed by
-    autoreconf to generate configure.
+ 0. For building from the git repository, run ./autogen.sh
  1. Run "./configure --help" for configuration options.
  2. Run "./configure [options]"
  3. Run "make" to build JWM.

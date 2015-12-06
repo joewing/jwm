@@ -59,7 +59,7 @@ static void DockWindow(Window win);
 static char UndockWindow(Window win);
 
 static void UpdateDock(void);
-static void GetDockItemSize(DockNode *np, int *width, int *height);
+static void GetDockItemSize(int *size);
 static void GetDockSize(int *width, int *height);
 
 /** Initialize dock data. */
@@ -291,7 +291,6 @@ char HandleDockResizeRequest(const XResizeRequestEvent *event)
 
    for(np = dock->nodes; np; np = np->next) {
       if(np->window == event->window) {
-         JXResizeWindow(display, np->window, event->width, event->height);
          UpdateDock();
          return 1;
       }
@@ -478,59 +477,39 @@ void UpdateDock(void)
    XConfigureEvent event;
    DockNode *np;
    int x, y;
-   int width, height;
-   int xoffset, yoffset;
    int itemSize;
 
    Assert(dock);
 
    /* Determine the size of items in the dock. */
-   if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-      itemSize = dock->cp->height;
-   } else {
-      itemSize = dock->cp->width;
-   }
-   if(dock->itemSize > 0 && itemSize > dock->itemSize) {
-      itemSize = dock->itemSize;
-   }
+   GetDockItemSize(&itemSize);
 
    x = 0;
    y = 0;
    memset(&event, 0, sizeof(event));
    for(np = dock->nodes; np; np = np->next) {
 
-      GetDockItemSize(np, &width, &height);
-      if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-         xoffset = 0;
-         yoffset = (itemSize - height) / 2;
-      } else {
-         xoffset = (itemSize - width) / 2;
-         yoffset = 0;
-      }
-
-      JXMoveResizeWindow(display, np->window, x + xoffset, y + yoffset,
-                         width, height);
+      JXMoveResizeWindow(display, np->window, x, y, itemSize, itemSize);
 
       /* Reparent if this window likes to go other places. */
       if(np->needs_reparent) {
-         JXReparentWindow(display, np->window, dock->cp->window,
-                          x + xoffset, y + yoffset);
+         JXReparentWindow(display, np->window, dock->cp->window, x, y);
       }
 
       event.type = ConfigureNotify;
       event.event = np->window;
       event.window = np->window;
-      event.x = x + xoffset;
-      event.y = y + yoffset;
-      event.width = width;
-      event.height = height;
+      event.x = x;
+      event.y = y;
+      event.width = itemSize;
+      event.height = itemSize;
       JXSendEvent(display, np->window, False, StructureNotifyMask,
                   (XEvent*)&event);
 
       if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-         x += width;
+         x += itemSize;
       } else {
-         y += height;
+         y += itemSize;
       }
 
    }
@@ -538,52 +517,38 @@ void UpdateDock(void)
 }
 
 /** Get the size of a particular window on the dock. */
-void GetDockItemSize(DockNode *np, int *width, int *height)
+void GetDockItemSize(int *size)
 {
-   int itemSize;
-
    /* Determine the default size of items in the dock. */
    if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-      itemSize = dock->cp->height;
+      *size = dock->cp->height;
    } else {
-      itemSize = dock->cp->width;
+      *size = dock->cp->width;
    }
-   if(dock->itemSize > 0 && itemSize > dock->itemSize) {
-      itemSize = dock->itemSize;
+   if(dock->itemSize > 0 && *size > dock->itemSize) {
+      *size = dock->itemSize;
    }
-
-   /* Determine the size of the window. */
-   *width = itemSize;
-   *height = itemSize;
-
 }
 
 /** Get the size of the dock. */
 void GetDockSize(int *width, int *height)
 {
    DockNode *np;
+   int itemSize;
 
    Assert(dock != NULL);
 
-   /* Determine the dimension that is fixed. */
-   if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-      *width = 0;
-      *height = dock->cp->height;
-   } else {
-      *width = dock->cp->width;
-      *height = 0;
-   }
+   /* Get the dock item size. */
+   GetDockItemSize(&itemSize);
 
    /* Determine the size of the items on the dock. */
    for(np = dock->nodes; np; np = np->next) {
-      int itemWidth, itemHeight;
-      GetDockItemSize(np, &itemWidth, &itemHeight);
       if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
          /* Horizontal tray; height fixed, placement is left to right. */
-         *width += itemWidth;
+         *width += itemSize;
       } else {
          /* Vertical tray; width fixed, placement is top to bottom. */
-         *height += itemHeight;
+         *height += itemSize;
       }
    }
 
@@ -596,4 +561,3 @@ void GetDockSize(int *width, int *height)
    }
 
 }
-

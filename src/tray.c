@@ -121,7 +121,7 @@ void StartupTray(void)
 
          if(cp->Create) {
             if(tp->layout == LAYOUT_HORIZONTAL) {
-               height = tp->height;
+               height = tp->height - TRAY_BORDER_SIZE * 2;
                width = cp->width;
                if(width == 0) {
                   width = variableSize;
@@ -131,7 +131,7 @@ void StartupTray(void)
                   }
                }
             } else {
-               width = tp->width;
+               width = tp->width - TRAY_BORDER_SIZE * 2;
                height = cp->height;
                if(height == 0) {
                   height = variableSize;

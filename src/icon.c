@@ -338,35 +338,63 @@ IconNode *LoadNamedIcon(const char *name, char save, char preserveAspect)
 IconNode *LoadNamedIconHelper(const char *name, const char *path,
                               char save, char preserveAspect)
 {
-   IconNode *result;
+   ImageNode *image;
    char *temp;
    const unsigned nameLength = strlen(name);
    const unsigned pathLength = strlen(path);
    unsigned i;
+   char hasExtension;
 
+   /* Full file name. */
    temp = AllocateStack(nameLength + pathLength + MAX_EXTENSION_LENGTH + 1);
    memcpy(&temp[0], path, pathLength);
-   memcpy(&temp[pathLength], name, nameLength);
+   memcpy(&temp[pathLength], name, nameLength + 1);
 
-   result = NULL;
+   /* Determine if the extension is provided.
+    * We avoid extra file opens if so.
+    */
+   hasExtension = 0;
    for(i = 0; i < EXTENSION_COUNT; i++) {
-      const unsigned len = strlen(ICON_EXTENSIONS[i]);
-      memcpy(&temp[pathLength + nameLength], ICON_EXTENSIONS[i], len + 1);
-      ImageNode *image = LoadImage(temp, 0, 0, 1);
-      if(image) {
-         result = CreateIcon(image);
-         result->preserveAspect = preserveAspect;
-         result->name = CopyString(temp);
-         if(save) {
-            InsertIcon(result);
-         }
-         DestroyImage(image);
+      const unsigned offset = nameLength + pathLength;
+      const unsigned extLength = strlen(ICON_EXTENSIONS[i]);
+      if(JUNLIKELY(offset < extLength)) {
+         continue;
+      }
+      if(!strcmp(ICON_EXTENSIONS[i], &temp[offset])) {
+         hasExtension = 1;
          break;
+      }
+   }
+
+   /* Attempt to load the image. */
+   image = NULL;
+   if(hasExtension) {
+      image = LoadImage(temp, 0, 0, 1);
+   } else {
+      for(i = 0; i < EXTENSION_COUNT; i++) {
+         const unsigned len = strlen(ICON_EXTENSIONS[i]);
+         memcpy(&temp[pathLength + nameLength], ICON_EXTENSIONS[i], len + 1);
+         image = LoadImage(temp, 0, 0, 1);
+         if(image) {
+            break;
+         }
       }
    }
    ReleaseStack(temp);
 
-   return result;
+   /* Create the icon if we were able to load the image. */
+   if(image) {
+      IconNode *result = CreateIcon(image);
+      result->preserveAspect = preserveAspect;
+      result->name = CopyString(temp);
+      if(save) {
+         InsertIcon(result);
+      }
+      DestroyImage(image);
+      return result;
+   }
+
+   return NULL;
 }
 
 /** Read the icon property from a client. */

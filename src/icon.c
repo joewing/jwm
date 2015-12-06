@@ -71,7 +71,6 @@ static void DoDestroyIcon(int index, IconNode *icon);
 static IconNode *ReadNetWMIcon(Window win);
 static IconNode *ReadWMHintIcon(Window win);
 static IconNode *CreateIcon(const ImageNode *image);
-static IconNode *GetDefaultIcon(void);
 static IconNode *CreateIconFromDrawable(Drawable d, Pixmap mask);
 static IconNode *CreateIconFromBinary(const unsigned long *data,
                                       unsigned int length);
@@ -280,9 +279,6 @@ void LoadIcon(ClientNode *np)
          return;
       }
    }
-
-   /* Load the default icon */
-   np->icon = GetDefaultIcon();
 }
 
 /** Load an icon from a file. */

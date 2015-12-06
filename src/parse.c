@@ -348,6 +348,9 @@ void Parse(const TokenNode *start, int depth)
             case TOK_BUTTONMIN:
                SetBorderIcon(BI_MIN, tp->value);
                break;
+            case TOK_BUTTONMENU:
+               SetBorderIcon(BI_MENU, tp->value);
+               break;
             default:
                InvalidTag(tp, TOK_JWM);
                break;

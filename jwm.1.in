@@ -1585,6 +1585,11 @@ default.
 An icon to display for the maximize button on maximized client windows instead
 of the default.
 .RE
+.B ButtonMenu
+.RS
+An icon to display for the menu button on client windows instead of the
+default. This is used for client windows that do not specify an icon.
+.RE
 .B ButtonMin
 .RS
 An icon to display for the minimize button on client windows instead

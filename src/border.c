@@ -65,6 +65,10 @@ void StartupBorders(void)
       }
    }
 
+   /* Always load a menu icon for windows without one. */
+   if(buttonIcons[BI_MENU] == NULL) {
+      buttonIcons[BI_MENU] = GetDefaultIcon();
+   }
 }
 
 /** Destroy structures. */
@@ -411,9 +415,10 @@ void DrawBorderHelper(const ClientNode *np)
 
       /* Draw the icon. */
 #ifdef USE_ICONS
-      if(np->icon && np->width >= settings.titleHeight) {
+      if(np->width >= settings.titleHeight) {
          const int iconSize = GetBorderIconSize();
-         PutIcon(np->icon, canvas, colors[borderTextColor],
+         IconNode *icon = np->icon ? np->icon : buttonIcons[BI_MENU];
+         PutIcon(icon, canvas, colors[borderTextColor],
                  startx, starty + (settings.titleHeight - iconSize) / 2,
                  iconSize, iconSize);
       }

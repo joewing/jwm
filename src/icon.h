@@ -92,6 +92,11 @@ void LoadIcon(struct ClientNode *np);
  */
 IconNode *LoadNamedIcon(const char *name, char save, char preserveAspect);
 
+/** Load the default icon.
+ * @return The default icon.
+ */
+IconNode *GetDefaultIcon(void);
+
 /** Destroy an icon.
  * @param icon The icon to destroy.
  */

@@ -350,7 +350,7 @@ IconNode *LoadNamedIconHelper(const char *name, const char *path,
     * We avoid extra file opens if so.
     */
    hasExtension = 0;
-   for(i = 0; i < EXTENSION_COUNT; i++) {
+   for(i = 1; i < EXTENSION_COUNT; i++) {
       const unsigned offset = nameLength + pathLength;
       const unsigned extLength = strlen(ICON_EXTENSIONS[i]);
       if(JUNLIKELY(offset < extLength)) {

@@ -84,7 +84,8 @@ static const StringMappingType TOKEN_MAP[] = {
    { "TrayButton",         TOK_TRAYBUTTON       },
    { "TrayStyle",          TOK_TRAYSTYLE        },
    { "Width",              TOK_WIDTH            },
-   { "WindowStyle",        TOK_WINDOWSTYLE      }
+   { "WindowStyle",        TOK_WINDOWSTYLE      },
+   { "WmName",             TOK_WMNAME           }
 };
 static const unsigned int TOKEN_MAP_COUNT
    = sizeof(TOKEN_MAP) / sizeof(TOKEN_MAP[0]);

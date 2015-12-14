@@ -20,6 +20,7 @@
 typedef unsigned int MatchType;
 #define MATCH_NAME   0  /**< Match the window name. */
 #define MATCH_CLASS  1  /**< Match the window class. */
+#define MATCH_WMNAME 2  /**< Match the window name. */
 
 /** List of match patterns for a group. */
 typedef struct PatternListType {
@@ -124,6 +125,16 @@ void AddGroupName(GroupType *gp, const char *pattern)
    }
 }
 
+void AddGroupWmName(GroupType *gp, const char *pattern)
+{
+   Assert(gp);
+   if(JLIKELY(pattern)) {
+      AddPattern(&gp->patterns, pattern, MATCH_WMNAME);
+   } else {
+      Warning(_("invalid group name"));
+   }
+}
+
 /** Add a pattern to a pattern list. */
 void AddPattern(PatternListType **lp, const char *pattern, MatchType match)
 {
@@ -181,15 +192,19 @@ void ApplyGroups(ClientNode *np)
    GroupType *gp;
    char hasClass;
    char hasName;
+   char hasWmName;
    char matchesClass;
    char matchesName;
+   char matchesWmName;
 
    Assert(np);
    for(gp = groups; gp; gp = gp->next) {
       hasClass = 0;
       hasName = 0;
+      hasWmName = 0;
       matchesClass = 0;
       matchesName = 0;
+      matchesWmName = 0;
       for(lp = gp->patterns; lp; lp = lp->next) {
          if(lp->match == MATCH_CLASS) {
             if(Match(lp->pattern, np->className)) {
@@ -201,11 +216,16 @@ void ApplyGroups(ClientNode *np)
                matchesName = 1;
             }
             hasName = 1;
+         } else if(lp->match == MATCH_WMNAME) {
+            if(Match(lp->pattern, np->name)) {
+               matchesWmName = 1;
+            }
+            hasWmName = 1;
          } else {
             Debug("invalid match in ApplyGroups: %d", lp->match);
          }
       }
-      if(hasName == matchesName && hasClass == matchesClass) {
+      if(hasName == matchesName && hasClass == matchesClass && hasWmName == matchesWmName) {
          ApplyGroup(gp, np);
       }
    }

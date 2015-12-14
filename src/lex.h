@@ -80,7 +80,8 @@ typedef enum {
    TOK_TRAYBUTTON,
    TOK_TRAYSTYLE,
    TOK_WIDTH,
-   TOK_WINDOWSTYLE
+   TOK_WINDOWSTYLE,
+   TOK_WMNAME
 
 } TokenType;
 

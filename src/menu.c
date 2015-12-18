@@ -415,8 +415,12 @@ char MenuLoop(Menu *menu, RunMenuCommandType runner)
             ip = GetMenuItem(menu, menu->currentIndex);
          }
          if(ip != NULL) {
-            HideMenu(menu);
-            (runner)(&ip->action, event.xbutton.button);
+            if(ip->type == MENU_ITEM_NORMAL) {
+               HideMenu(menu);
+               (runner)(&ip->action, event.xbutton.button);
+            } else {
+               break;
+            }
          }
          return 1;
       default:

@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
       break;
    }
 
-#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS)
+#if defined(HAVE_SETLOCALE) && (defined(ENABLE_NLS) || defined(ENABLE_ICONV))
    setlocale(LC_ALL, "");
 #endif
 #ifdef HAVE_GETTEXT

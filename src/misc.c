@@ -229,11 +229,11 @@ char *CopyString(const char *str)
 float ParseFloat(const char *str)
 {
    float result;
-#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS)
+#if defined(HAVE_SETLOCALE) && (defined(ENABLE_NLS) || defined(ENABLE_ICONV))
    setlocale(LC_ALL, "C");
 #endif
    result = atof(str);
-#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS)
+#if defined(HAVE_SETLOCALE) && (defined(ENABLE_NLS) || defined(ENABLE_ICONV))
    setlocale(LC_ALL, "");
 #endif
    return result;

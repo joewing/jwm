@@ -1478,7 +1478,6 @@ Over the maximize button, clicking toggles between vertically maximized
 and normal.
 Anywhere else on a window frame, dragging while holding button 2 will
 move the window.
-Over a task bar, closes the window.
 Over a pager, switches the active desktop.
 .RE
 .P

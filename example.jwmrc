@@ -148,6 +148,9 @@
 
     <!-- The resize mode (outline or opaque) -->
     <ResizeMode>opaque</ResizeMode>
+    
+    <!-- The closing mode of window on taskbar middle click (none or close) -->
+    <ClickMiddleTask>none</ClickMiddleTask>
 
     <!-- Key bindings -->
     <Key key="Up">up</Key>

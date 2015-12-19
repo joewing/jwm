@@ -419,7 +419,14 @@ char MenuLoop(Menu *menu, RunMenuCommandType runner)
                HideMenu(menu);
                (runner)(&ip->action, event.xbutton.button);
             } else {
-               break;
+               const Menu *parent = ip->type == MENU_ITEM_SUBMENU
+                                  ? menu->parent : menu;
+               if(event.xbutton.x >= parent->x &&
+                  event.xbutton.x < parent->x + parent->width &&
+                  event.xbutton.y >= parent->y &&
+                  event.xbutton.y < parent->y + parent->height) {
+                  break;
+               }
             }
          }
          return 1;

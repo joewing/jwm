@@ -830,13 +830,30 @@ Prevents windows in the group from grabbing the focus when mapped.
 .P
 .B nolist
 .RS
-Causes the tray to ignore windows in this group.
+Causes the tray to ignore windows in this group when the window
+is initially mapped.
+.RE
+
+.P
+.B ilist
+.RS
+Ignore the program-specified list setting for windows in this group.
+If specified with \fBnolist\fP, windows will not be listed in the task
+list, otherwise windows will be listed.
 .RE
 
 .P
 .B nopager
 .RS
 Causes the pager to ignore windows in this group.
+.RE
+
+.P
+.B ipager
+.RS
+Ignore the program-specified pager setting for windows in this group.
+If specified with \fBnopager\fP, windows will not be shown in the pager,
+otherwise windows will be shown.
 .RE
 
 .P

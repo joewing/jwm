@@ -90,6 +90,8 @@ static const StringMappingType OPTION_MAP[] = {
    { "fullscreen",         OPTION_FULLSCREEN    },
    { "hmax",               OPTION_MAX_H         },
    { "iignore",            OPTION_IIGNORE       },
+   { "ilist",              OPTION_ILIST         },
+   { "ipager",             OPTION_IPAGER        },
    { "maximized",          OPTION_MAXIMIZED     },
    { "minimized",          OPTION_MINIMIZED     },
    { "noborder",           OPTION_NOBORDER      },

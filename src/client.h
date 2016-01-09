@@ -80,6 +80,8 @@ typedef unsigned int StatusFlags;
 #define STAT_SHAPED     (1 << 22)   /**< This window is shaped. */
 #define STAT_FLASH      (1 << 23)   /**< Flashing for urgency. */
 #define STAT_DRAG       (1 << 24)   /**< Pass mouse events to JWM. */
+#define STAT_ILIST      (1 << 25)   /**< Ignore program-specified list. */
+#define STAT_IPAGER     (1 << 26)   /**< Ignore program-specified pager. */
 
 /** Maximization flags. */
 typedef unsigned char MaxFlags;

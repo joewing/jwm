@@ -235,8 +235,9 @@ void ApplyGroups(ClientNode *np)
 /** Apply a group to a client. */
 void ApplyGroup(const GroupType *gp, ClientNode *np)
 {
-
    OptionListType *lp;
+   char noPager = 0;
+   char noList = 0;
 
    Assert(gp);
    Assert(np);
@@ -247,9 +248,23 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
          break;
       case OPTION_NOLIST:
          np->state.status |= STAT_NOLIST;
+         noList = 1;
+         break;
+      case OPTION_ILIST:
+         np->state.status |= STAT_ILIST;
+         if(!noList) {
+            np->state.status &= ~STAT_NOLIST;
+         }
          break;
       case OPTION_NOPAGER:
          np->state.status |= STAT_NOPAGER;
+         noPager = 1;
+         break;
+      case OPTION_IPAGER:
+         np->state.status |= STAT_IPAGER;
+         if(!noPager) {
+            np->state.status &= ~STAT_NOPAGER;
+         }
          break;
       case OPTION_BORDER:
          np->state.border |= BORDER_OUTLINE;

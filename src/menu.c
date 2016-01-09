@@ -415,8 +415,19 @@ char MenuLoop(Menu *menu, RunMenuCommandType runner)
             ip = GetMenuItem(menu, menu->currentIndex);
          }
          if(ip != NULL) {
-            HideMenu(menu);
-            (runner)(&ip->action, event.xbutton.button);
+            if(ip->type == MENU_ITEM_NORMAL) {
+               HideMenu(menu);
+               (runner)(&ip->action, event.xbutton.button);
+            } else {
+               const Menu *parent = ip->type == MENU_ITEM_SUBMENU
+                                  ? menu->parent : menu;
+               if(event.xbutton.x >= parent->x &&
+                  event.xbutton.x < parent->x + parent->width &&
+                  event.xbutton.y >= parent->y &&
+                  event.xbutton.y < parent->y + parent->height) {
+                  break;
+               }
+            }
          }
          return 1;
       default:

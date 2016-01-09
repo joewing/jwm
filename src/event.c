@@ -1247,11 +1247,11 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
       if(actionMinimize) {
          RestoreClient(np, 0);
       }
-      if(actionNolist) {
+      if(actionNolist && !(np->state.status & STAT_ILIST)) {
          np->state.status &= ~STAT_NOLIST;
          RequireTaskUpdate();
       }
-      if(actionNopager) {
+      if(actionNopager && !(np->state.status & STAT_IPAGER)) {
          np->state.status &= ~STAT_NOPAGER;
          RequirePagerUpdate();
       }
@@ -1278,11 +1278,11 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
       if(actionMinimize) {
          MinimizeClient(np, 1);
       }
-      if(actionNolist) {
+      if(actionNolist && !(np->state.status & STAT_ILIST)) {
          np->state.status |= STAT_NOLIST;
          RequireTaskUpdate();
       }
-      if(actionNopager) {
+      if(actionNopager && !(np->state.status & STAT_IPAGER)) {
          np->state.status |= STAT_NOPAGER;
          RequirePagerUpdate();
       }
@@ -1334,11 +1334,11 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
       }
       /* Note that we don't handle toggling of hidden per EWMH
        * recommendations. */
-      if(actionNolist) {
+      if(actionNolist && !(np->state.status & STAT_ILIST)) {
          np->state.status ^= STAT_NOLIST;
          RequireTaskUpdate();
       }
-      if(actionNopager) {
+      if(actionNopager && !(np->state.status & STAT_IPAGER)) {
          np->state.status ^= STAT_NOPAGER;
          RequirePagerUpdate();
       }

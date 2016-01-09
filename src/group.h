@@ -48,6 +48,8 @@ typedef unsigned char OptionType;
 #define OPTION_NORESIZE       30    /**< Disallow resizing. */
 #define OPTION_NOFULLSCREEN   31    /**< Disallow fullscreen. */
 #define OPTION_DRAG           32    /**< Pass mouse events to JWM. */
+#define OPTION_ILIST          33    /**< Ignore program-specified list. */
+#define OPTION_IPAGER         34    /**< Ignore program-specified pager. */
 
 /*@{*/
 #define InitializeGroups() (void)(0)

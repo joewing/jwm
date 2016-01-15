@@ -558,7 +558,6 @@ char TileClient(const BoundingBox *box, ClientNode *np)
    ReleaseStack(xs);
    ReleaseStack(ys);
 
-   printf("OVERLAP %d\n", leastOverlap);
    if(leastOverlap < INT_MAX) {
       /* Set the client position. */
       GetBorderSize(&np->state, &north, &south, &east, &west);

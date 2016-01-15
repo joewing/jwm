@@ -73,10 +73,10 @@ void ProcessActionPress(struct ActionType *actions,
    int mwidth, mheight;
    int menu;
 
-   if (x < 0 || x >= cp->width) {
+   if (x < -1 || x > cp->width) {
       return;
    }
-   if (y < 0 || y >= cp->height) {
+   if (y < -1 || y > cp->height) {
       return;
    }
 
@@ -169,10 +169,10 @@ void ProcessActionRelease(struct ActionType *actions,
 
    /* Since we grab the mouse, make sure the mouse is actually over
     * the button. */
-   if(x < 0 || x >= cp->width) {
+   if(x < -1 || x > cp->width) {
       return;
    }
-   if(y < 0 || y >= cp->height) {
+   if(y < -1 || y > cp->height) {
       return;
    }
 

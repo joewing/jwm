@@ -676,19 +676,30 @@ TrayComponentType *GetTrayComponent(TrayType *tp, int x, int y)
    xoffset = 0;
    yoffset = 0;
    for(cp = tp->components; cp; cp = cp->next) {
-      int startx = xoffset;
-      int starty = yoffset;
+      const int startx = xoffset;
+      const int starty = yoffset;
       int width = cp->width;
       int height = cp->height;
+      if(tp->layout == LAYOUT_HORIZONTAL) {
+         height += 2 * TRAY_BORDER_SIZE;
+         if(!cp->next || yoffset == 0) {
+            width += TRAY_BORDER_SIZE;
+         }
+      } else {
+         width += 2 * TRAY_BORDER_SIZE;
+         if(!cp->next || xoffset == 0) {
+            height += TRAY_BORDER_SIZE;
+         }
+      }
       if(x >= startx && x < startx + width) {
          if(y >= starty && y < starty + height) {
             return cp;
          }
       }
       if(tp->layout == LAYOUT_HORIZONTAL) {
-         xoffset += cp->width;
+         xoffset += width;
       } else {
-         yoffset += cp->height;
+         yoffset += height;
       }
    }
 

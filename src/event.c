@@ -521,13 +521,7 @@ void HandleKeyPress(const XKeyEvent *event)
       }
       break;
    case KEY_MAX:
-      if(np) {
-         if(np->state.maxFlags) {
-            MaximizeClient(np, MAX_NONE);
-         } else {
-            MaximizeClient(np, MAX_HORIZ | MAX_VERT);
-         }
-      }
+      ToggleMaximized(np, MAX_HORIZ | MAX_VERT);
       break;
    case KEY_RESTORE:
       if(np) {

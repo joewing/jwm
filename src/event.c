@@ -576,22 +576,30 @@ void HandleKeyPress(const XKeyEvent *event)
       break;
    case KEY_SENDR:
       if(np) {
-         SetClientDesktop(np, GetRightDesktop(np->state.desktop));
+         const unsigned desktop = GetRightDesktop(np->state.desktop);
+         SetClientDesktop(np, desktop);
+         ChangeDesktop(desktop);
       }
       break;
    case KEY_SENDL:
       if(np) {
-         SetClientDesktop(np, GetLeftDesktop(np->state.desktop));
+         const unsigned desktop = GetLeftDesktop(np->state.desktop);
+         SetClientDesktop(np, desktop);
+         ChangeDesktop(desktop);
       }
       break;
    case KEY_SENDU:
       if(np) {
-         SetClientDesktop(np, GetAboveDesktop(np->state.desktop));
+         const unsigned desktop = GetAboveDesktop(np->state.desktop);
+         SetClientDesktop(np, desktop);
+         ChangeDesktop(desktop);
       }
       break;
    case KEY_SENDD:
       if(np) {
-         SetClientDesktop(np, GetBelowDesktop(np->state.desktop));
+         const unsigned desktop = GetBelowDesktop(np->state.desktop);
+         SetClientDesktop(np, desktop);
+         ChangeDesktop(desktop);
       }
       break;
    default:

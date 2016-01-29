@@ -80,7 +80,6 @@ typedef struct {
    DecorationsType trayDecorations;
    DecorationsType menuDecorations;
    PopupMaskType popupMask;
-   char exitConfirmation;
    char groupTasks;
    char listAllTasks;
 } Settings;

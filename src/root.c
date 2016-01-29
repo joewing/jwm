@@ -206,9 +206,9 @@ void Restart(void)
 }
 
 /** Exit with optional confirmation. */
-void Exit(void)
+void Exit(char confirm)
 {
-   if(settings.exitConfirmation) {
+   if(confirm) {
       ShowConfirmDialog(NULL, ExitHandler,
                         _("Exit JWM"),
                         _("Are you sure?"),
@@ -248,7 +248,7 @@ void RunRootCommand(MenuAction *action, unsigned button)
          Release(exitCommand);
       }
       exitCommand = CopyString(action->str);
-      Exit();
+      Exit(action->value);
       break;
    case MA_DESKTOP:
       ChangeDesktop(action->value);

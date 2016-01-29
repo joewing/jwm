@@ -41,7 +41,6 @@ void InitializeSettings(void)
    settings.windowDecorations = DECO_FLAT;
    settings.trayDecorations = DECO_FLAT;
    settings.menuDecorations = DECO_FLAT;
-   settings.exitConfirmation = 1;
    settings.cornerRadius = 4;
    settings.groupTasks = 0;
    settings.listAllTasks = 0;

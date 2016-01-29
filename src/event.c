@@ -563,7 +563,7 @@ void HandleKeyPress(const XKeyEvent *event)
       Restart();
       break;
    case KEY_EXIT:
-      Exit();
+      Exit(1);
       break;
    case KEY_FULLSCREEN:
       if(np) {
@@ -986,7 +986,7 @@ void HandleClientMessage(const XClientMessageEvent *event)
       if(event->message_type == atoms[ATOM_JWM_RESTART]) {
          Restart();
       } else if(event->message_type == atoms[ATOM_JWM_EXIT]) {
-         Exit();
+         Exit(0);
       } else if(event->message_type == atoms[ATOM_JWM_RELOAD]) {
          ReloadMenu();
       } else if(event->message_type == atoms[ATOM_NET_CURRENT_DESKTOP]) {

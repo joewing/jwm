@@ -53,6 +53,12 @@ typedef unsigned char PopupMaskType;
 #define POPUP_MENU   16
 #define POPUP_ALL    255
 
+/** Text alignment. */
+typedef unsigned char TextAlignmentType;
+#define TEXT_LEFT    0
+#define TEXT_CENTER  1
+#define TEXT_RIGHT   2
+
 /** Settings. */
 typedef struct {
    unsigned int doubleClickSpeed;
@@ -64,6 +70,7 @@ typedef struct {
    unsigned int inactiveClientOpacity;
    unsigned int borderWidth;
    unsigned int titleHeight;
+   TextAlignmentType titleTextAlignment;
    unsigned int desktopWidth;
    unsigned int desktopHeight;
    unsigned int desktopCount;

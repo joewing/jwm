@@ -858,6 +858,28 @@ void ParseKey(const TokenNode *tp) {
 
 }
 
+/** Parse text alignment. */
+TextAlignmentType ParseTextAlignment(const TokenNode *tp)
+{
+    static const StringMappingType mapping[] = {
+        { "left",    TEXT_LEFT   },
+        { "center",  TEXT_CENTER },
+        { "right",   TEXT_RIGHT  }
+    };
+    const char *attr;
+
+    attr = FindAttribute(tp->attributes, "align");
+    if (attr) {
+        const int x = FindValue(mapping, ARRAY_LENGTH(mapping), attr);
+        if(JLIKELY(x >= 0))
+            return x;
+        else
+            Warning(_("invalid text alignment: \"%s\""), attr);
+    }
+
+    return TEXT_LEFT;
+}
+
 /** Parse window style. */
 void ParseWindowStyle(const TokenNode *tp)
 {
@@ -868,6 +890,7 @@ void ParseWindowStyle(const TokenNode *tp)
       switch(np->type) {
       case TOK_FONT:
          SetFont(FONT_BORDER, np->value);
+         settings.titleTextAlignment = ParseTextAlignment(np);
          break;
       case TOK_WIDTH:
          settings.borderWidth = ParseUnsigned(np, np->value);

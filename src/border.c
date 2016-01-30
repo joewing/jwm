@@ -426,7 +426,18 @@ void DrawBorderHelper(const ClientNode *np)
 
       if(np->name && np->name[0] && titleWidth > 0) {
          const int sheight = GetStringHeight(FONT_BORDER);
-         const unsigned titlex = startx + settings.titleHeight
+         int xoffset = 0;
+         int textWidth = GetStringWidth(FONT_BORDER, np->name);
+         switch (settings.titleTextAlignment) {
+         case TEXT_CENTER:
+             xoffset = (titleWidth - textWidth) / 2;
+             break;
+         case TEXT_RIGHT:
+             xoffset = (titleWidth - textWidth);
+             break;
+         }
+         if (xoffset < 0) xoffset = 0;
+         const unsigned titlex = startx + settings.titleHeight + xoffset
             + (settings.windowDecorations == DECO_MOTIF ? 4 : 0);
          const unsigned titley = starty + (settings.titleHeight - sheight) / 2;
          RenderString(canvas, FONT_BORDER, borderTextColor,

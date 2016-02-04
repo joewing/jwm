@@ -672,13 +672,6 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
             menu->items = last;
          }
 
-         value = FindAttribute(start->attributes, CONFIRM_ATTRIBUTE);
-         if(value && !strcmp(value, FALSE_VALUE)) {
-            settings.exitConfirmation = 0;
-         } else {
-            settings.exitConfirmation = 1;
-         }
-
          value = FindAttribute(start->attributes, LABEL_ATTRIBUTE);
          if(!value) {
             value = GetTokenName(start);
@@ -693,6 +686,12 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
 
          last->action.type = MA_EXIT;
          last->action.str = CopyString(start->value);
+         value = FindAttribute(start->attributes, CONFIRM_ATTRIBUTE);
+         if(value && !strcmp(value, FALSE_VALUE)) {
+            last->action.value = 0;
+         } else {
+            last->action.value = 1;
+         }
 
          break;
       case TOK_RESTART:

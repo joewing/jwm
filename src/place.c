@@ -32,8 +32,8 @@ static char DoRemoveClientStrut(ClientNode *np);
 static void InsertStrut(const BoundingBox *box, ClientNode *np);
 static void CenterClient(const BoundingBox *box, ClientNode *np);
 static int IntComparator(const void *a, const void *b);
-static char TryTileClient(const BoundingBox *box, ClientNode *np,
-                          int x, int y);
+static int TryTileClient(const BoundingBox *box, ClientNode *np,
+                         int x, int y);
 static char TileClient(const BoundingBox *box, ClientNode *np);
 static void CascadeClient(const BoundingBox *box, ClientNode *np);
 
@@ -414,13 +414,14 @@ int IntComparator(const void *a, const void *b)
 }
 
 /** Attempt to place the client at the specified coordinates. */
-char TryTileClient(const BoundingBox *box, ClientNode *np, int x, int y)
+int TryTileClient(const BoundingBox *box, ClientNode *np, int x, int y)
 {
    const ClientNode *tp;
    int layer;
    int north, south, east, west;
    int x1, x2, y1, y2;
    int ox1, ox2, oy1, oy2;
+   int overlap;
 
    /* Set the client position. */
    GetBorderSize(&np->state, &north, &south, &east, &west);
@@ -436,6 +437,7 @@ char TryTileClient(const BoundingBox *box, ClientNode *np, int x, int y)
    y2 = np->y + np->height + south;
 
    /* Loop over each client. */
+   overlap = 0;
    for(layer = np->state.layer; layer < LAYER_COUNT; layer++) {
       for(tp = nodes[layer]; tp; tp = tp->next) {
 
@@ -464,14 +466,12 @@ char TryTileClient(const BoundingBox *box, ClientNode *np, int x, int y)
          if(y2 <= oy1 || y1 >= oy2) {
             continue;
          }
-         return 0;
-
+         overlap += (Min(ox2, x2) - Max(ox1, x1))
+                  * (Min(oy2, y2) - Max(oy1, y1));
       }
    }
 
-   /* No client overlaps this position. */
-   return 1;
-
+   return overlap;
 }
 
 /** Tiled placement. */
@@ -485,6 +485,8 @@ char TileClient(const BoundingBox *box, ClientNode *np)
    int count;
    int *xs;
    int *ys;
+   int leastOverlap;
+   int bestx, besty;
 
    /* Determine how much space to allocate. */
    count = 1;
@@ -536,12 +538,19 @@ char TileClient(const BoundingBox *box, ClientNode *np)
    qsort(ys, count, sizeof(int), IntComparator);
 
    /* Try all possible positions. */
+   leastOverlap = INT_MAX;
+   bestx = xs[0];
+   besty = ys[0];
    for(i = 0; i < count; i++) {
       for(j = 0; j < count; j++) {
-         if(TryTileClient(box, np, xs[i], ys[j])) {
-            ReleaseStack(xs);
-            ReleaseStack(ys);
-            return 1;
+         const int overlap = TryTileClient(box, np, xs[i], ys[j]);
+         if(overlap < leastOverlap) {
+            leastOverlap = overlap;
+            bestx = xs[i];
+            besty = ys[j];
+            if(overlap == 0) {
+               break;
+            }
          }
       }
    }
@@ -549,9 +558,18 @@ char TileClient(const BoundingBox *box, ClientNode *np)
    ReleaseStack(xs);
    ReleaseStack(ys);
 
-   /* Tiled placement failed. */
-   return 0;
-
+   if(leastOverlap < INT_MAX) {
+      /* Set the client position. */
+      GetBorderSize(&np->state, &north, &south, &east, &west);
+      np->x = bestx + west;
+      np->y = besty + north;
+      ConstrainSize(np);
+      ConstrainPosition(np);
+      return 1;
+   } else {
+      /* Tiled placement failed. */
+      return 0;
+   }
 }
 
 /** Cascade placement. */

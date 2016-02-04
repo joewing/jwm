@@ -59,8 +59,10 @@ char ShowRootMenu(int index, int x, int y, char keyboard);
 /** Restart the window manager. */
 void Restart(void);
 
-/** Exit the window manager. */
-void Exit(void);
+/** Exit the window manager.
+ * @param confirm 1 to confirm exit, 0 for immediate exit.
+ */
+void Exit(char confirm);
 
 /** Reload the menu. */
 void ReloadMenu(void);

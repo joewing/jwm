@@ -419,21 +419,21 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
       menu->items = NULL;
       menu->label = NULL;
 
-      item = CreateMenuItem(MENU_ITEM_SUBMENU);
+      item = CreateMenuItem(MENU_ITEM_NORMAL);
       item->name = CopyString(_("Close"));
       item->action.type = MA_CLOSE | MA_GROUP_MASK;
       item->action.context = tp;
       item->next = menu->items;
       menu->items = item;
 
-      item = CreateMenuItem(MENU_ITEM_SUBMENU);
+      item = CreateMenuItem(MENU_ITEM_NORMAL);
       item->name = CopyString(_("Minimize"));
       item->action.type = MA_MINIMIZE | MA_GROUP_MASK;
       item->action.context = tp;
       item->next = menu->items;
       menu->items = item;
 
-      item = CreateMenuItem(MENU_ITEM_SUBMENU);
+      item = CreateMenuItem(MENU_ITEM_NORMAL);
       item->name = CopyString(_("Restore"));
       item->action.type = MA_RESTORE | MA_GROUP_MASK;
       item->action.context = tp;

@@ -39,8 +39,7 @@ static char atTop;
 static ClientNode *currentClient;
 static TimeType moveTime;
 
-static void StopMove(ClientNode *np, int doMove,
-                     int oldx, int oldy, MaxFlags maxFlags);
+static void StopMove(ClientNode *np, int doMove, int oldx, int oldy);
 static void MoveController(int wasDestroyed);
 
 static void DoSnap(ClientNode *np);
@@ -99,7 +98,6 @@ char MoveClient(ClientNode *np, int startx, int starty)
    int doMove;
    int north, south, east, west;
    int height;
-   MaxFlags maxFlags;
 
    Assert(np);
 
@@ -120,10 +118,9 @@ char MoveClient(ClientNode *np, int startx, int starty)
 
    oldx = np->x;
    oldy = np->y;
-   maxFlags = np->state.maxFlags;
 
    if(!(GetMouseMask() & (Button1Mask | Button2Mask))) {
-      StopMove(np, 0, oldx, oldy, maxFlags);
+      StopMove(np, 0, oldx, oldy);
       return 0;
    }
 
@@ -150,7 +147,7 @@ char MoveClient(ClientNode *np, int startx, int starty)
       case ButtonRelease:
          if(event.xbutton.button == Button1
             || event.xbutton.button == Button2) {
-            StopMove(np, doMove, oldx, oldy, maxFlags);
+            StopMove(np, doMove, oldx, oldy);
             return doMove;
          }
          break;
@@ -253,7 +250,6 @@ char MoveClientKeyboard(ClientNode *np)
    int moved;
    int height;
    int north, south, east, west;
-   MaxFlags maxFlags;
    Window win;
 
    Assert(np);
@@ -265,7 +261,6 @@ char MoveClientKeyboard(ClientNode *np)
       return 0;
    }
 
-   maxFlags = np->state.maxFlags;
    if(np->state.maxFlags != MAX_NONE) {
       MaximizeClient(np, MAX_NONE);
    }
@@ -340,7 +335,7 @@ char MoveClientKeyboard(ClientNode *np)
             }
             break;
          default:
-            StopMove(np, 1, oldx, oldy, maxFlags);
+            StopMove(np, 1, oldx, oldy);
             return 1;
          }
 
@@ -360,7 +355,7 @@ char MoveClientKeyboard(ClientNode *np)
 
       } else if(event.type == ButtonRelease) {
 
-         StopMove(np, 1, oldx, oldy, maxFlags);
+         StopMove(np, 1, oldx, oldy);
          return 1;
 
       }
@@ -386,8 +381,7 @@ char MoveClientKeyboard(ClientNode *np)
 }
 
 /** Stop move. */
-void StopMove(ClientNode *np, int doMove,
-              int oldx, int oldy, MaxFlags maxFlags)
+void StopMove(ClientNode *np, int doMove, int oldx, int oldy)
 {
 
    int north, south, east, west;
@@ -403,16 +397,9 @@ void StopMove(ClientNode *np, int doMove,
    UnregisterCallback(SignalMove, NULL);
 
    if(!doMove) {
-
       np->x = oldx;
       np->y = oldy;
-
-      /* Restore maximized status. */
-      if(maxFlags) {
-         MaximizeClient(np, maxFlags);
-      }
       return;
-
    }
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
@@ -423,12 +410,6 @@ void StopMove(ClientNode *np, int doMove,
       JXMoveWindow(display, np->window, np->x - west, np->y - north);
    }
    SendConfigureEvent(np);
-
-   /* Restore maximized status. */
-   if(maxFlags) {
-      MaximizeClient(np, maxFlags);
-   }
-
 }
 
 /** Snap to the screen and/or neighboring windows. */

@@ -521,13 +521,7 @@ void HandleKeyPress(const XKeyEvent *event)
       }
       break;
    case KEY_MAX:
-      if(np) {
-         if(np->state.maxFlags) {
-            MaximizeClient(np, MAX_NONE);
-         } else {
-            MaximizeClient(np, MAX_HORIZ | MAX_VERT);
-         }
-      }
+      ToggleMaximized(np, MAX_HORIZ | MAX_VERT);
       break;
    case KEY_RESTORE:
       if(np) {
@@ -569,7 +563,7 @@ void HandleKeyPress(const XKeyEvent *event)
       Restart();
       break;
    case KEY_EXIT:
-      Exit();
+      Exit(1);
       break;
    case KEY_FULLSCREEN:
       if(np) {
@@ -582,22 +576,30 @@ void HandleKeyPress(const XKeyEvent *event)
       break;
    case KEY_SENDR:
       if(np) {
-         SetClientDesktop(np, GetRightDesktop(np->state.desktop));
+         const unsigned desktop = GetRightDesktop(np->state.desktop);
+         SetClientDesktop(np, desktop);
+         ChangeDesktop(desktop);
       }
       break;
    case KEY_SENDL:
       if(np) {
-         SetClientDesktop(np, GetLeftDesktop(np->state.desktop));
+         const unsigned desktop = GetLeftDesktop(np->state.desktop);
+         SetClientDesktop(np, desktop);
+         ChangeDesktop(desktop);
       }
       break;
    case KEY_SENDU:
       if(np) {
-         SetClientDesktop(np, GetAboveDesktop(np->state.desktop));
+         const unsigned desktop = GetAboveDesktop(np->state.desktop);
+         SetClientDesktop(np, desktop);
+         ChangeDesktop(desktop);
       }
       break;
    case KEY_SENDD:
       if(np) {
-         SetClientDesktop(np, GetBelowDesktop(np->state.desktop));
+         const unsigned desktop = GetBelowDesktop(np->state.desktop);
+         SetClientDesktop(np, desktop);
+         ChangeDesktop(desktop);
       }
       break;
    default:
@@ -984,7 +986,7 @@ void HandleClientMessage(const XClientMessageEvent *event)
       if(event->message_type == atoms[ATOM_JWM_RESTART]) {
          Restart();
       } else if(event->message_type == atoms[ATOM_JWM_EXIT]) {
-         Exit();
+         Exit(0);
       } else if(event->message_type == atoms[ATOM_JWM_RELOAD]) {
          ReloadMenu();
       } else if(event->message_type == atoms[ATOM_NET_CURRENT_DESKTOP]) {

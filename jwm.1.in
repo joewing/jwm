@@ -974,6 +974,13 @@ Within this tag, the following tags are supported:
 .B Font
 .RS
 The font used for title bars. See the \fBFONTS\fP section for more information.
+This tag supports the following attribute:
+.P
+.B align
+.RS
+The window title alignment.  Valid options are \fBleft\fP,
+\fBright\fP, and \fBcenter\fP.  \fBleft\fP is the default.
+.RE
 .RE
 .P
 .B Width

@@ -189,6 +189,7 @@ static void ParseMoveMode(const TokenNode *tp);
 static void ParseResizeMode(const TokenNode *tp);
 static void ParseFocusModel(const TokenNode *tp);
 
+static AlignmentType ParseTextAlignment(const TokenNode *tp);
 static DecorationsType ParseDecorations(const TokenNode *tp);
 static void ParseGradient(const char *value, ColorType a, ColorType b);
 static char *FindAttribute(AttributeNode *ap, const char *name);
@@ -858,6 +859,27 @@ void ParseKey(const TokenNode *tp) {
 
 }
 
+/** Parse text alignment. */
+AlignmentType ParseTextAlignment(const TokenNode *tp)
+{
+   static const StringMappingType mapping[] = {
+      {"left",    ALIGN_LEFT   },
+      {"center",  ALIGN_CENTER },
+      {"right",   ALIGN_RIGHT  }
+   };
+   const char *attr= FindAttribute(tp->attributes, "align");
+   if(attr) {
+      const int x = FindValue(mapping, ARRAY_LENGTH(mapping), attr);
+      if(JLIKELY(x >= 0)) {
+         return x;
+      } else {
+         Warning(_("invalid text alignment: \"%s\""), attr);
+      }
+   }
+
+   return ALIGN_LEFT;
+}
+
 /** Parse window style. */
 void ParseWindowStyle(const TokenNode *tp)
 {
@@ -868,6 +890,7 @@ void ParseWindowStyle(const TokenNode *tp)
       switch(np->type) {
       case TOK_FONT:
          SetFont(FONT_BORDER, np->value);
+         settings.titleTextAlignment = ParseTextAlignment(np);
          break;
       case TOK_WIDTH:
          settings.borderWidth = ParseUnsigned(np, np->value);

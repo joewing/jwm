@@ -35,6 +35,7 @@ void InitializeSettings(void)
    settings.inactiveClientOpacity = (unsigned int)(0.75 * UINT_MAX);
    settings.borderWidth = 5;
    settings.titleHeight = 22;
+   settings.titleTextAlignment = ALIGN_LEFT;
    settings.desktopWidth = 4;
    settings.desktopHeight = 1;
    settings.menuOpacity = UINT_MAX;

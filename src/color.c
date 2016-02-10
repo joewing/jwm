@@ -20,12 +20,6 @@ typedef struct {
    unsigned int value;
 } DefaultColorNode;
 
-/** Mapping from color type to the value it from which it inherits. */
-typedef struct {
-   ColorType dest;
-   ColorType src;
-} ColorInheritNode;
-
 unsigned long colors[COLOR_COUNT];
 static unsigned long rgbColors[COLOR_COUNT];
 
@@ -82,6 +76,16 @@ static const DefaultColorNode DEFAULT_COLORS[] = {
 static const unsigned DEFAULT_COUNT = ARRAY_LENGTH(DEFAULT_COLORS);
 
 static struct {
+   ColorType src;
+   ColorType dest;
+} INHERITED_COLORS[] = {
+   { COLOR_TRAY_FG,     COLOR_CLOCK_FG    },
+   { COLOR_TRAY_BG1,    COLOR_CLOCK_BG1   },
+   { COLOR_TRAY_BG2,    COLOR_CLOCK_BG2   }
+};
+static const unsigned INHERITED_COUNT = ARRAY_LENGTH(INHERITED_COLORS);
+
+static struct {
    ColorType base;
    ColorType up;
    ColorType down;
@@ -127,7 +131,6 @@ static void DarkenColor(ColorType oldColor, ColorType newColor);
 /** Startup color support. */
 void StartupColors(void)
 {
-
    unsigned int x;
    int red, green, blue;
    XColor c;
@@ -205,16 +208,17 @@ void StartupColors(void)
       }
    }
 
-   if(names) {
-      for(x = 0; x < COLOR_COUNT; x++) {
-         if(names[x]) {
-            Release(names[x]);
-         }
+   /* Inherit colors. */
+   for(x = 0; x < INHERITED_COUNT; x++) {
+      const ColorType dest = INHERITED_COLORS[x].dest;
+      if(!names || !names[dest]) {
+         const ColorType src = INHERITED_COLORS[x].src;
+         colors[dest] = colors[src];
+         rgbColors[dest] = rgbColors[src];
       }
-      Release(names);
-      names = NULL;
    }
 
+   DestroyColors();
 }
 
 /** Shutdown color support. */

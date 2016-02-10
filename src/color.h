@@ -50,7 +50,10 @@ typedef unsigned char ColorType;
 #define COLOR_TRAY_DOWN             35
 #define COLOR_TRAY_ACTIVE_UP        36
 #define COLOR_TRAY_ACTIVE_DOWN      37
-#define COLOR_COUNT                 38
+#define COLOR_CLOCK_FG              38
+#define COLOR_CLOCK_BG1             39
+#define COLOR_CLOCK_BG2             40
+#define COLOR_COUNT                 41
 
 extern unsigned long colors[COLOR_COUNT];
 

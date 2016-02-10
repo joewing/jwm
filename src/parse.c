@@ -178,6 +178,7 @@ static void ParseTrayStyle(const TokenNode *tp);
 static void ParseActiveTrayStyle(const TokenNode *tp);
 static void ParsePagerStyle(const TokenNode *tp);
 static void ParseActivePagerStyle(const TokenNode *tp);
+static void ParseClockStyle(const TokenNode *tp);
 static void ParseMenuStyle(const TokenNode *tp);
 static void ParseActiveMenuStyle(const TokenNode *tp);
 static void ParsePopupStyle(const TokenNode *tp);
@@ -335,6 +336,9 @@ void Parse(const TokenNode *start, int depth)
                break;
             case TOK_TRAYSTYLE:
                ParseTrayStyle(tp);
+               break;
+            case TOK_CLOCKSTYLE:
+               ParseClockStyle(tp);
                break;
             case TOK_WINDOWSTYLE:
                ParseWindowStyle(tp);
@@ -1511,6 +1515,28 @@ void ParseActivePagerStyle(const TokenNode *tp)
          break;
       default:
          InvalidTag(np, TOK_ACTIVE);
+         break;
+      }
+   }
+}
+
+/** Parse clock style. */
+void ParseClockStyle(const TokenNode *tp)
+{
+   const TokenNode *np;
+   for(np = tp->subnodeHead; np; np = np->next) {
+      switch(np->type) {
+      case TOK_FOREGROUND:
+         SetColor(COLOR_CLOCK_FG, np->value);
+         break;
+      case TOK_BACKGROUND:
+         ParseGradient(np->value, COLOR_CLOCK_BG1, COLOR_CLOCK_BG2);
+         break;
+      case TOK_FONT:
+         SetFont(FONT_CLOCK, np->value);
+         break;
+      default:
+         InvalidTag(np, TOK_CLOCKSTYLE);
          break;
       }
    }

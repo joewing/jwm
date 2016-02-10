@@ -1199,6 +1199,31 @@ for more information.
 .RE
 .RE
 
+.B "CLOCK STYLE"
+.RS
+The \fBClockStyle\fP tag controls the look of clocks.
+Within this tag, the following tags are supported:
+.P
+.B Font
+.RS
+The font to use for clocks.
+This defaults to the tray font.
+See the \fBCOLORS\fP section for more information.
+.RE
+.B Foreground
+.RS
+The foreground (text) color of clocks.
+This defaults to the tray foreground color.
+See the \fBCOLORS\fP section for more information.
+.RE
+.B Background
+.RS
+The background color of clocks (gradients are supported).
+This defaults to the tray background color.
+See the \fBCOLORS\fP section for more information.
+.RE
+.RE
+
 .B "MENU STYLE"
 .RS
 The \fBMenuStyle\fP tag controls the look of the menus in JWM

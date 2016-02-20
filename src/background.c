@@ -289,7 +289,7 @@ void LoadImageBackground(BackgroundNode *bp)
    /* Load the icon. */
    ExpandPath(&bp->value);
    ip = LoadNamedIcon(bp->value, 0, bp->type == BACKGROUND_SCALE);
-   if(JUNLIKELY(!ip)) {
+   if(JUNLIKELY(!ip || ip->width == 0)) {
       bp->pixmap = None;
       Warning(_("background image not found: \"%s\""), bp->value);
       return;

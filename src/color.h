@@ -79,9 +79,8 @@ char ParseColor(const char *value, XColor *color);
 
 /** Get the color pixel from red, green, and blue values.
  * @param c The structure containing the rgb values and the pixel value.
- * @param alloc Set to allocate the color if necessary.
  */
-void GetColor(XColor *c, char alloc);
+void GetColor(XColor *c);
 
 /** Get the RGB components from a color pixel.
  * This does the reverse of GetColor.

@@ -67,7 +67,7 @@ void DrawHorizontalGradient(Drawable d, GC g,
       temp.green = (unsigned short)(green >> shift);
       temp.blue = (unsigned short)(blue >> shift);
 
-      GetColor(&temp, 0);
+      GetColor(&temp);
 
       /* Draw the line. */
       JXSetForeground(display, g, temp.pixel);

@@ -150,7 +150,7 @@ ScaledIconNode *CreateScaledRenderIcon(ImageNode *image, long fg)
             color.green = (color.green * alpha) >> 8;
             color.blue = (color.blue * alpha) >> 8;
 
-            GetColor(&color, 0);
+            GetColor(&color);
             XPutPixel(destImage, x, y, color.pixel);
             destMask->data[maskLine + x] = alpha;
          }

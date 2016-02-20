@@ -128,7 +128,6 @@ static void DarkenColor(ColorType oldColor, ColorType newColor);
 void StartupColors(void)
 {
    unsigned int x;
-   int red, green, blue;
    XColor c;
 
    /* Determine how to convert between RGB triples and pixels. */

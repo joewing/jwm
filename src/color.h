@@ -88,21 +88,6 @@ void GetColor(XColor *c);
  */
 void GetColorFromPixel(XColor *c);
 
-/** Get an RGB pixel value from RGB components.
- * This is used when loading images from external sources. When doing
- * this we need to know the color components even if we are using a
- * color map so we just pretend to have a linear RGB colormap.
- * This prevents calls to XQueryColor.
- * @param c The structure containing the rgb values and pixel value.
- */
-void GetColorIndex(XColor *c);
-
-/** Extract the RGB components from a RGB linear pixel value.
- * This does the reverse of GetColorIndex.
- * @param c The structure containing the rgb values and pixel value.
- */
-void GetColorFromIndex(XColor *c);
-
 #ifdef USE_XFT
 /** Get an XFT color.
  * @param type The color whose XFT color to get.

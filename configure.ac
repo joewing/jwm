@@ -408,9 +408,13 @@ AC_ARG_ENABLE(xpm,
 if test "$enable_xpm" != "no"; then
 
    # We need to use the XPM libraries in Motif-2.1 on IRIX.
-   if test `uname` = "IRIX" -o `uname` = "IRIX64" ; then
+   if test `uname` = "IRIX" ; then
       CFLAGS="$CFLAGS -I/usr/Motif-2.1/include"
-      LDFLAGS="$LDFLAGS -L/usr/Motif-2.1/lib"
+      LDFLAGS="$LDFLAGS -L/usr/Motif-2.1/lib32"
+   fi
+   if test `uname` = "IRIX64" ; then
+      CFLAGS="$CFLAGS -I/usr/Motif-2.1/include"
+      LDFLAGS="$LDFLAGS -L/usr/Motif-2.1/lib64"
    fi
 
    AC_CHECK_HEADERS([X11/xpm.h], [],

@@ -99,16 +99,15 @@ static const unsigned DERIVED_COUNT = ARRAY_LENGTH(DERIVED_COLORS);
 
 static char **names = NULL;
 
-static unsigned long redShift;
-static unsigned long greenShift;
-static unsigned long blueShift;
-static unsigned long redMask;
-static unsigned long greenMask;
-static unsigned long blueMask;
+static unsigned redShift;
+static unsigned greenShift;
+static unsigned blueShift;
+static unsigned redBits;
+static unsigned greenBits;
+static unsigned blueBits;
 
-static void ComputeShiftMask(unsigned long maskIn,
-                             unsigned long *shiftOut,
-                             unsigned long *maskOut);
+static unsigned ComputeShift(unsigned long maskIn, unsigned *shiftOut);
+static unsigned long GetRGBFromXColor(const XColor *c);
 
 static void GetDirectPixel(XColor *c);
 static void GetMappedPixel(XColor *c);
@@ -117,8 +116,6 @@ static void AllocateColor(ColorType type, XColor *c);
 static void SetDefaultColor(ColorType type); 
 
 static unsigned long ReadHex(const char *hex);
-
-static unsigned long GetRGBFromXColor(const XColor *c);
 char ParseColorToRGB(const char *value, XColor *c);
 
 static void InitializeNames(void);
@@ -138,19 +135,16 @@ void StartupColors(void)
    switch(rootVisual->class) {
    case DirectColor:
    case TrueColor:
-      ComputeShiftMask(rootVisual->red_mask, &redShift, &redMask);
-      ComputeShiftMask(rootVisual->green_mask, &greenShift, &greenMask);
-      ComputeShiftMask(rootVisual->blue_mask, &blueShift, &blueMask);
+      redBits = ComputeShift(rootVisual->red_mask, &redShift);
+      greenBits = ComputeShift(rootVisual->green_mask, &greenShift);
+      blueBits = ComputeShift(rootVisual->blue_mask, &blueShift);
       rgbToPixel = NULL;
       break;
    default:
       /* Restrict icons to 64 colors (RGB 2, 2, 2). */
-      redMask = 0x30;
-      greenMask = 0x0C;
-      blueMask = 0x03;
-      ComputeShiftMask(redMask, &redShift, &redMask);
-      ComputeShiftMask(greenMask, &greenShift, &greenMask);
-      ComputeShiftMask(blueMask, &blueShift, &blueMask);
+      redBits = ComputeShift(0x30, &redShift);
+      greenBits = ComputeShift(0x0C, &greenShift);
+      blueBits = ComputeShift(0x03, &blueShift);
       rgbToPixel = Allocate(sizeof(unsigned long) * MAX_COLORS);
       memset(rgbToPixel, 0xFF, sizeof(unsigned long) * MAX_COLORS);
       pixelToRgb = Allocate(sizeof(unsigned long) * MAX_COLORS);
@@ -237,56 +231,36 @@ void DestroyColors(void)
    }
 }
 
-/** Compute the mask for computing colors in a linear RGB colormap. */
-void ComputeShiftMask(unsigned long maskIn, unsigned long *shiftOut,
-                      unsigned long *maskOut)
+/** Compute the shift and bits for a linear RGB colormap. */
+unsigned ComputeShift(unsigned long maskIn, unsigned *shiftOut)
 {
-   unsigned shift;
-
-   Assert(shiftOut);
-   Assert(maskOut);
-
-   /* Components are stored in 16 bits.
-    * When computing pixels, we'll first shift left 16 bits
-    * so to the shift will be an offset from that 32 bit entity.
-    * shift = 16 - <shift-to-ones> + <shift-to-zeros>
-    */
-
-   shift = 0;
-   *maskOut = maskIn;
-   while(maskIn && (maskIn & (1 << 31)) == 0) {
+   unsigned bits = 0;
+   unsigned shift = 0;
+   while(maskIn && (maskIn & 1) == 0) {
       shift += 1;
-      maskIn <<= 1;
+      maskIn >>= 1;
    }
    *shiftOut = shift;
-
+   while(maskIn) {
+      bits += 1;
+      maskIn >>= 1;
+   }
+   return bits;
 }
 
 /** Get an RGB value from an XColor. */
 unsigned long GetRGBFromXColor(const XColor *c)
 {
-
-   unsigned int red, green, blue;
-   unsigned long rgb;
-
-   Assert(c);
-
-   red = Min((c->red + 0x80) >> 8, 0xFF);
-   green = Min((c->green + 0x80) >> 8, 0xFF);
-   blue = Min((c->blue + 0x80) >> 8, 0xFF);
-
-   rgb = (unsigned long)red << 16;
-   rgb |= (unsigned long)green << 8;
-   rgb |= (unsigned long)blue;
-
-   return rgb;
-
+   unsigned long red, green, blue;
+   red   = (c->red   >> 8) << 16;
+   green = (c->green >> 8) << 8;
+   blue  = (c->blue  >> 8) << 0;
+   return red | green | blue;
 }
 
 /** Set the color to use for a component. */
 void SetColor(ColorType c, const char *value)
 {
-
    if(JUNLIKELY(!value)) {
       Warning("empty color tag");
       return;
@@ -299,7 +273,6 @@ void SetColor(ColorType c, const char *value)
    }
 
    names[c] = CopyString(value);
-
 }
 
 /** Parse a color without lookup. */
@@ -351,7 +324,6 @@ void SetDefaultColor(ColorType type)
          return;
       }
    }
-
 }
 
 /** Initialize color names to NULL. */
@@ -386,39 +358,26 @@ unsigned long ReadHex(const char *hex)
    return value;
 }
 
-/** Compute the RGB components from an index into our RGB colormap. */
-void GetColorFromIndex(XColor *c)
-{
-   const unsigned long red = (c->pixel & redMask) << redShift;
-   const unsigned long green = (c->pixel & greenMask) << greenShift;
-   const unsigned long blue = (c->pixel & blueMask) << blueShift;
-   c->red = red >> 16;
-   c->green = green >> 16;
-   c->blue = blue >> 16;
-}
-
 /** Compute the pixel value from RGB components. */
 void GetDirectPixel(XColor *c)
 {
-   unsigned long red = c->red << 16;
-   unsigned long green = c->green << 16;
-   unsigned long blue = c->blue << 16;
+   unsigned long red   = c->red;
+   unsigned long green = c->green;
+   unsigned long blue  = c->blue;
 
-   /* Shift to the correct offsets and mask. */
-   red = (red >> redShift) & redMask;
-   green = (green >> greenShift) & greenMask;
-   blue = (blue >> blueShift) & blueMask;
+   red   = (red   >> (16 - redBits  )) << redShift;
+   green = (green >> (16 - greenBits)) << greenShift;
+   blue  = (blue  >> (16 - blueBits )) << blueShift;
 
-   /* Combine. */
    c->pixel = red | green | blue;
 }
 
 /** Compute the pixel value from RGB components. */
 void GetMappedPixel(XColor *c)
 {
-   const unsigned index = (c->red   >> 14) << 4
-                        | (c->green >> 14) << 2
-                        | (c->blue  >> 14) << 0;
+   unsigned long index;
+   GetDirectPixel(c);
+   index = c->pixel;
    if(rgbToPixel[index] == ULONG_MAX) {
       c->red &= 0xC000;
       c->green &= 0xC000;
@@ -432,9 +391,7 @@ void GetMappedPixel(XColor *c)
       c->blue |= c->blue >> 8;
       c->blue |= c->blue >> 4;
       c->blue |= c->blue >> 2;
-      if(JUNLIKELY(!JXAllocColor(display, rootColormap, c))) {
-         c->pixel = 0;
-      }
+      JXAllocColor(display, rootColormap, c);
       rgbToPixel[index] = c->pixel;
       pixelToRgb[c->pixel & (MAX_COLORS - 1)] = index;
    } else {
@@ -475,6 +432,7 @@ void GetColor(XColor *c)
 /** Get the RGB components from a pixel value. */
 void GetColorFromPixel(XColor *c)
 {
+   unsigned long pixel = c->pixel;
    switch(rootVisual->class) {
    case DirectColor:
    case TrueColor:
@@ -482,18 +440,19 @@ void GetColorFromPixel(XColor *c)
       break;
    default:
       /* Convert from a pixel value to a linear RGB space. */
-      c->pixel = pixelToRgb[c->pixel & (MAX_COLORS - 1)];
+      pixel = pixelToRgb[pixel & (MAX_COLORS - 1)];
       break;
    }
 
    /* Extract the RGB components from the linear RGB pixel value. */
-   GetColorFromIndex(c);
-}
+   c->red   = (pixel >> redShift)   & ((1 << redBits)   - 1);
+   c->green = (pixel >> greenShift) & ((1 << greenBits) - 1);
+   c->blue  = (pixel >> blueShift)  & ((1 << blueBits)  - 1);
 
-/** Get an RGB pixel value from RGB components. */
-void GetColorIndex(XColor *c)
-{
-   GetDirectPixel(c);
+   /* Expand to 16 bits. */
+   c->red   <<= 16 - redBits;
+   c->green <<= 16 - greenBits;
+   c->blue  <<= 16 - blueBits;
 }
 
 /** Get an XFT color for the specified component. */
@@ -564,9 +523,7 @@ void LightenColor(ColorType oldColor, ColorType newColor)
    temp.green = green;
    temp.blue = blue;
 
-   GetColor(&temp);
-   colors[newColor] = temp.pixel;
-   rgbColors[newColor] = GetRGBFromXColor(&temp);
+   AllocateColor(newColor, &temp);
 }
 
 /** Compute a color darker than the input. */
@@ -597,7 +554,5 @@ void DarkenColor(ColorType oldColor, ColorType newColor)
    temp.green = green;
    temp.blue = blue;
 
-   GetColor(&temp);
-   colors[newColor] = temp.pixel;
-   rgbColors[newColor] = GetRGBFromXColor(&temp);
+   AllocateColor(newColor, &temp);
 }

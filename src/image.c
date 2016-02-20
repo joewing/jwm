@@ -585,10 +585,10 @@ ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
             *dest++ = value;
             *dest++ = value;
          } else {
-            GetColorFromIndex(&color);
-            *dest++ = (unsigned char)(color.red >> 8);
+            GetColorFromPixel(&color);
+            *dest++ = (unsigned char)(color.red   >> 8);
             *dest++ = (unsigned char)(color.green >> 8);
-            *dest++ = (unsigned char)(color.blue >> 8);
+            *dest++ = (unsigned char)(color.blue  >> 8);
          }
       }
    }
@@ -635,16 +635,14 @@ void DestroyImage(ImageNode *image) {
 int AllocateColor(Display *d, Colormap cmap, char *name,
                   XColor *c, void *closure)
 {
-
    if(name) {
       if(!JXParseColor(d, cmap, name, c)) {
          return -1;
       }
    }
 
-   GetColorIndex(c);
+   GetColor(c);
    return 1;
-
 }
 #endif /* USE_XPM */
 

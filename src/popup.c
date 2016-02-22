@@ -122,9 +122,9 @@ void ShowPopup(int x, int y, const char *text,
 
    popup.x = x;
    if(y + 2 * popup.height + 2 >= sp->height) {
-      popup.y = y - GetStringHeight(FONT_POPUP) - 5;
+      popup.y = y - popup.height - 2;
    } else {
-      popup.y = y + GetStringHeight(FONT_POPUP) + 5;
+      popup.y = y + GetStringHeight(FONT_POPUP) + 2;
    }
 
    if(popup.width + popup.x > sp->x + sp->width) {

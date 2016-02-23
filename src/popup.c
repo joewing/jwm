@@ -60,24 +60,30 @@ void ShutdownPopup(void)
 
 /** Calculate dimensions of a popup window given the popup text. */
 char** MeasurePopupText(const char *text, int *width, int *height, int *rows) {
-    char **result = NULL;
-    char *ptr     = NULL;
+    char **tokens = NULL;
+    char *token   = NULL;
+    char *str     = CopyString(text);
 
     *width  = 0;
     *height = 1;
     *rows   = 0;
 
-    for (ptr = strtok(strdup(text), "\n"); ptr != NULL; ptr = strtok(NULL,"\n"))
+    for (token = strtok(str, "\n"); token != NULL; token = strtok(NULL,"\n"))
     {
-        int current_width = GetStringWidth(FONT_POPUP, ptr) + 9;
+        int current_width = GetStringWidth(FONT_POPUP, token) + 9;
         if(*width < current_width)
             *width = current_width;
         *height = *height + GetStringHeight(FONT_POPUP) + 1;
-        result = (char**)Reallocate(result, sizeof(ptr)+sizeof(result));
-        result[(*rows)++] = strdup(ptr);
-    }
+        if (!tokens)
+            tokens = (char**) Allocate((*rows+1)*sizeof(*tokens));
+        else
+            tokens = (char**) Reallocate(tokens, (*rows+1)*sizeof(*tokens));
 
-    return result;
+        tokens[(*rows)++] = CopyString(token);
+    }
+    Release(str);
+
+    return tokens;
 }
 
 
@@ -183,9 +189,10 @@ void ShowPopup(int x, int y, const char *text,
    JXSetForeground(display, rootGC, colors[COLOR_POPUP_OUTLINE]);
    JXDrawRectangle(display, popup.pmap, rootGC, 0, 0,
                    popup.width - 1, popup.height - 1);
-   for (row = 0; row < rows; row++) {
+   for (row = rows-1; row >= 0; row--) {
        RenderString(popup.pmap, FONT_POPUP, COLOR_POPUP_FG, 4,
                     (GetStringHeight(FONT_POPUP) + 1)*row+1, popup.width, multitext[row]);
+       Release(multitext[row]);
    }
    Release(multitext);
    JXCopyArea(display, popup.pmap, popup.window, rootGC,

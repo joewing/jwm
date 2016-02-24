@@ -58,12 +58,43 @@ void ShutdownPopup(void)
    }
 }
 
+/** Calculate dimensions of a popup window given the popup text. */
+char** MeasurePopupText(const char *text, int *width, int *height, int *rows) {
+    char **tokens = NULL;
+    char *token   = NULL;
+    char *str     = CopyString(text);
+
+    *width  = 0;
+    *height = 1;
+    *rows   = 0;
+
+    for (token = strtok(str, "\n"); token != NULL; token = strtok(NULL,"\n"))
+    {
+        int current_width = GetStringWidth(FONT_POPUP, token) + 9;
+        if(*width < current_width)
+            *width = current_width;
+        *height = *height + GetStringHeight(FONT_POPUP) + 1;
+        if (!tokens)
+            tokens = (char**) Allocate((*rows+1)*sizeof(*tokens));
+        else
+            tokens = (char**) Reallocate(tokens, (*rows+1)*sizeof(*tokens));
+
+        tokens[(*rows)++] = CopyString(token);
+    }
+    Release(str);
+
+    return tokens;
+}
+
+
 /** Show a popup window. */
 void ShowPopup(int x, int y, const char *text,
                const PopupMaskType context)
 {
 
    const ScreenType *sp;
+   int rows, row;
+   char **multitext;
 
    Assert(text);
 
@@ -86,8 +117,8 @@ void ShowPopup(int x, int y, const char *text,
 
    GetMousePosition(&popup.mx, &popup.my, &popup.mw);
    popup.text = CopyString(text);
-   popup.height = GetStringHeight(FONT_POPUP) + 2;
-   popup.width = GetStringWidth(FONT_POPUP, popup.text) + 9;
+
+   multitext = MeasurePopupText(popup.text, &popup.width, &popup.height, &rows);
 
    sp = GetCurrentScreen(x, y);
 
@@ -99,7 +130,7 @@ void ShowPopup(int x, int y, const char *text,
    if(y + 2 * popup.height + 2 >= sp->height) {
       popup.y = y - popup.height - 2;
    } else {
-      popup.y = y + popup.height + 2;
+      popup.y = y + GetStringHeight(FONT_POPUP) + 2;
    }
 
    if(popup.width + popup.x > sp->x + sp->width) {
@@ -158,8 +189,12 @@ void ShowPopup(int x, int y, const char *text,
    JXSetForeground(display, rootGC, colors[COLOR_POPUP_OUTLINE]);
    JXDrawRectangle(display, popup.pmap, rootGC, 0, 0,
                    popup.width - 1, popup.height - 1);
-   RenderString(popup.pmap, FONT_POPUP, COLOR_POPUP_FG, 4, 1,
-                popup.width, popup.text);
+   for (row = rows-1; row >= 0; row--) {
+       RenderString(popup.pmap, FONT_POPUP, COLOR_POPUP_FG, 4,
+                    (GetStringHeight(FONT_POPUP) + 1)*row+1, popup.width, multitext[row]);
+       Release(multitext[row]);
+   }
+   Release(multitext);
    JXCopyArea(display, popup.pmap, popup.window, rootGC,
               0, 0, popup.width, popup.height, 0, 0);
 

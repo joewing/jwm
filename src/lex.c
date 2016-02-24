@@ -338,6 +338,9 @@ int ParseEntity(const char *entity, char *ch, const char *file,
    } else if(!strncmp("&apos;", entity, 6)) {
       *ch = '\'';
       return 6;
+   } else if(!strncmp("&NewLine;", entity, 9)) {
+      *ch = '\n';
+      return 9;
    } else {
       unsigned int x;
       for(x = 0; entity[x]; x++) {

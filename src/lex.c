@@ -348,13 +348,22 @@ int ParseEntity(const char *entity, char *ch, const char *file,
             break;
          }
       }
-      temp = AllocateStack(x + 2);
-      strncpy(temp, entity, x + 1);
-      temp[x + 1] = 0;
-      Warning(_("%s[%d]: invalid entity: \"%.8s\""), file, line, temp);
-      ReleaseStack(temp);
-      *ch = '&';
-      return 1;
+      if(entity[1] == '#' && entity[x] == ';') {
+         if(entity[2] == 'x') {
+            *ch = (char)strtol(&entity[3], NULL, 16);
+         } else {
+            *ch = (char)strtol(&entity[2], NULL, 10);
+         }
+         return x + 1;
+      } else {
+         temp = AllocateStack(x + 2);
+         strncpy(temp, entity, x + 1);
+         temp[x + 1] = 0;
+         Warning(_("%s[%d]: invalid entity: \"%.8s\""), file, line, temp);
+         ReleaseStack(temp);
+         *ch = '&';
+         return 1;
+      }
    }
 }
 

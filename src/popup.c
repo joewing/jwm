@@ -25,13 +25,16 @@ typedef struct PopupType {
    int mx, my; /* The mouse position when the popup was created. */
    Window mw;
    int width, height;
-   char *text;
+   char *text;    /* The raw popup text. */
+   char *lines;   /* Popup text split into NUL-separated lines. */
+   int lineCount; /* The number of lines. */
    Window window;
    Pixmap pmap;
 } PopupType;
 
 static PopupType popup;
 
+static void MeasurePopupText();
 static void SignalPopup(const TimeType *now, int x, int y, Window w,
                         void *data);
 
@@ -49,6 +52,7 @@ void ShutdownPopup(void)
    UnregisterCallback(SignalPopup, NULL);
    if(popup.text) {
       Release(popup.text);
+      Release(popup.lines);
       popup.text = NULL;
    }
    if(popup.window != None) {
@@ -58,14 +62,44 @@ void ShutdownPopup(void)
    }
 }
 
+/** Calculate dimensions of a popup window given the popup text. */
+void MeasurePopupText()
+{
+   const int textHeight = GetStringHeight(FONT_POPUP) + 1;
+   char *ptr;
+
+   popup.lines = CopyString(popup.text);
+   ptr = popup.lines;
+
+   popup.width       = 0;
+   popup.height      = 1;
+   popup.lineCount   = 0;
+   for(;;) {
+      char *end = strchr(ptr, '\n');
+      int currentWidth;
+      if(end) {
+         *end = 0;
+      }
+      currentWidth = GetStringWidth(FONT_POPUP, ptr) + 9;
+      popup.width = Max(popup.width, currentWidth);
+      popup.height += textHeight;
+      popup.lineCount += 1;
+      if(end) {
+         ptr = end + 1;
+      } else {
+         break;
+      }
+   }
+}
+
 /** Show a popup window. */
 void ShowPopup(int x, int y, const char *text,
                const PopupMaskType context)
 {
-
    const ScreenType *sp;
-
-   Assert(text);
+   char *ptr;
+   int textHeight;
+   int i;
 
    if(!(settings.popupMask & context)) {
       return;
@@ -73,10 +107,11 @@ void ShowPopup(int x, int y, const char *text,
 
    if(popup.text) {
       if(x == popup.x && y == popup.y && !strcmp(popup.text, text)) {
-         // This popup is already shown.
+         /* This popup is already shown. */
          return;
       }
       Release(popup.text);
+      Release(popup.lines);
       popup.text = NULL;
    }
 
@@ -86,11 +121,9 @@ void ShowPopup(int x, int y, const char *text,
 
    GetMousePosition(&popup.mx, &popup.my, &popup.mw);
    popup.text = CopyString(text);
-   popup.height = GetStringHeight(FONT_POPUP) + 2;
-   popup.width = GetStringWidth(FONT_POPUP, popup.text) + 9;
 
+   MeasurePopupText();
    sp = GetCurrentScreen(x, y);
-
    if(popup.width > sp->width) {
       popup.width = sp->width;
    }
@@ -99,7 +132,7 @@ void ShowPopup(int x, int y, const char *text,
    if(y + 2 * popup.height + 2 >= sp->height) {
       popup.y = y - popup.height - 2;
    } else {
-      popup.y = y + popup.height + 2;
+      popup.y = y + GetStringHeight(FONT_POPUP) + 2;
    }
 
    if(popup.width + popup.x > sp->x + sp->width) {
@@ -158,8 +191,13 @@ void ShowPopup(int x, int y, const char *text,
    JXSetForeground(display, rootGC, colors[COLOR_POPUP_OUTLINE]);
    JXDrawRectangle(display, popup.pmap, rootGC, 0, 0,
                    popup.width - 1, popup.height - 1);
-   RenderString(popup.pmap, FONT_POPUP, COLOR_POPUP_FG, 4, 1,
-                popup.width, popup.text);
+   ptr = popup.lines;
+   textHeight = GetStringHeight(FONT_POPUP) + 1;
+   for(i = 0; i < popup.lineCount; i++) {
+      RenderString(popup.pmap, FONT_POPUP, COLOR_POPUP_FG, 4,
+                   textHeight * i + 1, popup.width, ptr);
+      ptr += strlen(ptr) + 1;
+   }
    JXCopyArea(display, popup.pmap, popup.window, rootGC,
               0, 0, popup.width, popup.height, 0, 0);
 
@@ -194,4 +232,3 @@ char ProcessPopupEvent(const XEvent *event)
    }
    return 0;
 }
-

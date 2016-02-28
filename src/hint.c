@@ -82,7 +82,6 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_WM_PROTOCOLS],              "WM_PROTOCOLS"                },
    { &atoms[ATOM_WM_DELETE_WINDOW],          "WM_DELETE_WINDOW"            },
    { &atoms[ATOM_WM_TAKE_FOCUS],             "WM_TAKE_FOCUS"               },
-   { &atoms[ATOM_WM_LOCALE_NAME],            "WM_LOCALE_NAME"              },
    { &atoms[ATOM_WM_CHANGE_STATE],           "WM_CHANGE_STATE"             },
    { &atoms[ATOM_WM_COLORMAP_WINDOWS],       "WM_COLORMAP_WINDOWS"         },
 

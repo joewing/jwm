@@ -142,12 +142,13 @@ void ReadClientStrut(ClientNode *np)
     *   left_start_y, left_end_y, right_start_y, right_end_y,
     *   top_start_x, top_end_x, bottom_start_x, bottom_end_x
     */
+   count = 0;
    status = JXGetWindowProperty(display, np->window,
                                 atoms[ATOM_NET_WM_STRUT_PARTIAL],
                                 0, 12, False, XA_CARDINAL, &actualType,
                                 &actualFormat, &count, &bytesLeft, &value);
    if(status == Success && actualFormat != 0) {
-      if(count == 12) {
+      if(JLIKELY(count == 12)) {
 
          long leftStart, leftStop;
          long rightStart, rightStop;
@@ -208,11 +209,12 @@ void ReadClientStrut(ClientNode *np)
 
    /* Next try to read _NET_WM_STRUT */
    /* Format is: left_width, right_width, top_width, bottom_width */
+   count = 0;
    status = JXGetWindowProperty(display, np->window, atoms[ATOM_NET_WM_STRUT],
                                 0, 4, False, XA_CARDINAL, &actualType,
                                 &actualFormat, &count, &bytesLeft, &value);
    if(status == Success && actualFormat != 0) {
-      if(count == 4) {
+      if(JLIKELY(count == 4)) {
          lvalue = (long*)value;
          leftWidth = lvalue[0];
          rightWidth = lvalue[1];

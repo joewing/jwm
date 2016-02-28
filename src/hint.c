@@ -728,9 +728,9 @@ void ReadWMName(ClientNode *np)
    if(status != Success || realFormat == 0) {
       np->name = NULL;
    } else {
-      const size_t size = strlen((char*)name) + 1;
-      np->name = Allocate(size);
-      memcpy(np->name, name, size);
+      np->name = Allocate(count + 1);
+      memcpy(np->name, name, count);
+      np->name[count] = 0;
       JXFree(name);
       np->name = ConvertFromUTF8(np->name);
    }
@@ -742,14 +742,14 @@ void ReadWMName(ClientNode *np)
                                    atoms[ATOM_COMPOUND_TEXT],
                                    &realType, &realFormat, &count,
                                    &extra, &name);
-      if(status == Success && realFormat == 8) {
+      if(status == Success && realFormat != 0) {
          char **tlist;
          XTextProperty tprop;
          int tcount;
          tprop.value = name;
          tprop.encoding = atoms[ATOM_COMPOUND_TEXT];
          tprop.format = realFormat;
-         tprop.nitems = strlen((char*)name);
+         tprop.nitems = count;
          if(XmbTextPropertyToTextList(display, &tprop, &tlist, &tcount)
             == Success && tcount > 0) {
             const size_t len = strlen(tlist[0]) + 1;
@@ -944,20 +944,23 @@ void ReadWMState(Window win, ClientState *state)
    int realFormat;
    unsigned long *temp;
 
+   count = 0;
    status = JXGetWindowProperty(display, win, atoms[ATOM_WM_STATE], 0, 2,
                                 False, atoms[ATOM_WM_STATE],
                                 &realType, &realFormat,
                                 &count, &extra, (unsigned char**)&temp);
-   if(JLIKELY(status == Success && realFormat == 32 && count == 2)) {
-      switch(temp[0]) {
-      case IconicState:
-         state->status |= STAT_MINIMIZED;
-         break;
-      case WithdrawnState:
-         state->status &= ~STAT_MAPPED;
-         break;
-      default:
-         break;
+   if(JLIKELY(status == Success && realFormat != 0)) {
+      if(JLIKELY(count == 2)) {
+         switch(temp[0]) {
+         case IconicState:
+            state->status |= STAT_MINIMIZED;
+            break;
+         case WithdrawnState:
+            state->status &= ~STAT_MAPPED;
+            break;
+         default:
+            break;
+         }
       }
       JXFree(temp);
    }
@@ -1018,19 +1021,20 @@ void ReadMotifHints(Window win, ClientState *state)
    unsigned long itemCount, bytesLeft;
    unsigned char *data;
    int format;
+   int status;
 
    Assert(win != None);
    Assert(state);
 
-   if(JXGetWindowProperty(display, win, atoms[ATOM_MOTIF_WM_HINTS], 0L, 20L,
-                          False, atoms[ATOM_MOTIF_WM_HINTS], &type, &format,
-                          &itemCount, &bytesLeft, &data) != Success
-         || format == 0) {
+   status = JXGetWindowProperty(display, win, atoms[ATOM_MOTIF_WM_HINTS],
+                                0L, 20L, False, atoms[ATOM_MOTIF_WM_HINTS],
+                                &type, &format, &itemCount, &bytesLeft, &data);
+   if(status != Success || type == 0) {
       return;
    }
 
    mhints = (PropMwmHints*)data;
-   if(mhints) {
+   if(JLIKELY(mhints)) {
 
       if((mhints->flags & MWM_HINTS_FUNCTIONS)
          && !(mhints->functions & MWM_FUNC_ALL)) {
@@ -1082,12 +1086,13 @@ char GetCardinalAtom(Window window, AtomType atom, unsigned long *value)
    Assert(window != None);
    Assert(value);
 
+   count = 0;
    status = JXGetWindowProperty(display, window, atoms[atom], 0, 1, False,
                                 XA_CARDINAL, &realType, &realFormat,
                                 &count, &extra, &data);
    ret = 0;
    if(status == Success && realFormat != 0 && data) {
-      if(count == 1) {
+      if(JLIKELY(count == 1)) {
          *value = *(unsigned long*)data;
          ret = 1;
       }
@@ -1121,12 +1126,13 @@ char GetWindowAtom(Window window, AtomType atom, Window *value)
    Assert(window != None);
    Assert(value);
 
+   count = 0;
    status = JXGetWindowProperty(display, window, atoms[atom], 0, 1, False,
                                 XA_WINDOW, &realType, &realFormat,
                                 &count, &extra, &data);
    ret = 0;
    if(status == Success && realFormat != 0 && data) {
-      if(count == 1) {
+      if(JLIKELY(count == 1)) {
          *value = *(Window*)data;
          ret = 1;
       }

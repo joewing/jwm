@@ -969,20 +969,31 @@ void ParseInclude(const TokenNode *tp, int depth) {
    if(JUNLIKELY(!tp->value)) {
 
       ParseError(tp, "no include file specified");
-
-   } else {
-
-      temp = CopyString(tp->value);
-
-      ExpandPath(&temp);
-
-      if(JUNLIKELY(!ParseFile(temp, depth))) {
-         ParseError(tp, "could not open included file %s", temp);
-      }
-
-      Release(temp);
-
+      return;
    }
+
+   temp = CopyString(tp->value);
+   ExpandPath(&temp);
+
+   if(!strncmp(temp, "exec:", 5)) {
+      FILE *fd = popen(&temp[5], "r");
+      if(JLIKELY(fd)) {
+         TokenNode *tokens;
+         char *buffer = ReadFile(fd);
+         pclose(fd);
+         tokens = Tokenize(buffer, temp);
+         Release(buffer);
+         Parse(tokens, 0);
+         ReleaseTokens(tokens);
+      } else {
+         ParseError(tp, "could not execute included file: %s", temp);
+      }
+   } else {
+      if(JUNLIKELY(!ParseFile(temp, depth))) {
+         ParseError(tp, "could not open included file: %s", temp);
+      }
+   }
+   Release(temp);
 
 }
 

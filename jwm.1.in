@@ -706,12 +706,15 @@ An icon to display. No default.
 
 .B INCLUDES
 .RS
-Other configuration files may be included under the JWM tag via the 
-\fBInclude\fP tag.  The text of this tag specifies the location of an
-additional configuration file. The path may be relative to the location
-JWM was started, an absolute path, or a path referencing an environment
-variable (using '$'). The format of the configuration file is the same as
-the main configuration file.
+Other configuration files or the output of programs may be included under
+the JWM tag via the \fBInclude\fP tag. The text of this tag specifies the
+location of an additional configuration file or program. The path may be
+relative to the location JWM was started, an absolute path, or a path
+referencing an environment variable (using '$').
+If the text starts with "exec:", the specified program is executed and
+its output is used.
+The format of the configuration file or program
+output is the same as the main configuration file.
 .RE
 
 .B "GROUP SETTINGS"

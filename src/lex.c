@@ -535,7 +535,6 @@ TokenNode *CreateNode(TokenNode *current, const char *file,
                       unsigned int line)
 {
    TokenNode *np;
-   size_t len;
 
    np = Allocate(sizeof(TokenNode));
    np->type = TOK_INVALID;
@@ -546,9 +545,7 @@ TokenNode *CreateNode(TokenNode *current, const char *file,
    np->parent = current;
    np->next = NULL;
 
-   len = strlen(file);
-   np->fileName = Allocate(len + 1);
-   memcpy(np->fileName, file, len + 1);
+   np->fileName = file;
    np->line = line;
    np->invalidName = NULL;
 
@@ -624,10 +621,6 @@ void ReleaseTokens(TokenNode *np)
 
       if(np->invalidName) {
          Release(np->invalidName);
-      }
-
-      if(np->fileName) {
-         Release(np->fileName);
       }
 
       Release(np);

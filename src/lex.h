@@ -100,7 +100,7 @@ typedef struct TokenNode {
    TokenType type;            /**< Tag type. */
    char *invalidName;         /**< Name of the tag if invalid. */
    char *value;               /**< Body of the tag. */
-   char *fileName;            /**< Name of the file containing this tag. */
+   const char *fileName;      /**< Name of the file containing this tag. */
    unsigned int line;         /**< Line number of the start of this tag. */
    struct AttributeNode *attributes;   /**< Linked list of attributes. */
    struct TokenNode *parent;           /**< Parent tag. */

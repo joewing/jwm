@@ -33,6 +33,11 @@
 #include "desktop.h"
 #include "border.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+
 /** Mapping of key names to key types.
  * Note that this mapping must be sorted.
  */
@@ -132,6 +137,7 @@ static const char *TRUE_VALUE = "true";
 
 static char ParseFile(const char *fileName, int depth);
 static char *ReadFile(FILE *fd);
+static TokenNode *TokenizeFile(const char *fileName);
 
 /* Misc. */
 static void Parse(const TokenNode *start, int depth);
@@ -224,10 +230,7 @@ void ParseConfig(const char *fileName)
  */
 char ParseFile(const char *fileName, int depth)
 {
-
    TokenNode *tokens;
-   FILE *fd;
-   char *buffer;
 
    depth += 1;
    if(JUNLIKELY(depth > MAX_INCLUDE_DEPTH)) {
@@ -235,21 +238,15 @@ char ParseFile(const char *fileName, int depth)
       return 0;
    }
 
-   fd = fopen(fileName, "r");
-   if(!fd) {
+   tokens = TokenizeFile(fileName);
+   if(!tokens) {
       return 0;
    }
 
-   buffer = ReadFile(fd);
-   fclose(fd);
-
-   tokens = Tokenize(buffer, fileName);
-   Release(buffer);
    Parse(tokens, depth);
    ReleaseTokens(tokens);
 
    return 1;
-
 }
 
 /** Parse a token list. */
@@ -735,47 +732,43 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
 /** Get tokens from a menu include (either dynamic or static). */
 TokenNode *ParseMenuIncludeHelper(const TokenNode *tp, const char *command)
 {
-   FILE *fd;
    char *path;
-   char *buffer;
    TokenNode *start;
 
-   buffer = NULL;
    if(!strncmp(command, "exec:", 5)) {
+      char *buffer;
+      FILE *fp;
 
 		path = CopyString(command + 5);
       ExpandPath(&path);
 
-      fd = popen(path, "r");
-      if(JLIKELY(fd)) {
-         buffer = ReadFile(fd);
-         pclose(fd);
+      fp = popen(path, "r");
+      if(JLIKELY(fp)) {
+         buffer = ReadFile(fp);
+         pclose(fp);
       } else {
-         ParseError(tp, "could not execute included program: %s", path);
+         buffer = NULL;
+         ParseError(tp, "could not execute: %s", path);
       }
+      if(JUNLIKELY(!buffer)) {
+         Release(path);
+         return NULL;
+      }
+      start = Tokenize(buffer, &command[5]);
+      Release(buffer);
 
    } else {
 
       path = CopyString(command);
       ExpandPath(&path);
-
-      fd = fopen(path, "r");
-      if(JLIKELY(fd)) {
-         buffer = ReadFile(fd);
-         fclose(fd);
-      } else {
+      start = TokenizeFile(path);
+      if(JUNLIKELY(!start)) {
          ParseError(NULL, "could not open include: %s", path);
+         return NULL;
       }
 
    }
 
-   if(JUNLIKELY(!buffer)) {
-      Release(path);
-      return NULL;
-   }
-
-   start = Tokenize(buffer, path);
-   Release(buffer);
    Release(path);
 
    if(JUNLIKELY(!start || start->type != TOK_JWM))
@@ -981,12 +974,12 @@ void ParseInclude(const TokenNode *tp, int depth) {
          TokenNode *tokens;
          char *buffer = ReadFile(fd);
          pclose(fd);
-         tokens = Tokenize(buffer, temp);
+         tokens = Tokenize(buffer, &temp[5]);
          Release(buffer);
          Parse(tokens, 0);
          ReleaseTokens(tokens);
       } else {
-         ParseError(tp, "could not execute included file: %s", temp);
+         ParseError(tp, "could not execute: %s", temp);
       }
    } else {
       if(JUNLIKELY(!ParseFile(temp, depth))) {
@@ -1837,8 +1830,7 @@ int ParseAttribute(const StringMappingType *mapping, int count,
 /** Read a file. */
 char *ReadFile(FILE *fd)
 {
-
-   const int BLOCK_SIZE = 1024;  // Start at 1k.
+   const int BLOCK_SIZE = 1024;
 
    char *buffer;
    int len, max;
@@ -1853,7 +1845,7 @@ char *ReadFile(FILE *fd)
       if(len < max) {
          break;
       }
-      max *= 2;
+      max += BLOCK_SIZE;
       if(JUNLIKELY(max < 0)) {
          /* File is too big. */
          break;
@@ -1866,7 +1858,31 @@ char *ReadFile(FILE *fd)
    buffer[len] = 0;
 
    return buffer;
+}
 
+/** Tokenize a file by memory mapping it. */
+TokenNode *TokenizeFile(const char *fileName)
+{
+   struct stat sbuf;
+   TokenNode *tokens;
+   char *buffer;
+   int fd = open(fileName, O_RDONLY);
+   if(fd < 0) {
+      return NULL;
+   }
+   if(JUNLIKELY(fstat(fd, &sbuf) == -1)) {
+      close(fd);
+      return NULL;
+   }
+   buffer = mmap(NULL, sbuf.st_size, PROT_READ, MAP_SHARED, fd, 0);
+   if(JUNLIKELY(buffer == MAP_FAILED)) {
+      close(fd);
+      return NULL;
+   }
+   tokens = Tokenize(buffer, fileName);
+   munmap(buffer, sbuf.st_size);
+   close(fd);
+   return tokens;
 }
 
 /** Parse an unsigned integer. */

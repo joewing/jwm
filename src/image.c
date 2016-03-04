@@ -446,6 +446,7 @@ ImageNode *LoadSVGImage(const char *fileName, int width, int height,
    e = NULL;
    rh = rsvg_handle_new_from_file(fileName, &e);
    if(!rh) {
+      g_error_free(e);
       return NULL;
    }
 

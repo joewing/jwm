@@ -137,7 +137,10 @@ static const char *TRUE_VALUE = "true";
 
 static char ParseFile(const char *fileName, int depth);
 static char *ReadFile(FILE *fd);
-static TokenNode *TokenizeFile(const char *fileName);
+static TokenNode *TokenizeFile(const char *fileName,
+                               const char *displayName);
+static TokenNode *TokenizePipe(const char *command,
+                               const char *displayName);
 
 /* Misc. */
 static void Parse(const TokenNode *start, int depth);
@@ -238,7 +241,7 @@ char ParseFile(const char *fileName, int depth)
       return 0;
    }
 
-   tokens = TokenizeFile(fileName);
+   tokens = TokenizeFile(fileName, fileName);
    if(!tokens) {
       return 0;
    }
@@ -736,39 +739,14 @@ TokenNode *ParseMenuIncludeHelper(const TokenNode *tp, const char *command)
    TokenNode *start;
 
    if(!strncmp(command, "exec:", 5)) {
-      char *buffer;
-      FILE *fp;
-
 		path = CopyString(command + 5);
       ExpandPath(&path);
-
-      fp = popen(path, "r");
-      if(JLIKELY(fp)) {
-         buffer = ReadFile(fp);
-         pclose(fp);
-      } else {
-         buffer = NULL;
-         ParseError(tp, "could not execute: %s", path);
-      }
-      if(JUNLIKELY(!buffer)) {
-         Release(path);
-         return NULL;
-      }
-      start = Tokenize(buffer, &command[5]);
-      Release(buffer);
-
+      start = TokenizePipe(path, command + 5);
    } else {
-
       path = CopyString(command);
       ExpandPath(&path);
-      start = TokenizeFile(path);
-      if(JUNLIKELY(!start)) {
-         ParseError(NULL, "could not open include: %s", path);
-         return NULL;
-      }
-
+      start = TokenizeFile(path, command);
    }
-
    Release(path);
 
    if(JUNLIKELY(!start || start->type != TOK_JWM))
@@ -953,14 +931,11 @@ void ParseActiveWindowStyle(const TokenNode *tp)
 }
 
 /** Parse an include. */
-void ParseInclude(const TokenNode *tp, int depth) {
-
+void ParseInclude(const TokenNode *tp, int depth)
+{
    char *temp;
 
-   Assert(tp);
-
    if(JUNLIKELY(!tp->value)) {
-
       ParseError(tp, "no include file specified");
       return;
    }
@@ -969,17 +944,12 @@ void ParseInclude(const TokenNode *tp, int depth) {
    ExpandPath(&temp);
 
    if(!strncmp(temp, "exec:", 5)) {
-      FILE *fd = popen(&temp[5], "r");
-      if(JLIKELY(fd)) {
-         TokenNode *tokens;
-         char *buffer = ReadFile(fd);
-         pclose(fd);
-         tokens = Tokenize(buffer, &temp[5]);
-         Release(buffer);
+      TokenNode *tokens = TokenizePipe(&temp[5], &temp[5]);
+      if(JLIKELY(tokens)) {
          Parse(tokens, 0);
          ReleaseTokens(tokens);
       } else {
-         ParseError(tp, "could not execute: %s", temp);
+         ParseError(tp, "could not process include file: %s", temp);
       }
    } else {
       if(JUNLIKELY(!ParseFile(temp, depth))) {
@@ -1861,7 +1831,7 @@ char *ReadFile(FILE *fd)
 }
 
 /** Tokenize a file by memory mapping it. */
-TokenNode *TokenizeFile(const char *fileName)
+TokenNode *TokenizeFile(const char *fileName, const char *displayName)
 {
    struct stat sbuf;
    TokenNode *tokens;
@@ -1879,9 +1849,37 @@ TokenNode *TokenizeFile(const char *fileName)
       close(fd);
       return NULL;
    }
-   tokens = Tokenize(buffer, fileName);
+   tokens = Tokenize(buffer, displayName);
    munmap(buffer, sbuf.st_size);
    close(fd);
+   return tokens;
+}
+
+/** Tokenize the output of a command. */
+TokenNode *TokenizePipe(const char *command, const char *displayName)
+{
+   TokenNode *tokens;
+   FILE *fp;
+   char *path;
+   char *buffer;
+
+   path = CopyString(command + 5);
+   ExpandPath(&path);
+
+   fp = popen(path, "r");
+   if(JLIKELY(fp)) {
+      buffer = ReadFile(fp);
+      pclose(fp);
+   } else {
+      buffer = NULL;
+   }
+   if(JUNLIKELY(!buffer)) {
+      Release(path);
+      return NULL;
+   }
+
+   tokens = Tokenize(buffer, command);
+   Release(buffer);
    return tokens;
 }
 

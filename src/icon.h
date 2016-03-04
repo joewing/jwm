@@ -113,6 +113,7 @@ void DestroyIcon(IconNode *icon);
 #define AddIconPath( a )                   ICON_DUMMY_FUNCTION
 #define PutIcon( a, b, c, d, e, f, g )     ICON_DUMMY_FUNCTION
 #define LoadIcon( a )                      ICON_DUMMY_FUNCTION
+#define GetDefaultIcon()                   NULL
 #define LoadNamedIcon( a, b, c )           NULL
 #define DestroyIcon( a )                   ICON_DUMMY_FUNCTION
 

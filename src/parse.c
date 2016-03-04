@@ -137,10 +137,8 @@ static const char *TRUE_VALUE = "true";
 
 static char ParseFile(const char *fileName, int depth);
 static char *ReadFile(FILE *fd);
-static TokenNode *TokenizeFile(const char *fileName,
-                               const char *displayName);
-static TokenNode *TokenizePipe(const char *command,
-                               const char *displayName);
+static TokenNode *TokenizeFile(const char *fileName);
+static TokenNode *TokenizePipe(const char *command);
 
 /* Misc. */
 static void Parse(const TokenNode *start, int depth);
@@ -241,7 +239,7 @@ char ParseFile(const char *fileName, int depth)
       return 0;
    }
 
-   tokens = TokenizeFile(fileName, fileName);
+   tokens = TokenizeFile(fileName);
    if(!tokens) {
       return 0;
    }
@@ -735,19 +733,13 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
 /** Get tokens from a menu include (either dynamic or static). */
 TokenNode *ParseMenuIncludeHelper(const TokenNode *tp, const char *command)
 {
-   char *path;
    TokenNode *start;
 
    if(!strncmp(command, "exec:", 5)) {
-		path = CopyString(command + 5);
-      ExpandPath(&path);
-      start = TokenizePipe(path, command + 5);
+      start = TokenizePipe(&command[5]);
    } else {
-      path = CopyString(command);
-      ExpandPath(&path);
-      start = TokenizeFile(path, command);
+      start = TokenizeFile(command);
    }
-   Release(path);
 
    if(JUNLIKELY(!start || start->type != TOK_JWM))
    {
@@ -933,30 +925,24 @@ void ParseActiveWindowStyle(const TokenNode *tp)
 /** Parse an include. */
 void ParseInclude(const TokenNode *tp, int depth)
 {
-   char *temp;
-
    if(JUNLIKELY(!tp->value)) {
       ParseError(tp, "no include file specified");
       return;
    }
 
-   temp = CopyString(tp->value);
-   ExpandPath(&temp);
-
-   if(!strncmp(temp, "exec:", 5)) {
-      TokenNode *tokens = TokenizePipe(&temp[5], &temp[5]);
+   if(!strncmp(tp->value, "exec:", 5)) {
+      TokenNode *tokens = TokenizePipe(&tp->value[5]);
       if(JLIKELY(tokens)) {
          Parse(tokens, 0);
          ReleaseTokens(tokens);
       } else {
-         ParseError(tp, "could not process include file: %s", temp);
+         ParseError(tp, "could not process include: %s", &tp->value[5]);
       }
    } else {
-      if(JUNLIKELY(!ParseFile(temp, depth))) {
-         ParseError(tp, "could not open included file: %s", temp);
+      if(JUNLIKELY(!ParseFile(tp->value, depth))) {
+         ParseError(tp, "could not open included file: %s", tp->value);
       }
    }
-   Release(temp);
 
 }
 
@@ -1831,12 +1817,19 @@ char *ReadFile(FILE *fd)
 }
 
 /** Tokenize a file by memory mapping it. */
-TokenNode *TokenizeFile(const char *fileName, const char *displayName)
+TokenNode *TokenizeFile(const char *fileName)
 {
    struct stat sbuf;
    TokenNode *tokens;
+   char *path;
    char *buffer;
-   int fd = open(fileName, O_RDONLY);
+
+   path = CopyString(fileName);
+   ExpandPath(&path);
+
+   int fd = open(path, O_RDONLY);
+   Release(path);
+
    if(fd < 0) {
       return NULL;
    }
@@ -1849,32 +1842,32 @@ TokenNode *TokenizeFile(const char *fileName, const char *displayName)
       close(fd);
       return NULL;
    }
-   tokens = Tokenize(buffer, displayName);
+   tokens = Tokenize(buffer, fileName);
    munmap(buffer, sbuf.st_size);
    close(fd);
    return tokens;
 }
 
 /** Tokenize the output of a command. */
-TokenNode *TokenizePipe(const char *command, const char *displayName)
+TokenNode *TokenizePipe(const char *command)
 {
    TokenNode *tokens;
    FILE *fp;
    char *path;
    char *buffer;
 
-   path = CopyString(command + 5);
+   path = CopyString(command);
    ExpandPath(&path);
 
    fp = popen(path, "r");
+   Release(path);
+
+   buffer = NULL;
    if(JLIKELY(fp)) {
       buffer = ReadFile(fp);
       pclose(fp);
-   } else {
-      buffer = NULL;
    }
    if(JUNLIKELY(!buffer)) {
-      Release(path);
       return NULL;
    }
 

@@ -218,7 +218,8 @@ void ParseConfig(const char *fileName)
 {
    if(!ParseFile(fileName, 0)) {
       if(JUNLIKELY(!ParseFile(SYSTEM_CONFIG, 0))) {
-         ParseError(NULL, "could not open %s or %s", fileName, SYSTEM_CONFIG);
+         ParseError(NULL, _("could not open %s or %s"),
+                    fileName, SYSTEM_CONFIG);
       }
    }
    ValidateTrayButtons();
@@ -235,7 +236,8 @@ char ParseFile(const char *fileName, int depth)
 
    depth += 1;
    if(JUNLIKELY(depth > MAX_INCLUDE_DEPTH)) {
-      ParseError(NULL, "include depth (%d) exceeded", MAX_INCLUDE_DEPTH);
+      ParseError(NULL, _("include depth (%d) exceeded"),
+                 MAX_INCLUDE_DEPTH);
       return 0;
    }
 
@@ -363,7 +365,7 @@ void Parse(const TokenNode *start, int depth)
          }
       }
    } else {
-      ParseError(start, "invalid start tag: %s", GetTokenName(start));
+      ParseError(start, _("invalid start tag: %s"), GetTokenName(start));
    }
 
 }
@@ -743,7 +745,7 @@ TokenNode *ParseMenuIncludeHelper(const TokenNode *tp, const char *command)
 
    if(JUNLIKELY(!start || start->type != TOK_JWM))
    {
-      ParseError(tp, "invalid include: %s", command);
+      ParseError(tp, _("invalid include: %s"), command);
       ReleaseTokens(start);
       return NULL;
    }
@@ -793,7 +795,7 @@ void ParseKey(const TokenNode *tp) {
 
    action = tp->value;
    if(JUNLIKELY(action == NULL)) {
-      ParseError(tp, "no action specified for Key");
+      ParseError(tp, _("no action specified for Key"));
       return;
    }
 
@@ -816,7 +818,7 @@ void ParseKey(const TokenNode *tp) {
    /* Insert the binding if it's valid. */
    if(JUNLIKELY(k == KEY_NONE)) {
 
-      ParseError(tp, "invalid Key action: \"%s\"", action);
+      ParseError(tp, _("invalid Key action: \"%s\""), action);
 
    } else {
 
@@ -926,7 +928,7 @@ void ParseActiveWindowStyle(const TokenNode *tp)
 void ParseInclude(const TokenNode *tp, int depth)
 {
    if(JUNLIKELY(!tp->value)) {
-      ParseError(tp, "no include file specified");
+      ParseError(tp, _("no include file specified"));
       return;
    }
 
@@ -936,11 +938,11 @@ void ParseInclude(const TokenNode *tp, int depth)
          Parse(tokens, 0);
          ReleaseTokens(tokens);
       } else {
-         ParseError(tp, "could not process include: %s", &tp->value[5]);
+         ParseError(tp, _("could not process include: %s"), &tp->value[5]);
       }
    } else {
       if(JUNLIKELY(!ParseFile(tp->value, depth))) {
-         ParseError(tp, "could not open included file: %s", tp->value);
+         ParseError(tp, _("could not open included file: %s"), tp->value);
       }
    }
 
@@ -1528,7 +1530,7 @@ void ParsePopupStyle(const TokenNode *tp)
          if(JLIKELY(x >= 0)) {
             settings.popupMask |= x;
          } else {
-            ParseError(tp, "invalid value for 'enabled': \"%s\"", tok);
+            ParseError(tp, _("invalid value for 'enabled': \"%s\""), tok);
          }
          tok = strtok(NULL, ",");
       }
@@ -1674,7 +1676,7 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
       const unsigned int opacity = ParseOpacity(tp, option + 8);
       AddGroupOptionUnsigned(group, OPTION_OPACITY, opacity);
    } else {
-      ParseError(tp, "invalid Group Option: %s", option);
+      ParseError(tp, _("invalid Group Option: %s"), option);
    }
 
 }
@@ -1689,7 +1691,7 @@ DecorationsType ParseDecorations(const TokenNode *tp)
       } else if(!strcmp(str, "flat")) {
          return DECO_FLAT;
       } else {
-         ParseError(tp, "invalid decorations: %s\n", str);
+         ParseError(tp, _("invalid decorations: %s"), str);
       }
    }
    return DECO_FLAT;
@@ -1752,14 +1754,14 @@ int ParseTokenValue(const StringMappingType *mapping, int count,
                     const TokenNode *tp, int def)
 {
    if(JUNLIKELY(tp->value == NULL)) {
-      ParseError(tp, "%s is empty", GetTokenName(tp));
+      ParseError(tp, _("%s is empty"), GetTokenName(tp));
       return def;
    } else {
       const int x = FindValue(mapping, count, tp->value);
       if(JLIKELY(x >= 0)) {
          return x;
       } else {
-         ParseError(tp, "invalid %s: \"%s\"", GetTokenName(tp), tp->value);
+         ParseError(tp, _("invalid %s: \"%s\""), GetTokenName(tp), tp->value);
          return def;
       }
    }
@@ -1777,7 +1779,7 @@ int ParseAttribute(const StringMappingType *mapping, int count,
       if(JLIKELY(x >= 0)) {
          return x;
       } else {
-         ParseError(tp, "invalid value for %s: \"%s\"", attr, str);
+         ParseError(tp, _("invalid value for %s: \"%s\""), attr, str);
          return def;
       }
    }
@@ -1914,7 +1916,7 @@ WinLayerType ParseLayer(const TokenNode *tp, const char *str)
    if(JLIKELY(x >= 0)) {
       return x;
    }  else {
-      ParseError(tp, "invalid layer: %s", str);
+      ParseError(tp, _("invalid layer: %s"), str);
       return LAYER_NORMAL;
    }
 }

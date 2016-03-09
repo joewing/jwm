@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-11-21 19:28-0600\n"
+"POT-Creation-Date: 2016-03-08 19:00-0600\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -73,17 +73,17 @@ msgstr ""
 msgid "could not acquire system tray selection"
 msgstr ""
 
-#: src/font.c:95 src/font.c:112
+#: src/font.c:98 src/font.c:115
 #, c-format
 msgid "could not load font: %s"
 msgstr "konnte Schrift nicht laden: %s"
 
-#: src/font.c:102 src/font.c:119
+#: src/font.c:105 src/font.c:122
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "konnte Standard-Schrift nicht laden: %s"
 
-#: src/font.c:301
+#: src/font.c:304
 msgid "empty Font tag"
 msgstr ""
 
@@ -95,22 +95,22 @@ msgstr "ungültige Gruppenklasse"
 msgid "invalid group name"
 msgstr "ungültiger Gruppenname"
 
-#: src/group.c:254
+#: src/group.c:269
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr "ungültiger Gruppen-Desktop: %d"
 
-#: src/image.c:218
+#: src/image.c:220
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr ""
 
-#: src/image.c:231
+#: src/image.c:233
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr ""
 
-#: src/image.c:239
+#: src/image.c:241
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr ""
@@ -143,66 +143,150 @@ msgstr ""
 msgid "key binding: root menu \"%s\" not defined"
 msgstr ""
 
-#: src/lex.c:196
+#: src/lex.c:198
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 
-#: src/lex.c:202
+#: src/lex.c:204
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr ""
 
-#: src/lex.c:208
+#: src/lex.c:210
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr ""
 
-#: src/lex.c:211
+#: src/lex.c:213
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr ""
 
-#: src/lex.c:229
+#: src/lex.c:231
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr ""
 
-#: src/lex.c:245
+#: src/lex.c:247
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr ""
 
-#: src/lex.c:301
+#: src/lex.c:303
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr ""
 
-#: src/lex.c:349
+#: src/lex.c:362
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/lex.c:454 src/parse.c:1793
+#: src/lex.c:468 src/parse.c:1813
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:1807
+#: src/parse.c:221
+#, fuzzy, c-format
+msgid "could not open %s or %s"
+msgstr "konnte Schrift nicht laden: %s"
+
+#: src/parse.c:239
+#, c-format
+msgid "include depth (%d) exceeded"
+msgstr ""
+
+#: src/parse.c:368
+#, fuzzy, c-format
+msgid "invalid start tag: %s"
+msgstr "ungültige Einstellung %s"
+
+#: src/parse.c:748
+#, fuzzy, c-format
+msgid "invalid include: %s"
+msgstr "ungültige Ebene %s"
+
+#: src/parse.c:798
+#, fuzzy
+msgid "no action specified for Key"
+msgstr "kein Wert für Hintergrund spezifiziert"
+
+#: src/parse.c:821
+#, fuzzy, c-format
+msgid "invalid Key action: \"%s\""
+msgstr "ungültige Einstellung %s"
+
+#: src/parse.c:845
+#, fuzzy, c-format
+msgid "invalid text alignment: \"%s\""
+msgstr "ungültige Vertikalausrichtung für Leiste: \"%s\""
+
+#: src/parse.c:931
+msgid "no include file specified"
+msgstr ""
+
+#: src/parse.c:941
+#, fuzzy, c-format
+msgid "could not process include: %s"
+msgstr "konnte Schrift nicht laden: %s"
+
+#: src/parse.c:945
+#, fuzzy, c-format
+msgid "could not open included file: %s"
+msgstr "konnte Schrift nicht laden: %s"
+
+#: src/parse.c:1533
+#, fuzzy, c-format
+msgid "invalid value for 'enabled': \"%s\""
+msgstr "ungültige Einstellung %s"
+
+#: src/parse.c:1679
+#, fuzzy, c-format
+msgid "invalid Group Option: %s"
+msgstr "ungültiger Gruppen-Desktop: %d"
+
+#: src/parse.c:1694
+#, fuzzy, c-format
+msgid "invalid decorations: %s"
+msgstr "ungültige Einstellung %s"
+
+#: src/parse.c:1757
+#, c-format
+msgid "%s is empty"
+msgstr ""
+
+#: src/parse.c:1764
+#, fuzzy, c-format
+msgid "invalid %s: \"%s\""
+msgstr "ungültige Einstellung %s"
+
+#: src/parse.c:1782
+#, fuzzy, c-format
+msgid "invalid value for %s: \"%s\""
+msgstr "ungültiger tag in %s: %s"
+
+#: src/parse.c:1886
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ungültige Einstellung %s"
 
-#: src/parse.c:1819
+#: src/parse.c:1898
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ungültige Opazität: \"%s\""
 
-#: src/parse.c:1861
+#: src/parse.c:1919
+#, c-format
+msgid "invalid layer: %s"
+msgstr "ungültige Ebene %s"
+
+#: src/parse.c:1940
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ungültiger tag in %s: %s"
 
-#: src/parse.c:1882
+#: src/parse.c:1961
 msgid "configuration error"
 msgstr "Konfigurationsfehler"
 
@@ -223,28 +307,28 @@ msgstr "Sicher?"
 msgid "cannot swallow a client with no name"
 msgstr ""
 
-#: src/taskbar.c:395 src/winmenu.c:51
+#: src/taskbar.c:423 src/winmenu.c:51
 msgid "Close"
 msgstr "Schließen"
 
-#: src/taskbar.c:402 src/winmenu.c:71
+#: src/taskbar.c:430 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Minimieren"
 
-#: src/taskbar.c:409 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:437 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Wiedereinlesen"
 
-#: src/taskbar.c:416 src/winmenu.c:170
+#: src/taskbar.c:444 src/winmenu.c:170
 msgid "Send To"
 msgstr "Senden an"
 
-#: src/taskbar.c:907
+#: src/taskbar.c:938
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 
-#: src/taskbar.c:921
+#: src/taskbar.c:952
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "ungültige Opazität: \"%s\""
@@ -349,6 +433,3 @@ msgstr "Darunter"
 
 #~ msgid "invalid insert mode: \"%s\""
 #~ msgstr "ungültiger EInfügungsmodus: \"%s\""
-
-#~ msgid "invalid layer: %s"
-#~ msgstr "ungültige Ebene %s"

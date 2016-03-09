@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-11-21 19:28-0600\n"
+"POT-Creation-Date: 2016-03-08 19:00-0600\n"
 "PO-Revision-Date: 2015-08-19 14:22+0100\n"
 "Last-Translator: Vitor Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -80,17 +80,17 @@ msgstr "só um tabuleiro e permitido"
 msgid "could not acquire system tray selection"
 msgstr "não pode adquirir a seleção da bandeja do sistema"
 
-#: src/font.c:95 src/font.c:112
+#: src/font.c:98 src/font.c:115
 #, c-format
 msgid "could not load font: %s"
 msgstr "impossível carregar fonte %s"
 
-#: src/font.c:102 src/font.c:119
+#: src/font.c:105 src/font.c:122
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "Não foi possível carregar a fonte padrão %s"
 
-#: src/font.c:301
+#: src/font.c:304
 msgid "empty Font tag"
 msgstr "etiqueta Font vazia"
 
@@ -102,22 +102,22 @@ msgstr "classe do grupo invalida"
 msgid "invalid group name"
 msgstr "nome do grupo invalido"
 
-#: src/group.c:254
+#: src/group.c:269
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr "grupo invalido desktop %d"
 
-#: src/image.c:218
+#: src/image.c:220
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr "não foi possível criar ou ler a estrutura para imagens PNG: %s"
 
-#: src/image.c:231
+#: src/image.c:233
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr "erro lendo imagem PNG %s"
 
-#: src/image.c:239
+#: src/image.c:241
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "não foi possível criar estrutura de informação para imagem PNG %s"
@@ -152,68 +152,152 @@ msgstr ""
 "teclas de atalho: não foram especificadas para o menu root \"%s\" não esta "
 "definido"
 
-#: src/lex.c:196
+#: src/lex.c:198
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: terminação da etiqueta \"%s\" não corresponde à abertura da etiqueta "
 "\"%s\""
 
-#: src/lex.c:202
+#: src/lex.c:204
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: terminação da etiqueta inesperada e invalida"
 
-#: src/lex.c:208
+#: src/lex.c:210
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: terminação da etiqueta \"%s\" sem etiqueta de abertura"
 
-#: src/lex.c:211
+#: src/lex.c:213
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: terminação de etiqueta invalida"
 
-#: src/lex.c:229
+#: src/lex.c:231
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: abertura de etiqueta invalida"
 
-#: src/lex.c:245
+#: src/lex.c:247
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: etiqueta invalida"
 
-#: src/lex.c:301
+#: src/lex.c:303
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: texto inesperado: \"%s\""
 
-#: src/lex.c:349
+#: src/lex.c:362
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entrada invalida: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1793
+#: src/lex.c:468 src/parse.c:1813
 msgid "out of memory"
 msgstr "Memoria insuficiente"
 
-#: src/parse.c:1807
+#: src/parse.c:221
+#, fuzzy, c-format
+msgid "could not open %s or %s"
+msgstr "impossível carregar fonte %s"
+
+#: src/parse.c:239
+#, c-format
+msgid "include depth (%d) exceeded"
+msgstr ""
+
+#: src/parse.c:368
+#, fuzzy, c-format
+msgid "invalid start tag: %s"
+msgstr "Configuração invalida: %s"
+
+#: src/parse.c:748
+#, fuzzy, c-format
+msgid "invalid include: %s"
+msgstr "camada invalida: %s"
+
+#: src/parse.c:798
+#, fuzzy
+msgid "no action specified for Key"
+msgstr "tecla e código de tecla não foi especificado para esta tecla"
+
+#: src/parse.c:821
+#, fuzzy, c-format
+msgid "invalid Key action: \"%s\""
+msgstr "Açao do Traybutton invalida: \"%s\""
+
+#: src/parse.c:845
+#, fuzzy, c-format
+msgid "invalid text alignment: \"%s\""
+msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
+
+#: src/parse.c:931
+msgid "no include file specified"
+msgstr ""
+
+#: src/parse.c:941
+#, fuzzy, c-format
+msgid "could not process include: %s"
+msgstr "impossível carregar fonte %s"
+
+#: src/parse.c:945
+#, fuzzy, c-format
+msgid "could not open included file: %s"
+msgstr "impossível carregar fonte %s"
+
+#: src/parse.c:1533
+#, fuzzy, c-format
+msgid "invalid value for 'enabled': \"%s\""
+msgstr "Açao do Traybutton invalida: \"%s\""
+
+#: src/parse.c:1679
+#, fuzzy, c-format
+msgid "invalid Group Option: %s"
+msgstr "grupo invalido desktop %d"
+
+#: src/parse.c:1694
+#, fuzzy, c-format
+msgid "invalid decorations: %s"
+msgstr "Açao do Traybutton invalida: \"%s\""
+
+#: src/parse.c:1757
+#, c-format
+msgid "%s is empty"
+msgstr ""
+
+#: src/parse.c:1764
+#, fuzzy, c-format
+msgid "invalid %s: \"%s\""
+msgstr "Açao do Traybutton invalida: \"%s\""
+
+#: src/parse.c:1782
+#, fuzzy, c-format
+msgid "invalid value for %s: \"%s\""
+msgstr "etiqueta invalida dentro de %s: %s"
+
+#: src/parse.c:1886
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Configuração invalida: %s"
 
-#: src/parse.c:1819
+#: src/parse.c:1898
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "Transparência invalida: %s"
 
-#: src/parse.c:1861
+#: src/parse.c:1919
+#, c-format
+msgid "invalid layer: %s"
+msgstr "camada invalida: %s"
+
+#: src/parse.c:1940
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta invalida dentro de %s: %s"
 
-#: src/parse.c:1882
+#: src/parse.c:1961
 msgid "configuration error"
 msgstr "Erro de configuração"
 
@@ -235,28 +319,28 @@ msgid "cannot swallow a client with no name"
 msgstr ""
 "não podes inserir um cliente na etiqueta swallow sem especificar o nome"
 
-#: src/taskbar.c:395 src/winmenu.c:51
+#: src/taskbar.c:423 src/winmenu.c:51
 msgid "Close"
 msgstr "Fechar"
 
-#: src/taskbar.c:402 src/winmenu.c:71
+#: src/taskbar.c:430 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: src/taskbar.c:409 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:437 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Restaurar"
 
-#: src/taskbar.c:416 src/winmenu.c:170
+#: src/taskbar.c:444 src/winmenu.c:170
 msgid "Send To"
 msgstr "Enviar Para"
 
-#: src/taskbar.c:907
+#: src/taskbar.c:938
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largura máxima invalida para etiqueta a Tasklist: %s"
 
-#: src/taskbar.c:921
+#: src/taskbar.c:952
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "largura máxima invalida para etiqueta a Tasklist: %s"
@@ -361,9 +445,6 @@ msgstr "Abaixo"
 
 #~ msgid "invalid insert mode: \"%s\""
 #~ msgstr "modo de inserção invalido: \"%s\""
-
-#~ msgid "invalid layer: %s"
-#~ msgstr "camada invalida: %s"
 
 #~ msgid "invalid status window type: %s"
 #~ msgstr "tipo de fundo invalido: %s"

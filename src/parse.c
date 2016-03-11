@@ -1881,7 +1881,12 @@ TokenNode *TokenizePipe(const char *command)
 /** Parse an unsigned integer. */
 unsigned int ParseUnsigned(const TokenNode *tp, const char *str)
 {
-   const long value = strtol(str, NULL, 0);
+   long value;
+   if(JUNLIKELY(!str)) {
+      ParseError(tp, _("no value specified"));
+      return 0;
+   }
+   value = strtol(str, NULL, 0);
    if(JUNLIKELY(value < 0 || value > UINT_MAX)) {
       ParseError(tp, _("invalid setting: %s"), str);
       return 0;
@@ -1893,7 +1898,12 @@ unsigned int ParseUnsigned(const TokenNode *tp, const char *str)
 /** Parse opacity (a float between 0.0 and 1.0). */
 unsigned int ParseOpacity(const TokenNode *tp, const char *str)
 {
-   const float value = ParseFloat(str);
+   float value;
+   if(JUNLIKELY(!str)) {
+      ParseError(tp, _("no value specified"));
+      return UINT_MAX;
+   }
+   value = ParseFloat(str);
    if(JUNLIKELY(value <= 0.0 || value > 1.0)) {
       ParseError(tp, _("invalid opacity: %s"), str);
       return UINT_MAX;

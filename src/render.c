@@ -95,8 +95,9 @@ ScaledIconNode *CreateScaledRenderIcon(ImageNode *image, long fg)
    XImage *destImage;
    XImage *destMask;
    Pixmap pmap, mask;
-   const unsigned int width = image->width;
-   const unsigned int height = image->height;
+   const unsigned width = image->width;
+   const unsigned height = image->height;
+   unsigned perLine;
    int x, y;
    int maskLine;
 
@@ -119,15 +120,19 @@ ScaledIconNode *CreateScaledRenderIcon(ImageNode *image, long fg)
                             0, NULL, width, height, 8, 0);
    destMask->data = Allocate(width * height);
 
+   if(image->bitmap) {
+      perLine = (image->width >> 3) + ((image->width & 7) ? 1 : 0);
+   } else {
+      perLine = image->width;
+   }
    maskLine = 0;
    for(y = 0; y < height; y++) {
-      const int yindex = y * image->width;
+      const int yindex = y * perLine;
       for(x = 0; x < width; x++) {
          if(image->bitmap) {
 
-            const int index = yindex + x;
-            const int offset = index >> 3;
-            const int mask = 1 << (index & 7);
+            const int offset = yindex + (x >> 3);
+            const int mask = 1 << (x & 7);
             unsigned long alpha = 0;
             if(image->data[offset] & mask) {
                alpha = 255;

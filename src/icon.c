@@ -571,6 +571,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
    int srcx, srcy;         /* Fixed point. */
    int nwidth, nheight;
    unsigned char *data;
+   unsigned perLine;
 
    if(rwidth == 0) {
       rwidth = icon->width;
@@ -657,16 +658,21 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
 
    points = Allocate(sizeof(XPoint) * nwidth);
    data = imageNode->data;
+   if(imageNode->bitmap) {
+      perLine = (imageNode->width >> 3) + ((imageNode->width & 7) ? 1 : 0);
+   } else {
+      perLine = imageNode->width;
+   }
    srcy = 0;
    for(y = 0; y < nheight; y++) {
-      const int yindex = (srcy >> 16) * imageNode->width;
+      const int yindex = (srcy >> 16) * perLine;
       int pindex = 0;
       srcx = 0;
       for(x = 0; x < nwidth; x++) {
          if(imageNode->bitmap) {
-            const int index = yindex + (srcx >> 16);
-            const int offset = index >> 3;
-            const int mask = 1 << (index & 7);
+            const int tx = srcx >> 16;
+            const int offset = yindex + (tx >> 3);
+            const int mask = 1 << (tx & 7);
             if(data[offset] & mask) {
                points[pindex].x = x;
                points[pindex].y = y;

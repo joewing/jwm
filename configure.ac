@@ -546,6 +546,10 @@ if test "$mandir" = "" ; then
    mandir="$ac_default_mandir"
 fi
 
+if test "$datadir" = "" ; then
+    datadir="$ac_default_datadir"
+fi
+
 if test "$LOCALEDIR" = "" ; then
    localedir=`eval echo \""$datadir"/locale\"`
    localedir=`eval echo \""$localedir"\"`
@@ -556,6 +560,8 @@ BINDIR=`eval echo \""$bindir"\"`
 SYSCONF=`eval echo \""$sysconfdir"\"`
 MANDIR=`eval echo \""$mandir"\"`
 MANDIR=`eval echo \""$MANDIR"\"`
+DATADIR=`eval echo \""$datadir"\"`
+DATADIR=`eval echo \""$DATADIR"\"`
 
 AC_DEFINE_UNQUOTED(SYSTEM_CONFIG, "$SYSCONF/system.jwmrc",
    [default system configuration path])
@@ -566,6 +572,7 @@ AC_SUBST(VERSION, "$PACKAGE_VERSION")
 AC_SUBST(INSTVERSION, `echo $PACKAGE_VERSION | tr -d .`)
 AC_SUBST(BINDIR, "$BINDIR")
 AC_SUBST(MANDIR, "$MANDIR")
+AC_SUBST(DATADIR, "$DATADIR")
 AC_SUBST(DATE, `date "+%Y-%m-%d"`)
 AC_SUBST(SYSCONF, "$SYSCONF")
 AC_SUBST(PACKAGE, "$PACKAGE")
@@ -574,6 +581,7 @@ AC_OUTPUT(
    po/Makefile.in
    Makefile
    src/Makefile
+   contrib/Makefile
    jwm.1
 )
 

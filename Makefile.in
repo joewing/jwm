@@ -1,6 +1,7 @@
 PACKAGE = jwm
 SYSCONF = $(DESTDIR)@SYSCONF@
 MANDIR = $(DESTDIR)@MANDIR@
+ICONDIR = $(DESTDIR)@ICONDIR@
 VERSION ?= @VERSION@
 USE_NLS = @USE_NLS@
 
@@ -11,6 +12,7 @@ all:
 install: all
 	$(MAKE) -C src install
 	$(MAKE) -C po install
+	$(MAKE) -C contrib install
 	install -d -m 0755 $(SYSCONF)
 	install -m 644 example.jwmrc $(SYSCONF)/system.jwmrc
 	install -d -m 0755 $(MANDIR)/man1
@@ -19,14 +21,17 @@ install: all
 install-strip: all install-conf
 	$(MAKE) -C src install-strip
 	$(MAKE) -C po install-strip
+	$(MAKE) -C contrib install
 	install -d -m 0755 $(SYSCONF)
 	install -m 644 example.jwmrc $(SYSCONF)/system.jwmrc
 	install -d -m 0755 $(MANDIR)/man1
 	install -m 644 jwm.1 $(MANDIR)/man1/jwm.1
+	install -d -m 0755 $(ICONDIR)
 
 uninstall:
 	$(MAKE) -C src uninstall
 	$(MAKE) -C po uninstall
+	$(MAKE) -C contrib uninstall
 	rm -f $(SYSCONF)/system.jwmrc
 	rm -f $(MANDIR)/man1/jwm.1
 

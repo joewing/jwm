@@ -48,7 +48,7 @@
     <!-- Tray at the bottom. -->
     <Tray x="0" y="-1" autohide="off">
 
-        <TrayButton label="JWM">root:1</TrayButton>
+        <TrayButton icon="jwm-blue">root:1</TrayButton>
         <Spacer width="2"/>
         <TrayButton label="_">showdesktop</TrayButton>
         <Spacer width="2"/>
@@ -119,6 +119,9 @@
       -->
     <IconPath>
         /usr/share/icons/wm-icons/32x32-aquafusion
+    </IconPath>
+    <IconPath>
+        /usr/local/share/jwm
     </IconPath>
 
     <!-- Virtual Desktops -->

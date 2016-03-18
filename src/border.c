@@ -178,20 +178,17 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
    }
 
    /* Check south east/west and north east/west resizing. */
-   if(   np->width >= settings.titleHeight * 2
-      && np->height >= settings.titleHeight * 2) {
-      if(y > np->height + north - settings.titleHeight) {
-         if(x < settings.titleHeight) {
-            return (BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE) & resizeMask;
-         } else if(x > np->width + west - settings.titleHeight) {
-            return (BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE) & resizeMask;
-         }
-      } else if(y < settings.titleHeight) {
-         if(x < settings.titleHeight) {
-            return (BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE) & resizeMask;
-         } else if(x > np->width + west - settings.titleHeight) {
-            return (BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE) & resizeMask;
-         }
+   if(y > np->height + north - settings.titleHeight) {
+      if(x < settings.titleHeight) {
+         return (BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE) & resizeMask;
+      } else if(x > np->width + west - settings.titleHeight) {
+         return (BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE) & resizeMask;
+      }
+   } else if(y < settings.titleHeight) {
+      if(x < settings.titleHeight) {
+         return (BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE) & resizeMask;
+      } else if(x > np->width + west - settings.titleHeight) {
+         return (BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE) & resizeMask;
       }
    }
 

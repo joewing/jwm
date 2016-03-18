@@ -282,7 +282,33 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
          }
 FoundActiveAndTop:
          if(hasActive && onTop) {
-            MinimizeGroup(entry);
+            ClientNode *nextClient = NULL;
+            for(cp = entry->clients; cp; cp = cp->next) {
+                if(cp->client->state.status & STAT_MINIMIZED) {
+                   continue;
+                } else if(!ShouldFocus(cp->client, 0)) {
+                   continue;
+                }
+                if(!IsClientOnCurrentDesktop(cp->client)) {
+                    nextClient = cp->client;
+                } else if(nextClient) {
+                    break;
+                }
+            }
+            for(cp = entry->clients; cp && nextClient; cp = cp->next) {
+                if(cp->client->state.desktop == nextClient->state.desktop) {
+                    if(cp->client->state.status & STAT_ACTIVE) {
+                        nextClient = cp->client;
+                        break;
+                    }
+                }
+            }
+            if(nextClient) {
+               ChangeDesktop(nextClient->state.desktop);
+               FocusClient(nextClient);
+            } else {
+               MinimizeGroup(entry);
+            }
          } else {
             FocusGroup(entry);
             if(focused) {

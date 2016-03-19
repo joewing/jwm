@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.5\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-03-08 19:00-0600\n"
+"POT-Creation-Date: 2016-03-19 07:55-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,6 +76,20 @@ msgstr ""
 
 #: src/dock.c:232
 msgid "could not acquire system tray selection"
+msgstr ""
+
+#: src/error.c:22
+#, c-format
+msgid "JWM: error: "
+msgstr ""
+
+#: src/error.c:51
+#, c-format
+msgid "JWM: warning: "
+msgstr ""
+
+#: src/error.c:77
+msgid "display is already managed"
 msgstr ""
 
 #: src/font.c:98 src/font.c:115
@@ -270,27 +284,31 @@ msgstr ""
 msgid "invalid value for %s: \"%s\""
 msgstr ""
 
-#: src/parse.c:1886
+#: src/parse.c:1886 src/parse.c:1903
+msgid "no value specified"
+msgstr ""
+
+#: src/parse.c:1891
 #, c-format
 msgid "invalid setting: %s"
 msgstr ""
 
-#: src/parse.c:1898
+#: src/parse.c:1908
 #, c-format
 msgid "invalid opacity: %s"
 msgstr ""
 
-#: src/parse.c:1919
+#: src/parse.c:1929
 #, c-format
 msgid "invalid layer: %s"
 msgstr ""
 
-#: src/parse.c:1940
+#: src/parse.c:1950
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr ""
 
-#: src/parse.c:1961
+#: src/parse.c:1971
 msgid "configuration error"
 msgstr ""
 
@@ -311,28 +329,28 @@ msgstr ""
 msgid "cannot swallow a client with no name"
 msgstr ""
 
-#: src/taskbar.c:423 src/winmenu.c:51
+#: src/taskbar.c:452 src/winmenu.c:51
 msgid "Close"
 msgstr ""
 
-#: src/taskbar.c:430 src/winmenu.c:71
+#: src/taskbar.c:459 src/winmenu.c:71
 msgid "Minimize"
 msgstr ""
 
-#: src/taskbar.c:437 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:466 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr ""
 
-#: src/taskbar.c:444 src/winmenu.c:170
+#: src/taskbar.c:473 src/winmenu.c:170
 msgid "Send To"
 msgstr ""
 
-#: src/taskbar.c:938
+#: src/taskbar.c:967
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 
-#: src/taskbar.c:952
+#: src/taskbar.c:981
 #, c-format
 msgid "invalid height for TaskList: %s"
 msgstr ""

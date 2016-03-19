@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-03-08 19:00-0600\n"
+"POT-Creation-Date: 2016-03-19 07:55-0500\n"
 "PO-Revision-Date: 2014-11-06 10:23+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -73,6 +73,20 @@ msgstr "Un seul Dock autorisé"
 #: src/dock.c:232
 msgid "could not acquire system tray selection"
 msgstr "Impossible d'obtenir la sélection de la barre système"
+
+#: src/error.c:22
+#, c-format
+msgid "JWM: error: "
+msgstr ""
+
+#: src/error.c:51
+#, c-format
+msgid "JWM: warning: "
+msgstr ""
+
+#: src/error.c:77
+msgid "display is already managed"
+msgstr ""
 
 #: src/font.c:98 src/font.c:115
 #, c-format
@@ -269,27 +283,32 @@ msgstr "action de bouton de barre incorrect: \"%s\""
 msgid "invalid value for %s: \"%s\""
 msgstr "Balise incorrecte dans %s: %s"
 
-#: src/parse.c:1886
+#: src/parse.c:1886 src/parse.c:1903
+#, fuzzy
+msgid "no value specified"
+msgstr "Pas de valeur spécifiée pour l'arrière-plan"
+
+#: src/parse.c:1891
 #, c-format
 msgid "invalid setting: %s"
 msgstr "paramètre incorrect: %s"
 
-#: src/parse.c:1898
+#: src/parse.c:1908
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacité incorrecte: %s"
 
-#: src/parse.c:1919
+#: src/parse.c:1929
 #, c-format
 msgid "invalid layer: %s"
 msgstr "disposition incorrecte: %s"
 
-#: src/parse.c:1940
+#: src/parse.c:1950
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Balise incorrecte dans %s: %s"
 
-#: src/parse.c:1961
+#: src/parse.c:1971
 msgid "configuration error"
 msgstr "erreur de configuration"
 
@@ -310,28 +329,28 @@ msgstr "En êtes-vous certain?"
 msgid "cannot swallow a client with no name"
 msgstr "Impossible d'afficher un client sans nom"
 
-#: src/taskbar.c:423 src/winmenu.c:51
+#: src/taskbar.c:452 src/winmenu.c:51
 msgid "Close"
 msgstr "Fermer"
 
-#: src/taskbar.c:430 src/winmenu.c:71
+#: src/taskbar.c:459 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Réduire"
 
-#: src/taskbar.c:437 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:466 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Restaurer"
 
-#: src/taskbar.c:444 src/winmenu.c:170
+#: src/taskbar.c:473 src/winmenu.c:170
 msgid "Send To"
 msgstr "Envoyer vers"
 
-#: src/taskbar.c:938
+#: src/taskbar.c:967
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largeur maximale de la liste des tâches incorrecte: %s"
 
-#: src/taskbar.c:952
+#: src/taskbar.c:981
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "largeur maximale de la liste des tâches incorrecte: %s"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-03-08 19:00-0600\n"
+"POT-Creation-Date: 2016-03-19 07:55-0500\n"
 "PO-Revision-Date: 2015-06-22 13:19+0000\n"
 "Last-Translator: Mihaly Horvath <hermitsoft@users.sourceforge.net>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -78,6 +78,20 @@ msgstr "csak egy Dock engedélyezett"
 #: src/dock.c:232
 msgid "could not acquire system tray selection"
 msgstr "nem sikerült betölteni az értesítési terület (tray/dock) kijelölést"
+
+#: src/error.c:22
+#, c-format
+msgid "JWM: error: "
+msgstr ""
+
+#: src/error.c:51
+#, c-format
+msgid "JWM: warning: "
+msgstr ""
+
+#: src/error.c:77
+msgid "display is already managed"
+msgstr ""
 
 #: src/font.c:98 src/font.c:115
 #, c-format
@@ -273,27 +287,32 @@ msgstr "nem támogatott művelet: \"%s\""
 msgid "invalid value for %s: \"%s\""
 msgstr "érvéytelen xml tag %s-ben: %s"
 
-#: src/parse.c:1886
+#: src/parse.c:1886 src/parse.c:1903
+#, fuzzy
+msgid "no value specified"
+msgstr "nincs megadva háttérkép-adat"
+
+#: src/parse.c:1891
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nem támogatott beállítás: %s"
 
-#: src/parse.c:1898
+#: src/parse.c:1908
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "érvénytelen átlátszóssági (opacity) érték: %s"
 
-#: src/parse.c:1919
+#: src/parse.c:1929
 #, fuzzy, c-format
 msgid "invalid layer: %s"
 msgstr "érvénytelen átlátszóssági (opacity) érték: %s"
 
-#: src/parse.c:1940
+#: src/parse.c:1950
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "érvéytelen xml tag %s-ben: %s"
 
-#: src/parse.c:1961
+#: src/parse.c:1971
 msgid "configuration error"
 msgstr "konfigurációs hiba"
 
@@ -314,28 +333,28 @@ msgstr "Biztosan folytatja?"
 msgid "cannot swallow a client with no name"
 msgstr "név nélküli kliens nem építhető be a tálcába"
 
-#: src/taskbar.c:423 src/winmenu.c:51
+#: src/taskbar.c:452 src/winmenu.c:51
 msgid "Close"
 msgstr "Bezárás"
 
-#: src/taskbar.c:430 src/winmenu.c:71
+#: src/taskbar.c:459 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Lerakás tálcára"
 
-#: src/taskbar.c:437 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:466 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Visszaállítás"
 
-#: src/taskbar.c:444 src/winmenu.c:170
+#: src/taskbar.c:473 src/winmenu.c:170
 msgid "Send To"
 msgstr "Küldés"
 
-#: src/taskbar.c:938
+#: src/taskbar.c:967
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "érvénytelen maximális hosszúság van megadva a feladatlistához: %s"
 
-#: src/taskbar.c:952
+#: src/taskbar.c:981
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "érvénytelen maximális hosszúság van megadva a feladatlistához: %s"

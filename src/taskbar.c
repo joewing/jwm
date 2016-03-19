@@ -290,17 +290,21 @@ FoundActiveAndTop:
                const int target = (currentDesktop + i + 1)
                                 % settings.desktopCount;
                for(cp = entry->clients; cp; cp = cp->next) {
-                  if(!ShouldFocus(cp->client, 0)) {
+                  ClientNode *np = cp->client;
+                  if(!ShouldFocus(np, 0)) {
                      continue;
-                  } else if(cp->client->state.status & STAT_STICKY) {
+                  } else if(np->state.status & STAT_STICKY) {
                      continue;
-                  } else if(cp->client->state.desktop == target) {
-                     nextClient = cp->client;
-                     goto FoundNextClient;
+                  } else if(np->state.desktop == target) {
+                     if(!nextClient || np->state.status & STAT_ACTIVE) {
+                        nextClient = np;
+                     }
                   }
                }
+               if(nextClient) {
+                  break;
+               }
             }
-FoundNextClient:
             /* Focus the next client or minimize the current group. */
             if(nextClient) {
                ChangeDesktop(nextClient->state.desktop);

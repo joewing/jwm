@@ -283,29 +283,28 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
 FoundActiveAndTop:
          if(hasActive && onTop) {
             ClientNode *nextClient = NULL;
-            for(cp = entry->clients; cp; cp = cp->next) {
-                if(cp->client->state.status & STAT_MINIMIZED) {
-                   continue;
-                } else if(!ShouldFocus(cp->client, 0)) {
-                   continue;
-                }
-                if(!IsClientOnCurrentDesktop(cp->client)) {
-                    nextClient = cp->client;
-                } else if(nextClient) {
-                    break;
-                }
+            int i;
+
+            /* Try to find a client on a different desktop. */
+            for(i = 0; i < settings.desktopCount - 1; i++) {
+               const int target = (currentDesktop + i + 1)
+                                % settings.desktopCount;
+               for(cp = entry->clients; cp; cp = cp->next) {
+                  if(!ShouldFocus(cp->client, 0)) {
+                     continue;
+                  } else if(cp->client->state.status & STAT_STICKY) {
+                     continue;
+                  } else if(cp->client->state.desktop == target) {
+                     nextClient = cp->client;
+                     goto FoundNextClient;
+                  }
+               }
             }
-            for(cp = entry->clients; cp && nextClient; cp = cp->next) {
-                if(cp->client->state.desktop == nextClient->state.desktop) {
-                    if(cp->client->state.status & STAT_ACTIVE) {
-                        nextClient = cp->client;
-                        break;
-                    }
-                }
-            }
+FoundNextClient:
+            /* Focus the next client or minimize the current group. */
             if(nextClient) {
                ChangeDesktop(nextClient->state.desktop);
-               FocusClient(nextClient);
+               RestoreClient(nextClient, 1);
             } else {
                MinimizeGroup(entry);
             }

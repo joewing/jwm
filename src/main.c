@@ -409,8 +409,10 @@ void StartupConnection(void)
    sigaction(SIGTERM, &sa, NULL);
    sigaction(SIGINT, &sa, NULL);
    sigaction(SIGHUP, &sa, NULL);
-
-   sa.sa_flags = SA_NOCLDWAIT;
+   
+   #ifdef SA_NOCLDWAIT
+      sa.sa_flags = SA_NOCLDWAIT;
+   #endif
    sa.sa_handler = SIG_DFL;
    sigaction(SIGCHLD, &sa, NULL);
 

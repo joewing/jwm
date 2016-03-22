@@ -55,7 +55,7 @@ static const DefaultColorNode DEFAULT_COLORS[] = {
 
    { COLOR_PAGER_BG,                0x999999    },
    { COLOR_PAGER_FG,                0x333333    },
-   { COLOR_PAGER_ACTIVE_BG,         0x555555    },
+   { COLOR_PAGER_ACTIVE_BG,         0x004488    },
    { COLOR_PAGER_ACTIVE_FG,         0x0077CC    },
    { COLOR_PAGER_OUTLINE,           0x000000    },
    { COLOR_PAGER_TEXT,              0x000000    },

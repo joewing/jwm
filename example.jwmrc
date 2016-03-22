@@ -93,7 +93,7 @@
         <Text>#FFFFFF</Text>
         <Active>
             <Foreground>#0077CC</Foreground>
-            <Background>#555555</Background>
+            <Background>#004488</Background>
         </Active>
     </PagerStyle>
     <MenuStyle>

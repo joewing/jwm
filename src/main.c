@@ -42,6 +42,8 @@
 #include "timing.h"
 #include "grab.h"
 
+#include <errno.h>
+
 Display *display = NULL;
 Window rootWindow;
 int rootWidth, rootHeight;
@@ -89,6 +91,7 @@ static void StartupConnection(void);
 static void ShutdownConnection(void);
 static void EventLoop(void);
 static void HandleExit(int sig);
+static void HandleChild(int sig);
 static void DoExit(int code);
 static void SendRestart(void);
 static void SendExit(void);
@@ -410,8 +413,7 @@ void StartupConnection(void)
    sigaction(SIGINT, &sa, NULL);
    sigaction(SIGHUP, &sa, NULL);
 
-   sa.sa_flags = SA_NOCLDWAIT;
-   sa.sa_handler = SIG_DFL;
+   sa.sa_handler = HandleChild;
    sigaction(SIGCHLD, &sa, NULL);
 
 #ifdef USE_SHAPE
@@ -460,6 +462,14 @@ void ShutdownConnection(void)
 void HandleExit(int sig)
 {
    shouldExit = 1;
+}
+
+/** Signal handler for SIGCHLD. */
+void HandleChild(int sig)
+{
+   const int savedErrno = errno;
+   while(waitpid((pid_t)-1, NULL, WNOHANG) > 0);
+   errno = savedErrno;
 }
 
 /** Initialize data structures.

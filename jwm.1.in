@@ -776,6 +776,15 @@ move/resize the window.
 .RE
 
 .P
+.B fixed
+.RS
+Fix windows in this group to their initial desktop.
+This causes the current desktop to change when the window is activated
+rather than the default behavior of bringing the window to the current
+desktop.
+.RE
+
+.P
 .B fullscreen
 .RS
 Make windows in this group initially fullscreen.

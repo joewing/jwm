@@ -82,6 +82,7 @@ typedef unsigned int StatusFlags;
 #define STAT_DRAG       (1 << 24)   /**< Pass mouse events to JWM. */
 #define STAT_ILIST      (1 << 25)   /**< Ignore program-specified list. */
 #define STAT_IPAGER     (1 << 26)   /**< Ignore program-specified pager. */
+#define STAT_FIXED      (1 << 27)   /**< Keep on the specified desktop. */
 
 /** Maximization flags. */
 typedef unsigned char MaxFlags;

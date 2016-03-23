@@ -340,6 +340,9 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
       case OPTION_DRAG:
          np->state.status |= STAT_DRAG;
          break;
+      case OPTION_FIXED:
+         np->state.status |= STAT_FIXED;
+         break;
       default:
          Debug("invalid option: %d", lp->option);
          break;

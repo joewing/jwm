@@ -476,6 +476,9 @@ void RestoreTransients(ClientNode *np, char raise)
 /** Restore a client window and its transients. */
 void RestoreClient(ClientNode *np, char raise)
 {
+   if((np->state.status & STAT_FIXED) && !(np->state.status & STAT_STICKY)) {
+      ChangeDesktop(np->state.desktop);
+   }
    RestoreTransients(np, raise);
    RequireRestack();
    RequireTaskUpdate();

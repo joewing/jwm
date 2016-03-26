@@ -190,7 +190,17 @@ char MoveClient(ClientNode *np, int startx, int starty)
             }
          } else {
             /* If alt is not pressed, snap to borders. */
-            DoSnap(np);
+            if(atLeft) {
+               ToggleMaximized(np, MAX_LEFT | MAX_VERT);
+            } else if(atRight) {
+               ToggleMaximized(np, MAX_RIGHT | MAX_VERT);
+            } else if(atTop) {
+               ToggleMaximized(np, MAX_TOP | MAX_HORIZ);
+            } else if(atBottom) {
+               ToggleMaximized(np, MAX_BOTTOM | MAX_HORIZ);
+            } else {
+               DoSnap(np);
+            }
          }
 
          if(!doMove && (abs(np->x - oldx) > MOVE_DELTA

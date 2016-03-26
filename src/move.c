@@ -69,6 +69,20 @@ static char CheckBottomValid(const RectangleType *client,
 static void SignalMove(const TimeType *now, int x, int y, Window w, void *data);
 static void UpdateDesktop(const TimeType *now);
 
+static void ToggleMaximized(ClientNode *np, MaxFlags flags);
+
+/** Toggle maximized state. */
+void ToggleMaximized(ClientNode *np, MaxFlags flags)
+{
+   if(np) {
+      if(np->state.maxFlags == flags) {
+         MaximizeClient(np, MAX_NONE);
+      } else {
+         MaximizeClient(np, flags);
+      }
+   }
+}
+
 /** Callback for stopping moves. */
 void MoveController(int wasDestroyed)
 {

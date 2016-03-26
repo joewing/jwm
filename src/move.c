@@ -191,13 +191,23 @@ char MoveClient(ClientNode *np, int startx, int starty)
          } else {
             /* If alt is not pressed, snap to borders. */
             if(atLeft) {
-               MaximizeClient(np, MAX_LEFT | MAX_VERT);
+               if(atTop) {
+                  MaximizeClient(np, MAX_TOP | MAX_HORIZ);
+               } else if(atBottom) {
+                  MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+               } else {
+                  MaximizeClient(np, MAX_LEFT | MAX_VERT);
+               }
             } else if(atRight) {
-               MaximizeClient(np, MAX_RIGHT | MAX_VERT);
-            } else if(atTop) {
-               MaximizeClient(np, MAX_TOP | MAX_HORIZ);
-            } else if(atBottom) {
-               MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+               if(atTop) {
+                  MaximizeClient(np, MAX_TOP | MAX_HORIZ);
+               } else if (atBottom) {
+                  MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+               } else {
+                  MaximizeClient(np, MAX_RIGHT | MAX_VERT);
+               }
+            } else if(atTop || atBottom) {
+               MaximizeClient(np, MAX_VERT | MAX_HORIZ);
             } else {
                DoSnap(np);
             }

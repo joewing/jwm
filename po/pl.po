@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-03-19 07:55-0500\n"
+"POT-Creation-Date: 2016-03-25 20:24-0500\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -42,15 +42,15 @@ msgstr "nieprawidłowy typ tła: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "nie znaleziono obrazu tła: \"%s\""
 
-#: src/client.c:905
+#: src/client.c:908
 msgid "Kill this window?"
 msgstr "Zabić to okno?"
 
-#: src/client.c:906
+#: src/client.c:909
 msgid "This may cause data to be lost!"
 msgstr "Może to spowodować utratę danych!"
 
-#: src/command.c:138 src/main.c:217
+#: src/command.c:138 src/main.c:220
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "exec nie powiodło się: (%s) %s"
@@ -203,115 +203,115 @@ msgstr "%s[%u]: nieoczekiwany tekst: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: nieprawidłowa jednostka: \"%.8s\""
 
-#: src/lex.c:468 src/parse.c:1813
+#: src/lex.c:468 src/parse.c:1814
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:221
+#: src/parse.c:222
 #, fuzzy, c-format
 msgid "could not open %s or %s"
 msgstr "nie można załadować czcionki: %s"
 
-#: src/parse.c:239
+#: src/parse.c:240
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr ""
 
-#: src/parse.c:368
+#: src/parse.c:369
 #, fuzzy, c-format
 msgid "invalid start tag: %s"
 msgstr "nieprawidłowy znacznik w: %s"
 
-#: src/parse.c:748
+#: src/parse.c:749
 #, fuzzy, c-format
 msgid "invalid include: %s"
 msgstr "nieprawidłowa warstwa grupy: %s"
 
-#: src/parse.c:798
+#: src/parse.c:799
 #, fuzzy
 msgid "no action specified for Key"
 msgstr "ani klucza ani keycode określony dla Key"
 
-#: src/parse.c:821
+#: src/parse.c:822
 #, fuzzy, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/parse.c:845
+#: src/parse.c:846
 #, fuzzy, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""
 
-#: src/parse.c:931
+#: src/parse.c:932
 msgid "no include file specified"
 msgstr ""
 
-#: src/parse.c:941
+#: src/parse.c:942
 #, fuzzy, c-format
 msgid "could not process include: %s"
 msgstr "nie można załadować czcionki: %s"
 
-#: src/parse.c:945
+#: src/parse.c:946
 #, fuzzy, c-format
 msgid "could not open included file: %s"
 msgstr "nie można załadować czcionki: %s"
 
-#: src/parse.c:1533
+#: src/parse.c:1534
 #, fuzzy, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/parse.c:1679
+#: src/parse.c:1680
 #, fuzzy, c-format
 msgid "invalid Group Option: %s"
 msgstr "nieprawidłowy pulpitu grupy: %d"
 
-#: src/parse.c:1694
+#: src/parse.c:1695
 #, fuzzy, c-format
 msgid "invalid decorations: %s"
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/parse.c:1757
+#: src/parse.c:1758
 #, c-format
 msgid "%s is empty"
 msgstr ""
 
-#: src/parse.c:1764
+#: src/parse.c:1765
 #, fuzzy, c-format
 msgid "invalid %s: \"%s\""
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/parse.c:1782
+#: src/parse.c:1783
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:1886 src/parse.c:1903
+#: src/parse.c:1887 src/parse.c:1904
 #, fuzzy
 msgid "no value specified"
 msgstr "nie określono wartości dla tła"
 
-#: src/parse.c:1891
+#: src/parse.c:1892
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nieprawidłowy znacznik w: %s"
 
-#: src/parse.c:1908
+#: src/parse.c:1909
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "nieprawidłowa nieprzezroczystość menu: %s"
 
-#: src/parse.c:1929
+#: src/parse.c:1930
 #, c-format
 msgid "invalid layer: %s"
 msgstr "nieprawidłowa warstwa grupy: %s"
 
-#: src/parse.c:1950
+#: src/parse.c:1951
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:1971
+#: src/parse.c:1972
 msgid "configuration error"
 msgstr "błąd konfiguracji"
 

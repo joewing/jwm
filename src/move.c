@@ -69,16 +69,6 @@ static char CheckBottomValid(const RectangleType *client,
 static void SignalMove(const TimeType *now, int x, int y, Window w, void *data);
 static void UpdateDesktop(const TimeType *now);
 
-static void ToggleMaximized(ClientNode *np, MaxFlags flags);
-
-/** Toggle maximized state. */
-void ToggleMaximized(ClientNode *np, MaxFlags flags)
-{
-   if(np) {
-      MaximizeClient(np, flags);
-   }
-}
-
 /** Callback for stopping moves. */
 void MoveController(int wasDestroyed)
 {
@@ -201,13 +191,13 @@ char MoveClient(ClientNode *np, int startx, int starty)
          } else {
             /* If alt is not pressed, snap to borders. */
             if(atLeft) {
-               ToggleMaximized(np, MAX_LEFT | MAX_VERT);
+               MaximizeClient(np, MAX_LEFT | MAX_VERT);
             } else if(atRight) {
-               ToggleMaximized(np, MAX_RIGHT | MAX_VERT);
+               MaximizeClient(np, MAX_RIGHT | MAX_VERT);
             } else if(atTop) {
-               ToggleMaximized(np, MAX_TOP | MAX_HORIZ);
+               MaximizeClient(np, MAX_TOP | MAX_HORIZ);
             } else if(atBottom) {
-               ToggleMaximized(np, MAX_BOTTOM | MAX_HORIZ);
+               MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
             } else {
                DoSnap(np);
             }

@@ -24,6 +24,7 @@
 #include "settings.h"
 #include "timing.h"
 #include "grab.h"
+#include "desktop.h"
 
 static ClientNode *activeClient;
 

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-03-25 20:24-0500\n"
+"POT-Creation-Date: 2016-03-25 20:49-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -36,11 +36,11 @@ msgstr "ungültiger Typ für Hintergrund: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Hintergrundbild nicht gefunden: \"%s\""
 
-#: src/client.c:908
+#: src/client.c:909
 msgid "Kill this window?"
 msgstr "Dieses Fenster töten?"
 
-#: src/client.c:909
+#: src/client.c:910
 msgid "This may cause data to be lost!"
 msgstr "Das kann Datenverlust verursachen!"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-03-25 20:24-0500\n"
+"POT-Creation-Date: 2016-03-25 20:49-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -40,11 +40,11 @@ msgstr "неизвестный тип фона: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "фоновое изображение не найдено: \"%s\""
 
-#: src/client.c:908
+#: src/client.c:909
 msgid "Kill this window?"
 msgstr "Ликвидировать окно?"
 
-#: src/client.c:909
+#: src/client.c:910
 msgid "This may cause data to be lost!"
 msgstr "Это может привести к потере данных!"
 

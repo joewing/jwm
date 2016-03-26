@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.4\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-03-25 20:24-0500\n"
+"POT-Creation-Date: 2016-03-25 20:49-0500\n"
 "PO-Revision-Date: 2016-03-19 13:29-0300\n"
 "Last-Translator: Samuel Henrique Oltramari Pinto (SamuelOPH) "
 "<samueloph@gmail.com>\n"
@@ -39,11 +39,11 @@ msgstr "tipo de papel de parede inválido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "imagem de papel de parede não encontrado: \"%s\""
 
-#: src/client.c:908
+#: src/client.c:909
 msgid "Kill this window?"
 msgstr "Matar janela?"
 
-#: src/client.c:909
+#: src/client.c:910
 msgid "This may cause data to be lost!"
 msgstr "Isto pode causar perda de dados!"
 

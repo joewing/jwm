@@ -75,11 +75,7 @@ static void ToggleMaximized(ClientNode *np, MaxFlags flags);
 void ToggleMaximized(ClientNode *np, MaxFlags flags)
 {
    if(np) {
-      if(np->state.maxFlags == flags) {
-         MaximizeClient(np, MAX_NONE);
-      } else {
-         MaximizeClient(np, flags);
-      }
+      MaximizeClient(np, flags);
    }
 }
 

@@ -191,18 +191,18 @@ char MoveClient(ClientNode *np, int startx, int starty)
          } else {
             /* If alt is not pressed, snap to borders. */
             if(atLeft) {
-               if(atTop & !(np->state.maxFlags & MAX_TOP & MAX_HORIZ)) {
-                  MaximizeClient(np, MAX_TOP | MAX_HORIZ);
-               } else if(atBottom & !(np->state.maxFlags & MAX_BOTTOM & MAX_HORIZ)) {
-                  MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+               if(atTop & !(np->state.maxFlags & MAX_TOP & MAX_LEFT)) {
+                  MaximizeClient(np, MAX_TOP | MAX_LEFT);
+               } else if(atBottom & !(np->state.maxFlags & MAX_BOTTOM & MAX_LEFT)) {
+                  MaximizeClient(np, MAX_BOTTOM | MAX_LEFT);
                } else if(!(np->state.maxFlags & MAX_LEFT & MAX_VERT)) {
                   MaximizeClient(np, MAX_LEFT | MAX_VERT);
                }
             } else if(atRight) {
-               if(atTop & !(np->state.maxFlags & MAX_TOP & MAX_HORIZ)) {
-                  MaximizeClient(np, MAX_TOP | MAX_HORIZ);
-               } else if(atBottom & !(np->state.maxFlags & MAX_BOTTOM & MAX_HORIZ)) {
-                  MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+               if(atTop & !(np->state.maxFlags & MAX_TOP & MAX_RIGHT)) {
+                  MaximizeClient(np, MAX_TOP | MAX_RIGHT);
+               } else if(atBottom & !(np->state.maxFlags & MAX_BOTTOM & MAX_RIGHT)) {
+                  MaximizeClient(np, MAX_BOTTOM | MAX_RIGHT);
                } else if(!(np->state.maxFlags & MAX_RIGHT & MAX_VERT)) {
                   MaximizeClient(np, MAX_RIGHT | MAX_VERT);
                }

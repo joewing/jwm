@@ -190,24 +190,50 @@ char MoveClient(ClientNode *np, int startx, int starty)
             }
          } else {
             /* If alt is not pressed, snap to borders. */
-            if(atLeft) {
-               if(atTop & !(np->state.maxFlags & MAX_TOP & MAX_LEFT)) {
-                  MaximizeClient(np, MAX_TOP | MAX_LEFT);
-               } else if(atBottom & !(np->state.maxFlags & MAX_BOTTOM & MAX_LEFT)) {
-                  MaximizeClient(np, MAX_BOTTOM | MAX_LEFT);
-               } else if(!(np->state.maxFlags & MAX_LEFT & MAX_VERT)) {
+            if(atTop & atLeft) {
+               if(!(np->state.maxFlags & MAX_TOP & (MAX_HORIZ | MAX_LEFT))) {
+                  if(np->state.maxFlags & MAX_VERT & MAX_HORIZ) {
+                     MaximizeClient(np, MAX_TOP | MAX_HORIZ);
+                  } else {
+                     MaximizeClient(np, MAX_TOP | MAX_LEFT);
+                  }
+               }
+            } else if(atTop & atRight) {
+               if(!(np->state.maxFlags & MAX_TOP & (MAX_HORIZ | MAX_RIGHT))) {
+                  if(np->state.maxFlags & MAX_VERT & MAX_HORIZ) {
+                     MaximizeClient(np, MAX_TOP | MAX_HORIZ);
+                  } else {
+                     MaximizeClient(np, MAX_TOP | MAX_RIGHT);
+                  }
+               }
+            } else if(atBottom & atLeft) {
+               if(!(np->state.maxFlags & MAX_BOTTOM & (MAX_HORIZ | MAX_LEFT))) {
+                  if(np->state.maxFlags & MAX_VERT & MAX_HORIZ) {
+                     MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+                  } else {
+                     MaximizeClient(np, MAX_BOTTOM | MAX_LEFT);
+                  }
+               }
+            } else if(atBottom & atRight) {
+               if(!(np->state.maxFlags & MAX_BOTTOM & (MAX_HORIZ | MAX_RIGHT))) {
+                  if(np->state.maxFlags & MAX_VERT & MAX_HORIZ) {
+                     MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+                  } else {
+                     MaximizeClient(np, MAX_BOTTOM | MAX_RIGHT);
+                  }
+               }
+            } else if(atLeft) {
+               if(!(np->state.maxFlags & MAX_LEFT & MAX_VERT)) {
                   MaximizeClient(np, MAX_LEFT | MAX_VERT);
                }
             } else if(atRight) {
-               if(atTop & !(np->state.maxFlags & MAX_TOP & MAX_RIGHT)) {
-                  MaximizeClient(np, MAX_TOP | MAX_RIGHT);
-               } else if(atBottom & !(np->state.maxFlags & MAX_BOTTOM & MAX_RIGHT)) {
-                  MaximizeClient(np, MAX_BOTTOM | MAX_RIGHT);
-               } else if(!(np->state.maxFlags & MAX_RIGHT & MAX_VERT)) {
+               if(!(np->state.maxFlags & MAX_RIGHT & MAX_VERT)) {
                   MaximizeClient(np, MAX_RIGHT | MAX_VERT);
                }
-            } else if((atTop | atBottom) & !(np->state.maxFlags & MAX_VERT & MAX_HORIZ)) {
-               MaximizeClient(np, MAX_VERT | MAX_HORIZ);
+            } else if(atTop | atBottom) {
+               if(!(np->state.maxFlags & MAX_VERT & MAX_HORIZ)) {
+                  MaximizeClient(np, MAX_VERT | MAX_HORIZ);
+               }
             } else {
                if(np->state.maxFlags != MAX_NONE) {
                   MaximizeClient(np, MAX_NONE);

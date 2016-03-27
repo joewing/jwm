@@ -191,7 +191,11 @@ char MoveClient(ClientNode *np, int startx, int starty)
          } else {
             /* If alt is not pressed, snap to borders. */
             if(atTop & atLeft) {
-               if(!(np->state.maxFlags & MAX_TOP & (MAX_HORIZ | MAX_LEFT))) {
+               if(np->state.maxFlags & MAX_TOP & MAX_LEFT) {
+                  
+               } else if(np->state.maxFlags & MAX_TOP & MAX_HORIZ) {
+                  
+               } else {
                   if(np->state.maxFlags & MAX_VERT & MAX_HORIZ) {
                      MaximizeClient(np, MAX_TOP | MAX_HORIZ);
                   } else {

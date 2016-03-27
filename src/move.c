@@ -195,7 +195,6 @@ char MoveClient(ClientNode *np, int startx, int starty)
                if(!(np->state.maxFlags & MAX_TOP & (MAX_HORIZ | MAX_LEFT))) {
                   if(atSide) {
                      MaximizeClient(np, MAX_TOP | MAX_LEFT);
-                     atSide = 0;
                   } else {
                      MaximizeClient(np, MAX_TOP | MAX_HORIZ);
                   }
@@ -204,7 +203,6 @@ char MoveClient(ClientNode *np, int startx, int starty)
                if(!(np->state.maxFlags & MAX_TOP & (MAX_HORIZ | MAX_RIGHT))) {
                   if(atSide) {
                      MaximizeClient(np, MAX_TOP | MAX_RIGHT);
-                     atSide = 0;
                   } else {
                      MaximizeClient(np, MAX_TOP | MAX_HORIZ);
                   }
@@ -213,7 +211,6 @@ char MoveClient(ClientNode *np, int startx, int starty)
                if(!(np->state.maxFlags & MAX_BOTTOM & (MAX_HORIZ | MAX_LEFT))) {
                   if(atSide) {
                      MaximizeClient(np, MAX_BOTTOM | MAX_LEFT);
-                     atSide = 0;
                   } else {
                      MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
                   }
@@ -222,7 +219,6 @@ char MoveClient(ClientNode *np, int startx, int starty)
                if(!(np->state.maxFlags & MAX_BOTTOM & (MAX_HORIZ | MAX_RIGHT))) {
                   if(atSide) {
                      MaximizeClient(np, MAX_BOTTOM | MAX_RIGHT);
-                     atSide = 0;
                   } else {
                      MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
                   }

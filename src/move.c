@@ -37,6 +37,7 @@ static char atRight;
 static char atBottom;
 static char atTop;
 static char atSide;
+static char aeroSnap;
 static ClientNode *currentClient;
 static TimeType moveTime;
 
@@ -107,6 +108,12 @@ char MoveClient(ClientNode *np, int startx, int starty)
    }
    if(np->state.status & STAT_FULLSCREEN) {
       return 0;
+   }
+   
+   if(np->state.status & STAT_AEROSNAP) {
+      aeroSnap = 1;
+   } else {
+      aeroSnap = 0;
    }
 
    if(!GrabMouseForMove()) {
@@ -191,57 +198,61 @@ char MoveClient(ClientNode *np, int startx, int starty)
             }
          } else {
             /* If alt is not pressed, snap to borders. */
-            if(atTop & atLeft) {
-               if(!(np->state.maxFlags & MAX_TOP & (MAX_HORIZ | MAX_LEFT))) {
-                  if(atSide) {
-                     MaximizeClient(np, MAX_TOP | MAX_LEFT);
-                  } else {
-                     MaximizeClient(np, MAX_TOP | MAX_HORIZ);
+            if(aeroSnap) {
+               if(atTop & atLeft) {
+                  if(!(np->state.maxFlags & MAX_TOP & (MAX_HORIZ | MAX_LEFT))) {
+                     if(atSide) {
+                        MaximizeClient(np, MAX_TOP | MAX_LEFT);
+                     } else {
+                        MaximizeClient(np, MAX_TOP | MAX_HORIZ);
+                     }
                   }
-               }
-            } else if(atTop & atRight) {
-               if(!(np->state.maxFlags & MAX_TOP & (MAX_HORIZ | MAX_RIGHT))) {
-                  if(atSide) {
-                     MaximizeClient(np, MAX_TOP | MAX_RIGHT);
-                  } else {
-                     MaximizeClient(np, MAX_TOP | MAX_HORIZ);
+               } else if(atTop & atRight) {
+                  if(!(np->state.maxFlags & MAX_TOP & (MAX_HORIZ | MAX_RIGHT))) {
+                     if(atSide) {
+                        MaximizeClient(np, MAX_TOP | MAX_RIGHT);
+                     } else {
+                        MaximizeClient(np, MAX_TOP | MAX_HORIZ);
+                     }
                   }
-               }
-            } else if(atBottom & atLeft) {
-               if(!(np->state.maxFlags & MAX_BOTTOM & (MAX_HORIZ | MAX_LEFT))) {
-                  if(atSide) {
-                     MaximizeClient(np, MAX_BOTTOM | MAX_LEFT);
-                  } else {
-                     MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+               } else if(atBottom & atLeft) {
+                  if(!(np->state.maxFlags & MAX_BOTTOM & (MAX_HORIZ | MAX_LEFT))) {
+                     if(atSide) {
+                        MaximizeClient(np, MAX_BOTTOM | MAX_LEFT);
+                     } else {
+                        MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+                     }
                   }
-               }
-            } else if(atBottom & atRight) {
-               if(!(np->state.maxFlags & MAX_BOTTOM & (MAX_HORIZ | MAX_RIGHT))) {
-                  if(atSide) {
-                     MaximizeClient(np, MAX_BOTTOM | MAX_RIGHT);
-                  } else {
-                     MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+               } else if(atBottom & atRight) {
+                  if(!(np->state.maxFlags & MAX_BOTTOM & (MAX_HORIZ | MAX_RIGHT))) {
+                     if(atSide) {
+                        MaximizeClient(np, MAX_BOTTOM | MAX_RIGHT);
+                     } else {
+                        MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+                     }
                   }
-               }
-            } else if(atLeft) {
-               if(!(np->state.maxFlags & MAX_LEFT & MAX_VERT)) {
-                  MaximizeClient(np, MAX_LEFT | MAX_VERT);
-                  atSide = 1;
-               }
-            } else if(atRight) {
-               if(!(np->state.maxFlags & MAX_RIGHT & MAX_VERT)) {
-                  MaximizeClient(np, MAX_RIGHT | MAX_VERT);
-                  atSide = 1;
-               }
-            } else if(atTop | atBottom) {
-               if(!(np->state.maxFlags & MAX_VERT & MAX_HORIZ)) {
-                  MaximizeClient(np, MAX_VERT | MAX_HORIZ);
-                  atSide = 0;
+               } else if(atLeft) {
+                  if(!(np->state.maxFlags & MAX_LEFT & MAX_VERT)) {
+                     MaximizeClient(np, MAX_LEFT | MAX_VERT);
+                     atSide = 1;
+                  }
+               } else if(atRight) {
+                  if(!(np->state.maxFlags & MAX_RIGHT & MAX_VERT)) {
+                     MaximizeClient(np, MAX_RIGHT | MAX_VERT);
+                     atSide = 1;
+                  }
+               } else if(atTop | atBottom) {
+                  if(!(np->state.maxFlags & MAX_VERT & MAX_HORIZ)) {
+                     MaximizeClient(np, MAX_VERT | MAX_HORIZ);
+                     atSide = 0;
+                  }
+               } else {
+                  if(np->state.maxFlags != MAX_NONE) {
+                     MaximizeClient(np, MAX_NONE);
+                  }
+                  DoSnap(np);
                }
             } else {
-               if(np->state.maxFlags != MAX_NONE) {
-                  MaximizeClient(np, MAX_NONE);
-               }
                DoSnap(np);
             }
          }

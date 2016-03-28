@@ -100,6 +100,7 @@ static const StringMappingType OPTION_MAP[] = {
    { "ipager",             OPTION_IPAGER        },
    { "maximized",          OPTION_MAXIMIZED     },
    { "minimized",          OPTION_MINIMIZED     },
+   { "noaerosnap",         OPTION_NOAEROSNAP    },
    { "noborder",           OPTION_NOBORDER      },
    { "noclose",            OPTION_NOCLOSE       },
    { "nofocus",            OPTION_NOFOCUS       },
@@ -117,8 +118,7 @@ static const StringMappingType OPTION_MAP[] = {
    { "sticky",             OPTION_STICKY        },
    { "tiled",              OPTION_TILED         },
    { "title",              OPTION_TITLE         },
-   { "vmax",               OPTION_MAX_V         },
-   { "noaerosnap",         OPTION_NOAEROSNAP    }
+   { "vmax",               OPTION_MAX_V         }
 };
 static const unsigned int OPTION_MAP_COUNT = ARRAY_LENGTH(OPTION_MAP);
 

@@ -117,7 +117,8 @@ static const StringMappingType OPTION_MAP[] = {
    { "sticky",             OPTION_STICKY        },
    { "tiled",              OPTION_TILED         },
    { "title",              OPTION_TITLE         },
-   { "vmax",               OPTION_MAX_V         }
+   { "vmax",               OPTION_MAX_V         },
+   { "noaerosnap",         OPTION_NOAEROSNAP    }
 };
 static const unsigned int OPTION_MAP_COUNT = ARRAY_LENGTH(OPTION_MAP);
 

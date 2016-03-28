@@ -110,10 +110,10 @@ char MoveClient(ClientNode *np, int startx, int starty)
       return 0;
    }
    
-   if(np->state.status & STAT_AEROSNAP) {
-      aeroSnap = 1;
-   } else {
+   if(np->state.status & STAT_NOAEROSNAP) {
       aeroSnap = 0;
+   } else {
+      aeroSnap = 1;
    }
 
    if(!GrabMouseForMove()) {

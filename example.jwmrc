@@ -58,7 +58,7 @@
         <TaskList maxwidth="256"/>
 
         <Dock/>
-        <Clock><Button mask="123">exec:xclock</Button></Clock>
+        <Clock format="%H:%M"><Button mask="123">exec:xclock</Button></Clock>
 
     </Tray>
 

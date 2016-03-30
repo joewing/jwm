@@ -71,7 +71,7 @@ void DrawHorizontalGradient(Drawable d, GC g,
 
       /* Draw the line. */
       JXSetForeground(display, g, temp.pixel);
-      JXDrawLine(display, d, g, x, y + line, x + width, y + line);
+      JXDrawLine(display, d, g, x, y + line, x + width - 1, y + line);
 
       red += redStep;
       green += greenStep;

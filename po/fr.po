@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-03-25 20:49-0500\n"
+"POT-Creation-Date: 2016-03-30 18:44-0500\n"
 "PO-Revision-Date: 2016-03-30 11:27+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -13,289 +13,434 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.5.4\n"
 
-msgid "%s is empty"
-msgstr "%s est vide"
+#: src/action.c:43
+#, c-format
+msgid "invalid action: \"%s\""
+msgstr "action incorrecte: \"%s\""
 
-msgid "%s[%d]: invalid entity: \"%.8s\""
-msgstr "%s[%d]: entité incorrecte: \"%.8s\""
+#: src/action.c:202
+#, c-format
+msgid "action: root menu \"%s\" not defined"
+msgstr "action: menu racine \"%s\" non défini"
 
+#: src/background.c:137
+msgid "no value specified for background"
+msgstr "aucune valeur spécifiée pour l'arrière-plan"
+
+#: src/background.c:149
+#, c-format
+msgid "invalid background type: \"%s\""
+msgstr "type d'arrière-plan incorrect: \"%s\""
+
+#: src/background.c:294
+#, c-format
+msgid "background image not found: \"%s\""
+msgstr "image d'arrière-plan introuvable: \"%s\""
+
+#: src/client.c:909
+msgid "Kill this window?"
+msgstr "Éliminer la fenêtre?"
+
+#: src/client.c:910
+msgid "This may cause data to be lost!"
+msgstr "Cela peut entraîner la perte de données!"
+
+#: src/command.c:138 src/main.c:220
+#, c-format
+msgid "exec failed: (%s) %s"
+msgstr "échec de l'exécution: (%s) %s"
+
+#: src/confirm.c:68
+msgid "OK"
+msgstr "Valider"
+
+#: src/confirm.c:73
+msgid "Cancel"
+msgstr "Annuler"
+
+#: src/confirm.c:307
+msgid "Confirm"
+msgstr "Confirmer"
+
+#: src/desktop.c:342
+msgid "empty Desktops Name tag"
+msgstr "balise de noms de bureaux vide"
+
+#: src/dock.c:151
+msgid "only one Dock allowed"
+msgstr "un seul Dock autorisé"
+
+#: src/dock.c:232
+msgid "could not acquire system tray selection"
+msgstr "impossible d'obtenir la sélection de la barre système"
+
+#: src/error.c:22
+#, c-format
+msgid "JWM: error: "
+msgstr "JWM: erreur: "
+
+#: src/error.c:51
+#, c-format
+msgid "JWM: warning: "
+msgstr "JWM: avertissement: "
+
+#: src/error.c:77
+msgid "display is already managed"
+msgstr "affichage déjà pris en charge"
+
+#: src/font.c:98 src/font.c:115
+#, c-format
+msgid "could not load font: %s"
+msgstr "impossible de charger la police de caractères: %s"
+
+#: src/font.c:105 src/font.c:122
+#, c-format
+msgid "could not load the default font: %s"
+msgstr "impossible de charger la police de caractères par défaut: %s"
+
+#: src/font.c:304
+msgid "empty Font tag"
+msgstr "balise de police de caractères vide"
+
+#: src/group.c:112
+msgid "invalid group class"
+msgstr "classe de groupe incorrecte"
+
+#: src/group.c:123
+msgid "invalid group name"
+msgstr "nom de groupe incorrect"
+
+#: src/group.c:269
+#, c-format
+msgid "invalid group desktop: %d"
+msgstr "bureau de groupe incorrect: %d"
+
+#: src/image.c:220
+#, c-format
+msgid "could not create read struct for PNG image: %s"
+msgstr "impossible de créer une structure de lecture pour l'image PNG: %s"
+
+#: src/image.c:233
+#, c-format
+msgid "error reading PNG image: %s"
+msgstr "erreur de lecture de l'image PNG: %s"
+
+#: src/image.c:241
+#, c-format
+msgid "could not create info struct for PNG image: %s"
+msgstr "impossible de créer les informations de structure pour l'image PNG: %s"
+
+#: src/key.c:319
+msgid "Specified KeySym is not defined for any KeyCode"
+msgstr "Le symbole de touche spécifié n'est défini pour aucun code de touche"
+
+#: src/key.c:327
+#, c-format
+msgid "modifier not found for keysym 0x%0x"
+msgstr "modificateur pour le symbole de touche 0x%0x introuvable"
+
+#: src/key.c:357
+#, c-format
+msgid "invalid modifier: \"%c\""
+msgstr "modificateur incorrect: \"%c\""
+
+#: src/key.c:372
+#, c-format
+msgid "invalid key symbol: \"%s\""
+msgstr "symbole de touche incorrect: \"%s\""
+
+#: src/key.c:453
+msgid "neither key nor keycode specified for Key"
+msgstr "ni touche ni code de touche spécifié pour la touche"
+
+#: src/key.c:468
+#, c-format
+msgid "key binding: root menu \"%s\" not defined"
+msgstr "Raccourci-clavier: menu racine \"%s\" non défini"
+
+#: src/lex.c:198
+#, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: la balise de fermeture \"%s\" ne coïncide pas avec la balise "
 "d'ouverture \"%s\""
 
-msgid "%s[%u]: close tag \"%s\" without open tag"
-msgstr "%s[%u]: balise de fermeture \"%s\" sans balise d'ouverture"
-
-msgid "%s[%u]: invalid close tag"
-msgstr "%s[%u]: balise de fermeture incorrecte"
-
-msgid "%s[%u]: invalid open tag"
-msgstr "%s[%u]: balise d'ouverture incorrecte"
-
-msgid "%s[%u]: invalid tag"
-msgstr "%s[%u]: balise incorrecte"
-
+#: src/lex.c:204
+#, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: balise de fermeture inattendue et incorrecte"
 
+#: src/lex.c:210
+#, c-format
+msgid "%s[%u]: close tag \"%s\" without open tag"
+msgstr "%s[%u]: balise de fermeture \"%s\" sans balise d'ouverture"
+
+#: src/lex.c:213
+#, c-format
+msgid "%s[%u]: invalid close tag"
+msgstr "%s[%u]: balise de fermeture incorrecte"
+
+#: src/lex.c:231
+#, c-format
+msgid "%s[%u]: invalid open tag"
+msgstr "%s[%u]: balise d'ouverture incorrecte"
+
+#: src/lex.c:247
+#, c-format
+msgid "%s[%u]: invalid tag"
+msgstr "%s[%u]: balise incorrecte"
+
+#: src/lex.c:303
+#, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: texte inattendu: \"%s\""
 
-msgid "Above"
-msgstr "Avant"
+#: src/lex.c:362
+#, c-format
+msgid "%s[%d]: invalid entity: \"%.8s\""
+msgstr "%s[%d]: entité incorrecte: \"%.8s\""
 
-msgid "Are you sure?"
-msgstr "Êtes-vous certain?"
+#: src/lex.c:468 src/parse.c:1815
+msgid "out of memory"
+msgstr "mémoire insuffisante"
 
-msgid "Below"
-msgstr "Arrière"
-
-msgid "Cancel"
-msgstr "Annuler"
-
-msgid "Close"
-msgstr "Fermer"
-
-msgid "Confirm"
-msgstr "Confirmer"
-
-msgid "Exit JWM"
-msgstr "Quitter JWM"
-
-msgid "JWM: error: "
-msgstr "JWM: erreur: "
-
-msgid "JWM: warning: "
-msgstr "JWM: avertissement: "
-
-msgid "Kill"
-msgstr "Éliminer"
-
-msgid "Kill this window?"
-msgstr "Éliminer la fenêtre?"
-
-msgid "Layer"
-msgstr "Plan"
-
-msgid "Maximize"
-msgstr "Maximiser"
-
-msgid "Maximize-x"
-msgstr "Maximiser-x"
-
-msgid "Maximize-y"
-msgstr "Maximiser-y"
-
-msgid "Minimize"
-msgstr "Réduire"
-
-msgid "Move"
-msgstr "Déplacer"
-
-msgid "Normal"
-msgstr "Normal"
-
-msgid "OK"
-msgstr "Valider"
-
-msgid "Resize"
-msgstr "Redimensionner"
-
-msgid "Restore"
-msgstr "Restaurer"
-
-msgid "Send To"
-msgstr "Envoyer vers"
-
-msgid "Shade"
-msgstr "Replier"
-
-msgid "Specified KeySym is not defined for any KeyCode"
-msgstr "Le symbole de touche spécifié n'est défini pour aucun code de touche"
-
-msgid "Stick"
-msgstr "Coller"
-
-msgid "This may cause data to be lost!"
-msgstr "Cela peut entraîner la perte de données!"
-
-msgid "Unshade"
-msgstr "Déplier"
-
-msgid "Unstick"
-msgstr "Décoller"
-
-msgid "[Above]"
-msgstr "[Avant]"
-
-msgid "[Below]"
-msgstr "[Arrière]"
-
-msgid "[Normal]"
-msgstr "[Normal]"
-
-msgid "action: root menu \"%s\" not defined"
-msgstr "action: menu racine \"%s\" non défini"
-
-msgid "background image not found: \"%s\""
-msgstr "image d'arrière-plan introuvable: \"%s\""
-
-msgid "cannot swallow a client with no name"
-msgstr "impossible d'afficher un client sans nom"
-
-msgid "configuration error"
-msgstr "erreur de configuration"
-
-msgid "could not acquire system tray selection"
-msgstr "impossible d'obtenir la sélection de la barre système"
-
-msgid "could not create info struct for PNG image: %s"
-msgstr "impossible de créer les informations de structure pour l'image PNG: %s"
-
-msgid "could not create read struct for PNG image: %s"
-msgstr "impossible de créer une structure de lecture pour l'image PNG: %s"
-
-msgid "could not load font: %s"
-msgstr "impossible de charger la police de caractères: %s"
-
-msgid "could not load the default font: %s"
-msgstr "impossible de charger la police de caractères par défaut: %s"
-
-msgid "could not load tray icon: \"%s\""
-msgstr "impossible de charger l'icône de barre: \"%s\""
-
+#: src/parse.c:223
+#, c-format
 msgid "could not open %s or %s"
 msgstr "impossible d'ouvrir %s ou %s"
 
-msgid "could not open included file: %s"
-msgstr "impossible d'ouvrir le fichier inclus: %s"
-
-msgid "could not process include: %s"
-msgstr "impossible de procéder à l'inclusion: %s"
-
-msgid "display is already managed"
-msgstr "affichage déjà pris en charge"
-
-msgid "empty Desktops Name tag"
-msgstr "balise de noms de bureaux vide"
-
-msgid "empty Font tag"
-msgstr "balise de police de caractères vide"
-
-msgid "error reading PNG image: %s"
-msgstr "erreur de lecture de l'image PNG: %s"
-
-msgid "exec failed: (%s) %s"
-msgstr "échec de l'exécution: (%s) %s"
-
+#: src/parse.c:241
+#, c-format
 msgid "include depth (%d) exceeded"
 msgstr "profondeur incluse (%d) dépassée"
 
-msgid "invalid %s: \"%s\""
-msgstr " %s incorrect: \"%s\""
-
-msgid "invalid Group Option: %s"
-msgstr "option de groupe incorrecte: %s"
-
-msgid "invalid Key action: \"%s\""
-msgstr "action de touche incorrecte: \"%s\""
-
-msgid "invalid action: \"%s\""
-msgstr "action incorrecte: \"%s\""
-
-msgid "invalid background type: \"%s\""
-msgstr "type d'arrière-plan incorrect: \"%s\""
-
-msgid "invalid decorations: %s"
-msgstr "décorations incorrectes: %s"
-
-msgid "invalid group class"
-msgstr "classe de groupe incorrecte"
-
-msgid "invalid group desktop: %d"
-msgstr "bureau de groupe incorrect: %d"
-
-msgid "invalid group name"
-msgstr "nom de groupe incorrect"
-
-msgid "invalid height for TaskList: %s"
-msgstr "hauteur de liste de tâches incorrecte: %s"
-
-msgid "invalid include: %s"
-msgstr "inclusion incorrecte: %s"
-
-msgid "invalid key symbol: \"%s\""
-msgstr "symbole de touche incorrect: \"%s\""
-
-msgid "invalid layer: %s"
-msgstr "disposition incorrecte: %s"
-
-msgid "invalid maxwidth for TaskList: %s"
-msgstr "largeur maximale de liste de tâches incorrecte: %s"
-
-msgid "invalid modifier: \"%c\""
-msgstr "modificateur incorrect: \"%c\""
-
-msgid "invalid opacity: %s"
-msgstr "opacité incorrecte: %s"
-
-msgid "invalid root menu specified: \"%c\""
-msgstr "menu racine spécifié incorrect: \"%c\""
-
-msgid "invalid setting: %s"
-msgstr "paramètre incorrect: %s"
-
+#: src/parse.c:370
+#, c-format
 msgid "invalid start tag: %s"
 msgstr "balise de démarrage incorrecte: %s"
 
-msgid "invalid tag in %s: %s"
-msgstr "balise incorrecte dans %s: %s"
+#: src/parse.c:750
+#, c-format
+msgid "invalid include: %s"
+msgstr "inclusion incorrecte: %s"
 
-msgid "invalid text alignment: \"%s\""
-msgstr "alignement de texte incorrect: \"%s\""
-
-msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "alignement horizontal de barre incorrect: \"%s\""
-
-msgid "invalid tray layout: \"%s\""
-msgstr "disposition de barre incorrecte: \"%s\""
-
-msgid "invalid tray vertical alignment: \"%s\""
-msgstr "alignement vertical de barre incorrect: \"%s\""
-
-msgid "invalid value for %s: \"%s\""
-msgstr "valeur incorrecte pour %s: \"%s\""
-
-msgid "invalid value for 'enabled': \"%s\""
-msgstr "valeur incorrecte pour 'enabled': \"%s\""
-
-msgid "key binding: root menu \"%s\" not defined"
-msgstr "Raccourci-clavier: menu racine \"%s\" non défini"
-
-msgid "modifier not found for keysym 0x%0x"
-msgstr "modificateur pour le symbole de touche 0x%0x introuvable"
-
-msgid "neither key nor keycode specified for Key"
-msgstr "ni touche ni code de touche spécifié pour la touche"
-
+#: src/parse.c:800
 msgid "no action specified for Key"
 msgstr "aucune action spécifiée pour la touche"
 
-msgid "no icon or label for TrayButton"
-msgstr "aucune icône ou étiquette pour le bouton de barre"
+#: src/parse.c:823
+#, c-format
+msgid "invalid Key action: \"%s\""
+msgstr "action de touche incorrecte: \"%s\""
 
+#: src/parse.c:847
+#, c-format
+msgid "invalid text alignment: \"%s\""
+msgstr "alignement de texte incorrect: \"%s\""
+
+#: src/parse.c:933
 msgid "no include file specified"
 msgstr "aucun fichier inclus spécifié"
 
+#: src/parse.c:943
+#, c-format
+msgid "could not process include: %s"
+msgstr "impossible de procéder à l'inclusion: %s"
+
+#: src/parse.c:947
+#, c-format
+msgid "could not open included file: %s"
+msgstr "impossible d'ouvrir le fichier inclus: %s"
+
+#: src/parse.c:1535
+#, c-format
+msgid "invalid value for 'enabled': \"%s\""
+msgstr "valeur incorrecte pour 'enabled': \"%s\""
+
+#: src/parse.c:1681
+#, c-format
+msgid "invalid Group Option: %s"
+msgstr "option de groupe incorrecte: %s"
+
+#: src/parse.c:1696
+#, c-format
+msgid "invalid decorations: %s"
+msgstr "décorations incorrectes: %s"
+
+#: src/parse.c:1759
+#, c-format
+msgid "%s is empty"
+msgstr "%s est vide"
+
+#: src/parse.c:1766
+#, c-format
+msgid "invalid %s: \"%s\""
+msgstr " %s incorrect: \"%s\""
+
+#: src/parse.c:1784
+#, c-format
+msgid "invalid value for %s: \"%s\""
+msgstr "valeur incorrecte pour %s: \"%s\""
+
+#: src/parse.c:1888 src/parse.c:1905
 msgid "no value specified"
 msgstr "aucune valeur spécifiée"
 
-msgid "no value specified for background"
-msgstr "aucune valeur spécifiée pour l'arrière-plan"
+#: src/parse.c:1893
+#, c-format
+msgid "invalid setting: %s"
+msgstr "paramètre incorrect: %s"
 
-msgid "only one Dock allowed"
-msgstr "un seul Dock autorisé"
+#: src/parse.c:1910
+#, c-format
+msgid "invalid opacity: %s"
+msgstr "opacité incorrecte: %s"
 
-msgid "out of memory"
-msgstr "mémoire insuffisante"
+#: src/parse.c:1931
+#, c-format
+msgid "invalid layer: %s"
+msgstr "disposition incorrecte: %s"
+
+#: src/parse.c:1952
+#, c-format
+msgid "invalid tag in %s: %s"
+msgstr "balise incorrecte dans %s: %s"
+
+#: src/parse.c:1973
+msgid "configuration error"
+msgstr "erreur de configuration"
+
+#: src/root.c:131
+#, c-format
+msgid "invalid root menu specified: \"%c\""
+msgstr "menu racine spécifié incorrect: \"%c\""
+
+#: src/root.c:213
+msgid "Exit JWM"
+msgstr "Quitter JWM"
+
+#: src/root.c:214
+msgid "Are you sure?"
+msgstr "Êtes-vous certain?"
+
+#: src/swallow.c:85
+msgid "cannot swallow a client with no name"
+msgstr "impossible d'afficher un client sans nom"
+
+#: src/taskbar.c:452 src/winmenu.c:51
+msgid "Close"
+msgstr "Fermer"
+
+#: src/taskbar.c:459 src/winmenu.c:71
+msgid "Minimize"
+msgstr "Réduire"
+
+#: src/taskbar.c:466 src/winmenu.c:69 src/winmenu.c:89
+msgid "Restore"
+msgstr "Restaurer"
+
+#: src/taskbar.c:473 src/winmenu.c:170
+msgid "Send To"
+msgstr "Envoyer vers"
+
+#: src/taskbar.c:967
+#, c-format
+msgid "invalid maxwidth for TaskList: %s"
+msgstr "largeur maximale de liste de tâches incorrecte: %s"
+
+#: src/taskbar.c:981
+#, c-format
+msgid "invalid height for TaskList: %s"
+msgstr "hauteur de liste de tâches incorrecte: %s"
+
+#: src/tray.c:1064
+#, c-format
+msgid "invalid tray layout: \"%s\""
+msgstr "disposition de barre incorrecte: \"%s\""
+
+#: src/tray.c:1102
+#, c-format
+msgid "invalid tray horizontal alignment: \"%s\""
+msgstr "alignement horizontal de barre incorrect: \"%s\""
+
+#: src/tray.c:1125
+#, c-format
+msgid "invalid tray vertical alignment: \"%s\""
+msgstr "alignement vertical de barre incorrect: \"%s\""
+
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "impossible de charger l'icône de barre: \"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "aucune icône ou étiquette pour le bouton de barre"
+
+#: src/winmenu.c:52
+msgid "Kill"
+msgstr "Éliminer"
+
+#: src/winmenu.c:60
+msgid "Resize"
+msgstr "Redimensionner"
+
+#: src/winmenu.c:63
+msgid "Move"
+msgstr "Déplacer"
+
+#: src/winmenu.c:76
+msgid "Unshade"
+msgstr "Déplier"
+
+#: src/winmenu.c:78
+msgid "Shade"
+msgstr "Replier"
+
+#: src/winmenu.c:83
+msgid "Maximize-y"
+msgstr "Maximiser-y"
+
+#: src/winmenu.c:86
+msgid "Maximize-x"
+msgstr "Maximiser-x"
+
+#: src/winmenu.c:91
+msgid "Maximize"
+msgstr "Maximiser"
+
+#: src/winmenu.c:100
+msgid "Unstick"
+msgstr "Décoller"
+
+#: src/winmenu.c:102
+msgid "Stick"
+msgstr "Coller"
+
+#: src/winmenu.c:127
+msgid "Layer"
+msgstr "Plan"
+
+#: src/winmenu.c:139
+msgid "[Above]"
+msgstr "[Avant]"
+
+#: src/winmenu.c:141
+msgid "Above"
+msgstr "Avant"
+
+#: src/winmenu.c:144
+msgid "[Normal]"
+msgstr "[Normal]"
+
+#: src/winmenu.c:146
+msgid "Normal"
+msgstr "Normal"
+
+#: src/winmenu.c:149
+msgid "[Below]"
+msgstr "[Arrière]"
+
+#: src/winmenu.c:151
+msgid "Below"
+msgstr "Arrière"

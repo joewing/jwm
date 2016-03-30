@@ -1,11 +1,10 @@
-
 # Translators:
 # Jim Tsai <poormusic2001@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-03-25 20:49-0500\n"
+"POT-Creation-Date: 2016-03-30 18:44-0500\n"
 "PO-Revision-Date: 2016-03-30 16:11+0800\n"
 "Last-Translator: Jim Tsai <poormusic2001@gmail.com>\n"
 "Language-Team: \n"
@@ -201,115 +200,114 @@ msgstr ""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/lex.c:468 src/parse.c:1814
+#: src/lex.c:468 src/parse.c:1815
 msgid "out of memory"
 msgstr "記憶體不足"
 
-#: src/parse.c:222
-#, fuzzy, c-format
+#: src/parse.c:223
+#, c-format
 msgid "could not open %s or %s"
 msgstr ""
 
-#: src/parse.c:240
+#: src/parse.c:241
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr ""
 
-#: src/parse.c:369
-#, fuzzy, c-format
+#: src/parse.c:370
+#, c-format
 msgid "invalid start tag: %s"
 msgstr ""
 
-#: src/parse.c:749
-#, fuzzy, c-format
+#: src/parse.c:750
+#, c-format
 msgid "invalid include: %s"
 msgstr ""
 
-#: src/parse.c:799
-#, fuzzy
+#: src/parse.c:800
 msgid "no action specified for Key"
 msgstr ""
 
-#: src/parse.c:822
-#, fuzzy, c-format
+#: src/parse.c:823
+#, c-format
 msgid "invalid Key action: \"%s\""
 msgstr ""
 
-#: src/parse.c:846
-#, fuzzy, c-format
+#: src/parse.c:847
+#, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr ""
 
-#: src/parse.c:932
+#: src/parse.c:933
 msgid "no include file specified"
 msgstr ""
 
-#: src/parse.c:942
-#, fuzzy, c-format
+#: src/parse.c:943
+#, c-format
 msgid "could not process include: %s"
 msgstr ""
 
-#: src/parse.c:946
-#, fuzzy, c-format
+#: src/parse.c:947
+#, c-format
 msgid "could not open included file: %s"
 msgstr ""
 
-#: src/parse.c:1534
-#, fuzzy, c-format
+#: src/parse.c:1535
+#, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr ""
 
-#: src/parse.c:1680
-#, fuzzy, c-format
+#: src/parse.c:1681
+#, c-format
 msgid "invalid Group Option: %s"
 msgstr ""
 
-#: src/parse.c:1695
-#, fuzzy, c-format
+#: src/parse.c:1696
+#, c-format
 msgid "invalid decorations: %s"
 msgstr ""
 
-#: src/parse.c:1758
+#: src/parse.c:1759
 #, c-format
 msgid "%s is empty"
 msgstr "%s 是空"
 
-#: src/parse.c:1765
-#, fuzzy, c-format
+#: src/parse.c:1766
+#, c-format
 msgid "invalid %s: \"%s\""
 msgstr ""
 
-#: src/parse.c:1783
+#: src/parse.c:1784
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "%s: \"%s\"的無效數值"
 
-#: src/parse.c:1887 src/parse.c:1904
+#: src/parse.c:1888 src/parse.c:1905
 #, fuzzy
 msgid "no value specified"
 msgstr "未設定任何數值"
 
-#: src/parse.c:1892
+#: src/parse.c:1893
 #, c-format
 msgid "invalid setting: %s"
 msgstr "無效的攝定值:\"%s\""
 
-#: src/parse.c:1909
+#: src/parse.c:1910
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "無效的透明度:\"%s\""
 
-#: src/parse.c:1930
+#: src/parse.c:1931
 #, fuzzy, c-format
 msgid "invalid layer: %s"
 msgstr "無效的層次:\"%s\""
 
-#: src/parse.c:1951
+#: src/parse.c:1952
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "在 %s: %s 無效的標籤"
 
-#: src/parse.c:1972
+#: src/parse.c:1973
 msgid "configuration error"
 msgstr "設定錯誤"
 

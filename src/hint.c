@@ -7,7 +7,6 @@
  *
  */
 
-#include <X11/Xlibint.h>
 #include "jwm.h"
 #include "hint.h"
 #include "client.h"
@@ -15,6 +14,8 @@
 #include "misc.h"
 #include "font.h"
 #include "settings.h"
+
+#include <X11/Xlibint.h>
 
 /* MWM Defines */
 #define MWM_HINTS_FUNCTIONS   (1L << 0)

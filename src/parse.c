@@ -100,6 +100,7 @@ static const StringMappingType OPTION_MAP[] = {
    { "ipager",             OPTION_IPAGER        },
    { "maximized",          OPTION_MAXIMIZED     },
    { "minimized",          OPTION_MINIMIZED     },
+   { "noaerosnap",         OPTION_NOAEROSNAP    },
    { "noborder",           OPTION_NOBORDER      },
    { "noclose",            OPTION_NOCLOSE       },
    { "nofocus",            OPTION_NOFOCUS       },

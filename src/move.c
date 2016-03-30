@@ -36,6 +36,7 @@ static char atLeft;
 static char atRight;
 static char atBottom;
 static char atTop;
+static char atSideFirst;
 static ClientNode *currentClient;
 static TimeType moveTime;
 
@@ -86,7 +87,7 @@ void MoveController(int wasDestroyed)
    atBottom = 0;
    atLeft = 0;
    atRight = 0;
-
+   atSideFirst = 0;
 }
 
 /** Move a client window. */
@@ -130,7 +131,7 @@ char MoveClient(ClientNode *np, int startx, int starty)
    starty -= north;
 
    currentClient = np;
-   atTop = atBottom = atLeft = atRight = 0;
+   atTop = atBottom = atLeft = atRight = atSideFirst = 0;
    doMove = 0;
    for(;;) {
 
@@ -190,7 +191,49 @@ char MoveClient(ClientNode *np, int startx, int starty)
             }
          } else {
             /* If alt is not pressed, snap to borders. */
-            DoSnap(np);
+            if(!(np->state.status & STAT_NOAEROSNAP)) {
+               if(atTop & atLeft) {
+                  if(atSideFirst) {
+                     MaximizeClient(np, MAX_TOP | MAX_LEFT);
+                  } else {
+                     MaximizeClient(np, MAX_TOP | MAX_HORIZ);
+                  }
+               } else if(atTop & atRight) {
+                  if(atSideFirst) {
+                     MaximizeClient(np, MAX_TOP | MAX_RIGHT);
+                  } else {
+                     MaximizeClient(np, MAX_TOP | MAX_HORIZ);
+                  }
+               } else if(atBottom & atLeft) {
+                  if(atSideFirst) {
+                     MaximizeClient(np, MAX_BOTTOM | MAX_LEFT);
+                  } else {
+                     MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+                  }
+               } else if(atBottom & atRight) {
+                  if(atSideFirst) {
+                     MaximizeClient(np, MAX_BOTTOM | MAX_RIGHT);
+                  } else {
+                     MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+                  }
+               } else if(atLeft) {
+                  MaximizeClient(np, MAX_LEFT | MAX_VERT);
+                  atSideFirst = 1;
+               } else if(atRight) {
+                  MaximizeClient(np, MAX_RIGHT | MAX_VERT);
+                  atSideFirst = 1;
+               } else if(atTop | atBottom) {
+                  MaximizeClient(np, MAX_VERT | MAX_HORIZ);
+                  atSideFirst = 0;
+               } else {
+                  if(np->state.maxFlags != MAX_NONE) {
+                     MaximizeClient(np, MAX_NONE);
+                  }
+                  DoSnap(np);
+               }
+            } else {
+               DoSnap(np);
+            }
          }
 
          if(!doMove && (abs(np->x - oldx) > MOVE_DELTA

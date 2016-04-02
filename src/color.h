@@ -53,7 +53,17 @@ typedef unsigned char ColorType;
 #define COLOR_CLOCK_FG              38
 #define COLOR_CLOCK_BG1             39
 #define COLOR_CLOCK_BG2             40
-#define COLOR_COUNT                 41
+#define COLOR_TASKLIST_FG           41
+#define COLOR_TASKLIST_BG1          42
+#define COLOR_TASKLIST_BG2          43
+#define COLOR_TASKLIST_ACTIVE_FG    44
+#define COLOR_TASKLIST_ACTIVE_BG1   45
+#define COLOR_TASKLIST_ACTIVE_BG2   46
+#define COLOR_TASKLIST_UP           47
+#define COLOR_TASKLIST_DOWN         48
+#define COLOR_TASKLIST_ACTIVE_UP    49
+#define COLOR_TASKLIST_ACTIVE_DOWN  50
+#define COLOR_COUNT                 51
 
 extern unsigned long colors[COLOR_COUNT];
 

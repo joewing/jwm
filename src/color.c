@@ -36,39 +36,57 @@ static const unsigned MAX_COLORS = 64;
 static XftColor *xftColors[COLOR_COUNT] = { NULL };
 #endif
 
+#define THEME_TEXT         0xFFFFFF
+#define THEME_ACTIVE       0x0077CC
+#define THEME_ACTIVE2      0x004488
+#define THEME_INACTIVE     0x555555
+#define THEME_INACTIVE2    0x333333
+#define THEME_OUTLINE      0x000000
+
 static const DefaultColorNode DEFAULT_COLORS[] = {
 
-   { COLOR_TITLE_FG,                0xFFFFFF    },
-   { COLOR_TITLE_ACTIVE_FG,         0xFFFFFF    },
+   { COLOR_TITLE_FG,                THEME_TEXT        },
+   { COLOR_TITLE_ACTIVE_FG,         THEME_TEXT        },
 
-   { COLOR_TITLE_BG1,               0x555555    },
-   { COLOR_TITLE_BG2,               0x555555    },
-   { COLOR_TITLE_ACTIVE_BG1,        0x0077CC    },
-   { COLOR_TITLE_ACTIVE_BG2,        0x0077CC    },
+   { COLOR_TITLE_BG1,               THEME_INACTIVE    },
+   { COLOR_TITLE_BG2,               THEME_INACTIVE    },
+   { COLOR_TITLE_ACTIVE_BG1,        THEME_ACTIVE      },
+   { COLOR_TITLE_ACTIVE_BG2,        THEME_ACTIVE      },
 
-   { COLOR_TRAY_FG,                 0x000000    },
-   { COLOR_TRAY_BG1,                0x999999    },
-   { COLOR_TRAY_BG2,                0x999999    },
-   { COLOR_TRAY_ACTIVE_FG,          0xFFFFFF    },
-   { COLOR_TRAY_ACTIVE_BG1,         0x555555    },
-   { COLOR_TRAY_ACTIVE_BG2,         0x555555    },
+   { COLOR_TRAY_FG,                 THEME_TEXT        },
+   { COLOR_TRAY_BG1,                THEME_INACTIVE    },
+   { COLOR_TRAY_BG2,                THEME_INACTIVE    },
+   { COLOR_TRAY_ACTIVE_FG,          THEME_TEXT        },
+   { COLOR_TRAY_ACTIVE_BG1,         THEME_ACTIVE      },
+   { COLOR_TRAY_ACTIVE_BG2,         THEME_ACTIVE      },
 
-   { COLOR_PAGER_BG,                0x999999    },
-   { COLOR_PAGER_FG,                0x333333    },
-   { COLOR_PAGER_ACTIVE_BG,         0x004488    },
-   { COLOR_PAGER_ACTIVE_FG,         0x0077CC    },
-   { COLOR_PAGER_OUTLINE,           0x000000    },
-   { COLOR_PAGER_TEXT,              0x000000    },
+   { COLOR_TASKLIST_FG,             THEME_TEXT        },
+   { COLOR_TASKLIST_BG1,            THEME_INACTIVE    },
+   { COLOR_TASKLIST_BG2,            THEME_INACTIVE    },
+   { COLOR_TASKLIST_ACTIVE_FG,      THEME_TEXT        },
+   { COLOR_TASKLIST_ACTIVE_BG1,     THEME_INACTIVE    },
+   { COLOR_TASKLIST_ACTIVE_BG2,     THEME_INACTIVE    },
 
-   { COLOR_MENU_BG,                 0x999999    },
-   { COLOR_MENU_FG,                 0x000000    },
-   { COLOR_MENU_ACTIVE_BG1,         0x0077CC    },
-   { COLOR_MENU_ACTIVE_BG2,         0x0077CC    },
-   { COLOR_MENU_ACTIVE_FG,          0x000000    },
+   { COLOR_CLOCK_FG,                THEME_TEXT        },
+   { COLOR_CLOCK_BG1,               THEME_INACTIVE    },
+   { COLOR_CLOCK_BG2,               THEME_INACTIVE    },
 
-   { COLOR_POPUP_BG,                0x999999    },
-   { COLOR_POPUP_FG,                0x000000    },
-   { COLOR_POPUP_OUTLINE,           0x000000    }
+   { COLOR_PAGER_FG,                THEME_INACTIVE    },
+   { COLOR_PAGER_BG,                THEME_INACTIVE2   },
+   { COLOR_PAGER_ACTIVE_BG,         THEME_ACTIVE2     },
+   { COLOR_PAGER_ACTIVE_FG,         THEME_ACTIVE      },
+   { COLOR_PAGER_OUTLINE,           THEME_OUTLINE     },
+   { COLOR_PAGER_TEXT,              THEME_TEXT        },
+
+   { COLOR_MENU_FG,                 THEME_TEXT        },
+   { COLOR_MENU_BG,                 THEME_INACTIVE    },
+   { COLOR_MENU_ACTIVE_FG,          THEME_TEXT        },
+   { COLOR_MENU_ACTIVE_BG1,         THEME_ACTIVE      },
+   { COLOR_MENU_ACTIVE_BG2,         THEME_ACTIVE      },
+
+   { COLOR_POPUP_BG,                THEME_INACTIVE2   },
+   { COLOR_POPUP_FG,                THEME_TEXT        },
+   { COLOR_POPUP_OUTLINE,           THEME_OUTLINE     }
 
 };
 static const unsigned DEFAULT_COUNT = ARRAY_LENGTH(DEFAULT_COLORS);
@@ -77,9 +95,19 @@ static struct {
    ColorType src;
    ColorType dest;
 } INHERITED_COLORS[] = {
-   { COLOR_TRAY_FG,     COLOR_CLOCK_FG    },
-   { COLOR_TRAY_BG1,    COLOR_CLOCK_BG1   },
-   { COLOR_TRAY_BG2,    COLOR_CLOCK_BG2   }
+   { COLOR_TRAY_FG,           COLOR_CLOCK_FG             },
+   { COLOR_TRAY_BG1,          COLOR_CLOCK_BG1            },
+   { COLOR_TRAY_BG2,          COLOR_CLOCK_BG2            },
+   { COLOR_TRAY_FG,           COLOR_TASKLIST_FG          },
+   { COLOR_TRAY_BG1,          COLOR_TASKLIST_BG1         },
+   { COLOR_TRAY_BG2,          COLOR_TASKLIST_BG2         },
+   { COLOR_TRAY_ACTIVE_FG,    COLOR_TASKLIST_ACTIVE_FG   },
+   { COLOR_TRAY_ACTIVE_BG1,   COLOR_TASKLIST_ACTIVE_BG1  },
+   { COLOR_TRAY_ACTIVE_BG2,   COLOR_TASKLIST_ACTIVE_BG2  },
+   { COLOR_TRAY_UP,           COLOR_TASKLIST_UP          },
+   { COLOR_TRAY_DOWN,         COLOR_TASKLIST_DOWN        },
+   { COLOR_TRAY_ACTIVE_UP,    COLOR_TASKLIST_ACTIVE_UP   },
+   { COLOR_TRAY_ACTIVE_DOWN,  COLOR_TASKLIST_ACTIVE_DOWN }
 };
 static const unsigned INHERITED_COUNT = ARRAY_LENGTH(INHERITED_COLORS);
 
@@ -92,6 +120,9 @@ static struct {
    { COLOR_TITLE_ACTIVE_BG1, COLOR_TITLE_ACTIVE_UP, COLOR_TITLE_ACTIVE_DOWN },
    { COLOR_TRAY_BG1,         COLOR_TRAY_UP,         COLOR_TRAY_DOWN         },
    { COLOR_TRAY_ACTIVE_BG1,  COLOR_TRAY_ACTIVE_UP,  COLOR_TRAY_ACTIVE_DOWN  },
+   { COLOR_TASKLIST_BG1,     COLOR_TASKLIST_UP,     COLOR_TASKLIST_DOWN     },
+   { COLOR_TASKLIST_ACTIVE_BG1,
+        COLOR_TASKLIST_ACTIVE_UP,   COLOR_TASKLIST_ACTIVE_DOWN     },
    { COLOR_MENU_BG,          COLOR_MENU_UP,         COLOR_MENU_DOWN         },
    { COLOR_MENU_ACTIVE_BG1,  COLOR_MENU_ACTIVE_UP,  COLOR_MENU_ACTIVE_DOWN  }
 };
@@ -150,6 +181,17 @@ void StartupColors(void)
       break;
    }
 
+   /* Inherit colors. */
+   if(names) {
+      for(x = 0; x < INHERITED_COUNT; x++) {
+         const ColorType dest = INHERITED_COLORS[x].dest;
+         if(!names[dest]) {
+            const ColorType src = INHERITED_COLORS[x].src;
+            names[dest] = CopyString(names[src]);
+         }
+      }
+   }
+
    /* Get color information used for JWM stuff. */
    for(x = 0; x < COLOR_COUNT; x++) {
       if(names && names[x]) {
@@ -170,16 +212,6 @@ void StartupColors(void)
       }
       if(!names || !names[DERIVED_COLORS[x].down]) {
          DarkenColor(DERIVED_COLORS[x].base, DERIVED_COLORS[x].down);
-      }
-   }
-
-   /* Inherit colors. */
-   for(x = 0; x < INHERITED_COUNT; x++) {
-      const ColorType dest = INHERITED_COLORS[x].dest;
-      if(!names || !names[dest]) {
-         const ColorType src = INHERITED_COLORS[x].src;
-         colors[dest] = colors[src];
-         rgbColors[dest] = rgbColors[src];
       }
    }
 

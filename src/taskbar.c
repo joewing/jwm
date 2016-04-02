@@ -203,7 +203,7 @@ void ComputeItemSize(TaskBarType *tp)
       if(tp->userHeight > 0) {
          tp->itemHeight = tp->userHeight;
       } else {
-         tp->itemHeight = GetStringHeight(FONT_TRAY) + 12;
+         tp->itemHeight = GetStringHeight(FONT_TASKLIST) + 12;
       }
       tp->itemWidth = cp->width;
 
@@ -683,7 +683,7 @@ void UpdateTaskBar(void)
          if(bp->userHeight > 0) {
             bp->itemHeight = bp->userHeight;
          } else {
-            bp->itemHeight = GetStringHeight(FONT_TRAY) + 12;
+            bp->itemHeight = GetStringHeight(FONT_TASKLIST) + 12;
          }
          bp->cp->requestedHeight = 0;
          for(tp = taskEntries; tp; tp = tp->next) {
@@ -747,7 +747,7 @@ void Render(const TaskBarType *bp)
 
    ResetButton(&button, bp->cp->pixmap);
    button.border = settings.trayDecorations == DECO_MOTIF;
-   button.font = FONT_TRAY;
+   button.font = FONT_TASKLIST;
    button.height = bp->itemHeight;
    button.width = bp->itemWidth;
    button.text = NULL;

@@ -1161,6 +1161,76 @@ The default foreground color for active items.
 .RS
 The default background color for active items.
 .RE
+.P
+.B Outline
+.RS
+The default outline color for active items. See the \fBCOLORS\fP section
+for more information.
+The default is a darkened version of the background.
+If \fBmotif\fP tray decorations are specified, this may be given as
+two colors separated by a ':' to indicate the down and up colors
+respectively.
+.RE
+.RE
+.RE
+
+.B "TASK LIST STYLE"
+.RS
+The \fBTaskListStyle\fP tag controls the look of task lists.
+.P
+Within this tag the following tags are supported:
+.P
+.B Font
+.RS
+The font to use. See the \fBFONTS\fP section for more information.
+.RE
+.P
+.B Foreground
+.RS
+The foreground color. See the \fBCOLORS\fP section for more information.
+.RE
+.P
+.B Background
+.RS
+The background color. See the \fBCOLORS\fP section for more information.
+.RE
+.P
+.B Outline
+.RS
+The color of the button outline. See the \fBCOLORS\fP section for
+more information.
+The default is a darkened version of the background.
+If \fBmotif\fP tray decorations are specified, this may be given as
+two colors separated by a ':' to indicate the down and up colors
+respectively.
+.RE
+.P
+.P
+.B Active
+.RS
+The colors for the active items.
+See the \fBCOLORS\fP section for more information.
+The following tags are supported:
+.P
+.B Foreground
+.RS
+The foreground color for active items.
+.RE
+.P
+.B Background
+.RS
+The background color for active items.
+.RE
+.P
+.B Outline
+.RS
+The outline color for active items. See the \fBCOLORS\fP section for
+more information.
+The default is a darkened version of the background.
+If \fBmotif\fP tray decorations are specified, this may be given as
+two colors separated by a ':' to indicate the down and up colors
+respectively.
+.RE
 .RE
 .RE
 

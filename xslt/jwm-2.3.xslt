@@ -83,10 +83,6 @@
         </TrayStyle>
     </xsl:template>
 
-    <!-- Remove TaskListStyle -->
-    <xsl:template match="TaskListStyle">
-    </xsl:template>
-
     <!-- Remove TrayButtonStyle -->
     <xsl:template match="TrayButtonStyle">
     </xsl:template>

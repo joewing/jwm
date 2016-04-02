@@ -885,20 +885,11 @@ void DeleteClient(ClientNode *np)
 /** Callback to kill a client after a confirm dialog. */
 void KillClientHandler(ClientNode *np)
 {
-
-   Assert(np);
-
    if(np == activeClient) {
       FocusNextStacked(np);
    }
 
-   GrabServer();
    JXKillClient(display, np->window);
-   JXSync(display, True);
-   UngrabServer();
-
-   RemoveClient(np);
-
 }
 
 /** Kill a client window. */

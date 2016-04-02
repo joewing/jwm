@@ -56,8 +56,6 @@ static void Create(TrayComponentType *cp);
 static void Resize(TrayComponentType *cp);
 
 static void DockWindow(Window win);
-static char UndockWindow(Window win);
-
 static void UpdateDock(void);
 static void GetDockItemSize(int *size);
 static void GetDockSize(int *width, int *height);
@@ -98,6 +96,7 @@ void StartupDock(void)
       JXSelectInput(display, dock->window,
            SubstructureNotifyMask
          | SubstructureRedirectMask
+         | EnterWindowMask
          | PointerMotionMask | PointerMotionHintMask);
 
    }
@@ -280,7 +279,6 @@ void HandleDockEvent(const XClientMessageEvent *event)
 /** Handle a resize request event. */
 char HandleDockResizeRequest(const XResizeRequestEvent *event)
 {
-
    DockNode *np;
 
    Assert(event);
@@ -361,16 +359,6 @@ char HandleDockReparentNotify(const XReparentEvent *event)
 
 }
 
-/** Handle a destroy event. */
-char HandleDockDestroy(Window win)
-{
-   if(dock) {
-      return UndockWindow(win);
-   } else {
-      return 0;
-   }
-}
-
 /** Handle a selection clear event. */
 char HandleDockSelectionClear(const XSelectionClearEvent *event)
 {
@@ -384,7 +372,6 @@ char HandleDockSelectionClear(const XSelectionClearEvent *event)
 /** Add a window to the dock. */
 void DockWindow(Window win)
 {
-
    DockNode *np;
 
    /* If no dock is running, just return. */
@@ -418,11 +405,6 @@ void DockWindow(Window win)
     * ResizeTray which will invoke the Resize callback.
     */
    JXAddToSaveSet(display, win);
-   JXSelectInput(display, win,
-        StructureNotifyMask
-      | EnterWindowMask
-      | ResizeRedirectMask
-      | PointerMotionMask | PointerMotionHintMask);
    JXReparentWindow(display, win, dock->cp->window, 0, 0);
    JXMapRaised(display, win);
 
@@ -432,39 +414,30 @@ void DockWindow(Window win)
 }
 
 /** Remove a window from the dock. */
-char UndockWindow(Window win)
+char HandleDockDestroy(Window win)
 {
-
-   DockNode *np;
-   DockNode *last;
+   DockNode **np;
 
    /* If no dock is running, just return. */
    if(!dock) {
       return 0;
    }
 
-   last = NULL;
-   for(np = dock->nodes; np; np = np->next) {
-      if(np->window == win) {
+   for(np = &dock->nodes; *np; np = &(*np)->next) {
+      DockNode *dp = *np;
+      if(dp->window == win) {
 
          /* Remove the window from our list. */
-         if(last) {
-            last->next = np->next;
-         } else {
-            dock->nodes = np->next;
-         }
-         Release(np);
+         *np = dp->next;
+         Release(dp);
 
          /* Update the requested size. */
          GetDockSize(&dock->cp->requestedWidth, &dock->cp->requestedHeight);
 
          /* Resize the tray. */
          ResizeTray(dock->cp->tray);
-
          return 1;
-
       }
-      last = np;
    }
 
    return 0;

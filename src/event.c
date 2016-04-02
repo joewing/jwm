@@ -1525,7 +1525,6 @@ char HandleDestroyNotify(const XDestroyWindowEvent *event)
 void DispatchBorderButtonEvent(const XButtonEvent *event,
                                ClientNode *np)
 {
-
    static Time lastClickTime = 0;
    static int lastX = 0, lastY = 0;
    static char doubleClickActive = 0;

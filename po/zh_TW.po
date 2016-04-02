@@ -115,7 +115,7 @@ msgstr "無效的群組名稱"
 #: src/group.c:269
 #, c-format
 msgid "invalid group desktop: %d"
-msgstr "無效的群組桌面:"
+msgstr "無效的群組桌面: %d"
 
 #: src/image.c:220
 #, c-format
@@ -231,7 +231,7 @@ msgstr "此Key沒有指定的操作"
 #: src/parse.c:823
 #, c-format
 msgid "invalid Key action: \"%s\""
-msgstr "無效的Key操作"
+msgstr "無效的Key操作 %s"
 
 #: src/parse.c:847
 #, c-format

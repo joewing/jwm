@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-03-30 18:44-0500\n"
+"POT-Creation-Date: 2016-04-02 09:15-0500\n"
 "PO-Revision-Date: 2016-03-30 11:27+0100\n"
 "Last-Translator: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
 "Language-Team: FR_PUPPY_LINUX <fr_puppy_linux@tradux.org>\n"
@@ -37,11 +37,11 @@ msgstr "type d'arrière-plan incorrect: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "image d'arrière-plan introuvable: \"%s\""
 
-#: src/client.c:909
+#: src/client.c:900
 msgid "Kill this window?"
 msgstr "Éliminer la fenêtre?"
 
-#: src/client.c:910
+#: src/client.c:901
 msgid "This may cause data to be lost!"
 msgstr "Cela peut entraîner la perte de données!"
 
@@ -66,11 +66,11 @@ msgstr "Confirmer"
 msgid "empty Desktops Name tag"
 msgstr "balise de noms de bureaux vide"
 
-#: src/dock.c:151
+#: src/dock.c:150
 msgid "only one Dock allowed"
 msgstr "un seul Dock autorisé"
 
-#: src/dock.c:232
+#: src/dock.c:231
 msgid "could not acquire system tray selection"
 msgstr "impossible d'obtenir la sélection de la barre système"
 

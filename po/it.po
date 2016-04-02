@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-03-30 18:44-0500\n"
+"POT-Creation-Date: 2016-04-02 09:15-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -41,11 +41,11 @@ msgstr "Formato di sfondo non valido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Immagine di sfondo non trovata: \"%s\""
 
-#: src/client.c:909
+#: src/client.c:900
 msgid "Kill this window?"
 msgstr "Chiudere questa finestra?"
 
-#: src/client.c:910
+#: src/client.c:901
 msgid "This may cause data to be lost!"
 msgstr "Questo può causare una perdita di dati!"
 
@@ -70,11 +70,11 @@ msgstr "Conferma"
 msgid "empty Desktops Name tag"
 msgstr "Etichetta Nome dei desktop vuoti"
 
-#: src/dock.c:151
+#: src/dock.c:150
 msgid "only one Dock allowed"
 msgstr "Permesso un solo Dock"
 
-#: src/dock.c:232
+#: src/dock.c:231
 msgid "could not acquire system tray selection"
 msgstr "Impossibile acquisire la selezione del vassoio di sistema"
 

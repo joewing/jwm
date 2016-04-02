@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-03-30 18:44-0500\n"
+"POT-Creation-Date: 2016-04-02 09:15-0500\n"
 "PO-Revision-Date: 2014-08-13 03:07-0400\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -41,11 +41,11 @@ msgstr "tipo de fondo de pantalla no válido: «%s»"
 msgid "background image not found: \"%s\""
 msgstr "imagen de fondo de pantalla no encontrada: «%s»"
 
-#: src/client.c:909
+#: src/client.c:900
 msgid "Kill this window?"
 msgstr "¿Finalizar esta ventana?"
 
-#: src/client.c:910
+#: src/client.c:901
 msgid "This may cause data to be lost!"
 msgstr "¡Esto puede causar pérdida de datos!"
 
@@ -70,11 +70,11 @@ msgstr "Confirmar"
 msgid "empty Desktops Name tag"
 msgstr "etiqueta Nombre de Escritorio vacía"
 
-#: src/dock.c:151
+#: src/dock.c:150
 msgid "only one Dock allowed"
 msgstr "solo se permite un Dock"
 
-#: src/dock.c:232
+#: src/dock.c:231
 msgid "could not acquire system tray selection"
 msgstr "no se pudo adquirir selección de bandeja de sistema"
 

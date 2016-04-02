@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-03-30 18:44-0500\n"
+"POT-Creation-Date: 2016-04-02 09:15-0500\n"
 "PO-Revision-Date: 2015-09-24 16:11+0800\n"
 "Last-Translator: Christopher Meng <i@cicku.me>\n"
 "Language-Team: \n"
@@ -40,11 +40,11 @@ msgstr "无效的背景图片格式：\"%s\""
 msgid "background image not found: \"%s\""
 msgstr "未找到背景图片：\"%s\""
 
-#: src/client.c:909
+#: src/client.c:900
 msgid "Kill this window?"
 msgstr "强制结束该窗口？"
 
-#: src/client.c:910
+#: src/client.c:901
 msgid "This may cause data to be lost!"
 msgstr "这可能导致数据丢失！"
 
@@ -69,11 +69,11 @@ msgstr "确认操作"
 msgid "empty Desktops Name tag"
 msgstr "空的 Desktops Name 标签"
 
-#: src/dock.c:151
+#: src/dock.c:150
 msgid "only one Dock allowed"
 msgstr "仅允许一个 Dock"
 
-#: src/dock.c:232
+#: src/dock.c:231
 msgid "could not acquire system tray selection"
 msgstr "无法获取系统托盘选择"
 

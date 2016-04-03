@@ -81,16 +81,16 @@ msgstr "Impossibile acquisire la selezione del vassoio di sistema"
 #: src/error.c:22
 #, c-format
 msgid "JWM: error: "
-msgstr ""
+msgstr "JWM: errore: "
 
 #: src/error.c:51
 #, c-format
 msgid "JWM: warning: "
-msgstr ""
+msgstr "JWM: avviso: "
 
 #: src/error.c:77
 msgid "display is already managed"
-msgstr ""
+msgstr "lo schermo è già gestito"
 
 #: src/font.c:98 src/font.c:115
 #, c-format
@@ -215,7 +215,7 @@ msgstr "Impossibile caricare font: %s"
 #: src/parse.c:241
 #, c-format
 msgid "include depth (%d) exceeded"
-msgstr ""
+msgstr "livello di inclusione (%d) superato"
 
 #: src/parse.c:370
 #, fuzzy, c-format
@@ -244,7 +244,7 @@ msgstr "Allineamento verticale del vassoio non valido: \"%s\""
 
 #: src/parse.c:933
 msgid "no include file specified"
-msgstr ""
+msgstr "file da includere non specificato"
 
 #: src/parse.c:943
 #, fuzzy, c-format
@@ -274,7 +274,7 @@ msgstr "Azione del TrayButton non valida:  \"%s\""
 #: src/parse.c:1759
 #, c-format
 msgid "%s is empty"
-msgstr ""
+msgstr "%s è vuoto"
 
 #: src/parse.c:1766
 #, fuzzy, c-format

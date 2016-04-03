@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-04-02 09:15-0500\n"
+"POT-Creation-Date: 2016-04-03 15:33-0500\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -87,17 +87,17 @@ msgstr ""
 msgid "display is already managed"
 msgstr ""
 
-#: src/font.c:98 src/font.c:115
+#: src/font.c:109 src/font.c:126
 #, c-format
 msgid "could not load font: %s"
 msgstr "kon dit lettertype niet laden: %s"
 
-#: src/font.c:105 src/font.c:122
+#: src/font.c:116 src/font.c:133
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "kon standaard lettertype niet laden: %s"
 
-#: src/font.c:304
+#: src/font.c:315
 msgid "empty Font tag"
 msgstr "Leeg lettertype label"
 
@@ -157,155 +157,155 @@ msgstr "Toets en Toetscode niet opgegeven voor Toets"
 msgid "key binding: root menu \"%s\" not defined"
 msgstr "Sneltoets: root menu %d niet gedefiniëerd"
 
-#: src/lex.c:198
+#: src/lex.c:200
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: sluiten-label \"%s\" komt niet overeen met openen-label \"%s\""
 
-#: src/lex.c:204
+#: src/lex.c:206
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: onverwacht en ongeldig sluiten-label "
 
-#: src/lex.c:210
+#: src/lex.c:212
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: sluiten-label \"%s\" zonder openen-label"
 
-#: src/lex.c:213
+#: src/lex.c:215
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: ongeldig sluiten-label"
 
-#: src/lex.c:231
+#: src/lex.c:233
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: ongeldig openen-label"
 
-#: src/lex.c:247
+#: src/lex.c:249
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: ongeldig label"
 
-#: src/lex.c:303
+#: src/lex.c:305
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: ongeldige entiteit: \"%.8s\""
 
-#: src/lex.c:362
+#: src/lex.c:364
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ongeldige entiteit: \"%.8s\""
 
-#: src/lex.c:468 src/parse.c:1815
+#: src/lex.c:470 src/parse.c:1875
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:223
+#: src/parse.c:224
 #, fuzzy, c-format
 msgid "could not open %s or %s"
 msgstr "kon dit lettertype niet laden: %s"
 
-#: src/parse.c:241
+#: src/parse.c:242
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr ""
 
-#: src/parse.c:370
+#: src/parse.c:377
 #, fuzzy, c-format
 msgid "invalid start tag: %s"
 msgstr "ongeldige instelling: %s"
 
-#: src/parse.c:750
+#: src/parse.c:757
 #, fuzzy, c-format
 msgid "invalid include: %s"
 msgstr "ongeldige laag: %s"
 
-#: src/parse.c:800
+#: src/parse.c:807
 #, fuzzy
 msgid "no action specified for Key"
 msgstr "Toets en Toetscode niet opgegeven voor Toets"
 
-#: src/parse.c:823
+#: src/parse.c:830
 #, fuzzy, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
 
-#: src/parse.c:847
+#: src/parse.c:854
 #, fuzzy, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "ongeldige verticale taakbalk uitlijning: \"%s\""
 
-#: src/parse.c:933
+#: src/parse.c:940
 msgid "no include file specified"
 msgstr ""
 
-#: src/parse.c:943
+#: src/parse.c:950
 #, fuzzy, c-format
 msgid "could not process include: %s"
 msgstr "kon dit lettertype niet laden: %s"
 
-#: src/parse.c:947
+#: src/parse.c:954
 #, fuzzy, c-format
 msgid "could not open included file: %s"
 msgstr "kon dit lettertype niet laden: %s"
 
-#: src/parse.c:1535
+#: src/parse.c:1612
 #, fuzzy, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
 
-#: src/parse.c:1681
+#: src/parse.c:1741
 #, fuzzy, c-format
 msgid "invalid Group Option: %s"
 msgstr "ongeldige groep bureaublad: %d"
 
-#: src/parse.c:1696
+#: src/parse.c:1756
 #, fuzzy, c-format
 msgid "invalid decorations: %s"
 msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
 
-#: src/parse.c:1759
+#: src/parse.c:1819
 #, c-format
 msgid "%s is empty"
 msgstr ""
 
-#: src/parse.c:1766
+#: src/parse.c:1826
 #, fuzzy, c-format
 msgid "invalid %s: \"%s\""
 msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
 
-#: src/parse.c:1784
+#: src/parse.c:1844
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "ongeldig label in %s: %s"
 
-#: src/parse.c:1888 src/parse.c:1905
+#: src/parse.c:1948 src/parse.c:1965
 #, fuzzy
 msgid "no value specified"
 msgstr "Geen warde opgegeven voor achtergrond"
 
-#: src/parse.c:1893
+#: src/parse.c:1953
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ongeldige instelling: %s"
 
-#: src/parse.c:1910
+#: src/parse.c:1970
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ongeldige transparantie: %s"
 
-#: src/parse.c:1931
+#: src/parse.c:1991
 #, c-format
 msgid "invalid layer: %s"
 msgstr "ongeldige laag: %s"
 
-#: src/parse.c:1952
+#: src/parse.c:2012
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ongeldig label in %s: %s"
 
-#: src/parse.c:1973
+#: src/parse.c:2033
 msgid "configuration error"
 msgstr "configuratie-fout"
 

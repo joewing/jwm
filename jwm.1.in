@@ -1234,6 +1234,66 @@ respectively.
 .RE
 .RE
 
+.B "TRAY BUTTON STYLE"
+.RS
+The \fBTrayButtonStyle\fP tag controls the look of tray buttons.
+.P
+Within this tag the following tags are supported:
+.P
+.B Font
+.RS
+The font to use. See the \fBFONTS\fP section for more information.
+.RE
+.P
+.B Foreground
+.RS
+The foreground color. See the \fBCOLORS\fP section for more information.
+.RE
+.P
+.B Background
+.RS
+The background color. See the \fBCOLORS\fP section for more information.
+.RE
+.P
+.B Outline
+.RS
+The color of the button outline. See the \fBCOLORS\fP section for
+more information.
+The default is a darkened version of the background.
+If \fBmotif\fP tray decorations are specified, this may be given as
+two colors separated by a ':' to indicate the down and up colors
+respectively.
+.RE
+.P
+.P
+.B Active
+.RS
+The colors for pressed buttons.
+See the \fBCOLORS\fP section for more information.
+The following tags are supported:
+.P
+.B Foreground
+.RS
+The foreground color for pressed buttons.
+.RE
+.P
+.B Background
+.RS
+The background color for pressed buttons.
+.RE
+.P
+.B Outline
+.RS
+The outline color for pressed buttons. See the \fBCOLORS\fP section for
+more information.
+The default is a darkened version of the background.
+If \fBmotif\fP tray decorations are specified, this may be given as
+two colors separated by a ':' to indicate the down and up colors
+respectively.
+.RE
+.RE
+.RE
+
 .B "PAGER STYLE"
 .RS
 The \fBPagerStyle\fP tag controls the look of pagers.

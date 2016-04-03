@@ -183,11 +183,11 @@ static void ParseGroupOption(const TokenNode *tp,
 /* Style. */
 static void ParseWindowStyle(const TokenNode *tp);
 static void ParseActiveWindowStyle(const TokenNode *tp);
-static void ParseTrayStyle(const TokenNode *tp);
+static void ParseTrayStyle(const TokenNode *tp,
+                           FontType font, ColorType baseColor);
 static void ParseActive(const TokenNode *tp, ColorType fg,
                         ColorType bg1, ColorType bg2,
                         ColorType up, ColorType down);
-static void ParseTaskListStyle(const TokenNode *tp);
 static void ParsePagerStyle(const TokenNode *tp);
 static void ParseClockStyle(const TokenNode *tp);
 static void ParseMenuStyle(const TokenNode *tp);
@@ -338,10 +338,13 @@ void Parse(const TokenNode *start, int depth)
                ParseTray(tp);
                break;
             case TOK_TRAYSTYLE:
-               ParseTrayStyle(tp);
+               ParseTrayStyle(tp, FONT_TRAY, COLOR_TRAY_FG);
                break;
             case TOK_TASKLISTSTYLE:
-               ParseTaskListStyle(tp);
+               ParseTrayStyle(tp, FONT_TASKLIST, COLOR_TASKLIST_FG);
+               break;
+            case TOK_TRAYBUTTONSTYLE:
+               ParseTrayStyle(tp, FONT_TRAYBUTTON, COLOR_TRAYBUTTON_FG);
                break;
             case TOK_CLOCKSTYLE:
                ParseClockStyle(tp);
@@ -1027,46 +1030,59 @@ void ParseDesktopBackground(int desktop, const TokenNode *tp)
 }
 
 /** Parse tray style. */
-void ParseTrayStyle(const TokenNode *tp)
+void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
 {
    const TokenNode *np;
-   const char *temp;
+   const ColorType bg1 = fg + COLOR_TRAY_BG1 - COLOR_TRAY_FG;
+   const ColorType bg2 = fg + COLOR_TRAY_BG2 - COLOR_TRAY_FG;
+   const ColorType activeFg = fg + COLOR_TRAY_ACTIVE_FG - COLOR_TRAY_FG;
+   const ColorType activeBg1 = fg + COLOR_TRAY_ACTIVE_BG1 - COLOR_TRAY_FG;
+   const ColorType activeBg2 = fg + COLOR_TRAY_ACTIVE_BG2 - COLOR_TRAY_FG;
+   const ColorType up = fg + COLOR_TRAY_UP - COLOR_TRAY_FG;
+   const ColorType down = fg + COLOR_TRAY_DOWN - COLOR_TRAY_FG;
+   const ColorType activeUp = fg + COLOR_TRAY_ACTIVE_UP - COLOR_TRAY_FG;
+   const ColorType activeDown = fg + COLOR_TRAY_ACTIVE_DOWN - COLOR_TRAY_FG;
 
-   settings.trayDecorations = ParseDecorations(tp);
-   temp = FindAttribute(tp->attributes, "group");
-   if(temp) {
-      settings.groupTasks = !strcmp(temp, TRUE_VALUE);
-   }
+   /* TrayStyle has extra attributes. */
+   if(tp->type == TOK_TRAYSTYLE) {
+      const char *temp;
+      settings.trayDecorations = ParseDecorations(tp);
+      temp = FindAttribute(tp->attributes, "group");
+      if(temp) {
+         settings.groupTasks = !strcmp(temp, TRUE_VALUE);
+      }
 
-   temp = FindAttribute(tp->attributes, "list");
-   if(temp) {
-      settings.listAllTasks = !strcmp(temp, "all");
+      temp = FindAttribute(tp->attributes, "list");
+      if(temp) {
+         settings.listAllTasks = !strcmp(temp, "all");
+      }
    }
 
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FONT:
-         SetFont(FONT_TRAY, np->value);
+         SetFont(font, np->value);
          break;
       case TOK_ACTIVE:
-         ParseActive(np, COLOR_TRAY_ACTIVE_FG,
-                     COLOR_TRAY_ACTIVE_BG1, COLOR_TRAY_ACTIVE_BG2,
-                     COLOR_TRAY_ACTIVE_UP, COLOR_TRAY_ACTIVE_DOWN);
+         ParseActive(np, activeFg, activeBg1, activeBg2, activeUp, activeDown);
          break;
       case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_TRAY_BG1, COLOR_TRAY_BG2);
+         ParseGradient(np->value, bg1, bg2);
          break;
       case TOK_FOREGROUND:
          SetColor(COLOR_TRAY_FG, np->value);
          break;
       case TOK_OUTLINE:
-         ParseGradient(np->value, COLOR_TRAY_DOWN, COLOR_TRAY_UP);
+         ParseGradient(np->value, down, up);
          break;
       case TOK_OPACITY:
-         settings.trayOpacity = ParseOpacity(np, np->value);
-         break;
+         if(tp->type == TOK_TRAYSTYLE) {
+            settings.trayOpacity = ParseOpacity(np, np->value);
+            break;
+         }
+         /* fall through */
       default:
-         InvalidTag(np, TOK_TRAYSTYLE);
+         InvalidTag(np, tp->type);
          break;
       }
    }
@@ -1262,6 +1278,36 @@ void ParseTaskListStyle(const TokenNode *tp)
          break;
       default:
          InvalidTag(np, TOK_TASKLISTSTYLE);
+         break;
+      }
+   }
+}
+
+/** Parse the tray button style. */
+void ParseTrayButtonStyle(const TokenNode *tp)
+{
+   const TokenNode *np;
+   for(np = tp->subnodeHead; np; np = np->next) {
+      switch(np->type) {
+      case TOK_FONT:
+         SetFont(FONT_TRAYBUTTON, np->value);
+         break;
+      case TOK_ACTIVE:
+         ParseActive(np, COLOR_TRAYBUTTON_ACTIVE_FG,
+                     COLOR_TRAYBUTTON_ACTIVE_BG1, COLOR_TRAYBUTTON_ACTIVE_BG2,
+                     COLOR_TRAYBUTTON_ACTIVE_UP, COLOR_TRAYBUTTON_ACTIVE_DOWN);
+         break;
+      case TOK_BACKGROUND:
+         ParseGradient(np->value, COLOR_TRAYBUTTON_BG1, COLOR_TRAYBUTTON_BG2);
+         break;
+      case TOK_FOREGROUND:
+         SetColor(COLOR_TRAYBUTTON_FG, np->value);
+         break;
+      case TOK_OUTLINE:
+         ParseGradient(np->value, COLOR_TRAYBUTTON_DOWN, COLOR_TRAYBUTTON_UP);
+         break;
+      default:
+         InvalidTag(np, TOK_TRAYBUTTONSTYLE);
          break;
       }
    }

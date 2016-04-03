@@ -62,19 +62,19 @@ void DrawButton(ButtonNode *bp)
       decorations = settings.menuDecorations;
       break;
    case BUTTON_TRAY:
-      fg = COLOR_TRAY_FG;
-      bg1 = colors[COLOR_TRAY_BG1];
-      bg2 = colors[COLOR_TRAY_BG2];
-      up = colors[COLOR_TRAY_UP];
-      down = colors[COLOR_TRAY_DOWN];
+      fg = COLOR_TRAYBUTTON_FG;
+      bg1 = colors[COLOR_TRAYBUTTON_BG1];
+      bg2 = colors[COLOR_TRAYBUTTON_BG2];
+      up = colors[COLOR_TRAYBUTTON_UP];
+      down = colors[COLOR_TRAYBUTTON_DOWN];
       decorations = settings.trayDecorations;
       break;
    case BUTTON_TRAY_ACTIVE:
-      fg = COLOR_TRAY_ACTIVE_FG;
-      bg1 = colors[COLOR_TRAY_ACTIVE_BG1];
-      bg2 = colors[COLOR_TRAY_ACTIVE_BG2];
-      down = colors[COLOR_TRAY_ACTIVE_UP];
-      up = colors[COLOR_TRAY_ACTIVE_DOWN];
+      fg = COLOR_TRAYBUTTON_ACTIVE_FG;
+      bg1 = colors[COLOR_TRAYBUTTON_ACTIVE_BG1];
+      bg2 = colors[COLOR_TRAYBUTTON_ACTIVE_BG2];
+      down = colors[COLOR_TRAYBUTTON_ACTIVE_UP];
+      up = colors[COLOR_TRAYBUTTON_ACTIVE_DOWN];
       decorations = settings.trayDecorations;
       break;
    case BUTTON_TASK:

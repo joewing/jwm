@@ -90,9 +90,9 @@ void StartupFonts(void)
 
    /* Inherit unset fonts from the tray for tray items. */
    for(x = 0; x < ARRAY_LENGTH(INHERITED_FONTS); x++) {
-      const FontType src = INHERITED_FONTS[x].src;
-      if(!fontNames[src]) {
-         const FontType dest = INHERITED_FONTS[x].dest;
+      const FontType dest = INHERITED_FONTS[x].dest;
+      if(!fontNames[dest]) {
+         const FontType src = INHERITED_FONTS[x].src;
          fontNames[dest] = CopyString(fontNames[src]);
       }
    }

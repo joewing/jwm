@@ -117,8 +117,8 @@ int main(int argc, char *argv[])
 
 #ifdef HAVE_PLEDGE
    if(pledge("exec inet proc prot_exec rpath stdio unix", NULL) < 0) {
-       perror("pledge failed");
-       DoExit(1);
+      perror("pledge failed");
+      DoExit(1);
    }
 #endif
 

@@ -84,6 +84,7 @@ AC_CHECK_HEADERS([X11/Xutil.h X11/cursorfont.h X11/Xproto.h \
    ])
 
 AC_CHECK_FUNCS([unsetenv putenv setlocale])
+AC_CHECK_FUNCS([pledge])
 AC_FUNC_ALLOCA()
 
 ############################################################################

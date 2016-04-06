@@ -115,6 +115,13 @@ int main(int argc, char *argv[])
       ACTION_PARSE
    } action;
 
+#ifdef HAVE_PLEDGE
+   if(pledge("exec inet proc prot_exec rpath stdio unix", NULL) < 0) {
+       perror("pledge failed");
+       DoExit(1);
+   }
+#endif
+
    StartDebug();
 
    /* Get the name of the user's local configuration file. */
@@ -296,6 +303,14 @@ void OpenConnection(void)
       DoExit(1);
    }
 
+   /* No longer need to open sockets. */
+#ifdef HAVE_PLEDGE
+   if(pledge("exec proc prot_exec rpath stdio", NULL) < 0) {
+      perror("pledge failed");
+      DoExit(1);
+   }
+#endif
+
    rootScreen = DefaultScreen(display);
    rootWindow = RootWindow(display, rootScreen);
    rootWidth = DisplayWidth(display, rootScreen);
@@ -307,8 +322,6 @@ void OpenConnection(void)
    colormapCount = MaxCmapsOfScreen(ScreenOfDisplay(display, rootScreen));
 
    XSetGraphicsExposures(display, rootGC, False);
-
-
 }
 
 /** Predicate for XIfEvent to determine if we got the WM_Sn selection. */

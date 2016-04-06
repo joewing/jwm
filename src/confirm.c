@@ -12,6 +12,7 @@
 #include "client.h"
 #include "font.h"
 #include "button.h"
+#include "border.h"
 #include "screen.h"
 #include "misc.h"
 #include "settings.h"
@@ -408,8 +409,9 @@ void ComputeDimensions(const ClientNode *np)
          dialog->x = rootWidth - dialog->width - (settings.borderWidth * 2);
       }
       if(dialog->y + dialog->height >= rootHeight) {
+         const unsigned titleHeight = GetTitleHeight();
          dialog->y = rootHeight - dialog->height
-               - (settings.borderWidth * 2 + settings.titleHeight);
+               - (settings.borderWidth * 2 + titleHeight);
       }
 
    } else {

@@ -1552,8 +1552,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
          if(event->button == Button1) {
             ResizeClient(np, action, event->x, event->y);
          } else if(event->button == Button3) {
+            const unsigned titleHeight = GetTitleHeight();
             const int x = np->x + event->x - bsize;
-            const int y = np->y + event->y - settings.titleHeight - bsize;
+            const int y = np->y + event->y - titleHeight - bsize;
             ShowWindowMenu(np, x, y, 0);
          }
       }
@@ -1580,8 +1581,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
             }
          }
       } else if(event->button == Button3) {
+         const unsigned titleHeight = GetTitleHeight();
          const int x = np->x + event->x - bsize;
-         const int y = np->y + event->y - settings.titleHeight - bsize;
+         const int y = np->y + event->y - titleHeight - bsize;
          ShowWindowMenu(np, x, y, 0);
       } else if(event->button == Button4) {
          ShadeClient(np);
@@ -1595,8 +1597,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
       } else if(event->button == Button5) {
          UnshadeClient(np);
       } else if(event->type == ButtonPress) {
+         const unsigned titleHeight = GetTitleHeight();
          const int x = np->x + event->x - bsize;
-         const int y = np->y + event->y - settings.titleHeight - bsize;
+         const int y = np->y + event->y - titleHeight - bsize;
          ShowWindowMenu(np, x, y, 0);
       }
       break;

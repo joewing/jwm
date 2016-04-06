@@ -537,9 +537,9 @@ void Startup(void)
 
    StartupGroups();
    StartupColors();
+   StartupFonts();
    StartupIcons();
    StartupBackgrounds();
-   StartupFonts();
    StartupCursors();
 
    StartupPager();

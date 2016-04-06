@@ -10,6 +10,7 @@
 #include "jwm.h"
 #include "place.h"
 #include "client.h"
+#include "border.h"
 #include "screen.h"
 #include "tray.h"
 #include "settings.h"
@@ -44,7 +45,7 @@ static void SetWorkarea(void);
 /** Startup placement. */
 void StartupPlacement(void)
 {
-
+   const unsigned titleHeight = GetTitleHeight();
    int count;
    int x;
 
@@ -52,7 +53,7 @@ void StartupPlacement(void)
    cascadeOffsets = Allocate(count * sizeof(int));
 
    for(x = 0; x < count; x++) {
-      cascadeOffsets[x] = settings.borderWidth + settings.titleHeight;
+      cascadeOffsets[x] = settings.borderWidth + titleHeight;
    }
 
    SetWorkarea();
@@ -577,8 +578,8 @@ char TileClient(const BoundingBox *box, ClientNode *np)
 /** Cascade placement. */
 void CascadeClient(const BoundingBox *box, ClientNode *np)
 {
-
    const ScreenType *sp;
+   const unsigned titleHeight = GetTitleHeight();
    int north, south, east, west;
    int cascadeIndex;
    char overflow;
@@ -590,8 +591,7 @@ void CascadeClient(const BoundingBox *box, ClientNode *np)
    /* Set the cascaded location. */
    np->x = box->x + west + cascadeOffsets[cascadeIndex];
    np->y = box->y + north + cascadeOffsets[cascadeIndex];
-   cascadeOffsets[cascadeIndex] += settings.borderWidth
-                                 + settings.titleHeight;
+   cascadeOffsets[cascadeIndex] += settings.borderWidth + titleHeight;
 
    /* Check for cascade overflow. */
    overflow = 0;
@@ -602,8 +602,7 @@ void CascadeClient(const BoundingBox *box, ClientNode *np)
    }
 
    if(overflow) {
-      cascadeOffsets[cascadeIndex] = settings.borderWidth
-                                   + settings.titleHeight;
+      cascadeOffsets[cascadeIndex] = settings.borderWidth + titleHeight;
       np->x = box->x + west + cascadeOffsets[cascadeIndex];
       np->y = box->y + north + cascadeOffsets[cascadeIndex];
 
@@ -613,8 +612,7 @@ void CascadeClient(const BoundingBox *box, ClientNode *np)
       } else if(np->y + np->height - box->y > box->height) {
          np->y = box->y + north;
       } else {
-         cascadeOffsets[cascadeIndex] += settings.borderWidth
-                                       + settings.titleHeight;
+         cascadeOffsets[cascadeIndex] += settings.borderWidth + titleHeight;
       }
    }
 

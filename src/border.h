@@ -68,6 +68,9 @@ void DrawBorder(struct ClientNode *np);
  */
 int GetBorderIconSize(void);
 
+/** Get the height of a window title bar. */
+unsigned GetTitleHeight(void);
+
 /** Get the size of a window border.
  * @param state The client state.
  * @param north Pointer to the value to contain the north border size.

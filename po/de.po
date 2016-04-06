@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-04-03 15:33-0500\n"
+"POT-Creation-Date: 2016-04-05 20:15-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -44,20 +44,20 @@ msgstr "Dieses Fenster töten?"
 msgid "This may cause data to be lost!"
 msgstr "Das kann Datenverlust verursachen!"
 
-#: src/command.c:138 src/main.c:220
+#: src/command.c:138 src/main.c:227
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "Ausführung fehlgeschlagen: (%s) %s"
 
-#: src/confirm.c:68
+#: src/confirm.c:69
 msgid "OK"
 msgstr ""
 
-#: src/confirm.c:73
+#: src/confirm.c:74
 msgid "Cancel"
 msgstr ""
 
-#: src/confirm.c:307
+#: src/confirm.c:308
 msgid "Confirm"
 msgstr ""
 

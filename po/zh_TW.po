@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-04-03 15:33-0500\n"
+"POT-Creation-Date: 2016-04-05 20:15-0500\n"
 "PO-Revision-Date: 2016-03-30 16:11+0800\n"
 "Last-Translator: Jim Tsai <poormusic2001@gmail.com>\n"
 "Language-Team: \n"
@@ -47,20 +47,20 @@ msgstr "強制關閉該視窗？"
 msgid "This may cause data to be lost!"
 msgstr "這可能會導致資料不見！"
 
-#: src/command.c:138 src/main.c:220
+#: src/command.c:138 src/main.c:227
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "執行失敗：(%s) %s"
 
-#: src/confirm.c:68
+#: src/confirm.c:69
 msgid "OK"
 msgstr "確定"
 
-#: src/confirm.c:73
+#: src/confirm.c:74
 msgid "Cancel"
 msgstr "取消"
 
-#: src/confirm.c:307
+#: src/confirm.c:308
 msgid "Confirm"
 msgstr "確認"
 

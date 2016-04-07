@@ -7,10 +7,33 @@ version will not cause problems.  New configuration options are not
 described.  See the release notes at http://joewing.net/projects/jwm/ for
 more information.
 
+
+Changes from 2.3.5 to 2.3.6
+==============================================================================
+ * No breaking changes.
+ * TaskListStyle and TrayButtonStyle are back (removed in v2.3.2).
+
+
+Changes from 2.3.4 to 2.3.5
+==============================================================================
+ * No breaking changes.
+ * ClockStyle is back (removed in v2.3.2).
+
+
+Changes from 2.3.3 to 2.3.4
+==============================================================================
+ * No breaking changes.
+
+
+Changes from 2.3.2 to 2.3.3
+==============================================================================
+ * No breaking changes.
+
+
 Changes from 2.3.1 to 2.3.2
 ==============================================================================
  * The TaskListStyle, TrayButtonStyle, and ClockStyle tags have been removed.
-   These options are not set from TrayStyle.
+   These options are now set from TrayStyle.
 
 
 Changes from 2.3.0 to 2.3.1

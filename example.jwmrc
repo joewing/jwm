@@ -32,6 +32,10 @@
 
     <!-- Options for program groups. -->
     <Group>
+        <Option>tiled</Option>
+        <Option>aerosnap</Option>
+    </Group>
+    <Group>
         <Class>Pidgin</Class>
         <Option>sticky</Option>
     </Group>

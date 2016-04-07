@@ -343,8 +343,8 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
       case OPTION_FIXED:
          np->state.status |= STAT_FIXED;
          break;
-      case OPTION_NOAEROSNAP:
-         np->state.status |= STAT_NOAEROSNAP;
+      case OPTION_AEROSNAP:
+         np->state.status |= STAT_AEROSNAP;
          break;
       default:
          Debug("invalid option: %d", lp->option);

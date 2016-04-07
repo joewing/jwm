@@ -88,6 +88,7 @@ static const unsigned int KEY_MAP_COUNT = ARRAY_LENGTH(KEY_MAP);
  * Note that this mapping must be sorted.
  */
 static const StringMappingType OPTION_MAP[] = {
+   { "aerosnap",           OPTION_AEROSNAP      },
    { "border",             OPTION_BORDER        },
    { "centered",           OPTION_CENTERED      },
    { "constrain",          OPTION_CONSTRAIN     },
@@ -100,7 +101,6 @@ static const StringMappingType OPTION_MAP[] = {
    { "ipager",             OPTION_IPAGER        },
    { "maximized",          OPTION_MAXIMIZED     },
    { "minimized",          OPTION_MINIMIZED     },
-   { "noaerosnap",         OPTION_NOAEROSNAP    },
    { "noborder",           OPTION_NOBORDER      },
    { "noclose",            OPTION_NOCLOSE       },
    { "nofocus",            OPTION_NOFOCUS       },

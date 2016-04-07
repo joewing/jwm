@@ -744,6 +744,13 @@ second string in WM_CLASS).
 An option for this group. Possible options are:
 
 .P
+.B aerosnap
+.RS
+Enable auto-maximization when a window is dragged to the corner of the
+screen.
+.RE
+
+.P
 .B border
 .RS
 Causes windows in this group to have a border.
@@ -825,13 +832,6 @@ Make windows in this group initially maximized.
 .B minimized
 .RS
 Make windows in this group initially minimized.
-.RE
-
-.P
-.B noaerosnap
-.RS
-Disable auto-maximization when a window is dragged to the corner of the
-screen.
 .RE
 
 .P

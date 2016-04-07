@@ -51,7 +51,7 @@ typedef unsigned char OptionType;
 #define OPTION_ILIST          33    /**< Ignore program-specified list. */
 #define OPTION_IPAGER         34    /**< Ignore program-specified pager. */
 #define OPTION_FIXED          35    /**< Keep on the specified desktop. */
-#define OPTION_NOAEROSNAP     36    /**< Disallow Aero Snap. */
+#define OPTION_AEROSNAP       36    /**< Enable Aero Snap. */
 
 /*@{*/
 #define InitializeGroups() (void)(0)

@@ -191,7 +191,7 @@ char MoveClient(ClientNode *np, int startx, int starty)
             }
          } else {
             /* If alt is not pressed, snap to borders. */
-            if(!(np->state.status & STAT_NOAEROSNAP)) {
+            if(np->state.status & STAT_AEROSNAP) {
                if(atTop & atLeft) {
                   if(atSideFirst) {
                      MaximizeClient(np, MAX_TOP | MAX_LEFT);

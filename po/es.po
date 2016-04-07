@@ -72,25 +72,25 @@ msgstr "etiqueta Nombre de Escritorio vacía"
 
 #: src/dock.c:150
 msgid "only one Dock allowed"
-msgstr "solo se permite un Dock"
+msgstr "solo se permite un Muelle"
 
 #: src/dock.c:231
 msgid "could not acquire system tray selection"
-msgstr "no se pudo adquirir selección de bandeja de sistema"
+msgstr "no se pudo adquirir la selección de bandeja de sistema"
 
 #: src/error.c:22
 #, c-format
 msgid "JWM: error: "
-msgstr ""
+msgstr "JWM: error: "
 
 #: src/error.c:51
 #, c-format
 msgid "JWM: warning: "
-msgstr ""
+msgstr "JWM: advertencia: "
 
 #: src/error.c:77
 msgid "display is already managed"
-msgstr ""
+msgstr "el visor ya está manejado"
 
 #: src/font.c:109 src/font.c:126
 #, c-format
@@ -168,7 +168,7 @@ msgstr "atajo de teclado: menú raíz %d no definido"
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
-"%s[%u]: etiqueta de cierre «%s» no coincide con etiqueta de apertura «%s»"
+"%s[%u]: la etiqueta de cierre «%s» no coincide con la etiqueta de apertura «%s»"
 
 #: src/lex.c:206
 #, c-format
@@ -178,7 +178,7 @@ msgstr "%s[%u]: etiqueta de cierre inesperada y no válida"
 #: src/lex.c:212
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
-msgstr "%s[%u]: etiqueta de cierre \"%s\" sin etiqueta de apertura"
+msgstr "%s[%u]: etiqueta de cierre «%s» sin etiqueta de apertura"
 
 #: src/lex.c:215
 #, c-format
@@ -212,12 +212,12 @@ msgstr "Sin memoria"
 #: src/parse.c:224
 #, fuzzy, c-format
 msgid "could not open %s or %s"
-msgstr "no se pudo cargar el tipo de letra: %s"
+msgstr "no se pudo abrir %s o %s"
 
 #: src/parse.c:242
 #, c-format
 msgid "include depth (%d) exceeded"
-msgstr ""
+msgstr "se excedió la profundidad de capa (%d)"
 
 #: src/parse.c:377
 #, fuzzy, c-format
@@ -246,17 +246,17 @@ msgstr "alineación vertical no válida para bandeja: «%s»"
 
 #: src/parse.c:940
 msgid "no include file specified"
-msgstr ""
+msgstr "no se especificó un archivo de capa"
 
 #: src/parse.c:950
 #, fuzzy, c-format
 msgid "could not process include: %s"
-msgstr "no se pudo cargar el tipo de letra: %s"
+msgstr "no se pudo procesar la capa: %s"
 
 #: src/parse.c:954
 #, fuzzy, c-format
 msgid "could not open included file: %s"
-msgstr "no se pudo cargar el tipo de letra: %s"
+msgstr "no se pudo abrir el archivo de capa: %s"
 
 #: src/parse.c:1612
 #, fuzzy, c-format
@@ -276,7 +276,7 @@ msgstr "acción no válida para Botón de Bandeja: «%s»"
 #: src/parse.c:1819
 #, c-format
 msgid "%s is empty"
-msgstr ""
+msgstr "%s está vacío"
 
 #: src/parse.c:1826
 #, fuzzy, c-format
@@ -286,7 +286,7 @@ msgstr "acción no válida para Botón de Bandeja: «%s»"
 #: src/parse.c:1844
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
-msgstr "etiqueta no válida en %s: %s"
+msgstr "etiqueta no válida en %s: «%s»"
 
 #: src/parse.c:1948 src/parse.c:1965
 #, fuzzy
@@ -353,12 +353,12 @@ msgstr "Enviar A"
 #: src/taskbar.c:967
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
-msgstr "ancho máx. no válido para Lista de Tareas: %s"
+msgstr "ancho máximo no válido para Lista de Tareas: %s"
 
 #: src/taskbar.c:981
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
-msgstr "ancho máx. no válido para Lista de Tareas: %s"
+msgstr "ancho máximo no válido para Lista de Tareas: %s"
 
 #: src/tray.c:1064
 #, c-format

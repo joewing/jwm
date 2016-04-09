@@ -26,11 +26,13 @@
                 <xsl:when test=". = 'true'">
                     <xsl:text>bottom</xsl:text>
                 </xsl:when>
-                <xsl:otherwise><xsl:text>off</xsl:text></xsl:otherwise>
+                <xsl:when test=". = 'false'">
+                    <xsl:text>off</xsl:text>
+                </xsl:when>
+                <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
             </xsl:choose>
         </xsl:attribute>
     </xsl:template>
-
     <!-- Prefix the contents of Clock tags with exec within a Button tag. -->
     <xsl:template match="Clock">
         <Clock>

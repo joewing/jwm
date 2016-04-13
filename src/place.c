@@ -40,6 +40,7 @@ static void CascadeClient(const BoundingBox *box, ClientNode *np);
 
 static void SubtractStrutBounds(BoundingBox *box, const ClientNode *np);
 static void SubtractBounds(const BoundingBox *src, BoundingBox *dest);
+static void SubtractTrayBounds(BoundingBox *box, unsigned int layer);
 static void SetWorkarea(void);
 
 /** Startup placement. */
@@ -57,7 +58,6 @@ void StartupPlacement(void)
    }
 
    SetWorkarea();
-
 }
 
 /** Shutdown placement. */
@@ -342,12 +342,12 @@ void SubtractBounds(const BoundingBox *src, BoundingBox *dest)
 }
 
 /** Subtract tray area from the bounding box. */
-void SubtractTrayBounds(const TrayType *tp, BoundingBox *box,
-                        unsigned int layer)
+void SubtractTrayBounds(BoundingBox *box, unsigned int layer)
 {
+   const TrayType *tp;
    BoundingBox src;
    BoundingBox last;
-   for(; tp; tp = tp->next) {
+   for(tp = GetTrays(); tp; tp = tp->next) {
 
       if(tp->layer > layer && tp->autoHide == THIDE_OFF) {
 
@@ -643,7 +643,7 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
 
       sp = GetMouseScreen();
       GetScreenBounds(sp, &box);
-      SubtractTrayBounds(GetTrays(), &box, np->state.layer);
+      SubtractTrayBounds(&box, np->state.layer);
       SubtractStrutBounds(&box, np);
 
       /* If tiled is specified, first attempt to use tiled placement. */
@@ -683,7 +683,7 @@ char ConstrainSize(ClientNode *np)
    /* Constrain the width if necessary. */
    sp = GetCurrentScreen(np->x, np->y);
    GetScreenBounds(sp, &box);
-   SubtractTrayBounds(GetTrays(), &box, np->state.layer);
+   SubtractTrayBounds(&box, np->state.layer);
    SubtractStrutBounds(&box, np);
    GetBorderSize(&np->state, &north, &south, &east, &west);
    if(np->width + east + west > sp->width) {
@@ -748,7 +748,7 @@ void ConstrainPosition(ClientNode *np)
    box.y = 0;
    box.width = rootWidth;
    box.height = rootHeight;
-   SubtractTrayBounds(GetTrays(), &box, np->state.layer);
+   SubtractTrayBounds(&box, np->state.layer);
    SubtractStrutBounds(&box, np);
 
    /* Fix the position. */
@@ -771,7 +771,6 @@ void ConstrainPosition(ClientNode *np)
 /** Place a maximized client on the screen. */
 void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
 {
-
    BoundingBox box;
    const ScreenType *sp;
    int north, south, east, west;
@@ -795,7 +794,7 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
       box.y = np->y - north;
       box.height = np->height + north + south;
    }
-   SubtractTrayBounds(GetTrays(), &box, np->state.layer);
+   SubtractTrayBounds(&box, np->state.layer);
    SubtractStrutBounds(&box, np);
 
    if(box.width > np->maxWidth) {
@@ -812,20 +811,6 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
       if(box.width * np->aspect.maxy > box.height * np->aspect.maxx) {
          box.width = (box.height * np->aspect.maxx) / np->aspect.maxy;
       }
-   }
-
-   /* Remove window outlines. */
-   if(flags & (MAX_VERT | MAX_TOP)) {
-      north = Max(0, north - 1);
-   }
-   if(flags & (MAX_VERT | MAX_BOTTOM)) {
-      south = Max(0, south - 1);
-   }
-   if(flags & (MAX_HORIZ | MAX_LEFT)) {
-      west = Max(0, west - 1);
-   }
-   if(flags & (MAX_HORIZ | MAX_RIGHT)) {
-      east = Max(0, east - 1);
    }
 
    /* If maximizing horizontally, update width. */
@@ -875,7 +860,6 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
 /** Determine which way to move the client for the border. */
 void GetGravityDelta(const ClientNode *np, int gravity, int *x, int  *y)
 {
-
    int north, south, east, west;
    GetBorderSize(&np->state, &north, &south, &east, &west);
    switch(gravity) {
@@ -920,13 +904,11 @@ void GetGravityDelta(const ClientNode *np, int gravity, int *x, int  *y)
       *y = 0;
       break;
    }
-
 }
 
 /** Move the window in the specified direction for reparenting. */
 void GravitateClient(ClientNode *np, char negate)
 {
-
    int deltax, deltay;
    GetGravityDelta(np, np->gravity, &deltax, &deltay);
    if(negate) {
@@ -936,7 +918,6 @@ void GravitateClient(ClientNode *np, char negate)
       np->x -= deltax;
       np->y -= deltay;
    }
-
 }
 
 /** Set _NET_WORKAREA. */
@@ -955,7 +936,7 @@ void SetWorkarea(void)
    box.width = rootWidth;
    box.height = rootHeight;
 
-   SubtractTrayBounds(GetTrays(), &box, LAYER_NORMAL);
+   SubtractTrayBounds(&box, LAYER_NORMAL);
    SubtractStrutBounds(&box, NULL);
 
    for(x = 0; x < settings.desktopCount; x++) {
@@ -969,6 +950,4 @@ void SetWorkarea(void)
                     (unsigned char*)array, settings.desktopCount * 4);
 
    ReleaseStack(array);
-
 }
-

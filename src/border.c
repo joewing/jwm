@@ -453,10 +453,11 @@ void DrawBorderHelper(const ClientNode *np)
    /* Copy the pixmap for the title bar and clear the part of
     * the window to be drawn directly. */
    if(settings.windowDecorations == DECO_MOTIF) {
-      JXCopyArea(display, canvas, np->parent, gc, 2, 2,
-         width - 4, north - 2, 2, 2);
+      const int off = np->state.maxFlags ? 0 : 2;
+      JXCopyArea(display, canvas, np->parent, gc, off, off,
+         width - 2 * off, north - off, off, off);
       JXClearArea(display, np->parent,
-         2, north, width - 4, height - north - 2, False);
+         off, north, width - 2 * off, height - north - off, False);
    } else {
       JXCopyArea(display, canvas, np->parent, gc, 1, 1,
          width - 2, north - 1, 1, 1);
@@ -532,7 +533,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       pixelDown = colors[COLOR_TITLE_DOWN];
    }
 
-   if(!(np->state.maxFlags & MAX_VERT)) {
+   if(!(np->state.maxFlags & (MAX_VERT | MAX_TOP))) {
       /* Top title border. */
       segments[offset].x1 = west;
       segments[offset].y1 = settings.borderWidth;
@@ -541,7 +542,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       offset += 1;
    }
 
-   if(!(np->state.maxFlags & MAX_HORIZ)) {
+   if(!(np->state.maxFlags & (MAX_HORIZ | MAX_RIGHT))) {
       /* Right title border. */
       segments[offset].x1 = west;
       segments[offset].y1 = south + 1;
@@ -564,7 +565,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    segments[offset].y2 = height - south;
    offset += 1;
 
-   if(!(np->state.maxFlags & MAX_HORIZ)) {
+   if(!(np->state.maxFlags & (MAX_HORIZ | MAX_LEFT))) {
       /* Left border. */
       segments[offset].x1 = 0;
       segments[offset].y1 = 0;
@@ -578,7 +579,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       offset += 1;
    }
 
-   if(!(np->state.maxFlags & MAX_VERT)) {
+   if(!(np->state.maxFlags & (MAX_VERT | MAX_TOP))) {
       /* Top border. */
       segments[offset].x1 = 1;
       segments[offset].y1 = 0;
@@ -604,7 +605,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    segments[offset].y2 = north - 1;
    offset += 1;
 
-   if(!(np->state.maxFlags & MAX_HORIZ)) {
+   if(!(np->state.maxFlags & (MAX_HORIZ | MAX_RIGHT))) {
       /* Right title border. */
       segments[offset].x1 = width - east - 1;
       segments[offset].y1 = south + 1;
@@ -613,7 +614,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       offset += 1;
    }
 
-   if(!(np->state.maxFlags & MAX_VERT)) {
+   if(!(np->state.maxFlags & (MAX_VERT | MAX_TOP))) {
       /* Inside top border. */
       segments[offset].x1 = west - 1;
       segments[offset].y1 = settings.borderWidth - 1;
@@ -622,7 +623,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       offset += 1;
    }
 
-   if(!(np->state.maxFlags & MAX_HORIZ)) {
+   if(!(np->state.maxFlags & (MAX_HORIZ | MAX_LEFT))) {
       /* Inside left border. */
       segments[offset].x1 = west - 1;
       segments[offset].y1 = south;
@@ -631,7 +632,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       offset += 1;
    }
 
-   if(!(np->state.maxFlags & MAX_HORIZ)) {
+   if(!(np->state.maxFlags & (MAX_HORIZ | MAX_RIGHT))) {
       /* Right border. */
       segments[offset].x1 = width - 1;
       segments[offset].y1 = 0;
@@ -645,7 +646,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       offset += 1;
    }
 
-   if(!(np->state.maxFlags & MAX_VERT)) {
+   if(!(np->state.maxFlags & (MAX_VERT | MAX_BOTTOM))) {
       /* Bottom border. */
       segments[offset].x1 = 0;
       segments[offset].y1 = height - 1;
@@ -1183,6 +1184,9 @@ void GetBorderSize(const ClientState *state,
          *north = 0;
       } else {
          *north = settings.borderWidth;
+         if(state->maxFlags & (MAX_VERT | MAX_TOP)) {
+            *north = Max(0, *north - 1);
+         }
       }
       if(state->maxFlags & MAX_VERT) {
          *south = 0;
@@ -1199,12 +1203,15 @@ void GetBorderSize(const ClientState *state,
          }
       }
 
-      if(state->maxFlags & MAX_HORIZ) {
-         *east = 0;
+      if(state->maxFlags & (MAX_HORIZ | MAX_LEFT)) {
          *west = 0;
       } else {
-         *east = settings.borderWidth;
          *west = settings.borderWidth;
+      }
+      if(state->maxFlags & (MAX_HORIZ | MAX_RIGHT)) {
+         *east = 0;
+      } else {
+         *east = settings.borderWidth;
       }
 
    } else {

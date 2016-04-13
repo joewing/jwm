@@ -192,43 +192,43 @@ char MoveClient(ClientNode *np, int startx, int starty)
          } else {
             /* If alt is not pressed, snap to borders. */
             if(np->state.status & STAT_AEROSNAP) {
+               MaxFlags flags = MAX_NONE;
                if(atTop & atLeft) {
                   if(atSideFirst) {
-                     MaximizeClient(np, MAX_TOP | MAX_LEFT);
+                     flags = MAX_TOP | MAX_LEFT;
                   } else {
-                     MaximizeClient(np, MAX_TOP | MAX_HORIZ);
+                     flags = MAX_TOP | MAX_HORIZ;
                   }
                } else if(atTop & atRight) {
                   if(atSideFirst) {
-                     MaximizeClient(np, MAX_TOP | MAX_RIGHT);
+                     flags = MAX_TOP | MAX_RIGHT;
                   } else {
-                     MaximizeClient(np, MAX_TOP | MAX_HORIZ);
+                     flags = MAX_TOP | MAX_HORIZ;
                   }
                } else if(atBottom & atLeft) {
                   if(atSideFirst) {
-                     MaximizeClient(np, MAX_BOTTOM | MAX_LEFT);
+                     flags = MAX_BOTTOM | MAX_LEFT;
                   } else {
-                     MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+                     flags = MAX_BOTTOM | MAX_HORIZ;
                   }
                } else if(atBottom & atRight) {
                   if(atSideFirst) {
-                     MaximizeClient(np, MAX_BOTTOM | MAX_RIGHT);
+                     flags = MAX_BOTTOM | MAX_RIGHT;
                   } else {
-                     MaximizeClient(np, MAX_BOTTOM | MAX_HORIZ);
+                     flags = MAX_BOTTOM | MAX_HORIZ;
                   }
                } else if(atLeft) {
-                  MaximizeClient(np, MAX_LEFT | MAX_VERT);
+                  flags = MAX_LEFT | MAX_VERT;
                   atSideFirst = 1;
                } else if(atRight) {
-                  MaximizeClient(np, MAX_RIGHT | MAX_VERT);
+                  flags = MAX_RIGHT | MAX_VERT;
                   atSideFirst = 1;
                } else if(atTop | atBottom) {
-                  MaximizeClient(np, MAX_VERT | MAX_HORIZ);
+                  flags = MAX_VERT | MAX_HORIZ;
                   atSideFirst = 0;
-               } else {
-                  if(np->state.maxFlags != MAX_NONE) {
-                     MaximizeClient(np, MAX_NONE);
-                  }
+               }
+               MaximizeClient(np, flags);
+               if(!np->state.maxFlags) {
                   DoSnap(np);
                }
             } else {

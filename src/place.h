@@ -83,13 +83,5 @@ void ConstrainPosition(ClientNode *np);
  */
 void GetScreenBounds(const struct ScreenType *sp, BoundingBox *box);
 
-/** Subtract bounds for the configured trays.
- * @param tp The first tray to consider.
- * @param box The bounding box.
- * @param layer The maximum layer of the tray bounds.
- */
-void SubtractTrayBounds(const struct TrayType *tp, BoundingBox *box,
-                        unsigned int layer);
-
 #endif /* PLACE_H */
 

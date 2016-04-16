@@ -762,7 +762,7 @@ MenuSelectionType UpdateMotion(Menu *menu,
    if(ip && IsMenuValid(ip->submenu)) {
       const int x = menu->x + menu->width
                   - (settings.menuDecorations == DECO_MOTIF ? 0 : 1);
-      const int y = menu->y + menu->offsets[menu->currentIndex];
+      const int y = menu->y + menu->offsets[menu->currentIndex] - 1;
       if(ShowSubmenu(ip->submenu, menu, runner, x, y, 0)) {
 
          /* Item selected; destroy the menu tree. */

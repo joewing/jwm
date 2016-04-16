@@ -125,14 +125,14 @@ void ProcessActionPress(struct ActionType *actions,
    GetRootMenuSize(menu, &mwidth, &mheight);
    sp = GetCurrentScreen(cp->screenx, cp->screeny);
    if(cp->tray->layout == LAYOUT_HORIZONTAL) {
-      x = cp->screenx;
+      x = cp->screenx - 1;
       if(cp->screeny + cp->height / 2 < sp->y + sp->height / 2) {
          y = cp->screeny + cp->height;
       } else {
          y = cp->screeny - mheight;
       }
    } else {
-      y = cp->screeny;
+      y = cp->screeny - 1;
       if(cp->screenx + cp->width / 2 < sp->x + sp->width / 2) {
          x = cp->screenx + cp->width;
       } else {

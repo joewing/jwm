@@ -105,12 +105,6 @@ char ParseColor(const char *value, XColor *color);
  */
 void GetColor(XColor *c);
 
-/** Get the RGB components from a color pixel.
- * This does the reverse of GetColor.
- * @param c The structure containing the rgb values and pixel value.
- */
-void GetColorFromPixel(XColor *c);
-
 #ifdef USE_XFT
 /** Get an XFT color.
  * @param type The color whose XFT color to get.

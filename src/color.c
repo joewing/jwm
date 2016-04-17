@@ -26,9 +26,6 @@ static unsigned long rgbColors[COLOR_COUNT];
 /* Map a linear 8-bit RGB space to pixel values. */
 static unsigned long *rgbToPixel;
 
-/* Map 8-bit pixel values to a 24-bit linear RGB space. */
-static unsigned long *pixelToRgb;
-
 /* Maximum number of colors to allocate for icons. */
 static const unsigned MAX_COLORS = 64;
 
@@ -200,8 +197,6 @@ void StartupColors(void)
       blueBits = ComputeShift(0x03, &blueShift);
       rgbToPixel = Allocate(sizeof(unsigned long) * MAX_COLORS);
       memset(rgbToPixel, 0xFF, sizeof(unsigned long) * MAX_COLORS);
-      pixelToRgb = Allocate(sizeof(unsigned long) * MAX_COLORS);
-      memset(pixelToRgb, 0xFF, sizeof(unsigned long) * MAX_COLORS);
       break;
    }
 
@@ -275,7 +270,6 @@ void ShutdownColors(void)
          }
       }
       Release(rgbToPixel);
-      Release(pixelToRgb);
       rgbToPixel = NULL;
    }
 
@@ -442,7 +436,6 @@ void GetMappedPixel(XColor *c)
       c->blue  = (c->blue  & 0xC000) | 0x0800;
       JXAllocColor(display, rootColormap, c);
       rgbToPixel[index] = c->pixel;
-      pixelToRgb[c->pixel & (MAX_COLORS - 1)] = index;
    } else {
       c->pixel = rgbToPixel[index];
    }
@@ -490,38 +483,6 @@ void GetColor(XColor *c)
       GetMappedPixel(c);
       return;
    }
-}
-
-/** Get the RGB components from a pixel value. */
-void GetColorFromPixel(XColor *c)
-{
-   unsigned long pixel = c->pixel;
-   switch(rootVisual->class) {
-   case DirectColor:
-   case TrueColor:
-      /* Nothing to do. */
-      break;
-   default:
-      /* Convert from a pixel value to a linear RGB space. */
-      if(pixelToRgb[pixel & (MAX_COLORS - 1)] == ULONG_MAX) {
-         JXQueryColor(display, rootColormap, c);
-         pixelToRgb[c->pixel & (MAX_COLORS - 1)] = GetDirectPixel(c);
-         return;
-      } else {
-         pixel = pixelToRgb[pixel & (MAX_COLORS - 1)];
-      }
-      break;
-   }
-
-   /* Extract the RGB components from the linear RGB pixel value. */
-   c->red   = (pixel >> redShift)   & ((1 << redBits)   - 1);
-   c->green = (pixel >> greenShift) & ((1 << greenBits) - 1);
-   c->blue  = (pixel >> blueShift)  & ((1 << blueBits)  - 1);
-
-   /* Expand to 16 bits. */
-   c->red   <<= 16 - redBits;
-   c->green <<= 16 - greenBits;
-   c->blue  <<= 16 - blueBits;
 }
 
 /** Get an XFT color for the specified component. */

@@ -39,14 +39,14 @@ void DrawHorizontalGradient(Drawable d, GC g,
 
    /* Load the "from" color. */
    temp.pixel = fromColor;
-   GetColorFromPixel(&temp);
+   JXQueryColor(display, rootColormap, &temp);
    ared = (unsigned int)temp.red << shift;
    agreen = (unsigned int)temp.green << shift;
    ablue = (unsigned int)temp.blue << shift;
 
    /* Load the "to" color. */
    temp.pixel = toColor;
-   GetColorFromPixel(&temp);
+   JXQueryColor(display, rootColormap, &temp);
    bred = (unsigned int)temp.red << shift;
    bgreen = (unsigned int)temp.green << shift;
    bblue = (unsigned int)temp.blue << shift;
@@ -78,6 +78,4 @@ void DrawHorizontalGradient(Drawable d, GC g,
       blue += blueStep;
 
    }
-
 }
-

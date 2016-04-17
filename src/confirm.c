@@ -64,12 +64,12 @@ static char HandleDialogButtonPress(const XButtonEvent *event);
 static char HandleDialogButtonRelease(const XButtonEvent *event);
 static char HandleDialogKeyPress(const XKeyEvent *event);
 
-static const char * const GetOKString()
+static const char *GetOKString()
 {
    return _("OK");
 }
 
-static const char * const GetCancelString()
+static const char *GetCancelString()
 {
    return _("Cancel");
 }

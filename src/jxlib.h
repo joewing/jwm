@@ -22,6 +22,9 @@
 #define JXQueryColor( a, b, c ) \
    ( SetCheckpoint(), XQueryColor( a, b, c ) )
 
+#define JXQueryColors( a, b, c, d ) \
+   ( SetCheckpoint(), XQueryColors( a, b, c, d ) )
+
 #define JXAllowEvents( a, b, c ) \
    ( SetCheckpoint(), XAllowEvents( a, b, c ) )
 

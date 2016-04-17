@@ -564,35 +564,30 @@ ImageNode *LoadXBMImage(const char *fileName)
 ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
 {
    ImageNode *result;
+   XColor *colors;
    unsigned char *dest;
    int x, y;
 
    result = CreateImage(image->width, image->height, 0);
+   colors = AllocateStack(image->width * sizeof(XColor));
    dest = result->data;
    for(y = 0; y < image->height; y++) {
       for(x = 0; x < image->width; x++) {
-         XColor color;
-
+         colors[x].pixel = XGetPixel(image, x, y);
+      }
+      JXQueryColors(display, rootColormap, colors, image->width);
+      for(x = 0; x < image->width; x++) {
          if(!shape || XGetPixel(shape, x, y)) {
             *dest++ = 255;
          } else {
             *dest++ = 0;
          }
-
-         color.pixel = XGetPixel(image, x, y);
-         if(image->depth == 1) {
-            const unsigned char value =  color.pixel ? 0 : 255;
-            *dest++ = value;
-            *dest++ = value;
-            *dest++ = value;
-         } else {
-            GetColorFromPixel(&color);
-            *dest++ = (unsigned char)(color.red   >> 8);
-            *dest++ = (unsigned char)(color.green >> 8);
-            *dest++ = (unsigned char)(color.blue  >> 8);
-         }
+         *dest++ = (unsigned char)(colors[x].red   >> 8);
+         *dest++ = (unsigned char)(colors[x].green >> 8);
+         *dest++ = (unsigned char)(colors[x].blue  >> 8);
       }
    }
+   ReleaseStack(colors);
 
    return result;
 

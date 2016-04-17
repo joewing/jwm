@@ -561,37 +561,42 @@ ImageNode *LoadXBMImage(const char *fileName)
 
 /** Create an image from XImages giving color and shape information. */
 #ifdef USE_ICONS
+#define HASH_SIZE 16
 ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
 {
+   XColor colors[HASH_SIZE];
    ImageNode *result;
-   XColor *colors;
    unsigned char *dest;
    int x, y;
 
+   memset(colors, 0xFF, sizeof(colors));
    result = CreateImage(image->width, image->height, 0);
-   colors = AllocateStack(image->width * sizeof(XColor));
    dest = result->data;
    for(y = 0; y < image->height; y++) {
       for(x = 0; x < image->width; x++) {
-         colors[x].pixel = XGetPixel(image, x, y);
-      }
-      JXQueryColors(display, rootColormap, colors, image->width);
-      for(x = 0; x < image->width; x++) {
-         if(!shape || XGetPixel(shape, x, y)) {
-            *dest++ = 255;
-         } else {
-            *dest++ = 0;
+         const unsigned long pixel = XGetPixel(image, x, y);
+         *dest++ = (!shape || XGetPixel(shape, x, y)) ? 255 : 0;
+         if(image->depth == 1) {
+            const unsigned char value = pixel ? 0 : 255;
+            *dest++ = value;
+            *dest++ = value;
+            *dest++ = value;
+         } else{
+            const unsigned index = pixel % HASH_SIZE;
+            if(colors[index].pixel != pixel) {
+               colors[index].pixel = pixel;
+               JXQueryColor(display, rootColormap, &colors[index]);
+            }
+            *dest++ = (unsigned char)(colors[index].red   >> 8);
+            *dest++ = (unsigned char)(colors[index].green >> 8);
+            *dest++ = (unsigned char)(colors[index].blue  >> 8);
          }
-         *dest++ = (unsigned char)(colors[x].red   >> 8);
-         *dest++ = (unsigned char)(colors[x].green >> 8);
-         *dest++ = (unsigned char)(colors[x].blue  >> 8);
       }
    }
-   ReleaseStack(colors);
 
    return result;
-
 }
+#undef HASH_SIZE
 #endif /* USE_ICONS */
 
 ImageNode *CreateImage(unsigned width, unsigned height, char bitmap)

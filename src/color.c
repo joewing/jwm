@@ -160,7 +160,7 @@ static unsigned blueBits;
 static unsigned ComputeShift(unsigned long maskIn, unsigned *shiftOut);
 static unsigned long GetRGBFromXColor(const XColor *c);
 
-static void GetDirectPixel(XColor *c);
+static unsigned long GetDirectPixel(const XColor *c);
 static void GetMappedPixel(XColor *c);
 static void AllocateColor(ColorType type, XColor *c);
 
@@ -181,6 +181,9 @@ void StartupColors(void)
    unsigned int x;
    XColor c;
 
+   /* Initialize the color array. */
+   memset(rgbColors, 0xFF, sizeof(rgbColors));
+
    /* Determine how to convert between RGB triples and pixels. */
    switch(rootVisual->class) {
    case DirectColor:
@@ -198,6 +201,7 @@ void StartupColors(void)
       rgbToPixel = Allocate(sizeof(unsigned long) * MAX_COLORS);
       memset(rgbToPixel, 0xFF, sizeof(unsigned long) * MAX_COLORS);
       pixelToRgb = Allocate(sizeof(unsigned long) * MAX_COLORS);
+      memset(pixelToRgb, 0xFF, sizeof(unsigned long) * MAX_COLORS);
       break;
    }
 
@@ -259,7 +263,17 @@ void ShutdownColors(void)
             JXFreeColors(display, rootColormap, &rgbToPixel[x], 1, 0);
          }
       }
-      JXFreeColors(display, rootColormap, colors, COLOR_COUNT, 0);
+      for(x = 0; x < COLOR_COUNT; x++) {
+         if(rgbColors[x] != ULONG_MAX) {
+            unsigned y;
+            JXFreeColors(display, rootColormap, &colors[x], 1, 0);
+            for(y = x; y < COLOR_COUNT; y++) {
+               if(colors[y] == colors[x]) {
+                  rgbColors[y] = ULONG_MAX;
+               }
+            }
+         }
+      }
       Release(rgbToPixel);
       Release(pixelToRgb);
       rgbToPixel = NULL;
@@ -410,38 +424,22 @@ unsigned long ReadHex(const char *hex)
 }
 
 /** Compute the pixel value from RGB components. */
-void GetDirectPixel(XColor *c)
+unsigned long GetDirectPixel(const XColor *c)
 {
-   unsigned long red   = c->red;
-   unsigned long green = c->green;
-   unsigned long blue  = c->blue;
-
-   red   = (red   >> (16 - redBits  )) << redShift;
-   green = (green >> (16 - greenBits)) << greenShift;
-   blue  = (blue  >> (16 - blueBits )) << blueShift;
-
-   c->pixel = red | green | blue;
+   const unsigned long red   = (c->red   >> (16 - redBits  )) << redShift;
+   const unsigned long green = (c->green >> (16 - greenBits)) << greenShift;
+   const unsigned long blue  = (c->blue  >> (16 - blueBits )) << blueShift;
+   return red | green | blue;
 }
 
 /** Compute the pixel value from RGB components. */
 void GetMappedPixel(XColor *c)
 {
-   unsigned long index;
-   GetDirectPixel(c);
-   index = c->pixel;
+   const unsigned long index = GetDirectPixel(c);
    if(rgbToPixel[index] == ULONG_MAX) {
-      c->red &= 0xC000;
-      c->green &= 0xC000;
-      c->blue &= 0xC000;
-      c->red |= c->red >> 8;
-      c->red |= c->red >> 4;
-      c->red |= c->red >> 2;
-      c->green |= c->green >> 8;
-      c->green |= c->green >> 4;
-      c->green |= c->green >> 2;
-      c->blue |= c->blue >> 8;
-      c->blue |= c->blue >> 4;
-      c->blue |= c->blue >> 2;
+      c->red   = (c->red   & 0xC000) | 0x0800;
+      c->green = (c->green & 0xC000) | 0x0800;
+      c->blue  = (c->blue  & 0xC000) | 0x0800;
       JXAllocColor(display, rootColormap, c);
       rgbToPixel[index] = c->pixel;
       pixelToRgb[c->pixel & (MAX_COLORS - 1)] = index;
@@ -453,17 +451,31 @@ void GetMappedPixel(XColor *c)
 /** Allocate a pixel from RGB components. */
 void AllocateColor(ColorType type, XColor *c)
 {
+   unsigned i;
+
+   /* Save the desired RGB color. */
+   rgbColors[type] = GetRGBFromXColor(c);
+
+   /* Look up the pixel value to use. */
    switch(rootVisual->class) {
    case DirectColor:
    case TrueColor:
-      GetDirectPixel(c);
+      c->pixel = GetDirectPixel(c);
       break;
    default:
+      /* First see if we already know about this color. */
+      for(i = 0; i < COLOR_COUNT; i++) {
+         if(i != type && rgbColors[i] == rgbColors[type]) {
+            colors[type] = colors[i];
+            return;
+         }
+      }
+
+      /* Allocate a new read-only cell. */
       JXAllocColor(display, rootColormap, c);
       break;
    }
    colors[type] = c->pixel;
-   rgbColors[type] = GetRGBFromXColor(c);
 }
 
 /** Compute the pixel value from RGB components. */
@@ -472,7 +484,7 @@ void GetColor(XColor *c)
    switch(rootVisual->class) {
    case DirectColor:
    case TrueColor:
-      GetDirectPixel(c);
+      c->pixel = GetDirectPixel(c);
       return;
    default:
       GetMappedPixel(c);
@@ -491,7 +503,13 @@ void GetColorFromPixel(XColor *c)
       break;
    default:
       /* Convert from a pixel value to a linear RGB space. */
-      pixel = pixelToRgb[pixel & (MAX_COLORS - 1)];
+      if(pixelToRgb[pixel & (MAX_COLORS - 1)] == ULONG_MAX) {
+         JXQueryColor(display, rootColormap, c);
+         pixelToRgb[c->pixel & (MAX_COLORS - 1)] = GetDirectPixel(c);
+         return;
+      } else {
+         pixel = pixelToRgb[pixel & (MAX_COLORS - 1)];
+      }
       break;
    }
 

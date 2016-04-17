@@ -201,7 +201,7 @@ static void ParseResizeMode(const TokenNode *tp);
 static void ParseFocusModel(const TokenNode *tp);
 
 static AlignmentType ParseTextAlignment(const TokenNode *tp);
-static DecorationsType ParseDecorations(const TokenNode *tp);
+static void ParseDecorations(const TokenNode *tp, DecorationsType *deco);
 static void ParseGradient(const char *value, ColorType a, ColorType b);
 static char *FindAttribute(AttributeNode *ap, const char *name);
 static int ParseTokenValue(const StringMappingType *mapping, int count,
@@ -863,7 +863,7 @@ void ParseWindowStyle(const TokenNode *tp)
 {
    const TokenNode *np;
 
-   settings.windowDecorations = ParseDecorations(tp);
+   ParseDecorations(tp, &settings.windowDecorations);
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FONT:
@@ -1046,7 +1046,7 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
    /* TrayStyle has extra attributes. */
    if(tp->type == TOK_TRAYSTYLE) {
       const char *temp;
-      settings.trayDecorations = ParseDecorations(tp);
+      ParseDecorations(tp, &settings.trayDecorations);
       temp = FindAttribute(tp->attributes, "group");
       if(temp) {
          settings.groupTasks = !strcmp(temp, TRUE_VALUE);
@@ -1647,7 +1647,7 @@ void ParseMenuStyle(const TokenNode *tp)
 {
    const TokenNode *np;
 
-   settings.menuDecorations = ParseDecorations(tp);
+   ParseDecorations(tp, &settings.menuDecorations);
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FONT:
@@ -1744,19 +1744,18 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
 }
 
 /** Parse decorations type. */
-DecorationsType ParseDecorations(const TokenNode *tp)
+void ParseDecorations(const TokenNode *tp, DecorationsType *deco)
 {
    const char *str = FindAttribute(tp->attributes, "decorations");
    if(str) {
       if(!strcmp(str, "motif")) {
-         return DECO_MOTIF;
+         *deco = DECO_MOTIF;
       } else if(!strcmp(str, "flat")) {
-         return DECO_FLAT;
+         *deco = DECO_FLAT;
       } else {
          ParseError(tp, _("invalid decorations: %s"), str);
       }
    }
-   return DECO_FLAT;
 }
 
 /** Parse a color which may be a gradient. */

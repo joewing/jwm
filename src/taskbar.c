@@ -500,7 +500,7 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
          } else {
             item->name = CopyString(cp->client->name);
          }
-         item->icon = cp->client->icon;
+         item->icon = cp->client->icon ? cp->client->icon : GetDefaultIcon();
          item->action.type = MA_EXECUTE;
          item->action.context = cp->client;
          item->next = menu->items;
@@ -781,8 +781,8 @@ void Render(const TaskBarType *bp)
       }
       button.x = x;
       button.y = y;
-      if(tp->clients->client->icon == &emptyIcon) {
-         button.icon = NULL;
+      if(!tp->clients->client->icon) {
+         button.icon = GetDefaultIcon();
       } else {
          button.icon = tp->clients->client->icon;
       }

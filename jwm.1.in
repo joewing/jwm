@@ -1792,6 +1792,10 @@ default. This is used for client windows that do not specify an icon.
 An icon to display for the minimize button on client windows instead
 of the default.
 .RE
+.B DefaultIcon
+.RS
+An icon to display for windows that do not specify an icon.
+.RE
 .B DoubleClickDelta
 .RS
 The number of pixels the mouse can move during a double click.

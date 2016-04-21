@@ -32,6 +32,7 @@ static const StringMappingType TOKEN_MAP[] = {
    { "ClockStyle",         TOK_CLOCKSTYLE       },
    { "Close",              TOK_CLOSE            },
    { "Corner",             TOK_CORNER           },
+   { "DefaultIcon",        TOK_DEFAULTICON      },
    { "Desktop",            TOK_DESKTOP          },
    { "Desktops",           TOK_DESKTOPS         },
    { "Dock",               TOK_DOCK             },

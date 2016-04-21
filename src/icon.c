@@ -66,6 +66,7 @@ static IconPathNode *iconPaths;
 static IconPathNode *iconPathsTail;
 static GC iconGC;
 static char iconSizeSet = 0;
+static char *defaultIconName;
 
 static void DoDestroyIcon(int index, IconNode *icon);
 static IconNode *ReadNetWMIcon(Window win);
@@ -99,6 +100,7 @@ void InitializeIcons(void)
    }
    memset(&emptyIcon, 0, sizeof(emptyIcon));
    iconSizeSet = 0;
+   defaultIconName = NULL;
 }
 
 /** Startup icon support. */
@@ -146,6 +148,10 @@ void DestroyIcons(void)
    if(iconHash) {
       Release(iconHash);
       iconHash = NULL;
+   }
+   if(defaultIconName) {
+      Release(defaultIconName);
+      defaultIconName = NULL;
    }
 }
 
@@ -447,6 +453,12 @@ IconNode *GetDefaultIcon(void)
    IconNode *result;
    unsigned bytes;
    unsigned x, y;
+
+   /* Load the specified default, if configured. */
+   if(defaultIconName) {
+      result = LoadNamedIcon(defaultIconName, 1, 1);
+      return result ? result : &emptyIcon;
+   }
 
    /* Check if this icon has already been loaded */
    result = FindIcon(name);
@@ -896,6 +908,15 @@ unsigned int GetHash(const char *str)
       hash &= (HASH_SIZE - 1);
    }
    return hash;
+}
+
+/** Set the name of the default icon. */
+void SetDefaultIcon(const char *name)
+{
+   if(defaultIconName) {
+      Release(defaultIconName);
+   }
+   defaultIconName = CopyString(name);
 }
 
 #endif /* USE_ICONS */

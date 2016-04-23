@@ -931,9 +931,11 @@ char DrawBorderIcon(BorderIconType t,
                     Pixmap canvas, long fg)
 {
    if(buttonIcons[t]) {
+#ifdef USE_ICONS
       const unsigned titleHeight = GetTitleHeight();
       PutIcon(buttonIcons[t], canvas, fg, xoffset + 2, yoffset + 2,
               titleHeight - 4, titleHeight - 4);
+#endif
       return 1;
    } else {
       return 0;

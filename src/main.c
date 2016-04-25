@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
    } action;
 
 #ifdef HAVE_PLEDGE
-   if(pledge("exec inet proc prot_exec rpath stdio unix", NULL) < 0) {
+   if(pledge("cpath exec inet proc prot_exec rpath stdio unix", NULL) < 0) {
       perror("pledge failed");
       DoExit(1);
    }
@@ -305,7 +305,7 @@ void OpenConnection(void)
 
    /* No longer need to open sockets. */
 #ifdef HAVE_PLEDGE
-   if(pledge("exec proc prot_exec rpath stdio", NULL) < 0) {
+   if(pledge("cpath exec proc prot_exec rpath stdio", NULL) < 0) {
       perror("pledge failed");
       DoExit(1);
    }

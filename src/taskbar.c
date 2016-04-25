@@ -766,7 +766,7 @@ void Render(const TaskBarType *bp)
       button.type = BUTTON_TASK;
       for(cp = tp->clients; cp; cp = cp->next) {
          if(ShouldFocus(cp->client, 0)) {
-            const char flash = cp->client->state.status & STAT_FLASH;
+            const char flash = (cp->client->state.status & STAT_FLASH) != 0;
             const char active = (cp->client->state.status & STAT_ACTIVE)
                && IsClientOnCurrentDesktop(cp->client);
             if(flash || active) {

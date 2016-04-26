@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-04-05 20:15-0500\n"
+"POT-Creation-Date: 2016-04-25 19:50-0500\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -157,47 +157,47 @@ msgstr ""
 msgid "key binding: root menu \"%s\" not defined"
 msgstr ""
 
-#: src/lex.c:200
+#: src/lex.c:201
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 
-#: src/lex.c:206
+#: src/lex.c:207
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr ""
 
-#: src/lex.c:212
+#: src/lex.c:213
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr ""
 
-#: src/lex.c:215
+#: src/lex.c:216
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr ""
 
-#: src/lex.c:233
+#: src/lex.c:234
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr ""
 
-#: src/lex.c:249
+#: src/lex.c:250
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr ""
 
-#: src/lex.c:305
+#: src/lex.c:306
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr ""
 
-#: src/lex.c:364
+#: src/lex.c:365
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr ""
 
-#: src/lex.c:470 src/parse.c:1875
+#: src/lex.c:471 src/parse.c:1877
 msgid "out of memory"
 msgstr ""
 
@@ -211,101 +211,101 @@ msgstr "konnte Schrift nicht laden: %s"
 msgid "include depth (%d) exceeded"
 msgstr ""
 
-#: src/parse.c:377
+#: src/parse.c:380
 #, fuzzy, c-format
 msgid "invalid start tag: %s"
 msgstr "ungültige Einstellung %s"
 
-#: src/parse.c:757
+#: src/parse.c:760
 #, fuzzy, c-format
 msgid "invalid include: %s"
 msgstr "ungültige Ebene %s"
 
-#: src/parse.c:807
+#: src/parse.c:810
 #, fuzzy
 msgid "no action specified for Key"
 msgstr "kein Wert für Hintergrund spezifiziert"
 
-#: src/parse.c:830
+#: src/parse.c:833
 #, fuzzy, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "ungültige Einstellung %s"
 
-#: src/parse.c:854
+#: src/parse.c:857
 #, fuzzy, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "ungültige Vertikalausrichtung für Leiste: \"%s\""
 
-#: src/parse.c:940
+#: src/parse.c:943
 msgid "no include file specified"
 msgstr ""
 
-#: src/parse.c:950
+#: src/parse.c:953
 #, fuzzy, c-format
 msgid "could not process include: %s"
 msgstr "konnte Schrift nicht laden: %s"
 
-#: src/parse.c:954
+#: src/parse.c:957
 #, fuzzy, c-format
 msgid "could not open included file: %s"
 msgstr "konnte Schrift nicht laden: %s"
 
-#: src/parse.c:1612
+#: src/parse.c:1615
 #, fuzzy, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "ungültige Einstellung %s"
 
-#: src/parse.c:1741
+#: src/parse.c:1744
 #, fuzzy, c-format
 msgid "invalid Group Option: %s"
 msgstr "ungültiger Gruppen-Desktop: %d"
 
-#: src/parse.c:1756
+#: src/parse.c:1759
 #, fuzzy, c-format
 msgid "invalid decorations: %s"
 msgstr "ungültige Einstellung %s"
 
-#: src/parse.c:1819
+#: src/parse.c:1821
 #, c-format
 msgid "%s is empty"
 msgstr ""
 
-#: src/parse.c:1826
+#: src/parse.c:1828
 #, fuzzy, c-format
 msgid "invalid %s: \"%s\""
 msgstr "ungültige Einstellung %s"
 
-#: src/parse.c:1844
+#: src/parse.c:1846
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "ungültiger tag in %s: %s"
 
-#: src/parse.c:1948 src/parse.c:1965
+#: src/parse.c:1950 src/parse.c:1967
 #, fuzzy
 msgid "no value specified"
 msgstr "kein Wert für Hintergrund spezifiziert"
 
-#: src/parse.c:1953
+#: src/parse.c:1955
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ungültige Einstellung %s"
 
-#: src/parse.c:1970
+#: src/parse.c:1972
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ungültige Opazität: \"%s\""
 
-#: src/parse.c:1991
+#: src/parse.c:1993
 #, c-format
 msgid "invalid layer: %s"
 msgstr "ungültige Ebene %s"
 
-#: src/parse.c:2012
+#: src/parse.c:2014
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ungültiger tag in %s: %s"
 
-#: src/parse.c:2033
+#: src/parse.c:2035
 msgid "configuration error"
 msgstr "Konfigurationsfehler"
 

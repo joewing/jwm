@@ -113,19 +113,6 @@ char WaitForEvent(XEvent *event)
 
    do {
 
-      if(restack_pending) {
-         RestackClients();
-         restack_pending = 0;
-      }
-      if(task_update_pending) {
-         UpdateTaskBar();
-         task_update_pending = 0;
-      }
-      if(pager_update_pending) {
-         UpdatePager();
-         pager_update_pending = 0;
-      }
-
       while(JXPending(display) == 0) {
          FD_ZERO(&fds);
          FD_SET(fd, &fds);
@@ -255,6 +242,19 @@ void Signal(void)
    TimeType now;
    Window w;
    int x, y;
+
+   if(restack_pending) {
+      RestackClients();
+      restack_pending = 0;
+   }
+   if(task_update_pending) {
+      UpdateTaskBar();
+      task_update_pending = 0;
+   }
+   if(pager_update_pending) {
+      UpdatePager();
+      pager_update_pending = 0;
+   }
 
    GetCurrentTime(&now);
    if(GetTimeDifference(&now, &last) < MIN_TIME_DELTA) {

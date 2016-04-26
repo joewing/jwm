@@ -75,7 +75,10 @@ AC_CHECK_HEADERS([langinfo.h iconv.h])
 AC_CHECK_HEADERS([locale.h libintl.h])
 
 AC_CHECK_HEADERS([X11/Xlib.h], [],
-   [ AC_MSG_ERROR([Xlib.h could not be found]) ])
+   [ AC_MSG_ERROR([Xlib.h could not be found]) ],
+   [
+#include <X11/X.h>
+   ])
 
 AC_CHECK_HEADERS([X11/Xutil.h X11/cursorfont.h X11/Xproto.h \
    X11/Xatom.h X11/keysym.h X11/Xresource.h], [], [],
@@ -406,7 +409,10 @@ if test "$enable_xpm" != "no"; then
 
    AC_CHECK_HEADERS([X11/xpm.h], [],
       [ enable_xpm="no";
-        AC_MSG_WARN([unable to use X11/xpm.h]) ])
+        AC_MSG_WARN([unable to use X11/xpm.h]) ],
+      [
+#include <X11/X.h>
+      ])
 
 fi
 if test "$enable_xpm" != "no"; then

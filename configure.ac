@@ -388,20 +388,6 @@ if test "$enable_fribidi" = "yes" ; then
 fi
 
 ############################################################################
-# Check if iconv support was requested and available.
-############################################################################
-AC_ARG_ENABLE(iconv,
-   AC_HELP_STRING([--disable-iconv],
-      [disable non-UTF-8 character set support]) )
-if test "$enable_iconv" != "no" ; then
-   AC_CHECK_FUNC(iconv,
-        [ AC_DEFINE(USE_ICONV, 1, [Enable iconv support])
-          enable_iconv="yes" ],
-        [ enable_iconv="no"
-          AC_MSG_WARN([iconv not found]) ])
-fi
-
-############################################################################
 # Check if XPM support was requested and available.
 ############################################################################
 AC_ARG_ENABLE(xpm,
@@ -598,7 +584,6 @@ echo "Options"
 echo
 echo "    Confirm:  $enable_confirm"
 echo "    Icon:     $enable_icons"
-echo "    Iconv:    $enable_iconv"
 echo "    Cairo:    $enable_cairo"
 echo "    RSVG:     $enable_rsvg"
 echo "    PNG:      $enable_png"

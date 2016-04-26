@@ -4,9 +4,11 @@ autom4te.cache
 config.guess
 config.h
 config.h.in
+config.h.in~
 config.log
 config.status
 config.sub
+config.rpath
 configure
 jwm.1
 po/Makefile

@@ -145,11 +145,12 @@ void ProcessActionPress(struct ActionType *actions,
       (cp->Redraw)(cp);
       UpdateSpecificTray(cp->tray, cp);
    }
-   ShowRootMenu(menu, x, y, 0);
-   cp->grabbed = 0;
-   if(cp->Redraw) {
-      (cp->Redraw)(cp);
-      UpdateSpecificTray(cp->tray, cp);
+   if(ShowRootMenu(menu, x, y, 0)) {
+      cp->grabbed = 0;
+      if(cp->Redraw) {
+         (cp->Redraw)(cp);
+         UpdateSpecificTray(cp->tray, cp);
+      }
    }
 }
 

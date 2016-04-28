@@ -167,15 +167,15 @@ void InitializeMenu(Menu *menu)
 }
 
 /** Show a menu. */
-void ShowMenu(Menu *menu, RunMenuCommandType runner,
+char ShowMenu(Menu *menu, RunMenuCommandType runner,
               int x, int y, char keyboard)
 {
    /* Don't show the menu if there isn't anything to show. */
    if(JUNLIKELY(!IsMenuValid(menu))) {
-      return;
+      return 0;
    }
    if(JUNLIKELY(shouldExit)) {
-      return;
+      return 0;
    }
 
    if(x < 0 && y < 0) {
@@ -186,12 +186,12 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner,
    }
 
    if(!GrabMouse(rootWindow)) {
-      return;
+      return 0;
    }
    if(JXGrabKeyboard(display, rootWindow, False, GrabModeAsync,
                      GrabModeAsync, CurrentTime) != GrabSuccess) {
       JXUngrabPointer(display, CurrentTime);
-      return;
+      return 0;
    }
 
    RegisterCallback(100, MenuCallback, menu);
@@ -207,6 +207,7 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner,
       ReloadMenu();
    }
 
+   return 1;
 }
 
 /** Hide a menu. */

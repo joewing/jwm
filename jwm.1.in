@@ -810,9 +810,25 @@ The icon to be used for windows in this group.
 .RE
 
 .P
+.B ilist
+.RS
+Ignore the program-specified list setting for windows in this group.
+If specified with \fBnolist\fP, windows will not be listed in the task
+list, otherwise windows will be listed.
+.RE
+
+.P
 .B iignore
 .RS
 Ignore the size increment hint when maximizing windows in this group.
+.RE
+
+.P
+.B ipager
+.RS
+Ignore the program-specified pager setting for windows in this group.
+If specified with \fBnopager\fP, windows will not be shown in the pager,
+otherwise windows will be shown.
 .RE
 
 .P
@@ -841,9 +857,27 @@ Causes windows in this group to be displayed without a border.
 .RE
 
 .P
+.B noclose
+.RS
+Prevent windows in this group from being closed.
+.RE
+
+.P
+.B nodrag
+.RS
+Disable mod1+drag moving/resizing for windows in this group.
+.RE
+
+.P
 .B nofocus
 .RS
 Prevents windows in the group from grabbing the focus when mapped.
+.RE
+
+.P
+.B nofullscreen
+.RS
+Prevent windows in this group from being fullscreen.
 .RE
 
 .P
@@ -854,37 +888,9 @@ is initially mapped.
 .RE
 
 .P
-.B ilist
-.RS
-Ignore the program-specified list setting for windows in this group.
-If specified with \fBnolist\fP, windows will not be listed in the task
-list, otherwise windows will be listed.
-.RE
-
-.P
 .B nopager
 .RS
 Causes the pager to ignore windows in this group.
-.RE
-
-.P
-.B ipager
-.RS
-Ignore the program-specified pager setting for windows in this group.
-If specified with \fBnopager\fP, windows will not be shown in the pager,
-otherwise windows will be shown.
-.RE
-
-.P
-.B noshade
-.RS
-Prevent windows in this group from being shaded.
-.RE
-
-.P
-.B nomin
-.RS
-Prevent windows in this group from being minimized.
 .RE
 
 .P
@@ -894,9 +900,9 @@ Prevent windows in this group from being maximized.
 .RE
 
 .P
-.B noclose
+.B nomin
 .RS
-Prevent windows in this group from being closed.
+Prevent windows in this group from being minimized.
 .RE
 
 .P
@@ -912,9 +918,9 @@ Prevent windows in this group from being resized.
 .RE
 
 .P
-.B nofullscreen
+.B noshade
 .RS
-Prevent windows in this group from being fullscreen.
+Prevent windows in this group from being shaded.
 .RE
 
 .P

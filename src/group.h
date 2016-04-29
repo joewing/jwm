@@ -52,6 +52,7 @@ typedef unsigned char OptionType;
 #define OPTION_IPAGER         34    /**< Ignore program-specified pager. */
 #define OPTION_FIXED          35    /**< Keep on the specified desktop. */
 #define OPTION_AEROSNAP       36    /**< Enable Aero Snap. */
+#define OPTION_NODRAG         37    /**< Disable mod1+drag/resize. */
 
 /*@{*/
 #define InitializeGroups() (void)(0)

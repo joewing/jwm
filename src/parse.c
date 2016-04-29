@@ -103,6 +103,7 @@ static const StringMappingType OPTION_MAP[] = {
    { "minimized",          OPTION_MINIMIZED     },
    { "noborder",           OPTION_NOBORDER      },
    { "noclose",            OPTION_NOCLOSE       },
+   { "nodrag",             OPTION_NODRAG        },
    { "nofocus",            OPTION_NOFOCUS       },
    { "nofullscreen",       OPTION_NOFULLSCREEN  },
    { "nolist",             OPTION_NOLIST        },

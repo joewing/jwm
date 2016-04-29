@@ -29,7 +29,7 @@ void PutScaledRenderIcon(const struct IconNode *image,
                          Drawable d, int x, int y, int width, int height);
 
 /** Create a scaled icon.
- * @param icon The icon.
+ * @param image The image.
  * @param fg The foreground color (for bitmaps).
  * @return The scaled icon.
  */

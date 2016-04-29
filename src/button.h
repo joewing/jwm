@@ -52,7 +52,6 @@ void DrawButton(ButtonNode *bp);
 /** Reset the contents of a ButtonNode structure.
  * @param bp The structure to reset.
  * @param d The drawable to use.
- * @param g The graphics context to use.
  */
 void ResetButton(ButtonNode *bp, Drawable d);
 

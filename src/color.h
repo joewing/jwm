@@ -98,7 +98,7 @@ void SetColor(ColorType c, const char *value);
  * @param color The color return value (with pixel and components filled).
  * @return 1 on success, 0 on failure.
  */
-char ParseColor(const char *value, XColor *color);
+char ParseColor(const char *value, XColor *c);
 
 /** Get the color pixel from red, green, and blue values.
  * @param c The structure containing the rgb values and the pixel value.

@@ -15,6 +15,7 @@
 #include "cursor.h"
 #include "command.h"
 #include "desktop.h"
+#include "menu.h"
 
 typedef struct ActionType {
    char *action;
@@ -73,6 +74,9 @@ void ProcessActionPress(struct ActionType *actions,
    int mwidth, mheight;
    int menu;
 
+   if(JUNLIKELY(menuShown)) {
+      return;
+   }
    if (x < -1 || x > cp->width) {
       return;
    }
@@ -161,6 +165,10 @@ void ProcessActionRelease(struct ActionType *actions,
 {
    const ActionType *ap;
    const int mask = 1 << button;
+
+   if(JUNLIKELY(menuShown)) {
+      return;
+   }
 
    cp->grabbed = 0;
    if(cp->Redraw) {

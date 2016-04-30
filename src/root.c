@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2004-2006
  *
- * @brief Functions to handle root menus.
+ * @brief Root menu functions.
  *
  */
 

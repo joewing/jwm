@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2004-2015
  *
- * @brief Functions for dealing with window borders.
+ * @brief Functions for handling window borders.
  * 
  */
 

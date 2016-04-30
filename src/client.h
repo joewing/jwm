@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2004-2007
  *
- * @brief Header file for client window functions.
+ * @brief Client window functions.
  *
  */
 

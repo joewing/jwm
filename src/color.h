@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2004-2006
  *
- * @brief Header for the color functions.
+ * @brief Functions to handle loading colors.
  *
  */
 
@@ -95,7 +95,7 @@ void SetColor(ColorType c, const char *value);
 
 /** Parse a color.
  * @param value The color name or hex value.
- * @param color The color return value (with pixel and components filled).
+ * @param c The color return value (with pixel and components filled).
  * @return 1 on success, 0 on failure.
  */
 char ParseColor(const char *value, XColor *c);

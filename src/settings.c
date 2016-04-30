@@ -2,6 +2,9 @@
  * @file settings.c
  * @author Joe Wingbermuehle
  * @date 2012
+ *
+ * @brief JWM settings.
+ *
  */
 
 #include "jwm.h"

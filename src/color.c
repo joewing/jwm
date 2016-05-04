@@ -161,8 +161,6 @@ static unsigned long GetDirectPixel(const XColor *c);
 static void GetMappedPixel(XColor *c);
 static void AllocateColor(ColorType type, XColor *c);
 
-static void SetDefaultColor(ColorType type); 
-
 static unsigned long ReadHex(const char *hex);
 char ParseColorToRGB(const char *value, XColor *c);
 
@@ -211,16 +209,27 @@ void StartupColors(void)
       }
    }
 
-   /* Get color information used for JWM stuff. */
+   /* Load custom colors. */
    for(x = 0; x < COLOR_COUNT; x++) {
       if(names && names[x]) {
          if(ParseColorToRGB(names[x], &c)) {
             AllocateColor(x, &c);
          } else {
-            SetDefaultColor(x);
+            Release(names[x]);
+            names[x] = NULL;
          }
-      } else {
-         SetDefaultColor(x);
+      }
+   }
+
+   /* Load defaults. */
+   for(x = 0; x < DEFAULT_COUNT; x++) {
+      const ColorType type = DEFAULT_COLORS[x].type;
+      if(!names || !names[type]) {
+         const unsigned rgb = DEFAULT_COLORS[x].value;
+         c.red = ((rgb >> 16) & 0xFF) * 257;
+         c.green = ((rgb >> 8) & 0xFF) * 257;
+         c.blue = (rgb & 0xFF) * 257;
+         AllocateColor(type, &c);
       }
    }
 
@@ -364,24 +373,6 @@ char ParseColor(const char *value, XColor *c)
       return 1;
    } else {
       return 0;
-   }
-}
-
-/** Set the specified color to its default. */
-void SetDefaultColor(ColorType type)
-{
-   XColor c;
-   unsigned int x;
-
-   for(x = 0; x < DEFAULT_COUNT; x++) {
-      if(DEFAULT_COLORS[x].type == type) {
-         const unsigned int rgb = DEFAULT_COLORS[x].value;
-         c.red = ((rgb >> 16) & 0xFF) * 257;
-         c.green = ((rgb >> 8) & 0xFF) * 257;
-         c.blue = (rgb & 0xFF) * 257;
-         AllocateColor(type, &c);
-         return;
-      }
    }
 }
 

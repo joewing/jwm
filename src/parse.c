@@ -1074,7 +1074,7 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
          ParseGradient(np->value, bg1, bg2);
          break;
       case TOK_FOREGROUND:
-         SetColor(COLOR_TRAY_FG, np->value);
+         SetColor(fg, np->value);
          break;
       case TOK_OUTLINE:
          ParseGradient(np->value, down, up);

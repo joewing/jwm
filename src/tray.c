@@ -478,7 +478,7 @@ void ComputeTraySize(TrayType *tp)
    if(tp->layout == LAYOUT_HORIZONTAL) {
       if(tp->width == 0) {
          if(CheckHorizontalFill(tp)) {
-            tp->width = sp->width - x;
+            tp->width = sp->width + sp->x - x;
          } else {
             tp->width = ComputeTotalWidth(tp);
          }
@@ -489,7 +489,7 @@ void ComputeTraySize(TrayType *tp)
    } else {
       if(tp->height == 0) {
          if(CheckVerticalFill(tp)) {
-            tp->height = sp->height - y;
+            tp->height = sp->height + sp->y - y;
          } else {
             tp->height = ComputeTotalHeight(tp);
          }

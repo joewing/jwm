@@ -152,8 +152,9 @@ void WalkWindowStack(char forward)
             continue;
          }
 
-         /* Focus the window. We only raise the client when the
-          * stack walk completes. */
+         /* Show the window.
+          * Only when the walk completes do we update the stacking order. */
+         JXRaiseWindow(display, np->parent);
          FocusClient(np);
          break;
 

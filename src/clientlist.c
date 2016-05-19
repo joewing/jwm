@@ -154,6 +154,7 @@ void WalkWindowStack(char forward)
 
          /* Show the window.
           * Only when the walk completes do we update the stacking order. */
+         RestackClients();
          if(!(np->state.status & STAT_MINIMIZED)) {
             JXRaiseWindow(display, np->parent ? np->parent : np->window);
          }

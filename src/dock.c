@@ -472,8 +472,8 @@ void UpdateDock(void)
       event.type = ConfigureNotify;
       event.event = np->window;
       event.window = np->window;
-      event.x = x;
-      event.y = y;
+      event.x = dock->cp->screenx + x;
+      event.y = dock->cp->screeny + y;
       event.width = itemSize;
       event.height = itemSize;
       JXSendEvent(display, np->window, False, StructureNotifyMask,

@@ -111,6 +111,7 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_STATE_ABOVE],        "_NET_WM_STATE_ABOVE"         },
    { &atoms[ATOM_NET_WM_STATE_DEMANDS_ATTENTION],
       "_NET_WM_STATE_DEMANDS_ATTENTION"},
+   { &atoms[ATOM_NET_WM_STATE_FOCUSED],      "_NET_WM_STATE_FOCUSED"       },
    { &atoms[ATOM_NET_WM_ALLOWED_ACTIONS],    "_NET_WM_ALLOWED_ACTIONS"     },
    { &atoms[ATOM_NET_WM_ACTION_MOVE],        "_NET_WM_ACTION_MOVE"         },
    { &atoms[ATOM_NET_WM_ACTION_RESIZE],      "_NET_WM_ACTION_RESIZE"       },
@@ -176,7 +177,6 @@ static const AtomNode atomList[] = {
 };
 
 static char CheckShape(Window win);
-static void WriteNetState(ClientNode *np);
 static void WriteNetAllowed(ClientNode *np);
 static void ReadWMState(Window win, ClientState *state);
 static void ReadMotifHints(Window win, ClientState *state);
@@ -346,6 +346,7 @@ void WriteState(ClientNode *np)
    }
 
    WriteNetState(np);
+   WriteFrameExtents(np->window, &np->state);
    WriteNetAllowed(np);
 }
 
@@ -369,7 +370,6 @@ void SetOpacity(ClientNode *np, unsigned int opacity, char force)
 /** Write the net state hint for a client. */
 void WriteNetState(ClientNode *np)
 {
-
    unsigned long values[16];
    int index;
 
@@ -437,13 +437,13 @@ void WriteNetState(ClientNode *np)
    if(np->state.status & STAT_URGENT) {
       values[index++] = atoms[ATOM_NET_WM_STATE_DEMANDS_ATTENTION];
    }
+   if(np->state.status & STAT_ACTIVE) {
+      values[index++] = atoms[ATOM_NET_WM_STATE_FOCUSED];
+   }
 
    JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_STATE],
                     XA_ATOM, 32, PropModeReplace,
                     (unsigned char*)values, index);
-
-   WriteFrameExtents(np->window, &np->state);
-
 }
 
 /** Set _NET_FRAME_EXTENTS. */

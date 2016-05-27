@@ -55,6 +55,7 @@ typedef enum {
    ATOM_NET_WM_STATE_BELOW,
    ATOM_NET_WM_STATE_ABOVE,
    ATOM_NET_WM_STATE_DEMANDS_ATTENTION,
+   ATOM_NET_WM_STATE_FOCUSED,
 
    ATOM_NET_WM_ALLOWED_ACTIONS,
    ATOM_NET_WM_ACTION_MOVE,
@@ -225,9 +226,15 @@ void ReadWMHints(Window win, ClientState *state, char alreadyMapped);
 void ReadWMOpacity(Window win, unsigned *opacity);
 
 /** Set the state of a client window.
+ * Note that this will call WriteNetState.
  * @param np The client.
  */
 void WriteState(struct ClientNode *np);
+
+/** Set _NET_WM_STATE.
+ * @param np The client.
+ */
+void WriteNetState(struct ClientNode *np);
 
 /** Set the opacity of a client window.
  * @param np The client.

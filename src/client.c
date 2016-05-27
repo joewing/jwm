@@ -826,13 +826,13 @@ void FocusClient(ClientNode *np)
    }
 
    if(activeClient != np || !(np->state.status & STAT_ACTIVE)) {
-
       if(activeClient) {
          activeClient->state.status &= ~STAT_ACTIVE;
          if(!(activeClient->state.status & STAT_OPACITY)) {
             SetOpacity(activeClient, settings.inactiveClientOpacity, 0);
          }
          DrawBorder(activeClient);
+         WriteNetState(activeClient);
       }
       np->state.status |= STAT_ACTIVE;
       activeClient = np;
@@ -843,12 +843,12 @@ void FocusClient(ClientNode *np)
       DrawBorder(np);
       RequirePagerUpdate();
       RequireTaskUpdate();
-
    }
 
    if(np->state.status & STAT_MAPPED) {
       UpdateClientColormap(np);
       SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, np->window);
+      WriteNetState(np);
       if(np->state.status & STAT_CANFOCUS) {
          JXSetInputFocus(display, np->window, RevertToParent, eventTime);
       }

@@ -439,8 +439,17 @@ int TryTileClient(const BoundingBox *box, ClientNode *np, int x, int y)
    y1 = np->y - north;
    y2 = np->y + np->height + south;
 
-   /* Loop over each client. */
    overlap = 0;
+
+   /* Return maximum cost for window outside bounding box. */
+   if (  x1 < box->x ||
+         x2 > box->x + box->width ||
+         y1 < box->y ||
+         y2 > box->y + box->height) {
+       return INT_MAX;
+   }
+
+   /* Loop over each client. */
    for(layer = np->state.layer; layer < LAYER_COUNT; layer++) {
       for(tp = nodes[layer]; tp; tp = tp->next) {
 
@@ -491,8 +500,8 @@ char TileClient(const BoundingBox *box, ClientNode *np)
    int leastOverlap;
    int bestx, besty;
 
-   /* Determine how much space to allocate. */
-   count = 1;
+   /* Count insertion points, including bounding box edges. */
+   count = 2;
    for(layer = np->state.layer; layer < LAYER_COUNT; layer++) {
       for(tp = nodes[layer]; tp; tp = tp->next) {
          if(!IsClientOnCurrentDesktop(tp)) {
@@ -535,6 +544,12 @@ char TileClient(const BoundingBox *box, ClientNode *np)
          count += 2;
       }
    }
+
+   /* Try placing at lower right edge of box, too. */
+   GetBorderSize(&np->state, &north, &south, &east, &west);
+   xs[count] = box->x + box->width - np->width - east - west;
+   ys[count] = box->y + box->height - np->height - north - south;
+   count += 1;
 
    /* Sort the points. */
    qsort(xs, count, sizeof(int), IntComparator);

@@ -603,7 +603,7 @@ void HideTray(TrayType *tp)
       break;
    default:
       Assert(0);
-      break;
+      return;
    }
 
    /* Move and redraw. */

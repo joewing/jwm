@@ -7,23 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-04-25 19:50-0500\n"
+"POT-Creation-Date: 2016-07-27 18:24-0500\n"
 "PO-Revision-Date: 2015-06-22 13:19+0000\n"
 "Last-Translator: Mihaly Horvath <hermitsoft@users.sourceforge.net>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
-"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-Language: Hungarian\n"
 
-#: src/action.c:43
+#: src/action.c:44
 #, c-format
 msgid "invalid action: \"%s\""
 msgstr "nem támogatott művelet: \"%s\""
 
-#: src/action.c:202
+#: src/action.c:211
 #, c-format
 msgid "action: root menu \"%s\" not defined"
 msgstr "művelet: a \"%s\" gyökérmenü nincs definiálva"
@@ -50,7 +50,7 @@ msgstr "Ablak erőszakos bezárása?"
 msgid "This may cause data to be lost!"
 msgstr "Ez adatvesztéshez vezethet!"
 
-#: src/command.c:138 src/main.c:227
+#: src/command.c:138 src/main.c:220
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "futtatás sikertelen: (%s) %s"
@@ -204,115 +204,115 @@ msgstr "%s[%u]: váratlan szöveg: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: érvénytelen entitás: \"%.8s\""
 
-#: src/lex.c:471 src/parse.c:1877
+#: src/lex.c:471 src/parse.c:1878
 msgid "out of memory"
 msgstr "megtelt a memória"
 
-#: src/parse.c:224
+#: src/parse.c:225
 #, fuzzy, c-format
 msgid "could not open %s or %s"
 msgstr "nem sikerült a betűtípus betöltése: %s"
 
-#: src/parse.c:242
+#: src/parse.c:243
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr ""
 
-#: src/parse.c:380
+#: src/parse.c:381
 #, fuzzy, c-format
 msgid "invalid start tag: %s"
 msgstr "nem támogatott beállítás: %s"
 
-#: src/parse.c:760
+#: src/parse.c:761
 #, fuzzy, c-format
 msgid "invalid include: %s"
 msgstr "nem támogatott beállítás: %s"
 
-#: src/parse.c:810
+#: src/parse.c:811
 #, fuzzy
 msgid "no action specified for Key"
 msgstr "se billentyű, sem billentyűkód nincs megadva a billentyűhöz"
 
-#: src/parse.c:833
+#: src/parse.c:834
 #, fuzzy, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "nem támogatott művelet: \"%s\""
 
-#: src/parse.c:857
+#: src/parse.c:858
 #, fuzzy, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "érvénytelen függőleges igazítási érték a tálcához: \"%s\""
 
-#: src/parse.c:943
+#: src/parse.c:944
 msgid "no include file specified"
 msgstr ""
 
-#: src/parse.c:953
+#: src/parse.c:954
 #, fuzzy, c-format
 msgid "could not process include: %s"
 msgstr "nem sikerült a betűtípus betöltése: %s"
 
-#: src/parse.c:957
+#: src/parse.c:958
 #, fuzzy, c-format
 msgid "could not open included file: %s"
 msgstr "nem sikerült a betűtípus betöltése: %s"
 
-#: src/parse.c:1615
+#: src/parse.c:1616
 #, fuzzy, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "nem támogatott művelet: \"%s\""
 
-#: src/parse.c:1744
+#: src/parse.c:1745
 #, fuzzy, c-format
 msgid "invalid Group Option: %s"
 msgstr "érvénytelen csoport asztal: %d"
 
-#: src/parse.c:1759
+#: src/parse.c:1760
 #, fuzzy, c-format
 msgid "invalid decorations: %s"
 msgstr "nem támogatott művelet: \"%s\""
 
-#: src/parse.c:1821
+#: src/parse.c:1822
 #, c-format
 msgid "%s is empty"
 msgstr ""
 
-#: src/parse.c:1828
+#: src/parse.c:1829
 #, fuzzy, c-format
 msgid "invalid %s: \"%s\""
 msgstr "nem támogatott művelet: \"%s\""
 
-#: src/parse.c:1846
+#: src/parse.c:1847
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "érvéytelen xml tag %s-ben: %s"
 
-#: src/parse.c:1950 src/parse.c:1967
+#: src/parse.c:1951 src/parse.c:1968
 #, fuzzy
 msgid "no value specified"
 msgstr "nincs megadva háttérkép-adat"
 
-#: src/parse.c:1955
+#: src/parse.c:1956
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nem támogatott beállítás: %s"
 
-#: src/parse.c:1972
+#: src/parse.c:1973
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "érvénytelen átlátszóssági (opacity) érték: %s"
 
-#: src/parse.c:1993
+#: src/parse.c:1994
 #, fuzzy, c-format
 msgid "invalid layer: %s"
 msgstr "érvénytelen átlátszóssági (opacity) érték: %s"
 
-#: src/parse.c:2014
+#: src/parse.c:2015
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "érvéytelen xml tag %s-ben: %s"
 
-#: src/parse.c:2035
+#: src/parse.c:2036
 msgid "configuration error"
 msgstr "konfigurációs hiba"
 

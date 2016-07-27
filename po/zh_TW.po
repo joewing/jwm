@@ -4,23 +4,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-04-25 19:50-0500\n"
+"POT-Creation-Date: 2016-07-27 18:24-0500\n"
 "PO-Revision-Date: 2016-03-30 16:11+0800\n"
 "Last-Translator: Jim Tsai <poormusic2001@gmail.com>\n"
 "Language-Team: \n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
 "X-Generator: Poedit 1.8.4\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/action.c:43
+#: src/action.c:44
 #, c-format
 msgid "invalid action: \"%s\""
 msgstr "動作無效：\"%s\""
 
-#: src/action.c:202
+#: src/action.c:211
 #, c-format
 msgid "action: root menu \"%s\" not defined"
 msgstr "動作：主選項單 \"%s\" 未定義"
@@ -47,7 +47,7 @@ msgstr "強制關閉該視窗？"
 msgid "This may cause data to be lost!"
 msgstr "這可能會導致資料不見！"
 
-#: src/command.c:138 src/main.c:227
+#: src/command.c:138 src/main.c:220
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "執行失敗：(%s) %s"
@@ -200,114 +200,114 @@ msgstr "%s[%u]: 無預期的文字: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: 無效的實體: \"%.8s\""
 
-#: src/lex.c:471 src/parse.c:1877
+#: src/lex.c:471 src/parse.c:1878
 msgid "out of memory"
 msgstr "記憶體不足"
 
-#: src/parse.c:224
+#: src/parse.c:225
 #, c-format
 msgid "could not open %s or %s"
 msgstr "無法開啟 %s 或 %s"
 
-#: src/parse.c:242
+#: src/parse.c:243
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr "包含深度 (%d) 超過"
 
-#: src/parse.c:380
+#: src/parse.c:381
 #, c-format
 msgid "invalid start tag: %s"
 msgstr "無效的開啟標籤: %s"
 
-#: src/parse.c:760
+#: src/parse.c:761
 #, c-format
 msgid "invalid include: %s"
 msgstr "無效的包含: %s"
 
-#: src/parse.c:810
+#: src/parse.c:811
 msgid "no action specified for Key"
 msgstr "此Key沒有指定的操作"
 
-#: src/parse.c:833
+#: src/parse.c:834
 #, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "無效的Key操作 %s"
 
-#: src/parse.c:857
+#: src/parse.c:858
 #, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "無效的文字對齊: \"%s\""
 
-#: src/parse.c:943
+#: src/parse.c:944
 msgid "no include file specified"
 msgstr "沒有被包含的檔案被指定"
 
-#: src/parse.c:953
+#: src/parse.c:954
 #, c-format
 msgid "could not process include: %s"
 msgstr "無法處理包含: %s"
 
-#: src/parse.c:957
+#: src/parse.c:958
 #, c-format
 msgid "could not open included file: %s"
 msgstr "無法開啟包含的檔案: %s"
 
-#: src/parse.c:1615
+#: src/parse.c:1616
 #, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "無效的數值給'啟用的': \"%s\""
 
-#: src/parse.c:1744
+#: src/parse.c:1745
 #, c-format
 msgid "invalid Group Option: %s"
 msgstr "無效的群組選項: %s"
 
-#: src/parse.c:1759
+#: src/parse.c:1760
 #, c-format
 msgid "invalid decorations: %s"
 msgstr "無效的裝飾; %s"
 
-#: src/parse.c:1821
+#: src/parse.c:1822
 #, c-format
 msgid "%s is empty"
 msgstr "%s 是空"
 
-#: src/parse.c:1828
+#: src/parse.c:1829
 #, c-format
 msgid "invalid %s: \"%s\""
 msgstr "無效的 %s: \"%s\""
 
-#: src/parse.c:1846
+#: src/parse.c:1847
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "%s: \"%s\"的無效數值"
 
-#: src/parse.c:1950 src/parse.c:1967
+#: src/parse.c:1951 src/parse.c:1968
 #, fuzzy
 msgid "no value specified"
 msgstr "未設定任何數值"
 
-#: src/parse.c:1955
+#: src/parse.c:1956
 #, c-format
 msgid "invalid setting: %s"
 msgstr "無效的設定值:\"%s\""
 
-#: src/parse.c:1972
+#: src/parse.c:1973
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "無效的透明度:\"%s\""
 
-#: src/parse.c:1993
+#: src/parse.c:1994
 #, fuzzy, c-format
 msgid "invalid layer: %s"
 msgstr "無效的層次:\"%s\""
 
-#: src/parse.c:2014
+#: src/parse.c:2015
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr " %s: %s 的無效標籤"
 
-#: src/parse.c:2035
+#: src/parse.c:2036
 msgid "configuration error"
 msgstr "設定錯誤"
 

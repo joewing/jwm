@@ -7,21 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-04-25 19:50-0500\n"
+"POT-Creation-Date: 2016-07-27 18:24-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
 
-#: src/action.c:43
+#: src/action.c:44
 #, fuzzy, c-format
 msgid "invalid action: \"%s\""
 msgstr "недопустимое значение действия кнопки запуска: \"%s\""
 
-#: src/action.c:202
+#: src/action.c:211
 #, fuzzy, c-format
 msgid "action: root menu \"%s\" not defined"
 msgstr "кнопка запуска: главное меню %d не задано"
@@ -48,7 +48,7 @@ msgstr "Ликвидировать окно?"
 msgid "This may cause data to be lost!"
 msgstr "Это может привести к потере данных!"
 
-#: src/command.c:138 src/main.c:227
+#: src/command.c:138 src/main.c:220
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "не удалось выполнить: (%s) %s"
@@ -201,115 +201,115 @@ msgstr "%s[%u]: непонятный текст: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ошибочное вхождение: \"%.8s\""
 
-#: src/lex.c:471 src/parse.c:1877
+#: src/lex.c:471 src/parse.c:1878
 msgid "out of memory"
 msgstr "недостаточно памяти"
 
-#: src/parse.c:224
+#: src/parse.c:225
 #, fuzzy, c-format
 msgid "could not open %s or %s"
 msgstr "не удалось загрузить шрифт: %s"
 
-#: src/parse.c:242
+#: src/parse.c:243
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr ""
 
-#: src/parse.c:380
+#: src/parse.c:381
 #, fuzzy, c-format
 msgid "invalid start tag: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:760
+#: src/parse.c:761
 #, fuzzy, c-format
 msgid "invalid include: %s"
 msgstr "недопустимое значение расположения окна: %s"
 
-#: src/parse.c:810
+#: src/parse.c:811
 #, fuzzy
 msgid "no action specified for Key"
 msgstr "ни символ, ни код клавиши не заданы в тэге Key"
 
-#: src/parse.c:833
+#: src/parse.c:834
 #, fuzzy, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "недопустимое значение действия кнопки запуска: \"%s\""
 
-#: src/parse.c:857
+#: src/parse.c:858
 #, fuzzy, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""
 
-#: src/parse.c:943
+#: src/parse.c:944
 msgid "no include file specified"
 msgstr ""
 
-#: src/parse.c:953
+#: src/parse.c:954
 #, fuzzy, c-format
 msgid "could not process include: %s"
 msgstr "не удалось загрузить шрифт: %s"
 
-#: src/parse.c:957
+#: src/parse.c:958
 #, fuzzy, c-format
 msgid "could not open included file: %s"
 msgstr "не удалось загрузить шрифт: %s"
 
-#: src/parse.c:1615
+#: src/parse.c:1616
 #, fuzzy, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "недопустимое значение действия кнопки запуска: \"%s\""
 
-#: src/parse.c:1744
+#: src/parse.c:1745
 #, fuzzy, c-format
 msgid "invalid Group Option: %s"
 msgstr "недопустимое значение рабочего стола группы: %d"
 
-#: src/parse.c:1759
+#: src/parse.c:1760
 #, fuzzy, c-format
 msgid "invalid decorations: %s"
 msgstr "недопустимое значение действия кнопки запуска: \"%s\""
 
-#: src/parse.c:1821
+#: src/parse.c:1822
 #, c-format
 msgid "%s is empty"
 msgstr ""
 
-#: src/parse.c:1828
+#: src/parse.c:1829
 #, fuzzy, c-format
 msgid "invalid %s: \"%s\""
 msgstr "недопустимое значение действия кнопки запуска: \"%s\""
 
-#: src/parse.c:1846
+#: src/parse.c:1847
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:1950 src/parse.c:1967
+#: src/parse.c:1951 src/parse.c:1968
 #, fuzzy
 msgid "no value specified"
 msgstr "не задано значение для цвета фона"
 
-#: src/parse.c:1955
+#: src/parse.c:1956
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:1972
+#: src/parse.c:1973
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:1993
+#: src/parse.c:1994
 #, c-format
 msgid "invalid layer: %s"
 msgstr "недопустимое значение расположения окна: %s"
 
-#: src/parse.c:2014
+#: src/parse.c:2015
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:2035
+#: src/parse.c:2036
 msgid "configuration error"
 msgstr "ошибка конфигурации"
 

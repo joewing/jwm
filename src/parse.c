@@ -1864,18 +1864,20 @@ char *ReadFile(FILE *fd)
 
    for(;;) {
       const size_t count = fread(&buffer[len], 1, max - len, fd);
+      if(count == 0) {
+         break;
+      }
       len += count;
-      if(len < max) {
-         break;
-      }
-      max += BLOCK_SIZE;
-      if(JUNLIKELY(max < 0)) {
-         /* File is too big. */
-         break;
-      }
-      buffer = Reallocate(buffer, max + 1);
-      if(JUNLIKELY(buffer == NULL)) {
-         FatalError(_("out of memory"));
+      if(len == max) {
+         max += BLOCK_SIZE;
+         if(JUNLIKELY(max < 0)) {
+            /* File is too big. */
+            break;
+         }
+         buffer = Reallocate(buffer, max + 1);
+         if(JUNLIKELY(buffer == NULL)) {
+            FatalError(_("out of memory"));
+         }
       }
    }
    buffer[len] = 0;

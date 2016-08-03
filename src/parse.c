@@ -37,6 +37,7 @@
 #include <sys/stat.h>
 #include <sys/mman.h>
 #include <fcntl.h>
+#include <errno.h>
 
 /** Mapping of key names to key types.
  * Note that this mapping must be sorted.
@@ -1865,7 +1866,17 @@ char *ReadFile(FILE *fd)
    for(;;) {
       const size_t count = fread(&buffer[len], 1, max - len, fd);
       if(count == 0) {
-         break;
+         if(feof(fd)) {
+            break;
+         }
+         if(ferror(fd)) {
+            if(errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR) {
+               continue;
+            } else {
+               Warning(_("could not read file: %s"), strerror(errno));
+            }
+            break;
+         }
       }
       len += count;
       if(len == max) {

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-07-27 18:24-0500\n"
+"POT-Creation-Date: 2016-08-06 00:43+0000\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pl\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -203,115 +203,120 @@ msgstr "%s[%u]: nieoczekiwany tekst: \"%s\""
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: nieprawidłowa jednostka: \"%.8s\""
 
-#: src/lex.c:471 src/parse.c:1878
+#: src/lex.c:471 src/parse.c:1892
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:225
+#: src/parse.c:226
 #, fuzzy, c-format
 msgid "could not open %s or %s"
 msgstr "nie można załadować czcionki: %s"
 
-#: src/parse.c:243
+#: src/parse.c:244
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr ""
 
-#: src/parse.c:381
+#: src/parse.c:382
 #, fuzzy, c-format
 msgid "invalid start tag: %s"
 msgstr "nieprawidłowy znacznik w: %s"
 
-#: src/parse.c:761
+#: src/parse.c:762
 #, fuzzy, c-format
 msgid "invalid include: %s"
 msgstr "nieprawidłowa warstwa grupy: %s"
 
-#: src/parse.c:811
+#: src/parse.c:812
 #, fuzzy
 msgid "no action specified for Key"
 msgstr "ani klucza ani keycode określony dla Key"
 
-#: src/parse.c:834
+#: src/parse.c:835
 #, fuzzy, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/parse.c:858
+#: src/parse.c:859
 #, fuzzy, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""
 
-#: src/parse.c:944
+#: src/parse.c:945
 msgid "no include file specified"
 msgstr ""
 
-#: src/parse.c:954
+#: src/parse.c:955
 #, fuzzy, c-format
 msgid "could not process include: %s"
 msgstr "nie można załadować czcionki: %s"
 
-#: src/parse.c:958
+#: src/parse.c:959
 #, fuzzy, c-format
 msgid "could not open included file: %s"
 msgstr "nie można załadować czcionki: %s"
 
-#: src/parse.c:1616
+#: src/parse.c:1622
 #, fuzzy, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/parse.c:1745
+#: src/parse.c:1751
 #, fuzzy, c-format
 msgid "invalid Group Option: %s"
 msgstr "nieprawidłowy pulpitu grupy: %d"
 
-#: src/parse.c:1760
+#: src/parse.c:1766
 #, fuzzy, c-format
 msgid "invalid decorations: %s"
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/parse.c:1822
+#: src/parse.c:1828
 #, c-format
 msgid "%s is empty"
 msgstr ""
 
-#: src/parse.c:1829
+#: src/parse.c:1835
 #, fuzzy, c-format
 msgid "invalid %s: \"%s\""
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/parse.c:1847
+#: src/parse.c:1853
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:1951 src/parse.c:1968
+#: src/parse.c:1879
+#, fuzzy, c-format
+msgid "could not read file: %s"
+msgstr "nie można załadować czcionki: %s"
+
+#: src/parse.c:1966 src/parse.c:1983
 #, fuzzy
 msgid "no value specified"
 msgstr "nie określono wartości dla tła"
 
-#: src/parse.c:1956
+#: src/parse.c:1971
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nieprawidłowy znacznik w: %s"
 
-#: src/parse.c:1973
+#: src/parse.c:1988
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "nieprawidłowa nieprzezroczystość menu: %s"
 
-#: src/parse.c:1994
+#: src/parse.c:2009
 #, c-format
 msgid "invalid layer: %s"
 msgstr "nieprawidłowa warstwa grupy: %s"
 
-#: src/parse.c:2015
+#: src/parse.c:2030
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:2036
+#: src/parse.c:2051
 msgid "configuration error"
 msgstr "błąd konfiguracji"
 
@@ -332,31 +337,40 @@ msgstr "Czy jesteś pewien?"
 msgid "cannot swallow a client with no name"
 msgstr "nie może połknąć klienta bez nazwy"
 
-#: src/taskbar.c:452 src/winmenu.c:51
+#: src/taskbar.c:447 src/winmenu.c:51
 msgid "Close"
 msgstr "Zamknij"
 
-#: src/taskbar.c:459 src/winmenu.c:71
+#: src/taskbar.c:454 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Zminimalizuj"
 
-#: src/taskbar.c:466 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:461 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Przywróć"
 
-#: src/taskbar.c:473 src/winmenu.c:170
+#: src/taskbar.c:468 src/winmenu.c:170
 msgid "Send To"
 msgstr "Wyślij do"
 
-#: src/taskbar.c:967
+#: src/taskbar.c:964
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
 
-#: src/taskbar.c:981
+#: src/taskbar.c:978
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
+
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "nie można załadować ikon w zasobniku: \"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "brak ikony lub etykiety dla TrayButton"
 
 #: src/tray.c:1064
 #, c-format
@@ -372,15 +386,6 @@ msgstr "nieprawidłowe wypoziomowanie zasobnika: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""
-
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "nie można załadować ikon w zasobniku: \"%s\""
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "brak ikony lub etykiety dla TrayButton"
 
 #: src/winmenu.c:52
 msgid "Kill"

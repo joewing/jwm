@@ -1868,13 +1868,10 @@ char *ReadFile(FILE *fd)
       if(count == 0) {
          if(feof(fd)) {
             break;
-         }
-         if(ferror(fd)) {
-            if(errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR) {
-               continue;
-            } else {
-               Warning(_("could not read file: %s"), strerror(errno));
-            }
+         } else if(errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR) {
+            continue;
+         } else {
+            Warning(_("could not read file: %s"), strerror(errno));
             break;
          }
       }

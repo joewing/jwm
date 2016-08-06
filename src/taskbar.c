@@ -30,19 +30,19 @@
 typedef struct TaskBarType {
 
    TrayComponentType *cp;
+   struct TaskBarType *next;
 
    int maxItemWidth;
    int userHeight;
    int itemHeight;
    int itemWidth;
    LayoutType layout;
+   char labeled;
 
    Pixmap buffer;
 
    TimeType mouseTime;
    int mousex, mousey;
-
-   struct TaskBarType *next;
 
 } TaskBarType;
 
@@ -126,6 +126,7 @@ TrayComponentType *CreateTaskBar()
    tp->userHeight = 0;
    tp->maxItemWidth = 0;
    tp->layout = LAYOUT_HORIZONTAL;
+   tp->labeled = 1;
    tp->mousex = -settings.doubleClickDelta;
    tp->mousey = -settings.doubleClickDelta;
    tp->mouseTime.seconds = 0;
@@ -150,15 +151,7 @@ TrayComponentType *CreateTaskBar()
 /** Set the size of a task bar tray component. */
 void SetSize(TrayComponentType *cp, int width, int height)
 {
-
-   TaskBarType *tp;
-
-   Assert(cp);
-
-   tp = (TaskBarType*)cp->object;
-
-   Assert(tp);
-
+   TaskBarType *tp = (TaskBarType*)cp->object;
    if(width == 0) {
       tp->layout = LAYOUT_HORIZONTAL;
    } else if(height == 0) {
@@ -168,7 +161,6 @@ void SetSize(TrayComponentType *cp, int width, int height)
    } else {
       tp->layout = LAYOUT_VERTICAL;
    }
-
 }
 
 /** Initialize a task bar tray component. */
@@ -223,6 +215,9 @@ void ComputeItemSize(TaskBarType *tp)
       }
 
       tp->itemWidth = Max(1, cp->width / itemCount);
+      if(!tp->labeled) {
+         tp->itemWidth = Min(tp->itemHeight, tp->itemWidth);
+      }
       if(tp->maxItemWidth > 0) {
          tp->itemWidth = Min(tp->maxItemWidth, tp->itemWidth);
       }
@@ -787,18 +782,20 @@ void Render(const TaskBarType *bp)
          button.icon = tp->clients->client->icon;
       }
       displayName = NULL;
-      if(tp->clients->client->className && settings.groupTasks) {
-         if(clientCount != 1) {
-            const size_t len = strlen(tp->clients->client->className) + 16;
-            displayName = Allocate(len);
-            snprintf(displayName, len, "%s (%u)",
-                     tp->clients->client->className, clientCount);
-            button.text = displayName;
+      if(bp->labeled) {
+         if(tp->clients->client->className && settings.groupTasks) {
+            if(clientCount != 1) {
+               const size_t len = strlen(tp->clients->client->className) + 16;
+               displayName = Allocate(len);
+               snprintf(displayName, len, "%s (%u)",
+                        tp->clients->client->className, clientCount);
+               button.text = displayName;
+            } else {
+               button.text = tp->clients->client->className;
+            }
          } else {
-            button.text = tp->clients->client->className;
+            button.text = tp->clients->client->name;
          }
-      } else {
-         button.text = tp->clients->client->name;
       }
       DrawButton(&button);
       if(displayName) {
@@ -982,6 +979,13 @@ void SetTaskBarHeight(TrayComponentType *cp, const char *value)
       return;
    }
    bp->userHeight = temp;
+}
+
+/** Set whether the label should be displayed. */
+void SetTaskBarLabeled(TrayComponentType *cp, char labeled)
+{
+   TaskBarType *bp = (TaskBarType*)cp->object;
+   bp->labeled = labeled;
 }
 
 /** Maintain the _NET_CLIENT_LIST[_STACKING] properties on the root. */

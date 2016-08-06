@@ -652,6 +652,12 @@ The height of an item in the task list. 0 indicates that the height
 should be taken from the tray.  The default is 0.
 .RE
 .P
+\fBlabeled\fP \fIbool\fP
+.RS
+Determines if a label is shown for items in the task list.
+The default is true.
+.RE
+.P
 \fBmaxwidth\fP \fIint\fP
 .RS
 The maximum width of an item in the task list. 0 indicates no maximum.

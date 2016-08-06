@@ -1256,6 +1256,11 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray)
    if(temp) {
       SetTaskBarHeight(cp, temp);
    }
+
+   temp = FindAttribute(tp->attributes, "labeled");
+   if(temp && !strcmp(temp, FALSE_VALUE)) {
+      SetTaskBarLabeled(cp, 0);
+   }
 }
 
 /** Parse the task list style. */

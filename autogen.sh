@@ -1,4 +1,4 @@
 #!/bin/sh
-automake -a
+automake -a -c
 autoreconf --install --force
 touch config.rpath

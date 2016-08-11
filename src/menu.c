@@ -421,15 +421,18 @@ char MenuLoop(Menu *menu, RunMenuCommandType runner)
             if(ip->type == MENU_ITEM_NORMAL) {
                HideMenu(menu);
                (runner)(&ip->action, event.xbutton.button);
-            } else {
-               const Menu *parent = menu;
-               if(ip->type == MENU_ITEM_SUBMENU && menu->parent) {
-                  parent = menu->parent;
-               }
-               if(event.xbutton.x >= parent->x &&
-                  event.xbutton.x < parent->x + parent->width &&
-                  event.xbutton.y >= parent->y &&
-                  event.xbutton.y < parent->y + parent->height) {
+            } else if(ip->type == MENU_ITEM_SUBMENU) {
+               const Menu *parent = menu->parent;
+               if(event.xbutton.x >= menu->x &&
+                  event.xbutton.x < menu->x + menu->width &&
+                  event.xbutton.y >= menu->y &&
+                  event.xbutton.y < menu->y + menu->height) {
+                  break;
+               } else if(parent &&
+                         event.xbutton.x >= parent->x &&
+                         event.xbutton.x < parent->x + parent->width &&
+                         event.xbutton.y >= parent->y &&
+                         event.xbutton.y < parent->y + parent->height) {
                   break;
                }
             }

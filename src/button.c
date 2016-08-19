@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2004-2006
  *
- * @brief Functions to handle drawing buttons.
+ * @brief Functions for rendering buttons.
  *
  */
 
@@ -62,21 +62,35 @@ void DrawButton(ButtonNode *bp)
       decorations = settings.menuDecorations;
       break;
    case BUTTON_TRAY:
-   case BUTTON_TASK:
-      fg = COLOR_TRAY_FG;
-      bg1 = colors[COLOR_TRAY_BG1];
-      bg2 = colors[COLOR_TRAY_BG2];
-      up = colors[COLOR_TRAY_UP];
-      down = colors[COLOR_TRAY_DOWN];
+      fg = COLOR_TRAYBUTTON_FG;
+      bg1 = colors[COLOR_TRAYBUTTON_BG1];
+      bg2 = colors[COLOR_TRAYBUTTON_BG2];
+      up = colors[COLOR_TRAYBUTTON_UP];
+      down = colors[COLOR_TRAYBUTTON_DOWN];
       decorations = settings.trayDecorations;
       break;
    case BUTTON_TRAY_ACTIVE:
+      fg = COLOR_TRAYBUTTON_ACTIVE_FG;
+      bg1 = colors[COLOR_TRAYBUTTON_ACTIVE_BG1];
+      bg2 = colors[COLOR_TRAYBUTTON_ACTIVE_BG2];
+      down = colors[COLOR_TRAYBUTTON_ACTIVE_UP];
+      up = colors[COLOR_TRAYBUTTON_ACTIVE_DOWN];
+      decorations = settings.trayDecorations;
+      break;
+   case BUTTON_TASK:
+      fg = COLOR_TASKLIST_FG;
+      bg1 = colors[COLOR_TASKLIST_BG1];
+      bg2 = colors[COLOR_TASKLIST_BG2];
+      up = colors[COLOR_TASKLIST_UP];
+      down = colors[COLOR_TASKLIST_DOWN];
+      decorations = settings.trayDecorations;
+      break;
    case BUTTON_TASK_ACTIVE:
-      fg = COLOR_TRAY_ACTIVE_FG;
-      bg1 = colors[COLOR_TRAY_ACTIVE_BG1];
-      bg2 = colors[COLOR_TRAY_ACTIVE_BG2];
-      down = colors[COLOR_TRAY_ACTIVE_UP];
-      up = colors[COLOR_TRAY_ACTIVE_DOWN];
+      fg = COLOR_TASKLIST_ACTIVE_FG;
+      bg1 = colors[COLOR_TASKLIST_ACTIVE_BG1];
+      bg2 = colors[COLOR_TASKLIST_ACTIVE_BG2];
+      down = colors[COLOR_TASKLIST_ACTIVE_UP];
+      up = colors[COLOR_TASKLIST_ACTIVE_DOWN];
       decorations = settings.trayDecorations;
       break;
    case BUTTON_MENU:

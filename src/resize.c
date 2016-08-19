@@ -434,7 +434,7 @@ void FixHeight(ClientNode *np)
          np->height = (np->width * np->aspect.miny) / np->aspect.minx;
       }
       if(np->width * np->aspect.maxy > np->height * np->aspect.maxx) {
-         np->height = (np->width * np->aspect.maxy) / np->aspect.maxy;
+         np->height = (np->width * np->aspect.maxy) / np->aspect.maxx;
       }
    }
 

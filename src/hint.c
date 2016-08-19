@@ -7,7 +7,6 @@
  *
  */
 
-#include <X11/Xlibint.h>
 #include "jwm.h"
 #include "hint.h"
 #include "client.h"
@@ -15,6 +14,8 @@
 #include "misc.h"
 #include "font.h"
 #include "settings.h"
+
+#include <X11/Xlibint.h>
 
 /* MWM Defines */
 #define MWM_HINTS_FUNCTIONS   (1L << 0)
@@ -82,7 +83,6 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_WM_PROTOCOLS],              "WM_PROTOCOLS"                },
    { &atoms[ATOM_WM_DELETE_WINDOW],          "WM_DELETE_WINDOW"            },
    { &atoms[ATOM_WM_TAKE_FOCUS],             "WM_TAKE_FOCUS"               },
-   { &atoms[ATOM_WM_LOCALE_NAME],            "WM_LOCALE_NAME"              },
    { &atoms[ATOM_WM_CHANGE_STATE],           "WM_CHANGE_STATE"             },
    { &atoms[ATOM_WM_COLORMAP_WINDOWS],       "WM_COLORMAP_WINDOWS"         },
 
@@ -111,6 +111,7 @@ static const AtomNode atomList[] = {
    { &atoms[ATOM_NET_WM_STATE_ABOVE],        "_NET_WM_STATE_ABOVE"         },
    { &atoms[ATOM_NET_WM_STATE_DEMANDS_ATTENTION],
       "_NET_WM_STATE_DEMANDS_ATTENTION"},
+   { &atoms[ATOM_NET_WM_STATE_FOCUSED],      "_NET_WM_STATE_FOCUSED"       },
    { &atoms[ATOM_NET_WM_ALLOWED_ACTIONS],    "_NET_WM_ALLOWED_ACTIONS"     },
    { &atoms[ATOM_NET_WM_ACTION_MOVE],        "_NET_WM_ACTION_MOVE"         },
    { &atoms[ATOM_NET_WM_ACTION_RESIZE],      "_NET_WM_ACTION_RESIZE"       },
@@ -176,7 +177,6 @@ static const AtomNode atomList[] = {
 };
 
 static char CheckShape(Window win);
-static void WriteNetState(ClientNode *np);
 static void WriteNetAllowed(ClientNode *np);
 static void ReadWMState(Window win, ClientState *state);
 static void ReadMotifHints(Window win, ClientState *state);
@@ -346,6 +346,7 @@ void WriteState(ClientNode *np)
    }
 
    WriteNetState(np);
+   WriteFrameExtents(np->window, &np->state);
    WriteNetAllowed(np);
 }
 
@@ -369,7 +370,6 @@ void SetOpacity(ClientNode *np, unsigned int opacity, char force)
 /** Write the net state hint for a client. */
 void WriteNetState(ClientNode *np)
 {
-
    unsigned long values[16];
    int index;
 
@@ -437,13 +437,13 @@ void WriteNetState(ClientNode *np)
    if(np->state.status & STAT_URGENT) {
       values[index++] = atoms[ATOM_NET_WM_STATE_DEMANDS_ATTENTION];
    }
+   if(np->state.status & STAT_ACTIVE) {
+      values[index++] = atoms[ATOM_NET_WM_STATE_FOCUSED];
+   }
 
    JXChangeProperty(display, np->window, atoms[ATOM_NET_WM_STATE],
                     XA_ATOM, 32, PropModeReplace,
                     (unsigned char*)values, index);
-
-   WriteFrameExtents(np->window, &np->state);
-
 }
 
 /** Set _NET_FRAME_EXTENTS. */
@@ -728,9 +728,9 @@ void ReadWMName(ClientNode *np)
    if(status != Success || realFormat == 0) {
       np->name = NULL;
    } else {
-      const size_t size = strlen((char*)name) + 1;
-      np->name = Allocate(size);
-      memcpy(np->name, name, size);
+      np->name = Allocate(count + 1);
+      memcpy(np->name, name, count);
+      np->name[count] = 0;
       JXFree(name);
       np->name = ConvertFromUTF8(np->name);
    }
@@ -742,14 +742,14 @@ void ReadWMName(ClientNode *np)
                                    atoms[ATOM_COMPOUND_TEXT],
                                    &realType, &realFormat, &count,
                                    &extra, &name);
-      if(status == Success && realFormat == 8) {
+      if(status == Success && realFormat != 0) {
          char **tlist;
          XTextProperty tprop;
          int tcount;
          tprop.value = name;
          tprop.encoding = atoms[ATOM_COMPOUND_TEXT];
          tprop.format = realFormat;
-         tprop.nitems = strlen((char*)name);
+         tprop.nitems = count;
          if(XmbTextPropertyToTextList(display, &tprop, &tlist, &tcount)
             == Success && tcount > 0) {
             const size_t len = strlen(tlist[0]) + 1;
@@ -944,20 +944,23 @@ void ReadWMState(Window win, ClientState *state)
    int realFormat;
    unsigned long *temp;
 
+   count = 0;
    status = JXGetWindowProperty(display, win, atoms[ATOM_WM_STATE], 0, 2,
                                 False, atoms[ATOM_WM_STATE],
                                 &realType, &realFormat,
                                 &count, &extra, (unsigned char**)&temp);
-   if(JLIKELY(status == Success && realFormat == 32 && count == 2)) {
-      switch(temp[0]) {
-      case IconicState:
-         state->status |= STAT_MINIMIZED;
-         break;
-      case WithdrawnState:
-         state->status &= ~STAT_MAPPED;
-         break;
-      default:
-         break;
+   if(JLIKELY(status == Success && realFormat != 0)) {
+      if(JLIKELY(count == 2)) {
+         switch(temp[0]) {
+         case IconicState:
+            state->status |= STAT_MINIMIZED;
+            break;
+         case WithdrawnState:
+            state->status &= ~STAT_MAPPED;
+            break;
+         default:
+            break;
+         }
       }
       JXFree(temp);
    }
@@ -1018,19 +1021,20 @@ void ReadMotifHints(Window win, ClientState *state)
    unsigned long itemCount, bytesLeft;
    unsigned char *data;
    int format;
+   int status;
 
    Assert(win != None);
    Assert(state);
 
-   if(JXGetWindowProperty(display, win, atoms[ATOM_MOTIF_WM_HINTS], 0L, 20L,
-                          False, atoms[ATOM_MOTIF_WM_HINTS], &type, &format,
-                          &itemCount, &bytesLeft, &data) != Success
-         || format == 0) {
+   status = JXGetWindowProperty(display, win, atoms[ATOM_MOTIF_WM_HINTS],
+                                0L, 20L, False, atoms[ATOM_MOTIF_WM_HINTS],
+                                &type, &format, &itemCount, &bytesLeft, &data);
+   if(status != Success || type == 0) {
       return;
    }
 
    mhints = (PropMwmHints*)data;
-   if(mhints) {
+   if(JLIKELY(mhints)) {
 
       if((mhints->flags & MWM_HINTS_FUNCTIONS)
          && !(mhints->functions & MWM_FUNC_ALL)) {
@@ -1082,12 +1086,13 @@ char GetCardinalAtom(Window window, AtomType atom, unsigned long *value)
    Assert(window != None);
    Assert(value);
 
+   count = 0;
    status = JXGetWindowProperty(display, window, atoms[atom], 0, 1, False,
                                 XA_CARDINAL, &realType, &realFormat,
                                 &count, &extra, &data);
    ret = 0;
    if(status == Success && realFormat != 0 && data) {
-      if(count == 1) {
+      if(JLIKELY(count == 1)) {
          *value = *(unsigned long*)data;
          ret = 1;
       }
@@ -1121,12 +1126,13 @@ char GetWindowAtom(Window window, AtomType atom, Window *value)
    Assert(window != None);
    Assert(value);
 
+   count = 0;
    status = JXGetWindowProperty(display, window, atoms[atom], 0, 1, False,
                                 XA_WINDOW, &realType, &realFormat,
                                 &count, &extra, &data);
    ret = 0;
    if(status == Success && realFormat != 0 && data) {
-      if(count == 1) {
+      if(JLIKELY(count == 1)) {
          *value = *(Window*)data;
          ret = 1;
       }

@@ -66,6 +66,7 @@ static IconPathNode *iconPaths;
 static IconPathNode *iconPathsTail;
 static GC iconGC;
 static char iconSizeSet = 0;
+static char *defaultIconName;
 
 static void DoDestroyIcon(int index, IconNode *icon);
 static IconNode *ReadNetWMIcon(Window win);
@@ -99,6 +100,7 @@ void InitializeIcons(void)
    }
    memset(&emptyIcon, 0, sizeof(emptyIcon));
    iconSizeSet = 0;
+   defaultIconName = NULL;
 }
 
 /** Startup icon support. */
@@ -146,6 +148,10 @@ void DestroyIcons(void)
    if(iconHash) {
       Release(iconHash);
       iconHash = NULL;
+   }
+   if(defaultIconName) {
+      Release(defaultIconName);
+      defaultIconName = NULL;
    }
 }
 
@@ -448,6 +454,12 @@ IconNode *GetDefaultIcon(void)
    unsigned bytes;
    unsigned x, y;
 
+   /* Load the specified default, if configured. */
+   if(defaultIconName) {
+      result = LoadNamedIcon(defaultIconName, 1, 1);
+      return result ? result : &emptyIcon;
+   }
+
    /* Check if this icon has already been loaded */
    result = FindIcon(name);
    if(result) {
@@ -571,6 +583,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
    int srcx, srcy;         /* Fixed point. */
    int nwidth, nheight;
    unsigned char *data;
+   unsigned perLine;
 
    if(rwidth == 0) {
       rwidth = icon->width;
@@ -657,16 +670,21 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
 
    points = Allocate(sizeof(XPoint) * nwidth);
    data = imageNode->data;
+   if(imageNode->bitmap) {
+      perLine = (imageNode->width >> 3) + ((imageNode->width & 7) ? 1 : 0);
+   } else {
+      perLine = imageNode->width;
+   }
    srcy = 0;
    for(y = 0; y < nheight; y++) {
-      const int yindex = (srcy >> 16) * imageNode->width;
+      const int yindex = (srcy >> 16) * perLine;
       int pindex = 0;
       srcx = 0;
       for(x = 0; x < nwidth; x++) {
          if(imageNode->bitmap) {
-            const int index = yindex + (srcx >> 16);
-            const int offset = index >> 3;
-            const int mask = 1 << (index & 7);
+            const int tx = srcx >> 16;
+            const int offset = yindex + (tx >> 3);
+            const int mask = 1 << (tx & 7);
             if(data[offset] & mask) {
                points[pindex].x = x;
                points[pindex].y = y;
@@ -682,7 +700,7 @@ ScaledIconNode *GetScaledIcon(IconNode *icon, long fg,
             color.green |= color.green << 8;
             color.blue = data[index + 3];
             color.blue |= color.blue << 8;
-            GetColor(&color, 0);
+            GetColor(&color);
             XPutPixel(image, x, y, color.pixel);
             if(data[index] >= 128) {
                points[pindex].x = x;
@@ -890,6 +908,15 @@ unsigned int GetHash(const char *str)
       hash &= (HASH_SIZE - 1);
    }
    return hash;
+}
+
+/** Set the name of the default icon. */
+void SetDefaultIcon(const char *name)
+{
+   if(defaultIconName) {
+      Release(defaultIconName);
+   }
+   defaultIconName = CopyString(name);
 }
 
 #endif /* USE_ICONS */

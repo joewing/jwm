@@ -555,7 +555,7 @@ void DrawPager(const PagerType *pp)
    }
 
    /* Draw the desktop dividers. */
-   JXSetForeground(display, rootGC, colors[COLOR_PAGER_FG]);
+   JXSetForeground(display, rootGC, colors[COLOR_PAGER_OUTLINE]);
    for(x = 1; x < settings.desktopHeight; x++) {
       JXDrawLine(display, buffer, rootGC,
                  0, (deskHeight + 1) * x - 1,

@@ -21,7 +21,7 @@ void DrawHorizontalGradient(Drawable d, GC g,
 
    const int shift = 15;
    unsigned int line;
-   XColor temp;
+   XColor colors[2];
    int red, green, blue;
    int ared, agreen, ablue;
    int bred, bgreen, bblue;
@@ -37,19 +37,20 @@ void DrawHorizontalGradient(Drawable d, GC g,
       return;
    }
 
-   /* Load the "from" color. */
-   temp.pixel = fromColor;
-   GetColorFromPixel(&temp);
-   ared = (unsigned int)temp.red << shift;
-   agreen = (unsigned int)temp.green << shift;
-   ablue = (unsigned int)temp.blue << shift;
+   /* Query the from/to colors. */
+   colors[0].pixel = fromColor;
+   colors[1].pixel = toColor;
+   JXQueryColors(display, rootColormap, colors, 2);
 
-   /* Load the "to" color. */
-   temp.pixel = toColor;
-   GetColorFromPixel(&temp);
-   bred = (unsigned int)temp.red << shift;
-   bgreen = (unsigned int)temp.green << shift;
-   bblue = (unsigned int)temp.blue << shift;
+   /* Set the "from" color. */
+   ared = (unsigned int)colors[0].red << shift;
+   agreen = (unsigned int)colors[0].green << shift;
+   ablue = (unsigned int)colors[0].blue << shift;
+
+   /* Set the "to" color. */
+   bred = (unsigned int)colors[1].red << shift;
+   bgreen = (unsigned int)colors[1].green << shift;
+   bblue = (unsigned int)colors[1].blue << shift;
 
    /* Determine the step. */
    redStep = (bred - ared) / (int)height;
@@ -63,21 +64,19 @@ void DrawHorizontalGradient(Drawable d, GC g,
    for(line = 0; line < height; line++) {
 
       /* Determine the color for this line. */
-      temp.red = (unsigned short)(red >> shift);
-      temp.green = (unsigned short)(green >> shift);
-      temp.blue = (unsigned short)(blue >> shift);
+      colors[0].red = (unsigned short)(red >> shift);
+      colors[0].green = (unsigned short)(green >> shift);
+      colors[0].blue = (unsigned short)(blue >> shift);
 
-      GetColor(&temp, 0);
+      GetColor(&colors[0]);
 
       /* Draw the line. */
-      JXSetForeground(display, g, temp.pixel);
-      JXDrawLine(display, d, g, x, y + line, x + width, y + line);
+      JXSetForeground(display, g, colors[0].pixel);
+      JXDrawLine(display, d, g, x, y + line, x + width - 1, y + line);
 
       red += redStep;
       green += greenStep;
       blue += blueStep;
 
    }
-
 }
-

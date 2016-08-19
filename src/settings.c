@@ -2,6 +2,9 @@
  * @file settings.c
  * @author Joe Wingbermuehle
  * @date 2012
+ *
+ * @brief JWM settings.
+ *
  */
 
 #include "jwm.h"
@@ -35,14 +38,14 @@ void InitializeSettings(void)
    settings.activeClientOpacity = UINT_MAX;
    settings.inactiveClientOpacity = (unsigned int)(0.75 * UINT_MAX);
    settings.borderWidth = 5;
-   settings.titleHeight = 22;
+   settings.titleHeight = 0;
+   settings.titleTextAlignment = ALIGN_LEFT;
    settings.desktopWidth = 4;
    settings.desktopHeight = 1;
    settings.menuOpacity = UINT_MAX;
    settings.windowDecorations = DECO_FLAT;
    settings.trayDecorations = DECO_FLAT;
    settings.menuDecorations = DECO_FLAT;
-   settings.exitConfirmation = 1;
    settings.cornerRadius = 4;
    settings.groupTasks = 0;
    settings.listAllTasks = 0;
@@ -55,7 +58,7 @@ void StartupSettings(void)
    FixRange(&settings.cornerRadius, 0, 5, 4);
 
    FixRange(&settings.borderWidth, 1, 128, 4);
-   FixRange(&settings.titleHeight, 2, 256, 20);
+   FixRange(&settings.titleHeight, 0, 256, 0);
 
    FixRange(&settings.doubleClickDelta, 0, 64, 2);
    FixRange(&settings.doubleClickSpeed, 1, 2000, 400);

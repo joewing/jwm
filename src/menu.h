@@ -121,8 +121,9 @@ void InitializeMenu(Menu *menu);
  * @param x The x-coordinate of the menu.
  * @param y The y-coordinate of the menu.
  * @param keyboard Set if the request came from a key binding.
+ * @return 1 if the menu was shown, 0 otherwise.
  */
-void ShowMenu(Menu *menu, RunMenuCommandType runner,
+char ShowMenu(Menu *menu, RunMenuCommandType runner,
               int x, int y, char keyboard);
 
 /** Destroy a menu structure.

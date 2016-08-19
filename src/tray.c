@@ -478,7 +478,7 @@ void ComputeTraySize(TrayType *tp)
    if(tp->layout == LAYOUT_HORIZONTAL) {
       if(tp->width == 0) {
          if(CheckHorizontalFill(tp)) {
-            tp->width = sp->width;
+            tp->width = sp->width + sp->x - x;
          } else {
             tp->width = ComputeTotalWidth(tp);
          }
@@ -489,7 +489,7 @@ void ComputeTraySize(TrayType *tp)
    } else {
       if(tp->height == 0) {
          if(CheckVerticalFill(tp)) {
-            tp->height = sp->height;
+            tp->height = sp->height + sp->y - y;
          } else {
             tp->height = ComputeTotalHeight(tp);
          }
@@ -512,7 +512,7 @@ void ComputeTraySize(TrayType *tp)
       break;
    default:
       if(tp->y < 0) {
-         tp->y = sp->y + sp->height - tp->height;
+         tp->y = sp->y + sp->height - tp->height + tp->y + 1;
       }
       break;
    }
@@ -529,7 +529,7 @@ void ComputeTraySize(TrayType *tp)
       break;
    default:
       if(tp->x < 0) {
-         tp->x = sp->x + sp->width - tp->width;
+         tp->x = sp->x + sp->width - tp->width + tp->x + 1;
       }
       break;
    }
@@ -603,7 +603,7 @@ void HideTray(TrayType *tp)
       break;
    default:
       Assert(0);
-      break;
+      return;
    }
 
    /* Move and redraw. */
@@ -676,19 +676,19 @@ TrayComponentType *GetTrayComponent(TrayType *tp, int x, int y)
    xoffset = 0;
    yoffset = 0;
    for(cp = tp->components; cp; cp = cp->next) {
-      int startx = xoffset;
-      int starty = yoffset;
-      int width = cp->width;
-      int height = cp->height;
+      const int startx = xoffset;
+      const int starty = yoffset;
+      const int width = cp->width;
+      const int height = cp->height;
       if(x >= startx && x < startx + width) {
          if(y >= starty && y < starty + height) {
             return cp;
          }
       }
       if(tp->layout == LAYOUT_HORIZONTAL) {
-         xoffset += cp->width;
+         xoffset += width;
       } else {
-         yoffset += cp->height;
+         yoffset += height;
       }
    }
 

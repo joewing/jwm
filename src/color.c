@@ -20,66 +20,110 @@ typedef struct {
    unsigned int value;
 } DefaultColorNode;
 
-/** Mapping from color type to the value it from which it inherits. */
-typedef struct {
-   ColorType dest;
-   ColorType src;
-} ColorInheritNode;
-
 unsigned long colors[COLOR_COUNT];
 static unsigned long rgbColors[COLOR_COUNT];
 
 /* Map a linear 8-bit RGB space to pixel values. */
-static unsigned long *map;
+static unsigned long *rgbToPixel;
 
-/* Map 8-bit pixel values to a 24-bit linear RGB space. */
-static unsigned long *rmap;
-
-/* Number of JWM-specific colors allocated. */
-static const unsigned BASE_COLORS = 64;
-static const unsigned MAX_COLORS = 128;
-static unsigned extraColors;
+/* Maximum number of colors to allocate for icons. */
+static const unsigned MAX_COLORS = 64;
 
 #ifdef USE_XFT
 static XftColor *xftColors[COLOR_COUNT] = { NULL };
 #endif
 
+#define THEME_TEXT         0xFFFFFF
+#define THEME_ACTIVE       0x0077CC
+#define THEME_ACTIVE2      0x004488
+#define THEME_INACTIVE     0x555555
+#define THEME_INACTIVE2    0x333333
+#define THEME_OUTLINE      0x000000
+
 static const DefaultColorNode DEFAULT_COLORS[] = {
 
-   { COLOR_TITLE_FG,                0xFFFFFF    },
-   { COLOR_TITLE_ACTIVE_FG,         0xFFFFFF    },
+   { COLOR_TITLE_FG,                THEME_TEXT        },
+   { COLOR_TITLE_ACTIVE_FG,         THEME_TEXT        },
 
-   { COLOR_TITLE_BG1,               0x555555    },
-   { COLOR_TITLE_BG2,               0x555555    },
-   { COLOR_TITLE_ACTIVE_BG1,        0x0077CC    },
-   { COLOR_TITLE_ACTIVE_BG2,        0x0077CC    },
+   { COLOR_TITLE_BG1,               THEME_INACTIVE    },
+   { COLOR_TITLE_BG2,               THEME_INACTIVE    },
+   { COLOR_TITLE_ACTIVE_BG1,        THEME_ACTIVE      },
+   { COLOR_TITLE_ACTIVE_BG2,        THEME_ACTIVE      },
 
-   { COLOR_TRAY_FG,                 0x000000    },
-   { COLOR_TRAY_BG1,                0x999999    },
-   { COLOR_TRAY_BG2,                0x999999    },
-   { COLOR_TRAY_ACTIVE_FG,          0xFFFFFF    },
-   { COLOR_TRAY_ACTIVE_BG1,         0x555555    },
-   { COLOR_TRAY_ACTIVE_BG2,         0x555555    },
+   { COLOR_TRAY_FG,                 THEME_TEXT        },
+   { COLOR_TRAY_BG1,                THEME_INACTIVE    },
+   { COLOR_TRAY_BG2,                THEME_INACTIVE    },
+   { COLOR_TRAY_ACTIVE_FG,          THEME_TEXT        },
+   { COLOR_TRAY_ACTIVE_BG1,         THEME_ACTIVE      },
+   { COLOR_TRAY_ACTIVE_BG2,         THEME_ACTIVE      },
 
-   { COLOR_PAGER_BG,                0x999999    },
-   { COLOR_PAGER_FG,                0x333333    },
-   { COLOR_PAGER_ACTIVE_BG,         0x555555    },
-   { COLOR_PAGER_ACTIVE_FG,         0x0077CC    },
-   { COLOR_PAGER_OUTLINE,           0x000000    },
-   { COLOR_PAGER_TEXT,              0x000000    },
+   { COLOR_TASKLIST_FG,             THEME_TEXT        },
+   { COLOR_TASKLIST_BG1,            THEME_INACTIVE    },
+   { COLOR_TASKLIST_BG2,            THEME_INACTIVE    },
+   { COLOR_TASKLIST_ACTIVE_FG,      THEME_TEXT        },
+   { COLOR_TASKLIST_ACTIVE_BG1,     THEME_INACTIVE    },
+   { COLOR_TASKLIST_ACTIVE_BG2,     THEME_INACTIVE    },
 
-   { COLOR_MENU_BG,                 0x999999    },
-   { COLOR_MENU_FG,                 0x000000    },
-   { COLOR_MENU_ACTIVE_BG1,         0x0077CC    },
-   { COLOR_MENU_ACTIVE_BG2,         0x0077CC    },
-   { COLOR_MENU_ACTIVE_FG,          0x000000    },
+   { COLOR_TRAYBUTTON_FG,           THEME_TEXT        },
+   { COLOR_TRAYBUTTON_BG1,          THEME_INACTIVE    },
+   { COLOR_TRAYBUTTON_BG2,          THEME_INACTIVE    },
+   { COLOR_TRAYBUTTON_ACTIVE_FG,    THEME_TEXT        },
+   { COLOR_TRAYBUTTON_ACTIVE_BG1,   THEME_INACTIVE    },
+   { COLOR_TRAYBUTTON_ACTIVE_BG2,   THEME_INACTIVE    },
 
-   { COLOR_POPUP_BG,                0x999999    },
-   { COLOR_POPUP_FG,                0x000000    },
-   { COLOR_POPUP_OUTLINE,           0x000000    }
+   { COLOR_CLOCK_FG,                THEME_TEXT        },
+   { COLOR_CLOCK_BG1,               THEME_INACTIVE    },
+   { COLOR_CLOCK_BG2,               THEME_INACTIVE    },
+
+   { COLOR_PAGER_FG,                THEME_INACTIVE    },
+   { COLOR_PAGER_BG,                THEME_INACTIVE2   },
+   { COLOR_PAGER_ACTIVE_BG,         THEME_ACTIVE2     },
+   { COLOR_PAGER_ACTIVE_FG,         THEME_ACTIVE      },
+   { COLOR_PAGER_OUTLINE,           THEME_OUTLINE     },
+   { COLOR_PAGER_TEXT,              THEME_TEXT        },
+
+   { COLOR_MENU_FG,                 THEME_TEXT        },
+   { COLOR_MENU_BG,                 THEME_INACTIVE    },
+   { COLOR_MENU_ACTIVE_FG,          THEME_TEXT        },
+   { COLOR_MENU_ACTIVE_BG1,         THEME_ACTIVE      },
+   { COLOR_MENU_ACTIVE_BG2,         THEME_ACTIVE      },
+
+   { COLOR_POPUP_BG,                THEME_INACTIVE2   },
+   { COLOR_POPUP_FG,                THEME_TEXT        },
+   { COLOR_POPUP_OUTLINE,           THEME_OUTLINE     }
 
 };
 static const unsigned DEFAULT_COUNT = ARRAY_LENGTH(DEFAULT_COLORS);
+
+static struct {
+   ColorType src;
+   ColorType dest;
+} INHERITED_COLORS[] = {
+   { COLOR_TRAY_FG,           COLOR_CLOCK_FG                },
+   { COLOR_TRAY_BG1,          COLOR_CLOCK_BG1               },
+   { COLOR_TRAY_BG2,          COLOR_CLOCK_BG2               },
+   { COLOR_TRAY_FG,           COLOR_TASKLIST_FG             },
+   { COLOR_TRAY_BG1,          COLOR_TASKLIST_BG1            },
+   { COLOR_TRAY_BG2,          COLOR_TASKLIST_BG2            },
+   { COLOR_TRAY_ACTIVE_FG,    COLOR_TASKLIST_ACTIVE_FG      },
+   { COLOR_TRAY_ACTIVE_BG1,   COLOR_TASKLIST_ACTIVE_BG1     },
+   { COLOR_TRAY_ACTIVE_BG2,   COLOR_TASKLIST_ACTIVE_BG2     },
+   { COLOR_TRAY_UP,           COLOR_TASKLIST_UP             },
+   { COLOR_TRAY_DOWN,         COLOR_TASKLIST_DOWN           },
+   { COLOR_TRAY_ACTIVE_UP,    COLOR_TASKLIST_ACTIVE_UP      },
+   { COLOR_TRAY_ACTIVE_DOWN,  COLOR_TASKLIST_ACTIVE_DOWN    },
+   { COLOR_TRAY_FG,           COLOR_TRAYBUTTON_FG           },
+   { COLOR_TRAY_BG1,          COLOR_TRAYBUTTON_BG1          },
+   { COLOR_TRAY_BG2,          COLOR_TRAYBUTTON_BG2          },
+   { COLOR_TRAY_ACTIVE_FG,    COLOR_TRAYBUTTON_ACTIVE_FG    },
+   { COLOR_TRAY_ACTIVE_BG1,   COLOR_TRAYBUTTON_ACTIVE_BG1   },
+   { COLOR_TRAY_ACTIVE_BG2,   COLOR_TRAYBUTTON_ACTIVE_BG2   },
+   { COLOR_TRAY_UP,           COLOR_TRAYBUTTON_UP           },
+   { COLOR_TRAY_DOWN,         COLOR_TRAYBUTTON_DOWN         },
+   { COLOR_TRAY_ACTIVE_UP,    COLOR_TRAYBUTTON_ACTIVE_UP    },
+   { COLOR_TRAY_ACTIVE_DOWN,  COLOR_TRAYBUTTON_ACTIVE_DOWN  }
+};
+static const unsigned INHERITED_COUNT = ARRAY_LENGTH(INHERITED_COLORS);
 
 static struct {
    ColorType base;
@@ -90,6 +134,12 @@ static struct {
    { COLOR_TITLE_ACTIVE_BG1, COLOR_TITLE_ACTIVE_UP, COLOR_TITLE_ACTIVE_DOWN },
    { COLOR_TRAY_BG1,         COLOR_TRAY_UP,         COLOR_TRAY_DOWN         },
    { COLOR_TRAY_ACTIVE_BG1,  COLOR_TRAY_ACTIVE_UP,  COLOR_TRAY_ACTIVE_DOWN  },
+   { COLOR_TASKLIST_BG1,     COLOR_TASKLIST_UP,     COLOR_TASKLIST_DOWN     },
+   { COLOR_TASKLIST_ACTIVE_BG1,
+        COLOR_TASKLIST_ACTIVE_UP,   COLOR_TASKLIST_ACTIVE_DOWN              },
+   { COLOR_TRAYBUTTON_BG1,   COLOR_TRAYBUTTON_UP,   COLOR_TRAYBUTTON_DOWN   },
+   { COLOR_TRAYBUTTON_ACTIVE_BG1,
+        COLOR_TRAYBUTTON_ACTIVE_UP, COLOR_TRAYBUTTON_ACTIVE_DOWN            },
    { COLOR_MENU_BG,          COLOR_MENU_UP,         COLOR_MENU_DOWN         },
    { COLOR_MENU_ACTIVE_BG1,  COLOR_MENU_ACTIVE_UP,  COLOR_MENU_ACTIVE_DOWN  }
 };
@@ -97,27 +147,23 @@ static const unsigned DERIVED_COUNT = ARRAY_LENGTH(DERIVED_COLORS);
 
 static char **names = NULL;
 
-static unsigned long redShift;
-static unsigned long greenShift;
-static unsigned long blueShift;
-static unsigned long redMask;
-static unsigned long greenMask;
-static unsigned long blueMask;
+static unsigned redShift;
+static unsigned greenShift;
+static unsigned blueShift;
+static unsigned redBits;
+static unsigned greenBits;
+static unsigned blueBits;
 
-static void ComputeShiftMask(unsigned long maskIn,
-                             unsigned long *shiftOut,
-                             unsigned long *maskOut);
-
-static void GetDirectPixel(XColor *c);
-static void GetMappedPixel(XColor *c, char alloc);
-
-static void SetDefaultColor(ColorType type); 
-
-static unsigned long ReadHex(const char *hex);
-
+static unsigned ComputeShift(unsigned long maskIn, unsigned *shiftOut);
 static unsigned long GetRGBFromXColor(const XColor *c);
 
-static int GetColorByName(const char *str, XColor *c);
+static unsigned long GetDirectPixel(const XColor *c);
+static void GetMappedPixel(XColor *c);
+static void AllocateColor(ColorType type, XColor *c);
+
+static unsigned long ReadHex(const char *hex);
+char ParseColorToRGB(const char *value, XColor *c);
+
 static void InitializeNames(void);
 
 static XColor GetXColorFromRGB(unsigned long rgb);
@@ -127,71 +173,63 @@ static void DarkenColor(ColorType oldColor, ColorType newColor);
 /** Startup color support. */
 void StartupColors(void)
 {
-
    unsigned int x;
-   int red, green, blue;
    XColor c;
+
+   /* Initialize the color array. */
+   memset(rgbColors, 0xFF, sizeof(rgbColors));
 
    /* Determine how to convert between RGB triples and pixels. */
    switch(rootVisual->class) {
    case DirectColor:
    case TrueColor:
-      ComputeShiftMask(rootVisual->red_mask, &redShift, &redMask);
-      ComputeShiftMask(rootVisual->green_mask, &greenShift, &greenMask);
-      ComputeShiftMask(rootVisual->blue_mask, &blueShift, &blueMask);
-      map = NULL;
+      redBits = ComputeShift(rootVisual->red_mask, &redShift);
+      greenBits = ComputeShift(rootVisual->green_mask, &greenShift);
+      blueBits = ComputeShift(rootVisual->blue_mask, &blueShift);
+      rgbToPixel = NULL;
       break;
    default:
-
-      /* Attempt to get 64 colors, pretend it worked. */
-      /* RGB: 2, 2, 2 */
-      extraColors = 0;
-      redMask = 0x30;
-      greenMask = 0x0C;
-      blueMask = 0x03;
-      ComputeShiftMask(redMask, &redShift, &redMask);
-      ComputeShiftMask(greenMask, &greenShift, &greenMask);
-      ComputeShiftMask(blueMask, &blueShift, &blueMask);
-      map = Allocate(sizeof(unsigned long) * MAX_COLORS);
-
-      x = 0;
-      for(red = 0; red < 4; red++) {
-         for(green = 0; green < 4; green++) {
-            for(blue = 0; blue < 4; blue++) {
-               c.red = (unsigned short)(87381 * red / 4);
-               c.green = (unsigned short)(87381 * green / 4);
-               c.blue = (unsigned short)(87381 * blue / 4);
-               c.flags = DoRed | DoGreen | DoBlue;
-               JXAllocColor(display, rootColormap, &c);
-               map[x] = c.pixel;
-               x += 1;
-            }
-         }
-      }
-
-      /* Compute the reverse pixel mapping (pixel -> 24-bit RGB). */
-      rmap = Allocate(sizeof(unsigned long) * BASE_COLORS);
-      for(x = 0; x < BASE_COLORS; x++) {
-         c.pixel = x;
-         JXQueryColor(display, rootColormap, &c);
-         GetDirectPixel(&c);
-         rmap[x] = c.pixel;
-      }
-
+      /* Restrict icons to 64 colors (RGB 2, 2, 2). */
+      redBits = ComputeShift(0x30, &redShift);
+      greenBits = ComputeShift(0x0C, &greenShift);
+      blueBits = ComputeShift(0x03, &blueShift);
+      rgbToPixel = Allocate(sizeof(unsigned long) * MAX_COLORS);
+      memset(rgbToPixel, 0xFF, sizeof(unsigned long) * MAX_COLORS);
       break;
    }
 
-   /* Get color information used for JWM stuff. */
+   /* Inherit colors. */
+   if(names) {
+      for(x = 0; x < INHERITED_COUNT; x++) {
+         const ColorType dest = INHERITED_COLORS[x].dest;
+         if(!names[dest]) {
+            const ColorType src = INHERITED_COLORS[x].src;
+            names[dest] = CopyString(names[src]);
+         }
+      }
+   }
+
+   /* Load custom colors. */
    for(x = 0; x < COLOR_COUNT; x++) {
       if(names && names[x]) {
-         if(ParseColor(names[x], &c)) {
-            colors[x] = c.pixel;
-            rgbColors[x] = GetRGBFromXColor(&c);
+         if(ParseColorToRGB(names[x], &c)) {
+            AllocateColor(x, &c);
          } else {
-            SetDefaultColor(x);
+            Release(names[x]);
+            names[x] = NULL;
          }
-      } else {
-         SetDefaultColor(x);
+      }
+   }
+
+   /* Load defaults. */
+   for(x = 0; x < DEFAULT_COUNT; x++) {
+      const ColorType type = DEFAULT_COLORS[x].type;
+      if(!names || !names[type]) {
+         const unsigned rgb = DEFAULT_COLORS[x].value;
+         c.red = ((rgb >> 16) & 0xFF) * 257;
+         c.green = ((rgb >> 8) & 0xFF) * 257;
+         c.blue = (rgb & 0xFF) * 257;
+         AllocateColor(type, &c);
       }
    }
 
@@ -205,26 +243,15 @@ void StartupColors(void)
       }
    }
 
-   if(names) {
-      for(x = 0; x < COLOR_COUNT; x++) {
-         if(names[x]) {
-            Release(names[x]);
-         }
-      }
-      Release(names);
-      names = NULL;
-   }
-
+   DestroyColors();
 }
 
 /** Shutdown color support. */
 void ShutdownColors(void)
 {
+   unsigned x;
 
 #ifdef USE_XFT
-
-   int x;
-
    for(x = 0; x < COLOR_COUNT; x++) {
       if(xftColors[x]) {
          JXftColorFree(display, rootVisual, rootColormap, xftColors[x]);
@@ -232,16 +259,27 @@ void ShutdownColors(void)
          xftColors[x] = NULL;
       }
    }
-
 #endif
 
-   if(map != NULL) {
-      JXFreeColors(display, rootColormap, map, BASE_COLORS + extraColors, 0);
-      extraColors = 0;
-      Release(map);
-      map = NULL;
-      Release(rmap);
-      rmap = NULL;
+   if(rgbToPixel) {
+      for(x = 0; x < MAX_COLORS; x++) {
+         if(rgbToPixel[x] != ULONG_MAX) {
+            JXFreeColors(display, rootColormap, &rgbToPixel[x], 1, 0);
+         }
+      }
+      for(x = 0; x < COLOR_COUNT; x++) {
+         if(rgbColors[x] != ULONG_MAX) {
+            unsigned y;
+            JXFreeColors(display, rootColormap, &colors[x], 1, 0);
+            for(y = x; y < COLOR_COUNT; y++) {
+               if(colors[y] == colors[x]) {
+                  rgbColors[y] = ULONG_MAX;
+               }
+            }
+         }
+      }
+      Release(rgbToPixel);
+      rgbToPixel = NULL;
    }
 
 }
@@ -261,57 +299,36 @@ void DestroyColors(void)
    }
 }
 
-/** Compute the mask for computing colors in a linear RGB colormap. */
-void ComputeShiftMask(unsigned long maskIn, unsigned long *shiftOut,
-                      unsigned long *maskOut)
+/** Compute the shift and bits for a linear RGB colormap. */
+unsigned ComputeShift(unsigned long maskIn, unsigned *shiftOut)
 {
-
-   unsigned int shift;
-
-   Assert(shiftOut);
-   Assert(maskOut);
-
-   /* Components are stored in 16 bits.
-    * When computing pixels, we'll first shift left 16 bits
-    * so to the shift will be an offset from that 32 bit entity.
-    * shift = 16 - <shift-to-ones> + <shift-to-zeros>
-    */
-
-   shift = 0;
-   *maskOut = maskIn;
-   while(maskIn && (maskIn & (1 << 31)) == 0) {
+   unsigned bits = 0;
+   unsigned shift = 0;
+   while(maskIn && (maskIn & 1) == 0) {
       shift += 1;
-      maskIn <<= 1;
+      maskIn >>= 1;
    }
    *shiftOut = shift;
-
+   while(maskIn) {
+      bits += 1;
+      maskIn >>= 1;
+   }
+   return bits;
 }
 
 /** Get an RGB value from an XColor. */
 unsigned long GetRGBFromXColor(const XColor *c)
 {
-
-   unsigned int red, green, blue;
-   unsigned long rgb;
-
-   Assert(c);
-
-   red = Min((c->red + 0x80) >> 8, 0xFF);
-   green = Min((c->green + 0x80) >> 8, 0xFF);
-   blue = Min((c->blue + 0x80) >> 8, 0xFF);
-
-   rgb = (unsigned long)red << 16;
-   rgb |= (unsigned long)green << 8;
-   rgb |= (unsigned long)blue;
-
-   return rgb;
-
+   unsigned long red, green, blue;
+   red   = (c->red   >> 8) << 16;
+   green = (c->green >> 8) << 8;
+   blue  = (c->blue  >> 8) << 0;
+   return red | green | blue;
 }
 
 /** Set the color to use for a component. */
 void SetColor(ColorType c, const char *value)
 {
-
    if(JUNLIKELY(!value)) {
       Warning("empty color tag");
       return;
@@ -324,14 +341,11 @@ void SetColor(ColorType c, const char *value)
    }
 
    names[c] = CopyString(value);
-
 }
 
-/** Parse a color for a component. */
-char ParseColor(const char *value, XColor *c)
+/** Parse a color without lookup. */
+char ParseColorToRGB(const char *value, XColor *c)
 {
-
-
    if(JUNLIKELY(!value)) {
       return 0;
    }
@@ -341,40 +355,25 @@ char ParseColor(const char *value, XColor *c)
       c->red = ((rgb >> 16) & 0xFF) * 257;
       c->green = ((rgb >> 8) & 0xFF) * 257;
       c->blue = (rgb & 0xFF) * 257;
-      c->flags = DoRed | DoGreen | DoBlue;
-      GetColor(c, 1);
    } else {
-      if(JUNLIKELY(!GetColorByName(value, c))) {
+      if(!JXParseColor(display, rootColormap, value, c)) {
          Warning("bad color: \"%s\"", value);
          return 0;
       }
    }
 
    return 1;
-
 }
 
-/** Set the specified color to its default. */
-void SetDefaultColor(ColorType type)
+/** Parse a color for a component. */
+char ParseColor(const char *value, XColor *c)
 {
-
-   XColor c;
-   unsigned int x;
-
-   for(x = 0; x < DEFAULT_COUNT; x++) {
-      if(DEFAULT_COLORS[x].type == type) {
-         const unsigned int rgb = DEFAULT_COLORS[x].value;
-         c.red = ((rgb >> 16) & 0xFF) * 257;
-         c.green = ((rgb >> 8) & 0xFF) * 257;
-         c.blue = (rgb & 0xFF) * 257;
-         c.flags = DoRed | DoGreen | DoBlue;
-         GetColor(&c, 1);
-         colors[type] = c.pixel;
-         rgbColors[type] = rgb;
-         return;
-      }
+   if(JLIKELY(ParseColorToRGB(value, c))) {
+      GetColor(c);
+      return 1;
+   } else {
+      return 0;
    }
-
 }
 
 /** Initialize color names to NULL. */
@@ -409,95 +408,72 @@ unsigned long ReadHex(const char *hex)
    return value;
 }
 
-/** Look up a color by name. */
-int GetColorByName(const char *str, XColor *c)
+/** Compute the pixel value from RGB components. */
+unsigned long GetDirectPixel(const XColor *c)
 {
-   if(!JXParseColor(display, rootColormap, str, c)) {
-      return 0;
-   }
-   GetColor(c, 1);
-   return 1;
-}
-
-/** Compute the RGB components from an index into our RGB colormap. */
-void GetColorFromIndex(XColor *c)
-{
-   const unsigned long red = (c->pixel & redMask) << redShift;
-   const unsigned long green = (c->pixel & greenMask) << greenShift;
-   const unsigned long blue = (c->pixel & blueMask) << blueShift;
-   c->red = red >> 16;
-   c->green = green >> 16;
-   c->blue = blue >> 16;
+   const unsigned long red   = (c->red   >> (16 - redBits  )) << redShift;
+   const unsigned long green = (c->green >> (16 - greenBits)) << greenShift;
+   const unsigned long blue  = (c->blue  >> (16 - blueBits )) << blueShift;
+   return red | green | blue;
 }
 
 /** Compute the pixel value from RGB components. */
-void GetDirectPixel(XColor *c)
+void GetMappedPixel(XColor *c)
 {
-   unsigned long red = c->red << 16;
-   unsigned long green = c->green << 16;
-   unsigned long blue = c->blue << 16;
-
-   /* Shift to the correct offsets and mask. */
-   red = (red >> redShift) & redMask;
-   green = (green >> greenShift) & greenMask;
-   blue = (blue >> blueShift) & blueMask;
-
-   /* Combine. */
-   c->pixel = red | green | blue;
-}
-
-/** Compute the pixel value from RGB components. */
-void GetMappedPixel(XColor *c, char alloc)
-{
-   if(alloc && BASE_COLORS + extraColors < MAX_COLORS) {
-      if(JXAllocColor(display, rootColormap, c) == 0) {
-         /* Unable to allocate the entry. */
-         GetDirectPixel(c);
-      }
-      map[BASE_COLORS + extraColors] = c->pixel;
-      extraColors += 1;
+   const unsigned long index = GetDirectPixel(c);
+   if(rgbToPixel[index] == ULONG_MAX) {
+      c->red   = (c->red   & 0xC000) | 0x0800;
+      c->green = (c->green & 0xC000) | 0x0800;
+      c->blue  = (c->blue  & 0xC000) | 0x0800;
+      JXAllocColor(display, rootColormap, c);
+      rgbToPixel[index] = c->pixel;
    } else {
-      GetDirectPixel(c);
-      c->pixel = map[c->pixel];
+      c->pixel = rgbToPixel[index];
    }
+}
+
+/** Allocate a pixel from RGB components. */
+void AllocateColor(ColorType type, XColor *c)
+{
+   unsigned i;
+
+   /* Save the desired RGB color. */
+   rgbColors[type] = GetRGBFromXColor(c);
+
+   /* Look up the pixel value to use. */
+   switch(rootVisual->class) {
+   case DirectColor:
+   case TrueColor:
+      c->pixel = GetDirectPixel(c);
+      break;
+   default:
+      /* First see if we already know about this color. */
+      for(i = 0; i < COLOR_COUNT; i++) {
+         if(i != type && rgbColors[i] == rgbColors[type]) {
+            colors[type] = colors[i];
+            return;
+         }
+      }
+
+      /* Allocate a new read-only cell. */
+      JXAllocColor(display, rootColormap, c);
+      break;
+   }
+   colors[type] = c->pixel;
 }
 
 /** Compute the pixel value from RGB components. */
-void GetColor(XColor *c, char alloc)
+void GetColor(XColor *c)
 {
    switch(rootVisual->class) {
    case DirectColor:
    case TrueColor:
-      GetDirectPixel(c);
+      c->pixel = GetDirectPixel(c);
       return;
    default:
-      GetMappedPixel(c, alloc);
+      GetMappedPixel(c);
       return;
    }
-}
-
-/** Get the RGB components from a pixel value. */
-void GetColorFromPixel(XColor *c)
-{
-   switch(rootVisual->class) {
-   case DirectColor:
-   case TrueColor:
-      /* Nothing to do. */
-      break;
-   default:
-      /* Convert from a pixel value to a linear RGB space. */
-      c->pixel = rmap[c->pixel & (BASE_COLORS - 1)];
-      break;
-   }
-
-   /* Extract the RGB components from the linear RGB pixel value. */
-   GetColorFromIndex(c);
-}
-
-/** Get an RGB pixel value from RGB components. */
-void GetColorIndex(XColor *c)
-{
-   GetDirectPixel(c);
 }
 
 /** Get an XFT color for the specified component. */
@@ -568,10 +544,7 @@ void LightenColor(ColorType oldColor, ColorType newColor)
    temp.green = green;
    temp.blue = blue;
 
-   GetColor(&temp, 1);
-   colors[newColor] = temp.pixel;
-   rgbColors[newColor] = GetRGBFromXColor(&temp);
-
+   AllocateColor(newColor, &temp);
 }
 
 /** Compute a color darker than the input. */
@@ -602,8 +575,5 @@ void DarkenColor(ColorType oldColor, ColorType newColor)
    temp.green = green;
    temp.blue = blue;
 
-   GetColor(&temp, 1);
-   colors[newColor] = temp.pixel;
-   rgbColors[newColor] = GetRGBFromXColor(&temp);
-
+   AllocateColor(newColor, &temp);
 }

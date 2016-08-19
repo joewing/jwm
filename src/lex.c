@@ -30,8 +30,10 @@ static const StringMappingType TOKEN_MAP[] = {
    { "Class",              TOK_CLASS            },
    { "ClickMiddleTask",    TOK_CLICKMIDDLETASK  },
    { "Clock",              TOK_CLOCK            },
+   { "ClockStyle",         TOK_CLOCKSTYLE       },
    { "Close",              TOK_CLOSE            },
    { "Corner",             TOK_CORNER           },
+   { "DefaultIcon",        TOK_DEFAULTICON      },
    { "Desktop",            TOK_DESKTOP          },
    { "Desktops",           TOK_DESKTOPS         },
    { "Dock",               TOK_DOCK             },
@@ -80,9 +82,11 @@ static const StringMappingType TOKEN_MAP[] = {
    { "Stick",              TOK_STICK            },
    { "Swallow",            TOK_SWALLOW          },
    { "TaskList",           TOK_TASKLIST         },
+   { "TaskListStyle",      TOK_TASKLISTSTYLE    },
    { "Text",               TOK_TEXT             },
    { "Tray",               TOK_TRAY             },
    { "TrayButton",         TOK_TRAYBUTTON       },
+   { "TrayButtonStyle",    TOK_TRAYBUTTONSTYLE  },
    { "TrayStyle",          TOK_TRAYSTYLE        },
    { "Width",              TOK_WIDTH            },
    { "WindowStyle",        TOK_WINDOWSTYLE      }
@@ -338,6 +342,9 @@ int ParseEntity(const char *entity, char *ch, const char *file,
    } else if(!strncmp("&apos;", entity, 6)) {
       *ch = '\'';
       return 6;
+   } else if(!strncmp("&NewLine;", entity, 9)) {
+      *ch = '\n';
+      return 9;
    } else {
       unsigned int x;
       for(x = 0; entity[x]; x++) {
@@ -345,13 +352,22 @@ int ParseEntity(const char *entity, char *ch, const char *file,
             break;
          }
       }
-      temp = AllocateStack(x + 2);
-      strncpy(temp, entity, x + 1);
-      temp[x + 1] = 0;
-      Warning(_("%s[%d]: invalid entity: \"%.8s\""), file, line, temp);
-      ReleaseStack(temp);
-      *ch = '&';
-      return 1;
+      if(entity[1] == '#' && entity[x] == ';') {
+         if(entity[2] == 'x') {
+            *ch = (char)strtol(&entity[3], NULL, 16);
+         } else {
+            *ch = (char)strtol(&entity[2], NULL, 10);
+         }
+         return x + 1;
+      } else {
+         temp = AllocateStack(x + 2);
+         strncpy(temp, entity, x + 1);
+         temp[x + 1] = 0;
+         Warning(_("%s[%d]: invalid entity: \"%.8s\""), file, line, temp);
+         ReleaseStack(temp);
+         *ch = '&';
+         return 1;
+      }
    }
 }
 
@@ -523,7 +539,6 @@ TokenNode *CreateNode(TokenNode *current, const char *file,
                       unsigned int line)
 {
    TokenNode *np;
-   size_t len;
 
    np = Allocate(sizeof(TokenNode));
    np->type = TOK_INVALID;
@@ -534,9 +549,7 @@ TokenNode *CreateNode(TokenNode *current, const char *file,
    np->parent = current;
    np->next = NULL;
 
-   len = strlen(file);
-   np->fileName = Allocate(len + 1);
-   memcpy(np->fileName, file, len + 1);
+   np->fileName = file;
    np->line = line;
    np->invalidName = NULL;
 
@@ -612,10 +625,6 @@ void ReleaseTokens(TokenNode *np)
 
       if(np->invalidName) {
          Release(np->invalidName);
-      }
-
-      if(np->fileName) {
-         Release(np->fileName);
       }
 
       Release(np);

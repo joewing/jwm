@@ -2,7 +2,7 @@
  * @file action.h
  * @author Joe Wingbermuehle
  *
- * @brief Mouse click action processing for tray buttons and clocks.
+ * @brief Tray component actions.
  *
  */
 

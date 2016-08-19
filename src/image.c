@@ -446,6 +446,7 @@ ImageNode *LoadSVGImage(const char *fileName, int width, int height,
    e = NULL;
    rh = rsvg_handle_new_from_file(fileName, &e);
    if(!rh) {
+      g_error_free(e);
       return NULL;
    }
 
@@ -560,42 +561,42 @@ ImageNode *LoadXBMImage(const char *fileName)
 
 /** Create an image from XImages giving color and shape information. */
 #ifdef USE_ICONS
+#define HASH_SIZE 16
 ImageNode *CreateImageFromXImages(XImage *image, XImage *shape)
 {
+   XColor colors[HASH_SIZE];
    ImageNode *result;
    unsigned char *dest;
    int x, y;
 
+   memset(colors, 0xFF, sizeof(colors));
    result = CreateImage(image->width, image->height, 0);
    dest = result->data;
    for(y = 0; y < image->height; y++) {
       for(x = 0; x < image->width; x++) {
-         XColor color;
-
-         if(!shape || XGetPixel(shape, x, y)) {
-            *dest++ = 255;
-         } else {
-            *dest++ = 0;
-         }
-
-         color.pixel = XGetPixel(image, x, y);
+         const unsigned long pixel = XGetPixel(image, x, y);
+         *dest++ = (!shape || XGetPixel(shape, x, y)) ? 255 : 0;
          if(image->depth == 1) {
-            const unsigned char value =  color.pixel ? 0 : 255;
+            const unsigned char value = pixel ? 0 : 255;
             *dest++ = value;
             *dest++ = value;
             *dest++ = value;
-         } else {
-            GetColorFromIndex(&color);
-            *dest++ = (unsigned char)(color.red >> 8);
-            *dest++ = (unsigned char)(color.green >> 8);
-            *dest++ = (unsigned char)(color.blue >> 8);
+         } else{
+            const unsigned index = pixel % HASH_SIZE;
+            if(colors[index].pixel != pixel) {
+               colors[index].pixel = pixel;
+               JXQueryColor(display, rootColormap, &colors[index]);
+            }
+            *dest++ = (unsigned char)(colors[index].red   >> 8);
+            *dest++ = (unsigned char)(colors[index].green >> 8);
+            *dest++ = (unsigned char)(colors[index].blue  >> 8);
          }
       }
    }
 
    return result;
-
 }
+#undef HASH_SIZE
 #endif /* USE_ICONS */
 
 ImageNode *CreateImage(unsigned width, unsigned height, char bitmap)
@@ -635,16 +636,14 @@ void DestroyImage(ImageNode *image) {
 int AllocateColor(Display *d, Colormap cmap, char *name,
                   XColor *c, void *closure)
 {
-
    if(name) {
       if(!JXParseColor(d, cmap, name, c)) {
          return -1;
       }
    }
 
-   GetColorIndex(c);
+   GetColor(c);
    return 1;
-
 }
 #endif /* USE_XPM */
 

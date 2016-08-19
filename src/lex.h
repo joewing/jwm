@@ -26,8 +26,10 @@ typedef enum {
    TOK_CLASS,
    TOK_CLICKMIDDLETASK,
    TOK_CLOCK,
+   TOK_CLOCKSTYLE,
    TOK_CLOSE,
    TOK_CORNER,
+   TOK_DEFAULTICON,
    TOK_DESKTOP,
    TOK_DESKTOPS,
    TOK_DOCK,
@@ -76,9 +78,11 @@ typedef enum {
    TOK_STICK,
    TOK_SWALLOW,
    TOK_TASKLIST,
+   TOK_TASKLISTSTYLE,
    TOK_TEXT,
    TOK_TRAY,
    TOK_TRAYBUTTON,
+   TOK_TRAYBUTTONSTYLE,
    TOK_TRAYSTYLE,
    TOK_WIDTH,
    TOK_WINDOWSTYLE
@@ -100,7 +104,7 @@ typedef struct TokenNode {
    TokenType type;            /**< Tag type. */
    char *invalidName;         /**< Name of the tag if invalid. */
    char *value;               /**< Body of the tag. */
-   char *fileName;            /**< Name of the file containing this tag. */
+   const char *fileName;      /**< Name of the file containing this tag. */
    unsigned int line;         /**< Line number of the start of this tag. */
    struct AttributeNode *attributes;   /**< Linked list of attributes. */
    struct TokenNode *parent;           /**< Parent tag. */

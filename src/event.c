@@ -113,19 +113,6 @@ char WaitForEvent(XEvent *event)
 
    do {
 
-      if(restack_pending) {
-         RestackClients();
-         restack_pending = 0;
-      }
-      if(task_update_pending) {
-         UpdateTaskBar();
-         task_update_pending = 0;
-      }
-      if(pager_update_pending) {
-         UpdatePager();
-         pager_update_pending = 0;
-      }
-
       while(JXPending(display) == 0) {
          FD_ZERO(&fds);
          FD_SET(fd, &fds);
@@ -255,6 +242,19 @@ void Signal(void)
    TimeType now;
    Window w;
    int x, y;
+
+   if(restack_pending) {
+      RestackClients();
+      restack_pending = 0;
+   }
+   if(task_update_pending) {
+      UpdateTaskBar();
+      task_update_pending = 0;
+   }
+   if(pager_update_pending) {
+      UpdatePager();
+      pager_update_pending = 0;
+   }
 
    GetCurrentTime(&now);
    if(GetTimeDifference(&now, &last) < MIN_TIME_DELTA) {
@@ -388,8 +388,8 @@ void HandleButtonEvent(const XButtonEvent *event)
       const unsigned int mask = event->state & ~lockMask;
       np = FindClientByWindow(event->window);
       if(np) {
-         const char move_resize = (mask == Mod1Mask)
-            || (np->state.status & STAT_DRAG);
+         const char move_resize = (np->state.status & STAT_DRAG)
+            || ((mask == Mod1Mask) && !(np->state.status & STAT_NODRAG));
          switch(event->button) {
          case Button1:
          case Button2:
@@ -521,13 +521,7 @@ void HandleKeyPress(const XKeyEvent *event)
       }
       break;
    case KEY_MAX:
-      if(np) {
-         if(np->state.maxFlags) {
-            MaximizeClient(np, MAX_NONE);
-         } else {
-            MaximizeClient(np, MAX_HORIZ | MAX_VERT);
-         }
-      }
+      ToggleMaximized(np, MAX_HORIZ | MAX_VERT);
       break;
    case KEY_RESTORE:
       if(np) {
@@ -569,7 +563,7 @@ void HandleKeyPress(const XKeyEvent *event)
       Restart();
       break;
    case KEY_EXIT:
-      Exit();
+      Exit(1);
       break;
    case KEY_FULLSCREEN:
       if(np) {
@@ -582,22 +576,30 @@ void HandleKeyPress(const XKeyEvent *event)
       break;
    case KEY_SENDR:
       if(np) {
-         SetClientDesktop(np, GetRightDesktop(np->state.desktop));
+         const unsigned desktop = GetRightDesktop(np->state.desktop);
+         SetClientDesktop(np, desktop);
+         ChangeDesktop(desktop);
       }
       break;
    case KEY_SENDL:
       if(np) {
-         SetClientDesktop(np, GetLeftDesktop(np->state.desktop));
+         const unsigned desktop = GetLeftDesktop(np->state.desktop);
+         SetClientDesktop(np, desktop);
+         ChangeDesktop(desktop);
       }
       break;
    case KEY_SENDU:
       if(np) {
-         SetClientDesktop(np, GetAboveDesktop(np->state.desktop));
+         const unsigned desktop = GetAboveDesktop(np->state.desktop);
+         SetClientDesktop(np, desktop);
+         ChangeDesktop(desktop);
       }
       break;
    case KEY_SENDD:
       if(np) {
-         SetClientDesktop(np, GetBelowDesktop(np->state.desktop));
+         const unsigned desktop = GetBelowDesktop(np->state.desktop);
+         SetClientDesktop(np, desktop);
+         ChangeDesktop(desktop);
       }
       break;
    default:
@@ -984,7 +986,7 @@ void HandleClientMessage(const XClientMessageEvent *event)
       if(event->message_type == atoms[ATOM_JWM_RESTART]) {
          Restart();
       } else if(event->message_type == atoms[ATOM_JWM_EXIT]) {
-         Exit();
+         Exit(0);
       } else if(event->message_type == atoms[ATOM_JWM_RELOAD]) {
          ReloadMenu();
       } else if(event->message_type == atoms[ATOM_NET_CURRENT_DESKTOP]) {
@@ -1247,11 +1249,11 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
       if(actionMinimize) {
          RestoreClient(np, 0);
       }
-      if(actionNolist) {
+      if(actionNolist && !(np->state.status & STAT_ILIST)) {
          np->state.status &= ~STAT_NOLIST;
          RequireTaskUpdate();
       }
-      if(actionNopager) {
+      if(actionNopager && !(np->state.status & STAT_IPAGER)) {
          np->state.status &= ~STAT_NOPAGER;
          RequirePagerUpdate();
       }
@@ -1278,11 +1280,11 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
       if(actionMinimize) {
          MinimizeClient(np, 1);
       }
-      if(actionNolist) {
+      if(actionNolist && !(np->state.status & STAT_ILIST)) {
          np->state.status |= STAT_NOLIST;
          RequireTaskUpdate();
       }
-      if(actionNopager) {
+      if(actionNopager && !(np->state.status & STAT_IPAGER)) {
          np->state.status |= STAT_NOPAGER;
          RequirePagerUpdate();
       }
@@ -1334,11 +1336,11 @@ void HandleNetWMState(const XClientMessageEvent *event, ClientNode *np)
       }
       /* Note that we don't handle toggling of hidden per EWMH
        * recommendations. */
-      if(actionNolist) {
+      if(actionNolist && !(np->state.status & STAT_ILIST)) {
          np->state.status ^= STAT_NOLIST;
          RequireTaskUpdate();
       }
-      if(actionNopager) {
+      if(actionNopager && !(np->state.status & STAT_IPAGER)) {
          np->state.status ^= STAT_NOPAGER;
          RequirePagerUpdate();
       }
@@ -1523,7 +1525,6 @@ char HandleDestroyNotify(const XDestroyWindowEvent *event)
 void DispatchBorderButtonEvent(const XButtonEvent *event,
                                ClientNode *np)
 {
-
    static Time lastClickTime = 0;
    static int lastX = 0, lastY = 0;
    static char doubleClickActive = 0;
@@ -1551,8 +1552,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
          if(event->button == Button1) {
             ResizeClient(np, action, event->x, event->y);
          } else if(event->button == Button3) {
+            const unsigned titleHeight = GetTitleHeight();
             const int x = np->x + event->x - bsize;
-            const int y = np->y + event->y - settings.titleHeight - bsize;
+            const int y = np->y + event->y - titleHeight - bsize;
             ShowWindowMenu(np, x, y, 0);
          }
       }
@@ -1579,8 +1581,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
             }
          }
       } else if(event->button == Button3) {
+         const unsigned titleHeight = GetTitleHeight();
          const int x = np->x + event->x - bsize;
-         const int y = np->y + event->y - settings.titleHeight - bsize;
+         const int y = np->y + event->y - titleHeight - bsize;
          ShowWindowMenu(np, x, y, 0);
       } else if(event->button == Button4) {
          ShadeClient(np);
@@ -1594,8 +1597,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
       } else if(event->button == Button5) {
          UnshadeClient(np);
       } else if(event->type == ButtonPress) {
+         const unsigned titleHeight = GetTitleHeight();
          const int x = np->x + event->x - bsize;
-         const int y = np->y + event->y - settings.titleHeight - bsize;
+         const int y = np->y + event->y - titleHeight - bsize;
          ShowWindowMenu(np, x, y, 0);
       }
       break;

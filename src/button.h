@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2004-2006
  *
- * @brief Header file for button functions.
+ * @brief Functions for rendering buttons.
  *
  */
 
@@ -11,6 +11,7 @@
 #define BUTTON_H
 
 #include "font.h"
+#include "settings.h"
 
 struct IconNode;
 
@@ -23,11 +24,6 @@ typedef unsigned char ButtonType;
 #define BUTTON_TRAY_ACTIVE 4  /**< Active tray button. */
 #define BUTTON_TASK        5  /**< Item in the task list. */
 #define BUTTON_TASK_ACTIVE 6  /**< Active item in the task list. */
-
-/** Alignment of content in a button. */
-typedef unsigned char AlignmentType;
-#define ALIGN_LEFT   0  /**< Left align. */
-#define ALIGN_CENTER 1  /**< Center align. */
 
 /** Data used for drawing a button. */
 typedef struct {
@@ -56,7 +52,6 @@ void DrawButton(ButtonNode *bp);
 /** Reset the contents of a ButtonNode structure.
  * @param bp The structure to reset.
  * @param d The drawable to use.
- * @param g The graphics context to use.
  */
 void ResetButton(ButtonNode *bp, Drawable d);
 

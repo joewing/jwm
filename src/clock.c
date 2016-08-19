@@ -79,7 +79,7 @@ void StartupClock(void)
          clk->cp->requestedWidth = 1;
       }
       if(clk->cp->requestedHeight == 0) {
-         clk->cp->requestedHeight = GetStringHeight(FONT_TRAY) + 4;
+         clk->cp->requestedHeight = GetStringHeight(FONT_CLOCK) + 4;
       }
    }
 }
@@ -264,26 +264,26 @@ void DrawClock(ClockType *clk, const TimeType *now)
 
    /* Clear the area. */
    cp = clk->cp;
-   if(colors[COLOR_TRAY_BG1] == colors[COLOR_TRAY_BG2]) {
-      JXSetForeground(display, rootGC, colors[COLOR_TRAY_BG1]);
+   if(colors[COLOR_CLOCK_BG1] == colors[COLOR_CLOCK_BG2]) {
+      JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG1]);
       JXFillRectangle(display, cp->pixmap, rootGC, 0, 0,
                       cp->width, cp->height);
    } else {
       DrawHorizontalGradient(cp->pixmap, rootGC,
-                             colors[COLOR_TRAY_BG1], colors[COLOR_TRAY_BG2],
+                             colors[COLOR_CLOCK_BG1], colors[COLOR_CLOCK_BG2],
                              0, 0, cp->width, cp->height);
    }
 
    /* Determine if the clock is the right size. */
    timeString = GetTimeString(clk->format, clk->zone);
-   width = GetStringWidth(FONT_TRAY, timeString);
+   width = GetStringWidth(FONT_CLOCK, timeString);
    rwidth = width + 4;
    if(rwidth == clk->cp->requestedWidth || clk->userWidth) {
 
       /* Draw the clock. */
-      RenderString(cp->pixmap, FONT_TRAY, COLOR_TRAY_FG,
+      RenderString(cp->pixmap, FONT_CLOCK, COLOR_CLOCK_FG,
                    (cp->width - width) / 2,
-                   (cp->height - GetStringHeight(FONT_TRAY)) / 2,
+                   (cp->height - GetStringHeight(FONT_CLOCK)) / 2,
                    cp->width, timeString);
 
       UpdateSpecificTray(clk->cp->tray, clk->cp);

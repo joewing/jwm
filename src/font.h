@@ -19,7 +19,10 @@ typedef unsigned char FontType;
 #define FONT_POPUP      2
 #define FONT_TRAY       3
 #define FONT_PAGER      4
-#define FONT_COUNT      5
+#define FONT_CLOCK      5
+#define FONT_TASKLIST   6
+#define FONT_TRAYBUTTON 7
+#define FONT_COUNT      8
 
 void InitializeFonts(void);
 void StartupFonts(void);

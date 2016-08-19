@@ -54,8 +54,13 @@ void SetMaxTaskBarItemWidth(struct TrayComponentType *cp, const char *value);
  */
 void SetTaskBarHeight(struct TrayComponentType *cp, const char *value);
 
+/** Set whether labels should be displayed (or icon only).
+ * @param cp The task bar component.
+ * @param value 1 if labeled, 0 if no label is to be shown.
+ */
+void SetTaskBarLabeled(struct TrayComponentType *cp, char value);
+
 /** Update the _NET_CLIENT_LIST property. */
 void UpdateNetClientList(void);
 
 #endif /* TASKBAR_H */
-

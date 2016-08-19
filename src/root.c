@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2004-2006
  *
- * @brief Functions to handle root menus.
+ * @brief Root menu functions.
  *
  */
 
@@ -183,13 +183,13 @@ void GetRootMenuSize(int index, int *width, int *height)
 /** Show a root menu. */
 char ShowRootMenu(int index, int x, int y, char keyboard)
 {
-
    if(!rootMenu[index]) {
       return 0;
    }
-   ShowMenu(rootMenu[index], RunRootCommand, x, y, keyboard);
-   return 1;
-
+   if(menuShown) {
+      return 0;
+   }
+   return ShowMenu(rootMenu[index], RunRootCommand, x, y, keyboard);
 }
 
 /** Exit callback for the exit menu item. */
@@ -206,9 +206,9 @@ void Restart(void)
 }
 
 /** Exit with optional confirmation. */
-void Exit(void)
+void Exit(char confirm)
 {
-   if(settings.exitConfirmation) {
+   if(confirm) {
       ShowConfirmDialog(NULL, ExitHandler,
                         _("Exit JWM"),
                         _("Are you sure?"),
@@ -248,7 +248,7 @@ void RunRootCommand(MenuAction *action, unsigned button)
          Release(exitCommand);
       }
       exitCommand = CopyString(action->str);
-      Exit();
+      Exit(action->value);
       break;
    case MA_DESKTOP:
       ChangeDesktop(action->value);

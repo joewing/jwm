@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2004-2015
  *
- * @brief Functions for dealing with window borders.
+ * @brief Functions for handling window borders.
  * 
  */
 
@@ -87,10 +87,11 @@ void DestroyBorders(void)
 /** Get the size of the icon to display on a window. */
 int GetBorderIconSize(void)
 {
+   const unsigned height = GetTitleHeight();
    if(settings.windowDecorations == DECO_MOTIF) {
-      return settings.titleHeight - 4;
+      return Max((int)height - 4, 0);
    } else {
-      return settings.titleHeight - 6;
+      return Max((int)height - 6, 0);
    }
 }
 
@@ -100,7 +101,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
 
    int north, south, east, west;
    unsigned int resizeMask;
-   const unsigned int titleHeight = settings.titleHeight;
+   const unsigned int titleHeight = GetTitleHeight();
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
 
@@ -178,20 +179,17 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
    }
 
    /* Check south east/west and north east/west resizing. */
-   if(   np->width >= settings.titleHeight * 2
-      && np->height >= settings.titleHeight * 2) {
-      if(y > np->height + north - settings.titleHeight) {
-         if(x < settings.titleHeight) {
-            return (BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE) & resizeMask;
-         } else if(x > np->width + west - settings.titleHeight) {
-            return (BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE) & resizeMask;
-         }
-      } else if(y < settings.titleHeight) {
-         if(x < settings.titleHeight) {
-            return (BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE) & resizeMask;
-         } else if(x > np->width + west - settings.titleHeight) {
-            return (BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE) & resizeMask;
-         }
+   if(y > np->height + north - titleHeight) {
+      if(x < titleHeight) {
+         return (BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE) & resizeMask;
+      } else if(x > np->width + west - titleHeight) {
+         return (BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE) & resizeMask;
+      }
+   } else if(y < titleHeight) {
+      if(x < titleHeight) {
+         return (BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE) & resizeMask;
+      } else if(x > np->width + west - titleHeight) {
+         return (BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE) & resizeMask;
       }
    }
 
@@ -357,7 +355,7 @@ void DrawBorderHelper(const ClientNode *np)
    unsigned int width, height;
 
    unsigned int buttonCount;
-   int titleWidth;
+   int titleWidth, titleHeight;
    Pixmap canvas;
    GC gc;
 
@@ -396,14 +394,15 @@ void DrawBorderHelper(const ClientNode *np)
 
    /* Determine how many pixels may be used for the title. */
    buttonCount = GetButtonCount(np);
+   titleHeight = GetTitleHeight();
    titleWidth = width - east - west - 5;
-   titleWidth -= settings.titleHeight * (buttonCount + 1);
+   titleWidth -= titleHeight * (buttonCount + 1);
    titleWidth -= settings.windowDecorations == DECO_MOTIF
                ? (buttonCount + 1) : 0;
 
    /* Draw the top part (either a title or north border). */
    if((np->state.border & BORDER_TITLE) &&
-      settings.titleHeight > settings.borderWidth) {
+      titleHeight > settings.borderWidth) {
 
       const unsigned startx = west + 1;
       const unsigned starty = settings.windowDecorations == DECO_MOTIF
@@ -411,24 +410,36 @@ void DrawBorderHelper(const ClientNode *np)
 
       /* Draw a title bar. */
       DrawHorizontalGradient(canvas, gc, titleColor1, titleColor2,
-                             0, 1, width, settings.titleHeight - 2);
+                             0, 1, width, titleHeight - 2);
 
       /* Draw the icon. */
 #ifdef USE_ICONS
-      if(np->width >= settings.titleHeight) {
+      if(np->width >= titleHeight) {
          const int iconSize = GetBorderIconSize();
          IconNode *icon = np->icon ? np->icon : buttonIcons[BI_MENU];
          PutIcon(icon, canvas, colors[borderTextColor],
-                 startx, starty + (settings.titleHeight - iconSize) / 2,
+                 startx, starty + (titleHeight - iconSize) / 2,
                  iconSize, iconSize);
       }
 #endif
 
       if(np->name && np->name[0] && titleWidth > 0) {
          const int sheight = GetStringHeight(FONT_BORDER);
-         const unsigned titlex = startx + settings.titleHeight
-            + (settings.windowDecorations == DECO_MOTIF ? 4 : 0);
-         const unsigned titley = starty + (settings.titleHeight - sheight) / 2;
+         const int textWidth = GetStringWidth(FONT_BORDER, np->name);
+         unsigned titlex, titley;
+         int xoffset = 0;
+         switch (settings.titleTextAlignment) {
+         case ALIGN_CENTER:
+            xoffset = (titleWidth - textWidth) / 2;
+            break;
+         case ALIGN_RIGHT:
+            xoffset = (titleWidth - textWidth);
+            break;
+         }
+         xoffset = Max(xoffset, 0);
+         titlex = startx + titleHeight + xoffset
+                + (settings.windowDecorations == DECO_MOTIF ? 4 : 0);
+         titley = starty + (titleHeight - sheight) / 2;
          RenderString(canvas, FONT_BORDER, borderTextColor,
                       titlex, titley, titleWidth, np->name);
       }
@@ -442,10 +453,11 @@ void DrawBorderHelper(const ClientNode *np)
    /* Copy the pixmap for the title bar and clear the part of
     * the window to be drawn directly. */
    if(settings.windowDecorations == DECO_MOTIF) {
-      JXCopyArea(display, canvas, np->parent, gc, 2, 2,
-         width - 4, north - 2, 2, 2);
+      const int off = np->state.maxFlags ? 0 : 2;
+      JXCopyArea(display, canvas, np->parent, gc, off, off,
+         width - 2 * off, north - off, off, off);
       JXClearArea(display, np->parent,
-         2, north, width - 4, height - north - 2, False);
+         off, north, width - 2 * off, height - north - off, False);
    } else {
       JXCopyArea(display, canvas, np->parent, gc, 1, 1,
          width - 2, north - 1, 1, 1);
@@ -500,9 +512,11 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    int width, height;
    int north, south, east, west;
    unsigned offset = 0;
+   unsigned titleHeight;
 
    /* Determine the window size. */
    GetBorderSize(&np->state, &north, &south, &east, &west);
+   titleHeight = GetTitleHeight();
    width = np->width + east + west;
    if(np->state.status & STAT_SHADED) {
       height = north + south;
@@ -519,7 +533,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       pixelDown = colors[COLOR_TITLE_DOWN];
    }
 
-   if(!(np->state.maxFlags & MAX_VERT)) {
+   if(!(np->state.maxFlags & (MAX_VERT | MAX_TOP))) {
       /* Top title border. */
       segments[offset].x1 = west;
       segments[offset].y1 = settings.borderWidth;
@@ -528,12 +542,12 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       offset += 1;
    }
 
-   if(!(np->state.maxFlags & MAX_HORIZ)) {
+   if(!(np->state.maxFlags & (MAX_HORIZ | MAX_RIGHT))) {
       /* Right title border. */
       segments[offset].x1 = west;
       segments[offset].y1 = south + 1;
       segments[offset].x2 = east;
-      segments[offset].y2 = settings.titleHeight + south - 1;
+      segments[offset].y2 = titleHeight + south - 1;
       offset += 1;
 
       /* Inside right border. */
@@ -551,7 +565,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    segments[offset].y2 = height - south;
    offset += 1;
 
-   if(!(np->state.maxFlags & MAX_HORIZ)) {
+   if(!(np->state.maxFlags & (MAX_HORIZ | MAX_LEFT))) {
       /* Left border. */
       segments[offset].x1 = 0;
       segments[offset].y1 = 0;
@@ -565,7 +579,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       offset += 1;
    }
 
-   if(!(np->state.maxFlags & MAX_VERT)) {
+   if(!(np->state.maxFlags & (MAX_VERT | MAX_TOP))) {
       /* Top border. */
       segments[offset].x1 = 1;
       segments[offset].y1 = 0;
@@ -591,7 +605,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    segments[offset].y2 = north - 1;
    offset += 1;
 
-   if(!(np->state.maxFlags & MAX_HORIZ)) {
+   if(!(np->state.maxFlags & (MAX_HORIZ | MAX_RIGHT))) {
       /* Right title border. */
       segments[offset].x1 = width - east - 1;
       segments[offset].y1 = south + 1;
@@ -600,7 +614,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       offset += 1;
    }
 
-   if(!(np->state.maxFlags & MAX_VERT)) {
+   if(!(np->state.maxFlags & (MAX_VERT | MAX_TOP))) {
       /* Inside top border. */
       segments[offset].x1 = west - 1;
       segments[offset].y1 = settings.borderWidth - 1;
@@ -609,7 +623,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       offset += 1;
    }
 
-   if(!(np->state.maxFlags & MAX_HORIZ)) {
+   if(!(np->state.maxFlags & (MAX_HORIZ | MAX_LEFT))) {
       /* Inside left border. */
       segments[offset].x1 = west - 1;
       segments[offset].y1 = south;
@@ -618,7 +632,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       offset += 1;
    }
 
-   if(!(np->state.maxFlags & MAX_HORIZ)) {
+   if(!(np->state.maxFlags & (MAX_HORIZ | MAX_RIGHT))) {
       /* Right border. */
       segments[offset].x1 = width - 1;
       segments[offset].y1 = 0;
@@ -632,7 +646,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       offset += 1;
    }
 
-   if(!(np->state.maxFlags & MAX_VERT)) {
+   if(!(np->state.maxFlags & (MAX_VERT | MAX_BOTTOM))) {
       /* Bottom border. */
       segments[offset].x1 = 0;
       segments[offset].y1 = height - 1;
@@ -657,43 +671,43 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       && !(np->state.maxFlags)) {
 
       /* Upper left */
-      segments[0].x1 = settings.titleHeight + settings.borderWidth - 1;
+      segments[0].x1 = titleHeight + settings.borderWidth - 1;
       segments[0].y1 = 0;
-      segments[0].x2 = settings.titleHeight + settings.borderWidth - 1;
+      segments[0].x2 = titleHeight + settings.borderWidth - 1;
       segments[0].y2 = settings.borderWidth;
       segments[1].x1 = 0;
-      segments[1].y1 = settings.titleHeight + settings.borderWidth - 1;
+      segments[1].y1 = titleHeight + settings.borderWidth - 1;
       segments[1].x2 = settings.borderWidth;
-      segments[1].y2 = settings.titleHeight + settings.borderWidth - 1;
+      segments[1].y2 = titleHeight + settings.borderWidth - 1;
 
       /* Upper right. */
       segments[2].x1 = width - settings.borderWidth;
-      segments[2].y1 = settings.titleHeight + settings.borderWidth - 1;
+      segments[2].y1 = titleHeight + settings.borderWidth - 1;
       segments[2].x2 = width;
-      segments[2].y2 = settings.titleHeight + settings.borderWidth - 1;
-      segments[3].x1 = width - settings.titleHeight - settings.borderWidth - 1;
+      segments[2].y2 = titleHeight + settings.borderWidth - 1;
+      segments[3].x1 = width - titleHeight - settings.borderWidth - 1;
       segments[3].y1 = 0;
-      segments[3].x2 = width - settings.titleHeight - settings.borderWidth - 1;
+      segments[3].x2 = width - titleHeight - settings.borderWidth - 1;
       segments[3].y2 = settings.borderWidth;
 
       /* Lower left */
       segments[4].x1 = 0;
-      segments[4].y1 = height - settings.titleHeight - settings.borderWidth - 1;
+      segments[4].y1 = height - titleHeight - settings.borderWidth - 1;
       segments[4].x2 = settings.borderWidth;
-      segments[4].y2 = height - settings.titleHeight - settings.borderWidth - 1;
-      segments[5].x1 = settings.titleHeight + settings.borderWidth - 1;
+      segments[4].y2 = height - titleHeight - settings.borderWidth - 1;
+      segments[5].x1 = titleHeight + settings.borderWidth - 1;
       segments[5].y1 = height - settings.borderWidth;
-      segments[5].x2 = settings.titleHeight + settings.borderWidth - 1;
+      segments[5].x2 = titleHeight + settings.borderWidth - 1;
       segments[5].y2 = height;
 
       /* Lower right */
       segments[6].x1 = width - settings.borderWidth;
-      segments[6].y1 = height - settings.titleHeight - settings.borderWidth - 1;
+      segments[6].y1 = height - titleHeight - settings.borderWidth - 1;
       segments[6].x2 = width;
-      segments[6].y2 = height - settings.titleHeight - settings.borderWidth - 1;
-      segments[7].x1 = width - settings.titleHeight - settings.borderWidth - 1;
+      segments[6].y2 = height - titleHeight - settings.borderWidth - 1;
+      segments[7].x1 = width - titleHeight - settings.borderWidth - 1;
       segments[7].y1 = height - settings.borderWidth;
-      segments[7].x2 = width - settings.titleHeight - settings.borderWidth - 1;
+      segments[7].x2 = width - titleHeight - settings.borderWidth - 1;
       segments[7].y2 = height;
 
       /* Draw pixel-down segments. */
@@ -701,43 +715,43 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       JXDrawSegments(display, canvas, gc, segments, 8);
 
       /* Upper left */
-      segments[0].x1 = settings.titleHeight + settings.borderWidth;
+      segments[0].x1 = titleHeight + settings.borderWidth;
       segments[0].y1 = 0;
-      segments[0].x2 = settings.titleHeight + settings.borderWidth;
+      segments[0].x2 = titleHeight + settings.borderWidth;
       segments[0].y2 = settings.borderWidth;
       segments[1].x1 = 0;
-      segments[1].y1 = settings.titleHeight + settings.borderWidth;
+      segments[1].y1 = titleHeight + settings.borderWidth;
       segments[1].x2 = settings.borderWidth;
-      segments[1].y2 = settings.titleHeight + settings.borderWidth;
+      segments[1].y2 = titleHeight + settings.borderWidth;
 
       /* Upper right */
-      segments[2].x1 = width - settings.titleHeight - settings.borderWidth;
+      segments[2].x1 = width - titleHeight - settings.borderWidth;
       segments[2].y1 = 0;
-      segments[2].x2 = width - settings.titleHeight - settings.borderWidth;
+      segments[2].x2 = width - titleHeight - settings.borderWidth;
       segments[2].y2 = settings.borderWidth;
       segments[3].x1 = width - settings.borderWidth;
-      segments[3].y1 = settings.titleHeight + settings.borderWidth;
+      segments[3].y1 = titleHeight + settings.borderWidth;
       segments[3].x2 = width;
-      segments[3].y2 = settings.titleHeight + settings.borderWidth;
+      segments[3].y2 = titleHeight + settings.borderWidth;
 
       /* Lower left */
       segments[4].x1 = 0;
-      segments[4].y1 = height - settings.titleHeight - settings.borderWidth;
+      segments[4].y1 = height - titleHeight - settings.borderWidth;
       segments[4].x2 = settings.borderWidth;
-      segments[4].y2 = height - settings.titleHeight - settings.borderWidth;
-      segments[5].x1 = settings.titleHeight + settings.borderWidth;
+      segments[4].y2 = height - titleHeight - settings.borderWidth;
+      segments[5].x1 = titleHeight + settings.borderWidth;
       segments[5].y1 = height - settings.borderWidth;
-      segments[5].x2 = settings.titleHeight + settings.borderWidth;
+      segments[5].x2 = titleHeight + settings.borderWidth;
       segments[5].y2 = height;
 
       /* Lower right */
       segments[6].x1 = width - settings.borderWidth;
-      segments[6].y1 = height - settings.titleHeight - settings.borderWidth;
+      segments[6].y1 = height - titleHeight - settings.borderWidth;
       segments[6].x2 = width;
-      segments[6].y2 = height - settings.titleHeight - settings.borderWidth;
-      segments[7].x1 = width - settings.titleHeight - settings.borderWidth;
+      segments[6].y2 = height - titleHeight - settings.borderWidth;
+      segments[7].x1 = width - titleHeight - settings.borderWidth;
       segments[7].y1 = height - settings.borderWidth;
-      segments[7].x2 = width - settings.titleHeight - settings.borderWidth;
+      segments[7].x2 = width - titleHeight - settings.borderWidth;
       segments[7].y2 = height;
 
       /* Draw pixel-up segments. */
@@ -755,15 +769,16 @@ unsigned GetButtonCount(const ClientNode *np)
    unsigned count;
    unsigned buttonWidth;
    int available;
+   const unsigned titleHeight = GetTitleHeight();
 
    if(!(np->state.border & BORDER_TITLE)) {
       return 0;
    }
-   if(settings.titleHeight <= settings.borderWidth) {
+   if(titleHeight <= settings.borderWidth) {
       return 0;
    }
 
-   buttonWidth = settings.titleHeight;
+   buttonWidth = titleHeight;
    buttonWidth += settings.windowDecorations == DECO_MOTIF ? 1 : 0;
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
@@ -802,13 +817,14 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
 {
    long color;
    long pixelUp, pixelDown;
+   const unsigned titleHeight = GetTitleHeight();
    int xoffset, yoffset;
    int north, south, east, west;
    int minx;
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
-   xoffset = np->width + west - settings.titleHeight;
-   minx = settings.titleHeight + east;
+   xoffset = np->width + west - titleHeight;
+   minx = titleHeight + east;
    if(xoffset <= minx) {
       return;
    }
@@ -827,16 +843,16 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
    if(settings.windowDecorations == DECO_MOTIF) {
       JXSetForeground(display, gc, pixelDown);
       JXDrawLine(display, canvas, gc,
-                      west + settings.titleHeight - 1,
+                      west + titleHeight - 1,
                       south,
-                      west + settings.titleHeight - 1,
-                      south + settings.titleHeight);
+                      west + titleHeight - 1,
+                      south + titleHeight);
       JXSetForeground(display, gc, pixelUp);
       JXDrawLine(display, canvas, gc,
-                 west + settings.titleHeight,
+                 west + titleHeight,
                  south,
-                 west + settings.titleHeight,
-                 south + settings.titleHeight);
+                 west + titleHeight,
+                 south + titleHeight);
    }
 
    /* Close button. */
@@ -850,14 +866,14 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
          JXSetForeground(display, gc, pixelDown);
          JXDrawLine(display, canvas, gc, xoffset - 1,
                     south, xoffset - 1,
-                    south + settings.titleHeight);
+                    south + titleHeight);
          JXSetForeground(display, gc, pixelUp);
          JXDrawLine(display, canvas, gc, xoffset,
-                    south, xoffset, south + settings.titleHeight);
+                    south, xoffset, south + titleHeight);
          xoffset -= 1;
       }
 
-      xoffset -= settings.titleHeight;
+      xoffset -= titleHeight;
       if(xoffset <= minx) {
          return;
       }
@@ -877,14 +893,14 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
          JXSetForeground(display, gc, pixelDown);
          JXDrawLine(display, canvas, gc, xoffset - 1,
                     south, xoffset - 1,
-                    south + settings.titleHeight);
+                    south + titleHeight);
          JXSetForeground(display, gc, pixelUp);
          JXDrawLine(display, canvas, gc, xoffset,
-                    south, xoffset, south + settings.titleHeight);
+                    south, xoffset, south + titleHeight);
          xoffset -= 1;
       }
 
-      xoffset -= settings.titleHeight;
+      xoffset -= titleHeight;
       if(xoffset <= minx) {
          return;
       }
@@ -900,10 +916,10 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
          JXSetForeground(display, gc, pixelDown);
          JXDrawLine(display, canvas, gc, xoffset - 1,
                     south, xoffset - 1,
-                    south + settings.titleHeight);
+                    south + titleHeight);
          JXSetForeground(display, gc, pixelUp);
          JXDrawLine(display, canvas, gc, xoffset,
-                    south, xoffset, south + settings.titleHeight);
+                    south, xoffset, south + titleHeight);
          xoffset -= 1;
       }
    }
@@ -915,8 +931,11 @@ char DrawBorderIcon(BorderIconType t,
                     Pixmap canvas, long fg)
 {
    if(buttonIcons[t]) {
+#ifdef USE_ICONS
+      const unsigned titleHeight = GetTitleHeight();
       PutIcon(buttonIcons[t], canvas, fg, xoffset + 2, yoffset + 2,
-              settings.titleHeight - 4, settings.titleHeight - 4);
+              titleHeight - 4, titleHeight - 4);
+#endif
       return 1;
    } else {
       return 0;
@@ -928,6 +947,7 @@ void DrawCloseButton(unsigned xoffset, unsigned yoffset,
                      Pixmap canvas, GC gc, long fg)
 {
    XSegment segments[2];
+   const unsigned titleHeight = GetTitleHeight();
    unsigned size;
    unsigned x1, y1;
    unsigned x2, y2;
@@ -936,9 +956,9 @@ void DrawCloseButton(unsigned xoffset, unsigned yoffset,
       return;
    }
 
-   size = (settings.titleHeight + 2) / 3;
-   x1 = xoffset + settings.titleHeight / 2 - size / 2;
-   y1 = yoffset + settings.titleHeight / 2 - size / 2;
+   size = (titleHeight + 2) / 3;
+   x1 = xoffset + titleHeight / 2 - size / 2;
+   y1 = yoffset + titleHeight / 2 - size / 2;
    x2 = x1 + size;
    y2 = y1 + size;
 
@@ -966,6 +986,7 @@ void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
 {
 
    XSegment segments[5];
+   const unsigned titleHeight = GetTitleHeight();
    unsigned int size;
    unsigned int x1, y1;
    unsigned int x2, y2;
@@ -974,9 +995,9 @@ void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
       return;
    }
 
-   size = 2 + (settings.titleHeight + 2) / 3;
-   x1 = xoffset + settings.titleHeight / 2 - size / 2;
-   y1 = yoffset + settings.titleHeight / 2 - size / 2;
+   size = 2 + (titleHeight + 2) / 3;
+   x1 = xoffset + titleHeight / 2 - size / 2;
+   y1 = yoffset + titleHeight / 2 - size / 2;
    x2 = x1 + size;
    y2 = y1 + size;
 
@@ -1018,6 +1039,7 @@ void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
                     Pixmap canvas, GC gc, long fg)
 {
    XSegment segments[8];
+   unsigned titleHeight;
    unsigned size;
    unsigned x1, y1;
    unsigned x2, y2;
@@ -1027,9 +1049,10 @@ void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
       return;
    }
 
-   size = 2 + (settings.titleHeight + 2) / 3;
-   x1 = xoffset + settings.titleHeight / 2 - size / 2;
-   y1 = yoffset + settings.titleHeight / 2 - size / 2;
+   titleHeight = GetTitleHeight();
+   size = 2 + (titleHeight + 2) / 3;
+   x1 = xoffset + titleHeight / 2 - size / 2;
+   y1 = yoffset + titleHeight / 2 - size / 2;
    x2 = x1 + size;
    y2 = y1 + size;
    x3 = x1 + size / 2;
@@ -1086,18 +1109,19 @@ void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
 void DrawMinButton(unsigned xoffset, unsigned yoffset,
                    Pixmap canvas, GC gc, long fg)
 {
-
-   unsigned int size;
-   unsigned int x1, y1;
-   unsigned int x2, y2;
+   unsigned titleHeight;
+   unsigned size;
+   unsigned x1, y1;
+   unsigned x2, y2;
 
    if(DrawBorderIcon(BI_MIN, xoffset, yoffset, canvas, fg)) {
       return;
    }
 
-   size = (settings.titleHeight + 2) / 3;
-   x1 = xoffset + settings.titleHeight / 2 - size / 2;
-   y1 = yoffset + settings.titleHeight / 2 - size / 2;
+   titleHeight = GetTitleHeight();
+   size = (titleHeight + 2) / 3;
+   x1 = xoffset + titleHeight / 2 - size / 2;
+   y1 = yoffset + titleHeight / 2 - size / 2;
    x2 = x1 + size;
    y2 = y1 + size;
    JXSetLineAttributes(display, gc, 2, LineSolid,
@@ -1114,7 +1138,6 @@ void DrawMinButton(unsigned xoffset, unsigned yoffset,
  */
 void ExposeCurrentDesktop(void)
 {
-
    ClientNode *np;
    int layer;
 
@@ -1125,14 +1148,21 @@ void ExposeCurrentDesktop(void)
          }
       }
    }
+}
 
+/** Get the height of a window title bar. */
+unsigned GetTitleHeight(void)
+{
+   if(JUNLIKELY(settings.titleHeight == 0)) {
+      settings.titleHeight = GetStringHeight(FONT_BORDER) + 4;
+   }
+   return settings.titleHeight;
 }
 
 /** Get the size of the borders for a client. */
 void GetBorderSize(const ClientState *state,
                    int *north, int *south, int *east, int *west)
 {
-
    Assert(state);
    Assert(north);
    Assert(south);
@@ -1151,11 +1181,14 @@ void GetBorderSize(const ClientState *state,
    if(state->border & BORDER_OUTLINE) {
 
       if(state->border & BORDER_TITLE) {
-         *north = settings.titleHeight;
+         *north = GetTitleHeight();
       } else if(settings.windowDecorations == DECO_MOTIF) {
          *north = 0;
       } else {
          *north = settings.borderWidth;
+         if(state->maxFlags & (MAX_VERT | MAX_TOP)) {
+            *north = Max(0, *north - 1);
+         }
       }
       if(state->maxFlags & MAX_VERT) {
          *south = 0;
@@ -1172,12 +1205,15 @@ void GetBorderSize(const ClientState *state,
          }
       }
 
-      if(state->maxFlags & MAX_HORIZ) {
-         *east = 0;
+      if(state->maxFlags & (MAX_HORIZ | MAX_LEFT)) {
          *west = 0;
       } else {
-         *east = settings.borderWidth;
          *west = settings.borderWidth;
+      }
+      if(state->maxFlags & (MAX_HORIZ | MAX_RIGHT)) {
+         *east = 0;
+      } else {
+         *east = settings.borderWidth;
       }
 
    } else {

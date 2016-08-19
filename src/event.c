@@ -113,19 +113,6 @@ char WaitForEvent(XEvent *event)
 
    do {
 
-      if(restack_pending) {
-         RestackClients();
-         restack_pending = 0;
-      }
-      if(task_update_pending) {
-         UpdateTaskBar();
-         task_update_pending = 0;
-      }
-      if(pager_update_pending) {
-         UpdatePager();
-         pager_update_pending = 0;
-      }
-
       while(JXPending(display) == 0) {
          FD_ZERO(&fds);
          FD_SET(fd, &fds);
@@ -255,6 +242,19 @@ void Signal(void)
    TimeType now;
    Window w;
    int x, y;
+
+   if(restack_pending) {
+      RestackClients();
+      restack_pending = 0;
+   }
+   if(task_update_pending) {
+      UpdateTaskBar();
+      task_update_pending = 0;
+   }
+   if(pager_update_pending) {
+      UpdatePager();
+      pager_update_pending = 0;
+   }
 
    GetCurrentTime(&now);
    if(GetTimeDifference(&now, &last) < MIN_TIME_DELTA) {
@@ -388,8 +388,8 @@ void HandleButtonEvent(const XButtonEvent *event)
       const unsigned int mask = event->state & ~lockMask;
       np = FindClientByWindow(event->window);
       if(np) {
-         const char move_resize = (mask == Mod1Mask)
-            || (np->state.status & STAT_DRAG);
+         const char move_resize = (np->state.status & STAT_DRAG)
+            || ((mask == Mod1Mask) && !(np->state.status & STAT_NODRAG));
          switch(event->button) {
          case Button1:
          case Button2:
@@ -1525,7 +1525,6 @@ char HandleDestroyNotify(const XDestroyWindowEvent *event)
 void DispatchBorderButtonEvent(const XButtonEvent *event,
                                ClientNode *np)
 {
-
    static Time lastClickTime = 0;
    static int lastX = 0, lastY = 0;
    static char doubleClickActive = 0;
@@ -1553,8 +1552,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
          if(event->button == Button1) {
             ResizeClient(np, action, event->x, event->y);
          } else if(event->button == Button3) {
+            const unsigned titleHeight = GetTitleHeight();
             const int x = np->x + event->x - bsize;
-            const int y = np->y + event->y - settings.titleHeight - bsize;
+            const int y = np->y + event->y - titleHeight - bsize;
             ShowWindowMenu(np, x, y, 0);
          }
       }
@@ -1581,8 +1581,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
             }
          }
       } else if(event->button == Button3) {
+         const unsigned titleHeight = GetTitleHeight();
          const int x = np->x + event->x - bsize;
-         const int y = np->y + event->y - settings.titleHeight - bsize;
+         const int y = np->y + event->y - titleHeight - bsize;
          ShowWindowMenu(np, x, y, 0);
       } else if(event->button == Button4) {
          ShadeClient(np);
@@ -1596,8 +1597,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
       } else if(event->button == Button5) {
          UnshadeClient(np);
       } else if(event->type == ButtonPress) {
+         const unsigned titleHeight = GetTitleHeight();
          const int x = np->x + event->x - bsize;
-         const int y = np->y + event->y - settings.titleHeight - bsize;
+         const int y = np->y + event->y - titleHeight - bsize;
          ShowWindowMenu(np, x, y, 0);
       }
       break;

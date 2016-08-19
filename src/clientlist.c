@@ -22,6 +22,7 @@ static Window *windowStack = NULL;  /**< Image of the window stack. */
 static int windowStackSize = 0;     /**< Size of the image. */
 static int windowStackCurrent = 0;  /**< Current location in the image. */
 static char walkingWindows = 0;     /**< Are we walking windows? */
+static char wasMinimized = 0;       /**< Was the current window minimized? */
 
 /** Determine if a client is allowed focus. */
 char ShouldFocus(const ClientNode *np, char current)
@@ -117,6 +118,7 @@ void StartWindowStackWalk(void)
    RaiseTrays();
 
    walkingWindows = 1;
+   wasMinimized = 0;
 
 }
 
@@ -128,6 +130,13 @@ void WalkWindowStack(char forward)
 
    if(windowStack != NULL) {
       int x;
+
+      if(wasMinimized) {
+         np = FindClientByWindow(windowStack[windowStackCurrent]);
+         if(np) {
+            MinimizeClient(np, 1);
+         }
+      }
 
       /* Loop until we either raise a window or go through them all. */
       for(x = 0; x < windowStackSize; x++) {
@@ -152,8 +161,16 @@ void WalkWindowStack(char forward)
             continue;
          }
 
-         /* Focus the window. We only raise the client when the
-          * stack walk completes. */
+         /* Show the window.
+          * Only when the walk completes do we update the stacking order. */
+         RestackClients();
+         if(np->state.status & STAT_MINIMIZED) {
+            RestoreClient(np, 1);
+            wasMinimized = 1;
+         } else {
+            wasMinimized = 0;
+         }
+         JXRaiseWindow(display, np->parent ? np->parent : np->window);
          FocusClient(np);
          break;
 

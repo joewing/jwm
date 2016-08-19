@@ -119,7 +119,7 @@ void ReplaceSymbol(char **str, unsigned int offset,
    if(valueLength > nameLength) {
 		const size_t totalLen = strLength - nameLength + valueLength + 1;
       temp = Allocate(totalLen);
-		memcpy(temp, *str, totalLen);
+      memcpy(temp, *str, strLength + 1);
       Release(*str);
       *str = temp;
    }

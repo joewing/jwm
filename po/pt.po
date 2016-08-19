@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2015-11-21 19:28-0600\n"
+"POT-Creation-Date: 2016-08-06 00:43+0000\n"
 "PO-Revision-Date: 2015-08-19 14:22+0100\n"
 "Last-Translator: Vitor Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -19,12 +19,12 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 1.8.4\n"
 
-#: src/action.c:43
+#: src/action.c:44
 #, c-format
 msgid "invalid action: \"%s\""
 msgstr "Açao do Traybutton invalida: \"%s\""
 
-#: src/action.c:202
+#: src/action.c:211
 #, c-format
 msgid "action: root menu \"%s\" not defined"
 msgstr "botão do tabuleiro root \"%s\" não esta definido"
@@ -43,28 +43,28 @@ msgstr "tipo de fundo invalido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""
 
-#: src/client.c:905
+#: src/client.c:900
 msgid "Kill this window?"
 msgstr "Matar janela?"
 
-#: src/client.c:906
+#: src/client.c:901
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 
-#: src/command.c:138 src/main.c:217
+#: src/command.c:138 src/main.c:220
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "comando executável exec falhou (%s) %s"
 
-#: src/confirm.c:68
+#: src/confirm.c:69
 msgid "OK"
 msgstr "Está bem"
 
-#: src/confirm.c:73
+#: src/confirm.c:74
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/confirm.c:307
+#: src/confirm.c:308
 msgid "Confirm"
 msgstr "Comfirmar"
 
@@ -72,25 +72,39 @@ msgstr "Comfirmar"
 msgid "empty Desktops Name tag"
 msgstr "etiqueta Desktops vazia"
 
-#: src/dock.c:151
+#: src/dock.c:150
 msgid "only one Dock allowed"
 msgstr "só um tabuleiro e permitido"
 
-#: src/dock.c:232
+#: src/dock.c:231
 msgid "could not acquire system tray selection"
 msgstr "não pode adquirir a seleção da bandeja do sistema"
 
-#: src/font.c:95 src/font.c:112
+#: src/error.c:22
+#, c-format
+msgid "JWM: error: "
+msgstr ""
+
+#: src/error.c:51
+#, c-format
+msgid "JWM: warning: "
+msgstr ""
+
+#: src/error.c:77
+msgid "display is already managed"
+msgstr ""
+
+#: src/font.c:109 src/font.c:126
 #, c-format
 msgid "could not load font: %s"
 msgstr "impossível carregar fonte %s"
 
-#: src/font.c:102 src/font.c:119
+#: src/font.c:116 src/font.c:133
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "Não foi possível carregar a fonte padrão %s"
 
-#: src/font.c:301
+#: src/font.c:315
 msgid "empty Font tag"
 msgstr "etiqueta Font vazia"
 
@@ -102,22 +116,22 @@ msgstr "classe do grupo invalida"
 msgid "invalid group name"
 msgstr "nome do grupo invalido"
 
-#: src/group.c:254
+#: src/group.c:269
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr "grupo invalido desktop %d"
 
-#: src/image.c:218
+#: src/image.c:220
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr "não foi possível criar ou ler a estrutura para imagens PNG: %s"
 
-#: src/image.c:231
+#: src/image.c:233
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr "erro lendo imagem PNG %s"
 
-#: src/image.c:239
+#: src/image.c:241
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "não foi possível criar estrutura de informação para imagem PNG %s"
@@ -152,68 +166,162 @@ msgstr ""
 "teclas de atalho: não foram especificadas para o menu root \"%s\" não esta "
 "definido"
 
-#: src/lex.c:196
+#: src/lex.c:201
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: terminação da etiqueta \"%s\" não corresponde à abertura da etiqueta "
 "\"%s\""
 
-#: src/lex.c:202
+#: src/lex.c:207
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: terminação da etiqueta inesperada e invalida"
 
-#: src/lex.c:208
+#: src/lex.c:213
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: terminação da etiqueta \"%s\" sem etiqueta de abertura"
 
-#: src/lex.c:211
+#: src/lex.c:216
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: terminação de etiqueta invalida"
 
-#: src/lex.c:229
+#: src/lex.c:234
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: abertura de etiqueta invalida"
 
-#: src/lex.c:245
+#: src/lex.c:250
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: etiqueta invalida"
 
-#: src/lex.c:301
+#: src/lex.c:306
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: texto inesperado: \"%s\""
 
-#: src/lex.c:349
+#: src/lex.c:365
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: entrada invalida: \"%.8s\""
 
-#: src/lex.c:454 src/parse.c:1793
+#: src/lex.c:471 src/parse.c:1892
 msgid "out of memory"
 msgstr "Memoria insuficiente"
 
-#: src/parse.c:1807
+#: src/parse.c:226
+#, fuzzy, c-format
+msgid "could not open %s or %s"
+msgstr "impossível carregar fonte %s"
+
+#: src/parse.c:244
+#, c-format
+msgid "include depth (%d) exceeded"
+msgstr ""
+
+#: src/parse.c:382
+#, fuzzy, c-format
+msgid "invalid start tag: %s"
+msgstr "Configuração invalida: %s"
+
+#: src/parse.c:762
+#, fuzzy, c-format
+msgid "invalid include: %s"
+msgstr "camada invalida: %s"
+
+#: src/parse.c:812
+#, fuzzy
+msgid "no action specified for Key"
+msgstr "tecla e código de tecla não foi especificado para esta tecla"
+
+#: src/parse.c:835
+#, fuzzy, c-format
+msgid "invalid Key action: \"%s\""
+msgstr "Açao do Traybutton invalida: \"%s\""
+
+#: src/parse.c:859
+#, fuzzy, c-format
+msgid "invalid text alignment: \"%s\""
+msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
+
+#: src/parse.c:945
+msgid "no include file specified"
+msgstr ""
+
+#: src/parse.c:955
+#, fuzzy, c-format
+msgid "could not process include: %s"
+msgstr "impossível carregar fonte %s"
+
+#: src/parse.c:959
+#, fuzzy, c-format
+msgid "could not open included file: %s"
+msgstr "impossível carregar fonte %s"
+
+#: src/parse.c:1622
+#, fuzzy, c-format
+msgid "invalid value for 'enabled': \"%s\""
+msgstr "Açao do Traybutton invalida: \"%s\""
+
+#: src/parse.c:1751
+#, fuzzy, c-format
+msgid "invalid Group Option: %s"
+msgstr "grupo invalido desktop %d"
+
+#: src/parse.c:1766
+#, fuzzy, c-format
+msgid "invalid decorations: %s"
+msgstr "Açao do Traybutton invalida: \"%s\""
+
+#: src/parse.c:1828
+#, c-format
+msgid "%s is empty"
+msgstr ""
+
+#: src/parse.c:1835
+#, fuzzy, c-format
+msgid "invalid %s: \"%s\""
+msgstr "Açao do Traybutton invalida: \"%s\""
+
+#: src/parse.c:1853
+#, fuzzy, c-format
+msgid "invalid value for %s: \"%s\""
+msgstr "etiqueta invalida dentro de %s: %s"
+
+#: src/parse.c:1879
+#, fuzzy, c-format
+msgid "could not read file: %s"
+msgstr "impossível carregar fonte %s"
+
+#: src/parse.c:1966 src/parse.c:1983
+#, fuzzy
+msgid "no value specified"
+msgstr "nenhum valor foi especificado para o fundo (background)"
+
+#: src/parse.c:1971
 #, c-format
 msgid "invalid setting: %s"
 msgstr "Configuração invalida: %s"
 
-#: src/parse.c:1819
+#: src/parse.c:1988
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "Transparência invalida: %s"
 
-#: src/parse.c:1861
+#: src/parse.c:2009
+#, c-format
+msgid "invalid layer: %s"
+msgstr "camada invalida: %s"
+
+#: src/parse.c:2030
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta invalida dentro de %s: %s"
 
-#: src/parse.c:1882
+#: src/parse.c:2051
 msgid "configuration error"
 msgstr "Erro de configuração"
 
@@ -235,31 +343,40 @@ msgid "cannot swallow a client with no name"
 msgstr ""
 "não podes inserir um cliente na etiqueta swallow sem especificar o nome"
 
-#: src/taskbar.c:395 src/winmenu.c:51
+#: src/taskbar.c:447 src/winmenu.c:51
 msgid "Close"
 msgstr "Fechar"
 
-#: src/taskbar.c:402 src/winmenu.c:71
+#: src/taskbar.c:454 src/winmenu.c:71
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: src/taskbar.c:409 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:461 src/winmenu.c:69 src/winmenu.c:89
 msgid "Restore"
 msgstr "Restaurar"
 
-#: src/taskbar.c:416 src/winmenu.c:170
+#: src/taskbar.c:468 src/winmenu.c:170
 msgid "Send To"
 msgstr "Enviar Para"
 
-#: src/taskbar.c:907
+#: src/taskbar.c:964
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largura máxima invalida para etiqueta a Tasklist: %s"
 
-#: src/taskbar.c:921
+#: src/taskbar.c:978
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "largura máxima invalida para etiqueta a Tasklist: %s"
+
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "ícone e nome não esta definido na etiqueta TrayButton"
 
 #: src/tray.c:1064
 #, c-format
@@ -275,15 +392,6 @@ msgstr "alinhamento horizontal do tabuleiro invalido: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
-
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "ícone e nome não esta definido na etiqueta TrayButton"
 
 #: src/winmenu.c:52
 msgid "Kill"
@@ -361,9 +469,6 @@ msgstr "Abaixo"
 
 #~ msgid "invalid insert mode: \"%s\""
 #~ msgstr "modo de inserção invalido: \"%s\""
-
-#~ msgid "invalid layer: %s"
-#~ msgstr "camada invalida: %s"
 
 #~ msgid "invalid status window type: %s"
 #~ msgstr "tipo de fundo invalido: %s"

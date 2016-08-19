@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2004-2006
  *
- * @brief Functions to handle client windows.
+ * @brief Client window functions.
  *
  */
 
@@ -24,6 +24,7 @@
 #include "settings.h"
 #include "timing.h"
 #include "grab.h"
+#include "desktop.h"
 
 static ClientNode *activeClient;
 
@@ -476,6 +477,9 @@ void RestoreTransients(ClientNode *np, char raise)
 /** Restore a client window and its transients. */
 void RestoreClient(ClientNode *np, char raise)
 {
+   if((np->state.status & STAT_FIXED) && !(np->state.status & STAT_STICKY)) {
+      ChangeDesktop(np->state.desktop);
+   }
    RestoreTransients(np, raise);
    RequireRestack();
    RequireTaskUpdate();
@@ -822,13 +826,13 @@ void FocusClient(ClientNode *np)
    }
 
    if(activeClient != np || !(np->state.status & STAT_ACTIVE)) {
-
       if(activeClient) {
          activeClient->state.status &= ~STAT_ACTIVE;
          if(!(activeClient->state.status & STAT_OPACITY)) {
             SetOpacity(activeClient, settings.inactiveClientOpacity, 0);
          }
          DrawBorder(activeClient);
+         WriteNetState(activeClient);
       }
       np->state.status |= STAT_ACTIVE;
       activeClient = np;
@@ -839,12 +843,12 @@ void FocusClient(ClientNode *np)
       DrawBorder(np);
       RequirePagerUpdate();
       RequireTaskUpdate();
-
    }
 
    if(np->state.status & STAT_MAPPED) {
       UpdateClientColormap(np);
       SetWindowAtom(rootWindow, ATOM_NET_ACTIVE_WINDOW, np->window);
+      WriteNetState(np);
       if(np->state.status & STAT_CANFOCUS) {
          JXSetInputFocus(display, np->window, RevertToParent, eventTime);
       }
@@ -881,20 +885,11 @@ void DeleteClient(ClientNode *np)
 /** Callback to kill a client after a confirm dialog. */
 void KillClientHandler(ClientNode *np)
 {
-
-   Assert(np);
-
    if(np == activeClient) {
       FocusNextStacked(np);
    }
 
-   GrabServer();
    JXKillClient(display, np->window);
-   JXSync(display, True);
-   UngrabServer();
-
-   RemoveClient(np);
-
 }
 
 /** Kill a client window. */

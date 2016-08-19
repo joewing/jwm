@@ -12,6 +12,7 @@
 #include "client.h"
 #include "font.h"
 #include "button.h"
+#include "border.h"
 #include "screen.h"
 #include "misc.h"
 #include "settings.h"
@@ -63,12 +64,12 @@ static char HandleDialogButtonPress(const XButtonEvent *event);
 static char HandleDialogButtonRelease(const XButtonEvent *event);
 static char HandleDialogKeyPress(const XKeyEvent *event);
 
-static const char * const GetOKString()
+static const char *GetOKString()
 {
    return _("OK");
 }
 
-static const char * const GetCancelString()
+static const char *GetCancelString()
 {
    return _("Cancel");
 }
@@ -408,8 +409,9 @@ void ComputeDimensions(const ClientNode *np)
          dialog->x = rootWidth - dialog->width - (settings.borderWidth * 2);
       }
       if(dialog->y + dialog->height >= rootHeight) {
+         const unsigned titleHeight = GetTitleHeight();
          dialog->y = rootHeight - dialog->height
-               - (settings.borderWidth * 2 + settings.titleHeight);
+               - (settings.borderWidth * 2 + titleHeight);
       }
 
    } else {

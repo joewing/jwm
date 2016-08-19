@@ -30,19 +30,19 @@
 typedef struct TaskBarType {
 
    TrayComponentType *cp;
+   struct TaskBarType *next;
 
    int maxItemWidth;
    int userHeight;
    int itemHeight;
    int itemWidth;
    LayoutType layout;
+   char labeled;
 
    Pixmap buffer;
 
    TimeType mouseTime;
    int mousex, mousey;
-
-   struct TaskBarType *next;
 
 } TaskBarType;
 
@@ -126,6 +126,7 @@ TrayComponentType *CreateTaskBar()
    tp->userHeight = 0;
    tp->maxItemWidth = 0;
    tp->layout = LAYOUT_HORIZONTAL;
+   tp->labeled = 1;
    tp->mousex = -settings.doubleClickDelta;
    tp->mousey = -settings.doubleClickDelta;
    tp->mouseTime.seconds = 0;
@@ -150,15 +151,7 @@ TrayComponentType *CreateTaskBar()
 /** Set the size of a task bar tray component. */
 void SetSize(TrayComponentType *cp, int width, int height)
 {
-
-   TaskBarType *tp;
-
-   Assert(cp);
-
-   tp = (TaskBarType*)cp->object;
-
-   Assert(tp);
-
+   TaskBarType *tp = (TaskBarType*)cp->object;
    if(width == 0) {
       tp->layout = LAYOUT_HORIZONTAL;
    } else if(height == 0) {
@@ -168,7 +161,6 @@ void SetSize(TrayComponentType *cp, int width, int height)
    } else {
       tp->layout = LAYOUT_VERTICAL;
    }
-
 }
 
 /** Initialize a task bar tray component. */
@@ -203,7 +195,7 @@ void ComputeItemSize(TaskBarType *tp)
       if(tp->userHeight > 0) {
          tp->itemHeight = tp->userHeight;
       } else {
-         tp->itemHeight = GetStringHeight(FONT_TRAY) + 12;
+         tp->itemHeight = GetStringHeight(FONT_TASKLIST) + 12;
       }
       tp->itemWidth = cp->width;
 
@@ -223,6 +215,9 @@ void ComputeItemSize(TaskBarType *tp)
       }
 
       tp->itemWidth = Max(1, cp->width / itemCount);
+      if(!tp->labeled) {
+         tp->itemWidth = Min(tp->itemHeight, tp->itemWidth);
+      }
       if(tp->maxItemWidth > 0) {
          tp->itemWidth = Min(tp->maxItemWidth, tp->itemWidth);
       }
@@ -282,7 +277,36 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
          }
 FoundActiveAndTop:
          if(hasActive && onTop) {
-            MinimizeGroup(entry);
+            ClientNode *nextClient = NULL;
+            int i;
+
+            /* Try to find a client on a different desktop. */
+            for(i = 0; i < settings.desktopCount - 1; i++) {
+               const int target = (currentDesktop + i + 1)
+                                % settings.desktopCount;
+               for(cp = entry->clients; cp; cp = cp->next) {
+                  ClientNode *np = cp->client;
+                  if(!ShouldFocus(np, 0)) {
+                     continue;
+                  } else if(np->state.status & STAT_STICKY) {
+                     continue;
+                  } else if(np->state.desktop == target) {
+                     if(!nextClient || np->state.status & STAT_ACTIVE) {
+                        nextClient = np;
+                     }
+                  }
+               }
+               if(nextClient) {
+                  break;
+               }
+            }
+            /* Focus the next client or minimize the current group. */
+            if(nextClient) {
+               ChangeDesktop(nextClient->state.desktop);
+               RestoreClient(nextClient, 1);
+            } else {
+               MinimizeGroup(entry);
+            }
          } else {
             FocusGroup(entry);
             if(focused) {
@@ -471,7 +495,7 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
          } else {
             item->name = CopyString(cp->client->name);
          }
-         item->icon = cp->client->icon;
+         item->icon = cp->client->icon ? cp->client->icon : GetDefaultIcon();
          item->action.type = MA_EXECUTE;
          item->action.context = cp->client;
          item->next = menu->items;
@@ -654,7 +678,7 @@ void UpdateTaskBar(void)
          if(bp->userHeight > 0) {
             bp->itemHeight = bp->userHeight;
          } else {
-            bp->itemHeight = GetStringHeight(FONT_TRAY) + 12;
+            bp->itemHeight = GetStringHeight(FONT_TASKLIST) + 12;
          }
          bp->cp->requestedHeight = 0;
          for(tp = taskEntries; tp; tp = tp->next) {
@@ -718,7 +742,7 @@ void Render(const TaskBarType *bp)
 
    ResetButton(&button, bp->cp->pixmap);
    button.border = settings.trayDecorations == DECO_MOTIF;
-   button.font = FONT_TRAY;
+   button.font = FONT_TASKLIST;
    button.height = bp->itemHeight;
    button.width = bp->itemWidth;
    button.text = NULL;
@@ -737,7 +761,7 @@ void Render(const TaskBarType *bp)
       button.type = BUTTON_TASK;
       for(cp = tp->clients; cp; cp = cp->next) {
          if(ShouldFocus(cp->client, 0)) {
-            const char flash = cp->client->state.status & STAT_FLASH;
+            const char flash = (cp->client->state.status & STAT_FLASH) != 0;
             const char active = (cp->client->state.status & STAT_ACTIVE)
                && IsClientOnCurrentDesktop(cp->client);
             if(flash || active) {
@@ -752,24 +776,26 @@ void Render(const TaskBarType *bp)
       }
       button.x = x;
       button.y = y;
-      if(tp->clients->client->icon == &emptyIcon) {
-         button.icon = NULL;
+      if(!tp->clients->client->icon) {
+         button.icon = GetDefaultIcon();
       } else {
          button.icon = tp->clients->client->icon;
       }
       displayName = NULL;
-      if(tp->clients->client->className && settings.groupTasks) {
-         if(clientCount != 1) {
-            const size_t len = strlen(tp->clients->client->className) + 16;
-            displayName = Allocate(len);
-            snprintf(displayName, len, "%s (%u)",
-                     tp->clients->client->className, clientCount);
-            button.text = displayName;
+      if(bp->labeled) {
+         if(tp->clients->client->className && settings.groupTasks) {
+            if(clientCount != 1) {
+               const size_t len = strlen(tp->clients->client->className) + 16;
+               displayName = Allocate(len);
+               snprintf(displayName, len, "%s (%u)",
+                        tp->clients->client->className, clientCount);
+               button.text = displayName;
+            } else {
+               button.text = tp->clients->client->className;
+            }
          } else {
-            button.text = tp->clients->client->className;
+            button.text = tp->clients->client->name;
          }
-      } else {
-         button.text = tp->clients->client->name;
       }
       DrawButton(&button);
       if(displayName) {
@@ -953,6 +979,13 @@ void SetTaskBarHeight(TrayComponentType *cp, const char *value)
       return;
    }
    bp->userHeight = temp;
+}
+
+/** Set whether the label should be displayed. */
+void SetTaskBarLabeled(TrayComponentType *cp, char labeled)
+{
+   TaskBarType *bp = (TaskBarType*)cp->object;
+   bp->labeled = labeled;
 }
 
 /** Maintain the _NET_CLIENT_LIST[_STACKING] properties on the root. */

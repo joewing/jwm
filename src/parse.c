@@ -33,6 +33,12 @@
 #include "desktop.h"
 #include "border.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <errno.h>
+
 /** Mapping of key names to key types.
  * Note that this mapping must be sorted.
  */
@@ -83,10 +89,12 @@ static const unsigned int KEY_MAP_COUNT = ARRAY_LENGTH(KEY_MAP);
  * Note that this mapping must be sorted.
  */
 static const StringMappingType OPTION_MAP[] = {
+   { "aerosnap",           OPTION_AEROSNAP      },
    { "border",             OPTION_BORDER        },
    { "centered",           OPTION_CENTERED      },
    { "constrain",          OPTION_CONSTRAIN     },
    { "drag",               OPTION_DRAG          },
+   { "fixed",              OPTION_FIXED         },
    { "fullscreen",         OPTION_FULLSCREEN    },
    { "hmax",               OPTION_MAX_H         },
    { "iignore",            OPTION_IIGNORE       },
@@ -96,6 +104,7 @@ static const StringMappingType OPTION_MAP[] = {
    { "minimized",          OPTION_MINIMIZED     },
    { "noborder",           OPTION_NOBORDER      },
    { "noclose",            OPTION_NOCLOSE       },
+   { "nodrag",             OPTION_NODRAG        },
    { "nofocus",            OPTION_NOFOCUS       },
    { "nofullscreen",       OPTION_NOFULLSCREEN  },
    { "nolist",             OPTION_NOLIST        },
@@ -132,6 +141,8 @@ static const char *TRUE_VALUE = "true";
 
 static char ParseFile(const char *fileName, int depth);
 static char *ReadFile(FILE *fd);
+static TokenNode *TokenizeFile(const char *fileName);
+static TokenNode *TokenizePipe(const char *command);
 
 /* Misc. */
 static void Parse(const TokenNode *start, int depth);
@@ -174,12 +185,14 @@ static void ParseGroupOption(const TokenNode *tp,
 /* Style. */
 static void ParseWindowStyle(const TokenNode *tp);
 static void ParseActiveWindowStyle(const TokenNode *tp);
-static void ParseTrayStyle(const TokenNode *tp);
-static void ParseActiveTrayStyle(const TokenNode *tp);
+static void ParseTrayStyle(const TokenNode *tp,
+                           FontType font, ColorType baseColor);
+static void ParseActive(const TokenNode *tp, ColorType fg,
+                        ColorType bg1, ColorType bg2,
+                        ColorType up, ColorType down);
 static void ParsePagerStyle(const TokenNode *tp);
-static void ParseActivePagerStyle(const TokenNode *tp);
+static void ParseClockStyle(const TokenNode *tp);
 static void ParseMenuStyle(const TokenNode *tp);
-static void ParseActiveMenuStyle(const TokenNode *tp);
 static void ParsePopupStyle(const TokenNode *tp);
 
 /* Feel. */
@@ -189,7 +202,8 @@ static void ParseMoveMode(const TokenNode *tp);
 static void ParseResizeMode(const TokenNode *tp);
 static void ParseFocusModel(const TokenNode *tp);
 
-static DecorationsType ParseDecorations(const TokenNode *tp);
+static AlignmentType ParseTextAlignment(const TokenNode *tp);
+static void ParseDecorations(const TokenNode *tp, DecorationsType *deco);
 static void ParseGradient(const char *value, ColorType a, ColorType b);
 static char *FindAttribute(AttributeNode *ap, const char *name);
 static int ParseTokenValue(const StringMappingType *mapping, int count,
@@ -209,7 +223,8 @@ void ParseConfig(const char *fileName)
 {
    if(!ParseFile(fileName, 0)) {
       if(JUNLIKELY(!ParseFile(SYSTEM_CONFIG, 0))) {
-         ParseError(NULL, "could not open %s or %s", fileName, SYSTEM_CONFIG);
+         ParseError(NULL, _("could not open %s or %s"),
+                    fileName, SYSTEM_CONFIG);
       }
    }
    ValidateTrayButtons();
@@ -222,32 +237,24 @@ void ParseConfig(const char *fileName)
  */
 char ParseFile(const char *fileName, int depth)
 {
-
    TokenNode *tokens;
-   FILE *fd;
-   char *buffer;
 
    depth += 1;
    if(JUNLIKELY(depth > MAX_INCLUDE_DEPTH)) {
-      ParseError(NULL, "include depth (%d) exceeded", MAX_INCLUDE_DEPTH);
+      ParseError(NULL, _("include depth (%d) exceeded"),
+                 MAX_INCLUDE_DEPTH);
       return 0;
    }
 
-   fd = fopen(fileName, "r");
-   if(!fd) {
+   tokens = TokenizeFile(fileName);
+   if(!tokens) {
       return 0;
    }
 
-   buffer = ReadFile(fd);
-   fclose(fd);
-
-   tokens = Tokenize(buffer, fileName);
-   Release(buffer);
    Parse(tokens, depth);
    ReleaseTokens(tokens);
 
    return 1;
-
 }
 
 /** Parse a token list. */
@@ -333,7 +340,16 @@ void Parse(const TokenNode *start, int depth)
                ParseTray(tp);
                break;
             case TOK_TRAYSTYLE:
-               ParseTrayStyle(tp);
+               ParseTrayStyle(tp, FONT_TRAY, COLOR_TRAY_FG);
+               break;
+            case TOK_TASKLISTSTYLE:
+               ParseTrayStyle(tp, FONT_TASKLIST, COLOR_TASKLIST_FG);
+               break;
+            case TOK_TRAYBUTTONSTYLE:
+               ParseTrayStyle(tp, FONT_TRAYBUTTON, COLOR_TRAYBUTTON_FG);
+               break;
+            case TOK_CLOCKSTYLE:
+               ParseClockStyle(tp);
                break;
             case TOK_WINDOWSTYLE:
                ParseWindowStyle(tp);
@@ -353,6 +369,9 @@ void Parse(const TokenNode *start, int depth)
             case TOK_BUTTONMENU:
                SetBorderIcon(BI_MENU, tp->value);
                break;
+            case TOK_DEFAULTICON:
+               SetDefaultIcon(tp->value);
+               break;
             default:
                InvalidTag(tp, TOK_JWM);
                break;
@@ -360,7 +379,7 @@ void Parse(const TokenNode *start, int depth)
          }
       }
    } else {
-      ParseError(start, "invalid start tag: %s", GetTokenName(start));
+      ParseError(start, _("invalid start tag: %s"), GetTokenName(start));
    }
 
 }
@@ -730,52 +749,17 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
 /** Get tokens from a menu include (either dynamic or static). */
 TokenNode *ParseMenuIncludeHelper(const TokenNode *tp, const char *command)
 {
-   FILE *fd;
-   char *path;
-   char *buffer;
    TokenNode *start;
 
-   buffer = NULL;
    if(!strncmp(command, "exec:", 5)) {
-
-		path = CopyString(command + 5);
-      ExpandPath(&path);
-
-      fd = popen(path, "r");
-      if(JLIKELY(fd)) {
-         buffer = ReadFile(fd);
-         pclose(fd);
-      } else {
-         ParseError(tp, "could not execute included program: %s", path);
-      }
-
+      start = TokenizePipe(&command[5]);
    } else {
-
-      path = CopyString(command);
-      ExpandPath(&path);
-
-      fd = fopen(path, "r");
-      if(JLIKELY(fd)) {
-         buffer = ReadFile(fd);
-         fclose(fd);
-      } else {
-         ParseError(NULL, "could not open include: %s", path);
-      }
-
+      start = TokenizeFile(command);
    }
-
-   if(JUNLIKELY(!buffer)) {
-      Release(path);
-      return NULL;
-   }
-
-   start = Tokenize(buffer, path);
-   Release(buffer);
-   Release(path);
 
    if(JUNLIKELY(!start || start->type != TOK_JWM))
    {
-      ParseError(tp, "invalid include: %s", command);
+      ParseError(tp, _("invalid include: %s"), command);
       ReleaseTokens(start);
       return NULL;
    }
@@ -825,7 +809,7 @@ void ParseKey(const TokenNode *tp) {
 
    action = tp->value;
    if(JUNLIKELY(action == NULL)) {
-      ParseError(tp, "no action specified for Key");
+      ParseError(tp, _("no action specified for Key"));
       return;
    }
 
@@ -848,7 +832,7 @@ void ParseKey(const TokenNode *tp) {
    /* Insert the binding if it's valid. */
    if(JUNLIKELY(k == KEY_NONE)) {
 
-      ParseError(tp, "invalid Key action: \"%s\"", action);
+      ParseError(tp, _("invalid Key action: \"%s\""), action);
 
    } else {
 
@@ -858,16 +842,38 @@ void ParseKey(const TokenNode *tp) {
 
 }
 
+/** Parse text alignment. */
+AlignmentType ParseTextAlignment(const TokenNode *tp)
+{
+   static const StringMappingType mapping[] = {
+      {"left",    ALIGN_LEFT   },
+      {"center",  ALIGN_CENTER },
+      {"right",   ALIGN_RIGHT  }
+   };
+   const char *attr= FindAttribute(tp->attributes, "align");
+   if(attr) {
+      const int x = FindValue(mapping, ARRAY_LENGTH(mapping), attr);
+      if(JLIKELY(x >= 0)) {
+         return x;
+      } else {
+         Warning(_("invalid text alignment: \"%s\""), attr);
+      }
+   }
+
+   return ALIGN_LEFT;
+}
+
 /** Parse window style. */
 void ParseWindowStyle(const TokenNode *tp)
 {
    const TokenNode *np;
 
-   settings.windowDecorations = ParseDecorations(tp);
+   ParseDecorations(tp, &settings.windowDecorations);
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FONT:
          SetFont(FONT_BORDER, np->value);
+         settings.titleTextAlignment = ParseTextAlignment(np);
          break;
       case TOK_WIDTH:
          settings.borderWidth = ParseUnsigned(np, np->value);
@@ -933,28 +939,25 @@ void ParseActiveWindowStyle(const TokenNode *tp)
 }
 
 /** Parse an include. */
-void ParseInclude(const TokenNode *tp, int depth) {
-
-   char *temp;
-
-   Assert(tp);
-
+void ParseInclude(const TokenNode *tp, int depth)
+{
    if(JUNLIKELY(!tp->value)) {
+      ParseError(tp, _("no include file specified"));
+      return;
+   }
 
-      ParseError(tp, "no include file specified");
-
-   } else {
-
-      temp = CopyString(tp->value);
-
-      ExpandPath(&temp);
-
-      if(JUNLIKELY(!ParseFile(temp, depth))) {
-         ParseError(tp, "could not open included file %s", temp);
+   if(!strncmp(tp->value, "exec:", 5)) {
+      TokenNode *tokens = TokenizePipe(&tp->value[5]);
+      if(JLIKELY(tokens)) {
+         Parse(tokens, 0);
+         ReleaseTokens(tokens);
+      } else {
+         ParseError(tp, _("could not process include: %s"), &tp->value[5]);
       }
-
-      Release(temp);
-
+   } else {
+      if(JUNLIKELY(!ParseFile(tp->value, depth))) {
+         ParseError(tp, _("could not open included file: %s"), tp->value);
+      }
    }
 
 }
@@ -1032,44 +1035,59 @@ void ParseDesktopBackground(int desktop, const TokenNode *tp)
 }
 
 /** Parse tray style. */
-void ParseTrayStyle(const TokenNode *tp)
+void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
 {
    const TokenNode *np;
-   const char *temp;
+   const ColorType bg1 = fg + COLOR_TRAY_BG1 - COLOR_TRAY_FG;
+   const ColorType bg2 = fg + COLOR_TRAY_BG2 - COLOR_TRAY_FG;
+   const ColorType activeFg = fg + COLOR_TRAY_ACTIVE_FG - COLOR_TRAY_FG;
+   const ColorType activeBg1 = fg + COLOR_TRAY_ACTIVE_BG1 - COLOR_TRAY_FG;
+   const ColorType activeBg2 = fg + COLOR_TRAY_ACTIVE_BG2 - COLOR_TRAY_FG;
+   const ColorType up = fg + COLOR_TRAY_UP - COLOR_TRAY_FG;
+   const ColorType down = fg + COLOR_TRAY_DOWN - COLOR_TRAY_FG;
+   const ColorType activeUp = fg + COLOR_TRAY_ACTIVE_UP - COLOR_TRAY_FG;
+   const ColorType activeDown = fg + COLOR_TRAY_ACTIVE_DOWN - COLOR_TRAY_FG;
 
-   settings.trayDecorations = ParseDecorations(tp);
-   temp = FindAttribute(tp->attributes, "group");
-   if(temp) {
-      settings.groupTasks = !strcmp(temp, TRUE_VALUE);
-   }
+   /* TrayStyle has extra attributes. */
+   if(tp->type == TOK_TRAYSTYLE) {
+      const char *temp;
+      ParseDecorations(tp, &settings.trayDecorations);
+      temp = FindAttribute(tp->attributes, "group");
+      if(temp) {
+         settings.groupTasks = !strcmp(temp, TRUE_VALUE);
+      }
 
-   temp = FindAttribute(tp->attributes, "list");
-   if(temp) {
-      settings.listAllTasks = !strcmp(temp, "all");
+      temp = FindAttribute(tp->attributes, "list");
+      if(temp) {
+         settings.listAllTasks = !strcmp(temp, "all");
+      }
    }
 
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FONT:
-         SetFont(FONT_TRAY, np->value);
+         SetFont(font, np->value);
          break;
       case TOK_ACTIVE:
-         ParseActiveTrayStyle(np);
+         ParseActive(np, activeFg, activeBg1, activeBg2, activeUp, activeDown);
          break;
       case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_TRAY_BG1, COLOR_TRAY_BG2);
+         ParseGradient(np->value, bg1, bg2);
          break;
       case TOK_FOREGROUND:
-         SetColor(COLOR_TRAY_FG, np->value);
+         SetColor(fg, np->value);
          break;
       case TOK_OUTLINE:
-         ParseGradient(np->value, COLOR_TRAY_DOWN, COLOR_TRAY_UP);
+         ParseGradient(np->value, down, up);
          break;
       case TOK_OPACITY:
-         settings.trayOpacity = ParseOpacity(np, np->value);
-         break;
+         if(tp->type == TOK_TRAYSTYLE) {
+            settings.trayOpacity = ParseOpacity(np, np->value);
+            break;
+         }
+         /* fall through */
       default:
-         InvalidTag(np, TOK_TRAYSTYLE);
+         InvalidTag(np, tp->type);
          break;
       }
    }
@@ -1077,18 +1095,30 @@ void ParseTrayStyle(const TokenNode *tp)
 }
 
 /** Parse active tray style. */
-void ParseActiveTrayStyle(const TokenNode *tp)
+void ParseActive(const TokenNode *tp, ColorType fg,
+                 ColorType bg1, ColorType bg2,
+                 ColorType up, ColorType down)
 {
    const TokenNode *np;
 
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_TRAY_ACTIVE_BG1, COLOR_TRAY_ACTIVE_BG2);
+         if(bg1 == bg2) {
+            SetColor(bg1, np->value);
+         } else {
+            ParseGradient(np->value, bg1, bg2);
+         }
          break;
       case TOK_FOREGROUND:
-         SetColor(COLOR_TRAY_ACTIVE_FG, np->value);
+         SetColor(fg, np->value);
          break;
+      case TOK_OUTLINE:
+         if(up != COLOR_COUNT) {
+            ParseGradient(np->value, down, up);
+            break;
+         }
+         /* fall through */
       default:
          InvalidTag(np, TOK_ACTIVE);
          break;
@@ -1225,6 +1255,71 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray)
    temp = FindAttribute(tp->attributes, "height");
    if(temp) {
       SetTaskBarHeight(cp, temp);
+   }
+
+   temp = FindAttribute(tp->attributes, "labeled");
+   if(temp && !strcmp(temp, FALSE_VALUE)) {
+      SetTaskBarLabeled(cp, 0);
+   }
+}
+
+/** Parse the task list style. */
+void ParseTaskListStyle(const TokenNode *tp)
+{
+   const TokenNode *np;
+   for(np = tp->subnodeHead; np; np = np->next) {
+      switch(np->type) {
+      case TOK_FONT:
+         SetFont(FONT_TASKLIST, np->value);
+         break;
+      case TOK_ACTIVE:
+         ParseActive(np, COLOR_TASKLIST_ACTIVE_FG,
+                     COLOR_TASKLIST_ACTIVE_BG1, COLOR_TASKLIST_ACTIVE_BG2,
+                     COLOR_TASKLIST_ACTIVE_UP, COLOR_TASKLIST_ACTIVE_DOWN);
+         break;
+      case TOK_BACKGROUND:
+         ParseGradient(np->value, COLOR_TASKLIST_BG1, COLOR_TASKLIST_BG2);
+         break;
+      case TOK_FOREGROUND:
+         SetColor(COLOR_TASKLIST_FG, np->value);
+         break;
+      case TOK_OUTLINE:
+         ParseGradient(np->value, COLOR_TASKLIST_DOWN, COLOR_TASKLIST_UP);
+         break;
+      default:
+         InvalidTag(np, TOK_TASKLISTSTYLE);
+         break;
+      }
+   }
+}
+
+/** Parse the tray button style. */
+void ParseTrayButtonStyle(const TokenNode *tp)
+{
+   const TokenNode *np;
+   for(np = tp->subnodeHead; np; np = np->next) {
+      switch(np->type) {
+      case TOK_FONT:
+         SetFont(FONT_TRAYBUTTON, np->value);
+         break;
+      case TOK_ACTIVE:
+         ParseActive(np, COLOR_TRAYBUTTON_ACTIVE_FG,
+                     COLOR_TRAYBUTTON_ACTIVE_BG1, COLOR_TRAYBUTTON_ACTIVE_BG2,
+                     COLOR_TRAYBUTTON_ACTIVE_UP, COLOR_TRAYBUTTON_ACTIVE_DOWN);
+         break;
+      case TOK_BACKGROUND:
+         ParseGradient(np->value, COLOR_TRAYBUTTON_BG1, COLOR_TRAYBUTTON_BG2);
+         break;
+      case TOK_FOREGROUND:
+         SetColor(COLOR_TRAYBUTTON_FG, np->value);
+         break;
+      case TOK_OUTLINE:
+         ParseGradient(np->value, COLOR_TRAYBUTTON_DOWN, COLOR_TRAYBUTTON_UP);
+         break;
+      default:
+         InvalidTag(np, TOK_TRAYBUTTONSTYLE);
+         break;
+      }
    }
 }
 
@@ -1458,7 +1553,9 @@ void ParsePagerStyle(const TokenNode *tp)
          SetColor(COLOR_PAGER_BG, np->value);
          break;
       case TOK_ACTIVE:
-         ParseActivePagerStyle(np);
+         ParseActive(np, COLOR_PAGER_ACTIVE_FG,
+                     COLOR_PAGER_ACTIVE_BG, COLOR_PAGER_ACTIVE_BG,
+                     COLOR_COUNT, COLOR_COUNT);
          break;
       case TOK_FONT:
          SetFont(FONT_PAGER, np->value);
@@ -1474,20 +1571,23 @@ void ParsePagerStyle(const TokenNode *tp)
 
 }
 
-/** Parse active pager style. */
-void ParseActivePagerStyle(const TokenNode *tp)
+/** Parse clock style. */
+void ParseClockStyle(const TokenNode *tp)
 {
    const TokenNode *np;
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FOREGROUND:
-         SetColor(COLOR_PAGER_ACTIVE_FG, np->value);
+         SetColor(COLOR_CLOCK_FG, np->value);
          break;
       case TOK_BACKGROUND:
-         SetColor(COLOR_PAGER_ACTIVE_BG, np->value);
+         ParseGradient(np->value, COLOR_CLOCK_BG1, COLOR_CLOCK_BG2);
+         break;
+      case TOK_FONT:
+         SetFont(FONT_CLOCK, np->value);
          break;
       default:
-         InvalidTag(np, TOK_ACTIVE);
+         InvalidTag(np, TOK_CLOCKSTYLE);
          break;
       }
    }
@@ -1519,7 +1619,7 @@ void ParsePopupStyle(const TokenNode *tp)
          if(JLIKELY(x >= 0)) {
             settings.popupMask |= x;
          } else {
-            ParseError(tp, "invalid value for 'enabled': \"%s\"", tok);
+            ParseError(tp, _("invalid value for 'enabled': \"%s\""), tok);
          }
          tok = strtok(NULL, ",");
       }
@@ -1557,7 +1657,7 @@ void ParseMenuStyle(const TokenNode *tp)
 {
    const TokenNode *np;
 
-   settings.menuDecorations = ParseDecorations(tp);
+   ParseDecorations(tp, &settings.menuDecorations);
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FONT:
@@ -1570,7 +1670,9 @@ void ParseMenuStyle(const TokenNode *tp)
          SetColor(COLOR_MENU_BG, np->value);
          break;
       case TOK_ACTIVE:
-         ParseActiveMenuStyle(np);
+         ParseActive(np, COLOR_MENU_ACTIVE_FG,
+                     COLOR_MENU_ACTIVE_BG1, COLOR_MENU_ACTIVE_BG2,
+                     COLOR_MENU_ACTIVE_UP, COLOR_MENU_ACTIVE_DOWN);
          break;
       case TOK_OUTLINE:
          ParseGradient(np->value, COLOR_MENU_DOWN, COLOR_MENU_UP);
@@ -1584,25 +1686,6 @@ void ParseMenuStyle(const TokenNode *tp)
       }
    }
 
-}
-
-/** Parse active menu style. */
-void ParseActiveMenuStyle(const TokenNode *tp)
-{
-   const TokenNode *np;
-   for(np = tp->subnodeHead; np; np = np->next) {
-      switch(np->type) {
-      case TOK_FOREGROUND:
-         SetColor(COLOR_MENU_ACTIVE_FG, np->value);
-         break;
-      case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_MENU_ACTIVE_BG1, COLOR_MENU_ACTIVE_BG2);
-         break;
-      default:
-         InvalidTag(np, TOK_ACTIVE);
-         break;
-      }
-   }
 }
 
 /** Parse an option group. */
@@ -1668,25 +1751,24 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
       const unsigned int opacity = ParseOpacity(tp, option + 8);
       AddGroupOptionUnsigned(group, OPTION_OPACITY, opacity);
    } else {
-      ParseError(tp, "invalid Group Option: %s", option);
+      ParseError(tp, _("invalid Group Option: %s"), option);
    }
 
 }
 
 /** Parse decorations type. */
-DecorationsType ParseDecorations(const TokenNode *tp)
+void ParseDecorations(const TokenNode *tp, DecorationsType *deco)
 {
    const char *str = FindAttribute(tp->attributes, "decorations");
    if(str) {
       if(!strcmp(str, "motif")) {
-         return DECO_MOTIF;
+         *deco = DECO_MOTIF;
       } else if(!strcmp(str, "flat")) {
-         return DECO_FLAT;
+         *deco = DECO_FLAT;
       } else {
-         ParseError(tp, "invalid decorations: %s\n", str);
+         ParseError(tp, _("invalid decorations: %s"), str);
       }
    }
-   return DECO_FLAT;
 }
 
 /** Parse a color which may be a gradient. */
@@ -1746,14 +1828,14 @@ int ParseTokenValue(const StringMappingType *mapping, int count,
                     const TokenNode *tp, int def)
 {
    if(JUNLIKELY(tp->value == NULL)) {
-      ParseError(tp, "%s is empty", GetTokenName(tp));
+      ParseError(tp, _("%s is empty"), GetTokenName(tp));
       return def;
    } else {
       const int x = FindValue(mapping, count, tp->value);
       if(JLIKELY(x >= 0)) {
          return x;
       } else {
-         ParseError(tp, "invalid %s: \"%s\"", GetTokenName(tp), tp->value);
+         ParseError(tp, _("invalid %s: \"%s\""), GetTokenName(tp), tp->value);
          return def;
       }
    }
@@ -1771,7 +1853,7 @@ int ParseAttribute(const StringMappingType *mapping, int count,
       if(JLIKELY(x >= 0)) {
          return x;
       } else {
-         ParseError(tp, "invalid value for %s: \"%s\"", attr, str);
+         ParseError(tp, _("invalid value for %s: \"%s\""), attr, str);
          return def;
       }
    }
@@ -1780,8 +1862,7 @@ int ParseAttribute(const StringMappingType *mapping, int count,
 /** Read a file. */
 char *ReadFile(FILE *fd)
 {
-
-   const int BLOCK_SIZE = 1024;  // Start at 1k.
+   const int BLOCK_SIZE = 1024;
 
    char *buffer;
    int len, max;
@@ -1792,30 +1873,103 @@ char *ReadFile(FILE *fd)
 
    for(;;) {
       const size_t count = fread(&buffer[len], 1, max - len, fd);
+      if(count == 0) {
+         if(feof(fd)) {
+            break;
+         } else if(errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR) {
+            continue;
+         } else {
+            Warning(_("could not read file: %s"), strerror(errno));
+            break;
+         }
+      }
       len += count;
-      if(len < max) {
-         break;
-      }
-      max *= 2;
-      if(JUNLIKELY(max < 0)) {
-         /* File is too big. */
-         break;
-      }
-      buffer = Reallocate(buffer, max + 1);
-      if(JUNLIKELY(buffer == NULL)) {
-         FatalError(_("out of memory"));
+      if(len == max) {
+         max += BLOCK_SIZE;
+         if(JUNLIKELY(max < 0)) {
+            /* File is too big. */
+            break;
+         }
+         buffer = Reallocate(buffer, max + 1);
+         if(JUNLIKELY(buffer == NULL)) {
+            FatalError(_("out of memory"));
+         }
       }
    }
    buffer[len] = 0;
 
    return buffer;
+}
 
+/** Tokenize a file by memory mapping it. */
+TokenNode *TokenizeFile(const char *fileName)
+{
+   struct stat sbuf;
+   TokenNode *tokens;
+   char *path;
+   char *buffer;
+
+   path = CopyString(fileName);
+   ExpandPath(&path);
+
+   int fd = open(path, O_RDONLY);
+   Release(path);
+
+   if(fd < 0) {
+      return NULL;
+   }
+   if(JUNLIKELY(fstat(fd, &sbuf) == -1)) {
+      close(fd);
+      return NULL;
+   }
+   buffer = mmap(NULL, sbuf.st_size, PROT_READ, MAP_SHARED, fd, 0);
+   if(JUNLIKELY(buffer == MAP_FAILED)) {
+      close(fd);
+      return NULL;
+   }
+   tokens = Tokenize(buffer, fileName);
+   munmap(buffer, sbuf.st_size);
+   close(fd);
+   return tokens;
+}
+
+/** Tokenize the output of a command. */
+TokenNode *TokenizePipe(const char *command)
+{
+   TokenNode *tokens;
+   FILE *fp;
+   char *path;
+   char *buffer;
+
+   path = CopyString(command);
+   ExpandPath(&path);
+
+   fp = popen(path, "r");
+   Release(path);
+
+   buffer = NULL;
+   if(JLIKELY(fp)) {
+      buffer = ReadFile(fp);
+      pclose(fp);
+   }
+   if(JUNLIKELY(!buffer)) {
+      return NULL;
+   }
+
+   tokens = Tokenize(buffer, command);
+   Release(buffer);
+   return tokens;
 }
 
 /** Parse an unsigned integer. */
 unsigned int ParseUnsigned(const TokenNode *tp, const char *str)
 {
-   const long value = strtol(str, NULL, 0);
+   long value;
+   if(JUNLIKELY(!str)) {
+      ParseError(tp, _("no value specified"));
+      return 0;
+   }
+   value = strtol(str, NULL, 0);
    if(JUNLIKELY(value < 0 || value > UINT_MAX)) {
       ParseError(tp, _("invalid setting: %s"), str);
       return 0;
@@ -1827,7 +1981,12 @@ unsigned int ParseUnsigned(const TokenNode *tp, const char *str)
 /** Parse opacity (a float between 0.0 and 1.0). */
 unsigned int ParseOpacity(const TokenNode *tp, const char *str)
 {
-   const float value = ParseFloat(str);
+   float value;
+   if(JUNLIKELY(!str)) {
+      ParseError(tp, _("no value specified"));
+      return UINT_MAX;
+   }
+   value = ParseFloat(str);
    if(JUNLIKELY(value <= 0.0 || value > 1.0)) {
       ParseError(tp, _("invalid opacity: %s"), str);
       return UINT_MAX;
@@ -1850,7 +2009,7 @@ WinLayerType ParseLayer(const TokenNode *tp, const char *str)
    if(JLIKELY(x >= 0)) {
       return x;
    }  else {
-      ParseError(tp, "invalid layer: %s", str);
+      ParseError(tp, _("invalid layer: %s"), str);
       return LAYER_NORMAL;
    }
 }

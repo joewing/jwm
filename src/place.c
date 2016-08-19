@@ -10,6 +10,7 @@
 #include "jwm.h"
 #include "place.h"
 #include "client.h"
+#include "border.h"
 #include "screen.h"
 #include "tray.h"
 #include "settings.h"
@@ -39,12 +40,13 @@ static void CascadeClient(const BoundingBox *box, ClientNode *np);
 
 static void SubtractStrutBounds(BoundingBox *box, const ClientNode *np);
 static void SubtractBounds(const BoundingBox *src, BoundingBox *dest);
+static void SubtractTrayBounds(BoundingBox *box, unsigned int layer);
 static void SetWorkarea(void);
 
 /** Startup placement. */
 void StartupPlacement(void)
 {
-
+   const unsigned titleHeight = GetTitleHeight();
    int count;
    int x;
 
@@ -52,11 +54,10 @@ void StartupPlacement(void)
    cascadeOffsets = Allocate(count * sizeof(int));
 
    for(x = 0; x < count; x++) {
-      cascadeOffsets[x] = settings.borderWidth + settings.titleHeight;
+      cascadeOffsets[x] = settings.borderWidth + titleHeight;
    }
 
    SetWorkarea();
-
 }
 
 /** Shutdown placement. */
@@ -142,12 +143,13 @@ void ReadClientStrut(ClientNode *np)
     *   left_start_y, left_end_y, right_start_y, right_end_y,
     *   top_start_x, top_end_x, bottom_start_x, bottom_end_x
     */
+   count = 0;
    status = JXGetWindowProperty(display, np->window,
                                 atoms[ATOM_NET_WM_STRUT_PARTIAL],
                                 0, 12, False, XA_CARDINAL, &actualType,
                                 &actualFormat, &count, &bytesLeft, &value);
    if(status == Success && actualFormat != 0) {
-      if(count == 12) {
+      if(JLIKELY(count == 12)) {
 
          long leftStart, leftStop;
          long rightStart, rightStop;
@@ -208,11 +210,12 @@ void ReadClientStrut(ClientNode *np)
 
    /* Next try to read _NET_WM_STRUT */
    /* Format is: left_width, right_width, top_width, bottom_width */
+   count = 0;
    status = JXGetWindowProperty(display, np->window, atoms[ATOM_NET_WM_STRUT],
                                 0, 4, False, XA_CARDINAL, &actualType,
                                 &actualFormat, &count, &bytesLeft, &value);
    if(status == Success && actualFormat != 0) {
-      if(count == 4) {
+      if(JLIKELY(count == 4)) {
          lvalue = (long*)value;
          leftWidth = lvalue[0];
          rightWidth = lvalue[1];
@@ -339,12 +342,12 @@ void SubtractBounds(const BoundingBox *src, BoundingBox *dest)
 }
 
 /** Subtract tray area from the bounding box. */
-void SubtractTrayBounds(const TrayType *tp, BoundingBox *box,
-                        unsigned int layer)
+void SubtractTrayBounds(BoundingBox *box, unsigned int layer)
 {
+   const TrayType *tp;
    BoundingBox src;
    BoundingBox last;
-   for(; tp; tp = tp->next) {
+   for(tp = GetTrays(); tp; tp = tp->next) {
 
       if(tp->layer > layer && tp->autoHide == THIDE_OFF) {
 
@@ -436,8 +439,17 @@ int TryTileClient(const BoundingBox *box, ClientNode *np, int x, int y)
    y1 = np->y - north;
    y2 = np->y + np->height + south;
 
-   /* Loop over each client. */
    overlap = 0;
+
+   /* Return maximum cost for window outside bounding box. */
+   if (  x1 < box->x ||
+         x2 > box->x + box->width ||
+         y1 < box->y ||
+         y2 > box->y + box->height) {
+       return INT_MAX;
+   }
+
+   /* Loop over each client. */
    for(layer = np->state.layer; layer < LAYER_COUNT; layer++) {
       for(tp = nodes[layer]; tp; tp = tp->next) {
 
@@ -488,8 +500,8 @@ char TileClient(const BoundingBox *box, ClientNode *np)
    int leastOverlap;
    int bestx, besty;
 
-   /* Determine how much space to allocate. */
-   count = 1;
+   /* Count insertion points, including bounding box edges. */
+   count = 2;
    for(layer = np->state.layer; layer < LAYER_COUNT; layer++) {
       for(tp = nodes[layer]; tp; tp = tp->next) {
          if(!IsClientOnCurrentDesktop(tp)) {
@@ -533,6 +545,12 @@ char TileClient(const BoundingBox *box, ClientNode *np)
       }
    }
 
+   /* Try placing at lower right edge of box, too. */
+   GetBorderSize(&np->state, &north, &south, &east, &west);
+   xs[count] = box->x + box->width - np->width - east - west;
+   ys[count] = box->y + box->height - np->height - north - south;
+   count += 1;
+
    /* Sort the points. */
    qsort(xs, count, sizeof(int), IntComparator);
    qsort(ys, count, sizeof(int), IntComparator);
@@ -575,8 +593,8 @@ char TileClient(const BoundingBox *box, ClientNode *np)
 /** Cascade placement. */
 void CascadeClient(const BoundingBox *box, ClientNode *np)
 {
-
    const ScreenType *sp;
+   const unsigned titleHeight = GetTitleHeight();
    int north, south, east, west;
    int cascadeIndex;
    char overflow;
@@ -588,8 +606,7 @@ void CascadeClient(const BoundingBox *box, ClientNode *np)
    /* Set the cascaded location. */
    np->x = box->x + west + cascadeOffsets[cascadeIndex];
    np->y = box->y + north + cascadeOffsets[cascadeIndex];
-   cascadeOffsets[cascadeIndex] += settings.borderWidth
-                                 + settings.titleHeight;
+   cascadeOffsets[cascadeIndex] += settings.borderWidth + titleHeight;
 
    /* Check for cascade overflow. */
    overflow = 0;
@@ -600,8 +617,7 @@ void CascadeClient(const BoundingBox *box, ClientNode *np)
    }
 
    if(overflow) {
-      cascadeOffsets[cascadeIndex] = settings.borderWidth
-                                   + settings.titleHeight;
+      cascadeOffsets[cascadeIndex] = settings.borderWidth + titleHeight;
       np->x = box->x + west + cascadeOffsets[cascadeIndex];
       np->y = box->y + north + cascadeOffsets[cascadeIndex];
 
@@ -611,8 +627,7 @@ void CascadeClient(const BoundingBox *box, ClientNode *np)
       } else if(np->y + np->height - box->y > box->height) {
          np->y = box->y + north;
       } else {
-         cascadeOffsets[cascadeIndex] += settings.borderWidth
-                                       + settings.titleHeight;
+         cascadeOffsets[cascadeIndex] += settings.borderWidth + titleHeight;
       }
    }
 
@@ -643,7 +658,7 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
 
       sp = GetMouseScreen();
       GetScreenBounds(sp, &box);
-      SubtractTrayBounds(GetTrays(), &box, np->state.layer);
+      SubtractTrayBounds(&box, np->state.layer);
       SubtractStrutBounds(&box, np);
 
       /* If tiled is specified, first attempt to use tiled placement. */
@@ -683,7 +698,7 @@ char ConstrainSize(ClientNode *np)
    /* Constrain the width if necessary. */
    sp = GetCurrentScreen(np->x, np->y);
    GetScreenBounds(sp, &box);
-   SubtractTrayBounds(GetTrays(), &box, np->state.layer);
+   SubtractTrayBounds(&box, np->state.layer);
    SubtractStrutBounds(&box, np);
    GetBorderSize(&np->state, &north, &south, &east, &west);
    if(np->width + east + west > sp->width) {
@@ -748,7 +763,7 @@ void ConstrainPosition(ClientNode *np)
    box.y = 0;
    box.width = rootWidth;
    box.height = rootHeight;
-   SubtractTrayBounds(GetTrays(), &box, np->state.layer);
+   SubtractTrayBounds(&box, np->state.layer);
    SubtractStrutBounds(&box, np);
 
    /* Fix the position. */
@@ -771,7 +786,6 @@ void ConstrainPosition(ClientNode *np)
 /** Place a maximized client on the screen. */
 void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
 {
-
    BoundingBox box;
    const ScreenType *sp;
    int north, south, east, west;
@@ -795,7 +809,7 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
       box.y = np->y - north;
       box.height = np->height + north + south;
    }
-   SubtractTrayBounds(GetTrays(), &box, np->state.layer);
+   SubtractTrayBounds(&box, np->state.layer);
    SubtractStrutBounds(&box, np);
 
    if(box.width > np->maxWidth) {
@@ -812,20 +826,6 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
       if(box.width * np->aspect.maxy > box.height * np->aspect.maxx) {
          box.width = (box.height * np->aspect.maxx) / np->aspect.maxy;
       }
-   }
-
-   /* Remove window outlines. */
-   if(flags & (MAX_VERT | MAX_TOP)) {
-      north = Max(0, north - 1);
-   }
-   if(flags & (MAX_VERT | MAX_BOTTOM)) {
-      south = Max(0, south - 1);
-   }
-   if(flags & (MAX_HORIZ | MAX_LEFT)) {
-      west = Max(0, west - 1);
-   }
-   if(flags & (MAX_HORIZ | MAX_RIGHT)) {
-      east = Max(0, east - 1);
    }
 
    /* If maximizing horizontally, update width. */
@@ -875,7 +875,6 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
 /** Determine which way to move the client for the border. */
 void GetGravityDelta(const ClientNode *np, int gravity, int *x, int  *y)
 {
-
    int north, south, east, west;
    GetBorderSize(&np->state, &north, &south, &east, &west);
    switch(gravity) {
@@ -920,13 +919,11 @@ void GetGravityDelta(const ClientNode *np, int gravity, int *x, int  *y)
       *y = 0;
       break;
    }
-
 }
 
 /** Move the window in the specified direction for reparenting. */
 void GravitateClient(ClientNode *np, char negate)
 {
-
    int deltax, deltay;
    GetGravityDelta(np, np->gravity, &deltax, &deltay);
    if(negate) {
@@ -936,7 +933,6 @@ void GravitateClient(ClientNode *np, char negate)
       np->x -= deltax;
       np->y -= deltay;
    }
-
 }
 
 /** Set _NET_WORKAREA. */
@@ -955,7 +951,7 @@ void SetWorkarea(void)
    box.width = rootWidth;
    box.height = rootHeight;
 
-   SubtractTrayBounds(GetTrays(), &box, LAYER_NORMAL);
+   SubtractTrayBounds(&box, LAYER_NORMAL);
    SubtractStrutBounds(&box, NULL);
 
    for(x = 0; x < settings.desktopCount; x++) {
@@ -969,6 +965,4 @@ void SetWorkarea(void)
                     (unsigned char*)array, settings.desktopCount * 4);
 
    ReleaseStack(array);
-
 }
-

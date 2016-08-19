@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2004-2007
  *
- * @brief Header file for client window functions.
+ * @brief Client window functions.
  *
  */
 
@@ -82,6 +82,9 @@ typedef unsigned int StatusFlags;
 #define STAT_DRAG       (1 << 24)   /**< Pass mouse events to JWM. */
 #define STAT_ILIST      (1 << 25)   /**< Ignore program-specified list. */
 #define STAT_IPAGER     (1 << 26)   /**< Ignore program-specified pager. */
+#define STAT_FIXED      (1 << 27)   /**< Keep on the specified desktop. */
+#define STAT_AEROSNAP   (1 << 28)   /**< Enable Aero Snap. */
+#define STAT_NODRAG     (1 << 29)   /**< Disable mod1+drag/resize. */
 
 /** Maximization flags. */
 typedef unsigned char MaxFlags;

@@ -53,6 +53,12 @@ typedef unsigned char PopupMaskType;
 #define POPUP_MENU   16
 #define POPUP_ALL    255
 
+/** Text alignment. */
+typedef unsigned char AlignmentType;
+#define ALIGN_LEFT      0
+#define ALIGN_CENTER    1
+#define ALIGN_RIGHT     2
+
 /** Settings. */
 typedef struct {
    unsigned int doubleClickSpeed;
@@ -70,6 +76,7 @@ typedef struct {
    unsigned int menuOpacity;
    unsigned int desktopDelay;
    unsigned int cornerRadius;
+   AlignmentType titleTextAlignment;
    SnapModeType snapMode;
    MoveModeType moveMode;
    StatusWindowType moveStatusType;
@@ -97,4 +104,3 @@ void StartupSettings(void);
 void SetPathString(char **dest, const char *src);
 
 #endif
-

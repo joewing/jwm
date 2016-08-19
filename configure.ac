@@ -2,7 +2,7 @@
 # JWM autoconf.
 ############################################################################
 
-AC_INIT(jwm, 2.3.5, joewing@joewing.net)
+AC_INIT(jwm, 2.3.6, joewing@joewing.net)
 AC_PREREQ(2.57)
 AC_CONFIG_SRCDIR([src])
 AC_CONFIG_SRCDIR([po])
@@ -75,7 +75,10 @@ AC_CHECK_HEADERS([langinfo.h iconv.h])
 AC_CHECK_HEADERS([locale.h libintl.h])
 
 AC_CHECK_HEADERS([X11/Xlib.h], [],
-   [ AC_MSG_ERROR([Xlib.h could not be found]) ])
+   [ AC_MSG_ERROR([Xlib.h could not be found]) ],
+   [
+#include <X11/X.h>
+   ])
 
 AC_CHECK_HEADERS([X11/Xutil.h X11/cursorfont.h X11/Xproto.h \
    X11/Xatom.h X11/keysym.h X11/Xresource.h], [], [],
@@ -167,7 +170,7 @@ if test "$enable_png" != "no" ; then
       enable_png="yes"
    elif which libpng-config >/dev/null ; then
       PNG_CFLAGS=`libpng-config --cflags`
-      PNG_LDFLAGS=`libpng-config --libs`
+      PNG_LDFLAGS=`libpng-config --ldflags`
       enable_png="yes"
    else
       PNG_CFLAGS=""
@@ -387,20 +390,6 @@ if test "$enable_fribidi" = "yes" ; then
 fi
 
 ############################################################################
-# Check if iconv support was requested and available.
-############################################################################
-AC_ARG_ENABLE(iconv,
-   AC_HELP_STRING([--disable-iconv],
-      [disable non-UTF-8 character set support]) )
-if test "$enable_iconv" != "no" ; then
-   AC_CHECK_FUNC(iconv,
-        [ AC_DEFINE(USE_ICONV, 1, [Enable iconv support])
-          enable_iconv="yes" ],
-        [ enable_iconv="no"
-          AC_MSG_WARN([iconv not found]) ])
-fi
-
-############################################################################
 # Check if XPM support was requested and available.
 ############################################################################
 AC_ARG_ENABLE(xpm,
@@ -408,14 +397,21 @@ AC_ARG_ENABLE(xpm,
 if test "$enable_xpm" != "no"; then
 
    # We need to use the XPM libraries in Motif-2.1 on IRIX.
-   if test `uname` = "IRIX" -o `uname` = "IRIX64" ; then
+   if test `uname` = "IRIX" ; then
       CFLAGS="$CFLAGS -I/usr/Motif-2.1/include"
-      LDFLAGS="$LDFLAGS -L/usr/Motif-2.1/lib"
+      LDFLAGS="$LDFLAGS -L/usr/Motif-2.1/lib32"
+   fi
+   if test `uname` = "IRIX64" ; then
+      CFLAGS="$CFLAGS -I/usr/Motif-2.1/include"
+      LDFLAGS="$LDFLAGS -L/usr/Motif-2.1/lib64"
    fi
 
    AC_CHECK_HEADERS([X11/xpm.h], [],
       [ enable_xpm="no";
-        AC_MSG_WARN([unable to use X11/xpm.h]) ])
+        AC_MSG_WARN([unable to use X11/xpm.h]) ],
+      [
+#include <X11/X.h>
+      ])
 
 fi
 if test "$enable_xpm" != "no"; then
@@ -542,6 +538,10 @@ if test "$mandir" = "" ; then
    mandir="$ac_default_mandir"
 fi
 
+if test "$datadir" = "" ; then
+    datadir="$ac_default_datadir"
+fi
+
 if test "$LOCALEDIR" = "" ; then
    localedir=`eval echo \""$datadir"/locale\"`
    localedir=`eval echo \""$localedir"\"`
@@ -552,6 +552,8 @@ BINDIR=`eval echo \""$bindir"\"`
 SYSCONF=`eval echo \""$sysconfdir"\"`
 MANDIR=`eval echo \""$mandir"\"`
 MANDIR=`eval echo \""$MANDIR"\"`
+DATADIR=`eval echo \""$datadir"\"`
+DATADIR=`eval echo \""$DATADIR"\"`
 
 AC_DEFINE_UNQUOTED(SYSTEM_CONFIG, "$SYSCONF/system.jwmrc",
    [default system configuration path])
@@ -562,7 +564,8 @@ AC_SUBST(VERSION, "$PACKAGE_VERSION")
 AC_SUBST(INSTVERSION, `echo $PACKAGE_VERSION | tr -d .`)
 AC_SUBST(BINDIR, "$BINDIR")
 AC_SUBST(MANDIR, "$MANDIR")
-AC_SUBST(DATE, `date "+%Y-%m-%d"`)
+AC_SUBST(DATADIR, "$DATADIR")
+AC_SUBST(DATE, `date -u -d "@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y-%m-%d`)
 AC_SUBST(SYSCONF, "$SYSCONF")
 AC_SUBST(PACKAGE, "$PACKAGE")
 
@@ -570,6 +573,7 @@ AC_OUTPUT(
    po/Makefile.in
    Makefile
    src/Makefile
+   contrib/Makefile
    jwm.1
 )
 
@@ -585,7 +589,6 @@ echo "Options"
 echo
 echo "    Confirm:  $enable_confirm"
 echo "    Icon:     $enable_icons"
-echo "    Iconv:    $enable_iconv"
 echo "    Cairo:    $enable_cairo"
 echo "    RSVG:     $enable_rsvg"
 echo "    PNG:      $enable_png"

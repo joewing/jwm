@@ -3,54 +3,80 @@
  * @author Joe Wingbermuehle
  * @date 2004-2006
  *
- * @brief Header for the color functions.
+ * @brief Functions to handle loading colors.
  *
  */
 
 #ifndef COLOR_H
 #define COLOR_H
 
-/** Enumeration of colors used for various JWM components. */
+/** Enumeration of colors used for various JWM components.
+ * For easier parsing, tray components must all have colors ordered the
+ * same way as COLOR_TRAY_*.
+ */
 typedef unsigned char ColorType;
-#define COLOR_TITLE_FG              0
-#define COLOR_TITLE_ACTIVE_FG       1
-#define COLOR_TITLE_BG1             2
-#define COLOR_TITLE_BG2             3
-#define COLOR_TITLE_ACTIVE_BG1      4
-#define COLOR_TITLE_ACTIVE_BG2      5
-#define COLOR_TRAY_FG               6
-#define COLOR_TRAY_BG1              7
-#define COLOR_TRAY_BG2              8
-#define COLOR_TRAY_ACTIVE_FG        9
-#define COLOR_TRAY_ACTIVE_BG1       10
-#define COLOR_TRAY_ACTIVE_BG2       11
-#define COLOR_PAGER_BG              12
-#define COLOR_PAGER_FG              13
-#define COLOR_PAGER_ACTIVE_BG       14
-#define COLOR_PAGER_ACTIVE_FG       15
-#define COLOR_PAGER_OUTLINE         16
-#define COLOR_PAGER_TEXT            17
-#define COLOR_MENU_BG               18
-#define COLOR_MENU_FG               19
-#define COLOR_MENU_UP               20
-#define COLOR_MENU_DOWN             21
-#define COLOR_MENU_ACTIVE_BG1       22
-#define COLOR_MENU_ACTIVE_BG2       23
-#define COLOR_MENU_ACTIVE_FG        24
-#define COLOR_MENU_ACTIVE_UP        25
-#define COLOR_MENU_ACTIVE_DOWN      26
-#define COLOR_POPUP_BG              27
-#define COLOR_POPUP_FG              28
-#define COLOR_POPUP_OUTLINE         29
-#define COLOR_TITLE_UP              30
-#define COLOR_TITLE_DOWN            31
-#define COLOR_TITLE_ACTIVE_UP       32
-#define COLOR_TITLE_ACTIVE_DOWN     33
-#define COLOR_TRAY_UP               34
-#define COLOR_TRAY_DOWN             35
-#define COLOR_TRAY_ACTIVE_UP        36
-#define COLOR_TRAY_ACTIVE_DOWN      37
-#define COLOR_COUNT                 38
+#define COLOR_TITLE_FG                 0
+#define COLOR_TITLE_ACTIVE_FG          1
+#define COLOR_TITLE_BG1                2
+#define COLOR_TITLE_BG2                3
+#define COLOR_TITLE_ACTIVE_BG1         4
+#define COLOR_TITLE_ACTIVE_BG2         5
+#define COLOR_TRAY_FG                  6
+#define COLOR_TRAY_BG1                 7
+#define COLOR_TRAY_BG2                 8
+#define COLOR_TRAY_ACTIVE_FG           9
+#define COLOR_TRAY_ACTIVE_BG1          10
+#define COLOR_TRAY_ACTIVE_BG2          11
+#define COLOR_TRAY_UP                  12
+#define COLOR_TRAY_DOWN                13
+#define COLOR_TRAY_ACTIVE_UP           14
+#define COLOR_TRAY_ACTIVE_DOWN         15
+#define COLOR_TASKLIST_FG              16
+#define COLOR_TASKLIST_BG1             17
+#define COLOR_TASKLIST_BG2             18
+#define COLOR_TASKLIST_ACTIVE_FG       19
+#define COLOR_TASKLIST_ACTIVE_BG1      20
+#define COLOR_TASKLIST_ACTIVE_BG2      21
+#define COLOR_TASKLIST_UP              22
+#define COLOR_TASKLIST_DOWN            23
+#define COLOR_TASKLIST_ACTIVE_UP       24
+#define COLOR_TASKLIST_ACTIVE_DOWN     25
+#define COLOR_TRAYBUTTON_FG            26
+#define COLOR_TRAYBUTTON_BG1           27
+#define COLOR_TRAYBUTTON_BG2           28
+#define COLOR_TRAYBUTTON_ACTIVE_FG     29
+#define COLOR_TRAYBUTTON_ACTIVE_BG1    30
+#define COLOR_TRAYBUTTON_ACTIVE_BG2    31
+#define COLOR_TRAYBUTTON_UP            32
+#define COLOR_TRAYBUTTON_DOWN          33
+#define COLOR_TRAYBUTTON_ACTIVE_UP     34
+#define COLOR_TRAYBUTTON_ACTIVE_DOWN   35
+#define COLOR_PAGER_BG                 36
+#define COLOR_PAGER_FG                 37
+#define COLOR_PAGER_ACTIVE_BG          38
+#define COLOR_PAGER_ACTIVE_FG          39
+#define COLOR_PAGER_OUTLINE            40
+#define COLOR_PAGER_TEXT               41
+#define COLOR_MENU_BG                  42
+#define COLOR_MENU_FG                  43
+#define COLOR_MENU_UP                  44
+#define COLOR_MENU_DOWN                45
+#define COLOR_MENU_ACTIVE_BG1          46
+#define COLOR_MENU_ACTIVE_BG2          47
+#define COLOR_MENU_ACTIVE_FG           48
+#define COLOR_MENU_ACTIVE_UP           49
+#define COLOR_MENU_ACTIVE_DOWN         50
+#define COLOR_POPUP_BG                 51
+#define COLOR_POPUP_FG                 52
+#define COLOR_POPUP_OUTLINE            53
+#define COLOR_TITLE_UP                 54
+#define COLOR_TITLE_DOWN               55
+#define COLOR_TITLE_ACTIVE_UP          56
+#define COLOR_TITLE_ACTIVE_DOWN        57
+#define COLOR_CLOCK_FG                 58
+#define COLOR_CLOCK_BG1                59
+#define COLOR_CLOCK_BG2                60
+#define COLOR_COUNT                    61
 
 extern unsigned long colors[COLOR_COUNT];
 
@@ -69,37 +95,15 @@ void SetColor(ColorType c, const char *value);
 
 /** Parse a color.
  * @param value The color name or hex value.
- * @param color The color return value (with pixel and components filled).
+ * @param c The color return value (with pixel and components filled).
  * @return 1 on success, 0 on failure.
  */
-char ParseColor(const char *value, XColor *color);
+char ParseColor(const char *value, XColor *c);
 
 /** Get the color pixel from red, green, and blue values.
  * @param c The structure containing the rgb values and the pixel value.
- * @param alloc Set to allocate the color if necessary.
  */
-void GetColor(XColor *c, char alloc);
-
-/** Get the RGB components from a color pixel.
- * This does the reverse of GetColor.
- * @param c The structure containing the rgb values and pixel value.
- */
-void GetColorFromPixel(XColor *c);
-
-/** Get an RGB pixel value from RGB components.
- * This is used when loading images from external sources. When doing
- * this we need to know the color components even if we are using a
- * color map so we just pretend to have a linear RGB colormap.
- * This prevents calls to XQueryColor.
- * @param c The structure containing the rgb values and pixel value.
- */
-void GetColorIndex(XColor *c);
-
-/** Extract the RGB components from a RGB linear pixel value.
- * This does the reverse of GetColorIndex.
- * @param c The structure containing the rgb values and pixel value.
- */
-void GetColorFromIndex(XColor *c);
+void GetColor(XColor *c);
 
 #ifdef USE_XFT
 /** Get an XFT color.

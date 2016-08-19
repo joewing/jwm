@@ -28,6 +28,16 @@ static const char *DEFAULT_FONT = "FreeSans-9";
 static const char *DEFAULT_FONT = "fixed";
 #endif
 
+static const struct {
+   const FontType src;
+   const FontType dest;
+} INHERITED_FONTS[] = {
+   { FONT_TRAY, FONT_PAGER       },
+   { FONT_TRAY, FONT_CLOCK       },
+   { FONT_TRAY, FONT_TASKLIST    },
+   { FONT_TRAY, FONT_TRAYBUTTON  }
+};
+
 static char *GetUTF8String(const char *str);
 static void ReleaseUTF8String(char *utf8String);
 
@@ -79,8 +89,12 @@ void StartupFonts(void)
    unsigned int x;
 
    /* Inherit unset fonts from the tray for tray items. */
-   if(!fontNames[FONT_PAGER]) {
-      fontNames[FONT_PAGER] = CopyString(fontNames[FONT_TRAY]);
+   for(x = 0; x < ARRAY_LENGTH(INHERITED_FONTS); x++) {
+      const FontType dest = INHERITED_FONTS[x].dest;
+      if(!fontNames[dest]) {
+         const FontType src = INHERITED_FONTS[x].src;
+         fontNames[dest] = CopyString(fontNames[src]);
+      }
    }
 
 #ifdef USE_XFT

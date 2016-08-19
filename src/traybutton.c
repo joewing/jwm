@@ -180,24 +180,23 @@ void AddTrayButtonAction(TrayComponentType *cp,
 /** Set the size of a button tray component. */
 void SetSize(TrayComponentType *cp, int width, int height)
 {
-
    TrayButtonType *bp;
+   int labelWidth, labelHeight;
+   int iconWidth, iconHeight;
 
    bp = (TrayButtonType*)cp->object;
 
-   if(bp->icon) {
+   if(bp->label) {
+      labelWidth = GetStringWidth(FONT_TRAY, bp->label) + 6;
+      labelHeight = GetStringHeight(FONT_TRAY) + 6;
+   } else {
+      labelWidth = 4;
+      labelHeight = 4;
+   }
 
-      int labelWidth, labelHeight;
-      int iconWidth, iconHeight;
+   if(bp->icon && bp->icon->width && bp->icon->height) {
+      /* With an icon. */
       int ratio;
-
-      if(bp->label) {
-         labelWidth = GetStringWidth(FONT_TRAY, bp->label) + 6;
-         labelHeight = GetStringHeight(FONT_TRAY) + 6;
-      } else {
-         labelWidth = 4;
-         labelHeight = 4;
-      }
 
       iconWidth = bp->icon->width;
       iconHeight = bp->icon->height;
@@ -219,12 +218,29 @@ void SetSize(TrayComponentType *cp, int width, int height)
          iconWidth = (iconHeight * ratio) >> 16;
          width = iconWidth + labelWidth;
 
+      } else {
+
+         /* Use best size. */
+         height = Max(labelHeight, iconHeight + 4);
+         iconWidth = ((height - 4) * ratio) >> 16;
+         width = iconWidth + labelWidth;
+
       }
 
-      cp->width = width;
-      cp->height = height;
-
+   } else {
+      /* No icon. */
+      if(width > 0) {
+         height = labelHeight;
+      } else if(height > 0) {
+         width = labelWidth;
+      } else {
+         height = labelHeight;
+         width = labelWidth;
+      }
    }
+
+   cp->width = width;
+   cp->height = height;
 
 }
 
@@ -332,4 +348,3 @@ void ValidateTrayButtons(void)
       ValidateActions(bp->actions);
    }
 }
-

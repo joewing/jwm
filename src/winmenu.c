@@ -5,7 +5,7 @@
  *
  * @brief Functions for handling window menus.
  *
-*/
+ */
 
 #include "jwm.h"
 #include "winmenu.h"

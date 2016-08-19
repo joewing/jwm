@@ -19,7 +19,7 @@ void FatalError(const char *str, ...) {
 
    Assert(str);
 
-   fprintf(stderr, "JWM: error: ");
+   fprintf(stderr, _("JWM: error: "));
    vfprintf(stderr, str, ap);
    fprintf(stderr, "\n");
 
@@ -48,7 +48,7 @@ void WarningVA(const char *part, const char *str, va_list ap) {
 
    Assert(str);
 
-   fprintf(stderr, "JWM: warning: ");
+   fprintf(stderr, _("JWM: warning: "));
    if(part) {
       fprintf(stderr, "%s: ", part);
    }
@@ -74,7 +74,7 @@ int ErrorHandler(Display *d, XErrorEvent *e) {
    if(initializing) {
       if(e->request_code == X_ChangeWindowAttributes
          && e->error_code == BadAccess) {
-         FatalError("display is already managed");
+         FatalError(_("display is already managed"));
       }
    }
 
@@ -105,4 +105,3 @@ int ErrorHandler(Display *d, XErrorEvent *e) {
    return 0;
 
 }
-

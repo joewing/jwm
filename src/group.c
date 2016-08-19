@@ -360,6 +360,15 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
       case OPTION_DRAG:
          np->state.status |= STAT_DRAG;
          break;
+      case OPTION_FIXED:
+         np->state.status |= STAT_FIXED;
+         break;
+      case OPTION_AEROSNAP:
+         np->state.status |= STAT_AEROSNAP;
+         break;
+      case OPTION_NODRAG:
+         np->state.status |= STAT_NODRAG;
+         break;
       default:
          Debug("invalid option: %d", lp->option);
          break;

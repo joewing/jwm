@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2004-2006
  *
- * @brief Header for the window menu functions.
+ * @brief Functions for handling window menus.
  *
  */
 

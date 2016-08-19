@@ -15,6 +15,7 @@
 #include "cursor.h"
 #include "command.h"
 #include "desktop.h"
+#include "menu.h"
 
 typedef struct ActionType {
    char *action;
@@ -73,6 +74,9 @@ void ProcessActionPress(struct ActionType *actions,
    int mwidth, mheight;
    int menu;
 
+   if(JUNLIKELY(menuShown)) {
+      return;
+   }
    if (x < -1 || x > cp->width) {
       return;
    }
@@ -125,14 +129,14 @@ void ProcessActionPress(struct ActionType *actions,
    GetRootMenuSize(menu, &mwidth, &mheight);
    sp = GetCurrentScreen(cp->screenx, cp->screeny);
    if(cp->tray->layout == LAYOUT_HORIZONTAL) {
-      x = cp->screenx;
+      x = cp->screenx - 1;
       if(cp->screeny + cp->height / 2 < sp->y + sp->height / 2) {
          y = cp->screeny + cp->height;
       } else {
          y = cp->screeny - mheight;
       }
    } else {
-      y = cp->screeny;
+      y = cp->screeny - 1;
       if(cp->screenx + cp->width / 2 < sp->x + sp->width / 2) {
          x = cp->screenx + cp->width;
       } else {
@@ -145,11 +149,12 @@ void ProcessActionPress(struct ActionType *actions,
       (cp->Redraw)(cp);
       UpdateSpecificTray(cp->tray, cp);
    }
-   ShowRootMenu(menu, x, y, 0);
-   cp->grabbed = 0;
-   if(cp->Redraw) {
-      (cp->Redraw)(cp);
-      UpdateSpecificTray(cp->tray, cp);
+   if(ShowRootMenu(menu, x, y, 0)) {
+      cp->grabbed = 0;
+      if(cp->Redraw) {
+         (cp->Redraw)(cp);
+         UpdateSpecificTray(cp->tray, cp);
+      }
    }
 }
 
@@ -160,6 +165,10 @@ void ProcessActionRelease(struct ActionType *actions,
 {
    const ActionType *ap;
    const int mask = 1 << button;
+
+   if(JUNLIKELY(menuShown)) {
+      return;
+   }
 
    cp->grabbed = 0;
    if(cp->Redraw) {

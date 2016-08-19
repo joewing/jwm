@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2004-2006
  *
- * @brief Header file for border functions.
+ * @brief Functions for handling window borders.
  *
  */
 
@@ -67,6 +67,9 @@ void DrawBorder(struct ClientNode *np);
  * @return The size in pixels (note that icons are square).
  */
 int GetBorderIconSize(void);
+
+/** Get the height of a window title bar. */
+unsigned GetTitleHeight(void);
 
 /** Get the size of a window border.
  * @param state The client state.

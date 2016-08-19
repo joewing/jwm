@@ -161,19 +161,21 @@ void InitializeMenu(Menu *menu)
    menu->width += hasSubmenu + menu->textOffset;
    menu->width += 7 + 2 * MENU_BORDER_SIZE;
    menu->height += MENU_BORDER_SIZE;
+   menu->mousex = -1;
+   menu->mousey = -1;
 
 }
 
 /** Show a menu. */
-void ShowMenu(Menu *menu, RunMenuCommandType runner,
+char ShowMenu(Menu *menu, RunMenuCommandType runner,
               int x, int y, char keyboard)
 {
    /* Don't show the menu if there isn't anything to show. */
    if(JUNLIKELY(!IsMenuValid(menu))) {
-      return;
+      return 0;
    }
    if(JUNLIKELY(shouldExit)) {
-      return;
+      return 0;
    }
 
    if(x < 0 && y < 0) {
@@ -184,12 +186,12 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner,
    }
 
    if(!GrabMouse(rootWindow)) {
-      return;
+      return 0;
    }
    if(JXGrabKeyboard(display, rootWindow, False, GrabModeAsync,
                      GrabModeAsync, CurrentTime) != GrabSuccess) {
       JXUngrabPointer(display, CurrentTime);
-      return;
+      return 0;
    }
 
    RegisterCallback(100, MenuCallback, menu);
@@ -205,6 +207,7 @@ void ShowMenu(Menu *menu, RunMenuCommandType runner,
       ReloadMenu();
    }
 
+   return 1;
 }
 
 /** Hide a menu. */
@@ -418,13 +421,18 @@ char MenuLoop(Menu *menu, RunMenuCommandType runner)
             if(ip->type == MENU_ITEM_NORMAL) {
                HideMenu(menu);
                (runner)(&ip->action, event.xbutton.button);
-            } else {
-               const Menu *parent = ip->type == MENU_ITEM_SUBMENU
-                                  ? menu->parent : menu;
-               if(event.xbutton.x >= parent->x &&
-                  event.xbutton.x < parent->x + parent->width &&
-                  event.xbutton.y >= parent->y &&
-                  event.xbutton.y < parent->y + parent->height) {
+            } else if(ip->type == MENU_ITEM_SUBMENU) {
+               const Menu *parent = menu->parent;
+               if(event.xbutton.x >= menu->x &&
+                  event.xbutton.x < menu->x + menu->width &&
+                  event.xbutton.y >= menu->y &&
+                  event.xbutton.y < menu->y + menu->height) {
+                  break;
+               } else if(parent &&
+                         event.xbutton.x >= parent->x &&
+                         event.xbutton.x < parent->x + parent->width &&
+                         event.xbutton.y >= parent->y &&
+                         event.xbutton.y < parent->y + parent->height) {
                   break;
                }
             }
@@ -760,7 +768,7 @@ MenuSelectionType UpdateMotion(Menu *menu,
    if(ip && IsMenuValid(ip->submenu)) {
       const int x = menu->x + menu->width
                   - (settings.menuDecorations == DECO_MOTIF ? 0 : 1);
-      const int y = menu->y + menu->offsets[menu->currentIndex];
+      const int y = menu->y + menu->offsets[menu->currentIndex] - 1;
       if(ShowSubmenu(ip->submenu, menu, runner, x, y, 0)) {
 
          /* Item selected; destroy the menu tree. */

@@ -389,7 +389,8 @@ void HandleButtonEvent(const XButtonEvent *event)
       np = FindClientByWindow(event->window);
       if(np) {
          const char move_resize = (np->state.status & STAT_DRAG)
-            || ((mask == Mod1Mask) && !(np->state.status & STAT_NODRAG));
+            || ((mask == settings.moveMask)
+               && !(np->state.status & STAT_NODRAG));
          switch(event->button) {
          case Button1:
          case Button2:

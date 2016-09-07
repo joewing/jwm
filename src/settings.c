@@ -21,6 +21,7 @@ static void FixRange(unsigned int *value,
 /** Initialize settings. */
 void InitializeSettings(void)
 {
+   settings.moveMask = (1 << Mod1MapIndex);
    settings.doubleClickSpeed = 400;
    settings.doubleClickDelta = 2;
    settings.snapMode = SNAP_BORDER;

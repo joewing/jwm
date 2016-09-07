@@ -1674,6 +1674,8 @@ Button 1 (typically the left button):
 Over the border, dragging resizes the window.
 Over the title bar, dragging moves the window and double clicking toggles
 the maximized state.
+Over the window while holding the appropriate modifier key, dragging moves
+the window.
 Over the menu button, clicking shows the menu.
 Over the minimize button, clicking minimizes the window.
 Over the maximize button, clicking toggles between maximized and normal.
@@ -1842,6 +1844,12 @@ The location of the status window. The default is \fBscreen\fP.
 The delay in milliseconds before moving a window to a different desktop.
 Setting this to 0 disables dragging windows between desktops.
 The default is 1000.
+.RE
+.P
+\fBmask\fP \fIstring\fP
+.RS
+The key mask of the modifier that, when held, allows one to move the
+window by dragging it.  The default is "A".
 .RE
 .RE
 .P

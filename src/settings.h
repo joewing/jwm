@@ -76,6 +76,7 @@ typedef struct {
    unsigned int menuOpacity;
    unsigned int desktopDelay;
    unsigned int cornerRadius;
+   unsigned int moveMask;
    AlignmentType titleTextAlignment;
    SnapModeType snapMode;
    MoveModeType moveMode;

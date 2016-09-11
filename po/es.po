@@ -7,25 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-08-06 00:43+0000\n"
-"PO-Revision-Date: 2014-08-13 03:07-0400\n"
-"Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
+"POT-Creation-Date: 2016-09-10 03:01-0300\n"
+"PO-Revision-Date: 2016-09-10 03:09-0300\n"
+"Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail."
+"com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.5\n"
+"X-Generator: Poedit 1.8.8\n"
 
 #: src/action.c:44
-#, fuzzy, c-format
+#, c-format
 msgid "invalid action: \"%s\""
-msgstr "acción no válida para Botón de Bandeja: «%s»"
+msgstr "acción no válida: «%s»"
 
 #: src/action.c:211
-#, fuzzy, c-format
+#, c-format
 msgid "action: root menu \"%s\" not defined"
-msgstr "botón de bandeja: menú root %d no definido"
+msgstr "acción: menú raíz «%s» no definido"
 
 #: src/background.c:137
 msgid "no value specified for background"
@@ -52,7 +53,7 @@ msgstr "¡Esto puede causar pérdida de datos!"
 #: src/command.c:138 src/main.c:220
 #, c-format
 msgid "exec failed: (%s) %s"
-msgstr "Ha fallado «exec»: (%s) %s"
+msgstr "Ha fallado: (%s) %s"
 
 #: src/confirm.c:69
 msgid "OK"
@@ -160,9 +161,9 @@ msgid "neither key nor keycode specified for Key"
 msgstr "ni tecla ni código especificados para Tecla"
 
 #: src/key.c:468
-#, fuzzy, c-format
+#, c-format
 msgid "key binding: root menu \"%s\" not defined"
-msgstr "atajo de teclado: menú raíz %d no definido"
+msgstr "atajo de teclado: menú raíz «%s» no definido"
 
 #: src/lex.c:201
 #, c-format
@@ -211,7 +212,7 @@ msgid "out of memory"
 msgstr "Sin memoria"
 
 #: src/parse.c:226
-#, fuzzy, c-format
+#, c-format
 msgid "could not open %s or %s"
 msgstr "no se pudo abrir %s o %s"
 
@@ -221,58 +222,57 @@ msgid "include depth (%d) exceeded"
 msgstr "se excedió la profundidad de capa (%d)"
 
 #: src/parse.c:382
-#, fuzzy, c-format
+#, c-format
 msgid "invalid start tag: %s"
-msgstr "ajuste no válido: %s"
+msgstr "etiqueta inicial no válida: %s"
 
 #: src/parse.c:762
-#, fuzzy, c-format
+#, c-format
 msgid "invalid include: %s"
-msgstr "capa no válida: %s"
+msgstr "incluir no válido: %s"
 
 #: src/parse.c:812
-#, fuzzy
 msgid "no action specified for Key"
-msgstr "ni tecla ni código especificados para Tecla"
+msgstr "no se especificó acción para la Tecla"
 
 #: src/parse.c:835
-#, fuzzy, c-format
+#, c-format
 msgid "invalid Key action: \"%s\""
-msgstr "acción no válida para Botón de Bandeja: «%s»"
+msgstr "acción no válida para la Tecla de acción: «%s»"
 
 #: src/parse.c:859
-#, fuzzy, c-format
+#, c-format
 msgid "invalid text alignment: \"%s\""
-msgstr "alineación vertical no válida para bandeja: «%s»"
+msgstr "alineación de texto no válida: «%s»"
 
 #: src/parse.c:945
 msgid "no include file specified"
 msgstr "no se especificó un archivo de capa"
 
 #: src/parse.c:955
-#, fuzzy, c-format
+#, c-format
 msgid "could not process include: %s"
-msgstr "no se pudo procesar la capa: %s"
+msgstr "no se pudo procesar el incluir: %s"
 
 #: src/parse.c:959
-#, fuzzy, c-format
+#, c-format
 msgid "could not open included file: %s"
-msgstr "no se pudo abrir el archivo de capa: %s"
+msgstr "no se pudo abrir el incluir: %s"
 
 #: src/parse.c:1622
-#, fuzzy, c-format
+#, c-format
 msgid "invalid value for 'enabled': \"%s\""
-msgstr "acción no válida para Botón de Bandeja: «%s»"
+msgstr "valor no válido para «habilitado»: «%s»"
 
 #: src/parse.c:1751
-#, fuzzy, c-format
+#, c-format
 msgid "invalid Group Option: %s"
-msgstr "escritorio de grupo no válido: %d"
+msgstr "Grupo de opciones no válido: %s"
 
 #: src/parse.c:1766
-#, fuzzy, c-format
+#, c-format
 msgid "invalid decorations: %s"
-msgstr "acción no válida para Botón de Bandeja: «%s»"
+msgstr "decoración no válida: «%s»"
 
 #: src/parse.c:1828
 #, c-format
@@ -280,24 +280,23 @@ msgid "%s is empty"
 msgstr "%s está vacío"
 
 #: src/parse.c:1835
-#, fuzzy, c-format
+#, c-format
 msgid "invalid %s: \"%s\""
-msgstr "acción no válida para Botón de Bandeja: «%s»"
+msgstr "no valido para %s: «%s»"
 
 #: src/parse.c:1853
-#, fuzzy, c-format
+#, c-format
 msgid "invalid value for %s: \"%s\""
-msgstr "etiqueta no válida en %s: «%s»"
+msgstr "valor no válido para %s: «%s»"
 
 #: src/parse.c:1879
-#, fuzzy, c-format
+#, c-format
 msgid "could not read file: %s"
-msgstr "no se pudo cargar el tipo de letra: %s"
+msgstr "no se pudo cargar el archivo: %s"
 
 #: src/parse.c:1966 src/parse.c:1983
-#, fuzzy
 msgid "no value specified"
-msgstr "no hay valor especificado para fondo de pantalla"
+msgstr "no hay valor especificado"
 
 #: src/parse.c:1971
 #, c-format
@@ -362,9 +361,9 @@ msgid "invalid maxwidth for TaskList: %s"
 msgstr "ancho máximo no válido para Lista de Tareas: %s"
 
 #: src/taskbar.c:978
-#, fuzzy, c-format
+#, c-format
 msgid "invalid height for TaskList: %s"
-msgstr "ancho máximo no válido para Lista de Tareas: %s"
+msgstr "ancho no válido para Lista de Tareas: %s"
 
 #: src/traybutton.c:89
 #, c-format

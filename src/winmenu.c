@@ -71,26 +71,22 @@ Menu *CreateWindowMenu(ClientNode *np)
       AddWindowMenuItem(menu, _("Minimize"), MA_MINIMIZE, np, 0);
    }
 
-   if(!(np->state.status & STAT_FULLSCREEN) && 
-      !(np->state.status & STAT_MINIMIZED)  && 
-       (np->state.border & BORDER_MIN))
-   {
-      if(np->state.status & STAT_SHADED) {
-         AddWindowMenuItem(menu, _("Unshade"), MA_SHADE, np, 0);
-      } else if(np->state.border & BORDER_SHADE) {
-         AddWindowMenuItem(menu, _("Shade"), MA_SHADE, np, 0);
+   if(!(np->state.status & STAT_FULLSCREEN)) {
+      if(!(np->state.status & STAT_MINIMIZED)) {
+         if(np->state.status & STAT_SHADED) {
+            AddWindowMenuItem(menu, _("Unshade"), MA_SHADE, np, 0);
+         } else if(np->state.border & BORDER_SHADE) {
+            AddWindowMenuItem(menu, _("Shade"), MA_SHADE, np, 0);
+         }
       }
-      if((np->state.border & BORDER_MAX) &&
-         (np->state.status & STAT_MAPPED) && 
-        !(np->state.status & STAT_SHADED))
-      {
-         if(!(np->state.maxFlags & MAX_VERT)) {
+      if(np->state.border & BORDER_MAX) {
+         if(!(np->state.maxFlags & MAX_VERT) || np->state.maxFlags) {
             AddWindowMenuItem(menu, _("Maximize-y"), MA_MAXIMIZE_V, np, 0);
          }
-         if(!(np->state.maxFlags & MAX_HORIZ)) {
+         if(!(np->state.maxFlags & MAX_HORIZ) || np->state.maxFlags) {
             AddWindowMenuItem(menu, _("Maximize-x"), MA_MAXIMIZE_H, np, 0);
          }
-         if(np->state.maxFlags) {
+         if(np->state.maxFlags && !(np->state.status & STAT_MINIMIZED)) {
             AddWindowMenuItem(menu, _("Restore"), MA_MAXIMIZE, np, 0);
          } else {
             AddWindowMenuItem(menu, _("Maximize"), MA_MAXIMIZE, np, 0);
@@ -99,7 +95,7 @@ Menu *CreateWindowMenu(ClientNode *np)
    }
 
    if(!(np->state.status & STAT_WMDIALOG)) {
-
+   
       AddWindowMenuItem(menu, NULL, MA_NONE, np, 0);
 
       if(settings.desktopCount > 1) {

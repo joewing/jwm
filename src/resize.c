@@ -56,7 +56,8 @@ void ResizeClient(ClientNode *np, BorderActionType action,
    if(!(np->state.border & BORDER_RESIZE)) {
       return;
    }
-   if((np->state.status & STAT_FULLSCREEN) || np->state.maxFlags) {
+   if((np->state.status & STAT_FULLSCREEN) 
+   || (np->state.maxFlags & MAX_VERT && np->state.maxFlags & MAX_HORIZ)) {
       return;
    }
    if(JUNLIKELY(!GrabMouseForResize(action))) {
@@ -110,48 +111,52 @@ void ResizeClient(ClientNode *np, BorderActionType action,
                           event.xmotion.window);
          DiscardMotionEvents(&event, np->window);
 
-         if(action & BA_RESIZE_N) {
-            delta = (event.xmotion.y - starty) / np->yinc;
-            delta *= np->yinc;
-            if(oldh - delta >= np->minHeight
-               && (oldh - delta <= np->maxHeight || delta > 0)) {
-               np->height = oldh - delta;
-               np->y = oldy + delta;
+         if (!(np->state.maxFlags & MAX_VERT)) {
+            if(action & BA_RESIZE_N) {
+               delta = (event.xmotion.y - starty) / np->yinc;
+               delta *= np->yinc;
+               if(oldh - delta >= np->minHeight
+                  && (oldh - delta <= np->maxHeight || delta > 0)) {
+                  np->height = oldh - delta;
+                  np->y = oldy + delta;
+               }
+               if(!(action & (BA_RESIZE_E | BA_RESIZE_W))) {
+                  FixWidth(np);
+               }
             }
-            if(!(action & (BA_RESIZE_E | BA_RESIZE_W))) {
-               FixWidth(np);
-            }
-         }
-         if(action & BA_RESIZE_S) {
-            delta = (event.xmotion.y - starty) / np->yinc;
-            delta *= np->yinc;
-            np->height = oldh + delta;
-            np->height = Max(np->height, np->minHeight);
-            np->height = Min(np->height, np->maxHeight);
-            if(!(action & (BA_RESIZE_E | BA_RESIZE_W))) {
-               FixWidth(np);
-            }
-         }
-         if(action & BA_RESIZE_E) {
-            delta = (event.xmotion.x - startx) / np->xinc;
-            delta *= np->xinc;
-            np->width = oldw + delta;
-            np->width = Max(np->width, np->minWidth);
-            np->width = Min(np->width, np->maxWidth);
-            if(!(action & (BA_RESIZE_N | BA_RESIZE_S))) {
-               FixHeight(np);
+            if(action & BA_RESIZE_S) {
+               delta = (event.xmotion.y - starty) / np->yinc;
+               delta *= np->yinc;
+               np->height = oldh + delta;
+               np->height = Max(np->height, np->minHeight);
+               np->height = Min(np->height, np->maxHeight);
+               if(!(action & (BA_RESIZE_E | BA_RESIZE_W))) {
+                  FixWidth(np);
+               }
             }
          }
-         if(action & BA_RESIZE_W) {
-            delta = (event.xmotion.x - startx) / np->xinc;
-            delta *= np->xinc;
-            if(oldw - delta >= np->minWidth
-               && (oldw - delta <= np->maxWidth || delta > 0)) {
-               np->width = oldw - delta;
-               np->x = oldx + delta;
+         if (!(np->state.maxFlags & MAX_HORIZ)) {
+            if(action & BA_RESIZE_E) {
+               delta = (event.xmotion.x - startx) / np->xinc;
+               delta *= np->xinc;
+               np->width = oldw + delta;
+               np->width = Max(np->width, np->minWidth);
+               np->width = Min(np->width, np->maxWidth);
+               if(!(action & (BA_RESIZE_N | BA_RESIZE_S))) {
+                  FixHeight(np);
+               }
             }
-            if(!(action & (BA_RESIZE_N | BA_RESIZE_S))) {
-               FixHeight(np);
+            if(action & BA_RESIZE_W) {
+               delta = (event.xmotion.x - startx) / np->xinc;
+               delta *= np->xinc;
+               if(oldw - delta >= np->minWidth
+                  && (oldw - delta <= np->maxWidth || delta > 0)) {
+                  np->width = oldw - delta;
+                  np->x = oldx + delta;
+               }
+               if(!(action & (BA_RESIZE_N | BA_RESIZE_S))) {
+                  FixHeight(np);
+               }
             }
          }
 
@@ -229,7 +234,8 @@ void ResizeClientKeyboard(ClientNode *np)
    if(!(np->state.border & BORDER_RESIZE)) {
       return;
    }
-   if((np->state.status & STAT_FULLSCREEN) || np->state.maxFlags) {
+   if((np->state.status & STAT_FULLSCREEN)
+   || (np->state.maxFlags & MAX_VERT && np->state.maxFlags & MAX_HORIZ)) {
       return;
    }
 
@@ -277,16 +283,24 @@ void ResizeClientKeyboard(ClientNode *np)
          DiscardKeyEvents(&event, np->window);
          switch(GetKey(&event.xkey) & 0xFF) {
          case KEY_UP:
-            deltay = Min(-np->yinc, -10);
+            if (!(np->state.maxFlags & MAX_VERT)) {
+               deltay = Min(-np->yinc, -10);
+            }
             break;
          case KEY_DOWN:
-            deltay = Max(np->yinc, 10);
+            if (!(np->state.maxFlags & MAX_VERT)) {
+               deltay = Max(np->yinc, 10);
+            }
             break;
          case KEY_RIGHT:
-            deltax = Max(np->xinc, 10);
+            if (!(np->state.maxFlags & MAX_HORIZ)) {
+               deltax = Max(np->xinc, 10);
+            }
             break;
          case KEY_LEFT:
-            deltax = Min(-np->xinc, -10);
+            if (!(np->state.maxFlags & MAX_HORIZ)) {
+               deltax = Min(-np->xinc, -10);
+            }
             break;
          default:
             StopResize(np);
@@ -299,8 +313,13 @@ void ResizeClientKeyboard(ClientNode *np)
                           event.xmotion.window);
          DiscardMotionEvents(&event, np->window);
 
-         deltax = event.xmotion.x - (np->x + np->width);
-         if(np->state.status & STAT_SHADED) {
+         if (np->state.maxFlags & MAX_HORIZ) {
+            deltax = 0;
+         } else {
+            deltax = event.xmotion.x - (np->x + np->width);
+         }
+         if(np->state.status & STAT_SHADED 
+         || np->state.maxFlags & MAX_VERT) {
             deltay = 0;
          } else {
             deltay = event.xmotion.y - (np->y + np->height);

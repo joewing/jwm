@@ -688,9 +688,9 @@ void MaximizeClient(ClientNode *np, MaxFlags flags)
    if(np->state.status & STAT_SHADED) {
       UnshadeClient(np);
    }
-   
+
    if(np->state.status & STAT_MINIMIZED) {
-      RestoreClient(np,1);
+      RestoreClient(np, 1);
    }
 
    RaiseClient(np);

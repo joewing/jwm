@@ -40,8 +40,9 @@ typedef unsigned char FocusModelType;
 
 /** Decorations. */
 typedef unsigned char DecorationsType;
-#define DECO_FLAT    0
-#define DECO_MOTIF   1
+#define DECO_UNSET   0
+#define DECO_FLAT    1
+#define DECO_MOTIF   2
 
 /** Popup mask. */
 typedef unsigned char PopupMaskType;
@@ -86,6 +87,7 @@ typedef struct {
    ResizeModeType resizeMode;
    DecorationsType windowDecorations;
    DecorationsType trayDecorations;
+   DecorationsType taskListDecorations;
    DecorationsType menuDecorations;
    PopupMaskType popupMask;
    char groupTasks;

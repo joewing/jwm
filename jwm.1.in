@@ -1189,6 +1189,13 @@ respectively.
 .B "TASK LIST STYLE"
 .RS
 The \fBTaskListStyle\fP tag controls the look of task lists.
+The following attribute is supported:
+.P
+.B decorations
+.RS
+The window decorations to use. Valid options are \fBflat\fP and
+\fBmotif\fP. The default is inherited from \fBTrayStyle\fP.
+.RE
 .P
 Within this tag the following tags are supported:
 .P

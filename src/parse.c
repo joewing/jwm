@@ -1065,6 +1065,8 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
       if(temp) {
          settings.listAllTasks = !strcmp(temp, "all");
       }
+   } else if(tp->type == TOK_TASKLISTSTYLE) {
+      ParseDecorations(tp, &settings.taskListDecorations);
    }
 
    for(np = tp->subnodeHead; np; np = np->next) {
@@ -1264,36 +1266,6 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray)
    temp = FindAttribute(tp->attributes, "labeled");
    if(temp && !strcmp(temp, FALSE_VALUE)) {
       SetTaskBarLabeled(cp, 0);
-   }
-}
-
-/** Parse the task list style. */
-void ParseTaskListStyle(const TokenNode *tp)
-{
-   const TokenNode *np;
-   for(np = tp->subnodeHead; np; np = np->next) {
-      switch(np->type) {
-      case TOK_FONT:
-         SetFont(FONT_TASKLIST, np->value);
-         break;
-      case TOK_ACTIVE:
-         ParseActive(np, COLOR_TASKLIST_ACTIVE_FG,
-                     COLOR_TASKLIST_ACTIVE_BG1, COLOR_TASKLIST_ACTIVE_BG2,
-                     COLOR_TASKLIST_ACTIVE_UP, COLOR_TASKLIST_ACTIVE_DOWN);
-         break;
-      case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_TASKLIST_BG1, COLOR_TASKLIST_BG2);
-         break;
-      case TOK_FOREGROUND:
-         SetColor(COLOR_TASKLIST_FG, np->value);
-         break;
-      case TOK_OUTLINE:
-         ParseGradient(np->value, COLOR_TASKLIST_DOWN, COLOR_TASKLIST_UP);
-         break;
-      default:
-         InvalidTag(np, TOK_TASKLISTSTYLE);
-         break;
-      }
    }
 }
 
@@ -1762,6 +1734,7 @@ void ParseDecorations(const TokenNode *tp, DecorationsType *deco)
 {
    const char *str = FindAttribute(tp->attributes, "decorations");
    if(str) {
+      printf("%s\n", str);
       if(!strcmp(str, "motif")) {
          *deco = DECO_MOTIF;
       } else if(!strcmp(str, "flat")) {

@@ -45,6 +45,7 @@ void InitializeSettings(void)
    settings.menuOpacity = UINT_MAX;
    settings.windowDecorations = DECO_FLAT;
    settings.trayDecorations = DECO_FLAT;
+   settings.taskListDecorations = DECO_UNSET;
    settings.menuDecorations = DECO_FLAT;
    settings.cornerRadius = 4;
    settings.groupTasks = 0;
@@ -66,6 +67,10 @@ void StartupSettings(void)
    FixRange(&settings.desktopWidth, 1, 64, 4);
    FixRange(&settings.desktopHeight, 1, 64, 1);
    settings.desktopCount = settings.desktopWidth * settings.desktopHeight;
+
+   if(settings.taskListDecorations == DECO_UNSET) {
+      settings.taskListDecorations = settings.trayDecorations;
+   }
 
 }
 

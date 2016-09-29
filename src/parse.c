@@ -1734,7 +1734,6 @@ void ParseDecorations(const TokenNode *tp, DecorationsType *deco)
 {
    const char *str = FindAttribute(tp->attributes, "decorations");
    if(str) {
-      printf("%s\n", str);
       if(!strcmp(str, "motif")) {
          *deco = DECO_MOTIF;
       } else if(!strcmp(str, "flat")) {

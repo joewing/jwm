@@ -157,7 +157,8 @@ void WalkWindowStack(char forward)
          /* Skip this window if it no longer exists or is currently in
           * a state that doesn't allow focus.
           */
-         if(np == NULL || !ShouldFocus(np, 1)) {
+         if(np == NULL || !ShouldFocus(np, 1)
+            || (np->state.status & STAT_ACTIVE)) {
             continue;
          }
 

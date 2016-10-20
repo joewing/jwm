@@ -103,6 +103,7 @@ static char *displayString = NULL;
 char *configPath = NULL;
 
 /** The main entry point. */
+#ifndef UNIT_TEST
 int main(int argc, char *argv[])
 {
    char *temp;
@@ -227,6 +228,7 @@ int main(int argc, char *argv[])
    return -1;
 
 }
+#endif
 
 /** Exit with the specified status code. */
 void DoExit(int code)

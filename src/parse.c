@@ -135,6 +135,7 @@ static const char *X_ATTRIBUTE = "x";
 static const char *Y_ATTRIBUTE = "y";
 static const char *WIDTH_ATTRIBUTE = "width";
 static const char *HEIGHT_ATTRIBUTE = "height";
+static const char *DYNAMIC_ATTRIBUTE = "dynamic";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -485,6 +486,7 @@ void ParseRootMenu(const TokenNode *start)
 {
    Menu *menu;
    char *onroot;
+   const char *value;
 
    menu = ParseMenu(start);
 
@@ -492,6 +494,9 @@ void ParseRootMenu(const TokenNode *start)
    if(!onroot) {
       onroot = "123";
    }
+
+   value = FindAttribute(start->attributes, DYNAMIC_ATTRIBUTE);
+   menu->dynamic = CopyString(value);
 
    SetRootMenu(onroot, menu);
 

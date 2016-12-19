@@ -106,6 +106,12 @@ Determines if a label appears at the top of the menu. Default is false.
 The label to display at the top of the menu. Default is "JWM".
 .RE
 .P
+\fBdynamic\fP \fIstring\fP
+.RS
+A dynamically loaded menu. If the text starts with \fIexec:\fP, the
+output of the specified program is used.
+.RE
+.P
 Within the \fBRootMenu\fP tag, the following tags are supported:
 .P
 .B Menu

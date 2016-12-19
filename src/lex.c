@@ -266,24 +266,26 @@ ReadDefault:
          if(inElement) {
 
             /* In the open tag; read attributes. */
-            ap = CreateAttribute(current);
-            ap->name = ReadElementName(line + x);
-            if(ap->name) {
-               x += strlen(ap->name);
-               if(line[x] == '=') {
-                  x += 1;
-               }
-               if(line[x] == '\"') {
-                  x += 1;
-               }
-               ap->value = ReadAttributeValue(line + x, fileName,
-                                              &offset, &lineNumber);
-               x += offset;
-               if(line[x] == '\"') {
-                  x += 1;
+            if(current) {
+             ap = CreateAttribute(current);
+               ap->name = ReadElementName(line + x);
+               if(ap->name) {
+                  x += strlen(ap->name);
+                  if(line[x] == '=') {
+                     x += 1;
+                  }
+                  if(line[x] == '\"') {
+                     x += 1;
+                  }
+                  ap->value = ReadAttributeValue(line + x, fileName,
+                                                 &offset, &lineNumber);
+                  x += offset;
+                  if(line[x] == '\"') {
+                     x += 1;
+                  }
                }
             }
-
+  
          } else {
 
             /* In tag body; read text. */

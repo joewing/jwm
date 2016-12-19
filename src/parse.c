@@ -455,6 +455,7 @@ Menu *ParseMenu(const TokenNode *start)
    Menu *menu;
 
    menu = Allocate(sizeof(Menu));
+   menu->dynamic = NULL;
 
    value = FindAttribute(start->attributes, HEIGHT_ATTRIBUTE);
    if(value) {
@@ -570,6 +571,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
 
          last->submenu = Allocate(sizeof(Menu));
          child = last->submenu;
+         child->dynamic = NULL;
 
          value = FindAttribute(start->attributes, HEIGHT_ATTRIBUTE);
          if(value) {

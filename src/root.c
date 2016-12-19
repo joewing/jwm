@@ -191,12 +191,14 @@ char ShowRootMenu(int index, int x, int y, char keyboard)
    }
    if (rootMenu[index]->dynamic) {
       Menu *menu = ParseDynamicMenu(rootMenu[index]->dynamic);
+      char ret;
       InitializeMenu(menu);
-      char *ret = ShowMenu(menu, RunRootCommand, x, y, keyboard);
+      ret = ShowMenu(menu, RunRootCommand, x, y, keyboard);
       DestroyMenu(menu);
       return ret;
-   } else
+   } else {
        return ShowMenu(rootMenu[index], RunRootCommand, x, y, keyboard);
+   }
 }
 
 /** Exit callback for the exit menu item. */

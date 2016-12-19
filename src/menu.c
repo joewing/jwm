@@ -255,6 +255,9 @@ void DestroyMenu(Menu *menu)
       if(menu->label) {
          Release(menu->label);
       }
+      if(menu->dynamic) {
+         Release(menu->dynamic);
+      }
       if(menu->offsets) {
          Release(menu->offsets);
       }

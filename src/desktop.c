@@ -211,11 +211,7 @@ Menu *CreateDesktopMenu(unsigned int mask, void *context)
    Menu *menu;
    int x;
 
-   menu = Allocate(sizeof(Menu));
-   menu->itemHeight = 0;
-   menu->items = NULL;
-   menu->label = NULL;
-
+   menu = CreateMenu();
    for(x = settings.desktopCount - 1; x >= 0; x--) {
       const size_t len = strlen(desktopNames[x]);
       MenuItem *item = CreateMenuItem(MENU_ITEM_NORMAL);
@@ -244,11 +240,7 @@ Menu *CreateSendtoMenu(MenuActionType mask, void *context)
    Menu *menu;
    int x;
 
-   menu = Allocate(sizeof(Menu));
-   menu->itemHeight = 0;
-   menu->items = NULL;
-   menu->label = NULL;
-
+   menu = CreateMenu();
    for(x = settings.desktopCount - 1; x >= 0; x--) {
       const size_t len = strlen(desktopNames[x]);
       MenuItem *item = CreateMenuItem(MENU_ITEM_NORMAL);

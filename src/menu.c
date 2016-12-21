@@ -40,7 +40,7 @@ static char ShowSubmenu(Menu *menu, Menu *parent,
 
 static void PatchMenu(Menu *menu);
 static void UnpatchMenu(Menu *menu);
-static void CreateMenu(Menu *menu, int x, int y, char keyboard);
+static void MapMenu(Menu *menu, int x, int y, char keyboard);
 static void HideMenu(Menu *menu);
 static void DrawMenu(Menu *menu);
 
@@ -61,6 +61,17 @@ static void SetPosition(Menu *tp, int index);
 static char IsMenuValid(const Menu *menu);
 
 int menuShown = 0;
+
+/** Allocate an empty menu. */
+Menu *CreateMenu()
+{
+   Menu *menu = Allocate(sizeof(Menu));
+   menu->itemHeight = 0;
+   menu->items = NULL;
+   menu->label = NULL;
+   menu->dynamic = NULL;
+   return menu;
+}
 
 /** Create an empty menu item. */
 MenuItem *CreateMenuItem(MenuItemType type)
@@ -275,7 +286,7 @@ char ShowSubmenu(Menu *menu, Menu *parent,
 
    PatchMenu(menu);
    menu->parent = parent;
-   CreateMenu(menu, x, y, keyboard);
+   MapMenu(menu, x, y, keyboard);
 
    menuShown += 1;
    status = MenuLoop(menu, runner);
@@ -503,7 +514,7 @@ void MenuCallback(const TimeType *now, int x, int y, Window w, void *data)
 }
 
 /** Create and map a menu. */
-void CreateMenu(Menu *menu, int x, int y, char keyboard)
+void MapMenu(Menu *menu, int x, int y, char keyboard)
 {
    XSetWindowAttributes attr;
    unsigned long attrMask;

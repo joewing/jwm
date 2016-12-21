@@ -108,6 +108,9 @@ typedef struct Menu {
 
 typedef void (*RunMenuCommandType)(MenuAction *action, unsigned button);
 
+/** Allocate an empty menu. */
+Menu *CreateMenu();
+
 /** Create an empty menu item. */
 MenuItem *CreateMenuItem(MenuItemType type);
 

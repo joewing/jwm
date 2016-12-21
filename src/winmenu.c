@@ -40,10 +40,7 @@ Menu *CreateWindowMenu(ClientNode *np)
 
    Menu *menu;
 
-   menu = Allocate(sizeof(Menu));
-   menu->itemHeight = 0;
-   menu->items = NULL;
-   menu->label = NULL;
+   menu = CreateMenu();
 
    /* Note that items are added in reverse order of display. */
 
@@ -144,11 +141,8 @@ void CreateWindowLayerMenu(Menu *menu, ClientNode *np)
    item->next = menu->items;
    menu->items = item;
 
-   submenu = Allocate(sizeof(Menu));
+   submenu = CreateMenu();
    item->submenu = submenu;
-   submenu->itemHeight = 0;
-   submenu->items = NULL;
-   submenu->label = NULL;
 
    if(np->state.layer == LAYER_ABOVE) {
       AddWindowMenuItem(submenu, _("[Above]"), MA_LAYER, np, LAYER_ABOVE);

@@ -645,8 +645,10 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
 
    Assert(np);
 
-   if(alreadyMapped || (!(np->state.status & STAT_PIGNORE)
-                        && (np->sizeFlags & (PPosition | USPosition)))) {
+   if(alreadyMapped
+      || (np->state.status & STAT_POSITION)
+      || (!(np->state.status & STAT_PIGNORE)
+         && (np->sizeFlags & (PPosition | USPosition)))) {
 
       GravitateClient(np, 0);
       if(!alreadyMapped) {

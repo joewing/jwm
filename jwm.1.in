@@ -992,6 +992,20 @@ Forces windows in this group to have a title bar.
 Make windows in this group maximize vertically.
 .RE
 
+.P
+.B x:\fI#\fP
+.RS
+Set the initial x-coordinate of the window. Negative numbers indicate
+that the value is relative to the right side of the screen.
+.RE
+
+.P
+.B y:\fI#\fP
+.RS
+Set the initial y-coordinate of the window. Negative numbers indicate
+that the value is relative to the bottom of the screen.
+.RE
+
 .RE
 .RE
 

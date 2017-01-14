@@ -1728,6 +1728,12 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
    } else if(!strncmp(option, "opacity:", 8)) {
       const unsigned int opacity = ParseOpacity(tp, option + 8);
       AddGroupOptionUnsigned(group, OPTION_OPACITY, opacity);
+   } else if(!strncmp(option, "x:", 2)) {
+      const int x = atoi(option + 2);
+      AddGroupOptionSigned(group, OPTION_X, x);
+   } else if(!strncmp(option, "y:", 2)) {
+      const int y = atoi(option + 2);
+      AddGroupOptionSigned(group, OPTION_Y, y);
    } else {
       ParseError(tp, _("invalid Group Option: %s"), option);
    }

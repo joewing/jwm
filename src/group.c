@@ -387,6 +387,12 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
          }
          np->state.status |= STAT_POSITION;
          break;
+      case OPTION_WIDTH:
+         np->width = Max(1, lp->value.u);
+         break;
+      case OPTION_HEIGHT:
+         np->height = Max(1, lp->value.u);
+         break;
       default:
          Debug("invalid option: %d", lp->option);
          break;

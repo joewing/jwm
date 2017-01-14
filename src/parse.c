@@ -1721,12 +1721,12 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
       const WinLayerType layer = ParseLayer(tp, option + 6);
       AddGroupOptionUnsigned(group, OPTION_LAYER, layer);
    } else if(!strncmp(option, "desktop:", 8)) {
-      const unsigned int desktop = (unsigned int)atoi(option + 8);
+      const unsigned desktop = (unsigned)atoi(option + 8);
       AddGroupOptionUnsigned(group, OPTION_DESKTOP, desktop);
    } else if(!strncmp(option, "icon:", 5)) {
       AddGroupOptionString(group, OPTION_ICON, option + 5);
    } else if(!strncmp(option, "opacity:", 8)) {
-      const unsigned int opacity = ParseOpacity(tp, option + 8);
+      const unsigned opacity = ParseOpacity(tp, option + 8);
       AddGroupOptionUnsigned(group, OPTION_OPACITY, opacity);
    } else if(!strncmp(option, "x:", 2)) {
       const int x = atoi(option + 2);
@@ -1734,6 +1734,12 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
    } else if(!strncmp(option, "y:", 2)) {
       const int y = atoi(option + 2);
       AddGroupOptionSigned(group, OPTION_Y, y);
+   } else if(!strncmp(option, "width:", 6)) {
+      const unsigned width = (unsigned)atoi(option + 6);
+      AddGroupOptionUnsigned(group, OPTION_WIDTH, width);
+   } else if(!strncmp(option, "height:", 7)) {
+      const unsigned height = (unsigned)atoi(option + 7);
+      AddGroupOptionUnsigned(group, OPTION_HEIGHT, height);
    } else {
       ParseError(tp, _("invalid Group Option: %s"), option);
    }

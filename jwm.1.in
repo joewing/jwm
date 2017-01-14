@@ -810,6 +810,12 @@ Make windows in this group initially fullscreen.
 .RE
 
 .P
+.B height:\fI#\fP
+.RS
+Set the initial window height (in pixels).
+.RE
+
+.P
 .B hmax
 .RS
 Make windows in this group maximize horizontally.
@@ -990,6 +996,12 @@ Forces windows in this group to have a title bar.
 .B vmax
 .RS
 Make windows in this group maximize vertically.
+.RE
+
+.P
+.B width:\fI#\fP
+.RS
+Set the initial window width (in pixels).
 .RE
 
 .P

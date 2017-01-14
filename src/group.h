@@ -55,6 +55,8 @@ typedef unsigned char OptionType;
 #define OPTION_NODRAG         37    /**< Disable mod1+drag/resize. */
 #define OPTION_X              38    /**< Window X position. */
 #define OPTION_Y              39    /**< Window Y position. */
+#define OPTION_WIDTH          40    /**< Initial window width. */
+#define OPTION_HEIGHT         41    /**< Initial window height. */
 
 /*@{*/
 #define InitializeGroups() (void)(0)

@@ -350,19 +350,29 @@ char ParseColorToRGB(const char *value, XColor *c)
       return 0;
    }
 
-   if(value[0] == '#' && strlen(value) == 7) {
+   if(value[0] == '#') {
+      const unsigned len = strlen(value);
       const unsigned long rgb = ReadHex(value + 1);
-      c->red = ((rgb >> 16) & 0xFF) * 257;
-      c->green = ((rgb >> 8) & 0xFF) * 257;
-      c->blue = (rgb & 0xFF) * 257;
-   } else {
-      if(!JXParseColor(display, rootColormap, value, c)) {
-         Warning("bad color: \"%s\"", value);
-         return 0;
+      if(len == 4) {
+         c->red = ((rgb >> 8) & 0x0F) * 4369;
+         c->green = ((rgb >> 4) & 0x0F) * 4369;
+         c->blue = (rgb & 0x0F) * 4369;
+         return 1;
+      } else if(len == 7) {
+         const unsigned long rgb = ReadHex(value + 1);
+         c->red = ((rgb >> 16) & 0xFF) * 257;
+         c->green = ((rgb >> 8) & 0xFF) * 257;
+         c->blue = (rgb & 0xFF) * 257;
+         return 1;
       }
    }
 
-   return 1;
+   if(JXParseColor(display, rootColormap, value, c)) {
+      return 1;
+   }
+
+   Warning("bad color: \"%s\"", value);
+   return 0;
 }
 
 /** Parse a color for a component. */

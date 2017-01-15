@@ -95,6 +95,7 @@ char MoveClient(ClientNode *np, int startx, int starty)
 {
 
    XEvent event;
+   const ScreenType *sp;
    int oldx, oldy;
    int doMove;
    int north, south, east, west;
@@ -170,15 +171,16 @@ char MoveClient(ClientNode *np, int startx, int starty)
          }
 
          /* Determine if we are at a border for desktop switching. */
+         sp = GetCurrentScreen(np->x + np->width / 2, np->y + np->height / 2);
          atLeft = atTop = atRight = atBottom = 0;
-         if(event.xmotion.x_root == 0) {
+         if(event.xmotion.x_root <= sp->x) {
             atLeft = 1;
-         } else if(event.xmotion.x_root == rootWidth - 1) {
+         } else if(event.xmotion.x_root >= sp->x + sp->width - 1) {
             atRight = 1;
          }
-         if(event.xmotion.y_root == 0) {
+         if(event.xmotion.y_root <= sp->y) {
             atTop = 1;
-         } else if(event.xmotion.y_root == rootHeight - 1) {
+         } else if(event.xmotion.y_root >= sp->y + sp->height - 1) {
             atBottom = 1;
          }
 

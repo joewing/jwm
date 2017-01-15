@@ -907,10 +907,10 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
 /** Get the next item in the menu. */
 int GetNextMenuIndex(Menu *menu)
 {
-
    MenuItem *item;
    int x;
 
+   /* Move to the next non-separator in the menu. */
    for(x = menu->currentIndex + 1; x < menu->itemCount; x++) {
       item = GetMenuItem(menu, x);
       if(item->type != MENU_ITEM_SEPARATOR) {
@@ -918,17 +918,25 @@ int GetNextMenuIndex(Menu *menu)
       }
    }
 
-   return 0;
+   /* Wrap around. */
+   for(x = 0; x < menu->currentIndex; x++) {
+      item = GetMenuItem(menu, x);
+      if(item->type != MENU_ITEM_SEPARATOR) {
+         return x;
+      }
+   }
 
+   /* Nothing in the menu, stay at the current location. */
+   return menu->currentIndex;
 }
 
 /** Get the previous item in the menu. */
 int GetPreviousMenuIndex(Menu *menu)
 {
-
    MenuItem *item;
    int x;
 
+   /* Move to the previous non-separator in the menu. */
    for(x = menu->currentIndex - 1; x >= 0; x--) {
       item = GetMenuItem(menu, x);
       if(item->type != MENU_ITEM_SEPARATOR) {
@@ -936,8 +944,16 @@ int GetPreviousMenuIndex(Menu *menu)
       }
    }
 
-   return menu->itemCount - 1;
+   /* Wrap around. */
+   for(x = menu->itemCount - 1; x > menu->currentIndex; x--) {
+      item = GetMenuItem(menu, x);
+      if(item->type != MENU_ITEM_SEPARATOR) {
+         return x;
+      }
+   }
 
+   /* Nothing in the menu. */
+   return menu->currentIndex;
 }
 
 /** Get the item in the menu given a y-coordinate. */

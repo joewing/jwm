@@ -173,6 +173,7 @@ char MoveClient(ClientNode *np, int startx, int starty)
          /* Determine if we are at a border for desktop switching. */
          sp = GetCurrentScreen(np->x + np->width / 2, np->y + np->height / 2);
          atLeft = atTop = atRight = atBottom = 0;
+         MaxFlags flags = MAX_NONE;
          if(event.xmotion.x_root <= sp->x) {
             atLeft = 1;
          } else if(event.xmotion.x_root >= sp->x + sp->width - 1) {
@@ -194,7 +195,6 @@ char MoveClient(ClientNode *np, int startx, int starty)
          } else {
             /* If alt is not pressed, snap to borders. */
             if(np->state.status & STAT_AEROSNAP) {
-               MaxFlags flags = MAX_NONE;
                if(atTop & atLeft) {
                   if(atSideFirst) {
                      flags = MAX_TOP | MAX_LEFT;
@@ -238,7 +238,9 @@ char MoveClient(ClientNode *np, int startx, int starty)
             }
          }
 
-         if(!doMove && (abs(np->x - oldx) > MOVE_DELTA
+         if (flags == MAX_NONE)
+            doMove = 0;
+         else if(!doMove && (abs(np->x - oldx) > MOVE_DELTA
             || abs(np->y - oldy) > MOVE_DELTA)) {
 
             if(np->state.maxFlags) {

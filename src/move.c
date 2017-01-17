@@ -238,7 +238,7 @@ char MoveClient(ClientNode *np, int startx, int starty)
             }
          }
 
-         if (flags == MAX_NONE)
+         if(flags != MAX_NONE)
             doMove = 0;
          else if(!doMove && (abs(np->x - oldx) > MOVE_DELTA
             || abs(np->y - oldy) > MOVE_DELTA)) {

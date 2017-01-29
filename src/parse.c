@@ -136,6 +136,7 @@ static const char *Y_ATTRIBUTE = "y";
 static const char *WIDTH_ATTRIBUTE = "width";
 static const char *HEIGHT_ATTRIBUTE = "height";
 static const char *DYNAMIC_ATTRIBUTE = "dynamic";
+static const char *SPACING_ATTRIBUTE = "spacing";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -1470,6 +1471,11 @@ void ParseDock(const TokenNode *tp, TrayType *tray) {
       width = ParseUnsigned(tp, str);
    } else {
       width = 0;
+   }
+
+   str = FindAttribute(tp->attributes, SPACING_ATTRIBUTE);
+   if(str) {
+      settings.dockSpacing = ParseUnsigned(tp, str);
    }
 
    cp = CreateDock(width);

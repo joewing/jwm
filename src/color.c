@@ -153,6 +153,7 @@ static unsigned blueShift;
 static unsigned redBits;
 static unsigned greenBits;
 static unsigned blueBits;
+static unsigned long alphaMask;
 
 static unsigned ComputeShift(unsigned long maskIn, unsigned *shiftOut);
 static unsigned long GetRGBFromXColor(const XColor *c);
@@ -186,6 +187,10 @@ void StartupColors(void)
       redBits = ComputeShift(rootVisual->red_mask, &redShift);
       greenBits = ComputeShift(rootVisual->green_mask, &greenShift);
       blueBits = ComputeShift(rootVisual->blue_mask, &blueShift);
+      alphaMask = (~0UL >> (8 * sizeof(unsigned long) - rootDepth))
+                & ~(((1UL << redBits  ) - 1) << redShift)
+                & ~(((1UL << greenBits) - 1) << greenShift)
+                & ~(((1UL << blueBits ) - 1) << blueShift);
       rgbToPixel = NULL;
       break;
    default:
@@ -193,6 +198,7 @@ void StartupColors(void)
       redBits = ComputeShift(0x30, &redShift);
       greenBits = ComputeShift(0x0C, &greenShift);
       blueBits = ComputeShift(0x03, &blueShift);
+      alphaMask = 0;
       rgbToPixel = Allocate(sizeof(unsigned long) * MAX_COLORS);
       memset(rgbToPixel, 0xFF, sizeof(unsigned long) * MAX_COLORS);
       break;
@@ -424,7 +430,7 @@ unsigned long GetDirectPixel(const XColor *c)
    const unsigned long red   = (c->red   >> (16 - redBits  )) << redShift;
    const unsigned long green = (c->green >> (16 - greenBits)) << greenShift;
    const unsigned long blue  = (c->blue  >> (16 - blueBits )) << blueShift;
-   return red | green | blue;
+   return red | green | blue | alphaMask;
 }
 
 /** Compute the pixel value from RGB components. */

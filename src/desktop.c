@@ -20,6 +20,7 @@
 #include "settings.h"
 #include "grab.h"
 #include "event.h"
+#include "tray.h"
 
 static char **desktopNames = NULL;
 static char *showingDesktop = NULL;
@@ -322,6 +323,7 @@ void ShowDesktop(void)
    SetCardinalAtom(rootWindow, ATOM_NET_SHOWING_DESKTOP,
                    showingDesktop[currentDesktop]);
    UngrabServer();
+   DrawTray();
 
 }
 

@@ -50,6 +50,7 @@ void InitializeSettings(void)
    settings.cornerRadius = 4;
    settings.groupTasks = 0;
    settings.listAllTasks = 0;
+   settings.dockSpacing = 0;
 }
 
 /** Make sure settings are reasonable. */
@@ -72,6 +73,7 @@ void StartupSettings(void)
       settings.taskListDecorations = settings.trayDecorations;
    }
 
+   FixRange(&settings.dockSpacing, 0, 64, 0);
 }
 
 /** Update a string setting. */

@@ -577,12 +577,18 @@ Add a dock for system notifications. This can be used by those programs
 that use the _NET_SYSTEM_TRAY_Sn selection. The size of the Dock is
 dynamic based on the size of the tray and the number of items contained.
 Only one Dock is allowed per instance of JWM. This tag supports the
-following attribute:
+following attributes:
 .P
 \fBwidth\fP \fIint\fP
 .RS
 The maximum width of an item contained in the dock. This defaults to
 the width or height of the tray (whichever is smaller).
+.RE
+.P
+\fBspacing\fP \fIint\fP
+.RS
+The spacing of items contained in the dock (in pixels).
+This defaults to 0.
 .RE
 .RE
 .P

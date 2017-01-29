@@ -14,6 +14,7 @@
 #include "error.h"
 #include "color.h"
 #include "misc.h"
+#include "settings.h"
 
 #define SYSTEM_TRAY_REQUEST_DOCK    0
 #define SYSTEM_TRAY_BEGIN_MESSAGE   1
@@ -480,9 +481,9 @@ void UpdateDock(void)
                   (XEvent*)&event);
 
       if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
-         x += itemSize;
+         x += itemSize + settings.dockSpacing;
       } else {
-         y += itemSize;
+         y += itemSize + settings.dockSpacing;
       }
 
    }
@@ -516,12 +517,13 @@ void GetDockSize(int *width, int *height)
 
    /* Determine the size of the items on the dock. */
    for(np = dock->nodes; np; np = np->next) {
+      const unsigned spacing = (np->next ? settings.dockSpacing : 0);
       if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
          /* Horizontal tray; height fixed, placement is left to right. */
-         *width += itemSize;
+         *width += itemSize + spacing;
       } else {
          /* Vertical tray; width fixed, placement is top to bottom. */
-         *height += itemSize;
+         *height += itemSize + spacing;
       }
    }
 

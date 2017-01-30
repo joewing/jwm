@@ -96,6 +96,7 @@ char MoveClient(ClientNode *np, int startx, int starty)
 
    XEvent event;
    const ScreenType *sp;
+   MaxFlags flags;
    int oldx, oldy;
    int doMove;
    int north, south, east, west;
@@ -173,7 +174,6 @@ char MoveClient(ClientNode *np, int startx, int starty)
          /* Determine if we are at a border for desktop switching. */
          sp = GetCurrentScreen(np->x + np->width / 2, np->y + np->height / 2);
          atLeft = atTop = atRight = atBottom = 0;
-         MaxFlags flags = MAX_NONE;
          if(event.xmotion.x_root <= sp->x) {
             atLeft = 1;
          } else if(event.xmotion.x_root >= sp->x + sp->width - 1) {
@@ -185,6 +185,7 @@ char MoveClient(ClientNode *np, int startx, int starty)
             atBottom = 1;
          }
 
+         flags = MAX_NONE;
          if(event.xmotion.state & Mod1Mask) {
             /* Switch desktops immediately if alt is pressed. */
             if(atLeft | atRight | atTop | atBottom) {
@@ -238,9 +239,10 @@ char MoveClient(ClientNode *np, int startx, int starty)
             }
          }
 
-         if(flags != MAX_NONE)
+         if(flags != MAX_NONE) {
             doMove = 0;
-         else if(!doMove && (abs(np->x - oldx) > MOVE_DELTA
+            DestroyMoveWindow();
+         } else if(!doMove && (abs(np->x - oldx) > MOVE_DELTA
             || abs(np->y - oldy) > MOVE_DELTA)) {
 
             if(np->state.maxFlags) {

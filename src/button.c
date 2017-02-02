@@ -146,7 +146,11 @@ void DrawButton(ButtonNode *bp)
          iconHeight = iconWidth;
       } else {
          const int ratio = (bp->icon->width << 16) / bp->icon->height;
-         const int maxIconWidth = Min(width, height) - 4;
+         int maxIconWidth = width - 4;
+         if(bp->text) {
+            /* Showing text, keep the icon square. */
+            maxIconWidth = Min(width, height) - 4;
+         }
          iconHeight = height - 4;
          iconWidth = (iconHeight * ratio) >> 16;
          if(iconWidth > maxIconWidth) {

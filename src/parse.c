@@ -389,8 +389,10 @@ void Parse(const TokenNode *start, int depth)
 /** Parse focus model. */
 void ParseFocusModel(const TokenNode *tp) {
    static const StringMappingType mapping[] = {
-      { "click",     FOCUS_CLICK    },
-      { "sloppy",    FOCUS_SLOPPY   }
+      { "click",        FOCUS_CLICK          },
+      { "clicktitle",   FOCUS_CLICK_TITLE    },
+      { "sloppy",       FOCUS_SLOPPY         },
+      { "sloppytitle",  FOCUS_SLOPPY_TITLE   }
    };
    settings.focusModel = ParseTokenValue(mapping, ARRAY_LENGTH(mapping), tp,
                                          settings.focusModel);

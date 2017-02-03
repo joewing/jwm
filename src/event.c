@@ -371,6 +371,7 @@ void HandleButtonEvent(const XButtonEvent *event)
 
    np = FindClientByParent(event->window);
    if(np) {
+      /* Click on the border. */
       if(event->type == ButtonPress) {
          FocusClient(np);
          RaiseClient(np);
@@ -395,7 +396,10 @@ void HandleButtonEvent(const XButtonEvent *event)
          case Button1:
          case Button2:
             FocusClient(np);
-            RaiseClient(np);
+            if(settings.focusModel == FOCUS_SLOPPY
+               || settings.focusModel == FOCUS_CLICK) {
+               RaiseClient(np);
+            }
             if(move_resize) {
                GetBorderSize(&np->state, &north, &south, &east, &west);
                MoveClient(np, event->x + west, event->y + north);
@@ -408,7 +412,10 @@ void HandleButtonEvent(const XButtonEvent *event)
                             event->x + west, event->y + north);
             } else {
                FocusClient(np);
-               RaiseClient(np);
+               if(settings.focusModel == FOCUS_SLOPPY
+                  || settings.focusModel == FOCUS_CLICK) {
+                  RaiseClient(np);
+               }
             }
             break;
          default:
@@ -775,7 +782,8 @@ void HandleEnterNotify(const XCrossingEvent *event)
    np = FindClient(event->window);
    if(np) {
       if(  !(np->state.status & STAT_ACTIVE)
-         && (settings.focusModel == FOCUS_SLOPPY)) {
+         && (settings.focusModel == FOCUS_SLOPPY
+            || settings.focusModel == FOCUS_SLOPPY_TITLE)) {
          FocusClient(np);
       }
       if(np->parent == event->window) {

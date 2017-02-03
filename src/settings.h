@@ -35,8 +35,10 @@ typedef unsigned char StatusWindowType;
 
 /** Focus models. */
 typedef unsigned char FocusModelType;
-#define FOCUS_SLOPPY 0
-#define FOCUS_CLICK  1
+#define FOCUS_SLOPPY       0 /**< Sloppy focus, click to raise. */
+#define FOCUS_CLICK        1 /**< Click to focus, click to raise. */
+#define FOCUS_SLOPPY_TITLE 2 /**< Sloppy focus, title to raise. */
+#define FOCUS_CLICK_TITLE  3 /**< Click to focus, title to raise. */
 
 /** Decorations. */
 typedef unsigned char DecorationsType;

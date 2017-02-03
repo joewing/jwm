@@ -1869,8 +1869,28 @@ The default is 400. Valid values are between 1 and 2000 inclusive.
 .P
 .B FocusModel
 .RS
-The focus model to be used. The default is "sloppy". Valid values
-are "click" (click to focus) and "sloppy" (focus follows mouse).
+The focus model to be used. The default is "sloppy". Valid values are:
+.P
+\fBclick\fP
+.RS
+Click to focus and raise.
+.RE
+.P
+\fBclicktitle\fP
+.RS
+Click to focus. Click the title bar to raise.
+.RE
+.P
+\fBsloppy\fP
+.RS
+Focus follows mouse. Click to raise.
+.RE
+.P
+\fBsloppytitle\fP
+.RS
+Focus follows mouse. Click the title bar to raise.
+.RE
+.P
 .RE
 .P
 .B MoveMode

@@ -1238,8 +1238,9 @@ void RemoveClient(ClientNode *np)
                             np->x, np->y, np->width, np->height);
       }
       GravitateClient(np, 1);
-      if(!(np->state.status & STAT_MAPPED)
-         && (np->state.status & (STAT_MINIMIZED | STAT_SHADED))) {
+      if((np->state.status & STAT_HIDDEN)
+         || (!(np->state.status & STAT_MAPPED)
+            && (np->state.status & (STAT_MINIMIZED | STAT_SHADED)))) {
          JXMapWindow(display, np->window);
       }
       JXUngrabButton(display, AnyButton, AnyModifier, np->window);

@@ -830,6 +830,9 @@ void UpdateDesktop(const TimeType *now)
    }
    moveTime = *now;
 
+   /* We temporarily mark the client as hidden to avoid hidding it
+    * when changing desktops. */
+   currentClient->state.status |= STAT_HIDDEN;
    if(atLeft && LeftDesktop()) {
       SetClientDesktop(currentClient, currentDesktop);
       RequireRestack();
@@ -843,4 +846,5 @@ void UpdateDesktop(const TimeType *now)
       SetClientDesktop(currentClient, currentDesktop);
       RequireRestack();
    }
+   currentClient->state.status &= ~STAT_HIDDEN;
 }

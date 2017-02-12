@@ -632,18 +632,20 @@ void SetClientDesktop(ClientNode *np, unsigned int desktop)
 
 }
 
-/** Hide a client without unmapping. This will not update transients. */
+/** Hide a client. This will not update transients. */
 void HideClient(ClientNode *np)
 {
-   if(activeClient == np) {
-      activeClient = NULL;
-   }
-   np->state.status |= STAT_HIDDEN;
-   if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
-      if(np->parent != None) {
-         JXUnmapWindow(display, np->parent);
-      } else {
-         JXUnmapWindow(display, np->window);
+   if(!(np->state.status & STAT_HIDDEN)) {
+      if(activeClient == np) {
+         activeClient = NULL;
+      }
+      np->state.status |= STAT_HIDDEN;
+      if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
+         if(np->parent != None) {
+            JXUnmapWindow(display, np->parent);
+         } else {
+            JXUnmapWindow(display, np->window);
+         }
       }
    }
 }

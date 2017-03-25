@@ -1,0 +1,453 @@
+# Danish translation for JWM.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the jwm package.
+# scootergrisen, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: jwm 2.3.6\n"
+"Report-Msgid-Bugs-To: joewing@joewing.net\n"
+"POT-Creation-Date: 2016-08-06 00:43+0000\n"
+"PO-Revision-Date: 2017-03-25 00:00+0000\n"
+"Last-Translator: scootergrisen\n"
+"Language-Team: Danish\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/action.c:44
+#, c-format
+msgid "invalid action: \"%s\""
+msgstr "ugyldig handling: \"%s\""
+
+#: src/action.c:211
+#, c-format
+msgid "action: root menu \"%s\" not defined"
+msgstr "handling: rodmenu \"%s\" ikke angivet"
+
+#: src/background.c:137
+msgid "no value specified for background"
+msgstr "ingen værdi angivet for baggrund"
+
+#: src/background.c:149
+#, c-format
+msgid "invalid background type: \"%s\""
+msgstr "ugyldig baggrundstype: \"%s\""
+
+#: src/background.c:294
+#, c-format
+msgid "background image not found: \"%s\""
+msgstr "baggrundsbillede ikke fundet: \"%s\""
+
+#: src/client.c:900
+msgid "Kill this window?"
+msgstr "Dræb dette vindue?"
+
+#: src/client.c:901
+msgid "This may cause data to be lost!"
+msgstr "Dette kan forårsage tab af data!"
+
+#: src/command.c:138 src/main.c:220
+#, c-format
+msgid "exec failed: (%s) %s"
+msgstr "exec fejlede: (%s) %s"
+
+#: src/confirm.c:69
+msgid "OK"
+msgstr "OK"
+
+#: src/confirm.c:74
+msgid "Cancel"
+msgstr "Annuller"
+
+#: src/confirm.c:308
+msgid "Confirm"
+msgstr "Bekræft"
+
+#: src/desktop.c:342
+msgid "empty Desktops Name tag"
+msgstr "tomt Desktops Name-tag"
+
+#: src/dock.c:150
+msgid "only one Dock allowed"
+msgstr "kun én dok er tilladt"
+
+#: src/dock.c:231
+msgid "could not acquire system tray selection"
+msgstr "kunne ikke hente valg af systembakke"
+
+#: src/error.c:22
+#, c-format
+msgid "JWM: error: "
+msgstr "JWM: fejl: "
+
+#: src/error.c:51
+#, c-format
+msgid "JWM: warning: "
+msgstr "JWM: advarsel: "
+
+#: src/error.c:77
+msgid "display is already managed"
+msgstr "display er allerede håndteret"
+
+#: src/font.c:109 src/font.c:126
+#, c-format
+msgid "could not load font: %s"
+msgstr "kunne ikke indlæse skrifttype: %s"
+
+#: src/font.c:116 src/font.c:133
+#, c-format
+msgid "could not load the default font: %s"
+msgstr "kunne ikke indlæse standardskrifttypen: %s"
+
+#: src/font.c:315
+msgid "empty Font tag"
+msgstr "tomt Font-tag"
+
+#: src/group.c:112
+msgid "invalid group class"
+msgstr "ugyldig gruppeklasse"
+
+#: src/group.c:123
+msgid "invalid group name"
+msgstr "ugyldig gruppenavn"
+
+#: src/group.c:269
+#, c-format
+msgid "invalid group desktop: %d"
+msgstr "ugyldig gruppe skrivebord: %d"
+
+#: src/image.c:220
+#, c-format
+msgid "could not create read struct for PNG image: %s"
+msgstr "kunne ikke oprette read struct til PNG-billede: %s"
+
+#: src/image.c:233
+#, c-format
+msgid "error reading PNG image: %s"
+msgstr "fejl ved læsning af PNG-billede: %s"
+
+#: src/image.c:241
+#, c-format
+msgid "could not create info struct for PNG image: %s"
+msgstr "kunne ikke oprette info struct til PNG-billede: %s"
+
+#: src/key.c:319
+msgid "Specified KeySym is not defined for any KeyCode"
+msgstr "Angivne KeySym er ikke angivet for nogen KeyCode"
+
+#: src/key.c:327
+#, c-format
+msgid "modifier not found for keysym 0x%0x"
+msgstr "modifikator ikke fundet for keysym 0x%0x"
+
+#: src/key.c:357
+#, c-format
+msgid "invalid modifier: \"%c\""
+msgstr "ugyldig modifikator: \"%c\""
+
+#: src/key.c:372
+#, c-format
+msgid "invalid key symbol: \"%s\""
+msgstr "ugyldigt nøglesymbol: \"%s\""
+
+#: src/key.c:453
+msgid "neither key nor keycode specified for Key"
+msgstr "hverken tast eller tastkode angivet for tast"
+
+#: src/key.c:468
+#, c-format
+msgid "key binding: root menu \"%s\" not defined"
+msgstr "tastebinding: rodmenu \"%s\" ikke angivet"
+
+#: src/lex.c:201
+#, c-format
+msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
+msgstr "%s[%u]: luk-tag \"%s\" passer ikke med åben-tag \"%s\""
+
+#: src/lex.c:207
+#, c-format
+msgid "%s[%u]: unexpected and invalid close tag"
+msgstr "%s[%u]: uventet og ugyldigt luk-tag"
+
+#: src/lex.c:213
+#, c-format
+msgid "%s[%u]: close tag \"%s\" without open tag"
+msgstr "%s[%u]: luk-tag \"%s\" uden åben-tag"
+
+#: src/lex.c:216
+#, c-format
+msgid "%s[%u]: invalid close tag"
+msgstr "%s[%u]: ugyldigt luk-tag"
+
+#: src/lex.c:234
+#, c-format
+msgid "%s[%u]: invalid open tag"
+msgstr "%s[%u]: ugyldigt åben-tag"
+
+#: src/lex.c:250
+#, c-format
+msgid "%s[%u]: invalid tag"
+msgstr "%s[%u]: ugyldigt tag"
+
+#: src/lex.c:306
+#, c-format
+msgid "%s[%u]: unexpected text: \"%s\""
+msgstr "%s[%u]: uventet tekst: \"%s\""
+
+#: src/lex.c:365
+#, c-format
+msgid "%s[%d]: invalid entity: \"%.8s\""
+msgstr "%s[%d]: ugyldig entitet: \"%.8s\""
+
+#: src/lex.c:471 src/parse.c:1892
+msgid "out of memory"
+msgstr "ikke mere ledig hukommelse"
+
+#: src/parse.c:226
+#, c-format
+msgid "could not open %s or %s"
+msgstr "kunne ikke åbne %s eller %s"
+
+#: src/parse.c:244
+#, c-format
+msgid "include depth (%d) exceeded"
+msgstr "inkluderingsdybde (%d) overskredet"
+
+#: src/parse.c:382
+#, c-format
+msgid "invalid start tag: %s"
+msgstr "ugyldigt start-tag: %s"
+
+#: src/parse.c:762
+#, c-format
+msgid "invalid include: %s"
+msgstr "ugyldig inkludering: %s"
+
+#: src/parse.c:812
+msgid "no action specified for Key"
+msgstr "ingen handling angivet for tast"
+
+#: src/parse.c:835
+#, c-format
+msgid "invalid Key action: \"%s\""
+msgstr "ugyldig tasthandling: \"%s\""
+
+#: src/parse.c:859
+#, c-format
+msgid "invalid text alignment: \"%s\""
+msgstr "ugyldig tekstjustering: \"%s\""
+
+#: src/parse.c:945
+msgid "no include file specified"
+msgstr "ingen inkluderingsfil angivet"
+
+#: src/parse.c:955
+#, c-format
+msgid "could not process include: %s"
+msgstr "kunne ikke behandle inkludering: %s"
+
+#: src/parse.c:959
+#, c-format
+msgid "could not open included file: %s"
+msgstr "kunne ikke åbne inkluderede fil: %s"
+
+#: src/parse.c:1622
+#, c-format
+msgid "invalid value for 'enabled': \"%s\""
+msgstr "ugyldig værdi for 'enabled': \"%s\""
+
+#: src/parse.c:1751
+#, c-format
+msgid "invalid Group Option: %s"
+msgstr "ugyldig gruppevalgmulighed: %s"
+
+#: src/parse.c:1766
+#, c-format
+msgid "invalid decorations: %s"
+msgstr "ugyldige dekorationer: %s"
+
+#: src/parse.c:1828
+#, c-format
+msgid "%s is empty"
+msgstr "%s er tom"
+
+#: src/parse.c:1835
+#, c-format
+msgid "invalid %s: \"%s\""
+msgstr "ugyldig %s: \"%s\""
+
+#: src/parse.c:1853
+#, c-format
+msgid "invalid value for %s: \"%s\""
+msgstr "ugyldig værdi for %s: \"%s\""
+
+#: src/parse.c:1879
+#, c-format
+msgid "could not read file: %s"
+msgstr "kunne ikke læse fil: %s"
+
+#: src/parse.c:1966 src/parse.c:1983
+msgid "no value specified"
+msgstr "ingen værdi angivet"
+
+#: src/parse.c:1971
+#, c-format
+msgid "invalid setting: %s"
+msgstr "ugyldig indstilling: %s"
+
+#: src/parse.c:1988
+#, c-format
+msgid "invalid opacity: %s"
+msgstr "ugyldig opacitet: %s"
+
+#: src/parse.c:2009
+#, c-format
+msgid "invalid layer: %s"
+msgstr "ugyldigt lag: %s"
+
+#: src/parse.c:2030
+#, c-format
+msgid "invalid tag in %s: %s"
+msgstr "ugyldigt tag i %s: %s"
+
+#: src/parse.c:2051
+msgid "configuration error"
+msgstr "konfigurationsfejl"
+
+#: src/root.c:131
+#, c-format
+msgid "invalid root menu specified: \"%c\""
+msgstr "ugyldig rodmenu angivet: \"%c\""
+
+#: src/root.c:213
+msgid "Exit JWM"
+msgstr "Afslut JWM"
+
+#: src/root.c:214
+msgid "Are you sure?"
+msgstr "Er du sikker?"
+
+#: src/swallow.c:85
+msgid "cannot swallow a client with no name"
+msgstr "kan ikke sluge en klient uden navn"
+
+#: src/taskbar.c:447 src/winmenu.c:51
+msgid "Close"
+msgstr "Luk"
+
+#: src/taskbar.c:454 src/winmenu.c:71
+msgid "Minimize"
+msgstr "Minimer"
+
+#: src/taskbar.c:461 src/winmenu.c:69 src/winmenu.c:89
+msgid "Restore"
+msgstr "Gendan"
+
+#: src/taskbar.c:468 src/winmenu.c:170
+msgid "Send To"
+msgstr "Send til"
+
+#: src/taskbar.c:964
+#, c-format
+msgid "invalid maxwidth for TaskList: %s"
+msgstr "ugyldig maxwidth for TaskList: %s"
+
+#: src/taskbar.c:978
+#, c-format
+msgid "invalid height for TaskList: %s"
+msgstr "ugyldig højde for TaskList: %s"
+
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "kunne ikke indlæse bakkeikon: \"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "intet ikon eller etiket for bakkeknap"
+
+#: src/tray.c:1064
+#, c-format
+msgid "invalid tray layout: \"%s\""
+msgstr "ugyldigt bakkelayout: \"%s\""
+
+#: src/tray.c:1102
+#, c-format
+msgid "invalid tray horizontal alignment: \"%s\""
+msgstr "ugyldig vandret justering af bakke: \"%s\""
+
+#: src/tray.c:1125
+#, c-format
+msgid "invalid tray vertical alignment: \"%s\""
+msgstr "ugyldig lodret justering af bakke: \"%s\""
+
+#: src/winmenu.c:52
+msgid "Kill"
+msgstr "Dræb"
+
+#: src/winmenu.c:60
+msgid "Resize"
+msgstr "Tilpas størrelse"
+
+#: src/winmenu.c:63
+msgid "Move"
+msgstr "Flyt"
+
+#: src/winmenu.c:76
+msgid "Unshade"
+msgstr "Rul ud"
+
+#: src/winmenu.c:78
+msgid "Shade"
+msgstr "Rul sammen"
+
+#: src/winmenu.c:83
+msgid "Maximize-y"
+msgstr "Maksimer-y"
+
+#: src/winmenu.c:86
+msgid "Maximize-x"
+msgstr "Maksimer-x"
+
+#: src/winmenu.c:91
+msgid "Maximize"
+msgstr "Maksimer"
+
+#: src/winmenu.c:100
+msgid "Unstick"
+msgstr "Fastgør ikke"
+
+#: src/winmenu.c:102
+msgid "Stick"
+msgstr "Fastgør"
+
+#: src/winmenu.c:127
+msgid "Layer"
+msgstr "Lag"
+
+#: src/winmenu.c:139
+msgid "[Above]"
+msgstr "[Over]"
+
+#: src/winmenu.c:141
+msgid "Above"
+msgstr "Over"
+
+#: src/winmenu.c:144
+msgid "[Normal]"
+msgstr "[Normal]"
+
+#: src/winmenu.c:146
+msgid "Normal"
+msgstr "Normal"
+
+#: src/winmenu.c:149
+msgid "[Below]"
+msgstr "[Under]"
+
+#: src/winmenu.c:151
+msgid "Below"
+msgstr "Under"

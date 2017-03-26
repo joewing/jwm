@@ -1,56 +1,58 @@
+# Danish translation for JWM.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the jwm package.
+# scootergrisen, 2017.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: jwm 2.3.4\n"
+"Project-Id-Version: jwm 2.3.6\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
 "POT-Creation-Date: 2017-03-26 14:43-0500\n"
-"PO-Revision-Date: 2016-03-19 13:29-0300\n"
-"Last-Translator: Samuel Henrique Oltramari Pinto (SamuelOPH) "
-"<samueloph@gmail.com>\n"
-"Language-Team: Portuguese Brazil <samueloph@gmail.com>\n"
-"Language: pt_BR\n"
+"PO-Revision-Date: 2017-03-25 00:00+0000\n"
+"Last-Translator: scootergrisen\n"
+"Language-Team: Danish\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.8.7.1\n"
 
 #: src/action.c:44
 #, c-format
 msgid "invalid action: \"%s\""
-msgstr "Ação inválida: \"%s\""
+msgstr "ugyldig handling: \"%s\""
 
 #: src/action.c:211
 #, c-format
 msgid "action: root menu \"%s\" not defined"
-msgstr "ação: o menu raiz \"%s\" não está definido"
+msgstr "handling: rodmenu \"%s\" ikke angivet"
 
 #: src/background.c:137
 msgid "no value specified for background"
-msgstr "nenhum valor foi especificado para o papel de parede"
+msgstr "ingen værdi angivet for baggrund"
 
 #: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
-msgstr "tipo de papel de parede inválido: \"%s\""
+msgstr "ugyldig baggrundstype: \"%s\""
 
 #: src/background.c:294
 #, c-format
 msgid "background image not found: \"%s\""
-msgstr "imagem de papel de parede não encontrado: \"%s\""
+msgstr "baggrundsbillede ikke fundet: \"%s\""
 
 #: src/client.c:906
 msgid "Kill this window?"
-msgstr "Matar janela?"
+msgstr "Dræb dette vindue?"
 
 #: src/client.c:907
 msgid "This may cause data to be lost!"
-msgstr "Isto pode causar perda de dados!"
+msgstr "Dette kan forårsage tab af data!"
 
 #: src/command.c:138 src/main.c:221
 #, c-format
 msgid "exec failed: (%s) %s"
-msgstr "comando exec falhou (%s) %s"
+msgstr "exec fejlede: (%s) %s"
 
 #: src/confirm.c:69
 msgid "OK"
@@ -58,385 +60,382 @@ msgstr "OK"
 
 #: src/confirm.c:74
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Annuller"
 
 #: src/confirm.c:308
 msgid "Confirm"
-msgstr "Comfirmar"
+msgstr "Bekræft"
 
 #: src/desktop.c:336
 msgid "empty Desktops Name tag"
-msgstr "variável Name Tag do Desktops vazia"
+msgstr "tomt Desktops Name-tag"
 
 #: src/dock.c:151
 msgid "only one Dock allowed"
-msgstr "apenas um Dock é permitido"
+msgstr "kun én dok er tilladt"
 
 #: src/dock.c:232
 msgid "could not acquire system tray selection"
-msgstr "impossível adquirir a seleção da área de notificação"
+msgstr "kunne ikke hente valg af systembakke"
 
 #: src/error.c:22
 #, c-format
 msgid "JWM: error: "
-msgstr "JWM: erro:"
+msgstr "JWM: fejl: "
 
 #: src/error.c:51
 #, c-format
 msgid "JWM: warning: "
-msgstr "JWM: aviso:"
+msgstr "JWM: advarsel: "
 
 #: src/error.c:77
 msgid "display is already managed"
-msgstr "display já é gerenciado"
+msgstr "display er allerede håndteret"
 
 #: src/font.c:109 src/font.c:126
 #, c-format
 msgid "could not load font: %s"
-msgstr "impossível carregar fonte: %s"
+msgstr "kunne ikke indlæse skrifttype: %s"
 
 #: src/font.c:116 src/font.c:133
 #, c-format
 msgid "could not load the default font: %s"
-msgstr "impossível carregar a fonte padrão: %s"
+msgstr "kunne ikke indlæse standardskrifttypen: %s"
 
 #: src/font.c:315
 msgid "empty Font tag"
-msgstr "variável Font vazia"
+msgstr "tomt Font-tag"
 
 #: src/group.c:115
 msgid "invalid group class"
-msgstr "classe de grupo inválida"
+msgstr "ugyldig gruppeklasse"
 
 #: src/group.c:126
 msgid "invalid group name"
-msgstr "nome de grupo inválido"
+msgstr "ugyldig gruppenavn"
 
 #: src/group.c:287
 #, c-format
 msgid "invalid group desktop: %d"
-msgstr "grupo desktop inválido: %d"
+msgstr "ugyldig gruppe skrivebord: %d"
 
 #: src/image.c:220
 #, c-format
 msgid "could not create read struct for PNG image: %s"
-msgstr "impossível criar ou ler a estrutura para imagem PNG: %s"
+msgstr "kunne ikke oprette read struct til PNG-billede: %s"
 
 #: src/image.c:233
 #, c-format
 msgid "error reading PNG image: %s"
-msgstr "erro lendo imagem PNG: %s"
+msgstr "fejl ved læsning af PNG-billede: %s"
 
 #: src/image.c:241
 #, c-format
 msgid "could not create info struct for PNG image: %s"
-msgstr "impossível criar estrutura de informação para imagem PNG: %s"
+msgstr "kunne ikke oprette info struct til PNG-billede: %s"
 
 #: src/key.c:318
 msgid "Specified KeySym is not defined for any KeyCode"
-msgstr "KeySym especificado não está definido por nenhum KeyCode"
+msgstr "Angivne KeySym er ikke angivet for nogen KeyCode"
 
 #: src/key.c:326
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
-msgstr "modificador não foi encontrado para o keysym 0x%0x"
+msgstr "modifikator ikke fundet for keysym 0x%0x"
 
 #: src/key.c:356
 #, c-format
 msgid "invalid modifier: \"%c\""
-msgstr "modificador inválido: \"%c\""
+msgstr "ugyldig modifikator: \"%c\""
 
 #: src/key.c:371
 #, c-format
 msgid "invalid key symbol: \"%s\""
-msgstr "símbolo de tecla inválido: \"%s\""
+msgstr "ugyldigt nøglesymbol: \"%s\""
 
 #: src/key.c:452
 msgid "neither key nor keycode specified for Key"
-msgstr "tecla e código de tecla não foram especificados para Key"
+msgstr "hverken tast eller tastkode angivet for tast"
 
 #: src/key.c:467
 #, c-format
 msgid "key binding: root menu \"%s\" not defined"
-msgstr "teclas de atalho: menu raiz \"%s\" não está definido"
+msgstr "tastebinding: rodmenu \"%s\" ikke angivet"
 
 #: src/lex.c:201
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
-msgstr ""
-"%s[%u]: terminação da variável \"%s\" não corresponde à abertura da variável "
-"\"%s\""
+msgstr "%s[%u]: luk-tag \"%s\" passer ikke med åben-tag \"%s\""
 
 #: src/lex.c:207
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
-msgstr "%s[%u]: terminação da variável inesperada e inválida"
+msgstr "%s[%u]: uventet og ugyldigt luk-tag"
 
 #: src/lex.c:213
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
-msgstr "%s[%u]: terminação da variável \"%s\" sem variável de abertura"
+msgstr "%s[%u]: luk-tag \"%s\" uden åben-tag"
 
 #: src/lex.c:216
 #, c-format
 msgid "%s[%u]: invalid close tag"
-msgstr "%s[%u]: terminação da variável inválida"
+msgstr "%s[%u]: ugyldigt luk-tag"
 
 #: src/lex.c:234
 #, c-format
 msgid "%s[%u]: invalid open tag"
-msgstr "%s[%u]: abertura da variável inválida"
+msgstr "%s[%u]: ugyldigt åben-tag"
 
 #: src/lex.c:250
 #, c-format
 msgid "%s[%u]: invalid tag"
-msgstr "%s[%u]: variável inválida"
+msgstr "%s[%u]: ugyldigt tag"
 
 #: src/lex.c:308
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
-msgstr "%s[%u]: texto inesperado: \"%s\""
+msgstr "%s[%u]: uventet tekst: \"%s\""
 
 #: src/lex.c:367
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
-msgstr "%s[%d]: entrada inválida: \"%.8s\""
+msgstr "%s[%d]: ugyldig entitet: \"%.8s\""
 
 #: src/lex.c:473 src/parse.c:1893
 msgid "out of memory"
-msgstr "Memória insuficiente"
+msgstr "ikke mere ledig hukommelse"
 
 #: src/parse.c:228
 #, c-format
 msgid "could not open %s or %s"
-msgstr "impossível abrir %s ou %s"
+msgstr "kunne ikke åbne %s eller %s"
 
 #: src/parse.c:246
 #, c-format
 msgid "include depth (%d) exceeded"
-msgstr "profundidade de includes (%d) excedido"
+msgstr "inkluderingsdybde (%d) overskredet"
 
 #: src/parse.c:384
 #, c-format
 msgid "invalid start tag: %s"
-msgstr "abertura de variável inválida: %s"
+msgstr "ugyldigt start-tag: %s"
 
 #: src/parse.c:774
 #, c-format
 msgid "invalid include: %s"
-msgstr "include inválido: %s"
+msgstr "ugyldig inkludering: %s"
 
 #: src/parse.c:824
 msgid "no action specified for Key"
-msgstr "nenhuma ação especificada para tecla"
+msgstr "ingen handling angivet for tast"
 
 #: src/parse.c:847
 #, c-format
 msgid "invalid Key action: \"%s\""
-msgstr "Ação Key inválida: \"%s\""
+msgstr "ugyldig tasthandling: \"%s\""
 
 #: src/parse.c:871
 #, c-format
 msgid "invalid text alignment: \"%s\""
-msgstr "alinhamento de texto inválido: \"%s\""
+msgstr "ugyldig tekstjustering: \"%s\""
 
 #: src/parse.c:957
 msgid "no include file specified"
-msgstr "nenhum arquivo include especificado"
+msgstr "ingen inkluderingsfil angivet"
 
 #: src/parse.c:967
 #, c-format
 msgid "could not process include: %s"
-msgstr "impossível processar include: %s"
+msgstr "kunne ikke behandle inkludering: %s"
 
 #: src/parse.c:971
 #, c-format
 msgid "could not open included file: %s"
-msgstr "impossível abrir arquivo incluído: %s"
+msgstr "kunne ikke åbne inkluderede fil: %s"
 
 #: src/parse.c:1611
 #, c-format
 msgid "invalid value for 'enabled': \"%s\""
-msgstr "valor inválido para 'enabled': \"%s\""
+msgstr "ugyldig værdi for 'enabled': \"%s\""
 
 #: src/parse.c:1752
 #, c-format
 msgid "invalid Group Option: %s"
-msgstr "Opção de Grupo inválida: %s"
+msgstr "ugyldig gruppevalgmulighed: %s"
 
 #: src/parse.c:1767
 #, c-format
 msgid "invalid decorations: %s"
-msgstr "decorations inválido: \"%s\""
+msgstr "ugyldige dekorationer: %s"
 
 #: src/parse.c:1829
 #, c-format
 msgid "%s is empty"
-msgstr "%s está vazio"
+msgstr "%s er tom"
 
 #: src/parse.c:1836
 #, c-format
 msgid "invalid %s: \"%s\""
-msgstr "inválido  %s: \"%s\""
+msgstr "ugyldig %s: \"%s\""
 
 #: src/parse.c:1854
 #, c-format
 msgid "invalid value for %s: \"%s\""
-msgstr "valor inválido para %s: \"%s\""
+msgstr "ugyldig værdi for %s: \"%s\""
 
 #: src/parse.c:1880
-#, fuzzy, c-format
+#, c-format
 msgid "could not read file: %s"
-msgstr "impossível carregar fonte: %s"
+msgstr "kunne ikke læse fil: %s"
 
 #: src/parse.c:1967 src/parse.c:1984
 msgid "no value specified"
-msgstr "nenhum valor foi especificado"
+msgstr "ingen værdi angivet"
 
 #: src/parse.c:1972
 #, c-format
 msgid "invalid setting: %s"
-msgstr "configuração inválida: %s"
+msgstr "ugyldig indstilling: %s"
 
 #: src/parse.c:1989
 #, c-format
 msgid "invalid opacity: %s"
-msgstr "transparência inválida: %s"
+msgstr "ugyldig opacitet: %s"
 
 #: src/parse.c:2010
 #, c-format
 msgid "invalid layer: %s"
-msgstr "camada inválida: %s"
+msgstr "ugyldigt lag: %s"
 
 #: src/parse.c:2031
 #, c-format
 msgid "invalid tag in %s: %s"
-msgstr "variável inválida dentro de %s: %s"
+msgstr "ugyldigt tag i %s: %s"
 
 #: src/parse.c:2052
 msgid "configuration error"
-msgstr "erro de configuração"
+msgstr "konfigurationsfejl"
 
 #: src/root.c:131
 #, c-format
 msgid "invalid root menu specified: \"%c\""
-msgstr "menu root especificado é inválido: \"%c\""
+msgstr "ugyldig rodmenu angivet: \"%c\""
 
 #: src/root.c:223
 msgid "Exit JWM"
-msgstr "Sair do JWM"
+msgstr "Afslut JWM"
 
 #: src/root.c:224
 msgid "Are you sure?"
-msgstr "Tem certeza?"
+msgstr "Er du sikker?"
 
 #: src/swallow.c:85
 msgid "cannot swallow a client with no name"
-msgstr ""
-"não é possível inserir um cliente na variável swallow sem especificar o nome"
+msgstr "kan ikke sluge en klient uden navn"
 
 #: src/taskbar.c:444 src/winmenu.c:48
 msgid "Close"
-msgstr "Fechar"
+msgstr "Luk"
 
 #: src/taskbar.c:451 src/winmenu.c:66
 msgid "Minimize"
-msgstr "Minimizar"
+msgstr "Minimer"
 
 #: src/taskbar.c:458 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
 msgid "Restore"
-msgstr "Restaurar"
+msgstr "Gendan"
 
 #: src/taskbar.c:465 src/winmenu.c:179
 msgid "Send To"
-msgstr "Enviar para"
+msgstr "Send til"
 
 #: src/taskbar.c:961
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
-msgstr "largura máxima inválida para Tasklist: %s"
+msgstr "ugyldig maxwidth for TaskList: %s"
 
 #: src/taskbar.c:975
 #, c-format
 msgid "invalid height for TaskList: %s"
-msgstr "altura inválida para Tasklist: %s"
+msgstr "ugyldig højde for TaskList: %s"
 
 #: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
-msgstr "não foi possível carregar o ícone no painel: \"%s\""
+msgstr "kunne ikke indlæse bakkeikon: \"%s\""
 
 #: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
-msgstr "ícone e nome não estão definidos para TrayButton"
+msgstr "intet ikon eller etiket for bakkeknap"
 
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
-msgstr "layout do painel inválido: \"%s\""
+msgstr "ugyldigt bakkelayout: \"%s\""
 
 #: src/tray.c:1102
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "alinhamento horizontal do painel inválido: \"%s\""
+msgstr "ugyldig vandret justering af bakke: \"%s\""
 
 #: src/tray.c:1125
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
-msgstr "alinhamento vertical do painel inválido: \"%s\""
+msgstr "ugyldig lodret justering af bakke: \"%s\""
 
 #: src/winmenu.c:49
 msgid "Kill"
-msgstr "Terminar"
+msgstr "Dræb"
 
 #: src/winmenu.c:57
 msgid "Resize"
-msgstr "Redimensionar"
+msgstr "Tilpas størrelse"
 
 #: src/winmenu.c:60
 msgid "Move"
-msgstr "Mover"
+msgstr "Flyt"
 
 #: src/winmenu.c:72
 msgid "Unshade"
-msgstr "Desativar sombra"
+msgstr "Rul ud"
 
 #: src/winmenu.c:74
 msgid "Shade"
-msgstr "Ativar sombra"
+msgstr "Rul sammen"
 
 #: src/winmenu.c:81
 msgid "Maximize-y"
-msgstr "Maximizar-y"
+msgstr "Maksimer-y"
 
 #: src/winmenu.c:86
 msgid "Maximize-x"
-msgstr "Maximizar-x"
+msgstr "Maksimer-x"
 
 #: src/winmenu.c:90
 msgid "Maximize"
-msgstr "Maximizar"
+msgstr "Maksimer"
 
 #: src/winmenu.c:112
 msgid "Unstick"
-msgstr "Descolar"
+msgstr "Fastgør ikke"
 
 #: src/winmenu.c:114
 msgid "Stick"
-msgstr "Colar"
+msgstr "Fastgør"
 
 #: src/winmenu.c:139
 msgid "Layer"
-msgstr "Camada"
+msgstr "Lag"
 
 #: src/winmenu.c:148
 msgid "[Above]"
-msgstr "[Acima]"
+msgstr "[Over]"
 
 #: src/winmenu.c:150
 msgid "Above"
-msgstr "Acima"
+msgstr "Over"
 
 #: src/winmenu.c:153
 msgid "[Normal]"
@@ -448,26 +447,8 @@ msgstr "Normal"
 
 #: src/winmenu.c:158
 msgid "[Below]"
-msgstr "[Abaixo]"
+msgstr "[Under]"
 
 #: src/winmenu.c:160
 msgid "Below"
-msgstr "Abaixo"
-
-#~ msgid "invalid tray width: %d"
-#~ msgstr "largura do painel inválida: %d"
-
-#~ msgid "invalid tray height: %d"
-#~ msgstr "altura do painel inválida: %d"
-
-#~ msgid "invalid insert mode: \"%s\""
-#~ msgstr "modo de inserção inválido: \"%s\""
-
-#~ msgid "invalid status window type: %s"
-#~ msgstr "tipo de fundo inválido: %s"
-
-#~ msgid "cannot swallow the same client multiple times"
-#~ msgstr "não pode inserir um cliente no swallow mais que uma vez"
-
-#~ msgid "Fullscreen state will be shaped!"
-#~ msgstr "Estado do ecrã expandido será moldado!"
+msgstr "Under"

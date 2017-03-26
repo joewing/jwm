@@ -96,6 +96,7 @@ char MoveClient(ClientNode *np, int startx, int starty)
 
    XEvent event;
    const ScreenType *sp;
+   MaxFlags flags;
    int oldx, oldy;
    int doMove;
    int north, south, east, west;
@@ -184,6 +185,7 @@ char MoveClient(ClientNode *np, int startx, int starty)
             atBottom = 1;
          }
 
+         flags = MAX_NONE;
          if(event.xmotion.state & Mod1Mask) {
             /* Switch desktops immediately if alt is pressed. */
             if(atLeft | atRight | atTop | atBottom) {
@@ -194,7 +196,6 @@ char MoveClient(ClientNode *np, int startx, int starty)
          } else {
             /* If alt is not pressed, snap to borders. */
             if(np->state.status & STAT_AEROSNAP) {
-               MaxFlags flags = MAX_NONE;
                if(atTop & atLeft) {
                   if(atSideFirst) {
                      flags = MAX_TOP | MAX_LEFT;
@@ -238,7 +239,10 @@ char MoveClient(ClientNode *np, int startx, int starty)
             }
          }
 
-         if(!doMove && (abs(np->x - oldx) > MOVE_DELTA
+         if(flags != MAX_NONE) {
+            doMove = 0;
+            DestroyMoveWindow();
+         } else if(!doMove && (abs(np->x - oldx) > MOVE_DELTA
             || abs(np->y - oldy) > MOVE_DELTA)) {
 
             if(np->state.maxFlags) {

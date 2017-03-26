@@ -405,8 +405,12 @@ void DrawBorderHelper(const ClientNode *np)
       titleHeight > settings.borderWidth) {
 
       const unsigned startx = west + 1;
-      const unsigned starty = settings.windowDecorations == DECO_MOTIF
-                            ? (south - 1) : 0;
+      unsigned starty = 0;
+      if(settings.windowDecorations == DECO_MOTIF) {
+         if(!(np->state.maxFlags & (MAX_VERT | MAX_TOP))) {
+            starty += settings.borderWidth - 1;
+         }
+      }
 
       /* Draw a title bar. */
       DrawHorizontalGradient(canvas, gc, titleColor1, titleColor2,
@@ -445,7 +449,6 @@ void DrawBorderHelper(const ClientNode *np)
       }
 
       DrawBorderButtons(np, canvas, gc);
-
    }
 
    /* Copy the pixmap (for the title bar) to the window. */
@@ -507,11 +510,12 @@ void DrawBorderHelper(const ClientNode *np)
 /** Draw window handles. */
 void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
 {
-   XSegment segments[8];
+   XSegment segments[9];
    long pixelUp, pixelDown;
    int width, height;
    int north, south, east, west;
    unsigned offset = 0;
+   unsigned starty = 0;
    unsigned titleHeight;
 
    /* Determine the window size. */
@@ -522,6 +526,11 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       height = north + south;
    } else {
       height = np->height + north + south;
+   }
+
+   /* Determine the y-offset to start drawing. */
+   if(!(np->state.maxFlags & (MAX_VERT | MAX_TOP))) {
+      starty = settings.borderWidth;
    }
 
    /* Determine the colors to use. */
@@ -545,16 +554,25 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    if(!(np->state.maxFlags & (MAX_HORIZ | MAX_RIGHT))) {
       /* Right title border. */
       segments[offset].x1 = west;
-      segments[offset].y1 = south + 1;
+      segments[offset].y1 = starty + 1;
       segments[offset].x2 = east;
       segments[offset].y2 = titleHeight + south - 1;
       offset += 1;
 
       /* Inside right border. */
       segments[offset].x1 = width - east;
-      segments[offset].y1 = south;
+      segments[offset].y1 = starty;
       segments[offset].x2 = width - east;
       segments[offset].y2 = height - south;
+      offset += 1;
+   }
+
+   if(!(np->state.maxFlags & (MAX_HORIZ | MAX_LEFT))) {
+      /* Inside left border. */
+      segments[offset].x1 = west;
+      segments[offset].y1 = starty;
+      segments[offset].x2 = west;
+      segments[offset].y2 = starty + titleHeight;
       offset += 1;
    }
 
@@ -608,7 +626,7 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    if(!(np->state.maxFlags & (MAX_HORIZ | MAX_RIGHT))) {
       /* Right title border. */
       segments[offset].x1 = width - east - 1;
-      segments[offset].y1 = south + 1;
+      segments[offset].y1 = starty + 1;
       segments[offset].x2 = width - east - 1;
       segments[offset].y2 = north - 1;
       offset += 1;
@@ -626,9 +644,9 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    if(!(np->state.maxFlags & (MAX_HORIZ | MAX_LEFT))) {
       /* Inside left border. */
       segments[offset].x1 = west - 1;
-      segments[offset].y1 = south;
+      segments[offset].y1 = starty;
       segments[offset].x2 = west - 1;
-      segments[offset].y2 = height - south;
+      segments[offset].y2 = height - starty;
       offset += 1;
    }
 
@@ -757,7 +775,6 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
       /* Draw pixel-up segments. */
       JXSetForeground(display, gc, pixelUp);
       JXDrawSegments(display, canvas, gc, segments, 8);
-
    }
 }
 
@@ -823,7 +840,7 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
    int minx;
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
-   xoffset = np->width + west - titleHeight;
+   xoffset = np->width + Min(east, west) - titleHeight;
    minx = titleHeight + east;
    if(xoffset <= minx) {
       return;
@@ -840,23 +857,29 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
       pixelDown = colors[COLOR_TITLE_DOWN];
    }
 
+   yoffset = 0;
+   if(settings.windowDecorations == DECO_MOTIF) {
+      if(!(np->state.maxFlags & (MAX_TOP | MAX_VERT))) {
+         yoffset += settings.borderWidth - 1;
+      }
+   }
+
    if(settings.windowDecorations == DECO_MOTIF) {
       JXSetForeground(display, gc, pixelDown);
       JXDrawLine(display, canvas, gc,
                       west + titleHeight - 1,
-                      south,
+                      yoffset,
                       west + titleHeight - 1,
-                      south + titleHeight);
+                      yoffset + titleHeight);
       JXSetForeground(display, gc, pixelUp);
       JXDrawLine(display, canvas, gc,
                  west + titleHeight,
-                 south,
+                 yoffset,
                  west + titleHeight,
-                 south + titleHeight);
+                 yoffset + titleHeight);
    }
 
    /* Close button. */
-   yoffset = settings.windowDecorations == DECO_MOTIF ? (south - 1) : 0;
    if(np->state.border & BORDER_CLOSE) {
 
       JXSetForeground(display, gc, color);
@@ -865,11 +888,11 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
       if(settings.windowDecorations == DECO_MOTIF) {
          JXSetForeground(display, gc, pixelDown);
          JXDrawLine(display, canvas, gc, xoffset - 1,
-                    south, xoffset - 1,
-                    south + titleHeight);
+                    yoffset, xoffset - 1,
+                    yoffset + titleHeight);
          JXSetForeground(display, gc, pixelUp);
          JXDrawLine(display, canvas, gc, xoffset,
-                    south, xoffset, south + titleHeight);
+                    yoffset, xoffset, yoffset + titleHeight);
          xoffset -= 1;
       }
 
@@ -892,11 +915,11 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
       if(settings.windowDecorations == DECO_MOTIF) {
          JXSetForeground(display, gc, pixelDown);
          JXDrawLine(display, canvas, gc, xoffset - 1,
-                    south, xoffset - 1,
-                    south + titleHeight);
+                    yoffset, xoffset - 1,
+                    yoffset + titleHeight);
          JXSetForeground(display, gc, pixelUp);
          JXDrawLine(display, canvas, gc, xoffset,
-                    south, xoffset, south + titleHeight);
+                    yoffset, xoffset, yoffset + titleHeight);
          xoffset -= 1;
       }
 
@@ -915,11 +938,11 @@ void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
       if(settings.windowDecorations == DECO_MOTIF) {
          JXSetForeground(display, gc, pixelDown);
          JXDrawLine(display, canvas, gc, xoffset - 1,
-                    south, xoffset - 1,
-                    south + titleHeight);
+                    yoffset, xoffset - 1,
+                    yoffset + titleHeight);
          JXSetForeground(display, gc, pixelUp);
          JXDrawLine(display, canvas, gc, xoffset,
-                    south, xoffset, south + titleHeight);
+                    yoffset, xoffset, yoffset + titleHeight);
          xoffset -= 1;
       }
    }
@@ -1194,8 +1217,14 @@ void GetBorderSize(const ClientState *state,
          *south = 0;
       } else {
          if(settings.windowDecorations == DECO_MOTIF) {
-            *north += settings.borderWidth;
-            *south = settings.borderWidth;
+            if(!(state->maxFlags & MAX_TOP)) {
+               *north += settings.borderWidth;
+            }
+            if(!(state->maxFlags & MAX_BOTTOM)) {
+               *south = settings.borderWidth;
+            } else {
+               *south = 0;
+            }
          } else {
             if(state->status & STAT_SHADED) {
                *south = 0;

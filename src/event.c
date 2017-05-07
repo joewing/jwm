@@ -1500,7 +1500,7 @@ void HandleUnmapNotify(const XUnmapEvent *event)
          RemoveClient(np);
       } else if((np->state.status & STAT_MAPPED) || event->send_event) {
          if(!(np->state.status & STAT_HIDDEN)) {
-            np->state.status &= ~STAT_MAPPED;
+            np->state.status &= ~(STAT_MAPPED | STAT_MINIMIZED | STAT_SHADED);
             JXUngrabButton(display, AnyButton, AnyModifier, np->window);
             GravitateClient(np, 1);
             JXReparentWindow(display, np->window, rootWindow, np->x, np->y);

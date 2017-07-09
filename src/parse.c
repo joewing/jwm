@@ -85,6 +85,14 @@ static const StringMappingType KEY_MAP[] = {
 };
 static const unsigned int KEY_MAP_COUNT = ARRAY_LENGTH(KEY_MAP);
 
+/** Mapping of key names to key types.
+ * Note that this mapping must be sorted.
+ */
+static const StringMappingType MC_MAP[] = {
+   { "root",                  MC_ROOT     }
+};
+static const unsigned int MC_MAP_COUNT = ARRAY_LENGTH(MC_MAP);
+
 /** Mapping of names to group options.
  * Note that this mapping must be sorted.
  */
@@ -199,6 +207,7 @@ static void ParsePopupStyle(const TokenNode *tp);
 
 /* Feel. */
 static void ParseKey(const TokenNode *tp);
+static void ParseMouse(const TokenNode *tp);
 static void ParseSnapMode(const TokenNode *tp);
 static void ParseMoveMode(const TokenNode *tp);
 static void ParseResizeMode(const TokenNode *tp);
@@ -307,6 +316,9 @@ void Parse(const TokenNode *start, int depth)
                break;
             case TOK_KEY:
                ParseKey(tp);
+               break;
+            case TOK_MOUSE:
+               ParseMouse(tp);
                break;
             case TOK_MENUSTYLE:
                ParseMenuStyle(tp);
@@ -803,17 +815,36 @@ Menu *ParseDynamicMenu(const char *command)
    return menu;
 }
 
-/** Parse a key binding. */
-void ParseKey(const TokenNode *tp) {
+/** Parse an action. */
+KeyType ParseAction(const char *action, const char **command)
+{
+   KeyType k = KEY_NONE;
+   *command = NULL;
+   if(!strncmp(action, "exec:", 5)) {
+      k = KEY_EXEC;
+      *command = action + 5;
+   } else if(!strncmp(action, "root:", 5)) {
+      k = KEY_ROOT;
+      *command = action + 5;
+   } else {
+      /* Look up the option in the key map using binary search. */
+      const int x = FindValue(KEY_MAP, KEY_MAP_COUNT, action);
+      if(x >= 0) {
+         k = (KeyType)x;
+      }
+   }
+   return k;
+}
 
+/** Parse a key binding. */
+void ParseKey(const TokenNode *tp)
+{
    const char *key;
    const char *code;
    const char *mask;
    const char *action;
    const char *command;
    KeyType k;
-
-   Assert(tp);
 
    mask = FindAttribute(tp->attributes, "mask");
    key = FindAttribute(tp->attributes, "key");
@@ -825,33 +856,51 @@ void ParseKey(const TokenNode *tp) {
       return;
    }
 
-   command = NULL;
-   k = KEY_NONE;
-   if(!strncmp(action, "exec:", 5)) {
-      k = KEY_EXEC;
-      command = action + 5;
-   } else if(!strncmp(action, "root:", 5)) {
-      k = KEY_ROOT;
-      command = action + 5;
-   } else {
-      /* Look up the option in the key map using binary search. */
-      const int x = FindValue(KEY_MAP, KEY_MAP_COUNT, action);
-      if(x >= 0) {
-         k = (KeyType)x;
-      }
-   }
-
    /* Insert the binding if it's valid. */
+   k = ParseAction(action, &command);
    if(JUNLIKELY(k == KEY_NONE)) {
-
       ParseError(tp, _("invalid Key action: \"%s\""), action);
-
    } else {
-
       InsertBinding(k, mask, key, code, command);
+   }
+}
 
+/** Parse a mouse binding. */
+void ParseMouse(const TokenNode *tp)
+{
+   const char *mask;
+   const char *context;
+   const char *action;
+   const char *command;
+   unsigned button;
+   int x;
+   KeyType key;
+
+   button = ParseUnsigned(tp, FindAttribute(tp->attributes, "button"));
+   if(JUNLIKELY(button == 0)) {
+      return;
+   }
+   mask = FindAttribute(tp->attributes, "mask");
+   context = FindAttribute(tp->attributes, "context");
+
+   action = tp->value;
+   if(JUNLIKELY(action == NULL)) {
+      ParseError(tp, _("no action specified for Mouse"));
+      return;
+   }
+   key = ParseAction(action, &command);
+   if(JUNLIKELY(key == KEY_NONE)) {
+      ParseError(tp, _("invalid Mouse action: \"%s\""), action);
+      return;
    }
 
+   x = FindValue(MC_MAP, MC_MAP_COUNT, context);
+   if(JUNLIKELY(x < 0)) {
+      ParseError(tp, _("invalid Mouse context: \"%s\""), context);
+   } else {
+      const MouseContextType mc = (MouseContextType)x;
+      InsertMouseBinding(button, mask, mc, key, command);
+   }
 }
 
 /** Parse text alignment. */

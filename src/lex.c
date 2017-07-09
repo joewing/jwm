@@ -55,6 +55,7 @@ static const StringMappingType TOKEN_MAP[] = {
    { "Menu",               TOK_MENU             },
    { "MenuStyle",          TOK_MENUSTYLE        },
    { "Minimize",           TOK_MINIMIZE         },
+   { "Mouse",              TOK_MOUSE            },
    { "Move",               TOK_MOVE             },
    { "MoveMode",           TOK_MOVEMODE         },
    { "Name",               TOK_NAME             },

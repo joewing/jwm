@@ -54,6 +54,9 @@ static void Signal(void);
 static void DispatchBorderButtonEvent(const XButtonEvent *event,
                                       ClientNode *np);
 
+static void ProcessBinding(MouseContextType context, ClientNode *np,
+                           unsigned state, unsigned code);
+
 static void HandleConfigureRequest(const XConfigureRequestEvent *event);
 static char HandleConfigureNotify(const XConfigureEvent *event);
 static char HandleExpose(const XExposeEvent *event);
@@ -379,11 +382,7 @@ void HandleButtonEvent(const XButtonEvent *event)
       DispatchBorderButtonEvent(event, np);
    } else if(event->window == rootWindow && event->type == ButtonPress) {
       if(!ShowRootMenu(event->button, event->x, event->y, 0)) {
-         if(event->button == Button4) {
-            LeftDesktop();
-         } else if(event->button == Button5) {
-            RightDesktop();
-         }
+         ProcessBinding(MC_ROOT, NULL, event->state, event->button);
       }
    } else {
       const unsigned int mask = event->state & ~lockMask;
@@ -425,7 +424,6 @@ void HandleButtonEvent(const XButtonEvent *event)
       }
 
    }
-
 }
 
 /** Toggle maximized state. */
@@ -440,18 +438,14 @@ void ToggleMaximized(ClientNode *np, MaxFlags flags)
    }
 }
 
-/** Process a key press event. */
-void HandleKeyPress(const XKeyEvent *event)
+/** Process a key or mouse binding. */
+void ProcessBinding(MouseContextType context, ClientNode *np,
+                    unsigned state, unsigned code)
 {
-   ClientNode *np;
-   KeyType key;
-
-   SetMousePosition(event->x_root, event->y_root, event->window);
-   key = GetKey(event);
-   np = GetActiveClient();
+   const KeyType key = GetKey(MC_ROOT, state, code);
    switch(key & 0xFF) {
    case KEY_EXEC:
-      RunKeyCommand(event);
+      RunKeyCommand(context, state, code);
       break;
    case KEY_DESKTOP:
       ChangeDesktop((key >> 8) - 1);
@@ -559,7 +553,7 @@ void HandleKeyPress(const XKeyEvent *event)
       ToggleMaximized(np, MAX_HORIZ);
       break;
    case KEY_ROOT:
-      ShowKeyMenu(event);
+      ShowKeyMenu(context, state, code);
       break;
    case KEY_WIN:
       if(np) {
@@ -616,11 +610,20 @@ void HandleKeyPress(const XKeyEvent *event)
    DiscardEnterEvents();
 }
 
+/** Process a key press event. */
+void HandleKeyPress(const XKeyEvent *event)
+{
+   ClientNode *np;
+
+   SetMousePosition(event->x_root, event->y_root, event->window);
+   np = GetActiveClient();
+   ProcessBinding(MC_NONE, np, event->state, event->keycode);
+}
+
 /** Handle a key release event. */
 void HandleKeyRelease(const XKeyEvent *event)
 {
-   KeyType key;
-   key = GetKey(event) & 0xFF;
+   const KeyType key = GetKey(MC_NONE, event->state, event->keycode) & 0xFF;
    if(   key != KEY_NEXTSTACK && key != KEY_NEXT
       && key != KEY_PREV      && key != KEY_PREVSTACK) {
       StopWindowWalk();

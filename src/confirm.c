@@ -229,7 +229,7 @@ char HandleDialogButtonPress(const XButtonEvent *event)
 char HandleDialogKeyPress(const XKeyEvent *event)
 {
    if(dialog && event->window == dialog->node->window) {
-      KeyType key = GetKey(event);
+      const KeyType key = GetKey(MC_NONE, event->state, event->keycode);
       switch(key & 0xFF) {
       case KEY_ENTER:
          RunDialogAction();

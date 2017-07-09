@@ -51,13 +51,14 @@ typedef struct KeyNode {
 
    /* These are filled in when the configuration file is parsed */
    int key;
+   MouseContextType context;
    unsigned int state;
    KeySym symbol;
    char *command;
    struct KeyNode *next;
 
    /* This is filled in by StartupKeys if it isn't already set. */
-   KeyCode code;
+   unsigned code;
 
 } KeyNode;
 
@@ -125,13 +126,11 @@ void StartupKeys(void)
       }
 
    }
-
 }
 
 /** Shutdown key bindings. */
 void ShutdownKeys(void)
 {
-
    ClientNode *np;
    TrayType *tp;
    unsigned int layer;
@@ -150,15 +149,13 @@ void ShutdownKeys(void)
 
    /* Ungrab keys on the root. */
    JXUngrabKey(display, AnyKey, AnyModifier, rootWindow);
-
 }
 
 /** Destroy key data. */
 void DestroyKeys(void)
 {
-   KeyNode *np;
    while(bindings) {
-      np = bindings->next;
+      KeyNode *np = bindings->next;
       if(bindings->command) {
          Release(bindings->command);
       }
@@ -201,57 +198,49 @@ void GrabKey(KeyNode *np, Window win)
 }
 
 /** Get the key action from an event. */
-KeyType GetKey(const XKeyEvent *event)
+KeyType GetKey(MouseContextType context, unsigned state, unsigned code)
 {
-
    KeyNode *np;
-   unsigned int state;
 
    /* Remove modifiers we don't care about from the state. */
-   state = event->state & ~lockMask;
+   state &= ~lockMask;
 
    /* Loop looking for a matching key binding. */
    for(np = bindings; np; np = np->next) {
-      if(np->state == state && np->code == event->keycode) {
+      if(np->context == context && np->state == state && np->code == code) {
          return np->key;
       }
    }
 
    return KEY_NONE;
-
 }
 
 /** Run a command invoked from a key binding. */
-void RunKeyCommand(const XKeyEvent *event)
+void RunKeyCommand(MouseContextType context, unsigned state, unsigned code)
 {
-
    KeyNode *np;
-   unsigned int state;
 
    /* Remove the lock key modifiers. */
-   state = event->state & ~lockMask;
+   state &= ~lockMask;
 
    for(np = bindings; np; np = np->next) {
-      if(np->state == state && np->code == event->keycode) {
+      if(np->context == context && np->state == state && np->code == code) {
          RunCommand(np->command);
          return;
       }
    }
-
 }
 
 /** Show a root menu caused by a key binding. */
-void ShowKeyMenu(const XKeyEvent *event)
+void ShowKeyMenu(MouseContextType context, unsigned state, unsigned code)
 {
-
    KeyNode *np;
-   unsigned int state;
 
    /* Remove the lock key modifiers. */
-   state = event->state & ~lockMask;
+   state &= ~lockMask;
 
    for(np = bindings; np; np = np->next) {
-      if(np->state == state && np->code == event->keycode) {
+      if(np->context == context && np->state == state && np->code == code) {
          const int button = GetRootMenuIndexFromString(np->command);
          if(JLIKELY(button >= 0)) {
             ShowRootMenu(button, -1, -1, 1);
@@ -259,7 +248,6 @@ void ShowKeyMenu(const XKeyEvent *event)
          return;
       }
    }
-
 }
 
 /** Determine if a key should be grabbed on client windows. */
@@ -453,7 +441,25 @@ void InsertBinding(KeyType key, const char *modifiers,
       np = NULL;
 
    }
+}
 
+/** Insert a mouse binding. */
+void InsertMouseBinding(
+   unsigned button,
+   const char *mask,
+   MouseContextType context,
+   KeyType key,
+   const char *command)
+{
+   KeyNode *np = Allocate(sizeof(KeyNode));
+   np->next = bindings;
+   bindings = np;
+
+   np->command = CopyString(command);
+   np->key = key;
+   np->state = ParseModifierString(mask);
+   np->code = button;
+   np->context = context;
 }
 
 /** Validate key bindings. */

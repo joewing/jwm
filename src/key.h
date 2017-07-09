@@ -58,6 +58,11 @@ typedef unsigned short KeyType;
 #define KEY_MAXH            40
 #define KEY_RESTORE         41
 
+/** Mouse binding contexts. */
+typedef unsigned char MouseContextType;
+#define MC_NONE            0
+#define MC_ROOT            1
+
 void InitializeKeys(void);
 void StartupKeys(void);
 void ShutdownKeys(void);
@@ -66,10 +71,8 @@ void DestroyKeys(void);
 /** Mask of 'lock' keys. */
 extern unsigned int lockMask;
 
-/** Get the action to take from a key event.
- * @param event The event.
- */
-KeyType GetKey(const XKeyEvent *event);
+/** Get the action to take from a key event. */
+KeyType GetKey(MouseContextType context, unsigned state, unsigned code);
 
 /** Parse a modifier string.
  * @param str The modifier string.
@@ -87,15 +90,28 @@ unsigned int ParseModifierString(const char *str);
 void InsertBinding(KeyType key, const char *modifiers, const char *stroke,
                    const char *code, const char *command);
 
-/** Run a command caused by a key binding.
- * @param event The event causing the command to be run.
+/** Insert a mouse binding.
+ * A mouse binding maps a mouse click in a certain context to an action.
+ * @param button The mouse button.
+ * @param mask The modifier mask.
+ * @param context The mouse context.
+ * @param key The key binding.
+ * @param command Extra parameter needed for some bindings.
  */
-void RunKeyCommand(const XKeyEvent *event);
+void InsertMouseBinding(
+   unsigned button,
+   const char *mask,
+   MouseContextType context,
+   KeyType key,
+   const char *command);
+
+/** Run a command caused by a key binding. */
+void RunKeyCommand(MouseContextType context, unsigned state, unsigned code);
 
 /** Show a root menu caused by a key binding.
  * @param event The event that caused the menu to be shown.
  */
-void ShowKeyMenu(const XKeyEvent *event);
+void ShowKeyMenu(MouseContextType context, unsigned state, unsigned code);
 
 /** Validate key bindings.
  * This will log an error if an invalid key binding is found.

@@ -630,7 +630,6 @@ void HandleKeyRelease(const XKeyEvent *event)
 /** Process a configure request. */
 void HandleConfigureRequest(const XConfigureRequestEvent *event)
 {
-   XWindowChanges wc;
    ClientNode *np;
 
    if(HandleDockConfigureRequest(event)) {
@@ -713,12 +712,17 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
 
       /* Return early if there's nothing to do. */
       if(!changed) {
+         /* Nothing changed; send a synthetic configure event. */
+         SendConfigureEvent(np);
          return;
       }
 
+      /* Stop any move/resize that may be in progress. */
       if(np->controller) {
          (np->controller)(0);
       }
+
+      /* If the client is maximized, restore it first. */
       if(np->state.maxFlags) {
          MaximizeClient(np, MAX_NONE);
       }
@@ -727,26 +731,30 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
          resized = 1;
       }
       if(resized) {
+         /* The size changed so the parent will need to be redrawn. */
          ConstrainSize(np);
          ConstrainPosition(np);
          ResetBorder(np);
       } else {
+         /* Only the position changed; move the client. */
          int north, south, east, west;
          GetBorderSize(&np->state, &north, &south, &east, &west);
+
          if(np->parent != None) {
             JXMoveWindow(display, np->parent, np->x - west, np->y - north);
+            SendConfigureEvent(np);
          } else {
             JXMoveWindow(display, np->window, np->x, np->y);
          }
       }
 
-      SendConfigureEvent(np);
       RequirePagerUpdate();
 
    } else {
 
       /* We don't know about this window, just let the configure through. */
 
+      XWindowChanges wc;
       wc.stack_mode = event->detail;
       wc.sibling = event->above;
       wc.border_width = event->border_width;

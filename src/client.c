@@ -280,7 +280,6 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    ResetBorder(np);
 
    return np;
-
 }
 
 /** Minimize a client window and all of its transients. */
@@ -1412,6 +1411,7 @@ void SendConfigureEvent(ClientNode *np)
    Assert(np);
 
    memset(&event, 0, sizeof(event));
+   event.display = display;
    event.type = ConfigureNotify;
    event.event = np->window;
    event.window = np->window;

@@ -203,6 +203,7 @@ static void ParseSnapMode(const TokenNode *tp);
 static void ParseMoveMode(const TokenNode *tp);
 static void ParseResizeMode(const TokenNode *tp);
 static void ParseFocusModel(const TokenNode *tp);
+static void ParseClickMiddleTask(const TokenNode *tp);
 
 static AlignmentType ParseTextAlignment(const TokenNode *tp);
 static void ParseDecorations(const TokenNode *tp, DecorationsType *deco);
@@ -284,6 +285,9 @@ void Parse(const TokenNode *start, int depth)
             }
          } else {
             switch(tp->type) {
+            case TOK_CLICKMIDDLETASK:
+               ParseClickMiddleTask(tp);
+               break;
             case TOK_DESKTOPS:
                ParseDesktops(tp);
                break;
@@ -384,6 +388,16 @@ void Parse(const TokenNode *start, int depth)
       ParseError(start, _("invalid start tag: %s"), GetTokenName(start));
    }
 
+}
+
+/** Parse click middle of button in taskbar. */
+void ParseClickMiddleTask(const TokenNode *tp) {
+   static const StringMappingType mapping[] = {
+      { "close",     CLICKMIDDLETASK_CLOSE    },
+      { "none",      CLICKMIDDLETASK_NONE     }
+   };
+   settings.clickMiddleTask = ParseTokenValue(mapping, ARRAY_LENGTH(mapping), tp,
+                                         settings.clickMiddleTask);
 }
 
 /** Parse focus model. */

@@ -28,6 +28,7 @@ static const StringMappingType TOKEN_MAP[] = {
    { "ButtonMenu",         TOK_BUTTONMENU       },
    { "ButtonMin",          TOK_BUTTONMIN        },
    { "Class",              TOK_CLASS            },
+   { "ClickMiddleTask",    TOK_CLICKMIDDLETASK  },
    { "Clock",              TOK_CLOCK            },
    { "ClockStyle",         TOK_CLOCKSTYLE       },
    { "Close",              TOK_CLOSE            },

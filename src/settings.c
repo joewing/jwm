@@ -27,6 +27,7 @@ void InitializeSettings(void)
    settings.snapMode = SNAP_BORDER;
    settings.snapDistance = 5;
    settings.moveMode = MOVE_OPAQUE;
+   settings.clickMiddleTask = CLICKMIDDLETASK_NONE;
    settings.moveStatusType = SW_SCREEN;
    settings.resizeStatusType = SW_SCREEN;
    settings.focusModel = FOCUS_SLOPPY;

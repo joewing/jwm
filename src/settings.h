@@ -56,6 +56,11 @@ typedef unsigned char PopupMaskType;
 #define POPUP_MENU   16
 #define POPUP_ALL    255
 
+/** Decorations. */
+typedef unsigned char ClickMiddleTaskType;
+#define CLICKMIDDLETASK_NONE   0
+#define CLICKMIDDLETASK_CLOSE  1
+
 /** Text alignment. */
 typedef unsigned char AlignmentType;
 #define ALIGN_LEFT      0
@@ -87,6 +92,7 @@ typedef struct {
    StatusWindowType moveStatusType;
    StatusWindowType resizeStatusType;
    FocusModelType focusModel;
+   ClickMiddleTaskType clickMiddleTask;
    ResizeModeType resizeMode;
    DecorationsType windowDecorations;
    DecorationsType trayDecorations;

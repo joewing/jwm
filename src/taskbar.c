@@ -314,6 +314,13 @@ FoundActiveAndTop:
             }
          }
          break;
+      case Button2:
+         if(entry && settings.clickMiddleTask == CLICKMIDDLETASK_CLOSE) {
+            for(cp = entry->clients; cp; cp = cp->next) {
+               DeleteClient(cp->client);
+            }
+         }
+         break;
       case Button3:
          ShowClientList(bar, entry);
          break;

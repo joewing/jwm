@@ -77,7 +77,7 @@ unsigned int lockMask;
 
 static unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key);
 static KeySym ParseKeyString(const char *str);
-static char ShouldGrab(KeyType key);
+static char ShouldGrab(ActionType key);
 static void GrabKey(KeyNode *np, Window win);
 
 /** Initialize key data. */
@@ -198,7 +198,7 @@ void GrabKey(KeyNode *np, Window win)
 }
 
 /** Get the key action from an event. */
-KeyType GetKey(MouseContextType context, unsigned state, unsigned code)
+ActionType GetKey(MouseContextType context, unsigned state, unsigned code)
 {
    KeyNode *np;
 
@@ -212,7 +212,7 @@ KeyType GetKey(MouseContextType context, unsigned state, unsigned code)
       }
    }
 
-   return KEY_NONE;
+   return ACTION_NONE;
 }
 
 /** Run a command invoked from a key binding. */
@@ -251,44 +251,44 @@ void ShowKeyMenu(MouseContextType context, unsigned state, unsigned code)
 }
 
 /** Determine if a key should be grabbed on client windows. */
-char ShouldGrab(KeyType key)
+char ShouldGrab(ActionType key)
 {
    switch(key & 0xFF) {
-   case KEY_NEXT:
-   case KEY_NEXTSTACK:
-   case KEY_PREV:
-   case KEY_PREVSTACK:
-   case KEY_CLOSE:
-   case KEY_MIN:
-   case KEY_MAX:
-   case KEY_SHADE:
-   case KEY_STICK:
-   case KEY_MOVE:
-   case KEY_RESIZE:
-   case KEY_ROOT:
-   case KEY_WIN:
-   case KEY_DESKTOP:
-   case KEY_RDESKTOP:
-   case KEY_LDESKTOP:
-   case KEY_DDESKTOP:
-   case KEY_UDESKTOP:
-   case KEY_SHOWDESK:
-   case KEY_SHOWTRAY:
-   case KEY_EXEC:
-   case KEY_RESTART:
-   case KEY_EXIT:
-   case KEY_FULLSCREEN:
-   case KEY_SENDR:
-   case KEY_SENDL:
-   case KEY_SENDU:
-   case KEY_SENDD:
-   case KEY_MAXTOP:
-   case KEY_MAXBOTTOM:
-   case KEY_MAXLEFT:
-   case KEY_MAXRIGHT:
-   case KEY_MAXV:
-   case KEY_MAXH:
-   case KEY_RESTORE:
+   case ACTION_NEXT:
+   case ACTION_NEXTSTACK:
+   case ACTION_PREV:
+   case ACTION_PREVSTACK:
+   case ACTION_CLOSE:
+   case ACTION_MIN:
+   case ACTION_MAX:
+   case ACTION_SHADE:
+   case ACTION_STICK:
+   case ACTION_MOVE:
+   case ACTION_RESIZE:
+   case ACTION_ROOT:
+   case ACTION_WIN:
+   case ACTION_DESKTOP:
+   case ACTION_RDESKTOP:
+   case ACTION_LDESKTOP:
+   case ACTION_DDESKTOP:
+   case ACTION_UDESKTOP:
+   case ACTION_SHOWDESK:
+   case ACTION_SHOWTRAY:
+   case ACTION_EXEC:
+   case ACTION_RESTART:
+   case ACTION_EXIT:
+   case ACTION_FULLSCREEN:
+   case ACTION_SENDR:
+   case ACTION_SENDL:
+   case ACTION_SENDU:
+   case ACTION_SENDD:
+   case ACTION_MAXTOP:
+   case ACTION_MAXBOTTOM:
+   case ACTION_MAXLEFT:
+   case ACTION_MAXRIGHT:
+   case ACTION_MAXV:
+   case ACTION_MAXH:
+   case ACTION_RESTORE:
       return 1;
    default:
       return 0;
@@ -362,7 +362,7 @@ KeySym ParseKeyString(const char *str)
 }
 
 /** Insert a key binding. */
-void InsertBinding(KeyType key, const char *modifiers,
+void InsertBinding(ActionType key, const char *modifiers,
                    const char *stroke, const char *code,
                    const char *command)
 {
@@ -448,7 +448,7 @@ void InsertMouseBinding(
    unsigned button,
    const char *mask,
    MouseContextType context,
-   KeyType key,
+   ActionType key,
    const char *command)
 {
    KeyNode *np = Allocate(sizeof(KeyNode));
@@ -467,7 +467,7 @@ void ValidateKeys(void)
 {
    KeyNode *kp;
    for(kp = bindings; kp; kp = kp->next) {
-      if((kp->key & 0xFF) == KEY_ROOT && kp->command) {
+      if((kp->key & 0xFF) == ACTION_ROOT && kp->command) {
          const int bindex = GetRootMenuIndexFromString(kp->command);
          if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
             Warning(_("key binding: root menu \"%s\" not defined"),

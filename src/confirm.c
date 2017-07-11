@@ -229,13 +229,13 @@ char HandleDialogButtonPress(const XButtonEvent *event)
 char HandleDialogKeyPress(const XKeyEvent *event)
 {
    if(dialog && event->window == dialog->node->window) {
-      const KeyType key = GetKey(MC_NONE, event->state, event->keycode);
+      const ActionType key = GetKey(MC_NONE, event->state, event->keycode);
       switch(key & 0xFF) {
-      case KEY_ENTER:
+      case ACTION_ENTER:
          RunDialogAction();
          DestroyConfirmDialog();
          break;
-      case KEY_ESC:
+      case ACTION_ESC:
          DestroyConfirmDialog();
          break;
       default:

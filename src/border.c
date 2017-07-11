@@ -96,7 +96,7 @@ int GetBorderIconSize(void)
 }
 
 /** Determine the border action to take given coordinates. */
-BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
+MouseContextType GetBorderContext(const ClientNode *np, int x, int y)
 {
 
    int north, south, east, west;
@@ -116,14 +116,14 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
          /* Menu button. */
          if(np->width >= titleHeight) {
             if(x > west && x <= titleHeight + west) {
-               return BA_MENU;
+               return MC_ICON;
             }
          }
 
          /* Close button. */
          if((np->state.border & BORDER_CLOSE) && offset > 2 * titleHeight) {
             if(x > offset - titleHeight && x < offset) {
-               return BA_CLOSE;
+               return MC_CLOSE;
             }
             offset -= titleHeight + 1;
          }
@@ -131,7 +131,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
          /* Maximize button. */
          if((np->state.border & BORDER_MAX) && offset > 2 * titleHeight) {
             if(x > offset - titleHeight && x < offset) {
-               return BA_MAXIMIZE;
+               return MC_MAXIMIZE;
             }
             offset -= titleHeight + 1;
          }
@@ -139,7 +139,7 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
          /* Minimize button. */
          if((np->state.border & BORDER_MIN) && offset > 2 * titleHeight) {
             if(x > offset - titleHeight && x < offset) {
-               return BA_MINIMIZE;
+               return MC_MINIMIZE;
             }
          }
 
@@ -149,9 +149,9 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
       if(y >= south && y <= titleHeight + south) {
          if(x > west && x < offset) {
             if(np->state.border & BORDER_MOVE) {
-               return BA_MOVE;
+               return MC_MOVE;
             } else {
-               return BA_NONE;
+               return MC_NONE;
             }
          }
       }
@@ -161,49 +161,49 @@ BorderActionType GetBorderActionType(const ClientNode *np, int x, int y)
    /* Now we check resize actions.
     * There is no need to go further if resizing isn't allowed. */
    if(!(np->state.border & BORDER_RESIZE)) {
-      return BA_NONE;
+      return MC_NONE;
    }
 
    /* We don't allow resizing maximized windows. */
-   resizeMask = BA_RESIZE_S | BA_RESIZE_N
-              | BA_RESIZE_E | BA_RESIZE_W
-              | BA_RESIZE;
+   resizeMask = MC_RESIZE_S | MC_RESIZE_N
+              | MC_RESIZE_E | MC_RESIZE_W
+              | MC_RESIZE;
    if(np->state.maxFlags & MAX_HORIZ) {
-      resizeMask &= ~(BA_RESIZE_E | BA_RESIZE_W);
+      resizeMask &= ~(MC_RESIZE_E | MC_RESIZE_W);
    }
    if(np->state.maxFlags & MAX_VERT) {
-      resizeMask &= ~(BA_RESIZE_N | BA_RESIZE_S);
+      resizeMask &= ~(MC_RESIZE_N | MC_RESIZE_S);
    }
    if(np->state.status & STAT_SHADED) {
-      resizeMask &= ~(BA_RESIZE_N | BA_RESIZE_S);
+      resizeMask &= ~(MC_RESIZE_N | MC_RESIZE_S);
    }
 
    /* Check south east/west and north east/west resizing. */
    if(y > np->height + north - titleHeight) {
       if(x < titleHeight) {
-         return (BA_RESIZE_S | BA_RESIZE_W | BA_RESIZE) & resizeMask;
+         return (MC_RESIZE_S | MC_RESIZE_W | MC_RESIZE) & resizeMask;
       } else if(x > np->width + west - titleHeight) {
-         return (BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE) & resizeMask;
+         return (MC_RESIZE_S | MC_RESIZE_E | MC_RESIZE) & resizeMask;
       }
    } else if(y < titleHeight) {
       if(x < titleHeight) {
-         return (BA_RESIZE_N | BA_RESIZE_W | BA_RESIZE) & resizeMask;
+         return (MC_RESIZE_N | MC_RESIZE_W | MC_RESIZE) & resizeMask;
       } else if(x > np->width + west - titleHeight) {
-         return (BA_RESIZE_N | BA_RESIZE_E | BA_RESIZE) & resizeMask;
+         return (MC_RESIZE_N | MC_RESIZE_E | MC_RESIZE) & resizeMask;
       }
    }
 
    /* Check east, west, north, and south resizing. */
    if(x <= west) {
-      return (BA_RESIZE_W | BA_RESIZE) & resizeMask;
+      return (MC_RESIZE_W | MC_RESIZE) & resizeMask;
    } else if(x >= np->width + west) {
-      return (BA_RESIZE_E | BA_RESIZE) & resizeMask;
+      return (MC_RESIZE_E | MC_RESIZE) & resizeMask;
    } else if(y >= np->height + north) {
-      return (BA_RESIZE_S | BA_RESIZE) & resizeMask;
+      return (MC_RESIZE_S | MC_RESIZE) & resizeMask;
    } else if(y <= south) {
-      return (BA_RESIZE_N | BA_RESIZE) & resizeMask;
+      return (MC_RESIZE_N | MC_RESIZE) & resizeMask;
    } else {
-      return BA_NONE;
+      return MC_NONE;
    }
 
 }

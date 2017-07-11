@@ -39,57 +39,59 @@
 #include <fcntl.h>
 #include <errno.h>
 
-/** Mapping of key names to key types.
+/** Mapping of action names to values.
  * Note that this mapping must be sorted.
  */
-static const StringMappingType KEY_MAP[] = {
-   { "close",                 KEY_CLOSE         },
-   { "ddesktop",              KEY_DDESKTOP      },
-   { "desktop#",              KEY_DESKTOP       },
-   { "down",                  KEY_DOWN          },
-   { "escape",                KEY_ESC           },
-   { "exit",                  KEY_EXIT          },
-   { "fullscreen",            KEY_FULLSCREEN    },
-   { "ldesktop",              KEY_LDESKTOP      },
-   { "left",                  KEY_LEFT          },
-   { "maxbottom",             KEY_MAXBOTTOM     },
-   { "maxh",                  KEY_MAXH          },
-   { "maximize",              KEY_MAX           },
-   { "maxleft",               KEY_MAXLEFT       },
-   { "maxright",              KEY_MAXRIGHT      },
-   { "maxtop",                KEY_MAXTOP        },
-   { "maxv",                  KEY_MAXV          },
-   { "minimize",              KEY_MIN           },
-   { "move",                  KEY_MOVE          },
-   { "next",                  KEY_NEXT          },
-   { "nextstacked",           KEY_NEXTSTACK     },
-   { "prev",                  KEY_PREV          },
-   { "prevstacked",           KEY_PREVSTACK     },
-   { "rdesktop",              KEY_RDESKTOP      },
-   { "resize",                KEY_RESIZE        },
-   { "restart",               KEY_RESTART       },
-   { "restore",               KEY_RESTORE       },
-   { "right",                 KEY_RIGHT         },
-   { "select",                KEY_ENTER         },
-   { "sendd",                 KEY_SENDD         },
-   { "sendl",                 KEY_SENDL         },
-   { "sendr",                 KEY_SENDR         },
-   { "sendu",                 KEY_SENDU         },
-   { "shade",                 KEY_SHADE         },
-   { "showdesktop",           KEY_SHOWDESK      },
-   { "showtray",              KEY_SHOWTRAY      },
-   { "stick",                 KEY_STICK         },
-   { "udesktop",              KEY_UDESKTOP      },
-   { "up",                    KEY_UP            },
-   { "window",                KEY_WIN           }
+static const StringMappingType ACTION_MAP[] = {
+   { "close",                 ACTION_CLOSE         },
+   { "ddesktop",              ACTION_DDESKTOP      },
+   { "desktop#",              ACTION_DESKTOP       },
+   { "down",                  ACTION_DOWN          },
+   { "escape",                ACTION_ESC           },
+   { "exit",                  ACTION_EXIT          },
+   { "fullscreen",            ACTION_FULLSCREEN    },
+   { "ldesktop",              ACTION_LDESKTOP      },
+   { "left",                  ACTION_LEFT          },
+   { "maxbottom",             ACTION_MAXBOTTOM     },
+   { "maxh",                  ACTION_MAXH          },
+   { "maximize",              ACTION_MAX           },
+   { "maxleft",               ACTION_MAXLEFT       },
+   { "maxright",              ACTION_MAXRIGHT      },
+   { "maxtop",                ACTION_MAXTOP        },
+   { "maxv",                  ACTION_MAXV          },
+   { "minimize",              ACTION_MIN           },
+   { "move",                  ACTION_MOVE          },
+   { "next",                  ACTION_NEXT          },
+   { "nextstacked",           ACTION_NEXTSTACK     },
+   { "prev",                  ACTION_PREV          },
+   { "prevstacked",           ACTION_PREVSTACK     },
+   { "rdesktop",              ACTION_RDESKTOP      },
+   { "resize",                ACTION_RESIZE        },
+   { "restart",               ACTION_RESTART       },
+   { "restore",               ACTION_RESTORE       },
+   { "right",                 ACTION_RIGHT         },
+   { "select",                ACTION_ENTER         },
+   { "sendd",                 ACTION_SENDD         },
+   { "sendl",                 ACTION_SENDL         },
+   { "sendr",                 ACTION_SENDR         },
+   { "sendu",                 ACTION_SENDU         },
+   { "shade",                 ACTION_SHADE         },
+   { "showdesktop",           ACTION_SHOWDESK      },
+   { "showtray",              ACTION_SHOWTRAY      },
+   { "stick",                 ACTION_STICK         },
+   { "udesktop",              ACTION_UDESKTOP      },
+   { "up",                    ACTION_UP            },
+   { "window",                ACTION_WIN           }
 };
-static const unsigned int KEY_MAP_COUNT = ARRAY_LENGTH(KEY_MAP);
+static const unsigned int ACTION_MAP_COUNT = ARRAY_LENGTH(ACTION_MAP);
 
 /** Mapping of key names to key types.
  * Note that this mapping must be sorted.
  */
 static const StringMappingType MC_MAP[] = {
-   { "root",                  MC_ROOT     }
+   { "icon",                  MC_ICON     },
+   { "root",                  MC_ROOT     },
+   { "title",                 MC_MOVE     }
 };
 static const unsigned int MC_MAP_COUNT = ARRAY_LENGTH(MC_MAP);
 
@@ -206,6 +208,7 @@ static void ParseMenuStyle(const TokenNode *tp);
 static void ParsePopupStyle(const TokenNode *tp);
 
 /* Feel. */
+static ActionType ParseAction(const char *str, const char **command);
 static void ParseKey(const TokenNode *tp);
 static void ParseMouse(const TokenNode *tp);
 static void ParseSnapMode(const TokenNode *tp);
@@ -816,24 +819,24 @@ Menu *ParseDynamicMenu(const char *command)
 }
 
 /** Parse an action. */
-KeyType ParseAction(const char *action, const char **command)
+ActionType ParseAction(const char *str, const char **command)
 {
-   KeyType k = KEY_NONE;
+   ActionType action = ACTION_NONE;
    *command = NULL;
-   if(!strncmp(action, "exec:", 5)) {
-      k = KEY_EXEC;
-      *command = action + 5;
-   } else if(!strncmp(action, "root:", 5)) {
-      k = KEY_ROOT;
-      *command = action + 5;
+   if(!strncmp(str, "exec:", 5)) {
+      action = ACTION_EXEC;
+      *command = str + 5;
+   } else if(!strncmp(str, "root:", 5)) {
+      action = ACTION_ROOT;
+      *command = str + 5;
    } else {
       /* Look up the option in the key map using binary search. */
-      const int x = FindValue(KEY_MAP, KEY_MAP_COUNT, action);
+      const int x = FindValue(ACTION_MAP, ACTION_MAP_COUNT, str);
       if(x >= 0) {
-         k = (KeyType)x;
+         action = (ActionType)x;
       }
    }
-   return k;
+   return action;
 }
 
 /** Parse a key binding. */
@@ -844,7 +847,7 @@ void ParseKey(const TokenNode *tp)
    const char *mask;
    const char *action;
    const char *command;
-   KeyType k;
+   ActionType k;
 
    mask = FindAttribute(tp->attributes, "mask");
    key = FindAttribute(tp->attributes, "key");
@@ -858,7 +861,7 @@ void ParseKey(const TokenNode *tp)
 
    /* Insert the binding if it's valid. */
    k = ParseAction(action, &command);
-   if(JUNLIKELY(k == KEY_NONE)) {
+   if(JUNLIKELY(k == ACTION_NONE)) {
       ParseError(tp, _("invalid Key action: \"%s\""), action);
    } else {
       InsertBinding(k, mask, key, code, command);
@@ -874,7 +877,7 @@ void ParseMouse(const TokenNode *tp)
    const char *command;
    unsigned button;
    int x;
-   KeyType key;
+   ActionType key;
 
    button = ParseUnsigned(tp, FindAttribute(tp->attributes, "button"));
    if(JUNLIKELY(button == 0)) {
@@ -889,7 +892,7 @@ void ParseMouse(const TokenNode *tp)
       return;
    }
    key = ParseAction(action, &command);
-   if(JUNLIKELY(key == KEY_NONE)) {
+   if(JUNLIKELY(key == ACTION_NONE)) {
       ParseError(tp, _("invalid Mouse action: \"%s\""), action);
       return;
    }

@@ -10,58 +10,23 @@
 #ifndef KEY_H
 #define KEY_H
 
-/** Enumeration of key binding types.
- * Note that we use the high bits to store additional information
- * for some key types (for example the desktop number).
- */
-typedef unsigned short KeyType;
-#define KEY_NONE            0
-#define KEY_UP              1
-#define KEY_DOWN            2
-#define KEY_RIGHT           3
-#define KEY_LEFT            4
-#define KEY_ESC             5
-#define KEY_ENTER           6
-#define KEY_NEXT            7
-#define KEY_NEXTSTACK       8
-#define KEY_PREV            9
-#define KEY_PREVSTACK       10
-#define KEY_CLOSE           11
-#define KEY_MIN             12
-#define KEY_MAX             13
-#define KEY_SHADE           14
-#define KEY_STICK           15
-#define KEY_MOVE            16
-#define KEY_RESIZE          17
-#define KEY_ROOT            18
-#define KEY_WIN             19
-#define KEY_DESKTOP         20
-#define KEY_RDESKTOP        21
-#define KEY_LDESKTOP        22
-#define KEY_UDESKTOP        23
-#define KEY_DDESKTOP        24
-#define KEY_SHOWDESK        25
-#define KEY_SHOWTRAY        26
-#define KEY_EXEC            27
-#define KEY_RESTART         28
-#define KEY_EXIT            29
-#define KEY_FULLSCREEN      30
-#define KEY_SENDR           31
-#define KEY_SENDL           32
-#define KEY_SENDU           33
-#define KEY_SENDD           34
-#define KEY_MAXTOP          35
-#define KEY_MAXBOTTOM       36
-#define KEY_MAXLEFT         37
-#define KEY_MAXRIGHT        38
-#define KEY_MAXV            39
-#define KEY_MAXH            40
-#define KEY_RESTORE         41
+#include "action.h"
 
 /** Mouse binding contexts. */
 typedef unsigned char MouseContextType;
-#define MC_NONE            0
-#define MC_ROOT            1
+#define MC_MASK            0x0F  /**< Context type mask. */
+#define MC_NONE            0     /**< No context. */
+#define MC_ROOT            1     /**< Root window. */
+#define MC_RESIZE          2     /**< Resize handle. */
+#define MC_MOVE            3     /**< Move handle. */
+#define MC_CLOSE           4     /**< Close button. */
+#define MC_MAXIMIZE        5     /**< Maximize button. */
+#define MC_MINIMIZE        6     /**< Minimize button. */
+#define MC_ICON            7     /**< Window menu button. */
+#define MC_RESIZE_N        0x10  /**< Resize north. */
+#define MC_RESIZE_S        0x20  /**< Resize south. */
+#define MC_RESIZE_E        0x40  /**< Resize east. */
+#define MC_RESIZE_W        0x80  /**< Resize west. */
 
 void InitializeKeys(void);
 void StartupKeys(void);
@@ -72,7 +37,7 @@ void DestroyKeys(void);
 extern unsigned int lockMask;
 
 /** Get the action to take from a key event. */
-KeyType GetKey(MouseContextType context, unsigned state, unsigned code);
+ActionType GetKey(MouseContextType context, unsigned state, unsigned code);
 
 /** Parse a modifier string.
  * @param str The modifier string.
@@ -87,7 +52,7 @@ unsigned int ParseModifierString(const char *str);
  * @param code The key code (not needed if stroke given).
  * @param command Extra parameter needed for some key binding types.
  */
-void InsertBinding(KeyType key, const char *modifiers, const char *stroke,
+void InsertBinding(ActionType key, const char *modifiers, const char *stroke,
                    const char *code, const char *command);
 
 /** Insert a mouse binding.
@@ -102,7 +67,7 @@ void InsertMouseBinding(
    unsigned button,
    const char *mask,
    MouseContextType context,
-   KeyType key,
+   ActionType key,
    const char *command);
 
 /** Run a command caused by a key binding. */

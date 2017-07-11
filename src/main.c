@@ -109,11 +109,11 @@ int main(int argc, char *argv[])
    char *temp;
    int x;
    enum {
-      ACTION_RUN,
-      ACTION_RESTART,
-      ACTION_EXIT,
-      ACTION_RELOAD,
-      ACTION_PARSE
+      COMMAND_RUN,
+      COMMAND_RESTART,
+      COMMAND_EXIT,
+      COMMAND_RELOAD,
+      COMMAND_PARSE
    } action;
 
    StartDebug();
@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
    }
 
    /* Parse command line options. */
-   action = ACTION_RUN;
+   action = COMMAND_RUN;
    for(x = 1; x < argc; x++) {
       if(!strcmp(argv[x], "-v")) {
          DisplayAbout();
@@ -140,13 +140,13 @@ int main(int argc, char *argv[])
          DisplayHelp();
          DoExit(0);
       } else if(!strcmp(argv[x], "-p")) {
-         action = ACTION_PARSE;
+         action = COMMAND_PARSE;
       } else if(!strcmp(argv[x], "-restart")) {
-         action = ACTION_RESTART;
+         action = COMMAND_RESTART;
       } else if(!strcmp(argv[x], "-exit")) {
-         action = ACTION_EXIT;
+         action = COMMAND_EXIT;
       } else if(!strcmp(argv[x], "-reload")) {
-         action = ACTION_RELOAD;
+         action = COMMAND_RELOAD;
       } else if(!strcmp(argv[x], "-display") && x + 1 < argc) {
          displayString = argv[++x];
       } else if(!strcmp(argv[x], "-f") && x + 1 < argc) {
@@ -160,17 +160,17 @@ int main(int argc, char *argv[])
    }
 
    switch(action) {
-   case ACTION_PARSE:
+   case COMMAND_PARSE:
       Initialize();
       ParseConfig(configPath);
       DoExit(0);
-   case ACTION_RESTART:
+   case COMMAND_RESTART:
       SendRestart();
       DoExit(0);
-   case ACTION_EXIT:
+   case COMMAND_EXIT:
       SendExit();
       DoExit(0);
-   case ACTION_RELOAD:
+   case COMMAND_RELOAD:
       SendReload();
       DoExit(0);
    default:

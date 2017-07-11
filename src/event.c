@@ -55,7 +55,7 @@ static void DispatchBorderButtonEvent(const XButtonEvent *event,
                                       ClientNode *np);
 
 static void ProcessBinding(MouseContextType context, ClientNode *np,
-                           unsigned state, unsigned code, int x, int y);
+                           unsigned state, int code, int x, int y);
 
 static void HandleConfigureRequest(const XConfigureRequestEvent *event);
 static char HandleConfigureNotify(const XConfigureEvent *event);
@@ -440,10 +440,10 @@ void ToggleMaximized(ClientNode *np, MaxFlags flags)
 
 /** Process a key or mouse binding. */
 void ProcessBinding(MouseContextType context, ClientNode *np,
-                    unsigned state, unsigned code, int x, int y)
+                    unsigned state, int code, int x, int y)
 {
    const ActionType key = GetKey(context, state, code);
-   const char keyAction = context == MC_ROOT;
+   const char keyAction = context == MC_NONE;
    switch(key & 0xFF) {
    case ACTION_EXEC:
       RunKeyCommand(context, state, code);
@@ -638,7 +638,6 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
 void HandleKeyPress(const XKeyEvent *event)
 {
    ClientNode *np;
-
    SetMousePosition(event->x_root, event->y_root, event->window);
    np = GetActiveClient();
    ProcessBinding(MC_NONE, np, event->state, event->keycode, 0, 0);
@@ -1571,16 +1570,9 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
    static Time lastClickTime = 0;
    static int lastX = 0, lastY = 0;
    static char doubleClickActive = 0;
-   unsigned button;
-   MouseContextType context;
+   int button;
    int bsize;
-
-   /* Middle click starts a move unless it's over the maximize button. */
-   context = GetBorderContext(np, event->x, event->y);
-   if(event->button == Button2 && context != MC_MAXIMIZE) {
-      MoveClient(np, event->x, event->y);
-      return;
-   }
+   MouseContextType context;
 
    /* Determine the size of the border. */
    if(np->state.border & BORDER_OUTLINE) {
@@ -1589,84 +1581,36 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
       bsize = 0;
    }
 
-   /* Determine if this is a double click and set the button. */
-   if(doubleClickActive
-      && event->time != lastClickTime
-      && event->time - lastClickTime <= settings.doubleClickSpeed
-      && abs(event->x - lastX) <= settings.doubleClickDelta
-      && abs(event->y - lastY) <= settings.doubleClickDelta) {
-      doubleClickActive = 0;
-      button = event->button * 11;
-   } else {
-      doubleClickActive = 0;
-      button = event->button;
-   }
-
-
+   /* Determine if this is a double click and set the button.
+    * We multiply by 11 to indicate a double click.
+    */
    if(event->type == ButtonPress) {
-      ProcessBinding(context, np, event->state, button, event->x, event->y);
-      if(button < 11) {
-         doubleClickActive = 1;
-         lastClickTime = event->time;
-         lastX = event->x;
-         lastY = event->y;
+      if(doubleClickActive
+         && event->time != lastClickTime
+         && event->time - lastClickTime <= settings.doubleClickSpeed
+         && abs(event->x - lastX) <= settings.doubleClickDelta
+         && abs(event->y - lastY) <= settings.doubleClickDelta) {
+         doubleClickActive = 0;
+         button = event->button * 11;
+      } else {
+         doubleClickActive = 0;
+         button = event->button;
       }
+   }
+   if(event->type == ButtonRelease) {
+      /* Releases are specified by negative button numbers. */
+      button = -button;
    }
 
-   /* Other buttons are context sensitive. */
-   switch(context & MC_MASK) {
-   case MC_RESIZE:   /* Border */
-      if(event->type == ButtonPress) {
-         if(event->button == Button1) {
-            ResizeClient(np, context, event->x, event->y);
-         } else if(event->button == Button3) {
-            const unsigned titleHeight = GetTitleHeight();
-            const int x = np->x + event->x - bsize;
-            const int y = np->y + event->y - titleHeight - bsize;
-            ShowWindowMenu(np, x, y, 0);
-         }
-      }
-      break;
-   case MC_CLOSE: /* Close button */
-      if(event->type == ButtonRelease
-         && (event->button == Button1 || event->button == Button3)) {
-         DeleteClient(np);
-      }
-      break;
-   case MC_MAXIMIZE: /* Maximize button */
-      if(event->type == ButtonRelease) {
-         switch(event->button) {
-         case Button1:
-            MaximizeClientDefault(np);
-            break;
-         case Button2:
-            MaximizeClient(np, np->state.maxFlags ^ MAX_VERT);
-            break;
-         case Button3:
-            MaximizeClient(np, np->state.maxFlags ^ MAX_HORIZ);
-            break;
-         default:
-            break;
-         }
-      }
-      break;
-   case MC_MINIMIZE: /* Minimize button */
-      if(event->type == ButtonRelease) {
-         if(event->button == Button3) {
-            if(np->state.status & STAT_SHADED) {
-               UnshadeClient(np);
-            } else {
-               ShadeClient(np);
-            }
-         } else if(event->button == Button1) {
-            MinimizeClient(np, 1);
-         }
-      }
-      break;
-   default:
-      break;
+   /* Process the event. */
+   context = GetBorderContext(np, event->x, event->y);
+   ProcessBinding(context, np, event->state, button, event->x, event->y);
+   if(button < 11) {
+      doubleClickActive = 1;
+      lastClickTime = event->time;
+      lastX = event->x;
+      lastY = event->y;
    }
-   DiscardEnterEvents();
 }
 
 /** Update window state information. */

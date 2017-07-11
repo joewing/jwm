@@ -14,8 +14,7 @@
 
 /** Mouse binding contexts. */
 typedef unsigned char MouseContextType;
-#define MC_MASK            0x0F  /**< Context type mask. */
-#define MC_NONE            0     /**< No context. */
+#define MC_NONE            0     /**< Keyboard/none. */
 #define MC_ROOT            1     /**< Root window. */
 #define MC_RESIZE          2     /**< Resize handle. */
 #define MC_MOVE            3     /**< Move handle. */
@@ -23,6 +22,8 @@ typedef unsigned char MouseContextType;
 #define MC_MAXIMIZE        5     /**< Maximize button. */
 #define MC_MINIMIZE        6     /**< Minimize button. */
 #define MC_ICON            7     /**< Window menu button. */
+#define MC_COUNT           8     /**< Number of contexts. */
+#define MC_MASK            0x0F  /**< Context type mask. */
 #define MC_RESIZE_N        0x10  /**< Resize north. */
 #define MC_RESIZE_S        0x20  /**< Resize south. */
 #define MC_RESIZE_E        0x40  /**< Resize east. */
@@ -37,7 +38,7 @@ void DestroyKeys(void);
 extern unsigned int lockMask;
 
 /** Get the action to take from a key event. */
-ActionType GetKey(MouseContextType context, unsigned state, unsigned code);
+ActionType GetKey(MouseContextType context, unsigned state, int code);
 
 /** Parse a modifier string.
  * @param str The modifier string.
@@ -71,12 +72,12 @@ void InsertMouseBinding(
    const char *command);
 
 /** Run a command caused by a key binding. */
-void RunKeyCommand(MouseContextType context, unsigned state, unsigned code);
+void RunKeyCommand(MouseContextType context, unsigned state, int code);
 
 /** Show a root menu caused by a key binding.
  * @param event The event that caused the menu to be shown.
  */
-void ShowKeyMenu(MouseContextType context, unsigned state, unsigned code);
+void ShowKeyMenu(MouseContextType context, unsigned state, int code);
 
 /** Validate key bindings.
  * This will log an error if an invalid key binding is found.

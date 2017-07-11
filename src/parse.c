@@ -89,7 +89,11 @@ static const unsigned int ACTION_MAP_COUNT = ARRAY_LENGTH(ACTION_MAP);
  * Note that this mapping must be sorted.
  */
 static const StringMappingType MC_MAP[] = {
+   { "close",                 MC_CLOSE    },
    { "icon",                  MC_ICON     },
+   { "maximize",              MC_MAXIMIZE },
+   { "minimize",              MC_MINIMIZE },
+   { "resize",                MC_RESIZE   },
    { "root",                  MC_ROOT     },
    { "title",                 MC_MOVE     }
 };
@@ -225,7 +229,8 @@ static int ParseTokenValue(const StringMappingType *mapping, int count,
 static int ParseAttribute(const StringMappingType *mapping, int count,
                           const TokenNode *tp, const char *attr,
                           int def);
-static unsigned int ParseUnsigned(const TokenNode *tp, const char *str);
+static int ParseSigned(const TokenNode *tp, const char *str);
+static unsigned ParseUnsigned(const TokenNode *tp, const char *str);
 static unsigned int ParseOpacity(const TokenNode *tp, const char *str);
 static WinLayerType ParseLayer(const TokenNode *tp, const char *str);
 static StatusWindowType ParseStatusWindowType(const TokenNode *tp);
@@ -879,7 +884,7 @@ void ParseMouse(const TokenNode *tp)
    int x;
    ActionType key;
 
-   button = ParseUnsigned(tp, FindAttribute(tp->attributes, "button"));
+   button = ParseSigned(tp, FindAttribute(tp->attributes, "button"));
    if(JUNLIKELY(button == 0)) {
       return;
    }
@@ -2009,6 +2014,23 @@ TokenNode *TokenizePipe(const char *command)
    tokens = Tokenize(buffer, command);
    Release(buffer);
    return tokens;
+}
+
+/** Parse a signed integer. */
+int ParseSigned(const TokenNode *tp, const char *str)
+{
+   long value;
+   if(JUNLIKELY(!str)) {
+      ParseError(tp, _("no value specified"));
+      return 0;
+   }
+   value = strtol(str, NULL, 0);
+   if(JUNLIKELY(value < INT_MIN || value > INT_MAX)) {
+      ParseError(tp, _("invalid setting: %s"), str);
+      return 0;
+   } else {
+      return (int)value;
+   }
 }
 
 /** Parse an unsigned integer. */

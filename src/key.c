@@ -58,7 +58,7 @@ typedef struct KeyNode {
    struct KeyNode *next;
 
    /* This is filled in by StartupKeys if it isn't already set. */
-   unsigned code;
+   int code;
 
 } KeyNode;
 
@@ -72,8 +72,8 @@ static LockNode lockMods[] = {
    { XK_Num_Lock,    0 }
 };
 
-static KeyNode *bindings;
-unsigned int lockMask;
+static KeyNode *bindings[MC_COUNT];
+unsigned lockMask;
 
 static unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key);
 static KeySym ParseKeyString(const char *str);
@@ -83,7 +83,7 @@ static void GrabKey(KeyNode *np, Window win);
 /** Initialize key data. */
 void InitializeKeys(void)
 {
-   bindings = NULL;
+   memset(bindings, 0, sizeof(bindings));
    lockMask = 0;
 }
 
@@ -103,9 +103,11 @@ void StartupKeys(void)
       lockMask |= lockMods[x].mask;
    }
    JXFreeModifiermap(modmap);
+   lockMask |= Button1Mask | Button2Mask | Button3Mask
+            | Button4Mask | Button5Mask;
 
    /* Look up and grab the keys. */
-   for(np = bindings; np; np = np->next) {
+   for(np = bindings[MC_NONE]; np; np = np->next) {
 
       /* Determine the key code. */
       if(!np->code) {
@@ -154,13 +156,16 @@ void ShutdownKeys(void)
 /** Destroy key data. */
 void DestroyKeys(void)
 {
-   while(bindings) {
-      KeyNode *np = bindings->next;
-      if(bindings->command) {
-         Release(bindings->command);
+   unsigned i;
+   for(i = 0; i < MC_COUNT; i++) {
+      while(bindings[i]) {
+         KeyNode *np = bindings[i]->next;
+         if(bindings[i]->command) {
+            Release(bindings[i]->command);
+         }
+         Release(bindings[i]);
+         bindings[i] = np;
       }
-      Release(bindings);
-      bindings = np;
    }
 }
 
@@ -198,16 +203,19 @@ void GrabKey(KeyNode *np, Window win)
 }
 
 /** Get the key action from an event. */
-ActionType GetKey(MouseContextType context, unsigned state, unsigned code)
+ActionType GetKey(MouseContextType context, unsigned state, int code)
 {
    KeyNode *np;
 
    /* Remove modifiers we don't care about from the state. */
    state &= ~lockMask;
 
+   /* Mask off flags. */
+   context &= MC_MASK;
+
    /* Loop looking for a matching key binding. */
-   for(np = bindings; np; np = np->next) {
-      if(np->context == context && np->state == state && np->code == code) {
+   for(np = bindings[context]; np; np = np->next) {
+      if(np->state == state && np->code == code) {
          return np->key;
       }
    }
@@ -216,15 +224,18 @@ ActionType GetKey(MouseContextType context, unsigned state, unsigned code)
 }
 
 /** Run a command invoked from a key binding. */
-void RunKeyCommand(MouseContextType context, unsigned state, unsigned code)
+void RunKeyCommand(MouseContextType context, unsigned state, int code)
 {
    KeyNode *np;
 
    /* Remove the lock key modifiers. */
    state &= ~lockMask;
 
-   for(np = bindings; np; np = np->next) {
-      if(np->context == context && np->state == state && np->code == code) {
+   /* Mask off flags. */
+   context &= MC_MASK;
+
+   for(np = bindings[context]; np; np = np->next) {
+      if(np->state == state && np->code == code) {
          RunCommand(np->command);
          return;
       }
@@ -232,15 +243,18 @@ void RunKeyCommand(MouseContextType context, unsigned state, unsigned code)
 }
 
 /** Show a root menu caused by a key binding. */
-void ShowKeyMenu(MouseContextType context, unsigned state, unsigned code)
+void ShowKeyMenu(MouseContextType context, unsigned state, int code)
 {
    KeyNode *np;
 
    /* Remove the lock key modifiers. */
    state &= ~lockMask;
 
-   for(np = bindings; np; np = np->next) {
-      if(np->context == context && np->state == state && np->code == code) {
+   /* Mask off flags. */
+   context &= MC_MASK;
+
+   for(np = bindings[context]; np; np = np->next) {
+      if(np->state == state && np->code == code) {
          const int button = GetRootMenuIndexFromString(np->command);
          if(JLIKELY(button >= 0)) {
             ShowRootMenu(button, -1, -1, 1);
@@ -251,9 +265,9 @@ void ShowKeyMenu(MouseContextType context, unsigned state, unsigned code)
 }
 
 /** Determine if a key should be grabbed on client windows. */
-char ShouldGrab(ActionType key)
+char ShouldGrab(ActionType action)
 {
-   switch(key & 0xFF) {
+   switch(action & 0xFF) {
    case ACTION_NEXT:
    case ACTION_NEXTSTACK:
    case ACTION_PREV:
@@ -296,7 +310,7 @@ char ShouldGrab(ActionType key)
 }
 
 /** Get the modifier mask for a key. */
-unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key) {
+unsigned GetModifierMask(XModifierKeymap *modmap, KeySym key) {
 
    KeyCode temp;
    int x;
@@ -391,8 +405,8 @@ void InsertBinding(ActionType key, const char *modifiers,
                }
 
                np = Allocate(sizeof(KeyNode));
-               np->next = bindings;
-               bindings = np;
+               np->next = bindings[MC_NONE];
+               bindings[MC_NONE] = np;
 
                np->key = key | ((temp[offset] - '1' + 1) << 8);
                np->state = mask;
@@ -414,8 +428,8 @@ void InsertBinding(ActionType key, const char *modifiers,
       }
 
       np = Allocate(sizeof(KeyNode));
-      np->next = bindings;
-      bindings = np;
+      np->next = bindings[MC_NONE];
+      bindings[MC_NONE] = np;
 
       np->key = key;
       np->state = mask;
@@ -426,8 +440,8 @@ void InsertBinding(ActionType key, const char *modifiers,
    } else if(code && strlen(code) > 0) {
 
       np = Allocate(sizeof(KeyNode));
-      np->next = bindings;
-      bindings = np;
+      np->next = bindings[MC_NONE];
+      bindings[MC_NONE] = np;
 
       np->key = key;
       np->state = mask;
@@ -452,8 +466,8 @@ void InsertMouseBinding(
    const char *command)
 {
    KeyNode *np = Allocate(sizeof(KeyNode));
-   np->next = bindings;
-   bindings = np;
+   np->next = bindings[context];
+   bindings[context] = np;
 
    np->command = CopyString(command);
    np->key = key;
@@ -466,12 +480,16 @@ void InsertMouseBinding(
 void ValidateKeys(void)
 {
    KeyNode *kp;
-   for(kp = bindings; kp; kp = kp->next) {
-      if((kp->key & 0xFF) == ACTION_ROOT && kp->command) {
-         const int bindex = GetRootMenuIndexFromString(kp->command);
-         if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
-            Warning(_("key binding: root menu \"%s\" not defined"),
-                    kp->command);
+   unsigned i;
+
+   for(i = 0; i < MC_COUNT; i++) {
+      for(kp = bindings[i]; kp; kp = kp->next) {
+         if((kp->key & 0xFF) == ACTION_ROOT && kp->command) {
+            const int bindex = GetRootMenuIndexFromString(kp->command);
+            if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
+               Warning(_("key binding: root menu \"%s\" not defined"),
+                       kp->command);
+            }
          }
       }
    }

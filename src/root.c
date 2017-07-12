@@ -189,7 +189,7 @@ char ShowRootMenu(int index, int x, int y, char keyboard)
    if(menuShown) {
       return 0;
    }
-   if (rootMenu[index]->dynamic) {
+   if(rootMenu[index]->dynamic) {
       Menu *menu = ParseDynamicMenu(rootMenu[index]->dynamic);
       if(menu) {
          char ret;

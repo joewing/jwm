@@ -880,7 +880,7 @@ void ParseMouse(const TokenNode *tp)
    const char *context;
    const char *action;
    const char *command;
-   unsigned button;
+   int button;
    int x;
    ActionType key;
 

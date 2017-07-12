@@ -459,7 +459,7 @@ void InsertBinding(ActionType key, const char *modifiers,
 
 /** Insert a mouse binding. */
 void InsertMouseBinding(
-   unsigned button,
+   int button,
    const char *mask,
    MouseContextType context,
    ActionType key,

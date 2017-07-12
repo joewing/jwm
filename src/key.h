@@ -65,7 +65,7 @@ void InsertBinding(ActionType key, const char *modifiers, const char *stroke,
  * @param command Extra parameter needed for some bindings.
  */
 void InsertMouseBinding(
-   unsigned button,
+   int button,
    const char *mask,
    MouseContextType context,
    ActionType key,

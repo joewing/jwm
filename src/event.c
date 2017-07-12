@@ -1596,6 +1596,8 @@ void DispatchBorderButtonEvent(const XButtonEvent *event,
          doubleClickActive = 0;
          button = event->button;
       }
+   } else {
+      button = event->button;
    }
    if(event->type == ButtonRelease) {
       /* Releases are specified by negative button numbers. */

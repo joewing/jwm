@@ -89,11 +89,11 @@ static const unsigned int ACTION_MAP_COUNT = ARRAY_LENGTH(ACTION_MAP);
  * Note that this mapping must be sorted.
  */
 static const StringMappingType MC_MAP[] = {
+   { "border",                MC_BORDER   },
    { "close",                 MC_CLOSE    },
    { "icon",                  MC_ICON     },
    { "maximize",              MC_MAXIMIZE },
    { "minimize",              MC_MINIMIZE },
-   { "border",                MC_BORDER   },
    { "root",                  MC_ROOT     },
    { "title",                 MC_MOVE     }
 };

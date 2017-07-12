@@ -407,7 +407,7 @@ void HandleButtonEvent(const XButtonEvent *event)
          case Button3:
             if(move_resize) {
                GetBorderSize(&np->state, &north, &south, &east, &west);
-               ResizeClient(np, MC_RESIZE | MC_RESIZE_E | MC_RESIZE_S,
+               ResizeClient(np, MC_BORDER | MC_BORDER_E | MC_BORDER_S,
                             event->x + west, event->y + north);
             } else {
                FocusClient(np);
@@ -1164,28 +1164,28 @@ void HandleNetWMMoveResize(const XClientMessageEvent *event, ClientNode *np)
 
    switch(direction) {
    case 0:  /* top-left */
-      ResizeClient(np, MC_RESIZE | MC_RESIZE_N | MC_RESIZE_W, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_N | MC_BORDER_W, x, y);
       break;
    case 1:  /* top */
-      ResizeClient(np, MC_RESIZE | MC_RESIZE_N, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_N, x, y);
       break;
    case 2:  /* top-right */
-      ResizeClient(np, MC_RESIZE | MC_RESIZE_N | MC_RESIZE_E, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_N | MC_BORDER_E, x, y);
       break;
    case 3:  /* right */
-      ResizeClient(np, MC_RESIZE | MC_RESIZE_E, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_E, x, y);
       break;
    case 4:  /* bottom-right */
-      ResizeClient(np, MC_RESIZE | MC_RESIZE_S | MC_RESIZE_E, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_S | MC_BORDER_E, x, y);
       break;
    case 5:  /* bottom */
-      ResizeClient(np, MC_RESIZE | MC_RESIZE_S, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_S, x, y);
       break;
    case 6:  /* bottom-left */
-      ResizeClient(np, MC_RESIZE | MC_RESIZE_S | MC_RESIZE_W, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_S | MC_BORDER_W, x, y);
       break;
    case 7:  /* left */
-      ResizeClient(np, MC_RESIZE | MC_RESIZE_W, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_W, x, y);
       break;
    case 8:  /* move */
       MoveClient(np, x, y);

@@ -93,7 +93,7 @@ static const StringMappingType MC_MAP[] = {
    { "icon",                  MC_ICON     },
    { "maximize",              MC_MAXIMIZE },
    { "minimize",              MC_MINIMIZE },
-   { "resize",                MC_RESIZE   },
+   { "border",                MC_BORDER   },
    { "root",                  MC_ROOT     },
    { "title",                 MC_MOVE     }
 };

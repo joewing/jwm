@@ -16,7 +16,7 @@
 typedef unsigned char MouseContextType;
 #define MC_NONE            0     /**< Keyboard/none. */
 #define MC_ROOT            1     /**< Root window. */
-#define MC_RESIZE          2     /**< Resize handle. */
+#define MC_BORDER          2     /**< Resize handle. */
 #define MC_MOVE            3     /**< Move handle. */
 #define MC_CLOSE           4     /**< Close button. */
 #define MC_MAXIMIZE        5     /**< Maximize button. */
@@ -24,10 +24,10 @@ typedef unsigned char MouseContextType;
 #define MC_ICON            7     /**< Window menu button. */
 #define MC_COUNT           8     /**< Number of contexts. */
 #define MC_MASK            0x0F  /**< Context type mask. */
-#define MC_RESIZE_N        0x10  /**< Resize north. */
-#define MC_RESIZE_S        0x20  /**< Resize south. */
-#define MC_RESIZE_E        0x40  /**< Resize east. */
-#define MC_RESIZE_W        0x80  /**< Resize west. */
+#define MC_BORDER_N        0x10  /**< North border. */
+#define MC_BORDER_S        0x20  /**< South border. */
+#define MC_BORDER_E        0x40  /**< East border. */
+#define MC_BORDER_W        0x80  /**< West border. */
 
 void InitializeKeys(void);
 void StartupKeys(void);

@@ -90,7 +90,7 @@ void ShutdownCursors(void)
 Cursor GetFrameCursor(MouseContextType context)
 {
    switch(context & MC_MASK) {
-   case MC_RESIZE:
+   case MC_BORDER:
       return GetResizeCursor(context);
    case MC_CLOSE:
       break;
@@ -109,25 +109,25 @@ Cursor GetFrameCursor(MouseContextType context)
 /** Get the cursor for resizing on the specified frame location. */
 Cursor GetResizeCursor(MouseContextType context)
 {
-   if(context & MC_RESIZE_N) {
-      if(context & MC_RESIZE_E) {
+   if(context & MC_BORDER_N) {
+      if(context & MC_BORDER_E) {
          return cursors[CURSOR_NE];
-      } else if(context & MC_RESIZE_W) {
+      } else if(context & MC_BORDER_W) {
          return cursors[CURSOR_NW];
       } else {
          return cursors[CURSOR_NORTH];
       }
-   } else if(context & MC_RESIZE_S) {
-      if(context & MC_RESIZE_E) {
+   } else if(context & MC_BORDER_S) {
+      if(context & MC_BORDER_E) {
          return cursors[CURSOR_SE];
-      } else if(context & MC_RESIZE_W) {
+      } else if(context & MC_BORDER_W) {
          return cursors[CURSOR_SW];
       } else {
          return cursors[CURSOR_SOUTH];
       }
-   } else if(context & MC_RESIZE_E) {
+   } else if(context & MC_BORDER_E) {
          return cursors[CURSOR_EAST];
-   } else if(context & MC_RESIZE_W) {
+   } else if(context & MC_BORDER_W) {
       return cursors[CURSOR_WEST];
    } else {
       return cursors[CURSOR_DEFAULT];

@@ -110,7 +110,7 @@ void ResizeClient(ClientNode *np, MouseContextType context,
                           event.xmotion.window);
          DiscardMotionEvents(&event, np->window);
 
-         if(context & MC_RESIZE_N) {
+         if(context & MC_BORDER_N) {
             delta = (event.xmotion.y - starty) / np->yinc;
             delta *= np->yinc;
             if(oldh - delta >= np->minHeight
@@ -118,31 +118,31 @@ void ResizeClient(ClientNode *np, MouseContextType context,
                np->height = oldh - delta;
                np->y = oldy + delta;
             }
-            if(!(context & (MC_RESIZE_E | MC_RESIZE_W))) {
+            if(!(context & (MC_BORDER_E | MC_BORDER_W))) {
                FixWidth(np);
             }
          }
-         if(context & MC_RESIZE_S) {
+         if(context & MC_BORDER_S) {
             delta = (event.xmotion.y - starty) / np->yinc;
             delta *= np->yinc;
             np->height = oldh + delta;
             np->height = Max(np->height, np->minHeight);
             np->height = Min(np->height, np->maxHeight);
-            if(!(context & (MC_RESIZE_E | MC_RESIZE_W))) {
+            if(!(context & (MC_BORDER_E | MC_BORDER_W))) {
                FixWidth(np);
             }
          }
-         if(context & MC_RESIZE_E) {
+         if(context & MC_BORDER_E) {
             delta = (event.xmotion.x - startx) / np->xinc;
             delta *= np->xinc;
             np->width = oldw + delta;
             np->width = Max(np->width, np->minWidth);
             np->width = Min(np->width, np->maxWidth);
-            if(!(context & (MC_RESIZE_N | MC_RESIZE_S))) {
+            if(!(context & (MC_BORDER_N | MC_BORDER_S))) {
                FixHeight(np);
             }
          }
-         if(context & MC_RESIZE_W) {
+         if(context & MC_BORDER_W) {
             delta = (event.xmotion.x - startx) / np->xinc;
             delta *= np->xinc;
             if(oldw - delta >= np->minWidth
@@ -150,26 +150,26 @@ void ResizeClient(ClientNode *np, MouseContextType context,
                np->width = oldw - delta;
                np->x = oldx + delta;
             }
-            if(!(context & (MC_RESIZE_N | MC_RESIZE_S))) {
+            if(!(context & (MC_BORDER_N | MC_BORDER_S))) {
                FixHeight(np);
             }
          }
 
          if(np->sizeFlags & PAspect) {
-            if((context & (MC_RESIZE_N | MC_RESIZE_S)) &&
-               (context & (MC_RESIZE_E | MC_RESIZE_W))) {
+            if((context & (MC_BORDER_N | MC_BORDER_S)) &&
+               (context & (MC_BORDER_E | MC_BORDER_W))) {
 
                if(np->width * np->aspect.miny < np->height * np->aspect.minx) {
                   delta = np->width;
                   np->width = (np->height * np->aspect.minx) / np->aspect.miny;
-                  if(context & MC_RESIZE_W) {
+                  if(context & MC_BORDER_W) {
                      np->x -= np->width - delta;
                   }
                }
                if(np->width * np->aspect.maxy > np->height * np->aspect.maxx) {
                   delta = np->height;
                   np->height = (np->width * np->aspect.maxy) / np->aspect.maxx;
-                  if(context & MC_RESIZE_N) {
+                  if(context & MC_BORDER_N) {
                      np->y -= np->height - delta;
                   }
                }
@@ -237,7 +237,7 @@ void ResizeClientKeyboard(ClientNode *np)
                                GrabModeAsync, CurrentTime) != GrabSuccess)) {
       return;
    }
-   if(!GrabMouseForResize(MC_RESIZE_S | MC_RESIZE_E | MC_RESIZE)) {
+   if(!GrabMouseForResize(MC_BORDER_S | MC_BORDER_E | MC_BORDER)) {
       JXUngrabKeyboard(display, CurrentTime);
       return;
    }

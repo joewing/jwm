@@ -165,43 +165,43 @@ MouseContextType GetBorderContext(const ClientNode *np, int x, int y)
    }
 
    /* We don't allow resizing maximized windows. */
-   resizeMask = MC_RESIZE_S | MC_RESIZE_N
-              | MC_RESIZE_E | MC_RESIZE_W
-              | MC_RESIZE;
+   resizeMask = MC_BORDER_S | MC_BORDER_N
+              | MC_BORDER_E | MC_BORDER_W
+              | MC_BORDER;
    if(np->state.maxFlags & MAX_HORIZ) {
-      resizeMask &= ~(MC_RESIZE_E | MC_RESIZE_W);
+      resizeMask &= ~(MC_BORDER_E | MC_BORDER_W);
    }
    if(np->state.maxFlags & MAX_VERT) {
-      resizeMask &= ~(MC_RESIZE_N | MC_RESIZE_S);
+      resizeMask &= ~(MC_BORDER_N | MC_BORDER_S);
    }
    if(np->state.status & STAT_SHADED) {
-      resizeMask &= ~(MC_RESIZE_N | MC_RESIZE_S);
+      resizeMask &= ~(MC_BORDER_N | MC_BORDER_S);
    }
 
    /* Check south east/west and north east/west resizing. */
    if(y > np->height + north - titleHeight) {
       if(x < titleHeight) {
-         return (MC_RESIZE_S | MC_RESIZE_W | MC_RESIZE) & resizeMask;
+         return (MC_BORDER_S | MC_BORDER_W | MC_BORDER) & resizeMask;
       } else if(x > np->width + west - titleHeight) {
-         return (MC_RESIZE_S | MC_RESIZE_E | MC_RESIZE) & resizeMask;
+         return (MC_BORDER_S | MC_BORDER_E | MC_BORDER) & resizeMask;
       }
    } else if(y < titleHeight) {
       if(x < titleHeight) {
-         return (MC_RESIZE_N | MC_RESIZE_W | MC_RESIZE) & resizeMask;
+         return (MC_BORDER_N | MC_BORDER_W | MC_BORDER) & resizeMask;
       } else if(x > np->width + west - titleHeight) {
-         return (MC_RESIZE_N | MC_RESIZE_E | MC_RESIZE) & resizeMask;
+         return (MC_BORDER_N | MC_BORDER_E | MC_BORDER) & resizeMask;
       }
    }
 
    /* Check east, west, north, and south resizing. */
    if(x <= west) {
-      return (MC_RESIZE_W | MC_RESIZE) & resizeMask;
+      return (MC_BORDER_W | MC_BORDER) & resizeMask;
    } else if(x >= np->width + west) {
-      return (MC_RESIZE_E | MC_RESIZE) & resizeMask;
+      return (MC_BORDER_E | MC_BORDER) & resizeMask;
    } else if(y >= np->height + north) {
-      return (MC_RESIZE_S | MC_RESIZE) & resizeMask;
+      return (MC_BORDER_S | MC_BORDER) & resizeMask;
    } else if(y <= south) {
-      return (MC_RESIZE_N | MC_RESIZE) & resizeMask;
+      return (MC_BORDER_N | MC_BORDER) & resizeMask;
    } else {
       return MC_NONE;
    }

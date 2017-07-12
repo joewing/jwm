@@ -90,6 +90,15 @@
         <Outline>#000000</Outline>
         <Opacity>0.75</Opacity>
     </TrayStyle>
+    <TaskListStyle>
+      <Font>Sans-9</Font>
+      <Active>
+        <Foreground>#FFFFFF</Foreground>
+        <Background>#555555</Background>
+      </Active>
+      <Foreground>#FFFFFF</Foreground>
+      <Background>#333333</Background>
+    </TaskListStyle>
     <PagerStyle>
         <Outline>#000000</Outline>
         <Foreground>#555555</Foreground>

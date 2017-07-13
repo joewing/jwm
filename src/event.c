@@ -51,8 +51,6 @@ static char task_update_pending = 0;
 static char pager_update_pending = 0;
 
 static void Signal(void);
-static void DispatchBorderButtonEvent(const XButtonEvent *event,
-                                      ClientNode *np);
 
 static void ProcessBinding(MouseContextType context, ClientNode *np,
                            unsigned state, int code, int x, int y);
@@ -368,10 +366,44 @@ char HandleSelectionClear(const XSelectionClearEvent *event)
 /** Process a button event. */
 void HandleButtonEvent(const XButtonEvent *event)
 {
+   static Time lastClickTime = 0;
+   static int lastX = 0, lastY = 0;
+   static unsigned doubleClickActive = 0;
 
    ClientNode *np;
+   int button;
    int north, south, east, west;
+   MouseContextType context;
 
+   /* Determine the button to present for processing.
+    * Press is positive, release is negative, double clicks
+    * are multiplied by 11.
+    */
+   if(event->type == ButtonPress) {
+      if(doubleClickActive == event->button
+         && event->time != lastClickTime
+         && event->time - lastClickTime <= settings.doubleClickSpeed
+         && abs(event->x - lastX) <= settings.doubleClickDelta
+         && abs(event->y - lastY) <= settings.doubleClickDelta) {
+         button = event->button * 11;
+      } else {
+         button = event->button;
+      }
+      doubleClickActive = 0;
+   } else {
+      button = event->button;
+   }
+   if(event->type == ButtonRelease) {
+      button = -button;
+   }
+   if(button < 11) {
+      doubleClickActive = event->button;
+      lastClickTime = event->time;
+      lastX = event->x;
+      lastY = event->y;
+   }
+
+   /* Dispatch the event. */
    np = FindClientByParent(event->window);
    if(np) {
       /* Click on the border. */
@@ -379,12 +411,15 @@ void HandleButtonEvent(const XButtonEvent *event)
          FocusClient(np);
          RaiseClient(np);
       }
-      DispatchBorderButtonEvent(event, np);
-   } else if(event->window == rootWindow && event->type == ButtonPress) {
-      if(!ShowRootMenu(event->button, event->x, event->y, 0)) {
+      context = GetBorderContext(np, event->x, event->y);
+      ProcessBinding(context, np, event->state, button, event->x, event->y);
+   } else if(event->window == rootWindow) {
+      /* Click on the root. */
+      if(!ShowRootMenu(button, event->x, event->y, 0)) {
          ProcessBinding(MC_ROOT, NULL, event->state, event->button, 0, 0);
       }
    } else {
+      /* Click over window content. */
       const unsigned int mask = event->state & ~lockMask;
       np = FindClientByWindow(event->window);
       if(np) {
@@ -422,7 +457,6 @@ void HandleButtonEvent(const XButtonEvent *event)
          }
          JXAllowEvents(display, ReplayPointer, eventTime);
       }
-
    }
 }
 
@@ -1560,58 +1594,6 @@ char HandleDestroyNotify(const XDestroyWindowEvent *event)
       return 1;
    } else {
       return HandleDockDestroy(event->window);
-   }
-}
-
-/** Take the appropriate action for a click on a client border. */
-void DispatchBorderButtonEvent(const XButtonEvent *event,
-                               ClientNode *np)
-{
-   static Time lastClickTime = 0;
-   static int lastX = 0, lastY = 0;
-   static char doubleClickActive = 0;
-   int button;
-   int bsize;
-   MouseContextType context;
-
-   /* Determine the size of the border. */
-   if(np->state.border & BORDER_OUTLINE) {
-      bsize = settings.borderWidth;
-   } else {
-      bsize = 0;
-   }
-
-   /* Determine if this is a double click and set the button.
-    * We multiply by 11 to indicate a double click.
-    */
-   if(event->type == ButtonPress) {
-      if(doubleClickActive
-         && event->time != lastClickTime
-         && event->time - lastClickTime <= settings.doubleClickSpeed
-         && abs(event->x - lastX) <= settings.doubleClickDelta
-         && abs(event->y - lastY) <= settings.doubleClickDelta) {
-         doubleClickActive = 0;
-         button = event->button * 11;
-      } else {
-         doubleClickActive = 0;
-         button = event->button;
-      }
-   } else {
-      button = event->button;
-   }
-   if(event->type == ButtonRelease) {
-      /* Releases are specified by negative button numbers. */
-      button = -button;
-   }
-
-   /* Process the event. */
-   context = GetBorderContext(np, event->x, event->y);
-   ProcessBinding(context, np, event->state, button, event->x, event->y);
-   if(button < 11) {
-      doubleClickActive = 1;
-      lastClickTime = event->time;
-      lastX = event->x;
-      lastY = event->y;
    }
 }
 

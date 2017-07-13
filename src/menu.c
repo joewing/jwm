@@ -523,8 +523,7 @@ void MapMenu(Menu *menu, int x, int y, char keyboard)
    if(menu->parent) {
       menu->screen = menu->parent->screen;
    } else {
-      menu->screen = GetCurrentScreen(x + menu->width / 2,
-                                      y + menu->height / 2);
+      menu->screen = GetCurrentScreen(x, y);
    }
    if(x + menu->width > menu->screen->x + menu->screen->width) {
       if(menu->parent) {

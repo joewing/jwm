@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-03-26 14:43-0500\n"
+"POT-Creation-Date: 2017-07-12 21:06-0500\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -40,11 +40,11 @@ msgstr "неизвестный тип фона: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "фоновое изображение не найдено: \"%s\""
 
-#: src/client.c:906
+#: src/client.c:905
 msgid "Kill this window?"
 msgstr "Ликвидировать окно?"
 
-#: src/client.c:907
+#: src/client.c:906
 msgid "This may cause data to be lost!"
 msgstr "Это может привести к потере данных!"
 
@@ -364,15 +364,6 @@ msgid "invalid height for TaskList: %s"
 msgstr ""
 "недопустимое значение макс. ширины кнопки в панели задач (TaskList): %s"
 
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "не удалось загрузить иконку для кнопки запуска: \"%s\""
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "не заданы ни иконка, ни текст кнопки запуска"
-
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
@@ -387,6 +378,15 @@ msgstr "недопустимое значение горизонтального
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""
+
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "не удалось загрузить иконку для кнопки запуска: \"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "не заданы ни иконка, ни текст кнопки запуска"
 
 #: src/winmenu.c:49
 msgid "Kill"

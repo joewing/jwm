@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-03-26 14:43-0500\n"
+"POT-Creation-Date: 2017-07-12 21:06-0500\n"
 "PO-Revision-Date: 2015-08-19 14:22+0100\n"
 "Last-Translator: Vitor Lopes <vmnlop@gmail.com>\n"
 "Language-Team: Portuguese <vmnlop@gmail.com>\n"
@@ -43,11 +43,11 @@ msgstr "tipo de fundo invalido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "imagem de fundo não encontrada: \"%s\""
 
-#: src/client.c:906
+#: src/client.c:905
 msgid "Kill this window?"
 msgstr "Matar janela?"
 
-#: src/client.c:907
+#: src/client.c:906
 msgid "This may cause data to be lost!"
 msgstr "esta ação pode causar perda de dados!"
 
@@ -370,15 +370,6 @@ msgstr "largura máxima invalida para etiqueta a Tasklist: %s"
 msgid "invalid height for TaskList: %s"
 msgstr "largura máxima invalida para etiqueta a Tasklist: %s"
 
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "ícone e nome não esta definido na etiqueta TrayButton"
-
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
@@ -393,6 +384,15 @@ msgstr "alinhamento horizontal do tabuleiro invalido: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
+
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "ícone e nome não esta definido na etiqueta TrayButton"
 
 #: src/winmenu.c:49
 msgid "Kill"

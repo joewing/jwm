@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-03-26 14:43-0500\n"
+"POT-Creation-Date: 2017-07-12 21:06-0500\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -41,11 +41,11 @@ msgstr "Formato di sfondo non valido: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "Immagine di sfondo non trovata: \"%s\""
 
-#: src/client.c:906
+#: src/client.c:905
 msgid "Kill this window?"
 msgstr "Chiudere questa finestra?"
 
-#: src/client.c:907
+#: src/client.c:906
 msgid "This may cause data to be lost!"
 msgstr "Questo può causare una perdita di dati!"
 
@@ -364,15 +364,6 @@ msgstr "Larghezza massima della TaskList non valida: %s"
 msgid "invalid height for TaskList: %s"
 msgstr "Altezza della TaskList non valida: %s"
 
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "Impossibile caricare icona del vassoio: \"%s"
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "Nessuna icona o etichetta per il TrayButton"
-
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
@@ -387,6 +378,15 @@ msgstr "Allineamento orizzontale del vassoio non valido: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "Allineamento verticale del vassoio non valido: \"%s\""
+
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "Impossibile caricare icona del vassoio: \"%s"
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "Nessuna icona o etichetta per il TrayButton"
 
 #: src/winmenu.c:49
 msgid "Kill"

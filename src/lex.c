@@ -90,8 +90,7 @@ static const StringMappingType TOKEN_MAP[] = {
    { "Width",              TOK_WIDTH            },
    { "WindowStyle",        TOK_WINDOWSTYLE      }
 };
-static const unsigned int TOKEN_MAP_COUNT
-   = sizeof(TOKEN_MAP) / sizeof(TOKEN_MAP[0]);
+static const unsigned int TOKEN_MAP_COUNT = ARRAY_LENGTH(TOKEN_MAP);
 
 static TokenNode *head;
 
@@ -124,14 +123,12 @@ static TokenType LookupType(const char *name, TokenNode *np);
 /** Tokenize data. */
 TokenNode *Tokenize(const char *line, const char *fileName)
 {
-   AttributeNode *ap;
    TokenNode *current;
    char *temp;
-   unsigned int x;
-   unsigned int offset;
-   unsigned int lineNumber;
+   unsigned x;
+   unsigned offset;
+   unsigned lineNumber;
    char inElement;
-   char found;
 
    head = NULL;
    current = NULL;
@@ -160,6 +157,7 @@ TokenNode *Tokenize(const char *line, const char *fileName)
 
    /* Process the XML data. */
    while(line[x]) {
+      char found;
 
       /* Skip comments and white space. */
       do {
@@ -173,9 +171,7 @@ TokenNode *Tokenize(const char *line, const char *fileName)
          found = 0;
          if(!strncmp(line + x, "<!--", 4)) {
             while(line[x]) {
-               if(line[x] == '\n') {
-                  lineNumber += 1;
-               }
+               lineNumber += line[x] == '\n';
                if(!strncmp(line + x, "-->", 3)) {
                   x += 3;
                   found = 1;
@@ -219,6 +215,35 @@ TokenNode *Tokenize(const char *line, const char *fileName)
             if(temp) {
                x += strlen(temp);
                Release(temp);
+            }
+
+         } else if(current && !strncmp(line + x, "![CDATA[", 8)) {
+
+            int start, stop;
+
+            /* CDATA */
+            x += 8;
+            start = x;
+            while(line[x]) {
+               lineNumber += line[x] == '\n';
+               if(!strncmp(line + x, "]]>", 3)) {
+                  x += 3;
+                  break;
+               }
+               x += 1;
+            }
+            stop = x - 4;
+            if(JLIKELY(stop > start)) {
+               const unsigned new_len = stop - start;
+               unsigned value_len = 0;
+               if(current->value) {
+                  value_len = strlen(current->value);
+                  current->value = Reallocate(current->value,
+                                              value_len + new_len + 1);
+               } else {
+                  current->value = Allocate(new_len + 1);
+               }
+               memcpy(&current->value[value_len], &line[start], new_len + 1);
             }
 
          } else {
@@ -267,7 +292,7 @@ ReadDefault:
 
             /* In the open tag; read attributes. */
             if(current) {
-             ap = CreateAttribute(current);
+               AttributeNode *ap = CreateAttribute(current);
                ap->name = ReadElementName(line + x);
                if(ap->name) {
                   x += strlen(ap->name);

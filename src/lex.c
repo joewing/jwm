@@ -232,7 +232,7 @@ TokenNode *Tokenize(const char *line, const char *fileName)
                }
                x += 1;
             }
-            stop = x - 4;
+            stop = x - 3;
             if(JLIKELY(stop > start)) {
                const unsigned new_len = stop - start;
                unsigned value_len = 0;
@@ -243,7 +243,8 @@ TokenNode *Tokenize(const char *line, const char *fileName)
                } else {
                   current->value = Allocate(new_len + 1);
                }
-               memcpy(&current->value[value_len], &line[start], new_len + 1);
+               memcpy(&current->value[value_len], &line[start], new_len);
+               current->value[value_len + new_len] = 0;
             }
 
          } else {

@@ -1,14 +1,14 @@
 /**
- * @file key.c
+ * @file binding.c
  * @author Joe Wingbermuehle
- * @date 2004-2006
+ * @date 2004-20017
  *
- * @brief Key binding functions.
+ * @brief Key/mouse binding functions.
  *
  */
 
 #include "jwm.h"
-#include "key.h"
+#include "binding.h"
 
 #include "client.h"
 #include "clientlist.h"
@@ -78,15 +78,15 @@ static KeySym ParseKeyString(const char *str);
 static char ShouldGrab(ActionType key);
 static void GrabKey(KeyNode *np, Window win);
 
-/** Initialize key data. */
-void InitializeKeys(void)
+/** Initialize binding data. */
+void InitializeBindings(void)
 {
    memset(bindings, 0, sizeof(bindings));
    lockMask = 0;
 }
 
-/** Startup key bindings. */
-void StartupKeys(void)
+/** Startup bindings. */
+void StartupBindings(void)
 {
 
    XModifierKeymap *modmap;
@@ -128,8 +128,8 @@ void StartupKeys(void)
    }
 }
 
-/** Shutdown key bindings. */
-void ShutdownKeys(void)
+/** Shutdown bindings. */
+void ShutdownBindings(void)
 {
    ClientNode *np;
    TrayType *tp;
@@ -152,7 +152,7 @@ void ShutdownKeys(void)
 }
 
 /** Destroy key data. */
-void DestroyKeys(void)
+void DestroyBindings(void)
 {
    unsigned i;
    for(i = 0; i < MC_COUNT; i++) {

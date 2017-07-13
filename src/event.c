@@ -17,7 +17,7 @@
 #include "desktop.h"
 #include "dock.h"
 #include "icon.h"
-#include "key.h"
+#include "binding.h"
 #include "move.h"
 #include "place.h"
 #include "resize.h"

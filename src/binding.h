@@ -1,9 +1,9 @@
 /**
- * @file key.h
+ * @file binding.h
  * @author Joe Wingbermuehle
- * @date 2004-2006
+ * @date 2004-2017
  *
- * @brief Header for the key binding functions.
+ * @brief Header for mouse/key bindings.
  *
  */
 
@@ -29,10 +29,10 @@ typedef unsigned char MouseContextType;
 #define MC_BORDER_E        0x40  /**< East border. */
 #define MC_BORDER_W        0x80  /**< West border. */
 
-void InitializeKeys(void);
-void StartupKeys(void);
-void ShutdownKeys(void);
-void DestroyKeys(void);
+void InitializeBindings(void);
+void StartupBindings(void);
+void ShutdownBindings(void);
+void DestroyBindings(void);
 
 /** Mask of 'lock' keys. */
 extern unsigned int lockMask;

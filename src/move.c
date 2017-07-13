@@ -15,7 +15,7 @@
 #include "clientlist.h"
 #include "cursor.h"
 #include "event.h"
-#include "key.h"
+#include "binding.h"
 #include "outline.h"
 #include "pager.h"
 #include "screen.h"

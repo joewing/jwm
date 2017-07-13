@@ -13,7 +13,7 @@
 #include "client.h"
 #include "icon.h"
 #include "cursor.h"
-#include "key.h"
+#include "binding.h"
 #include "button.h"
 #include "event.h"
 #include "root.h"

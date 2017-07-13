@@ -16,7 +16,7 @@
 #include "screen.h"
 #include "misc.h"
 #include "settings.h"
-#include "key.h"
+#include "binding.h"
 
 #ifndef DISABLE_CONFIRM
 

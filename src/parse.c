@@ -19,7 +19,7 @@
 #include "swallow.h"
 #include "pager.h"
 #include "error.h"
-#include "key.h"
+#include "binding.h"
 #include "main.h"
 #include "font.h"
 #include "icon.h"

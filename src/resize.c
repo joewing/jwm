@@ -15,7 +15,7 @@
 #include "misc.h"
 #include "pager.h"
 #include "status.h"
-#include "key.h"
+#include "binding.h"
 #include "event.h"
 #include "settings.h"
 

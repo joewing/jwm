@@ -22,7 +22,7 @@
 #include "confirm.h"
 #include "font.h"
 #include "group.h"
-#include "key.h"
+#include "binding.h"
 #include "icon.h"
 #include "taskbar.h"
 #include "tray.h"
@@ -479,6 +479,7 @@ void Initialize(void)
 {
 
    InitializeBackgrounds();
+   InitializeBindings();
    InitializeBorders();
    InitializeClients();
    InitializeClock();
@@ -494,7 +495,6 @@ void Initialize(void)
    InitializeGroups();
    InitializeHints();
    InitializeIcons();
-   InitializeKeys();
    InitializePager();
    InitializePlacement();
    InitializePopup();
@@ -537,7 +537,7 @@ void Startup(void)
    StartupHints();
    StartupDock();
    StartupTray();
-   StartupKeys();
+   StartupBindings();
    StartupBorders();
    StartupPlacement();
    StartupClients();
@@ -588,7 +588,7 @@ void Shutdown(void)
       ShutdownDialogs();
 #  endif
    ShutdownPopup();
-   ShutdownKeys();
+   ShutdownBindings();
    ShutdownPager();
    ShutdownRootMenu();
    ShutdownDock();
@@ -637,7 +637,7 @@ void Destroy(void)
    DestroyGroups();
    DestroyHints();
    DestroyIcons();
-   DestroyKeys();
+   DestroyBindings();
    DestroyPager();
    DestroyPlacement();
    DestroyPopup();

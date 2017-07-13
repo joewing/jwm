@@ -11,7 +11,7 @@
 #define BORDER_H
 
 #include "gradient.h"
-#include "key.h"
+#include "binding.h"
 
 struct ClientNode;
 struct ClientState;

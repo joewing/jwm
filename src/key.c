@@ -33,8 +33,7 @@ typedef struct ModifierNode {
    unsigned int   mask;
 } ModifierNode;
 
-static ModifierNode modifiers[] = {
-
+static const ModifierNode MODIFIERS[] = {
    { 'C',   MASK_CTRL      },
    { 'S',   MASK_SHIFT     },
    { 'A',   MASK_MOD1      },
@@ -42,10 +41,9 @@ static ModifierNode modifiers[] = {
    { '2',   MASK_MOD2      },
    { '3',   MASK_MOD3      },
    { '4',   MASK_MOD4      },
-   { '5',   MASK_MOD5      },
-   { 0,     MASK_NONE      }
-
+   { '5',   MASK_MOD5      }
 };
+static const unsigned MODIFIER_COUNT = ARRAY_LENGTH(MODIFIERS);
 
 typedef struct KeyNode {
 
@@ -98,7 +96,7 @@ void StartupKeys(void)
 
    /* Get the keys that we don't care about (num lock, etc). */
    modmap = JXGetModifierMapping(display);
-   for(x = 0; x < sizeof(lockMods) / sizeof(lockMods[0]); x++) {
+   for(x = 0; x < ARRAY_LENGTH(lockMods); x++) {
       lockMods[x].mask = GetModifierMask(modmap, lockMods[x].symbol);
       lockMask |= lockMods[x].mask;
    }
@@ -182,12 +180,12 @@ void GrabKey(KeyNode *np, Window win)
    }
 
    /* Grab for each lock modifier. */
-   maxIndex = 1 << (sizeof(lockMods) / sizeof(lockMods[0]));
+   maxIndex = 1 << ARRAY_LENGTH(lockMods);
    for(index = 0; index < maxIndex; index++) {
 
       /* Compute the modifier mask. */
       mask = 0;
-      for(x = 0; x < sizeof(lockMods) / sizeof(lockMods[0]); x++) {
+      for(x = 0; x < ARRAY_LENGTH(lockMods); x++) {
          if(index & (1 << x)) {
             mask |= lockMods[x].mask;
          }
@@ -334,21 +332,19 @@ unsigned GetModifierMask(XModifierKeymap *modmap, KeySym key) {
 /** Parse a modifier mask string. */
 unsigned int ParseModifierString(const char *str)
 {
-   unsigned int mask;
-   unsigned int x, y;
-   char found;
+   unsigned mask = MASK_NONE;
+   unsigned x;
 
    if(!str) {
-      return MASK_NONE;
+      return mask;
    }
 
-   mask = MASK_NONE;
    for(x = 0; str[x]; x++) {
-
-      found = 0;
-      for(y = 0; modifiers[y].name; y++) {
-         if(modifiers[y].name == str[x]) {
-            mask |= modifiers[y].mask;
+      unsigned y;
+      char found = 0;
+      for(y = 0; y < MODIFIER_COUNT; y++) {
+         if(MODIFIERS[y].name == str[x]) {
+            mask |= MODIFIERS[y].mask;
             found = 1;
             break;
          }
@@ -357,7 +353,6 @@ unsigned int ParseModifierString(const char *str)
       if(JUNLIKELY(!found)) {
          Warning(_("invalid modifier: \"%c\""), str[x]);
       }
-
    }
 
    return mask;

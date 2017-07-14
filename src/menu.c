@@ -183,7 +183,11 @@ char ShowMenu(Menu *menu, RunMenuCommandType runner,
 {
    /* Don't show the menu if there isn't anything to show. */
    if(JUNLIKELY(!IsMenuValid(menu))) {
-      return 0;
+      /* Return 1 if there is an invalid menu.
+       * This allows empty root menus to be defined to disable
+       * scrolling on the root window.
+       */
+      return menu ? 1 : 0;
    }
    if(JUNLIKELY(shouldExit)) {
       return 0;

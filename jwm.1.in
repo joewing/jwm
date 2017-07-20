@@ -1129,7 +1129,7 @@ xcompmgr, is required for this.
 The color of the window outline for inactive windows.
 The default is a darkened version of the window background.
 If \fBmotif\fP window decorations are specified, two colors may be
-given separated by a ':' to set the down and up colors respetively.
+given separated by a ':' to set the down and up colors respectively.
 .RE
 .RE
 

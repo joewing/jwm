@@ -7,6 +7,9 @@ version will not cause problems.  New configuration options are not
 described.  See the release notes at http://joewing.net/projects/jwm/ for
 more information.
 
+Changes from 2.3.6 to 2.3.7
+==============================================================================
+ * No breaking changes.
 
 Changes from 2.3.5 to 2.3.6
 ==============================================================================

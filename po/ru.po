@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-07-12 21:06-0500\n"
+"POT-Creation-Date: 2017-07-22 00:02+0000\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -364,6 +364,15 @@ msgid "invalid height for TaskList: %s"
 msgstr ""
 "недопустимое значение макс. ширины кнопки в панели задач (TaskList): %s"
 
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "не удалось загрузить иконку для кнопки запуска: \"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "не заданы ни иконка, ни текст кнопки запуска"
+
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
@@ -378,15 +387,6 @@ msgstr "недопустимое значение горизонтального
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""
-
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "не удалось загрузить иконку для кнопки запуска: \"%s\""
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "не заданы ни иконка, ни текст кнопки запуска"
 
 #: src/winmenu.c:49
 msgid "Kill"

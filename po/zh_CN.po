@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-07-12 21:06-0500\n"
+"POT-Creation-Date: 2017-07-22 00:02+0000\n"
 "PO-Revision-Date: 2015-09-24 16:11+0800\n"
 "Last-Translator: Christopher Meng <i@cicku.me>\n"
 "Language-Team: \n"
@@ -362,6 +362,15 @@ msgstr "无效的任务列表最大宽度：%s"
 msgid "invalid height for TaskList: %s"
 msgstr "无效的任务列表最大宽度：%s"
 
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "无法加载托盘图标：\"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "TrayButton 中未找到 icon 或 label 定义"
+
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
@@ -376,15 +385,6 @@ msgstr "无效的托盘水平对齐：\"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "无效的托盘垂直对齐：\"%s\""
-
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "无法加载托盘图标：\"%s\""
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "TrayButton 中未找到 icon 或 label 定义"
 
 #: src/winmenu.c:49
 msgid "Kill"

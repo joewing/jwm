@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-07-12 21:06-0500\n"
+"POT-Creation-Date: 2017-07-22 00:02+0000\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -364,6 +364,15 @@ msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
 msgid "invalid height for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
 
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "nie można załadować ikon w zasobniku: \"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "brak ikony lub etykiety dla TrayButton"
+
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
@@ -378,15 +387,6 @@ msgstr "nieprawidłowe wypoziomowanie zasobnika: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""
-
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "nie można załadować ikon w zasobniku: \"%s\""
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "brak ikony lub etykiety dla TrayButton"
 
 #: src/winmenu.c:49
 msgid "Kill"

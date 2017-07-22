@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-07-12 21:06-0500\n"
+"POT-Creation-Date: 2017-07-22 00:02+0000\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -358,6 +358,15 @@ msgstr "ongeldige maximum breedte voor Taaklijst: %s"
 msgid "invalid height for TaskList: %s"
 msgstr "ongeldige maximum breedte voor Taaklijst: %s"
 
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "kon taakbalk-pictogram niet laden: \"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "geen pictogram of label voor Taakbalk-knop"
+
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
@@ -372,15 +381,6 @@ msgstr "ongeldige horizontale taakbalk uitlijning: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ongeldige verticale taakbalk uitlijning: \"%s\""
-
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "kon taakbalk-pictogram niet laden: \"%s\""
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "geen pictogram of label voor Taakbalk-knop"
 
 #: src/winmenu.c:49
 msgid "Kill"

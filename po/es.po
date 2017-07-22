@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-07-12 21:06-0500\n"
+"POT-Creation-Date: 2017-07-22 00:02+0000\n"
 "PO-Revision-Date: 2016-09-10 03:09-0300\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -365,6 +365,15 @@ msgstr "ancho máximo no válido para Lista de Tareas: %s"
 msgid "invalid height for TaskList: %s"
 msgstr "ancho no válido para Lista de Tareas: %s"
 
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "no se pudo cargar el icono de bandeja: «%s»"
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "no hay icono o etiqueta para el Botón de Bandeja"
+
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
@@ -379,15 +388,6 @@ msgstr "alineación horizontal no válida para bandeja: «%s»"
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alineación vertical no válida para bandeja: «%s»"
-
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "no se pudo cargar el icono de bandeja: «%s»"
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "no hay icono o etiqueta para el Botón de Bandeja"
 
 #: src/winmenu.c:49
 msgid "Kill"

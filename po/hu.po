@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-07-12 21:06-0500\n"
+"POT-Creation-Date: 2017-07-22 00:02+0000\n"
 "PO-Revision-Date: 2015-06-22 13:19+0000\n"
 "Last-Translator: Mihaly Horvath <hermitsoft@users.sourceforge.net>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -365,6 +365,15 @@ msgstr "érvénytelen maximális hosszúság van megadva a feladatlistához: %s"
 msgid "invalid height for TaskList: %s"
 msgstr "érvénytelen maximális hosszúság van megadva a feladatlistához: %s"
 
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "nem sikerült betölteni a gyorsindító tálcaikont: \"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "nincs ikon vagy címke megadva a gyorsindító tálcaikonhoz"
+
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
@@ -379,15 +388,6 @@ msgstr "érvénytelen vízszintes igazítási érték a tálcához: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "érvénytelen függőleges igazítási érték a tálcához: \"%s\""
-
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "nem sikerült betölteni a gyorsindító tálcaikont: \"%s\""
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "nincs ikon vagy címke megadva a gyorsindító tálcaikonhoz"
 
 #: src/winmenu.c:49
 msgid "Kill"

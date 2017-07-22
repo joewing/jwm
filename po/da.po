@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.6\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-07-12 21:06-0500\n"
+"POT-Creation-Date: 2017-07-22 00:02+0000\n"
 "PO-Revision-Date: 2017-03-25 00:00+0000\n"
 "Last-Translator: scootergrisen\n"
 "Language-Team: Danish\n"
@@ -361,6 +361,15 @@ msgstr "ugyldig maxwidth for TaskList: %s"
 msgid "invalid height for TaskList: %s"
 msgstr "ugyldig højde for TaskList: %s"
 
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "kunne ikke indlæse bakkeikon: \"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "intet ikon eller etiket for bakkeknap"
+
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
@@ -375,15 +384,6 @@ msgstr "ugyldig vandret justering af bakke: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ugyldig lodret justering af bakke: \"%s\""
-
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "kunne ikke indlæse bakkeikon: \"%s\""
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "intet ikon eller etiket for bakkeknap"
 
 #: src/winmenu.c:49
 msgid "Kill"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-07-12 21:06-0500\n"
+"POT-Creation-Date: 2017-07-22 00:02+0000\n"
 "PO-Revision-Date: 2013-03-11 14:25+0100\n"
 "Last-Translator: fido <L18L@puppy.forum>\n"
 "Language-Team: German\n"
@@ -358,6 +358,15 @@ msgstr ""
 msgid "invalid height for TaskList: %s"
 msgstr "ungültige Opazität: \"%s\""
 
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "konnte Leistensymbol nicht laden: %s"
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr ""
+
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
@@ -372,15 +381,6 @@ msgstr "ungültige Horizontalausrichtung für Leiste: \"%s\""
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ungültige Vertikalausrichtung für Leiste: \"%s\""
-
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "konnte Leistensymbol nicht laden: %s"
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr ""
 
 #: src/winmenu.c:49
 msgid "Kill"

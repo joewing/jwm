@@ -77,8 +77,6 @@ int shapeEvent;
 char haveRender;
 #endif
 
-static const char CONFIG_FILE[] = "/.jwmrc";
-
 static void Initialize(void);
 static void Startup(void);
 static void Shutdown(void);
@@ -118,18 +116,6 @@ int main(int argc, char *argv[])
 
    StartDebug();
 
-   /* Get the name of the user's local configuration file. */
-   temp = getenv("HOME");
-   if(temp) {
-      const size_t temp_len = strlen(temp);
-      const size_t config_len = sizeof(CONFIG_FILE);
-      configPath = Allocate(temp_len + config_len);
-      memcpy(configPath, temp, temp_len);
-      memcpy(&configPath[temp_len], CONFIG_FILE, config_len);
-   } else {
-      configPath = CopyString(CONFIG_FILE);
-   }
-
    /* Parse command line options. */
    action = ACTION_RUN;
    for(x = 1; x < argc; x++) {
@@ -150,7 +136,9 @@ int main(int argc, char *argv[])
       } else if(!strcmp(argv[x], "-display") && x + 1 < argc) {
          displayString = argv[++x];
       } else if(!strcmp(argv[x], "-f") && x + 1 < argc) {
-         Release(configPath);
+         if(configPath) {
+            Release(configPath);
+         }
          configPath = CopyString(argv[++x]);
       } else {
          printf("unrecognized option: %s\n", argv[x]);

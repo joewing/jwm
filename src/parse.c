@@ -141,6 +141,9 @@ static const char *SPACING_ATTRIBUTE = "spacing";
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
 
+static const char CONFIG_FILE[] = "$HOME/.config/jwm/jwmrc";
+static const char OLD_CONFIG_FILE[] = "$HOME/.jwmrc";
+
 static char ParseFile(const char *fileName, int depth);
 static char *ReadFile(FILE *fd);
 static TokenNode *TokenizeFile(const char *fileName);
@@ -223,11 +226,18 @@ static void ParseError(const TokenNode *tp, const char *str, ...);
 /** Parse the JWM configuration. */
 void ParseConfig(const char *fileName)
 {
-   if(!ParseFile(fileName, 0)) {
-      if(JUNLIKELY(!ParseFile(SYSTEM_CONFIG, 0))) {
-         ParseError(NULL, _("could not open %s or %s"),
-                    fileName, SYSTEM_CONFIG);
+   if(fileName) {
+      if(!ParseFile(fileName, 0)) {
+         ParseError(NULL, _("could not open %s"), fileName);
       }
+   } else if(ParseFile(CONFIG_FILE, 0)) {
+      /* Found a config file in the new location. */
+   } else if(ParseFile(OLD_CONFIG_FILE, 0)) {
+      /* Found a config file in the old location. */
+   } else if(!ParseFile(SYSTEM_CONFIG, 0)) {
+      /* No config file could be found. */
+      ParseError(NULL, _("could not open %s or %s"),
+                 CONFIG_FILE, SYSTEM_CONFIG);
    }
    ValidateTrayButtons();
    ValidateKeys();

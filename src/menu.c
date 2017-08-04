@@ -13,7 +13,7 @@
 #include "client.h"
 #include "icon.h"
 #include "cursor.h"
-#include "key.h"
+#include "binding.h"
 #include "button.h"
 #include "event.h"
 #include "root.h"
@@ -680,18 +680,18 @@ MenuSelectionType UpdateMotion(Menu *menu,
       }
 
       y = -1;
-      switch(GetKey(&event->xkey) & 0xFF) {
-      case KEY_UP:
+      switch(GetKey(MC_NONE, event->xkey.state, event->xkey.keycode) & 0xFF) {
+      case ACTION_UP:
          y = GetPreviousMenuIndex(tp);
          break;
-      case KEY_DOWN:
+      case ACTION_DOWN:
          y = GetNextMenuIndex(tp);
          break;
-      case KEY_RIGHT:
+      case ACTION_RIGHT:
          tp = menu;
          y = 0;
          break;
-      case KEY_LEFT:
+      case ACTION_LEFT:
          if(tp->parent) {
             tp = tp->parent;
             if(tp->currentIndex >= 0) {
@@ -701,9 +701,9 @@ MenuSelectionType UpdateMotion(Menu *menu,
             }
          }
          break;
-      case KEY_ESC:
+      case ACTION_ESC:
          return MENU_SUBSELECT;
-      case KEY_ENTER:
+      case ACTION_ENTER:
          ip = GetMenuItem(tp, tp->currentIndex);
          if(ip != NULL) {
             HideMenu(menu);

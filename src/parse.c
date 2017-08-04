@@ -19,7 +19,7 @@
 #include "swallow.h"
 #include "pager.h"
 #include "error.h"
-#include "key.h"
+#include "binding.h"
 #include "main.h"
 #include "font.h"
 #include "icon.h"
@@ -39,51 +39,65 @@
 #include <fcntl.h>
 #include <errno.h>
 
+/** Mapping of action names to values.
+ * Note that this mapping must be sorted.
+ */
+static const StringMappingType ACTION_MAP[] = {
+   { "close",                 ACTION_CLOSE         },
+   { "ddesktop",              ACTION_DDESKTOP      },
+   { "desktop#",              ACTION_DESKTOP       },
+   { "down",                  ACTION_DOWN          },
+   { "escape",                ACTION_ESC           },
+   { "exit",                  ACTION_EXIT          },
+   { "fullscreen",            ACTION_FULLSCREEN    },
+   { "ldesktop",              ACTION_LDESKTOP      },
+   { "left",                  ACTION_LEFT          },
+   { "maxbottom",             ACTION_MAXBOTTOM     },
+   { "maxh",                  ACTION_MAXH          },
+   { "maximize",              ACTION_MAX           },
+   { "maxleft",               ACTION_MAXLEFT       },
+   { "maxright",              ACTION_MAXRIGHT      },
+   { "maxtop",                ACTION_MAXTOP        },
+   { "maxv",                  ACTION_MAXV          },
+   { "minimize",              ACTION_MIN           },
+   { "move",                  ACTION_MOVE          },
+   { "next",                  ACTION_NEXT          },
+   { "nextstacked",           ACTION_NEXTSTACK     },
+   { "prev",                  ACTION_PREV          },
+   { "prevstacked",           ACTION_PREVSTACK     },
+   { "rdesktop",              ACTION_RDESKTOP      },
+   { "resize",                ACTION_RESIZE        },
+   { "restart",               ACTION_RESTART       },
+   { "restore",               ACTION_RESTORE       },
+   { "right",                 ACTION_RIGHT         },
+   { "select",                ACTION_ENTER         },
+   { "sendd",                 ACTION_SENDD         },
+   { "sendl",                 ACTION_SENDL         },
+   { "sendr",                 ACTION_SENDR         },
+   { "sendu",                 ACTION_SENDU         },
+   { "shade",                 ACTION_SHADE         },
+   { "showdesktop",           ACTION_SHOWDESK      },
+   { "showtray",              ACTION_SHOWTRAY      },
+   { "stick",                 ACTION_STICK         },
+   { "udesktop",              ACTION_UDESKTOP      },
+   { "up",                    ACTION_UP            },
+   { "window",                ACTION_WIN           }
+};
+static const unsigned int ACTION_MAP_COUNT = ARRAY_LENGTH(ACTION_MAP);
+
 /** Mapping of key names to key types.
  * Note that this mapping must be sorted.
  */
-static const StringMappingType KEY_MAP[] = {
-   { "close",                 KEY_CLOSE         },
-   { "ddesktop",              KEY_DDESKTOP      },
-   { "desktop#",              KEY_DESKTOP       },
-   { "down",                  KEY_DOWN          },
-   { "escape",                KEY_ESC           },
-   { "exit",                  KEY_EXIT          },
-   { "fullscreen",            KEY_FULLSCREEN    },
-   { "ldesktop",              KEY_LDESKTOP      },
-   { "left",                  KEY_LEFT          },
-   { "maxbottom",             KEY_MAXBOTTOM     },
-   { "maxh",                  KEY_MAXH          },
-   { "maximize",              KEY_MAX           },
-   { "maxleft",               KEY_MAXLEFT       },
-   { "maxright",              KEY_MAXRIGHT      },
-   { "maxtop",                KEY_MAXTOP        },
-   { "maxv",                  KEY_MAXV          },
-   { "minimize",              KEY_MIN           },
-   { "move",                  KEY_MOVE          },
-   { "next",                  KEY_NEXT          },
-   { "nextstacked",           KEY_NEXTSTACK     },
-   { "prev",                  KEY_PREV          },
-   { "prevstacked",           KEY_PREVSTACK     },
-   { "rdesktop",              KEY_RDESKTOP      },
-   { "resize",                KEY_RESIZE        },
-   { "restart",               KEY_RESTART       },
-   { "restore",               KEY_RESTORE       },
-   { "right",                 KEY_RIGHT         },
-   { "select",                KEY_ENTER         },
-   { "sendd",                 KEY_SENDD         },
-   { "sendl",                 KEY_SENDL         },
-   { "sendr",                 KEY_SENDR         },
-   { "sendu",                 KEY_SENDU         },
-   { "shade",                 KEY_SHADE         },
-   { "showdesktop",           KEY_SHOWDESK      },
-   { "showtray",              KEY_SHOWTRAY      },
-   { "stick",                 KEY_STICK         },
-   { "udesktop",              KEY_UDESKTOP      },
-   { "up",                    KEY_UP            },
-   { "window",                KEY_WIN           }
+static const StringMappingType MC_MAP[] = {
+   { "border",                MC_BORDER   },
+   { "close",                 MC_CLOSE    },
+   { "icon",                  MC_ICON     },
+   { "maximize",              MC_MAXIMIZE },
+   { "minimize",              MC_MINIMIZE },
+   { "root",                  MC_ROOT     },
+   { "title",                 MC_MOVE     }
 };
-static const unsigned int KEY_MAP_COUNT = ARRAY_LENGTH(KEY_MAP);
+static const unsigned int MC_MAP_COUNT = ARRAY_LENGTH(MC_MAP);
 
 /** Mapping of names to group options.
  * Note that this mapping must be sorted.
@@ -201,7 +215,9 @@ static void ParseMenuStyle(const TokenNode *tp);
 static void ParsePopupStyle(const TokenNode *tp);
 
 /* Feel. */
+static ActionType ParseAction(const char *str, const char **command);
 static void ParseKey(const TokenNode *tp);
+static void ParseMouse(const TokenNode *tp);
 static void ParseSnapMode(const TokenNode *tp);
 static void ParseMoveMode(const TokenNode *tp);
 static void ParseResizeMode(const TokenNode *tp);
@@ -216,7 +232,8 @@ static int ParseTokenValue(const StringMappingType *mapping, int count,
 static int ParseAttribute(const StringMappingType *mapping, int count,
                           const TokenNode *tp, const char *attr,
                           int def);
-static unsigned int ParseUnsigned(const TokenNode *tp, const char *str);
+static int ParseSigned(const TokenNode *tp, const char *str);
+static unsigned ParseUnsigned(const TokenNode *tp, const char *str);
 static unsigned int ParseOpacity(const TokenNode *tp, const char *str);
 static WinLayerType ParseLayer(const TokenNode *tp, const char *str);
 static StatusWindowType ParseStatusWindowType(const TokenNode *tp);
@@ -317,6 +334,9 @@ void Parse(const TokenNode *start, int depth)
                break;
             case TOK_KEY:
                ParseKey(tp);
+               break;
+            case TOK_MOUSE:
+               ParseMouse(tp);
                break;
             case TOK_MENUSTYLE:
                ParseMenuStyle(tp);
@@ -813,17 +833,36 @@ Menu *ParseDynamicMenu(const char *command)
    return menu;
 }
 
-/** Parse a key binding. */
-void ParseKey(const TokenNode *tp) {
+/** Parse an action. */
+ActionType ParseAction(const char *str, const char **command)
+{
+   ActionType action = ACTION_NONE;
+   *command = NULL;
+   if(!strncmp(str, "exec:", 5)) {
+      action = ACTION_EXEC;
+      *command = str + 5;
+   } else if(!strncmp(str, "root:", 5)) {
+      action = ACTION_ROOT;
+      *command = str + 5;
+   } else {
+      /* Look up the option in the key map using binary search. */
+      const int x = FindValue(ACTION_MAP, ACTION_MAP_COUNT, str);
+      if(x >= 0) {
+         action = (ActionType)x;
+      }
+   }
+   return action;
+}
 
+/** Parse a key binding. */
+void ParseKey(const TokenNode *tp)
+{
    const char *key;
    const char *code;
    const char *mask;
    const char *action;
    const char *command;
-   KeyType k;
-
-   Assert(tp);
+   ActionType k;
 
    mask = FindAttribute(tp->attributes, "mask");
    key = FindAttribute(tp->attributes, "key");
@@ -835,33 +874,51 @@ void ParseKey(const TokenNode *tp) {
       return;
    }
 
-   command = NULL;
-   k = KEY_NONE;
-   if(!strncmp(action, "exec:", 5)) {
-      k = KEY_EXEC;
-      command = action + 5;
-   } else if(!strncmp(action, "root:", 5)) {
-      k = KEY_ROOT;
-      command = action + 5;
-   } else {
-      /* Look up the option in the key map using binary search. */
-      const int x = FindValue(KEY_MAP, KEY_MAP_COUNT, action);
-      if(x >= 0) {
-         k = (KeyType)x;
-      }
-   }
-
    /* Insert the binding if it's valid. */
-   if(JUNLIKELY(k == KEY_NONE)) {
-
+   k = ParseAction(action, &command);
+   if(JUNLIKELY(k == ACTION_NONE)) {
       ParseError(tp, _("invalid Key action: \"%s\""), action);
-
    } else {
-
       InsertBinding(k, mask, key, code, command);
+   }
+}
 
+/** Parse a mouse binding. */
+void ParseMouse(const TokenNode *tp)
+{
+   const char *mask;
+   const char *context;
+   const char *action;
+   const char *command;
+   int button;
+   int x;
+   ActionType key;
+
+   button = ParseSigned(tp, FindAttribute(tp->attributes, "button"));
+   if(JUNLIKELY(button == 0)) {
+      return;
+   }
+   mask = FindAttribute(tp->attributes, "mask");
+   context = FindAttribute(tp->attributes, "context");
+
+   action = tp->value;
+   if(JUNLIKELY(action == NULL)) {
+      ParseError(tp, _("no action specified for Mouse"));
+      return;
+   }
+   key = ParseAction(action, &command);
+   if(JUNLIKELY(key == ACTION_NONE)) {
+      ParseError(tp, _("invalid Mouse action: \"%s\""), action);
+      return;
    }
 
+   x = FindValue(MC_MAP, MC_MAP_COUNT, context);
+   if(JUNLIKELY(x < 0)) {
+      ParseError(tp, _("invalid Mouse context: \"%s\""), context);
+   } else {
+      const MouseContextType mc = (MouseContextType)x;
+      InsertMouseBinding(button, mask, mc, key, command);
+   }
 }
 
 /** Parse text alignment. */
@@ -1967,6 +2024,23 @@ TokenNode *TokenizePipe(const char *command)
    tokens = Tokenize(buffer, command);
    Release(buffer);
    return tokens;
+}
+
+/** Parse a signed integer. */
+int ParseSigned(const TokenNode *tp, const char *str)
+{
+   long value;
+   if(JUNLIKELY(!str)) {
+      ParseError(tp, _("no value specified"));
+      return 0;
+   }
+   value = strtol(str, NULL, 0);
+   if(JUNLIKELY(value < INT_MIN || value > INT_MAX)) {
+      ParseError(tp, _("invalid setting: %s"), str);
+      return 0;
+   } else {
+      return (int)value;
+   }
 }
 
 /** Parse an unsigned integer. */

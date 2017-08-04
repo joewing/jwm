@@ -15,7 +15,7 @@
 #include "clientlist.h"
 #include "cursor.h"
 #include "event.h"
-#include "key.h"
+#include "binding.h"
 #include "outline.h"
 #include "pager.h"
 #include "screen.h"
@@ -350,23 +350,23 @@ char MoveClientKeyboard(ClientNode *np)
       if(event.type == KeyPress) {
 
          DiscardKeyEvents(&event, np->window);
-         switch(GetKey(&event.xkey) & 0xFF) {
-         case KEY_UP:
+         switch(GetKey(MC_NONE, event.xkey.state, event.xkey.keycode) & 0xFF) {
+         case ACTION_UP:
             if(np->y + height > 0) {
                np->y -= 10;
             }
             break;
-         case KEY_DOWN:
+         case ACTION_DOWN:
             if(np->y < rootHeight) {
                np->y += 10;
             }
             break;
-         case KEY_RIGHT:
+         case ACTION_RIGHT:
             if(np->x < rootWidth) {
                np->x += 10;
             }
             break;
-         case KEY_LEFT:
+         case ACTION_LEFT:
             if(np->x + np->width > 0) {
                np->x -= 10;
             }

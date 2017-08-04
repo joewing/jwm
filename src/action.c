@@ -17,16 +17,16 @@
 #include "desktop.h"
 #include "menu.h"
 
-typedef struct ActionType {
+typedef struct ActionNode {
    char *action;
-   struct ActionType *next;
+   struct ActionNode *next;
    int mask;
-} ActionType;
+} ActionNode;
 
 /** Add an action. */
-void AddAction(ActionType **actions, const char *action, int mask)
+void AddAction(ActionNode **actions, const char *action, int mask)
 {
-   ActionType *ap;
+   ActionNode *ap;
 
    /* Make sure we actually have an action. */
    if(action == NULL || action[0] == 0 || mask == 0) {
@@ -45,7 +45,7 @@ void AddAction(ActionType **actions, const char *action, int mask)
       return;
    }
 
-   ap = (ActionType*)Allocate(sizeof(ActionType));
+   ap = Allocate(sizeof(ActionNode));
    ap->action = CopyString(action);
    ap->mask = mask;
    ap->next = *actions;
@@ -53,10 +53,10 @@ void AddAction(ActionType **actions, const char *action, int mask)
 }
 
 /** Destroy an action list. */
-void DestroyActions(ActionType *actions)
+void DestroyActions(ActionNode *actions)
 {
    while(actions) {
-      ActionType *next = actions->next;
+      ActionNode *next = actions->next;
       Release(actions->action);
       Release(actions);
       actions = next;
@@ -64,12 +64,12 @@ void DestroyActions(ActionType *actions)
 }
 
 /** Process a button press. */
-void ProcessActionPress(struct ActionType *actions,
+void ProcessActionPress(struct ActionNode *actions,
                         struct TrayComponentType *cp,
                         int x, int y, int button)
 {
    const ScreenType *sp;
-   const ActionType *ap;
+   const ActionNode *ap;
    const int mask = 1 << button;
    int mwidth, mheight;
    int menu;
@@ -159,11 +159,11 @@ void ProcessActionPress(struct ActionType *actions,
 }
 
 /** Process a button release. */
-void ProcessActionRelease(struct ActionType *actions,
+void ProcessActionRelease(struct ActionNode *actions,
                           struct TrayComponentType *cp,
                           int x, int y, int button)
 {
-   const ActionType *ap;
+   const ActionNode *ap;
    const int mask = 1 << button;
 
    if(JUNLIKELY(menuShown)) {
@@ -201,9 +201,9 @@ void ProcessActionRelease(struct ActionType *actions,
 }
 
 /** Validate actions. */
-void ValidateActions(const ActionType *actions)
+void ValidateActions(const ActionNode *actions)
 {
-   const ActionType *ap;
+   const ActionNode *ap;
    for(ap = actions; ap; ap = ap->next) {
       if(ap->action && !strncmp(ap->action, "root:", 5)) {
          const int bindex = GetRootMenuIndexFromString(&ap->action[5]);

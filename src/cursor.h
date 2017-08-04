@@ -23,7 +23,7 @@ void ShutdownCursors(void);
  * @param action The resize action.
  * @return 1 on success, 0 on failure.
  */
-char GrabMouseForResize(BorderActionType action);
+char GrabMouseForResize(MouseContextType context);
 
 /** Grab the mouse for moving a window.
  * @return 1 on success, 0 on failure.
@@ -44,7 +44,7 @@ char GrabMouseForChoose(void);
  * @param action The border action.
  * @return The cursor to use.
  */
-Cursor GetFrameCursor(BorderActionType action);
+Cursor GetFrameCursor(MouseContextType action);
 
 /** Move the mouse cursor.
  * @param win The window to act as an origin for the coordinates.

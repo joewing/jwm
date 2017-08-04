@@ -148,7 +148,7 @@ typedef struct ClientNode {
 
    ClientState state;         /**< Window state. */
 
-   BorderActionType borderAction;
+   MouseContextType mouseContext;
 
    struct IconNode *icon;     /**< Icon assigned to this window. */
 

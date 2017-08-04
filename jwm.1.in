@@ -1709,21 +1709,58 @@ It is possible to bind multiple key combinations to the same action.
 
 .B "MOUSE BINDINGS"
 .RS
-Any button other than the scroll wheel (buttons 4 and 5) on the root
-window will bring up the root menu unless otherwise specified via the
-\fBonroot\fP attribute of \fBRootMenu\fP. Scrolling up on the root window
-switches to the left desktop and scrolling down switches to the right desktop.
+Mouse bindings are configured using \fBMouse\fP tags.
+The \fBcontext\fP attribute determines the context in which the
+binding applies, the \fBbutton\fP attribute species the mouse button, and
+the (optional) \fBmask\fP specifies the key mask that must be in effect
+for the binding to match.  Finally, the text of the \fBMouse\fP tag
+determines the action to perform (see \fBKEY BINDINGS\fP for a list
+of actions).  The \fBbutton\fP is a mouse button number, starting
+at \fB1\fP (typically the left button). A positive value for the button
+indicates that the action applies on mouse press and a negative value
+indicates that the action applies on release. The button number can be
+repeated to bind to double clicks. The following mouse contexts are
+supported:
+.P
+.B border
+.RS
+The window border.
+.RE
+.P
+.B close
+.RS
+The close button on a window.
+.RE
+.P
+.B icon
+.RS
+The icon button on a window.
+.RE
+.P
+.B maximize
+.RS
+The maximize button on a window.
+.RE
+.P
+.B minimize
+.RS
+The minimize button on a window.
+.RE
+.P
+.B root
+.RS
+The root window.
+.RE
+.P
+.B title
+.RS
+The title bar of a window.
+.RE
+.P
+Other bindings:
 .P
 Button 1 (typically the left button):
 .RS
-Over the border, dragging resizes the window.
-Over the title bar, dragging moves the window and double clicking toggles
-the maximized state.
-Over the window while holding the appropriate modifier key, dragging moves
-the window.
-Over the menu button, clicking shows the menu.
-Over the minimize button, clicking minimizes the window.
-Over the maximize button, clicking toggles between maximized and normal.
 Over the close button, clicking closes the window.
 Over a task bar, restores or minimizes the window.
 Over a pager, switches the active desktop.
@@ -1731,28 +1768,17 @@ Over a pager, switches the active desktop.
 .P
 Button 2 (typically the middle button):
 .RS
-Over the maximize button, clicking toggles between vertically maximized
-and normal.
-Anywhere else on a window frame, dragging while holding button 2 will
-move the window.
 Over a pager, switches the active desktop.
 .RE
 .P
 Button 3 (typically the right button):
 .RS
-Over the frame, clicking shows the window menu.
-On the minimize button, clicking toggles between shaded and unshaded.
-On the maximize button, clicking toggles between horizontally maximized
-and normal.
-On the close button, clicking closes the window.
 Over a task bar, shows the window menu.
 Over a pager, dragging while holding button 3 will move a window.
 .RE
 .RE
 .P
 .RS
-Scrolling up over the title bar will shade the window and scrolling down
-will unshade the window.
 When a menu is open, the scroll wheel will move through menu items.
 When over the pager, the scroll wheel will switch desktops.
 When over a task list, the scroll wheel will switch windows.

@@ -29,7 +29,7 @@ typedef struct ClockType {
 
    char *format;                 /**< The time format to use. */
    char *zone;                   /**< The time zone to use (NULL = local). */
-   struct ActionType *actions;   /**< Actions */
+   struct ActionNode *actions;   /**< Actions */
    TimeType lastTime;            /**< Currently displayed time. */
 
    /* The following are used to control popups. */

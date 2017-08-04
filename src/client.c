@@ -154,7 +154,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    np->state.defaultLayer = LAYER_NORMAL;
 
    np->state.border = BORDER_DEFAULT;
-   np->borderAction = BA_NONE;
+   np->mouseContext = MC_NONE;
 
    ReadClientInfo(np, alreadyMapped);
 

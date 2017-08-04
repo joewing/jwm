@@ -71,6 +71,7 @@ static const StringMappingType ACTION_MAP[] = {
    { "restore",               ACTION_RESTORE       },
    { "right",                 ACTION_RIGHT         },
    { "select",                ACTION_ENTER         },
+   { "send#",                 ACTION_SEND          },
    { "sendd",                 ACTION_SENDD         },
    { "sendl",                 ACTION_SENDL         },
    { "sendr",                 ACTION_SENDR         },

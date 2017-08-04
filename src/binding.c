@@ -290,6 +290,7 @@ char ShouldGrab(ActionType action)
    case ACTION_RESTART:
    case ACTION_EXIT:
    case ACTION_FULLSCREEN:
+   case ACTION_SEND:
    case ACTION_SENDR:
    case ACTION_SENDL:
    case ACTION_SENDU:

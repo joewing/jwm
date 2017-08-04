@@ -1661,6 +1661,11 @@ Maximize the active window to the left of the screen.
 Maximize the active window to the right of the screen.
 .IP \fBrestore\fP
 Restore a maximized window.
+.IP \fBsend#\fP
+Send the active window to the specified desktop.
+To use this, "#" must be specified in the key section.
+The number 1 to the number of desktops configured
+are then substituted for "#".
 .IP \fBsendl\fP
 Send the active window left.
 .IP \fBsendr\fP

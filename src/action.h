@@ -48,17 +48,18 @@ typedef unsigned short ActionType;
 #define ACTION_RESTART        28
 #define ACTION_EXIT           29
 #define ACTION_FULLSCREEN     30
-#define ACTION_SENDR          31
-#define ACTION_SENDL          32
-#define ACTION_SENDU          33
-#define ACTION_SENDD          34
-#define ACTION_MAXTOP         35
-#define ACTION_MAXBOTTOM      36
-#define ACTION_MAXLEFT        37
-#define ACTION_MAXRIGHT       38
-#define ACTION_MAXV           39
-#define ACTION_MAXH           40
-#define ACTION_RESTORE        41
+#define ACTION_SEND           31
+#define ACTION_SENDR          32
+#define ACTION_SENDL          33
+#define ACTION_SENDU          34
+#define ACTION_SENDD          35
+#define ACTION_MAXTOP         36
+#define ACTION_MAXBOTTOM      37
+#define ACTION_MAXLEFT        38
+#define ACTION_MAXRIGHT       39
+#define ACTION_MAXV           40
+#define ACTION_MAXH           41
+#define ACTION_RESTORE        42
 
 /** Add an action to a list of actions.
  * @param actions The action list to update.

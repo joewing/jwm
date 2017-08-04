@@ -634,6 +634,13 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
          }
       }
       break;
+   case ACTION_SEND:
+      if(np) {
+         const unsigned desktop = (key >> 8) - 1;
+         SetClientDesktop(np, desktop);
+         ChangeDesktop(desktop);
+      }
+      break;
    case ACTION_SENDR:
       if(np) {
          const unsigned desktop = GetRightDesktop(np->state.desktop);

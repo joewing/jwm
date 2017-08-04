@@ -56,8 +56,13 @@ void ResizeClient(ClientNode *np, BorderActionType action,
    if(!(np->state.border & BORDER_RESIZE)) {
       return;
    }
-   if((np->state.status & STAT_FULLSCREEN) || np->state.maxFlags) {
+   if(np->state.status & STAT_FULLSCREEN) {
       return;
+   }
+   if(np->state.maxFlags) {
+      np->state.maxFlags = MAX_NONE;
+      WriteState(np);
+      ResetBorder(np);
    }
    if(JUNLIKELY(!GrabMouseForResize(action))) {
       return;
@@ -229,8 +234,13 @@ void ResizeClientKeyboard(ClientNode *np)
    if(!(np->state.border & BORDER_RESIZE)) {
       return;
    }
-   if((np->state.status & STAT_FULLSCREEN) || np->state.maxFlags) {
+   if(np->state.status & STAT_FULLSCREEN) {
       return;
+   }
+   if(np->state.maxFlags) {
+      np->state.maxFlags = MAX_NONE;
+      WriteState(np);
+      ResetBorder(np);
    }
 
    if(JUNLIKELY(JXGrabKeyboard(display, np->parent, True, GrabModeAsync,

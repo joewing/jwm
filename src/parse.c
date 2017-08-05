@@ -156,8 +156,12 @@ static const char *SPACING_ATTRIBUTE = "spacing";
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
 
-static const char CONFIG_FILE[] = "$HOME/.config/jwm/jwmrc";
-static const char OLD_CONFIG_FILE[] = "$HOME/.jwmrc";
+static const char * const CONFIG_FILES[] = {
+  "$XDG_CONFIG_HOME/jwm/jwmrc",
+  "$HOME/.config/jwm/jwmrc",
+  "$HOME/.jwmrc",
+};
+static const unsigned CONFIG_FILE_COUNT = ARRAY_LENGTH(CONFIG_FILES);
 
 static char ParseFile(const char *fileName, int depth);
 static char *ReadFile(FILE *fd);
@@ -248,14 +252,19 @@ void ParseConfig(const char *fileName)
       if(!ParseFile(fileName, 0)) {
          ParseError(NULL, _("could not open %s"), fileName);
       }
-   } else if(ParseFile(CONFIG_FILE, 0)) {
-      /* Found a config file in the new location. */
-   } else if(ParseFile(OLD_CONFIG_FILE, 0)) {
-      /* Found a config file in the old location. */
-   } else if(!ParseFile(SYSTEM_CONFIG, 0)) {
-      /* No config file could be found. */
+   } else {
+     unsigned i;
+     char found = 0;
+     for(i = 0; i < CONFIG_FILE_COUNT; i++) {
+       if(ParseFile(CONFIG_FILES[i], 0)) {
+         found = 1;
+         break;
+       }
+     }
+     if(!found) {
       ParseError(NULL, _("could not open %s or %s"),
-                 CONFIG_FILE, SYSTEM_CONFIG);
+                 CONFIG_FILES[0], SYSTEM_CONFIG);
+     }
    }
    ValidateTrayButtons();
    ValidateKeys();

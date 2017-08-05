@@ -414,8 +414,9 @@ void HandleButtonEvent(const XButtonEvent *event)
       context = GetBorderContext(np, event->x, event->y);
       ProcessBinding(context, np, event->state, button, event->x, event->y);
    } else if(event->window == rootWindow) {
-      /* Click on the root. */
-      if(!ShowRootMenu(button, event->x, event->y, 0)) {
+      /* Click on the root.
+       * Note that we use the raw button from the event for ShowRootMenu. */
+      if(!ShowRootMenu(event->button, event->x, event->y, 0)) {
          ProcessBinding(MC_ROOT, NULL, event->state, event->button, 0, 0);
       }
    } else {

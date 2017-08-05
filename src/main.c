@@ -104,7 +104,6 @@ char *configPath = NULL;
 #ifndef UNIT_TEST
 int main(int argc, char *argv[])
 {
-   char *temp;
    int x;
    enum {
       COMMAND_RUN,

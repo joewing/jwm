@@ -417,7 +417,7 @@ void HandleButtonEvent(const XButtonEvent *event)
       /* Click on the root.
        * Note that we use the raw button from the event for ShowRootMenu. */
       if(!ShowRootMenu(event->button, event->x, event->y, 0)) {
-         ProcessBinding(MC_ROOT, NULL, event->state, event->button, 0, 0);
+         ProcessBinding(MC_ROOT, NULL, event->state, button, 0, 0);
       }
    } else {
       /* Click over window content. */

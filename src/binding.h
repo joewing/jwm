@@ -11,23 +11,7 @@
 #define KEY_H
 
 #include "action.h"
-
-/** Mouse binding contexts. */
-typedef unsigned char MouseContextType;
-#define MC_NONE            0     /**< Keyboard/none. */
-#define MC_ROOT            1     /**< Root window. */
-#define MC_BORDER          2     /**< Resize handle. */
-#define MC_MOVE            3     /**< Move handle. */
-#define MC_CLOSE           4     /**< Close button. */
-#define MC_MAXIMIZE        5     /**< Maximize button. */
-#define MC_MINIMIZE        6     /**< Minimize button. */
-#define MC_ICON            7     /**< Window menu button. */
-#define MC_COUNT           8     /**< Number of contexts. */
-#define MC_MASK            0x0F  /**< Context type mask. */
-#define MC_BORDER_N        0x10  /**< North border. */
-#define MC_BORDER_S        0x20  /**< South border. */
-#define MC_BORDER_E        0x40  /**< East border. */
-#define MC_BORDER_W        0x80  /**< West border. */
+#include "settings.h"
 
 void InitializeBindings(void);
 void StartupBindings(void);

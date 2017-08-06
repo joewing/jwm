@@ -21,14 +21,24 @@
 static char *buttonNames[BI_COUNT];
 static IconNode *buttonIcons[BI_COUNT];
 
+static char IsContextEnabled(MouseContextType context, const ClientNode *np);
 static void DrawBorderHelper(const ClientNode *np);
 static void DrawBorderHandles(const ClientNode *np,
                               Pixmap canvas, GC gc);
-static void DrawBorderButtons(const ClientNode *np,
-                              Pixmap canvas, GC gc);
+static void DrawBorderButton(const ClientNode *np, MouseContextType context,
+                             int x, int y, Pixmap canvas, GC gc, long fg);
+static void DrawButtonBorder(const ClientNode *np, int x,
+                             Pixmap canvas, GC gc);
+static void DrawLeftButton(const ClientNode *np, MouseContextType context,
+                           int x, int y, Pixmap canvas, GC gc, long fg);
+static void DrawRightButton(const ClientNode *np, MouseContextType context,
+                            int x, int y, Pixmap canvas, GC gc, long fg);
+static XPoint DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc);
 static char DrawBorderIcon(BorderIconType t,
                            unsigned xoffset, unsigned yoffset,
                            Pixmap canvas, long fg);
+static void DrawIconButton(const ClientNode *np, int x, int y,
+                           Pixmap canvas, GC gc, long fg);
 static void DrawCloseButton(unsigned xoffset, unsigned yoffset,
                             Pixmap canvas, GC gc, long fg);
 static void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
@@ -37,7 +47,6 @@ static void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
                            Pixmap canvas, GC gc, long fg);
 static void DrawMinButton(unsigned xoffset, unsigned yoffset,
                           Pixmap canvas, GC gc, long fg);
-static unsigned GetButtonCount(const ClientNode *np);
 
 #ifdef USE_SHAPE
 static void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
@@ -95,59 +104,95 @@ int GetBorderIconSize(void)
    }
 }
 
+/** Determine if the specified context is available for a client. */
+char IsContextEnabled(MouseContextType context, const ClientNode *np)
+{
+   const BorderFlags flags = np->state.border;
+   switch(context) {
+   case MC_BORDER:   return (flags & BORDER_RESIZE) != 0;
+   case MC_MOVE:     return (flags & BORDER_MOVE) != 0;
+   case MC_CLOSE:    return (flags & BORDER_CLOSE) != 0;
+   case MC_MAXIMIZE: return (flags & BORDER_MAX) != 0;
+   case MC_MINIMIZE: return (flags & BORDER_MIN) != 0;
+   case MC_ICON:     return 1;
+   default:          return 0;
+   }
+}
+
 /** Determine the border action to take given coordinates. */
 MouseContextType GetBorderContext(const ClientNode *np, int x, int y)
 {
-
    int north, south, east, west;
-   unsigned int resizeMask;
-   const unsigned int titleHeight = GetTitleHeight();
+   unsigned resizeMask;
+   const unsigned titleHeight = GetTitleHeight();
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
 
    /* Check title bar actions. */
    if((np->state.border & BORDER_TITLE) &&
       titleHeight > settings.borderWidth) {
+      int rightOffset = np->width + west;
+      int leftOffset = west;
 
-      /* Check buttons on the title bar. */
-      int offset = np->width + west;
       if(y >= south && y <= titleHeight + south) {
+         int index = 0;
+         int titleIndex;
 
-         /* Menu button. */
-         if(np->width >= titleHeight) {
-            if(x > west && x <= titleHeight + west) {
-               return MC_ICON;
+         /* Check button(s) to the left of the title. */
+         while(settings.titleBarLayout[index]) {
+            const int nextOffset = leftOffset + titleHeight + 1;
+            const MouseContextType context = settings.titleBarLayout[index];
+            if(context == MC_MOVE) {
+               /* At the title. */
+               break;
             }
+            if(nextOffset >= np->width - west) {
+               /* Past the end of the window. */
+               break;
+            }
+
+            if(IsContextEnabled(context, np)) {
+               if(x >= leftOffset && x < nextOffset) {
+                  return context;
+               }
+               leftOffset = nextOffset;
+            }
+
+            index += 1;
          }
 
-         /* Close button. */
-         if((np->state.border & BORDER_CLOSE) && offset > 2 * titleHeight) {
-            if(x > offset - titleHeight && x < offset) {
-               return MC_CLOSE;
-            }
-            offset -= titleHeight + 1;
-         }
+         /* Seek to the last title bar component. */
+         titleIndex = index;
+         while(settings.titleBarLayout[index]) index += 1;
+         index -= 1;
 
-         /* Maximize button. */
-         if((np->state.border & BORDER_MAX) && offset > 2 * titleHeight) {
-            if(x > offset - titleHeight && x < offset) {
-               return MC_MAXIMIZE;
+         /* Check button(s) on to right of the title. */
+         while(index > titleIndex) {
+            const int nextOffset = rightOffset - titleHeight - 1;
+            const MouseContextType context = settings.titleBarLayout[index];
+            if(context == MC_MOVE) {
+               /* Hit the title bar from the right. */
+               break;
             }
-            offset -= titleHeight + 1;
-         }
-
-         /* Minimize button. */
-         if((np->state.border & BORDER_MIN) && offset > 2 * titleHeight) {
-            if(x > offset - titleHeight && x < offset) {
-               return MC_MINIMIZE;
+            if(nextOffset < leftOffset) {
+               /* No more room. */
+               break;
             }
-         }
 
+            if(IsContextEnabled(context, np)) {
+               if(x >= nextOffset && x < rightOffset) {
+                  return context;
+               }
+               rightOffset = nextOffset;
+            }
+
+            index -= 1;
+         }
       }
 
       /* Check for move. */
       if(y >= south && y <= titleHeight + south) {
-         if(x > west && x < offset) {
+         if(x >= leftOffset && x < rightOffset) {
             if(np->state.border & BORDER_MOVE) {
                return MC_MOVE;
             } else {
@@ -338,7 +383,6 @@ void DrawBorder(ClientNode *np)
 /** Helper method for drawing borders. */
 void DrawBorderHelper(const ClientNode *np)
 {
-
    ColorType borderTextColor;
 
    long titleColor1, titleColor2;
@@ -346,9 +390,8 @@ void DrawBorderHelper(const ClientNode *np)
 
    int north, south, east, west;
    unsigned int width, height;
+   const int titleHeight = GetTitleHeight();
 
-   unsigned int buttonCount;
-   int titleWidth, titleHeight;
    Pixmap canvas;
    GC gc;
 
@@ -385,44 +428,29 @@ void DrawBorderHelper(const ClientNode *np)
    JXSetForeground(display, gc, titleColor2);
    JXFillRectangle(display, canvas, gc, 0, 0, width, north);
 
-   /* Determine how many pixels may be used for the title. */
-   buttonCount = GetButtonCount(np);
-   titleHeight = GetTitleHeight();
-   titleWidth = width - east - west - 5;
-   titleWidth -= titleHeight * (buttonCount + 1);
-   titleWidth -= settings.windowDecorations == DECO_MOTIF
-               ? (buttonCount + 1) : 0;
-
    /* Draw the top part (either a title or north border). */
    if((np->state.border & BORDER_TITLE) &&
       titleHeight > settings.borderWidth) {
 
-      const unsigned startx = west + 1;
-      unsigned starty = 0;
-      if(settings.windowDecorations == DECO_MOTIF) {
-         starty += settings.borderWidth - 1;
-      }
+      XPoint point;
 
       /* Draw a title bar. */
       DrawHorizontalGradient(canvas, gc, titleColor1, titleColor2,
                              0, 1, width, titleHeight - 2);
 
-      /* Draw the icon. */
-#ifdef USE_ICONS
-      if(np->width >= titleHeight) {
-         const int iconSize = GetBorderIconSize();
-         IconNode *icon = np->icon ? np->icon : buttonIcons[BI_MENU];
-         PutIcon(icon, canvas, colors[borderTextColor],
-                 startx, starty + (titleHeight - iconSize) / 2,
-                 iconSize, iconSize);
-      }
-#endif
+      /* Draw the buttons.
+       * This returns the start and end positions of the title as `x` and `y`.
+       */
+      point = DrawBorderButtons(np, canvas, gc);
 
-      if(np->name && np->name[0] && titleWidth > 0) {
+      /* Draw the title. */
+      if(np->name && np->name[0] && point.x < point.y) {
+         unsigned titleWidth = point.y - point.x;
          const int sheight = GetStringHeight(FONT_BORDER);
          const int textWidth = GetStringWidth(FONT_BORDER, np->name);
          unsigned titlex, titley;
          int xoffset = 0;
+
          switch (settings.titleTextAlignment) {
          case ALIGN_CENTER:
             xoffset = (titleWidth - textWidth) / 2;
@@ -432,14 +460,19 @@ void DrawBorderHelper(const ClientNode *np)
             break;
          }
          xoffset = Max(xoffset, 0);
-         titlex = startx + titleHeight + xoffset
-                + (settings.windowDecorations == DECO_MOTIF ? 4 : 0);
-         titley = starty + (titleHeight - sheight) / 2;
+         titlex = point.x + xoffset;
+         titlex = Min(Max(titlex, point.x), point.y);
+
+         titleWidth = Min(titleWidth, point.y - titlex);
+
+         titley = (titleHeight - sheight) / 2;
+         if(settings.windowDecorations == DECO_MOTIF) {
+            titley += settings.borderWidth - 1;
+         }
          RenderString(canvas, FONT_BORDER, borderTextColor,
                       titlex, titley, titleWidth, np->name);
       }
 
-      DrawBorderButtons(np, canvas, gc);
    }
 
    /* Copy the pixmap (for the title bar) to the window. */
@@ -726,172 +759,159 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    }
 }
 
-/** Determine the number of buttons to be displayed for a client. */
-unsigned GetButtonCount(const ClientNode *np)
+/** Draw draw a border button (with the border). */
+void DrawBorderButton(const ClientNode *np, MouseContextType context,
+                      int x, int y, Pixmap canvas, GC gc, long fg)
 {
-
-   int north, south, east, west;
-   unsigned count;
-   unsigned buttonWidth;
-   int available;
-   const unsigned titleHeight = GetTitleHeight();
-
-   if(!(np->state.border & BORDER_TITLE)) {
-      return 0;
-   }
-   if(titleHeight <= settings.borderWidth) {
-      return 0;
-   }
-
-   buttonWidth = titleHeight;
-   buttonWidth += settings.windowDecorations == DECO_MOTIF ? 1 : 0;
-
-   GetBorderSize(&np->state, &north, &south, &east, &west);
-
-   count = 0;
-   available = np->width - buttonWidth;
-   if(available < buttonWidth) {
-      return count;
-   }
-
-   if(np->state.border & BORDER_CLOSE) {
-      count += 1;
-      available -= buttonWidth;
-      if(available < buttonWidth) {
-         return count;
+   JXSetForeground(display, gc, fg);
+   switch(context) {
+   case MC_CLOSE:
+      DrawCloseButton(x, y, canvas, gc, fg);
+      break;
+   case MC_MINIMIZE:
+      DrawMinButton(x, y, canvas, gc, fg);
+      break;
+   case MC_MAXIMIZE:
+      if(np->state.maxFlags) {
+         DrawMaxAButton(x, y, canvas, gc, fg);
+      } else {
+         DrawMaxIButton(x, y, canvas, gc, fg);
       }
+      break;
+   case MC_ICON:
+      DrawIconButton(np, x, y, canvas, gc, fg);
+      break;
+   default:
+      Assert(0);
+      break;
    }
-
-   if(np->state.border & BORDER_MAX) {
-      count += 1;
-      available -= buttonWidth;
-      if(available < buttonWidth) {
-         return count;
-      }
-   }
-
-   if(np->state.border & BORDER_MIN) {
-      count += 1;
-   }
-
-   return count;
 }
 
-/** Draw the buttons on a client frame. */
-void DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
+/** Draw a button border. */
+void DrawButtonBorder(const ClientNode *np, int x, Pixmap canvas, GC gc)
 {
-   long color;
    long pixelUp, pixelDown;
-   const unsigned titleHeight = GetTitleHeight();
-   int xoffset, yoffset;
+   const unsigned y1 = settings.borderWidth - 1;
+   const unsigned y2 = y1 + GetTitleHeight();
    int north, south, east, west;
-   int minx;
 
-   GetBorderSize(&np->state, &north, &south, &east, &west);
-   xoffset = np->width + Min(east, west) - titleHeight;
-   minx = titleHeight + east;
-   if(xoffset <= minx) {
+   /* Only draw borders for motif decorations. */
+   if(settings.windowDecorations != DECO_MOTIF) {
       return;
    }
 
    /* Determine the colors to use. */
    if(np->state.status & (STAT_ACTIVE | STAT_FLASH)) {
-      color = colors[COLOR_TITLE_ACTIVE_FG];
       pixelUp = colors[COLOR_TITLE_ACTIVE_UP];
       pixelDown = colors[COLOR_TITLE_ACTIVE_DOWN];
    } else {
-      color = colors[COLOR_TITLE_FG];
       pixelUp = colors[COLOR_TITLE_UP];
       pixelDown = colors[COLOR_TITLE_DOWN];
    }
 
-   yoffset = 0;
+   GetBorderSize(&np->state, &north, &south, &east, &west);
+
+   JXSetForeground(display, gc, pixelDown);
+   JXDrawLine(display, canvas, gc, x, y1, x, y2);
+   JXSetForeground(display, gc, pixelUp);
+   JXDrawLine(display, canvas, gc, x + 1, y1, x + 1, y2);
+}
+
+/** Draw a button on the left side of the title (with border). */
+void DrawLeftButton(const ClientNode *np, MouseContextType context,
+                    int x, int y, Pixmap canvas, GC gc, long fg)
+{
+   DrawButtonBorder(np, x, canvas, gc);
+   DrawBorderButton(np, context, x, y, canvas, gc, fg);
+}
+
+/** Draw a button on the right side of the title (with border). */
+void DrawRightButton(const ClientNode *np, MouseContextType context,
+                     int x, int y, Pixmap canvas, GC gc, long fg)
+{
+   DrawButtonBorder(np, x + GetTitleHeight() - 1, canvas, gc);
+   DrawBorderButton(np, context, x, y, canvas, gc, fg);
+}
+
+/** Draw the buttons on a client frame. */
+XPoint DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
+{
+   long fg;
+   XPoint point;
+   const unsigned titleHeight = GetTitleHeight();
+   int titleIndex, index;
+   int leftOffset, rightOffset;
+   int north, south, east, west;
+   const int yoffset = (settings.windowDecorations == DECO_MOTIF)
+                     ? settings.borderWidth - 1 : 0;
+
+   /* Determine the foreground color to use. */
+   if(np->state.status & (STAT_ACTIVE | STAT_FLASH)) {
+      fg = colors[COLOR_TITLE_ACTIVE_FG];
+   } else {
+      fg = colors[COLOR_TITLE_FG];
+   }
+
+   GetBorderSize(&np->state, &north, &south, &east, &west);
+
+   /* Draw buttons to the left of the title. */
+   index = 0;
+   leftOffset = west;
+   while(settings.titleBarLayout[index]) {
+      const MouseContextType context = settings.titleBarLayout[index];
+      const int nextOffset = leftOffset + titleHeight;
+      if(context == MC_MOVE) {
+         /* Hit the window title. */
+         break;
+      }
+      if(nextOffset >= np->width - west) {
+         /* Past the end of the window. */
+         break;
+      }
+
+      /* Draw the button only if it's enabled. */
+      if(IsContextEnabled(context, np)) {
+         DrawRightButton(np, context, leftOffset, yoffset, canvas, gc, fg);
+         leftOffset = nextOffset;
+      }
+
+      index += 1;
+   }
+
+   /* Seek to the last title bar component. */
+   titleIndex = index;
+   while(settings.titleBarLayout[index]) index += 1;
+   index -= 1;
+
+   /* Draw buttons to the right of the title. */
+   rightOffset = np->width + west;
+   while(index > titleIndex) {
+      const int nextOffset = rightOffset - titleHeight - 1;
+      const MouseContextType context = settings.titleBarLayout[index];
+      if(context == MC_MOVE) {
+         /* Hit the title bar from the right. */
+         break;
+      }
+      if(nextOffset < leftOffset) {
+         /* No more room. */
+         break;
+      }
+
+      if(IsContextEnabled(context, np)) {
+         rightOffset = nextOffset;
+         DrawLeftButton(np, context, rightOffset, yoffset, canvas, gc, fg);
+      }
+
+      index -= 1;
+   }
+
+   point.x = leftOffset;
+   point.y = rightOffset;
    if(settings.windowDecorations == DECO_MOTIF) {
-      yoffset += settings.borderWidth - 1;
+      point.x += 4;
+      point.y -= 4;
    }
-
-   if(settings.windowDecorations == DECO_MOTIF) {
-      JXSetForeground(display, gc, pixelDown);
-      JXDrawLine(display, canvas, gc,
-                      west + titleHeight - 1,
-                      yoffset,
-                      west + titleHeight - 1,
-                      yoffset + titleHeight);
-      JXSetForeground(display, gc, pixelUp);
-      JXDrawLine(display, canvas, gc,
-                 west + titleHeight,
-                 yoffset,
-                 west + titleHeight,
-                 yoffset + titleHeight);
-   }
-
-   /* Close button. */
-   if(np->state.border & BORDER_CLOSE) {
-
-      JXSetForeground(display, gc, color);
-      DrawCloseButton(xoffset, yoffset, canvas, gc, color);
-
-      if(settings.windowDecorations == DECO_MOTIF) {
-         JXSetForeground(display, gc, pixelDown);
-         JXDrawLine(display, canvas, gc, xoffset - 1,
-                    yoffset, xoffset - 1,
-                    yoffset + titleHeight);
-         JXSetForeground(display, gc, pixelUp);
-         JXDrawLine(display, canvas, gc, xoffset,
-                    yoffset, xoffset, yoffset + titleHeight);
-         xoffset -= 1;
-      }
-
-      xoffset -= titleHeight;
-      if(xoffset <= minx) {
-         return;
-      }
-   }
-
-   /* Maximize button. */
-   if(np->state.border & BORDER_MAX) {
-
-      JXSetForeground(display, gc, color);
-      if(np->state.maxFlags) {
-         DrawMaxAButton(xoffset, yoffset, canvas, gc, color);
-      } else {
-         DrawMaxIButton(xoffset, yoffset, canvas, gc, color);
-      }
-
-      if(settings.windowDecorations == DECO_MOTIF) {
-         JXSetForeground(display, gc, pixelDown);
-         JXDrawLine(display, canvas, gc, xoffset - 1,
-                    yoffset, xoffset - 1,
-                    yoffset + titleHeight);
-         JXSetForeground(display, gc, pixelUp);
-         JXDrawLine(display, canvas, gc, xoffset,
-                    yoffset, xoffset, yoffset + titleHeight);
-         xoffset -= 1;
-      }
-
-      xoffset -= titleHeight;
-      if(xoffset <= minx) {
-         return;
-      }
-   }
-
-   /* Minimize button. */
-   if(np->state.border & BORDER_MIN) {
-
-      JXSetForeground(display, gc, color);
-      DrawMinButton(xoffset, yoffset, canvas, gc, color);
-
-      if(settings.windowDecorations == DECO_MOTIF) {
-         JXSetForeground(display, gc, pixelDown);
-         JXDrawLine(display, canvas, gc, xoffset - 1,
-                    yoffset, xoffset - 1,
-                    yoffset + titleHeight);
-         JXSetForeground(display, gc, pixelUp);
-         JXDrawLine(display, canvas, gc, xoffset,
-                    yoffset, xoffset, yoffset + titleHeight);
-         xoffset -= 1;
-      }
-   }
+   return point;
 }
 
 /** Attempt to draw a border icon. */
@@ -1098,6 +1118,21 @@ void DrawMinButton(unsigned xoffset, unsigned yoffset,
    JXDrawLine(display, canvas, gc, x1, y2, x2, y2);
    JXSetLineAttributes(display, gc, 1, LineSolid, CapButt, JoinMiter);
 
+}
+
+
+/* Draw the title icon. */
+void DrawIconButton(const ClientNode *np, int x, int y,
+                    Pixmap canvas, GC gc, long fg)
+{
+#ifdef USE_ICONS
+   const int iconSize = GetBorderIconSize();
+   const int titleHeight = GetTitleHeight();
+   IconNode *icon = np->icon ? np->icon : buttonIcons[BI_MENU];
+   PutIcon(icon, canvas, fg,
+           x, y + (titleHeight - iconSize) / 2,
+           iconSize, iconSize);
+#endif
 }
 
 /** Redraw the borders on the current desktop.

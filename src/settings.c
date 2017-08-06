@@ -13,6 +13,15 @@
 
 Settings settings;
 
+static const MouseContextType DEFAULT_TITLE_BAR_LAYOUT[TBC_COUNT] = {
+   MC_ICON,
+   MC_MOVE,
+   MC_MINIMIZE,
+   MC_MAXIMIZE,
+   MC_CLOSE,
+   MC_NONE
+};
+
 static void FixRange(unsigned int *value,
                      unsigned int min_value,
                      unsigned int max_value,
@@ -51,6 +60,8 @@ void InitializeSettings(void)
    settings.groupTasks = 0;
    settings.listAllTasks = 0;
    settings.dockSpacing = 0;
+   memcpy(settings.titleBarLayout, DEFAULT_TITLE_BAR_LAYOUT,
+      sizeof(settings.titleBarLayout));
 }
 
 /** Make sure settings are reasonable. */

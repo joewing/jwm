@@ -1130,7 +1130,8 @@ void DrawIconButton(const ClientNode *np, int x, int y,
    const int titleHeight = GetTitleHeight();
    IconNode *icon = np->icon ? np->icon : buttonIcons[BI_MENU];
    PutIcon(icon, canvas, fg,
-           x, y + (titleHeight - iconSize) / 2,
+           x + (titleHeight - iconSize) / 2,
+           y + (titleHeight - iconSize) / 2,
            iconSize, iconSize);
 #endif
 }

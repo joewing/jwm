@@ -1962,6 +1962,11 @@ The location of the status window. The default is \fBscreen\fP.
 .RE
 .RE
 .P
+.B RestartCommand
+.RS
+A command to run when JWM restarts.
+.RE
+.P
 .B SnapMode
 .RS
 The snap mode. The default is "border". Valid values are
@@ -1982,9 +1987,22 @@ A command to run when JWM starts.
 A command to run when JWM exits.
 .RE
 .P
-.B RestartCommand
+.B TitleButtonOrder
 .RS
-A command to run when JWM restarts.
+Change the order of buttons in title bars.  This is a string of zero
+or more of the following characters to determine the order of items
+in the window title bar:
+.P
+.RS
+\fBm\fP Maximize button
+.P
+\fBi\fP Minimize (iconify) button
+.P
+\fBt\fP Window title
+.P
+\fBw\fP Window menu button
+.P
+\fBx\fP Close button
 .RE
 .RE
 .P

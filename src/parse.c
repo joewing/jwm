@@ -414,6 +414,9 @@ void Parse(const TokenNode *start, int depth)
             case TOK_DEFAULTICON:
                SetDefaultIcon(tp->value);
                break;
+            case TOK_TITLEBUTTONORDER:
+               SetTitleButtonOrder(tp->value);
+               break;
             default:
                InvalidTag(tp, TOK_JWM);
                break;

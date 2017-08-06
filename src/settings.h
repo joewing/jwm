@@ -130,4 +130,7 @@ void StartupSettings(void);
 /** Update a string setting. */
 void SetPathString(char **dest, const char *src);
 
+/** Set the title button order. */
+void SetTitleButtonOrder(const char *order);
+
 #endif

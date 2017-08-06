@@ -109,3 +109,32 @@ void FixRange(unsigned int *value,
       *value = def_value;
    }
 }
+
+/** Set the title button order. */
+void SetTitleButtonOrder(const char *order)
+{
+   unsigned i = 0;
+   memset(settings.titleBarLayout, 0, sizeof(settings.titleBarLayout));
+   while(*order && i < TBC_COUNT) {
+      switch(tolower(*order)) {
+      case 'x':   /* Close */
+         settings.titleBarLayout[i++] = MC_CLOSE;
+         break;
+      case 'i':   /* Minimize (iconify) */
+         settings.titleBarLayout[i++] = MC_MINIMIZE;
+         break;
+      case 't':   /* Title */
+         settings.titleBarLayout[i++] = MC_MOVE;
+         break;
+      case 'm':   /* Maximize */
+         settings.titleBarLayout[i++] = MC_MAXIMIZE;
+         break;
+      case 'w':   /* Window */
+         settings.titleBarLayout[i++] = MC_ICON;
+         break;
+      default:
+         break;
+      }
+      order += 1;
+   }
+}

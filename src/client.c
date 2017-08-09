@@ -1490,8 +1490,17 @@ void SignalUrgent(const TimeType *now, int x, int y, Window w, void *data)
 void UnmapClient(ClientNode *np)
 {
    if(np->state.status & STAT_MAPPED) {
+      XEvent e;
+
+      /* Unmap the window and record that we did so. */
       np->state.status &= ~STAT_MAPPED;
       JXUnmapWindow(display, np->window);
+
+      /* Discard the unmap event so we don't process it later. */
+      JXSync(display, False);
+      if(JXCheckTypedWindowEvent(display, np->window, UnmapNotify, &e)) {
+         UpdateTime(&e);
+      }
    }
 }
 

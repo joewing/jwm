@@ -471,7 +471,7 @@ This tag supports the following attributes:
 .RS
 Specifies the location to hide the tray when not activated. Default is "off"
 to disable hiding.
-Possible values are "left", "right", "top", "bottom", and "off".
+Possible values are "left", "right", "top", "bottom", "off", and "on".
 .RE
 .P
 \fBx\fP \fIint\fP

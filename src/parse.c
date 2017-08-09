@@ -1228,6 +1228,7 @@ void ParseTray(const TokenNode *tp)
       { "bottom",    THIDE_BOTTOM   },
       { "left",      THIDE_LEFT     },
       { "off",       THIDE_OFF      },
+      { "on",        THIDE_ON       },
       { "right",     THIDE_RIGHT    },
       { "top",       THIDE_TOP      }
    };

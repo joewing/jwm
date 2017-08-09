@@ -79,8 +79,9 @@ typedef unsigned char MouseContextType;
 #define MC_BORDER_E        0x40  /**< East border. */
 #define MC_BORDER_W        0x80  /**< West border. */
 
-/** Maximimum number of Title bar components. */
-#define TBC_COUNT       6
+/** Maximimum number of title bar components
+ * For now, we allow each component to be used twice. */
+#define TBC_COUNT       9
 
 /** Settings. */
 typedef struct {

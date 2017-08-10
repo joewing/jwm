@@ -438,10 +438,7 @@ void ShowClientList(TaskBarType *bar, TaskEntry *tp)
 
    if(settings.groupTasks) {
 
-      menu = Allocate(sizeof(Menu));
-      menu->itemHeight = 0;
-      menu->items = NULL;
-      menu->label = NULL;
+      menu = CreateMenu();
 
       item = CreateMenuItem(MENU_ITEM_NORMAL);
       item->name = CopyString(_("Close"));
@@ -741,7 +738,7 @@ void Render(const TaskBarType *bp)
    }
 
    ResetButton(&button, bp->cp->pixmap);
-   button.border = settings.trayDecorations == DECO_MOTIF;
+   button.border = settings.taskListDecorations == DECO_MOTIF;
    button.font = FONT_TASKLIST;
    button.height = bp->itemHeight;
    button.width = bp->itemWidth;

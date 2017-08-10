@@ -31,8 +31,11 @@ typedef struct PatternListType {
 /** List of options for a group. */
 typedef struct OptionListType {
    OptionType option;
-   char *svalue;
-   unsigned int uvalue;
+   char *str;
+   union {
+      unsigned u;
+      int s;
+   } value;
    struct OptionListType *next;
 } OptionListType;
 
@@ -82,8 +85,8 @@ void ReleaseOptionList(OptionListType *lp)
    OptionListType *tp;
    while(lp) {
       tp = lp->next;
-      if(lp->svalue) {
-         Release(lp->svalue);
+      if(lp->str) {
+         Release(lp->str);
       }
       Release(lp);
       lp = tp;
@@ -143,7 +146,7 @@ void AddGroupOption(GroupType *gp, OptionType option)
    OptionListType *lp;
    lp = Allocate(sizeof(OptionListType));
    lp->option = option;
-   lp->svalue = NULL;
+   lp->str = NULL;
    lp->next = gp->options;
    gp->options = lp;
 }
@@ -156,24 +159,39 @@ void AddGroupOptionString(GroupType *gp, OptionType option,
    Assert(value);
    lp = Allocate(sizeof(OptionListType));
    lp->option = option;
-   lp->svalue = CopyString(value);
+   lp->str = CopyString(value);
    lp->next = gp->options;
    gp->options = lp;
 }
 
 /** Add an option (with an unsigned integer) to a group. */
 void AddGroupOptionUnsigned(GroupType *gp, OptionType option,
-                            unsigned int value)
+                            unsigned value)
 {
    OptionListType *lp;
    Assert(value);
    lp = Allocate(sizeof(OptionListType));
    lp->option = option;
-   lp->svalue = NULL;
-   lp->uvalue = value;
+   lp->str = NULL;
+   lp->value.u = value;
    lp->next = gp->options;
    gp->options = lp;
 }
+
+/** Add an option (with a signed integer) to a group. */
+void AddGroupOptionSigned(GroupType *gp, OptionType option,
+                          int value)
+{
+   OptionListType *lp;
+   Assert(value);
+   lp = Allocate(sizeof(OptionListType));
+   lp->option = option;
+   lp->str = NULL;
+   lp->value.s = value;
+   lp->next = gp->options;
+   gp->options = lp;
+}
+
 /** Apply groups to a client. */
 void ApplyGroups(ClientNode *np)
 {
@@ -260,18 +278,18 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
          np->state.border &= ~BORDER_SHADE;
          break;
       case OPTION_LAYER:
-         np->state.layer = lp->uvalue;
+         np->state.layer = lp->value.u;
          break;
       case OPTION_DESKTOP:
-         if(JLIKELY(lp->uvalue >= 1 && lp->uvalue <= settings.desktopCount)) {
-            np->state.desktop = lp->uvalue - 1;
+         if(JLIKELY(lp->value.u >= 1 && lp->value.u <= settings.desktopCount)) {
+            np->state.desktop = lp->value.u - 1;
          } else {
-            Warning(_("invalid group desktop: %d"), lp->uvalue);
+            Warning(_("invalid group desktop: %d"), lp->value.u);
          }
          break;
       case OPTION_ICON:
          DestroyIcon(np->icon);
-         np->icon = LoadNamedIcon(lp->svalue, 1, 1);
+         np->icon = LoadNamedIcon(lp->str, 1, 1);
          break;
       case OPTION_PIGNORE:
          np->state.status |= STAT_PIGNORE;
@@ -289,7 +307,7 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
          np->state.status |= STAT_SHADED;
          break;
       case OPTION_OPACITY:
-         np->state.opacity = lp->uvalue;
+         np->state.opacity = lp->value.u;
          np->state.status |= STAT_OPACITY;
          break;
       case OPTION_MAX_V:
@@ -348,6 +366,32 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
          break;
       case OPTION_NODRAG:
          np->state.status |= STAT_NODRAG;
+         break;
+      case OPTION_X:
+         if(lp->value.s < 0) {
+            int north, south, east, west;
+            GetBorderSize(&np->state, &north, &south, &east, &west);
+            np->x = rootWidth + lp->value.s - np->width - east - west;
+         } else {
+            np->x = lp->value.s;
+         }
+         np->state.status |= STAT_POSITION;
+         break;
+      case OPTION_Y:
+         if(lp->value.s < 0) {
+            int north, south, east, west;
+            GetBorderSize(&np->state, &north, &south, &east, &west);
+            np->y = rootHeight + lp->value.s - np->height - north - south;
+         } else {
+            np->y = lp->value.s;
+         }
+         np->state.status |= STAT_POSITION;
+         break;
+      case OPTION_WIDTH:
+         np->width = Max(1, lp->value.u);
+         break;
+      case OPTION_HEIGHT:
+         np->height = Max(1, lp->value.u);
          break;
       default:
          Debug("invalid option: %d", lp->option);

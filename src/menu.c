@@ -13,7 +13,7 @@
 #include "client.h"
 #include "icon.h"
 #include "cursor.h"
-#include "key.h"
+#include "binding.h"
 #include "button.h"
 #include "event.h"
 #include "root.h"
@@ -40,7 +40,7 @@ static char ShowSubmenu(Menu *menu, Menu *parent,
 
 static void PatchMenu(Menu *menu);
 static void UnpatchMenu(Menu *menu);
-static void CreateMenu(Menu *menu, int x, int y, char keyboard);
+static void MapMenu(Menu *menu, int x, int y, char keyboard);
 static void HideMenu(Menu *menu);
 static void DrawMenu(Menu *menu);
 
@@ -61,6 +61,17 @@ static void SetPosition(Menu *tp, int index);
 static char IsMenuValid(const Menu *menu);
 
 int menuShown = 0;
+
+/** Allocate an empty menu. */
+Menu *CreateMenu()
+{
+   Menu *menu = Allocate(sizeof(Menu));
+   menu->itemHeight = 0;
+   menu->items = NULL;
+   menu->label = NULL;
+   menu->dynamic = NULL;
+   return menu;
+}
 
 /** Create an empty menu item. */
 MenuItem *CreateMenuItem(MenuItemType type)
@@ -172,7 +183,11 @@ char ShowMenu(Menu *menu, RunMenuCommandType runner,
 {
    /* Don't show the menu if there isn't anything to show. */
    if(JUNLIKELY(!IsMenuValid(menu))) {
-      return 0;
+      /* Return 1 if there is an invalid menu.
+       * This allows empty root menus to be defined to disable
+       * scrolling on the root window.
+       */
+      return menu ? 1 : 0;
    }
    if(JUNLIKELY(shouldExit)) {
       return 0;
@@ -255,6 +270,9 @@ void DestroyMenu(Menu *menu)
       if(menu->label) {
          Release(menu->label);
       }
+      if(menu->dynamic) {
+         Release(menu->dynamic);
+      }
       if(menu->offsets) {
          Release(menu->offsets);
       }
@@ -272,7 +290,7 @@ char ShowSubmenu(Menu *menu, Menu *parent,
 
    PatchMenu(menu);
    menu->parent = parent;
-   CreateMenu(menu, x, y, keyboard);
+   MapMenu(menu, x, y, keyboard);
 
    menuShown += 1;
    status = MenuLoop(menu, runner);
@@ -500,7 +518,7 @@ void MenuCallback(const TimeType *now, int x, int y, Window w, void *data)
 }
 
 /** Create and map a menu. */
-void CreateMenu(Menu *menu, int x, int y, char keyboard)
+void MapMenu(Menu *menu, int x, int y, char keyboard)
 {
    XSetWindowAttributes attr;
    unsigned long attrMask;
@@ -509,8 +527,7 @@ void CreateMenu(Menu *menu, int x, int y, char keyboard)
    if(menu->parent) {
       menu->screen = menu->parent->screen;
    } else {
-      menu->screen = GetCurrentScreen(x + menu->width / 2,
-                                      y + menu->height / 2);
+      menu->screen = GetCurrentScreen(x, y);
    }
    if(x + menu->width > menu->screen->x + menu->screen->width) {
       if(menu->parent) {
@@ -663,18 +680,18 @@ MenuSelectionType UpdateMotion(Menu *menu,
       }
 
       y = -1;
-      switch(GetKey(&event->xkey) & 0xFF) {
-      case KEY_UP:
+      switch(GetKey(MC_NONE, event->xkey.state, event->xkey.keycode) & 0xFF) {
+      case ACTION_UP:
          y = GetPreviousMenuIndex(tp);
          break;
-      case KEY_DOWN:
+      case ACTION_DOWN:
          y = GetNextMenuIndex(tp);
          break;
-      case KEY_RIGHT:
+      case ACTION_RIGHT:
          tp = menu;
          y = 0;
          break;
-      case KEY_LEFT:
+      case ACTION_LEFT:
          if(tp->parent) {
             tp = tp->parent;
             if(tp->currentIndex >= 0) {
@@ -684,9 +701,9 @@ MenuSelectionType UpdateMotion(Menu *menu,
             }
          }
          break;
-      case KEY_ESC:
+      case ACTION_ESC:
          return MENU_SUBSELECT;
-      case KEY_ENTER:
+      case ACTION_ENTER:
          ip = GetMenuItem(tp, tp->currentIndex);
          if(ip != NULL) {
             HideMenu(menu);
@@ -893,10 +910,10 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
 /** Get the next item in the menu. */
 int GetNextMenuIndex(Menu *menu)
 {
-
    MenuItem *item;
    int x;
 
+   /* Move to the next non-separator in the menu. */
    for(x = menu->currentIndex + 1; x < menu->itemCount; x++) {
       item = GetMenuItem(menu, x);
       if(item->type != MENU_ITEM_SEPARATOR) {
@@ -904,17 +921,25 @@ int GetNextMenuIndex(Menu *menu)
       }
    }
 
-   return 0;
+   /* Wrap around. */
+   for(x = 0; x < menu->currentIndex; x++) {
+      item = GetMenuItem(menu, x);
+      if(item->type != MENU_ITEM_SEPARATOR) {
+         return x;
+      }
+   }
 
+   /* Nothing in the menu, stay at the current location. */
+   return menu->currentIndex;
 }
 
 /** Get the previous item in the menu. */
 int GetPreviousMenuIndex(Menu *menu)
 {
-
    MenuItem *item;
    int x;
 
+   /* Move to the previous non-separator in the menu. */
    for(x = menu->currentIndex - 1; x >= 0; x--) {
       item = GetMenuItem(menu, x);
       if(item->type != MENU_ITEM_SEPARATOR) {
@@ -922,8 +947,16 @@ int GetPreviousMenuIndex(Menu *menu)
       }
    }
 
-   return menu->itemCount - 1;
+   /* Wrap around. */
+   for(x = menu->itemCount - 1; x > menu->currentIndex; x--) {
+      item = GetMenuItem(menu, x);
+      if(item->type != MENU_ITEM_SEPARATOR) {
+         return x;
+      }
+   }
 
+   /* Nothing in the menu. */
+   return menu->currentIndex;
 }
 
 /** Get the item in the menu given a y-coordinate. */

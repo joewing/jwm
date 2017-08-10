@@ -22,7 +22,7 @@
 #include "confirm.h"
 #include "font.h"
 #include "group.h"
-#include "key.h"
+#include "binding.h"
 #include "icon.h"
 #include "taskbar.h"
 #include "tray.h"
@@ -77,8 +77,6 @@ int shapeEvent;
 char haveRender;
 #endif
 
-static const char CONFIG_FILE[] = "/.jwmrc";
-
 static void Initialize(void);
 static void Startup(void);
 static void Shutdown(void);
@@ -103,34 +101,22 @@ static char *displayString = NULL;
 char *configPath = NULL;
 
 /** The main entry point. */
+#ifndef UNIT_TEST
 int main(int argc, char *argv[])
 {
-   char *temp;
    int x;
    enum {
-      ACTION_RUN,
-      ACTION_RESTART,
-      ACTION_EXIT,
-      ACTION_RELOAD,
-      ACTION_PARSE
+      COMMAND_RUN,
+      COMMAND_RESTART,
+      COMMAND_EXIT,
+      COMMAND_RELOAD,
+      COMMAND_PARSE
    } action;
 
    StartDebug();
 
-   /* Get the name of the user's local configuration file. */
-   temp = getenv("HOME");
-   if(temp) {
-      const size_t temp_len = strlen(temp);
-      const size_t config_len = sizeof(CONFIG_FILE);
-      configPath = Allocate(temp_len + config_len);
-      memcpy(configPath, temp, temp_len);
-      memcpy(&configPath[temp_len], CONFIG_FILE, config_len);
-   } else {
-      configPath = CopyString(CONFIG_FILE);
-   }
-
    /* Parse command line options. */
-   action = ACTION_RUN;
+   action = COMMAND_RUN;
    for(x = 1; x < argc; x++) {
       if(!strcmp(argv[x], "-v")) {
          DisplayAbout();
@@ -139,17 +125,19 @@ int main(int argc, char *argv[])
          DisplayHelp();
          DoExit(0);
       } else if(!strcmp(argv[x], "-p")) {
-         action = ACTION_PARSE;
+         action = COMMAND_PARSE;
       } else if(!strcmp(argv[x], "-restart")) {
-         action = ACTION_RESTART;
+         action = COMMAND_RESTART;
       } else if(!strcmp(argv[x], "-exit")) {
-         action = ACTION_EXIT;
+         action = COMMAND_EXIT;
       } else if(!strcmp(argv[x], "-reload")) {
-         action = ACTION_RELOAD;
+         action = COMMAND_RELOAD;
       } else if(!strcmp(argv[x], "-display") && x + 1 < argc) {
          displayString = argv[++x];
       } else if(!strcmp(argv[x], "-f") && x + 1 < argc) {
-         Release(configPath);
+         if(configPath) {
+            Release(configPath);
+         }
          configPath = CopyString(argv[++x]);
       } else {
          printf("unrecognized option: %s\n", argv[x]);
@@ -159,17 +147,17 @@ int main(int argc, char *argv[])
    }
 
    switch(action) {
-   case ACTION_PARSE:
+   case COMMAND_PARSE:
       Initialize();
       ParseConfig(configPath);
       DoExit(0);
-   case ACTION_RESTART:
+   case COMMAND_RESTART:
       SendRestart();
       DoExit(0);
-   case ACTION_EXIT:
+   case COMMAND_EXIT:
       SendExit();
       DoExit(0);
-   case ACTION_RELOAD:
+   case COMMAND_RELOAD:
       SendReload();
       DoExit(0);
    default:
@@ -227,6 +215,7 @@ int main(int argc, char *argv[])
    return -1;
 
 }
+#endif
 
 /** Exit with the specified status code. */
 void DoExit(int code)
@@ -477,6 +466,7 @@ void Initialize(void)
 {
 
    InitializeBackgrounds();
+   InitializeBindings();
    InitializeBorders();
    InitializeClients();
    InitializeClock();
@@ -492,7 +482,6 @@ void Initialize(void)
    InitializeGroups();
    InitializeHints();
    InitializeIcons();
-   InitializeKeys();
    InitializePager();
    InitializePlacement();
    InitializePopup();
@@ -535,7 +524,7 @@ void Startup(void)
    StartupHints();
    StartupDock();
    StartupTray();
-   StartupKeys();
+   StartupBindings();
    StartupBorders();
    StartupPlacement();
    StartupClients();
@@ -586,7 +575,7 @@ void Shutdown(void)
       ShutdownDialogs();
 #  endif
    ShutdownPopup();
-   ShutdownKeys();
+   ShutdownBindings();
    ShutdownPager();
    ShutdownRootMenu();
    ShutdownDock();
@@ -635,7 +624,7 @@ void Destroy(void)
    DestroyGroups();
    DestroyHints();
    DestroyIcons();
-   DestroyKeys();
+   DestroyBindings();
    DestroyPager();
    DestroyPlacement();
    DestroyPopup();

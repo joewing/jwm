@@ -154,7 +154,7 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    np->state.defaultLayer = LAYER_NORMAL;
 
    np->state.border = BORDER_DEFAULT;
-   np->borderAction = BA_NONE;
+   np->mouseContext = MC_NONE;
 
    ReadClientInfo(np, alreadyMapped);
 
@@ -280,7 +280,6 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    ResetBorder(np);
 
    return np;
-
 }
 
 /** Minimize a client window and all of its transients. */
@@ -632,18 +631,20 @@ void SetClientDesktop(ClientNode *np, unsigned int desktop)
 
 }
 
-/** Hide a client without unmapping. This will not update transients. */
+/** Hide a client. This will not update transients. */
 void HideClient(ClientNode *np)
 {
-   if(activeClient == np) {
-      activeClient = NULL;
-   }
-   np->state.status |= STAT_HIDDEN;
-   if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
-      if(np->parent != None) {
-         JXUnmapWindow(display, np->parent);
-      } else {
-         JXUnmapWindow(display, np->window);
+   if(!(np->state.status & STAT_HIDDEN)) {
+      if(activeClient == np) {
+         activeClient = NULL;
+      }
+      np->state.status |= STAT_HIDDEN;
+      if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
+         if(np->parent != None) {
+            JXUnmapWindow(display, np->parent);
+         } else {
+            JXUnmapWindow(display, np->window);
+         }
       }
    }
 }
@@ -687,6 +688,10 @@ void MaximizeClient(ClientNode *np, MaxFlags flags)
 
    if(np->state.status & STAT_SHADED) {
       UnshadeClient(np);
+   }
+
+   if(np->state.status & STAT_MINIMIZED) {
+      RestoreClient(np, 1);
    }
 
    RaiseClient(np);
@@ -1232,8 +1237,9 @@ void RemoveClient(ClientNode *np)
                             np->x, np->y, np->width, np->height);
       }
       GravitateClient(np, 1);
-      if(!(np->state.status & STAT_MAPPED)
-         && (np->state.status & (STAT_MINIMIZED | STAT_SHADED))) {
+      if((np->state.status & STAT_HIDDEN)
+         || (!(np->state.status & STAT_MAPPED)
+            && (np->state.status & (STAT_MINIMIZED | STAT_SHADED)))) {
          JXMapWindow(display, np->window);
       }
       JXUngrabButton(display, AnyButton, AnyModifier, np->window);
@@ -1405,6 +1411,7 @@ void SendConfigureEvent(ClientNode *np)
    Assert(np);
 
    memset(&event, 0, sizeof(event));
+   event.display = display;
    event.type = ConfigureNotify;
    event.event = np->window;
    event.window = np->window;
@@ -1483,8 +1490,17 @@ void SignalUrgent(const TimeType *now, int x, int y, Window w, void *data)
 void UnmapClient(ClientNode *np)
 {
    if(np->state.status & STAT_MAPPED) {
+      XEvent e;
+
+      /* Unmap the window and record that we did so. */
       np->state.status &= ~STAT_MAPPED;
       JXUnmapWindow(display, np->window);
+
+      /* Discard the unmap event so we don't process it later. */
+      JXSync(display, False);
+      if(JXCheckTypedWindowEvent(display, np->window, UnmapNotify, &e)) {
+         UpdateTime(&e);
+      }
    }
 }
 

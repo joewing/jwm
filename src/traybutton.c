@@ -41,7 +41,7 @@ typedef struct TrayButtonType {
    int mousey;
    TimeType mouseTime;
 
-   struct ActionType *actions;
+   struct ActionNode *actions;
    struct TrayButtonType *next;
 
 } TrayButtonType;

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2016-08-06 00:43+0000\n"
+"POT-Creation-Date: 2017-07-12 21:06-0500\n"
 "PO-Revision-Date: 2015-09-24 16:11+0800\n"
 "Last-Translator: Christopher Meng <i@cicku.me>\n"
 "Language-Team: \n"
@@ -40,15 +40,15 @@ msgstr "无效的背景图片格式：\"%s\""
 msgid "background image not found: \"%s\""
 msgstr "未找到背景图片：\"%s\""
 
-#: src/client.c:900
+#: src/client.c:905
 msgid "Kill this window?"
 msgstr "强制结束该窗口？"
 
-#: src/client.c:901
+#: src/client.c:906
 msgid "This may cause data to be lost!"
 msgstr "这可能导致数据丢失！"
 
-#: src/command.c:138 src/main.c:220
+#: src/command.c:138 src/main.c:221
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "执行失败：(%s) %s"
@@ -65,15 +65,15 @@ msgstr "取消"
 msgid "Confirm"
 msgstr "确认操作"
 
-#: src/desktop.c:342
+#: src/desktop.c:336
 msgid "empty Desktops Name tag"
 msgstr "空的 Desktops Name 标签"
 
-#: src/dock.c:150
+#: src/dock.c:151
 msgid "only one Dock allowed"
 msgstr "仅允许一个 Dock"
 
-#: src/dock.c:231
+#: src/dock.c:232
 msgid "could not acquire system tray selection"
 msgstr "无法获取系统托盘选择"
 
@@ -105,15 +105,15 @@ msgstr "无法加载默认字体：%s"
 msgid "empty Font tag"
 msgstr "空的 Font 标签"
 
-#: src/group.c:112
+#: src/group.c:115
 msgid "invalid group class"
 msgstr ""
 
-#: src/group.c:123
+#: src/group.c:126
 msgid "invalid group name"
 msgstr ""
 
-#: src/group.c:269
+#: src/group.c:287
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr ""
@@ -133,30 +133,30 @@ msgstr "读取 PNG 图像时发生错误：%s"
 msgid "could not create info struct for PNG image: %s"
 msgstr ""
 
-#: src/key.c:319
+#: src/key.c:318
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr "指定的 KeySym 未被任何 KeyCode 定义"
 
-#: src/key.c:327
+#: src/key.c:326
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "未找到 KeySym 0x%0x 的修饰键"
 
-#: src/key.c:357
+#: src/key.c:356
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "无效的修饰键：\"%c\""
 
-#: src/key.c:372
+#: src/key.c:371
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "无效的按键符号：\"%s\""
 
-#: src/key.c:453
+#: src/key.c:452
 msgid "neither key nor keycode specified for Key"
 msgstr "key 或 keycode 均未被指定给 Key"
 
-#: src/key.c:468
+#: src/key.c:467
 #, c-format
 msgid "key binding: root menu \"%s\" not defined"
 msgstr "按键绑定：主菜单 \"%s\" 未定义"
@@ -191,130 +191,130 @@ msgstr "%s[%u]：无效的打开标签"
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]：无效的标签"
 
-#: src/lex.c:306
+#: src/lex.c:308
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]：未预料的文字：\"%s\""
 
-#: src/lex.c:365
+#: src/lex.c:367
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]：无效的实体：\"%.8s\""
 
-#: src/lex.c:471 src/parse.c:1892
+#: src/lex.c:473 src/parse.c:1893
 msgid "out of memory"
 msgstr "内存不足"
 
-#: src/parse.c:226
+#: src/parse.c:228
 #, fuzzy, c-format
 msgid "could not open %s or %s"
 msgstr "无法加载字体：%s"
 
-#: src/parse.c:244
+#: src/parse.c:246
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr ""
 
-#: src/parse.c:382
+#: src/parse.c:384
 #, fuzzy, c-format
 msgid "invalid start tag: %s"
 msgstr "无效的设置：\"%s\""
 
-#: src/parse.c:762
+#: src/parse.c:774
 #, fuzzy, c-format
 msgid "invalid include: %s"
 msgstr "无效的设置：\"%s\""
 
-#: src/parse.c:812
+#: src/parse.c:824
 #, fuzzy
 msgid "no action specified for Key"
 msgstr "key 或 keycode 均未被指定给 Key"
 
-#: src/parse.c:835
+#: src/parse.c:847
 #, fuzzy, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "无效操作：\"%s\""
 
-#: src/parse.c:859
+#: src/parse.c:871
 #, fuzzy, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "无效的托盘垂直对齐：\"%s\""
 
-#: src/parse.c:945
+#: src/parse.c:957
 msgid "no include file specified"
 msgstr ""
 
-#: src/parse.c:955
+#: src/parse.c:967
 #, fuzzy, c-format
 msgid "could not process include: %s"
 msgstr "无法加载字体：%s"
 
-#: src/parse.c:959
+#: src/parse.c:971
 #, fuzzy, c-format
 msgid "could not open included file: %s"
 msgstr "无法加载字体：%s"
 
-#: src/parse.c:1622
+#: src/parse.c:1611
 #, fuzzy, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "无效操作：\"%s\""
 
-#: src/parse.c:1751
+#: src/parse.c:1752
 #, fuzzy, c-format
 msgid "invalid Group Option: %s"
 msgstr "无效操作：\"%s\""
 
-#: src/parse.c:1766
+#: src/parse.c:1767
 #, fuzzy, c-format
 msgid "invalid decorations: %s"
 msgstr "无效操作：\"%s\""
 
-#: src/parse.c:1828
+#: src/parse.c:1829
 #, c-format
 msgid "%s is empty"
 msgstr ""
 
-#: src/parse.c:1835
+#: src/parse.c:1836
 #, fuzzy, c-format
 msgid "invalid %s: \"%s\""
 msgstr "无效操作：\"%s\""
 
-#: src/parse.c:1853
+#: src/parse.c:1854
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "%s 含无效标签：%s"
 
-#: src/parse.c:1879
+#: src/parse.c:1880
 #, fuzzy, c-format
 msgid "could not read file: %s"
 msgstr "无法加载字体：%s"
 
-#: src/parse.c:1966 src/parse.c:1983
+#: src/parse.c:1967 src/parse.c:1984
 #, fuzzy
 msgid "no value specified"
 msgstr "背景图片未定义"
 
-#: src/parse.c:1971
+#: src/parse.c:1972
 #, c-format
 msgid "invalid setting: %s"
 msgstr "无效的设置：\"%s\""
 
-#: src/parse.c:1988
+#: src/parse.c:1989
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "无效的透明度：\"%s\""
 
-#: src/parse.c:2009
+#: src/parse.c:2010
 #, fuzzy, c-format
 msgid "invalid layer: %s"
 msgstr "无效的透明度：\"%s\""
 
-#: src/parse.c:2030
+#: src/parse.c:2031
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "%s 含无效标签：%s"
 
-#: src/parse.c:2051
+#: src/parse.c:2052
 msgid "configuration error"
 msgstr "配置文件错误"
 
@@ -323,11 +323,11 @@ msgstr "配置文件错误"
 msgid "invalid root menu specified: \"%c\""
 msgstr "指定的主菜单无效：\"%c\""
 
-#: src/root.c:213
+#: src/root.c:223
 msgid "Exit JWM"
 msgstr "退出 JWM"
 
-#: src/root.c:214
+#: src/root.c:224
 msgid "Are you sure?"
 msgstr "确认吗？"
 
@@ -335,40 +335,32 @@ msgstr "确认吗？"
 msgid "cannot swallow a client with no name"
 msgstr ""
 
-#: src/taskbar.c:447 src/winmenu.c:51
+#: src/taskbar.c:444 src/winmenu.c:48
 msgid "Close"
 msgstr "关闭"
 
-#: src/taskbar.c:454 src/winmenu.c:71
+#: src/taskbar.c:451 src/winmenu.c:66
 msgid "Minimize"
 msgstr "最小化"
 
-#: src/taskbar.c:461 src/winmenu.c:69 src/winmenu.c:89
+#: src/taskbar.c:458 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
+#: src/winmenu.c:106
 msgid "Restore"
 msgstr "恢复"
 
-#: src/taskbar.c:468 src/winmenu.c:170
+#: src/taskbar.c:465 src/winmenu.c:179
 msgid "Send To"
 msgstr "发送到桌面"
 
-#: src/taskbar.c:964
+#: src/taskbar.c:961
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "无效的任务列表最大宽度：%s"
 
-#: src/taskbar.c:978
+#: src/taskbar.c:975
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "无效的任务列表最大宽度：%s"
-
-#: src/traybutton.c:89
-#, c-format
-msgid "could not load tray icon: \"%s\""
-msgstr "无法加载托盘图标：\"%s\""
-
-#: src/traybutton.c:130
-msgid "no icon or label for TrayButton"
-msgstr "TrayButton 中未找到 icon 或 label 定义"
 
 #: src/tray.c:1064
 #, c-format
@@ -385,27 +377,36 @@ msgstr "无效的托盘水平对齐：\"%s\""
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "无效的托盘垂直对齐：\"%s\""
 
-#: src/winmenu.c:52
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "无法加载托盘图标：\"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "TrayButton 中未找到 icon 或 label 定义"
+
+#: src/winmenu.c:49
 msgid "Kill"
 msgstr "强制结束"
 
-#: src/winmenu.c:60
+#: src/winmenu.c:57
 msgid "Resize"
 msgstr "改变大小"
 
-#: src/winmenu.c:63
+#: src/winmenu.c:60
 msgid "Move"
 msgstr "移动"
 
-#: src/winmenu.c:76
+#: src/winmenu.c:72
 msgid "Unshade"
 msgstr "向下展开"
 
-#: src/winmenu.c:78
+#: src/winmenu.c:74
 msgid "Shade"
 msgstr "向上收起"
 
-#: src/winmenu.c:83
+#: src/winmenu.c:81
 msgid "Maximize-y"
 msgstr "纵向最大化"
 
@@ -413,43 +414,43 @@ msgstr "纵向最大化"
 msgid "Maximize-x"
 msgstr "横向最大化"
 
-#: src/winmenu.c:91
+#: src/winmenu.c:90
 msgid "Maximize"
 msgstr "最大化"
 
-#: src/winmenu.c:100
+#: src/winmenu.c:112
 msgid "Unstick"
 msgstr "解除固定"
 
-#: src/winmenu.c:102
+#: src/winmenu.c:114
 msgid "Stick"
 msgstr "固定"
 
-#: src/winmenu.c:127
+#: src/winmenu.c:139
 msgid "Layer"
 msgstr "层"
 
-#: src/winmenu.c:139
+#: src/winmenu.c:148
 msgid "[Above]"
 msgstr "[当前：置顶]"
 
-#: src/winmenu.c:141
+#: src/winmenu.c:150
 msgid "Above"
 msgstr "置顶"
 
-#: src/winmenu.c:144
+#: src/winmenu.c:153
 msgid "[Normal]"
 msgstr "[当前：正常]"
 
-#: src/winmenu.c:146
+#: src/winmenu.c:155
 msgid "Normal"
 msgstr "正常"
 
-#: src/winmenu.c:149
+#: src/winmenu.c:158
 msgid "[Below]"
 msgstr "[当前：置底]"
 
-#: src/winmenu.c:151
+#: src/winmenu.c:160
 msgid "Below"
 msgstr "置底"
 

@@ -46,7 +46,7 @@ static const unsigned int cursor_shapes[CURSOR_COUNT] = {
 
 static Cursor cursors[CURSOR_COUNT];
 
-static Cursor GetResizeCursor(BorderActionType action);
+static Cursor GetResizeCursor(MouseContextType context);
 static Cursor CreateCursor(unsigned int shape);
 
 static int mousex;
@@ -87,18 +87,18 @@ void ShutdownCursors(void)
 }
 
 /** Get the cursor for the specified location on the frame. */
-Cursor GetFrameCursor(BorderActionType action)
+Cursor GetFrameCursor(MouseContextType context)
 {
-   switch(action & 0x0F) {
-   case BA_RESIZE:
-      return GetResizeCursor(action);
-   case BA_CLOSE:
+   switch(context & MC_MASK) {
+   case MC_BORDER:
+      return GetResizeCursor(context);
+   case MC_CLOSE:
       break;
-   case BA_MAXIMIZE:
+   case MC_MAXIMIZE:
       break;
-   case BA_MINIMIZE:
+   case MC_MINIMIZE:
       break;
-   case BA_MOVE:
+   case MC_MOVE:
       break;
    default:
       break;
@@ -107,27 +107,27 @@ Cursor GetFrameCursor(BorderActionType action)
 }
 
 /** Get the cursor for resizing on the specified frame location. */
-Cursor GetResizeCursor(BorderActionType action)
+Cursor GetResizeCursor(MouseContextType context)
 {
-   if(action & BA_RESIZE_N) {
-      if(action & BA_RESIZE_E) {
+   if(context & MC_BORDER_N) {
+      if(context & MC_BORDER_E) {
          return cursors[CURSOR_NE];
-      } else if(action & BA_RESIZE_W) {
+      } else if(context & MC_BORDER_W) {
          return cursors[CURSOR_NW];
       } else {
          return cursors[CURSOR_NORTH];
       }
-   } else if(action & BA_RESIZE_S) {
-      if(action & BA_RESIZE_E) {
+   } else if(context & MC_BORDER_S) {
+      if(context & MC_BORDER_E) {
          return cursors[CURSOR_SE];
-      } else if(action & BA_RESIZE_W) {
+      } else if(context & MC_BORDER_W) {
          return cursors[CURSOR_SW];
       } else {
          return cursors[CURSOR_SOUTH];
       }
-   } else if(action & BA_RESIZE_E) {
+   } else if(context & MC_BORDER_E) {
          return cursors[CURSOR_EAST];
-   } else if(action & BA_RESIZE_W) {
+   } else if(context & MC_BORDER_W) {
       return cursors[CURSOR_WEST];
    } else {
       return cursors[CURSOR_DEFAULT];
@@ -135,13 +135,13 @@ Cursor GetResizeCursor(BorderActionType action)
 }
 
 /** Grab the mouse for resizing a window. */
-char GrabMouseForResize(BorderActionType action)
+char GrabMouseForResize(MouseContextType context)
 {
    Cursor cur;
    int result;
    unsigned int mask;
 
-   cur = GetFrameCursor(action);
+   cur = GetFrameCursor(context);
    mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
    result = JXGrabPointer(display, rootWindow, False, mask,
                           GrabModeAsync, GrabModeAsync, None,

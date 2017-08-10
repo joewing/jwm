@@ -1,475 +1,455 @@
-# Polish translations for jwm package.
-# Copyright (C) 2012 Free Software Foundation, Inc.
+# Lithuanian JWM translation.
+# Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the jwm package.
-# Miś Uszatek <adres.email@ymail.com>, 2012
+# Moo, 2017.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 2.1.0+svn579-1\n"
+"Project-Id-Version: jwm 2.3.7\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-07-12 21:06-0500\n"
-"PO-Revision-Date: 2012-09-14 16:59+0100\n"
-"Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
-"Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
-"Language: pl\n"
+"POT-Creation-Date: 2017-07-20 15:41-0400\n"
+"PO-Revision-Date: 2017-07-21 05:18-0400\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.8.11\n"
+"Last-Translator: Moo\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: lt\n"
 
 #: src/action.c:44
-#, fuzzy, c-format
+#, c-format
 msgid "invalid action: \"%s\""
-msgstr "nieprawidłowa akcja TrayButton: \"%s\""
+msgstr "neteisingas veiksmas: \"%s\""
 
 #: src/action.c:211
-#, fuzzy, c-format
+#, c-format
 msgid "action: root menu \"%s\" not defined"
-msgstr "przycisk zasobnika: menu głównym %d nie zdefiniowano"
+msgstr "veiksmas: nėra apibrėžtas šaknies meniu \"%s\""
 
 #: src/background.c:137
 msgid "no value specified for background"
-msgstr "nie określono wartości dla tła"
+msgstr "fonui nenurodyta jokia reikšmė"
 
 #: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
-msgstr "nieprawidłowy typ tła: \"%s\""
+msgstr "neteisingas fono tipas: \"%s\""
 
 #: src/background.c:294
 #, c-format
 msgid "background image not found: \"%s\""
-msgstr "nie znaleziono obrazu tła: \"%s\""
+msgstr "nerastas fono paveikslas: \"%s\""
 
 #: src/client.c:905
 msgid "Kill this window?"
-msgstr "Zabić to okno?"
+msgstr "Nutraukti šio lango darbą?"
 
 #: src/client.c:906
 msgid "This may cause data to be lost!"
-msgstr "Może to spowodować utratę danych!"
+msgstr "Tai gali sukelti duomenų praradimą!"
 
 #: src/command.c:138 src/main.c:221
 #, c-format
 msgid "exec failed: (%s) %s"
-msgstr "exec nie powiodło się: (%s) %s"
+msgstr "vykdymas nepavyko: (%s) %s"
 
 #: src/confirm.c:69
 msgid "OK"
-msgstr ""
+msgstr "Gerai"
 
 #: src/confirm.c:74
 msgid "Cancel"
-msgstr ""
+msgstr "Atsisakyti"
 
 #: src/confirm.c:308
 msgid "Confirm"
-msgstr ""
+msgstr "Patvirtinti"
 
 #: src/desktop.c:336
 msgid "empty Desktops Name tag"
-msgstr "pusty znacznik Nazwa Pulpitów"
+msgstr "tuščia darbalaukių pavadinimo (Desktops Name) žymė"
 
 #: src/dock.c:151
 msgid "only one Dock allowed"
-msgstr "tylko jeden dozwolony Dock"
+msgstr "leidžiamas tik vienas dokas"
 
 #: src/dock.c:232
 msgid "could not acquire system tray selection"
-msgstr "nie można nabyć wyboru w zasobniku systemowym"
+msgstr "nepavyko gauti pasirinkimo sistemos dėkle"
 
 #: src/error.c:22
 #, c-format
 msgid "JWM: error: "
-msgstr ""
+msgstr "JWM: klaida: "
 
 #: src/error.c:51
 #, c-format
 msgid "JWM: warning: "
-msgstr ""
+msgstr "JWM: įspėjimas: "
 
 #: src/error.c:77
 msgid "display is already managed"
-msgstr ""
+msgstr "ekranas jau yra valdomas"
 
 #: src/font.c:109 src/font.c:126
 #, c-format
 msgid "could not load font: %s"
-msgstr "nie można załadować czcionki: %s"
+msgstr "nepavyko įkelti šrifto: %s"
 
 #: src/font.c:116 src/font.c:133
 #, c-format
 msgid "could not load the default font: %s"
-msgstr "nie można załadować domyślnej czcionki: %s"
+msgstr "nepavyko įkelti numatytojo šrifto: %s"
 
 #: src/font.c:315
 msgid "empty Font tag"
-msgstr "pusty znacznik czcionki"
+msgstr "tuščia šrifto (Font) žymė"
 
 #: src/group.c:115
 msgid "invalid group class"
-msgstr "nieprawidłowa klasa grupy"
+msgstr "neteisinga grupės klasė"
 
 #: src/group.c:126
 msgid "invalid group name"
-msgstr "nieprawidłowa nazwa grupy"
+msgstr "neteisingas grupės pavadinimas"
 
 #: src/group.c:287
 #, c-format
 msgid "invalid group desktop: %d"
-msgstr "nieprawidłowy pulpitu grupy: %d"
+msgstr "neteisingas grupės darbalaukis: %d"
 
 #: src/image.c:220
 #, c-format
 msgid "could not create read struct for PNG image: %s"
-msgstr "nie można utworzyć przeczytać struct dla obrazu PNG: %s"
+msgstr "nepavyko perskaityti PNG paveikslo struktūros: %s"
 
 #: src/image.c:233
 #, c-format
 msgid "error reading PNG image: %s"
-msgstr "błąd odczytu obrazu PNG: %s"
+msgstr "klaida skaitant PNG paveikslą: %s"
 
 #: src/image.c:241
 #, c-format
 msgid "could not create info struct for PNG image: %s"
-msgstr "nie można utworzyć struktur informacji dla obrazu PNG: %s"
+msgstr "nepavyko sukurti PNG paveikslo informacijos struktūros: %s"
 
 #: src/key.c:318
 msgid "Specified KeySym is not defined for any KeyCode"
-msgstr "Określony KeySym nie jest zdefiniowany dla żadego KeyCode"
+msgstr "Nurodytas KeySym nėra apibrėžtas jokiam KeyCode"
 
 #: src/key.c:326
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
-msgstr "nie znaleziono modyfikatora dla keysym 0x%0x"
+msgstr "nerastas modifikatorius, skirtas keysym 0x%0x"
 
 #: src/key.c:356
 #, c-format
 msgid "invalid modifier: \"%c\""
-msgstr "nieprawidłowy modyfikator: \"%c\""
+msgstr "neteisingas modifikatorius: \"%c\""
 
 #: src/key.c:371
 #, c-format
 msgid "invalid key symbol: \"%s\""
-msgstr "nieprawidłowy symbol klucza: \"%s\""
+msgstr "neteisingas klavišo simbolis: \"%s\""
 
 #: src/key.c:452
 msgid "neither key nor keycode specified for Key"
-msgstr "ani klucza ani keycode określony dla Key"
+msgstr "Klavišui (Key) nėra nurodytas nei klavišas, nei klavišo kodas"
 
 #: src/key.c:467
-#, fuzzy, c-format
+#, c-format
 msgid "key binding: root menu \"%s\" not defined"
-msgstr "klucz wiązania: menu główne %d nie zdefiniowano"
+msgstr "Klavišų susiejimas: nėra apibrėžtas šaknies meniu \"%s\""
 
 #: src/lex.c:201
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
-msgstr "%s[%u]: zamknij znacznik \"%s\" nie pasuje otwarty znacznik \"%s\""
+msgstr "%s[%u]: pabaigos žymė \"%s\" neatitinka pradžios žymę \"%s\""
 
 #: src/lex.c:207
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
-msgstr "%s[%u]: nieoczekiwany i nieprawidłowo zamknięty znacznik"
+msgstr "%s[%u]: netikėta ir neteisinga pabaigos žymė"
 
 #: src/lex.c:213
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
-msgstr "%s[%u]: zamknij znacznik \"%s\" bez otwartego znacznika"
+msgstr "%s[%u]: pabaigos žymė \"%s\" be pradžios žymės"
 
 #: src/lex.c:216
 #, c-format
 msgid "%s[%u]: invalid close tag"
-msgstr "%s[%u]: nieprawidłowo zamknięty znacznik"
+msgstr "%s[%u]: neteisinga pabaigos žymė"
 
 #: src/lex.c:234
 #, c-format
 msgid "%s[%u]: invalid open tag"
-msgstr "%s[%u]: nieprawidłowo otwarty znacznik"
+msgstr "%s[%u]: neteisinga pradžios žymė"
 
 #: src/lex.c:250
 #, c-format
 msgid "%s[%u]: invalid tag"
-msgstr "%s[%u]: nieprawidłowy znacznik"
+msgstr "%s[%u]: neteisinga žymė"
 
 #: src/lex.c:308
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
-msgstr "%s[%u]: nieoczekiwany tekst: \"%s\""
+msgstr "%s[%u]: netikėtas tekstas: \"%s\""
 
 #: src/lex.c:367
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
-msgstr "%s[%d]: nieprawidłowa jednostka: \"%.8s\""
+msgstr "%s[%d]: neteisingas objektas: \"%.8s\""
 
 #: src/lex.c:473 src/parse.c:1893
 msgid "out of memory"
-msgstr ""
+msgstr "trūksta atminties"
 
 #: src/parse.c:228
-#, fuzzy, c-format
+#, c-format
 msgid "could not open %s or %s"
-msgstr "nie można załadować czcionki: %s"
+msgstr "nepavyko atverti %s ar %s"
 
 #: src/parse.c:246
 #, c-format
 msgid "include depth (%d) exceeded"
-msgstr ""
+msgstr "viršytas įtraukimo gylis (%d)"
 
 #: src/parse.c:384
-#, fuzzy, c-format
+#, c-format
 msgid "invalid start tag: %s"
-msgstr "nieprawidłowy znacznik w: %s"
+msgstr "neteisinga pradžios žymė: %s"
 
 #: src/parse.c:774
-#, fuzzy, c-format
+#, c-format
 msgid "invalid include: %s"
-msgstr "nieprawidłowa warstwa grupy: %s"
+msgstr "neteisingas įtraukimas: %s"
 
 #: src/parse.c:824
-#, fuzzy
 msgid "no action specified for Key"
-msgstr "ani klucza ani keycode określony dla Key"
+msgstr "Klavišui (Key) nėra nurodytas joks veiksmas"
 
 #: src/parse.c:847
-#, fuzzy, c-format
+#, c-format
 msgid "invalid Key action: \"%s\""
-msgstr "nieprawidłowa akcja TrayButton: \"%s\""
+msgstr "neteisingas klavišo (Key) veiksmas: \"%s\""
 
 #: src/parse.c:871
-#, fuzzy, c-format
+#, c-format
 msgid "invalid text alignment: \"%s\""
-msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""
+msgstr "neteisingas teksto lygiavimas: \"%s\""
 
 #: src/parse.c:957
 msgid "no include file specified"
-msgstr ""
+msgstr "nenurodytas joks įtraukimo failas"
 
 #: src/parse.c:967
-#, fuzzy, c-format
+#, c-format
 msgid "could not process include: %s"
-msgstr "nie można załadować czcionki: %s"
+msgstr "nepavyko apdoroti įtraukimo: %s"
 
 #: src/parse.c:971
-#, fuzzy, c-format
+#, c-format
 msgid "could not open included file: %s"
-msgstr "nie można załadować czcionki: %s"
+msgstr "nepavyko atverti įtraukto failo: %s"
 
 #: src/parse.c:1611
-#, fuzzy, c-format
+#, c-format
 msgid "invalid value for 'enabled': \"%s\""
-msgstr "nieprawidłowa akcja TrayButton: \"%s\""
+msgstr "neteisinga \"enabled\" reikšmė: \"%s\""
 
 #: src/parse.c:1752
-#, fuzzy, c-format
+#, c-format
 msgid "invalid Group Option: %s"
-msgstr "nieprawidłowy pulpitu grupy: %d"
+msgstr "neteisingas grupės parametras: %s"
 
 #: src/parse.c:1767
-#, fuzzy, c-format
+#, c-format
 msgid "invalid decorations: %s"
-msgstr "nieprawidłowa akcja TrayButton: \"%s\""
+msgstr "neteisingas dekoravimas: %s"
 
 #: src/parse.c:1829
 #, c-format
 msgid "%s is empty"
-msgstr ""
+msgstr "%s yra tuščias"
 
 #: src/parse.c:1836
-#, fuzzy, c-format
+#, c-format
 msgid "invalid %s: \"%s\""
-msgstr "nieprawidłowa akcja TrayButton: \"%s\""
+msgstr "neteisingas %s: \"%s\""
 
 #: src/parse.c:1854
-#, fuzzy, c-format
+#, c-format
 msgid "invalid value for %s: \"%s\""
-msgstr "nieprawidłowy znacznik w %s: %s"
+msgstr "neteisinga %s reikšmė: \"%s\""
 
 #: src/parse.c:1880
-#, fuzzy, c-format
+#, c-format
 msgid "could not read file: %s"
-msgstr "nie można załadować czcionki: %s"
+msgstr "nepavyko perskaityti failo: %s"
 
 #: src/parse.c:1967 src/parse.c:1984
-#, fuzzy
 msgid "no value specified"
-msgstr "nie określono wartości dla tła"
+msgstr "nenurodyta reikšmė"
 
 #: src/parse.c:1972
 #, c-format
 msgid "invalid setting: %s"
-msgstr "nieprawidłowy znacznik w: %s"
+msgstr "neteisingas nustatymas: %s"
 
 #: src/parse.c:1989
 #, c-format
 msgid "invalid opacity: %s"
-msgstr "nieprawidłowa nieprzezroczystość menu: %s"
+msgstr "neteisingas nepermatomumas: %s"
 
 #: src/parse.c:2010
 #, c-format
 msgid "invalid layer: %s"
-msgstr "nieprawidłowa warstwa grupy: %s"
+msgstr "neteisingas sluoksnis: %s"
 
 #: src/parse.c:2031
 #, c-format
 msgid "invalid tag in %s: %s"
-msgstr "nieprawidłowy znacznik w %s: %s"
+msgstr "neteisinga žymė, esanti %s: %s"
 
 #: src/parse.c:2052
 msgid "configuration error"
-msgstr "błąd konfiguracji"
+msgstr "konfigūracijos klaida"
 
 #: src/root.c:131
 #, c-format
 msgid "invalid root menu specified: \"%c\""
-msgstr "nieprawidłowo określono menu główne: \"%c\""
+msgstr "nurodytas neteisingas šaknies meniu: \"%c\""
 
 #: src/root.c:223
 msgid "Exit JWM"
-msgstr "Zakończ JWM"
+msgstr "Išeiti iš JWM"
 
 #: src/root.c:224
 msgid "Are you sure?"
-msgstr "Czy jesteś pewien?"
+msgstr "Ar tikrai?"
 
 #: src/swallow.c:85
 msgid "cannot swallow a client with no name"
-msgstr "nie może połknąć klienta bez nazwy"
+msgstr "nepavyksta į dėklą praryti klientą be pavadinimo"
 
 #: src/taskbar.c:444 src/winmenu.c:48
 msgid "Close"
-msgstr "Zamknij"
+msgstr "Užverti"
 
 #: src/taskbar.c:451 src/winmenu.c:66
 msgid "Minimize"
-msgstr "Zminimalizuj"
+msgstr "Suskleisti"
 
 #: src/taskbar.c:458 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
 msgid "Restore"
-msgstr "Przywróć"
+msgstr "Atkurti"
 
 #: src/taskbar.c:465 src/winmenu.c:179
 msgid "Send To"
-msgstr "Wyślij do"
+msgstr "Siųsti į"
 
 #: src/taskbar.c:961
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
-msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
+msgstr "neteisingas didžiausias užduočių juostos (TaskList) plotis: %s"
 
 #: src/taskbar.c:975
-#, fuzzy, c-format
+#, c-format
 msgid "invalid height for TaskList: %s"
-msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
+msgstr "neteisingas užduočių juostos (TaskList) aukštis: %s"
 
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
-msgstr "nieprawidłowy układ zasobnika: \"%s\""
+msgstr "neteisingas dėklo lygiavimas: \"%s\""
 
 #: src/tray.c:1102
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "nieprawidłowe wypoziomowanie zasobnika: \"%s\""
+msgstr "neteisingas horizontalusis dėklo lygiavimas: \"%s\""
 
 #: src/tray.c:1125
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
-msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""
+msgstr "neteisingas vertikalusis dėklo lygiavimas: \"%s\""
 
 #: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
-msgstr "nie można załadować ikon w zasobniku: \"%s\""
+msgstr "nepavyko įkelti dėklo piktogramos: \"%s\""
 
 #: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
-msgstr "brak ikony lub etykiety dla TrayButton"
+msgstr "nėra jokios dėklo mygtuko (TrayButton) piktogramos ar etiketės"
 
 #: src/winmenu.c:49
 msgid "Kill"
-msgstr "Zabij"
+msgstr "Nutraukti lango darbą"
 
 #: src/winmenu.c:57
 msgid "Resize"
-msgstr "Zmień rozmiar"
+msgstr "Keisti dydį"
 
 #: src/winmenu.c:60
 msgid "Move"
-msgstr "Przenieś"
+msgstr "Perkelti"
 
 #: src/winmenu.c:72
 msgid "Unshade"
-msgstr "Rozwiń"
+msgstr "Atidengti"
 
 #: src/winmenu.c:74
 msgid "Shade"
-msgstr "Zwiń"
+msgstr "Pridengti"
 
 #: src/winmenu.c:81
 msgid "Maximize-y"
-msgstr "Zmaksymalizuj pio."
+msgstr "Išskleisti per y"
 
 #: src/winmenu.c:86
 msgid "Maximize-x"
-msgstr "Zmaksymalizuj poz."
+msgstr "Išskleisti per x"
 
 #: src/winmenu.c:90
 msgid "Maximize"
-msgstr "Zmaksymalizuj"
+msgstr "Išskleisti"
 
 #: src/winmenu.c:112
 msgid "Unstick"
-msgstr "Odepnij"
+msgstr "Atklijuoti"
 
 #: src/winmenu.c:114
 msgid "Stick"
-msgstr "Przypnij"
+msgstr "Priklijuoti"
 
 #: src/winmenu.c:139
 msgid "Layer"
-msgstr "Warstwa"
+msgstr "Sluoksnis"
 
 #: src/winmenu.c:148
 msgid "[Above]"
-msgstr ""
+msgstr "[Aukščiau]"
 
 #: src/winmenu.c:150
 msgid "Above"
-msgstr ""
+msgstr "Aukščiau"
 
 #: src/winmenu.c:153
 msgid "[Normal]"
-msgstr "[Normalny]"
+msgstr "[Normalus]"
 
 #: src/winmenu.c:155
 msgid "Normal"
-msgstr "Normalny"
+msgstr "Normalus"
 
 #: src/winmenu.c:158
 msgid "[Below]"
-msgstr ""
+msgstr "[Žemiau]"
 
 #: src/winmenu.c:160
 msgid "Below"
-msgstr ""
-
-#~ msgid "invalid tray width: %d"
-#~ msgstr "nieprawidłowa szerokość zasobnika: %d"
-
-#~ msgid "invalid tray height: %d"
-#~ msgstr "nieprawidłowa wysokość zasobnika: %d"
-
-#~ msgid "invalid insert mode: \"%s\""
-#~ msgstr "nieprawidłowy tryb edycji: \"%s\""
-
-#~ msgid "invalid status window type: %s"
-#~ msgstr "nieprawidłowy typ tła: %s"
-
-#~ msgid "cannot swallow the same client multiple times"
-#~ msgstr "nie można połknąć tego samego klienta, wiele razy"
-
-#~ msgid "Fullscreen state will be shaped!"
-#~ msgstr "Pełnoekranowy stan będzie kształtowany!"
+msgstr "Žemiau"

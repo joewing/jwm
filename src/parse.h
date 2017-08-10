@@ -13,7 +13,7 @@
 struct Menu;
 
 /** Parse a configuration file.
- * @param fileName The file to parse.
+ * @param fileName The user-specified config file to parse.
  */
 void ParseConfig(const char *fileName);
 

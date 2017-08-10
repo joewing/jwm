@@ -53,6 +53,10 @@ typedef unsigned char OptionType;
 #define OPTION_FIXED          35    /**< Keep on the specified desktop. */
 #define OPTION_AEROSNAP       36    /**< Enable Aero Snap. */
 #define OPTION_NODRAG         37    /**< Disable mod1+drag/resize. */
+#define OPTION_X              38    /**< Window X position. */
+#define OPTION_Y              39    /**< Window Y position. */
+#define OPTION_WIDTH          40    /**< Initial window width. */
+#define OPTION_HEIGHT         41    /**< Initial window height. */
 
 /*@{*/
 #define InitializeGroups() (void)(0)
@@ -98,7 +102,15 @@ void AddGroupOptionString(struct GroupType *gp, OptionType option,
  * @param value The option value.
  */
 void AddGroupOptionUnsigned(struct GroupType *gp, OptionType option,
-                            unsigned int value);
+                            unsigned value);
+
+/** Add a group option that takes a signed integer.
+ * @param gp The group.
+ * @param option The option.
+ * @param value The option value.
+ */
+void AddGroupOptionSigned(struct GroupType *gp, OptionType option,
+                          int value);
 
 /** Apply any matching groups to a client.
  * @param np The client.

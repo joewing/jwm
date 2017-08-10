@@ -573,6 +573,7 @@ void ShowAllTrays(void)
 void HideTray(TrayType *tp)
 {
    const ScreenType *sp;
+   LayoutType layout;
    int x, y;
 
    /* Don't hide if the tray is raised. */
@@ -582,9 +583,27 @@ void HideTray(TrayType *tp)
 
    tp->hidden = 1;
 
-   /* Determine where to move the tray. */
+   /* Derive the location for hiding the tray. */
    sp = GetCurrentScreen(tp->x, tp->y);
-   switch(tp->autoHide) {
+   layout = tp->autoHide;
+   if(layout == THIDE_ON) {
+      if(tp->layout == LAYOUT_HORIZONTAL) {
+         if(tp->y >= sp->height / 2) {
+            layout = THIDE_BOTTOM;
+         } else {
+            layout = THIDE_TOP;
+         }
+      } else {
+         if(tp->x >= sp->width / 2) {
+            layout = THIDE_RIGHT;
+         } else {
+            layout = THIDE_LEFT;
+         }
+      }
+   }
+
+   /* Determine where to move the tray. */
+   switch(layout) {
    case THIDE_LEFT:
       x = sp->y - tp->width + 1;
       y = tp->y;

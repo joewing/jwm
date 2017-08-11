@@ -497,10 +497,9 @@ fi
 ############################################################################
 # Check if support for gettext was requested and available.
 ############################################################################
-# Use m4_pattern_allow to work around gettext's use of AM_PROG_MKDIR_P.
-m4_pattern_allow([AM_PROG_MKDIR_P])
+AM_ICONV
 AM_GNU_GETTEXT([external])
-AM_ICONV()
+AM_GNU_GETTEXT_VERSION([0.19])
 LDFLAGS="$LDFLAGS $LIBINTL $LIBICONV"
 
 ############################################################################

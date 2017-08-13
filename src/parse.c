@@ -1155,7 +1155,7 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
          settings.listAllTasks = !strcmp(temp, "all");
       }
    } else if(tp->type == TOK_TRAYSTYLE) {
-      ParseDecorations(tp, &settings.taskListDecorations);
+      ParseDecorations(tp, &settings.trayDecorations);
    }
 
    for(np = tp->subnodeHead; np; np = np->next) {

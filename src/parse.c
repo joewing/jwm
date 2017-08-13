@@ -1141,10 +1141,10 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
    const ColorType activeUp = fg + COLOR_TRAY_ACTIVE_UP - COLOR_TRAY_FG;
    const ColorType activeDown = fg + COLOR_TRAY_ACTIVE_DOWN - COLOR_TRAY_FG;
 
-   /* TrayStyle has extra attributes. */
-   if(tp->type == TOK_TRAYSTYLE) {
+   /* TaskListStyle has extra attributes. */
+   if(tp->type == TOK_TASKLISTSTYLE) {
       const char *temp;
-      ParseDecorations(tp, &settings.trayDecorations);
+      ParseDecorations(tp, &settings.taskListDecorations);
       temp = FindAttribute(tp->attributes, "group");
       if(temp) {
          settings.groupTasks = !strcmp(temp, TRUE_VALUE);
@@ -1154,7 +1154,7 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
       if(temp) {
          settings.listAllTasks = !strcmp(temp, "all");
       }
-   } else if(tp->type == TOK_TASKLISTSTYLE) {
+   } else if(tp->type == TOK_TRAYSTYLE) {
       ParseDecorations(tp, &settings.taskListDecorations);
    }
 

@@ -1136,27 +1136,13 @@ given separated by a ':' to set the down and up colors respectively.
 .B "TRAY STYLE"
 .RS
 The \fBTrayStyle\fP tag controls the look of trays.
-The following attributes are supported:
+The following attribute is supported:
 .P
 .B decorations
 .RS
 The type of decorations to use for trays.
 Possible values are \fBflat\fP and \fBmotif\fP. The default
 is \fBflat\fP.
-.RE
-.P
-.B group
-.RS
-Determines if windows are grouped by class when shown in task bars.
-Possible values are \fBtrue\fP and \fBfalse\fP. The default
-is \fBfalse\fP.
-.RE
-.P
-.B list
-.RS
-Determines which windows are shown in task bars.
-Possible values are \fBdesktop\fP and \fBall\fP. The default
-is \fBdesktop\fP.
 .RE
 .P
 Within this tag the following tags are supported:
@@ -1227,12 +1213,26 @@ respectively.
 .B "TASK LIST STYLE"
 .RS
 The \fBTaskListStyle\fP tag controls the look of task lists.
-The following attribute is supported:
+The following attributea are supported:
 .P
 .B decorations
 .RS
 The window decorations to use. Valid options are \fBflat\fP and
 \fBmotif\fP. The default is inherited from \fBTrayStyle\fP.
+.RE
+.P
+.B group
+.RS
+Determines if windows are grouped by class when shown in task bars.
+Possible values are \fBtrue\fP and \fBfalse\fP. The default
+is \fBfalse\fP.
+.RE
+.P
+.B list
+.RS
+Determines which windows are shown in task bars.
+Possible values are \fBdesktop\fP and \fBall\fP. The default
+is \fBdesktop\fP.
 .RE
 .P
 Within this tag the following tags are supported:

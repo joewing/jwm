@@ -102,7 +102,7 @@ void StartupBindings(void)
    }
    JXFreeModifiermap(modmap);
    lockMask |= Button1Mask | Button2Mask | Button3Mask
-            | Button4Mask | Button5Mask;
+            | Button4Mask | Button5Mask | (1<<13) | (1<<14);
 
    /* Look up and grab the keys. */
    for(np = bindings[MC_NONE]; np; np = np->next) {

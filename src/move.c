@@ -228,7 +228,12 @@ char MoveClient(ClientNode *np, int startx, int starty)
                   flags = MAX_VERT | MAX_HORIZ;
                   atSideFirst = 0;
                }
-               MaximizeClient(np, flags);
+               if(flags != np->state.maxFlags) {
+                  if(settings.moveMode == MOVE_OUTLINE) {
+                     ClearOutline();
+                  }
+                  MaximizeClient(np, flags);
+               }
                if(!np->state.maxFlags) {
                   DoSnap(np);
                }

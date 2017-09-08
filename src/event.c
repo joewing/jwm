@@ -555,7 +555,7 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
    case ACTION_RESIZE:
       if(np) {
          if(keyAction) {
-            ResizeClientKeyboard(np);
+            ResizeClientKeyboard(np, context);
          } else {
             ResizeClient(np, context, x, y);
          }
@@ -1233,7 +1233,7 @@ void HandleNetWMMoveResize(const XClientMessageEvent *event, ClientNode *np)
       MoveClient(np, x, y);
       break;
    case 9:  /* resize-keyboard */
-      ResizeClientKeyboard(np);
+      ResizeClientKeyboard(np, MC_BORDER | MC_BORDER_S | MC_BORDER_E);
       break;
    case 10: /* move-keyboard */
       MoveClientKeyboard(np);

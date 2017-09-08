@@ -25,8 +25,9 @@ void ResizeClient(struct ClientNode *np, MouseContextType context,
 
 /** Resize a client window using the keyboard (mouse optional).
  * @param np The client to resize.
+ * @param context The mouse context.
  */
-void ResizeClientKeyboard(struct ClientNode *np);
+void ResizeClientKeyboard(struct ClientNode *np, MouseContextType context);
 
 #endif /* RESIZE_H */
 

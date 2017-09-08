@@ -297,7 +297,7 @@ void RunWindowCommand(MenuAction *action, unsigned button)
       MoveClientKeyboard(client);
       break;
    case MA_RESIZE:
-      ResizeClientKeyboard(client);
+      ResizeClientKeyboard(client, MC_BORDER | MC_BORDER_S | MC_BORDER_E);
       break;
    case MA_KILL:
       KillClient(client);

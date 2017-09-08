@@ -1681,7 +1681,26 @@ Stick/unstick the active window.
 .IP \fBmove\fP
 Move the active window.
 .IP \fBresize\fP
-Resize the active window.
+Resize the active window.  An optional suffix may be applied to this option to
+specify the corner of the window to resize.  The options are:
+.RS
+.IP \fBresize:n\fP
+Resize the north side
+.IP \fBresize:s\fP
+Resize the south side
+.IP \fBresize:e\fP
+Resize the east side
+.IP \fBresize:w\fP
+Resize the west side
+.IP \fBresize:nw\fP
+Resize the north-west corner
+.IP \fBresize:ne\fP
+Resize the north-east corner
+.IP \fBresize:sw\fP
+Resize the south-west corner
+.IP \fBresize:se\fP
+Resize the south-east corner
+.RE
 .IP \fBroot:\fP\fIn\fP
 Show root menu \fIn\fP.
 .IP \fBwindow\fP

@@ -152,6 +152,8 @@ static const char *WIDTH_ATTRIBUTE = "width";
 static const char *HEIGHT_ATTRIBUTE = "height";
 static const char *DYNAMIC_ATTRIBUTE = "dynamic";
 static const char *SPACING_ATTRIBUTE = "spacing";
+static const char *TIMEOUT_ATTRIBUTE = "timeout";
+static const char *POPUP_ATTRIBUTE = "popup";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -167,7 +169,7 @@ static const unsigned CONFIG_FILE_COUNT = ARRAY_LENGTH(CONFIG_FILES);
 static char ParseFile(const char *fileName, int depth);
 static char *ReadFile(FILE *fd);
 static TokenNode *TokenizeFile(const char *fileName);
-static TokenNode *TokenizePipe(const char *command);
+static TokenNode *TokenizePipe(const char *command, unsigned timeout);
 
 /* Misc. */
 static void Parse(const TokenNode *start, int depth);
@@ -806,9 +808,17 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
 TokenNode *ParseMenuIncludeHelper(const TokenNode *tp, const char *command)
 {
    TokenNode *start;
+   char *temp;
+   unsigned timeout = DEFAULT_TIMEOUT;
+
+   temp = FindAttribute(tp->attributes, TIMEOUT_ATTRIBUTE);
+   if(temp) {
+      timeout = ParseUnsigned(tp, temp);
+      timeout = timeout == 0 ? DEFAULT_TIMEOUT : timeout;
+   }
 
    if(!strncmp(command, "exec:", 5)) {
-      start = TokenizePipe(&command[5]);
+      start = TokenizePipe(&command[5], timeout);
    } else {
       start = TokenizeFile(command);
    }
@@ -1046,13 +1056,22 @@ void ParseActiveWindowStyle(const TokenNode *tp)
 /** Parse an include. */
 void ParseInclude(const TokenNode *tp, int depth)
 {
+   char *temp;
+   unsigned timeout = DEFAULT_TIMEOUT;
+
    if(JUNLIKELY(!tp->value)) {
       ParseError(tp, _("no include file specified"));
       return;
    }
 
+   temp = FindAttribute(tp->attributes, TIMEOUT_ATTRIBUTE);
+   if(temp) {
+      timeout = ParseUnsigned(tp, temp);
+      timeout = timeout == 0 ? DEFAULT_TIMEOUT : timeout;
+   }
+
    if(!strncmp(tp->value, "exec:", 5)) {
-      TokenNode *tokens = TokenizePipe(&tp->value[5]);
+      TokenNode *tokens = TokenizePipe(&tp->value[5], timeout);
       if(JLIKELY(tokens)) {
          Parse(tokens, 0);
          ReleaseTokens(tokens);
@@ -1455,7 +1474,7 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray)
 
    icon = FindAttribute(tp->attributes, ICON_ATTRIBUTE);
    label = FindAttribute(tp->attributes, LABEL_ATTRIBUTE);
-   popup = FindAttribute(tp->attributes, "popup");
+   popup = FindAttribute(tp->attributes, POPUP_ATTRIBUTE);
 
    temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
    if(temp) {
@@ -2026,24 +2045,16 @@ TokenNode *TokenizeFile(const char *fileName)
 }
 
 /** Tokenize the output of a command. */
-TokenNode *TokenizePipe(const char *command)
+TokenNode *TokenizePipe(const char *command, unsigned timeout)
 {
    TokenNode *tokens;
-   FILE *fp;
    char *path;
    char *buffer;
 
    path = CopyString(command);
    ExpandPath(&path);
 
-   fp = popen(path, "r");
-   Release(path);
-
-   buffer = NULL;
-   if(JLIKELY(fp)) {
-      buffer = ReadFile(fp);
-      pclose(fp);
-   }
+   buffer = ReadFromProcess(command, timeout);
    if(JUNLIKELY(!buffer)) {
       return NULL;
    }
@@ -2071,7 +2082,7 @@ int ParseSigned(const TokenNode *tp, const char *str)
 }
 
 /** Parse an unsigned integer. */
-unsigned int ParseUnsigned(const TokenNode *tp, const char *str)
+unsigned ParseUnsigned(const TokenNode *tp, const char *str)
 {
    long value;
    if(JUNLIKELY(!str)) {

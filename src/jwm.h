@@ -124,6 +124,7 @@
 #define MOVE_DELTA         3     /**< Pixels before trigging a move. */
 #define RESTART_DELAY      1000  /**< Max timeout in ms before restarting. */
 #define URGENCY_DELAY      500   /**< Flash timeout in ms for urgency. */
+#define DEFAULT_TIMEOUT    5     /**< Default pipe timeout in seconds. */
 
 #define SHELL_NAME "/bin/sh"
 

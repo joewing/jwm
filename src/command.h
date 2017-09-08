@@ -37,5 +37,12 @@ void AddRestartCommand(const char *command);
  */
 void RunCommand(const char *command);
 
+/** Read output from a process.
+ * @param command The command to run (run in sh).
+ * @param timeout The timeout in seconds.
+ * @return The output (must be freed, NULL on timeout).
+ */
+char *ReadFromProcess(const char *command, unsigned timeout);
+
 #endif /* COMMAND_H */
 

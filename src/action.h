@@ -17,6 +17,7 @@ struct TrayComponentType;
  * for some key types (for example the desktop number).
  */
 typedef unsigned short ActionType;
+#define ACTION_MASK           0xFF
 #define ACTION_NONE           0
 #define ACTION_UP             1
 #define ACTION_DOWN           2

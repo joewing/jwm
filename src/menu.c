@@ -672,6 +672,7 @@ MenuSelectionType UpdateMotion(Menu *menu,
       return MENU_NOSELECTION;
 
    } else if(event->type == KeyPress) {
+      ActionType action;
 
       if(menu->currentIndex >= 0 || !menu->parent) {
          tp = menu;
@@ -680,7 +681,8 @@ MenuSelectionType UpdateMotion(Menu *menu,
       }
 
       y = -1;
-      switch(GetKey(MC_NONE, event->xkey.state, event->xkey.keycode) & 0xFF) {
+      action = GetKey(MC_NONE, event->xkey.state, event->xkey.keycode);
+      switch(action & ACTION_MASK) {
       case ACTION_UP:
          y = GetPreviousMenuIndex(tp);
          break;

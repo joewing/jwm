@@ -566,7 +566,7 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
             resizeContext |= (corner & ACTION_RESIZE_W) ? MC_BORDER_W : MC_NONE;
          } else if(keyAction) {
             /* No corner specified for a key action, assume SE. */
-            resizeContext |= MC_BORDER_S | MC_BORDER_E;
+            resizeContext = MC_BORDER | MC_BORDER_S | MC_BORDER_E;
          }
          if(keyAction) {
             ResizeClientKeyboard(np, resizeContext);

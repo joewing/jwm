@@ -285,15 +285,19 @@ void ResizeClientKeyboard(ClientNode *np, MouseContextType context)
    CreateResizeWindow(np);
    UpdateResizeWindow(np, gwidth, gheight);
 
-   if((context & MC_BORDER_N) || (np->state.status & STAT_SHADED)) {
-      starty = np->y;
+   if(context & MC_BORDER_N) {
+      starty = np->y - north;
    } else if(context & MC_BORDER_S) {
-      starty = np->y + np->height;
+      if(np->state.status & STAT_SHADED) {
+         starty = np->y;
+      } else {
+         starty = np->y + np->height;
+      }
    } else {
       starty = np->y + np->height / 2;
    }
    if(context & MC_BORDER_W) {
-      startx = np->x;
+      startx = np->x - west;
    } else if(context & MC_BORDER_E) {
       startx = np->x + np->width;
    } else {

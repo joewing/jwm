@@ -50,10 +50,10 @@ Menu *CreateWindowMenu(ClientNode *np)
       AddWindowMenuItem(menu, NULL, MA_NONE, np, 0);
    }
 
-   if(!(np->state.status & (STAT_FULLSCREEN | STAT_MINIMIZED)
-        || np->state.maxFlags)) {
+   if(!(np->state.status & (STAT_FULLSCREEN | STAT_MINIMIZED))) {
       if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
-         if(np->state.border & BORDER_RESIZE) {
+         if(np->state.border & BORDER_RESIZE &&
+            !(np->state.maxFlags & MAX_VERT && np->state.maxFlags & MAX_HORIZ)) {
             AddWindowMenuItem(menu, _("Resize"), MA_RESIZE, np, 0);
          }
          if(np->state.border & BORDER_MOVE) {

@@ -56,13 +56,9 @@ void ResizeClient(ClientNode *np, MouseContextType context,
    if(!(np->state.border & BORDER_RESIZE)) {
       return;
    }
-   if(np->state.status & STAT_FULLSCREEN) {
+   if((np->state.status & STAT_FULLSCREEN) 
+   || (np->state.maxFlags & MAX_VERT && np->state.maxFlags & MAX_HORIZ)) {
       return;
-   }
-   if(np->state.maxFlags) {
-      np->state.maxFlags = MAX_NONE;
-      WriteState(np);
-      ResetBorder(np);
    }
    if(JUNLIKELY(!GrabMouseForResize(context))) {
       return;
@@ -115,48 +111,52 @@ void ResizeClient(ClientNode *np, MouseContextType context,
                           event.xmotion.window);
          DiscardMotionEvents(&event, np->window);
 
-         if(context & MC_BORDER_N) {
-            delta = (event.xmotion.y - starty) / np->yinc;
-            delta *= np->yinc;
-            if(oldh - delta >= np->minHeight
-               && (oldh - delta <= np->maxHeight || delta > 0)) {
-               np->height = oldh - delta;
-               np->y = oldy + delta;
+         if(!(np->state.maxFlags & MAX_VERT)) {
+            if(context & MC_BORDER_N) {
+               delta = (event.xmotion.y - starty) / np->yinc;
+               delta *= np->yinc;
+               if(oldh - delta >= np->minHeight
+                  && (oldh - delta <= np->maxHeight || delta > 0)) {
+                  np->height = oldh - delta;
+                  np->y = oldy + delta;
+               }
+               if(!(context & (MC_BORDER_E | MC_BORDER_W))) {
+                  FixWidth(np);
+               }
             }
-            if(!(context & (MC_BORDER_E | MC_BORDER_W))) {
-               FixWidth(np);
-            }
-         }
-         if(context & MC_BORDER_S) {
-            delta = (event.xmotion.y - starty) / np->yinc;
-            delta *= np->yinc;
-            np->height = oldh + delta;
-            np->height = Max(np->height, np->minHeight);
-            np->height = Min(np->height, np->maxHeight);
-            if(!(context & (MC_BORDER_E | MC_BORDER_W))) {
-               FixWidth(np);
-            }
-         }
-         if(context & MC_BORDER_E) {
-            delta = (event.xmotion.x - startx) / np->xinc;
-            delta *= np->xinc;
-            np->width = oldw + delta;
-            np->width = Max(np->width, np->minWidth);
-            np->width = Min(np->width, np->maxWidth);
-            if(!(context & (MC_BORDER_N | MC_BORDER_S))) {
-               FixHeight(np);
+            if(context & MC_BORDER_S) {
+               delta = (event.xmotion.y - starty) / np->yinc;
+               delta *= np->yinc;
+               np->height = oldh + delta;
+               np->height = Max(np->height, np->minHeight);
+               np->height = Min(np->height, np->maxHeight);
+               if(!(context & (MC_BORDER_E | MC_BORDER_W))) {
+                  FixWidth(np);
+               }
             }
          }
-         if(context & MC_BORDER_W) {
-            delta = (event.xmotion.x - startx) / np->xinc;
-            delta *= np->xinc;
-            if(oldw - delta >= np->minWidth
-               && (oldw - delta <= np->maxWidth || delta > 0)) {
-               np->width = oldw - delta;
-               np->x = oldx + delta;
+         if(!(np->state.maxFlags & MAX_HORIZ)) {
+            if(context & MC_BORDER_E) {
+               delta = (event.xmotion.x - startx) / np->xinc;
+               delta *= np->xinc;
+               np->width = oldw + delta;
+               np->width = Max(np->width, np->minWidth);
+               np->width = Min(np->width, np->maxWidth);
+               if(!(context & (MC_BORDER_N | MC_BORDER_S))) {
+                  FixHeight(np);
+               }
             }
-            if(!(context & (MC_BORDER_N | MC_BORDER_S))) {
-               FixHeight(np);
+            if(context & MC_BORDER_W) {
+               delta = (event.xmotion.x - startx) / np->xinc;
+               delta *= np->xinc;
+               if(oldw - delta >= np->minWidth
+                  && (oldw - delta <= np->maxWidth || delta > 0)) {
+                  np->width = oldw - delta;
+                  np->x = oldx + delta;
+               }
+               if(!(context & (MC_BORDER_N | MC_BORDER_S))) {
+                  FixHeight(np);
+               }
             }
          }
 
@@ -234,13 +234,9 @@ void ResizeClientKeyboard(ClientNode *np)
    if(!(np->state.border & BORDER_RESIZE)) {
       return;
    }
-   if(np->state.status & STAT_FULLSCREEN) {
+   if((np->state.status & STAT_FULLSCREEN)
+   || (np->state.maxFlags & MAX_VERT && np->state.maxFlags & MAX_HORIZ)) {
       return;
-   }
-   if(np->state.maxFlags) {
-      np->state.maxFlags = MAX_NONE;
-      WriteState(np);
-      ResetBorder(np);
    }
 
    if(JUNLIKELY(JXGrabKeyboard(display, np->parent, True, GrabModeAsync,
@@ -287,16 +283,24 @@ void ResizeClientKeyboard(ClientNode *np)
          DiscardKeyEvents(&event, np->window);
          switch(GetKey(MC_NONE, event.xkey.state, event.xkey.keycode) & 0xFF) {
          case ACTION_UP:
-            deltay = Min(-np->yinc, -10);
+            if(!(np->state.maxFlags & MAX_VERT)) {
+               deltay = Min(-np->yinc, -10);
+            }
             break;
          case ACTION_DOWN:
-            deltay = Max(np->yinc, 10);
+            if(!(np->state.maxFlags & MAX_VERT)) {
+               deltay = Max(np->yinc, 10);
+            }
             break;
          case ACTION_RIGHT:
-            deltax = Max(np->xinc, 10);
+            if(!(np->state.maxFlags & MAX_HORIZ)) {
+               deltax = Max(np->xinc, 10);
+            }
             break;
          case ACTION_LEFT:
-            deltax = Min(-np->xinc, -10);
+            if(!(np->state.maxFlags & MAX_HORIZ)) {
+               deltax = Min(-np->xinc, -10);
+            }
             break;
          default:
             StopResize(np);

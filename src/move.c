@@ -338,6 +338,7 @@ char MoveClientKeyboard(ClientNode *np)
    } else {
       height = np->height;
    }
+   currentClient = np;
 
    for(;;) {
 

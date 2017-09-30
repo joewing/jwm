@@ -554,10 +554,24 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
       break;
    case ACTION_RESIZE:
       if(np) {
+         /* Use provided context by default. */
+         const ActionType corner = key & 0xFF00;
+         MouseContextType resizeContext = context;
+         if(corner) {
+            /* Custom corner specified. */
+            resizeContext = MC_BORDER;
+            resizeContext |= (corner & ACTION_RESIZE_N) ? MC_BORDER_N : MC_NONE;
+            resizeContext |= (corner & ACTION_RESIZE_S) ? MC_BORDER_S : MC_NONE;
+            resizeContext |= (corner & ACTION_RESIZE_E) ? MC_BORDER_E : MC_NONE;
+            resizeContext |= (corner & ACTION_RESIZE_W) ? MC_BORDER_W : MC_NONE;
+         } else if(keyAction) {
+            /* No corner specified for a key action, assume SE. */
+            resizeContext = MC_BORDER | MC_BORDER_S | MC_BORDER_E;
+         }
          if(keyAction) {
-            ResizeClientKeyboard(np);
+            ResizeClientKeyboard(np, resizeContext);
          } else {
-            ResizeClient(np, context, x, y);
+            ResizeClient(np, resizeContext, x, y);
          }
       }
       break;
@@ -1233,7 +1247,7 @@ void HandleNetWMMoveResize(const XClientMessageEvent *event, ClientNode *np)
       MoveClient(np, x, y);
       break;
    case 9:  /* resize-keyboard */
-      ResizeClientKeyboard(np);
+      ResizeClientKeyboard(np, MC_BORDER | MC_BORDER_S | MC_BORDER_E);
       break;
    case 10: /* move-keyboard */
       MoveClientKeyboard(np);

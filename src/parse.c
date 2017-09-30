@@ -858,6 +858,18 @@ ActionType ParseAction(const char *str, const char **command)
    } else if(!strncmp(str, "root:", 5)) {
       action = ACTION_ROOT;
       *command = str + 5;
+   } else if(!strncmp(str, "resize:", 7)) {
+      int i;
+      action = ACTION_RESIZE;
+      for(i = 7; str[i]; i++) {
+         switch(str[i]) {
+         case 'n': action |= ACTION_RESIZE_N; break;
+         case 's': action |= ACTION_RESIZE_S; break;
+         case 'e': action |= ACTION_RESIZE_E; break;
+         case 'w': action |= ACTION_RESIZE_W; break;
+         default: break;
+         }
+      }
    } else {
       /* Look up the option in the key map using binary search. */
       const int x = FindValue(ACTION_MAP, ACTION_MAP_COUNT, str);

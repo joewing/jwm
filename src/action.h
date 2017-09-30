@@ -60,6 +60,10 @@ typedef unsigned short ActionType;
 #define ACTION_MAXV           40
 #define ACTION_MAXH           41
 #define ACTION_RESTORE        42
+#define ACTION_RESIZE_N       (1 << 8)
+#define ACTION_RESIZE_S       (1 << 9)
+#define ACTION_RESIZE_E       (1 << 10)
+#define ACTION_RESIZE_W       (1 << 11)
 
 /** Add an action to a list of actions.
  * @param actions The action list to update.

@@ -161,6 +161,9 @@ char *ReadFromProcess(const char *command, unsigned timeout)
       Warning(_("could not set O_NONBLOCK"));
    }
 
+   /* Convert timeout from seconds to milliseconds. */
+   timeout *= 1000;
+
    pid = fork();
    if(pid == 0) {
       /* The child process. */
@@ -168,7 +171,7 @@ char *ReadFromProcess(const char *command, unsigned timeout)
       close(fds[0]);
       dup2(fds[1], 1);  /* stdout */
       setsid();
-      execl("/bin/sh", "/bin/sh", "-c", "./slow", NULL);
+      execl("/bin/sh", "/bin/sh", "-c", command, NULL);
       Warning(_("exec failed: (%s) %s"), SHELL_NAME, command);
       exit(EXIT_SUCCESS);
    } else if(pid > 0) {
@@ -177,7 +180,7 @@ char *ReadFromProcess(const char *command, unsigned timeout)
       TimeType start_time, current_time;
 
       max_size = BLOCK_SIZE;
-      buffer_size = max_size;
+      buffer_size = 0;
       buffer = Allocate(max_size);
 
       GetCurrentTime(&start_time);
@@ -199,6 +202,7 @@ char *ReadFromProcess(const char *command, unsigned timeout)
          /* Determine the max time to sit in select. */
          GetCurrentTime(&current_time);
          diff_ms = GetTimeDifference(&start_time, &current_time);
+         diff_ms = timeout > diff_ms ? (timeout - diff_ms) : 0;
          tv.tv_sec = diff_ms / 1000;
          tv.tv_usec = (diff_ms % 1000) * 1000;
 
@@ -217,21 +221,20 @@ char *ReadFromProcess(const char *command, unsigned timeout)
          if(rc > 0) {
             buffer_size += rc;
          } else {
-            if(waitpid(pid, NULL, WNOHANG) == pid) {
-               /* Process exited, check for any leftovers and return. */
-               do {
-                  if(buffer_size + BLOCK_SIZE > max_size) {
-                     max_size *= 2;
-                     buffer = Reallocate(buffer, max_size);
-                  }
-                  rc = read(fds[0], &buffer[buffer_size], BLOCK_SIZE);
-                  buffer_size += (rc > 0) ? rc : 0;
-               } while(rc > 0);
-               break;
-            }
+            /* Process exited, check for any leftovers and return. */
+            do {
+               if(buffer_size + BLOCK_SIZE > max_size) {
+                  max_size *= 2;
+                  buffer = Reallocate(buffer, max_size);
+               }
+               rc = read(fds[0], &buffer[buffer_size], BLOCK_SIZE);
+               buffer_size += (rc > 0) ? rc : 0;
+            } while(rc > 0);
+            break;
          }
       }
       close(fds[1]);
+      buffer[buffer_size] = 0;
       return buffer;
    }
 

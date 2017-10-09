@@ -127,7 +127,6 @@ void ResizeClient(ClientNode *np, MouseContextType context,
    int oldw, oldh;
    int gwidth, gheight;
    int lastgwidth, lastgheight;
-   int delta;
    int north, south, east, west;
 
    Assert(np);

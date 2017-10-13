@@ -3,6 +3,7 @@
 ############################################################################
 
 AC_INIT(jwm, 2.4.0, joewing@joewing.net)
+AM_INIT_AUTOMAKE
 AC_PREREQ(2.57)
 AC_CONFIG_SRCDIR([src])
 AC_CONFIG_SRCDIR([po])

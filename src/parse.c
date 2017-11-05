@@ -19,7 +19,7 @@
 #include "swallow.h"
 #include "pager.h"
 #include "error.h"
-#include "key.h"
+#include "binding.h"
 #include "main.h"
 #include "font.h"
 #include "icon.h"
@@ -39,51 +39,66 @@
 #include <fcntl.h>
 #include <errno.h>
 
+/** Mapping of action names to values.
+ * Note that this mapping must be sorted.
+ */
+static const StringMappingType ACTION_MAP[] = {
+   { "close",                 ACTION_CLOSE         },
+   { "ddesktop",              ACTION_DDESKTOP      },
+   { "desktop#",              ACTION_DESKTOP       },
+   { "down",                  ACTION_DOWN          },
+   { "escape",                ACTION_ESC           },
+   { "exit",                  ACTION_EXIT          },
+   { "fullscreen",            ACTION_FULLSCREEN    },
+   { "ldesktop",              ACTION_LDESKTOP      },
+   { "left",                  ACTION_LEFT          },
+   { "maxbottom",             ACTION_MAXBOTTOM     },
+   { "maxh",                  ACTION_MAXH          },
+   { "maximize",              ACTION_MAX           },
+   { "maxleft",               ACTION_MAXLEFT       },
+   { "maxright",              ACTION_MAXRIGHT      },
+   { "maxtop",                ACTION_MAXTOP        },
+   { "maxv",                  ACTION_MAXV          },
+   { "minimize",              ACTION_MIN           },
+   { "move",                  ACTION_MOVE          },
+   { "next",                  ACTION_NEXT          },
+   { "nextstacked",           ACTION_NEXTSTACK     },
+   { "prev",                  ACTION_PREV          },
+   { "prevstacked",           ACTION_PREVSTACK     },
+   { "rdesktop",              ACTION_RDESKTOP      },
+   { "resize",                ACTION_RESIZE        },
+   { "restart",               ACTION_RESTART       },
+   { "restore",               ACTION_RESTORE       },
+   { "right",                 ACTION_RIGHT         },
+   { "select",                ACTION_ENTER         },
+   { "send#",                 ACTION_SEND          },
+   { "sendd",                 ACTION_SENDD         },
+   { "sendl",                 ACTION_SENDL         },
+   { "sendr",                 ACTION_SENDR         },
+   { "sendu",                 ACTION_SENDU         },
+   { "shade",                 ACTION_SHADE         },
+   { "showdesktop",           ACTION_SHOWDESK      },
+   { "showtray",              ACTION_SHOWTRAY      },
+   { "stick",                 ACTION_STICK         },
+   { "udesktop",              ACTION_UDESKTOP      },
+   { "up",                    ACTION_UP            },
+   { "window",                ACTION_WIN           }
+};
+static const unsigned int ACTION_MAP_COUNT = ARRAY_LENGTH(ACTION_MAP);
+
 /** Mapping of key names to key types.
  * Note that this mapping must be sorted.
  */
-static const StringMappingType KEY_MAP[] = {
-   { "close",                 KEY_CLOSE         },
-   { "ddesktop",              KEY_DDESKTOP      },
-   { "desktop#",              KEY_DESKTOP       },
-   { "down",                  KEY_DOWN          },
-   { "escape",                KEY_ESC           },
-   { "exit",                  KEY_EXIT          },
-   { "fullscreen",            KEY_FULLSCREEN    },
-   { "ldesktop",              KEY_LDESKTOP      },
-   { "left",                  KEY_LEFT          },
-   { "maxbottom",             KEY_MAXBOTTOM     },
-   { "maxh",                  KEY_MAXH          },
-   { "maximize",              KEY_MAX           },
-   { "maxleft",               KEY_MAXLEFT       },
-   { "maxright",              KEY_MAXRIGHT      },
-   { "maxtop",                KEY_MAXTOP        },
-   { "maxv",                  KEY_MAXV          },
-   { "minimize",              KEY_MIN           },
-   { "move",                  KEY_MOVE          },
-   { "next",                  KEY_NEXT          },
-   { "nextstacked",           KEY_NEXTSTACK     },
-   { "prev",                  KEY_PREV          },
-   { "prevstacked",           KEY_PREVSTACK     },
-   { "rdesktop",              KEY_RDESKTOP      },
-   { "resize",                KEY_RESIZE        },
-   { "restart",               KEY_RESTART       },
-   { "restore",               KEY_RESTORE       },
-   { "right",                 KEY_RIGHT         },
-   { "select",                KEY_ENTER         },
-   { "sendd",                 KEY_SENDD         },
-   { "sendl",                 KEY_SENDL         },
-   { "sendr",                 KEY_SENDR         },
-   { "sendu",                 KEY_SENDU         },
-   { "shade",                 KEY_SHADE         },
-   { "showdesktop",           KEY_SHOWDESK      },
-   { "showtray",              KEY_SHOWTRAY      },
-   { "stick",                 KEY_STICK         },
-   { "udesktop",              KEY_UDESKTOP      },
-   { "up",                    KEY_UP            },
-   { "window",                KEY_WIN           }
+static const StringMappingType MC_MAP[] = {
+   { "border",                MC_BORDER   },
+   { "close",                 MC_CLOSE    },
+   { "icon",                  MC_ICON     },
+   { "maximize",              MC_MAXIMIZE },
+   { "minimize",              MC_MINIMIZE },
+   { "root",                  MC_ROOT     },
+   { "title",                 MC_MOVE     }
 };
-static const unsigned int KEY_MAP_COUNT = ARRAY_LENGTH(KEY_MAP);
+static const unsigned int MC_MAP_COUNT = ARRAY_LENGTH(MC_MAP);
 
 /** Mapping of names to group options.
  * Note that this mapping must be sorted.
@@ -135,9 +150,19 @@ static const char *X_ATTRIBUTE = "x";
 static const char *Y_ATTRIBUTE = "y";
 static const char *WIDTH_ATTRIBUTE = "width";
 static const char *HEIGHT_ATTRIBUTE = "height";
+static const char *DYNAMIC_ATTRIBUTE = "dynamic";
+static const char *SPACING_ATTRIBUTE = "spacing";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
+
+static const char * const CONFIG_FILES[] = {
+  "$XDG_CONFIG_HOME/jwm/jwmrc",
+  "$HOME/.config/jwm/jwmrc",
+  "$HOME/.jwmrc",
+  SYSTEM_CONFIG
+};
+static const unsigned CONFIG_FILE_COUNT = ARRAY_LENGTH(CONFIG_FILES);
 
 static char ParseFile(const char *fileName, int depth);
 static char *ReadFile(FILE *fd);
@@ -196,7 +221,9 @@ static void ParseMenuStyle(const TokenNode *tp);
 static void ParsePopupStyle(const TokenNode *tp);
 
 /* Feel. */
+static ActionType ParseAction(const char *str, const char **command);
 static void ParseKey(const TokenNode *tp);
+static void ParseMouse(const TokenNode *tp);
 static void ParseSnapMode(const TokenNode *tp);
 static void ParseMoveMode(const TokenNode *tp);
 static void ParseResizeMode(const TokenNode *tp);
@@ -211,7 +238,8 @@ static int ParseTokenValue(const StringMappingType *mapping, int count,
 static int ParseAttribute(const StringMappingType *mapping, int count,
                           const TokenNode *tp, const char *attr,
                           int def);
-static unsigned int ParseUnsigned(const TokenNode *tp, const char *str);
+static int ParseSigned(const TokenNode *tp, const char *str);
+static unsigned ParseUnsigned(const TokenNode *tp, const char *str);
 static unsigned int ParseOpacity(const TokenNode *tp, const char *str);
 static WinLayerType ParseLayer(const TokenNode *tp, const char *str);
 static StatusWindowType ParseStatusWindowType(const TokenNode *tp);
@@ -221,11 +249,23 @@ static void ParseError(const TokenNode *tp, const char *str, ...);
 /** Parse the JWM configuration. */
 void ParseConfig(const char *fileName)
 {
-   if(!ParseFile(fileName, 0)) {
-      if(JUNLIKELY(!ParseFile(SYSTEM_CONFIG, 0))) {
-         ParseError(NULL, _("could not open %s or %s"),
-                    fileName, SYSTEM_CONFIG);
+   if(fileName) {
+      if(!ParseFile(fileName, 0)) {
+         ParseError(NULL, _("could not open %s"), fileName);
       }
+   } else {
+     unsigned i;
+     char found = 0;
+     for(i = 0; i < CONFIG_FILE_COUNT; i++) {
+       if(ParseFile(CONFIG_FILES[i], 0)) {
+         found = 1;
+         break;
+       }
+     }
+     if(!found) {
+      ParseError(NULL, _("could not open %s or %s"),
+                 CONFIG_FILES[0], SYSTEM_CONFIG);
+     }
    }
    ValidateTrayButtons();
    ValidateKeys();
@@ -306,6 +346,9 @@ void Parse(const TokenNode *start, int depth)
             case TOK_KEY:
                ParseKey(tp);
                break;
+            case TOK_MOUSE:
+               ParseMouse(tp);
+               break;
             case TOK_MENUSTYLE:
                ParseMenuStyle(tp);
                break;
@@ -372,6 +415,9 @@ void Parse(const TokenNode *start, int depth)
             case TOK_DEFAULTICON:
                SetDefaultIcon(tp->value);
                break;
+            case TOK_TITLEBUTTONORDER:
+               SetTitleButtonOrder(tp->value);
+               break;
             default:
                InvalidTag(tp, TOK_JWM);
                break;
@@ -387,8 +433,10 @@ void Parse(const TokenNode *start, int depth)
 /** Parse focus model. */
 void ParseFocusModel(const TokenNode *tp) {
    static const StringMappingType mapping[] = {
-      { "click",     FOCUS_CLICK    },
-      { "sloppy",    FOCUS_SLOPPY   }
+      { "click",        FOCUS_CLICK          },
+      { "clicktitle",   FOCUS_CLICK_TITLE    },
+      { "sloppy",       FOCUS_SLOPPY         },
+      { "sloppytitle",  FOCUS_SLOPPY_TITLE   }
    };
    settings.focusModel = ParseTokenValue(mapping, ARRAY_LENGTH(mapping), tp,
                                          settings.focusModel);
@@ -425,6 +473,10 @@ void ParseMoveMode(const TokenNode *tp)
    if(str) {
       settings.desktopDelay = ParseUnsigned(tp, str);
    }
+   str = FindAttribute(tp->attributes, "mask");
+   if(str && *str) {
+      settings.moveMask = ParseModifierString(str);
+   }
 
    settings.moveStatusType = ParseStatusWindowType(tp);
    settings.moveMode = ParseTokenValue(mapping, ARRAY_LENGTH(mapping), tp,
@@ -449,7 +501,7 @@ Menu *ParseMenu(const TokenNode *start)
    const char *value;
    Menu *menu;
 
-   menu = Allocate(sizeof(Menu));
+   menu = CreateMenu();
 
    value = FindAttribute(start->attributes, HEIGHT_ATTRIBUTE);
    if(value) {
@@ -481,6 +533,7 @@ void ParseRootMenu(const TokenNode *start)
 {
    Menu *menu;
    char *onroot;
+   const char *value;
 
    menu = ParseMenu(start);
 
@@ -488,6 +541,9 @@ void ParseRootMenu(const TokenNode *start)
    if(!onroot) {
       onroot = "123";
    }
+
+   value = FindAttribute(start->attributes, DYNAMIC_ATTRIBUTE);
+   menu->dynamic = CopyString(value);
 
    SetRootMenu(onroot, menu);
 
@@ -559,7 +615,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
          value = FindAttribute(start->attributes, TOOLTIP_ATTRIBUTE);
          last->tooltip = CopyString(value);
 
-         last->submenu = Allocate(sizeof(Menu));
+         last->submenu = CreateMenu();
          child = last->submenu;
 
          value = FindAttribute(start->attributes, HEIGHT_ATTRIBUTE);
@@ -791,17 +847,48 @@ Menu *ParseDynamicMenu(const char *command)
    return menu;
 }
 
-/** Parse a key binding. */
-void ParseKey(const TokenNode *tp) {
+/** Parse an action. */
+ActionType ParseAction(const char *str, const char **command)
+{
+   ActionType action = ACTION_NONE;
+   *command = NULL;
+   if(!strncmp(str, "exec:", 5)) {
+      action = ACTION_EXEC;
+      *command = str + 5;
+   } else if(!strncmp(str, "root:", 5)) {
+      action = ACTION_ROOT;
+      *command = str + 5;
+   } else if(!strncmp(str, "resize:", 7)) {
+      int i;
+      action = ACTION_RESIZE;
+      for(i = 7; str[i]; i++) {
+         switch(str[i]) {
+         case 'n': action |= ACTION_RESIZE_N; break;
+         case 's': action |= ACTION_RESIZE_S; break;
+         case 'e': action |= ACTION_RESIZE_E; break;
+         case 'w': action |= ACTION_RESIZE_W; break;
+         default: break;
+         }
+      }
+   } else {
+      /* Look up the option in the key map using binary search. */
+      const int x = FindValue(ACTION_MAP, ACTION_MAP_COUNT, str);
+      if(x >= 0) {
+         action = (ActionType)x;
+      }
+   }
+   return action;
+}
 
+/** Parse a key binding. */
+void ParseKey(const TokenNode *tp)
+{
    const char *key;
    const char *code;
    const char *mask;
    const char *action;
    const char *command;
-   KeyType k;
-
-   Assert(tp);
+   ActionType k;
 
    mask = FindAttribute(tp->attributes, "mask");
    key = FindAttribute(tp->attributes, "key");
@@ -813,33 +900,51 @@ void ParseKey(const TokenNode *tp) {
       return;
    }
 
-   command = NULL;
-   k = KEY_NONE;
-   if(!strncmp(action, "exec:", 5)) {
-      k = KEY_EXEC;
-      command = action + 5;
-   } else if(!strncmp(action, "root:", 5)) {
-      k = KEY_ROOT;
-      command = action + 5;
-   } else {
-      /* Look up the option in the key map using binary search. */
-      const int x = FindValue(KEY_MAP, KEY_MAP_COUNT, action);
-      if(x >= 0) {
-         k = (KeyType)x;
-      }
-   }
-
    /* Insert the binding if it's valid. */
-   if(JUNLIKELY(k == KEY_NONE)) {
-
+   k = ParseAction(action, &command);
+   if(JUNLIKELY(k == ACTION_NONE)) {
       ParseError(tp, _("invalid Key action: \"%s\""), action);
-
    } else {
-
       InsertBinding(k, mask, key, code, command);
+   }
+}
 
+/** Parse a mouse binding. */
+void ParseMouse(const TokenNode *tp)
+{
+   const char *mask;
+   const char *context;
+   const char *action;
+   const char *command;
+   int button;
+   int x;
+   ActionType key;
+
+   button = ParseSigned(tp, FindAttribute(tp->attributes, "button"));
+   if(JUNLIKELY(button == 0)) {
+      return;
+   }
+   mask = FindAttribute(tp->attributes, "mask");
+   context = FindAttribute(tp->attributes, "context");
+
+   action = tp->value;
+   if(JUNLIKELY(action == NULL)) {
+      ParseError(tp, _("no action specified for Mouse"));
+      return;
+   }
+   key = ParseAction(action, &command);
+   if(JUNLIKELY(key == ACTION_NONE)) {
+      ParseError(tp, _("invalid Mouse action: \"%s\""), action);
+      return;
    }
 
+   x = FindValue(MC_MAP, MC_MAP_COUNT, context);
+   if(JUNLIKELY(x < 0)) {
+      ParseError(tp, _("invalid Mouse context: \"%s\""), context);
+   } else {
+      const MouseContextType mc = (MouseContextType)x;
+      InsertMouseBinding(button, mask, mc, key, command);
+   }
 }
 
 /** Parse text alignment. */
@@ -1048,10 +1153,10 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
    const ColorType activeUp = fg + COLOR_TRAY_ACTIVE_UP - COLOR_TRAY_FG;
    const ColorType activeDown = fg + COLOR_TRAY_ACTIVE_DOWN - COLOR_TRAY_FG;
 
-   /* TrayStyle has extra attributes. */
-   if(tp->type == TOK_TRAYSTYLE) {
+   /* TaskListStyle has extra attributes. */
+   if(tp->type == TOK_TASKLISTSTYLE) {
       const char *temp;
-      ParseDecorations(tp, &settings.trayDecorations);
+      ParseDecorations(tp, &settings.taskListDecorations);
       temp = FindAttribute(tp->attributes, "group");
       if(temp) {
          settings.groupTasks = !strcmp(temp, TRUE_VALUE);
@@ -1061,6 +1166,8 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
       if(temp) {
          settings.listAllTasks = !strcmp(temp, "all");
       }
+   } else if(tp->type == TOK_TRAYSTYLE) {
+      ParseDecorations(tp, &settings.trayDecorations);
    }
 
    for(np = tp->subnodeHead; np; np = np->next) {
@@ -1133,6 +1240,7 @@ void ParseTray(const TokenNode *tp)
       { "bottom",    THIDE_BOTTOM   },
       { "left",      THIDE_LEFT     },
       { "off",       THIDE_OFF      },
+      { "on",        THIDE_ON       },
       { "right",     THIDE_RIGHT    },
       { "top",       THIDE_TOP      }
    };
@@ -1260,36 +1368,6 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray)
    temp = FindAttribute(tp->attributes, "labeled");
    if(temp && !strcmp(temp, FALSE_VALUE)) {
       SetTaskBarLabeled(cp, 0);
-   }
-}
-
-/** Parse the task list style. */
-void ParseTaskListStyle(const TokenNode *tp)
-{
-   const TokenNode *np;
-   for(np = tp->subnodeHead; np; np = np->next) {
-      switch(np->type) {
-      case TOK_FONT:
-         SetFont(FONT_TASKLIST, np->value);
-         break;
-      case TOK_ACTIVE:
-         ParseActive(np, COLOR_TASKLIST_ACTIVE_FG,
-                     COLOR_TASKLIST_ACTIVE_BG1, COLOR_TASKLIST_ACTIVE_BG2,
-                     COLOR_TASKLIST_ACTIVE_UP, COLOR_TASKLIST_ACTIVE_DOWN);
-         break;
-      case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_TASKLIST_BG1, COLOR_TASKLIST_BG2);
-         break;
-      case TOK_FOREGROUND:
-         SetColor(COLOR_TASKLIST_FG, np->value);
-         break;
-      case TOK_OUTLINE:
-         ParseGradient(np->value, COLOR_TASKLIST_DOWN, COLOR_TASKLIST_UP);
-         break;
-      default:
-         InvalidTag(np, TOK_TASKLISTSTYLE);
-         break;
-      }
    }
 }
 
@@ -1489,6 +1567,11 @@ void ParseDock(const TokenNode *tp, TrayType *tray) {
       width = ParseUnsigned(tp, str);
    } else {
       width = 0;
+   }
+
+   str = FindAttribute(tp->attributes, SPACING_ATTRIBUTE);
+   if(str) {
+      settings.dockSpacing = ParseUnsigned(tp, str);
    }
 
    cp = CreateDock(width);
@@ -1743,13 +1826,25 @@ void ParseGroupOption(const TokenNode *tp, struct GroupType *group,
       const WinLayerType layer = ParseLayer(tp, option + 6);
       AddGroupOptionUnsigned(group, OPTION_LAYER, layer);
    } else if(!strncmp(option, "desktop:", 8)) {
-      const unsigned int desktop = (unsigned int)atoi(option + 8);
+      const unsigned desktop = (unsigned)atoi(option + 8);
       AddGroupOptionUnsigned(group, OPTION_DESKTOP, desktop);
    } else if(!strncmp(option, "icon:", 5)) {
       AddGroupOptionString(group, OPTION_ICON, option + 5);
    } else if(!strncmp(option, "opacity:", 8)) {
-      const unsigned int opacity = ParseOpacity(tp, option + 8);
+      const unsigned opacity = ParseOpacity(tp, option + 8);
       AddGroupOptionUnsigned(group, OPTION_OPACITY, opacity);
+   } else if(!strncmp(option, "x:", 2)) {
+      const int x = atoi(option + 2);
+      AddGroupOptionSigned(group, OPTION_X, x);
+   } else if(!strncmp(option, "y:", 2)) {
+      const int y = atoi(option + 2);
+      AddGroupOptionSigned(group, OPTION_Y, y);
+   } else if(!strncmp(option, "width:", 6)) {
+      const unsigned width = (unsigned)atoi(option + 6);
+      AddGroupOptionUnsigned(group, OPTION_WIDTH, width);
+   } else if(!strncmp(option, "height:", 7)) {
+      const unsigned height = (unsigned)atoi(option + 7);
+      AddGroupOptionUnsigned(group, OPTION_HEIGHT, height);
    } else {
       ParseError(tp, _("invalid Group Option: %s"), option);
    }
@@ -1959,6 +2054,23 @@ TokenNode *TokenizePipe(const char *command)
    tokens = Tokenize(buffer, command);
    Release(buffer);
    return tokens;
+}
+
+/** Parse a signed integer. */
+int ParseSigned(const TokenNode *tp, const char *str)
+{
+   long value;
+   if(JUNLIKELY(!str)) {
+      ParseError(tp, _("no value specified"));
+      return 0;
+   }
+   value = strtol(str, NULL, 0);
+   if(JUNLIKELY(value < INT_MIN || value > INT_MAX)) {
+      ParseError(tp, _("invalid setting: %s"), str);
+      return 0;
+   } else {
+      return (int)value;
+   }
 }
 
 /** Parse an unsigned integer. */

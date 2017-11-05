@@ -83,6 +83,7 @@ typedef struct Menu {
    /* These fields must be set before calling ShowMenu */
    struct MenuItem *items; /**< Menu items. */
    char *label;            /**< Menu label (NULL for no label). */
+   char *dynamic;          /**< Generating command of dynamic menu. */
    int itemHeight;         /**< User-specified menu item height. */
 
    /* These fields are handled by menu.c */
@@ -106,6 +107,9 @@ typedef struct Menu {
 } Menu;
 
 typedef void (*RunMenuCommandType)(MenuAction *action, unsigned button);
+
+/** Allocate an empty menu. */
+Menu *CreateMenu();
 
 /** Create an empty menu item. */
 MenuItem *CreateMenuItem(MenuItemType type);

@@ -1,14 +1,14 @@
 /**
- * @file key.c
+ * @file binding.c
  * @author Joe Wingbermuehle
- * @date 2004-2006
+ * @date 2004-20017
  *
- * @brief Key binding functions.
+ * @brief Key/mouse binding functions.
  *
  */
 
 #include "jwm.h"
-#include "key.h"
+#include "binding.h"
 
 #include "client.h"
 #include "clientlist.h"
@@ -33,8 +33,7 @@ typedef struct ModifierNode {
    unsigned int   mask;
 } ModifierNode;
 
-static ModifierNode modifiers[] = {
-
+static const ModifierNode MODIFIERS[] = {
    { 'C',   MASK_CTRL      },
    { 'S',   MASK_SHIFT     },
    { 'A',   MASK_MOD1      },
@@ -42,22 +41,22 @@ static ModifierNode modifiers[] = {
    { '2',   MASK_MOD2      },
    { '3',   MASK_MOD3      },
    { '4',   MASK_MOD4      },
-   { '5',   MASK_MOD5      },
-   { 0,     MASK_NONE      }
-
+   { '5',   MASK_MOD5      }
 };
+static const unsigned MODIFIER_COUNT = ARRAY_LENGTH(MODIFIERS);
 
 typedef struct KeyNode {
 
    /* These are filled in when the configuration file is parsed */
    int key;
+   MouseContextType context;
    unsigned int state;
    KeySym symbol;
    char *command;
    struct KeyNode *next;
 
    /* This is filled in by StartupKeys if it isn't already set. */
-   KeyCode code;
+   int code;
 
 } KeyNode;
 
@@ -71,24 +70,23 @@ static LockNode lockMods[] = {
    { XK_Num_Lock,    0 }
 };
 
-static KeyNode *bindings;
-unsigned int lockMask;
+static KeyNode *bindings[MC_COUNT];
+unsigned lockMask;
 
 static unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key);
-static unsigned int ParseModifierString(const char *str);
 static KeySym ParseKeyString(const char *str);
-static char ShouldGrab(KeyType key);
+static char ShouldGrab(ActionType key);
 static void GrabKey(KeyNode *np, Window win);
 
-/** Initialize key data. */
-void InitializeKeys(void)
+/** Initialize binding data. */
+void InitializeBindings(void)
 {
-   bindings = NULL;
+   memset(bindings, 0, sizeof(bindings));
    lockMask = 0;
 }
 
-/** Startup key bindings. */
-void StartupKeys(void)
+/** Startup bindings. */
+void StartupBindings(void)
 {
 
    XModifierKeymap *modmap;
@@ -98,14 +96,16 @@ void StartupKeys(void)
 
    /* Get the keys that we don't care about (num lock, etc). */
    modmap = JXGetModifierMapping(display);
-   for(x = 0; x < sizeof(lockMods) / sizeof(lockMods[0]); x++) {
+   for(x = 0; x < ARRAY_LENGTH(lockMods); x++) {
       lockMods[x].mask = GetModifierMask(modmap, lockMods[x].symbol);
       lockMask |= lockMods[x].mask;
    }
    JXFreeModifiermap(modmap);
+   lockMask |= Button1Mask | Button2Mask | Button3Mask
+            | Button4Mask | Button5Mask | (1<<13) | (1<<14);
 
    /* Look up and grab the keys. */
-   for(np = bindings; np; np = np->next) {
+   for(np = bindings[MC_NONE]; np; np = np->next) {
 
       /* Determine the key code. */
       if(!np->code) {
@@ -126,13 +126,11 @@ void StartupKeys(void)
       }
 
    }
-
 }
 
-/** Shutdown key bindings. */
-void ShutdownKeys(void)
+/** Shutdown bindings. */
+void ShutdownBindings(void)
 {
-
    ClientNode *np;
    TrayType *tp;
    unsigned int layer;
@@ -151,20 +149,21 @@ void ShutdownKeys(void)
 
    /* Ungrab keys on the root. */
    JXUngrabKey(display, AnyKey, AnyModifier, rootWindow);
-
 }
 
 /** Destroy key data. */
-void DestroyKeys(void)
+void DestroyBindings(void)
 {
-   KeyNode *np;
-   while(bindings) {
-      np = bindings->next;
-      if(bindings->command) {
-         Release(bindings->command);
+   unsigned i;
+   for(i = 0; i < MC_COUNT; i++) {
+      while(bindings[i]) {
+         KeyNode *np = bindings[i]->next;
+         if(bindings[i]->command) {
+            Release(bindings[i]->command);
+         }
+         Release(bindings[i]);
+         bindings[i] = np;
       }
-      Release(bindings);
-      bindings = np;
    }
 }
 
@@ -181,12 +180,12 @@ void GrabKey(KeyNode *np, Window win)
    }
 
    /* Grab for each lock modifier. */
-   maxIndex = 1 << (sizeof(lockMods) / sizeof(lockMods[0]));
+   maxIndex = 1 << ARRAY_LENGTH(lockMods);
    for(index = 0; index < maxIndex; index++) {
 
       /* Compute the modifier mask. */
       mask = 0;
-      for(x = 0; x < sizeof(lockMods) / sizeof(lockMods[0]); x++) {
+      for(x = 0; x < ARRAY_LENGTH(lockMods); x++) {
          if(index & (1 << x)) {
             mask |= lockMods[x].mask;
          }
@@ -202,57 +201,58 @@ void GrabKey(KeyNode *np, Window win)
 }
 
 /** Get the key action from an event. */
-KeyType GetKey(const XKeyEvent *event)
+ActionType GetKey(MouseContextType context, unsigned state, int code)
 {
-
    KeyNode *np;
-   unsigned int state;
 
    /* Remove modifiers we don't care about from the state. */
-   state = event->state & ~lockMask;
+   state &= ~lockMask;
+
+   /* Mask off flags. */
+   context &= MC_MASK;
 
    /* Loop looking for a matching key binding. */
-   for(np = bindings; np; np = np->next) {
-      if(np->state == state && np->code == event->keycode) {
+   for(np = bindings[context]; np; np = np->next) {
+      if(np->state == state && np->code == code) {
          return np->key;
       }
    }
 
-   return KEY_NONE;
-
+   return ACTION_NONE;
 }
 
 /** Run a command invoked from a key binding. */
-void RunKeyCommand(const XKeyEvent *event)
+void RunKeyCommand(MouseContextType context, unsigned state, int code)
 {
-
    KeyNode *np;
-   unsigned int state;
 
    /* Remove the lock key modifiers. */
-   state = event->state & ~lockMask;
+   state &= ~lockMask;
 
-   for(np = bindings; np; np = np->next) {
-      if(np->state == state && np->code == event->keycode) {
+   /* Mask off flags. */
+   context &= MC_MASK;
+
+   for(np = bindings[context]; np; np = np->next) {
+      if(np->state == state && np->code == code) {
          RunCommand(np->command);
          return;
       }
    }
-
 }
 
 /** Show a root menu caused by a key binding. */
-void ShowKeyMenu(const XKeyEvent *event)
+void ShowKeyMenu(MouseContextType context, unsigned state, int code)
 {
-
    KeyNode *np;
-   unsigned int state;
 
    /* Remove the lock key modifiers. */
-   state = event->state & ~lockMask;
+   state &= ~lockMask;
 
-   for(np = bindings; np; np = np->next) {
-      if(np->state == state && np->code == event->keycode) {
+   /* Mask off flags. */
+   context &= MC_MASK;
+
+   for(np = bindings[context]; np; np = np->next) {
+      if(np->state == state && np->code == code) {
          const int button = GetRootMenuIndexFromString(np->command);
          if(JLIKELY(button >= 0)) {
             ShowRootMenu(button, -1, -1, 1);
@@ -260,48 +260,48 @@ void ShowKeyMenu(const XKeyEvent *event)
          return;
       }
    }
-
 }
 
 /** Determine if a key should be grabbed on client windows. */
-char ShouldGrab(KeyType key)
+char ShouldGrab(ActionType action)
 {
-   switch(key & 0xFF) {
-   case KEY_NEXT:
-   case KEY_NEXTSTACK:
-   case KEY_PREV:
-   case KEY_PREVSTACK:
-   case KEY_CLOSE:
-   case KEY_MIN:
-   case KEY_MAX:
-   case KEY_SHADE:
-   case KEY_STICK:
-   case KEY_MOVE:
-   case KEY_RESIZE:
-   case KEY_ROOT:
-   case KEY_WIN:
-   case KEY_DESKTOP:
-   case KEY_RDESKTOP:
-   case KEY_LDESKTOP:
-   case KEY_DDESKTOP:
-   case KEY_UDESKTOP:
-   case KEY_SHOWDESK:
-   case KEY_SHOWTRAY:
-   case KEY_EXEC:
-   case KEY_RESTART:
-   case KEY_EXIT:
-   case KEY_FULLSCREEN:
-   case KEY_SENDR:
-   case KEY_SENDL:
-   case KEY_SENDU:
-   case KEY_SENDD:
-   case KEY_MAXTOP:
-   case KEY_MAXBOTTOM:
-   case KEY_MAXLEFT:
-   case KEY_MAXRIGHT:
-   case KEY_MAXV:
-   case KEY_MAXH:
-   case KEY_RESTORE:
+   switch(action & 0xFF) {
+   case ACTION_NEXT:
+   case ACTION_NEXTSTACK:
+   case ACTION_PREV:
+   case ACTION_PREVSTACK:
+   case ACTION_CLOSE:
+   case ACTION_MIN:
+   case ACTION_MAX:
+   case ACTION_SHADE:
+   case ACTION_STICK:
+   case ACTION_MOVE:
+   case ACTION_RESIZE:
+   case ACTION_ROOT:
+   case ACTION_WIN:
+   case ACTION_DESKTOP:
+   case ACTION_RDESKTOP:
+   case ACTION_LDESKTOP:
+   case ACTION_DDESKTOP:
+   case ACTION_UDESKTOP:
+   case ACTION_SHOWDESK:
+   case ACTION_SHOWTRAY:
+   case ACTION_EXEC:
+   case ACTION_RESTART:
+   case ACTION_EXIT:
+   case ACTION_FULLSCREEN:
+   case ACTION_SEND:
+   case ACTION_SENDR:
+   case ACTION_SENDL:
+   case ACTION_SENDU:
+   case ACTION_SENDD:
+   case ACTION_MAXTOP:
+   case ACTION_MAXBOTTOM:
+   case ACTION_MAXLEFT:
+   case ACTION_MAXRIGHT:
+   case ACTION_MAXV:
+   case ACTION_MAXH:
+   case ACTION_RESTORE:
       return 1;
    default:
       return 0;
@@ -309,7 +309,7 @@ char ShouldGrab(KeyType key)
 }
 
 /** Get the modifier mask for a key. */
-unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key) {
+unsigned GetModifierMask(XModifierKeymap *modmap, KeySym key) {
 
    KeyCode temp;
    int x;
@@ -333,21 +333,19 @@ unsigned int GetModifierMask(XModifierKeymap *modmap, KeySym key) {
 /** Parse a modifier mask string. */
 unsigned int ParseModifierString(const char *str)
 {
-   unsigned int mask;
-   unsigned int x, y;
-   char found;
+   unsigned mask = MASK_NONE;
+   unsigned x;
 
    if(!str) {
-      return MASK_NONE;
+      return mask;
    }
 
-   mask = MASK_NONE;
    for(x = 0; str[x]; x++) {
-
-      found = 0;
-      for(y = 0; modifiers[y].name; y++) {
-         if(modifiers[y].name == str[x]) {
-            mask |= modifiers[y].mask;
+      unsigned y;
+      char found = 0;
+      for(y = 0; y < MODIFIER_COUNT; y++) {
+         if(MODIFIERS[y].name == str[x]) {
+            mask |= MODIFIERS[y].mask;
             found = 1;
             break;
          }
@@ -356,7 +354,6 @@ unsigned int ParseModifierString(const char *str)
       if(JUNLIKELY(!found)) {
          Warning(_("invalid modifier: \"%c\""), str[x]);
       }
-
    }
 
    return mask;
@@ -375,7 +372,7 @@ KeySym ParseKeyString(const char *str)
 }
 
 /** Insert a key binding. */
-void InsertBinding(KeyType key, const char *modifiers,
+void InsertBinding(ActionType key, const char *modifiers,
                    const char *stroke, const char *code,
                    const char *command)
 {
@@ -404,8 +401,8 @@ void InsertBinding(KeyType key, const char *modifiers,
                }
 
                np = Allocate(sizeof(KeyNode));
-               np->next = bindings;
-               bindings = np;
+               np->next = bindings[MC_NONE];
+               bindings[MC_NONE] = np;
 
                np->key = key | ((temp[offset] - '1' + 1) << 8);
                np->state = mask;
@@ -427,8 +424,8 @@ void InsertBinding(KeyType key, const char *modifiers,
       }
 
       np = Allocate(sizeof(KeyNode));
-      np->next = bindings;
-      bindings = np;
+      np->next = bindings[MC_NONE];
+      bindings[MC_NONE] = np;
 
       np->key = key;
       np->state = mask;
@@ -439,8 +436,8 @@ void InsertBinding(KeyType key, const char *modifiers,
    } else if(code && strlen(code) > 0) {
 
       np = Allocate(sizeof(KeyNode));
-      np->next = bindings;
-      bindings = np;
+      np->next = bindings[MC_NONE];
+      bindings[MC_NONE] = np;
 
       np->key = key;
       np->state = mask;
@@ -454,19 +451,41 @@ void InsertBinding(KeyType key, const char *modifiers,
       np = NULL;
 
    }
+}
 
+/** Insert a mouse binding. */
+void InsertMouseBinding(
+   int button,
+   const char *mask,
+   MouseContextType context,
+   ActionType key,
+   const char *command)
+{
+   KeyNode *np = Allocate(sizeof(KeyNode));
+   np->next = bindings[context];
+   bindings[context] = np;
+
+   np->command = CopyString(command);
+   np->key = key;
+   np->state = ParseModifierString(mask);
+   np->code = button;
+   np->context = context;
 }
 
 /** Validate key bindings. */
 void ValidateKeys(void)
 {
    KeyNode *kp;
-   for(kp = bindings; kp; kp = kp->next) {
-      if((kp->key & 0xFF) == KEY_ROOT && kp->command) {
-         const int bindex = GetRootMenuIndexFromString(kp->command);
-         if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
-            Warning(_("key binding: root menu \"%s\" not defined"),
-                    kp->command);
+   unsigned i;
+
+   for(i = 0; i < MC_COUNT; i++) {
+      for(kp = bindings[i]; kp; kp = kp->next) {
+         if((kp->key & 0xFF) == ACTION_ROOT && kp->command) {
+            const int bindex = GetRootMenuIndexFromString(kp->command);
+            if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
+               Warning(_("key binding: root menu \"%s\" not defined"),
+                       kp->command);
+            }
          }
       }
    }

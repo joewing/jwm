@@ -44,6 +44,6 @@ src/status.c
 src/swallow.c
 src/taskbar.c
 src/timing.c
-src/traybutton.c
 src/tray.c
+src/traybutton.c
 src/winmenu.c

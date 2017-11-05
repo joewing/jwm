@@ -20,6 +20,7 @@
 #include "settings.h"
 #include "grab.h"
 #include "event.h"
+#include "tray.h"
 
 static char **desktopNames = NULL;
 static char *showingDesktop = NULL;
@@ -211,11 +212,7 @@ Menu *CreateDesktopMenu(unsigned int mask, void *context)
    Menu *menu;
    int x;
 
-   menu = Allocate(sizeof(Menu));
-   menu->itemHeight = 0;
-   menu->items = NULL;
-   menu->label = NULL;
-
+   menu = CreateMenu();
    for(x = settings.desktopCount - 1; x >= 0; x--) {
       const size_t len = strlen(desktopNames[x]);
       MenuItem *item = CreateMenuItem(MENU_ITEM_NORMAL);
@@ -244,11 +241,7 @@ Menu *CreateSendtoMenu(MenuActionType mask, void *context)
    Menu *menu;
    int x;
 
-   menu = Allocate(sizeof(Menu));
-   menu->itemHeight = 0;
-   menu->items = NULL;
-   menu->label = NULL;
-
+   menu = CreateMenu();
    for(x = settings.desktopCount - 1; x >= 0; x--) {
       const size_t len = strlen(desktopNames[x]);
       MenuItem *item = CreateMenuItem(MENU_ITEM_NORMAL);
@@ -330,6 +323,7 @@ void ShowDesktop(void)
    SetCardinalAtom(rootWindow, ATOM_NET_SHOWING_DESKTOP,
                    showingDesktop[currentDesktop]);
    UngrabServer();
+   DrawTray();
 
 }
 

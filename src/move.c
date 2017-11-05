@@ -15,7 +15,7 @@
 #include "clientlist.h"
 #include "cursor.h"
 #include "event.h"
-#include "key.h"
+#include "binding.h"
 #include "outline.h"
 #include "pager.h"
 #include "screen.h"
@@ -41,6 +41,7 @@ static ClientNode *currentClient;
 static TimeType moveTime;
 
 static void StopMove(ClientNode *np, int doMove, int oldx, int oldy);
+static void RestartMove(ClientNode *np, int *doMove);
 static void MoveController(int wasDestroyed);
 
 static void DoSnap(ClientNode *np);
@@ -73,7 +74,6 @@ static void UpdateDesktop(const TimeType *now);
 /** Callback for stopping moves. */
 void MoveController(int wasDestroyed)
 {
-
    if(settings.moveMode == MOVE_OUTLINE) {
       ClearOutline();
    }
@@ -93,8 +93,9 @@ void MoveController(int wasDestroyed)
 /** Move a client window. */
 char MoveClient(ClientNode *np, int startx, int starty)
 {
-
    XEvent event;
+   const ScreenType *sp;
+   MaxFlags flags;
    int oldx, oldy;
    int doMove;
    int north, south, east, west;
@@ -126,7 +127,6 @@ char MoveClient(ClientNode *np, int startx, int starty)
    }
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
-
    startx -= west;
    starty -= north;
 
@@ -170,18 +170,20 @@ char MoveClient(ClientNode *np, int startx, int starty)
          }
 
          /* Determine if we are at a border for desktop switching. */
+         sp = GetCurrentScreen(np->x + np->width / 2, np->y + np->height / 2);
          atLeft = atTop = atRight = atBottom = 0;
-         if(event.xmotion.x_root == 0) {
+         if(event.xmotion.x_root <= sp->x) {
             atLeft = 1;
-         } else if(event.xmotion.x_root == rootWidth - 1) {
+         } else if(event.xmotion.x_root >= sp->x + sp->width - 1) {
             atRight = 1;
          }
-         if(event.xmotion.y_root == 0) {
+         if(event.xmotion.y_root <= sp->y) {
             atTop = 1;
-         } else if(event.xmotion.y_root == rootHeight - 1) {
+         } else if(event.xmotion.y_root >= sp->y + sp->height - 1) {
             atBottom = 1;
          }
 
+         flags = MAX_NONE;
          if(event.xmotion.state & Mod1Mask) {
             /* Switch desktops immediately if alt is pressed. */
             if(atLeft | atRight | atTop | atBottom) {
@@ -192,7 +194,6 @@ char MoveClient(ClientNode *np, int startx, int starty)
          } else {
             /* If alt is not pressed, snap to borders. */
             if(np->state.status & STAT_AEROSNAP) {
-               MaxFlags flags = MAX_NONE;
                if(atTop & atLeft) {
                   if(atSideFirst) {
                      flags = MAX_TOP | MAX_LEFT;
@@ -227,7 +228,12 @@ char MoveClient(ClientNode *np, int startx, int starty)
                   flags = MAX_VERT | MAX_HORIZ;
                   atSideFirst = 0;
                }
-               MaximizeClient(np, flags);
+               if(flags != np->state.maxFlags) {
+                  if(settings.moveMode == MOVE_OUTLINE) {
+                     ClearOutline();
+                  }
+                  MaximizeClient(np, flags);
+               }
                if(!np->state.maxFlags) {
                   DoSnap(np);
                }
@@ -236,18 +242,13 @@ char MoveClient(ClientNode *np, int startx, int starty)
             }
          }
 
-         if(!doMove && (abs(np->x - oldx) > MOVE_DELTA
+         if(flags != MAX_NONE) {
+            RestartMove(np, &doMove);
+         } else if(!doMove && (abs(np->x - oldx) > MOVE_DELTA
             || abs(np->y - oldy) > MOVE_DELTA)) {
 
             if(np->state.maxFlags) {
                MaximizeClient(np, MAX_NONE);
-               startx = np->width / 2;
-               starty = -north / 2;
-               if(np->parent != None) {
-                  MoveMouse(np->parent, startx, starty);
-               } else {
-                  MoveMouse(np->window, startx, starty);
-               }
             }
 
             CreateMoveWindow(np);
@@ -255,7 +256,6 @@ char MoveClient(ClientNode *np, int startx, int starty)
          }
 
          if(doMove) {
-
             if(settings.moveMode == MOVE_OUTLINE) {
                ClearOutline();
                height = north + south;
@@ -287,7 +287,6 @@ char MoveClient(ClientNode *np, int startx, int starty)
 /** Move a client window (keyboard or menu initiated). */
 char MoveClientKeyboard(ClientNode *np)
 {
-
    XEvent event;
    int oldx, oldy;
    int moved;
@@ -339,6 +338,7 @@ char MoveClientKeyboard(ClientNode *np)
    } else {
       height = np->height;
    }
+   currentClient = np;
 
    for(;;) {
 
@@ -356,23 +356,23 @@ char MoveClientKeyboard(ClientNode *np)
       if(event.type == KeyPress) {
 
          DiscardKeyEvents(&event, np->window);
-         switch(GetKey(&event.xkey) & 0xFF) {
-         case KEY_UP:
+         switch(GetKey(MC_NONE, event.xkey.state, event.xkey.keycode) & 0xFF) {
+         case ACTION_UP:
             if(np->y + height > 0) {
                np->y -= 10;
             }
             break;
-         case KEY_DOWN:
+         case ACTION_DOWN:
             if(np->y < rootHeight) {
                np->y += 10;
             }
             break;
-         case KEY_RIGHT:
+         case ACTION_RIGHT:
             if(np->x < rootWidth) {
                np->x += 10;
             }
             break;
-         case KEY_LEFT:
+         case ACTION_LEFT:
             if(np->x + np->width > 0) {
                np->x -= 10;
             }
@@ -426,7 +426,6 @@ char MoveClientKeyboard(ClientNode *np)
 /** Stop move. */
 void StopMove(ClientNode *np, int doMove, int oldx, int oldy)
 {
-
    int north, south, east, west;
 
    Assert(np);
@@ -446,13 +445,29 @@ void StopMove(ClientNode *np, int doMove, int oldx, int oldy)
    }
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
-
    if(np->parent != None) {
       JXMoveWindow(display, np->parent, np->x - west, np->y - north);
    } else {
       JXMoveWindow(display, np->window, np->x - west, np->y - north);
    }
    SendConfigureEvent(np);
+}
+
+/** Restart a move. */
+void RestartMove(ClientNode *np, int *doMove)
+{
+   if(*doMove) {
+      int north, south, east, west;
+      *doMove = 0;
+      DestroyMoveWindow();
+      GetBorderSize(&np->state, &north, &south, &east, &west);
+      if(np->parent != None) {
+         JXMoveWindow(display, np->parent, np->x - west, np->y - north);
+      } else {
+         JXMoveWindow(display, np->window, np->x - west, np->y - north);
+      }
+      SendConfigureEvent(np);
+   }
 }
 
 /** Snap to the screen and/or neighboring windows. */
@@ -828,6 +843,9 @@ void UpdateDesktop(const TimeType *now)
    }
    moveTime = *now;
 
+   /* We temporarily mark the client as hidden to avoid hidding it
+    * when changing desktops. */
+   currentClient->state.status |= STAT_HIDDEN;
    if(atLeft && LeftDesktop()) {
       SetClientDesktop(currentClient, currentDesktop);
       RequireRestack();
@@ -841,4 +859,5 @@ void UpdateDesktop(const TimeType *now)
       SetClientDesktop(currentClient, currentDesktop);
       RequireRestack();
    }
+   currentClient->state.status &= ~STAT_HIDDEN;
 }

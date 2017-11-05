@@ -24,8 +24,7 @@ the following libraries:
 Installation
 ------------------------------------------------------------------------------
 
- 0. For building from the git repository, run "automake -a" followed by
-    autoreconf to generate configure.
+ 0. For building from the git repository, run "./autogen.sh".
  1. Run "./configure --help" for configuration options.
  2. Run "./configure [options]"
  3. Run "make" to build JWM.

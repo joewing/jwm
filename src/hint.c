@@ -308,6 +308,10 @@ void ReadClientInfo(ClientNode *np, char alreadyMapped)
    if(np->minWidth == np->maxWidth && np->minHeight == np->maxHeight) {
       np->state.border &= ~BORDER_RESIZE;
       np->state.border &= ~BORDER_MAX;
+      if(np->minWidth * np->xinc >= rootWidth
+         && np->minHeight * np->yinc >= rootHeight) {
+         np->state.status |= STAT_FULLSCREEN;
+      }
    }
 
    /* Make sure this client is on at least as high of a layer

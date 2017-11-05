@@ -2,7 +2,7 @@
 # JWM autoconf.
 ############################################################################
 
-AC_INIT(jwm, 2.3.6, joewing@joewing.net)
+AC_INIT(jwm, 2.4.0, joewing@joewing.net)
 AC_PREREQ(2.57)
 AC_CONFIG_SRCDIR([src])
 AC_CONFIG_SRCDIR([po])
@@ -497,10 +497,9 @@ fi
 ############################################################################
 # Check if support for gettext was requested and available.
 ############################################################################
-# Use m4_pattern_allow to work around gettext's use of AM_PROG_MKDIR_P.
-m4_pattern_allow([AM_PROG_MKDIR_P])
+AM_ICONV
 AM_GNU_GETTEXT([external])
-AM_ICONV()
+AM_GNU_GETTEXT_VERSION([0.19])
 LDFLAGS="$LDFLAGS $LIBINTL $LIBICONV"
 
 ############################################################################

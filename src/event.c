@@ -17,7 +17,7 @@
 #include "desktop.h"
 #include "dock.h"
 #include "icon.h"
-#include "key.h"
+#include "binding.h"
 #include "move.h"
 #include "place.h"
 #include "resize.h"
@@ -51,8 +51,9 @@ static char task_update_pending = 0;
 static char pager_update_pending = 0;
 
 static void Signal(void);
-static void DispatchBorderButtonEvent(const XButtonEvent *event,
-                                      ClientNode *np);
+
+static void ProcessBinding(MouseContextType context, ClientNode *np,
+                           unsigned state, int code, int x, int y);
 
 static void HandleConfigureRequest(const XConfigureRequestEvent *event);
 static char HandleConfigureNotify(const XConfigureEvent *event);
@@ -365,36 +366,75 @@ char HandleSelectionClear(const XSelectionClearEvent *event)
 /** Process a button event. */
 void HandleButtonEvent(const XButtonEvent *event)
 {
+   static Time lastClickTime = 0;
+   static int lastX = 0, lastY = 0;
+   static unsigned doubleClickActive = 0;
 
    ClientNode *np;
+   int button;
    int north, south, east, west;
+   MouseContextType context;
 
+   /* Determine the button to present for processing.
+    * Press is positive, release is negative, double clicks
+    * are multiplied by 11.
+    */
+   if(event->type == ButtonPress) {
+      if(doubleClickActive == event->button
+         && event->time != lastClickTime
+         && event->time - lastClickTime <= settings.doubleClickSpeed
+         && abs(event->x - lastX) <= settings.doubleClickDelta
+         && abs(event->y - lastY) <= settings.doubleClickDelta) {
+         button = event->button * 11;
+      } else {
+         button = event->button;
+      }
+      doubleClickActive = 0;
+   } else {
+      button = event->button;
+   }
+   if(event->type == ButtonRelease) {
+      button = -button;
+   }
+   if(button < 11) {
+      doubleClickActive = event->button;
+      lastClickTime = event->time;
+      lastX = event->x;
+      lastY = event->y;
+   }
+
+   /* Dispatch the event. */
    np = FindClientByParent(event->window);
    if(np) {
+      /* Click on the border. */
       if(event->type == ButtonPress) {
          FocusClient(np);
          RaiseClient(np);
       }
-      DispatchBorderButtonEvent(event, np);
-   } else if(event->window == rootWindow && event->type == ButtonPress) {
+      context = GetBorderContext(np, event->x, event->y);
+      ProcessBinding(context, np, event->state, button, event->x, event->y);
+   } else if(event->window == rootWindow) {
+      /* Click on the root.
+       * Note that we use the raw button from the event for ShowRootMenu. */
       if(!ShowRootMenu(event->button, event->x, event->y, 0)) {
-         if(event->button == Button4) {
-            LeftDesktop();
-         } else if(event->button == Button5) {
-            RightDesktop();
-         }
+         ProcessBinding(MC_ROOT, NULL, event->state, button, 0, 0);
       }
    } else {
+      /* Click over window content. */
       const unsigned int mask = event->state & ~lockMask;
       np = FindClientByWindow(event->window);
       if(np) {
          const char move_resize = (np->state.status & STAT_DRAG)
-            || ((mask == Mod1Mask) && !(np->state.status & STAT_NODRAG));
+            || ((mask == settings.moveMask)
+               && !(np->state.status & STAT_NODRAG));
          switch(event->button) {
          case Button1:
          case Button2:
             FocusClient(np);
-            RaiseClient(np);
+            if(settings.focusModel == FOCUS_SLOPPY
+               || settings.focusModel == FOCUS_CLICK) {
+               RaiseClient(np);
+            }
             if(move_resize) {
                GetBorderSize(&np->state, &north, &south, &east, &west);
                MoveClient(np, event->x + west, event->y + north);
@@ -403,11 +443,14 @@ void HandleButtonEvent(const XButtonEvent *event)
          case Button3:
             if(move_resize) {
                GetBorderSize(&np->state, &north, &south, &east, &west);
-               ResizeClient(np, BA_RESIZE | BA_RESIZE_E | BA_RESIZE_S,
+               ResizeClient(np, MC_BORDER | MC_BORDER_E | MC_BORDER_S,
                             event->x + west, event->y + north);
             } else {
                FocusClient(np);
-               RaiseClient(np);
+               if(settings.focusModel == FOCUS_SLOPPY
+                  || settings.focusModel == FOCUS_CLICK) {
+                  RaiseClient(np);
+               }
             }
             break;
          default:
@@ -415,9 +458,7 @@ void HandleButtonEvent(const XButtonEvent *event)
          }
          JXAllowEvents(display, ReplayPointer, eventTime);
       }
-
    }
-
 }
 
 /** Toggle maximized state. */
@@ -432,62 +473,59 @@ void ToggleMaximized(ClientNode *np, MaxFlags flags)
    }
 }
 
-/** Process a key press event. */
-void HandleKeyPress(const XKeyEvent *event)
+/** Process a key or mouse binding. */
+void ProcessBinding(MouseContextType context, ClientNode *np,
+                    unsigned state, int code, int x, int y)
 {
-   ClientNode *np;
-   KeyType key;
-
-   SetMousePosition(event->x_root, event->y_root, event->window);
-   key = GetKey(event);
-   np = GetActiveClient();
+   const ActionType key = GetKey(context, state, code);
+   const char keyAction = context == MC_NONE;
    switch(key & 0xFF) {
-   case KEY_EXEC:
-      RunKeyCommand(event);
+   case ACTION_EXEC:
+      RunKeyCommand(context, state, code);
       break;
-   case KEY_DESKTOP:
+   case ACTION_DESKTOP:
       ChangeDesktop((key >> 8) - 1);
       break;
-   case KEY_RDESKTOP:
+   case ACTION_RDESKTOP:
       RightDesktop();
       break;
-   case KEY_LDESKTOP:
+   case ACTION_LDESKTOP:
       LeftDesktop();
       break;
-   case KEY_UDESKTOP:
+   case ACTION_UDESKTOP:
       AboveDesktop();
       break;
-   case KEY_DDESKTOP:
+   case ACTION_DDESKTOP:
       BelowDesktop();
       break;
-   case KEY_SHOWDESK:
+   case ACTION_SHOWDESK:
       ShowDesktop();
       break;
-   case KEY_SHOWTRAY:
+   case ACTION_SHOWTRAY:
       ShowAllTrays();
       break;
-   case KEY_NEXT:
+   case ACTION_NEXT:
       StartWindowWalk();
       FocusNext();
       break;
-   case KEY_NEXTSTACK:
+   case ACTION_NEXTSTACK:
       StartWindowStackWalk();
       WalkWindowStack(1);
       break;
-   case KEY_PREV:
+   case ACTION_PREV:
       StartWindowWalk();
       FocusPrevious();
       break;
-   case KEY_PREVSTACK:
+   case ACTION_PREVSTACK:
       StartWindowStackWalk();
       WalkWindowStack(0);
       break;
-   case KEY_CLOSE:
+   case ACTION_CLOSE:
       if(np) {
          DeleteClient(np);
       }
       break;
-   case KEY_SHADE:
+   case ACTION_SHADE:
       if(np) {
          if(np->state.status & STAT_SHADED) {
             UnshadeClient(np);
@@ -496,7 +534,7 @@ void HandleKeyPress(const XKeyEvent *event)
          }
       }
       break;
-   case KEY_STICK:
+   case ACTION_STICK:
       if(np) {
          if(np->state.status & STAT_STICKY) {
             SetClientSticky(np, 0);
@@ -505,25 +543,53 @@ void HandleKeyPress(const XKeyEvent *event)
          }
       }
       break;
-   case KEY_MOVE:
+   case ACTION_MOVE:
       if(np) {
-         MoveClientKeyboard(np);
+         if(keyAction) {
+            MoveClientKeyboard(np);
+         } else {
+            MoveClient(np, x, y);
+         }
       }
       break;
-   case KEY_RESIZE:
+   case ACTION_RESIZE:
       if(np) {
-         ResizeClientKeyboard(np);
+         /* Use provided context by default. */
+         const ActionType corner = key & 0xFF00;
+         MouseContextType resizeContext = context;
+         if(corner) {
+            /* Custom corner specified. */
+            resizeContext = MC_BORDER;
+            resizeContext |= (corner & ACTION_RESIZE_N) ? MC_BORDER_N : MC_NONE;
+            resizeContext |= (corner & ACTION_RESIZE_S) ? MC_BORDER_S : MC_NONE;
+            resizeContext |= (corner & ACTION_RESIZE_E) ? MC_BORDER_E : MC_NONE;
+            resizeContext |= (corner & ACTION_RESIZE_W) ? MC_BORDER_W : MC_NONE;
+         } else if(keyAction) {
+            /* No corner specified for a key action, assume SE. */
+            resizeContext = MC_BORDER | MC_BORDER_S | MC_BORDER_E;
+         }
+         if(keyAction) {
+            ResizeClientKeyboard(np, resizeContext);
+         } else {
+            ResizeClient(np, resizeContext, x, y);
+         }
       }
       break;
-   case KEY_MIN:
+   case ACTION_MIN:
       if(np) {
          MinimizeClient(np, 1);
       }
       break;
-   case KEY_MAX:
-      ToggleMaximized(np, MAX_HORIZ | MAX_VERT);
+   case ACTION_MAX:
+      if(np) {
+         if(keyAction) {
+            ToggleMaximized(np, MAX_HORIZ | MAX_VERT);
+         } else {
+            MaximizeClientDefault(np);
+         }
+      }
       break;
-   case KEY_RESTORE:
+   case ACTION_RESTORE:
       if(np) {
          if(np->state.maxFlags) {
             MaximizeClient(np, MAX_NONE);
@@ -532,40 +598,49 @@ void HandleKeyPress(const XKeyEvent *event)
          }
       }
       break;
-   case KEY_MAXTOP:
+   case ACTION_MAXTOP:
       ToggleMaximized(np, MAX_TOP | MAX_HORIZ);
       break;
-   case KEY_MAXBOTTOM:
+   case ACTION_MAXBOTTOM:
       ToggleMaximized(np, MAX_BOTTOM | MAX_HORIZ);
       break;
-   case KEY_MAXLEFT:
+   case ACTION_MAXLEFT:
       ToggleMaximized(np, MAX_LEFT | MAX_VERT);
       break;
-   case KEY_MAXRIGHT:
+   case ACTION_MAXRIGHT:
       ToggleMaximized(np, MAX_RIGHT | MAX_VERT);
       break;
-   case KEY_MAXV:
+   case ACTION_MAXV:
       ToggleMaximized(np, MAX_VERT);
       break;
-   case KEY_MAXH:
+   case ACTION_MAXH:
       ToggleMaximized(np, MAX_HORIZ);
       break;
-   case KEY_ROOT:
-      ShowKeyMenu(event);
+   case ACTION_ROOT:
+      ShowKeyMenu(context, state, code);
       break;
-   case KEY_WIN:
+   case ACTION_WIN:
       if(np) {
-         RaiseClient(np);
-         ShowWindowMenu(np, np->x, np->y, 1);
+         if(keyAction) {
+            RaiseClient(np);
+            ShowWindowMenu(np, np->x, np->y, 1);
+         } else {
+            const unsigned bsize = (np->state.border & BORDER_OUTLINE)
+                                 ? settings.borderWidth : 0;
+            const unsigned titleHeight = GetTitleHeight();
+            const int mx = np->x + x - bsize;
+            const int my = np->y + y - titleHeight - bsize;
+            ShowWindowMenu(np, mx, my, 0);
+         }
       }
       break;
-   case KEY_RESTART:
+   case ACTION_RESTART:
       Restart();
       break;
-   case KEY_EXIT:
+   case ACTION_EXIT:
       Exit(1);
       break;
-   case KEY_FULLSCREEN:
+   case ACTION_FULLSCREEN:
       if(np) {
          if(np->state.status & STAT_FULLSCREEN) {
             SetClientFullScreen(np, 0);
@@ -574,28 +649,35 @@ void HandleKeyPress(const XKeyEvent *event)
          }
       }
       break;
-   case KEY_SENDR:
+   case ACTION_SEND:
+      if(np) {
+         const unsigned desktop = (key >> 8) - 1;
+         SetClientDesktop(np, desktop);
+         ChangeDesktop(desktop);
+      }
+      break;
+   case ACTION_SENDR:
       if(np) {
          const unsigned desktop = GetRightDesktop(np->state.desktop);
          SetClientDesktop(np, desktop);
          ChangeDesktop(desktop);
       }
       break;
-   case KEY_SENDL:
+   case ACTION_SENDL:
       if(np) {
          const unsigned desktop = GetLeftDesktop(np->state.desktop);
          SetClientDesktop(np, desktop);
          ChangeDesktop(desktop);
       }
       break;
-   case KEY_SENDU:
+   case ACTION_SENDU:
       if(np) {
          const unsigned desktop = GetAboveDesktop(np->state.desktop);
          SetClientDesktop(np, desktop);
          ChangeDesktop(desktop);
       }
       break;
-   case KEY_SENDD:
+   case ACTION_SENDD:
       if(np) {
          const unsigned desktop = GetBelowDesktop(np->state.desktop);
          SetClientDesktop(np, desktop);
@@ -608,13 +690,21 @@ void HandleKeyPress(const XKeyEvent *event)
    DiscardEnterEvents();
 }
 
+/** Process a key press event. */
+void HandleKeyPress(const XKeyEvent *event)
+{
+   ClientNode *np;
+   SetMousePosition(event->x_root, event->y_root, event->window);
+   np = GetActiveClient();
+   ProcessBinding(MC_NONE, np, event->state, event->keycode, 0, 0);
+}
+
 /** Handle a key release event. */
 void HandleKeyRelease(const XKeyEvent *event)
 {
-   KeyType key;
-   key = GetKey(event) & 0xFF;
-   if(   key != KEY_NEXTSTACK && key != KEY_NEXT
-      && key != KEY_PREV      && key != KEY_PREVSTACK) {
+   const ActionType key = GetKey(MC_NONE, event->state, event->keycode) & 0xFF;
+   if(   key != ACTION_NEXTSTACK && key != ACTION_NEXT
+      && key != ACTION_PREV      && key != ACTION_PREVSTACK) {
       StopWindowWalk();
    }
 }
@@ -622,7 +712,6 @@ void HandleKeyRelease(const XKeyEvent *event)
 /** Process a configure request. */
 void HandleConfigureRequest(const XConfigureRequestEvent *event)
 {
-   XWindowChanges wc;
    ClientNode *np;
 
    if(HandleDockConfigureRequest(event)) {
@@ -705,12 +794,17 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
 
       /* Return early if there's nothing to do. */
       if(!changed) {
+         /* Nothing changed; send a synthetic configure event. */
+         SendConfigureEvent(np);
          return;
       }
 
+      /* Stop any move/resize that may be in progress. */
       if(np->controller) {
          (np->controller)(0);
       }
+
+      /* If the client is maximized, restore it first. */
       if(np->state.maxFlags) {
          MaximizeClient(np, MAX_NONE);
       }
@@ -719,26 +813,30 @@ void HandleConfigureRequest(const XConfigureRequestEvent *event)
          resized = 1;
       }
       if(resized) {
+         /* The size changed so the parent will need to be redrawn. */
          ConstrainSize(np);
          ConstrainPosition(np);
          ResetBorder(np);
       } else {
+         /* Only the position changed; move the client. */
          int north, south, east, west;
          GetBorderSize(&np->state, &north, &south, &east, &west);
+
          if(np->parent != None) {
             JXMoveWindow(display, np->parent, np->x - west, np->y - north);
+            SendConfigureEvent(np);
          } else {
             JXMoveWindow(display, np->window, np->x, np->y);
          }
       }
 
-      SendConfigureEvent(np);
       RequirePagerUpdate();
 
    } else {
 
       /* We don't know about this window, just let the configure through. */
 
+      XWindowChanges wc;
       wc.stack_mode = event->detail;
       wc.sibling = event->above;
       wc.border_width = event->border_width;
@@ -774,16 +872,17 @@ void HandleEnterNotify(const XCrossingEvent *event)
    np = FindClient(event->window);
    if(np) {
       if(  !(np->state.status & STAT_ACTIVE)
-         && (settings.focusModel == FOCUS_SLOPPY)) {
+         && (settings.focusModel == FOCUS_SLOPPY
+            || settings.focusModel == FOCUS_SLOPPY_TITLE)) {
          FocusClient(np);
       }
       if(np->parent == event->window) {
-         np->borderAction = GetBorderActionType(np, event->x, event->y);
-         cur = GetFrameCursor(np->borderAction);
+         np->mouseContext = GetBorderContext(np, event->x, event->y);
+         cur = GetFrameCursor(np->mouseContext);
          JXDefineCursor(display, np->parent, cur);
-      } else if(np->borderAction != BA_NONE) {
+      } else if(np->mouseContext != MC_NONE) {
          SetDefaultCursor(np->parent);
-         np->borderAction = BA_NONE;
+         np->mouseContext = MC_NONE;
       }
    }
 
@@ -1121,34 +1220,34 @@ void HandleNetWMMoveResize(const XClientMessageEvent *event, ClientNode *np)
 
    switch(direction) {
    case 0:  /* top-left */
-      ResizeClient(np, BA_RESIZE | BA_RESIZE_N | BA_RESIZE_W, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_N | MC_BORDER_W, x, y);
       break;
    case 1:  /* top */
-      ResizeClient(np, BA_RESIZE | BA_RESIZE_N, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_N, x, y);
       break;
    case 2:  /* top-right */
-      ResizeClient(np, BA_RESIZE | BA_RESIZE_N | BA_RESIZE_E, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_N | MC_BORDER_E, x, y);
       break;
    case 3:  /* right */
-      ResizeClient(np, BA_RESIZE | BA_RESIZE_E, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_E, x, y);
       break;
    case 4:  /* bottom-right */
-      ResizeClient(np, BA_RESIZE | BA_RESIZE_S | BA_RESIZE_E, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_S | MC_BORDER_E, x, y);
       break;
    case 5:  /* bottom */
-      ResizeClient(np, BA_RESIZE | BA_RESIZE_S, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_S, x, y);
       break;
    case 6:  /* bottom-left */
-      ResizeClient(np, BA_RESIZE | BA_RESIZE_S | BA_RESIZE_W, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_S | MC_BORDER_W, x, y);
       break;
    case 7:  /* left */
-      ResizeClient(np, BA_RESIZE | BA_RESIZE_W, x, y);
+      ResizeClient(np, MC_BORDER | MC_BORDER_W, x, y);
       break;
    case 8:  /* move */
       MoveClient(np, x, y);
       break;
    case 9:  /* resize-keyboard */
-      ResizeClientKeyboard(np);
+      ResizeClientKeyboard(np, MC_BORDER | MC_BORDER_S | MC_BORDER_E);
       break;
    case 10: /* move-keyboard */
       MoveClientKeyboard(np);
@@ -1380,11 +1479,10 @@ void HandleMotionNotify(const XMotionEvent *event)
 
    np = FindClientByParent(event->window);
    if(np) {
-      BorderActionType action;
-      action = GetBorderActionType(np, event->x, event->y);
-      if(np->borderAction != action) {
-         np->borderAction = action;
-         cur = GetFrameCursor(action);
+      const MouseContextType context = GetBorderContext(np, event->x, event->y);
+      if(np->mouseContext != context) {
+         np->mouseContext = context;
+         cur = GetFrameCursor(context);
          JXDefineCursor(display, np->parent, cur);
       }
    }
@@ -1491,7 +1589,7 @@ void HandleUnmapNotify(const XUnmapEvent *event)
          RemoveClient(np);
       } else if((np->state.status & STAT_MAPPED) || event->send_event) {
          if(!(np->state.status & STAT_HIDDEN)) {
-            np->state.status &= ~STAT_MAPPED;
+            np->state.status &= ~(STAT_MAPPED | STAT_MINIMIZED | STAT_SHADED);
             JXUngrabButton(display, AnyButton, AnyModifier, np->window);
             GravitateClient(np, 1);
             JXReparentWindow(display, np->window, rootWindow, np->x, np->y);
@@ -1519,130 +1617,6 @@ char HandleDestroyNotify(const XDestroyWindowEvent *event)
    } else {
       return HandleDockDestroy(event->window);
    }
-}
-
-/** Take the appropriate action for a click on a client border. */
-void DispatchBorderButtonEvent(const XButtonEvent *event,
-                               ClientNode *np)
-{
-   static Time lastClickTime = 0;
-   static int lastX = 0, lastY = 0;
-   static char doubleClickActive = 0;
-   BorderActionType action;
-   int bsize;
-
-   /* Middle click starts a move unless it's over the maximize button. */
-   action = GetBorderActionType(np, event->x, event->y);
-   if(event->button == Button2 && action != BA_MAXIMIZE) {
-      MoveClient(np, event->x, event->y);
-      return;
-   }
-
-   /* Determine the size of the border. */
-   if(np->state.border & BORDER_OUTLINE) {
-      bsize = settings.borderWidth;
-   } else {
-      bsize = 0;
-   }
-
-   /* Other buttons are context sensitive. */
-   switch(action & 0x0F) {
-   case BA_RESIZE:   /* Border */
-      if(event->type == ButtonPress) {
-         if(event->button == Button1) {
-            ResizeClient(np, action, event->x, event->y);
-         } else if(event->button == Button3) {
-            const unsigned titleHeight = GetTitleHeight();
-            const int x = np->x + event->x - bsize;
-            const int y = np->y + event->y - titleHeight - bsize;
-            ShowWindowMenu(np, x, y, 0);
-         }
-      }
-      break;
-   case BA_MOVE:     /* Title bar */
-      if(event->button == Button1) {
-         if(event->type == ButtonPress) {
-            if(doubleClickActive
-               && event->time != lastClickTime
-               && event->time - lastClickTime <= settings.doubleClickSpeed
-               && abs(event->x - lastX) <= settings.doubleClickDelta
-               && abs(event->y - lastY) <= settings.doubleClickDelta) {
-               MaximizeClientDefault(np);
-               doubleClickActive = 0;
-            } else {
-               if(MoveClient(np, event->x, event->y)) {
-                  doubleClickActive = 0;
-               } else {
-                  doubleClickActive = 1;
-                  lastClickTime = event->time;
-                  lastX = event->x;
-                  lastY = event->y;
-               }
-            }
-         }
-      } else if(event->button == Button3) {
-         const unsigned titleHeight = GetTitleHeight();
-         const int x = np->x + event->x - bsize;
-         const int y = np->y + event->y - titleHeight - bsize;
-         ShowWindowMenu(np, x, y, 0);
-      } else if(event->button == Button4) {
-         ShadeClient(np);
-      } else if(event->button == Button5) {
-         UnshadeClient(np);
-      }
-      break;
-   case BA_MENU:  /* Menu button */
-      if(event->button == Button4) {
-         ShadeClient(np);
-      } else if(event->button == Button5) {
-         UnshadeClient(np);
-      } else if(event->type == ButtonPress) {
-         const unsigned titleHeight = GetTitleHeight();
-         const int x = np->x + event->x - bsize;
-         const int y = np->y + event->y - titleHeight - bsize;
-         ShowWindowMenu(np, x, y, 0);
-      }
-      break;
-   case BA_CLOSE: /* Close button */
-      if(event->type == ButtonRelease
-         && (event->button == Button1 || event->button == Button3)) {
-         DeleteClient(np);
-      }
-      break;
-   case BA_MAXIMIZE: /* Maximize button */
-      if(event->type == ButtonRelease) {
-         switch(event->button) {
-         case Button1:
-            MaximizeClientDefault(np);
-            break;
-         case Button2:
-            MaximizeClient(np, np->state.maxFlags ^ MAX_VERT);
-            break;
-         case Button3:
-            MaximizeClient(np, np->state.maxFlags ^ MAX_HORIZ);
-            break;
-         default:
-            break;
-         }
-      }
-      break;
-   case BA_MINIMIZE: /* Minimize button */
-      if(event->type == ButtonRelease) {
-         if(event->button == Button3) {
-            if(np->state.status & STAT_SHADED) {
-               UnshadeClient(np);
-            } else {
-               ShadeClient(np);
-            }
-         } else if(event->button == Button1) {
-            MinimizeClient(np, 1);
-         }
-      }
-      break;
-   default:
-      break;
-   }
-   DiscardEnterEvents();
 }
 
 /** Update window state information. */

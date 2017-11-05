@@ -83,7 +83,7 @@ void DrawButton(ButtonNode *bp)
       bg2 = colors[COLOR_TASKLIST_BG2];
       up = colors[COLOR_TASKLIST_UP];
       down = colors[COLOR_TASKLIST_DOWN];
-      decorations = settings.trayDecorations;
+      decorations = settings.taskListDecorations;
       break;
    case BUTTON_TASK_ACTIVE:
       fg = COLOR_TASKLIST_ACTIVE_FG;
@@ -91,7 +91,7 @@ void DrawButton(ButtonNode *bp)
       bg2 = colors[COLOR_TASKLIST_ACTIVE_BG2];
       down = colors[COLOR_TASKLIST_ACTIVE_UP];
       up = colors[COLOR_TASKLIST_ACTIVE_DOWN];
-      decorations = settings.trayDecorations;
+      decorations = settings.taskListDecorations;
       break;
    case BUTTON_MENU:
    default:
@@ -146,10 +146,15 @@ void DrawButton(ButtonNode *bp)
          iconHeight = iconWidth;
       } else {
          const int ratio = (bp->icon->width << 16) / bp->icon->height;
+         int maxIconWidth = width - 4;
+         if(bp->text) {
+            /* Showing text, keep the icon square. */
+            maxIconWidth = Min(width, height) - 4;
+         }
          iconHeight = height - 4;
          iconWidth = (iconHeight * ratio) >> 16;
-         if(iconWidth > width - 4) {
-            iconWidth = width - 4;
+         if(iconWidth > maxIconWidth) {
+            iconWidth = maxIconWidth;
             iconHeight = (iconWidth << 16) / ratio;
          }
       }

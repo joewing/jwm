@@ -11,6 +11,7 @@
 #define BORDER_H
 
 #include "gradient.h"
+#include "binding.h"
 
 struct ClientNode;
 struct ClientState;
@@ -24,20 +25,6 @@ typedef unsigned char BorderIconType;
 #define BI_MIN          4
 #define BI_COUNT        5
 
-/** Flags to determine what action to take on the border. */
-typedef unsigned char BorderActionType;
-#define BA_NONE      0     /**< Do nothing. */
-#define BA_RESIZE    1     /**< Resize the window. */
-#define BA_MOVE      2     /**< Move the window. */
-#define BA_CLOSE     3     /**< Close the window. */
-#define BA_MAXIMIZE  4     /**< Maximize the window. */
-#define BA_MINIMIZE  5     /**< Minimize the window. */
-#define BA_MENU      6     /**< Show the window menu. */
-#define BA_RESIZE_N  0x10  /**< Resize north. */
-#define BA_RESIZE_S  0x20  /**< Resize south. */
-#define BA_RESIZE_E  0x40  /**< Resize east. */
-#define BA_RESIZE_W  0x80  /**< Resize west. */
-
 /*@{*/
 void InitializeBorders(void);
 void StartupBorders(void);
@@ -45,13 +32,14 @@ void StartupBorders(void);
 void DestroyBorders(void);
 /*@}*/
 
-/** Determine the action to take for a client.
+/** Determine the mouse context for a location.
  * @param np The client.
  * @param x The x-coordinate of the mouse (frame relative).
  * @param y The y-coordinate of the mouse (frame relative).
- * @return The action to take.
+ * @return The context.
  */
-BorderActionType GetBorderActionType(const struct ClientNode *np, int x, int y);
+MouseContextType GetBorderContext(const struct ClientNode *np,
+                                  int x, int y);
 
 /** Reset the shape of a window border.
  * @param np The client.

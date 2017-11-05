@@ -645,8 +645,10 @@ void PlaceClient(ClientNode *np, char alreadyMapped)
 
    Assert(np);
 
-   if(alreadyMapped || (!(np->state.status & STAT_PIGNORE)
-                        && (np->sizeFlags & (PPosition | USPosition)))) {
+   if(alreadyMapped
+      || (np->state.status & STAT_POSITION)
+      || (!(np->state.status & STAT_PIGNORE)
+         && (np->sizeFlags & (PPosition | USPosition)))) {
 
       GravitateClient(np, 0);
       if(!alreadyMapped) {
@@ -802,12 +804,12 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
                          np->y + (north + south + np->height) / 2);
    GetScreenBounds(sp, &box);
    if(!(flags & (MAX_HORIZ | MAX_LEFT | MAX_RIGHT))) {
-      box.x = np->x - west;
-      box.width = np->width + east + west;
+      box.x = np->x;
+      box.width = np->width;
    }
    if(!(flags & (MAX_VERT | MAX_TOP | MAX_BOTTOM))) {
-      box.y = np->y - north;
-      box.height = np->height + north + south;
+      box.y = np->y;
+      box.height = np->height;
    }
    SubtractTrayBounds(&box, np->state.layer);
    SubtractStrutBounds(&box, np);
@@ -830,20 +832,20 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
 
    /* If maximizing horizontally, update width. */
    if(flags & MAX_HORIZ) {
-      np->x = box.x;
-      np->width = box.width;
+      np->x = box.x + west;
+      np->width = box.width - east - west;
       if(!(np->state.status & STAT_IIGNORE)) {
          np->width -= ((np->width - np->baseWidth) % np->xinc);
       }
    } else if(flags & MAX_LEFT) {
-      np->x = box.x;
-      np->width = box.width / 2 - west;
+      np->x = box.x + west;
+      np->width = box.width / 2 - east - west;
       if(!(np->state.status & STAT_IIGNORE)) {
          np->width -= ((np->width - np->baseWidth) % np->xinc);
       }
    } else if(flags & MAX_RIGHT) {
       np->x = box.x + box.width / 2 + west;
-      np->width = box.width / 2 - east;
+      np->width = box.width / 2 - east - west;
       if(!(np->state.status & STAT_IIGNORE)) {
          np->width -= ((np->width - np->baseWidth) % np->xinc);
       }
@@ -852,7 +854,7 @@ void PlaceMaximizedClient(ClientNode *np, MaxFlags flags)
    /* If maximizing vertically, update height. */
    if(flags & MAX_VERT) {
       np->y = box.y + north;
-      np->height = box.height - north;
+      np->height = box.height - north - south;
       if(!(np->state.status & STAT_IIGNORE)) {
          np->height -= ((np->height - np->baseHeight) % np->yinc);
       }

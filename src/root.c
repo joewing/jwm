@@ -118,15 +118,13 @@ int GetRootMenuIndexFromString(const char *str)
 void SetRootMenu(const char *indexes, Menu *m)
 {
 
-   unsigned int x, y;
-   int index;
-   char found;
+   unsigned x;
 
    /* Loop over each index to consider. */
    for(x = 0; indexes[x]; x++) {
 
       /* Get the index and make sure it's in range. */
-      index = GetRootMenuIndex(indexes[x]);
+      const int index = GetRootMenuIndex(indexes[x]);
       if(JUNLIKELY(index < 0)) {
          Warning(_("invalid root menu specified: \"%c\""), indexes[x]);
          continue;
@@ -135,7 +133,8 @@ void SetRootMenu(const char *indexes, Menu *m)
       if(rootMenu[index] && rootMenu[index] != m) {
 
          /* See if replacing this value will cause an orphan. */
-         found = 0;
+         unsigned y;
+         char found = 0;
          for(y = 0; y < ROOT_MENU_COUNT; y++) {
             if(x != y && rootMenu[y] == rootMenu[x]) {
                found = 1;
@@ -187,9 +186,19 @@ char ShowRootMenu(int index, int x, int y, char keyboard)
       return 0;
    }
    if(menuShown) {
-      return 0;
+      return 1;
    }
-   return ShowMenu(rootMenu[index], RunRootCommand, x, y, keyboard);
+   if(rootMenu[index]->dynamic) {
+      Menu *menu = ParseDynamicMenu(rootMenu[index]->dynamic);
+      if(menu) {
+         InitializeMenu(menu);
+         ShowMenu(menu, RunRootCommand, x, y, keyboard);
+         DestroyMenu(menu);
+         return 1;
+      }
+   }
+   ShowMenu(rootMenu[index], RunRootCommand, x, y, keyboard);
+   return 1;
 }
 
 /** Exit callback for the exit menu item. */

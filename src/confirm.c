@@ -16,7 +16,7 @@
 #include "screen.h"
 #include "misc.h"
 #include "settings.h"
-#include "key.h"
+#include "binding.h"
 
 #ifndef DISABLE_CONFIRM
 
@@ -229,13 +229,13 @@ char HandleDialogButtonPress(const XButtonEvent *event)
 char HandleDialogKeyPress(const XKeyEvent *event)
 {
    if(dialog && event->window == dialog->node->window) {
-      KeyType key = GetKey(event);
+      const ActionType key = GetKey(MC_NONE, event->state, event->keycode);
       switch(key & 0xFF) {
-      case KEY_ENTER:
+      case ACTION_ENTER:
          RunDialogAction();
          DestroyConfirmDialog();
          break;
-      case KEY_ESC:
+      case ACTION_ESC:
          DestroyConfirmDialog();
          break;
       default:

@@ -13,6 +13,15 @@
 
 Settings settings;
 
+static const MouseContextType DEFAULT_TITLE_BAR_LAYOUT[TBC_COUNT] = {
+   MC_ICON,
+   MC_MOVE,
+   MC_MINIMIZE,
+   MC_MAXIMIZE,
+   MC_CLOSE,
+   MC_NONE
+};
+
 static void FixRange(unsigned int *value,
                      unsigned int min_value,
                      unsigned int max_value,
@@ -21,6 +30,7 @@ static void FixRange(unsigned int *value,
 /** Initialize settings. */
 void InitializeSettings(void)
 {
+   settings.moveMask = (1 << Mod1MapIndex);
    settings.doubleClickSpeed = 400;
    settings.doubleClickDelta = 2;
    settings.snapMode = SNAP_BORDER;
@@ -44,10 +54,14 @@ void InitializeSettings(void)
    settings.menuOpacity = UINT_MAX;
    settings.windowDecorations = DECO_FLAT;
    settings.trayDecorations = DECO_FLAT;
+   settings.taskListDecorations = DECO_UNSET;
    settings.menuDecorations = DECO_FLAT;
    settings.cornerRadius = 4;
    settings.groupTasks = 0;
    settings.listAllTasks = 0;
+   settings.dockSpacing = 0;
+   memcpy(settings.titleBarLayout, DEFAULT_TITLE_BAR_LAYOUT,
+      sizeof(settings.titleBarLayout));
 }
 
 /** Make sure settings are reasonable. */
@@ -66,6 +80,11 @@ void StartupSettings(void)
    FixRange(&settings.desktopHeight, 1, 64, 1);
    settings.desktopCount = settings.desktopWidth * settings.desktopHeight;
 
+   if(settings.taskListDecorations == DECO_UNSET) {
+      settings.taskListDecorations = settings.trayDecorations;
+   }
+
+   FixRange(&settings.dockSpacing, 0, 64, 0);
 }
 
 /** Update a string setting. */
@@ -88,5 +107,34 @@ void FixRange(unsigned int *value,
 {
    if(JUNLIKELY(*value < min_value || *value > max_value)) {
       *value = def_value;
+   }
+}
+
+/** Set the title button order. */
+void SetTitleButtonOrder(const char *order)
+{
+   unsigned i = 0;
+   memset(settings.titleBarLayout, 0, sizeof(settings.titleBarLayout));
+   while(*order && i < TBC_COUNT) {
+      switch(tolower(*order)) {
+      case 'x':   /* Close */
+         settings.titleBarLayout[i++] = MC_CLOSE;
+         break;
+      case 'i':   /* Minimize (iconify) */
+         settings.titleBarLayout[i++] = MC_MINIMIZE;
+         break;
+      case 't':   /* Title */
+         settings.titleBarLayout[i++] = MC_MOVE;
+         break;
+      case 'm':   /* Maximize */
+         settings.titleBarLayout[i++] = MC_MAXIMIZE;
+         break;
+      case 'w':   /* Window */
+         settings.titleBarLayout[i++] = MC_ICON;
+         break;
+      default:
+         break;
+      }
+      order += 1;
    }
 }

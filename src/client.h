@@ -85,6 +85,7 @@ typedef unsigned int StatusFlags;
 #define STAT_FIXED      (1 << 27)   /**< Keep on the specified desktop. */
 #define STAT_AEROSNAP   (1 << 28)   /**< Enable Aero Snap. */
 #define STAT_NODRAG     (1 << 29)   /**< Disable mod1+drag/resize. */
+#define STAT_POSITION   (1 << 30)   /**< Config-specified position. */
 
 /** Maximization flags. */
 typedef unsigned char MaxFlags;
@@ -147,7 +148,7 @@ typedef struct ClientNode {
 
    ClientState state;         /**< Window state. */
 
-   BorderActionType borderAction;
+   MouseContextType mouseContext;
 
    struct IconNode *icon;     /**< Icon assigned to this window. */
 

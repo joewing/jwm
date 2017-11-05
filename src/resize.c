@@ -15,7 +15,7 @@
 #include "misc.h"
 #include "pager.h"
 #include "status.h"
-#include "key.h"
+#include "binding.h"
 #include "event.h"
 #include "settings.h"
 
@@ -23,6 +23,11 @@ static char shouldStopResize;
 
 static void StopResize(ClientNode *np);
 static void ResizeController(int wasDestroyed);
+static void UpdateSize(ClientNode *np, const MouseContextType context,
+                       const int x, const int y,
+                       const int startx, const int starty,
+                       const int oldx, const int oldy,
+                       const int oldw, const int oldh);
 static void FixWidth(ClientNode *np);
 static void FixHeight(ClientNode *np);
 
@@ -38,8 +43,82 @@ void ResizeController(int wasDestroyed)
    shouldStopResize = 1;
 }
 
+/** Update the size of a client window. */
+void UpdateSize(ClientNode *np, const MouseContextType context,
+                const int x, const int y,
+                const int startx, const int starty,
+                const int oldx, const int oldy,
+                const int oldw, const int oldh)
+{
+   if(context & MC_BORDER_N) {
+      int delta = (y - starty) / np->yinc;
+      delta *= np->yinc;
+      if(oldh - delta >= np->minHeight
+         && (oldh - delta <= np->maxHeight || delta > 0)) {
+         np->height = oldh - delta;
+         np->y = oldy + delta;
+      }
+      if(!(context & (MC_BORDER_E | MC_BORDER_W))) {
+         FixWidth(np);
+      }
+   }
+   if(context & MC_BORDER_S) {
+      int delta = (y - starty) / np->yinc;
+      delta *= np->yinc;
+      np->height = oldh + delta;
+      np->height = Max(np->height, np->minHeight);
+      np->height = Min(np->height, np->maxHeight);
+      if(!(context & (MC_BORDER_E | MC_BORDER_W))) {
+         FixWidth(np);
+      }
+   }
+   if(context & MC_BORDER_E) {
+      int delta = (x - startx) / np->xinc;
+      delta *= np->xinc;
+      np->width = oldw + delta;
+      np->width = Max(np->width, np->minWidth);
+      np->width = Min(np->width, np->maxWidth);
+      if(!(context & (MC_BORDER_N | MC_BORDER_S))) {
+         FixHeight(np);
+      }
+   }
+   if(context & MC_BORDER_W) {
+      int delta = (x - startx) / np->xinc;
+      delta *= np->xinc;
+      if(oldw - delta >= np->minWidth
+         && (oldw - delta <= np->maxWidth || delta > 0)) {
+         np->width = oldw - delta;
+         np->x = oldx + delta;
+      }
+      if(!(context & (MC_BORDER_N | MC_BORDER_S))) {
+         FixHeight(np);
+      }
+   }
+
+   if(np->sizeFlags & PAspect) {
+      if((context & (MC_BORDER_N | MC_BORDER_S)) &&
+         (context & (MC_BORDER_E | MC_BORDER_W))) {
+
+         if(np->width * np->aspect.miny < np->height * np->aspect.minx) {
+            const int delta = np->width;
+            np->width = (np->height * np->aspect.minx) / np->aspect.miny;
+            if(context & MC_BORDER_W) {
+               np->x -= np->width - delta;
+            }
+         }
+         if(np->width * np->aspect.maxy > np->height * np->aspect.maxx) {
+            const int delta = np->height;
+            np->height = (np->width * np->aspect.maxy) / np->aspect.maxx;
+            if(context & MC_BORDER_N) {
+               np->y -= np->height - delta;
+            }
+         }
+      }
+   }
+}
+
 /** Resize a client window (mouse initiated). */
-void ResizeClient(ClientNode *np, BorderActionType action,
+void ResizeClient(ClientNode *np, MouseContextType context,
                   int startx, int starty)
 {
 
@@ -56,10 +135,15 @@ void ResizeClient(ClientNode *np, BorderActionType action,
    if(!(np->state.border & BORDER_RESIZE)) {
       return;
    }
-   if((np->state.status & STAT_FULLSCREEN) || np->state.maxFlags) {
+   if(np->state.status & STAT_FULLSCREEN) {
       return;
    }
-   if(JUNLIKELY(!GrabMouseForResize(action))) {
+   if(np->state.maxFlags) {
+      np->state.maxFlags = MAX_NONE;
+      WriteState(np);
+      ResetBorder(np);
+   }
+   if(JUNLIKELY(!GrabMouseForResize(context))) {
       return;
    }
 
@@ -110,71 +194,8 @@ void ResizeClient(ClientNode *np, BorderActionType action,
                           event.xmotion.window);
          DiscardMotionEvents(&event, np->window);
 
-         if(action & BA_RESIZE_N) {
-            delta = (event.xmotion.y - starty) / np->yinc;
-            delta *= np->yinc;
-            if(oldh - delta >= np->minHeight
-               && (oldh - delta <= np->maxHeight || delta > 0)) {
-               np->height = oldh - delta;
-               np->y = oldy + delta;
-            }
-            if(!(action & (BA_RESIZE_E | BA_RESIZE_W))) {
-               FixWidth(np);
-            }
-         }
-         if(action & BA_RESIZE_S) {
-            delta = (event.xmotion.y - starty) / np->yinc;
-            delta *= np->yinc;
-            np->height = oldh + delta;
-            np->height = Max(np->height, np->minHeight);
-            np->height = Min(np->height, np->maxHeight);
-            if(!(action & (BA_RESIZE_E | BA_RESIZE_W))) {
-               FixWidth(np);
-            }
-         }
-         if(action & BA_RESIZE_E) {
-            delta = (event.xmotion.x - startx) / np->xinc;
-            delta *= np->xinc;
-            np->width = oldw + delta;
-            np->width = Max(np->width, np->minWidth);
-            np->width = Min(np->width, np->maxWidth);
-            if(!(action & (BA_RESIZE_N | BA_RESIZE_S))) {
-               FixHeight(np);
-            }
-         }
-         if(action & BA_RESIZE_W) {
-            delta = (event.xmotion.x - startx) / np->xinc;
-            delta *= np->xinc;
-            if(oldw - delta >= np->minWidth
-               && (oldw - delta <= np->maxWidth || delta > 0)) {
-               np->width = oldw - delta;
-               np->x = oldx + delta;
-            }
-            if(!(action & (BA_RESIZE_N | BA_RESIZE_S))) {
-               FixHeight(np);
-            }
-         }
-
-         if(np->sizeFlags & PAspect) {
-            if((action & (BA_RESIZE_N | BA_RESIZE_S)) &&
-               (action & (BA_RESIZE_E | BA_RESIZE_W))) {
-
-               if(np->width * np->aspect.miny < np->height * np->aspect.minx) {
-                  delta = np->width;
-                  np->width = (np->height * np->aspect.minx) / np->aspect.miny;
-                  if(action & BA_RESIZE_W) {
-                     np->x -= np->width - delta;
-                  }
-               }
-               if(np->width * np->aspect.maxy > np->height * np->aspect.maxx) {
-                  delta = np->height;
-                  np->height = (np->width * np->aspect.maxy) / np->aspect.maxx;
-                  if(action & BA_RESIZE_N) {
-                     np->y -= np->height - delta;
-                  }
-               }
-            }
-         }
+         UpdateSize(np, context, event.xmotion.x, event.xmotion.y,
+                    startx, starty, oldx, oldy, oldw, oldh);
 
          lastgwidth = gwidth;
          lastgheight = gheight;
@@ -214,14 +235,15 @@ void ResizeClient(ClientNode *np, BorderActionType action,
 }
 
 /** Resize a client window (keyboard or menu initiated). */
-void ResizeClientKeyboard(ClientNode *np)
+void ResizeClientKeyboard(ClientNode *np, MouseContextType context)
 {
 
    XEvent event;
    int gwidth, gheight;
    int lastgwidth, lastgheight;
    int north, south, east, west;
-   int deltax, deltay;
+   int startx, starty;
+   int oldx, oldy, oldw, oldh;
    int ratio, minr, maxr;
 
    Assert(np);
@@ -229,21 +251,31 @@ void ResizeClientKeyboard(ClientNode *np)
    if(!(np->state.border & BORDER_RESIZE)) {
       return;
    }
-   if((np->state.status & STAT_FULLSCREEN) || np->state.maxFlags) {
+   if(np->state.status & STAT_FULLSCREEN) {
       return;
+   }
+   if(np->state.maxFlags) {
+      np->state.maxFlags = MAX_NONE;
+      WriteState(np);
+      ResetBorder(np);
    }
 
    if(JUNLIKELY(JXGrabKeyboard(display, np->parent, True, GrabModeAsync,
                                GrabModeAsync, CurrentTime) != GrabSuccess)) {
       return;
    }
-   if(!GrabMouseForResize(BA_RESIZE_S | BA_RESIZE_E | BA_RESIZE)) {
+   if(!GrabMouseForResize(context)) {
       JXUngrabKeyboard(display, CurrentTime);
       return;
    }
 
    np->controller = ResizeController;
    shouldStopResize = 0;
+
+   oldx = np->x;
+   oldy = np->y;
+   oldw = np->width;
+   oldh = np->height;
 
    gwidth = (np->width - np->baseWidth) / np->xinc;
    gheight = (np->height - np->baseHeight) / np->yinc;
@@ -253,11 +285,25 @@ void ResizeClientKeyboard(ClientNode *np)
    CreateResizeWindow(np);
    UpdateResizeWindow(np, gwidth, gheight);
 
-   if(np->state.status & STAT_SHADED) {
-      MoveMouse(rootWindow, np->x + np->width, np->y);
+   if(context & MC_BORDER_N) {
+      starty = np->y - north;
+   } else if(context & MC_BORDER_S) {
+      if(np->state.status & STAT_SHADED) {
+         starty = np->y;
+      } else {
+         starty = np->y + np->height;
+      }
    } else {
-      MoveMouse(rootWindow, np->x + np->width, np->y + np->height);
+      starty = np->y + np->height / 2;
    }
+   if(context & MC_BORDER_W) {
+      startx = np->x - west;
+   } else if(context & MC_BORDER_E) {
+      startx = np->x + np->width;
+   } else {
+      startx = np->x + np->width / 2;
+   }
+   MoveMouse(rootWindow, startx, starty);
    DiscardMotionEvents(&event, np->window);
 
    for(;;) {
@@ -269,28 +315,52 @@ void ResizeClientKeyboard(ClientNode *np)
          return;
       }
 
-      deltax = 0;
-      deltay = 0;
-
       if(event.type == KeyPress) {
+         int deltax = 0;
+         int deltay = 0;
 
          DiscardKeyEvents(&event, np->window);
-         switch(GetKey(&event.xkey) & 0xFF) {
-         case KEY_UP:
+         switch(GetKey(MC_NONE, event.xkey.state, event.xkey.keycode) & 0xFF) {
+         case ACTION_UP:
             deltay = Min(-np->yinc, -10);
             break;
-         case KEY_DOWN:
+         case ACTION_DOWN:
             deltay = Max(np->yinc, 10);
             break;
-         case KEY_RIGHT:
+         case ACTION_RIGHT:
             deltax = Max(np->xinc, 10);
             break;
-         case KEY_LEFT:
+         case ACTION_LEFT:
             deltax = Min(-np->xinc, -10);
             break;
          default:
             StopResize(np);
             return;
+         }
+
+         deltay -= deltay % np->yinc;
+         np->height += deltay;
+         np->height = Max(np->height, np->minHeight);
+         np->height = Min(np->height, np->maxHeight);
+         deltax -= deltax % np->xinc;
+         np->width += deltax;
+         np->width = Max(np->width, np->minWidth);
+         np->width = Min(np->width, np->maxWidth);
+
+         if(np->sizeFlags & PAspect) {
+
+            ratio = (np->width << 16) / np->height;
+
+            minr = (np->aspect.minx << 16) / np->aspect.miny;
+            if(ratio < minr) {
+               np->width = (np->height * minr) >> 16;
+            }
+
+            maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
+            if(ratio > maxr) {
+               np->height = (np->width << 16) / maxr;
+            }
+
          }
 
       } else if(event.type == MotionNotify) {
@@ -299,46 +369,13 @@ void ResizeClientKeyboard(ClientNode *np)
                           event.xmotion.window);
          DiscardMotionEvents(&event, np->window);
 
-         deltax = event.xmotion.x - (np->x + np->width);
-         if(np->state.status & STAT_SHADED) {
-            deltay = 0;
-         } else {
-            deltay = event.xmotion.y - (np->y + np->height);
-         }
+         UpdateSize(np, context, event.xmotion.x, event.xmotion.y,
+                    startx, starty, oldx, oldy, oldw, oldh);
 
       } else if(event.type == ButtonRelease) {
 
          StopResize(np);
          return;
-
-      }
-
-      if(abs(deltax) < np->xinc && abs(deltay) < np->yinc) {
-         continue;
-      }
-
-      deltay -= deltay % np->yinc;
-      np->height += deltay;
-      np->height = Max(np->height, np->minHeight);
-      np->height = Min(np->height, np->maxHeight);
-      deltax -= deltax % np->xinc;
-      np->width += deltax;
-      np->width = Max(np->width, np->minWidth);
-      np->width = Min(np->width, np->maxWidth);
-
-      if(np->sizeFlags & PAspect) {
-
-         ratio = (np->width << 16) / np->height;
-
-         minr = (np->aspect.minx << 16) / np->aspect.miny;
-         if(ratio < minr) {
-            np->width = (np->height * minr) >> 16;
-         }
-
-         maxr = (np->aspect.maxx << 16) / np->aspect.maxy;
-         if(ratio > maxr) {
-            np->height = (np->width << 16) / maxr;
-         }
 
       }
 

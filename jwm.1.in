@@ -106,6 +106,12 @@ Determines if a label appears at the top of the menu. Default is false.
 The label to display at the top of the menu. Default is "JWM".
 .RE
 .P
+\fBdynamic\fP \fIstring\fP
+.RS
+A dynamically loaded menu. If the text starts with \fIexec:\fP, the
+output of the specified program is used.
+.RE
+.P
 Within the \fBRootMenu\fP tag, the following tags are supported:
 .P
 .B Menu
@@ -465,7 +471,7 @@ This tag supports the following attributes:
 .RS
 Specifies the location to hide the tray when not activated. Default is "off"
 to disable hiding.
-Possible values are "left", "right", "top", "bottom", and "off".
+Possible values are "left", "right", "top", "bottom", "off", and "on".
 .RE
 .P
 \fBx\fP \fIint\fP
@@ -571,12 +577,18 @@ Add a dock for system notifications. This can be used by those programs
 that use the _NET_SYSTEM_TRAY_Sn selection. The size of the Dock is
 dynamic based on the size of the tray and the number of items contained.
 Only one Dock is allowed per instance of JWM. This tag supports the
-following attribute:
+following attributes:
 .P
 \fBwidth\fP \fIint\fP
 .RS
 The maximum width of an item contained in the dock. This defaults to
 the width or height of the tray (whichever is smaller).
+.RE
+.P
+\fBspacing\fP \fIint\fP
+.RS
+The spacing of items contained in the dock (in pixels).
+This defaults to 0.
 .RE
 .RE
 .P
@@ -804,6 +816,12 @@ Make windows in this group initially fullscreen.
 .RE
 
 .P
+.B height:\fI#\fP
+.RS
+Set the initial window height (in pixels).
+.RE
+
+.P
 .B hmax
 .RS
 Make windows in this group maximize horizontally.
@@ -986,6 +1004,26 @@ Forces windows in this group to have a title bar.
 Make windows in this group maximize vertically.
 .RE
 
+.P
+.B width:\fI#\fP
+.RS
+Set the initial window width (in pixels).
+.RE
+
+.P
+.B x:\fI#\fP
+.RS
+Set the initial x-coordinate of the window. Negative numbers indicate
+that the value is relative to the right side of the screen.
+.RE
+
+.P
+.B y:\fI#\fP
+.RS
+Set the initial y-coordinate of the window. Negative numbers indicate
+that the value is relative to the bottom of the screen.
+.RE
+
 .RE
 .RE
 
@@ -1091,34 +1129,20 @@ xcompmgr, is required for this.
 The color of the window outline for inactive windows.
 The default is a darkened version of the window background.
 If \fBmotif\fP window decorations are specified, two colors may be
-given separated by a ':' to set the down and up colors respetively.
+given separated by a ':' to set the down and up colors respectively.
 .RE
 .RE
 
 .B "TRAY STYLE"
 .RS
 The \fBTrayStyle\fP tag controls the look of trays.
-The following attributes are supported:
+The following attribute is supported:
 .P
 .B decorations
 .RS
 The type of decorations to use for trays.
 Possible values are \fBflat\fP and \fBmotif\fP. The default
 is \fBflat\fP.
-.RE
-.P
-.B group
-.RS
-Determines if windows are grouped by class when shown in task bars.
-Possible values are \fBtrue\fP and \fBfalse\fP. The default
-is \fBfalse\fP.
-.RE
-.P
-.B list
-.RS
-Determines which windows are shown in task bars.
-Possible values are \fBdesktop\fP and \fBall\fP. The default
-is \fBdesktop\fP.
 .RE
 .P
 Within this tag the following tags are supported:
@@ -1189,6 +1213,27 @@ respectively.
 .B "TASK LIST STYLE"
 .RS
 The \fBTaskListStyle\fP tag controls the look of task lists.
+The following attributea are supported:
+.P
+.B decorations
+.RS
+The window decorations to use. Valid options are \fBflat\fP and
+\fBmotif\fP. The default is inherited from \fBTrayStyle\fP.
+.RE
+.P
+.B group
+.RS
+Determines if windows are grouped by class when shown in task bars.
+Possible values are \fBtrue\fP and \fBfalse\fP. The default
+is \fBfalse\fP.
+.RE
+.P
+.B list
+.RS
+Determines which windows are shown in task bars.
+Possible values are \fBdesktop\fP and \fBall\fP. The default
+is \fBdesktop\fP.
+.RE
 .P
 Within this tag the following tags are supported:
 .P
@@ -1616,6 +1661,11 @@ Maximize the active window to the left of the screen.
 Maximize the active window to the right of the screen.
 .IP \fBrestore\fP
 Restore a maximized window.
+.IP \fBsend#\fP
+Send the active window to the specified desktop.
+To use this, "#" must be specified in the key section.
+The number 1 to the number of desktops configured
+are then substituted for "#".
 .IP \fBsendl\fP
 Send the active window left.
 .IP \fBsendr\fP
@@ -1631,7 +1681,26 @@ Stick/unstick the active window.
 .IP \fBmove\fP
 Move the active window.
 .IP \fBresize\fP
-Resize the active window.
+Resize the active window.  An optional suffix may be applied to this option to
+specify the corner of the window to resize.  The options are:
+.RS
+.IP \fBresize:n\fP
+Resize the north side
+.IP \fBresize:s\fP
+Resize the south side
+.IP \fBresize:e\fP
+Resize the east side
+.IP \fBresize:w\fP
+Resize the west side
+.IP \fBresize:nw\fP
+Resize the north-west corner
+.IP \fBresize:ne\fP
+Resize the north-east corner
+.IP \fBresize:sw\fP
+Resize the south-west corner
+.IP \fBresize:se\fP
+Resize the south-east corner
+.RE
 .IP \fBroot:\fP\fIn\fP
 Show root menu \fIn\fP.
 .IP \fBwindow\fP
@@ -1664,19 +1733,58 @@ It is possible to bind multiple key combinations to the same action.
 
 .B "MOUSE BINDINGS"
 .RS
-Any button other than the scroll wheel (buttons 4 and 5) on the root
-window will bring up the root menu unless otherwise specified via the
-\fBonroot\fP attribute of \fBRootMenu\fP. Scrolling up on the root window
-switches to the left desktop and scrolling down switches to the right desktop.
+Mouse bindings are configured using \fBMouse\fP tags.
+The \fBcontext\fP attribute determines the context in which the
+binding applies, the \fBbutton\fP attribute species the mouse button, and
+the (optional) \fBmask\fP specifies the key mask that must be in effect
+for the binding to match.  Finally, the text of the \fBMouse\fP tag
+determines the action to perform (see \fBKEY BINDINGS\fP for a list
+of actions).  The \fBbutton\fP is a mouse button number, starting
+at \fB1\fP (typically the left button). A positive value for the button
+indicates that the action applies on mouse press and a negative value
+indicates that the action applies on release. The button number can be
+repeated to bind to double clicks. The following mouse contexts are
+supported:
+.P
+.B border
+.RS
+The window border.
+.RE
+.P
+.B close
+.RS
+The close button on a window.
+.RE
+.P
+.B icon
+.RS
+The icon button on a window.
+.RE
+.P
+.B maximize
+.RS
+The maximize button on a window.
+.RE
+.P
+.B minimize
+.RS
+The minimize button on a window.
+.RE
+.P
+.B root
+.RS
+The root window.
+.RE
+.P
+.B title
+.RS
+The title bar of a window.
+.RE
+.P
+Other bindings:
 .P
 Button 1 (typically the left button):
 .RS
-Over the border, dragging resizes the window.
-Over the title bar, dragging moves the window and double clicking toggles
-the maximized state.
-Over the menu button, clicking shows the menu.
-Over the minimize button, clicking minimizes the window.
-Over the maximize button, clicking toggles between maximized and normal.
 Over the close button, clicking closes the window.
 Over a task bar, restores or minimizes the window.
 Over a pager, switches the active desktop.
@@ -1684,28 +1792,17 @@ Over a pager, switches the active desktop.
 .P
 Button 2 (typically the middle button):
 .RS
-Over the maximize button, clicking toggles between vertically maximized
-and normal.
-Anywhere else on a window frame, dragging while holding button 2 will
-move the window.
 Over a pager, switches the active desktop.
 .RE
 .P
 Button 3 (typically the right button):
 .RS
-Over the frame, clicking shows the window menu.
-On the minimize button, clicking toggles between shaded and unshaded.
-On the maximize button, clicking toggles between horizontally maximized
-and normal.
-On the close button, clicking closes the window.
 Over a task bar, shows the window menu.
 Over a pager, dragging while holding button 3 will move a window.
 .RE
 .RE
 .P
 .RS
-Scrolling up over the title bar will shade the window and scrolling down
-will unshade the window.
 When a menu is open, the scroll wheel will move through menu items.
 When over the pager, the scroll wheel will switch desktops.
 When over a task list, the scroll wheel will switch windows.
@@ -1822,8 +1919,28 @@ The default is 400. Valid values are between 1 and 2000 inclusive.
 .P
 .B FocusModel
 .RS
-The focus model to be used. The default is "sloppy". Valid values
-are "click" (click to focus) and "sloppy" (focus follows mouse).
+The focus model to be used. The default is "sloppy". Valid values are:
+.P
+\fBclick\fP
+.RS
+Click to focus and raise.
+.RE
+.P
+\fBclicktitle\fP
+.RS
+Click to focus. Click the title bar to raise.
+.RE
+.P
+\fBsloppy\fP
+.RS
+Focus follows mouse. Click to raise.
+.RE
+.P
+\fBsloppytitle\fP
+.RS
+Focus follows mouse. Click the title bar to raise.
+.RE
+.P
 .RE
 .P
 .B MoveMode
@@ -1843,6 +1960,12 @@ The delay in milliseconds before moving a window to a different desktop.
 Setting this to 0 disables dragging windows between desktops.
 The default is 1000.
 .RE
+.P
+\fBmask\fP \fIstring\fP
+.RS
+The key mask of the modifier that, when held, allows one to move the
+window by dragging it.  The default is "A".
+.RE
 .RE
 .P
 .B ResizeMode
@@ -1856,6 +1979,11 @@ This tag supports the following attribute:
 .RS
 The location of the status window. The default is \fBscreen\fP.
 .RE
+.RE
+.P
+.B RestartCommand
+.RS
+A command to run when JWM restarts.
 .RE
 .P
 .B SnapMode
@@ -1878,9 +2006,22 @@ A command to run when JWM starts.
 A command to run when JWM exits.
 .RE
 .P
-.B RestartCommand
+.B TitleButtonOrder
 .RS
-A command to run when JWM restarts.
+Change the order of buttons in title bars.  This is a string of zero
+or more of the following characters to determine the order of items
+in the window title bar:
+.P
+.RS
+\fBm\fP Maximize button
+.P
+\fBi\fP Minimize (iconify) button
+.P
+\fBt\fP Window title
+.P
+\fBw\fP Window menu button
+.P
+\fBx\fP Close button
 .RE
 .RE
 .P

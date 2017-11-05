@@ -35,13 +35,16 @@ typedef unsigned char StatusWindowType;
 
 /** Focus models. */
 typedef unsigned char FocusModelType;
-#define FOCUS_SLOPPY 0
-#define FOCUS_CLICK  1
+#define FOCUS_SLOPPY       0 /**< Sloppy focus, click to raise. */
+#define FOCUS_CLICK        1 /**< Click to focus, click to raise. */
+#define FOCUS_SLOPPY_TITLE 2 /**< Sloppy focus, title to raise. */
+#define FOCUS_CLICK_TITLE  3 /**< Click to focus, title to raise. */
 
 /** Decorations. */
 typedef unsigned char DecorationsType;
-#define DECO_FLAT    0
-#define DECO_MOTIF   1
+#define DECO_UNSET   0
+#define DECO_FLAT    1
+#define DECO_MOTIF   2
 
 /** Popup mask. */
 typedef unsigned char PopupMaskType;
@@ -59,23 +62,46 @@ typedef unsigned char AlignmentType;
 #define ALIGN_CENTER    1
 #define ALIGN_RIGHT     2
 
+/** Mouse binding contexts. */
+typedef unsigned char MouseContextType;
+#define MC_NONE            0     /**< Keyboard/none. */
+#define MC_ROOT            1     /**< Root window. */
+#define MC_BORDER          2     /**< Resize handle. */
+#define MC_MOVE            3     /**< Move handle. */
+#define MC_CLOSE           4     /**< Close button. */
+#define MC_MAXIMIZE        5     /**< Maximize button. */
+#define MC_MINIMIZE        6     /**< Minimize button. */
+#define MC_ICON            7     /**< Window menu button. */
+#define MC_COUNT           8     /**< Number of contexts. */
+#define MC_MASK            0x0F  /**< Context type mask. */
+#define MC_BORDER_N        0x10  /**< North border. */
+#define MC_BORDER_S        0x20  /**< South border. */
+#define MC_BORDER_E        0x40  /**< East border. */
+#define MC_BORDER_W        0x80  /**< West border. */
+
+/** Maximimum number of title bar components
+ * For now, we allow each component to be used twice. */
+#define TBC_COUNT       9
+
 /** Settings. */
 typedef struct {
-   unsigned int doubleClickSpeed;
-   unsigned int doubleClickDelta;
-   unsigned int snapDistance;
-   unsigned int popupDelay;
-   unsigned int trayOpacity;
-   unsigned int activeClientOpacity;
-   unsigned int inactiveClientOpacity;
-   unsigned int borderWidth;
-   unsigned int titleHeight;
-   unsigned int desktopWidth;
-   unsigned int desktopHeight;
-   unsigned int desktopCount;
-   unsigned int menuOpacity;
-   unsigned int desktopDelay;
-   unsigned int cornerRadius;
+   unsigned doubleClickSpeed;
+   unsigned doubleClickDelta;
+   unsigned snapDistance;
+   unsigned popupDelay;
+   unsigned trayOpacity;
+   unsigned activeClientOpacity;
+   unsigned inactiveClientOpacity;
+   unsigned borderWidth;
+   unsigned titleHeight;
+   unsigned desktopWidth;
+   unsigned desktopHeight;
+   unsigned desktopCount;
+   unsigned menuOpacity;
+   unsigned desktopDelay;
+   unsigned cornerRadius;
+   unsigned moveMask;
+   unsigned dockSpacing;
    AlignmentType titleTextAlignment;
    SnapModeType snapMode;
    MoveModeType moveMode;
@@ -85,8 +111,10 @@ typedef struct {
    ResizeModeType resizeMode;
    DecorationsType windowDecorations;
    DecorationsType trayDecorations;
+   DecorationsType taskListDecorations;
    DecorationsType menuDecorations;
    PopupMaskType popupMask;
+   MouseContextType titleBarLayout[TBC_COUNT + 1];
    char groupTasks;
    char listAllTasks;
 } Settings;
@@ -102,5 +130,8 @@ void StartupSettings(void);
 
 /** Update a string setting. */
 void SetPathString(char **dest, const char *src);
+
+/** Set the title button order. */
+void SetTitleButtonOrder(const char *order);
 
 #endif

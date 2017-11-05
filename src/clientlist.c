@@ -10,7 +10,7 @@
 #include "jwm.h"
 #include "clientlist.h"
 #include "client.h"
-#include "key.h"
+#include "binding.h"
 #include "event.h"
 #include "tray.h"
 #include "settings.h"
@@ -157,7 +157,8 @@ void WalkWindowStack(char forward)
          /* Skip this window if it no longer exists or is currently in
           * a state that doesn't allow focus.
           */
-         if(np == NULL || !ShouldFocus(np, 1)) {
+         if(np == NULL || !ShouldFocus(np, 1)
+            || (np->state.status & STAT_ACTIVE)) {
             continue;
          }
 

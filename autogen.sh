@@ -1,4 +1,5 @@
 #!/bin/sh
-automake -a -c
-autoreconf --install --force
+aclocal
+automake -ac
+autoreconf -fi
 touch config.rpath

@@ -234,14 +234,12 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
    if(entry) {
       ClientEntry *cp;
       ClientNode *focused = NULL;
-      char onTop = 0;
       char hasActive = 0;
 
       switch(mask) {
       case Button1:  /* Raise or minimize items in this group. */
          for(cp = entry->clients; cp; cp = cp->next) {
             int layer;
-            char foundTop = 0;
             if(cp->client->state.status & STAT_MINIMIZED) {
                continue;
             } else if(!ShouldFocus(cp->client, 0)) {
@@ -258,7 +256,6 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
                   if(np == cp->client) {
                      const char isActive = (np->state.status & STAT_ACTIVE)
                                          && IsClientOnCurrentDesktop(np);
-                     onTop = onTop || !foundTop;
                      if(isActive) {
                         focused = np;
                      }
@@ -268,15 +265,14 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
                         hasActive = 1;
                      }
                   }
-                  if(hasActive && onTop) {
-                     goto FoundActiveAndTop;
+                  if(hasActive) {
+                     goto FoundActive;
                   }
-                  foundTop = 1;
                }
             }
          }
-FoundActiveAndTop:
-         if(hasActive && onTop) {
+FoundActive:
+         if(hasActive) {
             ClientNode *nextClient = NULL;
             int i;
 

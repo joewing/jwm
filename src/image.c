@@ -161,8 +161,8 @@ ImageNode *LoadImageFromDrawable(Drawable pmap, Pixmap mask)
    if(mask != None) {
       mask_image = JXGetImage(display, mask, 0, 0, width, height, 1, ZPixmap);
    }
-   result = CreateImageFromXImages(icon_image, mask_image);
    if(icon_image) {
+      result = CreateImageFromXImages(icon_image, mask_image);
       JXDestroyImage(icon_image);
    }
    if(mask_image) {

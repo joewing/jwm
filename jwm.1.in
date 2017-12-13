@@ -1736,8 +1736,8 @@ It is possible to bind multiple key combinations to the same action.
 Mouse bindings are configured using \fBMouse\fP tags.
 The \fBcontext\fP attribute determines the context in which the
 binding applies, the \fBbutton\fP attribute species the mouse button, and
-the (optional) \fBmask\fP specifies the key mask that must be in effect
-for the binding to match.  Finally, the text of the \fBMouse\fP tag
+the (optional) \fBmask\fP attribute specifies the key mask that must be in
+effect for the binding to match.  Finally, the text of the \fBMouse\fP tag
 determines the action to perform (see \fBKEY BINDINGS\fP for a list
 of actions).  The \fBbutton\fP is a mouse button number, starting
 at \fB1\fP (typically the left button). A positive value for the button
@@ -1785,7 +1785,6 @@ Other bindings:
 .P
 Button 1 (typically the left button):
 .RS
-Over the close button, clicking closes the window.
 Over a task bar, restores or minimizes the window.
 Over a pager, switches the active desktop.
 .RE

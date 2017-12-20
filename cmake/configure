@@ -1,0 +1,233 @@
+#!/bin/sh
+## TODO command line options in parity with old system
+getThing()
+{
+  ARG="$1"
+  DELIM="$2"
+  printf "%s\n" "$ARG" | sed "s/.*$DELIM//"
+}
+getEQ()
+{
+  getThing "$1" "="
+}
+
+checkYN()
+{
+	ARG=$(getEQ "${1}")
+	#TODO:
+	#ARG="${ARG,,}"
+	case $ARG in
+		"no"|"No"|"NO")return 1;;
+	esac
+	return 0
+}
+enable_thing()
+{
+	ARG="${1}"
+	THING=$(printf "%s\n" "${ARG}" | sed "s/=.*//")
+	##To UPPER
+	ENABLED=$(getEQ "${ARG}")
+	checkYN "$ENABLED"
+	case $? in
+		0)RESULT="$THING";; ## Enabled
+		*)RESULT="";;
+	esac
+	printf "%s\n" "${RESULT}"
+}
+usage()
+{
+	echo "'configure' configures jwm 2.4.0 to adapt to many kinds of systems.
+
+Usage: ${0} [OPTION]... [VAR=VALUE]...
+
+To assign environment variables (e.g., CC, CFLAGS...), specify them as
+VAR=VALUE.  See below for descriptions of some of the useful variables.
+
+Defaults for the options are specified in brackets.
+
+Configuration:
+  -h, --help              display this help and exit
+  -V, --version           display version information and exit
+  -q, --quiet, --silent   do not print 'checking ...' messages
+    	--cache-file=FILE   cache test results in FILE [disabled]
+  -C, --config-cache      alias for '--cache-file=config.cache'
+  -n, --no-create         do not create output files
+    	--srcdir=DIR        find the sources in DIR [configure dir or '..']
+
+Installation directories:
+	--prefix=PREFIX         install architecture-independent files in PREFIX
+                          [/usr/local]
+	--exec-prefix=EPREFIX   install architecture-dependent files in EPREFIX
+                          [PREFIX]
+
+By default, 'make install' will install all the files in
+'/usr/local/bin', '/usr/local/lib' etc.  You can specify
+an installation prefix other than '/usr/local' using '--prefix',
+for instance '--prefix=$HOME'.
+
+For better control, use the options below.
+
+Fine tuning of the installation directories:
+	--bindir=DIR            user executables [EPREFIX/bin]
+	--sbindir=DIR           system admin executables [EPREFIX/sbin]
+	--libexecdir=DIR        program executables [EPREFIX/libexec]
+	--sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
+	--sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
+	--localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+	--runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
+	--libdir=DIR            object code libraries [EPREFIX/lib]
+	--includedir=DIR        C header files [PREFIX/include]
+	--oldincludedir=DIR     C header files for non-gcc [/usr/include]
+	--datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]
+	--datadir=DIR           read-only architecture-independent data [DATAROOTDIR]
+	--infodir=DIR           info documentation [DATAROOTDIR/info]
+	--localedir=DIR         locale-dependent data [DATAROOTDIR/locale]
+	--mandir=DIR            man documentation [DATAROOTDIR/man]
+	--docdir=DIR            documentation root [DATAROOTDIR/doc/jwm]
+	--htmldir=DIR           html documentation [DOCDIR]
+	--dvidir=DIR            dvi documentation [DOCDIR]
+	--pdfdir=DIR            pdf documentation [DOCDIR]
+	--psdir=DIR             ps documentation [DOCDIR]
+
+X features:
+	--x-includes=DIR    X include files are in DIR
+	--x-libraries=DIR   X library files are in DIR
+
+System types:
+	--build=BUILD     configure for building on BUILD [guessed]
+	--host=HOST       cross-compile to build programs to run on HOST [BUILD]
+
+Optional Features:
+	--disable-option-checking  ignore unrecognized --enable/--with options
+	--disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
+	--enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+	--disable-confirm       disable confirm dialogs
+	--disable-icons         disable icon support
+	--disable-png           disable PNG images
+	--disable-cairo         disable Cairo support
+	--disable-rsvg          disable rsvg support
+	--disable-jpeg          disable JPEG images
+	--disable-xft           disable Xft
+	--disable-xrender       disable XRender
+	--disable-fribidi       disable bi-directional unicode support
+	--disable-xpm           disable XPM images
+	--disable-xbm           disable XBM images
+	--disable-shape         disable use of the X shape extension
+	--disable-xmu           disable Xmu support
+	--disable-xinerama      disable Xinerama support
+	--disable-rpath         do not hardcode runtime library paths
+	--disable-nls           do not use Native Language Support
+	--enable-debug          use this to debug JWM
+
+Optional Packages:
+	--with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
+	--without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+	--with-x                use the X Window System
+	--with-gnu-ld           assume the C compiler uses GNU ld [default=no]
+	--with-libiconv-prefix[=DIR]  search for libiconv in DIR/include and DIR/lib
+	--without-libiconv-prefix     don't search for libiconv in includedir and libdir
+	--with-libintl-prefix[=DIR]  search for libintl in DIR/include and DIR/lib
+	--without-libintl-prefix     don't search for libintl in includedir and libdir
+
+Some influential environment variables:
+  CC          C compiler command
+  CFLAGS      C compiler flags
+  LDFLAGS     linker flags, e.g. -L<lib dir> if you have libraries in a
+              nonstandard directory <lib dir>
+  LIBS        libraries to pass to the linker, e.g. -l<library>
+  CPPFLAGS    (Objective) C/C++ preprocessor flags, e.g. -I<include dir> if
+              you have headers in a nonstandard directory <include dir>
+  CPP         C preprocessor
+  XMKMF       Path to xmkmf, Makefile generator for X Window System
+
+Use these variables to override the choices made by 'configure' or to help
+it to find libraries and programs with nonstandard names/locations.
+
+Report bugs to <joewing@joewing.net>."
+
+
+  exit
+}
+#ARGUMENTS=(${ARGUMENTS[@]} "-D:INT=1")
+addArguments()
+{
+	ARG="$1"
+	TYPE="$2"
+	VALUE="$3"
+	ARGUMENTS="${ARGUMENTS[*]} -D$ARG:$TYPE=$VALUE"
+}
+addBool()
+{
+	[ "$2" -eq "" ] && 2="true"
+	addArguments "$1" BOOL "$2"
+}
+andInt()
+{
+	[ "$2" -eq "" ] && 2="1"
+	addArguments "$1" INT "$2"
+}
+addString()
+{
+	[ "$2" -eq "" ] && return
+	addArguments "$1" STRING "$2"
+}
+case $1 in
+	-h|--help|-\?)usage;;
+	--prefix=*)addString "ARCH_INDEP_INSTALL_DIR" "$(getEQ ${1})";;
+	--exec-prefix=*)addString "CMAKE_INSTALL_PREFIX" "$(getEQ ${1})";;
+	--bindir=*)BINDIR=$(getEQ "${1}");;
+	--sbindir=*)SBINDIR=$(getEQ "${1}");;
+	--libexecdir=*)LIBEXECDIR=$(getEQ "${1}");;
+	--sysconfdir=*)SYSCONFDIR=$(getEQ "${1}");;
+	--sharedstatedir=*)SHAREDSTATEDIR=$(getEQ "${1}");;
+	--localstatedir=*)LOCALSTATEDIR=$(getEQ "${1}");;
+	--runstatedir=*)RUNSTATEDIR=$(getEQ "${1}");;
+	--libdir=*)LIBDIR=$(getEQ "${1}");;
+	--includedir=*)INCLUDEDIR=$(getEQ "${1}");;
+	--oldincludedir=*)OLDINCLUDEDIR=$(getEQ "${1}");;
+	--datarootdir=*)DATAROOTDIR=$(getEQ "${1}");;
+	--datadir=*)DATADIR=$(getEQ "${1}");;
+	--infodir=*)INFODIR=$(getEQ "${1}");;
+	--localedir=*)LOCALEDIR=$(getEQ "${1}");;
+	--mandir=*)MANDIR=$(getEQ "${1}");;
+	--docdir=*)DOCDIR=$(getEQ "${1}");;
+	--htmldir=*)HTMLDIR=$(getEQ "${1}");;
+	--dvidir=*)DVIDIR=$(getEQ "${1}");;
+	--pdfdir=*)PDFDIR=$(getEQ "${1}");;
+	--psdir=*)PSDIR=$(getEQ "${1}");;
+	--x-includes=*)X_INCLUDES=$(getEQ "${1}");;
+	--x-libraries=*)X_LIBRARIES=$(getEQ "${1}");;
+	--build=*)BUILD=$(getEQ "${1}");;
+	--host=*)HOST=$(getEQ "${1}");;
+	--disable-confirm)ARGUMENTS=(${ARGUMENTS[@]} "-DDISABLE_CONFIRM:INT=1");;
+	--disable-icons);;
+	--disable-png);;
+	--disable-cairo);;
+	--disable-rsvg);;
+	--disable-jpeg);;
+	--disable-xft);;
+	--disable-xrender);;
+	--disable-fribidi);;
+	--disable-xpm);;
+	--disable-xbm);;
+	--disable-shape);;
+	--disable-xmu);;
+	--disable-xinerama);;
+	--disable-rpath);;
+	--disable-nls);;
+	--enable-debug);;
+	--enable-*|--disable-*)enable_thing "${1}";;
+	
+	--with-x)WITH_X="true";;
+	--with-gnu-ld)WITH_GNU_LD="true";;
+	--with-libiconv-prefix)WITH_LIBICONV_PREFIX="true";;
+	--without-libiconv-prefix)unset WITH_LIBICONV_PREFIX;;
+	--with-libintl-prefix=*)WITH_LIBINTL_PREFIX=$(getEQ "${1}");;
+	--without-libintl-prefix)unset WITH_LIBINTL_PREFIX;;
+	--with-*);;
+	--without-*);;
+esac
+
+[ -d bin ] || mkdir bin
+cd bin
+cmake ${ARGUMENTS[@]} ..

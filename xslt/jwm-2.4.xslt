@@ -5,6 +5,7 @@
         xsltproc jwm-2.4.xsl oldjwmrc > newjwmrc
 
      All relevant JWM configuration files will need to be updated.
+     Note: auto-hide trays are assumed to hide to the bottom of the screen.
 -->
 
 <xsl:stylesheet version="1.0"

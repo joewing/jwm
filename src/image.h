@@ -53,5 +53,9 @@ ImageNode *CreateImage(unsigned int width, unsigned int height, char bitmap);
  * @param image The image to destroy.
  */
 void DestroyImage(ImageNode *image);
+/** Extracts file type by reading first few bytes
+ * @param fileName The path to the file.
+ */
+int ExtractFileType(const char *fileName);
 
 #endif /* IMAGE_H */

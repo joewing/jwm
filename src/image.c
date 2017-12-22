@@ -78,67 +78,38 @@ ImageNode *LoadImage(const char *fileName, int width, int height,
       return result;
    }
 
-   /* Attempt to load the file as a PNG image. */
-#ifdef USE_PNG
-   if(nameLength >= 4
-      && !StrCmpNoCase(&fileName[nameLength - 4], ".png")) {
-      result = LoadPNGImage(fileName);
-      if(result) {
-         return result;
-      }
+   switch(ExtractFileType(fileName)){
+    #ifdef USE_JPEG
+    case 1:
+    result=LoadJPEGImage(fileName,width,height);
+    break;
+    #endif
+    #ifdef USE_PNG
+    case 2:
+    result=LoadPNGImage(fileName);
+    break;
+    #endif
+    #ifdef USE_CAIRO
+    #ifdef USE_RSVG
+    case 3:
+    result=LoadSVGImage(fileName, width, height, preserveAspect);
+    break;
+    #endif
+    #endif
+    #ifdef USE_XPM
+    case 4:
+    result=LoadXPMImage(fileName);
+    break;
+    #endif
+    #ifdef USE_XBM
+    case 5:
+    result=LoadXBMImage(fileName);
+    break;
+    #endif
+    case -1:
+    return result;
    }
-#endif
-
-   /* Attempt to load the file as a JPEG image. */
-#ifdef USE_JPEG
-   if(   (nameLength >= 4
-            && !StrCmpNoCase(&fileName[nameLength - 4], ".jpg"))
-      || (nameLength >= 5
-            && !StrCmpNoCase(&fileName[nameLength - 5], ".jpeg"))) {
-      result = LoadJPEGImage(fileName, width, height);
-      if(result) {
-         return result;
-      }
-   }
-#endif
-
-   /* Attempt to load the file as an SVG image. */
-#ifdef USE_CAIRO
-#ifdef USE_RSVG
-   if(nameLength >= 4
-      && !StrCmpNoCase(&fileName[nameLength - 4], ".svg")) {
-      result = LoadSVGImage(fileName, width, height, preserveAspect);
-      if(result) {
-         return result;
-      }
-   }
-#endif
-#endif
-
-   /* Attempt to load the file as an XPM image. */
-#ifdef USE_XPM
-   if(nameLength >= 4
-      && !StrCmpNoCase(&fileName[nameLength - 4], ".xpm")) {
-      result = LoadXPMImage(fileName);
-      if(result) {
-         return result;
-      }
-   }
-#endif
-
-   /* Attempt to load the file as an XBM image. */
-#ifdef USE_XBM
-   if(nameLength >= 4
-      && !StrCmpNoCase(&fileName[nameLength - 4], ".xbm")) {
-      result = LoadXBMImage(fileName);
-      if(result) {
-         return result;
-      }
-   }
-#endif
-
    return result;
-
 }
 
 /** Load an image from a pixmap. */
@@ -657,3 +628,55 @@ int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
    return 1;
 }
 #endif /* USE_XPM */
+
+/*
+ *NOTE: Used loop unrolling method to increase efficiency.
+ * in SVG first character is always '<' hence it is only checked 
+ * once rest of the header can either match with '?xml' or 'svg '
+ * using && ensures that if the left most condition is false then rest of them will never be checked.
+ */
+int ExtractFileType(const char *fileName){
+    unsigned char header[9];
+    FILE *fd;
+    fd=fopen(fileName,"rb");
+    if(fd==NULL){
+      return 0;
+    }
+    fread(header, sizeof(header), 1, (FILE*)fd);
+    fclose(fd);
+    #ifdef USE_JPEG
+    /* Matched with {0xFF,0xD8} */
+    if (header[0]==0xFF && header[1]==0xD8){
+
+      return 1;
+    }
+    #endif
+    #ifdef USE_PNG
+    /* Matched with {0x89 , 0x50 , 0x4E , 0x47 , 0x0D , 0x0A , 0x1A , 0x0A} */
+    if (header[0]==0x89 && header[1]==0x50 && header[2]==0x4E && header[3]==0x47 && header[4]==0x0D && header[5]==0x0A && header[6]==0x1A && header[7]==0x0A){
+      return 2;
+    }
+    #endif
+    #ifdef USE_CAIRO
+    #ifdef USE_RSVG
+    /* Matched with either {0x3C , 0x73 , 0x76 , 0x67, 0x20}('<svg ') or {0x3C, 0x3F, 0x78, 0x6D, 0x6C}('<?xml') */
+    if ((header[0]==0x3C) && ( (header[1]==0x73 && header[2]==0x76 && header[3]==0x67 && header[4]==0x20) || (header[1]==0x3F && header[2]==0x78 && header[3]==0x6D && header[4]==0x6C) )){
+      return 3;
+    }
+    #endif
+    #endif
+    #ifdef USE_XPM
+    // Matched with {0x2F , 0x2A , 0x20 , 0x58 , 0x50 , 0x4D , 0x20 , 0x2A , 0x2F} ('/* XPM */')
+    if (header[0]==0x2F && header[1]==0x2A && header[2]==0x20 && header[3]==0x58 && header[4]==0x50 && header[5]==0x4D && header[6]==0x20 && header[7]==0x2A && header[8]==0x2F){
+      return 4;
+    }
+    #endif
+    #ifdef USE_XBM
+    /* Matched with {0x23 , 0x64 , 0x65 , 0x66 , 0x69 , 0x6E , 0x65}('#define')*/
+    if (header[0]==0x23 && header[1]==0x65 && header[2]==0x65 && header[3]==0x66 && header[4]==0x6E && header[5]==0x65){
+      return 5;
+    }
+    #endif
+
+    return -1;
+}

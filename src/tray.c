@@ -16,7 +16,6 @@
 #include "error.h"
 #include "taskbar.h"
 #include "menu.h"
-#include "timing.h"
 #include "screen.h"
 #include "settings.h"
 #include "event.h"
@@ -198,7 +197,9 @@ void DestroyTray(void)
 
    while(trays) {
       tp = trays->next;
-      UnregisterCallback(SignalTray, trays);
+      if(trays->autoHide != THIDE_OFF) {
+         UnregisterCallback(SignalTray, trays);
+      }
       while(trays->components) {
          cp = trays->components->next;
          Release(trays->components);
@@ -230,7 +231,9 @@ TrayType *CreateTray(void)
    tp->valign = TALIGN_FIXED;
    tp->halign = TALIGN_FIXED;
 
+   GetCurrentTime(&tp->showTime);
    tp->autoHide = THIDE_OFF;
+   tp->autoHideDelay = 0;
    tp->hidden = 0;
 
    tp->window = None;
@@ -240,8 +243,6 @@ TrayType *CreateTray(void)
 
    tp->next = trays;
    trays = tp;
-
-   RegisterCallback(100, SignalTray, tp);
 
    return tp;
 }
@@ -546,6 +547,7 @@ void ShowTray(TrayType *tp)
    if(tp->hidden) {
 
       tp->hidden = 0;
+      GetCurrentTime(&tp->showTime);
       JXMoveWindow(display, tp->window, tp->x, tp->y);
 
       JXQueryPointer(display, rootWindow, &win1, &win2,
@@ -666,11 +668,18 @@ char ProcessTrayEvent(const XEvent *event)
 void SignalTray(const TimeType *now, int x, int y, Window w, void *data)
 {
    TrayType *tp = (TrayType*)data;
-   if(tp->autoHide != THIDE_OFF && !tp->hidden && !menuShown) {
-      if(x < tp->x || x >= tp->x + tp->width
-         || y < tp->y || y >= tp->y + tp->height) {
+   Assert(tp->autoHide != THIDE_OFF);
+   if(tp->hidden || menuShown) {
+      return;
+   }
+
+   if(x < tp->x || x >= tp->x + tp->width
+      || y < tp->y || y >= tp->y + tp->height) {
+      if(GetTimeDifference(now, &tp->showTime) >= tp->autoHideDelay) {
          HideTray(tp);
       }
+   } else {
+      tp->showTime = *now;
    }
 }
 
@@ -1027,10 +1036,20 @@ unsigned int GetTrayCount(void)
 }
 
 /** Determine if a tray should autohide. */
-void SetAutoHideTray(TrayType *tp, TrayAutoHideType autohide)
+void SetAutoHideTray(TrayType *tp,
+                     TrayAutoHideType autohide,
+                     unsigned timeout_ms)
 {
-   Assert(tp);
+   if(JUNLIKELY(tp->autoHide != THIDE_OFF)) {
+      UnregisterCallback(SignalTray, tp);
+   }
+
    tp->autoHide = autohide;
+   tp->autoHideDelay = timeout_ms;
+
+   if(autohide != THIDE_OFF) {
+      RegisterCallback(timeout_ms, SignalTray, tp);
+   }
 }
 
 /** Set the x-coordinate of a tray. */

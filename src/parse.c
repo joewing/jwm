@@ -1257,6 +1257,7 @@ void ParseTray(const TokenNode *tp)
    };
    const TokenNode *np;
    const char *attr;
+   unsigned delay = 0;
    TrayType *tray;
    TrayAutoHideType autohide;
 
@@ -1266,7 +1267,11 @@ void ParseTray(const TokenNode *tp)
 
    autohide = ParseAttribute(mapping, ARRAY_LENGTH(mapping), tp,
                              "autohide", THIDE_OFF);
-   SetAutoHideTray(tray, autohide);
+   attr = FindAttribute(tp->attributes, "delay");
+   if(attr) {
+      delay = ParseUnsigned(tp, attr);
+   }
+   SetAutoHideTray(tray, autohide, delay);
 
    attr = FindAttribute(tp->attributes, X_ATTRIBUTE);
    if(attr) {
@@ -2045,7 +2050,7 @@ unsigned ParseUnsigned(const TokenNode *tp, const char *str)
       ParseError(tp, _("invalid setting: %s"), str);
       return 0;
    } else {
-      return (unsigned int)value;
+      return (unsigned)value;
    }
 }
 

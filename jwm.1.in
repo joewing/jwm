@@ -478,6 +478,11 @@ to disable hiding.
 Possible values are "left", "right", "top", "bottom", "off", and "on".
 .RE
 .P
+\fBdelay\fP \fIint\fP
+.RS
+The delay before hiding the tray in milliseconds. Default is 0 milliseconds.
+.RE
+.P
 \fBx\fP \fIint\fP
 .RS
 The x-coordinate of the tray. This may be negative to indicate an offset

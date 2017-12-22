@@ -11,6 +11,7 @@
 #define TRAY_H
 
 #include "hint.h"
+#include "timing.h"
 
 /** Enumeration of tray layouts. */
 typedef unsigned char LayoutType;
@@ -140,7 +141,9 @@ typedef struct TrayType {
    TrayAlignmentType valign;  /**< Vertical alignment. */
    TrayAlignmentType halign;  /**< Horizontal alignment. */
 
+   TimeType showTime;
    TrayAutoHideType  autoHide;
+   unsigned autoHideDelay;
    char hidden;     /**< 1 if hidden (due to autohide), 0 otherwise. */
 
    Window window; /**< The tray window. */
@@ -233,11 +236,14 @@ unsigned int GetTrayCount(void);
  */
 char ProcessTrayEvent(const XEvent *event);
 
-/** Set whether auto hide is enabled for a tray.
+/** Set whether auto-hide is enabled for a tray.
  * @param tp The tray.
- * @param autohide The auto hide setting.
+ * @param autohide The auto-hide setting.
+ * @param delay_ms The auto-hide timeout in milliseconds.
  */
-void SetAutoHideTray(TrayType *tp, TrayAutoHideType autohide);
+void SetAutoHideTray(TrayType *tp,
+                     TrayAutoHideType autohide,
+                     unsigned delay_ms);
 
 /** Set the tray x-coordinate.
  * @param tp The tray.

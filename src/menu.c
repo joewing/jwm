@@ -210,7 +210,7 @@ char ShowMenu(Menu *menu, RunMenuCommandType runner,
       return 0;
    }
 
-   RegisterCallback(100, MenuCallback, menu);
+   RegisterCallback(settings.popupDelay, MenuCallback, menu);
    ShowSubmenu(menu, NULL, runner, x, y, keyboard);
    UnregisterCallback(MenuCallback, menu);
    UnpatchMenu(menu);

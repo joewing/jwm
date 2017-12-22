@@ -475,7 +475,9 @@ This tag supports the following attributes:
 .RS
 Specifies the location to hide the tray when not activated. Default is "off"
 to disable hiding.
-Possible values are "left", "right", "top", "bottom", "off", and "on".
+Possible values are "left", "right", "top", "bottom", "off", "on" (JWM
+picks the location), and "invisible" (trays must be activated by a key
+binding).
 .RE
 .P
 \fBdelay\fP \fIint\fP

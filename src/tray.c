@@ -622,6 +622,11 @@ void HideTray(TrayType *tp)
       x = tp->x;
       y = sp->y + sp->height - 1;
       break;
+   case THIDE_INVISIBLE:
+      /* Off the top of the screen. */
+      x = tp->x;
+      y = 0 - tp->height - 1;
+      break;
    default:
       Assert(0);
       return;

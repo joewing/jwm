@@ -1248,12 +1248,13 @@ void ParseActive(const TokenNode *tp, ColorType fg,
 void ParseTray(const TokenNode *tp)
 {
    static const StringMappingType mapping[] = {
-      { "bottom",    THIDE_BOTTOM   },
-      { "left",      THIDE_LEFT     },
-      { "off",       THIDE_OFF      },
-      { "on",        THIDE_ON       },
-      { "right",     THIDE_RIGHT    },
-      { "top",       THIDE_TOP      }
+      { "bottom",    THIDE_BOTTOM      },
+      { "invisible", THIDE_INVISIBLE   },
+      { "left",      THIDE_LEFT        },
+      { "off",       THIDE_OFF         },
+      { "on",        THIDE_ON          },
+      { "right",     THIDE_RIGHT       },
+      { "top",       THIDE_TOP         }
    };
    const TokenNode *np;
    const char *attr;

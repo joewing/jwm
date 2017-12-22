@@ -35,6 +35,7 @@ typedef unsigned char TrayAutoHideType;
 #define THIDE_TOP       3 /**< Hide on the top. */
 #define THIDE_BOTTOM    4 /**< Hide on the bottom. */
 #define THIDE_ON        5 /**< Auto-select hide location. */
+#define THIDE_INVISIBLE 6 /**< Make the tray invisible when hidden. */
 #define THIDE_RAISED    8 /**< Mask to indicate the tray is raised. */
 
 /** Structure to hold common tray component data.

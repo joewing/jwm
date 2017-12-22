@@ -152,6 +152,8 @@ static const char *WIDTH_ATTRIBUTE = "width";
 static const char *HEIGHT_ATTRIBUTE = "height";
 static const char *DYNAMIC_ATTRIBUTE = "dynamic";
 static const char *SPACING_ATTRIBUTE = "spacing";
+static const char *TIMEOUT_ATTRIBUTE = "timeout";
+static const char *POPUP_ATTRIBUTE = "popup";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -165,9 +167,8 @@ static const char * const CONFIG_FILES[] = {
 static const unsigned CONFIG_FILE_COUNT = ARRAY_LENGTH(CONFIG_FILES);
 
 static char ParseFile(const char *fileName, int depth);
-static char *ReadFile(FILE *fd);
 static TokenNode *TokenizeFile(const char *fileName);
-static TokenNode *TokenizePipe(const char *command);
+static TokenNode *TokenizePipe(const char *command, unsigned timeout_ms);
 
 /* Misc. */
 static void Parse(const TokenNode *start, int depth);
@@ -185,6 +186,7 @@ static MenuItem *InsertMenuItem(MenuItem *last);
 static MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
                                   MenuItem *last);
 static TokenNode *ParseMenuIncludeHelper(const TokenNode *tp,
+                                         unsigned timeout_ms,
                                          const char *command);
 
 /* Tray. */
@@ -240,6 +242,7 @@ static int ParseAttribute(const StringMappingType *mapping, int count,
                           int def);
 static int ParseSigned(const TokenNode *tp, const char *str);
 static unsigned ParseUnsigned(const TokenNode *tp, const char *str);
+static unsigned ParseTimeout(const TokenNode *tp);
 static unsigned int ParseOpacity(const TokenNode *tp, const char *str);
 static WinLayerType ParseLayer(const TokenNode *tp, const char *str);
 static StatusWindowType ParseStatusWindowType(const TokenNode *tp);
@@ -544,9 +547,9 @@ void ParseRootMenu(const TokenNode *start)
 
    value = FindAttribute(start->attributes, DYNAMIC_ATTRIBUTE);
    menu->dynamic = CopyString(value);
+   menu->timeout_ms = ParseTimeout(start);
 
    SetRootMenu(onroot, menu);
-
 }
 
 /** Insert a new menu item into a menu. */
@@ -589,6 +592,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
 
          last->action.type = MA_DYNAMIC;
          last->action.str = CopyString(start->value);
+         last->action.timeout_ms = ParseTimeout(start);
 
          value = FindAttribute(start->attributes, HEIGHT_ATTRIBUTE);
          if(value) {
@@ -803,12 +807,13 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
 }
 
 /** Get tokens from a menu include (either dynamic or static). */
-TokenNode *ParseMenuIncludeHelper(const TokenNode *tp, const char *command)
+TokenNode *ParseMenuIncludeHelper(const TokenNode *tp,
+                                  unsigned timeout_ms,
+                                  const char *command)
 {
    TokenNode *start;
-
    if(!strncmp(command, "exec:", 5)) {
-      start = TokenizePipe(&command[5]);
+      start = TokenizePipe(&command[5], timeout_ms);
    } else {
       start = TokenizeFile(command);
    }
@@ -827,7 +832,10 @@ TokenNode *ParseMenuIncludeHelper(const TokenNode *tp, const char *command)
 MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
                            MenuItem *last)
 {
-   TokenNode *start = ParseMenuIncludeHelper(tp, tp->value);
+   TokenNode *start;
+   const unsigned timeout_ms = ParseTimeout(tp);
+
+   start = ParseMenuIncludeHelper(tp, timeout_ms, tp->value);
    if(JLIKELY(start)) {
       last = ParseMenuItem(start->subnodeHead, menu, last);
       ReleaseTokens(start);
@@ -836,10 +844,10 @@ MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
 }
 
 /** Parse a dynamic menu (called from menu code). */
-Menu *ParseDynamicMenu(const char *command)
+Menu *ParseDynamicMenu(unsigned timeout_ms, const char *command)
 {
    Menu *menu = NULL;
-   TokenNode *start = ParseMenuIncludeHelper(NULL, command);
+   TokenNode *start = ParseMenuIncludeHelper(NULL, timeout_ms, command);
    if(JLIKELY(start)) {
       menu = ParseMenu(start);
       ReleaseTokens(start);
@@ -1046,13 +1054,16 @@ void ParseActiveWindowStyle(const TokenNode *tp)
 /** Parse an include. */
 void ParseInclude(const TokenNode *tp, int depth)
 {
+   unsigned timeout_ms;
+
    if(JUNLIKELY(!tp->value)) {
       ParseError(tp, _("no include file specified"));
       return;
    }
 
+   timeout_ms = ParseTimeout(tp);
    if(!strncmp(tp->value, "exec:", 5)) {
-      TokenNode *tokens = TokenizePipe(&tp->value[5]);
+      TokenNode *tokens = TokenizePipe(&tp->value[5], timeout_ms);
       if(JLIKELY(tokens)) {
          Parse(tokens, 0);
          ReleaseTokens(tokens);
@@ -1455,7 +1466,7 @@ void ParseTrayButton(const TokenNode *tp, TrayType *tray)
 
    icon = FindAttribute(tp->attributes, ICON_ATTRIBUTE);
    label = FindAttribute(tp->attributes, LABEL_ATTRIBUTE);
-   popup = FindAttribute(tp->attributes, "popup");
+   popup = FindAttribute(tp->attributes, POPUP_ATTRIBUTE);
 
    temp = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
    if(temp) {
@@ -1951,48 +1962,6 @@ int ParseAttribute(const StringMappingType *mapping, int count,
    }
 }
 
-/** Read a file. */
-char *ReadFile(FILE *fd)
-{
-   const int BLOCK_SIZE = 1024;
-
-   char *buffer;
-   int len, max;
-
-   len = 0;
-   max = BLOCK_SIZE;
-   buffer = Allocate(max + 1);
-
-   for(;;) {
-      const size_t count = fread(&buffer[len], 1, max - len, fd);
-      if(count == 0) {
-         if(feof(fd)) {
-            break;
-         } else if(errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR) {
-            continue;
-         } else {
-            Warning(_("could not read file: %s"), strerror(errno));
-            break;
-         }
-      }
-      len += count;
-      if(len == max) {
-         max += BLOCK_SIZE;
-         if(JUNLIKELY(max < 0)) {
-            /* File is too big. */
-            break;
-         }
-         buffer = Reallocate(buffer, max + 1);
-         if(JUNLIKELY(buffer == NULL)) {
-            FatalError(_("out of memory"));
-         }
-      }
-   }
-   buffer[len] = 0;
-
-   return buffer;
-}
-
 /** Tokenize a file by memory mapping it. */
 TokenNode *TokenizeFile(const char *fileName)
 {
@@ -2026,24 +1995,17 @@ TokenNode *TokenizeFile(const char *fileName)
 }
 
 /** Tokenize the output of a command. */
-TokenNode *TokenizePipe(const char *command)
+TokenNode *TokenizePipe(const char *command, unsigned timeout_ms)
 {
    TokenNode *tokens;
-   FILE *fp;
    char *path;
    char *buffer;
 
    path = CopyString(command);
    ExpandPath(&path);
 
-   fp = popen(path, "r");
+   buffer = ReadFromProcess(path, timeout_ms);
    Release(path);
-
-   buffer = NULL;
-   if(JLIKELY(fp)) {
-      buffer = ReadFile(fp);
-      pclose(fp);
-   }
    if(JUNLIKELY(!buffer)) {
       return NULL;
    }
@@ -2071,7 +2033,7 @@ int ParseSigned(const TokenNode *tp, const char *str)
 }
 
 /** Parse an unsigned integer. */
-unsigned int ParseUnsigned(const TokenNode *tp, const char *str)
+unsigned ParseUnsigned(const TokenNode *tp, const char *str)
 {
    long value;
    if(JUNLIKELY(!str)) {
@@ -2087,8 +2049,20 @@ unsigned int ParseUnsigned(const TokenNode *tp, const char *str)
    }
 }
 
+/** Parse a timeout attribute. */
+unsigned ParseTimeout(const TokenNode *tp)
+{
+   unsigned timeout_ms = DEFAULT_TIMEOUT_MS;
+   char *temp = FindAttribute(tp->attributes, TIMEOUT_ATTRIBUTE);
+   if(temp) {
+      timeout_ms = ParseUnsigned(tp, temp);
+      timeout_ms = timeout_ms == 0 ? DEFAULT_TIMEOUT_MS : timeout_ms;
+   }
+   return timeout_ms;
+}
+
 /** Parse opacity (a float between 0.0 and 1.0). */
-unsigned int ParseOpacity(const TokenNode *tp, const char *str)
+unsigned ParseOpacity(const TokenNode *tp, const char *str)
 {
    float value;
    if(JUNLIKELY(!str)) {

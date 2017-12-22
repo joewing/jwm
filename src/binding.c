@@ -265,7 +265,7 @@ void ShowKeyMenu(MouseContextType context, unsigned state, int code)
 /** Determine if a key should be grabbed on client windows. */
 char ShouldGrab(ActionType action)
 {
-   switch(action & 0xFF) {
+   switch(action & ACTION_MASK) {
    case ACTION_NEXT:
    case ACTION_NEXTSTACK:
    case ACTION_PREV:
@@ -480,7 +480,7 @@ void ValidateKeys(void)
 
    for(i = 0; i < MC_COUNT; i++) {
       for(kp = bindings[i]; kp; kp = kp->next) {
-         if((kp->key & 0xFF) == ACTION_ROOT && kp->command) {
+         if((kp->key & ACTION_MASK) == ACTION_ROOT && kp->command) {
             const int bindex = GetRootMenuIndexFromString(kp->command);
             if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
                Warning(_("key binding: root menu \"%s\" not defined"),

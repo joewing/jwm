@@ -127,7 +127,6 @@ void ResizeClient(ClientNode *np, MouseContextType context,
    int oldw, oldh;
    int gwidth, gheight;
    int lastgwidth, lastgheight;
-   int delta;
    int north, south, east, west;
 
    Assert(np);
@@ -318,9 +317,11 @@ void ResizeClientKeyboard(ClientNode *np, MouseContextType context)
       if(event.type == KeyPress) {
          int deltax = 0;
          int deltay = 0;
+         ActionType action;
 
          DiscardKeyEvents(&event, np->window);
-         switch(GetKey(MC_NONE, event.xkey.state, event.xkey.keycode) & 0xFF) {
+         action = GetKey(MC_NONE, event.xkey.state, event.xkey.keycode);
+         switch(action & ACTION_MASK) {
          case ACTION_UP:
             deltay = Min(-np->yinc, -10);
             break;

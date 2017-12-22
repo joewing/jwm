@@ -70,6 +70,7 @@ Menu *CreateMenu()
    menu->items = NULL;
    menu->label = NULL;
    menu->dynamic = NULL;
+   menu->timeout_ms = DEFAULT_TIMEOUT_MS;
    return menu;
 }
 
@@ -324,8 +325,12 @@ void PatchMenu(Menu *menu)
          break;
       case MA_DYNAMIC:
          if(!item->submenu) {
-            submenu = ParseDynamicMenu(item->action.str);
-            submenu->itemHeight = item->action.value;
+            submenu = ParseDynamicMenu(
+               item->action.timeout_ms,
+               item->action.str);
+            if(JLIKELY(submenu)) {
+               submenu->itemHeight = item->action.value;
+            }
          }
          break;
       default:
@@ -672,6 +677,7 @@ MenuSelectionType UpdateMotion(Menu *menu,
       return MENU_NOSELECTION;
 
    } else if(event->type == KeyPress) {
+      ActionType action;
 
       if(menu->currentIndex >= 0 || !menu->parent) {
          tp = menu;
@@ -680,7 +686,8 @@ MenuSelectionType UpdateMotion(Menu *menu,
       }
 
       y = -1;
-      switch(GetKey(MC_NONE, event->xkey.state, event->xkey.keycode) & 0xFF) {
+      action = GetKey(MC_NONE, event->xkey.state, event->xkey.keycode);
+      switch(action & ACTION_MASK) {
       case ACTION_UP:
          y = GetPreviousMenuIndex(tp);
          break;

@@ -153,6 +153,8 @@ Dynamically include the contents of a file or executable into a submenu.
 The file must start with a "JWM" tag. The file is specified by the text
 of the tag. If the text starts with "exec:" then the output of a program
 is used. This tag supports the same attributes as \fBMenu\fP.
+A \fBtimeout\fP attribute may be specified to set a timeout in milliseconds.
+The default timeout is 5000 milliseconds (5 seconds).
 .RE
 .P
 .B Include
@@ -160,6 +162,8 @@ is used. This tag supports the same attributes as \fBMenu\fP.
 Include the contents of a file into the menu structure. The file must
 start with a "JWM" tag. The file is specified by the text of the tag.
 If the text starts with "exec:" then the output of a program is used.
+A \fBtimeout\fP attribute may be specified to set a timeout in milliseconds.
+The default timeout is 5000 milliseconds (5 seconds).
 .RE
 .P
 .B Program

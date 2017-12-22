@@ -479,7 +479,7 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
 {
    const ActionType key = GetKey(context, state, code);
    const char keyAction = context == MC_NONE;
-   switch(key & 0xFF) {
+   switch(key & ACTION_MASK) {
    case ACTION_EXEC:
       RunKeyCommand(context, state, code);
       break;
@@ -702,7 +702,8 @@ void HandleKeyPress(const XKeyEvent *event)
 /** Handle a key release event. */
 void HandleKeyRelease(const XKeyEvent *event)
 {
-   const ActionType key = GetKey(MC_NONE, event->state, event->keycode) & 0xFF;
+   const ActionType key
+      = GetKey(MC_NONE, event->state, event->keycode) & ACTION_MASK;
    if(   key != ACTION_NEXTSTACK && key != ACTION_NEXT
       && key != ACTION_PREV      && key != ACTION_PREVSTACK) {
       StopWindowWalk();

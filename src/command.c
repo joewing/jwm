@@ -145,7 +145,7 @@ void RunCommand(const char *command)
 }
 
 /** Reads the output of an exernal program. */
-char *ReadFromProcess(const char *command, unsigned timeout)
+char *ReadFromProcess(const char *command, unsigned timeout_ms)
 {
    const unsigned BLOCK_SIZE = 256;
    pid_t pid;
@@ -160,9 +160,6 @@ char *ReadFromProcess(const char *command, unsigned timeout)
        * of the command, but the timeout won't work. */
       Warning(_("could not set O_NONBLOCK"));
    }
-
-   /* Convert timeout from seconds to milliseconds. */
-   timeout *= 1000;
 
    pid = fork();
    if(pid == 0) {
@@ -202,7 +199,7 @@ char *ReadFromProcess(const char *command, unsigned timeout)
          /* Determine the max time to sit in select. */
          GetCurrentTime(&current_time);
          diff_ms = GetTimeDifference(&start_time, &current_time);
-         diff_ms = timeout > diff_ms ? (timeout - diff_ms) : 0;
+         diff_ms = timeout_ms > diff_ms ? (timeout_ms - diff_ms) : 0;
          tv.tv_sec = diff_ms / 1000;
          tv.tv_usec = (diff_ms % 1000) * 1000;
 
@@ -210,8 +207,8 @@ char *ReadFromProcess(const char *command, unsigned timeout)
          rc = select(fds[0] + 1, &fs, NULL, &fs, &tv);
          if(rc == 0) {
             /* Timeout */
-            Warning(_("timeout: %s did not complete in %u seconds"),
-                    command, timeout);
+            Warning(_("timeout: %s did not complete in %u milliseconds"),
+                    command, timeout_ms);
             kill(pid, SIGKILL);
             waitpid(pid, NULL, 0);
             break;

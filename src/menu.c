@@ -70,7 +70,7 @@ Menu *CreateMenu()
    menu->items = NULL;
    menu->label = NULL;
    menu->dynamic = NULL;
-   menu->timeout = DEFAULT_TIMEOUT;
+   menu->timeout_ms = DEFAULT_TIMEOUT_MS;
    return menu;
 }
 
@@ -325,7 +325,9 @@ void PatchMenu(Menu *menu)
          break;
       case MA_DYNAMIC:
          if(!item->submenu) {
-            submenu = ParseDynamicMenu(item->action.timeout, item->action.str);
+            submenu = ParseDynamicMenu(
+               item->action.timeout_ms,
+               item->action.str);
             if(JLIKELY(submenu)) {
                submenu->itemHeight = item->action.value;
             }

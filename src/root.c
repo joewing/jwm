@@ -190,7 +190,7 @@ char ShowRootMenu(int index, int x, int y, char keyboard)
    }
    if(rootMenu[index]->dynamic) {
       Menu *menu = rootMenu[index];
-      menu = ParseDynamicMenu(menu->timeout, menu->dynamic);
+      menu = ParseDynamicMenu(menu->timeout_ms, menu->dynamic);
       if(menu) {
          InitializeMenu(menu);
          ShowMenu(menu, RunRootCommand, x, y, keyboard);

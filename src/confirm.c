@@ -230,7 +230,7 @@ char HandleDialogKeyPress(const XKeyEvent *event)
 {
    if(dialog && event->window == dialog->node->window) {
       const ActionType key = GetKey(MC_NONE, event->state, event->keycode);
-      switch(key & ACTION_MASK) {
+      switch(key.action) {
       case ACTION_ENTER:
          RunDialogAction();
          DestroyConfirmDialog();

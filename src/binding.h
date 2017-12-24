@@ -31,28 +31,28 @@ ActionType GetKey(MouseContextType context, unsigned state, int code);
 unsigned int ParseModifierString(const char *str);
 
 /** Insert a key binding.
- * @param key The key binding type.
+ * @param action The action.
  * @param modifiers The modifier mask.
  * @param stroke The key stroke (not needed if code given).
  * @param code The key code (not needed if stroke given).
  * @param command Extra parameter needed for some key binding types.
  */
-void InsertBinding(ActionType key, const char *modifiers, const char *stroke,
-                   const char *code, const char *command);
+void InsertBinding(ActionType action, const char *modifiers,
+                   const char *stroke, const char *code, const char *command);
 
 /** Insert a mouse binding.
  * A mouse binding maps a mouse click in a certain context to an action.
  * @param button The mouse button.
  * @param mask The modifier mask.
  * @param context The mouse context.
- * @param key The key binding.
+ * @param action The action binding.
  * @param command Extra parameter needed for some bindings.
  */
 void InsertMouseBinding(
    int button,
    const char *mask,
    MouseContextType context,
-   ActionType key,
+   ActionType action,
    const char *command);
 
 /** Run a command caused by a key binding. */

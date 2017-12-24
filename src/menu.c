@@ -687,7 +687,7 @@ MenuSelectionType UpdateMotion(Menu *menu,
 
       y = -1;
       action = GetKey(MC_NONE, event->xkey.state, event->xkey.keycode);
-      switch(action & ACTION_MASK) {
+      switch(action.action) {
       case ACTION_UP:
          y = GetPreviousMenuIndex(tp);
          break;

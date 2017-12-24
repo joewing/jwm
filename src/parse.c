@@ -858,23 +858,25 @@ Menu *ParseDynamicMenu(unsigned timeout_ms, const char *command)
 /** Parse an action. */
 ActionType ParseAction(const char *str, const char **command)
 {
-   ActionType action = ACTION_NONE;
+   ActionType action;
+   action.action = ACTION_NONE;
+   action.extra = 0;
    *command = NULL;
    if(!strncmp(str, "exec:", 5)) {
-      action = ACTION_EXEC;
+      action.action = ACTION_EXEC;
       *command = str + 5;
    } else if(!strncmp(str, "root:", 5)) {
-      action = ACTION_ROOT;
+      action.action = ACTION_ROOT;
       *command = str + 5;
    } else if(!strncmp(str, "resize:", 7)) {
       int i;
-      action = ACTION_RESIZE;
+      action.action = ACTION_RESIZE;
       for(i = 7; str[i]; i++) {
          switch(str[i]) {
-         case 'n': action |= ACTION_RESIZE_N; break;
-         case 's': action |= ACTION_RESIZE_S; break;
-         case 'e': action |= ACTION_RESIZE_E; break;
-         case 'w': action |= ACTION_RESIZE_W; break;
+         case 'n': action.extra |= ACTION_RESIZE_N; break;
+         case 's': action.extra |= ACTION_RESIZE_S; break;
+         case 'e': action.extra |= ACTION_RESIZE_E; break;
+         case 'w': action.extra |= ACTION_RESIZE_W; break;
          default: break;
          }
       }
@@ -882,7 +884,7 @@ ActionType ParseAction(const char *str, const char **command)
       /* Look up the option in the key map using binary search. */
       const int x = FindValue(ACTION_MAP, ACTION_MAP_COUNT, str);
       if(x >= 0) {
-         action = (ActionType)x;
+         action.action = (unsigned char)x;
       }
    }
    return action;
@@ -910,7 +912,7 @@ void ParseKey(const TokenNode *tp)
 
    /* Insert the binding if it's valid. */
    k = ParseAction(action, &command);
-   if(JUNLIKELY(k == ACTION_NONE)) {
+   if(JUNLIKELY(k.action == ACTION_NONE)) {
       ParseError(tp, _("invalid Key action: \"%s\""), action);
    } else {
       InsertBinding(k, mask, key, code, command);
@@ -941,7 +943,7 @@ void ParseMouse(const TokenNode *tp)
       return;
    }
    key = ParseAction(action, &command);
-   if(JUNLIKELY(key == ACTION_NONE)) {
+   if(JUNLIKELY(key.action == ACTION_NONE)) {
       ParseError(tp, _("invalid Mouse action: \"%s\""), action);
       return;
    }

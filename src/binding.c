@@ -48,7 +48,7 @@ static const unsigned MODIFIER_COUNT = ARRAY_LENGTH(MODIFIERS);
 typedef struct KeyNode {
 
    /* These are filled in when the configuration file is parsed */
-   int key;
+   ActionType action;
    MouseContextType context;
    unsigned int state;
    KeySym symbol;
@@ -113,7 +113,7 @@ void StartupBindings(void)
       }
 
       /* Grab the key if needed. */
-      if(ShouldGrab(np->key)) {
+      if(ShouldGrab(np->action)) {
 
          /* Grab on the root. */
          GrabKey(np, rootWindow);
@@ -204,6 +204,7 @@ void GrabKey(KeyNode *np, Window win)
 ActionType GetKey(MouseContextType context, unsigned state, int code)
 {
    KeyNode *np;
+   ActionType result;
 
    /* Remove modifiers we don't care about from the state. */
    state &= ~lockMask;
@@ -214,11 +215,13 @@ ActionType GetKey(MouseContextType context, unsigned state, int code)
    /* Loop looking for a matching key binding. */
    for(np = bindings[context]; np; np = np->next) {
       if(np->state == state && np->code == code) {
-         return np->key;
+         return np->action;
       }
    }
 
-   return ACTION_NONE;
+   result.action = ACTION_NONE;
+   result.extra = 0;
+   return result;
 }
 
 /** Run a command invoked from a key binding. */
@@ -265,7 +268,7 @@ void ShowKeyMenu(MouseContextType context, unsigned state, int code)
 /** Determine if a key should be grabbed on client windows. */
 char ShouldGrab(ActionType action)
 {
-   switch(action & ACTION_MASK) {
+   switch(action.action) {
    case ACTION_NEXT:
    case ACTION_NEXTSTACK:
    case ACTION_PREV:
@@ -372,7 +375,7 @@ KeySym ParseKeyString(const char *str)
 }
 
 /** Insert a key binding. */
-void InsertBinding(ActionType key, const char *modifiers,
+void InsertBinding(ActionType action, const char *modifiers,
                    const char *stroke, const char *code,
                    const char *command)
 {
@@ -404,7 +407,8 @@ void InsertBinding(ActionType key, const char *modifiers,
                np->next = bindings[MC_NONE];
                bindings[MC_NONE] = np;
 
-               np->key = key | ((temp[offset] - '1' + 1) << 8);
+               np->action = action;
+               np->action.extra = temp[offset] - '1';
                np->state = mask;
                np->symbol = sym;
                np->command = NULL;
@@ -427,7 +431,7 @@ void InsertBinding(ActionType key, const char *modifiers,
       np->next = bindings[MC_NONE];
       bindings[MC_NONE] = np;
 
-      np->key = key;
+      np->action = action;
       np->state = mask;
       np->symbol = sym;
       np->command = CopyString(command);
@@ -439,7 +443,7 @@ void InsertBinding(ActionType key, const char *modifiers,
       np->next = bindings[MC_NONE];
       bindings[MC_NONE] = np;
 
-      np->key = key;
+      np->action = action;
       np->state = mask;
       np->symbol = NoSymbol;
       np->command = CopyString(command);
@@ -458,7 +462,7 @@ void InsertMouseBinding(
    int button,
    const char *mask,
    MouseContextType context,
-   ActionType key,
+   ActionType action,
    const char *command)
 {
    KeyNode *np = Allocate(sizeof(KeyNode));
@@ -466,7 +470,7 @@ void InsertMouseBinding(
    bindings[context] = np;
 
    np->command = CopyString(command);
-   np->key = key;
+   np->action = action;
    np->state = ParseModifierString(mask);
    np->code = button;
    np->context = context;
@@ -480,7 +484,7 @@ void ValidateKeys(void)
 
    for(i = 0; i < MC_COUNT; i++) {
       for(kp = bindings[i]; kp; kp = kp->next) {
-         if((kp->key & ACTION_MASK) == ACTION_ROOT && kp->command) {
+         if(kp->action.action == ACTION_ROOT && kp->command) {
             const int bindex = GetRootMenuIndexFromString(kp->command);
             if(JUNLIKELY(!IsRootMenuDefined(bindex))) {
                Warning(_("key binding: root menu \"%s\" not defined"),

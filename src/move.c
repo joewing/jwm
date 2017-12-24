@@ -358,7 +358,7 @@ char MoveClientKeyboard(ClientNode *np)
 
          DiscardKeyEvents(&event, np->window);
          action = GetKey(MC_NONE, event.xkey.state, event.xkey.keycode);
-         switch(action & ACTION_MASK) {
+         switch(action.action) {
          case ACTION_UP:
             if(np->y + height > 0) {
                np->y -= 10;

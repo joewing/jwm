@@ -321,7 +321,7 @@ void ResizeClientKeyboard(ClientNode *np, MouseContextType context)
 
          DiscardKeyEvents(&event, np->window);
          action = GetKey(MC_NONE, event.xkey.state, event.xkey.keycode);
-         switch(action & ACTION_MASK) {
+         switch(action.action) {
          case ACTION_UP:
             deltay = Min(-np->yinc, -10);
             break;

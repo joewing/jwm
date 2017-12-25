@@ -63,6 +63,7 @@ static const StringMappingType ACTION_MAP[] = {
    { "move",                  ACTION_MOVE          },
    { "next",                  ACTION_NEXT          },
    { "nextstacked",           ACTION_NEXTSTACK     },
+   { "none",                  ACTION_NONE          },
    { "prev",                  ACTION_PREV          },
    { "prevstacked",           ACTION_PREVSTACK     },
    { "rdesktop",              ACTION_RDESKTOP      },
@@ -859,7 +860,7 @@ Menu *ParseDynamicMenu(unsigned timeout_ms, const char *command)
 ActionType ParseAction(const char *str, const char **command)
 {
    ActionType action;
-   action.action = ACTION_NONE;
+   action.action = ACTION_INVALID;
    action.extra = 0;
    *command = NULL;
    if(!strncmp(str, "exec:", 5)) {
@@ -912,7 +913,7 @@ void ParseKey(const TokenNode *tp)
 
    /* Insert the binding if it's valid. */
    k = ParseAction(action, &command);
-   if(JUNLIKELY(k.action == ACTION_NONE)) {
+   if(JUNLIKELY(k.action == ACTION_INVALID)) {
       ParseError(tp, _("invalid Key action: \"%s\""), action);
    } else {
       InsertBinding(k, mask, key, code, command);
@@ -943,7 +944,7 @@ void ParseMouse(const TokenNode *tp)
       return;
    }
    key = ParseAction(action, &command);
-   if(JUNLIKELY(key.action == ACTION_NONE)) {
+   if(JUNLIKELY(key.action == ACTION_INVALID)) {
       ParseError(tp, _("invalid Mouse action: \"%s\""), action);
       return;
    }

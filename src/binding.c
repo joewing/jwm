@@ -374,6 +374,27 @@ KeySym ParseKeyString(const char *str)
    return symbol;
 }
 
+/** Remove a binding. */
+void RemoveDuplicates(KeyNode *bp)
+{
+   KeyNode **npp = &bindings[bp->context];
+   while(*npp) {
+      KeyNode *np = *npp;
+      if(   (np != bp || np->action.action == ACTION_NONE)
+         && np->symbol == bp->symbol
+         && np->state == bp->state
+         && np->code == bp->code) {
+         *npp = np->next;
+         if(np->command) {
+            Release(np->command);
+         }
+         Release(np);
+      } else {
+         npp = &np->next;
+      }
+   }
+}
+
 /** Insert a key binding. */
 void InsertBinding(ActionType action, const char *modifiers,
                    const char *stroke, const char *code,
@@ -407,12 +428,14 @@ void InsertBinding(ActionType action, const char *modifiers,
                np->next = bindings[MC_NONE];
                bindings[MC_NONE] = np;
 
+               np->context = MC_NONE;
                np->action = action;
                np->action.extra = temp[offset] - '1';
                np->state = mask;
                np->symbol = sym;
                np->command = NULL;
                np->code = 0;
+               RemoveDuplicates(np);
 
             }
 
@@ -431,11 +454,13 @@ void InsertBinding(ActionType action, const char *modifiers,
       np->next = bindings[MC_NONE];
       bindings[MC_NONE] = np;
 
+      np->context = MC_NONE;
       np->action = action;
       np->state = mask;
       np->symbol = sym;
       np->command = CopyString(command);
       np->code = 0;
+      RemoveDuplicates(np);
 
    } else if(code && strlen(code) > 0) {
 
@@ -443,11 +468,13 @@ void InsertBinding(ActionType action, const char *modifiers,
       np->next = bindings[MC_NONE];
       bindings[MC_NONE] = np;
 
+      np->context = MC_NONE;
       np->action = action;
       np->state = mask;
       np->symbol = NoSymbol;
       np->command = CopyString(command);
       np->code = atoi(code);
+      RemoveDuplicates(np);
 
    } else {
 
@@ -472,8 +499,10 @@ void InsertMouseBinding(
    np->command = CopyString(command);
    np->action = action;
    np->state = ParseModifierString(mask);
+   np->symbol = NoSymbol;
    np->code = button;
    np->context = context;
+   RemoveDuplicates(np);
 }
 
 /** Validate key bindings. */

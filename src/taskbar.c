@@ -77,6 +77,7 @@ static void ProcessTaskButtonEvent(TrayComponentType *cp,
                                    int x, int y, int mask);
 static void MinimizeGroup(const TaskEntry *tp);
 static void FocusGroup(const TaskEntry *tp);
+static char IsGroupOnTop(const TaskEntry *entry);
 static void ProcessTaskMotionEvent(TrayComponentType *cp,
                                    int x, int y, int mask);
 static void SignalTaskbar(const TimeType *now, int x, int y, Window w,
@@ -224,6 +225,35 @@ void ComputeItemSize(TaskBarType *tp)
    }
 }
 
+/** Check if all clients in this grou are on the top of their layer. */
+char IsGroupOnTop(const TaskEntry *entry)
+{
+   ClientEntry *cp;
+   int layer;
+
+   for(layer = FIRST_LAYER; layer <= LAST_LAYER; layer++) {
+      ClientNode *np;
+      char foundOther = 0;
+      for(np = nodes[layer]; np; np = np->next) {
+         char found = 0;
+         if(!IsClientOnCurrentDesktop(np)) {
+            continue;
+         }
+         for(cp = entry->clients; cp; cp = cp->next) {
+            if(np == cp->client) {
+               if(foundOther) {
+                  return 0;
+               }
+               found = 1;
+               break;
+            }
+         }
+         foundOther = !found;
+      }
+   }
+   return 1;
+}
+
 /** Process a task list button event. */
 void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
 {
@@ -235,44 +265,53 @@ void ProcessTaskButtonEvent(TrayComponentType *cp, int x, int y, int mask)
       ClientEntry *cp;
       ClientNode *focused = NULL;
       char hasActive = 0;
+      char allTop;
 
       switch(mask) {
       case Button1:  /* Raise or minimize items in this group. */
-         for(cp = entry->clients; cp; cp = cp->next) {
-            int layer;
-            if(cp->client->state.status & STAT_MINIMIZED) {
-               continue;
-            } else if(!ShouldFocus(cp->client, 0)) {
-               continue;
-            }
-            for(layer = LAST_LAYER; layer >= FIRST_LAYER; layer--) {
-               ClientNode *np;
-               for(np = nodes[layer]; np; np = np->next) {
-                  if(np->state.status & STAT_MINIMIZED) {
-                     continue;
-                  } else if(!ShouldFocus(np, 0)) {
-                     continue;
-                  }
-                  if(np == cp->client) {
-                     const char isActive = (np->state.status & STAT_ACTIVE)
-                                         && IsClientOnCurrentDesktop(np);
-                     if(isActive) {
-                        focused = np;
+
+         allTop = IsGroupOnTop(entry);
+         if(allTop) {
+            for(cp = entry->clients; cp; cp = cp->next) {
+               int layer;
+               if(cp->client->state.status & STAT_MINIMIZED) {
+                  continue;
+               } else if(!ShouldFocus(cp->client, 0)) {
+                  continue;
+               }
+               for(layer = LAST_LAYER; layer >= FIRST_LAYER; layer--) {
+                  ClientNode *np;
+                  for(np = nodes[layer]; np; np = np->next) {
+                     if(np->state.status & STAT_MINIMIZED) {
+                        continue;
+                     } else if(!ShouldFocus(np, 0)) {
+                        continue;
                      }
-                     if(!(cp->client->state.status
-                           & (STAT_CANFOCUS | STAT_TAKEFOCUS))
-                        || isActive) {
-                        hasActive = 1;
+                     if(np == cp->client) {
+                        const char isActive = (np->state.status & STAT_ACTIVE)
+                                            && IsClientOnCurrentDesktop(np);
+                        if(isActive) {
+                           focused = np;
+                        }
+                        if(!(cp->client->state.status
+                              & (STAT_CANFOCUS | STAT_TAKEFOCUS))
+                           || isActive) {
+                           hasActive = 1;
+                        }
                      }
-                  }
-                  if(hasActive) {
-                     goto FoundActive;
+                     if(hasActive) {
+                        goto FoundActiveAndTop;
+                     }
                   }
                }
             }
          }
-FoundActive:
-         if(hasActive) {
+FoundActiveAndTop:
+         if(hasActive && allTop) {
+            /* The client is already active.
+             * Here we switch desktops if the client is on another
+             * desktop too. Otherwise we minimize the client.
+             */
             ClientNode *nextClient = NULL;
             int i;
 
@@ -304,8 +343,12 @@ FoundActive:
                MinimizeGroup(entry);
             }
          } else {
+            /* The group was not currently on top, raise the group. */
             FocusGroup(entry);
             if(focused) {
+               /* If the group already contained the active client,
+                * ensure that the same client remains active.
+                */
                FocusClient(focused);
             }
          }

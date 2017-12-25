@@ -72,7 +72,7 @@ static int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
 #endif
 
 /* File extension to image loader mapping. */
-static struct {
+static const struct {
    const char *extension;
    ImageLoader loader;
 } IMAGE_LOADERS[] = {
@@ -104,12 +104,18 @@ ImageNode *LoadImage(const char *fileName, int rwidth, int rheight,
    unsigned i;
    unsigned name_length;
    ImageNode *result = NULL;
+
+   /* Make sure we have a reasonable file name. */
    if(!fileName) {
       return result;
    }
-
    name_length = strlen(fileName);
    if(JUNLIKELY(name_length == 0)) {
+      return result;
+   }
+
+   /* Make sure the file exists. */
+   if(access(fileName, R_OK) < 0) {
       return result;
    }
 

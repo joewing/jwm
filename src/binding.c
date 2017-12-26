@@ -380,7 +380,7 @@ void RemoveDuplicates(KeyNode *bp)
    KeyNode **npp = &bindings[bp->context];
    while(*npp) {
       KeyNode *np = *npp;
-      if(   (np != bp || np->action.action == ACTION_NONE)
+      if(   np != bp
          && np->symbol == bp->symbol
          && np->state == bp->state
          && np->code == bp->code) {

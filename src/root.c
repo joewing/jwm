@@ -136,7 +136,7 @@ void SetRootMenu(const char *indexes, Menu *m)
          unsigned y;
          char found = 0;
          for(y = 0; y < ROOT_MENU_COUNT; y++) {
-            if(x != y && rootMenu[y] == rootMenu[x]) {
+            if(index != y && rootMenu[y] == rootMenu[index]) {
                found = 1;
                break;
             }

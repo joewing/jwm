@@ -1601,7 +1601,8 @@ Either the \fBkey\fP or \fBkeycode\fP attributes must be specified
 to determine which key will cause an action. The optional
 attribute, \fBmask\fP, specifies what key mask, if any, must be in effect
 for the binding to match. Finally, the text of the \fBKey\fP tag is the
-action to perform.
+action to perform.  The last action to match is used if there are
+duplicates.
 .P
 One or more of the following key masks may be specified for \fBmask\fP
 (see \fBxmodmap\fP(1)):
@@ -1648,6 +1649,8 @@ Make a menu selection or confirm an action.
 Move to the next window in the task list.
 .IP \fBnextstacked\fP
 Move to the next window in the stacking order.
+.IP \fBnone\fP
+Remove the current binding.
 .IP \fBprev\fP
 Move to the previous window in the task list.
 .IP \fBprevstacked\fP

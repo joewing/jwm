@@ -475,7 +475,7 @@ ImageNode *LoadSVGImage(const char *fileName, int rwidth, int rheight,
    } else if(preserveAspect) {
       if(abs(dim.width - rwidth) < abs(dim.height - rheight)) {
          xscale = (float)rwidth / dim.width;
-         height = dim.height * xscale;
+         rheight = dim.height * xscale;
       } else {
          xscale = (float)rheight / dim.height;
          rwidth = dim.width * xscale;

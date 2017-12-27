@@ -32,6 +32,7 @@
 #include "spacer.h"
 #include "desktop.h"
 #include "border.h"
+#include "default.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -167,6 +168,7 @@ static const char * const CONFIG_FILES[] = {
 };
 static const unsigned CONFIG_FILE_COUNT = ARRAY_LENGTH(CONFIG_FILES);
 
+static void ParseInternal(const char *config);
 static char ParseFile(const char *fileName, int depth);
 static TokenNode *TokenizeFile(const char *fileName);
 static TokenNode *TokenizePipe(const char *command, unsigned timeout_ms);
@@ -250,27 +252,35 @@ static StatusWindowType ParseStatusWindowType(const TokenNode *tp);
 static void InvalidTag(const TokenNode *tp, TokenType parent);
 static void ParseError(const TokenNode *tp, const char *str, ...);
 
+/** Parse the default configuration. */
+void ParseInternal(const char *config)
+{
+   TokenNode *tokens = Tokenize(config, "");
+   Parse(tokens, 0);
+   ReleaseTokens(tokens);
+}
+
 /** Parse the JWM configuration. */
 void ParseConfig(const char *fileName)
 {
+   ParseInternal(BASE_CONFIG);
    if(fileName) {
       if(!ParseFile(fileName, 0)) {
          ParseError(NULL, _("could not open %s"), fileName);
+         ParseInternal(DEFAULT_CONFIG);
       }
    } else {
-     unsigned i;
-     char found = 0;
-     for(i = 0; i < CONFIG_FILE_COUNT; i++) {
-       if(ParseFile(CONFIG_FILES[i], 0)) {
-         found = 1;
-         break;
-       }
-     }
-     if(!found) {
+      unsigned i;
+      for(i = 0; i < CONFIG_FILE_COUNT; i++) {
+         if(ParseFile(CONFIG_FILES[i], 0)) {
+            goto ConfigFileFound;
+         }
+      }
       ParseError(NULL, _("could not open %s or %s"),
                  CONFIG_FILES[0], SYSTEM_CONFIG);
-     }
+      ParseInternal(DEFAULT_CONFIG);
    }
+ConfigFileFound:
    ValidateTrayButtons();
    ValidateKeys();
 }

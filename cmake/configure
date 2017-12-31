@@ -154,21 +154,30 @@ addArguments()
 	ARG="$1"
 	TYPE="$2"
 	VALUE="$3"
-	ARGUMENTS="${ARGUMENTS[*]} -D$ARG:$TYPE=$VALUE"
+	ARGUMENTS="${ARGUMENTS} -D$ARG:$TYPE=$VALUE"
 }
 addBool()
 {
-	[ "$2" -eq "" ] && 2="TRUE"
+	if [ -z "$2" ]
+	then
+		2="TRUE"
+	fi
 	addArguments "$1" BOOL "$2"
 }
 andInt()
 {
-	[ "$2" -eq "" ] && 2="1"
+	if [ -z "$2" ]
+	then
+		2="1"
+	fi
 	addArguments "$1" INT "$2"
 }
 addString()
 {
-	[ "$2" -eq "" ] && return
+	if [ -z "$2" ]
+	then
+		return
+	fi
 	addArguments "$1" STRING "$2"
 }
 while :
@@ -236,6 +245,6 @@ do
   esac
   shift
 done
-[ -d bin ] || mkdir bin
-cd bin
-cmake ${ARGUMENTS[@]} ..
+#[ -d bin ] || mkdir bin
+#cd bin
+cmake ${ARGUMENTS} ..

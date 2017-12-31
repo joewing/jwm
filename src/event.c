@@ -479,12 +479,12 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
 {
    const ActionType key = GetKey(context, state, code);
    const char keyAction = context == MC_NONE;
-   switch(key & 0xFF) {
+   switch(key.action) {
    case ACTION_EXEC:
       RunKeyCommand(context, state, code);
       break;
    case ACTION_DESKTOP:
-      ChangeDesktop((key >> 8) - 1);
+      ChangeDesktop(key.extra);
       break;
    case ACTION_RDESKTOP:
       RightDesktop();
@@ -555,7 +555,7 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
    case ACTION_RESIZE:
       if(np) {
          /* Use provided context by default. */
-         const ActionType corner = key & 0xFF00;
+         const unsigned char corner = key.extra;
          MouseContextType resizeContext = context;
          if(corner) {
             /* Custom corner specified. */
@@ -651,7 +651,7 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
       break;
    case ACTION_SEND:
       if(np) {
-         const unsigned desktop = (key >> 8) - 1;
+         const unsigned desktop = key.extra;
          SetClientDesktop(np, desktop);
          ChangeDesktop(desktop);
       }
@@ -702,9 +702,11 @@ void HandleKeyPress(const XKeyEvent *event)
 /** Handle a key release event. */
 void HandleKeyRelease(const XKeyEvent *event)
 {
-   const ActionType key = GetKey(MC_NONE, event->state, event->keycode) & 0xFF;
-   if(   key != ACTION_NEXTSTACK && key != ACTION_NEXT
-      && key != ACTION_PREV      && key != ACTION_PREVSTACK) {
+   const ActionType key = GetKey(MC_NONE, event->state, event->keycode);
+   if(   key.action != ACTION_NEXTSTACK
+      && key.action != ACTION_NEXT
+      && key.action != ACTION_PREV
+      && key.action != ACTION_PREVSTACK) {
       StopWindowWalk();
    }
 }

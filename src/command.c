@@ -12,6 +12,9 @@
 #include "misc.h"
 #include "main.h"
 #include "error.h"
+#include "timing.h"
+
+#include <fcntl.h>
 
 /** Structure to represent a list of commands. */
 typedef struct CommandNode {
@@ -141,3 +144,96 @@ void RunCommand(const char *command)
 
 }
 
+/** Reads the output of an exernal program. */
+char *ReadFromProcess(const char *command, unsigned timeout_ms)
+{
+   const unsigned BLOCK_SIZE = 256;
+   pid_t pid;
+   int fds[2];
+
+   if(pipe(fds)) {
+      Warning(_("could not create pipe"));
+      return NULL;
+   }
+   if(fcntl(fds[0], F_SETFL, O_NONBLOCK) == -1) {
+      /* We don't return here since we can still process the output
+       * of the command, but the timeout won't work. */
+      Warning(_("could not set O_NONBLOCK"));
+   }
+
+   pid = fork();
+   if(pid == 0) {
+      /* The child process. */
+      close(ConnectionNumber(display));
+      close(fds[0]);
+      dup2(fds[1], 1);  /* stdout */
+      setsid();
+      execl("/bin/sh", "/bin/sh", "-c", command, NULL);
+      Warning(_("exec failed: (%s) %s"), SHELL_NAME, command);
+      exit(EXIT_SUCCESS);
+   } else if(pid > 0) {
+      char *buffer;
+      unsigned buffer_size, max_size;
+      TimeType start_time, current_time;
+
+      max_size = BLOCK_SIZE;
+      buffer_size = 0;
+      buffer = Allocate(max_size);
+
+      GetCurrentTime(&start_time);
+      for(;;) {
+         struct timeval tv;
+         unsigned long diff_ms;
+         fd_set fs;
+         int rc;
+
+         /* Make sure we have room to read. */
+         if(buffer_size + BLOCK_SIZE > max_size) {
+            max_size *= 2;
+            buffer = Reallocate(buffer, max_size);
+         }
+
+         FD_ZERO(&fs);
+         FD_SET(fds[0], &fs);
+
+         /* Determine the max time to sit in select. */
+         GetCurrentTime(&current_time);
+         diff_ms = GetTimeDifference(&start_time, &current_time);
+         diff_ms = timeout_ms > diff_ms ? (timeout_ms - diff_ms) : 0;
+         tv.tv_sec = diff_ms / 1000;
+         tv.tv_usec = (diff_ms % 1000) * 1000;
+
+         /* Wait for data (or a timeout). */
+         rc = select(fds[0] + 1, &fs, NULL, &fs, &tv);
+         if(rc == 0) {
+            /* Timeout */
+            Warning(_("timeout: %s did not complete in %u milliseconds"),
+                    command, timeout_ms);
+            kill(pid, SIGKILL);
+            waitpid(pid, NULL, 0);
+            break;
+         }
+
+         rc = read(fds[0], &buffer[buffer_size], BLOCK_SIZE);
+         if(rc > 0) {
+            buffer_size += rc;
+         } else {
+            /* Process exited, check for any leftovers and return. */
+            do {
+               if(buffer_size + BLOCK_SIZE > max_size) {
+                  max_size *= 2;
+                  buffer = Reallocate(buffer, max_size);
+               }
+               rc = read(fds[0], &buffer[buffer_size], BLOCK_SIZE);
+               buffer_size += (rc > 0) ? rc : 0;
+            } while(rc > 0);
+            break;
+         }
+      }
+      close(fds[1]);
+      buffer[buffer_size] = 0;
+      return buffer;
+   }
+
+   return NULL;
+}

@@ -139,12 +139,20 @@ endif()
 
 ##### HEADERS #####
 include (CheckIncludeFiles)
-function(CheckHeader string1)
-	string(TOUPPER ${string1} OUTVAR)
+function(CheckHeader header_filename)
+	string(TOUPPER ${header_filename} OUTVAR)
 	string(REPLACE . _ DEFINE_NAME ${OUTVAR})
 	string(REPLACE / _ DEFINE_NAME ${DEFINE_NAME})
 	string(REPLACE / _ DEFINE_NAME ${DEFINE_NAME})
-	check_include_files("${string1}" "HAVE_${DEFINE_NAME}")
+	set(NORMAL_PLACES_TO_LOOK "/usr/include/;/usr/local/include/")
+	check_include_files("${header_filename}" "HAVE_${DEFINE_NAME}")
+	if( NOT HAVE_${DEFINE_NAME})
+		message("Trying something else to find ${header_filename}")
+		find_file("CHECK_${DEFINE_NAME}" "${header_filename}")
+		if( CHECK_${DEFINE_NAME})
+			set(HAVE_${DEFINE_NAME} true)
+		endif()
+	endif()
 endfunction()
 
 find_path(ALLOCA alloca.c)
@@ -211,12 +219,10 @@ endif()
 # https://cmake.org/cmake/help/v2.8.12/cmake.html#module:FindGettext
 find_package(Gettext)
 if(GETTEXT_FOUND)
-	file (GLOB PO_FILES po/"*.po")
+	file (GLOB PO_FILES ${CMAKE_SOURCE_DIR}/po/*.po)
 	message( "msgfmt: ${GETTEXT_MSGFMT_EXECUTABLE}")
 	message( "msgmerge: ${GETTEXT_MSGMERGE_EXECUTABLE}")
-	#GETTEXT_PROCESS_POT(po/jwm.pot)
-	GETTEXT_PROCESS_PO_FILES( PO_FILES ${PO_FILES})
-	#GETTEXT_CREATE_TRANSLATIONS (outputFile [ALL] file1 ... fileN )
+    GETTEXT_CREATE_TRANSLATIONS(po/jwm.pot ALL ${PO_FILES})
 endif()
 
 ########### Source #####################
@@ -295,11 +301,11 @@ install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 ## install icons
 file(GLOB ICONS "contrib/*.svg")
 set(ICONS "${ICONS}" contrib/${PROJECT_NAME}.xbm)
-install(FILES ${ICONS} DESTINATION "${ARCH_INDEP_INSTALL_DIR}share/pixmaps")
+install(FILES ${ICONS} DESTINATION "${ARCH_INDEP_INSTALL_DIR}/share/pixmaps")
 
 ##install man page
 message("creating ${PROJECT_NAME}.1")
-configure_file("${PROJECT_NAME}.1.in" "${PROJECT_NAME}.1")
+configure_file("${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.1.in" "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.1")
 install(FILES "${PROJECT_NAME}.1" DESTINATION "${ARCH_INDEP_INSTALL_DIR}/share/man/man1/")
 
 ## configure header

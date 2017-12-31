@@ -18,10 +18,11 @@ struct Menu;
 void ParseConfig(const char *fileName);
 
 /** Parse a dynamic menu.
+ * @param timeout_ms The timeout in milliseconds.
  * @param command The command to generate the menu.
  * @return The menu.
  */
-struct Menu *ParseDynamicMenu(const char *command);
+struct Menu *ParseDynamicMenu(unsigned timeout_ms, const char *command);
 
 #endif /* PARSE_H */
 

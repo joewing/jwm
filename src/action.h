@@ -16,7 +16,10 @@ struct TrayComponentType;
  * Note that we use the high bits to store additional information
  * for some key types (for example the desktop number).
  */
-typedef unsigned short ActionType;
+typedef struct {
+   unsigned char action;
+   unsigned char extra;
+} ActionType;
 #define ACTION_NONE           0
 #define ACTION_UP             1
 #define ACTION_DOWN           2
@@ -60,10 +63,11 @@ typedef unsigned short ActionType;
 #define ACTION_MAXV           40
 #define ACTION_MAXH           41
 #define ACTION_RESTORE        42
-#define ACTION_RESIZE_N       (1 << 8)
-#define ACTION_RESIZE_S       (1 << 9)
-#define ACTION_RESIZE_E       (1 << 10)
-#define ACTION_RESIZE_W       (1 << 11)
+#define ACTION_INVALID        255
+#define ACTION_RESIZE_N       1  /* Extra value mask for resize north. */
+#define ACTION_RESIZE_S       2  /* Extra value mask for resize south. */
+#define ACTION_RESIZE_E       4  /* Extra value mask for resize east. */
+#define ACTION_RESIZE_W       8  /* Extra value mask for resize west. */
 
 /** Add an action to a list of actions.
  * @param actions The action list to update.

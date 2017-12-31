@@ -34,23 +34,31 @@
 #include "color.h"
 #include "misc.h"
 
+typedef ImageNode *(*ImageLoader)(const char *fileName,
+                                  int rwidth, int rheight,
+                                  char preserveAspect);
+
 #ifdef USE_CAIRO
 #ifdef USE_RSVG
-static ImageNode *LoadSVGImage(const char *fileName, int width, int height,
+static ImageNode *LoadSVGImage(const char *fileName, int rwidth, int rheight,
                                char preserveAspect);
 #endif
 #endif
 #ifdef USE_JPEG
-static ImageNode *LoadJPEGImage(const char *fileName, int width, int height);
+static ImageNode *LoadJPEGImage(const char *fileName, int rwidth, int rheight,
+                                char preserveAspect);
 #endif
 #ifdef USE_PNG
-static ImageNode *LoadPNGImage(const char *fileName);
+static ImageNode *LoadPNGImage(const char *fileName, int rwidth, int rheight,
+                               char preserveAspect);
 #endif
 #ifdef USE_XPM
-static ImageNode *LoadXPMImage(const char *fileName);
+static ImageNode *LoadXPMImage(const char *fileName, int rwidth, int rheight,
+                               char preserveAspect);
 #endif
 #ifdef USE_XBM
-static ImageNode *LoadXBMImage(const char *fileName);
+static ImageNode *LoadXBMImage(const char *fileName, int rwidth, int rheight,
+                               char preserveAspect);
 #endif
 #ifdef USE_ICONS
 static ImageNode *CreateImageFromXImages(XImage *image, XImage *shape);
@@ -63,82 +71,87 @@ static int FreeColors(Display *d, Colormap cmap, Pixel *pixels, int n,
                       void *closure);
 #endif
 
+/* File extension to image loader mapping. */
+static const struct {
+   const char *extension;
+   ImageLoader loader;
+} IMAGE_LOADERS[] = {
+#ifdef USE_PNG
+   {".png",       LoadPNGImage      },
+#endif
+#ifdef USE_JPEG
+   {".jpg",       LoadJPEGImage     },
+   {".jpeg",      LoadJPEGImage     },
+#endif
+#ifdef USE_CAIRO
+#ifdef USE_RSVG
+   {".svg",       LoadSVGImage      },
+#endif
+#endif
+#ifdef USE_XPM
+   {".xpm",       LoadXPMImage      },
+#endif
+#ifdef USE_XBM
+   {".xbm",       LoadXBMImage      },
+#endif
+};
+static const unsigned IMAGE_LOADER_COUNT = ARRAY_LENGTH(IMAGE_LOADERS);
+
 /** Load an image from the specified file. */
-ImageNode *LoadImage(const char *fileName, int width, int height,
+ImageNode *LoadImage(const char *fileName, int rwidth, int rheight,
                      char preserveAspect)
 {
-   unsigned nameLength;
+   unsigned i;
+   unsigned name_length;
    ImageNode *result = NULL;
+
+   /* Make sure we have a reasonable file name. */
    if(!fileName) {
       return result;
    }
-
-   nameLength = strlen(fileName);
-   if(JUNLIKELY(nameLength == 0)) {
+   name_length = strlen(fileName);
+   if(JUNLIKELY(name_length == 0)) {
       return result;
    }
 
-   /* Attempt to load the file as a PNG image. */
-#ifdef USE_PNG
-   if(nameLength >= 4
-      && !StrCmpNoCase(&fileName[nameLength - 4], ".png")) {
-      result = LoadPNGImage(fileName);
+   /* Make sure the file exists. */
+   if(access(fileName, R_OK) < 0) {
+      return result;
+   }
+
+   /* First we attempt to use the extension to determine the type
+    * to avoid trying all loaders. */
+   for(i = 0; i < IMAGE_LOADER_COUNT; i++) {
+      const char *ext = IMAGE_LOADERS[i].extension;
+      const unsigned ext_length = strlen(ext);
+      if(JLIKELY(name_length >= ext_length)) {
+         const unsigned offset = name_length - ext_length;
+         if(!StrCmpNoCase(&fileName[offset], ext)) {
+            const ImageLoader loader = IMAGE_LOADERS[i].loader;
+            result = (loader)(fileName, rwidth, rheight, preserveAspect);
+            if(JLIKELY(result)) {
+               return result;
+            }
+            break;
+         }
+      }
+   }
+
+   /* We were unable to load by extension, so try everything. */
+   for(i = 0; i < IMAGE_LOADER_COUNT; i++) {
+      const ImageLoader loader = IMAGE_LOADERS[i].loader;
+      result = (loader)(fileName, rwidth, rheight, preserveAspect);
       if(result) {
+         /* We were able to load the image, so it must have either the
+          * wrong extension or an extension we don't recognize. */
+         Warning(_("unrecognized extension for \"%s\", expected \"%s\""),
+                 fileName, IMAGE_LOADERS[i].extension);
          return result;
       }
    }
-#endif
 
-   /* Attempt to load the file as a JPEG image. */
-#ifdef USE_JPEG
-   if(   (nameLength >= 4
-            && !StrCmpNoCase(&fileName[nameLength - 4], ".jpg"))
-      || (nameLength >= 5
-            && !StrCmpNoCase(&fileName[nameLength - 5], ".jpeg"))) {
-      result = LoadJPEGImage(fileName, width, height);
-      if(result) {
-         return result;
-      }
-   }
-#endif
-
-   /* Attempt to load the file as an SVG image. */
-#ifdef USE_CAIRO
-#ifdef USE_RSVG
-   if(nameLength >= 4
-      && !StrCmpNoCase(&fileName[nameLength - 4], ".svg")) {
-      result = LoadSVGImage(fileName, width, height, preserveAspect);
-      if(result) {
-         return result;
-      }
-   }
-#endif
-#endif
-
-   /* Attempt to load the file as an XPM image. */
-#ifdef USE_XPM
-   if(nameLength >= 4
-      && !StrCmpNoCase(&fileName[nameLength - 4], ".xpm")) {
-      result = LoadXPMImage(fileName);
-      if(result) {
-         return result;
-      }
-   }
-#endif
-
-   /* Attempt to load the file as an XBM image. */
-#ifdef USE_XBM
-   if(nameLength >= 4
-      && !StrCmpNoCase(&fileName[nameLength - 4], ".xbm")) {
-      result = LoadXBMImage(fileName);
-      if(result) {
-         return result;
-      }
-   }
-#endif
-
+   /* No image could be loaded. */
    return result;
-
 }
 
 /** Load an image from a pixmap. */
@@ -177,7 +190,8 @@ ImageNode *LoadImageFromDrawable(Drawable pmap, Pixmap mask)
  * the issues surrounding longjmp and local variables.
  */
 #ifdef USE_PNG
-ImageNode *LoadPNGImage(const char *fileName)
+ImageNode *LoadPNGImage(const char *fileName, int rwidth, int rheight,
+                        char preserveAspect)
 {
 
    static ImageNode *result;
@@ -313,7 +327,9 @@ static void JPEGErrorHandler(j_common_ptr cinfo) {
    longjmp(es->jbuffer, 1);
 }
 
-ImageNode *LoadJPEGImage(const char *fileName, int width, int height)
+ImageNode *LoadJPEGImage(const char *fileName,
+                         int rwidth, int rheight,
+                         char preserveAspect)
 {
    static ImageNode *result;
    static struct jpeg_decompress_struct cinfo;
@@ -359,14 +375,14 @@ ImageNode *LoadJPEGImage(const char *fileName, int width, int height)
     * the smallest absolute change.
     */
    jpeg_calc_output_dimensions(&cinfo);
-   if(width != 0 && height != 0) {
+   if(rwidth != 0 && rheight != 0) {
       /* Scale using n/8 with n in [1..8]. */
       int ratio;
-      if(abs((int)cinfo.output_width - width)
-            < abs((int)cinfo.output_height - height)) {
-         ratio = (width << 4) / cinfo.output_width;
+      if(abs((int)cinfo.output_width - rwidth)
+            < abs((int)cinfo.output_height - rheight)) {
+         ratio = (rwidth << 4) / cinfo.output_width;
       } else {
-         ratio = (height << 4) / cinfo.output_height;
+         ratio = (rheight << 4) / cinfo.output_height;
       }
       cinfo.scale_num = Max(1, Min(8, (ratio >> 2)));
       cinfo.scale_denom = 8;
@@ -416,7 +432,7 @@ ImageNode *LoadJPEGImage(const char *fileName, int width, int height)
 
 #ifdef USE_CAIRO
 #ifdef USE_RSVG
-ImageNode *LoadSVGImage(const char *fileName, int width, int height,
+ImageNode *LoadSVGImage(const char *fileName, int rwidth, int rheight,
                         char preserveAspect)
 {
 
@@ -451,33 +467,33 @@ ImageNode *LoadSVGImage(const char *fileName, int width, int height,
    }
 
    rsvg_handle_get_dimensions(rh, &dim);
-   if(width == 0 || height == 0) {
-      width = dim.width;
-      height = dim.height;
+   if(rwidth == 0 || rheight == 0) {
+      rwidth = dim.width;
+      rheight = dim.height;
       xscale = 1.0;
       yscale = 1.0;
    } else if(preserveAspect) {
-      if(abs(dim.width - width) < abs(dim.height - height)) {
-         xscale = (float)width / dim.width;
-         height = dim.height * xscale;
+      if(abs(dim.width - rwidth) < abs(dim.height - rheight)) {
+         xscale = (float)rwidth / dim.width;
+         rheight = dim.height * xscale;
       } else {
-         xscale = (float)height / dim.height;
-         width = dim.width * xscale;
+         xscale = (float)rheight / dim.height;
+         rwidth = dim.width * xscale;
       }
       yscale = xscale;
    } else {
-      xscale = (float)width / dim.width;
-      yscale = (float)height / dim.height;
+      xscale = (float)rwidth / dim.width;
+      yscale = (float)rheight / dim.height;
    }
 
-   result = CreateImage(width, height, 0);
-   memset(result->data, 0, width * height * 4);
+   result = CreateImage(rwidth, rheight, 0);
+   memset(result->data, 0, rwidth * rheight * 4);
 
    /* Create the target surface. */
-   stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, width);
+   stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, rwidth);
    target = cairo_image_surface_create_for_data(result->data,
                                                 CAIRO_FORMAT_ARGB32,
-                                                width, height, stride);
+                                                rwidth, rheight, stride);
    context = cairo_create(target);
    cairo_scale(context, xscale, yscale);
    cairo_paint_with_alpha(context, 0.0);
@@ -486,7 +502,7 @@ ImageNode *LoadSVGImage(const char *fileName, int width, int height,
    cairo_surface_destroy(target);
    g_object_unref(rh);
 
-   for(i = 0; i < 4 * width * height; i += 4) {
+   for(i = 0; i < 4 * rwidth * rheight; i += 4) {
       const unsigned int temp = *(unsigned int*)&result->data[i];
       const unsigned int alpha  = (temp >> 24) & 0xFF;
       const unsigned int red    = (temp >> 16) & 0xFF;
@@ -508,7 +524,8 @@ ImageNode *LoadSVGImage(const char *fileName, int width, int height,
 
 /** Load an XPM image from the specified file. */
 #ifdef USE_XPM
-ImageNode *LoadXPMImage(const char *fileName)
+ImageNode *LoadXPMImage(const char *fileName, int rwidth, int rheight,
+                        char preserveAspect)
 {
 
    ImageNode *result = NULL;
@@ -540,7 +557,8 @@ ImageNode *LoadXPMImage(const char *fileName)
 
 /** Load an XBM image from the specified file. */
 #ifdef USE_XBM
-ImageNode *LoadXBMImage(const char *fileName)
+ImageNode *LoadXBMImage(const char *fileName, int rwidth, int rheight,
+                        char preserveAspect)
 {
    ImageNode *result = NULL;
    unsigned char *data;

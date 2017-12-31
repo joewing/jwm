@@ -153,6 +153,8 @@ Dynamically include the contents of a file or executable into a submenu.
 The file must start with a "JWM" tag. The file is specified by the text
 of the tag. If the text starts with "exec:" then the output of a program
 is used. This tag supports the same attributes as \fBMenu\fP.
+A \fBtimeout\fP attribute may be specified to set a timeout in milliseconds.
+The default timeout is 5000 milliseconds (5 seconds).
 .RE
 .P
 .B Include
@@ -160,6 +162,8 @@ is used. This tag supports the same attributes as \fBMenu\fP.
 Include the contents of a file into the menu structure. The file must
 start with a "JWM" tag. The file is specified by the text of the tag.
 If the text starts with "exec:" then the output of a program is used.
+A \fBtimeout\fP attribute may be specified to set a timeout in milliseconds.
+The default timeout is 5000 milliseconds (5 seconds).
 .RE
 .P
 .B Program
@@ -471,7 +475,14 @@ This tag supports the following attributes:
 .RS
 Specifies the location to hide the tray when not activated. Default is "off"
 to disable hiding.
-Possible values are "left", "right", "top", "bottom", "off", and "on".
+Possible values are "left", "right", "top", "bottom", "off", "on" (JWM
+picks the location), and "invisible" (trays must be activated by a key
+binding).
+.RE
+.P
+\fBdelay\fP \fIint\fP
+.RS
+The delay before hiding the tray in milliseconds. Default is 0 milliseconds.
 .RE
 .P
 \fBx\fP \fIint\fP
@@ -1590,7 +1601,8 @@ Either the \fBkey\fP or \fBkeycode\fP attributes must be specified
 to determine which key will cause an action. The optional
 attribute, \fBmask\fP, specifies what key mask, if any, must be in effect
 for the binding to match. Finally, the text of the \fBKey\fP tag is the
-action to perform.
+action to perform.  The last action to match is used if there are
+duplicates.
 .P
 One or more of the following key masks may be specified for \fBmask\fP
 (see \fBxmodmap\fP(1)):
@@ -1637,6 +1649,8 @@ Make a menu selection or confirm an action.
 Move to the next window in the task list.
 .IP \fBnextstacked\fP
 Move to the next window in the stacking order.
+.IP \fBnone\fP
+Remove the current binding.
 .IP \fBprev\fP
 Move to the previous window in the task list.
 .IP \fBprevstacked\fP
@@ -1736,8 +1750,8 @@ It is possible to bind multiple key combinations to the same action.
 Mouse bindings are configured using \fBMouse\fP tags.
 The \fBcontext\fP attribute determines the context in which the
 binding applies, the \fBbutton\fP attribute species the mouse button, and
-the (optional) \fBmask\fP specifies the key mask that must be in effect
-for the binding to match.  Finally, the text of the \fBMouse\fP tag
+the (optional) \fBmask\fP attribute specifies the key mask that must be in
+effect for the binding to match.  Finally, the text of the \fBMouse\fP tag
 determines the action to perform (see \fBKEY BINDINGS\fP for a list
 of actions).  The \fBbutton\fP is a mouse button number, starting
 at \fB1\fP (typically the left button). A positive value for the button
@@ -1785,7 +1799,6 @@ Other bindings:
 .P
 Button 1 (typically the left button):
 .RS
-Over the close button, clicking closes the window.
 Over a task bar, restores or minimizes the window.
 Over a pager, switches the active desktop.
 .RE

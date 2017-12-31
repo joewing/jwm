@@ -18,10 +18,9 @@ set(LOCALE_DIR "/locale")
 set(LOCALEDIR "${CMAKE_INSTALL_PREFIX}${LOCALE_DIR}")
 set(ARCH_INDEP_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}")
 ## TODO... make configure script that does: mkdir bin && cd bin && cmake ..
-set(USE_ICONS true)
+set(USE_ICONS true CACHE BOOL "Disable Icon supprot")
 ## path for custom cmake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-
 ## DON'T build in here!!!! OK?!?!?!
 if ( ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR} )
      message( FATAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there. You may need to remove CMakeCache.txt." )
@@ -44,8 +43,8 @@ endif()
 set(ALL_LIBS "${X11_LIBRARIES}" "${X11_X11_LIB}")
 set(JWM_INCLUDES "${X11_X11_INCLUDE_PATH}")
 #libXpm
-set(USE_XPM ${X11_Xpm_FOUND})
-if(X11_Xpm_FOUND)
+set(USE_XPM ${X11_Xpm_FOUND} CACHE BOOL "Use XPM")
+if(USE_XPM)
 	## ALL_LIBS is the variable to store all the libraries we find
 	set(ALL_LIBS "${ALL_LIBS}" "${X11_Xpm_LIB}")
     ## JWM_INCLUDES is the variable to contain all the includes we find
@@ -53,32 +52,33 @@ if(X11_Xpm_FOUND)
 endif()
 
 #libXinerama
-set(USE_XINERAMA ${X11_Xinerama_FOUND})
-if(X11_Xinerama_FOUND)
+set(USE_XINERAMA ${X11_Xinerama_FOUND} CACHE BOOL "Use Xinerama")
+if(USE_XINERAMA)
 	set(ALL_LIBS "${ALL_LIBS}" "${X11_Xinerama_LIB}")
 	set(JWM_INCLUDES "${JWM_INCLUDES}" "${X11_Xinerama_INCLUDE_PATH}")
 endif()
 
 #libXft
 find_package(FreeType QUIET)
-if(FREETYPE_FOUND)
+set(USE_XFT ${FREETYPE_FOUND} CACHE BOOL "Use XFT")
+if(USE_XFT)
 	message("FREETYPE found")
 	set(ALL_LIBS "${ALL_LIBS}" "${X11_Xft_LIB}" "${FREETYPE_LIBRARIES}")
 	set(JWM_INCLUDES "${JWM_INCLUDES}" "${X11_Xft_INCLUDE_PATH}" "${FREETYPE_INCLUDE_DIRS}")
 endif()
-set(USE_XFT ${FREETYPE_FOUND})
+
 
 #libXmu
-set(USE_XMU ${X11_Xmu_FOUND})
-if(X11_Xmu_FOUND)
+set(USE_XMU ${X11_Xmu_FOUND} CACHE BOOL "Use XMU")
+if(USE_XMU)
 	message("Found X11 Xmu")
 	set(ALL_LIBS "${ALL_LIBS}" "${X11_Xmu_LIB}")
 	set(JWM_INCLUDES "${JWM_INCLUDES}" "${X11_Xmu_INCLUDE_PATH}")
 endif()
 
 #libXrender
-set(USE_XRENDER ${X11_Xrender_FOUND})
-if(X11_Xrender_FOUND)
+set(USE_XRENDER ${X11_Xrender_FOUND} CACHE BOOL "Use XRENDER")
+if(USE_XRENDER)
 	set(ALL_LIBS "${ALL_LIBS}" "${X11_Xrender_LIB}")
 	set(JWM_INCLUDES "${JWM_INCLUDES}" "${X11_Xrender_INCLUDE_PATH}")
 endif()
@@ -88,46 +88,47 @@ if(X11_Xext_FOUND)
 	set(ALL_LIBS "${ALL_LIBS}" "${X11_Xext_LIB}")
 	#set(JWM_INCLUDES "${JWM_INCLUDES}" "${}")
 endif()
-
-#libpng
-find_package(PNG QUIET)
-set(USE_PNG ${PNG_FOUND})
-if(PNG_FOUND)
-	set(ALL_LIBS "${ALL_LIBS}" "${PNG_LIBRARIES}")
-	set(JWM_INCLUDES "${JWM_INCLUDES}" "${PNG_INCLUDE_DIRS}")
-endif()
-
-#libjpeg
-find_package(JPEG QUIET)
-set(USE_JPEG ${JPEG_FOUND})
-if(PNG_FOUND)
-	set(ALL_LIBS "${ALL_LIBS}" "${JPEG_LIBRARIES}")
-	set(JWM_INCLUDES "${JWM_INCLUDES}" "${JPEG_INCLUDE_DIRS}")
-endif()
 #fribidi
 find_package(Fribidi QUIET)
-set(USE_FRIBIDI ${FRIBIDI_FOUND})
-if(FRIBIDI_FOUND)
+set(USE_FRIBIDI ${FRIBIDI_FOUND} CACHE BOOL "Use Fribidi")
+if(USE_FRIBIDI)
 	set(ALL_LIBS "${ALL_LIBS}" "${FRIBIDI_LIBRARIES}")
 	set(JWM_INCLUDES "${JWM_INCLUDES}" "${FRIBIDI_INCLUDE_DIR}")
 endif()
+if(USE_ICONS)
+	#libpng
+	find_package(PNG QUIET)
+	set(USE_PNG ${PNG_FOUND} CACHE BOOL "Use PNG")
+	if(USE_PNG)
+		set(ALL_LIBS "${ALL_LIBS}" "${PNG_LIBRARIES}")
+		set(JWM_INCLUDES "${JWM_INCLUDES}" "${PNG_INCLUDE_DIRS}")
+	endif()
 
-#Cairo
-find_package(Cairo)
-set(USE_CAIRO ${CAIRO_FOUND})
-if(CAIRO_FOUND)
-	set(ALL_LIBS "${ALL_LIBS}" "${CAIRO_LIBRARIES}")
-	set(JWM_INCLUDES "${JWM_INCLUDES}" "${CAIRO_INCLUDE_DIRS}")
-endif()
+	#libjpeg
+	find_package(JPEG QUIET)
+	set(USE_JPEG ${JPEG_FOUND} CACHE BOOL "Use JPG")
+	if(USE_JPEG)
+		set(ALL_LIBS "${ALL_LIBS}" "${JPEG_LIBRARIES}")
+		set(JWM_INCLUDES "${JWM_INCLUDES}" "${JPEG_INCLUDE_DIRS}")
+	endif()
 
-#librsvg2
-find_package(RSVG)
-set(USE_RSVG ${RSVG_FOUND})
-if(RSVG_FOUND)
-	message("Found RSVG")
-	set(ALL_LIBS "${ALL_LIBS}" "${RSVG_LIBRARIES}")
-	set(JWM_INCLUDES "${JWM_INCLUDES}" "${RSVG_INCLUDE_DIRS}")
-endif()
+	#Cairo
+	find_package(Cairo)
+	set(USE_CAIRO ${CAIRO_FOUND} CACHE BOOL "Use Cairo")
+	if(USE_CAIRO)
+		set(ALL_LIBS "${ALL_LIBS}" "${CAIRO_LIBRARIES}")
+		set(JWM_INCLUDES "${JWM_INCLUDES}" "${CAIRO_INCLUDE_DIRS}")
+	endif()
+
+	#librsvg2
+	find_package(RSVG)
+	set(USE_RSVG ${RSVG_FOUND} CACHE BOOL "Use RSVG")
+	if(USE_RSVG)
+		message("Found RSVG")
+		set(ALL_LIBS "${ALL_LIBS}" "${RSVG_LIBRARIES}")
+		set(JWM_INCLUDES "${JWM_INCLUDES}" "${RSVG_INCLUDE_DIRS}")
+	endif()
+endif() # USE_ICONS
 
 #nanosvg
 #find_package( QUIET)
@@ -206,14 +207,6 @@ set(__EXTENSIONS__ "${_XOPEN_SOURCE_EXTENDED}")
 if(_XOPEN_SOURCE_EXTENDED)
 	set(_XOPEN_SOURCE 600L)
 endif()
-##TODO:
-#AC_ARG_ENABLE(confirm,
-#   AC_HELP_STRING([--disable-confirm], [disable confirm dialogs]) )
-#if test "$enable_confirm" = "no" ; then
-#   AC_DEFINE(DISABLE_CONFIRM, 1, [Define to disable confirm dialogs])
-#else
-#   enable_confirm="yes"
-#fi
 
 ## gettext
 # https://cmake.org/cmake/help/v2.8.12/cmake.html#module:FindGettext
@@ -288,12 +281,13 @@ set(JWM_SRCS
 )
 
 ######### Build ###############
-## add the library
+## add the library if we want a separate library
 #add_library(JWM STATIC ${JWM_SRCS})
 ## make the executable
 add_executable(${PROJECT_NAME} src/main.c ${JWM_SRCS})
 ## link the libs to the executable
 target_link_libraries(${PROJECT_NAME} "${ALL_LIBS}")
+
 
 ## install jwm and libJWM
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
@@ -306,7 +300,8 @@ install(FILES ${ICONS} DESTINATION "${ARCH_INDEP_INSTALL_DIR}/share/pixmaps")
 ##install man page
 message("creating ${PROJECT_NAME}.1")
 configure_file("${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.1.in" "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.1")
-install(FILES "${PROJECT_NAME}.1" DESTINATION "${ARCH_INDEP_INSTALL_DIR}/share/man/man1/")
+set(MAN_DIR "${ARCH_INDEP_INSTALL_DIR}/share/man/man1/" CACHE STRING "Man page installation directory")
+install(FILES "${PROJECT_NAME}.1" DESTINATION "${MAN_DIR}")
 
 ## configure header
 configure_file("${CMAKE_SOURCE_DIR}/cmake/config.h.in" ../config.h)

@@ -158,7 +158,7 @@ addArguments()
 }
 addBool()
 {
-	[ "$2" -eq "" ] && 2="true"
+	[ "$2" -eq "" ] && 2="TRUE"
 	addArguments "$1" BOOL "$2"
 }
 andInt()
@@ -171,17 +171,19 @@ addString()
 	[ "$2" -eq "" ] && return
 	addArguments "$1" STRING "$2"
 }
-case $1 in
+while :
+do
+  case $1 in
 	-h|--help|-\?)usage;;
 	--prefix=*)addString "ARCH_INDEP_INSTALL_DIR" "$(getEQ ${1})";;
 	--exec-prefix=*)addString "CMAKE_INSTALL_PREFIX" "$(getEQ ${1})";;
 	--bindir=*)BINDIR=$(getEQ "${1}");;
-	--sbindir=*)SBINDIR=$(getEQ "${1}");;
-	--libexecdir=*)LIBEXECDIR=$(getEQ "${1}");;
-	--sysconfdir=*)SYSCONFDIR=$(getEQ "${1}");;
-	--sharedstatedir=*)SHAREDSTATEDIR=$(getEQ "${1}");;
-	--localstatedir=*)LOCALSTATEDIR=$(getEQ "${1}");;
-	--runstatedir=*)RUNSTATEDIR=$(getEQ "${1}");;
+	--sbindir=*)SBINDIR=$(getEQ "${1}");; ## do we need this?
+	--libexecdir=*)LIBEXECDIR=$(getEQ "${1}");; ## do we need this?
+	--sysconfdir=*)addString "SYSCONF" "$(getEQ ${1})";;
+	--sharedstatedir=*)SHAREDSTATEDIR=$(getEQ "${1}");; ## do we need this?
+	--localstatedir=*)LOCALSTATEDIR=$(getEQ "${1}");; ## do we need this?
+	--runstatedir=*)RUNSTATEDIR=$(getEQ "${1}");; ## do we need this?
 	--libdir=*)LIBDIR=$(getEQ "${1}");;
 	--includedir=*)INCLUDEDIR=$(getEQ "${1}");;
 	--oldincludedir=*)OLDINCLUDEDIR=$(getEQ "${1}");;
@@ -189,30 +191,30 @@ case $1 in
 	--datadir=*)DATADIR=$(getEQ "${1}");;
 	--infodir=*)INFODIR=$(getEQ "${1}");;
 	--localedir=*)LOCALEDIR=$(getEQ "${1}");;
-	--mandir=*)MANDIR=$(getEQ "${1}");;
-	--docdir=*)DOCDIR=$(getEQ "${1}");;
+	--mandir=*)addString "MAN_DIR" "$(getEQ ${1})";;
+	--docdir=*)DOCDIR=$(getEQ "${1}");; ## do we need this?
 	--htmldir=*)HTMLDIR=$(getEQ "${1}");;
 	--dvidir=*)DVIDIR=$(getEQ "${1}");;
 	--pdfdir=*)PDFDIR=$(getEQ "${1}");;
 	--psdir=*)PSDIR=$(getEQ "${1}");;
-	--x-includes=*)X_INCLUDES=$(getEQ "${1}");;
-	--x-libraries=*)X_LIBRARIES=$(getEQ "${1}");;
+	--x-includes=*)addString "X11_X11_INCLUDE_PATH" "$(getEQ ${1})";;
+	--x-libraries=*)addString "X11_LIBRARIES" "$(getEQ ${1})";;
 	--build=*)BUILD=$(getEQ "${1}");;
 	--host=*)HOST=$(getEQ "${1}");;
-	--disable-confirm)ARGUMENTS=(${ARGUMENTS[@]} "-DDISABLE_CONFIRM:INT=1");;
-	--disable-icons);;
-	--disable-png);;
-	--disable-cairo);;
-	--disable-rsvg);;
-	--disable-jpeg);;
-	--disable-xft);;
-	--disable-xrender);;
-	--disable-fribidi);;
-	--disable-xpm);;
-	--disable-xbm);;
-	--disable-shape);;
-	--disable-xmu);;
-	--disable-xinerama);;
+	--disable-confirm)andInt "DISABLE_CONFIRM" "1";;
+	--disable-icons)addBool "USE_ICONS" FALSE;;
+	--disable-png)addBool "USE_PNG" FALSE;;
+	--disable-cairo)addBool "USE_CAIRO" FALSE;;
+	--disable-rsvg)addBool "USE_RSVG" FALSE;;
+	--disable-jpeg)addBool "USE_JPEG" FALSE;;
+	--disable-xft)addBool "USE_XFT" FALSE;;
+	--disable-xrender)addBool "USE_XRENDER" FALSE;;
+	--disable-fribidi)addBool "USE_FRIBIDI" FALSE;;
+	--disable-xpm)addBool "USE_XPM" FALSE;;
+	--disable-xbm)addBool "USE_XBM" FALSE;;
+	--disable-shape)addBool "USE_SHAPE" FALSE;; ## where is this?  what is it??
+	--disable-xmu)addBool "USE_XMU" FALSE;;
+	--disable-xinerama)addBool "USE_XINERAMA" FALSE;;
 	--disable-rpath);;
 	--disable-nls);;
 	--enable-debug);;
@@ -226,8 +228,14 @@ case $1 in
 	--without-libintl-prefix)unset WITH_LIBINTL_PREFIX;;
 	--with-*);;
 	--without-*);;
-esac
-
+    --)
+      shift
+      break
+      ;;
+    *)break;;
+  esac
+  shift
+done
 [ -d bin ] || mkdir bin
 cd bin
 cmake ${ARGUMENTS[@]} ..

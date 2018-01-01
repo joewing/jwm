@@ -1,42 +1,9 @@
 #!/bin/sh
-## TODO command line options in parity with old system
-getThing()
-{
-  ARG="$1"
-  DELIM="$2"
-  printf "%s\n" "$ARG" | sed "s/.*$DELIM//"
-}
-getEQ()
-{
-  getThing "$1" "="
-}
 
-checkYN()
-{
-	ARG=$(getEQ "${1}")
-	#TODO:
-	#ARG="${ARG,,}"
-	case $ARG in
-		"no"|"No"|"NO")return 1;;
-	esac
-	return 0
-}
-enable_thing()
-{
-	ARG="${1}"
-	THING=$(printf "%s\n" "${ARG}" | sed "s/=.*//")
-	##To UPPER
-	ENABLED=$(getEQ "${ARG}")
-	checkYN "$ENABLED"
-	case $? in
-		0)RESULT="$THING";; ## Enabled
-		*)RESULT="";;
-	esac
-	printf "%s\n" "${RESULT}"
-}
+VERSION="2.4.0"
 usage()
 {
-	echo "'configure' configures jwm 2.4.0 to adapt to many kinds of systems.
+	echo "'configure' configures jwm $VERSION to adapt to many kinds of systems.
 
 Usage: ${0} [OPTION]... [VAR=VALUE]...
 
@@ -146,7 +113,7 @@ it to find libraries and programs with nonstandard names/locations.
 Report bugs to <joewing@joewing.net>."
 
 
-  exit
+  exit 0
 }
 #ARGUMENTS=(${ARGUMENTS[@]} "-D:INT=1")
 addArguments()
@@ -180,10 +147,76 @@ addString()
 	fi
 	addArguments "$1" STRING "$2"
 }
+getThing()
+{
+  ARG="$1"
+  DELIM="$2"
+  printf "%s\n" "$ARG" | sed "s/.*$DELIM//"
+}
+getEQ()
+{
+  getThing "$1" "="
+}
+
+checkYN()
+{
+	ARG=$(getEQ "${1}")
+	#TODO:
+	#ARG="${ARG,,}"
+	case $ARG in
+		"no"|"No"|"NO")return 1;;
+	esac
+	return 0
+}
+checkEnabled()
+{
+	ARG="${1}"
+	RES=$(printf "%s" "$ARG" | sed "s/.*-//")
+	echo "$RES"
+	TESTER=$(printf "%s" "$ARG" | sed "s/--//")
+	TESTER=$(printf "%s" "$ARG" | sed "s/-.*//")
+	case $TESTER in
+		"dis"*|"disabled")return 1;;
+	esac
+	return 0
+	
+}
+enable_thing()
+{
+	ARG="${1}"
+	THING=$(printf "%s\n" "${ARG}" | sed "s/=.*//")
+	VALUE="FALSE"
+	##To UPPER
+	ENABLED=$(getEQ "${ARG}")
+	RESULT="$THING"
+	RESULT=$(printf "%s" "$RESULT" | tr '[a-z]' '[A-Z]')
+	RESULT=$(checkEnabled "$RESULT")
+	EnabledOrDisabled="$?"
+	checkYN "$ENABLED"
+	YesOrNo="$?"
+	if [ $YesOrNo -eq 0 ] ##=yes
+	then
+		if [ $EnabledOrDisabled -eq 0 ] ## enabled
+		then
+			VALUE="TRUE"
+		fi
+	else ## = no
+		if [ $EnabledOrDisabled -eq 1 ] ## disabled
+		then
+			VALUE="TRUE"
+		fi
+	if
+	addBool "USE_$RESULT" "$VALUE"
+}
+
 while :
 do
   case $1 in
 	-h|--help|-\?)usage;;
+	-v|--version)
+		printf "%s\n" "JWM version $VERSION"
+		exit 0
+		;;
 	--prefix=*)addString "ARCH_INDEP_INSTALL_DIR" "$(getEQ ${1})";;
 	--exec-prefix=*)addString "CMAKE_INSTALL_PREFIX" "$(getEQ ${1})";;
 	--bindir=*)BINDIR=$(getEQ "${1}");;
@@ -226,7 +259,7 @@ do
 	--disable-xinerama)addBool "USE_XINERAMA" FALSE;;
 	--disable-rpath);;
 	--disable-nls);;
-	--enable-debug);;
+	--enable-debug)addBool "DEBUG" TRUE;;
 	--enable-*|--disable-*)enable_thing "${1}";;
 	
 	--with-x)WITH_X="true";;

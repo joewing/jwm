@@ -17,10 +17,13 @@ set(PACKAGE_TARNAME "${PROJECT_NAME}")
 set(LOCALE_DIR "/locale")
 set(LOCALEDIR "${CMAKE_INSTALL_PREFIX}${LOCALE_DIR}")
 set(ARCH_INDEP_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}")
-## TODO... make configure script that does: mkdir bin && cd bin && cmake ..
-set(USE_ICONS true CACHE BOOL "Disable Icon supprot")
+set(USE_ICONS TRUE CACHE BOOL "Disable Icon supprot")
+set(USE_NLS TRUE CACHE BOOL "Disable translation of program messages to the user's native language")
+set(ENABLE_NLS "${USE_NLS}")
+set(STDC_HEADERS TRUE)
 ## path for custom cmake modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+
 ## DON'T build in here!!!! OK?!?!?!
 if ( ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR} )
      message( FATAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there. You may need to remove CMakeCache.txt." )
@@ -28,12 +31,14 @@ endif()
 
 ## first line of our generated config.h file
 set(SYSTEM_CONFIG "${SYSCONF}system.jwmrc")
-
+## Set debug if using cmake debug
 string(COMPARE EQUAL "${CMAKE_BUILD_TYPE}" "Debug" D_RES)
 set(DEBUG "${D_RES}")
+
 ######## FIND STUFF ####################
 
-##### LIBRARIES #####
+##### PACKAGED LIBRARIES #####
+message("Looking for packaged libraries")
 ## We need X11
 find_package(X11 REQUIRED)
 string(COMPARE EQUAL "${X11_INCLUDE_DIR}" "" x11_result)
@@ -122,7 +127,11 @@ if(USE_ICONS)
 
 	#librsvg2
 	find_package(RSVG)
-	set(USE_RSVG ${RSVG_FOUND} CACHE BOOL "Use RSVG")
+	if(RSVG_FOUND)
+		set(USE_RSVG TRUE CACHE BOOL "Use RSVG")
+	else()
+		set(USE_RSVG FALSE CACHE BOOL "Use RSVG")
+	endif()
 	if(USE_RSVG)
 		message("Found RSVG")
 		set(ALL_LIBS "${ALL_LIBS}" "${RSVG_LIBRARIES}")
@@ -139,6 +148,7 @@ endif() # USE_ICONS
 #endif()
 
 ##### HEADERS #####
+message("Checking headers")
 include (CheckIncludeFiles)
 function(CheckHeader header_filename)
 	string(TOUPPER ${header_filename} OUTVAR)
@@ -156,8 +166,12 @@ function(CheckHeader header_filename)
 	endif()
 endfunction()
 
+## probably this works
 find_path(ALLOCA alloca.c)
 set(C_ALLOCA "${ALLOCA}")
+##TODO:
+#undef CRAY_STACKSEG_END
+
 
 ## check list of header files
 set(HEADERS_TO_CHECK "alloca.h;ctype.h;iconv.h;inttypes.h;jpeglib.h;langinfo.h;libintl.h;locale.h;memory.h;signal.h;stdarg.h;stdint.h;stdio.h;stdlib.h;strings.h;string.h;sys/select.h;sys/stat.h;sys/time.h;sys/types.h;sys/wait.h;time.h;unistd.h;X11/cursorfont.h;X11/extensions/Xrender.h;X11/keysym.h;X11/Xatom.h;X11/Xlib.h;X11/xpm.h;X11/Xproto.h;X11/Xresource.h;X11/Xutil.h;")
@@ -167,6 +181,7 @@ foreach(loop_var ${HEADERS_TO_CHECK})
 endforeach()
 
 ##### FUNCTIONS #####
+message("Checking functions")
 include (CheckFunctionExists)
 ## FUNCTION CHECKER
 function (CheckFunctions FunName)
@@ -182,6 +197,7 @@ foreach(loop_var ${FUNCTIONS_TO_CHECK})
 endforeach()
 
 ###### LIBS ############
+message("Checking Libraries")
 #check_library_exists(X11 XOpenDisplay "" USE_X11)
 check_library_exists(Xrender XRenderComposite "" USE_XRENDER)
 check_library_exists(fribidi fribidi_charset_to_unicode "" USE_FRIBIDI)
@@ -191,18 +207,74 @@ check_library_exists(Xext XShapeCombineRectangles "" USE_SHAPE)
 check_library_exists(Xmu XmuDrawRoundedRectangle "" USE_XMU)
 check_library_exists(Xft XftFontOpenName "" USE_XFT)
 check_include_files(ft2build.h USE_XFT)
+
 ###### Symbols  ############
+message("Checking for symbols")
 include(CheckSymbolExists)
 check_symbol_exists(XpmAllocColor X11/xpm.h USE_XPM)
-check_symbol_exists(alloca alloca.h HAVE_ALLOCA)
-##### compiles or not? ############
-set(iconvsourcetest "")
+#check_symbol_exists(alloca alloca.h alloca.c HAVE_ALLOCA)
 
+###### size_t
+message("Checking Types")
+include(CheckTypeSize)
+check_type_size(size_t DEFINED_SIZE_T)
+if(NOT DEFINED_SIZE_T)
+	set(size_t "unsigned int")
+endif()
+
+##### compiles or not? ############
+message("Checking compiliation compatibility")
 include (CheckCSourceCompiles)
-check_c_source_compiles("${iconvsourcetest}" ICONV_CONST)
-##TODO: doesn't work right
-check_c_source_compiles("#define _XOPEN_SOURCE 600L
-#include <unistd.h>" _XOPEN_SOURCE_EXTENDED)
+include(CheckCCompilerFlag)
+
+## alloca
+##TODO: make this work!!
+check_c_source_compiles("
+#include <alloca.h>
+int
+main ()
+{
+  char *p = (char *) alloca (2 * sizeof (int));
+  if (p) return 0;
+  ;
+  return 0;
+}
+" HAVE_ALLOCA)
+
+check_c_compiler_flag("-Werror" ICONV_HAVE_WERROR)
+set (CMAKE_C_FLAGS_BACKUP "${CMAKE_C_FLAGS}")
+if(ICONV_HAVE_WERROR)
+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
+endif(ICONV_HAVE_WERROR)
+
+## iconv()
+## TODO: this does not work correctly
+check_c_source_compiles("
+#include <iconv.h>
+int main(){
+  iconv_t conv = 0;
+  const char* in = 0;
+  size_t ilen = 0;
+  char* out = 0;
+  size_t olen = 0;
+  iconv(conv, &in, &ilen, &out, &olen);
+  return 0;
+}
+" ICONV_CONST)
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS_BACKUP}")
+
+## open source
+check_c_source_compiles(
+"#define _XOPEN_SOURCE 600L
+#include <unistd.h>
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+" _XOPEN_SOURCE_EXTENDED)
 set(__EXTENSIONS__ "${_XOPEN_SOURCE_EXTENDED}")
 if(_XOPEN_SOURCE_EXTENDED)
 	set(_XOPEN_SOURCE 600L)

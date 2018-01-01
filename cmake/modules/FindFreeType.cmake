@@ -17,7 +17,7 @@ if(PKG_CONFIG_FOUND)
   pkg_check_modules(PC_FREETYPE freetype2 QUIET)
 endif()
 
-find_path(FREETYPE_INCLUDE_DIR NAMES freetype/freetype.h freetype.h freetype2/freetype.h
+find_path(FREETYPE_INCLUDE_DIR NAMES freetype2/freetype/freetype.h freetype.h freetype2/freetype.h freetype/freetype.h
                                PATHS ${PC_FREETYPE_INCLUDEDIR}
                                      ${PC_FREETYPE_INCLUDE_DIRS})
 find_library(FREETYPE_LIBRARY NAMES freetype freetype246MT

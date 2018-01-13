@@ -205,7 +205,7 @@ enable_thing()
 		then
 			VALUE="TRUE"
 		fi
-	if
+	fi
 	addBool "USE_$RESULT" "$VALUE"
 }
 

@@ -145,6 +145,19 @@ typedef unsigned char WinLayerType;
 #define LAST_LAYER         LAYER_ABOVE
 #define DEFAULT_TRAY_LAYER LAYER_ABOVE
 
+/** Enumeration of window type. */
+typedef unsigned char WindowType;
+#define WINDOW_TYPE_DESKTOP        0
+#define WINDOW_TYPE_DOCK           1
+#define WINDOW_TYPE_SPLASH         2
+#define WINDOW_TYPE_DIALOG         3
+#define WINDOW_TYPE_NORMAL         4
+#define WINDOW_TYPE_MENU           5
+#define WINDOW_TYPE_NOTIFICATION   6
+#define WINDOW_TYPE_TOOLBAR        7
+#define WINDOW_TYPE_UTILITY        8
+#define WINDOW_TYPE_COUNT          9
+
 /** Client state information. */
 typedef struct ClientState {
    unsigned int status;          /**< Status bit mask. */
@@ -154,6 +167,7 @@ typedef struct ClientState {
    unsigned char maxFlags;       /**< Maximization status. */
    unsigned char layer;          /**< Current window layer. */
    unsigned char defaultLayer;   /**< Default window layer. */
+   unsigned char windowType;     /**< Window type. */
 } ClientState;
 
 extern Atom atoms[ATOM_COUNT];

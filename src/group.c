@@ -20,7 +20,8 @@
 typedef unsigned int MatchType;
 #define MATCH_NAME   0  /**< Match the window name. */
 #define MATCH_CLASS  1  /**< Match the window class. */
-#define MATCH_WMNAME 2  /**< Match the window name. */
+#define MATCH_TYPE   2  /**< Match the window type. */
+#define MATCH_WMNAME 3  /**< Match the window name. */
 
 /** List of match patterns for a group. */
 typedef struct PatternListType {
@@ -128,6 +129,18 @@ void AddGroupName(GroupType *gp, const char *pattern)
    }
 }
 
+/** Add a window type to a group. */
+void AddGroupType(GroupType *gp, const char *pattern)
+{
+   Assert(gp);
+   if(JLIKELY(pattern)) {
+      AddPattern(&gp->patterns, pattern, MATCH_TYPE);
+   } else {
+      Warning(_("invalid group type"));
+   }
+}
+
+/** Add a window name to a group. */
 void AddGroupWmName(GroupType *gp, const char *pattern)
 {
    Assert(gp);
@@ -210,18 +223,34 @@ void ApplyGroups(ClientNode *np)
    GroupType *gp;
    char hasClass;
    char hasName;
+   char hasType;
    char hasWmName;
    char matchesClass;
    char matchesName;
+   char matchesType;
    char matchesWmName;
+
+   static const StringMappingType windowTypeMapping[] = {
+      { "desktop",      WINDOW_TYPE_DESKTOP      },
+      { "dialog",       WINDOW_TYPE_DIALOG       },
+      { "dock",         WINDOW_TYPE_DOCK         },
+      { "menu",         WINDOW_TYPE_MENU         },
+      { "normal",       WINDOW_TYPE_NORMAL       },
+      { "notification", WINDOW_TYPE_NOTIFICATION },
+      { "splash",       WINDOW_TYPE_SPLASH       },
+      { "toolbar",      WINDOW_TYPE_TOOLBAR      },
+      { "utility",      WINDOW_TYPE_UTILITY      }
+   };
 
    Assert(np);
    for(gp = groups; gp; gp = gp->next) {
       hasClass = 0;
       hasName = 0;
+      hasType = 0;
       hasWmName = 0;
       matchesClass = 0;
       matchesName = 0;
+      matchesType = 0;
       matchesWmName = 0;
       for(lp = gp->patterns; lp; lp = lp->next) {
          if(lp->match == MATCH_CLASS) {
@@ -234,6 +263,12 @@ void ApplyGroups(ClientNode *np)
                matchesName = 1;
             }
             hasName = 1;
+         } else if(lp->match == MATCH_TYPE) {
+             if(FindValue(windowTypeMapping, WINDOW_TYPE_COUNT, lp->pattern)
+             == np->state.windowType) {
+                matchesType = 1;
+             }
+             hasType = 1;
          } else if(lp->match == MATCH_WMNAME) {
             if(Match(lp->pattern, np->name)) {
                matchesWmName = 1;
@@ -243,7 +278,8 @@ void ApplyGroups(ClientNode *np)
             Debug("invalid match in ApplyGroups: %d", lp->match);
          }
       }
-      if(hasName == matchesName && hasClass == matchesClass && hasWmName == matchesWmName) {
+      if(hasName == matchesName && hasClass == matchesClass
+      && hasType == matchesType && hasWmName == matchesWmName) {
          ApplyGroup(gp, np);
       }
    }

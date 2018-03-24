@@ -49,6 +49,7 @@ typedef struct MenuAction {
    /* Extra data for the action. */
    char *str;
    unsigned value;
+   unsigned timeout_ms;
 
    MenuActionType type;          /**< Type of action. */
 
@@ -84,6 +85,7 @@ typedef struct Menu {
    struct MenuItem *items; /**< Menu items. */
    char *label;            /**< Menu label (NULL for no label). */
    char *dynamic;          /**< Generating command of dynamic menu. */
+   unsigned timeout_ms;    /**< Timeout in milliseconds for dynamic menus. */
    int itemHeight;         /**< User-specified menu item height. */
 
    /* These fields are handled by menu.c */

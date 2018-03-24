@@ -136,7 +136,7 @@ void SetRootMenu(const char *indexes, Menu *m)
          unsigned y;
          char found = 0;
          for(y = 0; y < ROOT_MENU_COUNT; y++) {
-            if(x != y && rootMenu[y] == rootMenu[x]) {
+            if(index != y && rootMenu[y] == rootMenu[index]) {
                found = 1;
                break;
             }
@@ -189,7 +189,8 @@ char ShowRootMenu(int index, int x, int y, char keyboard)
       return 1;
    }
    if(rootMenu[index]->dynamic) {
-      Menu *menu = ParseDynamicMenu(rootMenu[index]->dynamic);
+      Menu *menu = rootMenu[index];
+      menu = ParseDynamicMenu(menu->timeout_ms, menu->dynamic);
       if(menu) {
          InitializeMenu(menu);
          ShowMenu(menu, RunRootCommand, x, y, keyboard);

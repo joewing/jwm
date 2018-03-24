@@ -229,7 +229,7 @@ if test "$enable_rsvg" != "no" ; then
       RSVG_LDFLAGS=`$PKGCONFIG --libs librsvg-2.0`
       enable_rsvg="yes"
    else
-      RSVG_LDFLAGS="-lrsvg-2.0"
+      RSVG_LDFLAGS="-lrsvg-2"
       AC_CHECK_LIB(rsvg-2, rsvg_handle_render_cairo,
          [ enable_rsvg="yes" ],
          [ enable_rsvg="no"

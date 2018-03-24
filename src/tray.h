@@ -11,6 +11,7 @@
 #define TRAY_H
 
 #include "hint.h"
+#include "timing.h"
 
 /** Enumeration of tray layouts. */
 typedef unsigned char LayoutType;
@@ -34,6 +35,7 @@ typedef unsigned char TrayAutoHideType;
 #define THIDE_TOP       3 /**< Hide on the top. */
 #define THIDE_BOTTOM    4 /**< Hide on the bottom. */
 #define THIDE_ON        5 /**< Auto-select hide location. */
+#define THIDE_INVISIBLE 6 /**< Make the tray invisible when hidden. */
 #define THIDE_RAISED    8 /**< Mask to indicate the tray is raised. */
 
 /** Structure to hold common tray component data.
@@ -140,7 +142,9 @@ typedef struct TrayType {
    TrayAlignmentType valign;  /**< Vertical alignment. */
    TrayAlignmentType halign;  /**< Horizontal alignment. */
 
+   TimeType showTime;
    TrayAutoHideType  autoHide;
+   unsigned autoHideDelay;
    char hidden;     /**< 1 if hidden (due to autohide), 0 otherwise. */
 
    Window window; /**< The tray window. */
@@ -233,11 +237,14 @@ unsigned int GetTrayCount(void);
  */
 char ProcessTrayEvent(const XEvent *event);
 
-/** Set whether auto hide is enabled for a tray.
+/** Set whether auto-hide is enabled for a tray.
  * @param tp The tray.
- * @param autohide The auto hide setting.
+ * @param autohide The auto-hide setting.
+ * @param delay_ms The auto-hide timeout in milliseconds.
  */
-void SetAutoHideTray(TrayType *tp, TrayAutoHideType autohide);
+void SetAutoHideTray(TrayType *tp,
+                     TrayAutoHideType autohide,
+                     unsigned delay_ms);
 
 /** Set the tray x-coordinate.
  * @param tp The tray.

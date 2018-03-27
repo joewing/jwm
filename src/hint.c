@@ -639,6 +639,7 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
       state = (Atom*)temp;
       for(x = 0; x < count; x++) {
          if(         state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_NORMAL]) {
+            result.windowType = WINDOW_TYPE_NORMAL;
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DESKTOP]) {
             result.defaultLayer  = LAYER_DESKTOP;
@@ -646,35 +647,43 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
             result.status       |= STAT_STICKY;
             result.status       |= STAT_NOLIST;
             result.status       |= STAT_NOFOCUS;
+            result.windowType    = WINDOW_TYPE_DESKTOP;
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DOCK]) {
             result.border        = BORDER_NONE;
             result.defaultLayer  = LAYER_ABOVE;
             result.status       |= STAT_NOFOCUS;
+            result.windowType    = WINDOW_TYPE_DOCK;
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_SPLASH]) {
-            result.border = BORDER_NONE;
+            result.border     = BORDER_NONE;
+            result.windowType = WINDOW_TYPE_SPLASH;
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_DIALOG]) {
-            result.border &= ~BORDER_MIN;
-            result.border &= ~BORDER_MAX;
+            result.border    &= ~BORDER_MIN;
+            result.border    &= ~BORDER_MAX;
+            result.windowType = WINDOW_TYPE_DIALOG;
             break;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_MENU]) {
             result.border       &= ~BORDER_MAX;
             result.status       |= STAT_NOLIST;
+            result.windowType    = WINDOW_TYPE_MENU;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_NOTIFICATION]) {
             result.border        = BORDER_NONE;
             result.status       |= STAT_NOLIST;
             result.status       |= STAT_NOFOCUS;
+            result.windowType    = WINDOW_TYPE_NOTIFICATION;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_TOOLBAR]) {
             result.border       &= ~BORDER_MAX;
             result.defaultLayer  = LAYER_ABOVE;
             result.status       |= STAT_STICKY;
             result.status       |= STAT_NOLIST;
             result.status       |= STAT_NOFOCUS;
+            result.windowType    = WINDOW_TYPE_TOOLBAR;
          } else if(  state[x] == atoms[ATOM_NET_WM_WINDOW_TYPE_UTILITY]) {
             result.border       &= ~BORDER_MAX;
             result.status       |= STAT_NOFOCUS;
+            result.windowType    = WINDOW_TYPE_UTILITY;
          } else {
             Debug("Unknown _NET_WM_WINDOW_TYPE: %lu", state[x]);
          }

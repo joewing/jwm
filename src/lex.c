@@ -51,6 +51,7 @@ static const StringMappingType TOKEN_MAP[] = {
    { "Key",                TOK_KEY              },
    { "Kill",               TOK_KILL             },
    { "Layer",              TOK_LAYER            },
+   { "Machine",            TOK_MACHINE          },
    { "Maximize",           TOK_MAXIMIZE         },
    { "Menu",               TOK_MENU             },
    { "MenuStyle",          TOK_MENUSTYLE        },

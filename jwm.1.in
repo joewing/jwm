@@ -749,8 +749,8 @@ output is the same as the main configuration file.
 .B "GROUP SETTINGS"
 .RS
 Program groups allow one to specify options which apply to a group of
-programs by name, class and window type. A program group is created with 
-the \fBGroup\fP tag. As many program groups can be created as desired.
+programs by name, class, window type and machine. A program group is created
+with the \fBGroup\fP tag. As many program groups can be created as desired.
 If one or more \fBName\fP tags is specified, at least one name must
 match.  Likewise, if one or more \fBClass\fP tags is specified, at least
 one class must match.
@@ -773,6 +773,11 @@ second string in WM_CLASS).
 The window type for a program to match to be in this group. Possible 
 values are desktop, dialog, dock, menu, normal, notification, splash,
 toolbar, utility.
+.RE
+.B Machine
+.RS
+The machine on which a program runs to match to be in this group.
+(the string WM_CLIENT_MACHINE)
 .RE
 .B Option
 .RS

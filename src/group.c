@@ -18,9 +18,10 @@
 
 /** What part of the window to match. */
 typedef unsigned int MatchType;
-#define MATCH_NAME   0  /**< Match the window name. */
-#define MATCH_CLASS  1  /**< Match the window class. */
-#define MATCH_TYPE   2  /**< Match the window type. */
+#define MATCH_NAME      0  /**< Match the window name. */
+#define MATCH_CLASS     1  /**< Match the window class. */
+#define MATCH_TYPE      2  /**< Match the window type. */
+#define MATCH_MACHINE   3  /**< Match the window machine. */
 
 /** List of match patterns for a group. */
 typedef struct PatternListType {
@@ -139,6 +140,17 @@ void AddGroupType(GroupType *gp, const char *pattern)
    }
 }
 
+/** Add a window machine to a group. */
+void AddGroupMachine(GroupType *gp, const char *pattern)
+{
+   Assert(gp);
+   if(JLIKELY(pattern)) {
+      AddPattern(&gp->patterns, pattern, MATCH_MACHINE);
+   } else {
+      Warning(_("invalid group machine"));
+   }
+}
+
 /** Add a pattern to a pattern list. */
 void AddPattern(PatternListType **lp, const char *pattern, MatchType match)
 {
@@ -212,9 +224,11 @@ void ApplyGroups(ClientNode *np)
    char hasClass;
    char hasName;
    char hasType;
+   char hasMachine;
    char matchesClass;
    char matchesName;
    char matchesType;
+   char matchesMachine;
 
    static const StringMappingType windowTypeMapping[] = {
       { "desktop",      WINDOW_TYPE_DESKTOP      },
@@ -236,6 +250,7 @@ void ApplyGroups(ClientNode *np)
       matchesClass = 0;
       matchesName = 0;
       matchesType = 0;
+      matchesMachine = 0;
       for(lp = gp->patterns; lp; lp = lp->next) {
          if(lp->match == MATCH_CLASS) {
             if(Match(lp->pattern, np->className)) {
@@ -253,12 +268,17 @@ void ApplyGroups(ClientNode *np)
                 matchesType = 1;
              }
              hasType = 1;
+         } else if(lp->match == MATCH_MACHINE) {
+            if(Match(lp->pattern, np->machineName)) {
+               matchesMachine = 1;
+            }
+             hasMachine = 1;
          } else {
             Debug("invalid match in ApplyGroups: %d", lp->match);
          }
       }
       if(hasName == matchesName && hasClass == matchesClass
-      && hasType == matchesType) {
+      && hasType == matchesType && hasMachine == matchesMachine) {
          ApplyGroup(gp, np);
       }
    }

@@ -247,6 +247,7 @@ void ApplyGroups(ClientNode *np)
       hasClass = 0;
       hasName = 0;
       hasType = 0;
+      hasMachine = 0;
       matchesClass = 0;
       matchesName = 0;
       matchesType = 0;

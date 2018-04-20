@@ -794,7 +794,11 @@ void ReadWMMachine(ClientNode *np)
    XTextProperty tprop;
    char **tlist;
    int tcount;
-   
+
+   if(np->machineName) {
+      Release(np->machineName);
+   }
+
    XGetWMClientMachine(display, np->window, &tprop);
    if(XmbTextPropertyToTextList(display, &tprop, &tlist, &tcount)
       == Success && tcount > 0) {
@@ -802,6 +806,8 @@ void ReadWMMachine(ClientNode *np)
       np->machineName = Allocate(len);
       memcpy(np->machineName, tlist[0], len);
       XFreeStringList(tlist);
+   } else {
+      np->machineName = NULL;
    }
 }
 

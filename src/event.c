@@ -955,6 +955,7 @@ char HandlePropertyNotify(const XPropertyEvent *event)
       case XA_WM_CLIENT_MACHINE:
          ReadWMMachine(np);
          changed = 1;
+         break;
       default:
          if(event->atom == atoms[ATOM_WM_COLORMAP_WINDOWS]) {
             ReadWMColormaps(np);

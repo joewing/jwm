@@ -972,8 +972,8 @@ void ParseMouse(const TokenNode *tp)
 AlignmentType ParseTextAlignment(const TokenNode *tp)
 {
    static const StringMappingType mapping[] = {
-      {"left",    ALIGN_LEFT   },
       {"center",  ALIGN_CENTER },
+      {"left",    ALIGN_LEFT   },
       {"right",   ALIGN_RIGHT  }
    };
    const char *attr= FindAttribute(tp->attributes, "align");

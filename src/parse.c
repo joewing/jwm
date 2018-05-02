@@ -36,7 +36,6 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/mman.h>
 #include <fcntl.h>
 #include <errno.h>
 
@@ -1994,6 +1993,7 @@ TokenNode *TokenizeFile(const char *fileName)
    TokenNode *tokens;
    char *path;
    char *buffer;
+   ssize_t offset;
 
    path = CopyString(fileName);
    ExpandPath(&path);
@@ -2008,13 +2008,18 @@ TokenNode *TokenizeFile(const char *fileName)
       close(fd);
       return NULL;
    }
-   buffer = mmap(NULL, sbuf.st_size, PROT_READ, MAP_SHARED, fd, 0);
-   if(JUNLIKELY(buffer == MAP_FAILED)) {
-      close(fd);
-      return NULL;
+   buffer = Allocate(sbuf.st_size + 1);
+   offset = 0;
+   while(offset < sbuf.st_size) {
+      const ssize_t rc = read(fd, &buffer[offset], sbuf.st_size - offset);
+      if(rc <= 0) {
+         break;
+      }
+      offset += rc;
    }
+   buffer[offset] = 0;
    tokens = Tokenize(buffer, fileName);
-   munmap(buffer, sbuf.st_size);
+   Release(buffer);
    close(fd);
    return tokens;
 }

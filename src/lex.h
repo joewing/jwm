@@ -47,6 +47,7 @@ typedef enum {
    TOK_KEY,
    TOK_KILL,
    TOK_LAYER,
+   TOK_MACHINE,
    TOK_MAXIMIZE,
    TOK_MENU,
    TOK_MENUSTYLE,

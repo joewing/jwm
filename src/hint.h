@@ -193,6 +193,11 @@ void ReadClientInfo(struct ClientNode *np, char alreadyMapped);
  */
 void ReadWMName(struct ClientNode *np);
 
+/** Read a client's machine.
+ * @param np The client.
+ */
+void ReadWMMachine(struct ClientNode *np);
+
 /** Read a client's class.
  * @param np The client.
  */

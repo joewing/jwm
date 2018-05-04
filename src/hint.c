@@ -297,6 +297,7 @@ void ReadClientInfo(ClientNode *np, char alreadyMapped)
    ReadWMClass(np);
    ReadWMNormalHints(np);
    ReadWMColormaps(np);
+   ReadWMMachine(np);
 
    status = JXGetTransientForHint(display, np->window, &np->owner);
    if(!status) {
@@ -785,6 +786,29 @@ void ReadWMName(ClientNode *np)
       }
    }
 
+}
+
+/** Read the machine for a client. */
+void ReadWMMachine(ClientNode *np)
+{
+   XTextProperty tprop;
+   char **tlist;
+   int tcount;
+
+   if(np->machineName) {
+      Release(np->machineName);
+   }
+
+   XGetWMClientMachine(display, np->window, &tprop);
+   if(XmbTextPropertyToTextList(display, &tprop, &tlist, &tcount)
+      == Success && tcount > 0) {
+      const size_t len = strlen(tlist[0]) + 1;
+      np->machineName = Allocate(len);
+      memcpy(np->machineName, tlist[0], len);
+      XFreeStringList(tlist);
+   } else {
+      np->machineName = NULL;
+   }
 }
 
 /** Read the window class for a client. */

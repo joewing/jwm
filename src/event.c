@@ -951,7 +951,10 @@ char HandlePropertyNotify(const XPropertyEvent *event)
          JXGetTransientForHint(display, np->window, &np->owner);
          break;
       case XA_WM_ICON_NAME:
+         break;
       case XA_WM_CLIENT_MACHINE:
+         ReadWMMachine(np);
+         changed = 1;
          break;
       default:
          if(event->atom == atoms[ATOM_WM_COLORMAP_WINDOWS]) {

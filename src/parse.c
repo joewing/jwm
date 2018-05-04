@@ -36,7 +36,6 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/mman.h>
 #include <fcntl.h>
 #include <errno.h>
 
@@ -972,8 +971,8 @@ void ParseMouse(const TokenNode *tp)
 AlignmentType ParseTextAlignment(const TokenNode *tp)
 {
    static const StringMappingType mapping[] = {
-      {"left",    ALIGN_LEFT   },
       {"center",  ALIGN_CENTER },
+      {"left",    ALIGN_LEFT   },
       {"right",   ALIGN_RIGHT  }
    };
    const char *attr= FindAttribute(tp->attributes, "align");
@@ -1822,9 +1821,12 @@ void ParseGroup(const TokenNode *tp)
          break;
       case TOK_TYPE:
          AddGroupType(group, np->value);
-          break;
+         break;
       case TOK_WMNAME:
          AddGroupWmName(group, np->value);
+         break;
+      case TOK_MACHINE:
+         AddGroupMachine(group, np->value);
          break;
       case TOK_OPTION:
          ParseGroupOption(np, group, np->value);
@@ -1994,6 +1996,7 @@ TokenNode *TokenizeFile(const char *fileName)
    TokenNode *tokens;
    char *path;
    char *buffer;
+   ssize_t offset;
 
    path = CopyString(fileName);
    ExpandPath(&path);
@@ -2008,13 +2011,18 @@ TokenNode *TokenizeFile(const char *fileName)
       close(fd);
       return NULL;
    }
-   buffer = mmap(NULL, sbuf.st_size, PROT_READ, MAP_SHARED, fd, 0);
-   if(JUNLIKELY(buffer == MAP_FAILED)) {
-      close(fd);
-      return NULL;
+   buffer = Allocate(sbuf.st_size + 1);
+   offset = 0;
+   while(offset < sbuf.st_size) {
+      const ssize_t rc = read(fd, &buffer[offset], sbuf.st_size - offset);
+      if(rc <= 0) {
+         break;
+      }
+      offset += rc;
    }
+   buffer[offset] = 0;
    tokens = Tokenize(buffer, fileName);
-   munmap(buffer, sbuf.st_size);
+   Release(buffer);
    close(fd);
    return tokens;
 }

@@ -17,152 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.8\n"
 
-#: src/action.c:44
+#: src/parse.c:1829
 #, c-format
-msgid "invalid action: \"%s\""
-msgstr "acción no válida: «%s»"
+msgid "%s is empty"
+msgstr "%s está vacío"
 
-#: src/action.c:211
+#: src/lex.c:367
 #, c-format
-msgid "action: root menu \"%s\" not defined"
-msgstr "acción: menú raíz «%s» no definido"
-
-#: src/background.c:137
-msgid "no value specified for background"
-msgstr "no hay valor especificado para fondo de pantalla"
-
-#: src/background.c:149
-#, c-format
-msgid "invalid background type: \"%s\""
-msgstr "tipo de fondo de pantalla no válido: «%s»"
-
-#: src/background.c:294
-#, c-format
-msgid "background image not found: \"%s\""
-msgstr "imagen de fondo de pantalla no encontrada: «%s»"
-
-#: src/client.c:905
-msgid "Kill this window?"
-msgstr "¿Finalizar esta ventana?"
-
-#: src/client.c:906
-msgid "This may cause data to be lost!"
-msgstr "¡Esto puede causar pérdida de datos!"
-
-#: src/command.c:138 src/main.c:221
-#, c-format
-msgid "exec failed: (%s) %s"
-msgstr "Ha fallado: (%s) %s"
-
-#: src/confirm.c:69
-msgid "OK"
-msgstr "OK"
-
-#: src/confirm.c:74
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: src/confirm.c:308
-msgid "Confirm"
-msgstr "Confirmar"
-
-#: src/desktop.c:336
-msgid "empty Desktops Name tag"
-msgstr "etiqueta Nombre de Escritorio vacía"
-
-#: src/dock.c:151
-msgid "only one Dock allowed"
-msgstr "solo se permite un Muelle"
-
-#: src/dock.c:232
-msgid "could not acquire system tray selection"
-msgstr "no se pudo adquirir la selección de bandeja de sistema"
-
-#: src/error.c:22
-#, c-format
-msgid "JWM: error: "
-msgstr "JWM: error: "
-
-#: src/error.c:51
-#, c-format
-msgid "JWM: warning: "
-msgstr "JWM: advertencia: "
-
-#: src/error.c:77
-msgid "display is already managed"
-msgstr "el visor ya está manejado"
-
-#: src/font.c:109 src/font.c:126
-#, c-format
-msgid "could not load font: %s"
-msgstr "no se pudo cargar el tipo de letra: %s"
-
-#: src/font.c:116 src/font.c:133
-#, c-format
-msgid "could not load the default font: %s"
-msgstr "no se pudo cargar el tipo de letra por omición: %s"
-
-#: src/font.c:315
-msgid "empty Font tag"
-msgstr "etiqueta de Tipo de letra vacía"
-
-#: src/group.c:115
-msgid "invalid group class"
-msgstr "clase de grupo no válida"
-
-#: src/group.c:126
-msgid "invalid group name"
-msgstr "nombre de grupo no válido"
-
-#: src/group.c:287
-#, c-format
-msgid "invalid group desktop: %d"
-msgstr "escritorio de grupo no válido: %d"
-
-#: src/image.c:220
-#, c-format
-msgid "could not create read struct for PNG image: %s"
-msgstr "no se pudo crear estructura de lectura para imagen PNG: %s"
-
-#: src/image.c:233
-#, c-format
-msgid "error reading PNG image: %s"
-msgstr "error leyendo imagen PNG: %s"
-
-#: src/image.c:241
-#, c-format
-msgid "could not create info struct for PNG image: %s"
-msgstr "no se pudo crear estruct. de infor. para imagen PNG: %s"
-
-#: src/key.c:318
-msgid "Specified KeySym is not defined for any KeyCode"
-msgstr ""
-"El símbolo de tecla especificado no está definido para cualquier código de "
-"tecla"
-
-#: src/key.c:326
-#, c-format
-msgid "modifier not found for keysym 0x%0x"
-msgstr "modificador no encontrado para el símbolo de tecla 0x%0x"
-
-#: src/key.c:356
-#, c-format
-msgid "invalid modifier: \"%c\""
-msgstr "modificador no válido: \"%c\""
-
-#: src/key.c:371
-#, c-format
-msgid "invalid key symbol: \"%s\""
-msgstr "símbolo de tecla no válido: \"%s\""
-
-#: src/key.c:452
-msgid "neither key nor keycode specified for Key"
-msgstr "ni tecla ni código especificados para Tecla"
-
-#: src/key.c:467
-#, c-format
-msgid "key binding: root menu \"%s\" not defined"
-msgstr "atajo de teclado: menú raíz «%s» no definido"
+msgid "%s[%d]: invalid entity: \"%.8s\""
+msgstr "%s[%d]: entidad no válida: «%.8s»"
 
 #: src/lex.c:201
 #, c-format
@@ -170,11 +33,6 @@ msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: la etiqueta de cierre «%s» no coincide con la etiqueta de apertura "
 "«%s»"
-
-#: src/lex.c:207
-#, c-format
-msgid "%s[%u]: unexpected and invalid close tag"
-msgstr "%s[%u]: etiqueta de cierre inesperada y no válida"
 
 #: src/lex.c:213
 #, c-format
@@ -196,155 +54,97 @@ msgstr "%s[%u]: etiqueta de apertura no válida"
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: etiqueta no válida"
 
+#: src/lex.c:207
+#, c-format
+msgid "%s[%u]: unexpected and invalid close tag"
+msgstr "%s[%u]: etiqueta de cierre inesperada y no válida"
+
 #: src/lex.c:308
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: texto inesperado: «%s»"
 
-#: src/lex.c:367
-#, c-format
-msgid "%s[%d]: invalid entity: \"%.8s\""
-msgstr "%s[%d]: entidad no válida: «%.8s»"
-
-#: src/lex.c:473 src/parse.c:1893
-msgid "out of memory"
-msgstr "Sin memoria"
-
-#: src/parse.c:228
-#, c-format
-msgid "could not open %s or %s"
-msgstr "no se pudo abrir %s o %s"
-
-#: src/parse.c:246
-#, c-format
-msgid "include depth (%d) exceeded"
-msgstr "se excedió la profundidad de capa (%d)"
-
-#: src/parse.c:384
-#, c-format
-msgid "invalid start tag: %s"
-msgstr "etiqueta inicial no válida: %s"
-
-#: src/parse.c:774
-#, c-format
-msgid "invalid include: %s"
-msgstr "incluir no válido: %s"
-
-#: src/parse.c:824
-msgid "no action specified for Key"
-msgstr "no se especificó acción para la Tecla"
-
-#: src/parse.c:847
-#, c-format
-msgid "invalid Key action: \"%s\""
-msgstr "acción no válida para la Tecla de acción: «%s»"
-
-#: src/parse.c:871
-#, c-format
-msgid "invalid text alignment: \"%s\""
-msgstr "alineación de texto no válida: «%s»"
-
-#: src/parse.c:957
-msgid "no include file specified"
-msgstr "no se especificó un archivo de capa"
-
-#: src/parse.c:967
-#, c-format
-msgid "could not process include: %s"
-msgstr "no se pudo procesar el incluir: %s"
-
-#: src/parse.c:971
-#, c-format
-msgid "could not open included file: %s"
-msgstr "no se pudo abrir el incluir: %s"
-
-#: src/parse.c:1611
-#, c-format
-msgid "invalid value for 'enabled': \"%s\""
-msgstr "valor no válido para «habilitado»: «%s»"
-
-#: src/parse.c:1752
-#, c-format
-msgid "invalid Group Option: %s"
-msgstr "Grupo de opciones no válido: %s"
-
-#: src/parse.c:1767
-#, c-format
-msgid "invalid decorations: %s"
-msgstr "decoración no válida: «%s»"
-
-#: src/parse.c:1829
-#, c-format
-msgid "%s is empty"
-msgstr "%s está vacío"
-
-#: src/parse.c:1836
-#, c-format
-msgid "invalid %s: \"%s\""
-msgstr "no valido para %s: «%s»"
-
-#: src/parse.c:1854
-#, c-format
-msgid "invalid value for %s: \"%s\""
-msgstr "valor no válido para %s: «%s»"
-
-#: src/parse.c:1880
-#, c-format
-msgid "could not read file: %s"
-msgstr "no se pudo cargar el archivo: %s"
-
-#: src/parse.c:1967 src/parse.c:1984
-msgid "no value specified"
-msgstr "no hay valor especificado"
-
-#: src/parse.c:1972
-#, c-format
-msgid "invalid setting: %s"
-msgstr "ajuste no válido: %s"
-
-#: src/parse.c:1989
-#, c-format
-msgid "invalid opacity: %s"
-msgstr "opacidad no válida: %s"
-
-#: src/parse.c:2010
-#, c-format
-msgid "invalid layer: %s"
-msgstr "capa no válida: %s"
-
-#: src/parse.c:2031
-#, c-format
-msgid "invalid tag in %s: %s"
-msgstr "etiqueta no válida en %s: %s"
-
-#: src/parse.c:2052
-msgid "configuration error"
-msgstr "error de configuración"
-
-#: src/root.c:131
-#, c-format
-msgid "invalid root menu specified: \"%c\""
-msgstr "menú root especificado no válido: «%c»"
-
-#: src/root.c:223
-msgid "Exit JWM"
-msgstr "Salir de JWM"
+#: src/winmenu.c:150
+msgid "Above"
+msgstr "Arriba"
 
 #: src/root.c:224
 msgid "Are you sure?"
 msgstr "¿Está seguro?"
 
-#: src/swallow.c:85
-msgid "cannot swallow a client with no name"
-msgstr "no se puede mostrar un cliente sin nombre"
+#: src/winmenu.c:160
+msgid "Below"
+msgstr "Abajo"
+
+#: src/confirm.c:74
+msgid "Cancel"
+msgstr "Cancelar"
 
 #: src/taskbar.c:444 src/winmenu.c:48
 msgid "Close"
 msgstr "Cerrar"
 
+#: src/confirm.c:308
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: src/root.c:223
+msgid "Exit JWM"
+msgstr "Salir de JWM"
+
+#: src/error.c:22
+#, c-format
+msgid "JWM: error: "
+msgstr "JWM: error: "
+
+#: src/error.c:51
+#, c-format
+msgid "JWM: warning: "
+msgstr "JWM: advertencia: "
+
+#: src/winmenu.c:49
+msgid "Kill"
+msgstr "Finalizar"
+
+#: src/client.c:905
+msgid "Kill this window?"
+msgstr "¿Finalizar esta ventana?"
+
+#: src/winmenu.c:139
+msgid "Layer"
+msgstr "Capa"
+
+#: src/winmenu.c:90
+msgid "Maximize"
+msgstr "Maximizar"
+
+#: src/winmenu.c:86
+msgid "Maximize-x"
+msgstr "Maximizar-x"
+
+#: src/winmenu.c:81
+msgid "Maximize-y"
+msgstr "Maximizar-y"
+
 #: src/taskbar.c:451 src/winmenu.c:66
 msgid "Minimize"
 msgstr "Minimizar"
+
+#: src/winmenu.c:60
+msgid "Move"
+msgstr "Mover"
+
+#: src/winmenu.c:155
+msgid "Normal"
+msgstr "Normal"
+
+#: src/confirm.c:69
+msgid "OK"
+msgstr "OK"
+
+#: src/winmenu.c:57
+msgid "Resize"
+msgstr "Redimensionar"
 
 #: src/taskbar.c:458 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
@@ -355,113 +155,313 @@ msgstr "Restaurar"
 msgid "Send To"
 msgstr "Enviar A"
 
-#: src/taskbar.c:961
-#, c-format
-msgid "invalid maxwidth for TaskList: %s"
-msgstr "ancho máximo no válido para Lista de Tareas: %s"
+#: src/winmenu.c:74
+msgid "Shade"
+msgstr "Enrollar"
 
-#: src/taskbar.c:975
-#, c-format
-msgid "invalid height for TaskList: %s"
-msgstr "ancho no válido para Lista de Tareas: %s"
+#: src/key.c:318
+msgid "Specified KeySym is not defined for any KeyCode"
+msgstr ""
+"El símbolo de tecla especificado no está definido para cualquier código de "
+"tecla"
 
-#: src/tray.c:1064
-#, c-format
-msgid "invalid tray layout: \"%s\""
-msgstr "forma no válida para bandeja: «%s»"
+#: src/winmenu.c:114
+msgid "Stick"
+msgstr "Pegar"
 
-#: src/tray.c:1102
-#, c-format
-msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "alineación horizontal no válida para bandeja: «%s»"
+#: src/client.c:906
+msgid "This may cause data to be lost!"
+msgstr "¡Esto puede causar pérdida de datos!"
 
-#: src/tray.c:1125
+#: src/winmenu.c:72
+msgid "Unshade"
+msgstr "Desenrollar"
+
+#: src/winmenu.c:112
+msgid "Unstick"
+msgstr "Despegar"
+
+#: src/winmenu.c:148
+msgid "[Above]"
+msgstr "[Arriba]"
+
+#: src/winmenu.c:158
+msgid "[Below]"
+msgstr "[Abajo]"
+
+#: src/winmenu.c:153
+msgid "[Normal]"
+msgstr "[Normal]"
+
+#: src/action.c:211
 #, c-format
-msgid "invalid tray vertical alignment: \"%s\""
-msgstr "alineación vertical no válida para bandeja: «%s»"
+msgid "action: root menu \"%s\" not defined"
+msgstr "acción: menú raíz «%s» no definido"
+
+#: src/background.c:294
+#, c-format
+msgid "background image not found: \"%s\""
+msgstr "imagen de fondo de pantalla no encontrada: «%s»"
+
+#: src/swallow.c:85
+msgid "cannot swallow a client with no name"
+msgstr "no se puede mostrar un cliente sin nombre"
+
+#: src/parse.c:2052
+msgid "configuration error"
+msgstr "error de configuración"
+
+#: src/dock.c:232
+msgid "could not acquire system tray selection"
+msgstr "no se pudo adquirir la selección de bandeja de sistema"
+
+#: src/image.c:241
+#, c-format
+msgid "could not create info struct for PNG image: %s"
+msgstr "no se pudo crear estruct. de infor. para imagen PNG: %s"
+
+#: src/image.c:220
+#, c-format
+msgid "could not create read struct for PNG image: %s"
+msgstr "no se pudo crear estructura de lectura para imagen PNG: %s"
+
+#: src/font.c:109 src/font.c:126
+#, c-format
+msgid "could not load font: %s"
+msgstr "no se pudo cargar el tipo de letra: %s"
+
+#: src/font.c:116 src/font.c:133
+#, c-format
+msgid "could not load the default font: %s"
+msgstr "no se pudo cargar el tipo de letra por omición: %s"
 
 #: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "no se pudo cargar el icono de bandeja: «%s»"
 
+#: src/parse.c:228
+#, c-format
+msgid "could not open %s or %s"
+msgstr "no se pudo abrir %s o %s"
+
+#: src/parse.c:971
+#, c-format
+msgid "could not open included file: %s"
+msgstr "no se pudo abrir el incluir: %s"
+
+#: src/parse.c:967
+#, c-format
+msgid "could not process include: %s"
+msgstr "no se pudo procesar el incluir: %s"
+
+#: src/parse.c:1880
+#, c-format
+msgid "could not read file: %s"
+msgstr "no se pudo cargar el archivo: %s"
+
+#: src/error.c:77
+msgid "display is already managed"
+msgstr "el visor ya está manejado"
+
+#: src/desktop.c:336
+msgid "empty Desktops Name tag"
+msgstr "etiqueta Nombre de Escritorio vacía"
+
+#: src/font.c:315
+msgid "empty Font tag"
+msgstr "etiqueta de Tipo de letra vacía"
+
+#: src/image.c:233
+#, c-format
+msgid "error reading PNG image: %s"
+msgstr "error leyendo imagen PNG: %s"
+
+#: src/command.c:138 src/main.c:221
+#, c-format
+msgid "exec failed: (%s) %s"
+msgstr "Ha fallado: (%s) %s"
+
+#: src/parse.c:246
+#, c-format
+msgid "include depth (%d) exceeded"
+msgstr "se excedió la profundidad de capa (%d)"
+
+#: src/parse.c:1836
+#, c-format
+msgid "invalid %s: \"%s\""
+msgstr "no valido para %s: «%s»"
+
+#: src/parse.c:1752
+#, c-format
+msgid "invalid Group Option: %s"
+msgstr "Grupo de opciones no válido: %s"
+
+#: src/parse.c:847
+#, c-format
+msgid "invalid Key action: \"%s\""
+msgstr "acción no válida para la Tecla de acción: «%s»"
+
+#: src/action.c:44
+#, c-format
+msgid "invalid action: \"%s\""
+msgstr "acción no válida: «%s»"
+
+#: src/background.c:149
+#, c-format
+msgid "invalid background type: \"%s\""
+msgstr "tipo de fondo de pantalla no válido: «%s»"
+
+#: src/parse.c:1767
+#, c-format
+msgid "invalid decorations: %s"
+msgstr "decoración no válida: «%s»"
+
+#: src/group.c:115
+msgid "invalid group class"
+msgstr "clase de grupo no válida"
+
+#: src/group.c:287
+#, c-format
+msgid "invalid group desktop: %d"
+msgstr "escritorio de grupo no válido: %d"
+
+#: src/group.c:126
+msgid "invalid group name"
+msgstr "nombre de grupo no válido"
+
+#: src/taskbar.c:975
+#, c-format
+msgid "invalid height for TaskList: %s"
+msgstr "ancho no válido para Lista de Tareas: %s"
+
+#: src/parse.c:774
+#, c-format
+msgid "invalid include: %s"
+msgstr "incluir no válido: %s"
+
+#: src/key.c:371
+#, c-format
+msgid "invalid key symbol: \"%s\""
+msgstr "símbolo de tecla no válido: \"%s\""
+
+#: src/parse.c:2010
+#, c-format
+msgid "invalid layer: %s"
+msgstr "capa no válida: %s"
+
+#: src/taskbar.c:961
+#, c-format
+msgid "invalid maxwidth for TaskList: %s"
+msgstr "ancho máximo no válido para Lista de Tareas: %s"
+
+#: src/key.c:356
+#, c-format
+msgid "invalid modifier: \"%c\""
+msgstr "modificador no válido: \"%c\""
+
+#: src/parse.c:1989
+#, c-format
+msgid "invalid opacity: %s"
+msgstr "opacidad no válida: %s"
+
+#: src/root.c:131
+#, c-format
+msgid "invalid root menu specified: \"%c\""
+msgstr "menú root especificado no válido: «%c»"
+
+#: src/parse.c:1972
+#, c-format
+msgid "invalid setting: %s"
+msgstr "ajuste no válido: %s"
+
+#: src/parse.c:384
+#, c-format
+msgid "invalid start tag: %s"
+msgstr "etiqueta inicial no válida: %s"
+
+#: src/parse.c:2031
+#, c-format
+msgid "invalid tag in %s: %s"
+msgstr "etiqueta no válida en %s: %s"
+
+#: src/parse.c:871
+#, c-format
+msgid "invalid text alignment: \"%s\""
+msgstr "alineación de texto no válida: «%s»"
+
+#: src/tray.c:1102
+#, c-format
+msgid "invalid tray horizontal alignment: \"%s\""
+msgstr "alineación horizontal no válida para bandeja: «%s»"
+
+#: src/tray.c:1064
+#, c-format
+msgid "invalid tray layout: \"%s\""
+msgstr "forma no válida para bandeja: «%s»"
+
+#: src/tray.c:1125
+#, c-format
+msgid "invalid tray vertical alignment: \"%s\""
+msgstr "alineación vertical no válida para bandeja: «%s»"
+
+#: src/parse.c:1854
+#, c-format
+msgid "invalid value for %s: \"%s\""
+msgstr "valor no válido para %s: «%s»"
+
+#: src/parse.c:1611
+#, c-format
+msgid "invalid value for 'enabled': \"%s\""
+msgstr "valor no válido para «habilitado»: «%s»"
+
+#: src/key.c:467
+#, c-format
+msgid "key binding: root menu \"%s\" not defined"
+msgstr "atajo de teclado: menú raíz «%s» no definido"
+
+#: src/key.c:326
+#, c-format
+msgid "modifier not found for keysym 0x%0x"
+msgstr "modificador no encontrado para el símbolo de tecla 0x%0x"
+
+#: src/key.c:452
+msgid "neither key nor keycode specified for Key"
+msgstr "ni tecla ni código especificados para Tecla"
+
+#: src/parse.c:824
+msgid "no action specified for Key"
+msgstr "no se especificó acción para la Tecla"
+
 #: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
 msgstr "no hay icono o etiqueta para el Botón de Bandeja"
 
-#: src/winmenu.c:49
-msgid "Kill"
-msgstr "Finalizar"
+#: src/parse.c:957
+msgid "no include file specified"
+msgstr "no se especificó un archivo de capa"
 
-#: src/winmenu.c:57
-msgid "Resize"
-msgstr "Redimensionar"
+#: src/parse.c:1967 src/parse.c:1984
+msgid "no value specified"
+msgstr "no hay valor especificado"
 
-#: src/winmenu.c:60
-msgid "Move"
-msgstr "Mover"
+#: src/background.c:137
+msgid "no value specified for background"
+msgstr "no hay valor especificado para fondo de pantalla"
 
-#: src/winmenu.c:72
-msgid "Unshade"
-msgstr "Desenrollar"
+#: src/dock.c:151
+msgid "only one Dock allowed"
+msgstr "solo se permite un Muelle"
 
-#: src/winmenu.c:74
-msgid "Shade"
-msgstr "Enrollar"
+#: src/lex.c:473 src/parse.c:1893
+msgid "out of memory"
+msgstr "Sin memoria"
 
-#: src/winmenu.c:81
-msgid "Maximize-y"
-msgstr "Maximizar-y"
+#~ msgid "Fullscreen state will be shaped!"
+#~ msgstr "¡Se definirá el estado de Pantalla Completa!"
 
-#: src/winmenu.c:86
-msgid "Maximize-x"
-msgstr "Maximizar-x"
-
-#: src/winmenu.c:90
-msgid "Maximize"
-msgstr "Maximizar"
-
-#: src/winmenu.c:112
-msgid "Unstick"
-msgstr "Despegar"
-
-#: src/winmenu.c:114
-msgid "Stick"
-msgstr "Pegar"
-
-#: src/winmenu.c:139
-msgid "Layer"
-msgstr "Capa"
-
-#: src/winmenu.c:148
-msgid "[Above]"
-msgstr "[Arriba]"
-
-#: src/winmenu.c:150
-msgid "Above"
-msgstr "Arriba"
-
-#: src/winmenu.c:153
-msgid "[Normal]"
-msgstr "[Normal]"
-
-#: src/winmenu.c:155
-msgid "Normal"
-msgstr "Normal"
-
-#: src/winmenu.c:158
-msgid "[Below]"
-msgstr "[Abajo]"
-
-#: src/winmenu.c:160
-msgid "Below"
-msgstr "Abajo"
-
-#~ msgid "invalid tray width: %d"
-#~ msgstr "ancho de bandeja no válido: %d"
-
-#~ msgid "invalid tray height: %d"
-#~ msgstr "alto de bandeja no válido: %d"
+#~ msgid "cannot swallow the same client multiple times"
+#~ msgstr "no se puede mostrar el mismo cliente varias veces"
 
 #~ msgid "invalid insert mode: \"%s\""
 #~ msgstr "modo de insertar no válido: «%s»"
@@ -469,8 +469,8 @@ msgstr "Abajo"
 #~ msgid "invalid status window type: %s"
 #~ msgstr "tipo de ventana de estado no válido: %s"
 
-#~ msgid "cannot swallow the same client multiple times"
-#~ msgstr "no se puede mostrar el mismo cliente varias veces"
+#~ msgid "invalid tray height: %d"
+#~ msgstr "alto de bandeja no válido: %d"
 
-#~ msgid "Fullscreen state will be shaped!"
-#~ msgstr "¡Se definirá el estado de Pantalla Completa!"
+#~ msgid "invalid tray width: %d"
+#~ msgstr "ancho de bandeja no válido: %d"

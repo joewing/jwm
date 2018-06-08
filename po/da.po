@@ -1,14 +1,14 @@
 # Danish translation for JWM.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the jwm package.
-# scootergrisen, 2017.
+# scootergrisen, 2017-2018.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: jwm 2.3.6\n"
+"Project-Id-Version: jwm 2.3.7\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
 "POT-Creation-Date: 2017-07-12 21:06-0500\n"
-"PO-Revision-Date: 2017-03-25 00:00+0000\n"
+"PO-Revision-Date: 2018-06-08 00:00+0000\n"
 "Last-Translator: scootergrisen\n"
 "Language-Team: Danish\n"
 "Language: da\n"
@@ -68,7 +68,7 @@ msgstr "Bekræft"
 
 #: src/desktop.c:336
 msgid "empty Desktops Name tag"
-msgstr "tomt Desktops Name-tag"
+msgstr "tomt \"Desktops Name\"-opmærkning"
 
 #: src/dock.c:151
 msgid "only one Dock allowed"
@@ -104,7 +104,7 @@ msgstr "kunne ikke indlæse standardskrifttypen: %s"
 
 #: src/font.c:315
 msgid "empty Font tag"
-msgstr "tomt Font-tag"
+msgstr "tomt \"Font\"-opmærkning"
 
 #: src/group.c:115
 msgid "invalid group class"
@@ -122,7 +122,7 @@ msgstr "ugyldig gruppe skrivebord: %d"
 #: src/image.c:220
 #, c-format
 msgid "could not create read struct for PNG image: %s"
-msgstr "kunne ikke oprette read struct til PNG-billede: %s"
+msgstr "kunne ikke oprette \"read struct\" til PNG-billede: %s"
 
 #: src/image.c:233
 #, c-format
@@ -132,16 +132,17 @@ msgstr "fejl ved læsning af PNG-billede: %s"
 #: src/image.c:241
 #, c-format
 msgid "could not create info struct for PNG image: %s"
-msgstr "kunne ikke oprette info struct til PNG-billede: %s"
+msgstr "kunne ikke oprette \"info struct\" til PNG-billede: %s"
 
 #: src/key.c:318
 msgid "Specified KeySym is not defined for any KeyCode"
-msgstr "Angivne KeySym er ikke angivet for nogen KeyCode"
+msgstr ""
+"Angivne tastesymbol (KeySym) er ikke angivet for nogen tastekode (KeyCode)"
 
 #: src/key.c:326
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
-msgstr "modifikator ikke fundet for keysym 0x%0x"
+msgstr "modifikator ikke fundet for tastesymbol (keysym) 0x%0x"
 
 #: src/key.c:356
 #, c-format
@@ -151,46 +152,46 @@ msgstr "ugyldig modifikator: \"%c\""
 #: src/key.c:371
 #, c-format
 msgid "invalid key symbol: \"%s\""
-msgstr "ugyldigt nøglesymbol: \"%s\""
+msgstr "ugyldig tastesymbol (key symbol): \"%s\""
 
 #: src/key.c:452
 msgid "neither key nor keycode specified for Key"
-msgstr "hverken tast eller tastkode angivet for tast"
+msgstr "hverken tast (key) eller tastekode (keycode) angivet for tast (Key)"
 
 #: src/key.c:467
 #, c-format
 msgid "key binding: root menu \"%s\" not defined"
-msgstr "tastebinding: rodmenu \"%s\" ikke angivet"
+msgstr "tastebinding (key binding): rodmenu \"%s\" ikke angivet"
 
 #: src/lex.c:201
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
-msgstr "%s[%u]: luk-tag \"%s\" passer ikke med åben-tag \"%s\""
+msgstr "%s[%u]: luk-opmærkning \"%s\" passer ikke med åbn-opmærkning \"%s\""
 
 #: src/lex.c:207
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
-msgstr "%s[%u]: uventet og ugyldigt luk-tag"
+msgstr "%s[%u]: uventet og ugyldig luk-opmærkning"
 
 #: src/lex.c:213
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
-msgstr "%s[%u]: luk-tag \"%s\" uden åben-tag"
+msgstr "%s[%u]: luk-opmærkning \"%s\" uden åbn-opmærkning"
 
 #: src/lex.c:216
 #, c-format
 msgid "%s[%u]: invalid close tag"
-msgstr "%s[%u]: ugyldigt luk-tag"
+msgstr "%s[%u]: ugyldig luk-opmærkning"
 
 #: src/lex.c:234
 #, c-format
 msgid "%s[%u]: invalid open tag"
-msgstr "%s[%u]: ugyldigt åben-tag"
+msgstr "%s[%u]: ugyldig åbn-opmærkning"
 
 #: src/lex.c:250
 #, c-format
 msgid "%s[%u]: invalid tag"
-msgstr "%s[%u]: ugyldigt tag"
+msgstr "%s[%u]: ugyldig opmærkning"
 
 #: src/lex.c:308
 #, c-format
@@ -219,7 +220,7 @@ msgstr "inkluderingsdybde (%d) overskredet"
 #: src/parse.c:384
 #, c-format
 msgid "invalid start tag: %s"
-msgstr "ugyldigt start-tag: %s"
+msgstr "ugyldig start-opmærkning: %s"
 
 #: src/parse.c:774
 #, c-format
@@ -228,12 +229,12 @@ msgstr "ugyldig inkludering: %s"
 
 #: src/parse.c:824
 msgid "no action specified for Key"
-msgstr "ingen handling angivet for tast"
+msgstr "ingen handling angivet for tast (Key)"
 
 #: src/parse.c:847
 #, c-format
 msgid "invalid Key action: \"%s\""
-msgstr "ugyldig tasthandling: \"%s\""
+msgstr "ugyldig tastehandling (Key action): \"%s\""
 
 #: src/parse.c:871
 #, c-format
@@ -311,7 +312,7 @@ msgstr "ugyldigt lag: %s"
 #: src/parse.c:2031
 #, c-format
 msgid "invalid tag in %s: %s"
-msgstr "ugyldigt tag i %s: %s"
+msgstr "ugyldig opmærkning i %s: %s"
 
 #: src/parse.c:2052
 msgid "configuration error"

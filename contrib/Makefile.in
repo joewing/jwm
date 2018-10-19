@@ -1,6 +1,6 @@
 ICONDIR = $(DESTDIR)@DATADIR@/jwm
 
-ICONS = jwm.xbm jwm-gray.svg jwm-blue.svg jwm-orange.svg
+ICONS = jwm.xbm jwm-gray.svg jwm-blue.svg jwm-orange.svg jwm-red.svg
 
 install:
 	install -d $(ICONDIR)

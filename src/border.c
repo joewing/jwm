@@ -453,7 +453,7 @@ void DrawBorderHelper(const ClientNode *np)
 
          switch (settings.titleTextAlignment) {
          case ALIGN_CENTER:
-            xoffset = (titleWidth - textWidth) / 2;
+            xoffset = (int)(titleWidth - textWidth) / 2;
             break;
          case ALIGN_RIGHT:
             xoffset = (titleWidth - textWidth);

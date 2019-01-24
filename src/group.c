@@ -22,6 +22,7 @@ typedef unsigned int MatchType;
 #define MATCH_CLASS     1  /**< Match the window class. */
 #define MATCH_TYPE      2  /**< Match the window type. */
 #define MATCH_MACHINE   3  /**< Match the window machine. */
+#define MATCH_TITLE     4  /**< Match the window title. */
 
 /** List of match patterns for a group. */
 typedef struct PatternListType {
@@ -151,6 +152,17 @@ void AddGroupMachine(GroupType *gp, const char *pattern)
    }
 }
 
+/** Add a window title to a group. */
+void AddGroupTitle(GroupType *gp, const char *pattern)
+{
+   Assert(gp);
+   if(JLIKELY(pattern)) {
+      AddPattern(&gp->patterns, pattern, MATCH_TITLE);
+   } else {
+      Warning(_("invalid group title"));
+   }
+}
+
 /** Add a pattern to a pattern list. */
 void AddPattern(PatternListType **lp, const char *pattern, MatchType match)
 {
@@ -225,10 +237,12 @@ void ApplyGroups(ClientNode *np)
    char hasName;
    char hasType;
    char hasMachine;
+   char hasTitle;
    char matchesClass;
    char matchesName;
    char matchesType;
    char matchesMachine;
+   char matchesTitle;
 
    static const StringMappingType windowTypeMapping[] = {
       { "desktop",      WINDOW_TYPE_DESKTOP      },
@@ -274,12 +288,20 @@ void ApplyGroups(ClientNode *np)
                matchesMachine = 1;
             }
              hasMachine = 1;
+         } else if(lp->match == MATCH_TITLE) {
+            if(Match(lp->pattern, np->name)) {
+               matchesTitle = 1;
+            }
+            hasTitle = 1;
          } else {
             Debug("invalid match in ApplyGroups: %d", lp->match);
          }
       }
+
       if(hasName == matchesName && hasClass == matchesClass
-      && hasType == matchesType && hasMachine == matchesMachine) {
+      && hasType == matchesType && hasMachine == matchesMachine
+      && hasTitle == matchesTitle) {
+
          ApplyGroup(gp, np);
       }
    }

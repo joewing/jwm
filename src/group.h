@@ -94,6 +94,12 @@ void AddGroupType(struct GroupType *gp, const char *pattern);
  */
 void AddGroupMachine(struct GroupType *gp, const char *pattern);
 
+/** Add a window title to a group.
+ * @param gp The group.
+ * @param pattern A pattern to match with the window name.
+ */
+void AddGroupTitle(struct GroupType *gp, const char *pattern);
+
 /** Add a group option that doesn't take a value.
  * @param gp The group.
  * @param option The option.

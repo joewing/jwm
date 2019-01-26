@@ -13,7 +13,7 @@
 
 Settings settings;
 
-static const MouseContextType DEFAULT_TITLE_BAR_LAYOUT[TBC_COUNT] = {
+static const MouseContextType DEFAULT_TITLE_BAR_LAYOUT[TBC_COUNT + 1] = {
    MC_ICON,
    MC_MOVE,
    MC_MINIMIZE,

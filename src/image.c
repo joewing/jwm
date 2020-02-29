@@ -370,6 +370,7 @@ ImageNode *LoadJPEGImage(const char *fileName,
    /* Check the header. */
    jpeg_read_header(&cinfo, TRUE);
 
+#if 0
    /* Pick an appropriate scale for the image.
     * We scale the image by the scale value for the dimension with
     * the smallest absolute change.
@@ -387,6 +388,7 @@ ImageNode *LoadJPEGImage(const char *fileName,
       cinfo.scale_num = Max(1, Min(8, (ratio >> 2)));
       cinfo.scale_denom = 8;
    }
+#endif
 
    /* Start decompression. */
    jpeg_start_decompress(&cinfo);

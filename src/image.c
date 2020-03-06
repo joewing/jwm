@@ -370,13 +370,15 @@ ImageNode *LoadJPEGImage(const char *fileName,
    /* Check the header. */
    jpeg_read_header(&cinfo, TRUE);
 
-#if 0
    /* Pick an appropriate scale for the image.
     * We scale the image by the scale value for the dimension with
     * the smallest absolute change.
     */
    jpeg_calc_output_dimensions(&cinfo);
-   if(rwidth != 0 && rheight != 0) {
+   if(rwidth != 0 && rheight != 0 &&
+      (!( (rwidth == cinfo.output_width) &&
+          (rheight == cinfo.output_height) ))
+      ) {
       /* Scale using n/8 with n in [1..8]. */
       int ratio;
       if(abs((int)cinfo.output_width - rwidth)
@@ -388,7 +390,6 @@ ImageNode *LoadJPEGImage(const char *fileName,
       cinfo.scale_num = Max(1, Min(8, (ratio >> 2)));
       cinfo.scale_denom = 8;
    }
-#endif
 
    /* Start decompression. */
    jpeg_start_decompress(&cinfo);

@@ -93,17 +93,7 @@ AC_FUNC_ALLOCA()
 # Check for pkg-config.
 ############################################################################
 
-AC_DEFUN([JWM_PKGCONFIG_EXISTS],
-[
-   AC_MSG_CHECKING([for pkg-config])
-   if which pkg-config >/dev/null ; then
-      PKGCONFIG=pkg-config
-      AC_MSG_RESULT($PKGCONFIG)
-   else
-      PKGCONFIG=""
-      AC_MSG_RESULT([no])
-   fi
-])
+AC_DEFUN([JWM_PKGCONFIG_EXISTS],[AC_PATH_TOOL(PKGCONFIG,pkg-config)])
 
 AC_DEFUN([JWM_PKGCONFIG],
 [

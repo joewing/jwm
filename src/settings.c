@@ -88,12 +88,12 @@ void StartupSettings(void)
 }
 
 /** Update a string setting. */
-void SetPathString(char **dest, const char *src)
+void SetPathString(char *dest, const char *src)
 {
-   if(*dest) {
-      Release(*dest);
+   if(dest) {
+      Release(dest);
    }
-   *dest = CopyString(src);
+   dest = CopyString(src);
    if(JLIKELY(*dest)) {
       ExpandPath(dest);
    }

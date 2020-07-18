@@ -30,17 +30,8 @@ void *alloca(size_t);
 
 void Debug(const char *str, ...);
 
-#ifdef HAVE_ALLOCA
-
-#   define AllocateStack( x ) alloca( x )
-#   define ReleaseStack( x ) ((void)0)
-
-#else
-
 #   define AllocateStack( x ) Allocate( x )
 #   define ReleaseStack( x ) Release( x )
-
-#endif
 
 #ifdef DEBUG
 

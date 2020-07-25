@@ -812,7 +812,7 @@ void Render(const TaskBarType *bp)
       }
       button.x = x;
       button.y = y;
-      if(!tp->clients->client->icon) {
+      if(!tp->clients->client || !tp->clients->client->icon) {
          button.icon = GetDefaultIcon();
       } else {
          button.icon = tp->clients->client->icon;
@@ -861,7 +861,6 @@ void FocusNext(void)
          if(cp->client->state.status & (STAT_CANFOCUS | STAT_TAKEFOCUS)) {
             if(ShouldFocus(cp->client, 1)) {
                if(cp->client->state.status & STAT_ACTIVE) {
-                  cp = cp->next;
                   goto ClientFound;
                }
             }

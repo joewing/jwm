@@ -509,6 +509,9 @@ void MenuCallback(const TimeType *now, int x, int y, Window w, void *data)
       }
       menu = item->submenu;
    }
+   if(!menu) {
+      return;
+   }
    if(menu->currentIndex < 0) {
       return;
    }

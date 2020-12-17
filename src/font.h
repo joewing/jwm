@@ -24,6 +24,16 @@ typedef unsigned char FontType;
 #define FONT_TRAYBUTTON 7
 #define FONT_COUNT      8
 
+typedef struct FontAttributes {
+   const char *name;
+   const char *family;
+   const char *style;
+   const char *variant;
+   const char *weight;
+   const char *stretch;
+   const char *size;
+} FontAttributes;
+
 void InitializeFonts(void);
 void StartupFonts(void);
 void ShutdownFonts(void);
@@ -31,9 +41,9 @@ void DestroyFonts(void);
 
 /** Set the font to use for a component.
  * @param type The font component.
- * @param value The font to use.
+ * @param attrs Attributes of the font to use.
  */
-void SetFont(FontType type, const char *value);
+void SetFont(FontType type, FontAttributes attrs);
 
 /** Render a string.
  * @param d The drawable on which to render the string.

@@ -115,10 +115,9 @@ JWM_PKGCONFIG([use_pkgconfig_png], [libpng])
 JWM_PKGCONFIG([use_pkgconfig_jpeg], [libjpeg])
 JWM_PKGCONFIG([use_pkgconfig_cairo], [cairo])
 JWM_PKGCONFIG([use_pkgconfig_rsvg], [librsvg-2.0])
-JWM_PKGCONFIG([use_pkgconfig_freetype2], [freetype2])
 JWM_PKGCONFIG([use_pkgconfig_xft], [xft])
 JWM_PKGCONFIG([use_pkgconfig_xrender], [xrender])
-JWM_PKGCONFIG([use_pkgconfig_fribidi], [fribidi])
+JWM_PKGCONFIG([use_pkgconfig_pango], [pango])
 
 ############################################################################
 # Check if confirm dialogs should be used.
@@ -277,17 +276,6 @@ fi
 AC_ARG_ENABLE(xft, AC_HELP_STRING([--disable-xft], [disable Xft]) )
 if test "$enable_xft" != "no"; then
 
-   if test "$use_pkgconfig_freetype2" = "yes" ; then
-      FT2_CFLAGS=`$PKGCONFIG --cflags freetype2`
-      FT2_LDFLAGS=`$PKGCONFIG --libs freetype2`
-   elif which freetype-config >/dev/null ; then
-      FT2_CFLAGS=`freetype-config --cflags`
-      FT2_LDFLAGS=`freetype-config --libs`
-   else
-      FT2_CFLAGS=""
-      FT2_LDFLAGS=""
-   fi
-
    if test "$use_pkgconfig_xft" = "yes" ; then
       XFT_CFLAGS=`$PKGCONFIG --cflags xft`
       XFT_LDFLAGS=`$PKGCONFIG --libs xft`
@@ -350,33 +338,35 @@ if test "$enable_xrender" != "no" ; then
 fi
 
 ############################################################################
-# Check if FriBidi support was requested and available.
+# Check if Pango support was requested and available.
 ############################################################################
-AC_ARG_ENABLE(fribidi,
-   AC_HELP_STRING([--disable-fribidi],
-      [disable bi-directional unicode support]) )
-if test "$enable_fribidi" != "no" ; then
-   if test "$use_pkgconfig_fribidi" = "yes" ; then
-      FRIBIDI_CFLAGS=`$PKGCONFIG --cflags fribidi`
-      FRIBIDI_LDFLAGS=`$PKGCONFIG --libs fribidi`
-      enable_fribidi="yes"
-   elif which fribidi-config >/dev/null ; then
-      FRIBIDI_CFLAGS=`fribidi-config --cflags`
-      FRIBIDI_LDFLAGS=`fribidi-config --libs`
-      enable_fribidi="yes"
-   else
-      FRIBIDI_LDFLAGS="-lfribidi"
-      AC_CHECK_LIB(fribidi, fribidi_charset_to_unicode,
-         [ enable_fribidi="yes" ],
-         [ enable_fribidi="no"
-           AC_MSG_WARN([unable to use FriBidi]) ],
-         [ $FRIBIDI_LDFLAGS ])
+AC_ARG_ENABLE(pango,
+   AC_HELP_STRING([--disable-pango],
+      [disable pango font support]) )
+if test "$enable_xft" != "yes" ; then
+   if test "$enable_pango" != "no" ; then
+      AC_MSG_WARN(["xft required for pango support; disabling pango"])
+      enable_pango="no"
    fi
 fi
-if test "$enable_fribidi" = "yes" ; then
-   LDFLAGS="$LDFLAGS $FRIBIDI_LDFLAGS"
-   CFLAGS="$CFLAGS $FRIBIDI_CFLAGS"
-   AC_DEFINE(USE_FRIBIDI, 1, [Define to use FriBidi])
+if test "$enable_pango" != "no" ; then
+   if test "$use_pkgconfig_pango" = "yes" ; then
+      PANGO_CFLAGS=`$PKGCONFIG --cflags pangoxft`
+      PANGO_LDFLAGS=`$PKGCONFIG --libs pangoxft`
+      enable_pango="yes"
+   else
+      PANGO_LDFLAGS="-lpango -lpango-xft"
+      AC_CHECK_LIB(pango-xft, pango_xft_get_context,
+         [ enable_pango="yes" ],
+         [ enable_pango="no"
+           AC_MSG_WARN([unable to use Pango]) ],
+         [ $PANGO_LDFLAGS ])
+   fi
+fi
+if test "$enable_pango" = "yes" ; then
+   LDFLAGS="$LDFLAGS $PANGO_LDFLAGS"
+   CFLAGS="$CFLAGS $PANGO_CFLAGS"
+   AC_DEFINE(USE_PANGO, 1, [Define to use Pango])
 fi
 
 ############################################################################
@@ -586,7 +576,7 @@ echo "    XBM:      $enable_xbm"
 echo "    XPM:      $enable_xpm"
 echo "    XFT:      $enable_xft"
 echo "    XRender:  $enable_xrender"
-echo "    FriBidi:  $enable_fribidi"
+echo "    Pango:    $enable_pango"
 echo "    Shape:    $enable_shape"
 echo "    Xmu:      $enable_xmu"
 echo "    Xinerama: $enable_xinerama"

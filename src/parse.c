@@ -223,6 +223,7 @@ static void ParsePagerStyle(const TokenNode *tp);
 static void ParseClockStyle(const TokenNode *tp);
 static void ParseMenuStyle(const TokenNode *tp);
 static void ParsePopupStyle(const TokenNode *tp);
+static void ParseFont(FontType font, const TokenNode *np);
 
 /* Feel. */
 static ActionType ParseAction(const char *str, const char **command);
@@ -997,7 +998,7 @@ void ParseWindowStyle(const TokenNode *tp)
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FONT:
-         SetFont(FONT_BORDER, np->value);
+         ParseFont(FONT_BORDER, np);
          settings.titleTextAlignment = ParseTextAlignment(np);
          break;
       case TOK_WIDTH:
@@ -1196,7 +1197,7 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FONT:
-         SetFont(font, np->value);
+         ParseFont(font, np);
          break;
       case TOK_ACTIVE:
          ParseActive(np, activeFg, activeBg1, activeBg2, activeUp, activeDown);
@@ -1407,7 +1408,7 @@ void ParseTrayButtonStyle(const TokenNode *tp)
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FONT:
-         SetFont(FONT_TRAYBUTTON, np->value);
+         ParseFont(FONT_TRAYBUTTON, np);
          break;
       case TOK_ACTIVE:
          ParseActive(np, COLOR_TRAYBUTTON_ACTIVE_FG,
@@ -1670,7 +1671,7 @@ void ParsePagerStyle(const TokenNode *tp)
                      COLOR_COUNT, COLOR_COUNT);
          break;
       case TOK_FONT:
-         SetFont(FONT_PAGER, np->value);
+         ParseFont(FONT_PAGER, np);
          break;
       case TOK_TEXT:
          SetColor(COLOR_PAGER_TEXT, np->value);
@@ -1696,7 +1697,7 @@ void ParseClockStyle(const TokenNode *tp)
          ParseGradient(np->value, COLOR_CLOCK_BG1, COLOR_CLOCK_BG2);
          break;
       case TOK_FONT:
-         SetFont(FONT_CLOCK, np->value);
+         ParseFont(FONT_CLOCK, np);
          break;
       default:
          InvalidTag(np, TOK_CLOCKSTYLE);
@@ -1745,7 +1746,7 @@ void ParsePopupStyle(const TokenNode *tp)
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FONT:
-         SetFont(FONT_POPUP, np->value);
+         ParseFont(FONT_POPUP, np);
          break;
       case TOK_FOREGROUND:
          SetColor(COLOR_POPUP_FG, np->value);
@@ -1773,7 +1774,7 @@ void ParseMenuStyle(const TokenNode *tp)
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
       case TOK_FONT:
-         SetFont(FONT_MENU, np->value);
+         ParseFont(FONT_MENU, np);
          break;
       case TOK_FOREGROUND:
          SetColor(COLOR_MENU_FG, np->value);
@@ -1798,6 +1799,20 @@ void ParseMenuStyle(const TokenNode *tp)
       }
    }
 
+}
+
+/** Parse font. */
+void ParseFont(FontType font, const TokenNode *np)
+{
+   FontAttributes attrs;
+   memset(&attrs, 0, sizeof(attrs));
+   attrs.name = np->value;
+   attrs.family = FindAttribute(np->attributes, "family");
+   attrs.style = FindAttribute(np->attributes, "style");
+   attrs.variant = FindAttribute(np->attributes, "variant");
+   attrs.weight = FindAttribute(np->attributes, "weight");
+   attrs.size = FindAttribute(np->attributes, "size");
+   SetFont(font, attrs);
 }
 
 /** Parse an option group. */

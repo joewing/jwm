@@ -16,6 +16,8 @@
 #ifdef USE_PANGO
 #  include <pango/pango.h>
 #  include <pango/pangoxft.h>
+#  include <pango/pangofc-fontmap.h>
+#  include <fontconfig/fontconfig.h>
 #endif
 
 #ifdef USE_ICONV
@@ -43,41 +45,6 @@ static const struct {
    { FONT_TRAY, FONT_TRAYBUTTON  }
 };
 
-#ifdef USE_PANGO
-static const StringMappingType STRETCH_MAP[] = {
-   { "condensed",          PANGO_STRETCH_CONDENSED          },
-   { "expanded",           PANGO_STRETCH_EXPANDED           },
-   { "extra_condensed",    PANGO_STRETCH_EXTRA_CONDENSED    },
-   { "normal",             PANGO_STRETCH_NORMAL             },
-   { "ultra_condensed",    PANGO_STRETCH_ULTRA_CONDENSED    }
-};
-static const unsigned STRETCH_MAP_COUNT = ARRAY_LENGTH(STRETCH_MAP);
-
-static const StringMappingType STYLE_MAP[] = {
-   { "italic",    PANGO_STYLE_ITALIC   },
-   { "normal",    PANGO_STYLE_NORMAL   },
-   { "oblique",   PANGO_STYLE_OBLIQUE  }
-};
-static const unsigned STYLE_MAP_COUNT = ARRAY_LENGTH(STYLE_MAP);
-
-static const StringMappingType VARIANT_MAP[] = {
-   { "normal",       PANGO_VARIANT_NORMAL       },
-   { "small_caps",   PANGO_VARIANT_SMALL_CAPS   }
-};
-static const unsigned VARIANT_MAP_COUNT = ARRAY_LENGTH(VARIANT_MAP);
-
-static const StringMappingType WEIGHT_MAP[] = {
-   { "bold",         PANGO_WEIGHT_BOLD          },
-   { "heavy",        PANGO_WEIGHT_HEAVY         },
-   { "light",        PANGO_WEIGHT_LIGHT         },
-   { "normal",       PANGO_WEIGHT_NORMAL        },
-   { "semibold",     PANGO_WEIGHT_SEMIBOLD      },
-   { "ultrabold",    PANGO_WEIGHT_ULTRABOLD     },
-   { "ultralight",   PANGO_WEIGHT_ULTRALIGHT    }
-};
-static const unsigned WEIGHT_MAP_COUNT = ARRAY_LENGTH(WEIGHT_MAP);
-#endif
-
 static char *GetUTF8String(const char *str);
 static void ReleaseUTF8String(char *utf8String);
 
@@ -98,11 +65,6 @@ static PangoLanguage *language;
 #else
 static char *fontNames[FONT_COUNT];
 static XFontStruct *fonts[FONT_COUNT];
-#endif
-
-#ifndef USE_PANGO
-static unsigned XlfdLen(const char *src);
-static void XlfdCat(char *dest, const char *src);
 #endif
 
 /** Initialize font data. */
@@ -181,6 +143,8 @@ void StartupFonts(void)
          font_heights[x] = font_ascents[x]
             + pango_font_metrics_get_descent(metrics);
         pango_font_metrics_unref(metrics);
+
+        pango_font_description_free(fonts[x]);
         
       } else {
         font_ascents[x] = 0;
@@ -209,15 +173,17 @@ void ShutdownFonts(void)
 {
    unsigned int x;
    for(x = 0; x < FONT_COUNT; x++) {
-      if(fonts[x]) {
 #ifdef USE_PANGO
-        g_object_unref(layouts[x]);
-        pango_font_description_free(fonts[x]);
+      if(layouts[x]) {
+         g_object_unref(layouts[x]);
+         layouts[x] = NULL;
+      }
 #else
+      if(fonts[x]) {
          JXFreeFont(display, fonts[x]);
-#endif
          fonts[x] = NULL;
       }
+#endif
    }
 
 #ifdef USE_PANGO
@@ -358,152 +324,37 @@ int GetStringHeight(FontType ft)
 #endif
 }
 
-#ifndef USE_PANGO
-unsigned XlfdLen(const char *src) {
-   if(src) {
-      return strlen(src) + 1;
-   } else {
-      return 2;
-   }
-}
-#endif
-
-#ifndef USE_PANGO
-void XlfdCat(char *dest, const char *src) {
-   if(src) {
-      strcat(dest, "-");
-      strcat(dest, src);
-   } else {
-      strcat(dest, "-*");
-   }
-}
-#endif
-
 /** Set the font to use for a component. */
-void SetFont(FontType type, FontAttributes attrs)
+void SetFont(FontType type, const char *name)
 {
-   /* We attempt to build a font based on the provided attributes.
-    * Since older versions of JWM relied on an explicit font description,
-    * we fall back to that (if it exists).
-    */
-   const int have_attrs = attrs.family
-      || attrs.style
-      || attrs.variant
-      || attrs.weight
-      || attrs.stretch
-      || attrs.size;
+#ifdef USE_PANGO
+   FcPattern *pattern;
+#endif
+
+   if(!name) {
+      Warning(_("empty Font tag"));
+      return;
+   }
 
 #ifdef USE_PANGO
 
    if(fonts[type]) {
       pango_font_description_free(fonts[type]);
    }
-   if(have_attrs) {
-      PangoFontDescription *desc = pango_font_description_new();
-      fonts[type] = desc;
-
-      if(attrs.family) {
-         pango_font_description_set_family(desc, attrs.family);
-      }
-
-      if(attrs.style) {
-         const int style = FindValue(STYLE_MAP, STYLE_MAP_COUNT, attrs.style);
-         if(style >= 0) {
-            pango_font_description_set_style(desc, style);
-         } else {
-            Warning(_("invalid font style: %s"), attrs.style);
-         }
-      }
-
-      if(attrs.variant) {
-         const int variant = FindValue(VARIANT_MAP, VARIANT_MAP_COUNT,
-            attrs.variant);
-         if(variant >= 0) {
-            pango_font_description_set_variant(desc, variant);
-         } else {
-            Warning(_("invalid font variant: %s"), attrs.variant);
-         }
-      }
-
-      if(attrs.weight) {
-         const int weight = FindValue(WEIGHT_MAP, WEIGHT_MAP_COUNT,
-            attrs.weight);
-         if(weight >= 0) {
-            pango_font_description_set_weight(desc, weight);
-         } else {
-            Warning(_("invalid font weight: %s"), attrs.weight);
-         }
-      }
-
-      if(attrs.stretch) {
-         const int stretch = FindValue(STRETCH_MAP,
-            STRETCH_MAP_COUNT, attrs.stretch);
-         if(stretch >= 0) {
-            pango_font_description_set_stretch(desc, stretch);
-         } else {
-            Warning(_("invalid font stretch: %s"), attrs.stretch);
-         }
-      }
-
-      if(attrs.size) {
-         const int size = atoi(attrs.size);
-         if(size >= 0) {
-            pango_font_description_set_size(desc, size * PANGO_SCALE);
-         } else {
-            Warning(_("invalid font size: %s"), attrs.size);
-         }
-      }
-
-   } else if(attrs.name) {
-      fonts[type] = pango_font_description_from_string(attrs.name);
+   pattern = FcNameParse((const FcChar8*)name);
+   if(pattern) {
+      fonts[type] = pango_fc_font_description_from_pattern(pattern, TRUE);
+      FcPatternDestroy(pattern);
    } else {
       fonts[type] = pango_font_description_new();
    }
 
 #else
 
-   /* Build XLFD string using attributes if provided,
-    * otherwise use the font name, and if that doesn't
-    * exist, use the default font.
-    */
    if(fontNames[type]) {
       Release(fontNames[type]);
    }
-
-   if(have_attrs) {
-      const unsigned len = 1
-          + 1                       /* foundry */
-          + XlfdLen(attrs.family)   /* family */
-          + XlfdLen(attrs.weight)   /* weight */
-          + XlfdLen(attrs.style)    /* style */
-          + XlfdLen(attrs.stretch)  /* stretch */
-          + XlfdLen(attrs.variant)  /* add_style */
-          + 2                       /* pixel_size */
-          + XlfdLen(attrs.size)     /* point_size */
-          + 2                       /* res_x */
-          + 2                       /* res_y */
-          + 2                       /* spacing */
-          + 2                       /* average_width */
-          + 2                       /* registry */
-          + 2                       /* encoding */
-      ;
-      fontNames[type] = Allocate(len + 1);
-      strcpy(fontNames[type], "-*");
-      XlfdCat(fontNames[type], attrs.family);
-      XlfdCat(fontNames[type], attrs.weight);
-      XlfdCat(fontNames[type], attrs.style);
-      XlfdCat(fontNames[type], attrs.stretch);
-      XlfdCat(fontNames[type], attrs.variant);
-      XlfdCat(fontNames[type], attrs.size);
-      XlfdCat(fontNames[type], NULL);
-      strcat(fontNames[type], "-*-*-*-*-*-*");
-      printf("[%s]\n", fontNames[type]);
-   } else if(attrs.name) {
-      fontNames[type] = CopyString(attrs.name);
-      printf("name [%s]\n", fontNames[type]);
-   } else {
-      fontNames[type] = NULL;
-   }
+   fontNames[type] = CopyString(name);
 
 #endif
 }

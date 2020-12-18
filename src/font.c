@@ -56,15 +56,18 @@ static iconv_t toUTF8 = (iconv_t)-1;
 #endif
 
 #ifdef USE_PANGO
-static PangoFontDescription *fonts[FONT_COUNT];
-static PangoLayout *layouts[FONT_COUNT];
+static PangoLayout *fonts[FONT_COUNT];
 static int font_heights[FONT_COUNT];
 static int font_ascents[FONT_COUNT];
 static PangoFontMap *font_map;
 static PangoContext *font_context;
 #else
-static char *fontNames[FONT_COUNT];
 static XFontStruct *fonts[FONT_COUNT];
+#endif
+static char *fontNames[FONT_COUNT];
+
+#ifdef USE_PANGO
+static int IsXlfd(const char *str);
 #endif
 
 /** Initialize font data. */
@@ -77,9 +80,7 @@ void InitializeFonts(void)
 
    for(x = 0; x < FONT_COUNT; x++) {
       fonts[x] = NULL;
-#ifndef USE_PANGO
       fontNames[x] = NULL;
-#endif
    }
 
    /* Allocate a conversion descriptor if we're not using UTF-8. */
@@ -105,45 +106,55 @@ void StartupFonts(void)
    /* Inherit unset fonts from the tray for tray items. */
    for(x = 0; x < ARRAY_LENGTH(INHERITED_FONTS); x++) {
       const FontType dest = INHERITED_FONTS[x].dest;
-#ifdef USE_PANGO
-      if(!fonts[dest]) {
-         const FontType src = INHERITED_FONTS[x].src;
-         fonts[dest] = pango_font_description_copy(fonts[src]);
-      }
-#else
       if(!fontNames[dest]) {
          const FontType src = INHERITED_FONTS[x].src;
          fontNames[dest] = CopyString(fontNames[src]);
       }
-#endif
    }
 
 #ifdef USE_PANGO
-  font_map = pango_xft_get_font_map(display, rootScreen);
-  font_context = pango_font_map_create_context(font_map);
+   font_map = pango_xft_get_font_map(display, rootScreen);
+   font_context = pango_font_map_create_context(font_map);
 #endif
 
    for(x = 0; x < FONT_COUNT; x++) {
 #ifdef USE_PANGO
-      if(!fonts[x]) {
-         fonts[x] = pango_font_description_from_string(DEFAULT_FONT);
+      XftFont *font = NULL;
+      if(fontNames[x]) {
+         if(IsXlfd(fontNames[x])) {
+            font = JXftFontOpenXlfd(display, rootScreen, fontNames[x]);
+         }
+         if(!font) {
+            font = JXftFontOpenName(display, rootScreen, fontNames[x]);
+         }
+         if(JUNLIKELY(!font)) {
+            Warning(_("could not load font: %s"), fontNames[x]);
+         }
       }
-      if(JLIKELY(fonts[x])) {
-        PangoFontMetrics *metrics;
+      if(!font) {
+         font = JXftFontOpenName(display, rootScreen, DEFAULT_FONT);
+      }
+      if(JLIKELY(font)) {
+         PangoFontMetrics *metrics;
+         PangoFontDescription *desc;
 
-        layouts[x] = pango_layout_new(font_context);
-        pango_layout_set_font_description(layouts[x], fonts[x]);
-        pango_layout_set_single_paragraph_mode(layouts[x], TRUE);
-        pango_layout_set_width(layouts[x], -1);
-        pango_layout_set_ellipsize(layouts[x], PANGO_ELLIPSIZE_MIDDLE);
+         desc = pango_fc_font_description_from_pattern(font->pattern, TRUE);
+         JXftFontClose(display, font);
 
-        metrics = pango_context_get_metrics(font_context, fonts[x], NULL);
-        font_ascents[x] = pango_font_metrics_get_ascent(metrics);
+         fonts[x] = pango_layout_new(font_context);
+         pango_layout_set_font_description(fonts[x], desc);
+
+         pango_layout_set_single_paragraph_mode(fonts[x], TRUE);
+         pango_layout_set_width(fonts[x], -1);
+         pango_layout_set_ellipsize(fonts[x], PANGO_ELLIPSIZE_MIDDLE);
+
+         metrics = pango_context_get_metrics(font_context, desc, NULL);
+         font_ascents[x] = pango_font_metrics_get_ascent(metrics);
          font_heights[x] = font_ascents[x]
             + pango_font_metrics_get_descent(metrics);
-        pango_font_metrics_unref(metrics);
 
-        pango_font_description_free(fonts[x]);
+         pango_font_description_free(desc);
+         pango_font_metrics_unref(metrics);
         
       } else {
         font_ascents[x] = 0;
@@ -172,17 +183,15 @@ void ShutdownFonts(void)
 {
    unsigned int x;
    for(x = 0; x < FONT_COUNT; x++) {
-#ifdef USE_PANGO
-      if(layouts[x]) {
-         g_object_unref(layouts[x]);
-         layouts[x] = NULL;
-      }
-#else
       if(fonts[x]) {
+#ifdef USE_PANGO
+         g_object_unref(fonts[x]);
+         fonts[x] = NULL;
+#else
          JXFreeFont(display, fonts[x]);
          fonts[x] = NULL;
-      }
 #endif
+      }
    }
 
 #ifdef USE_PANGO
@@ -213,6 +222,21 @@ void DestroyFonts(void)
    }
 #endif
 }
+
+/** Determine if a font string is likely XLFD. */
+#ifdef USE_PANGO
+int IsXlfd(const char *str)
+{
+   /* Valid XLFD should have 14 '-'s. */
+   unsigned count = 0;
+   while(*str) {
+      count += *str == '-';
+      str += 1;
+   }
+   return count == 14;
+}
+#endif
+
 
 /** Convert a string from UTF-8. */
 char *ConvertFromUTF8(char *str)
@@ -295,9 +319,9 @@ int GetStringWidth(FontType ft, const char *str)
    utf8String = GetUTF8String(str);
 
 #ifdef USE_PANGO
-   pango_layout_set_text(layouts[ft], utf8String, -1);
-   pango_layout_set_width(layouts[ft], -1);
-   pango_layout_get_extents(layouts[ft], NULL, &rect);
+   pango_layout_set_text(fonts[ft], utf8String, -1);
+   pango_layout_set_width(fonts[ft], -1);
+   pango_layout_get_extents(fonts[ft], NULL, &rect);
    result = (rect.width + PANGO_SCALE - 1) / PANGO_SCALE;
 #else
    result = XTextWidth(fonts[ft], utf8String, strlen(utf8String));
@@ -322,41 +346,14 @@ int GetStringHeight(FontType ft)
 /** Set the font to use for a component. */
 void SetFont(FontType type, const char *name)
 {
-#ifdef USE_PANGO
-   FcPattern *pattern;
-#endif
-
    if(!name) {
       Warning(_("empty Font tag"));
       return;
    }
-
-#ifdef USE_PANGO
-
-   if(fonts[type]) {
-      pango_font_description_free(fonts[type]);
-   }
-   pattern = FcNameParse((const FcChar8*)name);
-   if(pattern) {
-      fonts[type] = pango_fc_font_description_from_pattern(pattern, TRUE);
-      FcPatternDestroy(pattern);
-      if(pango_font_description_get_size(fonts[type]) == 0) {
-         /* Pick a value if no size was specified. */
-         pango_font_description_set_size(fonts[type],
-            DEFAULT_SIZE * PANGO_SCALE);
-      }
-   } else {
-      fonts[type] = pango_font_description_new();
-   }
-
-#else
-
    if(fontNames[type]) {
       Release(fontNames[type]);
    }
    fontNames[type] = CopyString(name);
-
-#endif
 }
 
 /** Display a string. */
@@ -387,12 +384,12 @@ void RenderString(Drawable d, FontType font, ColorType color,
 
 #ifdef USE_PANGO
 
-   pango_layout_set_text(layouts[font], str, -1);
-   pango_layout_set_width(layouts[font], width * PANGO_SCALE);
+   pango_layout_set_text(fonts[font], str, -1);
+   pango_layout_set_width(fonts[font], width * PANGO_SCALE);
 
    xd = XftDrawCreate(display, d, rootVisual, rootColormap);
    xc = GetXftColor(color);
-   line = pango_layout_get_line_readonly(layouts[font], 0);
+   line = pango_layout_get_line_readonly(fonts[font], 0);
    pango_xft_render_layout_line(xd, xc, line, x * PANGO_SCALE,
       y * PANGO_SCALE + font_ascents[font]);
 

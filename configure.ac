@@ -117,7 +117,7 @@ JWM_PKGCONFIG([use_pkgconfig_cairo], [cairo])
 JWM_PKGCONFIG([use_pkgconfig_rsvg], [librsvg-2.0])
 JWM_PKGCONFIG([use_pkgconfig_xft], [xft])
 JWM_PKGCONFIG([use_pkgconfig_xrender], [xrender])
-JWM_PKGCONFIG([use_pkgconfig_pango], [pango])
+JWM_PKGCONFIG([use_pkgconfig_pango], [pangoxft])
 
 ############################################################################
 # Check if confirm dialogs should be used.

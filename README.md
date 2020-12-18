@@ -11,13 +11,12 @@ If available and not disabled at compile time, JWM will also use
 the following libraries:
 
  - cairo and librsvg2 for SVG icons and backgrounds.
- - fribidi for bi-directional text support.
+ - pango (with the xft backend) for text layout.
  - libjpeg for JPEG icons and backgrounds.
  - libpng for PNG icons and backgrounds.
  - libXext for the shape extension.
  - libXrender for the render extension.
  - libXmu for rounded corners.
- - libXft for anti-aliased and true type fonts.
  - libXinerama for multiple head support.
  - libXpm for XPM icons and backgrounds.
 

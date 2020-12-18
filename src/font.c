@@ -30,7 +30,8 @@
 #endif
 
 #ifdef USE_PANGO
-static const char *DEFAULT_FONT = "sans 9";
+static const int DEFAULT_SIZE = 12;
+static const char *DEFAULT_FONT = "12";
 #else
 static const char *DEFAULT_FONT = "fixed";
 #endif
@@ -61,7 +62,6 @@ static int font_heights[FONT_COUNT];
 static int font_ascents[FONT_COUNT];
 static PangoFontMap *font_map;
 static PangoContext *font_context;
-static PangoLanguage *language;
 #else
 static char *fontNames[FONT_COUNT];
 static XFontStruct *fonts[FONT_COUNT];
@@ -121,7 +121,6 @@ void StartupFonts(void)
 #ifdef USE_PANGO
   font_map = pango_xft_get_font_map(display, rootScreen);
   font_context = pango_font_map_create_context(font_map);
-  language = pango_language_get_default();
 #endif
 
    for(x = 0; x < FONT_COUNT; x++) {
@@ -138,7 +137,7 @@ void StartupFonts(void)
         pango_layout_set_width(layouts[x], -1);
         pango_layout_set_ellipsize(layouts[x], PANGO_ELLIPSIZE_MIDDLE);
 
-        metrics = pango_context_get_metrics(font_context, fonts[x], language);
+        metrics = pango_context_get_metrics(font_context, fonts[x], NULL);
         font_ascents[x] = pango_font_metrics_get_ascent(metrics);
          font_heights[x] = font_ascents[x]
             + pango_font_metrics_get_descent(metrics);
@@ -296,16 +295,12 @@ int GetStringWidth(FontType ft, const char *str)
    utf8String = GetUTF8String(str);
 
 #ifdef USE_PANGO
-
-  pango_layout_set_text(layouts[ft], utf8String, -1);
-  pango_layout_set_width(layouts[ft], -1);
-  pango_layout_get_extents(layouts[ft], NULL, &rect);
-  result = (rect.width + PANGO_SCALE - 1) / PANGO_SCALE;
+   pango_layout_set_text(layouts[ft], utf8String, -1);
+   pango_layout_set_width(layouts[ft], -1);
+   pango_layout_get_extents(layouts[ft], NULL, &rect);
+   result = (rect.width + PANGO_SCALE - 1) / PANGO_SCALE;
 #else
-
-   /* Get the width of the string. */
    result = XTextWidth(fonts[ft], utf8String, strlen(utf8String));
-
 #endif
 
    /* Clean up. */
@@ -318,9 +313,9 @@ int GetStringWidth(FontType ft, const char *str)
 int GetStringHeight(FontType ft)
 {
 #ifdef USE_PANGO
-  return PANGO_PIXELS(font_heights[ft]);
+   return PANGO_PIXELS(font_heights[ft]);
 #else
-  return fonts[ft]->ascent + fonts[ft]->descent;
+   return fonts[ft]->ascent + fonts[ft]->descent;
 #endif
 }
 
@@ -345,6 +340,11 @@ void SetFont(FontType type, const char *name)
    if(pattern) {
       fonts[type] = pango_fc_font_description_from_pattern(pattern, TRUE);
       FcPatternDestroy(pattern);
+      if(pango_font_description_get_size(fonts[type]) == 0) {
+         /* Pick a value if no size was specified. */
+         pango_font_description_set_size(fonts[type],
+            DEFAULT_SIZE * PANGO_SCALE);
+      }
    } else {
       fonts[type] = pango_font_description_new();
    }

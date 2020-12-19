@@ -344,29 +344,13 @@ IconNode *LoadNamedIconHelper(const char *name, const char *path,
    char *temp;
    const unsigned nameLength = strlen(name);
    const unsigned pathLength = strlen(path);
+   const char hasExtension = strchr(name, '.') != NULL;
    unsigned i;
-   char hasExtension;
 
    /* Full file name. */
    temp = AllocateStack(nameLength + pathLength + MAX_EXTENSION_LENGTH + 1);
    memcpy(&temp[0], path, pathLength);
    memcpy(&temp[pathLength], name, nameLength + 1);
-
-   /* Determine if the extension is provided.
-    * We avoid extra file opens if so.
-    */
-   hasExtension = 0;
-   for(i = 1; i < EXTENSION_COUNT; i++) {
-      const unsigned offset = nameLength + pathLength;
-      const unsigned extLength = strlen(ICON_EXTENSIONS[i]);
-      if(JUNLIKELY(offset < extLength)) {
-         continue;
-      }
-      if(!strcmp(ICON_EXTENSIONS[i], &temp[offset])) {
-         hasExtension = 1;
-         break;
-      }
-   }
 
    /* Attempt to load the image. */
    image = NULL;

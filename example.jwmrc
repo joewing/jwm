@@ -3,37 +3,36 @@
 
     <!-- The root menu. -->
     <RootMenu onroot="12">
-        <Program icon="terminal.png" label="Terminal">xterm</Program>
-        <Menu icon="folder.png" label="Applications">
-            <Program icon="music.png" label="Audacious">audacious</Program>
-            <Program icon="calculator.png" label="Calculator">xcalc</Program>
-            <Program icon="gimp.png" label="Gimp">gimp</Program>
-            <Program icon="chat.png" label="Pidgin">pidgin</Program>
-            <Program icon="www.png" label="Firefox">firefox</Program>
-            <Program icon="editor.png" label="XEdit">xedit</Program>
+        <Program icon="utilities-terminal" label="Terminal">xterm</Program>
+        <Menu icon="folder" label="Applications">
+            <Program icon="sound" label="Audacious">audacious</Program>
+            <Program icon="calc" label="Calculator">xcalc</Program>
+            <Program icon="web-browser" label="Firefox">firefox</Program>
+            <Program icon="image" label="Gimp">gimp</Program>
+            <Program icon="email" label="Mail">claws-mail</Program>
+            <Program icon="system-file-manager" label="ROX">rox ~</Program>
         </Menu>
-        <Menu icon="folder.png" label="Utilities">
-            <Program icon="font.png" label="Fonts">xfontsel</Program>
-            <Program icon="window.png" label="Window Properties">
+        <Menu icon="folder" label="Utilities">
+            <Program icon="font" label="Fonts">xfontsel</Program>
+            <Program icon="info" label="Window Properties">
                 xprop | xmessage -file -
             </Program>
-            <Program icon="window.png" label="Window Information">
+            <Program icon="info" label="Window Information">
                 xwininfo | xmessage -file -
             </Program>
         </Menu>
         <Separator/>
-        <Program icon="lock.png" label="Lock">
-            xlock -mode blank
+        <Program icon="lock" label="Lock">
+           xscreensaver-command -lock
         </Program>
         <Separator/>
-        <Restart label="Restart" icon="restart.png"/>
-        <Exit label="Exit" confirm="true" icon="quit.png"/>
+        <Restart label="Restart" icon="reload"/>
+        <Exit label="Exit" confirm="true" icon="exit"/>
     </RootMenu>
 
     <!-- Options for program groups. -->
     <Group>
         <Option>tiled</Option>
-        <Option>aerosnap</Option>
     </Group>
     <Group>
         <Class>Pidgin</Class>
@@ -48,11 +47,21 @@
         <Option>drag</Option>
         <Option>notitle</Option>
     </Group>
+    <Group>
+      <Name>claws-mail</Name>
+      <Option>desktop:3</Option>
+      <Option>fixed</Option>
+    </Group>
+    <Group>
+      <Name>Navigator</Name>
+      <Option>desktop:2</Option>
+      <Option>fixed</Option>
+    </Group>
 
     <!-- Tray at the bottom. -->
-    <Tray x="0" y="-1" autohide="off">
+    <Tray x="0" y="-1" autohide="off" delay="1000">
 
-        <TrayButton icon="jwm-blue">root:1</TrayButton>
+        <TrayButton label="JWM">root:1</TrayButton>
         <Spacer width="2"/>
         <TrayButton label="_">showdesktop</TrayButton>
         <Spacer width="2"/>
@@ -61,37 +70,35 @@
 
         <TaskList maxwidth="256"/>
 
+        <Swallow width="32" height="32" name="xclock">xclock</Swallow>
+
         <Dock/>
-        <Clock format="%H:%M"><Button mask="123">exec:xclock</Button></Clock>
+        <Clock format="%l:%M %p"><Button mask="123">exec:xclock</Button></Clock>
 
     </Tray>
 
     <!-- Visual Styles -->
-    <WindowStyle>
-        <Font>Sans-9:bold</Font>
+    <WindowStyle decorations="motif">
+        <Font>Sans-12:bold</Font>
         <Width>4</Width>
-        <Height>21</Height>
-        <Corner>3</Corner>
+        <Corner>0</Corner>
         <Foreground>#FFFFFF</Foreground>
         <Background>#555555</Background>
-        <Outline>#000000</Outline>
         <Opacity>0.5</Opacity>
         <Active>
             <Foreground>#FFFFFF</Foreground>
             <Background>#0077CC</Background>
-            <Outline>#000000</Outline>
             <Opacity>1.0</Opacity>
         </Active>
     </WindowStyle>
-    <TrayStyle group="true" list="all">
-        <Font>Sans-9</Font>
+    <TrayStyle decorations="motif">
+        <Font>Sans-12</Font>
         <Background>#333333</Background>
         <Foreground>#FFFFFF</Foreground>
-        <Outline>#000000</Outline>
         <Opacity>0.75</Opacity>
     </TrayStyle>
-    <TaskListStyle>
-      <Font>Sans-9</Font>
+    <TaskListStyle list="all" group="true">
+      <Font>Sans-12</Font>
       <Active>
         <Foreground>#FFFFFF</Foreground>
         <Background>#555555</Background>
@@ -100,7 +107,6 @@
       <Background>#333333</Background>
     </TaskListStyle>
     <PagerStyle>
-        <Outline>#000000</Outline>
         <Foreground>#555555</Foreground>
         <Background>#333333</Background>
         <Text>#FFFFFF</Text>
@@ -109,11 +115,10 @@
             <Background>#004488</Background>
         </Active>
     </PagerStyle>
-    <MenuStyle>
-        <Font>Sans-9</Font>
+    <MenuStyle decorations="motif">
+        <Font>Sans-12</Font>
         <Foreground>#FFFFFF</Foreground>
         <Background>#333333</Background>
-        <Outline>#000000</Outline>
         <Active>
             <Foreground>#FFFFFF</Foreground>
             <Background>#0077CC</Background>
@@ -121,7 +126,7 @@
         <Opacity>0.85</Opacity>
     </MenuStyle>
     <PopupStyle>
-        <Font>Sans-9</Font>
+        <Font>Sans-12</Font>
         <Foreground>#000000</Foreground>
         <Background>#999999</Background>
     </PopupStyle>
@@ -131,10 +136,22 @@
          for icons in multiple paths.
       -->
     <IconPath>
-        /usr/share/icons/wm-icons/32x32-aquafusion
+      /usr/local/share/icons/Tango/scalable/actions
     </IconPath>
     <IconPath>
-        /usr/local/share/jwm
+      /usr/local/share/icons/Tango/scalable/apps
+    </IconPath>
+    <IconPath>
+      /usr/local/share/icons/Tango/scalable/places
+    </IconPath>
+    <IconPath>
+      /usr/local/share/icons/Tango/scalable/status
+    </IconPath>
+    <IconPath>
+      /usr/local/share/icons/Tango/scalable/mimetypes
+    </IconPath>
+    <IconPath>
+      /usr/local/share/jwm
     </IconPath>
 
     <!-- Virtual Desktops -->

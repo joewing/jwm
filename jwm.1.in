@@ -1568,7 +1568,7 @@ The background color. See the \fBCOLORS\fP section for more information.
 .RS
 Fonts for various parts of JWM are specified within a \fBFont\fP tag. The
 text of this tag determines the font to use.
-This can be either a standard X font string or, if compiled with Pango
+This can be either an XLFD font string or, if compiled with Pango
 support, an XFT font string.
 .RE
 

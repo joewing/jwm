@@ -31,7 +31,7 @@ void DestroyFonts(void);
 
 /** Set the font to use for a component.
  * @param type The font component.
- * @param name A description of the font (XFT or XFLD).
+ * @param name A description of the font (XFT or XLFD).
  */
 void SetFont(FontType type, const char *name);
 

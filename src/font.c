@@ -30,7 +30,6 @@
 #endif
 
 #ifdef USE_PANGO
-static const int DEFAULT_SIZE = 12;
 static const char *DEFAULT_FONT = "12";
 #else
 static const char *DEFAULT_FONT = "fixed";
@@ -312,7 +311,7 @@ int GetStringWidth(FontType ft, const char *str)
    int result;
 
 #ifdef USE_PANGO
-  PangoRectangle rect;
+   PangoRectangle rect;
 #endif
 
    /* Convert to UTF-8 if necessary. */
@@ -346,7 +345,7 @@ int GetStringHeight(FontType ft)
 /** Set the font to use for a component. */
 void SetFont(FontType type, const char *name)
 {
-   if(!name) {
+   if(JUNLIKELY(!name)) {
       Warning(_("empty Font tag"));
       return;
    }
@@ -360,27 +359,38 @@ void SetFont(FontType type, const char *name)
 void RenderString(Drawable d, FontType font, ColorType color,
                   int x, int y, int width, const char *str)
 {
+   XRectangle rect;
+   Region renderRegion;
+   int len;
    char *utf8String;
 #ifdef USE_PANGO
    XftDraw *xd;
    PangoLayoutLine *line;
    XftColor *xc;
 #else
-   XRectangle rect;
-   Region renderRegion;
-   int len;
    XGCValues gcValues;
    unsigned long gcMask;
    GC gc;
 #endif
 
    /* Early return for empty strings. */
-   if(!str || !str[0]) {
+   if(!str || !str[0] || width < 1) {
       return;
    }
 
    /* Convert to UTF-8 if necessary. */
    utf8String = GetUTF8String(str);
+   len = strlen(utf8String);
+
+   /* Get the bounds for the string based on the specified width. */
+   rect.x = x;
+   rect.y = y;
+   rect.height = GetStringHeight(font);
+   rect.width = width + 2;
+
+   /* Combine the width bounds with the region to use. */
+   renderRegion = XCreateRegion();
+   XUnionRectWithRegion(&rect, renderRegion, renderRegion);
 
 #ifdef USE_PANGO
 
@@ -388,31 +398,18 @@ void RenderString(Drawable d, FontType font, ColorType color,
    pango_layout_set_width(fonts[font], width * PANGO_SCALE);
 
    xd = XftDrawCreate(display, d, rootVisual, rootColormap);
+   JXftDrawSetClip(xd, renderRegion);
    xc = GetXftColor(color);
    line = pango_layout_get_line_readonly(fonts[font], 0);
    pango_xft_render_layout_line(xd, xc, line, x * PANGO_SCALE,
       y * PANGO_SCALE + font_ascents[font]);
 
-   XftDrawDestroy(xd);
+   JXftDrawDestroy(xd);
 #else
-
-   /* Get the length of the UTF-8 string. */
-   len = strlen(utf8String);
 
    gcMask = GCGraphicsExposures;
    gcValues.graphics_exposures = False;
    gc = JXCreateGC(display, d, gcMask, &gcValues);
-
-   /* Get the bounds for the string based on the specified width. */
-   rect.x = x;
-   rect.y = y;
-   rect.height = GetStringHeight(font);
-   rect.width = XTextWidth(fonts[font], utf8String, len);
-   rect.width = Min(rect.width, width) + 2;
-
-   /* Combine the width bounds with the region to use. */
-   renderRegion = XCreateRegion();
-   XUnionRectWithRegion(&rect, renderRegion, renderRegion);
 
    /* Display the string. */
    JXSetForeground(display, gc, colors[color]);
@@ -420,9 +417,10 @@ void RenderString(Drawable d, FontType font, ColorType color,
    JXSetFont(display, gc, fonts[font]->fid);
    JXDrawString(display, d, gc, x, y + fonts[font]->ascent, utf8String, len);
 
-   XDestroyRegion(renderRegion);
    JXFreeGC(display, gc);
 #endif
+
+   XDestroyRegion(renderRegion);
 
    /* Free any memory used for UTF conversion. */
    ReleaseUTF8String(utf8String);

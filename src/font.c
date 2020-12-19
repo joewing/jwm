@@ -201,7 +201,6 @@ void ShutdownFonts(void)
 /** Destroy font data. */
 void DestroyFonts(void)
 {
-#ifndef USE_PANGO
    unsigned int x;
    for(x = 0; x < FONT_COUNT; x++) {
       if(fontNames[x]) {
@@ -209,7 +208,6 @@ void DestroyFonts(void)
          fontNames[x] = NULL;
       }
    }
-#endif
 #ifdef USE_ICONV
    if(fromUTF8 != (iconv_t)-1) {
       iconv_close(fromUTF8);

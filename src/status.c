@@ -17,13 +17,16 @@
 #include "hint.h"
 
 static Window statusWindow;
+static Pixmap statusPixmap;
 static unsigned int statusWindowHeight;
 static unsigned int statusWindowWidth;
 static int statusWindowX, statusWindowY;
 
 static void CreateMoveResizeWindow(const ClientNode *np,
                                    StatusWindowType type);
-static void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type);
+static void DrawMoveResizeWindow(const ClientNode *np,
+                                 StatusWindowType type,
+                                 const char *str);
 static void DestroyMoveResizeWindow(void);
 static void GetMoveResizeCoordinates(const ClientNode *np,
                                      StatusWindowType type, int *x, int *y);
@@ -85,20 +88,25 @@ void CreateMoveResizeWindow(const ClientNode *np, StatusWindowType type)
    statusWindow = JXCreateWindow(display, rootWindow,
       statusWindowX, statusWindowY,
       statusWindowWidth, statusWindowHeight, 0,
-      CopyFromParent, InputOutput, CopyFromParent,
+      rootDepth, InputOutput, rootVisual,
       attrMask, &attrs);
    SetAtomAtom(statusWindow, ATOM_NET_WM_WINDOW_TYPE,
                ATOM_NET_WM_WINDOW_TYPE_NOTIFICATION);
+   statusPixmap = JXCreatePixmap(display, statusWindow,
+      statusWindowWidth, statusWindowHeight, rootDepth);
 
    JXMapRaised(display, statusWindow);
 
 }
 
 /** Draw the status window. */
-void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type)
+void DrawMoveResizeWindow(const ClientNode *np,
+                          StatusWindowType type,
+                          const char *str)
 {
 
    int x, y;
+   int width;
 
    GetMoveResizeCoordinates(np, type, &x, &y);
    if(x != statusWindowX || y != statusWindowX) {
@@ -109,26 +117,34 @@ void DrawMoveResizeWindow(const ClientNode *np, StatusWindowType type)
    }
 
    /* Clear the background. */
-   JXClearWindow(display, statusWindow);
+   JXSetForeground(display, rootGC, colors[COLOR_MENU_BG]);
+   JXFillRectangle(display, statusPixmap, rootGC, 0, 0,
+                   statusWindowWidth, statusWindowHeight);
 
    /* Draw the border. */
    if(settings.menuDecorations == DECO_MOTIF) {
       JXSetForeground(display, rootGC, colors[COLOR_MENU_UP]);
-      JXDrawLine(display, statusWindow, rootGC,
+      JXDrawLine(display, statusPixmap, rootGC,
                  0, 0, statusWindowWidth, 0);
-      JXDrawLine(display, statusWindow, rootGC,
+      JXDrawLine(display, statusPixmap, rootGC,
                  0, 0, 0, statusWindowHeight);
       JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
-      JXDrawLine(display, statusWindow, rootGC, 0, statusWindowHeight - 1,
+      JXDrawLine(display, statusPixmap, rootGC, 0, statusWindowHeight - 1,
                  statusWindowWidth, statusWindowHeight - 1);
-      JXDrawLine(display, statusWindow, rootGC, statusWindowWidth - 1, 0,
+      JXDrawLine(display, statusPixmap, rootGC, statusWindowWidth - 1, 0,
                  statusWindowWidth - 1, statusWindowHeight);
    } else {
       JXSetForeground(display, rootGC, colors[COLOR_MENU_DOWN]);
-      JXDrawRectangle(display, statusWindow, rootGC, 0, 0,
+      JXDrawRectangle(display, statusPixmap, rootGC, 0, 0,
                       statusWindowWidth - 1, statusWindowHeight - 1);
    }
 
+   width = GetStringWidth(FONT_MENU, str);
+   RenderString(statusPixmap, FONT_MENU, COLOR_MENU_FG,
+                (statusWindowWidth - width) / 2, 5, width, str);
+
+   JXCopyArea(display, statusPixmap, statusWindow, rootGC,
+      0, 0, statusWindowWidth, statusWindowHeight, 0, 0);
 }
 
 /** Destroy the status window. */
@@ -137,6 +153,10 @@ void DestroyMoveResizeWindow(void)
    if(statusWindow != None) {
       JXDestroyWindow(display, statusWindow);
       statusWindow = None;
+   }
+   if(statusPixmap != None) {
+      JXFreePixmap(display, statusPixmap);
+      statusPixmap = None;
    }
 }
 
@@ -150,18 +170,13 @@ void CreateMoveWindow(ClientNode *np)
 void UpdateMoveWindow(ClientNode *np)
 {
    char str[80];
-   unsigned int width;
 
    if(settings.moveStatusType == SW_OFF) {
       return;
    }
 
-   DrawMoveResizeWindow(np, settings.moveStatusType);
-
    snprintf(str, sizeof(str), "(%d, %d)", np->x, np->y);
-   width = GetStringWidth(FONT_MENU, str);
-   RenderString(statusWindow, FONT_MENU, COLOR_MENU_FG,
-                (statusWindowWidth - width) / 2, 5, rootWidth, str);
+   DrawMoveResizeWindow(np, settings.moveStatusType, str);
 }
 
 /** Destroy the move status window. */
@@ -179,21 +194,14 @@ void CreateResizeWindow(ClientNode *np)
 /** Update the resize status window. */
 void UpdateResizeWindow(ClientNode *np, int gwidth, int gheight)
 {
-
    char str[80];
-   unsigned int fontWidth;
 
    if(settings.resizeStatusType == SW_OFF) {
       return;
    }
 
-   DrawMoveResizeWindow(np, settings.resizeStatusType);
-
    snprintf(str, sizeof(str), "%d x %d", gwidth, gheight);
-   fontWidth = GetStringWidth(FONT_MENU, str);
-   RenderString(statusWindow, FONT_MENU, COLOR_MENU_FG,
-                (statusWindowWidth - fontWidth) / 2, 5, rootWidth, str);
-
+   DrawMoveResizeWindow(np, settings.resizeStatusType, str);
 }
 
 /** Destroy the resize status window. */

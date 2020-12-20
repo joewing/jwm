@@ -455,7 +455,6 @@ void RestoreTransients(ClientNode *np, char raise)
    }
    np->state.status &= ~STAT_MINIMIZED;
    np->state.status &= ~STAT_SDESKTOP;
-   np->state.status &= ~STAT_FULLSCREEN;
 
    /* Restore transient windows. */
    for(x = 0; x < LAYER_COUNT; x++) {

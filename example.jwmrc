@@ -35,10 +35,6 @@
         <Option>tiled</Option>
     </Group>
     <Group>
-        <Class>Pidgin</Class>
-        <Option>sticky</Option>
-    </Group>
-    <Group>
         <Name>xterm</Name>
         <Option>vmax</Option>
     </Group>
@@ -46,16 +42,6 @@
         <Name>xclock</Name>
         <Option>drag</Option>
         <Option>notitle</Option>
-    </Group>
-    <Group>
-      <Name>claws-mail</Name>
-      <Option>desktop:3</Option>
-      <Option>fixed</Option>
-    </Group>
-    <Group>
-      <Name>Navigator</Name>
-      <Option>desktop:2</Option>
-      <Option>fixed</Option>
     </Group>
 
     <!-- Tray at the bottom. -->

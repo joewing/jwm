@@ -19,6 +19,9 @@
 #  include <pango/pangofc-fontmap.h>
 #  include <fontconfig/fontconfig.h>
 #endif
+#ifndef PANGO_VERSION_CHECK
+#  define PANGO_VERSION_CHECK(a, b, c) 0
+#endif
 
 #ifdef USE_ICONV
 #  ifdef HAVE_LANGINFO_H
@@ -113,7 +116,12 @@ void StartupFonts(void)
 
 #ifdef USE_PANGO
    font_map = pango_xft_get_font_map(display, rootScreen);
+#  if PANGO_VERSION_CHECK(1, 22, 0)
    font_context = pango_font_map_create_context(font_map);
+#  else
+   font_context = pango_context_new();
+   pango_context_set_font_map(font_context, font_map);
+#  endif
 #endif
 
    for(x = 0; x < FONT_COUNT; x++) {
@@ -398,7 +406,11 @@ void RenderString(Drawable d, FontType font, ColorType color,
    xd = XftDrawCreate(display, d, rootVisual, rootColormap);
    JXftDrawSetClip(xd, renderRegion);
    xc = GetXftColor(color);
+#  if PANGO_VERSION_CHECK(1, 16, 0)
    line = pango_layout_get_line_readonly(fonts[font], 0);
+#  else
+   line = pango_layout_get_line(fonts[font], 0);
+#  endif
    pango_xft_render_layout_line(xd, xc, line, x * PANGO_SCALE,
       y * PANGO_SCALE + font_ascents[font]);
 

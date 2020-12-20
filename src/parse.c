@@ -133,6 +133,7 @@ static const StringMappingType OPTION_MAP[] = {
    { "notitle",            OPTION_NOTITLE       },
    { "noturgent",          OPTION_NOTURGENT     },
    { "pignore",            OPTION_PIGNORE       },
+   { "shaded",             OPTION_SHADED        },
    { "sticky",             OPTION_STICKY        },
    { "tiled",              OPTION_TILED         },
    { "title",              OPTION_TITLE         },

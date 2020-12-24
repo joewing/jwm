@@ -122,12 +122,11 @@ const ScreenType *GetMouseScreen(void)
 /** Get data for a screen. */
 const ScreenType *GetScreen(int index)
 {
-
-   Assert(index >= 0);
-   Assert(index < screenCount);
-
-   return &screens[index];
-
+   if(index >= 0 && index < screenCount) {
+      return &screens[index];
+   } else {
+      return &screens[0];
+   }
 }
 
 /** Get the number of screens. */

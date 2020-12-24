@@ -511,6 +511,13 @@ optimal height depending on what it contains and the layout. A negative
 value subtracts from the screen height. 0 is the default.
 .RE
 .P
+\fBscreen\fP \fIint\fP
+.RS
+The index of the screen on which to show the tray if relative
+positioning (valign or halign) is used.
+0 is the default (the primary screen).
+.RE
+.P
 \fBlayer\fP { \fBbelow\fP | \fBnormal\fP | \fBabove\fP }
 .RS
 The layer of the tray. The default is \fBabove\fP.

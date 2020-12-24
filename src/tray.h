@@ -127,6 +127,7 @@ typedef struct TrayType {
 
    int requestedX;      /**< The user-requested x-coordinate of the tray. */
    int requestedY;      /**< The user-requested y-coordinate of the tray. */
+   int requestedScreen; /**< The user-requested screen. */
 
    int x;   /**< The x-coordinate of the tray. */
    int y;   /**< The y-coordinate of the tray. */
@@ -269,6 +270,12 @@ void SetTrayWidth(TrayType *tp, const char *str);
  * @param str The height (ASCII, pixels).
  */
 void SetTrayHeight(TrayType *tp, const char *str);
+
+/** Set the tray screen.
+ * @param tp The tray.
+ * @param str The screen index (ASCII).
+ */
+void SetTrayScreen(TrayType *tp, const char *str);
 
 /** Set the tray layout.
  * @param tp The tray.

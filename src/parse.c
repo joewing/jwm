@@ -152,6 +152,7 @@ static const char *X_ATTRIBUTE = "x";
 static const char *Y_ATTRIBUTE = "y";
 static const char *WIDTH_ATTRIBUTE = "width";
 static const char *HEIGHT_ATTRIBUTE = "height";
+static const char *SCREEN_ATTRIBUTE = "screen";
 static const char *DYNAMIC_ATTRIBUTE = "dynamic";
 static const char *SPACING_ATTRIBUTE = "spacing";
 static const char *TIMEOUT_ATTRIBUTE = "timeout";
@@ -1305,6 +1306,11 @@ void ParseTray(const TokenNode *tp)
    attr = FindAttribute(tp->attributes, HEIGHT_ATTRIBUTE);
    if(attr) {
       SetTrayHeight(tray, attr);
+   }
+
+   attr = FindAttribute(tp->attributes, SCREEN_ATTRIBUTE);
+   if(attr) {
+      SetTrayScreen(tray, attr);
    }
 
    attr = FindAttribute(tp->attributes, "valign");

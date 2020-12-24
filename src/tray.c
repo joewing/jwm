@@ -220,6 +220,7 @@ TrayType *CreateTray(void)
 
    tp->requestedX = 0;
    tp->requestedY = -1;
+   tp->requestedScreen = 0;
    tp->x = 0;
    tp->y = -1;
    tp->requestedWidth = 0;
@@ -463,7 +464,7 @@ void ComputeTraySize(TrayType *tp)
    if(tp->valign == TALIGN_FIXED && tp->halign == TALIGN_FIXED) {
       sp = GetCurrentScreen(x, y);
    } else {
-      sp = GetScreen(0);
+      sp = GetScreen(tp->requestedScreen);
    }
 
    /* Determine the missing dimension. */
@@ -1074,6 +1075,12 @@ void SetTrayWidth(TrayType *tp, const char *str)
 void SetTrayHeight(TrayType *tp, const char *str)
 {
    tp->requestedHeight = atoi(str);
+}
+
+/** Set the tray screen index. */
+void SetTrayScreen(TrayType *tp, const char *str)
+{
+   tp->requestedScreen = atoi(str);
 }
 
 

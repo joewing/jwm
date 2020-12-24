@@ -475,8 +475,6 @@ void DrawBorderHelper(const ClientNode *np)
 
    }
 
-   /* Copy the pixmap (for the title bar) to the window. */
-
    /* Copy the pixmap for the title bar and clear the part of
     * the window to be drawn directly. */
    if(settings.windowDecorations == DECO_MOTIF) {

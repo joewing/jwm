@@ -513,8 +513,7 @@ value subtracts from the screen height. 0 is the default.
 .P
 \fBscreen\fP \fIint\fP
 .RS
-The index of the screen on which to show the tray if relative
-positioning (valign or halign) is used.
+The index of the screen on which to start the tray.
 0 is the default (the primary screen).
 .RE
 .P

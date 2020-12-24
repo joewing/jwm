@@ -127,10 +127,10 @@ typedef struct TrayType {
 
    int requestedX;      /**< The user-requested x-coordinate of the tray. */
    int requestedY;      /**< The user-requested y-coordinate of the tray. */
-   int requestedScreen; /**< The user-requested screen. */
 
-   int x;   /**< The x-coordinate of the tray. */
-   int y;   /**< The y-coordinate of the tray. */
+   int screen;       /**< The screen index (-1 if not known). */
+   int x;            /**< The x-coordinate of the tray. */
+   int y;            /**< The y-coordinate of the tray. */
 
    int requestedWidth;  /**< Total requested width of the tray. */
    int requestedHeight; /**< Total requested height of the tray. */

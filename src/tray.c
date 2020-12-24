@@ -436,44 +436,35 @@ void ComputeTraySize(TrayType *tp)
    tp->x = tp->requestedX;
    tp->y = tp->requestedY;
 
-   /* Determine on which screen the tray will reside. */
-   switch(tp->valign) {
-   case TALIGN_TOP:
-      y = 0;
-      break;
-   case TALIGN_BOTTOM:
-      y = rootHeight - 1;
-      break;
-   case TALIGN_CENTER:
-      y = 1 + rootHeight / 2;
-      break;
-   default:
+   /* Determine x and y offsets for the tray. */
+   if(tp->valign == TALIGN_FIXED) {
       if(tp->y < 0) {
          y = rootHeight + tp->y;
       } else {
          y = tp->y;
       }
-      break;
+   } else {
+      y = 0;
    }
-   switch(tp->halign) {
-   case TALIGN_LEFT:
-      x = 0;
-      break;
-   case TALIGN_RIGHT:
-      x = rootWidth - 1;
-      break;
-   case TALIGN_CENTER:
-      x = 1 + rootWidth / 2;
-      break;
-   default:
+   if(tp->halign == TALIGN_FIXED) {
       if(tp->x < 0) {
          x = rootWidth + tp->x;
       } else {
          x = tp->x;
       }
-      break;
+   } else {
+      x = 0;
    }
-   sp = GetCurrentScreen(x, y);
+
+   /* Determine the screen.
+    * Note that we assume the primary screen unless fixed dimensions
+    * are provided.
+    */
+   if(tp->valign == TALIGN_FIXED && tp->halign == TALIGN_FIXED) {
+      sp = GetCurrentScreen(x, y);
+   } else {
+      sp = GetScreen(0);
+   }
 
    /* Determine the missing dimension. */
    if(tp->layout == LAYOUT_HORIZONTAL) {

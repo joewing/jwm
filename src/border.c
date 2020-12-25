@@ -300,8 +300,11 @@ void ResetBorder(const ClientNode *np)
          !(np->state.status & STAT_SHADED)) {
          JXFillRectangle(display, shapePixmap, shapeGC, 0, 0, width, height);
       } else {
+         const int radius
+            = (np->state.maxFlags && (np->state.border & BORDER_NOMAX))
+            ? 0 : (settings.cornerRadius - 1);
          FillRoundedRectangle(shapePixmap, shapeGC, 0, 0, width, height,
-                              settings.cornerRadius - 1);
+                              radius);
       }
 
       /* Apply the client window. */

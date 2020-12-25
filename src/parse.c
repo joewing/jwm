@@ -125,6 +125,7 @@ static const StringMappingType OPTION_MAP[] = {
    { "nofullscreen",       OPTION_NOFULLSCREEN  },
    { "nolist",             OPTION_NOLIST        },
    { "nomax",              OPTION_NOMAX         },
+   { "nomaxborder",        OPTION_NOMAXBORDER   },
    { "nomin",              OPTION_NOMIN         },
    { "nomove",             OPTION_NOMOVE        },
    { "nopager",            OPTION_NOPAGER       },

@@ -467,7 +467,7 @@ void DrawBorderHelper(const ClientNode *np)
 
          titley = (titleHeight - sheight) / 2;
          if(settings.windowDecorations == DECO_MOTIF) {
-            titley += settings.borderWidth - 1;
+            titley += south - 1;
          }
          RenderString(canvas, FONT_BORDER, borderTextColor,
                       titlex, titley, titleWidth, np->name);
@@ -494,13 +494,16 @@ void DrawBorderHelper(const ClientNode *np)
    if(settings.windowDecorations == DECO_MOTIF) {
       DrawBorderHandles(np, np->parent, gc);
    } else {
+      const int radius
+         = (np->state.maxFlags && (np->state.border & BORDER_NOMAX))
+         ? 0 : settings.cornerRadius;
       JXSetForeground(display, gc, outlineColor);
       if(np->state.status & STAT_SHADED) {
          DrawRoundedRectangle(np->parent, gc, 0, 0, width - 1, north - 1,
-                              settings.cornerRadius);
+                              radius);
       } else {
          DrawRoundedRectangle(np->parent, gc, 0, 0, width - 1, height - 1,
-                              settings.cornerRadius);
+                              radius);
       }
    }
 
@@ -519,6 +522,10 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    unsigned offset = 0;
    unsigned starty = 0;
    unsigned titleHeight;
+
+   if(np->state.maxFlags && (np->state.border & BORDER_NOMAX)) {
+      return;
+   }
 
    /* Determine the window size. */
    GetBorderSize(&np->state, &north, &south, &east, &west);
@@ -549,6 +556,25 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    segments[offset].y2 = settings.borderWidth;
    offset += 1;
 
+   /* Inside bottom border. */
+   segments[offset].x1 = west;
+   segments[offset].y1 = height - south;
+   segments[offset].x2 = width - east;
+   segments[offset].y2 = height - south;
+   offset += 1;
+
+   /* Top border. */
+   segments[offset].x1 = 1;
+   segments[offset].y1 = 0;
+   segments[offset].x2 = width - 1;
+   segments[offset].y2 = 0;
+   offset += 1;
+   segments[offset].x1 = 1;
+   segments[offset].y1 = 1;
+   segments[offset].x2 = width - 2;
+   segments[offset].y2 = 1;
+   offset += 1;
+
    /* Right title border. */
    segments[offset].x1 = west;
    segments[offset].y1 = starty + 1;
@@ -570,13 +596,6 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    segments[offset].y2 = starty + titleHeight;
    offset += 1;
 
-   /* Inside bottom border. */
-   segments[offset].x1 = west;
-   segments[offset].y1 = height - south;
-   segments[offset].x2 = width - east;
-   segments[offset].y2 = height - south;
-   offset += 1;
-
    /* Left border. */
    segments[offset].x1 = 0;
    segments[offset].y1 = 0;
@@ -587,18 +606,6 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    segments[offset].y1 = 1;
    segments[offset].x2 = 1;
    segments[offset].y2 = height - 2;
-   offset += 1;
-
-   /* Top border. */
-   segments[offset].x1 = 1;
-   segments[offset].y1 = 0;
-   segments[offset].x2 = width - 1;
-   segments[offset].y2 = 0;
-   offset += 1;
-   segments[offset].x1 = 1;
-   segments[offset].y1 = 1;
-   segments[offset].x2 = width - 2;
-   segments[offset].y2 = 1;
    offset += 1;
 
    /* Draw pixel-up segments. */
@@ -613,18 +620,30 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    segments[offset].y2 = north - 1;
    offset += 1;
 
-   /* Right title border. */
-   segments[offset].x1 = width - east - 1;
-   segments[offset].y1 = starty + 1;
-   segments[offset].x2 = width - east - 1;
-   segments[offset].y2 = north - 1;
-   offset += 1;
-
    /* Inside top border. */
    segments[offset].x1 = west - 1;
    segments[offset].y1 = settings.borderWidth - 1;
    segments[offset].x2 = width - east;
    segments[offset].y2 = settings.borderWidth - 1;
+   offset += 1;
+
+   /* Bottom border. */
+   segments[offset].x1 = 0;
+   segments[offset].y1 = height - 1;
+   segments[offset].x2 = width;
+   segments[offset].y2 = height - 1;
+   offset += 1;
+   segments[offset].x1 = 1;
+   segments[offset].y1 = height - 2;
+   segments[offset].x2 = width - 1;
+   segments[offset].y2 = height - 2;
+   offset += 1;
+
+   /* Right title border. */
+   segments[offset].x1 = width - east - 1;
+   segments[offset].y1 = starty + 1;
+   segments[offset].x2 = width - east - 1;
+   segments[offset].y2 = north - 1;
    offset += 1;
 
    /* Inside left border. */
@@ -646,25 +665,13 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
    segments[offset].y2 = height - 2;
    offset += 1;
 
-   /* Bottom border. */
-   segments[offset].x1 = 0;
-   segments[offset].y1 = height - 1;
-   segments[offset].x2 = width;
-   segments[offset].y2 = height - 1;
-   offset += 1;
-   segments[offset].x1 = 1;
-   segments[offset].y1 = height - 2;
-   segments[offset].x2 = width - 1;
-   segments[offset].y2 = height - 2;
-   offset += 1;
-
    /* Draw pixel-down segments. */
    JXSetForeground(display, gc, pixelDown);
    JXDrawSegments(display, canvas, gc, segments, offset);
    offset = 0;
 
    /* Draw marks */
-   if((np->state.border & BORDER_RESIZE)
+   if(    (np->state.border & BORDER_RESIZE)
       && !(np->state.status & STAT_SHADED)) {
 
       /* Upper left */
@@ -840,8 +847,7 @@ XPoint DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
    int titleIndex, index;
    int leftOffset, rightOffset;
    int north, south, east, west;
-   const int yoffset = (settings.windowDecorations == DECO_MOTIF)
-                     ? settings.borderWidth - 1 : 0;
+   int yoffset;
 
    /* Determine the foreground color to use. */
    if(np->state.status & (STAT_ACTIVE | STAT_FLASH)) {
@@ -851,6 +857,11 @@ XPoint DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
    }
 
    GetBorderSize(&np->state, &north, &south, &east, &west);
+   if(settings.windowDecorations == DECO_MOTIF) {
+      yoffset = south - 1;
+   } else {
+      yoffset = 0;
+   }
 
    /* Draw buttons to the left of the title. */
    index = 0;
@@ -1182,27 +1193,34 @@ void GetBorderSize(const ClientState *state,
    }
 
    if(state->border & BORDER_OUTLINE) {
+      const char show_border =
+         !state->maxFlags || !(state->border & BORDER_NOMAX);
 
       if(state->border & BORDER_TITLE) {
          *north = GetTitleHeight();
       } else if(settings.windowDecorations == DECO_MOTIF) {
          *north = 0;
       } else {
-         *north = settings.borderWidth;
+         *north = show_border ? settings.borderWidth : 0;
       }
       if(settings.windowDecorations == DECO_MOTIF) {
-         *north += settings.borderWidth;
-         *south = settings.borderWidth;
+         *north += show_border ? settings.borderWidth : 0;
+         *south = show_border ? settings.borderWidth : 0;
       } else {
          if(state->status & STAT_SHADED) {
             *south = 0;
          } else {
-            *south = settings.borderWidth;
+            *south = show_border ? settings.borderWidth : 0;
          }
       }
 
-      *west = settings.borderWidth;
-      *east = settings.borderWidth;
+      if(show_border) {
+         *west = settings.borderWidth;
+         *east = settings.borderWidth;
+      } else {
+         *west = 0;
+         *east = 0;
+      }
 
    } else {
 

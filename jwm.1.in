@@ -1738,6 +1738,8 @@ Resize the south-west corner
 .IP \fBresize:se\fP
 Resize the south-east corner
 .RE
+.IP \fBcenter\fP
+Center the current window.
 .IP \fBroot:\fP\fIn\fP
 Show root menu \fIn\fP.
 .IP \fBwindow\fP

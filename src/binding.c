@@ -305,6 +305,7 @@ char ShouldGrab(ActionType action)
    case ACTION_MAXV:
    case ACTION_MAXH:
    case ACTION_RESTORE:
+   case ACTION_CENTER:
       return 1;
    default:
       return 0;

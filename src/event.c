@@ -31,6 +31,7 @@
 #include "popup.h"
 #include "pager.h"
 #include "grab.h"
+#include "screen.h"
 
 #define MIN_TIME_DELTA 50
 
@@ -682,6 +683,20 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
          const unsigned desktop = GetBelowDesktop(np->state.desktop);
          SetClientDesktop(np, desktop);
          ChangeDesktop(desktop);
+      }
+      break;
+   case ACTION_CENTER:
+      if(np) {
+         const ScreenType *sp = GetCurrentScreen(np->x, np->y);
+         if(np->state.maxFlags) {
+            MaximizeClient(np, MAX_NONE);
+         }
+
+         np->x = sp->x + (sp->width - np->width) / 2;
+         np->y = sp->y + (sp->height - np->height) / 2;
+         ResetBorder(np);
+         SendConfigureEvent(np);
+         RequirePagerUpdate();
       }
       break;
    default:

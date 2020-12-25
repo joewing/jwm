@@ -43,6 +43,7 @@
  * Note that this mapping must be sorted.
  */
 static const StringMappingType ACTION_MAP[] = {
+   { "center",                ACTION_CENTER        },
    { "close",                 ACTION_CLOSE         },
    { "ddesktop",              ACTION_DDESKTOP      },
    { "desktop#",              ACTION_DESKTOP       },

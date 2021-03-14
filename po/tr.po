@@ -1,0 +1,459 @@
+#
+# Translators:
+# Cihan Alkan <cihanalk@gmail.com>, 2014-2021
+msgid ""
+msgstr ""
+"Project-Id-Version: jwm 2.3.7\n"
+"Report-Msgid-Bugs-To: joewing@joewing.net\n"
+"POT-Creation-Date: 2017-07-12 21:06-0500\n"
+"PO-Revision-Date: 2021-09-24 16:11+0800\n"
+"Last-Translator: Cihan Alkan <cihanalk@gmail.com>\n"
+"Language-Team: \n"
+"Language: tr_TR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.4\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: src/action.c:44
+#, c-format
+msgid "invalid action: \"%s\""
+msgstr "geçersiz eylem：\"%s\""
+
+#: src/action.c:211
+#, c-format
+msgid "action: root menu \"%s\" not defined"
+msgstr "eylem: kök menü \"%s\" tanımlı değil"
+
+#: src/background.c:137
+msgid "no value specified for background"
+msgstr "arka plan için değer belirtilmedi"
+
+#: src/background.c:149
+#, c-format
+msgid "invalid background type: \"%s\""
+msgstr "geçersiz arka plan türü：\"%s\""
+
+#: src/background.c:294
+#, c-format
+msgid "background image not found: \"%s\""
+msgstr "arka plan resmi bulunamadı：\"%s\""
+
+#: src/client.c:905
+msgid "Kill this window?"
+msgstr "Bu pencereyi öldürmek mi?"
+
+#: src/client.c:906
+msgid "This may cause data to be lost!"
+msgstr "Bu, verilerin kaybolmasına neden olabilir!"
+
+#: src/command.c:138 src/main.c:221
+#, c-format
+msgid "exec failed: (%s) %s"
+msgstr "exec başarısız oldu：(%s) %s"
+
+#: src/confirm.c:69
+msgid "OK"
+msgstr "Tamam"
+
+#: src/confirm.c:74
+msgid "Cancel"
+msgstr "İptal"
+
+#: src/confirm.c:308
+msgid "Confirm"
+msgstr "Onayla"
+
+#: src/desktop.c:336
+msgid "empty Desktops Name tag"
+msgstr "Masaüstü Bilgisayarlar Adı etiketi boş"
+
+#: src/dock.c:151
+msgid "only one Dock allowed"
+msgstr "Sadece bir Dock'a izin verilir"
+
+#: src/dock.c:232
+msgid "could not acquire system tray selection"
+msgstr "Sistem tepsisi seçimi alınamadı"
+
+#: src/error.c:22
+#, c-format
+msgid "JWM: error: "
+msgstr "JWM: hata: "
+
+#: src/error.c:51
+#, c-format
+msgid "JWM: warning: "
+msgstr "JWM: uyarı: "
+
+#: src/error.c:77
+msgid "display is already managed"
+msgstr "Ekran zaten yönetiliyor"
+
+#: src/font.c:109 src/font.c:126
+#, c-format
+msgid "could not load font: %s"
+msgstr "Yazı tipi yüklenemedi：%s"
+
+#: src/font.c:116 src/font.c:133
+#, c-format
+msgid "could not load the default font: %s"
+msgstr "Varsayılan yazı tipini yükleyemedi：%s"
+
+#: src/font.c:315
+msgid "empty Font tag"
+msgstr "Yazı tipi etiketi boş"
+
+#: src/group.c:115
+msgid "invalid group class"
+msgstr "Grup sınıfı geçersiz"
+
+#: src/group.c:126
+msgid "invalid group name"
+msgstr "Grup adı geçersiz"
+
+#: src/group.c:287
+#, c-format
+msgid "invalid group desktop: %d"
+msgstr "Grup masaüstü geçersiz: %d"
+
+#: src/image.c:220
+#, c-format
+msgid "could not create read struct for PNG image: %s"
+msgstr "PNG resmi için okuma yapısı oluşturamadı: %s"
+
+#: src/image.c:233
+#, c-format
+msgid "error reading PNG image: %s"
+msgstr "PNG resmini okuma hatası：%s"
+
+#: src/image.c:241
+#, c-format
+msgid "could not create info struct for PNG image: %s"
+msgstr "PNG resmi için bilgi yapısı oluşturulamadı: %s"
+
+#: src/key.c:318
+msgid "Specified KeySym is not defined for any KeyCode"
+msgstr "Belirtilen KeySym herhangi bir KeyCode için tanımlanmadı"
+
+#: src/key.c:326
+#, c-format
+msgid "modifier not found for keysym 0x%0x"
+msgstr "KeySym 0x%0x için değiştirici bulunamadı"
+
+#: src/key.c:356
+#, c-format
+msgid "invalid modifier: \"%c\""
+msgstr "Geçersiz değiştirici：\"%c\""
+
+#: src/key.c:371
+#, c-format
+msgid "invalid key symbol: \"%s\""
+msgstr "Geçersiz anahtar sembolü：\"%s\""
+
+#: src/key.c:452
+msgid "neither key nor keycode specified for Key"
+msgstr "Anahtar için ne anahtar ne de anahtar kodu belirtilmedi"
+
+#: src/key.c:467
+#, c-format
+msgid "key binding: root menu \"%s\" not defined"
+msgstr "Anahtar bağlama: kök menü \"%s\" tanımlı değil"
+
+#: src/lex.c:201
+#, c-format
+msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
+msgstr "%s[%u]：Kapatma etiketi \"%s\" açık etiketle \"%s\" eşleşmiyor"
+
+#: src/lex.c:207
+#, c-format
+msgid "%s[%u]: unexpected and invalid close tag"
+msgstr "%s[%u]：Beklenmeyen ve geçersiz kapatma etiketi"
+
+#: src/lex.c:213
+#, c-format
+msgid "%s[%u]: close tag \"%s\" without open tag"
+msgstr "%s[%u]：Açık etiket olmadan \"%s\" etiketini kapat"
+
+#: src/lex.c:216
+#, c-format
+msgid "%s[%u]: invalid close tag"
+msgstr "%s[%u]：Geçersiz kapatma etiketi"
+
+#: src/lex.c:234
+#, c-format
+msgid "%s[%u]: invalid open tag"
+msgstr "%s[%u]：Geçersiz açık etiket"
+
+#: src/lex.c:250
+#, c-format
+msgid "%s[%u]: invalid tag"
+msgstr "%s[%u]：Geçersiz etiket"
+
+#: src/lex.c:308
+#, c-format
+msgid "%s[%u]: unexpected text: \"%s\""
+msgstr "%s[%u]：Beklenmedik metin：\"%s\""
+
+#: src/lex.c:367
+#, c-format
+msgid "%s[%d]: invalid entity: \"%.8s\""
+msgstr "%s[%d]：Geçersiz varlık：\"%.8s\""
+
+#: src/lex.c:473 src/parse.c:1893
+msgid "out of memory"
+msgstr "Bellek yetersiz"
+
+#: src/parse.c:228
+#, c-format
+msgid "could not open %s or %s"
+msgstr "%s veya %s açılamadı"
+
+#: src/parse.c:246
+#, c-format
+msgid "include depth (%d) exceeded"
+msgstr "Derinliği dahil etme (%d) aşıldı"
+
+#: src/parse.c:384
+#, c-format
+msgid "invalid start tag: %s"
+msgstr "Geçersiz başlangıç etiketi：\"%s\""
+
+#: src/parse.c:774
+#, c-format
+msgid "invalid include: %s"
+msgstr "Geçersiz dahil：\"%s\""
+
+#: src/parse.c:824
+msgid "no action specified for Key"
+msgstr "Key için herhangi bir eylem belirtilmedi"
+
+#: src/parse.c:847
+#, c-format
+msgid "invalid Key action: \"%s\""
+msgstr "Geçersiz Anahtar eylem：\"%s\""
+
+#: src/parse.c:871
+#, c-format
+msgid "invalid text alignment: \"%s\""
+msgstr "Geçersiz metin hizalaması：\"%s\""
+
+#: src/parse.c:957
+msgid "no include file specified"
+msgstr "İçerme dosyası belirtilmedi"
+
+#: src/parse.c:967
+#, c-format
+msgid "could not process include: %s"
+msgstr "İşlenemeyen dahil：%s"
+
+#: src/parse.c:971
+#, c-format
+msgid "could not open included file: %s"
+msgstr "Dahil edilen dosya açılamadı：%s"
+
+#: src/parse.c:1611
+#, c-format
+msgid "invalid value for 'enabled': \"%s\""
+msgstr "Etkin için geçersiz değer：\"%s\""
+
+#: src/parse.c:1752
+#, c-format
+msgid "invalid Group Option: %s"
+msgstr "Geçersiz Grup Seçeneği：\"%s\""
+
+#: src/parse.c:1767
+#, c-format
+msgid "invalid decorations: %s"
+msgstr "Geçersiz donatılar：\"%s\""
+
+#: src/parse.c:1829
+#, c-format
+msgid "%s is empty"
+msgstr "%s boş"
+
+#: src/parse.c:1836
+#, c-format
+msgid "invalid %s: \"%s\""
+msgstr "%s geçersiz：\"%s\""
+
+#: src/parse.c:1854
+#, c-format
+msgid "invalid value for %s: \"%s\""
+msgstr "%s için geçersiz değer：%s"
+
+#: src/parse.c:1880
+#, c-format
+msgid "could not read file: %s"
+msgstr "Dosya okunamadı：%s"
+
+#: src/parse.c:1967 src/parse.c:1984
+msgid "no value specified"
+msgstr "Değer belirtilmedi"
+
+#: src/parse.c:1972
+#, c-format
+msgid "invalid setting: %s"
+msgstr "Geçersiz ayar：\"%s\""
+
+#: src/parse.c:1989
+#, c-format
+msgid "invalid opacity: %s"
+msgstr "Geçersiz opaklık：\"%s\""
+
+#: src/parse.c:2010
+#, c-format
+msgid "invalid layer: %s"
+msgstr "Geçersiz katman：\"%s\""
+
+#: src/parse.c:2031
+#, c-format
+msgid "invalid tag in %s: %s"
+msgstr "%s içinde geçersiz etiket：%s"
+
+#: src/parse.c:2052
+msgid "configuration error"
+msgstr "Yapılandırma hatası"
+
+#: src/root.c:131
+#, c-format
+msgid "invalid root menu specified: \"%c\""
+msgstr "Geçersiz kök menü belirtildi：\"%c\""
+
+#: src/root.c:223
+msgid "Exit JWM"
+msgstr "JWM'den Çık"
+
+#: src/root.c:224
+msgid "Are you sure?"
+msgstr "Emin misiniz？"
+
+#: src/swallow.c:85
+msgid "cannot swallow a client with no name"
+msgstr "isimsiz bir hesabu alamaz"
+
+#: src/taskbar.c:444 src/winmenu.c:48
+msgid "Close"
+msgstr "Kapat"
+
+#: src/taskbar.c:451 src/winmenu.c:66
+msgid "Minimize"
+msgstr "Küçült"
+
+#: src/taskbar.c:458 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
+#: src/winmenu.c:106
+msgid "Restore"
+msgstr "Onar"
+
+#: src/taskbar.c:465 src/winmenu.c:179
+msgid "Send To"
+msgstr "Gönder"
+
+#: src/taskbar.c:961
+#, c-format
+msgid "invalid maxwidth for TaskList: %s"
+msgstr "Görev Listesi için geçersiz maksimum genişlik：%s"
+
+#: src/taskbar.c:975
+#, c-format
+msgid "invalid height for TaskList: %s"
+msgstr "Görev Listesi için geçersiz yükseklik：%s"
+
+#: src/tray.c:1064
+#, c-format
+msgid "invalid tray layout: \"%s\""
+msgstr "Geçersiz tepsi düzeni：\"%s\""
+
+#: src/tray.c:1102
+#, c-format
+msgid "invalid tray horizontal alignment: \"%s\""
+msgstr "Geçersiz tepsi yatay hizalaması：\"%s\""
+
+#: src/tray.c:1125
+#, c-format
+msgid "invalid tray vertical alignment: \"%s\""
+msgstr "Geçersiz tepsi dikey hizalaması：\"%s\""
+
+#: src/traybutton.c:89
+#, c-format
+msgid "could not load tray icon: \"%s\""
+msgstr "Tepsi simgesi yüklenemedi：\"%s\""
+
+#: src/traybutton.c:130
+msgid "no icon or label for TrayButton"
+msgstr "Tepsi Düğmesi için simge veya etiket yok"
+
+#: src/winmenu.c:49
+msgid "Kill"
+msgstr "Öldür"
+
+#: src/winmenu.c:57
+msgid "Resize"
+msgstr "Yeniden boyutlandır"
+
+#: src/winmenu.c:60
+msgid "Move"
+msgstr "Taşı"
+
+#: src/winmenu.c:72
+msgid "Unshade"
+msgstr "Gölgesiz"
+
+#: src/winmenu.c:74
+msgid "Shade"
+msgstr "Gölgeli"
+
+#: src/winmenu.c:81
+msgid "Maximize-y"
+msgstr "Büyüt-y"
+
+#: src/winmenu.c:86
+msgid "Maximize-x"
+msgstr "Büyüt-x"
+
+#: src/winmenu.c:90
+msgid "Maximize"
+msgstr "Büyüt"
+
+#: src/winmenu.c:112
+msgid "Unstick"
+msgstr "Çubuksuz"
+
+#: src/winmenu.c:114
+msgid "Stick"
+msgstr "Çubuklu"
+
+#: src/winmenu.c:139
+msgid "Layer"
+msgstr "Katman"
+
+#: src/winmenu.c:148
+msgid "[Above]"
+msgstr "[Yukarıda]"
+
+#: src/winmenu.c:150
+msgid "Above"
+msgstr "Yukarıda"
+
+#: src/winmenu.c:153
+msgid "[Normal]"
+msgstr "[Normal]"
+
+#: src/winmenu.c:155
+msgid "Normal"
+msgstr "Normal"
+
+#: src/winmenu.c:158
+msgid "[Below]"
+msgstr "[Aşağıda]"
+
+#: src/winmenu.c:160
+msgid "Below"
+msgstr "Aşağıda"
+
+#~ msgid "invalid tray width: %d"
+#~ msgstr "Geçersiz tepsi genişliği：%d"
+
+#~ msgid "invalid tray height: %d"
+#~ msgstr "Geçersiz tepsi yüksekliği：%d"

@@ -22,6 +22,7 @@ typedef unsigned int MatchType;
 #define MATCH_CLASS     1  /**< Match the window class. */
 #define MATCH_TYPE      2  /**< Match the window type. */
 #define MATCH_MACHINE   3  /**< Match the window machine. */
+#define MATCH_WNAME     4  /**< Match the window display name. */
 
 /** List of match patterns for a group. */
 typedef struct PatternListType {
@@ -151,6 +152,17 @@ void AddGroupMachine(GroupType *gp, const char *pattern)
    }
 }
 
+/** Add a window name to a group. */
+void AddGroupWindowName(GroupType *gp, const char *pattern)
+{
+   Assert(gp);
+   if(JLIKELY(pattern)) {
+      AddPattern(&gp->patterns, pattern, MATCH_WNAME);
+   } else {
+      Warning(_("invalid group window name"));
+   }
+}
+
 /** Add a pattern to a pattern list. */
 void AddPattern(PatternListType **lp, const char *pattern, MatchType match)
 {
@@ -225,10 +237,12 @@ void ApplyGroups(ClientNode *np)
    char hasName;
    char hasType;
    char hasMachine;
+   char hasWindowName;
    char matchesClass;
    char matchesName;
    char matchesType;
    char matchesMachine;
+   char matchesWindowName;
 
    static const StringMappingType windowTypeMapping[] = {
       { "desktop",      WINDOW_TYPE_DESKTOP      },
@@ -248,10 +262,12 @@ void ApplyGroups(ClientNode *np)
       hasName = 0;
       hasType = 0;
       hasMachine = 0;
+      hasWindowName = 0;
       matchesClass = 0;
       matchesName = 0;
       matchesType = 0;
       matchesMachine = 0;
+      matchesWindowName = 0;
       for(lp = gp->patterns; lp; lp = lp->next) {
          if(lp->match == MATCH_CLASS) {
             if(Match(lp->pattern, np->className)) {
@@ -274,12 +290,18 @@ void ApplyGroups(ClientNode *np)
                matchesMachine = 1;
             }
              hasMachine = 1;
+         } else if(lp->match == MATCH_WNAME) {
+            if(Match(lp->pattern, np->name)) {
+               matchesWindowName = 1;
+            }
+            hasWindowName = 1;
          } else {
             Debug("invalid match in ApplyGroups: %d", lp->match);
          }
       }
       if(hasName == matchesName && hasClass == matchesClass
-      && hasType == matchesType && hasMachine == matchesMachine) {
+      && hasType == matchesType && hasMachine == matchesMachine
+      && hasWindowName == matchesWindowName) {
          ApplyGroup(gp, np);
       }
    }

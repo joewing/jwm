@@ -785,6 +785,11 @@ toolbar, utility.
 The machine on which a program runs to match to be in this group.
 (the string WM_CLIENT_MACHINE)
 .RE
+.B WindowName
+.RS
+The window display name of a program to match to be in this group
+(the name in the title bar)
+.RE
 .B Option
 .RS
 An option for this group. Possible options are:

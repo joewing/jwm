@@ -89,6 +89,12 @@ void AddGroupName(struct GroupType *gp, const char *pattern);
  */
 void AddGroupType(struct GroupType *gp, const char *pattern);
 
+/** Add a window display name to a group.
+ * @param gp The group.
+ * @param pattern A pattern to match with the window display name.
+ */
+void AddGroupWindowName(struct GroupType *gp, const char *pattern);
+
 /** Add a window machine to a group.
  * @param gp The group.
  * @param pattern A pattern to match with the window type.

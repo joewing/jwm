@@ -1834,6 +1834,9 @@ void ParseGroup(const TokenNode *tp)
       case TOK_MACHINE:
          AddGroupMachine(group, np->value);
          break;
+      case TOK_WINDOWNAME:
+         AddGroupWindowName(group, np->value);
+         break;
       case TOK_OPTION:
          ParseGroupOption(np, group, np->value);
          break;

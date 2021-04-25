@@ -92,6 +92,7 @@ static const StringMappingType TOKEN_MAP[] = {
    { "TrayStyle",          TOK_TRAYSTYLE        },
    { "Type",               TOK_TYPE             },
    { "Width",              TOK_WIDTH            },
+   { "WindowName",         TOK_WINDOWNAME       },
    { "WindowStyle",        TOK_WINDOWSTYLE      }
 };
 static const unsigned int TOKEN_MAP_COUNT = ARRAY_LENGTH(TOKEN_MAP);

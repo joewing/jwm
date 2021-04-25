@@ -88,6 +88,7 @@ typedef enum {
    TOK_TRAYSTYLE,
    TOK_TYPE,
    TOK_WIDTH,
+   TOK_WINDOWNAME,
    TOK_WINDOWSTYLE
 
 } TokenType;

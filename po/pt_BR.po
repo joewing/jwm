@@ -2,11 +2,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.4\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-07-12 21:06-0500\n"
-"PO-Revision-Date: 2016-03-19 13:29-0300\n"
-"Last-Translator: Samuel Henrique Oltramari Pinto (SamuelOPH) "
-"<samueloph@gmail.com>\n"
-"Language-Team: Portuguese Brazil <samueloph@gmail.com>\n"
+"POT-Creation-Date: 2021-09-20 21:06-0300\n"
+"PO-Revision-Date: 2021-09-21 22:29-0300\n"
+"Last-Translator: marcelo cripe <marcelocripe@gmail.com>\n"
+"Language-Team: Portuguese Brazil\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,7 +17,7 @@ msgstr ""
 #: src/action.c:44
 #, c-format
 msgid "invalid action: \"%s\""
-msgstr "Ação inválida: \"%s\""
+msgstr "A ação \"%s\" não é válida"
 
 #: src/action.c:211
 #, c-format
@@ -32,25 +31,25 @@ msgstr "nenhum valor foi especificado para o papel de parede"
 #: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
-msgstr "tipo de papel de parede inválido: \"%s\""
+msgstr "o tipo de papel de parede \"%s\" não é válido"
 
 #: src/background.c:294
 #, c-format
 msgid "background image not found: \"%s\""
-msgstr "imagem de papel de parede não encontrado: \"%s\""
+msgstr "a imagem \"%s\" do papel de parede não foi encontrada"
 
 #: src/client.c:905
 msgid "Kill this window?"
-msgstr "Matar janela?"
+msgstr "Fechar a janela?"
 
 #: src/client.c:906
 msgid "This may cause data to be lost!"
-msgstr "Isto pode causar perda de dados!"
+msgstr "Isto pode causar a perda de dados!"
 
 #: src/command.c:138 src/main.c:221
 #, c-format
 msgid "exec failed: (%s) %s"
-msgstr "comando exec falhou (%s) %s"
+msgstr "o comando executável (%s) falhou %s"
 
 #: src/confirm.c:69
 msgid "OK"
@@ -62,19 +61,19 @@ msgstr "Cancelar"
 
 #: src/confirm.c:308
 msgid "Confirm"
-msgstr "Comfirmar"
+msgstr "Confirmar"
 
 #: src/desktop.c:336
 msgid "empty Desktops Name tag"
-msgstr "variável Name Tag do Desktops vazia"
+msgstr "a variável de identificação 'Name' da Área de Trabalho está vazia"
 
 #: src/dock.c:151
 msgid "only one Dock allowed"
-msgstr "apenas um Dock é permitido"
+msgstr "apenas uma Doca (Dock) é permitida"
 
 #: src/dock.c:232
 msgid "could not acquire system tray selection"
-msgstr "impossível adquirir a seleção da área de notificação"
+msgstr "não foi possível adquirir a seleção da área de notificação"
 
 #: src/error.c:22
 #, c-format
@@ -88,206 +87,205 @@ msgstr "JWM: aviso:"
 
 #: src/error.c:77
 msgid "display is already managed"
-msgstr "display já é gerenciado"
+msgstr "a tela já está gerenciada"
 
 #: src/font.c:109 src/font.c:126
 #, c-format
 msgid "could not load font: %s"
-msgstr "impossível carregar fonte: %s"
+msgstr "não foi possível carregar a fonte %s"
 
 #: src/font.c:116 src/font.c:133
 #, c-format
 msgid "could not load the default font: %s"
-msgstr "impossível carregar a fonte padrão: %s"
+msgstr "não foi possível carregar a fonte padrão %s"
 
 #: src/font.c:315
 msgid "empty Font tag"
-msgstr "variável Font vazia"
+msgstr "a variável 'Font' está vazia"
 
 #: src/group.c:115
 msgid "invalid group class"
-msgstr "classe de grupo inválida"
+msgstr "a classe de grupo não é válida"
 
 #: src/group.c:126
 msgid "invalid group name"
-msgstr "nome de grupo inválido"
+msgstr "o nome do grupo não é válido"
 
 #: src/group.c:287
 #, c-format
 msgid "invalid group desktop: %d"
-msgstr "grupo desktop inválido: %d"
+msgstr "o grupo da área de trabalho %d não é válido"
 
 #: src/image.c:220
 #, c-format
 msgid "could not create read struct for PNG image: %s"
-msgstr "impossível criar ou ler a estrutura para imagem PNG: %s"
+msgstr "não foi possível criar a estrutura de leitura para a imagem PNG %s"
 
 #: src/image.c:233
 #, c-format
 msgid "error reading PNG image: %s"
-msgstr "erro lendo imagem PNG: %s"
+msgstr "erro ao ler imagem PNG %s"
 
 #: src/image.c:241
 #, c-format
 msgid "could not create info struct for PNG image: %s"
-msgstr "impossível criar estrutura de informação para imagem PNG: %s"
+msgstr "não foi possível criar a estrutura de informações para a imagem PNG %s"
 
 #: src/key.c:318
 msgid "Specified KeySym is not defined for any KeyCode"
-msgstr "KeySym especificado não está definido por nenhum KeyCode"
+msgstr "O 'KeySym' especificado não está definido por nenhum 'KeyCode'"
 
 #: src/key.c:326
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
-msgstr "modificador não foi encontrado para o keysym 0x%0x"
+msgstr "o modificador 0x%0x não foi encontrado para o 'keysym'"
 
 #: src/key.c:356
 #, c-format
 msgid "invalid modifier: \"%c\""
-msgstr "modificador inválido: \"%c\""
+msgstr "o modificador \"%c\" não é válido"
 
 #: src/key.c:371
 #, c-format
 msgid "invalid key symbol: \"%s\""
-msgstr "símbolo de tecla inválido: \"%s\""
+msgstr "o símbolo da tecla \"%s\" não é válido"
 
 #: src/key.c:452
 msgid "neither key nor keycode specified for Key"
-msgstr "tecla e código de tecla não foram especificados para Key"
+msgstr "a tecla e o código da tecla não foram especificados para a 'Key'"
 
 #: src/key.c:467
 #, c-format
 msgid "key binding: root menu \"%s\" not defined"
-msgstr "teclas de atalho: menu raiz \"%s\" não está definido"
+msgstr "teclas de atalho: o menu raiz \"%s\" não está definido"
 
 #: src/lex.c:201
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
-msgstr ""
-"%s[%u]: terminação da variável \"%s\" não corresponde à abertura da variável "
-"\"%s\""
+msgstr "%s[%u]: o fechamento da variável \"%s\" não corresponde "
+"à abertura da variável \"%s\""
 
 #: src/lex.c:207
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
-msgstr "%s[%u]: terminação da variável inesperada e inválida"
+msgstr "%s[%u]: o fechamento inesperado da variável não é válido"
 
 #: src/lex.c:213
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
-msgstr "%s[%u]: terminação da variável \"%s\" sem variável de abertura"
+msgstr "%s[%u]: o fechamento da variável \"%s\" está sem a variável de abertura"
 
 #: src/lex.c:216
 #, c-format
 msgid "%s[%u]: invalid close tag"
-msgstr "%s[%u]: terminação da variável inválida"
+msgstr "%s[%u]: o fechamento da variável não é válido"
 
 #: src/lex.c:234
 #, c-format
 msgid "%s[%u]: invalid open tag"
-msgstr "%s[%u]: abertura da variável inválida"
+msgstr "%s[%u]: a abertura da variável não é válida"
 
 #: src/lex.c:250
 #, c-format
 msgid "%s[%u]: invalid tag"
-msgstr "%s[%u]: variável inválida"
+msgstr "%s[%u]: a variável não é válida"
 
 #: src/lex.c:308
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
-msgstr "%s[%u]: texto inesperado: \"%s\""
+msgstr "%s[%u]: o texto \"%s\" não é esperado"
 
 #: src/lex.c:367
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
-msgstr "%s[%d]: entrada inválida: \"%.8s\""
+msgstr "%s[%d]: a entrada \"%.8s\" não é válida"
 
 #: src/lex.c:473 src/parse.c:1893
 msgid "out of memory"
-msgstr "Memória insuficiente"
+msgstr "a memória não é suficiente"
 
 #: src/parse.c:228
 #, c-format
 msgid "could not open %s or %s"
-msgstr "impossível abrir %s ou %s"
+msgstr "não foi possível abrir %s ou %s"
 
 #: src/parse.c:246
 #, c-format
 msgid "include depth (%d) exceeded"
-msgstr "profundidade de includes (%d) excedido"
+msgstr "a profundidade do 'include' (%d) foi excedido"
 
 #: src/parse.c:384
 #, c-format
 msgid "invalid start tag: %s"
-msgstr "abertura de variável inválida: %s"
+msgstr "abertura de variável %s não é válida"
 
 #: src/parse.c:774
 #, c-format
 msgid "invalid include: %s"
-msgstr "include inválido: %s"
+msgstr "o 'include' %s não é válido"
 
 #: src/parse.c:824
 msgid "no action specified for Key"
-msgstr "nenhuma ação especificada para tecla"
+msgstr "nenhuma ação foi especificada para a tecla"
 
 #: src/parse.c:847
 #, c-format
 msgid "invalid Key action: \"%s\""
-msgstr "Ação Key inválida: \"%s\""
+msgstr "a ação \"%s\" da tecla 'Key' não é válida"
 
 #: src/parse.c:871
 #, c-format
 msgid "invalid text alignment: \"%s\""
-msgstr "alinhamento de texto inválido: \"%s\""
+msgstr "o alinhamento de texto \"%s\" não é válido"
 
 #: src/parse.c:957
 msgid "no include file specified"
-msgstr "nenhum arquivo include especificado"
+msgstr "nenhum arquivo 'include' foi especificado"
 
 #: src/parse.c:967
 #, c-format
 msgid "could not process include: %s"
-msgstr "impossível processar include: %s"
+msgstr "não é possível processar o 'include' %s"
 
 #: src/parse.c:971
 #, c-format
 msgid "could not open included file: %s"
-msgstr "impossível abrir arquivo incluído: %s"
+msgstr "não é possível abrir o arquivo incluído %s"
 
 #: src/parse.c:1611
 #, c-format
 msgid "invalid value for 'enabled': \"%s\""
-msgstr "valor inválido para 'enabled': \"%s\""
+msgstr "o valor não é válido para o 'enabled' \"%s\""
 
 #: src/parse.c:1752
 #, c-format
 msgid "invalid Group Option: %s"
-msgstr "Opção de Grupo inválida: %s"
+msgstr "A opção do grupo %s não é válida"
 
 #: src/parse.c:1767
 #, c-format
 msgid "invalid decorations: %s"
-msgstr "decorations inválido: \"%s\""
+msgstr "a decoração \"%s\" não é válida"
 
 #: src/parse.c:1829
 #, c-format
 msgid "%s is empty"
-msgstr "%s está vazio"
+msgstr "%s está vazio(a)"
 
 #: src/parse.c:1836
 #, c-format
 msgid "invalid %s: \"%s\""
-msgstr "inválido  %s: \"%s\""
+msgstr "não é válido %s: \"%s\""
 
 #: src/parse.c:1854
 #, c-format
 msgid "invalid value for %s: \"%s\""
-msgstr "valor inválido para %s: \"%s\""
+msgstr "o valor %s não é válido para \"%s\""
 
 #: src/parse.c:1880
 #, fuzzy, c-format
 msgid "could not read file: %s"
-msgstr "impossível carregar fonte: %s"
+msgstr "não é possível carregar a fonte %s"
 
 #: src/parse.c:1967 src/parse.c:1984
 msgid "no value specified"
@@ -296,22 +294,22 @@ msgstr "nenhum valor foi especificado"
 #: src/parse.c:1972
 #, c-format
 msgid "invalid setting: %s"
-msgstr "configuração inválida: %s"
+msgstr "a configuração %s não é válida"
 
 #: src/parse.c:1989
 #, c-format
 msgid "invalid opacity: %s"
-msgstr "transparência inválida: %s"
+msgstr "a transparência %s não é válida"
 
 #: src/parse.c:2010
 #, c-format
 msgid "invalid layer: %s"
-msgstr "camada inválida: %s"
+msgstr "a camada %s não é válida"
 
 #: src/parse.c:2031
 #, c-format
 msgid "invalid tag in %s: %s"
-msgstr "variável inválida dentro de %s: %s"
+msgstr "a variável %s não é válida dentro de %s"
 
 #: src/parse.c:2052
 msgid "configuration error"
@@ -320,7 +318,7 @@ msgstr "erro de configuração"
 #: src/root.c:131
 #, c-format
 msgid "invalid root menu specified: \"%c\""
-msgstr "menu root especificado é inválido: \"%c\""
+msgstr "o menu de root \"%c\" especificado não é válido"
 
 #: src/root.c:223
 msgid "Exit JWM"
@@ -328,12 +326,11 @@ msgstr "Sair do JWM"
 
 #: src/root.c:224
 msgid "Are you sure?"
-msgstr "Tem certeza?"
+msgstr "Você tem certeza?"
 
 #: src/swallow.c:85
 msgid "cannot swallow a client with no name"
-msgstr ""
-"não é possível inserir um cliente na variável swallow sem especificar o nome"
+msgstr "não é possível inserir um cliente na variável 'swallow' sem especificar o nome"
 
 #: src/taskbar.c:444 src/winmenu.c:48
 msgid "Close"
@@ -350,41 +347,41 @@ msgstr "Restaurar"
 
 #: src/taskbar.c:465 src/winmenu.c:179
 msgid "Send To"
-msgstr "Enviar para"
+msgstr "Enviar Para"
 
 #: src/taskbar.c:961
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
-msgstr "largura máxima inválida para Tasklist: %s"
+msgstr "a largura máxima %s para a lista de tarefas não é válida"
 
 #: src/taskbar.c:975
 #, c-format
 msgid "invalid height for TaskList: %s"
-msgstr "altura inválida para Tasklist: %s"
+msgstr "a altura %s para a lista de tarefas não é válida"
 
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
-msgstr "layout do painel inválido: \"%s\""
+msgstr "o leiaute de \"%s\" da bandeja do painel não é válido"
 
 #: src/tray.c:1102
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "alinhamento horizontal do painel inválido: \"%s\""
+msgstr "o alinhamento horizontal de \"%s\" da bandeja do painel não é válido"
 
 #: src/tray.c:1125
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
-msgstr "alinhamento vertical do painel inválido: \"%s\""
+msgstr "o alinhamento vertical de \"%s\" da bandeja do painel não é válido"
 
 #: src/traybutton.c:89
 #, c-format
 msgid "could not load tray icon: \"%s\""
-msgstr "não foi possível carregar o ícone no painel: \"%s\""
+msgstr "não foi possível carregar o ícone \"%s\" da bandeja do painel"
 
 #: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
-msgstr "ícone e nome não estão definidos para TrayButton"
+msgstr "o ícone e o nome não estão definidos para o botão da bandeja"
 
 #: src/winmenu.c:49
 msgid "Kill"
@@ -400,11 +397,11 @@ msgstr "Mover"
 
 #: src/winmenu.c:72
 msgid "Unshade"
-msgstr "Desativar sombra"
+msgstr "Desativar a Sombra"
 
 #: src/winmenu.c:74
 msgid "Shade"
-msgstr "Ativar sombra"
+msgstr "Ativar a Sombra"
 
 #: src/winmenu.c:81
 msgid "Maximize-y"
@@ -455,19 +452,19 @@ msgid "Below"
 msgstr "Abaixo"
 
 #~ msgid "invalid tray width: %d"
-#~ msgstr "largura do painel inválida: %d"
+#~ msgstr "a largura %d da bandeja do painel não é válida"
 
 #~ msgid "invalid tray height: %d"
-#~ msgstr "altura do painel inválida: %d"
+#~ msgstr "a altura %d da bandeja do painel não é válida"
 
 #~ msgid "invalid insert mode: \"%s\""
-#~ msgstr "modo de inserção inválido: \"%s\""
+#~ msgstr "o modo de inserção \"%s\" não é válido"
 
 #~ msgid "invalid status window type: %s"
-#~ msgstr "tipo de fundo inválido: %s"
+#~ msgstr "o tipo do fundo %s da janela não é válido"
 
 #~ msgid "cannot swallow the same client multiple times"
-#~ msgstr "não pode inserir um cliente no swallow mais que uma vez"
+#~ msgstr "você não pode inserir o mesmo cliente no 'swallow' mais que uma vez"
 
 #~ msgid "Fullscreen state will be shaped!"
-#~ msgstr "Estado do ecrã expandido será moldado!"
+#~ msgstr "O estado da tela cheia será moldado!"

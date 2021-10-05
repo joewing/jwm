@@ -439,6 +439,10 @@ ImageNode *LoadSVGImage(const char *fileName, int rwidth, int rheight,
 #if !GLIB_CHECK_VERSION(2, 35, 0)
    static char initialized = 0;
 #endif
+#if LIBRSVG_CHECK_VERSION(2, 52, 0)
+   RsvgRectangle viewport;
+   double pwidth, pheight;
+#endif
    ImageNode *result = NULL;
    RsvgHandle *rh;
    RsvgDimensionData dim;
@@ -466,7 +470,13 @@ ImageNode *LoadSVGImage(const char *fileName, int rwidth, int rheight,
       return NULL;
    }
 
+#if LIBRSVG_CHECK_VERSION(2, 52, 0)
+   rsvg_handle_get_intrinsic_size_in_pixels(rh, &pwidth, &pheight);
+   dim.width = pwidth;
+   dim.height = pheight;
+#else
    rsvg_handle_get_dimensions(rh, &dim);
+#endif
    if(rwidth == 0 || rheight == 0) {
       rwidth = dim.width;
       rheight = dim.height;
@@ -497,7 +507,15 @@ ImageNode *LoadSVGImage(const char *fileName, int rwidth, int rheight,
    context = cairo_create(target);
    cairo_scale(context, xscale, yscale);
    cairo_paint_with_alpha(context, 0.0);
+#if LIBRSVG_CHECK_VERSION(2, 52, 0)
+   viewport.x = 0;
+   viewport.y = 0;
+   viewport.width = rwidth;
+   viewport.height = rheight;
+   rsvg_handle_render_document(rh, context, &viewport, NULL);
+#else
    rsvg_handle_render_cairo(rh, context);
+#endif
    cairo_destroy(context);
    cairo_surface_destroy(target);
    g_object_unref(rh);

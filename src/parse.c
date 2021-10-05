@@ -2103,7 +2103,7 @@ unsigned ParseTimeout(const TokenNode *tp)
 /** Parse opacity (a float between 0.0 and 1.0). */
 unsigned ParseOpacity(const TokenNode *tp, const char *str)
 {
-   float value;
+   double value;
    if(JUNLIKELY(!str)) {
       ParseError(tp, _("no value specified"));
       return UINT_MAX;

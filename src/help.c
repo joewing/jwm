@@ -29,9 +29,6 @@ void DisplayCompileOptions(void)
 #ifdef DEBUG
           "debug "
 #endif
-#ifdef USE_FRIBIDI
-          "fribidi "
-#endif
 #ifdef USE_ICONS
           "icons "
 #endif
@@ -40,6 +37,9 @@ void DisplayCompileOptions(void)
 #endif
 #ifdef ENABLE_NLS
           "nls "
+#endif
+#ifdef USE_PANGO
+          "pango "
 #endif
 #ifdef USE_PNG
           "png "

@@ -1,5 +1,6 @@
 src/action.c
 src/background.c
+src/binding.c
 src/border.c
 src/button.c
 src/client.c
@@ -10,6 +11,7 @@ src/command.c
 src/confirm.c
 src/cursor.c
 src/debug.c
+src/default.c
 src/desktop.c
 src/dock.c
 src/error.c
@@ -22,7 +24,6 @@ src/help.c
 src/hint.c
 src/icon.c
 src/image.c
-src/key.c
 src/lex.c
 src/main.c
 src/match.c

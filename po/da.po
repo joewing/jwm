@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.7\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-07-12 21:06-0500\n"
+"POT-Creation-Date: 2021-10-05 22:44+0000\n"
 "PO-Revision-Date: 2018-06-08 00:00+0000\n"
 "Last-Translator: scootergrisen\n"
 "Language-Team: Danish\n"
@@ -41,18 +41,62 @@ msgstr "ugyldig baggrundstype: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "baggrundsbillede ikke fundet: \"%s\""
 
-#: src/client.c:905
+#: src/binding.c:323
+msgid "Specified KeySym is not defined for any KeyCode"
+msgstr ""
+"Angivne tastesymbol (KeySym) er ikke angivet for nogen tastekode (KeyCode)"
+
+#: src/binding.c:331
+#, c-format
+msgid "modifier not found for keysym 0x%0x"
+msgstr "modifikator ikke fundet for tastesymbol (keysym) 0x%0x"
+
+#: src/binding.c:359
+#, c-format
+msgid "invalid modifier: \"%c\""
+msgstr "ugyldig modifikator: \"%c\""
+
+#: src/binding.c:373
+#, c-format
+msgid "invalid key symbol: \"%s\""
+msgstr "ugyldig tastesymbol (key symbol): \"%s\""
+
+#: src/binding.c:482
+msgid "neither key nor keycode specified for Key"
+msgstr "hverken tast (key) eller tastekode (keycode) angivet for tast (Key)"
+
+#: src/binding.c:520
+#, c-format
+msgid "key binding: root menu \"%s\" not defined"
+msgstr "tastebinding (key binding): rodmenu \"%s\" ikke angivet"
+
+#: src/client.c:903
 msgid "Kill this window?"
 msgstr "Dræb dette vindue?"
 
-#: src/client.c:906
+#: src/client.c:904
 msgid "This may cause data to be lost!"
 msgstr "Dette kan forårsage tab af data!"
 
-#: src/command.c:138 src/main.c:221
+#: src/command.c:141 src/command.c:172 src/main.c:208
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "exec fejlede: (%s) %s"
+
+#: src/command.c:155
+#, fuzzy
+#| msgid "could not read file: %s"
+msgid "could not create pipe"
+msgstr "kunne ikke læse fil: %s"
+
+#: src/command.c:161
+msgid "could not set O_NONBLOCK"
+msgstr ""
+
+#: src/command.c:210
+#, c-format
+msgid "timeout: %s did not complete in %u milliseconds"
+msgstr ""
 
 #: src/confirm.c:69
 msgid "OK"
@@ -92,76 +136,64 @@ msgstr "JWM: advarsel: "
 msgid "display is already managed"
 msgstr "display er allerede håndteret"
 
-#: src/font.c:109 src/font.c:126
+#: src/font.c:138 src/font.c:174
 #, c-format
 msgid "could not load font: %s"
 msgstr "kunne ikke indlæse skrifttype: %s"
 
-#: src/font.c:116 src/font.c:133
+#: src/font.c:182
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "kunne ikke indlæse standardskrifttypen: %s"
 
-#: src/font.c:315
+#: src/font.c:355
 msgid "empty Font tag"
 msgstr "tomt \"Font\"-opmærkning"
 
-#: src/group.c:115
+#: src/group.c:117
 msgid "invalid group class"
 msgstr "ugyldig gruppeklasse"
 
-#: src/group.c:126
+#: src/group.c:128
 msgid "invalid group name"
 msgstr "ugyldig gruppenavn"
 
-#: src/group.c:287
+#: src/group.c:139
+#, fuzzy
+#| msgid "invalid group name"
+msgid "invalid group type"
+msgstr "ugyldig gruppenavn"
+
+#: src/group.c:150
+#, fuzzy
+#| msgid "invalid group name"
+msgid "invalid group machine"
+msgstr "ugyldig gruppenavn"
+
+#: src/group.c:343
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr "ugyldig gruppe skrivebord: %d"
 
-#: src/image.c:220
+#: src/image.c:147
+#, c-format
+msgid "unrecognized extension for \"%s\", expected \"%s\""
+msgstr ""
+
+#: src/image.c:234
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr "kunne ikke oprette \"read struct\" til PNG-billede: %s"
 
-#: src/image.c:233
+#: src/image.c:247
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr "fejl ved læsning af PNG-billede: %s"
 
-#: src/image.c:241
+#: src/image.c:255
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "kunne ikke oprette \"info struct\" til PNG-billede: %s"
-
-#: src/key.c:318
-msgid "Specified KeySym is not defined for any KeyCode"
-msgstr ""
-"Angivne tastesymbol (KeySym) er ikke angivet for nogen tastekode (KeyCode)"
-
-#: src/key.c:326
-#, c-format
-msgid "modifier not found for keysym 0x%0x"
-msgstr "modifikator ikke fundet for tastesymbol (keysym) 0x%0x"
-
-#: src/key.c:356
-#, c-format
-msgid "invalid modifier: \"%c\""
-msgstr "ugyldig modifikator: \"%c\""
-
-#: src/key.c:371
-#, c-format
-msgid "invalid key symbol: \"%s\""
-msgstr "ugyldig tastesymbol (key symbol): \"%s\""
-
-#: src/key.c:452
-msgid "neither key nor keycode specified for Key"
-msgstr "hverken tast (key) eller tastekode (keycode) angivet for tast (Key)"
-
-#: src/key.c:467
-#, c-format
-msgid "key binding: root menu \"%s\" not defined"
-msgstr "tastebinding (key binding): rodmenu \"%s\" ikke angivet"
 
 #: src/lex.c:201
 #, c-format
@@ -183,142 +215,161 @@ msgstr "%s[%u]: luk-opmærkning \"%s\" uden åbn-opmærkning"
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: ugyldig luk-opmærkning"
 
-#: src/lex.c:234
+#: src/lex.c:264
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: ugyldig åbn-opmærkning"
 
-#: src/lex.c:250
+#: src/lex.c:280
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: ugyldig opmærkning"
 
-#: src/lex.c:308
+#: src/lex.c:338
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: uventet tekst: \"%s\""
 
-#: src/lex.c:367
+#: src/lex.c:397
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: ugyldig entitet: \"%.8s\""
 
-#: src/lex.c:473 src/parse.c:1893
+#: src/lex.c:503
 msgid "out of memory"
 msgstr "ikke mere ledig hukommelse"
 
-#: src/parse.c:228
+#: src/parse.c:272
+#, fuzzy, c-format
+#| msgid "could not open %s or %s"
+msgid "could not open %s"
+msgstr "kunne ikke åbne %s eller %s"
+
+#: src/parse.c:282
 #, c-format
 msgid "could not open %s or %s"
 msgstr "kunne ikke åbne %s eller %s"
 
-#: src/parse.c:246
+#: src/parse.c:301
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr "inkluderingsdybde (%d) overskredet"
 
-#: src/parse.c:384
+#: src/parse.c:445
 #, c-format
 msgid "invalid start tag: %s"
 msgstr "ugyldig start-opmærkning: %s"
 
-#: src/parse.c:774
+#: src/parse.c:837
 #, c-format
 msgid "invalid include: %s"
 msgstr "ugyldig inkludering: %s"
 
-#: src/parse.c:824
+#: src/parse.c:923
 msgid "no action specified for Key"
 msgstr "ingen handling angivet for tast (Key)"
 
-#: src/parse.c:847
+#: src/parse.c:930
 #, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "ugyldig tastehandling (Key action): \"%s\""
 
-#: src/parse.c:871
+#: src/parse.c:956
+#, fuzzy
+#| msgid "no action specified for Key"
+msgid "no action specified for Mouse"
+msgstr "ingen handling angivet for tast (Key)"
+
+#: src/parse.c:961
+#, fuzzy, c-format
+#| msgid "invalid Key action: \"%s\""
+msgid "invalid Mouse action: \"%s\""
+msgstr "ugyldig tastehandling (Key action): \"%s\""
+
+#: src/parse.c:967
+#, fuzzy, c-format
+#| msgid "invalid Key action: \"%s\""
+msgid "invalid Mouse context: \"%s\""
+msgstr "ugyldig tastehandling (Key action): \"%s\""
+
+#: src/parse.c:988
 #, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "ugyldig tekstjustering: \"%s\""
 
-#: src/parse.c:957
+#: src/parse.c:1076
 msgid "no include file specified"
 msgstr "ingen inkluderingsfil angivet"
 
-#: src/parse.c:967
+#: src/parse.c:1087
 #, c-format
 msgid "could not process include: %s"
 msgstr "kunne ikke behandle inkludering: %s"
 
-#: src/parse.c:971
+#: src/parse.c:1091
 #, c-format
 msgid "could not open included file: %s"
 msgstr "kunne ikke åbne inkluderede fil: %s"
 
-#: src/parse.c:1611
+#: src/parse.c:1743
 #, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "ugyldig værdi for 'enabled': \"%s\""
 
-#: src/parse.c:1752
+#: src/parse.c:1890
 #, c-format
 msgid "invalid Group Option: %s"
 msgstr "ugyldig gruppevalgmulighed: %s"
 
-#: src/parse.c:1767
+#: src/parse.c:1905
 #, c-format
 msgid "invalid decorations: %s"
 msgstr "ugyldige dekorationer: %s"
 
-#: src/parse.c:1829
+#: src/parse.c:1967
 #, c-format
 msgid "%s is empty"
 msgstr "%s er tom"
 
-#: src/parse.c:1836
+#: src/parse.c:1974
 #, c-format
 msgid "invalid %s: \"%s\""
 msgstr "ugyldig %s: \"%s\""
 
-#: src/parse.c:1854
+#: src/parse.c:1992
 #, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "ugyldig værdi for %s: \"%s\""
 
-#: src/parse.c:1880
-#, c-format
-msgid "could not read file: %s"
-msgstr "kunne ikke læse fil: %s"
-
-#: src/parse.c:1967 src/parse.c:1984
+#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2108
 msgid "no value specified"
 msgstr "ingen værdi angivet"
 
-#: src/parse.c:1972
+#: src/parse.c:2067 src/parse.c:2084
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ugyldig indstilling: %s"
 
-#: src/parse.c:1989
+#: src/parse.c:2113
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ugyldig opacitet: %s"
 
-#: src/parse.c:2010
+#: src/parse.c:2134
 #, c-format
 msgid "invalid layer: %s"
 msgstr "ugyldigt lag: %s"
 
-#: src/parse.c:2031
+#: src/parse.c:2155
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ugyldig opmærkning i %s: %s"
 
-#: src/parse.c:2052
+#: src/parse.c:2176
 msgid "configuration error"
 msgstr "konfigurationsfejl"
 
-#: src/root.c:131
+#: src/root.c:129
 #, c-format
 msgid "invalid root menu specified: \"%c\""
 msgstr "ugyldig rodmenu angivet: \"%c\""
@@ -335,44 +386,44 @@ msgstr "Er du sikker?"
 msgid "cannot swallow a client with no name"
 msgstr "kan ikke sluge en klient uden navn"
 
-#: src/taskbar.c:444 src/winmenu.c:48
+#: src/taskbar.c:483 src/winmenu.c:48
 msgid "Close"
 msgstr "Luk"
 
-#: src/taskbar.c:451 src/winmenu.c:66
+#: src/taskbar.c:490 src/winmenu.c:66
 msgid "Minimize"
 msgstr "Minimer"
 
-#: src/taskbar.c:458 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
+#: src/taskbar.c:497 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
 msgid "Restore"
 msgstr "Gendan"
 
-#: src/taskbar.c:465 src/winmenu.c:179
+#: src/taskbar.c:504 src/winmenu.c:179
 msgid "Send To"
 msgstr "Send til"
 
-#: src/taskbar.c:961
+#: src/taskbar.c:999
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ugyldig maxwidth for TaskList: %s"
 
-#: src/taskbar.c:975
+#: src/taskbar.c:1013
 #, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "ugyldig højde for TaskList: %s"
 
-#: src/tray.c:1064
+#: src/tray.c:1082
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "ugyldigt bakkelayout: \"%s\""
 
-#: src/tray.c:1102
+#: src/tray.c:1109
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "ugyldig vandret justering af bakke: \"%s\""
 
-#: src/tray.c:1125
+#: src/tray.c:1132
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ugyldig lodret justering af bakke: \"%s\""

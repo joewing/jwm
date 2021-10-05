@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2017-07-12 21:06-0500\n"
+"POT-Creation-Date: 2021-10-05 22:44+0000\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -42,18 +42,60 @@ msgstr "nieprawidłowy typ tła: \"%s\""
 msgid "background image not found: \"%s\""
 msgstr "nie znaleziono obrazu tła: \"%s\""
 
-#: src/client.c:905
+#: src/binding.c:323
+msgid "Specified KeySym is not defined for any KeyCode"
+msgstr "Określony KeySym nie jest zdefiniowany dla żadego KeyCode"
+
+#: src/binding.c:331
+#, c-format
+msgid "modifier not found for keysym 0x%0x"
+msgstr "nie znaleziono modyfikatora dla keysym 0x%0x"
+
+#: src/binding.c:359
+#, c-format
+msgid "invalid modifier: \"%c\""
+msgstr "nieprawidłowy modyfikator: \"%c\""
+
+#: src/binding.c:373
+#, c-format
+msgid "invalid key symbol: \"%s\""
+msgstr "nieprawidłowy symbol klucza: \"%s\""
+
+#: src/binding.c:482
+msgid "neither key nor keycode specified for Key"
+msgstr "ani klucza ani keycode określony dla Key"
+
+#: src/binding.c:520
+#, fuzzy, c-format
+msgid "key binding: root menu \"%s\" not defined"
+msgstr "klucz wiązania: menu główne %d nie zdefiniowano"
+
+#: src/client.c:903
 msgid "Kill this window?"
 msgstr "Zabić to okno?"
 
-#: src/client.c:906
+#: src/client.c:904
 msgid "This may cause data to be lost!"
 msgstr "Może to spowodować utratę danych!"
 
-#: src/command.c:138 src/main.c:221
+#: src/command.c:141 src/command.c:172 src/main.c:208
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "exec nie powiodło się: (%s) %s"
+
+#: src/command.c:155
+#, fuzzy
+msgid "could not create pipe"
+msgstr "nie można załadować czcionki: %s"
+
+#: src/command.c:161
+msgid "could not set O_NONBLOCK"
+msgstr ""
+
+#: src/command.c:210
+#, c-format
+msgid "timeout: %s did not complete in %u milliseconds"
+msgstr ""
 
 #: src/confirm.c:69
 msgid "OK"
@@ -93,75 +135,64 @@ msgstr ""
 msgid "display is already managed"
 msgstr ""
 
-#: src/font.c:109 src/font.c:126
+#: src/font.c:138 src/font.c:174
 #, c-format
 msgid "could not load font: %s"
 msgstr "nie można załadować czcionki: %s"
 
-#: src/font.c:116 src/font.c:133
+#: src/font.c:182
 #, c-format
 msgid "could not load the default font: %s"
 msgstr "nie można załadować domyślnej czcionki: %s"
 
-#: src/font.c:315
+#: src/font.c:355
 msgid "empty Font tag"
 msgstr "pusty znacznik czcionki"
 
-#: src/group.c:115
+#: src/group.c:117
 msgid "invalid group class"
 msgstr "nieprawidłowa klasa grupy"
 
-#: src/group.c:126
+#: src/group.c:128
 msgid "invalid group name"
 msgstr "nieprawidłowa nazwa grupy"
 
-#: src/group.c:287
+#: src/group.c:139
+#, fuzzy
+#| msgid "invalid group name"
+msgid "invalid group type"
+msgstr "nieprawidłowa nazwa grupy"
+
+#: src/group.c:150
+#, fuzzy
+#| msgid "invalid group name"
+msgid "invalid group machine"
+msgstr "nieprawidłowa nazwa grupy"
+
+#: src/group.c:343
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr "nieprawidłowy pulpitu grupy: %d"
 
-#: src/image.c:220
+#: src/image.c:147
+#, c-format
+msgid "unrecognized extension for \"%s\", expected \"%s\""
+msgstr ""
+
+#: src/image.c:234
 #, c-format
 msgid "could not create read struct for PNG image: %s"
 msgstr "nie można utworzyć przeczytać struct dla obrazu PNG: %s"
 
-#: src/image.c:233
+#: src/image.c:247
 #, c-format
 msgid "error reading PNG image: %s"
 msgstr "błąd odczytu obrazu PNG: %s"
 
-#: src/image.c:241
+#: src/image.c:255
 #, c-format
 msgid "could not create info struct for PNG image: %s"
 msgstr "nie można utworzyć struktur informacji dla obrazu PNG: %s"
-
-#: src/key.c:318
-msgid "Specified KeySym is not defined for any KeyCode"
-msgstr "Określony KeySym nie jest zdefiniowany dla żadego KeyCode"
-
-#: src/key.c:326
-#, c-format
-msgid "modifier not found for keysym 0x%0x"
-msgstr "nie znaleziono modyfikatora dla keysym 0x%0x"
-
-#: src/key.c:356
-#, c-format
-msgid "invalid modifier: \"%c\""
-msgstr "nieprawidłowy modyfikator: \"%c\""
-
-#: src/key.c:371
-#, c-format
-msgid "invalid key symbol: \"%s\""
-msgstr "nieprawidłowy symbol klucza: \"%s\""
-
-#: src/key.c:452
-msgid "neither key nor keycode specified for Key"
-msgstr "ani klucza ani keycode określony dla Key"
-
-#: src/key.c:467
-#, fuzzy, c-format
-msgid "key binding: root menu \"%s\" not defined"
-msgstr "klucz wiązania: menu główne %d nie zdefiniowano"
 
 #: src/lex.c:201
 #, c-format
@@ -183,144 +214,159 @@ msgstr "%s[%u]: zamknij znacznik \"%s\" bez otwartego znacznika"
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: nieprawidłowo zamknięty znacznik"
 
-#: src/lex.c:234
+#: src/lex.c:264
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: nieprawidłowo otwarty znacznik"
 
-#: src/lex.c:250
+#: src/lex.c:280
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: nieprawidłowy znacznik"
 
-#: src/lex.c:308
+#: src/lex.c:338
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: nieoczekiwany tekst: \"%s\""
 
-#: src/lex.c:367
+#: src/lex.c:397
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: nieprawidłowa jednostka: \"%.8s\""
 
-#: src/lex.c:473 src/parse.c:1893
+#: src/lex.c:503
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:228
+#: src/parse.c:272
+#, fuzzy, c-format
+msgid "could not open %s"
+msgstr "nie można załadować czcionki: %s"
+
+#: src/parse.c:282
 #, fuzzy, c-format
 msgid "could not open %s or %s"
 msgstr "nie można załadować czcionki: %s"
 
-#: src/parse.c:246
+#: src/parse.c:301
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr ""
 
-#: src/parse.c:384
+#: src/parse.c:445
 #, fuzzy, c-format
 msgid "invalid start tag: %s"
 msgstr "nieprawidłowy znacznik w: %s"
 
-#: src/parse.c:774
+#: src/parse.c:837
 #, fuzzy, c-format
 msgid "invalid include: %s"
 msgstr "nieprawidłowa warstwa grupy: %s"
 
-#: src/parse.c:824
+#: src/parse.c:923
 #, fuzzy
 msgid "no action specified for Key"
 msgstr "ani klucza ani keycode określony dla Key"
 
-#: src/parse.c:847
+#: src/parse.c:930
 #, fuzzy, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/parse.c:871
+#: src/parse.c:956
+#, fuzzy
+msgid "no action specified for Mouse"
+msgstr "ani klucza ani keycode określony dla Key"
+
+#: src/parse.c:961
+#, fuzzy, c-format
+msgid "invalid Mouse action: \"%s\""
+msgstr "nieprawidłowa akcja TrayButton: \"%s\""
+
+#: src/parse.c:967
+#, fuzzy, c-format
+msgid "invalid Mouse context: \"%s\""
+msgstr "nieprawidłowa akcja TrayButton: \"%s\""
+
+#: src/parse.c:988
 #, fuzzy, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""
 
-#: src/parse.c:957
+#: src/parse.c:1076
 msgid "no include file specified"
 msgstr ""
 
-#: src/parse.c:967
+#: src/parse.c:1087
 #, fuzzy, c-format
 msgid "could not process include: %s"
 msgstr "nie można załadować czcionki: %s"
 
-#: src/parse.c:971
+#: src/parse.c:1091
 #, fuzzy, c-format
 msgid "could not open included file: %s"
 msgstr "nie można załadować czcionki: %s"
 
-#: src/parse.c:1611
+#: src/parse.c:1743
 #, fuzzy, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/parse.c:1752
+#: src/parse.c:1890
 #, fuzzy, c-format
 msgid "invalid Group Option: %s"
 msgstr "nieprawidłowy pulpitu grupy: %d"
 
-#: src/parse.c:1767
+#: src/parse.c:1905
 #, fuzzy, c-format
 msgid "invalid decorations: %s"
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/parse.c:1829
+#: src/parse.c:1967
 #, c-format
 msgid "%s is empty"
 msgstr ""
 
-#: src/parse.c:1836
+#: src/parse.c:1974
 #, fuzzy, c-format
 msgid "invalid %s: \"%s\""
 msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 
-#: src/parse.c:1854
+#: src/parse.c:1992
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:1880
-#, fuzzy, c-format
-msgid "could not read file: %s"
-msgstr "nie można załadować czcionki: %s"
-
-#: src/parse.c:1967 src/parse.c:1984
+#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2108
 #, fuzzy
 msgid "no value specified"
 msgstr "nie określono wartości dla tła"
 
-#: src/parse.c:1972
+#: src/parse.c:2067 src/parse.c:2084
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nieprawidłowy znacznik w: %s"
 
-#: src/parse.c:1989
+#: src/parse.c:2113
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "nieprawidłowa nieprzezroczystość menu: %s"
 
-#: src/parse.c:2010
+#: src/parse.c:2134
 #, c-format
 msgid "invalid layer: %s"
 msgstr "nieprawidłowa warstwa grupy: %s"
 
-#: src/parse.c:2031
+#: src/parse.c:2155
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:2052
+#: src/parse.c:2176
 msgid "configuration error"
 msgstr "błąd konfiguracji"
 
-#: src/root.c:131
+#: src/root.c:129
 #, c-format
 msgid "invalid root menu specified: \"%c\""
 msgstr "nieprawidłowo określono menu główne: \"%c\""
@@ -337,44 +383,44 @@ msgstr "Czy jesteś pewien?"
 msgid "cannot swallow a client with no name"
 msgstr "nie może połknąć klienta bez nazwy"
 
-#: src/taskbar.c:444 src/winmenu.c:48
+#: src/taskbar.c:483 src/winmenu.c:48
 msgid "Close"
 msgstr "Zamknij"
 
-#: src/taskbar.c:451 src/winmenu.c:66
+#: src/taskbar.c:490 src/winmenu.c:66
 msgid "Minimize"
 msgstr "Zminimalizuj"
 
-#: src/taskbar.c:458 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
+#: src/taskbar.c:497 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
 msgid "Restore"
 msgstr "Przywróć"
 
-#: src/taskbar.c:465 src/winmenu.c:179
+#: src/taskbar.c:504 src/winmenu.c:179
 msgid "Send To"
 msgstr "Wyślij do"
 
-#: src/taskbar.c:961
+#: src/taskbar.c:999
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
 
-#: src/taskbar.c:975
+#: src/taskbar.c:1013
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
 
-#: src/tray.c:1064
+#: src/tray.c:1082
 #, c-format
 msgid "invalid tray layout: \"%s\""
 msgstr "nieprawidłowy układ zasobnika: \"%s\""
 
-#: src/tray.c:1102
+#: src/tray.c:1109
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
 msgstr "nieprawidłowe wypoziomowanie zasobnika: \"%s\""
 
-#: src/tray.c:1125
+#: src/tray.c:1132
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""

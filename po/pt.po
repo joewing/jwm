@@ -1,42 +1,43 @@
-# Copyright (C) YEAR Free Software Foundation, Inc.
-# Translation of JWM 2.3.0 in Portuguese (Portugal)
-# This file is distributed under the same license as the PACKAGE package.
+# Copyright (c) 2016 Joe Wingbermuehle (MIT License)
+# Translation of JWM 2.3.8 in Portuguese (Portugal)
+# This file is distributed under the same license as the JWM package.
 # Vitor Lopes <vmnlop@gmail.com>, 2013.
+# Hugo Carvalho <hugokarvalho@hotmail.com>, 2021.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: jwm 2.3.0\n"
+"Project-Id-Version: jwm 2.3.8\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
 "POT-Creation-Date: 2017-07-12 21:06-0500\n"
-"PO-Revision-Date: 2015-08-19 14:22+0100\n"
-"Last-Translator: Vitor Lopes <vmnlop@gmail.com>\n"
-"Language-Team: Portuguese <vmnlop@gmail.com>\n"
+"PO-Revision-Date: 2021-10-11 15:14+0100\n"
+"Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
+"Language-Team: Portuguese <hugokarvalho@hotmail.com>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 1.8.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 3.0\n"
 
 #: src/action.c:44
 #, c-format
 msgid "invalid action: \"%s\""
-msgstr "Açao do Traybutton invalida: \"%s\""
+msgstr "ação inválida: \"%s\""
 
 #: src/action.c:211
 #, c-format
 msgid "action: root menu \"%s\" not defined"
-msgstr "botão do tabuleiro root \"%s\" não esta definido"
+msgstr "ação: o menu root \"%s\" não está definido"
 
 #: src/background.c:137
 msgid "no value specified for background"
-msgstr "nenhum valor foi especificado para o fundo (background)"
+msgstr "nenhum valor especificado para o fundo"
 
 #: src/background.c:149
 #, c-format
 msgid "invalid background type: \"%s\""
-msgstr "tipo de fundo invalido: \"%s\""
+msgstr "tipo de fundo inválido: \"%s\""
 
 #: src/background.c:294
 #, c-format
@@ -45,20 +46,20 @@ msgstr "imagem de fundo não encontrada: \"%s\""
 
 #: src/client.c:905
 msgid "Kill this window?"
-msgstr "Matar janela?"
+msgstr "Terminar esta janela?"
 
 #: src/client.c:906
 msgid "This may cause data to be lost!"
-msgstr "esta ação pode causar perda de dados!"
+msgstr "Isto pode causar a perda de dados!"
 
 #: src/command.c:138 src/main.c:221
 #, c-format
 msgid "exec failed: (%s) %s"
-msgstr "comando executável exec falhou (%s) %s"
+msgstr "exec falhou: (%s) %s"
 
 #: src/confirm.c:69
 msgid "OK"
-msgstr "Está bem"
+msgstr "Aceitar"
 
 #: src/confirm.c:74
 msgid "Cancel"
@@ -70,29 +71,29 @@ msgstr "Comfirmar"
 
 #: src/desktop.c:336
 msgid "empty Desktops Name tag"
-msgstr "etiqueta Desktops vazia"
+msgstr "etiqueta do nome da Área de trabalho em branco"
 
 #: src/dock.c:151
 msgid "only one Dock allowed"
-msgstr "só um tabuleiro e permitido"
+msgstr "apenas uma Doca é permitida"
 
 #: src/dock.c:232
 msgid "could not acquire system tray selection"
-msgstr "não pode adquirir a seleção da bandeja do sistema"
+msgstr "não foi possível adquirir a seleção da área de notificação"
 
 #: src/error.c:22
 #, c-format
 msgid "JWM: error: "
-msgstr ""
+msgstr "JWM: erro: "
 
 #: src/error.c:51
 #, c-format
 msgid "JWM: warning: "
-msgstr ""
+msgstr "JWM: aviso: "
 
 #: src/error.c:77
 msgid "display is already managed"
-msgstr ""
+msgstr "o ecrã já é gerido"
 
 #: src/font.c:109 src/font.c:126
 #, c-format
@@ -102,24 +103,24 @@ msgstr "impossível carregar fonte %s"
 #: src/font.c:116 src/font.c:133
 #, c-format
 msgid "could not load the default font: %s"
-msgstr "Não foi possível carregar a fonte padrão %s"
+msgstr "não foi possível carregar a fonte predefinida: %s"
 
 #: src/font.c:315
 msgid "empty Font tag"
-msgstr "etiqueta Font vazia"
+msgstr "etiqueta de fonte em branco"
 
 #: src/group.c:115
 msgid "invalid group class"
-msgstr "classe do grupo invalida"
+msgstr "classe do grupo inválida"
 
 #: src/group.c:126
 msgid "invalid group name"
-msgstr "nome do grupo invalido"
+msgstr "nome do grupo inválido"
 
 #: src/group.c:287
 #, c-format
 msgid "invalid group desktop: %d"
-msgstr "grupo invalido desktop %d"
+msgstr "área de trabalho de grupo inválida: %d"
 
 #: src/image.c:220
 #, c-format
@@ -129,12 +130,12 @@ msgstr "não foi possível criar ou ler a estrutura para imagens PNG: %s"
 #: src/image.c:233
 #, c-format
 msgid "error reading PNG image: %s"
-msgstr "erro lendo imagem PNG %s"
+msgstr "erro ao ler imagem PNG: %s"
 
 #: src/image.c:241
 #, c-format
 msgid "could not create info struct for PNG image: %s"
-msgstr "não foi possível criar estrutura de informação para imagem PNG %s"
+msgstr "não foi possível criar estrutura de informação para imagem PNG: %s"
 
 #: src/key.c:318
 msgid "Specified KeySym is not defined for any KeyCode"
@@ -148,12 +149,12 @@ msgstr "modificador não foi encontrado para o Keysym 0x%0x"
 #: src/key.c:356
 #, c-format
 msgid "invalid modifier: \"%c\""
-msgstr "modificador invalido: \"%c\""
+msgstr "modificador inválido: \"%c\""
 
 #: src/key.c:371
 #, c-format
 msgid "invalid key symbol: \"%s\""
-msgstr "símbolo de tecla invalido: \"%s\""
+msgstr "símbolo de tecla inválido: \"%s\""
 
 #: src/key.c:452
 msgid "neither key nor keycode specified for Key"
@@ -176,7 +177,7 @@ msgstr ""
 #: src/lex.c:207
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
-msgstr "%s[%u]: terminação da etiqueta inesperada e invalida"
+msgstr "%s[%u]: terminação da etiqueta inesperada e inválida"
 
 #: src/lex.c:213
 #, c-format
@@ -186,17 +187,17 @@ msgstr "%s[%u]: terminação da etiqueta \"%s\" sem etiqueta de abertura"
 #: src/lex.c:216
 #, c-format
 msgid "%s[%u]: invalid close tag"
-msgstr "%s[%u]: terminação de etiqueta invalida"
+msgstr "%s[%u]: terminação de etiqueta inválida"
 
 #: src/lex.c:234
 #, c-format
 msgid "%s[%u]: invalid open tag"
-msgstr "%s[%u]: abertura de etiqueta invalida"
+msgstr "%s[%u]: abertura de etiqueta inválida"
 
 #: src/lex.c:250
 #, c-format
 msgid "%s[%u]: invalid tag"
-msgstr "%s[%u]: etiqueta invalida"
+msgstr "%s[%u]: etiqueta inválida"
 
 #: src/lex.c:308
 #, c-format
@@ -206,133 +207,131 @@ msgstr "%s[%u]: texto inesperado: \"%s\""
 #: src/lex.c:367
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
-msgstr "%s[%d]: entrada invalida: \"%.8s\""
+msgstr "%s[%d]: entrada inválida: \"%.8s\""
 
 #: src/lex.c:473 src/parse.c:1893
 msgid "out of memory"
-msgstr "Memoria insuficiente"
+msgstr "memória insuficiente"
 
 #: src/parse.c:228
-#, fuzzy, c-format
+#, c-format
 msgid "could not open %s or %s"
-msgstr "impossível carregar fonte %s"
+msgstr "não foi possível abrir %s ou %s"
 
 #: src/parse.c:246
 #, c-format
 msgid "include depth (%d) exceeded"
-msgstr ""
+msgstr "a profundidade do 'include' (%d) excedida"
 
 #: src/parse.c:384
-#, fuzzy, c-format
+#, c-format
 msgid "invalid start tag: %s"
-msgstr "Configuração invalida: %s"
+msgstr "abertura de variável inválida: %s"
 
 #: src/parse.c:774
-#, fuzzy, c-format
+#, c-format
 msgid "invalid include: %s"
-msgstr "camada invalida: %s"
+msgstr "include inválido: %s"
 
 #: src/parse.c:824
-#, fuzzy
 msgid "no action specified for Key"
-msgstr "tecla e código de tecla não foi especificado para esta tecla"
+msgstr "nenhuma ação foi especificada para a tecla"
 
 #: src/parse.c:847
-#, fuzzy, c-format
+#, c-format
 msgid "invalid Key action: \"%s\""
-msgstr "Açao do Traybutton invalida: \"%s\""
+msgstr "ação inválida da tecla: \"%s\""
 
 #: src/parse.c:871
-#, fuzzy, c-format
+#, c-format
 msgid "invalid text alignment: \"%s\""
-msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
+msgstr "alinhamento de texto inválido: \"%s\""
 
 #: src/parse.c:957
 msgid "no include file specified"
-msgstr ""
+msgstr "nenhum icheiro 'include' foi especificado"
 
 #: src/parse.c:967
-#, fuzzy, c-format
+#, c-format
 msgid "could not process include: %s"
-msgstr "impossível carregar fonte %s"
+msgstr "não é possível processar o 'include': %s"
 
 #: src/parse.c:971
-#, fuzzy, c-format
+#, c-format
 msgid "could not open included file: %s"
-msgstr "impossível carregar fonte %s"
+msgstr "não foi possível abrir o ficheiro incluído %s"
 
 #: src/parse.c:1611
-#, fuzzy, c-format
+#, c-format
 msgid "invalid value for 'enabled': \"%s\""
-msgstr "Açao do Traybutton invalida: \"%s\""
+msgstr "valor inválido para 'ativado': \"%s\""
 
 #: src/parse.c:1752
-#, fuzzy, c-format
+#, c-format
 msgid "invalid Group Option: %s"
-msgstr "grupo invalido desktop %d"
+msgstr "opção de grupo inválida: %s"
 
 #: src/parse.c:1767
-#, fuzzy, c-format
+#, c-format
 msgid "invalid decorations: %s"
-msgstr "Açao do Traybutton invalida: \"%s\""
+msgstr "decorações inválidas: %s"
 
 #: src/parse.c:1829
 #, c-format
 msgid "%s is empty"
-msgstr ""
+msgstr "%s está vazio(a)"
 
 #: src/parse.c:1836
-#, fuzzy, c-format
+#, c-format
 msgid "invalid %s: \"%s\""
-msgstr "Açao do Traybutton invalida: \"%s\""
+msgstr "inválido %s: \"%s\""
 
 #: src/parse.c:1854
-#, fuzzy, c-format
+#, c-format
 msgid "invalid value for %s: \"%s\""
-msgstr "etiqueta invalida dentro de %s: %s"
+msgstr "valor inválido para %s: \"%s\""
 
 #: src/parse.c:1880
-#, fuzzy, c-format
+#, c-format
 msgid "could not read file: %s"
-msgstr "impossível carregar fonte %s"
+msgstr "não foi possível ler o ficheiro: %s"
 
 #: src/parse.c:1967 src/parse.c:1984
-#, fuzzy
 msgid "no value specified"
-msgstr "nenhum valor foi especificado para o fundo (background)"
+msgstr "nenhum valor especificado"
 
 #: src/parse.c:1972
 #, c-format
 msgid "invalid setting: %s"
-msgstr "Configuração invalida: %s"
+msgstr "definição inválida: %s"
 
 #: src/parse.c:1989
 #, c-format
 msgid "invalid opacity: %s"
-msgstr "Transparência invalida: %s"
+msgstr "opacidade inválida: %s"
 
 #: src/parse.c:2010
 #, c-format
 msgid "invalid layer: %s"
-msgstr "camada invalida: %s"
+msgstr "camada inválida: %s"
 
 #: src/parse.c:2031
 #, c-format
 msgid "invalid tag in %s: %s"
-msgstr "etiqueta invalida dentro de %s: %s"
+msgstr "etiqueta inválida dentro de %s: %s"
 
 #: src/parse.c:2052
 msgid "configuration error"
-msgstr "Erro de configuração"
+msgstr "erro de configuração"
 
 #: src/root.c:131
 #, c-format
 msgid "invalid root menu specified: \"%c\""
-msgstr "menu root especificado é invalido: \"%c\""
+msgstr "menu root especificado é inválido: \"%c\""
 
 #: src/root.c:223
 msgid "Exit JWM"
-msgstr "Sair do JWM?"
+msgstr "Sair do JWM"
 
 #: src/root.c:224
 msgid "Are you sure?"
@@ -341,7 +340,8 @@ msgstr "Tem a certeza?"
 #: src/swallow.c:85
 msgid "cannot swallow a client with no name"
 msgstr ""
-"não podes inserir um cliente na etiqueta swallow sem especificar o nome"
+"não é possível inserir um cliente na variável 'swallow' sem especificar o "
+"nome"
 
 #: src/taskbar.c:444 src/winmenu.c:48
 msgid "Close"
@@ -358,32 +358,32 @@ msgstr "Restaurar"
 
 #: src/taskbar.c:465 src/winmenu.c:179
 msgid "Send To"
-msgstr "Enviar Para"
+msgstr "Enviar para"
 
 #: src/taskbar.c:961
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
-msgstr "largura máxima invalida para etiqueta a Tasklist: %s"
+msgstr "largura máxima inválida para Lista de tarefas: %s"
 
 #: src/taskbar.c:975
-#, fuzzy, c-format
+#, c-format
 msgid "invalid height for TaskList: %s"
-msgstr "largura máxima invalida para etiqueta a Tasklist: %s"
+msgstr "altura inválida para Lista de tarefas: %s"
 
 #: src/tray.c:1064
 #, c-format
 msgid "invalid tray layout: \"%s\""
-msgstr "layout do tabuleiro invalido: \"%s\""
+msgstr "disposição inválida da área de notificação: \"%s\""
 
 #: src/tray.c:1102
 #, c-format
 msgid "invalid tray horizontal alignment: \"%s\""
-msgstr "alinhamento horizontal do tabuleiro invalido: \"%s\""
+msgstr "alinhamento horizontal da área de notificação inválido: \"%s\""
 
 #: src/tray.c:1125
 #, c-format
 msgid "invalid tray vertical alignment: \"%s\""
-msgstr "alinhamento vertical do tabuleiro invalido: \"%s\""
+msgstr "alinhamento vertical do tabuleiro inválido: \"%s\""
 
 #: src/traybutton.c:89
 #, c-format
@@ -392,7 +392,7 @@ msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
 
 #: src/traybutton.c:130
 msgid "no icon or label for TrayButton"
-msgstr "ícone e nome não esta definido na etiqueta TrayButton"
+msgstr "sem ícone ou etiqueta para o Botão da Área de notificação"
 
 #: src/winmenu.c:49
 msgid "Kill"
@@ -408,11 +408,11 @@ msgstr "Mover"
 
 #: src/winmenu.c:72
 msgid "Unshade"
-msgstr "Desligar Sombra"
+msgstr "Sem sombra"
 
 #: src/winmenu.c:74
 msgid "Shade"
-msgstr "Ligar Sombra"
+msgstr "Sombra"
 
 #: src/winmenu.c:81
 msgid "Maximize-y"

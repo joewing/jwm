@@ -13,6 +13,9 @@
 #include "font.h"
 #include "settings.h"
 
+/** Number of pixels used for a border. */
+#define BUTTON_BORDER 3
+
 struct IconNode;
 
 /** Button types. */

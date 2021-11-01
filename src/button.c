@@ -142,16 +142,16 @@ void DrawButton(ButtonNode *bp)
    iconHeight = 0;
    if(bp->icon) {
       if(bp->icon == &emptyIcon) {
-         iconWidth = Min(width - 4, height - 4);
+         iconWidth = Min(width - BUTTON_BORDER * 2, height - BUTTON_BORDER * 2);
          iconHeight = iconWidth;
       } else {
          const int ratio = (bp->icon->width << 16) / bp->icon->height;
-         int maxIconWidth = width - 4;
+         int maxIconWidth = width - BUTTON_BORDER * 2;
          if(bp->text) {
             /* Showing text, keep the icon square. */
-            maxIconWidth = Min(width, height) - 4;
+            maxIconWidth = Min(width, height) - BUTTON_BORDER * 2;
          }
-         iconHeight = height - 4;
+         iconHeight = height - BUTTON_BORDER * 2;
          iconWidth = (iconHeight * ratio) >> 16;
          if(iconWidth > maxIconWidth) {
             iconWidth = maxIconWidth;
@@ -164,12 +164,11 @@ void DrawButton(ButtonNode *bp)
    textWidth = 0;
    textHeight = 0;
    if(bp->text && (width > height || !bp->icon)) {
+      const int borderWidth = BUTTON_BORDER * (bp->icon ? 3 : 2);
       textWidth = GetStringWidth(bp->font, bp->text);
       textHeight = GetStringHeight(bp->font);
-      if(iconWidth > 0 && textWidth + iconWidth + 7 > width) {
-         textWidth = width - iconWidth - 7;
-      } else if(iconWidth == 0 && textWidth + 5 > width) {
-         textWidth = width - 5;
+      if(textWidth + iconWidth + borderWidth > width) {
+         textWidth = width - iconWidth - borderWidth;
       }
       textWidth = textWidth < 0 ? 0 : textWidth;
    }
@@ -181,7 +180,7 @@ void DrawButton(ButtonNode *bp)
          xoffset = 0;
       }
    } else {
-      xoffset = 2;
+      xoffset = BUTTON_BORDER;
    }
 
    /* Display the icon. */
@@ -190,7 +189,7 @@ void DrawButton(ButtonNode *bp)
       PutIcon(bp->icon, drawable, colors[fg],
               x + xoffset, y + yoffset,
               iconWidth, iconHeight);
-      xoffset += iconWidth + 2;
+      xoffset += iconWidth + BUTTON_BORDER;
    }
 
    /* Display the label. */

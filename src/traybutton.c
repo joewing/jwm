@@ -69,9 +69,10 @@ void StartupTrayButtons(void)
    TrayButtonType *bp;
    for(bp = buttons; bp; bp = bp->next) {
       if(bp->label) {
-         bp->cp->requestedWidth
-            = GetStringWidth(FONT_TRAY, bp->label) + 4;
-         bp->cp->requestedHeight = GetStringHeight(FONT_TRAY);
+         bp->cp->requestedWidth = BUTTON_BORDER * 2;
+         bp->cp->requestedWidth += GetStringWidth(FONT_TRAY, bp->label);
+         bp->cp->requestedHeight = BUTTON_BORDER * 2;
+         bp->cp->requestedHeight += GetStringHeight(FONT_TRAY);
       } else {
          bp->cp->requestedWidth = 0;
          bp->cp->requestedHeight = 0;
@@ -79,12 +80,13 @@ void StartupTrayButtons(void)
       if(bp->iconName) {
          bp->icon = LoadNamedIcon(bp->iconName, 1, 1);
          if(JLIKELY(bp->icon)) {
-            bp->cp->requestedWidth += bp->icon->width + 4;
-            if(bp->label) {
-               bp->cp->requestedWidth -= 2;
-            }
-            bp->cp->requestedHeight
-               = Max(bp->icon->height + 4, bp->cp->requestedHeight);
+            bp->cp->requestedWidth = Max(
+              bp->cp->requestedWidth + BUTTON_BORDER,
+              BUTTON_BORDER * 2);
+            bp->cp->requestedWidth += bp->icon->width;
+            bp->cp->requestedHeight = Max(
+              bp->icon->height + BUTTON_BORDER * 2,
+              bp->cp->requestedHeight);
          } else {
             Warning(_("could not load tray icon: \"%s\""), bp->iconName);
          }
@@ -187,11 +189,15 @@ void SetSize(TrayComponentType *cp, int width, int height)
    bp = (TrayButtonType*)cp->object;
 
    if(bp->label) {
-      labelWidth = GetStringWidth(FONT_TRAY, bp->label) + 6;
-      labelHeight = GetStringHeight(FONT_TRAY) + 6;
+      labelWidth = GetStringWidth(FONT_TRAY, bp->label);
+      labelHeight = GetStringHeight(FONT_TRAY);
+      if(bp->icon) {
+         /* Padding on the left if there is an icon. */
+         labelWidth += BUTTON_BORDER;
+      }
    } else {
-      labelWidth = 4;
-      labelHeight = 4;
+      labelWidth = 0;
+      labelHeight = 0;
    }
 
    if(bp->icon && bp->icon->width && bp->icon->height) {
@@ -207,35 +213,35 @@ void SetSize(TrayComponentType *cp, int width, int height)
       if(width > 0) {
 
          /* Compute height from width. */
-         iconWidth = width - labelWidth;
+         iconWidth = width - labelWidth - BUTTON_BORDER * 2;
          iconHeight = (iconWidth << 16) / ratio;
-         height = Max(labelHeight, iconHeight + 4);
+         height = Max(labelHeight, iconHeight) + BUTTON_BORDER * 2;
 
       } else if(height > 0) {
 
          /* Compute width from height. */
-         iconHeight = height - 4;
+         iconHeight = height - BUTTON_BORDER * 2;
          iconWidth = (iconHeight * ratio) >> 16;
-         width = iconWidth + labelWidth;
+         width = iconWidth + labelWidth + BUTTON_BORDER * 2;
 
       } else {
 
          /* Use best size. */
-         height = Max(labelHeight, iconHeight + 4);
-         iconWidth = ((height - 4) * ratio) >> 16;
-         width = iconWidth + labelWidth;
+         height = Max(labelHeight, iconHeight) + BUTTON_BORDER * 2;
+         iconWidth = ((height - BUTTON_BORDER * 2) * ratio) >> 16;
+         width = iconWidth + labelWidth + BUTTON_BORDER * 2;
 
       }
 
    } else {
       /* No icon. */
       if(width > 0) {
-         height = labelHeight;
+         height = labelHeight + BUTTON_BORDER * 2;
       } else if(height > 0) {
-         width = labelWidth;
+         width = labelWidth + BUTTON_BORDER * 2;
       } else {
-         height = labelHeight;
-         width = labelWidth;
+         height = labelHeight + BUTTON_BORDER * 2;
+         width = labelWidth + BUTTON_BORDER * 2;
       }
    }
 

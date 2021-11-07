@@ -180,8 +180,6 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    }
    nodes[np->state.layer] = np;
 
-   SetDefaultCursor(np->window);
-
    if(notOwner) {
       XSetWindowAttributes sattr;
       JXAddToSaveSet(display, np->window);

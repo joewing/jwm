@@ -375,7 +375,10 @@ ImageNode *LoadJPEGImage(const char *fileName,
     * the smallest absolute change.
     */
    jpeg_calc_output_dimensions(&cinfo);
-   if(rwidth != 0 && rheight != 0) {
+   if(rwidth != 0 && rheight != 0 &&
+      (!( (rwidth == cinfo.output_width) &&
+          (rheight == cinfo.output_height) ))
+      ) {
       /* Scale using n/8 with n in [1..8]. */
       int ratio;
       if(abs((int)cinfo.output_width - rwidth)

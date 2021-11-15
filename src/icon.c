@@ -203,7 +203,7 @@ void PutIcon(IconNode *icon, Drawable d, long fg,
 
    Assert(icon);
 
-   if(icon == &emptyIcon) {
+   if(!icon->width || !icon->height) {
       return;
    }
 

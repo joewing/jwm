@@ -141,7 +141,7 @@ void DrawButton(ButtonNode *bp)
    iconWidth = 0;
    iconHeight = 0;
    if(bp->icon) {
-      if(bp->icon == &emptyIcon) {
+      if(!bp->icon->width || !bp->icon->height) {
          iconWidth = Min(width - BUTTON_BORDER * 2, height - BUTTON_BORDER * 2);
          iconHeight = iconWidth;
       } else {

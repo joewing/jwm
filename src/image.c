@@ -442,9 +442,10 @@ ImageNode *LoadSVGImage(const char *fileName, int rwidth, int rheight,
 #if !GLIB_CHECK_VERSION(2, 35, 0)
    static char initialized = 0;
 #endif
-#if LIBRSVG_CHECK_VERSION(2, 52, 0)
-   RsvgRectangle viewport;
-   double pwidth, pheight;
+#if LIBRSVG_CHECK_VERSION(2, 46, 0)
+   RsvgRectangle viewbox;
+   RsvgLength pwidth, pheight;
+   gboolean has_width, has_height, has_viewbox;
 #endif
    ImageNode *result = NULL;
    RsvgHandle *rh;
@@ -473,18 +474,35 @@ ImageNode *LoadSVGImage(const char *fileName, int rwidth, int rheight,
       return NULL;
    }
 
-#if LIBRSVG_CHECK_VERSION(2, 52, 0)
-   rsvg_handle_get_intrinsic_size_in_pixels(rh, &pwidth, &pheight);
-   dim.width = pwidth;
-   dim.height = pheight;
+#if LIBRSVG_CHECK_VERSION(2, 46, 0)
+   rsvg_handle_get_intrinsic_dimensions(rh, &has_width, &pwidth, &has_height, &pheight,
+      &has_viewbox, &viewbox);
+   if(has_width && has_height && pwidth.unit == RSVG_UNIT_PX && pheight.unit == RSVG_UNIT_PX) {
+      dim.width = pwidth.length;
+      dim.height = pheight.length;
+   } else if(has_viewbox) {
+      dim.width = viewbox.width;
+      dim.height = viewbox.height;
+   } else {
+      dim.width = rwidth;
+      dim.height = rheight;
+   }
 #else
    rsvg_handle_get_dimensions(rh, &dim);
 #endif
-   if(rwidth == 0 || rheight == 0) {
+   if(rwidth == 0 && rheight == 0) {
       rwidth = dim.width;
       rheight = dim.height;
       xscale = 1.0;
       yscale = 1.0;
+   } else if(rwidth == 0) {
+      yscale = (float)rheight / dim.height;
+      xscale = yscale;
+      rwidth = dim.width * xscale;
+   } else if(rheight == 0) {
+      xscale = (float)rwidth / dim.width;
+      yscale = xscale;
+      rheight = dim.height * yscale;
    } else if(preserveAspect) {
       if(abs(dim.width - rwidth) < abs(dim.height - rheight)) {
          xscale = (float)rwidth / dim.width;
@@ -508,15 +526,15 @@ ImageNode *LoadSVGImage(const char *fileName, int rwidth, int rheight,
                                                 CAIRO_FORMAT_ARGB32,
                                                 rwidth, rheight, stride);
    context = cairo_create(target);
-   cairo_scale(context, xscale, yscale);
    cairo_paint_with_alpha(context, 0.0);
-#if LIBRSVG_CHECK_VERSION(2, 52, 0)
-   viewport.x = 0;
-   viewport.y = 0;
-   viewport.width = rwidth;
-   viewport.height = rheight;
-   rsvg_handle_render_document(rh, context, &viewport, NULL);
+#if LIBRSVG_CHECK_VERSION(2, 46, 0)
+   viewbox.x = 0;
+   viewbox.y = 0;
+   viewbox.width = rwidth;
+   viewbox.height = rheight;
+   rsvg_handle_render_document(rh, context, &viewbox, NULL);
 #else
+   cairo_scale(context, xscale, yscale);
    rsvg_handle_render_cairo(rh, context);
 #endif
    cairo_destroy(context);

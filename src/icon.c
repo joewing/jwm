@@ -356,7 +356,8 @@ IconNode *LoadNamedIconHelper(const char *name, const char *path,
    image = NULL;
    if(hasExtension) {
       image = LoadImage(temp, 0, 0, 1);
-   } else {
+   }
+   if(!image) {
       for(i = 0; i < EXTENSION_COUNT; i++) {
          const unsigned len = strlen(ICON_EXTENSIONS[i]);
          memcpy(&temp[pathLength + nameLength], ICON_EXTENSIONS[i], len + 1);

@@ -410,13 +410,13 @@ void ComputeTrayGeometry(TrayType *tp)
    if(tp->halign == TALIGN_FIXED) {
       x = tp->requestedX;
       if(x < 0) {
-         x += sp->width;
+         x += sp->width + 1;
       }
    }
    if(tp->valign == TALIGN_FIXED) {
       y = tp->requestedY;
       if(y < 0) {
-         y += sp->height;
+         y += sp->height + 1;
       }
    }
    x += sp->x;

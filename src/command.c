@@ -206,6 +206,7 @@ char *ReadFromProcess(const char *command, unsigned timeout_ms)
          /* Wait for data (or a timeout). */
          rc = select(fds[0] + 1, &fs, NULL, &fs, &tv);
          if(rc == 0) {
+            close(fds[0]);
             /* Timeout */
             Warning(_("timeout: %s did not complete in %u milliseconds"),
                     command, timeout_ms);
@@ -227,6 +228,7 @@ char *ReadFromProcess(const char *command, unsigned timeout_ms)
                rc = read(fds[0], &buffer[buffer_size], BLOCK_SIZE);
                buffer_size += (rc > 0) ? rc : 0;
             } while(rc > 0);
+            close(fds[0]);
             break;
          }
       }

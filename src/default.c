@@ -17,8 +17,6 @@ const char * const BASE_CONFIG =
       "<Key key=\"Left\">left</Key>"
       "<Key key=\"Return\">select</Key>"
       "<Key key=\"Escape\">escape</Key>"
-      "<Key mask=\"A\" key=\"Tab\">nextstacked</Key>"
-      "<Key mask=\"A\" key=\"F4\">close</Key>"
       "<Mouse context=\"title\" button=\"1\">move</Mouse>"
       "<Mouse context=\"title\" button=\"2\">move</Mouse>"
       "<Mouse context=\"title\" button=\"3\">window</Mouse>"

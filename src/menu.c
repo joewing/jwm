@@ -70,7 +70,7 @@ Menu *CreateMenu()
    menu->items = NULL;
    menu->label = NULL;
    menu->dynamic = NULL;
-   menu->timeout_ms = DEFAULT_TIMEOUT_MS;
+   menu->timeout_ms = MENU_TIMEOUT_MS;
    return menu;
 }
 

@@ -168,7 +168,7 @@ char *ReadFromProcess(const char *command, unsigned timeout_ms)
       close(fds[0]);
       dup2(fds[1], 1);  /* stdout */
       setsid();
-      execl("/bin/sh", "/bin/sh", "-c", command, NULL);
+      execl(SHELL_NAME, SHELL_NAME, "-c", command, NULL);
       Warning(_("exec failed: (%s) %s"), SHELL_NAME, command);
       exit(EXIT_SUCCESS);
    } else if(pid > 0) {

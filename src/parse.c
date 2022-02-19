@@ -248,7 +248,7 @@ static int ParseAttribute(const StringMappingType *mapping, int count,
                           int def);
 static int ParseSigned(const TokenNode *tp, const char *str);
 static unsigned ParseUnsigned(const TokenNode *tp, const char *str);
-static unsigned ParseTimeout(const TokenNode *tp);
+static unsigned ParseTimeout(const TokenNode *tp, unsigned timeout_ms);
 static unsigned int ParseOpacity(const TokenNode *tp, const char *str);
 static WinLayerType ParseLayer(const TokenNode *tp, const char *str);
 static StatusWindowType ParseStatusWindowType(const TokenNode *tp);
@@ -561,7 +561,7 @@ void ParseRootMenu(const TokenNode *start)
 
    value = FindAttribute(start->attributes, DYNAMIC_ATTRIBUTE);
    menu->dynamic = CopyString(value);
-   menu->timeout_ms = ParseTimeout(start);
+   menu->timeout_ms = ParseTimeout(start, MENU_TIMEOUT_MS);
 
    SetRootMenu(onroot, menu);
 }
@@ -606,7 +606,7 @@ MenuItem *ParseMenuItem(const TokenNode *start, Menu *menu, MenuItem *last)
 
          last->action.type = MA_DYNAMIC;
          last->action.str = CopyString(start->value);
-         last->action.timeout_ms = ParseTimeout(start);
+         last->action.timeout_ms = ParseTimeout(start, MENU_TIMEOUT_MS);
 
          value = FindAttribute(start->attributes, HEIGHT_ATTRIBUTE);
          if(value) {
@@ -847,7 +847,7 @@ MenuItem *ParseMenuInclude(const TokenNode *tp, Menu *menu,
                            MenuItem *last)
 {
    TokenNode *start;
-   const unsigned timeout_ms = ParseTimeout(tp);
+   const unsigned timeout_ms = ParseTimeout(tp, INCLUDE_TIMEOUT_MS);
 
    start = ParseMenuIncludeHelper(tp, timeout_ms, tp->value);
    if(JLIKELY(start)) {
@@ -1077,7 +1077,7 @@ void ParseInclude(const TokenNode *tp, int depth)
       return;
    }
 
-   timeout_ms = ParseTimeout(tp);
+   timeout_ms = ParseTimeout(tp, INCLUDE_TIMEOUT_MS);
    if(!strncmp(tp->value, "exec:", 5)) {
       TokenNode *tokens = TokenizePipe(&tp->value[5], timeout_ms);
       if(JLIKELY(tokens)) {
@@ -2089,13 +2089,12 @@ unsigned ParseUnsigned(const TokenNode *tp, const char *str)
 }
 
 /** Parse a timeout attribute. */
-unsigned ParseTimeout(const TokenNode *tp)
+unsigned ParseTimeout(const TokenNode *tp, unsigned timeout_ms)
 {
-   unsigned timeout_ms = DEFAULT_TIMEOUT_MS;
    char *temp = FindAttribute(tp->attributes, TIMEOUT_ATTRIBUTE);
    if(temp) {
-      timeout_ms = ParseUnsigned(tp, temp);
-      timeout_ms = timeout_ms == 0 ? DEFAULT_TIMEOUT_MS : timeout_ms;
+      const unsigned ms = ParseUnsigned(tp, temp);
+      timeout_ms = ms == 0 ? timeout_ms : ms;
    }
    return timeout_ms;
 }

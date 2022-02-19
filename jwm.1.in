@@ -1830,6 +1830,7 @@ Over a pager, switches the active desktop.
 .P
 Button 2 (typically the middle button):
 .RS
+Over a task bar, closes the window.
 Over a pager, switches the active desktop.
 .RE
 .P

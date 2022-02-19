@@ -353,6 +353,11 @@ FoundActiveAndTop:
             }
          }
          break;
+      case Button2:
+      	for(cp = entry->clients; cp; cp = cp->next) {
+      	   DeleteClient(cp->client);
+         }
+         break;
       case Button3:
          ShowClientList(bar, entry);
          break;

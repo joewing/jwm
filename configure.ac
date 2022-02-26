@@ -3,7 +3,7 @@
 ############################################################################
 
 AC_INIT([jwm],[2.4.1],[joewing@joewing.net])
-AC_PREREQ([2.71])
+AC_PREREQ([2.69])
 AC_CONFIG_SRCDIR([src])
 AC_CONFIG_SRCDIR([po])
 AC_CONFIG_HEADERS([config.h])

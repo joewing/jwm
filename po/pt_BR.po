@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.4\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2021-10-05 22:44+0000\n"
+"POT-Creation-Date: 2022-02-26 13:28+0000\n"
 "PO-Revision-Date: 2021-09-21 22:29-0300\n"
 "Last-Translator: marcelo cripe <marcelocripe@gmail.com>\n"
 "Language-Team: Portuguese Brazil\n"
@@ -88,7 +88,7 @@ msgstr "não é possível carregar a fonte %s"
 msgid "could not set O_NONBLOCK"
 msgstr ""
 
-#: src/command.c:210
+#: src/command.c:211
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr ""
@@ -339,7 +339,7 @@ msgstr "não é válido %s: \"%s\""
 msgid "invalid value for %s: \"%s\""
 msgstr "o valor %s não é válido para \"%s\""
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2108
+#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
 msgid "no value specified"
 msgstr "nenhum valor foi especificado"
 
@@ -348,22 +348,22 @@ msgstr "nenhum valor foi especificado"
 msgid "invalid setting: %s"
 msgstr "a configuração %s não é válida"
 
-#: src/parse.c:2113
+#: src/parse.c:2112
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "a transparência %s não é válida"
 
-#: src/parse.c:2134
+#: src/parse.c:2133
 #, c-format
 msgid "invalid layer: %s"
 msgstr "a camada %s não é válida"
 
-#: src/parse.c:2155
+#: src/parse.c:2154
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "a variável %s não é válida dentro de %s"
 
-#: src/parse.c:2176
+#: src/parse.c:2175
 msgid "configuration error"
 msgstr "erro de configuração"
 
@@ -386,29 +386,29 @@ msgstr ""
 "não é possível inserir um cliente na variável 'swallow' sem especificar o "
 "nome"
 
-#: src/taskbar.c:483 src/winmenu.c:48
+#: src/taskbar.c:488 src/winmenu.c:48
 msgid "Close"
 msgstr "Fechar"
 
-#: src/taskbar.c:490 src/winmenu.c:66
+#: src/taskbar.c:495 src/winmenu.c:66
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: src/taskbar.c:497 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
+#: src/taskbar.c:502 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
 msgid "Restore"
 msgstr "Restaurar"
 
-#: src/taskbar.c:504 src/winmenu.c:179
+#: src/taskbar.c:509 src/winmenu.c:179
 msgid "Send To"
 msgstr "Enviar Para"
 
-#: src/taskbar.c:999
+#: src/taskbar.c:1004
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "a largura máxima %s para a lista de tarefas não é válida"
 
-#: src/taskbar.c:1013
+#: src/taskbar.c:1018
 #, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "a altura %s para a lista de tarefas não é válida"
@@ -428,12 +428,12 @@ msgstr "o alinhamento horizontal de \"%s\" da bandeja do painel não é válido"
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "o alinhamento vertical de \"%s\" da bandeja do painel não é válido"
 
-#: src/traybutton.c:89
+#: src/traybutton.c:91
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "não foi possível carregar o ícone \"%s\" da bandeja do painel"
 
-#: src/traybutton.c:130
+#: src/traybutton.c:132
 msgid "no icon or label for TrayButton"
 msgstr "o ícone e o nome não estão definidos para o botão da bandeja"
 

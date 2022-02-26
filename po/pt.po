@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.8\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2021-10-05 22:44+0000\n"
+"POT-Creation-Date: 2022-02-26 13:28+0000\n"
 "PO-Revision-Date: 2021-10-11 15:14+0100\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Portuguese <hugokarvalho@hotmail.com>\n"
@@ -97,7 +97,7 @@ msgstr "não foi possível ler o ficheiro: %s"
 msgid "could not set O_NONBLOCK"
 msgstr ""
 
-#: src/command.c:210
+#: src/command.c:211
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr ""
@@ -347,7 +347,7 @@ msgstr "inválido %s: \"%s\""
 msgid "invalid value for %s: \"%s\""
 msgstr "valor inválido para %s: \"%s\""
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2108
+#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
 msgid "no value specified"
 msgstr "nenhum valor especificado"
 
@@ -356,22 +356,22 @@ msgstr "nenhum valor especificado"
 msgid "invalid setting: %s"
 msgstr "definição inválida: %s"
 
-#: src/parse.c:2113
+#: src/parse.c:2112
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacidade inválida: %s"
 
-#: src/parse.c:2134
+#: src/parse.c:2133
 #, c-format
 msgid "invalid layer: %s"
 msgstr "camada inválida: %s"
 
-#: src/parse.c:2155
+#: src/parse.c:2154
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta inválida dentro de %s: %s"
 
-#: src/parse.c:2176
+#: src/parse.c:2175
 msgid "configuration error"
 msgstr "erro de configuração"
 
@@ -394,29 +394,29 @@ msgstr ""
 "não é possível inserir um cliente na variável 'swallow' sem especificar o "
 "nome"
 
-#: src/taskbar.c:483 src/winmenu.c:48
+#: src/taskbar.c:488 src/winmenu.c:48
 msgid "Close"
 msgstr "Fechar"
 
-#: src/taskbar.c:490 src/winmenu.c:66
+#: src/taskbar.c:495 src/winmenu.c:66
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: src/taskbar.c:497 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
+#: src/taskbar.c:502 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
 msgid "Restore"
 msgstr "Restaurar"
 
-#: src/taskbar.c:504 src/winmenu.c:179
+#: src/taskbar.c:509 src/winmenu.c:179
 msgid "Send To"
 msgstr "Enviar para"
 
-#: src/taskbar.c:999
+#: src/taskbar.c:1004
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "largura máxima inválida para Lista de tarefas: %s"
 
-#: src/taskbar.c:1013
+#: src/taskbar.c:1018
 #, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "altura inválida para Lista de tarefas: %s"
@@ -436,12 +436,12 @@ msgstr "alinhamento horizontal da área de notificação inválido: \"%s\""
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alinhamento vertical do tabuleiro inválido: \"%s\""
 
-#: src/traybutton.c:89
+#: src/traybutton.c:91
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "nao foi possível carregar o ícone no tabuleiro: \"%s\""
 
-#: src/traybutton.c:130
+#: src/traybutton.c:132
 msgid "no icon or label for TrayButton"
 msgstr "sem ícone ou etiqueta para o Botão da Área de notificação"
 

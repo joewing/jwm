@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.4.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2021-10-05 22:44+0000\n"
+"POT-Creation-Date: 2022-02-26 13:28+0000\n"
 "PO-Revision-Date: 2021-12-19 19:14+0200\n"
 "Last-Translator: Taras Panchenko <top39@ukr.net>\n"
 "Language-Team: JWM UA Team\n"
@@ -15,7 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Generator: Poedit 3.0.1\n"
 
 #: src/action.c:44
@@ -91,7 +92,7 @@ msgstr "не вдалося створити канал"
 msgid "could not set O_NONBLOCK"
 msgstr "не вдалося встановити O_NONBLOCK"
 
-#: src/command.c:210
+#: src/command.c:211
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr "завершення часу очікування: %s не завершено за %u мілісекунд"
@@ -330,7 +331,7 @@ msgstr "недійсне %s: \"%s\""
 msgid "invalid value for %s: \"%s\""
 msgstr "недійсне значення для %s: \"%s\""
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2108
+#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
 msgid "no value specified"
 msgstr "значення не вказано"
 
@@ -339,22 +340,22 @@ msgstr "значення не вказано"
 msgid "invalid setting: %s"
 msgstr "недійсне налаштування: %s"
 
-#: src/parse.c:2113
+#: src/parse.c:2112
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недійсна прозорість: %s"
 
-#: src/parse.c:2134
+#: src/parse.c:2133
 #, c-format
 msgid "invalid layer: %s"
 msgstr "недійсний шар: %s"
 
-#: src/parse.c:2155
+#: src/parse.c:2154
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недійсний маркер у %s: %s"
 
-#: src/parse.c:2176
+#: src/parse.c:2175
 msgid "configuration error"
 msgstr "помилка конфігурації"
 
@@ -375,29 +376,29 @@ msgstr "Ви впевнені?"
 msgid "cannot swallow a client with no name"
 msgstr "не може прийняти клієнта без імені"
 
-#: src/taskbar.c:483 src/winmenu.c:48
+#: src/taskbar.c:488 src/winmenu.c:48
 msgid "Close"
 msgstr "Закрити"
 
-#: src/taskbar.c:490 src/winmenu.c:66
+#: src/taskbar.c:495 src/winmenu.c:66
 msgid "Minimize"
 msgstr "Згорнути"
 
-#: src/taskbar.c:497 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
+#: src/taskbar.c:502 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
 msgid "Restore"
 msgstr "Відновити"
 
-#: src/taskbar.c:504 src/winmenu.c:179
+#: src/taskbar.c:509 src/winmenu.c:179
 msgid "Send To"
 msgstr "Відправити"
 
-#: src/taskbar.c:999
+#: src/taskbar.c:1004
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "недійсна максимальна ширина для TaskList: %s"
 
-#: src/taskbar.c:1013
+#: src/taskbar.c:1018
 #, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "недійсна висота для TaskList: %s"
@@ -417,12 +418,12 @@ msgstr "недійсне горизонтальне вирівнювання л�
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "недійсне вертикальне вирівнювання лотка: \"%s\""
 
-#: src/traybutton.c:89
+#: src/traybutton.c:91
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "не вдалося завантажити піктограму лотка: \"%s\""
 
-#: src/traybutton.c:130
+#: src/traybutton.c:132
 msgid "no icon or label for TrayButton"
 msgstr "немає піктограми або мітки для TrayButton"
 

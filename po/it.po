@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2021-10-05 22:44+0000\n"
+"POT-Creation-Date: 2022-02-26 13:28+0000\n"
 "PO-Revision-Date: Tue Jul 08 2014 15:18:16 GMT+0200\n"
 "Last-Translator: Man from Mars <manfrommars@libero.it>\n"
 "Language-Team: Italiano <LL@li.org>\n"
@@ -91,7 +91,7 @@ msgstr "Impossibile leggere il file: %s"
 msgid "could not set O_NONBLOCK"
 msgstr ""
 
-#: src/command.c:210
+#: src/command.c:211
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr ""
@@ -337,7 +337,7 @@ msgstr "%s non valido: \"%s\""
 msgid "invalid value for %s: \"%s\""
 msgstr "Valore non valido per %s: \"%s\""
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2108
+#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
 #, fuzzy
 msgid "no value specified"
 msgstr "Nessun valore specificato"
@@ -347,22 +347,22 @@ msgstr "Nessun valore specificato"
 msgid "invalid setting: %s"
 msgstr "Impostazione non valida: %s"
 
-#: src/parse.c:2113
+#: src/parse.c:2112
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "Opacità non valida: %s"
 
-#: src/parse.c:2134
+#: src/parse.c:2133
 #, c-format
 msgid "invalid layer: %s"
 msgstr "Layer non valido: %s"
 
-#: src/parse.c:2155
+#: src/parse.c:2154
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "Tag non valido in %s: %s"
 
-#: src/parse.c:2176
+#: src/parse.c:2175
 msgid "configuration error"
 msgstr "Errore di configurazione"
 
@@ -383,29 +383,29 @@ msgstr "Sei sicuro?"
 msgid "cannot swallow a client with no name"
 msgstr "Impossibile includere un client senza nome"
 
-#: src/taskbar.c:483 src/winmenu.c:48
+#: src/taskbar.c:488 src/winmenu.c:48
 msgid "Close"
 msgstr "Chiudi"
 
-#: src/taskbar.c:490 src/winmenu.c:66
+#: src/taskbar.c:495 src/winmenu.c:66
 msgid "Minimize"
 msgstr "Riduci"
 
-#: src/taskbar.c:497 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
+#: src/taskbar.c:502 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
 msgid "Restore"
 msgstr "Ripristina"
 
-#: src/taskbar.c:504 src/winmenu.c:179
+#: src/taskbar.c:509 src/winmenu.c:179
 msgid "Send To"
 msgstr "Manda A"
 
-#: src/taskbar.c:999
+#: src/taskbar.c:1004
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "Larghezza massima della TaskList non valida: %s"
 
-#: src/taskbar.c:1013
+#: src/taskbar.c:1018
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "Altezza della TaskList non valida: %s"
@@ -425,12 +425,12 @@ msgstr "Allineamento orizzontale del vassoio non valido: \"%s\""
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "Allineamento verticale del vassoio non valido: \"%s\""
 
-#: src/traybutton.c:89
+#: src/traybutton.c:91
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "Impossibile caricare icona del vassoio: \"%s"
 
-#: src/traybutton.c:130
+#: src/traybutton.c:132
 msgid "no icon or label for TrayButton"
 msgstr "Nessuna icona o etichetta per il TrayButton"
 

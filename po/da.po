@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.7\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2021-10-05 22:44+0000\n"
+"POT-Creation-Date: 2022-02-26 13:28+0000\n"
 "PO-Revision-Date: 2018-06-08 00:00+0000\n"
 "Last-Translator: scootergrisen\n"
 "Language-Team: Danish\n"
@@ -93,7 +93,7 @@ msgstr "kunne ikke læse fil: %s"
 msgid "could not set O_NONBLOCK"
 msgstr ""
 
-#: src/command.c:210
+#: src/command.c:211
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr ""
@@ -341,7 +341,7 @@ msgstr "ugyldig %s: \"%s\""
 msgid "invalid value for %s: \"%s\""
 msgstr "ugyldig værdi for %s: \"%s\""
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2108
+#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
 msgid "no value specified"
 msgstr "ingen værdi angivet"
 
@@ -350,22 +350,22 @@ msgstr "ingen værdi angivet"
 msgid "invalid setting: %s"
 msgstr "ugyldig indstilling: %s"
 
-#: src/parse.c:2113
+#: src/parse.c:2112
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ugyldig opacitet: %s"
 
-#: src/parse.c:2134
+#: src/parse.c:2133
 #, c-format
 msgid "invalid layer: %s"
 msgstr "ugyldigt lag: %s"
 
-#: src/parse.c:2155
+#: src/parse.c:2154
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ugyldig opmærkning i %s: %s"
 
-#: src/parse.c:2176
+#: src/parse.c:2175
 msgid "configuration error"
 msgstr "konfigurationsfejl"
 
@@ -386,29 +386,29 @@ msgstr "Er du sikker?"
 msgid "cannot swallow a client with no name"
 msgstr "kan ikke sluge en klient uden navn"
 
-#: src/taskbar.c:483 src/winmenu.c:48
+#: src/taskbar.c:488 src/winmenu.c:48
 msgid "Close"
 msgstr "Luk"
 
-#: src/taskbar.c:490 src/winmenu.c:66
+#: src/taskbar.c:495 src/winmenu.c:66
 msgid "Minimize"
 msgstr "Minimer"
 
-#: src/taskbar.c:497 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
+#: src/taskbar.c:502 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
 msgid "Restore"
 msgstr "Gendan"
 
-#: src/taskbar.c:504 src/winmenu.c:179
+#: src/taskbar.c:509 src/winmenu.c:179
 msgid "Send To"
 msgstr "Send til"
 
-#: src/taskbar.c:999
+#: src/taskbar.c:1004
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "ugyldig maxwidth for TaskList: %s"
 
-#: src/taskbar.c:1013
+#: src/taskbar.c:1018
 #, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "ugyldig højde for TaskList: %s"
@@ -428,12 +428,12 @@ msgstr "ugyldig vandret justering af bakke: \"%s\""
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "ugyldig lodret justering af bakke: \"%s\""
 
-#: src/traybutton.c:89
+#: src/traybutton.c:91
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "kunne ikke indlæse bakkeikon: \"%s\""
 
-#: src/traybutton.c:130
+#: src/traybutton.c:132
 msgid "no icon or label for TrayButton"
 msgstr "intet ikon eller etiket for bakkeknap"
 

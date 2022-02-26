@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2021-10-05 22:44+0000\n"
+"POT-Creation-Date: 2022-02-26 13:28+0000\n"
 "PO-Revision-Date: 2015-06-22 13:19+0000\n"
 "Last-Translator: Mihaly Horvath <hermitsoft@users.sourceforge.net>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -92,7 +92,7 @@ msgstr "nem sikerült a betűtípus betöltése: %s"
 msgid "could not set O_NONBLOCK"
 msgstr ""
 
-#: src/command.c:210
+#: src/command.c:211
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr ""
@@ -338,7 +338,7 @@ msgstr "nem támogatott művelet: \"%s\""
 msgid "invalid value for %s: \"%s\""
 msgstr "érvéytelen xml tag %s-ben: %s"
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2108
+#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
 #, fuzzy
 msgid "no value specified"
 msgstr "nincs megadva háttérkép-adat"
@@ -348,22 +348,22 @@ msgstr "nincs megadva háttérkép-adat"
 msgid "invalid setting: %s"
 msgstr "nem támogatott beállítás: %s"
 
-#: src/parse.c:2113
+#: src/parse.c:2112
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "érvénytelen átlátszóssági (opacity) érték: %s"
 
-#: src/parse.c:2134
+#: src/parse.c:2133
 #, fuzzy, c-format
 msgid "invalid layer: %s"
 msgstr "érvénytelen átlátszóssági (opacity) érték: %s"
 
-#: src/parse.c:2155
+#: src/parse.c:2154
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "érvéytelen xml tag %s-ben: %s"
 
-#: src/parse.c:2176
+#: src/parse.c:2175
 msgid "configuration error"
 msgstr "konfigurációs hiba"
 
@@ -384,29 +384,29 @@ msgstr "Biztosan folytatja?"
 msgid "cannot swallow a client with no name"
 msgstr "név nélküli kliens nem építhető be a tálcába"
 
-#: src/taskbar.c:483 src/winmenu.c:48
+#: src/taskbar.c:488 src/winmenu.c:48
 msgid "Close"
 msgstr "Bezárás"
 
-#: src/taskbar.c:490 src/winmenu.c:66
+#: src/taskbar.c:495 src/winmenu.c:66
 msgid "Minimize"
 msgstr "Lerakás tálcára"
 
-#: src/taskbar.c:497 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
+#: src/taskbar.c:502 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
 msgid "Restore"
 msgstr "Visszaállítás"
 
-#: src/taskbar.c:504 src/winmenu.c:179
+#: src/taskbar.c:509 src/winmenu.c:179
 msgid "Send To"
 msgstr "Küldés"
 
-#: src/taskbar.c:999
+#: src/taskbar.c:1004
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "érvénytelen maximális hosszúság van megadva a feladatlistához: %s"
 
-#: src/taskbar.c:1013
+#: src/taskbar.c:1018
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "érvénytelen maximális hosszúság van megadva a feladatlistához: %s"
@@ -426,12 +426,12 @@ msgstr "érvénytelen vízszintes igazítási érték a tálcához: \"%s\""
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "érvénytelen függőleges igazítási érték a tálcához: \"%s\""
 
-#: src/traybutton.c:89
+#: src/traybutton.c:91
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "nem sikerült betölteni a gyorsindító tálcaikont: \"%s\""
 
-#: src/traybutton.c:130
+#: src/traybutton.c:132
 msgid "no icon or label for TrayButton"
 msgstr "nincs ikon vagy címke megadva a gyorsindító tálcaikonhoz"
 

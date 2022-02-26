@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2021-10-05 22:44+0000\n"
+"POT-Creation-Date: 2022-02-26 13:28+0000\n"
 "PO-Revision-Date: 2012-09-14 16:59+0100\n"
 "Last-Translator: Miś Uszatek  <adres.email@ymail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -92,7 +92,7 @@ msgstr "nie można załadować czcionki: %s"
 msgid "could not set O_NONBLOCK"
 msgstr ""
 
-#: src/command.c:210
+#: src/command.c:211
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr ""
@@ -337,7 +337,7 @@ msgstr "nieprawidłowa akcja TrayButton: \"%s\""
 msgid "invalid value for %s: \"%s\""
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2108
+#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
 #, fuzzy
 msgid "no value specified"
 msgstr "nie określono wartości dla tła"
@@ -347,22 +347,22 @@ msgstr "nie określono wartości dla tła"
 msgid "invalid setting: %s"
 msgstr "nieprawidłowy znacznik w: %s"
 
-#: src/parse.c:2113
+#: src/parse.c:2112
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "nieprawidłowa nieprzezroczystość menu: %s"
 
-#: src/parse.c:2134
+#: src/parse.c:2133
 #, c-format
 msgid "invalid layer: %s"
 msgstr "nieprawidłowa warstwa grupy: %s"
 
-#: src/parse.c:2155
+#: src/parse.c:2154
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:2176
+#: src/parse.c:2175
 msgid "configuration error"
 msgstr "błąd konfiguracji"
 
@@ -383,29 +383,29 @@ msgstr "Czy jesteś pewien?"
 msgid "cannot swallow a client with no name"
 msgstr "nie może połknąć klienta bez nazwy"
 
-#: src/taskbar.c:483 src/winmenu.c:48
+#: src/taskbar.c:488 src/winmenu.c:48
 msgid "Close"
 msgstr "Zamknij"
 
-#: src/taskbar.c:490 src/winmenu.c:66
+#: src/taskbar.c:495 src/winmenu.c:66
 msgid "Minimize"
 msgstr "Zminimalizuj"
 
-#: src/taskbar.c:497 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
+#: src/taskbar.c:502 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
 msgid "Restore"
 msgstr "Przywróć"
 
-#: src/taskbar.c:504 src/winmenu.c:179
+#: src/taskbar.c:509 src/winmenu.c:179
 msgid "Send To"
 msgstr "Wyślij do"
 
-#: src/taskbar.c:999
+#: src/taskbar.c:1004
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
 
-#: src/taskbar.c:1013
+#: src/taskbar.c:1018
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "nieprawidłowa maksymalna szerokość TaskList: %s"
@@ -425,12 +425,12 @@ msgstr "nieprawidłowe wypoziomowanie zasobnika: \"%s\""
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""
 
-#: src/traybutton.c:89
+#: src/traybutton.c:91
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "nie można załadować ikon w zasobniku: \"%s\""
 
-#: src/traybutton.c:130
+#: src/traybutton.c:132
 msgid "no icon or label for TrayButton"
 msgstr "brak ikony lub etykiety dla TrayButton"
 

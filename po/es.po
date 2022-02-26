@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2021-10-05 22:44+0000\n"
+"POT-Creation-Date: 2022-02-26 13:28+0000\n"
 "PO-Revision-Date: 2018-05-14 16:04+0100\n"
 "Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
@@ -95,7 +95,7 @@ msgstr "no se ha podido leer el archivo: %s"
 msgid "could not set O_NONBLOCK"
 msgstr ""
 
-#: src/command.c:210
+#: src/command.c:211
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr ""
@@ -359,7 +359,7 @@ msgstr "%s no válido: «%s»"
 msgid "invalid value for %s: \"%s\""
 msgstr "valor no válido para %s: «%s»"
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2108
+#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
 msgid "no value specified"
 msgstr "no hay valor especificado"
 
@@ -368,22 +368,22 @@ msgstr "no hay valor especificado"
 msgid "invalid setting: %s"
 msgstr "ajuste no válido: %s"
 
-#: src/parse.c:2113
+#: src/parse.c:2112
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacidad no válida: %s"
 
-#: src/parse.c:2134
+#: src/parse.c:2133
 #, c-format
 msgid "invalid layer: %s"
 msgstr "capa no válida: %s"
 
-#: src/parse.c:2155
+#: src/parse.c:2154
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta no válida en %s: %s"
 
-#: src/parse.c:2176
+#: src/parse.c:2175
 msgid "configuration error"
 msgstr "error de configuración"
 
@@ -404,31 +404,31 @@ msgstr "¿Está seguro?"
 msgid "cannot swallow a client with no name"
 msgstr "no se puede mostrar un cliente sin nombre"
 
-#: src/taskbar.c:483 src/winmenu.c:48
+#: src/taskbar.c:488 src/winmenu.c:48
 msgid "Close"
 msgstr "Cerrar"
 
-#: src/taskbar.c:490 src/winmenu.c:66
+#: src/taskbar.c:495 src/winmenu.c:66
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: src/taskbar.c:497 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
+#: src/taskbar.c:502 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
 msgid "Restore"
 msgstr "Restaurar"
 
-#: src/taskbar.c:504 src/winmenu.c:179
+#: src/taskbar.c:509 src/winmenu.c:179
 msgid "Send To"
 msgstr "Enviar a"
 
 # No traducir «TaskList» ni «maxwidth»: «maxwidth» es un atributo de la etiqueta «TaskList» del archivo de configuración de JWM.
-#: src/taskbar.c:999
+#: src/taskbar.c:1004
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "«maxwidth» no válido para «TaskList»: %s"
 
 # No traducir «TaskList» ni «height»: «height» es un atributo de la etiqueta «TaskList» del archivo de configuración de JWM.
-#: src/taskbar.c:1013
+#: src/taskbar.c:1018
 #, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "«height» no válido para «TaskList»: %s"
@@ -448,13 +448,13 @@ msgstr "alineación horizontal no válida para la bandeja: «%s»"
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "alineación vertical no válida para la bandeja: «%s»"
 
-#: src/traybutton.c:89
+#: src/traybutton.c:91
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "no se ha podido cargar el icono de la bandeja: «%s»"
 
 # No traducir «TrayButton»: es una etiqueta del archivo de configuración de JWM.
-#: src/traybutton.c:130
+#: src/traybutton.c:132
 msgid "no icon or label for TrayButton"
 msgstr "no hay icono o etiqueta para «TrayButton»"
 

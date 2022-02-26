@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.2.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2021-10-05 22:44+0000\n"
+"POT-Creation-Date: 2022-02-26 13:28+0000\n"
 "PO-Revision-Date: 2013-06-18 10:33+0300\n"
 "Last-Translator: aleksandr <aleksandr.samusenko@gmail.com>\n"
 "Language-Team: Russian <aleksandr.samusenko@gmail.com>\n"
@@ -90,7 +90,7 @@ msgstr "не удалось загрузить шрифт: %s"
 msgid "could not set O_NONBLOCK"
 msgstr ""
 
-#: src/command.c:210
+#: src/command.c:211
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr ""
@@ -335,7 +335,7 @@ msgstr "недопустимое значение действия кнопки 
 msgid "invalid value for %s: \"%s\""
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2108
+#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
 #, fuzzy
 msgid "no value specified"
 msgstr "не задано значение для цвета фона"
@@ -345,22 +345,22 @@ msgstr "не задано значение для цвета фона"
 msgid "invalid setting: %s"
 msgstr "недопустимое значение положительного числа: %s"
 
-#: src/parse.c:2113
+#: src/parse.c:2112
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недопустимое значение прозрачности: %s"
 
-#: src/parse.c:2134
+#: src/parse.c:2133
 #, c-format
 msgid "invalid layer: %s"
 msgstr "недопустимое значение расположения окна: %s"
 
-#: src/parse.c:2155
+#: src/parse.c:2154
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недопустимое значение тэга в %s: %s"
 
-#: src/parse.c:2176
+#: src/parse.c:2175
 msgid "configuration error"
 msgstr "ошибка конфигурации"
 
@@ -381,30 +381,30 @@ msgstr "Вы уверены?"
 msgid "cannot swallow a client with no name"
 msgstr "нельзя использовать микро-окно панели (swallow) без имени"
 
-#: src/taskbar.c:483 src/winmenu.c:48
+#: src/taskbar.c:488 src/winmenu.c:48
 msgid "Close"
 msgstr "Закрыть"
 
-#: src/taskbar.c:490 src/winmenu.c:66
+#: src/taskbar.c:495 src/winmenu.c:66
 msgid "Minimize"
 msgstr "Свернуть"
 
-#: src/taskbar.c:497 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
+#: src/taskbar.c:502 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
 msgid "Restore"
 msgstr "Восстановить"
 
-#: src/taskbar.c:504 src/winmenu.c:179
+#: src/taskbar.c:509 src/winmenu.c:179
 msgid "Send To"
 msgstr "Переместить на рабочий стол"
 
-#: src/taskbar.c:999
+#: src/taskbar.c:1004
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr ""
 "недопустимое значение макс. ширины кнопки в панели задач (TaskList): %s"
 
-#: src/taskbar.c:1013
+#: src/taskbar.c:1018
 #, fuzzy, c-format
 msgid "invalid height for TaskList: %s"
 msgstr ""
@@ -425,12 +425,12 @@ msgstr "недопустимое значение горизонтального
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "недопустимое значение вертикального выравнивания панели: \"%s\""
 
-#: src/traybutton.c:89
+#: src/traybutton.c:91
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "не удалось загрузить иконку для кнопки запуска: \"%s\""
 
-#: src/traybutton.c:130
+#: src/traybutton.c:132
 msgid "no icon or label for TrayButton"
 msgstr "не заданы ни иконка, ни текст кнопки запуска"
 

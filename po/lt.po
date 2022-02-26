@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.7\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2021-10-05 22:44+0000\n"
+"POT-Creation-Date: 2022-02-26 13:28+0000\n"
 "PO-Revision-Date: 2017-07-21 05:18-0400\n"
 "Last-Translator: Moo\n"
 "Language-Team: \n"
@@ -94,7 +94,7 @@ msgstr "nepavyko perskaityti failo: %s"
 msgid "could not set O_NONBLOCK"
 msgstr ""
 
-#: src/command.c:210
+#: src/command.c:211
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr ""
@@ -342,7 +342,7 @@ msgstr "neteisingas %s: \"%s\""
 msgid "invalid value for %s: \"%s\""
 msgstr "neteisinga %s reikšmė: \"%s\""
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2108
+#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
 msgid "no value specified"
 msgstr "nenurodyta reikšmė"
 
@@ -351,22 +351,22 @@ msgstr "nenurodyta reikšmė"
 msgid "invalid setting: %s"
 msgstr "neteisingas nustatymas: %s"
 
-#: src/parse.c:2113
+#: src/parse.c:2112
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "neteisingas nepermatomumas: %s"
 
-#: src/parse.c:2134
+#: src/parse.c:2133
 #, c-format
 msgid "invalid layer: %s"
 msgstr "neteisingas sluoksnis: %s"
 
-#: src/parse.c:2155
+#: src/parse.c:2154
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "neteisinga žymė, esanti %s: %s"
 
-#: src/parse.c:2176
+#: src/parse.c:2175
 msgid "configuration error"
 msgstr "konfigūracijos klaida"
 
@@ -387,29 +387,29 @@ msgstr "Ar tikrai?"
 msgid "cannot swallow a client with no name"
 msgstr "nepavyksta į dėklą praryti klientą be pavadinimo"
 
-#: src/taskbar.c:483 src/winmenu.c:48
+#: src/taskbar.c:488 src/winmenu.c:48
 msgid "Close"
 msgstr "Užverti"
 
-#: src/taskbar.c:490 src/winmenu.c:66
+#: src/taskbar.c:495 src/winmenu.c:66
 msgid "Minimize"
 msgstr "Suskleisti"
 
-#: src/taskbar.c:497 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
+#: src/taskbar.c:502 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
 #: src/winmenu.c:106
 msgid "Restore"
 msgstr "Atkurti"
 
-#: src/taskbar.c:504 src/winmenu.c:179
+#: src/taskbar.c:509 src/winmenu.c:179
 msgid "Send To"
 msgstr "Siųsti į"
 
-#: src/taskbar.c:999
+#: src/taskbar.c:1004
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "neteisingas didžiausias užduočių juostos (TaskList) plotis: %s"
 
-#: src/taskbar.c:1013
+#: src/taskbar.c:1018
 #, c-format
 msgid "invalid height for TaskList: %s"
 msgstr "neteisingas užduočių juostos (TaskList) aukštis: %s"
@@ -429,12 +429,12 @@ msgstr "neteisingas horizontalusis dėklo lygiavimas: \"%s\""
 msgid "invalid tray vertical alignment: \"%s\""
 msgstr "neteisingas vertikalusis dėklo lygiavimas: \"%s\""
 
-#: src/traybutton.c:89
+#: src/traybutton.c:91
 #, c-format
 msgid "could not load tray icon: \"%s\""
 msgstr "nepavyko įkelti dėklo piktogramos: \"%s\""
 
-#: src/traybutton.c:130
+#: src/traybutton.c:132
 msgid "no icon or label for TrayButton"
 msgstr "nėra jokios dėklo mygtuko (TrayButton) piktogramos ar etiketės"
 

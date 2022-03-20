@@ -127,6 +127,7 @@ static const StringMappingType OPTION_MAP[] = {
    { "nolist",             OPTION_NOLIST        },
    { "nomax",              OPTION_NOMAX         },
    { "nomaxborder",        OPTION_NOMAXBORDER   },
+   { "nomaxtitle",         OPTION_NOMAXTITLE    },
    { "nomin",              OPTION_NOMIN         },
    { "nomove",             OPTION_NOMOVE        },
    { "nopager",            OPTION_NOPAGER       },

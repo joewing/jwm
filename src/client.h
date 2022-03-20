@@ -35,6 +35,7 @@ typedef unsigned short BorderFlags;
 #define BORDER_CONSTRAIN   (1 << 10)   /**< Constrain to the screen. */
 #define BORDER_FULLSCREEN  (1 << 11)   /**< Allow fullscreen. */
 #define BORDER_NOMAX       (1 << 12)   /**< No border on maximize. */
+#define TITLE_NOMAX        (1 << 13)   /**< No title on maximize. */
 
 /** The default border flags. */
 #define BORDER_DEFAULT (   \

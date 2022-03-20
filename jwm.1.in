@@ -958,6 +958,12 @@ Do not show a border on maximized windows in this group.
 .RE
 
 .P
+.B nomaxtitle
+.RS
+Do not show a title bar on maximized windows in this group.
+.RE
+
+.P
 .B nomin
 .RS
 Prevent windows in this group from being minimized.

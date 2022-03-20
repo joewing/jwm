@@ -452,6 +452,9 @@ void ApplyGroup(const GroupType *gp, ClientNode *np)
       case OPTION_NOMAXBORDER:
          np->state.border |= BORDER_NOMAX;
          break;
+      case OPTION_NOMAXTITLE:
+         np->state.border |= TITLE_NOMAX;
+         break;
       default:
          Debug("invalid option: %d", lp->option);
          break;

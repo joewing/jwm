@@ -433,6 +433,7 @@ void DrawBorderHelper(const ClientNode *np)
 
    /* Draw the top part (either a title or north border). */
    if((np->state.border & BORDER_TITLE) &&
+      !(np->state.maxFlags && (np->state.border & TITLE_NOMAX)) &&
       titleHeight > settings.borderWidth) {
 
       XPoint point;
@@ -1199,7 +1200,8 @@ void GetBorderSize(const ClientState *state,
       const char show_border =
          !state->maxFlags || !(state->border & BORDER_NOMAX);
 
-      if(state->border & BORDER_TITLE) {
+      if((state->border & BORDER_TITLE) &&
+         !(state->maxFlags && (state->border & TITLE_NOMAX))) {
          *north = GetTitleHeight();
       } else if(settings.windowDecorations == DECO_MOTIF) {
          *north = 0;

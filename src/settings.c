@@ -51,6 +51,7 @@ void InitializeSettings(void)
    settings.titleTextAlignment = ALIGN_LEFT;
    settings.desktopWidth = 4;
    settings.desktopHeight = 1;
+   settings.desktopBackAndForth = DBACKANDFORTH_OFF;
    settings.menuOpacity = UINT_MAX;
    settings.windowDecorations = DECO_FLAT;
    settings.trayDecorations = DECO_FLAT;

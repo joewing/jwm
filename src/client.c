@@ -49,6 +49,7 @@ void StartupClients(void)
    clientCount = 0;
    activeClient = NULL;
    currentDesktop = 0;
+   previousDesktop = 0;
 
    /* Clear out the client lists. */
    for(x = 0; x < LAYER_COUNT; x++) {

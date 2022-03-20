@@ -1097,13 +1097,22 @@ void ParseInclude(const TokenNode *tp, int depth)
 
 /** Parse desktop configuration. */
 void ParseDesktops(const TokenNode *tp) {
-
+   
+   static const StringMappingType mapping[] = {
+      { "off",       DBACKANDFORTH_OFF },
+      { "on",        DBACKANDFORTH_ON  }
+   };
    TokenNode *np;
    const char *width;
    const char *height;
    int desktop;
+   DesktopBackAndForthType backandforth;
 
    Assert(tp);
+
+   backandforth = ParseAttribute(mapping, ARRAY_LENGTH(mapping), tp,
+                                 "backandforth", DBACKANDFORTH_OFF);
+   settings.desktopBackAndForth = backandforth;
 
    width = FindAttribute(tp->attributes, WIDTH_ATTRIBUTE);
    if(width != NULL) {

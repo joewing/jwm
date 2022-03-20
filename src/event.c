@@ -480,12 +480,18 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
 {
    const ActionType key = GetKey(context, state, code);
    const char keyAction = context == MC_NONE;
+   unsigned int desktop;
    switch(key.action) {
    case ACTION_EXEC:
       RunKeyCommand(context, state, code);
       break;
    case ACTION_DESKTOP:
-      ChangeDesktop(key.extra);
+      desktop = key.extra;
+      if(currentDesktop == desktop &&
+         settings.desktopBackAndForth) {
+           desktop = previousDesktop;
+      }
+      ChangeDesktop(desktop);
       break;
    case ACTION_RDESKTOP:
       RightDesktop();

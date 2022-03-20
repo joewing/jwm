@@ -25,6 +25,7 @@ extern Atom managerSelection;
 extern char *exitCommand;
 
 extern unsigned int currentDesktop;
+extern unsigned int previousDesktop;
 
 extern char shouldExit;
 extern char shouldRestart;

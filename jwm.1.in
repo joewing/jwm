@@ -1870,6 +1870,15 @@ The number of virtual desktops in the vertical direction.
 The default is 1.
 .RE
 .P
+\fBbackandforth\fP \fIstring\fP
+.RS
+Controls whether changing the desktop to the currently active desktop using
+the \fBdesktop#\fP action should instead switch to the previously active
+desktop.
+Default is "off" to do nothing when switching to the currently active desktop.
+Possible values are "on" and "off".
+.RE
+.P
 Within the \fBDesktops\fP tag the following tags are supported:
 .P
 .B Background

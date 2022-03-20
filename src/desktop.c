@@ -192,6 +192,7 @@ void ChangeDesktop(unsigned int desktop)
       }
    }
 
+   previousDesktop = currentDesktop;
    currentDesktop = desktop;
 
    SetCardinalAtom(rootWindow, ATOM_NET_CURRENT_DESKTOP, currentDesktop);

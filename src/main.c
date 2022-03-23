@@ -63,6 +63,7 @@ char initializing = 0;
 char shouldReload = 0;
 
 unsigned int currentDesktop = 0;
+unsigned int previousDesktop = 0;
 
 char *exitCommand = NULL;
 

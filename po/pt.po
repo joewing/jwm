@@ -2,14 +2,14 @@
 # Translation of JWM 2.3.8 in Portuguese (Portugal)
 # This file is distributed under the same license as the JWM package.
 # Vitor Lopes <vmnlop@gmail.com>, 2013.
-# Hugo Carvalho <hugokarvalho@hotmail.com>, 2021.
+# Hugo Carvalho <hugokarvalho@hotmail.com>, 2021, 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.8\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
 "POT-Creation-Date: 2022-02-26 13:28+0000\n"
-"PO-Revision-Date: 2021-10-11 15:14+0100\n"
+"PO-Revision-Date: 2022-04-10 15:34+0100\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Portuguese <hugokarvalho@hotmail.com>\n"
 "Language: pt\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: src/action.c:44
 #, c-format
@@ -88,19 +88,17 @@ msgid "exec failed: (%s) %s"
 msgstr "exec falhou: (%s) %s"
 
 #: src/command.c:155
-#, fuzzy
-#| msgid "could not read file: %s"
 msgid "could not create pipe"
-msgstr "não foi possível ler o ficheiro: %s"
+msgstr "não foi possível criar o pipe"
 
 #: src/command.c:161
 msgid "could not set O_NONBLOCK"
-msgstr ""
+msgstr "não foi possível definir O_NONBLOCK"
 
 #: src/command.c:211
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
-msgstr ""
+msgstr "tempo limite: %s não foi concluído em %u milissegundos"
 
 #: src/confirm.c:69
 msgid "OK"
@@ -163,16 +161,12 @@ msgid "invalid group name"
 msgstr "nome do grupo inválido"
 
 #: src/group.c:139
-#, fuzzy
-#| msgid "invalid group name"
 msgid "invalid group type"
-msgstr "nome do grupo inválido"
+msgstr "tipo de grupo inválido"
 
 #: src/group.c:150
-#, fuzzy
-#| msgid "invalid group name"
 msgid "invalid group machine"
-msgstr "nome do grupo inválido"
+msgstr "máquina de grupo inválida"
 
 #: src/group.c:343
 #, c-format
@@ -182,7 +176,7 @@ msgstr "área de trabalho de grupo inválida: %d"
 #: src/image.c:147
 #, c-format
 msgid "unrecognized extension for \"%s\", expected \"%s\""
-msgstr ""
+msgstr "extensão não reconhecida para \"%s\", era previsto \"%s\""
 
 #: src/image.c:234
 #, c-format
@@ -246,10 +240,9 @@ msgid "out of memory"
 msgstr "memória insuficiente"
 
 #: src/parse.c:272
-#, fuzzy, c-format
-#| msgid "could not open %s or %s"
+#, c-format
 msgid "could not open %s"
-msgstr "não foi possível abrir %s ou %s"
+msgstr "não foi possível abrir %s"
 
 #: src/parse.c:282
 #, c-format
@@ -281,22 +274,18 @@ msgid "invalid Key action: \"%s\""
 msgstr "ação inválida da tecla: \"%s\""
 
 #: src/parse.c:956
-#, fuzzy
-#| msgid "no action specified for Key"
 msgid "no action specified for Mouse"
-msgstr "nenhuma ação foi especificada para a tecla"
+msgstr "nenhuma ação especificada para o Rato"
 
 #: src/parse.c:961
-#, fuzzy, c-format
-#| msgid "invalid Key action: \"%s\""
+#, c-format
 msgid "invalid Mouse action: \"%s\""
-msgstr "ação inválida da tecla: \"%s\""
+msgstr "ação do Rato inválida: \"%s\""
 
 #: src/parse.c:967
-#, fuzzy, c-format
-#| msgid "invalid Key action: \"%s\""
+#, c-format
 msgid "invalid Mouse context: \"%s\""
-msgstr "ação inválida da tecla: \"%s\""
+msgstr "contexto do Rato inválido: \"%s\""
 
 #: src/parse.c:988
 #, c-format

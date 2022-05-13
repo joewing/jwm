@@ -204,7 +204,7 @@ char *ReadFromProcess(const char *command, unsigned timeout_ms)
          tv.tv_usec = (diff_ms % 1000) * 1000;
 
          /* Wait for data (or a timeout). */
-         rc = select(fds[0] + 1, &fs, NULL, &fs, &tv);
+         rc = select(fds[0] + 1, &fs, &fs, &fs, &tv);
          if(rc == 0) {
             close(fds[0]);
             /* Timeout */

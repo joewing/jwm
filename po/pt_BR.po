@@ -1,7 +1,7 @@
-#~  Translators:
-#~  Samuel Henrique Oltramari Pinto (SamuelOPH), <samueloph@gmail.com>, 2016-03-19
-#~  marcelocripe <marcelocripe@gmail.com>, 2021-09-21
-#~  marcelocripe <marcelocripe@gmail.com>, 2022-04-02
+#  Translators:
+#  Samuel Henrique Oltramari Pinto (SamuelOPH), <samueloph@gmail.com>, 2016-03-19
+#  marcelocripe <marcelocripe@gmail.com>, 2021-09-21
+#  marcelocripe <marcelocripe@gmail.com>, 2022-04-02
 
 msgid ""
 msgstr ""

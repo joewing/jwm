@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.1.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2022-02-26 13:28+0000\n"
+"POT-Creation-Date: 2022-05-28 15:24+0000\n"
 "PO-Revision-Date: 2013-06-26 15:38+0200\n"
 "Last-Translator: Bert <bert@astil.be>\n"
 "Language-Team: Dutch\n"
@@ -64,15 +64,15 @@ msgstr "Toets en Toetscode niet opgegeven voor Toets"
 msgid "key binding: root menu \"%s\" not defined"
 msgstr "Sneltoets: root menu %d niet gedefiniëerd"
 
-#: src/client.c:903
+#: src/client.c:904
 msgid "Kill this window?"
 msgstr "Sluiten van dit venster forceren?"
 
-#: src/client.c:904
+#: src/client.c:905
 msgid "This may cause data to be lost!"
 msgstr "Dit kan verlies van data veroorzaken!"
 
-#: src/command.c:141 src/command.c:172 src/main.c:208
+#: src/command.c:141 src/command.c:175 src/main.c:209
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "uitvoeren mislukt: (%s) %s"
@@ -86,7 +86,7 @@ msgstr "kon dit lettertype niet laden: %s"
 msgid "could not set O_NONBLOCK"
 msgstr ""
 
-#: src/command.c:211
+#: src/command.c:209
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr ""
@@ -103,7 +103,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/desktop.c:336
+#: src/desktop.c:337
 msgid "empty Desktops Name tag"
 msgstr "leeg Bureaublad-naam label"
 
@@ -232,131 +232,131 @@ msgstr "%s[%d]: ongeldige entiteit: \"%.8s\""
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:272
+#: src/parse.c:273
 #, fuzzy, c-format
 msgid "could not open %s"
 msgstr "kon dit lettertype niet laden: %s"
 
-#: src/parse.c:282
+#: src/parse.c:283
 #, fuzzy, c-format
 msgid "could not open %s or %s"
 msgstr "kon dit lettertype niet laden: %s"
 
-#: src/parse.c:301
+#: src/parse.c:302
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr ""
 
-#: src/parse.c:445
+#: src/parse.c:446
 #, fuzzy, c-format
 msgid "invalid start tag: %s"
 msgstr "ongeldige instelling: %s"
 
-#: src/parse.c:837
+#: src/parse.c:838
 #, fuzzy, c-format
 msgid "invalid include: %s"
 msgstr "ongeldige laag: %s"
 
-#: src/parse.c:923
+#: src/parse.c:924
 #, fuzzy
 msgid "no action specified for Key"
 msgstr "Toets en Toetscode niet opgegeven voor Toets"
 
-#: src/parse.c:930
+#: src/parse.c:931
 #, fuzzy, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
 
-#: src/parse.c:956
+#: src/parse.c:957
 #, fuzzy
 msgid "no action specified for Mouse"
 msgstr "Toets en Toetscode niet opgegeven voor Toets"
 
-#: src/parse.c:961
+#: src/parse.c:962
 #, fuzzy, c-format
 msgid "invalid Mouse action: \"%s\""
 msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
 
-#: src/parse.c:967
+#: src/parse.c:968
 #, fuzzy, c-format
 msgid "invalid Mouse context: \"%s\""
 msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
 
-#: src/parse.c:988
+#: src/parse.c:989
 #, fuzzy, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "ongeldige verticale taakbalk uitlijning: \"%s\""
 
-#: src/parse.c:1076
+#: src/parse.c:1077
 msgid "no include file specified"
 msgstr ""
 
-#: src/parse.c:1087
+#: src/parse.c:1088
 #, fuzzy, c-format
 msgid "could not process include: %s"
 msgstr "kon dit lettertype niet laden: %s"
 
-#: src/parse.c:1091
+#: src/parse.c:1092
 #, fuzzy, c-format
 msgid "could not open included file: %s"
 msgstr "kon dit lettertype niet laden: %s"
 
-#: src/parse.c:1743
+#: src/parse.c:1753
 #, fuzzy, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
 
-#: src/parse.c:1890
+#: src/parse.c:1900
 #, fuzzy, c-format
 msgid "invalid Group Option: %s"
 msgstr "ongeldige groep bureaublad: %d"
 
-#: src/parse.c:1905
+#: src/parse.c:1915
 #, fuzzy, c-format
 msgid "invalid decorations: %s"
 msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
 
-#: src/parse.c:1967
+#: src/parse.c:1977
 #, c-format
 msgid "%s is empty"
 msgstr ""
 
-#: src/parse.c:1974
+#: src/parse.c:1984
 #, fuzzy, c-format
 msgid "invalid %s: \"%s\""
 msgstr "Ongeldige Taakbalk-knop actie: \"%s\""
 
-#: src/parse.c:1992
+#: src/parse.c:2002
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "ongeldig label in %s: %s"
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
+#: src/parse.c:2072 src/parse.c:2089 src/parse.c:2117
 #, fuzzy
 msgid "no value specified"
 msgstr "Geen warde opgegeven voor achtergrond"
 
-#: src/parse.c:2067 src/parse.c:2084
+#: src/parse.c:2077 src/parse.c:2094
 #, c-format
 msgid "invalid setting: %s"
 msgstr "ongeldige instelling: %s"
 
-#: src/parse.c:2112
+#: src/parse.c:2122
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "ongeldige transparantie: %s"
 
-#: src/parse.c:2133
+#: src/parse.c:2143
 #, c-format
 msgid "invalid layer: %s"
 msgstr "ongeldige laag: %s"
 
-#: src/parse.c:2154
+#: src/parse.c:2164
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "ongeldig label in %s: %s"
 
-#: src/parse.c:2175
+#: src/parse.c:2185
 msgid "configuration error"
 msgstr "configuratie-fout"
 

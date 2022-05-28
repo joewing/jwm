@@ -2,12 +2,11 @@
 #  Samuel Henrique Oltramari Pinto (SamuelOPH), <samueloph@gmail.com>, 2016-03-19
 #  marcelocripe <marcelocripe@gmail.com>, 2021-09-21
 #  marcelocripe <marcelocripe@gmail.com>, 2022-04-02
-
 msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.4\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2022-02-26 13:28+0000\n"
+"POT-Creation-Date: 2022-05-28 15:24+0000\n"
 "PO-Revision-Date: 2022-04-02 19:07-0300\n"
 "Last-Translator: marcelo cripe <marcelocripe@gmail.com>\n"
 "Language-Team: Portuguese Brazil\n"
@@ -71,15 +70,15 @@ msgstr "A tecla e o código da tecla não foram especificadas para a 'Key'"
 msgid "key binding: root menu \"%s\" not defined"
 msgstr "As teclas de atalho do menu do root \"%s\" não estão definidas"
 
-#: src/client.c:903
+#: src/client.c:904
 msgid "Kill this window?"
 msgstr "Fechar a janela?"
 
-#: src/client.c:904
+#: src/client.c:905
 msgid "This may cause data to be lost!"
 msgstr "Isto pode causar a perda de dados!"
 
-#: src/command.c:141 src/command.c:172 src/main.c:208
+#: src/command.c:141 src/command.c:175 src/main.c:209
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "O comando executável (%s) falhou %s"
@@ -93,7 +92,7 @@ msgstr "Não é possível criar a fonte"
 msgid "could not set O_NONBLOCK"
 msgstr "Não é possível definir o O_NONBLOCK"
 
-#: src/command.c:211
+#: src/command.c:209
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr "O tempo acabou e %s não foi completada em %u milissegundos"
@@ -110,7 +109,7 @@ msgstr "Cancelar"
 msgid "Confirm"
 msgstr "Confirmar"
 
-#: src/desktop.c:336
+#: src/desktop.c:337
 msgid "empty Desktops Name tag"
 msgstr "A variável de identificação 'Name' da Área de Trabalho está vazia"
 
@@ -242,133 +241,133 @@ msgstr "%s[%d]: a entrada \"%.8s\" não é válida"
 msgid "out of memory"
 msgstr "A memória não é suficiente"
 
-#: src/parse.c:272
+#: src/parse.c:273
 #, fuzzy, c-format
 #| msgid "could not open %s or %s"
 msgid "could not open %s"
 msgstr "Não foi possível abrir %s ou %s"
 
-#: src/parse.c:282
+#: src/parse.c:283
 #, c-format
 msgid "could not open %s or %s"
 msgstr "Não foi possível abrir %s ou %s"
 
-#: src/parse.c:301
+#: src/parse.c:302
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr "A profundidade do 'include' (%d) foi excedido"
 
-#: src/parse.c:445
+#: src/parse.c:446
 #, c-format
 msgid "invalid start tag: %s"
 msgstr "A abertura da variável %s não é válida"
 
-#: src/parse.c:837
+#: src/parse.c:838
 #, c-format
 msgid "invalid include: %s"
 msgstr "A inclusão de %s não é válida"
 
-#: src/parse.c:923
+#: src/parse.c:924
 msgid "no action specified for Key"
 msgstr "Nenhuma ação foi especificada para a tecla"
 
-#: src/parse.c:930
+#: src/parse.c:931
 #, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "A ação \"%s\" da tecla 'Key' não é válida"
 
-#: src/parse.c:956
+#: src/parse.c:957
 #, fuzzy
 #| msgid "no action specified for Key"
 msgid "no action specified for Mouse"
 msgstr "Nenhuma ação foi especificada para o Rato/Mouse"
 
-#: src/parse.c:961
+#: src/parse.c:962
 #, fuzzy, c-format
 #| msgid "invalid Key action: \"%s\""
 msgid "invalid Mouse action: \"%s\""
 msgstr "A ação \"%s\" do Rato/Mouse não é válida"
 
-#: src/parse.c:967
+#: src/parse.c:968
 #, fuzzy, c-format
 #| msgid "invalid Key action: \"%s\""
 msgid "invalid Mouse context: \"%s\""
 msgstr "O menu de contexto \"%s\" do Rato/Mouse não é válido"
 
-#: src/parse.c:988
+#: src/parse.c:989
 #, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "O alinhamento do texto \"%s\" não é válido"
 
-#: src/parse.c:1076
+#: src/parse.c:1077
 msgid "no include file specified"
 msgstr "Nenhum arquivo foi incluído"
 
-#: src/parse.c:1087
+#: src/parse.c:1088
 #, c-format
 msgid "could not process include: %s"
 msgstr "Não é possível processar o %s"
 
-#: src/parse.c:1091
+#: src/parse.c:1092
 #, c-format
 msgid "could not open included file: %s"
 msgstr "Não é possível abrir o arquivo %s"
 
-#: src/parse.c:1743
+#: src/parse.c:1753
 #, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "O valor não é válido para ativar \"%s\""
 
-#: src/parse.c:1890
+#: src/parse.c:1900
 #, c-format
 msgid "invalid Group Option: %s"
 msgstr "A opção do grupo %s não é válida"
 
-#: src/parse.c:1905
+#: src/parse.c:1915
 #, c-format
 msgid "invalid decorations: %s"
 msgstr "A decoração \"%s\" não é válida"
 
-#: src/parse.c:1967
+#: src/parse.c:1977
 #, c-format
 msgid "%s is empty"
 msgstr "%s está vazio(a)"
 
-#: src/parse.c:1974
+#: src/parse.c:1984
 #, c-format
 msgid "invalid %s: \"%s\""
 msgstr "Não é válido %s: \"%s\""
 
-#: src/parse.c:1992
+#: src/parse.c:2002
 #, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "O valor %s não é válido para \"%s\""
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
+#: src/parse.c:2072 src/parse.c:2089 src/parse.c:2117
 msgid "no value specified"
 msgstr "Nenhum valor foi especificado"
 
-#: src/parse.c:2067 src/parse.c:2084
+#: src/parse.c:2077 src/parse.c:2094
 #, c-format
 msgid "invalid setting: %s"
 msgstr "A configuração %s não é válida"
 
-#: src/parse.c:2112
+#: src/parse.c:2122
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "A transparência %s não é válida"
 
-#: src/parse.c:2133
+#: src/parse.c:2143
 #, c-format
 msgid "invalid layer: %s"
 msgstr "A camada %s não é válida"
 
-#: src/parse.c:2154
+#: src/parse.c:2164
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "A variável %s não é válida dentro de %s"
 
-#: src/parse.c:2175
+#: src/parse.c:2185
 msgid "configuration error"
 msgstr "Erro na configuração"
 
@@ -523,7 +522,8 @@ msgstr "Abaixo"
 #~ msgstr "O tipo do fundo %s da janela não é válido"
 
 #~ msgid "cannot swallow the same client multiple times"
-#~ msgstr "Você não pode inserir o mesmo cliente no 'swallow' mais do que uma vez"
+#~ msgstr ""
+#~ "Você não pode inserir o mesmo cliente no 'swallow' mais do que uma vez"
 
 #~ msgid "Fullscreen state will be shaped!"
 #~ msgstr "O estado da tela cheia será moldado!"

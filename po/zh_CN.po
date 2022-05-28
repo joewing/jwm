@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2022-02-26 13:28+0000\n"
+"POT-Creation-Date: 2022-05-28 15:24+0000\n"
 "PO-Revision-Date: 2015-09-24 16:11+0800\n"
 "Last-Translator: Christopher Meng <i@cicku.me>\n"
 "Language-Team: \n"
@@ -68,15 +68,15 @@ msgstr "key 或 keycode 均未被指定给 Key"
 msgid "key binding: root menu \"%s\" not defined"
 msgstr "按键绑定：主菜单 \"%s\" 未定义"
 
-#: src/client.c:903
+#: src/client.c:904
 msgid "Kill this window?"
 msgstr "强制结束该窗口？"
 
-#: src/client.c:904
+#: src/client.c:905
 msgid "This may cause data to be lost!"
 msgstr "这可能导致数据丢失！"
 
-#: src/command.c:141 src/command.c:172 src/main.c:208
+#: src/command.c:141 src/command.c:175 src/main.c:209
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "执行失败：(%s) %s"
@@ -90,7 +90,7 @@ msgstr "无法加载字体：%s"
 msgid "could not set O_NONBLOCK"
 msgstr ""
 
-#: src/command.c:211
+#: src/command.c:209
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr ""
@@ -107,7 +107,7 @@ msgstr "取消"
 msgid "Confirm"
 msgstr "确认操作"
 
-#: src/desktop.c:336
+#: src/desktop.c:337
 msgid "empty Desktops Name tag"
 msgstr "空的 Desktops Name 标签"
 
@@ -235,131 +235,131 @@ msgstr "%s[%d]：无效的实体：\"%.8s\""
 msgid "out of memory"
 msgstr "内存不足"
 
-#: src/parse.c:272
+#: src/parse.c:273
 #, fuzzy, c-format
 msgid "could not open %s"
 msgstr "无法加载字体：%s"
 
-#: src/parse.c:282
+#: src/parse.c:283
 #, fuzzy, c-format
 msgid "could not open %s or %s"
 msgstr "无法加载字体：%s"
 
-#: src/parse.c:301
+#: src/parse.c:302
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr ""
 
-#: src/parse.c:445
+#: src/parse.c:446
 #, fuzzy, c-format
 msgid "invalid start tag: %s"
 msgstr "无效的设置：\"%s\""
 
-#: src/parse.c:837
+#: src/parse.c:838
 #, fuzzy, c-format
 msgid "invalid include: %s"
 msgstr "无效的设置：\"%s\""
 
-#: src/parse.c:923
+#: src/parse.c:924
 #, fuzzy
 msgid "no action specified for Key"
 msgstr "key 或 keycode 均未被指定给 Key"
 
-#: src/parse.c:930
+#: src/parse.c:931
 #, fuzzy, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "无效操作：\"%s\""
 
-#: src/parse.c:956
+#: src/parse.c:957
 #, fuzzy
 msgid "no action specified for Mouse"
 msgstr "key 或 keycode 均未被指定给 Key"
 
-#: src/parse.c:961
+#: src/parse.c:962
 #, fuzzy, c-format
 msgid "invalid Mouse action: \"%s\""
 msgstr "无效操作：\"%s\""
 
-#: src/parse.c:967
+#: src/parse.c:968
 #, fuzzy, c-format
 msgid "invalid Mouse context: \"%s\""
 msgstr "无效操作：\"%s\""
 
-#: src/parse.c:988
+#: src/parse.c:989
 #, fuzzy, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "无效的托盘垂直对齐：\"%s\""
 
-#: src/parse.c:1076
+#: src/parse.c:1077
 msgid "no include file specified"
 msgstr ""
 
-#: src/parse.c:1087
+#: src/parse.c:1088
 #, fuzzy, c-format
 msgid "could not process include: %s"
 msgstr "无法加载字体：%s"
 
-#: src/parse.c:1091
+#: src/parse.c:1092
 #, fuzzy, c-format
 msgid "could not open included file: %s"
 msgstr "无法加载字体：%s"
 
-#: src/parse.c:1743
+#: src/parse.c:1753
 #, fuzzy, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "无效操作：\"%s\""
 
-#: src/parse.c:1890
+#: src/parse.c:1900
 #, fuzzy, c-format
 msgid "invalid Group Option: %s"
 msgstr "无效操作：\"%s\""
 
-#: src/parse.c:1905
+#: src/parse.c:1915
 #, fuzzy, c-format
 msgid "invalid decorations: %s"
 msgstr "无效操作：\"%s\""
 
-#: src/parse.c:1967
+#: src/parse.c:1977
 #, c-format
 msgid "%s is empty"
 msgstr ""
 
-#: src/parse.c:1974
+#: src/parse.c:1984
 #, fuzzy, c-format
 msgid "invalid %s: \"%s\""
 msgstr "无效操作：\"%s\""
 
-#: src/parse.c:1992
+#: src/parse.c:2002
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "%s 含无效标签：%s"
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
+#: src/parse.c:2072 src/parse.c:2089 src/parse.c:2117
 #, fuzzy
 msgid "no value specified"
 msgstr "背景图片未定义"
 
-#: src/parse.c:2067 src/parse.c:2084
+#: src/parse.c:2077 src/parse.c:2094
 #, c-format
 msgid "invalid setting: %s"
 msgstr "无效的设置：\"%s\""
 
-#: src/parse.c:2112
+#: src/parse.c:2122
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "无效的透明度：\"%s\""
 
-#: src/parse.c:2133
+#: src/parse.c:2143
 #, fuzzy, c-format
 msgid "invalid layer: %s"
 msgstr "无效的透明度：\"%s\""
 
-#: src/parse.c:2154
+#: src/parse.c:2164
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "%s 含无效标签：%s"
 
-#: src/parse.c:2175
+#: src/parse.c:2185
 msgid "configuration error"
 msgstr "配置文件错误"
 

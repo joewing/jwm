@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: jwm 2.4.0\n"
+"Project-Id-Version: jwm 2.4.1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2022-02-26 13:28+0000\n"
+"POT-Creation-Date: 2022-05-28 15:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,15 +69,15 @@ msgstr ""
 msgid "key binding: root menu \"%s\" not defined"
 msgstr ""
 
-#: src/client.c:903
+#: src/client.c:904
 msgid "Kill this window?"
 msgstr ""
 
-#: src/client.c:904
+#: src/client.c:905
 msgid "This may cause data to be lost!"
 msgstr ""
 
-#: src/command.c:141 src/command.c:172 src/main.c:208
+#: src/command.c:141 src/command.c:175 src/main.c:209
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr ""
@@ -90,7 +90,7 @@ msgstr ""
 msgid "could not set O_NONBLOCK"
 msgstr ""
 
-#: src/command.c:211
+#: src/command.c:209
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr ""
@@ -107,7 +107,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/desktop.c:336
+#: src/desktop.c:337
 msgid "empty Desktops Name tag"
 msgstr ""
 
@@ -232,128 +232,128 @@ msgstr ""
 msgid "out of memory"
 msgstr ""
 
-#: src/parse.c:272
+#: src/parse.c:273
 #, c-format
 msgid "could not open %s"
 msgstr ""
 
-#: src/parse.c:282
+#: src/parse.c:283
 #, c-format
 msgid "could not open %s or %s"
 msgstr ""
 
-#: src/parse.c:301
+#: src/parse.c:302
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr ""
 
-#: src/parse.c:445
+#: src/parse.c:446
 #, c-format
 msgid "invalid start tag: %s"
 msgstr ""
 
-#: src/parse.c:837
+#: src/parse.c:838
 #, c-format
 msgid "invalid include: %s"
 msgstr ""
 
-#: src/parse.c:923
+#: src/parse.c:924
 msgid "no action specified for Key"
 msgstr ""
 
-#: src/parse.c:930
+#: src/parse.c:931
 #, c-format
 msgid "invalid Key action: \"%s\""
 msgstr ""
 
-#: src/parse.c:956
+#: src/parse.c:957
 msgid "no action specified for Mouse"
 msgstr ""
 
-#: src/parse.c:961
+#: src/parse.c:962
 #, c-format
 msgid "invalid Mouse action: \"%s\""
 msgstr ""
 
-#: src/parse.c:967
+#: src/parse.c:968
 #, c-format
 msgid "invalid Mouse context: \"%s\""
 msgstr ""
 
-#: src/parse.c:988
+#: src/parse.c:989
 #, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr ""
 
-#: src/parse.c:1076
+#: src/parse.c:1077
 msgid "no include file specified"
 msgstr ""
 
-#: src/parse.c:1087
+#: src/parse.c:1088
 #, c-format
 msgid "could not process include: %s"
 msgstr ""
 
-#: src/parse.c:1091
+#: src/parse.c:1092
 #, c-format
 msgid "could not open included file: %s"
 msgstr ""
 
-#: src/parse.c:1743
+#: src/parse.c:1753
 #, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr ""
 
-#: src/parse.c:1890
+#: src/parse.c:1900
 #, c-format
 msgid "invalid Group Option: %s"
 msgstr ""
 
-#: src/parse.c:1905
+#: src/parse.c:1915
 #, c-format
 msgid "invalid decorations: %s"
 msgstr ""
 
-#: src/parse.c:1967
+#: src/parse.c:1977
 #, c-format
 msgid "%s is empty"
 msgstr ""
 
-#: src/parse.c:1974
+#: src/parse.c:1984
 #, c-format
 msgid "invalid %s: \"%s\""
 msgstr ""
 
-#: src/parse.c:1992
+#: src/parse.c:2002
 #, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr ""
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
+#: src/parse.c:2072 src/parse.c:2089 src/parse.c:2117
 msgid "no value specified"
 msgstr ""
 
-#: src/parse.c:2067 src/parse.c:2084
+#: src/parse.c:2077 src/parse.c:2094
 #, c-format
 msgid "invalid setting: %s"
 msgstr ""
 
-#: src/parse.c:2112
+#: src/parse.c:2122
 #, c-format
 msgid "invalid opacity: %s"
 msgstr ""
 
-#: src/parse.c:2133
+#: src/parse.c:2143
 #, c-format
 msgid "invalid layer: %s"
 msgstr ""
 
-#: src/parse.c:2154
+#: src/parse.c:2164
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr ""
 
-#: src/parse.c:2175
+#: src/parse.c:2185
 msgid "configuration error"
 msgstr ""
 

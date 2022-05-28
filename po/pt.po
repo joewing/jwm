@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.8\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2022-02-26 13:28+0000\n"
+"POT-Creation-Date: 2022-05-28 15:24+0000\n"
 "PO-Revision-Date: 2022-04-10 15:34+0100\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Portuguese <hugokarvalho@hotmail.com>\n"
@@ -74,15 +74,15 @@ msgstr ""
 "teclas de atalho: não foram especificadas para o menu root \"%s\" não esta "
 "definido"
 
-#: src/client.c:903
+#: src/client.c:904
 msgid "Kill this window?"
 msgstr "Terminar esta janela?"
 
-#: src/client.c:904
+#: src/client.c:905
 msgid "This may cause data to be lost!"
 msgstr "Isto pode causar a perda de dados!"
 
-#: src/command.c:141 src/command.c:172 src/main.c:208
+#: src/command.c:141 src/command.c:175 src/main.c:209
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "exec falhou: (%s) %s"
@@ -95,7 +95,7 @@ msgstr "não foi possível criar o pipe"
 msgid "could not set O_NONBLOCK"
 msgstr "não foi possível definir O_NONBLOCK"
 
-#: src/command.c:211
+#: src/command.c:209
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr "tempo limite: %s não foi concluído em %u milissegundos"
@@ -112,7 +112,7 @@ msgstr "Cancelar"
 msgid "Confirm"
 msgstr "Comfirmar"
 
-#: src/desktop.c:336
+#: src/desktop.c:337
 msgid "empty Desktops Name tag"
 msgstr "etiqueta do nome da Área de trabalho em branco"
 
@@ -239,128 +239,128 @@ msgstr "%s[%d]: entrada inválida: \"%.8s\""
 msgid "out of memory"
 msgstr "memória insuficiente"
 
-#: src/parse.c:272
+#: src/parse.c:273
 #, c-format
 msgid "could not open %s"
 msgstr "não foi possível abrir %s"
 
-#: src/parse.c:282
+#: src/parse.c:283
 #, c-format
 msgid "could not open %s or %s"
 msgstr "não foi possível abrir %s ou %s"
 
-#: src/parse.c:301
+#: src/parse.c:302
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr "a profundidade do 'include' (%d) excedida"
 
-#: src/parse.c:445
+#: src/parse.c:446
 #, c-format
 msgid "invalid start tag: %s"
 msgstr "abertura de variável inválida: %s"
 
-#: src/parse.c:837
+#: src/parse.c:838
 #, c-format
 msgid "invalid include: %s"
 msgstr "include inválido: %s"
 
-#: src/parse.c:923
+#: src/parse.c:924
 msgid "no action specified for Key"
 msgstr "nenhuma ação foi especificada para a tecla"
 
-#: src/parse.c:930
+#: src/parse.c:931
 #, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "ação inválida da tecla: \"%s\""
 
-#: src/parse.c:956
+#: src/parse.c:957
 msgid "no action specified for Mouse"
 msgstr "nenhuma ação especificada para o Rato"
 
-#: src/parse.c:961
+#: src/parse.c:962
 #, c-format
 msgid "invalid Mouse action: \"%s\""
 msgstr "ação do Rato inválida: \"%s\""
 
-#: src/parse.c:967
+#: src/parse.c:968
 #, c-format
 msgid "invalid Mouse context: \"%s\""
 msgstr "contexto do Rato inválido: \"%s\""
 
-#: src/parse.c:988
+#: src/parse.c:989
 #, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "alinhamento de texto inválido: \"%s\""
 
-#: src/parse.c:1076
+#: src/parse.c:1077
 msgid "no include file specified"
 msgstr "nenhum icheiro 'include' foi especificado"
 
-#: src/parse.c:1087
+#: src/parse.c:1088
 #, c-format
 msgid "could not process include: %s"
 msgstr "não é possível processar o 'include': %s"
 
-#: src/parse.c:1091
+#: src/parse.c:1092
 #, c-format
 msgid "could not open included file: %s"
 msgstr "não foi possível abrir o ficheiro incluído %s"
 
-#: src/parse.c:1743
+#: src/parse.c:1753
 #, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "valor inválido para 'ativado': \"%s\""
 
-#: src/parse.c:1890
+#: src/parse.c:1900
 #, c-format
 msgid "invalid Group Option: %s"
 msgstr "opção de grupo inválida: %s"
 
-#: src/parse.c:1905
+#: src/parse.c:1915
 #, c-format
 msgid "invalid decorations: %s"
 msgstr "decorações inválidas: %s"
 
-#: src/parse.c:1967
+#: src/parse.c:1977
 #, c-format
 msgid "%s is empty"
 msgstr "%s está vazio(a)"
 
-#: src/parse.c:1974
+#: src/parse.c:1984
 #, c-format
 msgid "invalid %s: \"%s\""
 msgstr "inválido %s: \"%s\""
 
-#: src/parse.c:1992
+#: src/parse.c:2002
 #, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "valor inválido para %s: \"%s\""
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
+#: src/parse.c:2072 src/parse.c:2089 src/parse.c:2117
 msgid "no value specified"
 msgstr "nenhum valor especificado"
 
-#: src/parse.c:2067 src/parse.c:2084
+#: src/parse.c:2077 src/parse.c:2094
 #, c-format
 msgid "invalid setting: %s"
 msgstr "definição inválida: %s"
 
-#: src/parse.c:2112
+#: src/parse.c:2122
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "opacidade inválida: %s"
 
-#: src/parse.c:2133
+#: src/parse.c:2143
 #, c-format
 msgid "invalid layer: %s"
 msgstr "camada inválida: %s"
 
-#: src/parse.c:2154
+#: src/parse.c:2164
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "etiqueta inválida dentro de %s: %s"
 
-#: src/parse.c:2175
+#: src/parse.c:2185
 msgid "configuration error"
 msgstr "erro de configuração"
 

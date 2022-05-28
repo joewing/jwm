@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.4.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2022-02-26 13:28+0000\n"
+"POT-Creation-Date: 2022-05-28 15:24+0000\n"
 "PO-Revision-Date: 2021-12-19 19:14+0200\n"
 "Last-Translator: Taras Panchenko <top39@ukr.net>\n"
 "Language-Team: JWM UA Team\n"
@@ -71,15 +71,15 @@ msgstr "для Клавіши не вказано ні клавіши, ні ко
 msgid "key binding: root menu \"%s\" not defined"
 msgstr "прив'язка клавіш: кореневе меню \"%s\" не визначено"
 
-#: src/client.c:903
+#: src/client.c:904
 msgid "Kill this window?"
 msgstr "Знищити це вікно?"
 
-#: src/client.c:904
+#: src/client.c:905
 msgid "This may cause data to be lost!"
 msgstr "Це може призвести до втрати даних!"
 
-#: src/command.c:141 src/command.c:172 src/main.c:208
+#: src/command.c:141 src/command.c:175 src/main.c:209
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "помилка exec: (%s) %s"
@@ -92,7 +92,7 @@ msgstr "не вдалося створити канал"
 msgid "could not set O_NONBLOCK"
 msgstr "не вдалося встановити O_NONBLOCK"
 
-#: src/command.c:211
+#: src/command.c:209
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr "завершення часу очікування: %s не завершено за %u мілісекунд"
@@ -109,7 +109,7 @@ msgstr "Скасувати"
 msgid "Confirm"
 msgstr "Підтвердити"
 
-#: src/desktop.c:336
+#: src/desktop.c:337
 msgid "empty Desktops Name tag"
 msgstr "порожній маркер назви Стільниці"
 
@@ -234,128 +234,128 @@ msgstr "%s[%d]: недійсна категорія: \"%.8s\""
 msgid "out of memory"
 msgstr "недостатньо пам'яті"
 
-#: src/parse.c:272
+#: src/parse.c:273
 #, c-format
 msgid "could not open %s"
 msgstr "не вдалося відкрити %s"
 
-#: src/parse.c:282
+#: src/parse.c:283
 #, c-format
 msgid "could not open %s or %s"
 msgstr "не вдалося відкрити %s або %s"
 
-#: src/parse.c:301
+#: src/parse.c:302
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr "глибину уміщення (%d) перевищено"
 
-#: src/parse.c:445
+#: src/parse.c:446
 #, c-format
 msgid "invalid start tag: %s"
 msgstr "недійсний маркер запуску: %s"
 
-#: src/parse.c:837
+#: src/parse.c:838
 #, c-format
 msgid "invalid include: %s"
 msgstr "недійсне уміщення: %s"
 
-#: src/parse.c:923
+#: src/parse.c:924
 msgid "no action specified for Key"
 msgstr "для Клавіши не вказано дії"
 
-#: src/parse.c:930
+#: src/parse.c:931
 #, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "недійсна дія для Клавіши: \"%s\""
 
-#: src/parse.c:956
+#: src/parse.c:957
 msgid "no action specified for Mouse"
 msgstr "для Миші не вказано дії"
 
-#: src/parse.c:961
+#: src/parse.c:962
 #, c-format
 msgid "invalid Mouse action: \"%s\""
 msgstr "недійсна дія для Миші: \"%s\""
 
-#: src/parse.c:967
+#: src/parse.c:968
 #, c-format
 msgid "invalid Mouse context: \"%s\""
 msgstr "недійсне оточення для Миші: \"%s\""
 
-#: src/parse.c:988
+#: src/parse.c:989
 #, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "недійсне вирівнювання тексту: \"%s\""
 
-#: src/parse.c:1076
+#: src/parse.c:1077
 msgid "no include file specified"
 msgstr "не вказано файл уміщення"
 
-#: src/parse.c:1087
+#: src/parse.c:1088
 #, c-format
 msgid "could not process include: %s"
 msgstr "не вдалося обробити уміщення: %s"
 
-#: src/parse.c:1091
+#: src/parse.c:1092
 #, c-format
 msgid "could not open included file: %s"
 msgstr "не вдалося відкрити файл уміщення: %s"
 
-#: src/parse.c:1743
+#: src/parse.c:1753
 #, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "недійсне значення для 'дозволено': \"%s\""
 
-#: src/parse.c:1890
+#: src/parse.c:1900
 #, c-format
 msgid "invalid Group Option: %s"
 msgstr "недійсний параметр Групи: %s"
 
-#: src/parse.c:1905
+#: src/parse.c:1915
 #, c-format
 msgid "invalid decorations: %s"
 msgstr "недійсні оздоблення: %s"
 
-#: src/parse.c:1967
+#: src/parse.c:1977
 #, c-format
 msgid "%s is empty"
 msgstr "%s порожнє"
 
-#: src/parse.c:1974
+#: src/parse.c:1984
 #, c-format
 msgid "invalid %s: \"%s\""
 msgstr "недійсне %s: \"%s\""
 
-#: src/parse.c:1992
+#: src/parse.c:2002
 #, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "недійсне значення для %s: \"%s\""
 
-#: src/parse.c:2062 src/parse.c:2079 src/parse.c:2107
+#: src/parse.c:2072 src/parse.c:2089 src/parse.c:2117
 msgid "no value specified"
 msgstr "значення не вказано"
 
-#: src/parse.c:2067 src/parse.c:2084
+#: src/parse.c:2077 src/parse.c:2094
 #, c-format
 msgid "invalid setting: %s"
 msgstr "недійсне налаштування: %s"
 
-#: src/parse.c:2112
+#: src/parse.c:2122
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "недійсна прозорість: %s"
 
-#: src/parse.c:2133
+#: src/parse.c:2143
 #, c-format
 msgid "invalid layer: %s"
 msgstr "недійсний шар: %s"
 
-#: src/parse.c:2154
+#: src/parse.c:2164
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "недійсний маркер у %s: %s"
 
-#: src/parse.c:2175
+#: src/parse.c:2185
 msgid "configuration error"
 msgstr "помилка конфігурації"
 

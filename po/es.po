@@ -5,11 +5,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: jwm 2.2.0\n"
+"Project-Id-Version: jwm 2.4.2\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
 "POT-Creation-Date: 2022-05-28 15:24+0000\n"
-"PO-Revision-Date: 2018-05-14 16:04+0100\n"
-"Last-Translator: PAblo Roberto Francisco Lezaeta Reyes <prflr88@gmail.com>\n"
+"PO-Revision-Date: 2022-05-31 11:20+0100\n"
+"Last-Translator: Ciro Farid Elías Haskour <ciroh.jobs@gmail.com>\n"
 "Language-Team: Spanish <LL@li.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -98,7 +98,7 @@ msgstr ""
 #: src/command.c:209
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
-msgstr ""
+msgstr "timeout: %s no se completó en %u milisegundos"
 
 #: src/confirm.c:69
 msgid "OK"
@@ -288,9 +288,8 @@ msgstr "acción no válida para «Key»: «%s»"
 # No traducir «Key»: es una etiqueta del archivo de configuración de JWM.
 #: src/parse.c:957
 #, fuzzy
-#| msgid "no action specified for Key"
 msgid "no action specified for Mouse"
-msgstr "no se especificó acción para «Key»"
+msgstr "no se especificó acción para el Mouse"
 
 # No traducir «Key»: es una etiqueta del archivo de configuración de JWM.
 #: src/parse.c:962
@@ -525,21 +524,3 @@ msgstr "[Abajo]"
 #: src/winmenu.c:160
 msgid "Below"
 msgstr "Abajo"
-
-#~ msgid "invalid tray width: %d"
-#~ msgstr "ancho de bandeja no válido: %d"
-
-#~ msgid "invalid tray height: %d"
-#~ msgstr "alto de bandeja no válido: %d"
-
-#~ msgid "invalid insert mode: \"%s\""
-#~ msgstr "modo de insertar no válido: «%s»"
-
-#~ msgid "invalid status window type: %s"
-#~ msgstr "tipo de ventana de estado no válido: %s"
-
-#~ msgid "cannot swallow the same client multiple times"
-#~ msgstr "no se puede mostrar el mismo cliente varias veces"
-
-#~ msgid "Fullscreen state will be shaped!"
-#~ msgstr "¡Se definirá el estado de Pantalla Completa!"

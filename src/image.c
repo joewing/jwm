@@ -483,6 +483,14 @@ ImageNode *LoadSVGImage(const char *fileName, int rwidth, int rheight,
    } else if(has_viewbox) {
       dim.width = viewbox.width;
       dim.height = viewbox.height;
+   } else if(rwidth == 0 && rheight == 0) {
+#if LIBRSVG_CHECK_VERSION(2, 52, 0)
+      rsvg_handle_get_intrinsic_size_in_pixels(rh, &pwidth.length, &pheight.length);
+      dim.width = pwidth.length;
+      dim.height = pheight.length;
+#else
+      rsvg_handle_get_dimensions(rh, &dim);
+#endif
    } else {
       dim.width = rwidth;
       dim.height = rheight;

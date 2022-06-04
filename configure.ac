@@ -2,7 +2,7 @@
 # JWM autoconf.
 ############################################################################
 
-AC_INIT([jwm],[2.4.2],[joewing@joewing.net])
+AC_INIT([jwm],[2.4.3],[joewing@joewing.net])
 AC_PREREQ([2.69])
 AC_CONFIG_SRCDIR([src])
 AC_CONFIG_SRCDIR([po])

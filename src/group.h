@@ -84,6 +84,12 @@ void AddGroupClass(struct GroupType *gp, const char *pattern);
  */
 void AddGroupName(struct GroupType *gp, const char *pattern);
 
+/** Add a window title to a group.
+ * @param gp The group.
+ * @param pattern A pattern to match with the window title.
+ */
+void AddGroupTitle(struct GroupType *gp, const char *pattern);
+
 /** Add a window type to a group.
  * @param gp The group.
  * @param pattern A pattern to match with the window type.

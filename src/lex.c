@@ -85,6 +85,7 @@ static const StringMappingType TOKEN_MAP[] = {
    { "TaskList",           TOK_TASKLIST         },
    { "TaskListStyle",      TOK_TASKLISTSTYLE    },
    { "Text",               TOK_TEXT             },
+   { "Title",              TOK_TITLE            },
    { "TitleButtonOrder",   TOK_TITLEBUTTONORDER },
    { "Tray",               TOK_TRAY             },
    { "TrayButton",         TOK_TRAYBUTTON       },

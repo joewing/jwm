@@ -1838,6 +1838,9 @@ void ParseGroup(const TokenNode *tp)
       case TOK_NAME:
          AddGroupName(group, np->value);
          break;
+      case TOK_TITLE:
+         AddGroupTitle(group, np->value);
+         break;
       case TOK_TYPE:
          AddGroupType(group, np->value);
          break;

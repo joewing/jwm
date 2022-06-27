@@ -15,6 +15,7 @@
 #include "timing.h"
 
 #include <fcntl.h>
+#include <errno.h>
 
 /** Structure to represent a list of commands. */
 typedef struct CommandNode {
@@ -202,7 +203,9 @@ char *ReadFromProcess(const char *command, unsigned timeout_ms)
          tv.tv_usec = (diff_ms % 1000) * 1000;
 
          /* Wait for data (or a timeout). */
-         rc = select(fds[0] + 1, &fs, NULL, &fs, &tv);
+         do {
+            rc = select(fds[0] + 1, &fs, NULL, &fs, &tv);
+         } while(rc < 0 && errno == EINTR);
          if(rc == 0) {
             close(fds[0]);
             /* Timeout */

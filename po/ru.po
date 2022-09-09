@@ -26,7 +26,7 @@ msgstr "недопустимое действия: \"%s\""
 #: src/action.c:211
 #, c-format
 msgid "action: root menu \"%s\" not defined"
-msgstr "действие: главное меню \"%d\" не задано"
+msgstr "действие: главное меню \"%s\" не задано"
 
 #: src/background.c:137
 msgid "no value specified for background"
@@ -68,7 +68,7 @@ msgstr "ни символ, ни код клавиши не заданы в те�
 #: src/binding.c:520
 #, c-format
 msgid "key binding: root menu \"%s\" not defined"
-msgstr "назначение клавиши: главное меню \"%d\" не задано"
+msgstr "назначение клавиши: главное меню \"%s\" не задано"
 
 #: src/client.c:904
 msgid "Kill this window?"

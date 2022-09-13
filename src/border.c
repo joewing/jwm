@@ -451,7 +451,17 @@ void DrawBorderHelper(const ClientNode *np)
       if(np->name && np->name[0] && point.x < point.y) {
          unsigned titleWidth = point.y - point.x;
          const int sheight = GetStringHeight(FONT_BORDER);
-         const int textWidth = GetStringWidth(FONT_BORDER, np->name);
+         const int buffSize = (MAX_TITLE_LENGTH+1)*sizeof(char);
+         char *titleBuffer = calloc(MAX_TITLE_LENGTH+1,sizeof(char));
+         titleBuffer = memset(titleBuffer,'\0',buffSize);
+         if (settings.showMachineName){
+             sprintf(titleBuffer,"%s %c%s%c",np->name,
+                     settings.machineNameDelimiters[0],np->machineName,
+                     settings.machineNameDelimiters[1]);
+         } else {
+             sprintf(titleBuffer,"%s",np->name);
+         }
+         const int textWidth = GetStringWidth(FONT_BORDER,titleBuffer);
          unsigned titlex, titley;
          int xoffset = 0;
 
@@ -474,7 +484,8 @@ void DrawBorderHelper(const ClientNode *np)
             titley += south - 1;
          }
          RenderString(canvas, FONT_BORDER, borderTextColor,
-                      titlex, titley, titleWidth, np->name);
+                      titlex, titley, titleWidth, titleBuffer);
+         free(titleBuffer);
       }
 
    }

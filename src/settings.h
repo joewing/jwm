@@ -84,9 +84,14 @@ typedef unsigned char DesktopBackAndForthType;
 #define DBACKANDFORTH_OFF 0 /**< No back and forth */
 #define DBACKANDFORTH_ON  1 /**< Enable back and forth */
 
-/** Maximimum number of title bar components
+/** Maximum number of title bar components
  * For now, we allow each component to be used twice. */
 #define TBC_COUNT       9
+
+/** Maximum number of characters in window title 
+ * and default characters for machine name delimiters. */
+#define MAX_TITLE_LENGTH                   512
+#define DEFAULT_MACHINE_NAME_DELIMITERS    "()"
 
 /** Settings. */
 typedef struct {
@@ -122,6 +127,9 @@ typedef struct {
    MouseContextType titleBarLayout[TBC_COUNT + 1];
    char groupTasks;
    char listAllTasks;
+   char showMachineName;
+   char *machineNameDelimiters;
+   char showKillMenuItem;
    DesktopBackAndForthType desktopBackAndForth;
 } Settings;
 

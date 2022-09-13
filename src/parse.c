@@ -160,6 +160,9 @@ static const char *DYNAMIC_ATTRIBUTE = "dynamic";
 static const char *SPACING_ATTRIBUTE = "spacing";
 static const char *TIMEOUT_ATTRIBUTE = "timeout";
 static const char *POPUP_ATTRIBUTE = "popup";
+static const char *MACHINENAME_ATTRIBUTE = "machinename";
+static const char *MN_DELIMITERS_ATTRIBUTE = "delimiters";
+static const char *KILL_MENU_ATTRIBUTE = "killmenu";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -998,6 +1001,19 @@ void ParseWindowStyle(const TokenNode *tp)
 {
    const TokenNode *np;
 
+   const char *temp;
+   temp = FindAttribute(tp->attributes, MACHINENAME_ATTRIBUTE);
+   if(temp){
+        settings.showMachineName = !strcmp(temp,TRUE_VALUE);
+   }
+
+   temp = FindAttribute(tp->attributes, MN_DELIMITERS_ATTRIBUTE);
+   if(temp && strlen(temp)>=2) {
+      char *delims = calloc(strlen(temp)+1,sizeof(char));
+      sprintf(delims,"%s",temp);
+      settings.machineNameDelimiters = delims;
+   }
+
    ParseDecorations(tp, &settings.windowDecorations);
    for(np = tp->subnodeHead; np; np = np->next) {
       switch(np->type) {
@@ -1203,6 +1219,12 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
       if(temp) {
          settings.listAllTasks = !strcmp(temp, "all");
       }
+
+      temp = FindAttribute(tp->attributes, KILL_MENU_ATTRIBUTE);
+      if(temp) {
+         settings.showKillMenuItem = !strcmp(temp, TRUE_VALUE);
+      }
+
    } else if(tp->type == TOK_TRAYSTYLE) {
       ParseDecorations(tp, &settings.trayDecorations);
    }

@@ -61,6 +61,9 @@ void InitializeSettings(void)
    settings.groupTasks = 0;
    settings.listAllTasks = 0;
    settings.dockSpacing = 0;
+   settings.showMachineName = 0;
+   settings.machineNameDelimiters = DEFAULT_MACHINE_NAME_DELIMITERS;
+   settings.showKillMenuItem = 1;
    memcpy(settings.titleBarLayout, DEFAULT_TITLE_BAR_LAYOUT,
       sizeof(settings.titleBarLayout));
 }

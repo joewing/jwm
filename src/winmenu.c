@@ -46,7 +46,9 @@ Menu *CreateWindowMenu(ClientNode *np)
 
    if(!(np->state.status & STAT_WMDIALOG)) {
       AddWindowMenuItem(menu, _("Close"), MA_CLOSE, np, 0);
-      AddWindowMenuItem(menu, _("Kill"), MA_KILL, np, 0);
+      if (settings.showKillMenuItem){
+          AddWindowMenuItem(menu, _("Kill"), MA_KILL, np, 0);
+      }
       AddWindowMenuItem(menu, NULL, MA_NONE, np, 0);
    }
 

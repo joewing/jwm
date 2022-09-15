@@ -147,7 +147,7 @@ typedef struct ClientNode {
    char *name;                /**< Name of this window for display. */
    char *instanceName;        /**< Name of this window for properties. */
    char *className;           /**< Name of the window class. */
-   char *machineName;         /**< Name of the machine. */
+   char *clientName;         /**< Name of the client machine. */
 
    ClientState state;         /**< Window state. */
 

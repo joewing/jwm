@@ -1260,8 +1260,8 @@ void RemoveClient(ClientNode *np)
    if(np->className) {
       JXFree(np->className);
    }
-   if(np->machineName) {
-      Release(np->machineName);
+   if(np->clientName) {
+      Release(np->clientName);
    }
 
    RemoveClientFromTaskBar(np);

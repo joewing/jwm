@@ -22,6 +22,9 @@ static const MouseContextType DEFAULT_TITLE_BAR_LAYOUT[TBC_COUNT + 1] = {
    MC_NONE
 };
 
+/** Default characters for client machine name delimiters. */
+static const char DEFAULT_CLIENT_NAME_DELIMITERS[2] = {'(',')'};
+
 static void FixRange(unsigned int *value,
                      unsigned int min_value,
                      unsigned int max_value,
@@ -61,6 +64,10 @@ void InitializeSettings(void)
    settings.groupTasks = 0;
    settings.listAllTasks = 0;
    settings.dockSpacing = 0;
+   settings.showClientName = 0;
+   memcpy(settings.clientNameDelimiters, DEFAULT_CLIENT_NAME_DELIMITERS,
+      sizeof(settings.clientNameDelimiters));
+   settings.showKillMenuItem = 1;
    memcpy(settings.titleBarLayout, DEFAULT_TITLE_BAR_LAYOUT,
       sizeof(settings.titleBarLayout));
 }

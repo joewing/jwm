@@ -1074,12 +1074,24 @@ that the value is relative to the bottom of the screen.
 .B "WINDOW STYLE"
 .RS
 The \fBWindowStyle\fP tag controls the look of window borders.
-This tag supports the following attribute:
+This tag supports the following attributes:
 .P
 .B decorations
 .RS
 The window decorations to use. Valid options are \fBflat\fP and
 \fBmotif\fP. \fBflat\fP is the default.
+.RE
+.P
+.B showclient
+.RS
+Include the X client machine name (WM_CLIENT_MACHINE) in the window title.
+Valid options are \fBtrue\fP and \fBfalse\fP. \fBfalse\fP is the default.
+.RE
+.P
+.B delimiters
+.RS
+The two characters used to wrap the X client machine name in the window title.
+The default characters are \fB()\fP.
 .RE
 .P
 Within this tag, the following tags are supported:
@@ -1257,7 +1269,7 @@ respectively.
 .B "TASK LIST STYLE"
 .RS
 The \fBTaskListStyle\fP tag controls the look of task lists.
-The following attributea are supported:
+The following attributes are supported:
 .P
 .B decorations
 .RS
@@ -1277,6 +1289,13 @@ is \fBfalse\fP.
 Determines which windows are shown in task bars.
 Possible values are \fBdesktop\fP and \fBall\fP. The default
 is \fBdesktop\fP.
+.RE
+.P
+.B showkill
+.RS
+Determines if the \fBKill\fP popup menu item is shown on task bars and
+window title bars. Possible values are \fBtrue\fP and \fBfalse\fP. The default
+is \fBtrue\fP.
 .RE
 .P
 Within this tag the following tags are supported:

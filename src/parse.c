@@ -160,9 +160,9 @@ static const char *DYNAMIC_ATTRIBUTE = "dynamic";
 static const char *SPACING_ATTRIBUTE = "spacing";
 static const char *TIMEOUT_ATTRIBUTE = "timeout";
 static const char *POPUP_ATTRIBUTE = "popup";
-static const char *MACHINENAME_ATTRIBUTE = "machinename";
-static const char *MN_DELIMITERS_ATTRIBUTE = "delimiters";
-static const char *KILL_MENU_ATTRIBUTE = "killmenu";
+static const char *CLIENTNAME_ATTRIBUTE = "showclient";
+static const char *CN_DELIMITERS_ATTRIBUTE = "delimiters";
+static const char *KILL_MENU_ATTRIBUTE = "showkill";
 
 static const char *FALSE_VALUE = "false";
 static const char *TRUE_VALUE = "true";
@@ -1002,16 +1002,15 @@ void ParseWindowStyle(const TokenNode *tp)
    const TokenNode *np;
 
    const char *temp;
-   temp = FindAttribute(tp->attributes, MACHINENAME_ATTRIBUTE);
+   temp = FindAttribute(tp->attributes, CLIENTNAME_ATTRIBUTE);
    if(temp){
-        settings.showMachineName = !strcmp(temp,TRUE_VALUE);
+        settings.showClientName = !strcmp(temp,TRUE_VALUE);
    }
 
-   temp = FindAttribute(tp->attributes, MN_DELIMITERS_ATTRIBUTE);
+   temp = FindAttribute(tp->attributes, CN_DELIMITERS_ATTRIBUTE);
    if(temp && strlen(temp)>=2) {
-      char *delims = calloc(strlen(temp)+1,sizeof(char));
-      sprintf(delims,"%s",temp);
-      settings.machineNameDelimiters = delims;
+      memcpy(settings.clientNameDelimiters, temp,
+          sizeof(settings.clientNameDelimiters));
    }
 
    ParseDecorations(tp, &settings.windowDecorations);

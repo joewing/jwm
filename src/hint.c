@@ -788,26 +788,26 @@ void ReadWMName(ClientNode *np)
 
 }
 
-/** Read the machine for a client. */
+/** Read the machine name of a client. */
 void ReadWMMachine(ClientNode *np)
 {
    XTextProperty tprop;
    char **tlist;
    int tcount;
 
-   if(np->machineName) {
-      Release(np->machineName);
+   if(np->clientName) {
+      Release(np->clientName);
    }
 
    XGetWMClientMachine(display, np->window, &tprop);
    if(XmbTextPropertyToTextList(display, &tprop, &tlist, &tcount)
       == Success && tcount > 0) {
       const size_t len = strlen(tlist[0]) + 1;
-      np->machineName = Allocate(len);
-      memcpy(np->machineName, tlist[0], len);
+      np->clientName = Allocate(len);
+      memcpy(np->clientName, tlist[0], len);
       XFreeStringList(tlist);
    } else {
-      np->machineName = NULL;
+      np->clientName = NULL;
    }
 }
 

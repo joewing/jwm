@@ -1082,7 +1082,7 @@ The window decorations to use. Valid options are \fBflat\fP and
 \fBmotif\fP. \fBflat\fP is the default.
 .RE
 .P
-.B machinename
+.B showclient
 .RS
 Include the X client machine name (WM_CLIENT_MACHINE) in the window title.
 Valid options are \fBtrue\fP and \fBfalse\fP. \fBfalse\fP is the default.
@@ -1291,7 +1291,7 @@ Possible values are \fBdesktop\fP and \fBall\fP. The default
 is \fBdesktop\fP.
 .RE
 .P
-.B killmenu
+.B showkill
 .RS
 Determines if the \fBKill\fP popup menu item is shown on task bars and
 window title bars. Possible values are \fBtrue\fP and \fBfalse\fP. The default

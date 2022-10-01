@@ -64,6 +64,7 @@ typedef struct {
 #define ACTION_MAXH           41
 #define ACTION_RESTORE        42
 #define ACTION_CENTER         43
+#define ACTION_AT             44
 #define ACTION_INVALID        255
 #define ACTION_RESIZE_N       1  /* Extra value mask for resize north. */
 #define ACTION_RESIZE_S       2  /* Extra value mask for resize south. */

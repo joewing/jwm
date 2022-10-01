@@ -1707,6 +1707,8 @@ Remove the current binding.
 Move to the previous window in the task list.
 .IP \fBprevstacked\fP
 Move to the previous window in the stacking order.
+.IP \fBat#\fP
+Move to window position in the task list.
 .IP \fBclose\fP
 Close the active window.
 .IP \fBminimize\fP

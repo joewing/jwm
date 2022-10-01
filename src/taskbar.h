@@ -36,6 +36,11 @@ void RemoveClientFromTaskBar(struct ClientNode *np);
 /** Update all task bars. */
 void UpdateTaskBar(void);
 
+/** Focus the client in the task bar.
+ * @param n The window position in the taskbar.
+ */
+void FocusAt(char n);
+
 /** Focus the next client in the task bar. */
 void FocusNext(void);
 

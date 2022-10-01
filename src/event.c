@@ -705,6 +705,10 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
          RequirePagerUpdate();
       }
       break;
+    case ACTION_AT:
+      StartWindowWalk();
+      FocusAt(key.extra);
+      break;
    default:
       break;
    }

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2022-05-28 15:24+0000\n"
+"POT-Creation-Date: 2022-10-21 15:44+0000\n"
 "PO-Revision-Date: 2016-03-30 16:11+0800\n"
 "Last-Translator: Jim Tsai <poormusic2001@gmail.com>\n"
 "Language-Team: \n"
@@ -75,21 +75,21 @@ msgstr "強制關閉該視窗？"
 msgid "This may cause data to be lost!"
 msgstr "這可能會導致資料不見！"
 
-#: src/command.c:141 src/command.c:175 src/main.c:209
+#: src/command.c:142 src/command.c:176 src/main.c:209
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "執行失敗：(%s) %s"
 
-#: src/command.c:155
+#: src/command.c:156
 #, fuzzy
 msgid "could not create pipe"
 msgstr "無法載入字體:%s"
 
-#: src/command.c:161
+#: src/command.c:162
 msgid "could not set O_NONBLOCK"
 msgstr ""
 
-#: src/command.c:209
+#: src/command.c:212
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr ""
@@ -146,27 +146,27 @@ msgstr "無法載入預設字體:%s"
 msgid "empty Font tag"
 msgstr "空的字體標籤"
 
-#: src/group.c:117
+#: src/group.c:118
 msgid "invalid group class"
 msgstr "無效的群組類別"
 
-#: src/group.c:128
+#: src/group.c:129 src/group.c:140
 msgid "invalid group name"
 msgstr "無效的群組名稱"
 
-#: src/group.c:139
+#: src/group.c:151
 #, fuzzy
 #| msgid "invalid group name"
 msgid "invalid group type"
 msgstr "無效的群組名稱"
 
-#: src/group.c:150
+#: src/group.c:162
 #, fuzzy
 #| msgid "invalid group name"
 msgid "invalid group machine"
 msgstr "無效的群組名稱"
 
-#: src/group.c:343
+#: src/group.c:367
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr "無效的群組桌面: %d"
@@ -191,178 +191,178 @@ msgstr "讀取 PNG圖片發生錯誤：%s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "無法產生PNG圖片的資訊結構: %s"
 
-#: src/lex.c:201
+#: src/lex.c:202
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: 關閉的標籤 \"%s\" 沒有配對到開啟的標籤 \"%s\""
 
-#: src/lex.c:207
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: 無預期且無效的標籤"
 
-#: src/lex.c:213
+#: src/lex.c:214
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: 關閉標籤 \"%s\" 不要開啟標籤"
 
-#: src/lex.c:216
+#: src/lex.c:217
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: 無效的關閉標籤"
 
-#: src/lex.c:264
+#: src/lex.c:265
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: 無效的開啟標籤"
 
-#: src/lex.c:280
+#: src/lex.c:281
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: 無效的標籤"
 
-#: src/lex.c:338
+#: src/lex.c:339
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: 無預期的文字: \"%s\""
 
-#: src/lex.c:397
+#: src/lex.c:398
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: 無效的實體: \"%.8s\""
 
-#: src/lex.c:503
+#: src/lex.c:504
 msgid "out of memory"
 msgstr "記憶體不足"
 
-#: src/parse.c:273
+#: src/parse.c:276
 #, fuzzy, c-format
 #| msgid "could not open %s or %s"
 msgid "could not open %s"
 msgstr "無法開啟 %s 或 %s"
 
-#: src/parse.c:283
+#: src/parse.c:286
 #, c-format
 msgid "could not open %s or %s"
 msgstr "無法開啟 %s 或 %s"
 
-#: src/parse.c:302
+#: src/parse.c:305
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr "包含深度 (%d) 超過"
 
-#: src/parse.c:446
+#: src/parse.c:449
 #, c-format
 msgid "invalid start tag: %s"
 msgstr "無效的開啟標籤: %s"
 
-#: src/parse.c:838
+#: src/parse.c:841
 #, c-format
 msgid "invalid include: %s"
 msgstr "無效的包含: %s"
 
-#: src/parse.c:924
+#: src/parse.c:927
 msgid "no action specified for Key"
 msgstr "此Key沒有指定的操作"
 
-#: src/parse.c:931
+#: src/parse.c:934
 #, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "無效的Key操作 %s"
 
-#: src/parse.c:957
+#: src/parse.c:960
 #, fuzzy
 #| msgid "no action specified for Key"
 msgid "no action specified for Mouse"
 msgstr "此Key沒有指定的操作"
 
-#: src/parse.c:962
+#: src/parse.c:965
 #, fuzzy, c-format
 #| msgid "invalid Key action: \"%s\""
 msgid "invalid Mouse action: \"%s\""
 msgstr "無效的Key操作 %s"
 
-#: src/parse.c:968
+#: src/parse.c:971
 #, fuzzy, c-format
 #| msgid "invalid Key action: \"%s\""
 msgid "invalid Mouse context: \"%s\""
 msgstr "無效的Key操作 %s"
 
-#: src/parse.c:989
+#: src/parse.c:992
 #, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "無效的文字對齊: \"%s\""
 
-#: src/parse.c:1077
+#: src/parse.c:1092
 msgid "no include file specified"
 msgstr "沒有被包含的檔案被指定"
 
-#: src/parse.c:1088
+#: src/parse.c:1103
 #, c-format
 msgid "could not process include: %s"
 msgstr "無法處理包含: %s"
 
-#: src/parse.c:1092
+#: src/parse.c:1107
 #, c-format
 msgid "could not open included file: %s"
 msgstr "無法開啟包含的檔案: %s"
 
-#: src/parse.c:1753
+#: src/parse.c:1774
 #, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "無效的數值給'啟用的': \"%s\""
 
-#: src/parse.c:1900
+#: src/parse.c:1924
 #, c-format
 msgid "invalid Group Option: %s"
 msgstr "無效的群組選項: %s"
 
-#: src/parse.c:1915
+#: src/parse.c:1939
 #, c-format
 msgid "invalid decorations: %s"
 msgstr "無效的裝飾; %s"
 
-#: src/parse.c:1977
+#: src/parse.c:2001
 #, c-format
 msgid "%s is empty"
 msgstr "%s 是空"
 
-#: src/parse.c:1984
+#: src/parse.c:2008
 #, c-format
 msgid "invalid %s: \"%s\""
 msgstr "無效的 %s: \"%s\""
 
-#: src/parse.c:2002
+#: src/parse.c:2026
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "%s: \"%s\"的無效數值"
 
-#: src/parse.c:2072 src/parse.c:2089 src/parse.c:2117
+#: src/parse.c:2096 src/parse.c:2113 src/parse.c:2141
 #, fuzzy
 msgid "no value specified"
 msgstr "未設定任何數值"
 
-#: src/parse.c:2077 src/parse.c:2094
+#: src/parse.c:2101 src/parse.c:2118
 #, c-format
 msgid "invalid setting: %s"
 msgstr "無效的設定值:\"%s\""
 
-#: src/parse.c:2122
+#: src/parse.c:2146
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "無效的透明度:\"%s\""
 
-#: src/parse.c:2143
+#: src/parse.c:2167
 #, fuzzy, c-format
 msgid "invalid layer: %s"
 msgstr "無效的層次:\"%s\""
 
-#: src/parse.c:2164
+#: src/parse.c:2188
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr " %s: %s 的無效標籤"
 
-#: src/parse.c:2185
+#: src/parse.c:2209
 msgid "configuration error"
 msgstr "設定錯誤"
 
@@ -387,16 +387,16 @@ msgstr "無法消掉沒有名字的客戶端"
 msgid "Close"
 msgstr "關閉"
 
-#: src/taskbar.c:495 src/winmenu.c:66
+#: src/taskbar.c:495 src/winmenu.c:68
 msgid "Minimize"
 msgstr "最小化"
 
-#: src/taskbar.c:502 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
-#: src/winmenu.c:106
+#: src/taskbar.c:502 src/winmenu.c:97 src/winmenu.c:99 src/winmenu.c:101
+#: src/winmenu.c:108
 msgid "Restore"
 msgstr "回復"
 
-#: src/taskbar.c:509 src/winmenu.c:179
+#: src/taskbar.c:509 src/winmenu.c:181
 msgid "Send To"
 msgstr "傳送到"
 
@@ -434,70 +434,70 @@ msgstr "無法載入tray圖示：\"%s\""
 msgid "no icon or label for TrayButton"
 msgstr "未找到TrayButton的icon或是標籤"
 
-#: src/winmenu.c:49
+#: src/winmenu.c:50
 msgid "Kill"
 msgstr "強制結束"
 
-#: src/winmenu.c:57
+#: src/winmenu.c:59
 msgid "Resize"
 msgstr "改變大小"
 
-#: src/winmenu.c:60
+#: src/winmenu.c:62
 msgid "Move"
 msgstr "移動"
 
-#: src/winmenu.c:72
+#: src/winmenu.c:74
 msgid "Unshade"
 msgstr "向下展開"
 
-#: src/winmenu.c:74
+#: src/winmenu.c:76
 msgid "Shade"
 msgstr "向上收起"
 
-#: src/winmenu.c:81
+#: src/winmenu.c:83
 msgid "Maximize-y"
 msgstr "垂直最大化"
 
-#: src/winmenu.c:86
+#: src/winmenu.c:88
 msgid "Maximize-x"
 msgstr "水平最大化"
 
-#: src/winmenu.c:90
+#: src/winmenu.c:92
 msgid "Maximize"
 msgstr "最大化"
 
-#: src/winmenu.c:112
+#: src/winmenu.c:114
 msgid "Unstick"
 msgstr "解除固定"
 
-#: src/winmenu.c:114
+#: src/winmenu.c:116
 msgid "Stick"
 msgstr "固定"
 
-#: src/winmenu.c:139
+#: src/winmenu.c:141
 msgid "Layer"
 msgstr "層"
 
-#: src/winmenu.c:148
+#: src/winmenu.c:150
 msgid "[Above]"
 msgstr "[置頂]"
 
-#: src/winmenu.c:150
+#: src/winmenu.c:152
 msgid "Above"
 msgstr "置頂"
 
-#: src/winmenu.c:153
+#: src/winmenu.c:155
 msgid "[Normal]"
 msgstr "[正常]"
 
-#: src/winmenu.c:155
+#: src/winmenu.c:157
 msgid "Normal"
 msgstr "正常"
 
-#: src/winmenu.c:158
+#: src/winmenu.c:160
 msgid "[Below]"
 msgstr "[置底]"
 
-#: src/winmenu.c:160
+#: src/winmenu.c:162
 msgid "Below"
 msgstr "置底"

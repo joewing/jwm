@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.4\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2022-05-28 15:24+0000\n"
+"POT-Creation-Date: 2022-10-21 15:44+0000\n"
 "PO-Revision-Date: 2022-04-02 19:07-0300\n"
 "Last-Translator: marcelo cripe <marcelocripe@gmail.com>\n"
 "Language-Team: Portuguese Brazil\n"
@@ -78,21 +78,21 @@ msgstr "Fechar a janela?"
 msgid "This may cause data to be lost!"
 msgstr "Isto pode causar a perda de dados!"
 
-#: src/command.c:141 src/command.c:175 src/main.c:209
+#: src/command.c:142 src/command.c:176 src/main.c:209
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "O comando executável (%s) falhou %s"
 
-#: src/command.c:155
+#: src/command.c:156
 #, fuzzy
 msgid "could not create pipe"
 msgstr "Não é possível criar a fonte"
 
-#: src/command.c:161
+#: src/command.c:162
 msgid "could not set O_NONBLOCK"
 msgstr "Não é possível definir o O_NONBLOCK"
 
-#: src/command.c:209
+#: src/command.c:212
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr "O tempo acabou e %s não foi completada em %u milissegundos"
@@ -149,27 +149,27 @@ msgstr "Não foi possível carregar a fonte padrão %s"
 msgid "empty Font tag"
 msgstr "A variável 'Font' está vazia"
 
-#: src/group.c:117
+#: src/group.c:118
 msgid "invalid group class"
 msgstr "A classe do grupo não é válida"
 
-#: src/group.c:128
+#: src/group.c:129 src/group.c:140
 msgid "invalid group name"
 msgstr "O nome do grupo não é válido"
 
-#: src/group.c:139
+#: src/group.c:151
 #, fuzzy
 #| msgid "invalid group name"
 msgid "invalid group type"
 msgstr "O nome do grupo não é válido"
 
-#: src/group.c:150
+#: src/group.c:162
 #, fuzzy
 #| msgid "invalid group name"
 msgid "invalid group machine"
 msgstr "O nome da máquina não é válido"
 
-#: src/group.c:343
+#: src/group.c:367
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr "O grupo da área de trabalho %d não é válido"
@@ -194,180 +194,180 @@ msgstr "Erro ao ler a imagem PNG %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "Não foi possível criar a estrutura de informações para a imagem PNG %s"
 
-#: src/lex.c:201
+#: src/lex.c:202
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: o fechamento da variável \"%s\" não corresponde à abertura da "
 "variável \"%s\""
 
-#: src/lex.c:207
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: o fechamento inesperado da variável não é válido"
 
-#: src/lex.c:213
+#: src/lex.c:214
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr ""
 "%s[%u]: o fechamento da variável \"%s\" está sem a variável de abertura"
 
-#: src/lex.c:216
+#: src/lex.c:217
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: o fechamento da variável não é válido"
 
-#: src/lex.c:264
+#: src/lex.c:265
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: a abertura da variável não é válida"
 
-#: src/lex.c:280
+#: src/lex.c:281
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: a variável não é válida"
 
-#: src/lex.c:338
+#: src/lex.c:339
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: o texto \"%s\" não é esperado"
 
-#: src/lex.c:397
+#: src/lex.c:398
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: a entrada \"%.8s\" não é válida"
 
-#: src/lex.c:503
+#: src/lex.c:504
 msgid "out of memory"
 msgstr "A memória não é suficiente"
 
-#: src/parse.c:273
+#: src/parse.c:276
 #, fuzzy, c-format
 #| msgid "could not open %s or %s"
 msgid "could not open %s"
 msgstr "Não foi possível abrir %s ou %s"
 
-#: src/parse.c:283
+#: src/parse.c:286
 #, c-format
 msgid "could not open %s or %s"
 msgstr "Não foi possível abrir %s ou %s"
 
-#: src/parse.c:302
+#: src/parse.c:305
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr "A profundidade do 'include' (%d) foi excedido"
 
-#: src/parse.c:446
+#: src/parse.c:449
 #, c-format
 msgid "invalid start tag: %s"
 msgstr "A abertura da variável %s não é válida"
 
-#: src/parse.c:838
+#: src/parse.c:841
 #, c-format
 msgid "invalid include: %s"
 msgstr "A inclusão de %s não é válida"
 
-#: src/parse.c:924
+#: src/parse.c:927
 msgid "no action specified for Key"
 msgstr "Nenhuma ação foi especificada para a tecla"
 
-#: src/parse.c:931
+#: src/parse.c:934
 #, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "A ação \"%s\" da tecla 'Key' não é válida"
 
-#: src/parse.c:957
+#: src/parse.c:960
 #, fuzzy
 #| msgid "no action specified for Key"
 msgid "no action specified for Mouse"
 msgstr "Nenhuma ação foi especificada para o Rato/Mouse"
 
-#: src/parse.c:962
+#: src/parse.c:965
 #, fuzzy, c-format
 #| msgid "invalid Key action: \"%s\""
 msgid "invalid Mouse action: \"%s\""
 msgstr "A ação \"%s\" do Rato/Mouse não é válida"
 
-#: src/parse.c:968
+#: src/parse.c:971
 #, fuzzy, c-format
 #| msgid "invalid Key action: \"%s\""
 msgid "invalid Mouse context: \"%s\""
 msgstr "O menu de contexto \"%s\" do Rato/Mouse não é válido"
 
-#: src/parse.c:989
+#: src/parse.c:992
 #, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "O alinhamento do texto \"%s\" não é válido"
 
-#: src/parse.c:1077
+#: src/parse.c:1092
 msgid "no include file specified"
 msgstr "Nenhum arquivo foi incluído"
 
-#: src/parse.c:1088
+#: src/parse.c:1103
 #, c-format
 msgid "could not process include: %s"
 msgstr "Não é possível processar o %s"
 
-#: src/parse.c:1092
+#: src/parse.c:1107
 #, c-format
 msgid "could not open included file: %s"
 msgstr "Não é possível abrir o arquivo %s"
 
-#: src/parse.c:1753
+#: src/parse.c:1774
 #, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "O valor não é válido para ativar \"%s\""
 
-#: src/parse.c:1900
+#: src/parse.c:1924
 #, c-format
 msgid "invalid Group Option: %s"
 msgstr "A opção do grupo %s não é válida"
 
-#: src/parse.c:1915
+#: src/parse.c:1939
 #, c-format
 msgid "invalid decorations: %s"
 msgstr "A decoração \"%s\" não é válida"
 
-#: src/parse.c:1977
+#: src/parse.c:2001
 #, c-format
 msgid "%s is empty"
 msgstr "%s está vazio(a)"
 
-#: src/parse.c:1984
+#: src/parse.c:2008
 #, c-format
 msgid "invalid %s: \"%s\""
 msgstr "Não é válido %s: \"%s\""
 
-#: src/parse.c:2002
+#: src/parse.c:2026
 #, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "O valor %s não é válido para \"%s\""
 
-#: src/parse.c:2072 src/parse.c:2089 src/parse.c:2117
+#: src/parse.c:2096 src/parse.c:2113 src/parse.c:2141
 msgid "no value specified"
 msgstr "Nenhum valor foi especificado"
 
-#: src/parse.c:2077 src/parse.c:2094
+#: src/parse.c:2101 src/parse.c:2118
 #, c-format
 msgid "invalid setting: %s"
 msgstr "A configuração %s não é válida"
 
-#: src/parse.c:2122
+#: src/parse.c:2146
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "A transparência %s não é válida"
 
-#: src/parse.c:2143
+#: src/parse.c:2167
 #, c-format
 msgid "invalid layer: %s"
 msgstr "A camada %s não é válida"
 
-#: src/parse.c:2164
+#: src/parse.c:2188
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "A variável %s não é válida dentro de %s"
 
-#: src/parse.c:2185
+#: src/parse.c:2209
 msgid "configuration error"
 msgstr "Erro na configuração"
 
@@ -394,16 +394,16 @@ msgstr ""
 msgid "Close"
 msgstr "Fechar"
 
-#: src/taskbar.c:495 src/winmenu.c:66
+#: src/taskbar.c:495 src/winmenu.c:68
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: src/taskbar.c:502 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
-#: src/winmenu.c:106
+#: src/taskbar.c:502 src/winmenu.c:97 src/winmenu.c:99 src/winmenu.c:101
+#: src/winmenu.c:108
 msgid "Restore"
 msgstr "Restaurar"
 
-#: src/taskbar.c:509 src/winmenu.c:179
+#: src/taskbar.c:509 src/winmenu.c:181
 msgid "Send To"
 msgstr "Enviar Para"
 
@@ -441,71 +441,71 @@ msgstr "Não foi possível carregar o ícone \"%s\" da bandeja do painel"
 msgid "no icon or label for TrayButton"
 msgstr "O ícone e o nome não estão definidos para o botão da bandeja"
 
-#: src/winmenu.c:49
+#: src/winmenu.c:50
 msgid "Kill"
 msgstr "Terminar"
 
-#: src/winmenu.c:57
+#: src/winmenu.c:59
 msgid "Resize"
 msgstr "Redimensionar"
 
-#: src/winmenu.c:60
+#: src/winmenu.c:62
 msgid "Move"
 msgstr "Mover"
 
-#: src/winmenu.c:72
+#: src/winmenu.c:74
 msgid "Unshade"
 msgstr "Desativar a Sombra"
 
-#: src/winmenu.c:74
+#: src/winmenu.c:76
 msgid "Shade"
 msgstr "Ativar a Sombra"
 
-#: src/winmenu.c:81
+#: src/winmenu.c:83
 msgid "Maximize-y"
 msgstr "Maximizar-y"
 
-#: src/winmenu.c:86
+#: src/winmenu.c:88
 msgid "Maximize-x"
 msgstr "Maximizar-x"
 
-#: src/winmenu.c:90
+#: src/winmenu.c:92
 msgid "Maximize"
 msgstr "Maximizar"
 
-#: src/winmenu.c:112
+#: src/winmenu.c:114
 msgid "Unstick"
 msgstr "Descolar"
 
-#: src/winmenu.c:114
+#: src/winmenu.c:116
 msgid "Stick"
 msgstr "Colar"
 
-#: src/winmenu.c:139
+#: src/winmenu.c:141
 msgid "Layer"
 msgstr "Camada"
 
-#: src/winmenu.c:148
+#: src/winmenu.c:150
 msgid "[Above]"
 msgstr "[Acima]"
 
-#: src/winmenu.c:150
+#: src/winmenu.c:152
 msgid "Above"
 msgstr "Acima"
 
-#: src/winmenu.c:153
+#: src/winmenu.c:155
 msgid "[Normal]"
 msgstr "[Normal]"
 
-#: src/winmenu.c:155
+#: src/winmenu.c:157
 msgid "Normal"
 msgstr "Normal"
 
-#: src/winmenu.c:158
+#: src/winmenu.c:160
 msgid "[Below]"
 msgstr "[Abaixo]"
 
-#: src/winmenu.c:160
+#: src/winmenu.c:162
 msgid "Below"
 msgstr "Abaixo"
 

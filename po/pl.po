@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2.1.0+svn579-1\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2022-05-28 15:24+0000\n"
+"POT-Creation-Date: 2022-10-21 15:44+0000\n"
 "PO-Revision-Date: 2022-05-15 14:46+0200\n"
 "Last-Translator: Faalagorn, 2022\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -79,20 +79,20 @@ msgstr "Zabić to okno?"
 msgid "This may cause data to be lost!"
 msgstr "Może to spowodować utratę danych!"
 
-#: src/command.c:141 src/command.c:175 src/main.c:209
+#: src/command.c:142 src/command.c:176 src/main.c:209
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "exec nie powiodło się: (%s) %s"
 
-#: src/command.c:155
+#: src/command.c:156
 msgid "could not create pipe"
 msgstr "nie można utworzyć połączenia"
 
-#: src/command.c:161
+#: src/command.c:162
 msgid "could not set O_NONBLOCK"
 msgstr "nie można ustawić O_NONBLOCK"
 
-#: src/command.c:209
+#: src/command.c:212
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr "przekoroczono czas: %s nie skończył się w %u milisekund"
@@ -149,23 +149,23 @@ msgstr "nie można załadować domyślnej czcionki: %s"
 msgid "empty Font tag"
 msgstr "pusty znacznik czcionki"
 
-#: src/group.c:117
+#: src/group.c:118
 msgid "invalid group class"
 msgstr "nieprawidłowa klasa grupy"
 
-#: src/group.c:128
+#: src/group.c:129 src/group.c:140
 msgid "invalid group name"
 msgstr "nieprawidłowa nazwa grupy"
 
-#: src/group.c:139
+#: src/group.c:151
 msgid "invalid group type"
 msgstr "nieprawidłowy typ grupy"
 
-#: src/group.c:150
+#: src/group.c:162
 msgid "invalid group machine"
 msgstr "nieprawidłowa maszyna grupy"
 
-#: src/group.c:343
+#: src/group.c:367
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr "nieprawidłowy pulpit grupy: %d"
@@ -190,173 +190,173 @@ msgstr "błąd odczytu obrazu PNG: %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "nie można utworzyć struktur informacji dla obrazu PNG: %s"
 
-#: src/lex.c:201
+#: src/lex.c:202
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: znacznik zamknięcia \"%s\" nie pasuje do znacznika otwarcia \"%s\""
 
-#: src/lex.c:207
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: nieoczekiwany i nieprawidłowo zamknięty znacznik"
 
-#: src/lex.c:213
+#: src/lex.c:214
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: zamknij znacznik \"%s\" bez otwartego znacznika"
 
-#: src/lex.c:216
+#: src/lex.c:217
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: nieprawidłowo zamknięty znacznik"
 
-#: src/lex.c:264
+#: src/lex.c:265
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: nieprawidłowo otwarty znacznik"
 
-#: src/lex.c:280
+#: src/lex.c:281
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: nieprawidłowy znacznik"
 
-#: src/lex.c:338
+#: src/lex.c:339
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: nieoczekiwany tekst: \"%s\""
 
-#: src/lex.c:397
+#: src/lex.c:398
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: nieprawidłowa wartość: \"%.8s\""
 
-#: src/lex.c:503
+#: src/lex.c:504
 msgid "out of memory"
 msgstr "brak pamięci"
 
-#: src/parse.c:273
+#: src/parse.c:276
 #, c-format
 msgid "could not open %s"
 msgstr "nie można otworzyć %s"
 
-#: src/parse.c:283
+#: src/parse.c:286
 #, c-format
 msgid "could not open %s or %s"
 msgstr "nie można otworzyć %s lub %s"
 
-#: src/parse.c:302
+#: src/parse.c:305
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr "przekroczono głębokość załączenia (%d)"
 
-#: src/parse.c:446
+#: src/parse.c:449
 #, c-format
 msgid "invalid start tag: %s"
 msgstr "nieprawidłowy znacznik startu: %s"
 
-#: src/parse.c:838
+#: src/parse.c:841
 #, c-format
 msgid "invalid include: %s"
 msgstr "nieprawidłowy załącznik: %s"
 
-#: src/parse.c:924
+#: src/parse.c:927
 msgid "no action specified for Key"
 msgstr "brak określonej akcji dla Key"
 
-#: src/parse.c:931
+#: src/parse.c:934
 #, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "nieprawidłowa akcja dla Key: \"%s\""
 
-#: src/parse.c:957
+#: src/parse.c:960
 msgid "no action specified for Mouse"
 msgstr "brak określonej akcji dla Mouse"
 
-#: src/parse.c:962
+#: src/parse.c:965
 #, c-format
 msgid "invalid Mouse action: \"%s\""
 msgstr "nieprawidłowa akcja Mouse: \"%s\""
 
-#: src/parse.c:968
+#: src/parse.c:971
 #, c-format
 msgid "invalid Mouse context: \"%s\""
 msgstr "nieprawidłowy kontekst Mouse: \"%s\""
 
-#: src/parse.c:989
+#: src/parse.c:992
 #, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "nieprawidłowe wypionowanie zasobnika: \"%s\""
 
-#: src/parse.c:1077
+#: src/parse.c:1092
 msgid "no include file specified"
 msgstr "nie odkreślonu pliku do załączenia"
 
-#: src/parse.c:1088
+#: src/parse.c:1103
 #, c-format
 msgid "could not process include: %s"
 msgstr "nie można przetworzyć załączonego: %s"
 
-#: src/parse.c:1092
+#: src/parse.c:1107
 #, c-format
 msgid "could not open included file: %s"
 msgstr "nie można otworzyć załączonego pliku: %s"
 
-#: src/parse.c:1753
+#: src/parse.c:1774
 #, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "nieprawidłowa wartość dla 'enabled': \"%s\""
 
-#: src/parse.c:1900
+#: src/parse.c:1924
 #, c-format
 msgid "invalid Group Option: %s"
 msgstr "nieprawidłowa opcja grupy: %s"
 
-#: src/parse.c:1915
+#: src/parse.c:1939
 #, c-format
 msgid "invalid decorations: %s"
 msgstr "nieprawidłowe dekoracje: %s"
 
-#: src/parse.c:1977
+#: src/parse.c:2001
 #, c-format
 msgid "%s is empty"
 msgstr "%s jest puste"
 
-#: src/parse.c:1984
+#: src/parse.c:2008
 #, c-format
 msgid "invalid %s: \"%s\""
 msgstr "nieprawidłowa %s: \"%s\""
 
-#: src/parse.c:2002
+#: src/parse.c:2026
 #, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "nieprawidłowa wartość dla %s: \"%s\""
 
-#: src/parse.c:2072 src/parse.c:2089 src/parse.c:2117
+#: src/parse.c:2096 src/parse.c:2113 src/parse.c:2141
 msgid "no value specified"
 msgstr "nie określono wartości"
 
-#: src/parse.c:2077 src/parse.c:2094
+#: src/parse.c:2101 src/parse.c:2118
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nieprawidłowe ustawienie: %s"
 
-#: src/parse.c:2122
+#: src/parse.c:2146
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "nieprawidłowa nieprzezroczystość: %s"
 
-#: src/parse.c:2143
+#: src/parse.c:2167
 #, c-format
 msgid "invalid layer: %s"
 msgstr "nieprawidłowa warstwa: %s"
 
-#: src/parse.c:2164
+#: src/parse.c:2188
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "nieprawidłowy znacznik w %s: %s"
 
-#: src/parse.c:2185
+#: src/parse.c:2209
 msgid "configuration error"
 msgstr "błąd konfiguracji"
 
@@ -381,16 +381,16 @@ msgstr "nie może połknąć klienta bez nazwy"
 msgid "Close"
 msgstr "Zamknij"
 
-#: src/taskbar.c:495 src/winmenu.c:66
+#: src/taskbar.c:495 src/winmenu.c:68
 msgid "Minimize"
 msgstr "Zminimalizuj"
 
-#: src/taskbar.c:502 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
-#: src/winmenu.c:106
+#: src/taskbar.c:502 src/winmenu.c:97 src/winmenu.c:99 src/winmenu.c:101
+#: src/winmenu.c:108
 msgid "Restore"
 msgstr "Przywróć"
 
-#: src/taskbar.c:509 src/winmenu.c:179
+#: src/taskbar.c:509 src/winmenu.c:181
 msgid "Send To"
 msgstr "Wyślij do"
 
@@ -428,71 +428,71 @@ msgstr "nie można załadować ikon w zasobniku: \"%s\""
 msgid "no icon or label for TrayButton"
 msgstr "brak ikony lub etykiety dla TrayButton"
 
-#: src/winmenu.c:49
+#: src/winmenu.c:50
 msgid "Kill"
 msgstr "Zabij"
 
-#: src/winmenu.c:57
+#: src/winmenu.c:59
 msgid "Resize"
 msgstr "Zmień rozmiar"
 
-#: src/winmenu.c:60
+#: src/winmenu.c:62
 msgid "Move"
 msgstr "Przenieś"
 
-#: src/winmenu.c:72
+#: src/winmenu.c:74
 msgid "Unshade"
 msgstr "Rozwiń"
 
-#: src/winmenu.c:74
+#: src/winmenu.c:76
 msgid "Shade"
 msgstr "Zwiń"
 
-#: src/winmenu.c:81
+#: src/winmenu.c:83
 msgid "Maximize-y"
 msgstr "Zmaksymalizuj pio."
 
-#: src/winmenu.c:86
+#: src/winmenu.c:88
 msgid "Maximize-x"
 msgstr "Zmaksymalizuj poz."
 
-#: src/winmenu.c:90
+#: src/winmenu.c:92
 msgid "Maximize"
 msgstr "Zmaksymalizuj"
 
-#: src/winmenu.c:112
+#: src/winmenu.c:114
 msgid "Unstick"
 msgstr "Odepnij"
 
-#: src/winmenu.c:114
+#: src/winmenu.c:116
 msgid "Stick"
 msgstr "Przypnij"
 
-#: src/winmenu.c:139
+#: src/winmenu.c:141
 msgid "Layer"
 msgstr "Warstwa"
 
-#: src/winmenu.c:148
+#: src/winmenu.c:150
 msgid "[Above]"
 msgstr "[Powyżej]"
 
-#: src/winmenu.c:150
+#: src/winmenu.c:152
 msgid "Above"
 msgstr "Powyżej"
 
-#: src/winmenu.c:153
+#: src/winmenu.c:155
 msgid "[Normal]"
 msgstr "[Normalny]"
 
-#: src/winmenu.c:155
+#: src/winmenu.c:157
 msgid "Normal"
 msgstr "Normalny"
 
-#: src/winmenu.c:158
+#: src/winmenu.c:160
 msgid "[Below]"
 msgstr "[Poniżej]"
 
-#: src/winmenu.c:160
+#: src/winmenu.c:162
 msgid "Below"
 msgstr "Poniżej"
 

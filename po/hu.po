@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.0\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2022-05-28 15:24+0000\n"
+"POT-Creation-Date: 2022-10-21 15:44+0000\n"
 "PO-Revision-Date: 2015-06-22 13:19+0000\n"
 "Last-Translator: Mihaly Horvath <hermitsoft@users.sourceforge.net>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -78,21 +78,21 @@ msgstr "Ablak erőszakos bezárása?"
 msgid "This may cause data to be lost!"
 msgstr "Ez adatvesztéshez vezethet!"
 
-#: src/command.c:141 src/command.c:175 src/main.c:209
+#: src/command.c:142 src/command.c:176 src/main.c:209
 #, c-format
 msgid "exec failed: (%s) %s"
 msgstr "futtatás sikertelen: (%s) %s"
 
-#: src/command.c:155
+#: src/command.c:156
 #, fuzzy
 msgid "could not create pipe"
 msgstr "nem sikerült a betűtípus betöltése: %s"
 
-#: src/command.c:161
+#: src/command.c:162
 msgid "could not set O_NONBLOCK"
 msgstr ""
 
-#: src/command.c:209
+#: src/command.c:212
 #, c-format
 msgid "timeout: %s did not complete in %u milliseconds"
 msgstr ""
@@ -149,27 +149,27 @@ msgstr "nem sikerült az alapértelmezett betűtípus betöltése: %s"
 msgid "empty Font tag"
 msgstr "üres betűtípus (Font) xml tag"
 
-#: src/group.c:117
+#: src/group.c:118
 msgid "invalid group class"
 msgstr "nem támogatott csoport-osztály"
 
-#: src/group.c:128
+#: src/group.c:129 src/group.c:140
 msgid "invalid group name"
 msgstr "nem támogatott csoportnév"
 
-#: src/group.c:139
+#: src/group.c:151
 #, fuzzy
 #| msgid "invalid group name"
 msgid "invalid group type"
 msgstr "nem támogatott csoportnév"
 
-#: src/group.c:150
+#: src/group.c:162
 #, fuzzy
 #| msgid "invalid group name"
 msgid "invalid group machine"
 msgstr "nem támogatott csoportnév"
 
-#: src/group.c:343
+#: src/group.c:367
 #, c-format
 msgid "invalid group desktop: %d"
 msgstr "érvénytelen csoport asztal: %d"
@@ -195,175 +195,175 @@ msgstr "hiba a PNG kép beolvasása során: %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "nem sikerült az 'info' struktúra létrehozása a PNG képhez: %s"
 
-#: src/lex.c:201
+#: src/lex.c:202
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr "%s[%u]: az xml záró tag \"%s\" nem egyezik a nyitótaggal \"%s\""
 
-#: src/lex.c:207
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: váratlan és érvénytelen xml zárótag"
 
-#: src/lex.c:213
+#: src/lex.c:214
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr "%s[%u]: xml zárótag \"%s\" nyitótag nélkül"
 
-#: src/lex.c:216
+#: src/lex.c:217
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: érvénytelen xml zárótag (címke)"
 
-#: src/lex.c:264
+#: src/lex.c:265
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: érvénytelen xml nyitótag (címke)"
 
-#: src/lex.c:280
+#: src/lex.c:281
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: érvénytelen xml tag (címke)"
 
-#: src/lex.c:338
+#: src/lex.c:339
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: váratlan szöveg: \"%s\""
 
-#: src/lex.c:397
+#: src/lex.c:398
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: érvénytelen entitás: \"%.8s\""
 
-#: src/lex.c:503
+#: src/lex.c:504
 msgid "out of memory"
 msgstr "megtelt a memória"
 
-#: src/parse.c:273
+#: src/parse.c:276
 #, fuzzy, c-format
 msgid "could not open %s"
 msgstr "nem sikerült a betűtípus betöltése: %s"
 
-#: src/parse.c:283
+#: src/parse.c:286
 #, fuzzy, c-format
 msgid "could not open %s or %s"
 msgstr "nem sikerült a betűtípus betöltése: %s"
 
-#: src/parse.c:302
+#: src/parse.c:305
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr ""
 
-#: src/parse.c:446
+#: src/parse.c:449
 #, fuzzy, c-format
 msgid "invalid start tag: %s"
 msgstr "nem támogatott beállítás: %s"
 
-#: src/parse.c:838
+#: src/parse.c:841
 #, fuzzy, c-format
 msgid "invalid include: %s"
 msgstr "nem támogatott beállítás: %s"
 
-#: src/parse.c:924
+#: src/parse.c:927
 #, fuzzy
 msgid "no action specified for Key"
 msgstr "se billentyű, sem billentyűkód nincs megadva a billentyűhöz"
 
-#: src/parse.c:931
+#: src/parse.c:934
 #, fuzzy, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "nem támogatott művelet: \"%s\""
 
-#: src/parse.c:957
+#: src/parse.c:960
 #, fuzzy
 msgid "no action specified for Mouse"
 msgstr "se billentyű, sem billentyűkód nincs megadva a billentyűhöz"
 
-#: src/parse.c:962
+#: src/parse.c:965
 #, fuzzy, c-format
 msgid "invalid Mouse action: \"%s\""
 msgstr "nem támogatott művelet: \"%s\""
 
-#: src/parse.c:968
+#: src/parse.c:971
 #, fuzzy, c-format
 msgid "invalid Mouse context: \"%s\""
 msgstr "nem támogatott művelet: \"%s\""
 
-#: src/parse.c:989
+#: src/parse.c:992
 #, fuzzy, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "érvénytelen függőleges igazítási érték a tálcához: \"%s\""
 
-#: src/parse.c:1077
+#: src/parse.c:1092
 msgid "no include file specified"
 msgstr ""
 
-#: src/parse.c:1088
+#: src/parse.c:1103
 #, fuzzy, c-format
 msgid "could not process include: %s"
 msgstr "nem sikerült a betűtípus betöltése: %s"
 
-#: src/parse.c:1092
+#: src/parse.c:1107
 #, fuzzy, c-format
 msgid "could not open included file: %s"
 msgstr "nem sikerült a betűtípus betöltése: %s"
 
-#: src/parse.c:1753
+#: src/parse.c:1774
 #, fuzzy, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "nem támogatott művelet: \"%s\""
 
-#: src/parse.c:1900
+#: src/parse.c:1924
 #, fuzzy, c-format
 msgid "invalid Group Option: %s"
 msgstr "érvénytelen csoport asztal: %d"
 
-#: src/parse.c:1915
+#: src/parse.c:1939
 #, fuzzy, c-format
 msgid "invalid decorations: %s"
 msgstr "nem támogatott művelet: \"%s\""
 
-#: src/parse.c:1977
+#: src/parse.c:2001
 #, c-format
 msgid "%s is empty"
 msgstr ""
 
-#: src/parse.c:1984
+#: src/parse.c:2008
 #, fuzzy, c-format
 msgid "invalid %s: \"%s\""
 msgstr "nem támogatott művelet: \"%s\""
 
-#: src/parse.c:2002
+#: src/parse.c:2026
 #, fuzzy, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "érvéytelen xml tag %s-ben: %s"
 
-#: src/parse.c:2072 src/parse.c:2089 src/parse.c:2117
+#: src/parse.c:2096 src/parse.c:2113 src/parse.c:2141
 #, fuzzy
 msgid "no value specified"
 msgstr "nincs megadva háttérkép-adat"
 
-#: src/parse.c:2077 src/parse.c:2094
+#: src/parse.c:2101 src/parse.c:2118
 #, c-format
 msgid "invalid setting: %s"
 msgstr "nem támogatott beállítás: %s"
 
-#: src/parse.c:2122
+#: src/parse.c:2146
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "érvénytelen átlátszóssági (opacity) érték: %s"
 
-#: src/parse.c:2143
+#: src/parse.c:2167
 #, fuzzy, c-format
 msgid "invalid layer: %s"
 msgstr "érvénytelen átlátszóssági (opacity) érték: %s"
 
-#: src/parse.c:2164
+#: src/parse.c:2188
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "érvéytelen xml tag %s-ben: %s"
 
-#: src/parse.c:2185
+#: src/parse.c:2209
 msgid "configuration error"
 msgstr "konfigurációs hiba"
 
@@ -388,16 +388,16 @@ msgstr "név nélküli kliens nem építhető be a tálcába"
 msgid "Close"
 msgstr "Bezárás"
 
-#: src/taskbar.c:495 src/winmenu.c:66
+#: src/taskbar.c:495 src/winmenu.c:68
 msgid "Minimize"
 msgstr "Lerakás tálcára"
 
-#: src/taskbar.c:502 src/winmenu.c:95 src/winmenu.c:97 src/winmenu.c:99
-#: src/winmenu.c:106
+#: src/taskbar.c:502 src/winmenu.c:97 src/winmenu.c:99 src/winmenu.c:101
+#: src/winmenu.c:108
 msgid "Restore"
 msgstr "Visszaállítás"
 
-#: src/taskbar.c:509 src/winmenu.c:179
+#: src/taskbar.c:509 src/winmenu.c:181
 msgid "Send To"
 msgstr "Küldés"
 
@@ -435,71 +435,71 @@ msgstr "nem sikerült betölteni a gyorsindító tálcaikont: \"%s\""
 msgid "no icon or label for TrayButton"
 msgstr "nincs ikon vagy címke megadva a gyorsindító tálcaikonhoz"
 
-#: src/winmenu.c:49
+#: src/winmenu.c:50
 msgid "Kill"
 msgstr "Erőszakos bezárás"
 
-#: src/winmenu.c:57
+#: src/winmenu.c:59
 msgid "Resize"
 msgstr "Átméretezés"
 
-#: src/winmenu.c:60
+#: src/winmenu.c:62
 msgid "Move"
 msgstr "Mozgatás"
 
-#: src/winmenu.c:72
+#: src/winmenu.c:74
 msgid "Unshade"
 msgstr "Előtérbe helyezés"
 
-#: src/winmenu.c:74
+#: src/winmenu.c:76
 msgid "Shade"
 msgstr "Háttérbe helyezés"
 
-#: src/winmenu.c:81
+#: src/winmenu.c:83
 msgid "Maximize-y"
 msgstr "Max. függőleges méret"
 
-#: src/winmenu.c:86
+#: src/winmenu.c:88
 msgid "Maximize-x"
 msgstr "Max. vízszintes méret"
 
-#: src/winmenu.c:90
+#: src/winmenu.c:92
 msgid "Maximize"
 msgstr "Maximális méret"
 
-#: src/winmenu.c:112
+#: src/winmenu.c:114
 msgid "Unstick"
 msgstr "Feloldás"
 
-#: src/winmenu.c:114
+#: src/winmenu.c:116
 msgid "Stick"
 msgstr "Rögzítés"
 
-#: src/winmenu.c:139
+#: src/winmenu.c:141
 msgid "Layer"
 msgstr "Réteg"
 
-#: src/winmenu.c:148
+#: src/winmenu.c:150
 msgid "[Above]"
 msgstr "[Fölött]"
 
-#: src/winmenu.c:150
+#: src/winmenu.c:152
 msgid "Above"
 msgstr "Fölé"
 
-#: src/winmenu.c:153
+#: src/winmenu.c:155
 msgid "[Normal]"
 msgstr "[Normál]"
 
-#: src/winmenu.c:155
+#: src/winmenu.c:157
 msgid "Normal"
 msgstr "Normál"
 
-#: src/winmenu.c:158
+#: src/winmenu.c:160
 msgid "[Below]"
 msgstr "[Alatt]"
 
-#: src/winmenu.c:160
+#: src/winmenu.c:162
 msgid "Below"
 msgstr "Alá"
 

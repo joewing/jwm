@@ -937,6 +937,23 @@ ClientFound:
    }
 }
 
+/** Focus the client in the task bar. */
+void FocusAt(char n)
+{
+   TaskEntry *tp;
+   char window = 0;
+      
+   for(tp = taskEntries; tp; tp = tp->next) {
+       if(ShouldFocusEntry(tp)) {
+          if(window == n) {
+             FocusGroup(tp);
+             break;
+          }
+          ++window;
+       }
+   }
+}
+
 /** Determine if there is anything to show for the specified entry. */
 char ShouldShowEntry(const TaskEntry *tp)
 {

@@ -332,6 +332,7 @@ unsigned long GetRGBFromXColor(const XColor *c)
    return red | green | blue;
 }
 
+
 /** Set the color to use for a component. */
 void SetColor(ColorType c, const char *value)
 {

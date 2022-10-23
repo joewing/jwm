@@ -80,12 +80,14 @@ typedef unsigned char ColorType;
 
 extern unsigned long colors[COLOR_COUNT];
 
+
 /*@{*/
 #define InitializeColors() (void)(0)
 void StartupColors(void);
 void ShutdownColors(void);
 void DestroyColors(void);
 /*@}*/
+
 
 /** Set the color to use for a component.
  * @param c The component whose color to set.

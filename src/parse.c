@@ -245,6 +245,7 @@ static void ParseFocusModel(const TokenNode *tp);
 static AlignmentType ParseTextAlignment(const TokenNode *tp);
 static void ParseDecorations(const TokenNode *tp, DecorationsType *deco);
 static void ParseGradient(const char *value, ColorType a, ColorType b);
+static void ParseGradientType(const char *value, ColorType a, ColorType b, GradientType g);
 static char *FindAttribute(AttributeNode *ap, const char *name);
 static int ParseTokenValue(const StringMappingType *mapping, int count,
                            const TokenNode *tp, int def);
@@ -1037,7 +1038,7 @@ void ParseWindowStyle(const TokenNode *tp)
          SetColor(COLOR_TITLE_FG, np->value);
          break;
       case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_TITLE_BG1, COLOR_TITLE_BG2);
+         ParseGradientType(np->value, COLOR_TITLE_BG1, COLOR_TITLE_BG2,GRADIENT_TITLE);
          break;
       case TOK_OUTLINE:
          ParseGradient(np->value, COLOR_TITLE_DOWN, COLOR_TITLE_UP);
@@ -1066,8 +1067,8 @@ void ParseActiveWindowStyle(const TokenNode *tp)
          SetColor(COLOR_TITLE_ACTIVE_FG, np->value);
          break;
       case TOK_BACKGROUND:
-         ParseGradient(np->value,
-            COLOR_TITLE_ACTIVE_BG1, COLOR_TITLE_ACTIVE_BG2);
+         ParseGradientType(np->value,
+            COLOR_TITLE_ACTIVE_BG1, COLOR_TITLE_ACTIVE_BG2, GRADIENT_TITLE_ACTIVE);
          break;
       case TOK_OUTLINE:
          ParseGradient(np->value, COLOR_TITLE_ACTIVE_DOWN,
@@ -1945,12 +1946,59 @@ void ParseDecorations(const TokenNode *tp, DecorationsType *deco)
 /** Parse a color which may be a gradient. */
 void ParseGradient(const char *value, ColorType a, ColorType b)
 {
-
    const char *sep;
    char *temp;
 
    /* Find the separator. */
    sep = strchr(value, ':');
+   
+   if(!sep) {
+
+      /* Only one color given - use the same color for both. */
+      SetColor(a, value);
+      SetColor(b, value);
+
+   } else {
+
+      /* Two colors. */
+
+      /* Get the first color. */
+      int len = (int)(sep - value);
+      temp = AllocateStack(len + 1);
+      memcpy(temp, value, len);
+      temp[len] = 0;
+      SetColor(a, temp);
+      ReleaseStack(temp);
+
+      /* Get the second color. */
+      len = strlen(sep + 1);
+      temp = AllocateStack(len + 1);
+      memcpy(temp, sep + 1, len);
+      temp[len] = 0;
+      SetColor(b, temp);
+      ReleaseStack(temp);
+
+   }
+}
+void ParseGradientType(const char *value, ColorType a, ColorType b, GradientType g)
+{
+
+   const char *sepv;
+   const char *seph;
+   const char *sep;
+   char *temp;
+
+   /* Find the separator. */
+   sepv = strchr(value, ':');
+   seph = strchr(value, ';');
+
+   sep = seph;
+   SetGradient(g, GRADIENT_HORIZONTAL);
+    
+   if (sepv) {
+      sep = sepv;
+      SetGradient(g, GRADIENT_VERTICAL);
+   }
 
    if(!sep) {
 

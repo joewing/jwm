@@ -273,8 +273,8 @@ void LoadGradientBackground(BackgroundNode *bp)
    } else {
       bp->pixmap = JXCreatePixmap(display, rootWindow, 1, rootHeight,
                                   rootDepth);
-      DrawHorizontalGradient(bp->pixmap, rootGC, color1.pixel,
-                             color2.pixel, 0, 0, 1, rootHeight);
+      DrawGradient(bp->pixmap, rootGC, color1.pixel,
+                             color2.pixel, 0, 0, 1, rootHeight, GRADIENT_VERTICAL);
    }
 
 }

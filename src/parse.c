@@ -1945,21 +1945,18 @@ void ParseDecorations(const TokenNode *tp, DecorationsType *deco)
 void ParseGradient(const char *value, ColorType a, ColorType b, GradientType g)
 {
 
-   const char *sepv;
    const char *sep;
    char *temp;
 
    /* Find the separator. */
-   sepv = strchr(value, ':');
-
-   sep = strchr(value, ';');
-   SetGradient(g, GRADIENT_HORIZONTAL);
-    
-   if (sepv) {
-      sep = sepv;
+   sep = strchr(value, ':');
+   if (sep) {
       SetGradient(g, GRADIENT_VERTICAL);
+   } else {
+      sep = strchr(value, ';');
+      SetGradient(g, GRADIENT_HORIZONTAL);
    }
-
+   
    if(!sep) {
 
       /* Only one color given - use the same color for both. */

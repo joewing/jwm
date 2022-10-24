@@ -233,25 +233,23 @@ void LoadGradientBackground(BackgroundNode *bp)
    XColor color2;
    char *temp;
    char *sep;
-   char *sepv;
    int len;
    int bg;
    unsigned int w;
    unsigned int h;
 
-   sepv = strchr(bp->value, ':');
-   sep = strchr(bp->value, ';');
-   bg = GRADIENT_HORIZONTAL;
-   w = rootWidth;
-   h = 1;
-
-   if (sepv) {
-      sep = sepv;
+   sep = strchr(bp->value, ':');
+   if (sep) {
       bg = GRADIENT_VERTICAL;
       w = 1;
       h = rootHeight;
+   } else {
+      sep = strchr(bp->value, ';');
+      bg = GRADIENT_HORIZONTAL;
+      w = rootWidth;
+      h = 1;
    }
-
+   
    if(sep) {
 
       /* Gradient background. */
@@ -287,12 +285,6 @@ void LoadGradientBackground(BackgroundNode *bp)
       JXSetForeground(display, rootGC, color1.pixel);
       JXDrawPoint(display, bp->pixmap, rootGC, 0, 0);
    } else {
-      /*
-      bp->pixmap = JXCreatePixmap(display, rootWindow, 1, rootHeight,
-                                  rootDepth);
-      DrawGradient(bp->pixmap, rootGC, color1.pixel,
-                             color2.pixel, 0, 0, 1, rootHeight, bg);
-      */
       bp->pixmap = JXCreatePixmap(display, rootWindow, w, h, rootDepth);
       DrawGradient(bp->pixmap, rootGC, color1.pixel, color2.pixel, 0, 0, w, h, bg);
    }

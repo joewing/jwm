@@ -27,36 +27,18 @@ void DrawGradient(Drawable d, GC g,
                             unsigned int width, unsigned int height,
                             int type)
 {
-   if (type == GRADIENT_VERTICAL) {
-      DrawVerticalGradient(d,g,fromColor,toColor,x,y,width,height);
-   } else {
-      DrawHorizontalGradient(d,g,fromColor,toColor,x,y,width,height);
-   }
-}
-
-
-/** Draw a vertical gradient. */
-void DrawVerticalGradient(Drawable d, GC g,
-                            long fromColor, long toColor,
-                            int x, int y,
-                            unsigned int width, unsigned int height)
-{
 
    const int shift = 15;
-   unsigned int line;
+   unsigned int counter;
+   unsigned int limit;
    XColor colors[2];
    int red, green, blue;
    int ared, agreen, ablue;
    int bred, bgreen, bblue;
    int redStep, greenStep, blueStep;
 
-   /* Return if there's nothing to do. */
-   if(width == 0 || height == 0) {
-      return;
-   }
-
-   /* Here we assume that the background was filled elsewhere. */
-   if(fromColor == toColor) {
+   /* Return if there's nothing to do or if the background was filled elsewhere. */
+   if((width == 0 || height == 0) || (fromColor == toColor)) {
       return;
    }
 
@@ -76,15 +58,23 @@ void DrawVerticalGradient(Drawable d, GC g,
    bblue = (unsigned int)colors[1].blue << shift;
 
    /* Determine the step. */
-   redStep = (bred - ared) / (int)height;
-   greenStep = (bgreen - agreen) / (int)height;
-   blueStep = (bblue - ablue) / (int)height;
+   if (type == GRADIENT_VERTICAL) {
+      redStep = (bred - ared) / (int)height;
+      greenStep = (bgreen - agreen) / (int)height;
+      blueStep = (bblue - ablue) / (int)height;
+      limit = height;
+   } else {
+      redStep = (bred - ared) / (int)width;
+      greenStep = (bgreen - agreen) / (int)width;
+      blueStep = (bblue - ablue) / (int)width;
+      limit = width - 1;
+   }
 
-   /* Loop over each line. */
+   /* Loop over each line or column. */
    red = ared;
    blue = ablue;
    green = agreen;
-   for(line = 0; line < height; line++) {
+   for(counter = 0; counter < limit; counter++) {
 
       /* Determine the color for this line. */
       colors[0].red = (unsigned short)(red >> shift);
@@ -95,76 +85,11 @@ void DrawVerticalGradient(Drawable d, GC g,
 
       /* Draw the line. */
       JXSetForeground(display, g, colors[0].pixel);
-      JXDrawLine(display, d, g, x, y + line, x + width - 1, y + line);
-
-      red += redStep;
-      green += greenStep;
-      blue += blueStep;
-
-   }
-}
-
-/** Draw a horizontal gradient. */
-void DrawHorizontalGradient(Drawable d, GC g,
-                            long fromColor, long toColor,
-                            int x, int y,
-                            unsigned int width, unsigned int height)
-{
-
-   const int shift = 15;
-   unsigned int column;
-   XColor colors[2];
-   int red, green, blue;
-   int ared, agreen, ablue;
-   int bred, bgreen, bblue;
-   int redStep, greenStep, blueStep;
-
-   /* Return if there's nothing to do. */
-   if(width == 0 || height == 0) {
-      return;
-   }
-
-   /* Here we assume that the background was filled elsewhere. */
-   if(fromColor == toColor) {
-      return;
-   }
-
-   /* Query the from/to colors. */
-   colors[0].pixel = fromColor;
-   colors[1].pixel = toColor;
-   JXQueryColors(display, rootColormap, colors, 2);
-
-   /* Set the "from" color. */
-   ared = (unsigned int)colors[0].red << shift;
-   agreen = (unsigned int)colors[0].green << shift;
-   ablue = (unsigned int)colors[0].blue << shift;
-
-   /* Set the "to" color. */
-   bred = (unsigned int)colors[1].red << shift;
-   bgreen = (unsigned int)colors[1].green << shift;
-   bblue = (unsigned int)colors[1].blue << shift;
-
-   /* Determine the step. */
-   redStep = (bred - ared) / (int)width;
-   greenStep = (bgreen - agreen) / (int)width;
-   blueStep = (bblue - ablue) / (int)width;
-
-   /* Loop over each line. */
-   red = ared;
-   blue = ablue;
-   green = agreen;
-
-   for(column = 0; column < width - 1; column++) {
-	  /* Determine the color for this line. */
-      colors[0].red = (unsigned short)(red >> shift);
-      colors[0].green = (unsigned short)(green >> shift);
-      colors[0].blue = (unsigned short)(blue >> shift);
-
-      GetColor(&colors[0]);
-
-      /* Draw the line. */
-      JXSetForeground(display, g, colors[0].pixel);
-      JXDrawLine(display, d, g, x + column, y, x + column + 1, y  + height - 1);
+      if (type == GRADIENT_VERTICAL) {
+         JXDrawLine(display, d, g, x, y + counter, x + width - 1, y + counter);
+      } else {
+         JXDrawLine(display, d, g, x + counter, y, x + counter + 1, y  + height - 1);
+      }
       
       red += redStep;
       green += greenStep;

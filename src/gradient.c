@@ -12,28 +12,33 @@
 #include "color.h"
 #include "main.h"
 
-/** Draw a horizontal gradient. */
-void DrawHorizontalGradient(Drawable d, GC g,
+unsigned int gradients[GRADIENT_COUNT];
+
+/** Set the color to use for a component. */
+void SetGradient(GradientType c, const int value)
+{
+   gradients[c] = value;
+}
+
+/** Draw a gradient. */
+void DrawGradient(Drawable d, GC g,
                             long fromColor, long toColor,
                             int x, int y,
-                            unsigned int width, unsigned int height)
+                            unsigned int width, unsigned int height,
+                            int type)
 {
 
    const int shift = 15;
-   unsigned int line;
+   unsigned int counter;
+   unsigned int limit;
    XColor colors[2];
    int red, green, blue;
    int ared, agreen, ablue;
    int bred, bgreen, bblue;
    int redStep, greenStep, blueStep;
 
-   /* Return if there's nothing to do. */
-   if(width == 0 || height == 0) {
-      return;
-   }
-
-   /* Here we assume that the background was filled elsewhere. */
-   if(fromColor == toColor) {
+   /* Return if there's nothing to do or if the background was filled elsewhere. */
+   if((width == 0 || height == 0) || (fromColor == toColor)) {
       return;
    }
 
@@ -53,15 +58,23 @@ void DrawHorizontalGradient(Drawable d, GC g,
    bblue = (unsigned int)colors[1].blue << shift;
 
    /* Determine the step. */
-   redStep = (bred - ared) / (int)height;
-   greenStep = (bgreen - agreen) / (int)height;
-   blueStep = (bblue - ablue) / (int)height;
+   if (type == GRADIENT_VERTICAL) {
+      redStep = (bred - ared) / (int)height;
+      greenStep = (bgreen - agreen) / (int)height;
+      blueStep = (bblue - ablue) / (int)height;
+      limit = height;
+   } else {
+      redStep = (bred - ared) / (int)width;
+      greenStep = (bgreen - agreen) / (int)width;
+      blueStep = (bblue - ablue) / (int)width;
+      limit = width - 1;
+   }
 
-   /* Loop over each line. */
+   /* Loop over each line or column. */
    red = ared;
    blue = ablue;
    green = agreen;
-   for(line = 0; line < height; line++) {
+   for(counter = 0; counter < limit; counter++) {
 
       /* Determine the color for this line. */
       colors[0].red = (unsigned short)(red >> shift);
@@ -72,8 +85,12 @@ void DrawHorizontalGradient(Drawable d, GC g,
 
       /* Draw the line. */
       JXSetForeground(display, g, colors[0].pixel);
-      JXDrawLine(display, d, g, x, y + line, x + width - 1, y + line);
-
+      if (type == GRADIENT_VERTICAL) {
+         JXDrawLine(display, d, g, x, y + counter, x + width - 1, y + counter);
+      } else {
+         JXDrawLine(display, d, g, x + counter, y, x + counter + 1, y  + height - 1);
+      }
+      
       red += redStep;
       green += greenStep;
       blue += blueStep;

@@ -59,6 +59,7 @@ static void Resize(TrayComponentType *cp);
 static void DockWindow(Window win);
 static void UpdateDock(void);
 static void GetDockItemSize(int *size);
+static void GetDockItemOffset(int *size, int *xoffset, int *yoffset);
 static void GetDockSize(int *width, int *height);
 
 /** Initialize dock data. */
@@ -451,6 +452,7 @@ void UpdateDock(void)
    XConfigureEvent event;
    DockNode *np;
    int x, y;
+   int xoffset, yoffset;
    int itemSize;
 
    Assert(dock);
@@ -458,16 +460,19 @@ void UpdateDock(void)
    /* Determine the size of items in the dock. */
    GetDockItemSize(&itemSize);
 
+   /* Determine the offset of the items in the dock. */
+   GetDockItemOffset(&itemSize, &xoffset, &yoffset);
+
    x = 0;
    y = 0;
    memset(&event, 0, sizeof(event));
    for(np = dock->nodes; np; np = np->next) {
 
-      JXMoveResizeWindow(display, np->window, x, y, itemSize, itemSize);
+      JXMoveResizeWindow(display, np->window, x + xoffset, y + yoffset, itemSize, itemSize);
 
       /* Reparent if this window likes to go other places. */
       if(np->needs_reparent) {
-         JXReparentWindow(display, np->window, dock->cp->window, x, y);
+         JXReparentWindow(display, np->window, dock->cp->window, x + xoffset, y + yoffset);
       }
 
       event.type = ConfigureNotify;
@@ -501,6 +506,19 @@ void GetDockItemSize(int *size)
    }
    if(dock->itemSize > 0 && *size > dock->itemSize) {
       *size = dock->itemSize;
+   }
+}
+
+/** Get the offset of a particular window on the dock. */
+void GetDockItemOffset(int *size, int *xoffset, int *yoffset)
+{
+   /* Calculate the offset of the item in the dock. */
+   if(orientation == SYSTEM_TRAY_ORIENTATION_HORZ) {
+      *yoffset = (dock->cp->height - *size) / 2;
+      *xoffset = 0;
+   } else {
+      *xoffset = (dock->cp->width - *size) / 2;
+      *yoffset = 0;
    }
 }
 

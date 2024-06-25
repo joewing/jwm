@@ -10,7 +10,28 @@
 #ifndef GRADIENT_H
 #define GRADIENT_H
 
-/** Draw a horizontal gradient.
+/** Enumeration of Gradient type used for determine gradient function to use.
+ */
+typedef unsigned char GradientType;
+#define GRADIENT_DUMMY          0
+#define GRADIENT_TITLE_ACTIVE   1
+#define GRADIENT_TITLE          2
+#define GRADIENT_COUNT          3
+
+#define GRADIENT_HORIZONTAL        0
+#define GRADIENT_VERTICAL          1
+
+extern unsigned int gradients[GRADIENT_COUNT];
+
+#define InitializeGradients() (void)(0)
+
+/** Set the gradient type to use for a component.
+ * @param c The component whose color to set.
+ * @param value The gradient type to use.
+ */
+void SetGradient(GradientType c, const int value);
+
+/** Draw a gradient.
  * Note that no action is taken if fromColor == toColor.
  * @param d The drawable on which to draw the gradient.
  * @param g The graphics context to use.
@@ -20,11 +41,14 @@
  * @param y The y-coordinate.
  * @param width The width of the area to fill.
  * @param height The height of the area to fill.
+ * @param type The gradient type
  */
-void DrawHorizontalGradient(Drawable d, GC g,
+void DrawGradient(Drawable d, GC g,
                             long fromColor, long toColor,
                             int x, int y,
-                            unsigned int width, unsigned int height);
+                            unsigned int width, unsigned int height,
+                            int type);
+
 
 #endif /* GRADIENT_H */
 

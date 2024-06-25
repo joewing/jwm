@@ -269,9 +269,9 @@ void DrawClock(ClockType *clk, const TimeType *now)
       JXFillRectangle(display, cp->pixmap, rootGC, 0, 0,
                       cp->width, cp->height);
    } else {
-      DrawHorizontalGradient(cp->pixmap, rootGC,
+      DrawGradient(cp->pixmap, rootGC,
                              colors[COLOR_CLOCK_BG1], colors[COLOR_CLOCK_BG2],
-                             0, 0, cp->width, cp->height);
+                             0, 0, cp->width, cp->height, GRADIENT_VERTICAL);
    }
 
    /* Determine if the clock is the right size. */

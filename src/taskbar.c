@@ -192,14 +192,37 @@ void ComputeItemSize(TaskBarType *tp)
 {
    TrayComponentType *cp = tp->cp;
    if(tp->layout == LAYOUT_VERTICAL) {
+      TaskEntry *ep;
+      unsigned itemCount = 0;
 
+      tp->itemWidth = cp->width;
+      for(ep = taskEntries; ep; ep = ep->next) {
+         if(ShouldShowEntry(ep)) {
+            itemCount += 1;
+         }
+      }
+      if(itemCount == 0) {
+         return;
+      }
+
+      tp->itemHeight = Max(1, cp->height / itemCount);
+      if(!tp->labeled) {
+         tp->itemHeight = Min(tp->itemWidth, tp->itemHeight);
+      } else {
+         tp->itemHeight = Min(tp->itemWidth + GetStringHeight(FONT_TASKLIST), tp->itemHeight);
+      }
+
+      if(tp->maxItemWidth > 0) {
+         tp->itemHeight = Min(tp->maxItemWidth, tp->itemHeight);
+      }
+/*
       if(tp->userHeight > 0) {
          tp->itemHeight = tp->userHeight;
       } else {
          tp->itemHeight = GetStringHeight(FONT_TASKLIST) + 12;
       }
       tp->itemWidth = cp->width;
-
+*/
    } else {
 
       TaskEntry *ep;
@@ -713,7 +736,7 @@ void UpdateTaskBar(void)
    }
 
    for(bp = bars; bp; bp = bp->next) {
-      if(bp->layout == LAYOUT_VERTICAL) {
+/*      if(bp->layout == LAYOUT_VERTICAL) {
          TaskEntry *tp;
          lastHeight = bp->cp->requestedHeight;
          if(bp->userHeight > 0) {
@@ -732,6 +755,7 @@ void UpdateTaskBar(void)
             ResizeTray(bp->cp->tray);
          }
       }
+*/
       ComputeItemSize(bp);
       Render(bp);
    }
@@ -838,7 +862,13 @@ void Render(const TaskBarType *bp)
             button.text = tp->clients->client->name;
          }
       }
-      DrawButton(&button);
+
+      if(bp->layout == LAYOUT_HORIZONTAL) {
+         DrawButton(&button);
+      } else {
+         DrawButtonVertical(&button);
+      }
+
       if(displayName) {
          Release(displayName);
       }

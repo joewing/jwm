@@ -52,6 +52,11 @@ typedef struct {
  */
 void DrawButton(ButtonNode *bp);
 
+/** Draw a vertical button.
+ * @param bp The button to draw
+ */
+void DrawButtonVertical(ButtonNode *bp);
+
 /** Reset the contents of a ButtonNode structure.
  * @param bp The structure to reset.
  * @param d The drawable to use.

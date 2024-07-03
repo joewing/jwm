@@ -550,7 +550,9 @@ void DrawPager(const PagerType *pp)
    /* Draw the clients. */
    for(x = FIRST_LAYER; x <= LAST_LAYER; x++) {
       for(np = nodeTail[x]; np; np = np->prev) {
-         DrawPagerClient(pp, np);
+         if (np->state.layer != LAYER_DESKTOP) {
+            DrawPagerClient(pp, np);
+         }
       }
    }
 

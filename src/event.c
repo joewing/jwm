@@ -901,7 +901,7 @@ void HandleEnterNotify(const XCrossingEvent *event)
       if(  !(np->state.status & STAT_ACTIVE)
          && (settings.focusModel == FOCUS_SLOPPY
             || settings.focusModel == FOCUS_SLOPPY_TITLE)
-         && (np->state.layer != LAYER_DESKTOP)) {
+         && (np->state.windowType != WINDOW_TYPE_DESKTOP)) {
          FocusClient(np);
       }
       if(np->parent == event->window) {

@@ -624,6 +624,14 @@ void DrawPagerClient(const PagerType *pp, const ClientNode *np)
    if(!(np->state.status & STAT_MAPPED)) {
       return;
    }
+   /* The user will probably expect to see windows providing background
+    * images and/or desktop file icons as "unoccupied space", as if there
+    * were no non-root window there really. */
+   if((np->state.windowType == WINDOW_TYPE_DESKTOP) ||
+      (np->state.layer == LAYER_DESKTOP)) {
+      return;
+   }
+   /* Skip anything we're specifically told to skip too. */
    if(np->state.status & STAT_NOPAGER) {
       return;
    }

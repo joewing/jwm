@@ -168,7 +168,7 @@ typedef struct ClientState {
    unsigned char layer;          /**< Current window layer. */
    unsigned char defaultLayer;   /**< Default window layer. */
    unsigned char windowType;     /**< Window type. */
-} ClientState;
+} ClientState;  /* !! Keep in sync: defaults go in ReadWindowState() */
 
 extern Atom atoms[ATOM_COUNT];
 

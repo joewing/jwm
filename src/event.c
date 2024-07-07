@@ -84,6 +84,7 @@ static void HandleNetWMState(const XClientMessageEvent *event,
 static void HandleFrameExtentsRequest(const XClientMessageEvent *event);
 static void UpdateState(ClientNode *np);
 static void DiscardEnterEvents();
+static char ClientCanReceiveSloppyFocus(const ClientNode *np);
 
 #ifdef USE_SHAPE
 static void HandleShapeEvent(const XShapeEvent *event);
@@ -891,6 +892,29 @@ char HandleConfigureNotify(const XConfigureEvent *event)
    return 1;
 }
 
+/** True if a window should receive focus if the pointer moves over it. */
+char ClientCanReceiveSloppyFocus(const ClientNode *np)
+{
+   /* Not if the window is already active */
+   if(np->state.status & STAT_ACTIVE) {
+      return 0;
+   }
+   /* Only when running in a sloppy focus mode */
+   if(! (settings.focusModel == FOCUS_SLOPPY
+         || settings.focusModel == FOCUS_SLOPPY_TITLE)) {
+      return 0;
+   }
+   /* The user will probably understand desktop windows as a kind of
+    * empty space. If they took focus based just on mouse motion over
+    * them, sloppy focus would feel broken. They can still be given
+    * focus with a click. */
+   if((np->state.windowType == WINDOW_TYPE_DESKTOP)
+      || (np->state.layer == LAYER_DESKTOP)) {
+      return 0;
+   }
+   return 1;
+}
+
 /** Process an enter notify event. */
 void HandleEnterNotify(const XCrossingEvent *event)
 {
@@ -898,9 +922,7 @@ void HandleEnterNotify(const XCrossingEvent *event)
    Cursor cur;
    np = FindClient(event->window);
    if(np) {
-      if(  !(np->state.status & STAT_ACTIVE)
-         && (settings.focusModel == FOCUS_SLOPPY
-            || settings.focusModel == FOCUS_SLOPPY_TITLE)) {
+      if(ClientCanReceiveSloppyFocus(np)) {
          FocusClient(np);
       }
       if(np->parent == event->window) {

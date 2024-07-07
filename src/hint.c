@@ -560,11 +560,13 @@ ClientState ReadWindowState(Window win, char alreadyMapped)
 
    Assert(win != None);
 
+   /* !! Keep in sync: defaults for ClientState in hint.h */
    result.status = STAT_MAPPED;
    result.maxFlags = MAX_NONE;
    result.border = BORDER_DEFAULT;
    result.layer = LAYER_NORMAL;
    result.defaultLayer = LAYER_NORMAL;
+   result.windowType = WINDOW_TYPE_NORMAL;
    result.desktop = currentDesktop;
    result.opacity = UINT_MAX;
 

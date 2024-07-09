@@ -232,7 +232,7 @@ void ComputeItemSize(TaskBarType *tp)
    } else {
       unsigned itemCount = TallyVisibleItems();
       if(itemCount == 0) {
-            return;
+         return;
       }
 
       tp->itemHeight = cp->height;

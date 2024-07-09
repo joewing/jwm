@@ -1220,6 +1220,11 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
          settings.listAllTasks = !strcmp(temp, "all");
       }
 
+      temp = FindAttribute(tp->attributes, "altvertlist");
+      if(temp) {
+         settings.altVerticalTasks = !strcmp(temp, TRUE_VALUE);
+      }
+
       temp = FindAttribute(tp->attributes, KILL_MENU_ATTRIBUTE);
       if(temp) {
          settings.showKillMenuItem = !strcmp(temp, TRUE_VALUE);

@@ -62,6 +62,7 @@ static TaskBarType *bars;
 static TaskEntry *taskEntries;
 static TaskEntry *taskEntriesTail;
 
+static unsigned TallyVisibleItems(void);
 static void ComputeItemSize(TaskBarType *tp);
 static char ShouldShowEntry(const TaskEntry *tp);
 static char ShouldFocusEntry(const TaskEntry *tp);
@@ -187,61 +188,60 @@ void Resize(TrayComponentType *cp)
    ClearTrayDrawable(cp);
 }
 
+/** Count the number of items that should be shown in the task bar. */
+unsigned TallyVisibleItems(void)
+{
+   TaskEntry *ep;
+   unsigned count = 0;
+   for(ep = taskEntries; ep; ep = ep->next) {
+      if(ShouldShowEntry(ep)) {
+         count += 1;
+      }
+   }
+   return count;
+}
+
 /** Determine the size of items in the task bar. */
 void ComputeItemSize(TaskBarType *tp)
 {
    TrayComponentType *cp = tp->cp;
+
    if(tp->layout == LAYOUT_VERTICAL) {
-      TaskEntry *ep;
-      unsigned itemCount = 0;
-
-      tp->itemWidth = cp->width;
-      for(ep = taskEntries; ep; ep = ep->next) {
-         if(ShouldShowEntry(ep)) {
-            itemCount += 1;
+      if(settings.altVerticalTasks) {
+         unsigned itemCount = TallyVisibleItems();
+         if(itemCount == 0) {
+            return;
          }
-      }
-      if(itemCount == 0) {
-         return;
-      }
 
-      tp->itemHeight = Max(1, cp->height / itemCount);
-      if(!tp->labeled) {
-         tp->itemHeight = Min(tp->itemWidth, tp->itemHeight);
-      } else {
-         tp->itemHeight = Min(tp->itemWidth + GetStringHeight(FONT_TASKLIST), tp->itemHeight);
-      }
+         tp->itemWidth = cp->width;
+         tp->itemHeight = Max(1, cp->height / itemCount);
 
-      if(tp->maxItemWidth > 0) {
-         tp->itemHeight = Min(tp->maxItemWidth, tp->itemHeight);
-      }
-/*
-      if(tp->userHeight > 0) {
-         tp->itemHeight = tp->userHeight;
+         if(!tp->labeled) {
+            tp->itemHeight = Min(tp->itemWidth, tp->itemHeight);
+         } else {
+            tp->itemHeight = Min(tp->itemWidth + GetStringHeight(FONT_TASKLIST), tp->itemHeight);
+         }
+
+         if(tp->maxItemWidth > 0) {
+            tp->itemHeight = Min(tp->maxItemWidth, tp->itemHeight);
+         }
       } else {
-         tp->itemHeight = GetStringHeight(FONT_TASKLIST) + 12;
+         tp->itemHeight = tp->userHeight > 0 ? tp->userHeight : GetStringHeight(FONT_TASKLIST) + 12;
+         tp->itemWidth = cp->width;
       }
-      tp->itemWidth = cp->width;
-*/
    } else {
-
-      TaskEntry *ep;
-      unsigned itemCount = 0;
+      unsigned itemCount = TallyVisibleItems();
+      if(itemCount == 0) {
+            return;
+      }
 
       tp->itemHeight = cp->height;
-      for(ep = taskEntries; ep; ep = ep->next) {
-         if(ShouldShowEntry(ep)) {
-            itemCount += 1;
-         }
-      }
-      if(itemCount == 0) {
-         return;
-      }
-
       tp->itemWidth = Max(1, cp->width / itemCount);
+
       if(!tp->labeled) {
          tp->itemWidth = Min(tp->itemHeight, tp->itemWidth);
       }
+
       if(tp->maxItemWidth > 0) {
          tp->itemWidth = Min(tp->maxItemWidth, tp->itemWidth);
       }
@@ -736,7 +736,7 @@ void UpdateTaskBar(void)
    }
 
    for(bp = bars; bp; bp = bp->next) {
-/*      if(bp->layout == LAYOUT_VERTICAL) {
+      if(bp->layout == LAYOUT_VERTICAL && !settings.altVerticalTasks) {
          TaskEntry *tp;
          lastHeight = bp->cp->requestedHeight;
          if(bp->userHeight > 0) {
@@ -755,7 +755,6 @@ void UpdateTaskBar(void)
             ResizeTray(bp->cp->tray);
          }
       }
-*/
       ComputeItemSize(bp);
       Render(bp);
    }
@@ -863,7 +862,7 @@ void Render(const TaskBarType *bp)
          }
       }
 
-      if(bp->layout == LAYOUT_HORIZONTAL) {
+      if(bp->layout == LAYOUT_HORIZONTAL || !settings.altVerticalTasks) {
          DrawButton(&button);
       } else {
          DrawButtonVertical(&button);

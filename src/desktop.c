@@ -287,7 +287,7 @@ void ShowDesktop(void)
                   JXSetInputFocus(display, rootWindow, RevertToParent,
                                   CurrentTime);
                }
-               if(np->state.status & (STAT_MAPPED | STAT_SHADED)) {
+               if(np->state.status & (STAT_MAPPED | STAT_SHADED) && (np->state.border & BORDER_MIN)) {
                   MinimizeClient(np, 0);
                   np->state.status |= STAT_SDESKTOP;
                }

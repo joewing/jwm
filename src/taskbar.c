@@ -379,7 +379,7 @@ void MinimizeGroup(const TaskEntry *tp)
 {
    ClientEntry *cp;
    for(cp = tp->clients; cp; cp = cp->next) {
-      if(ShouldFocus(cp->client, 1)) {
+      if(ShouldFocus(cp->client, 1) && (cp->client->state.border & BORDER_MIN)) {
          MinimizeClient(cp->client, 0);
       }
    }

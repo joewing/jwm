@@ -584,7 +584,7 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
       }
       break;
    case ACTION_MIN:
-      if(np) {
+      if(np && (np->state.border & BORDER_MIN)) {
          MinimizeClient(np, 1);
       }
       break;
@@ -601,7 +601,7 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
       if(np) {
          if(np->state.maxFlags) {
             MaximizeClient(np, MAX_NONE);
-         } else {
+         } else if(np->state.border & BORDER_MIN) {
             MinimizeClient(np, 1);
          }
       }

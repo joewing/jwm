@@ -176,6 +176,9 @@ void ChangeDesktop(unsigned int desktop)
          }
          if(np->state.desktop == currentDesktop) {
             HideClient(np);
+            if((np->state.status & STAT_MINIMIZED) && (np->state.status & STAT_ACTIVE)) {
+               np->state.status &= ~STAT_ACTIVE;
+            }
          }
       }
    }

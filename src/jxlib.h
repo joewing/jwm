@@ -302,6 +302,8 @@
 
 #define JXSetWindowBackground( a, b, c ) JFUNC3(XSetWindowBackground, a, b, c)
 
+#define JXSetWindowBackgroundPixmap( a, b, c ) JFUNC3(XSetWindowBackgroundPixmap, a, b, c)
+
 #define JXSetWindowBorderWidth( a, b, c ) \
    JFUNC3(XSetWindowBorderWidth, a, b, c)
 

@@ -41,6 +41,8 @@ typedef struct DockType {
    Window window;
    int itemSize;
 
+   Pixmap buffer;
+
    DockNode *nodes;
 
 } DockType;
@@ -127,7 +129,8 @@ void ShutdownDock(void)
          JXSetSelectionOwner(display, dockAtom, None, CurrentTime);
       }
 
-      /* Destroy the dock window. */
+      /* Free dock pixmap and destroy the window. */
+      JXFreePixmap(display, dock->buffer);
       JXDestroyWindow(display, dock->window);
 
    }
@@ -204,6 +207,7 @@ void SetSize(TrayComponentType *cp, int width, int height)
 void Create(TrayComponentType *cp)
 {
 
+   DockType *tp = (DockType*)cp->object;
    XEvent event;
 
    Assert(cp);
@@ -251,12 +255,31 @@ void Create(TrayComponentType *cp)
 
    }
 
+   /* Create and assign dock background pixmap. */
+   cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
+                               rootDepth);
+   tp->buffer = cp->pixmap;
+   ClearTrayDrawable(cp);
+   JXSetWindowBackgroundPixmap(display, cp->window, tp->buffer);
+
 }
 
 /** Resize a dock component. */
 void Resize(TrayComponentType *cp)
 {
+   DockType *tp = (DockType*)cp->object;
+
    JXResizeWindow(display, cp->window, cp->width, cp->height);
+
+   /* Recreate and assign dock background pixmap. */
+   if(tp->buffer != None) {
+      JXFreePixmap(display, tp->buffer);
+   }
+   cp->pixmap = JXCreatePixmap(display, rootWindow, cp->width, cp->height,
+                               rootDepth);
+   tp->buffer = cp->pixmap;
+   ClearTrayDrawable(cp);
+   JXSetWindowBackgroundPixmap(display, cp->window, tp->buffer);
    UpdateDock();
 }
 

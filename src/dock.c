@@ -260,7 +260,7 @@ void Create(TrayComponentType *cp)
                                rootDepth);
    tp->buffer = cp->pixmap;
    ClearTrayDrawable(cp);
-   XSetWindowBackgroundPixmap(display, cp->window, tp->buffer);
+   JXSetWindowBackgroundPixmap(display, cp->window, tp->buffer);
 
 }
 
@@ -279,7 +279,7 @@ void Resize(TrayComponentType *cp)
                                rootDepth);
    tp->buffer = cp->pixmap;
    ClearTrayDrawable(cp);
-   XSetWindowBackgroundPixmap(display, cp->window, tp->buffer);
+   JXSetWindowBackgroundPixmap(display, cp->window, tp->buffer);
    UpdateDock();
 }
 

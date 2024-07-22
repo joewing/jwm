@@ -1721,8 +1721,16 @@ Maximize the active window vertically.
 Maximize the active window horizontally.
 .IP \fBmaxtop\fP
 Maximize the active window to the top of the screen.
+.IP \fBmaxtopleft\fP
+Maximize the active window to the top left of the screen.
+.IP \fBmaxtopright\fP
+Maximize the active window to the top right of the screen.
 .IP \fBmaxbottom\fP
 Maximize the active window to the bottom of the screen.
+.IP \fBmaxbottomleft\fP
+Maximize the active window to the bottom left of the screen.
+.IP \fBmaxbottomright\fP
+Maximize the active window to the bottom right of the screen.
 .IP \fBmaxleft\fP
 Maximize the active window to the left of the screen.
 .IP \fBmaxright\fP

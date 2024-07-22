@@ -123,7 +123,6 @@ typedef struct {
    MouseContextType titleBarLayout[TBC_COUNT + 1];
    char groupTasks;
    char listAllTasks;
-   char altVerticalTasks;
    char showClientName;
    char clientNameDelimiters[2];
    char showKillMenuItem;

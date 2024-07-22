@@ -296,6 +296,7 @@ void Draw(TrayComponentType *cp)
    button.y = 0;
    button.font = FONT_TRAY;
    button.text = bp->label;
+   button.labelPos = LABEL_POSITION_RIGHT;
    button.icon = bp->icon;
    DrawButton(&button);
 

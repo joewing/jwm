@@ -16,6 +16,7 @@
 #include "misc.h"
 #include "settings.h"
 
+/** Determine the colors to use. */
 static void GetButtonColors(ButtonNode *bp, ColorType *fg, long *bg1, long *bg2,
                             long *up, long *down, DecorationsType *decorations)
 {
@@ -81,144 +82,68 @@ static void GetButtonColors(ButtonNode *bp, ColorType *fg, long *bg1, long *bg2,
 
 }
 
-/* Determine the size of the icon (if any) to display. */
+/** Determine the size of the icon (if any) to display. */
 static void GetButtonIconSize(ButtonNode *bp, int *width, int *height, int *iconWidth, int *iconHeight)
 {
    *iconWidth = 0;
    *iconHeight = 0;
-   if(bp->icon) {
-      if(!bp->icon->width || !bp->icon->height) {
-         *iconWidth = Min(*width - BUTTON_BORDER * 2, *height - BUTTON_BORDER * 2);
-         *iconHeight = *iconWidth;
+
+   if(!bp->icon)
+      return;
+
+   int maxIconWidth = *width - BUTTON_BORDER * 2;
+   int maxIconHeight = *height - BUTTON_BORDER * 2;
+
+   if(bp->text) {
+      if(bp->labelPos > LABEL_POSITION_RIGHT) {
+         maxIconHeight -= GetStringHeight(bp->font) + BUTTON_BORDER;
       } else {
-         const int ratio = (bp->icon->width << 16) / bp->icon->height;
-         int maxIconWidth = *width - BUTTON_BORDER * 2;
-         if(bp->text) {
-            /* Showing text, keep the icon square. */
-            maxIconWidth = Min(*width, *height) - BUTTON_BORDER * 2;
-         }
-         *iconHeight = *height - BUTTON_BORDER * 2;
-         *iconWidth = (*iconHeight * ratio) >> 16;
-         if(*iconWidth > maxIconWidth) {
-            *iconWidth = maxIconWidth;
-            *iconHeight = (*iconWidth << 16) / ratio;
-         }
+         maxIconWidth = Min(*width, *height) - BUTTON_BORDER * 2;
       }
    }
+   if(!bp->icon->width || !bp->icon->height) {
+      *iconWidth = Min(maxIconWidth, maxIconHeight);
+      *iconHeight = *iconWidth;
+   } else {
+      const int ratio = (bp->icon->width << 16) / bp->icon->height;
+      *iconHeight = maxIconHeight;
+      *iconWidth = (*iconHeight * ratio) >> 16;
+      if(*iconWidth > maxIconWidth) {
+         *iconWidth = maxIconWidth;
+         *iconHeight = (*iconWidth << 16) / ratio;
+      }
+    }
 
 }
 
-/** Draw a button. */
-void DrawButton(ButtonNode *bp)
+/** Determine how much room is left for text. */
+static void GetTextSpaceRemaining(ButtonNode *bp, int *width, int *height, int *iconWidth,
+                                  int *iconHeight, int *textWidth, int *textHeight)
 {
+   *textWidth = 0;
+   *textHeight = 0;
 
-   ColorType fg;
-   long bg1, bg2;
-   long up, down;
-   DecorationsType decorations;
-
-   Drawable drawable;
-   GC gc;
-   int x, y;
-   int width, height;
-   int xoffset, yoffset;
-
-   int iconWidth, iconHeight;
-   int textWidth, textHeight;
-   
-   Assert(bp);
-
-   drawable = bp->drawable;
-   x = bp->x;
-   y = bp->y;
-   width = bp->width;
-   height = bp->height;
-   gc = JXCreateGC(display, drawable, 0, NULL);
-
-   /* Determine the colors to use. */
-   GetButtonColors(bp, &fg, &bg1, &bg2, &up, &down, &decorations);
-
-   /* Draw the background. */
-   if(bp->fill) {
-
-      /* Draw the button background. */
-      JXSetForeground(display, gc, bg1);
-      if(bg1 == bg2) {
-         /* single color */
-         JXFillRectangle(display, drawable, gc, x, y, width, height);
-      } else {
-         /* gradient */
-         DrawHorizontalGradient(drawable, gc, bg1, bg2,
-                                x, y, width, height);
-      }
-
+   if(!bp->text) {
+      return;
    }
 
-   /* Draw the border. */
-   if(bp->border) {
-      if(decorations == DECO_MOTIF) {
-         JXSetForeground(display, gc, up);
-         JXDrawLine(display, drawable, gc, x, y, x + width - 1, y);
-         JXDrawLine(display, drawable, gc, x, y, x, y + height - 1);
-         JXSetForeground(display, gc, down);
-         JXDrawLine(display, drawable, gc, x, y + height - 1,
-                    x + width - 1, y + height - 1);
-         JXDrawLine(display, drawable, gc, x + width - 1, y,
-                    x + width - 1, y + height - 1);
-      } else {
-         JXSetForeground(display, gc, down);
-         JXDrawRectangle(display, drawable, gc, x, y, width - 1, height - 1);
-      }
-   }
+   *textWidth = GetStringWidth(bp->font, bp->text);
+   *textHeight = GetStringHeight(bp->font);
 
-   /* Determine the size of the icon (if any) to display. */
-   GetButtonIconSize(bp, &width, &height, &iconWidth, &iconHeight);
-
-   /* Determine how much room is left for text. */
-   textWidth = 0;
-   textHeight = 0;
-   if(bp->text && (width > height || !bp->icon)) {
-      const int borderWidth = BUTTON_BORDER * (bp->icon ? 3 : 2);
-      textWidth = GetStringWidth(bp->font, bp->text);
-      textHeight = GetStringHeight(bp->font);
-      if(textWidth + iconWidth + borderWidth > width) {
-         textWidth = width - iconWidth - borderWidth;
-      }
-      textWidth = textWidth < 0 ? 0 : textWidth;
-   }
-
-   /* Determine the offset of the text in the button. */
-   if(bp->alignment == ALIGN_CENTER || width <= height) {
-      xoffset = (width - iconWidth - textWidth + 1) / 2;
-      if(xoffset < 0) {
-         xoffset = 0;
+   if(bp->labelPos < LABEL_POSITION_TOP) {
+      if(*width > *height || !bp->icon) {
+         const int borderWidth = BUTTON_BORDER * (bp->icon ? 3 : 2);
+         *textWidth = Min(*textWidth, *width - *iconWidth - borderWidth);
       }
    } else {
-      xoffset = BUTTON_BORDER;
+      *textHeight = Min(*textHeight, *height - *iconHeight - BUTTON_BORDER * 3);
+      *textWidth = Min(*textWidth, *width - BUTTON_BORDER * 2);
    }
 
-   /* Display the icon. */
-   if(bp->icon) {
-      yoffset = (height - iconHeight + 1) / 2;
-      PutIcon(bp->icon, drawable, colors[fg],
-              x + xoffset, y + yoffset,
-              iconWidth, iconHeight);
-      xoffset += iconWidth + BUTTON_BORDER;
-   }
-
-   /* Display the label. */
-   if(textWidth > 0) {
-      yoffset = (height - textHeight + 1) / 2;
-      RenderString(drawable, bp->font, fg,
-                   x + xoffset, y + yoffset,
-                   textWidth, bp->text);
-   }
-
-   JXFreeGC(display, gc);
-
+   *textWidth = Max(*textWidth, 0);
 }
 
-void DrawButtonVertical(ButtonNode *bp)
+void DrawButton(ButtonNode *bp)
 {
    ColorType fg;
    long bg1, bg2;
@@ -281,37 +206,70 @@ void DrawButtonVertical(ButtonNode *bp)
    GetButtonIconSize(bp, &width, &height, &iconWidth, &iconHeight);
 
    /* Determine how much room is left for text. */
-   textWidth = 0;
-   textHeight = 0;
-   if(bp->text) {
-        textWidth = GetStringWidth(bp->font, bp->text);
-        textHeight = GetStringHeight(bp->font);
-        if(textHeight + iconHeight + BUTTON_BORDER * 3 > height) {
-            textHeight = height - iconHeight - BUTTON_BORDER * 3;
-        }
-   }
+   GetTextSpaceRemaining(bp, &width, &height, &iconWidth, &iconHeight,
+                         &textWidth, &textHeight);
 
-   /* Determine the offset of the icon in the button. */
-   xoffset = (width - iconWidth + 1) / 2;
-   yoffset = BUTTON_BORDER;
-
-   /* Display the icon. */
-   if(bp->icon) {
-      PutIcon(bp->icon, drawable, colors[fg],
-            x + xoffset, y + yoffset,
-            iconWidth, iconHeight);
-      yoffset += iconHeight + BUTTON_BORDER;
-   }
-
-   if(textHeight > 0) {
-      if(textWidth <= iconWidth) {
-         xoffset = (width - textWidth + 1) / 2;
+   if(bp->labelPos == LABEL_POSITION_RIGHT) {
+      if(bp->alignment == ALIGN_CENTER || width <= height) {
+         xoffset = Max(0, (width - iconWidth - textWidth + 1) / 2);
       } else {
          xoffset = BUTTON_BORDER;
       }
-      RenderString(drawable, bp->font, fg,
-                  x + xoffset, y + yoffset,
-               textWidth, bp->text);
+
+      if(bp->icon) {
+         PutIcon(bp->icon, drawable, colors[fg],
+                 x + xoffset, y + yoffset,
+                 iconWidth, iconHeight);
+         xoffset += iconWidth + BUTTON_BORDER;
+      }
+
+      /* Display the label. */
+      if(textWidth > 0) {
+         yoffset = (height - textHeight + 1) / 2;
+         RenderString(drawable, bp->font, fg,
+                     x + xoffset, y + yoffset,
+                 textWidth, bp->text);
+      }
+   } else if (bp->labelPos == LABEL_POSITION_TOP) {
+      const int ycenter = (height - textHeight - iconHeight - BUTTON_BORDER + 1) / 2;
+      yoffset = (height - iconHeight + 1) / 2;
+
+      /* Display the label before the icon. */
+      if(textHeight > 0 && textWidth > 0) {
+         xoffset = (width - textWidth + 1) / 2;
+         yoffset = width <= height ? Max(BUTTON_BORDER, ycenter) : BUTTON_BORDER;
+
+         RenderString(drawable, bp->font, fg,
+                    x + xoffset, y + yoffset,
+                textWidth, bp->text);
+         yoffset += textHeight + BUTTON_BORDER;
+      }
+
+      if(bp->icon) {
+         xoffset = (width - iconWidth + 1) / 2;
+         PutIcon(bp->icon, drawable, colors[fg],
+               x + xoffset, y + yoffset,
+           iconWidth, iconHeight);
+      }
+   } else if (bp->labelPos == LABEL_POSITION_BOTTOM) {
+      const int ycenter = (height - iconHeight - textHeight - BUTTON_BORDER + 1) / 2;
+      xoffset = (width - iconWidth + 1) / 2;
+      yoffset = width <= height ? Max(BUTTON_BORDER, ycenter) : BUTTON_BORDER;
+
+      if(bp->icon) {
+         PutIcon(bp->icon, drawable, colors[fg],
+               x + xoffset, y + yoffset,
+               iconWidth, iconHeight);
+         yoffset += iconHeight + BUTTON_BORDER;
+      }
+
+      /* Display the label. */
+      if(textHeight > 0 && textWidth > 0) {
+         xoffset = (width - textWidth + 1) / 2;
+         RenderString(drawable, bp->font, fg,
+                     x + xoffset, y + yoffset,
+                  textWidth, bp->text);
+      }
    }
 
    JXFreeGC(display, gc);
@@ -328,6 +286,7 @@ void ResetButton(ButtonNode *bp, Drawable d)
    bp->drawable = d;
    bp->font = FONT_TRAY;
    bp->alignment = ALIGN_LEFT;
+   bp->labelPos = LABEL_POSITION_RIGHT;
    bp->x = 0;
    bp->y = 0;
    bp->width = 1;

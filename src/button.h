@@ -28,11 +28,18 @@ typedef unsigned char ButtonType;
 #define BUTTON_TASK        5  /**< Item in the task list. */
 #define BUTTON_TASK_ACTIVE 6  /**< Active item in the task list. */
 
+/** Enumeration of button label positions. */
+typedef unsigned char LabelPosition;
+#define LABEL_POSITION_RIGHT  0  /**< Right of the button icon. */
+#define LABEL_POSITION_TOP    1  /**< Above of the button icon. */
+#define LABEL_POSITION_BOTTOM 2  /**< Below the button icon.. */
+
 /** Data used for drawing a button. */
 typedef struct {
 
    ButtonType type;           /**< The type of button to draw. */
    AlignmentType alignment;   /**< Alignment of the button content. */
+   LabelPosition labelPos;    /**< Position of the button label. */
    FontType font;             /**< The font for button text. */
    char fill;                 /**< Determine if we should fill. */
    char border;               /**< Determine if we should draw a border. */
@@ -51,11 +58,6 @@ typedef struct {
  * @param bp The button to draw.
  */
 void DrawButton(ButtonNode *bp);
-
-/** Draw a vertical button.
- * @param bp The button to draw
- */
-void DrawButtonVertical(ButtonNode *bp);
 
 /** Reset the contents of a ButtonNode structure.
  * @param bp The structure to reset.

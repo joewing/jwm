@@ -853,6 +853,7 @@ void DrawMenuItem(Menu *menu, MenuItem *item, int index)
          button.type = BUTTON_LABEL;
          button.text = menu->label;
          button.alignment = ALIGN_CENTER;
+         button.labelPos = LABEL_POSITION_RIGHT;
          DrawButton(&button);
       }
       return;

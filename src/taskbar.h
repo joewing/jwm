@@ -65,6 +65,12 @@ void SetTaskBarHeight(struct TrayComponentType *cp, const char *value);
  */
 void SetTaskBarLabeled(struct TrayComponentType *cp, char value);
 
+/** Set where labels should be positioned in relation to the icon.
+ * @param cp The task bar component.
+ * @param value 0 for right of the icon, 1 for above the icon, 2 for below the icon.
+ */
+void SetTaskBarLabelPosition(struct TrayComponentType *cp, const char *value);
+
 /** Update the _NET_CLIENT_LIST property. */
 void UpdateNetClientList(void);
 

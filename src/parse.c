@@ -1220,11 +1220,6 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
          settings.listAllTasks = !strcmp(temp, "all");
       }
 
-      temp = FindAttribute(tp->attributes, "altvertlist");
-      if(temp) {
-         settings.altVerticalTasks = !strcmp(temp, TRUE_VALUE);
-      }
-
       temp = FindAttribute(tp->attributes, KILL_MENU_ATTRIBUTE);
       if(temp) {
          settings.showKillMenuItem = !strcmp(temp, TRUE_VALUE);
@@ -1444,6 +1439,12 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray)
    if(temp && !strcmp(temp, FALSE_VALUE)) {
       SetTaskBarLabeled(cp, 0);
    }
+
+   temp = FindAttribute(tp->attributes, "labelpos");
+   if(temp) {
+      SetTaskBarLabelPosition(cp, temp);
+   }
+
 }
 
 /** Parse the tray button style. */

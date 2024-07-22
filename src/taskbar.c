@@ -38,6 +38,7 @@ typedef struct TaskBarType {
    int itemWidth;
    LayoutType layout;
    char labeled;
+   LabelPosition labelPos;
 
    Pixmap buffer;
 
@@ -129,6 +130,7 @@ TrayComponentType *CreateTaskBar()
    tp->maxItemWidth = 0;
    tp->layout = LAYOUT_HORIZONTAL;
    tp->labeled = 1;
+   tp->labelPos = LABEL_POSITION_RIGHT;
    tp->mousex = -settings.doubleClickDelta;
    tp->mousey = -settings.doubleClickDelta;
    tp->mouseTime.seconds = 0;
@@ -207,7 +209,7 @@ void ComputeItemSize(TaskBarType *tp)
    TrayComponentType *cp = tp->cp;
 
    if(tp->layout == LAYOUT_VERTICAL) {
-      if(settings.altVerticalTasks) {
+      if(tp->labelPos > LABEL_POSITION_RIGHT) {
          unsigned itemCount = TallyVisibleItems();
          if(itemCount == 0) {
             return;
@@ -736,7 +738,7 @@ void UpdateTaskBar(void)
    }
 
    for(bp = bars; bp; bp = bp->next) {
-      if(bp->layout == LAYOUT_VERTICAL && !settings.altVerticalTasks) {
+      if(bp->layout == LAYOUT_VERTICAL && bp->labelPos < LABEL_POSITION_TOP) {
          TaskEntry *tp;
          lastHeight = bp->cp->requestedHeight;
          if(bp->userHeight > 0) {
@@ -809,6 +811,7 @@ void Render(const TaskBarType *bp)
    button.font = FONT_TASKLIST;
    button.height = bp->itemHeight;
    button.width = bp->itemWidth;
+   button.labelPos = bp->labelPos;
    button.text = NULL;
 
    x = 0;
@@ -862,11 +865,7 @@ void Render(const TaskBarType *bp)
          }
       }
 
-      if(bp->layout == LAYOUT_HORIZONTAL || !settings.altVerticalTasks) {
-         DrawButton(&button);
-      } else {
-         DrawButtonVertical(&button);
-      }
+      DrawButton(&button);
 
       if(displayName) {
          Release(displayName);
@@ -1072,6 +1071,25 @@ void SetTaskBarLabeled(TrayComponentType *cp, char labeled)
 {
    TaskBarType *bp = (TaskBarType*)cp->object;
    bp->labeled = labeled;
+}
+
+/** Set the label's postion. */
+void SetTaskBarLabelPosition(TrayComponentType *cp, const char *value)
+{
+   TaskBarType *bp = (TaskBarType*)cp->object;
+
+   Assert(cp);
+   Assert(value);
+
+   if(!strcmp(value, "right")) {
+      bp->labelPos = LABEL_POSITION_RIGHT;
+   } else if(!strcmp(value, "top")) {
+      bp->labelPos = LABEL_POSITION_TOP;
+   } else if(!strcmp(value, "bottom")) {
+      bp->labelPos = LABEL_POSITION_BOTTOM;
+   } else {
+      Warning(_("invalid labelpos for TaskList: %s"), value);
+   }
 }
 
 /** Maintain the _NET_CLIENT_LIST[_STACKING] properties on the root. */

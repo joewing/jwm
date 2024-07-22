@@ -57,14 +57,18 @@ typedef struct {
 #define ACTION_SENDU          34
 #define ACTION_SENDD          35
 #define ACTION_MAXTOP         36
-#define ACTION_MAXBOTTOM      37
-#define ACTION_MAXLEFT        38
-#define ACTION_MAXRIGHT       39
-#define ACTION_MAXV           40
-#define ACTION_MAXH           41
-#define ACTION_RESTORE        42
-#define ACTION_CENTER         43
-#define ACTION_AT             44
+#define ACTION_MAXTOPLEFT     37
+#define ACTION_MAXTOPRIGHT    38
+#define ACTION_MAXBOTTOM      39
+#define ACTION_MAXBOTTOMLEFT  40
+#define ACTION_MAXBOTTOMRIGHT 41
+#define ACTION_MAXLEFT        42
+#define ACTION_MAXRIGHT       43
+#define ACTION_MAXV           44
+#define ACTION_MAXH           45
+#define ACTION_RESTORE        46
+#define ACTION_CENTER         47
+#define ACTION_AT             48
 #define ACTION_INVALID        255
 #define ACTION_RESIZE_N       1  /* Extra value mask for resize north. */
 #define ACTION_RESIZE_S       2  /* Extra value mask for resize south. */

@@ -299,7 +299,11 @@ char ShouldGrab(ActionType action)
    case ACTION_SENDU:
    case ACTION_SENDD:
    case ACTION_MAXTOP:
+   case ACTION_MAXTOPLEFT:
+   case ACTION_MAXTOPRIGHT:
    case ACTION_MAXBOTTOM:
+   case ACTION_MAXBOTTOMLEFT:
+   case ACTION_MAXBOTTOMRIGHT:
    case ACTION_MAXLEFT:
    case ACTION_MAXRIGHT:
    case ACTION_MAXV:

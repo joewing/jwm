@@ -609,8 +609,20 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
    case ACTION_MAXTOP:
       ToggleMaximized(np, MAX_TOP | MAX_HORIZ);
       break;
+   case ACTION_MAXTOPLEFT:
+      ToggleMaximized(np, MAX_TOP | MAX_LEFT);
+      break;
+   case ACTION_MAXTOPRIGHT:
+      ToggleMaximized(np, MAX_TOP | MAX_RIGHT);
+      break;
    case ACTION_MAXBOTTOM:
       ToggleMaximized(np, MAX_BOTTOM | MAX_HORIZ);
+      break;
+   case ACTION_MAXBOTTOMLEFT:
+      ToggleMaximized(np, MAX_BOTTOM | MAX_LEFT);
+      break;
+   case ACTION_MAXBOTTOMRIGHT:
+      ToggleMaximized(np, MAX_BOTTOM | MAX_RIGHT);
       break;
    case ACTION_MAXLEFT:
       ToggleMaximized(np, MAX_LEFT | MAX_VERT);

@@ -864,7 +864,6 @@ void Render(const TaskBarType *bp)
             button.text = tp->clients->client->name;
          }
       }
-
       DrawButton(&button);
 
       if(displayName) {

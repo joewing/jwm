@@ -149,16 +149,18 @@ void DrawButton(ButtonNode *bp)
    long bg1, bg2;
    long up, down;
    DecorationsType decorations;
-   
+
    Drawable drawable;
    GC gc;
    int x, y;
    int width, height;
    int xoffset, yoffset;
+
    int iconWidth, iconHeight;
    int textWidth, textHeight;
 
    Assert(bp);
+
    drawable = bp->drawable;
    x = bp->x;
    y = bp->y;

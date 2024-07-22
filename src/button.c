@@ -96,8 +96,10 @@ static void GetButtonIconSize(ButtonNode *bp, int *width, int *height, int *icon
 
    if(bp->text) {
       if(bp->labelPos > LABEL_POSITION_RIGHT) {
+         /* Make room for the text. */
          maxIconHeight -= GetStringHeight(bp->font) + BUTTON_BORDER;
       } else {
+         /* Showing text, keep the icon square. */
          maxIconWidth = Min(*width, *height) - BUTTON_BORDER * 2;
       }
    }

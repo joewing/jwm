@@ -220,6 +220,7 @@ void DrawButton(ButtonNode *bp)
          xoffset = BUTTON_BORDER;
       }
 
+      /* Display the icon. */
       if(bp->icon) {
          yoffset = (height - iconHeight + 1) / 2;
          PutIcon(bp->icon, drawable, colors[fg],
@@ -250,6 +251,7 @@ void DrawButton(ButtonNode *bp)
          yoffset += textHeight + BUTTON_BORDER;
       }
 
+      /* Display the icon. */
       if(bp->icon) {
          xoffset = (width - iconWidth + 1) / 2;
          PutIcon(bp->icon, drawable, colors[fg],
@@ -260,6 +262,7 @@ void DrawButton(ButtonNode *bp)
       const int ycenter = (height - iconHeight - textHeight - BUTTON_BORDER + 1) / 2;
       yoffset = width <= height ? Max(BUTTON_BORDER, ycenter) : BUTTON_BORDER;
 
+      /* Display the icon. */
       if(bp->icon) {
          xoffset = (width - iconWidth + 1) / 2;
          PutIcon(bp->icon, drawable, colors[fg],

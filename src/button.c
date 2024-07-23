@@ -232,8 +232,8 @@ void DrawButton(ButtonNode *bp)
       if(textWidth > 0) {
          yoffset = (height - textHeight + 1) / 2;
          RenderString(drawable, bp->font, fg,
-                     x + xoffset, y + yoffset,
-                 textWidth, bp->text);
+                      x + xoffset, y + yoffset,
+                      textWidth, bp->text);
       }
    } else if (bp->labelPos == LABEL_POSITION_TOP) {
       const int ycenter = (height - textHeight - iconHeight - BUTTON_BORDER + 1) / 2;
@@ -245,26 +245,26 @@ void DrawButton(ButtonNode *bp)
          yoffset = width <= height ? Max(BUTTON_BORDER, ycenter) : BUTTON_BORDER;
 
          RenderString(drawable, bp->font, fg,
-                    x + xoffset, y + yoffset,
-                textWidth, bp->text);
+                      x + xoffset, y + yoffset,
+                      textWidth, bp->text);
          yoffset += textHeight + BUTTON_BORDER;
       }
 
       if(bp->icon) {
          xoffset = (width - iconWidth + 1) / 2;
          PutIcon(bp->icon, drawable, colors[fg],
-               x + xoffset, y + yoffset,
-           iconWidth, iconHeight);
+                 x + xoffset, y + yoffset,
+                 iconWidth, iconHeight);
       }
    } else if (bp->labelPos == LABEL_POSITION_BOTTOM) {
       const int ycenter = (height - iconHeight - textHeight - BUTTON_BORDER + 1) / 2;
-      xoffset = (width - iconWidth + 1) / 2;
       yoffset = width <= height ? Max(BUTTON_BORDER, ycenter) : BUTTON_BORDER;
 
       if(bp->icon) {
+         xoffset = (width - iconWidth + 1) / 2;
          PutIcon(bp->icon, drawable, colors[fg],
-               x + xoffset, y + yoffset,
-               iconWidth, iconHeight);
+                 x + xoffset, y + yoffset,
+                 iconWidth, iconHeight);
          yoffset += iconHeight + BUTTON_BORDER;
       }
 
@@ -272,8 +272,8 @@ void DrawButton(ButtonNode *bp)
       if(textHeight > 0 && textWidth > 0) {
          xoffset = (width - textWidth + 1) / 2;
          RenderString(drawable, bp->font, fg,
-                     x + xoffset, y + yoffset,
-                  textWidth, bp->text);
+                      x + xoffset, y + yoffset,
+                      textWidth, bp->text);
       }
    }
 

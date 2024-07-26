@@ -713,6 +713,7 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
 
          np->x = sp->x + (sp->width - np->width) / 2;
          np->y = sp->y + (sp->height - np->height) / 2;
+         ConstrainPosition(np);
          ResetBorder(np);
          SendConfigureEvent(np);
          RequirePagerUpdate();

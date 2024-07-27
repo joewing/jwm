@@ -687,6 +687,14 @@ Determines if a label is shown for items in the task list.
 The default is true.
 .RE
 .P
+\fBlabelpos\fP \fIstring\fP
+.RS
+Determines the label position in the task list. The default is "right" where
+the icon is on the left and the label is on the right.
+Possible values are "right", "top" and "bottom". When the tray is vertical and "top"
+or "bottom" is chosen, an alternate method for resizing the task list will be used.
+.RE
+.P
 \fBmaxwidth\fP \fIint\fP
 .RS
 The maximum width of an item in the task list. 0 indicates no maximum.

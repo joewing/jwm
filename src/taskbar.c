@@ -38,6 +38,7 @@ typedef struct TaskBarType {
    int itemWidth;
    LayoutType layout;
    char labeled;
+   LabelPosition labelPos;
 
    Pixmap buffer;
 
@@ -62,6 +63,7 @@ static TaskBarType *bars;
 static TaskEntry *taskEntries;
 static TaskEntry *taskEntriesTail;
 
+static unsigned TallyVisibleItems(void);
 static void ComputeItemSize(TaskBarType *tp);
 static char ShouldShowEntry(const TaskEntry *tp);
 static char ShouldFocusEntry(const TaskEntry *tp);
@@ -128,6 +130,7 @@ TrayComponentType *CreateTaskBar()
    tp->maxItemWidth = 0;
    tp->layout = LAYOUT_HORIZONTAL;
    tp->labeled = 1;
+   tp->labelPos = LABEL_POSITION_RIGHT;
    tp->mousex = -settings.doubleClickDelta;
    tp->mousey = -settings.doubleClickDelta;
    tp->mouseTime.seconds = 0;
@@ -187,38 +190,60 @@ void Resize(TrayComponentType *cp)
    ClearTrayDrawable(cp);
 }
 
+/** Count the number of items that should be shown in the task bar. */
+unsigned TallyVisibleItems(void)
+{
+   TaskEntry *ep;
+   unsigned count = 0;
+   for(ep = taskEntries; ep; ep = ep->next) {
+      if(ShouldShowEntry(ep)) {
+         count += 1;
+      }
+   }
+   return count;
+}
+
 /** Determine the size of items in the task bar. */
 void ComputeItemSize(TaskBarType *tp)
 {
    TrayComponentType *cp = tp->cp;
+
    if(tp->layout == LAYOUT_VERTICAL) {
-
-      if(tp->userHeight > 0) {
-         tp->itemHeight = tp->userHeight;
-      } else {
-         tp->itemHeight = GetStringHeight(FONT_TASKLIST) + 12;
-      }
-      tp->itemWidth = cp->width;
-
-   } else {
-
-      TaskEntry *ep;
-      unsigned itemCount = 0;
-
-      tp->itemHeight = cp->height;
-      for(ep = taskEntries; ep; ep = ep->next) {
-         if(ShouldShowEntry(ep)) {
-            itemCount += 1;
+      if(tp->labelPos > LABEL_POSITION_RIGHT) {
+         unsigned itemCount = TallyVisibleItems();
+         if(itemCount == 0) {
+            return;
          }
+
+         tp->itemWidth = cp->width;
+         tp->itemHeight = Max(1, cp->height / itemCount);
+
+         if(!tp->labeled) {
+            tp->itemHeight = Min(tp->itemWidth, tp->itemHeight);
+         } else {
+            tp->itemHeight = Min(tp->itemWidth + GetStringHeight(FONT_TASKLIST), tp->itemHeight);
+         }
+
+         if(tp->maxItemWidth > 0) {
+            tp->itemHeight = Min(tp->maxItemWidth, tp->itemHeight);
+         }
+      } else {
+         tp->itemHeight = tp->userHeight > 0 ? tp->userHeight : GetStringHeight(FONT_TASKLIST) + 12;
+         tp->itemWidth = cp->width;
       }
+   } else {
+      unsigned itemCount = TallyVisibleItems();
       if(itemCount == 0) {
          return;
       }
 
+      tp->itemHeight = cp->height;
       tp->itemWidth = Max(1, cp->width / itemCount);
+
       if(!tp->labeled) {
          tp->itemWidth = Min(tp->itemHeight, tp->itemWidth);
       }
+
       if(tp->maxItemWidth > 0) {
          tp->itemWidth = Min(tp->maxItemWidth, tp->itemWidth);
       }
@@ -713,7 +738,7 @@ void UpdateTaskBar(void)
    }
 
    for(bp = bars; bp; bp = bp->next) {
-      if(bp->layout == LAYOUT_VERTICAL) {
+      if(bp->layout == LAYOUT_VERTICAL && bp->labelPos < LABEL_POSITION_TOP) {
          TaskEntry *tp;
          lastHeight = bp->cp->requestedHeight;
          if(bp->userHeight > 0) {
@@ -786,6 +811,7 @@ void Render(const TaskBarType *bp)
    button.font = FONT_TASKLIST;
    button.height = bp->itemHeight;
    button.width = bp->itemWidth;
+   button.labelPos = bp->labelPos;
    button.text = NULL;
 
    x = 0;
@@ -839,6 +865,7 @@ void Render(const TaskBarType *bp)
          }
       }
       DrawButton(&button);
+
       if(displayName) {
          Release(displayName);
       }
@@ -1043,6 +1070,25 @@ void SetTaskBarLabeled(TrayComponentType *cp, char labeled)
 {
    TaskBarType *bp = (TaskBarType*)cp->object;
    bp->labeled = labeled;
+}
+
+/** Set the label's postion. */
+void SetTaskBarLabelPosition(TrayComponentType *cp, const char *value)
+{
+   TaskBarType *bp = (TaskBarType*)cp->object;
+
+   Assert(cp);
+   Assert(value);
+
+   if(!strcmp(value, "right")) {
+      bp->labelPos = LABEL_POSITION_RIGHT;
+   } else if(!strcmp(value, "top")) {
+      bp->labelPos = LABEL_POSITION_TOP;
+   } else if(!strcmp(value, "bottom")) {
+      bp->labelPos = LABEL_POSITION_BOTTOM;
+   } else {
+      Warning(_("invalid labelpos for TaskList: %s"), value);
+   }
 }
 
 /** Maintain the _NET_CLIENT_LIST[_STACKING] properties on the root. */

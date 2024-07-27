@@ -1443,6 +1443,12 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray)
    if(temp && !strcmp(temp, FALSE_VALUE)) {
       SetTaskBarLabeled(cp, 0);
    }
+
+   temp = FindAttribute(tp->attributes, "labelpos");
+   if(temp) {
+      SetTaskBarLabelPosition(cp, temp);
+   }
+
 }
 
 /** Parse the tray button style. */

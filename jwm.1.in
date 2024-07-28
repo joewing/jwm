@@ -1719,6 +1719,8 @@ Move to the previous window in the stacking order.
 Move to window position in the task list.
 .IP \fBclose\fP
 Close the active window.
+.IP \fBkill\fP
+Kill the active window.
 .IP \fBminimize\fP
 Minimize the active window.
 .IP \fBmaximize\fP

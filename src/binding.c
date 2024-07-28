@@ -311,6 +311,7 @@ char ShouldGrab(ActionType action)
    case ACTION_RESTORE:
    case ACTION_CENTER:
    case ACTION_AT:
+   case ACTION_KILL:
       return 1;
    default:
       return 0;

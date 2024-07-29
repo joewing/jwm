@@ -20,13 +20,14 @@ struct IconNode;
 
 /** Button types. */
 typedef unsigned char ButtonType;
-#define BUTTON_LABEL       0  /**< Label. */
-#define BUTTON_MENU        1  /**< Menu item. */
-#define BUTTON_MENU_ACTIVE 2  /**< Active menu item. */
-#define BUTTON_TRAY        3  /**< Inactive tray button. */
-#define BUTTON_TRAY_ACTIVE 4  /**< Active tray button. */
-#define BUTTON_TASK        5  /**< Item in the task list. */
-#define BUTTON_TASK_ACTIVE 6  /**< Active item in the task list. */
+#define BUTTON_LABEL          0  /**< Label. */
+#define BUTTON_MENU           1  /**< Menu item. */
+#define BUTTON_MENU_ACTIVE    2  /**< Active menu item. */
+#define BUTTON_TRAY           3  /**< Inactive tray button. */
+#define BUTTON_TRAY_ACTIVE    4  /**< Active tray button. */
+#define BUTTON_TASK           5  /**< Item in the task list. */
+#define BUTTON_TASK_ACTIVE    6  /**< Active item in the task list. */
+#define BUTTON_TASK_MINIMIZED 7  /**< Minimized item in the task list. */
 
 /** Enumeration of button label positions. */
 typedef unsigned char LabelPosition;

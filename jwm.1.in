@@ -1360,6 +1360,33 @@ two colors separated by a ':' to indicate the down and up colors
 respectively.
 .RE
 .RE
+.P
+.B Minimized
+.RS
+The colors for the minimized items.
+See the \fBCOLORS\fP section for more information.
+The following tags are supported:
+.P
+.B Foreground
+.RS
+The foreground color for minimized items.
+.RE
+.P
+.B Background
+.RS
+The background color for minimized items.
+.RE
+.P
+.B Outline
+.RS
+The outline color for minimized items. See the \fBCOLORS\fP section for
+more information.
+The default is a darkened version of the background.
+If \fBmotif\fP tray decorations are specified, this may be given as
+two colors separated by a ':' to indicate the down and up colors
+respectively.
+.RE
+.RE
 .RE
 
 .B "TRAY BUTTON STYLE"

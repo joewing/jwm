@@ -723,6 +723,10 @@ void ProcessBinding(MouseContextType context, ClientNode *np,
       StartWindowWalk();
       FocusAt(key.extra);
       break;
+   case ACTION_KILL:
+      KillClient(np);
+      break;
+
    default:
       break;
    }

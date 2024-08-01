@@ -52,6 +52,7 @@ static const StringMappingType ACTION_MAP[] = {
    { "escape",                ACTION_ESC            },
    { "exit",                  ACTION_EXIT           },
    { "fullscreen",            ACTION_FULLSCREEN     },
+   { "kill",                  ACTION_KILL           },
    { "ldesktop",              ACTION_LDESKTOP       },
    { "left",                  ACTION_LEFT           },
    { "maxbottom",             ACTION_MAXBOTTOM      },

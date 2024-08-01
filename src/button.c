@@ -191,8 +191,8 @@ void DrawButton(ButtonNode *bp)
          JXFillRectangle(display, drawable, gc, x, y, width, height);
       } else {
          /* gradient */
-         DrawHorizontalGradient(drawable, gc, bg1, bg2,
-                                x, y, width, height);
+         DrawGradient(drawable, gc, bg1, bg2,
+                                x, y, width, height, GRADIENT_VERTICAL);
       }
 
    }

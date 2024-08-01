@@ -233,6 +233,9 @@ static void ParseTrayStyle(const TokenNode *tp,
 static void ParseActive(const TokenNode *tp, ColorType fg,
                         ColorType bg1, ColorType bg2,
                         ColorType up, ColorType down);
+static void ParseMinimized(const TokenNode *tp, ColorType fg,
+                        ColorType bg1, ColorType bg2,
+                        ColorType up, ColorType down);
 static void ParsePagerStyle(const TokenNode *tp);
 static void ParseClockStyle(const TokenNode *tp);
 static void ParseMenuStyle(const TokenNode *tp);
@@ -1206,10 +1209,15 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
    const ColorType activeFg = fg + COLOR_TRAY_ACTIVE_FG - COLOR_TRAY_FG;
    const ColorType activeBg1 = fg + COLOR_TRAY_ACTIVE_BG1 - COLOR_TRAY_FG;
    const ColorType activeBg2 = fg + COLOR_TRAY_ACTIVE_BG2 - COLOR_TRAY_FG;
+   const ColorType minimizedFg = fg + COLOR_TASKLIST_MINIMIZED_FG - COLOR_TASKLIST_FG;
+   const ColorType minimizedBg1 = fg + COLOR_TASKLIST_MINIMIZED_BG1 - COLOR_TASKLIST_FG;
+   const ColorType minimizedBg2 = fg + COLOR_TASKLIST_MINIMIZED_BG2 - COLOR_TASKLIST_FG;
    const ColorType up = fg + COLOR_TRAY_UP - COLOR_TRAY_FG;
    const ColorType down = fg + COLOR_TRAY_DOWN - COLOR_TRAY_FG;
    const ColorType activeUp = fg + COLOR_TRAY_ACTIVE_UP - COLOR_TRAY_FG;
    const ColorType activeDown = fg + COLOR_TRAY_ACTIVE_DOWN - COLOR_TRAY_FG;
+   const ColorType minimizedUp = fg + COLOR_TASKLIST_MINIMIZED_UP - COLOR_TASKLIST_FG;
+   const ColorType minimizedDown = fg + COLOR_TASKLIST_MINIMIZED_DOWN - COLOR_TASKLIST_FG;
 
    /* TaskListStyle has extra attributes. */
    if(tp->type == TOK_TASKLISTSTYLE) {
@@ -1241,6 +1249,9 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
          break;
       case TOK_ACTIVE:
          ParseActive(np, activeFg, activeBg1, activeBg2, activeUp, activeDown);
+         break;
+      case TOK_MINIMIZED:
+         ParseMinimized(np, minimizedFg, minimizedBg1, minimizedBg2, minimizedUp, minimizedDown);
          break;
       case TOK_BACKGROUND:
          ParseGradient(np->value, bg1, bg2);
@@ -1292,6 +1303,38 @@ void ParseActive(const TokenNode *tp, ColorType fg,
          /* fall through */
       default:
          InvalidTag(np, TOK_ACTIVE);
+         break;
+      }
+   }
+}
+
+/** Parse minimized tray style. */
+void ParseMinimized(const TokenNode *tp, ColorType fg,
+                 ColorType bg1, ColorType bg2,
+                 ColorType up, ColorType down)
+{
+   const TokenNode *np;
+
+   for(np = tp->subnodeHead; np; np = np->next) {
+      switch(np->type) {
+      case TOK_BACKGROUND:
+         if(bg1 == bg2) {
+            SetColor(bg1, np->value);
+         } else {
+            ParseGradient(np->value, bg1, bg2);
+         }
+         break;
+      case TOK_FOREGROUND:
+         SetColor(fg, np->value);
+         break;
+      case TOK_OUTLINE:
+         if(up != COLOR_COUNT) {
+            ParseGradient(np->value, down, up);
+            break;
+         }
+         /* fall through */
+      default:
+         InvalidTag(np, TOK_MINIMIZED);
          break;
       }
    }

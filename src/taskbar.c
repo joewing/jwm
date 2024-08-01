@@ -831,12 +831,17 @@ void Render(const TaskBarType *bp)
             const char flash = (cp->client->state.status & STAT_FLASH) != 0;
             const char active = (cp->client->state.status & STAT_ACTIVE)
                && IsClientOnCurrentDesktop(cp->client);
+            const char minimized = (cp->client->state.status & STAT_MINIMIZED);
             if(flash || active) {
-               if(button.type == BUTTON_TASK) {
+               if(button.type != BUTTON_TASK_ACTIVE) {
                   button.type = BUTTON_TASK_ACTIVE;
+               } else if(minimized) {
+                  button.type = BUTTON_TASK_MINIMIZED;
                } else {
                   button.type = BUTTON_TASK;
                }
+            } else if(minimized) {
+               button.type = BUTTON_TASK_MINIMIZED;
             }
             clientCount += 1;
          }

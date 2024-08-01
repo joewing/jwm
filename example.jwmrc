@@ -89,6 +89,10 @@
         <Foreground>#FFFFFF</Foreground>
         <Background>#555555</Background>
       </Active>
+      <Minimized>
+        <Foreground>#FFFFFF</Foreground>
+        <Background>#111111</Background>
+      </Minimized>
       <Foreground>#FFFFFF</Foreground>
       <Background>#333333</Background>
     </TaskListStyle>

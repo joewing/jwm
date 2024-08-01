@@ -69,6 +69,14 @@ static void GetButtonColors(ButtonNode *bp, ColorType *fg, long *bg1, long *bg2,
       *up = colors[COLOR_TASKLIST_ACTIVE_DOWN];
       *decorations = settings.taskListDecorations;
       break;
+   case BUTTON_TASK_MINIMIZED:
+      *fg = COLOR_TASKLIST_MINIMIZED_FG;
+      *bg1 = colors[COLOR_TASKLIST_MINIMIZED_BG1];
+      *bg2 = colors[COLOR_TASKLIST_MINIMIZED_BG2];
+      *down = colors[COLOR_TASKLIST_MINIMIZED_UP];
+      *up = colors[COLOR_TASKLIST_MINIMIZED_DOWN];
+      *decorations = settings.taskListDecorations;
+      break;
    case BUTTON_MENU:
    default:
       *fg = COLOR_MENU_FG;

@@ -390,7 +390,7 @@ void DrawBorderHelper(const ClientNode *np)
 
    long titleColor1, titleColor2;
    long outlineColor;
-   int gradient;
+   GradientDirection gradient;
 
    int north, south, east, west;
    unsigned int width, height;
@@ -407,20 +407,17 @@ void DrawBorderHelper(const ClientNode *np)
 
    /* Determine the colors and gradients to use. */
    if(np->state.status & (STAT_ACTIVE | STAT_FLASH)) {
-
       borderTextColor = COLOR_TITLE_ACTIVE_FG;
       titleColor1 = colors[COLOR_TITLE_ACTIVE_BG1];
       titleColor2 = colors[COLOR_TITLE_ACTIVE_BG2];
       outlineColor = colors[COLOR_TITLE_ACTIVE_DOWN];
-      gradient = gradients[GRADIENT_TITLE_ACTIVE];
-
+      gradient = gradients[COLOR_TITLE_ACTIVE_BG1];
    } else {
-
       borderTextColor = COLOR_TITLE_FG;
       titleColor1 = colors[COLOR_TITLE_BG1];
       titleColor2 = colors[COLOR_TITLE_BG2];
       outlineColor = colors[COLOR_TITLE_DOWN];
-      gradient = gradients[GRADIENT_TITLE];
+      gradient = gradients[COLOR_TITLE_BG1];
    }
 
    /* Set parent background to reduce flicker. */
@@ -439,10 +436,13 @@ void DrawBorderHelper(const ClientNode *np)
       titleHeight > settings.borderWidth) {
 
       XPoint point;
+      const unsigned gradientHeight
+        = settings.windowDecorations == DECO_MOTIF
+        ? titleHeight + settings.borderWidth : titleHeight;
 
       /* Draw a title bar. */
       DrawGradient(canvas, gc, titleColor1, titleColor2,
-                             0, 1, width, titleHeight - 2, gradient);
+                   0, 0, width, gradientHeight, gradient);
 
       /* Draw the buttons.
        * This returns the start and end positions of the title as `x` and `y`.

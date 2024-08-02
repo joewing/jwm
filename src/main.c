@@ -472,7 +472,6 @@ void Initialize(void)
    InitializeClients();
    InitializeClock();
    InitializeColors();
-   InitializeGradients();
    InitializeCommands();
    InitializeCursors();
    InitializeDesktops();

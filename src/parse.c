@@ -252,7 +252,7 @@ static void ParseFocusModel(const TokenNode *tp);
 
 static AlignmentType ParseTextAlignment(const TokenNode *tp);
 static void ParseDecorations(const TokenNode *tp, DecorationsType *deco);
-static void ParseGradient(const char *value, ColorType a, ColorType b, GradientType g);
+static void ParseGradient(const char *value, ColorType a, ColorType b);
 static char *FindAttribute(AttributeNode *ap, const char *name);
 static int ParseTokenValue(const StringMappingType *mapping, int count,
                            const TokenNode *tp, int def);
@@ -1045,10 +1045,10 @@ void ParseWindowStyle(const TokenNode *tp)
          SetColor(COLOR_TITLE_FG, np->value);
          break;
       case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_TITLE_BG1, COLOR_TITLE_BG2,GRADIENT_TITLE);
+         ParseGradient(np->value, COLOR_TITLE_BG1, COLOR_TITLE_BG2);
          break;
       case TOK_OUTLINE:
-         ParseGradient(np->value, COLOR_TITLE_DOWN, COLOR_TITLE_UP,GRADIENT_DUMMY);
+         ParseGradient(np->value, COLOR_TITLE_DOWN, COLOR_TITLE_UP);
          break;
       case TOK_OPACITY:
          settings.inactiveClientOpacity = ParseOpacity(tp, np->value);
@@ -1074,11 +1074,12 @@ void ParseActiveWindowStyle(const TokenNode *tp)
          SetColor(COLOR_TITLE_ACTIVE_FG, np->value);
          break;
       case TOK_BACKGROUND:
-         ParseGradient(np->value,
-            COLOR_TITLE_ACTIVE_BG1, COLOR_TITLE_ACTIVE_BG2, GRADIENT_TITLE_ACTIVE);
+         ParseGradient(np->value, COLOR_TITLE_ACTIVE_BG1,
+                       COLOR_TITLE_ACTIVE_BG2);
          break;
       case TOK_OUTLINE:
-         ParseGradient(np->value, COLOR_TITLE_ACTIVE_DOWN,COLOR_TITLE_ACTIVE_UP,GRADIENT_DUMMY);
+         ParseGradient(np->value, COLOR_TITLE_ACTIVE_DOWN,
+                       COLOR_TITLE_ACTIVE_UP);
          break;
       case TOK_OPACITY:
          settings.activeClientOpacity = ParseOpacity(np, np->value);
@@ -1250,16 +1251,17 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
          ParseActive(np, activeFg, activeBg1, activeBg2, activeUp, activeDown);
          break;
       case TOK_MINIMIZED:
-         ParseMinimized(np, minimizedFg, minimizedBg1, minimizedBg2, minimizedUp, minimizedDown);
+         ParseMinimized(np, minimizedFg, minimizedBg1, minimizedBg2,
+                        minimizedUp, minimizedDown);
          break;
       case TOK_BACKGROUND:
-         ParseGradient(np->value, bg1, bg2,GRADIENT_DUMMY);
+         ParseGradient(np->value, bg1, bg2);
          break;
       case TOK_FOREGROUND:
          SetColor(fg, np->value);
          break;
       case TOK_OUTLINE:
-         ParseGradient(np->value, down, up,GRADIENT_DUMMY);
+         ParseGradient(np->value, down, up);
          break;
       case TOK_OPACITY:
          if(tp->type == TOK_TRAYSTYLE) {
@@ -1288,7 +1290,7 @@ void ParseActive(const TokenNode *tp, ColorType fg,
          if(bg1 == bg2) {
             SetColor(bg1, np->value);
          } else {
-            ParseGradient(np->value, bg1, bg2,GRADIENT_DUMMY);
+            ParseGradient(np->value, bg1, bg2);
          }
          break;
       case TOK_FOREGROUND:
@@ -1296,7 +1298,7 @@ void ParseActive(const TokenNode *tp, ColorType fg,
          break;
       case TOK_OUTLINE:
          if(up != COLOR_COUNT) {
-            ParseGradient(np->value, down, up,GRADIENT_DUMMY);
+            ParseGradient(np->value, down, up);
             break;
          }
          /* fall through */
@@ -1509,13 +1511,13 @@ void ParseTrayButtonStyle(const TokenNode *tp)
                      COLOR_TRAYBUTTON_ACTIVE_UP, COLOR_TRAYBUTTON_ACTIVE_DOWN);
          break;
       case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_TRAYBUTTON_BG1, COLOR_TRAYBUTTON_BG2,GRADIENT_DUMMY);
+         ParseGradient(np->value, COLOR_TRAYBUTTON_BG1, COLOR_TRAYBUTTON_BG2);
          break;
       case TOK_FOREGROUND:
          SetColor(COLOR_TRAYBUTTON_FG, np->value);
          break;
       case TOK_OUTLINE:
-         ParseGradient(np->value, COLOR_TRAYBUTTON_DOWN, COLOR_TRAYBUTTON_UP,GRADIENT_DUMMY);
+         ParseGradient(np->value, COLOR_TRAYBUTTON_DOWN, COLOR_TRAYBUTTON_UP);
          break;
       default:
          InvalidTag(np, TOK_TRAYBUTTONSTYLE);
@@ -1787,7 +1789,7 @@ void ParseClockStyle(const TokenNode *tp)
          SetColor(COLOR_CLOCK_FG, np->value);
          break;
       case TOK_BACKGROUND:
-         ParseGradient(np->value, COLOR_CLOCK_BG1, COLOR_CLOCK_BG2,GRADIENT_DUMMY);
+         ParseGradient(np->value, COLOR_CLOCK_BG1, COLOR_CLOCK_BG2);
          break;
       case TOK_FONT:
          SetFont(FONT_CLOCK, np->value);
@@ -1881,7 +1883,7 @@ void ParseMenuStyle(const TokenNode *tp)
                      COLOR_MENU_ACTIVE_UP, COLOR_MENU_ACTIVE_DOWN);
          break;
       case TOK_OUTLINE:
-         ParseGradient(np->value, COLOR_MENU_DOWN, COLOR_MENU_UP,GRADIENT_DUMMY);
+         ParseGradient(np->value, COLOR_MENU_DOWN, COLOR_MENU_UP);
          break;
       case TOK_OPACITY:
          settings.menuOpacity = ParseOpacity(np, np->value);
@@ -1996,7 +1998,7 @@ void ParseDecorations(const TokenNode *tp, DecorationsType *deco)
 }
 
 /** Parse a color which may be a gradient. */
-void ParseGradient(const char *value, ColorType a, ColorType b, GradientType g)
+void ParseGradient(const char *value, ColorType a, ColorType b)
 {
 
    const char *sep;
@@ -2004,11 +2006,11 @@ void ParseGradient(const char *value, ColorType a, ColorType b, GradientType g)
 
    /* Find the separator. */
    sep = strchr(value, ':');
-   if (sep) {
-      SetGradient(g, GRADIENT_VERTICAL);
+   if(sep) {
+      SetGradient(a, b, GRADIENT_VERTICAL);
    } else {
       sep = strchr(value, ';');
-      SetGradient(g, GRADIENT_HORIZONTAL);
+      SetGradient(a, b, GRADIENT_HORIZONTAL);
    }
    
    if(!sep) {

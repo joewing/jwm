@@ -270,8 +270,8 @@ void DrawClock(ClockType *clk, const TimeType *now)
                       cp->width, cp->height);
    } else {
       DrawGradient(cp->pixmap, rootGC,
-                             colors[COLOR_CLOCK_BG1], colors[COLOR_CLOCK_BG2],
-                             0, 0, cp->width, cp->height, GRADIENT_VERTICAL);
+                   colors[COLOR_CLOCK_BG1], colors[COLOR_CLOCK_BG2],
+                   0, 0, cp->width, cp->height, gradients[COLOR_CLOCK_BG1]);
    }
 
    /* Determine if the clock is the right size. */

@@ -18,6 +18,8 @@
 #include "root.h"
 #include "tray.h"
 
+#include <X11/XKBlib.h>
+
 #define MASK_NONE    0
 #define MASK_SHIFT   (1 << ShiftMapIndex)
 #define MASK_LOCK    (1 << LockMapIndex)
@@ -425,7 +427,7 @@ void InsertBinding(ActionType action, const char *modifiers,
 
             for(temp[offset] = '1'; temp[offset] <= '9'; temp[offset]++) {
 
-               sym = ParseKeyString(temp);
+               sym = XkbKeycodeToKeysym(display, temp[offset] - '1' + 10, 0, 0);
                if(sym == NoSymbol) {
                   Release(temp);
                   return;

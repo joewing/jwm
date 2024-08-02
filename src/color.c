@@ -219,6 +219,7 @@ void StartupColors(void)
          if(!names[dest]) {
             const ColorType src = INHERITED_COLORS[x].src;
             names[dest] = CopyString(names[src]);
+            gradients[dest] = gradients[src];
          }
       }
    }

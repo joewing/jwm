@@ -911,7 +911,7 @@ XPoint DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
    /* Draw buttons to the right of the title. */
    rightOffset = np->width + west;
    while(index > titleIndex) {
-      const int nextOffset = rightOffset - titleHeight - 1;
+      const int nextOffset = rightOffset - titleHeight;
       const MouseContextType context = settings.titleBarLayout[index];
       if(context == MC_MOVE) {
          /* Hit the title bar from the right. */
@@ -924,7 +924,7 @@ XPoint DrawBorderButtons(const ClientNode *np, Pixmap canvas, GC gc)
 
       if(IsContextEnabled(context, np)) {
          rightOffset = nextOffset;
-         DrawLeftButton(np, context, rightOffset, yoffset, canvas, gc, fg);
+         DrawLeftButton(np, context, rightOffset - 1, yoffset, canvas, gc, fg);
       }
 
       index -= 1;
@@ -948,7 +948,7 @@ char DrawBorderIcon(BorderIconType t,
 #ifdef USE_ICONS
       const unsigned titleHeight = GetTitleHeight();
       PutIcon(buttonIcons[t], canvas, fg, xoffset + 2, yoffset + 2,
-              titleHeight - 4, titleHeight - 4);
+              titleHeight - 2, titleHeight - 2);
 #endif
       return 1;
    } else {
@@ -1151,12 +1151,15 @@ void DrawIconButton(const ClientNode *np, int x, int y,
                     Pixmap canvas, GC gc, long fg)
 {
 #ifdef USE_ICONS
-   const int iconSize = GetBorderIconSize();
+   const char hasIcon = np->icon ? 1 : 0;
    const int titleHeight = GetTitleHeight();
-   IconNode *icon = np->icon ? np->icon : buttonIcons[BI_MENU];
+   const int iconSize = hasIcon ? GetBorderIconSize() : Max((int)titleHeight - 2, 0);
+   const int iconXOffset = (titleHeight - iconSize) / 2;
+   const int iconYOffset = hasIcon ? iconXOffset : iconXOffset + 1;
+   IconNode *icon = hasIcon ? np->icon : buttonIcons[BI_MENU];
    PutIcon(icon, canvas, fg,
-           x + (titleHeight - iconSize) / 2,
-           y + (titleHeight - iconSize) / 2,
+           x + iconXOffset,
+           y + iconYOffset,
            iconSize, iconSize);
 #endif
 }

@@ -365,7 +365,6 @@ void SetGradient(ColorType a, ColorType b, GradientDirection d)
    gradients[b] = d;
 }
 
-
 /** Parse a color without lookup. */
 char ParseColorToRGB(const char *value, XColor *c)
 {

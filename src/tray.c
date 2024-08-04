@@ -1001,9 +1001,9 @@ void ClearTrayDrawable(const TrayComponentType *cp)
       JXSetForeground(display, rootGC, colors[COLOR_TRAY_BG1]);
       JXFillRectangle(display, d, rootGC, 0, 0, cp->width, cp->height);
    } else {
-      DrawHorizontalGradient(d, rootGC, colors[COLOR_TRAY_BG1],
-                             colors[COLOR_TRAY_BG2], 0, 0,
-                             cp->width, cp->height);
+      DrawGradient(d, rootGC, colors[COLOR_TRAY_BG1],
+                   colors[COLOR_TRAY_BG2], 0, 0,
+                   cp->width, cp->height, gradients[COLOR_TRAY_BG1]);
    }
 }
 

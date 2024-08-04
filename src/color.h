@@ -83,7 +83,14 @@ typedef unsigned char ColorType;
 #define COLOR_CLOCK_BG2                65
 #define COLOR_COUNT                    66
 
+typedef unsigned char GradientDirection;
+#define GRADIENT_HORIZONTAL        0
+#define GRADIENT_VERTICAL          1
+
 extern unsigned long colors[COLOR_COUNT];
+
+/* Gradient direction associated with each color. */
+extern GradientDirection gradients[COLOR_COUNT];
 
 /*@{*/
 #define InitializeColors() (void)(0)
@@ -97,6 +104,13 @@ void DestroyColors(void);
  * @param value The color to use.
  */
 void SetColor(ColorType c, const char *value);
+
+/** Set the gradient direction for a pair of colors.
+ * @param a From color component.
+ * @param b To color component.
+ * @param d The gradient direction.
+ */
+void SetGradient(ColorType a, ColorType b, GradientDirection d);
 
 /** Parse a color.
  * @param value The color name or hex value.

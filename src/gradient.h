@@ -10,7 +10,9 @@
 #ifndef GRADIENT_H
 #define GRADIENT_H
 
-/** Draw a horizontal gradient.
+#include "color.h"
+
+/** Draw a gradient.
  * Note that no action is taken if fromColor == toColor.
  * @param d The drawable on which to draw the gradient.
  * @param g The graphics context to use.
@@ -20,11 +22,14 @@
  * @param y The y-coordinate.
  * @param width The width of the area to fill.
  * @param height The height of the area to fill.
+ * @param gd The direction of the gradient.
  */
-void DrawHorizontalGradient(Drawable d, GC g,
-                            long fromColor, long toColor,
-                            int x, int y,
-                            unsigned int width, unsigned int height);
+void DrawGradient(Drawable d, GC g,
+                  long fromColor, long toColor,
+                  int x, int y,
+                  unsigned width, unsigned height,
+                  GradientDirection gd);
+
 
 #endif /* GRADIENT_H */
 

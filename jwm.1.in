@@ -1654,7 +1654,8 @@ Colors for various parts of JWM are specified within specific tags
 (described above). Colors may either be hex triplets in RGB format
 (for example, #FF0000 is red) or by a name recognized by the X server.
 For components that support gradients, two colors may be specified
-separated by a colon.
+separated by a colon for a horizontal gradient or a semicolon for a
+vertical gradient.
 .RE
 
 .B ICONS

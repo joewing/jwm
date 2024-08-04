@@ -23,6 +23,8 @@ typedef struct {
 unsigned long colors[COLOR_COUNT];
 static unsigned long rgbColors[COLOR_COUNT];
 
+GradientDirection gradients[COLOR_COUNT];
+
 /* Map a linear 8-bit RGB space to pixel values. */
 static unsigned long *rgbToPixel;
 
@@ -217,6 +219,7 @@ void StartupColors(void)
          if(!names[dest]) {
             const ColorType src = INHERITED_COLORS[x].src;
             names[dest] = CopyString(names[src]);
+            gradients[dest] = gradients[src];
          }
       }
    }
@@ -353,6 +356,13 @@ void SetColor(ColorType c, const char *value)
    }
 
    names[c] = CopyString(value);
+}
+
+/** Set the gradient direction to use for a pair of colors. */
+void SetGradient(ColorType a, ColorType b, GradientDirection d)
+{
+   gradients[a] = d;
+   gradients[b] = d;
 }
 
 /** Parse a color without lookup. */

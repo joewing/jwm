@@ -1074,8 +1074,8 @@ void ParseActiveWindowStyle(const TokenNode *tp)
          SetColor(COLOR_TITLE_ACTIVE_FG, np->value);
          break;
       case TOK_BACKGROUND:
-         ParseGradient(np->value,
-            COLOR_TITLE_ACTIVE_BG1, COLOR_TITLE_ACTIVE_BG2);
+         ParseGradient(np->value, COLOR_TITLE_ACTIVE_BG1,
+                       COLOR_TITLE_ACTIVE_BG2);
          break;
       case TOK_OUTLINE:
          ParseGradient(np->value, COLOR_TITLE_ACTIVE_DOWN,
@@ -1251,7 +1251,8 @@ void ParseTrayStyle(const TokenNode *tp, FontType font, ColorType fg)
          ParseActive(np, activeFg, activeBg1, activeBg2, activeUp, activeDown);
          break;
       case TOK_MINIMIZED:
-         ParseMinimized(np, minimizedFg, minimizedBg1, minimizedBg2, minimizedUp, minimizedDown);
+         ParseMinimized(np, minimizedFg, minimizedBg1, minimizedBg2,
+                        minimizedUp, minimizedDown);
          break;
       case TOK_BACKGROUND:
          ParseGradient(np->value, bg1, bg2);
@@ -2005,7 +2006,13 @@ void ParseGradient(const char *value, ColorType a, ColorType b)
 
    /* Find the separator. */
    sep = strchr(value, ':');
-
+   if(sep) {
+      SetGradient(a, b, GRADIENT_VERTICAL);
+   } else {
+      sep = strchr(value, ';');
+      SetGradient(a, b, GRADIENT_HORIZONTAL);
+   }
+   
    if(!sep) {
 
       /* Only one color given - use the same color for both. */

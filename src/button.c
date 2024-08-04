@@ -18,7 +18,8 @@
 
 /** Determine the colors to use. */
 static void GetButtonColors(ButtonNode *bp, ColorType *fg, long *bg1, long *bg2,
-                            long *up, long *down, DecorationsType *decorations)
+                            long *up, long *down, DecorationsType *decorations,
+                            GradientDirection *gd)
 {
    switch(bp->type) {
    case BUTTON_LABEL:
@@ -28,6 +29,7 @@ static void GetButtonColors(ButtonNode *bp, ColorType *fg, long *bg1, long *bg2,
       *up = colors[COLOR_MENU_UP];
       *down = colors[COLOR_MENU_DOWN];
       *decorations = settings.menuDecorations;
+      *gd = gradients[COLOR_MENU_BG];
       break;
    case BUTTON_MENU_ACTIVE:
       *fg = COLOR_MENU_ACTIVE_FG;
@@ -36,6 +38,7 @@ static void GetButtonColors(ButtonNode *bp, ColorType *fg, long *bg1, long *bg2,
       *down = colors[COLOR_MENU_ACTIVE_UP];
       *up = colors[COLOR_MENU_ACTIVE_DOWN];
       *decorations = settings.menuDecorations;
+      *gd = gradients[COLOR_MENU_ACTIVE_BG1];
       break;
    case BUTTON_TRAY:
       *fg = COLOR_TRAYBUTTON_FG;
@@ -44,6 +47,7 @@ static void GetButtonColors(ButtonNode *bp, ColorType *fg, long *bg1, long *bg2,
       *up = colors[COLOR_TRAYBUTTON_UP];
       *down = colors[COLOR_TRAYBUTTON_DOWN];
       *decorations = settings.trayDecorations;
+      *gd = gradients[COLOR_TRAYBUTTON_BG1];
       break;
    case BUTTON_TRAY_ACTIVE:
       *fg = COLOR_TRAYBUTTON_ACTIVE_FG;
@@ -52,6 +56,7 @@ static void GetButtonColors(ButtonNode *bp, ColorType *fg, long *bg1, long *bg2,
       *down = colors[COLOR_TRAYBUTTON_ACTIVE_UP];
       *up = colors[COLOR_TRAYBUTTON_ACTIVE_DOWN];
       *decorations = settings.trayDecorations;
+      *gd = gradients[COLOR_TRAYBUTTON_ACTIVE_BG1];
       break;
    case BUTTON_TASK:
       *fg = COLOR_TASKLIST_FG;
@@ -60,6 +65,7 @@ static void GetButtonColors(ButtonNode *bp, ColorType *fg, long *bg1, long *bg2,
       *up = colors[COLOR_TASKLIST_UP];
       *down = colors[COLOR_TASKLIST_DOWN];
       *decorations = settings.taskListDecorations;
+      *gd = gradients[COLOR_TASKLIST_BG1];
       break;
    case BUTTON_TASK_ACTIVE:
       *fg = COLOR_TASKLIST_ACTIVE_FG;
@@ -68,6 +74,7 @@ static void GetButtonColors(ButtonNode *bp, ColorType *fg, long *bg1, long *bg2,
       *down = colors[COLOR_TASKLIST_ACTIVE_UP];
       *up = colors[COLOR_TASKLIST_ACTIVE_DOWN];
       *decorations = settings.taskListDecorations;
+      *gd = gradients[COLOR_TASKLIST_ACTIVE_BG1];
       break;
    case BUTTON_TASK_MINIMIZED:
       *fg = COLOR_TASKLIST_MINIMIZED_FG;
@@ -76,6 +83,7 @@ static void GetButtonColors(ButtonNode *bp, ColorType *fg, long *bg1, long *bg2,
       *down = colors[COLOR_TASKLIST_MINIMIZED_UP];
       *up = colors[COLOR_TASKLIST_MINIMIZED_DOWN];
       *decorations = settings.taskListDecorations;
+      *gd = gradients[COLOR_TASKLIST_MINIMIZED_BG1];
       break;
    case BUTTON_MENU:
    default:
@@ -85,6 +93,7 @@ static void GetButtonColors(ButtonNode *bp, ColorType *fg, long *bg1, long *bg2,
       *up = colors[COLOR_MENU_UP];
       *down = colors[COLOR_MENU_DOWN];
       *decorations = settings.menuDecorations;
+      *gd = gradients[COLOR_MENU_BG];
       break;
    }
 
@@ -159,6 +168,7 @@ void DrawButton(ButtonNode *bp)
    long bg1, bg2;
    long up, down;
    DecorationsType decorations;
+   GradientDirection gradient;
 
    Drawable drawable;
    GC gc;
@@ -179,7 +189,7 @@ void DrawButton(ButtonNode *bp)
    gc = JXCreateGC(display, drawable, 0, NULL);
 
    /* Determine the colors to use. */
-   GetButtonColors(bp, &fg, &bg1, &bg2, &up, &down, &decorations);
+   GetButtonColors(bp, &fg, &bg1, &bg2, &up, &down, &decorations, &gradient);
 
    /* Draw the background. */
    if(bp->fill) {
@@ -191,8 +201,8 @@ void DrawButton(ButtonNode *bp)
          JXFillRectangle(display, drawable, gc, x, y, width, height);
       } else {
          /* gradient */
-         DrawHorizontalGradient(drawable, gc, bg1, bg2,
-                                x, y, width, height);
+         DrawGradient(drawable, gc, bg1, bg2,
+                                x, y, width, height, gradient);
       }
 
    }

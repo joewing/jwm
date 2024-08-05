@@ -41,9 +41,9 @@ static void DrawIconButton(const ClientNode *np, int x, int y,
                            Pixmap canvas, GC gc, long fg);
 static void DrawCloseButton(unsigned xoffset, unsigned yoffset,
                             Pixmap canvas, GC gc, long fg);
-static void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
+static void DrawMaxButton(unsigned xoffset, unsigned yoffset,
                            Pixmap canvas, GC gc, long fg);
-static void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
+static void DrawMaximizedButton(unsigned xoffset, unsigned yoffset,
                            Pixmap canvas, GC gc, long fg);
 static void DrawMinButton(unsigned xoffset, unsigned yoffset,
                           Pixmap canvas, GC gc, long fg);
@@ -796,9 +796,9 @@ void DrawBorderButton(const ClientNode *np, MouseContextType context,
       break;
    case MC_MAXIMIZE:
       if(np->state.maxFlags) {
-         DrawMaxAButton(x, y, canvas, gc, fg);
+         DrawMaximizedButton(x, y, canvas, gc, fg);
       } else {
-         DrawMaxIButton(x, y, canvas, gc, fg);
+         DrawMaxButton(x, y, canvas, gc, fg);
       }
       break;
    case MC_ICON:
@@ -996,8 +996,8 @@ void DrawCloseButton(unsigned xoffset, unsigned yoffset,
 
 }
 
-/** Draw an inactive maximize button. */
-void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
+/** Draw a maximize button. */
+void DrawMaxButton(unsigned xoffset, unsigned yoffset,
                     Pixmap canvas, GC gc, long fg)
 {
 
@@ -1050,8 +1050,8 @@ void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
 
 }
 
-/** Draw an active maximize button. */
-void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
+/** Draw a maximized button. */
+void DrawMaximizedButton(unsigned xoffset, unsigned yoffset,
                     Pixmap canvas, GC gc, long fg)
 {
    XSegment segments[8];
@@ -1061,7 +1061,7 @@ void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
    unsigned x2, y2;
    unsigned x3, y3;
 
-   if(DrawBorderIcon(BI_MAX_ACTIVE, xoffset, yoffset, canvas, fg)) {
+   if(DrawBorderIcon(BI_MAXIMIZED, xoffset, yoffset, canvas, fg)) {
       return;
    }
 

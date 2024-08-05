@@ -24,7 +24,7 @@ static const StringMappingType TOKEN_MAP[] = {
    { "Button",             TOK_BUTTON           },
    { "ButtonClose",        TOK_BUTTONCLOSE      },
    { "ButtonMax",          TOK_BUTTONMAX        },
-   { "ButtonMaxActive",    TOK_BUTTONMAXACTIVE  },
+   { "ButtonMaximized",    TOK_BUTTONMAXIMIZED  },
    { "ButtonMenu",         TOK_BUTTONMENU       },
    { "ButtonMin",          TOK_BUTTONMIN        },
    { "Class",              TOK_CLASS            },

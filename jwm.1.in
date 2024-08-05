@@ -2011,7 +2011,7 @@ default.
 An icon to display for the maximize button on client windows instead of the
 default.
 .RE
-.B ButtonMaxActive
+.B ButtonMaximized
 .RS
 An icon to display for the maximize button on maximized client windows instead
 of the default.

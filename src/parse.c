@@ -433,8 +433,8 @@ void Parse(const TokenNode *start, int depth)
             case TOK_BUTTONMAX:
                SetBorderIcon(BI_MAX, tp->value);
                break;
-            case TOK_BUTTONMAXACTIVE:
-               SetBorderIcon(BI_MAX_ACTIVE, tp->value);
+            case TOK_BUTTONMAXIMIZED:
+               SetBorderIcon(BI_MAXIMIZED, tp->value);
                break;
             case TOK_BUTTONMIN:
                SetBorderIcon(BI_MIN, tp->value);

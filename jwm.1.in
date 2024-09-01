@@ -2006,25 +2006,50 @@ The following tags may also be supplied:
 An icon to display for the close button on client windows instead of the
 default.
 .RE
+.B ButtonCloseFocus
+.RS
+An icon to display for the close button on active client windows instead
+of the default.
+.RE
 .B ButtonMax
 .RS
 An icon to display for the maximize button on client windows instead of the
 default.
+.RE
+.B ButtonMaxFocus
+.RS
+An icon to display for the maximize button on active client windows instead
+of the default.
 .RE
 .B ButtonMaxActive
 .RS
 An icon to display for the maximize button on maximized client windows instead
 of the default.
 .RE
+.B ButtonMaxActiveFocus
+.RS
+An icon to display for the maximize button on active maximized client windows
+instead of the default.
+.RE
 .B ButtonMenu
 .RS
 An icon to display for the menu button on client windows instead of the
 default. This is used for client windows that do not specify an icon.
 .RE
+.B ButtonMenuFocus
+.RS
+An icon to display for the menu button on active client windows instead
+of the default. This is used for client windows that do not specify an icon.
+.RE
 .B ButtonMin
 .RS
 An icon to display for the minimize button on client windows instead
 of the default.
+.RE
+.B ButtonMinFocus
+.RS
+An icon to display for the minimize button on active client windows
+instead of the default.
 .RE
 .B DefaultIcon
 .RS

@@ -430,17 +430,32 @@ void Parse(const TokenNode *start, int depth)
             case TOK_BUTTONCLOSE:
                SetBorderIcon(BI_CLOSE, tp->value);
                break;
+            case TOK_BUTTONCLOSEFOCUS:
+               SetBorderIcon(BI_CLOSE_FOCUS, tp->value);
+               break;
             case TOK_BUTTONMAX:
                SetBorderIcon(BI_MAX, tp->value);
                break;
             case TOK_BUTTONMAXACTIVE:
                SetBorderIcon(BI_MAX_ACTIVE, tp->value);
                break;
+            case TOK_BUTTONMAXACTIVEFOCUS:
+               SetBorderIcon(BI_MAX_ACTIVE_FOCUS, tp->value);
+               break;
+            case TOK_BUTTONMAXFOCUS:
+               SetBorderIcon(BI_MAX_FOCUS, tp->value);
+               break;
             case TOK_BUTTONMIN:
                SetBorderIcon(BI_MIN, tp->value);
                break;
+            case TOK_BUTTONMINFOCUS:
+               SetBorderIcon(BI_MIN_FOCUS, tp->value);
+               break;
             case TOK_BUTTONMENU:
                SetBorderIcon(BI_MENU, tp->value);
+               break;
+            case TOK_BUTTONMENUFOCUS:
+               SetBorderIcon(BI_MENU_FOCUS, tp->value);
                break;
             case TOK_DEFAULTICON:
                SetDefaultIcon(tp->value);

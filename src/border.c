@@ -38,15 +38,15 @@ static char DrawBorderIcon(BorderIconType t,
                            unsigned xoffset, unsigned yoffset,
                            Pixmap canvas, long fg);
 static void DrawIconButton(const ClientNode *np, int x, int y,
-                           Pixmap canvas, GC gc, long fg);
+                           Pixmap canvas, GC gc, long fg, char active);
 static void DrawCloseButton(unsigned xoffset, unsigned yoffset,
-                            Pixmap canvas, GC gc, long fg);
+                            Pixmap canvas, GC gc, long fg, char active);
 static void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
-                           Pixmap canvas, GC gc, long fg);
+                           Pixmap canvas, GC gc, long fg, char active);
 static void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
-                           Pixmap canvas, GC gc, long fg);
+                           Pixmap canvas, GC gc, long fg, char active);
 static void DrawMinButton(unsigned xoffset, unsigned yoffset,
-                          Pixmap canvas, GC gc, long fg);
+                          Pixmap canvas, GC gc, long fg, char active);
 
 #ifdef USE_SHAPE
 static void FillRoundedRectangle(Drawable d, GC gc, int x, int y,
@@ -786,23 +786,25 @@ void DrawBorderHandles(const ClientNode *np, Pixmap canvas, GC gc)
 void DrawBorderButton(const ClientNode *np, MouseContextType context,
                       int x, int y, Pixmap canvas, GC gc, long fg)
 {
+  const char isActive = (np->state.status & STAT_ACTIVE)
+                      && IsClientOnCurrentDesktop(np);
    JXSetForeground(display, gc, fg);
    switch(context) {
    case MC_CLOSE:
-      DrawCloseButton(x, y, canvas, gc, fg);
+      DrawCloseButton(x, y, canvas, gc, fg, isActive);
       break;
    case MC_MINIMIZE:
-      DrawMinButton(x, y, canvas, gc, fg);
+      DrawMinButton(x, y, canvas, gc, fg, isActive);
       break;
    case MC_MAXIMIZE:
       if(np->state.maxFlags) {
-         DrawMaxAButton(x, y, canvas, gc, fg);
+         DrawMaxAButton(x, y, canvas, gc, fg, isActive);
       } else {
-         DrawMaxIButton(x, y, canvas, gc, fg);
+         DrawMaxIButton(x, y, canvas, gc, fg, isActive);
       }
       break;
    case MC_ICON:
-      DrawIconButton(np, x, y, canvas, gc, fg);
+      DrawIconButton(np, x, y, canvas, gc, fg, isActive);
       break;
    default:
       Assert(0);
@@ -960,7 +962,7 @@ char DrawBorderIcon(BorderIconType t,
 
 /** Draw a close button. */
 void DrawCloseButton(unsigned xoffset, unsigned yoffset,
-                     Pixmap canvas, GC gc, long fg)
+                     Pixmap canvas, GC gc, long fg, char active)
 {
    XSegment segments[2];
    const unsigned titleHeight = GetTitleHeight();
@@ -968,7 +970,9 @@ void DrawCloseButton(unsigned xoffset, unsigned yoffset,
    unsigned x1, y1;
    unsigned x2, y2;
 
-   if(DrawBorderIcon(BI_CLOSE, xoffset, yoffset, canvas, fg)) {
+   if(active && DrawBorderIcon(BI_CLOSE_FOCUS, xoffset, yoffset, canvas, fg)) {
+      return;
+   } else if(DrawBorderIcon(BI_CLOSE, xoffset, yoffset, canvas, fg)) {
       return;
    }
 
@@ -998,7 +1002,7 @@ void DrawCloseButton(unsigned xoffset, unsigned yoffset,
 
 /** Draw an inactive maximize button. */
 void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
-                    Pixmap canvas, GC gc, long fg)
+                    Pixmap canvas, GC gc, long fg, char active)
 {
 
    XSegment segments[5];
@@ -1007,7 +1011,9 @@ void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
    unsigned int x1, y1;
    unsigned int x2, y2;
 
-   if(DrawBorderIcon(BI_MAX, xoffset, yoffset, canvas, fg)) {
+   if(active && DrawBorderIcon(BI_MAX_FOCUS, xoffset, yoffset, canvas, fg)) {
+      return;
+   } else if(DrawBorderIcon(BI_MAX, xoffset, yoffset, canvas, fg)) {
       return;
    }
 
@@ -1052,7 +1058,7 @@ void DrawMaxIButton(unsigned xoffset, unsigned yoffset,
 
 /** Draw an active maximize button. */
 void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
-                    Pixmap canvas, GC gc, long fg)
+                    Pixmap canvas, GC gc, long fg, char active)
 {
    XSegment segments[8];
    unsigned titleHeight;
@@ -1061,7 +1067,9 @@ void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
    unsigned x2, y2;
    unsigned x3, y3;
 
-   if(DrawBorderIcon(BI_MAX_ACTIVE, xoffset, yoffset, canvas, fg)) {
+   if(active && DrawBorderIcon(BI_MAX_ACTIVE_FOCUS, xoffset, yoffset, canvas, fg)) {
+      return;
+   } else if(DrawBorderIcon(BI_MAX_ACTIVE, xoffset, yoffset, canvas, fg)) {
       return;
    }
 
@@ -1123,14 +1131,16 @@ void DrawMaxAButton(unsigned xoffset, unsigned yoffset,
 
 /** Draw a minimize button. */
 void DrawMinButton(unsigned xoffset, unsigned yoffset,
-                   Pixmap canvas, GC gc, long fg)
+                   Pixmap canvas, GC gc, long fg, char active)
 {
    unsigned titleHeight;
    unsigned size;
    unsigned x1, y1;
    unsigned x2, y2;
 
-   if(DrawBorderIcon(BI_MIN, xoffset, yoffset, canvas, fg)) {
+   if(active && DrawBorderIcon(BI_MIN_FOCUS, xoffset, yoffset, canvas, fg)) {
+      return;
+   } else if(DrawBorderIcon(BI_MIN, xoffset, yoffset, canvas, fg)) {
       return;
    }
 
@@ -1150,7 +1160,7 @@ void DrawMinButton(unsigned xoffset, unsigned yoffset,
 
 /* Draw the title icon. */
 void DrawIconButton(const ClientNode *np, int x, int y,
-                    Pixmap canvas, GC gc, long fg)
+                    Pixmap canvas, GC gc, long fg, char active)
 {
 #ifdef USE_ICONS
    const char hasIcon = np->icon ? 1 : 0;
@@ -1158,7 +1168,14 @@ void DrawIconButton(const ClientNode *np, int x, int y,
    const int iconSize = hasIcon ? GetBorderIconSize() : Max((int)titleHeight - 2, 0);
    const int iconXOffset = (titleHeight - iconSize) / 2;
    const int iconYOffset = hasIcon ? iconXOffset : iconXOffset + 1;
-   IconNode *icon = hasIcon ? np->icon : buttonIcons[BI_MENU];
+   IconNode *icon;
+   if(hasIcon) {
+      icon = np->icon;
+   } else if(active && (buttonIcons[BI_MENU_FOCUS] != NULL)) {
+      icon = buttonIcons[BI_MENU_FOCUS];
+   } else {
+      icon = buttonIcons[BI_MENU];
+   }
    PutIcon(icon, canvas, fg,
            x + iconXOffset,
            y + iconYOffset,

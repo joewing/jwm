@@ -18,12 +18,17 @@ struct ClientState;
 
 /** Border icon types. */
 typedef unsigned char BorderIconType;
-#define BI_CLOSE        0
-#define BI_MAX          1
-#define BI_MAX_ACTIVE   2
-#define BI_MENU         3
-#define BI_MIN          4
-#define BI_COUNT        5
+#define BI_CLOSE              0
+#define BI_CLOSE_FOCUS        1
+#define BI_MAX                2
+#define BI_MAX_FOCUS          3
+#define BI_MAX_ACTIVE         4
+#define BI_MAX_ACTIVE_FOCUS   5
+#define BI_MENU               6
+#define BI_MENU_FOCUS         7
+#define BI_MIN                8
+#define BI_MIN_FOCUS          9
+#define BI_COUNT              10
 
 /*@{*/
 void InitializeBorders(void);

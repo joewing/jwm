@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jwm 2.3.4\n"
 "Report-Msgid-Bugs-To: joewing@joewing.net\n"
-"POT-Creation-Date: 2022-10-21 15:44+0000\n"
+"POT-Creation-Date: 2024-10-05 01:37+0000\n"
 "PO-Revision-Date: 2022-04-02 19:07-0300\n"
 "Last-Translator: marcelo cripe <marcelocripe@gmail.com>\n"
 "Language-Team: Portuguese Brazil\n"
@@ -37,35 +37,35 @@ msgstr "Nenhum valor foi especificado para o papel de parede"
 msgid "invalid background type: \"%s\""
 msgstr "O tipo de papel de parede \"%s\" não é válido"
 
-#: src/background.c:294
+#: src/background.c:306
 #, c-format
 msgid "background image not found: \"%s\""
 msgstr "A imagem \"%s\" do papel de parede não foi encontrada"
 
-#: src/binding.c:323
+#: src/binding.c:329
 msgid "Specified KeySym is not defined for any KeyCode"
 msgstr "O 'KeySym' especificado não está definido por nenhum 'KeyCode'"
 
-#: src/binding.c:331
+#: src/binding.c:337
 #, c-format
 msgid "modifier not found for keysym 0x%0x"
 msgstr "O modificador 0x%0x não foi encontrado para o 'keysym'"
 
-#: src/binding.c:359
+#: src/binding.c:365
 #, c-format
 msgid "invalid modifier: \"%c\""
 msgstr "O modificador \"%c\" não é válido"
 
-#: src/binding.c:373
+#: src/binding.c:379
 #, c-format
 msgid "invalid key symbol: \"%s\""
 msgstr "O símbolo da tecla \"%s\" não é válido"
 
-#: src/binding.c:482
+#: src/binding.c:488
 msgid "neither key nor keycode specified for Key"
 msgstr "A tecla e o código da tecla não foram especificadas para a 'Key'"
 
-#: src/binding.c:520
+#: src/binding.c:526
 #, c-format
 msgid "key binding: root menu \"%s\" not defined"
 msgstr "As teclas de atalho do menu do root \"%s\" não estão definidas"
@@ -109,15 +109,15 @@ msgstr "Cancelar"
 msgid "Confirm"
 msgstr "Confirmar"
 
-#: src/desktop.c:337
+#: src/desktop.c:340
 msgid "empty Desktops Name tag"
 msgstr "A variável de identificação 'Name' da Área de Trabalho está vazia"
 
-#: src/dock.c:151
+#: src/dock.c:155
 msgid "only one Dock allowed"
 msgstr "Apenas uma Doca (Dock) é permitida"
 
-#: src/dock.c:232
+#: src/dock.c:237
 msgid "could not acquire system tray selection"
 msgstr "Não foi possível adquirir a seleção da área de notificação"
 
@@ -194,180 +194,180 @@ msgstr "Erro ao ler a imagem PNG %s"
 msgid "could not create info struct for PNG image: %s"
 msgstr "Não foi possível criar a estrutura de informações para a imagem PNG %s"
 
-#: src/lex.c:202
+#: src/lex.c:208
 #, c-format
 msgid "%s[%u]: close tag \"%s\" does not match open tag \"%s\""
 msgstr ""
 "%s[%u]: o fechamento da variável \"%s\" não corresponde à abertura da "
 "variável \"%s\""
 
-#: src/lex.c:208
+#: src/lex.c:214
 #, c-format
 msgid "%s[%u]: unexpected and invalid close tag"
 msgstr "%s[%u]: o fechamento inesperado da variável não é válido"
 
-#: src/lex.c:214
+#: src/lex.c:220
 #, c-format
 msgid "%s[%u]: close tag \"%s\" without open tag"
 msgstr ""
 "%s[%u]: o fechamento da variável \"%s\" está sem a variável de abertura"
 
-#: src/lex.c:217
+#: src/lex.c:223
 #, c-format
 msgid "%s[%u]: invalid close tag"
 msgstr "%s[%u]: o fechamento da variável não é válido"
 
-#: src/lex.c:265
+#: src/lex.c:271
 #, c-format
 msgid "%s[%u]: invalid open tag"
 msgstr "%s[%u]: a abertura da variável não é válida"
 
-#: src/lex.c:281
+#: src/lex.c:287
 #, c-format
 msgid "%s[%u]: invalid tag"
 msgstr "%s[%u]: a variável não é válida"
 
-#: src/lex.c:339
+#: src/lex.c:345
 #, c-format
 msgid "%s[%u]: unexpected text: \"%s\""
 msgstr "%s[%u]: o texto \"%s\" não é esperado"
 
-#: src/lex.c:398
+#: src/lex.c:404
 #, c-format
 msgid "%s[%d]: invalid entity: \"%.8s\""
 msgstr "%s[%d]: a entrada \"%.8s\" não é válida"
 
-#: src/lex.c:504
+#: src/lex.c:510
 msgid "out of memory"
 msgstr "A memória não é suficiente"
 
-#: src/parse.c:276
+#: src/parse.c:285
 #, fuzzy, c-format
 #| msgid "could not open %s or %s"
 msgid "could not open %s"
 msgstr "Não foi possível abrir %s ou %s"
 
-#: src/parse.c:286
+#: src/parse.c:295
 #, c-format
 msgid "could not open %s or %s"
 msgstr "Não foi possível abrir %s ou %s"
 
-#: src/parse.c:305
+#: src/parse.c:314
 #, c-format
 msgid "include depth (%d) exceeded"
 msgstr "A profundidade do 'include' (%d) foi excedido"
 
-#: src/parse.c:449
+#: src/parse.c:473
 #, c-format
 msgid "invalid start tag: %s"
 msgstr "A abertura da variável %s não é válida"
 
-#: src/parse.c:841
+#: src/parse.c:865
 #, c-format
 msgid "invalid include: %s"
 msgstr "A inclusão de %s não é válida"
 
-#: src/parse.c:927
+#: src/parse.c:951
 msgid "no action specified for Key"
 msgstr "Nenhuma ação foi especificada para a tecla"
 
-#: src/parse.c:934
+#: src/parse.c:958
 #, c-format
 msgid "invalid Key action: \"%s\""
 msgstr "A ação \"%s\" da tecla 'Key' não é válida"
 
-#: src/parse.c:960
+#: src/parse.c:984
 #, fuzzy
 #| msgid "no action specified for Key"
 msgid "no action specified for Mouse"
 msgstr "Nenhuma ação foi especificada para o Rato/Mouse"
 
-#: src/parse.c:965
+#: src/parse.c:989
 #, fuzzy, c-format
 #| msgid "invalid Key action: \"%s\""
 msgid "invalid Mouse action: \"%s\""
 msgstr "A ação \"%s\" do Rato/Mouse não é válida"
 
-#: src/parse.c:971
+#: src/parse.c:995
 #, fuzzy, c-format
 #| msgid "invalid Key action: \"%s\""
 msgid "invalid Mouse context: \"%s\""
 msgstr "O menu de contexto \"%s\" do Rato/Mouse não é válido"
 
-#: src/parse.c:992
+#: src/parse.c:1016
 #, c-format
 msgid "invalid text alignment: \"%s\""
 msgstr "O alinhamento do texto \"%s\" não é válido"
 
-#: src/parse.c:1092
+#: src/parse.c:1116
 msgid "no include file specified"
 msgstr "Nenhum arquivo foi incluído"
 
-#: src/parse.c:1103
+#: src/parse.c:1127
 #, c-format
 msgid "could not process include: %s"
 msgstr "Não é possível processar o %s"
 
-#: src/parse.c:1107
+#: src/parse.c:1131
 #, c-format
 msgid "could not open included file: %s"
 msgstr "Não é possível abrir o arquivo %s"
 
-#: src/parse.c:1774
+#: src/parse.c:1845
 #, c-format
 msgid "invalid value for 'enabled': \"%s\""
 msgstr "O valor não é válido para ativar \"%s\""
 
-#: src/parse.c:1924
+#: src/parse.c:1995
 #, c-format
 msgid "invalid Group Option: %s"
 msgstr "A opção do grupo %s não é válida"
 
-#: src/parse.c:1939
+#: src/parse.c:2010
 #, c-format
 msgid "invalid decorations: %s"
 msgstr "A decoração \"%s\" não é válida"
 
-#: src/parse.c:2001
+#: src/parse.c:2078
 #, c-format
 msgid "%s is empty"
 msgstr "%s está vazio(a)"
 
-#: src/parse.c:2008
+#: src/parse.c:2085
 #, c-format
 msgid "invalid %s: \"%s\""
 msgstr "Não é válido %s: \"%s\""
 
-#: src/parse.c:2026
+#: src/parse.c:2103
 #, c-format
 msgid "invalid value for %s: \"%s\""
 msgstr "O valor %s não é válido para \"%s\""
 
-#: src/parse.c:2096 src/parse.c:2113 src/parse.c:2141
+#: src/parse.c:2173 src/parse.c:2190 src/parse.c:2218
 msgid "no value specified"
 msgstr "Nenhum valor foi especificado"
 
-#: src/parse.c:2101 src/parse.c:2118
+#: src/parse.c:2178 src/parse.c:2195
 #, c-format
 msgid "invalid setting: %s"
 msgstr "A configuração %s não é válida"
 
-#: src/parse.c:2146
+#: src/parse.c:2223
 #, c-format
 msgid "invalid opacity: %s"
 msgstr "A transparência %s não é válida"
 
-#: src/parse.c:2167
+#: src/parse.c:2244
 #, c-format
 msgid "invalid layer: %s"
 msgstr "A camada %s não é válida"
 
-#: src/parse.c:2188
+#: src/parse.c:2265
 #, c-format
 msgid "invalid tag in %s: %s"
 msgstr "A variável %s não é válida dentro de %s"
 
-#: src/parse.c:2209
+#: src/parse.c:2286
 msgid "configuration error"
 msgstr "Erro na configuração"
 
@@ -390,31 +390,37 @@ msgstr ""
 "não é possível inserir um cliente na variável 'swallow' sem especificar o "
 "nome"
 
-#: src/taskbar.c:488 src/winmenu.c:48
+#: src/taskbar.c:513 src/winmenu.c:48
 msgid "Close"
 msgstr "Fechar"
 
-#: src/taskbar.c:495 src/winmenu.c:68
+#: src/taskbar.c:520 src/winmenu.c:68
 msgid "Minimize"
 msgstr "Minimizar"
 
-#: src/taskbar.c:502 src/winmenu.c:97 src/winmenu.c:99 src/winmenu.c:101
+#: src/taskbar.c:527 src/winmenu.c:97 src/winmenu.c:99 src/winmenu.c:101
 #: src/winmenu.c:108
 msgid "Restore"
 msgstr "Restaurar"
 
-#: src/taskbar.c:509 src/winmenu.c:181
+#: src/taskbar.c:534 src/winmenu.c:181
 msgid "Send To"
 msgstr "Enviar Para"
 
-#: src/taskbar.c:1004
+#: src/taskbar.c:1053
 #, c-format
 msgid "invalid maxwidth for TaskList: %s"
 msgstr "A largura máxima %s para a lista de tarefas não é válida"
 
-#: src/taskbar.c:1018
+#: src/taskbar.c:1067
 #, c-format
 msgid "invalid height for TaskList: %s"
+msgstr "A altura %s para a lista de tarefas não é válida"
+
+#: src/taskbar.c:1095
+#, fuzzy, c-format
+#| msgid "invalid height for TaskList: %s"
+msgid "invalid labelpos for TaskList: %s"
 msgstr "A altura %s para a lista de tarefas não é válida"
 
 #: src/tray.c:1082

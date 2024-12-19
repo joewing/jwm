@@ -166,7 +166,7 @@ void InitializeMenu(Menu *menu)
          np->icon = &emptyIcon;
       }
       if(np->submenu) {
-         hasSubmenu = (menu->itemHeight + 3) / 4;
+         hasSubmenu = (hasIcon ? menu->itemHeight / 3 : menu->itemHeight / 2 + 4);
          InitializeMenu(np->submenu);
       }
    }

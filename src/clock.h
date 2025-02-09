@@ -10,6 +10,8 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
+#define CLOCK_BORDER_SIZE   4
+
 struct TrayComponentType;
 
 /*@{*/

@@ -38,7 +38,6 @@ typedef struct ClockType {
    TimeType mouseTime;        /**< Time of the last mouse motion. */
 
    int userWidth;             /**< User-specified clock width (or 0). */
-
    struct ClockType *next;    /**< Next clock in the list. */
 
 } ClockType;
@@ -252,18 +251,52 @@ void SignalClock(const TimeType *now, int x, int y, Window w, void *data)
 void DrawClock(ClockType *clk, const TimeType *now)
 {
 
-   TrayComponentType *cp;
+   TrayComponentType *cp = clk->cp;
    const char *timeString;
-   int width;
-   int rwidth;
+   char *tmpTimeString;
+   char *token;
+   int tokenWidth;
+   int maxTokenWidth;
+   int tmpWidth;
+   int linesCount;
+   int sheight;
+   int yoffset;
 
    /* Only draw if the time changed. */
    if(now->seconds == clk->lastTime.seconds) {
       return;
    }
 
+   /* Determine if the clock is the right size. */
+   timeString = GetTimeString(clk->format, clk->zone);
+   tmpTimeString = CopyString(timeString);
+   token = strtok(tmpTimeString, "\n");
+
+   linesCount = 0;
+   tmpWidth = 0;
+   maxTokenWidth = 0;
+   while(token) {
+      linesCount++;
+      tmpWidth = GetStringWidth(FONT_CLOCK, token);
+      if (tmpWidth > maxTokenWidth)
+         maxTokenWidth = tmpWidth;
+
+      token = strtok(NULL, "\n");
+   }
+
+   /**< Resize clock if width of time/date string bigger than component width */
+   if (maxTokenWidth > cp->width) {
+      clk->cp->requestedWidth = maxTokenWidth + CLOCK_BORDER_SIZE * 2;
+      ResizeTray(clk->cp->tray);
+   }
+
+   sheight = GetStringHeight(FONT_CLOCK);
+   yoffset = (cp->height - sheight) / 2;
+   if (linesCount > 1) {
+      yoffset = (cp->height - sheight * linesCount) / 2;
+   }
+
    /* Clear the area. */
-   cp = clk->cp;
    if(colors[COLOR_CLOCK_BG1] == colors[COLOR_CLOCK_BG2]) {
       JXSetForeground(display, rootGC, colors[COLOR_CLOCK_BG1]);
       JXFillRectangle(display, cp->pixmap, rootGC, 0, 0,
@@ -274,26 +307,22 @@ void DrawClock(ClockType *clk, const TimeType *now)
                    0, 0, cp->width, cp->height, gradients[COLOR_CLOCK_BG1]);
    }
 
-   /* Determine if the clock is the right size. */
-   timeString = GetTimeString(clk->format, clk->zone);
-   width = GetStringWidth(FONT_CLOCK, timeString);
-   rwidth = width + 4;
-   if(rwidth == clk->cp->requestedWidth || clk->userWidth) {
+    /* Draw the clock. */
+   Release(tmpTimeString);
+   tmpTimeString = CopyString(timeString);
+   token = strtok(tmpTimeString, "\n");
 
-      /* Draw the clock. */
+   int i = 1;
+   while(token) {
+      tokenWidth = GetStringWidth(FONT_CLOCK, token);
       RenderString(cp->pixmap, FONT_CLOCK, COLOR_CLOCK_FG,
-                   (cp->width - width) / 2,
-                   (cp->height - GetStringHeight(FONT_CLOCK)) / 2,
-                   cp->width, timeString);
+                  (cp->width - tokenWidth) / 2, yoffset - 1,
+                  cp->width, token);
 
-      UpdateSpecificTray(clk->cp->tray, clk->cp);
-
-   } else {
-
-      /* Wrong size. Resize. */
-      clk->cp->requestedWidth = rwidth;
-      ResizeTray(clk->cp->tray);
-
+      yoffset += sheight * i;
+      token = strtok(NULL, "\n");
    }
 
+   UpdateSpecificTray(clk->cp->tray, clk->cp);
+   Release(tmpTimeString);
 }

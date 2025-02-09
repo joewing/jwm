@@ -308,6 +308,7 @@ void DrawClock(ClockType *clk, const TimeType *now)
    }
 
     /* Draw the clock. */
+   Release(tmpTimeString);
    tmpTimeString = CopyString(timeString);
    token = strtok(tmpTimeString, "\n");
 

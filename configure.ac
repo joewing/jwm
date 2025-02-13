@@ -479,7 +479,7 @@ fi
 ############################################################################
 AM_ICONV
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.20])
+AM_GNU_GETTEXT_VERSION
 LDFLAGS="$LDFLAGS $LIBINTL $LIBICONV"
 
 ############################################################################

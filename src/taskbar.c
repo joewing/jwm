@@ -250,7 +250,7 @@ void ComputeItemSize(TaskBarType *tp)
    }
 }
 
-/** Check if all clients in this grou are on the top of their layer. */
+/** Check if all clients in this group are on the top of their layer. */
 char IsGroupOnTop(const TaskEntry *entry)
 {
    ClientEntry *cp;

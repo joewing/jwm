@@ -250,7 +250,7 @@ void ComputeItemSize(TaskBarType *tp)
    }
 }
 
-/** Check if all clients in this grou are on the top of their layer. */
+/** Check if all clients in this group are on the top of their layer. */
 char IsGroupOnTop(const TaskEntry *entry)
 {
    ClientEntry *cp;
@@ -431,9 +431,13 @@ void FocusGroup(const TaskEntry *tp)
    }
 
    /* If there is a client in the group on this desktop,
-    * then we remain on the same desktop. */
+    * then we remain on the same desktop. However,
+    * desktop windows in the group do not count. */
    shouldSwitch = 1;
    for(cp = tp->clients; cp; cp = cp->next) {
+      if (cp->client->state.windowType == WINDOW_TYPE_DESKTOP) {
+         continue;
+      }
       if(IsClientOnCurrentDesktop(cp->client)) {
          shouldSwitch = 0;
          break;

@@ -244,6 +244,9 @@ int FindValue(const StringMappingType *mapping, int count, const char *key)
 {
    int left = 0;
    int right = count - 1;
+   if(!key) {
+      return -1;
+   }
    while(right >= left) {
       const int x = (left + right) / 2;
       Assert(x >= 0);

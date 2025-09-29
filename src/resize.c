@@ -27,7 +27,7 @@ static void UpdateSize(ClientNode *np, const MouseContextType context,
                        const int x, const int y,
                        const int startx, const int starty,
                        const int oldx, const int oldy,
-                       const int oldw, const int oldh);
+                       const int oldw, const int oldh, MouseContextType *prevContext);
 static void FixWidth(ClientNode *np);
 static void FixHeight(ClientNode *np);
 
@@ -48,9 +48,19 @@ void UpdateSize(ClientNode *np, const MouseContextType context,
                 const int x, const int y,
                 const int startx, const int starty,
                 const int oldx, const int oldy,
-                const int oldw, const int oldh)
+                const int oldw, const int oldh, MouseContextType *prevContext)
 {
-   if(context & MC_BORDER_N) {
+
+   // if previous context is unset, and context contains mask (not keyboard)
+   if (*prevContext == MC_NONE && context & MC_MASK) {
+      int xpos = x-oldx;
+      int ypos = y-oldy;
+      *prevContext |= MC_MASK; // make sure we don't run this twice
+      if (xpos < oldw/2) *prevContext |= MC_BORDER_W; // is left
+      if (ypos < oldh/2) *prevContext |= MC_BORDER_N; // is top
+   }
+
+   if(*prevContext & MC_BORDER_N || context & MC_BORDER_N) {
       int delta = (y - starty) / np->yinc;
       delta *= np->yinc;
       if(oldh - delta >= np->minHeight
@@ -62,7 +72,7 @@ void UpdateSize(ClientNode *np, const MouseContextType context,
          FixWidth(np);
       }
    }
-   if(context & MC_BORDER_S) {
+   if(!(*prevContext & MC_BORDER_N) && context & MC_BORDER_S) {
       int delta = (y - starty) / np->yinc;
       delta *= np->yinc;
       np->height = oldh + delta;
@@ -72,7 +82,7 @@ void UpdateSize(ClientNode *np, const MouseContextType context,
          FixWidth(np);
       }
    }
-   if(context & MC_BORDER_E) {
+   if(!(*prevContext & MC_BORDER_W) && context & MC_BORDER_E) {
       int delta = (x - startx) / np->xinc;
       delta *= np->xinc;
       np->width = oldw + delta;
@@ -82,7 +92,7 @@ void UpdateSize(ClientNode *np, const MouseContextType context,
          FixHeight(np);
       }
    }
-   if(context & MC_BORDER_W) {
+   if(*prevContext & MC_BORDER_W || context & MC_BORDER_W) {
       int delta = (x - startx) / np->xinc;
       delta *= np->xinc;
       if(oldw - delta >= np->minWidth
@@ -170,6 +180,7 @@ void ResizeClient(ClientNode *np, MouseContextType context,
       return;
    }
 
+   MouseContextType prevContext = MC_NONE;
    for(;;) {
 
       WaitForEvent(&event);
@@ -194,7 +205,7 @@ void ResizeClient(ClientNode *np, MouseContextType context,
          DiscardMotionEvents(&event, np->window);
 
          UpdateSize(np, context, event.xmotion.x, event.xmotion.y,
-                    startx, starty, oldx, oldy, oldw, oldh);
+                    startx, starty, oldx, oldy, oldw, oldh, &prevContext);
 
          lastgwidth = gwidth;
          lastgheight = gheight;
@@ -371,7 +382,7 @@ void ResizeClientKeyboard(ClientNode *np, MouseContextType context)
          DiscardMotionEvents(&event, np->window);
 
          UpdateSize(np, context, event.xmotion.x, event.xmotion.y,
-                    startx, starty, oldx, oldy, oldw, oldh);
+                    startx, starty, oldx, oldy, oldw, oldh, 0);
 
       } else if(event.type == ButtonRelease) {
 

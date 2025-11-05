@@ -548,8 +548,7 @@ AC_SUBST(DATE, `date -u -d "@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y-%m-%d`)
 AC_SUBST(SYSCONF, "$SYSCONF")
 AC_SUBST(PACKAGE, "$PACKAGE")
 
-AC_CONFIG_FILES([po/Makefile.in
-   Makefile
+AC_CONFIG_FILES([Makefile
    src/Makefile
    contrib/Makefile
    jwm.1

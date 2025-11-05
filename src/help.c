@@ -3,7 +3,7 @@
  * @author Joe Wingbermuehle
  * @date 2004-2006
  *
- * @brief Functions for displaying information about JWM.
+ * @brief Functions for displaying information about SBWM.
  *
  */
 
@@ -15,7 +15,7 @@ static void DisplayUsage(void);
 /** Display program name, version, and compiled options . */
 void DisplayAbout(void)
 {
-   printf("JWM v" PACKAGE_VERSION " by Joe Wingbermuehle\n");
+   printf("SBWM v" PACKAGE_VERSION " (based on JWM 2.4.6) by Joe Wingbermuehle\n");
    DisplayCompileOptions();
 }
 
@@ -73,12 +73,12 @@ void DisplayHelp(void)
 {
    DisplayUsage();
    printf("  -display X  Set the X display to use\n"
-          "  -exit       Exit JWM (send _JWM_EXIT to the root)\n"
+          "  -exit       Exit SBWM (send _JWM_EXIT to the root)\n"
           "  -f file     Use specified configuration file\n"
           "  -h          Display this help message\n"
           "  -p          Parse the configuration file and exit\n"
           "  -reload     Reload menu (send _JWM_RELOAD to the root)\n"
-          "  -restart    Restart JWM (send _JWM_RESTART to the root)\n"
+          "  -restart    Restart SBWM (send _JWM_RESTART to the root)\n"
           "  -v          Display version information\n");
 }
 
@@ -86,6 +86,6 @@ void DisplayHelp(void)
 void DisplayUsage(void)
 {
    DisplayAbout();
-   printf("usage: jwm [ options ]\n");
+   printf("usage: SBWM [ options ]\n");
 }
 

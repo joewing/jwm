@@ -2,7 +2,7 @@
 # JWM autoconf.
 ############################################################################
 
-AC_INIT([jwm],[2.4.7],[joewing@joewing.net])
+AC_INIT([SBWM],[0.1.0],[joewing@joewing.net])
 AC_PREREQ([2.69])
 AC_CONFIG_SRCDIR([src])
 AC_CONFIG_SRCDIR([po])
@@ -15,7 +15,7 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_MKDIR_P
 
-PACKAGE=jwm
+PACKAGE=SBWM
 
 ############################################################################
 # Check if we need _XOPEN_SOURCE

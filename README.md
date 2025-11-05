@@ -1,37 +1,37 @@
-JWM (Joe's Window Manager)
-==============================================================================
+# SBWM - SIBOS Window Manager
 
-JWM is a light-weight window manager for the X11 Window System.
+  SBWM is a lightweight window manager for the SIBOS operating system, forked from [JWM (Joe's Window Manager)](https://github.com/joewing/jwm).
 
-Requirements
-------------------------------------------------------------------------------
-To build JWM you will need a C compiler (gcc works), X11, and the
-"development headers" for X11 and Xlib.
-If available and not disabled at compile time, JWM will also use
-the following libraries:
+  ## Version
+  v0.1.0 - Initial fork based on JWM 2.4.6
 
- - cairo and librsvg2 for SVG icons and backgrounds.
- - pango (with the xft backend) for text layout.
- - libjpeg for JPEG icons and backgrounds.
- - libpng for PNG icons and backgrounds.
- - libXext for the shape extension.
- - libXrender for the render extension.
- - libXmu for rounded corners.
- - libXinerama for multiple head support.
- - libXpm for XPM icons and backgrounds.
+  ## Upstream Project
+  - **Original Author**: Joe Wingbermuehle
+  - **Original Project**: https://joewing.net/projects/jwm/
+  - **Source Repository**: https://github.com/joewing/jwm
 
-Installation
-------------------------------------------------------------------------------
+  ## Changes from JWM
+  - Renamed binary: `jwm` → `SBWM`
+  - Version changed to 0.1.0 for independent versioning
+  - Planned features:
+    - Pre-rendered transparency with blur effects (no compositor needed)
+    - SIBOS-specific system integrations
+    - Performance optimizations for image-based OS
 
- 0. For building from the git repository, run "./autogen.sh".
- 1. Run "./configure --help" for configuration options.
- 2. Run "./configure [options]"
- 3. Run "make" to build JWM.
- 4. Run "make install" to install JWM.  Depending on where you are installing
-    JWM, you may need to perform this step as root ("sudo make install").
+  ## Configuration
+  SBWM currently uses `.jwmrc` configuration files (same format as JWM 2.4.6).
 
-License
-------------------------------------------------------------------------------
-See LICENSE for license information.
+  ## License
+  MIT License (same as upstream JWM)
 
-For more information see http://joewing.net/projects/jwm/
+  See LICENSE file for full copyright information.
+
+  ## Building
+
+  ./configure --prefix=/usr --sysconfdir=/etc
+  make
+  make install 
+
+  For SIBOS
+
+  SBWM is designed for the SIBOS operating system. Build scripts are available in the SIBOS source tree at packages/build_sbwm.sh.

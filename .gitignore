@@ -18,4 +18,9 @@ po/*.gmo
 po/stamp-*
 src/Makefile
 src/jwm
+src/SBWM
 doc
+aclocal.m4
+compile
+install-sh
+missing

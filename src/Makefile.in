@@ -14,7 +14,7 @@ OBJECTS = action.o background.o binding.o border.o button.o client.o \
    root.o screen.o settings.o spacer.o status.o swallow.o taskbar.o \
    timing.o tray.o traybutton.o winmenu.o
 
-EXE = jwm
+EXE = SBWM
 
 .SUFFIXES: .o .h .c
 

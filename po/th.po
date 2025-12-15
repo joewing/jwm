@@ -25,7 +25,7 @@ msgstr "การกระทำที่ไม่ถูกต้อง: \"%s\""
 #: src/action.c:211
 #, c-format
 msgid "action: root menu \"%s\" not defined"
-msgstr "การดำเนินการ: ไม่ได้กำหนดเมนูรูท \"%is\""
+msgstr "การดำเนินการ: ไม่ได้กำหนดเมนูรูท \"%s\""
 
 #: src/background.c:137
 msgid "no value specified for background"
@@ -67,7 +67,7 @@ msgstr "ไม่ได้ระบุคีย์หรือรหัสคี
 #: src/binding.c:526
 #, c-format
 msgid "key binding: root menu \"%s\" not defined"
-msgstr "การเชื่อมโยงคีย์: ไม่ได้กำหนดเมนูรูท \"%is\""
+msgstr "การเชื่อมโยงคีย์: ไม่ได้กำหนดเมนูรูท \"%s\""
 
 #: src/client.c:904
 msgid "Kill this window?"

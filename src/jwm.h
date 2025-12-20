@@ -100,9 +100,6 @@
 #  ifdef USE_XRENDER
 #     include <X11/extensions/Xrender.h>
 #  endif
-#  ifdef USE_FRIBIDI
-#     include <fribidi/fribidi.h>
-#  endif
 
 #endif /* MAKE_DEPEND */
 

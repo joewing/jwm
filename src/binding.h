@@ -38,7 +38,8 @@ unsigned int ParseModifierString(const char *str);
  * @param command Extra parameter needed for some key binding types.
  */
 void InsertBinding(ActionType action, const char *modifiers,
-                   const char *stroke, const char *code, const char *command);
+                   const char *stroke, const char *code, const char *command,
+                   const char *fileName, int line);
 
 /** Insert a mouse binding.
  * A mouse binding maps a mouse click in a certain context to an action.

@@ -957,7 +957,7 @@ void ParseKey(const TokenNode *tp)
    if(JUNLIKELY(k.action == ACTION_INVALID)) {
       ParseError(tp, _("invalid Key action: \"%s\""), action);
    } else {
-      InsertBinding(k, mask, key, code, command);
+      InsertBinding(k, mask, key, code, command, tp->fileName, tp->line);
    }
 }
 

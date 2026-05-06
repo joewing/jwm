@@ -74,6 +74,7 @@ void StartWindowStackWalk(void)
    ClientNode *np;
    int layer;
    int count;
+   int active;
 
    /* If we are already walking the stack, just return. */
    if(windowStack != NULL) {
@@ -99,10 +100,14 @@ void StartWindowStackWalk(void)
    windowStack = Allocate(sizeof(Window) * count);
 
    /* Copy windows into the array. */
+   active = -1;
    windowStackSize = 0;
    for(layer = LAST_LAYER; layer >= FIRST_LAYER; layer--) {
       for(np = nodes[layer]; np; np = np->next) {
          if(ShouldFocus(np, 1)) {
+            if(np->state.status & STAT_ACTIVE) {
+               active = windowStackSize;
+            }
             windowStack[windowStackSize++] = np->window;
          }
       }
@@ -110,7 +115,11 @@ void StartWindowStackWalk(void)
 
    Assert(windowStackSize == count);
 
-   windowStackCurrent = 0;
+   if(active >= 0) {
+      windowStackCurrent = active;
+   } else {
+      windowStackCurrent = 0;
+   }
 
    JXGrabKeyboard(display, rootWindow, False, GrabModeAsync,
                   GrabModeAsync, CurrentTime);
@@ -158,7 +167,8 @@ void WalkWindowStack(char forward)
           * a state that doesn't allow focus.
           */
          if(np == NULL || !ShouldFocus(np, 1)
-            || (np->state.status & STAT_ACTIVE)) {
+            || ((np->state.status & STAT_ACTIVE)
+               && !(np->state.status & STAT_MINIMIZED))) {
             continue;
          }
 
@@ -246,4 +256,3 @@ void FocusNextStacked(ClientNode *np)
    JXSetInputFocus(display, rootWindow, RevertToParent, eventTime);
 
 }
-

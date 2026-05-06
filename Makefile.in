@@ -7,11 +7,11 @@ USE_NLS = @USE_NLS@
 
 all:
 	$(MAKE) -C src all
-	$(MAKE) -C po all
+	@if test x$(USE_NLS) = xyes ; then $(MAKE) -C po all ; fi
 
 install: all
 	$(MAKE) -C src install
-	$(MAKE) -C po install
+	@if test x$(USE_NLS) = xyes ; then $(MAKE) -C po install ; fi
 	$(MAKE) -C contrib install
 	install -d -m 0755 $(SYSCONF)
 	install -m 644 example.jwmrc $(SYSCONF)/system.jwmrc
@@ -20,7 +20,7 @@ install: all
 
 install-strip: all install-conf
 	$(MAKE) -C src install-strip
-	$(MAKE) -C po install-strip
+	@if test x$(USE_NLS) = xyes ; then $(MAKE) -C po install-strip ; fi
 	$(MAKE) -C contrib install
 	install -d -m 0755 $(SYSCONF)
 	install -m 644 example.jwmrc $(SYSCONF)/system.jwmrc
@@ -30,7 +30,7 @@ install-strip: all install-conf
 
 uninstall:
 	$(MAKE) -C src uninstall
-	$(MAKE) -C po uninstall
+	@if test x$(USE_NLS) = xyes ; then $(MAKE) -C po uninstall ; fi
 	$(MAKE) -C contrib uninstall
 	rm -f $(SYSCONF)/system.jwmrc
 	rm -f $(MANDIR)/man1/jwm.1
@@ -46,7 +46,7 @@ tarball:
 
 clean:
 	(cd src && $(MAKE) clean)
-	(cd po && $(MAKE) clean)
+	@if test x$(USE_NLS) = xyes ; then (cd po && $(MAKE) clean) ; fi
 	rm -rf doc
 
 distclean: clean

@@ -367,7 +367,6 @@ void RenderString(Drawable d, FontType font, ColorType color,
 {
    XRectangle rect;
    Region renderRegion;
-   int len;
    char *utf8String;
 #ifdef USE_PANGO
    XftDraw *xd;
@@ -386,7 +385,6 @@ void RenderString(Drawable d, FontType font, ColorType color,
 
    /* Convert to UTF-8 if necessary. */
    utf8String = GetUTF8String(str);
-   len = strlen(utf8String);
 
    /* Get the bounds for the string based on the specified width. */
    rect.x = x;

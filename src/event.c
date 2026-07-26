@@ -307,13 +307,15 @@ void ProcessEvent(XEvent *event)
    }
 }
 
-/** Discard button events for the specified windows. */
+/** Discard button events for the specified windows.
+ * Note that only presses are discarded: a queued release may pair
+ * with the press being processed (fast click) and components with
+ * a release handler depend on receiving it. */
 void DiscardButtonEvents()
 {
    XEvent event;
    JXSync(display, False);
-   while(JXCheckMaskEvent(display, ButtonPressMask | ButtonReleaseMask,
-			  &event)) {
+   while(JXCheckMaskEvent(display, ButtonPressMask, &event)) {
       UpdateTime(&event);
    }
 }

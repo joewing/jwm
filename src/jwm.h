@@ -91,6 +91,9 @@
 #  ifdef USE_XINERAMA
 #     include <X11/extensions/Xinerama.h>
 #  endif
+#  ifdef USE_XRANDR
+#     include <X11/extensions/Xrandr.h>
+#  endif
 #  ifdef USE_XFT
 #     ifdef HAVE_FT2BUILD_H
 #        include <ft2build.h>

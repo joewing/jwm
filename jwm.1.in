@@ -511,10 +511,13 @@ optimal height depending on what it contains and the layout. A negative
 value subtracts from the screen height. 0 is the default.
 .RE
 .P
-\fBscreen\fP \fIint\fP
+\fBscreen\fP \fIstring\fP
 .RS
-The index of the screen on which to start the tray.
-0 is the default (the primary screen).
+The screen on which to place the tray: a Xinerama screen index
+(0 is the default), or, when JWM is compiled with XRandR support,
+a RandR output name (for example "DP-2") or the string "primary"
+for the primary output. An unknown name falls back to screen 0
+with a warning.
 .RE
 .P
 \fBlayer\fP { \fBbelow\fP | \fBnormal\fP | \fBabove\fP }
@@ -673,6 +676,8 @@ the default.
 .B TaskList
 .RS
 Add a task list to the tray.
+Task buttons can be reordered by dragging them with the left mouse
+button; a click without dragging activates or minimizes the task.
 This tag supports the following attributes:
 .P
 \fBheight\fP \fIint\fP
@@ -699,6 +704,24 @@ or "bottom" is chosen, an alternate method for resizing the task list will be us
 .RS
 The maximum width of an item in the task list. 0 indicates no maximum.
 The default is 0.
+.RE
+.P
+\fBrows\fP \fIint\fP
+.RS
+The number of button rows for a horizontal task list (1 to 8).
+With more than one row, buttons are placed row-major and the item
+height is the tray height divided by the number of rows.
+The default is 1.
+.RE
+.P
+\fBscreen\fP \fIstring\fP
+.RS
+Limit the task list to clients on a Xinerama screen: "all" shows
+clients from every screen, "local" shows only clients whose dominant
+screen is the screen of the tray containing this task list, and a
+number selects an explicit screen index. A client belongs to the
+screen containing the largest part of its window.
+The default is "all".
 .RE
 .RE
 .P

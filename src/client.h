@@ -128,6 +128,7 @@ typedef struct ClientNode {
    int oldy;                  /**< The old y coordinate (for maximize). */
    int oldWidth;              /**< The old width (for maximize). */
    int oldHeight;             /**< The old height (for maximize). */
+   int screenIndex;           /**< Cached dominant screen index. */
 
    long sizeFlags;            /**< Size flags from XGetWMNormalHints. */
    int baseWidth;             /**< Base width for resizing. */

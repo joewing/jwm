@@ -475,6 +475,24 @@ if test "$enable_xinerama" != "no"; then
 fi
 
 ############################################################################
+# Check if support for XRandR was requested and available.
+# Used only to name Xinerama screens after RandR outputs (and find the
+# primary output); requires Xinerama.
+############################################################################
+AC_ARG_ENABLE(xrandr,
+   AS_HELP_STRING([--disable-xrandr],[disable XRandR support]) )
+if test "$enable_xrandr" != "no" -a "$enable_xinerama" = "yes"; then
+   AC_CHECK_LIB(Xrandr, XRRGetScreenResourcesCurrent,
+      [ LDFLAGS="$LDFLAGS -lXrandr"
+        enable_xrandr="yes"
+        AC_DEFINE(USE_XRANDR, 1, [Define to enable XRandR]) ],
+      [ enable_xrandr="no"
+        AC_MSG_WARN([unable to use XRandR]) ])
+else
+   enable_xrandr="no"
+fi
+
+############################################################################
 # Check if support for gettext was requested and available.
 ############################################################################
 AM_ICONV
@@ -580,6 +598,7 @@ echo "    Pango:    $enable_pango"
 echo "    Shape:    $enable_shape"
 echo "    Xmu:      $enable_xmu"
 echo "    Xinerama: $enable_xinerama"
+echo "    XRandR:   $enable_xrandr"
 echo "    Debug:    $enable_debug"
 echo
 

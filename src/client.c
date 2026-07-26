@@ -148,6 +148,8 @@ ClientNode *AddClientWindow(Window w, char alreadyMapped, char notOwner)
    np->y = attr.y;
    np->width = attr.width;
    np->height = attr.height;
+   np->screenIndex = GetDominantScreen(np->x, np->y,
+                                       np->width, np->height)->index;
    np->cmap = attr.colormap;
    np->state.status = STAT_NONE;
    np->state.maxFlags = MAX_NONE;
@@ -1409,8 +1411,19 @@ void SendConfigureEvent(ClientNode *np)
 
    XConfigureEvent event;
    const ScreenType *sp;
+   int screenIndex;
 
    Assert(np);
+
+   /* Update the cached dominant screen; refresh screen-bound
+    * taskbars when the client moves to another screen. */
+   screenIndex = GetDominantScreen(np->x, np->y,
+                                   np->width, np->height)->index;
+   if(screenIndex != np->screenIndex) {
+      np->screenIndex = screenIndex;
+      MoveClientToTaskBarEnd(np);
+      RequireTaskUpdate();
+   }
 
    memset(&event, 0, sizeof(event));
    event.display = display;

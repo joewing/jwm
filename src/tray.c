@@ -74,6 +74,20 @@ void StartupTray(void)
 
    for(tp = trays; tp; tp = tp->next) {
 
+      if(tp->screenName) {
+         const int index = FindScreenByName(tp->screenName);
+         if(index >= 0) {
+            tp->screen = index;
+         } else {
+            Warning(_("tray screen \"%s\" not found"), tp->screenName);
+            tp->screen = 0;
+         }
+      }
+      if(tp->screen >= GetScreenCount()) {
+         Warning(_("tray screen index %d out of range"), tp->screen);
+         tp->screen = 0;
+      }
+
       LayoutTray(tp, &variableSize, &variableRemainder);
 
       /* Create the tray window. */
@@ -205,6 +219,9 @@ void DestroyTray(void)
          Release(trays->components);
          trays->components = cp;
       }
+      if(trays->screenName) {
+         Release(trays->screenName);
+      }
       Release(trays);
 
       trays = tp;
@@ -221,6 +238,7 @@ TrayType *CreateTray(void)
    tp->requestedX = 0;
    tp->requestedY = -1;
    tp->screen = 0;
+   tp->screenName = NULL;
    tp->x = 0;
    tp->y = -1;
    tp->requestedWidth = 0;
@@ -1067,7 +1085,16 @@ void SetTrayHeight(TrayType *tp, const char *str)
 /** Set the tray screen index. */
 void SetTrayScreen(TrayType *tp, const char *str)
 {
-   tp->screen = atoi(str);
+   if(str[0] >= '0' && str[0] <= '9') {
+      tp->screen = atoi(str);
+   } else {
+      /* A screen name ("DP-2", "primary"); screens are not known at
+       * parse time, so resolution is deferred to StartupTray. */
+      if(tp->screenName) {
+         Release(tp->screenName);
+      }
+      tp->screenName = CopyString(str);
+   }
 }
 
 

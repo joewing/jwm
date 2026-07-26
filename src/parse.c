@@ -1509,6 +1509,16 @@ void ParseTaskList(const TokenNode *tp, TrayType *tray)
       SetTaskBarLabelPosition(cp, temp);
    }
 
+   temp = FindAttribute(tp->attributes, "screen");
+   if(temp) {
+      SetTaskBarScreenFilter(cp, temp);
+   }
+
+   temp = FindAttribute(tp->attributes, "rows");
+   if(temp) {
+      SetTaskBarRows(cp, temp);
+   }
+
 }
 
 /** Parse the tray button style. */
